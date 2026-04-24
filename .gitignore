@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# uploads (if users upload files like PS submissions)
+uploads/
+
+# local database/cache files
+*.sqlite
+*.db
+
+# system junk
+Thumbs.db
+
+# optional: private spreadsheets
+*.xlsx
+*.xls
+*.csv
