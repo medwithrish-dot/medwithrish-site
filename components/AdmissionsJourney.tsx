@@ -127,7 +127,7 @@ const stages = [
     number: "07",
     title: "A-Levels & Final Offers",
     description:
-      "Final grades matter. Meeting offer conditions is the final step in securing your place at medical or dental school. Often, students become relaxed after getting their offer and end up losing their offer after neglecting A-level revision. It is highly important you do NOT miss your A-Levels offer. Click below for A-Level help!6",
+      "Final grades matter. Meeting offer conditions is the final step in securing your place at medical or dental school. Often, students become relaxed after getting their offer and end up losing their offer after neglecting A-level revision. It is highly important you do NOT miss your A-Levels offer. Click below for A-Level help!",
     buttons: [
       {
         label: "Click here for A-Level tutoring",

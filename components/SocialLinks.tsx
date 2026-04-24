@@ -1,5 +1,4 @@
-import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
+import { FaInstagram, FaTiktok } from "react-icons/fa";
 
 export default function SocialLinks() {
   return (
@@ -11,7 +10,7 @@ export default function SocialLinks() {
         href="https://tiktok.com/@medwithrish"
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-center rounded-full border border-bllue-300 p-3 text-gray-700 transition hover:scale-110 hover:bg-gray-50"
+        className="flex items-center justify-center rounded-full border border-blue-300 p-3 text-gray-700 transition hover:scale-110 hover:bg-gray-50"
         aria-label="TikTok"
       >
         <FaTiktok size={22} />
@@ -22,7 +21,7 @@ export default function SocialLinks() {
         href="https://instagram.com/medwithrish_"
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-center rounded-full border border-bllue-300 p-3 text-gray-700 transition hover:scale-110 hover:bg-gray-50"
+        className="flex items-center justify-center rounded-full border border-blue-300 p-3 text-gray-700 transition hover:scale-110 hover:bg-gray-50"
         aria-label="Instagram"
       >
         <FaInstagram size={22} />

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import TopBanner from "@/components/TopBanner";
 import SuccessStories from "@/components/SuccessStories";
@@ -10,7 +11,9 @@ export default function Home() {
       <Navbar />
       <TopBanner />
       <SuccessStories />
-      <AdmissionsJourney />
+      <Suspense>
+        <AdmissionsJourney />
+      </Suspense>
       <OtherPathways />
       <Hero />
     </main>
