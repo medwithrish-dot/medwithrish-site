@@ -38,7 +38,7 @@ const navItems: {
     label: "Interviews",
     items: [
       { label: "FREE Medicine Interview Guide", href: "https://payhip.com/Medwithrish", external: true },
-      { label: "Interview Tutoring", href: "/interview-tutoring" },
+      { label: "Medicine/Dentistry Interview Tutoring", href: "/interview-tutoring" },
     ],
   },
 

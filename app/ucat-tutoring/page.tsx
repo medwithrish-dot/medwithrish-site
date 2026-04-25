@@ -1,5 +1,11 @@
 import Link from "next/link";
-
+ 
+        <Link
+          href="/resources"
+          className="text-sm font-semibold text-blue-600 hover:underline"
+        >
+          ← Back to resources
+        </Link>
 const includes = [
   "Subtest-specific strategy and timing work",
   "Review of mistakes and weak-question patterns",

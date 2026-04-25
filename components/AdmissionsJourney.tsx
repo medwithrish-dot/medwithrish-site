@@ -109,7 +109,7 @@ const stages = [
     number: "06",
     title: "Interviews",
     description:
-      "Strong interview preparation helps students communicate clearly, think ethically, and perform confidently under pressure. Medicine/dentistry nterviews are a hurdle students are unfamiliar with and often fail at. It is highly important to prepare carefully and invest a lot of time into practice. Interviews test communication, personality and critical thinking generally. Fortunately, I've prepared a FREE medicine interviews guide that has helped 300+ students. Click below for more!",
+      "Strong interview preparation helps students communicate clearly, think ethically, and perform confidently under pressure. Medicine/dentistry nterviews are a hurdle students are unfamiliar with and often fail at. It is highly important to prepare carefully and invest a lot of time into practice. Interviews test communication, personality and critical thinking generally. Fortunately, we've prepared a FREE medicine interviews guide that has helped 300+ students. Click below for more!",
     buttons: [
       {
         label: "Click here for the FREE medicine interviews guide",

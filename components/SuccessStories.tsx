@@ -89,7 +89,7 @@ export default function SuccessStories() {
           </h2>
 
           <p className="mt-3 text-sm leading-7 text-gray-600 md:text-base">
-            A few of the messages and outcomes from students I’ve helped with
+            A few of the messages and outcomes from students we’ve helped with
             UCAT, interviews, and competitive applications that received <strong>Oxbridge</strong> and other Russel group uni offers.
 
           
