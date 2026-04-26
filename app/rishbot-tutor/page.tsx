@@ -239,15 +239,15 @@ function EyeTrackingDemo() {
         const neutralX = neutralHorizRef.current ?? 0.5;
         // High gains: a small iris shift covers meaningful screen distance.
         // Front-facing cameras return mirrored data → invert horizontal.
-        const GAIN_V = 50;
-        const GAIN_H = 40;
+        const GAIN_V = 60;
+        const GAIN_H = 25;
         const screenY = Math.max(0, Math.min(
           window.innerHeight - 1,
           window.innerHeight * 0.5 + (irisY - neutralY) * GAIN_V * window.innerHeight
         ));
         const screenX = Math.max(0, Math.min(
           window.innerWidth - 1,
-          window.innerWidth * 0.5 + (irisX - neutralX) * GAIN_H * window.innerWidth
+          window.innerWidth * 0.5 - (irisX - neutralX) * GAIN_H * window.innerWidth
         ));
         recordGaze(screenX, screenY);
       }
