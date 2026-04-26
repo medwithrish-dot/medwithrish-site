@@ -225,29 +225,30 @@ function EyeTrackingDemo() {
     if (results.faceLandmarks?.[0]) {
       const lm = results.faceLandmarks[0];
 
-      // Use absolute iris position in the video frame (0–1 normalised).
-      // This is simpler and more sensitive than the eye-socket ratio approach:
-      // any eye movement shifts iris.y / iris.x directly, no eyelid landmarks needed.
-      const irisY = (lm[L_IRIS].y + lm[R_IRIS].y) / 2;
-      const irisX = (lm[L_IRIS].x + lm[R_IRIS].x) / 2;
+      // Head-stabilised gaze: iris position relative to the midpoint of the
+      // inner eye corners (lm 133 = left, lm 362 = right). Both landmarks
+      // move with the head, so their midpoint cancels out head translation.
+      // Only actual eye rotation changes the iris-relative-to-head offset.
+      const headRefY = (lm[133].y + lm[362].y) / 2;
+      const headRefX = (lm[133].x + lm[362].x) / 2;
+      const gazeY = (lm[L_IRIS].y + lm[R_IRIS].y) / 2 - headRefY;
+      const gazeX = (lm[L_IRIS].x + lm[R_IRIS].x) / 2 - headRefX;
 
       if (stateRef.current === "calibrating") {
-        calibSamplesRef.current.push(irisY);
-        calibHorizSamplesRef.current.push(irisX);
+        calibSamplesRef.current.push(gazeY);
+        calibHorizSamplesRef.current.push(gazeX);
       } else if (stateRef.current === "active") {
-        const neutralY = neutralRef.current ?? 0.5;
-        const neutralX = neutralHorizRef.current ?? 0.5;
-        // High gains: a small iris shift covers meaningful screen distance.
-        // Front-facing cameras return mirrored data → invert horizontal.
+        const neutralY = neutralRef.current ?? 0;
+        const neutralX = neutralHorizRef.current ?? 0;
         const GAIN_V = 60;
         const GAIN_H = 25;
         const screenY = Math.max(0, Math.min(
           window.innerHeight - 1,
-          window.innerHeight * 0.5 + (irisY - neutralY) * GAIN_V * window.innerHeight
+          window.innerHeight * 0.5 + (gazeY - neutralY) * GAIN_V * window.innerHeight
         ));
         const screenX = Math.max(0, Math.min(
           window.innerWidth - 1,
-          window.innerWidth * 0.5 - (irisX - neutralX) * GAIN_H * window.innerWidth
+          window.innerWidth * 0.5 - (gazeX - neutralX) * GAIN_H * window.innerWidth
         ));
         recordGaze(screenX, screenY);
       }
