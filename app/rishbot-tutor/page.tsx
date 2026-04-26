@@ -13,15 +13,15 @@ function EyeAnimation() {
   return (
     <div className="relative flex items-center justify-center w-40 h-40">
       <div
-        className="absolute w-40 h-40 rounded-full border border-cyan-500/20 animate-ping"
+        className="absolute w-40 h-40 rounded-full border border-blue-600/20 animate-ping"
         style={{ animationDuration: "2.5s" }}
       />
       <div
-        className="absolute w-32 h-32 rounded-full border border-cyan-400/15 animate-ping"
+        className="absolute w-32 h-32 rounded-full border border-blue-500/15 animate-ping"
         style={{ animationDuration: "2s", animationDelay: "0.4s" }}
       />
-      <div className="absolute w-28 h-28 rounded-full bg-cyan-500/5 blur-xl" />
-      <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-slate-800 to-blue-950 border border-cyan-500/40 flex items-center justify-center shadow-[0_0_40px_rgba(6,182,212,0.25)]">
+      <div className="absolute w-28 h-28 rounded-full bg-blue-900/20 blur-xl" />
+      <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-slate-800 to-blue-950 border border-blue-600/40 flex items-center justify-center shadow-none">
         <svg className="w-14 h-9" viewBox="0 0 80 48" fill="none">
           <path
             d="M4 24 C20 4, 60 4, 76 24 C60 44, 20 44, 4 24 Z"
@@ -485,9 +485,9 @@ function EyeTrackingDemo() {
   if (state === "idle") {
     return (
       <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 space-y-4 text-center">
-        <div className="w-14 h-14 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center mx-auto">
+        <div className="w-14 h-14 rounded-2xl bg-blue-900/30 border border-blue-700/40 flex items-center justify-center mx-auto">
           <svg
-            className="w-7 h-7 text-cyan-400"
+            className="w-7 h-7 text-blue-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -515,7 +515,7 @@ function EyeTrackingDemo() {
         <div className="space-y-2">
           <button
             onClick={startEyeTracking}
-            className="w-full py-2.5 rounded-xl bg-cyan-500 text-white text-sm font-semibold hover:bg-cyan-400 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.25)]"
+            className="w-full py-2.5 rounded-xl bg-blue-700 text-white text-sm font-semibold hover:bg-blue-600 transition-colors shadow-sm"
           >
             Enable Eye Tracking + Start →
           </button>
@@ -537,7 +537,7 @@ function EyeTrackingDemo() {
   if (state === "enabling") {
     return (
       <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-10 text-center space-y-3">
-        <div className="w-6 h-6 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin mx-auto" />
+        <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto" />
         <p className="text-slate-300 text-sm">Loading eye-tracking…</p>
         <p className="text-slate-500 text-xs">Webcam permission prompt may appear</p>
       </div>
@@ -553,7 +553,7 @@ function EyeTrackingDemo() {
         <div className="absolute top-6 left-0 right-0 flex flex-col items-center gap-3">
           <p className="text-white font-bold text-lg">Eye Tracking Calibration</p>
           <p className="text-slate-400 text-sm">
-            Look at the dot — <span className="text-cyan-400 font-medium">{phase.label}</span>
+            Look at the dot — <span className="text-blue-400 font-medium">{phase.label}</span>
           </p>
           {/* Phase progress dots */}
           <div className="flex gap-2">
@@ -561,7 +561,7 @@ function EyeTrackingDemo() {
               <div
                 key={i}
                 className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${
-                  i < calibPhase ? "bg-cyan-400" : i === calibPhase ? "bg-white" : "bg-slate-700"
+                  i < calibPhase ? "bg-blue-600" : i === calibPhase ? "bg-white" : "bg-slate-700"
                 }`}
               />
             ))}
@@ -575,15 +575,15 @@ function EyeTrackingDemo() {
         >
           <div className="relative flex items-center justify-center">
             <div
-              className="absolute w-20 h-20 rounded-full border border-cyan-400/30 animate-ping"
+              className="absolute w-20 h-20 rounded-full border border-blue-500/30 animate-ping"
               style={{ animationDuration: "1.2s" }}
             />
-            <div className="w-9 h-9 rounded-full bg-cyan-400 flex items-center justify-center shadow-[0_0_32px_rgba(6,182,212,0.9)]">
+            <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center shadow-md">
               <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
             </div>
           </div>
           {/* Countdown under the dot */}
-          <div className="text-center mt-4 text-4xl font-black text-cyan-400 tabular-nums">
+          <div className="text-center mt-4 text-4xl font-black text-blue-400 tabular-nums">
             {calibCountdown > 0 ? calibCountdown : "✓"}
           </div>
         </div>
@@ -599,7 +599,7 @@ function EyeTrackingDemo() {
   if (state === "loading") {
     return (
       <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-10 text-center space-y-3">
-        <div className="w-6 h-6 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin mx-auto" />
+        <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto" />
         <p className="text-slate-300 text-sm">Generating UCAT question…</p>
       </div>
     );
@@ -623,25 +623,14 @@ function EyeTrackingDemo() {
               height: 44,
             }}
           >
-            {/* Soft glow */}
-            <div
-              style={{
-                position: "absolute",
-                inset: -8,
-                borderRadius: "50%",
-                background: "rgba(6,182,212,0.08)",
-                filter: "blur(5px)",
-              }}
-            />
-            {/* Cyan ring */}
+            {/* Ring */}
             <div
               style={{
                 position: "absolute",
                 inset: 0,
                 borderRadius: "50%",
-                border: "2px solid rgba(6,182,212,0.7)",
-                boxShadow: "0 0 8px rgba(6,182,212,0.35)",
-                background: "rgba(6,182,212,0.04)",
+                border: "1.5px solid rgba(148,163,184,0.55)",
+                background: "rgba(255,255,255,0.03)",
               }}
             />
             {/* Centre dot */}
@@ -651,10 +640,10 @@ function EyeTrackingDemo() {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%,-50%)",
-                width: 4,
-                height: 4,
+                width: 3,
+                height: 3,
                 borderRadius: "50%",
-                background: "rgba(6,182,212,0.85)",
+                background: "rgba(148,163,184,0.7)",
               }}
             />
           </div>
@@ -668,8 +657,8 @@ function EyeTrackingDemo() {
               Verbal Reasoning
             </span>
             {gazeActive && state === "active" && (
-              <span className="flex items-center gap-1 text-cyan-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse inline-block" />
+              <span className="flex items-center gap-1 text-blue-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse inline-block" />
                 Eye tracking active
               </span>
             )}
@@ -797,7 +786,7 @@ function EyeTrackingDemo() {
                         : isWrong
                         ? "border-red-400 bg-red-900/30 text-red-300"
                         : isSelected
-                        ? "border-cyan-400 bg-cyan-900/30 text-cyan-200"
+                        ? "border-blue-500 bg-blue-900/30 text-blue-200"
                         : state === "active"
                         ? "border-slate-600 bg-slate-700/50 text-slate-200 hover:border-slate-500 hover:bg-slate-700"
                         : "border-slate-700 bg-slate-800/30 text-slate-500"
@@ -913,7 +902,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
           {freeFeatures.map((f) => (
             <li key={f} className="flex items-start gap-2">
               <svg
-                className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0"
+                className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -931,7 +920,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
         </ul>
         <button
           onClick={onFreeClick}
-          className="w-full py-2.5 rounded-xl bg-cyan-500 text-white text-sm font-semibold hover:bg-cyan-400 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+          className="w-full py-2.5 rounded-xl bg-blue-700 text-white text-sm font-semibold hover:bg-blue-600 transition-colors shadow-sm"
         >
           Get Started Free
         </button>
@@ -1035,7 +1024,7 @@ function AuthModal({
 
         <div className="mb-5">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+            <span className="text-2xl font-black text-white">
               Rishbot
             </span>
           </div>
@@ -1051,7 +1040,7 @@ function AuthModal({
               onClick={() => setTab(t)}
               className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 tab === t
-                  ? "bg-cyan-500 text-white"
+                  ? "bg-blue-700 text-white"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -1072,7 +1061,7 @@ function AuthModal({
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your name"
                 required
-                className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-blue-600 transition-colors"
               />
             </div>
           )}
@@ -1084,7 +1073,7 @@ function AuthModal({
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+              className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-blue-600 transition-colors"
             />
           </div>
           <div>
@@ -1097,12 +1086,12 @@ function AuthModal({
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+              className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-blue-600 transition-colors"
             />
           </div>
           <button
             type="submit"
-            className="w-full py-2.5 rounded-xl bg-cyan-500 text-white text-sm font-semibold hover:bg-cyan-400 transition-colors mt-1 shadow-[0_0_20px_rgba(6,182,212,0.2)]"
+            className="w-full py-2.5 rounded-xl bg-blue-700 text-white text-sm font-semibold hover:bg-blue-600 transition-colors mt-1 shadow-sm"
           >
             {tab === "signup" ? "Create Free Account" : "Log In"}
           </button>
@@ -1158,7 +1147,7 @@ function PrivacyNotice() {
           contacting{" "}
           <a
             href="mailto:medwithrish@gmail.com"
-            className="text-cyan-400 hover:underline"
+            className="text-blue-400 hover:underline"
           >
             medwithrish@gmail.com
           </a>
@@ -1219,7 +1208,7 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
           {sections.map((sec) => (
             <div
               key={sec}
-              className="rounded-2xl bg-slate-800/50 border border-slate-700/50 p-5 flex items-center justify-between group hover:border-cyan-500/40 transition-colors cursor-pointer"
+              className="rounded-2xl bg-slate-800/50 border border-slate-700/50 p-5 flex items-center justify-between group hover:border-blue-600/40 transition-colors cursor-pointer"
             >
               <div>
                 <div className="text-sm font-semibold text-white">{sec}</div>
@@ -1227,9 +1216,9 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
                   No sessions yet — start practising
                 </div>
               </div>
-              <div className="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center group-hover:bg-cyan-500/20 transition-colors">
+              <div className="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center group-hover:bg-blue-800/30 transition-colors">
                 <svg
-                  className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors"
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-400 transition-colors"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -1332,7 +1321,7 @@ function UCATSection({
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide mb-2">
+              <div className="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-2">
                 Free — Basic Feedback
               </div>
               <ul className="space-y-1.5 text-xs text-slate-400">
@@ -1343,7 +1332,7 @@ function UCATSection({
                   '"You were slower than expected on this set"',
                 ].map((t) => (
                   <li key={t} className="flex gap-2">
-                    <span className="text-cyan-400 mt-0.5 flex-shrink-0">
+                    <span className="text-blue-400 mt-0.5 flex-shrink-0">
                       ·
                     </span>
                     {t}
@@ -1395,7 +1384,7 @@ function RishbotHero({ onUCATClick }: { onUCATClick: () => void }) {
 
       <h1 className="mt-6 text-4xl sm:text-5xl font-black text-white text-center leading-tight">
         Hi! I&apos;m{" "}
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
+        <span className="text-white">
           Rishbot!
         </span>
       </h1>
@@ -1403,12 +1392,12 @@ function RishbotHero({ onUCATClick }: { onUCATClick: () => void }) {
       <p className="mt-4 text-center text-slate-300 text-lg max-w-xl leading-relaxed">
         I am an AI Healthcare Admissions tutor designed by leading Medical
         admissions specialist{" "}
-        <span className="text-cyan-400 font-semibold">@medwithrish</span>.
+        <span className="text-blue-400 font-semibold">@medwithrish</span>.
       </p>
 
       {/* Feature badge */}
       <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/25 text-xs text-cyan-300">
+        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-900/30 border border-blue-500/25 text-xs text-blue-300">
           <svg
             className="w-3.5 h-3.5"
             fill="none"
@@ -1442,13 +1431,13 @@ function RishbotHero({ onUCATClick }: { onUCATClick: () => void }) {
         {/* UCAT — active */}
         <button
           onClick={onUCATClick}
-          className="group relative rounded-2xl overflow-hidden border border-cyan-500/40 bg-slate-900/60 p-6 text-center hover:border-cyan-400/80 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all duration-300 cursor-pointer"
+          className="group relative rounded-2xl overflow-hidden border border-blue-600/40 bg-slate-900/60 p-6 text-center hover:border-blue-500/80 hover:shadow-md transition-all duration-300 cursor-pointer"
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/0 to-cyan-500/5 group-hover:to-cyan-500/12 transition-all duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-900/0 to-blue-900/10 group-hover:to-blue-900/20 transition-all duration-300" />
           <div className="relative">
             <div className="text-4xl mb-3">🧠</div>
             <div className="text-white font-bold text-lg mb-1">UCAT</div>
-            <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 font-medium">
+            <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-blue-800/30 border border-blue-500/30 text-blue-300 font-medium">
               Available Now
             </span>
             <p className="mt-3 text-xs text-slate-400 leading-relaxed">
