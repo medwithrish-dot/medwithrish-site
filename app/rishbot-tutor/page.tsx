@@ -251,7 +251,7 @@ function EyeTrackingDemo() {
       } else if (stateRef.current === "active") {
         const neutralY = neutralRef.current ?? 0;
         const neutralX = neutralHorizRef.current ?? 0;
-        const GAIN_V = gainVRef.current;
+        const GAIN_V = gainVRef.current * 1.2;
         const GAIN_H = 25;
         const screenY = Math.max(0, Math.min(
           window.innerHeight - 1,
