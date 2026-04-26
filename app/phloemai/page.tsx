@@ -1142,7 +1142,7 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
   ];
 
   return (
-    <div className="min-h-[calc(100vh-49px)] bg-[#EEF4FF]">
+    <div className="min-h-[calc(100vh-49px)]">
       <div className="max-w-4xl mx-auto px-4 pt-10 pb-20">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -1243,7 +1243,7 @@ function UCATSection({
   onFreePlan: () => void;
 }) {
   return (
-    <div className="min-h-[calc(100vh-49px)] bg-[#EEF4FF]">
+    <div className="min-h-[calc(100vh-49px)]">
       <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
         <button
           onClick={onBack}
@@ -1432,7 +1432,7 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
   };
 
   return (
-    <div className="bg-[#EEF4FF] flex flex-col items-center px-4 pt-8 pb-10">
+    <div className="flex flex-col items-center px-4 pt-8 pb-10">
       <PhloemAILogo />
 
       <div className="mt-4 text-center">
@@ -1440,7 +1440,7 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
           AI Medical Admissions Tutor
         </p>
         <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight">
-          Meet <span className="text-blue-600">PhloemAI</span>
+          Meet <span className="text-blue-600">Phloem</span>
         </h1>
       </div>
 
@@ -1448,7 +1448,7 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
         AI-powered preparation for UCAT, medicine and dentistry interviews,
         built by{" "}
         <span className="text-blue-600 font-medium">@medwithrish</span> - a
-        leading Medical admissions specialist.
+        leading Medical admissions specialist, having helped numerous students ace the UCAT and secure medicine offers like from universities such as Cambridge.
       </p>
 
       {/* Feature badges */}
@@ -1458,20 +1458,20 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
-          Attention Analysis
+      Optional Eye-Tracker Analysis
         </span>
         <span className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs text-slate-800 shadow-sm">
           AI-Powered Coaching
         </span>
         <span className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs text-slate-800 shadow-sm">
-          Healthcare Admissions Specialist
+          Tutor-approved strategic guidance
         </span>
       </div>
 
       {/* Three subject cards */}
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl">
         {/* UCAT - active */}
-        <div className="group relative rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all duration-200 p-5 flex flex-col">
+        <div className="group relative rounded-2xl bg-white border-2 border-blue-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-200 p-5 flex flex-col">
           <div className="text-3xl mb-2 text-center">🧠</div>
           <div className="text-slate-900 font-bold text-base mb-1 text-center">UCAT</div>
           <div className="flex justify-center mb-2">
@@ -1499,7 +1499,7 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
         </div>
 
         {/* Medicine Interview - WIP */}
-        <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center opacity-60 cursor-not-allowed select-none">
+        <div className="relative rounded-2xl border-2 border-slate-200 bg-slate-50 p-5 text-center opacity-60 cursor-not-allowed select-none">
           <div className="text-3xl mb-2">🏥</div>
           <div className="text-slate-900 font-bold text-base mb-1">Medicine Interview</div>
           <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-medium">
@@ -1511,7 +1511,7 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
         </div>
 
         {/* Dentistry Interview - WIP */}
-        <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center opacity-60 cursor-not-allowed select-none">
+        <div className="relative rounded-2xl border-2 border-slate-200 bg-slate-50 p-5 text-center opacity-60 cursor-not-allowed select-none">
           <div className="text-3xl mb-2">🦷</div>
           <div className="text-slate-900 font-bold text-base mb-1">Dentistry Interview</div>
           <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-medium">
@@ -1621,7 +1621,7 @@ export default function RishbotTutorPage() {
   };
 
   return (
-    <div className="bg-[#EEF4FF]">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-[#EEF4FF] to-indigo-100">
       <Navbar />
 
       {view === "landing" && (
