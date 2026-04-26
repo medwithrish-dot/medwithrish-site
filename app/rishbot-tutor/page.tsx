@@ -1141,7 +1141,7 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
   ];
 
   return (
-    <div className="min-h-[calc(100vh-73px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+    <div className="min-h-[calc(100vh-57px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
       <div className="max-w-4xl mx-auto px-4 pt-10 pb-20">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -1242,7 +1242,7 @@ function UCATSection({
   onFreePlan: () => void;
 }) {
   return (
-    <div className="min-h-[calc(100vh-73px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+    <div className="min-h-[calc(100vh-57px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
       <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
         <button
           onClick={onBack}
@@ -1351,7 +1351,7 @@ function UCATSection({
 
 function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
   return (
-    <div className="min-h-[calc(100vh-73px)] bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center px-4 py-16">
+    <div className="min-h-[calc(100vh-57px)] bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center px-4 py-16">
       <PhloemAILogo />
 
       <div className="mt-6 text-center">
