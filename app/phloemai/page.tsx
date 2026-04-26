@@ -456,7 +456,7 @@ function EyeTrackingDemo() {
   // ── Idle state ──────────────────────────────────────────────────────────────
   if (state === "idle") {
     return (
-      <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 space-y-4">
+      <div className="bg-slate-800 border border-slate-600 shadow-md rounded-2xl p-6 space-y-4">
         <div className="flex items-start gap-4">
           <div className="w-12 h-12 rounded-xl bg-blue-900/30 border border-blue-700/40 flex items-center justify-center flex-shrink-0">
             <svg
@@ -514,7 +514,7 @@ function EyeTrackingDemo() {
   // ── Loading WebGazer ────────────────────────────────────────────────────────
   if (state === "enabling") {
     return (
-      <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-10 text-center space-y-3">
+      <div className="bg-slate-800 border border-slate-600 shadow-md rounded-2xl p-10 text-center space-y-3">
         <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto" />
         <p className="text-slate-300 text-sm">Loading eye-tracking…</p>
         <p className="text-slate-500 text-xs">Webcam permission prompt may appear</p>
@@ -576,7 +576,7 @@ function EyeTrackingDemo() {
   // ── Fetching question ───────────────────────────────────────────────────────
   if (state === "loading") {
     return (
-      <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-10 text-center space-y-3">
+      <div className="bg-slate-800 border border-slate-600 shadow-md rounded-2xl p-10 text-center space-y-3">
         <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto" />
         <p className="text-slate-300 text-sm">Generating UCAT question…</p>
       </div>
@@ -866,7 +866,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {/* Free */}
-      <div className="rounded-2xl bg-slate-800/60 border border-slate-600/50 p-6 flex flex-col gap-5">
+      <div className="rounded-2xl bg-slate-800 border border-slate-600 shadow-lg p-6 flex flex-col gap-5">
         <div>
           <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
             Free Plan
@@ -901,7 +901,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
       </div>
 
       {/* Premium */}
-      <div className="relative rounded-2xl bg-gradient-to-b from-blue-950 to-slate-900 border border-blue-500/40 p-6 flex flex-col gap-5 overflow-hidden">
+      <div className="relative rounded-2xl bg-gradient-to-b from-blue-900/60 to-slate-800 border border-blue-500/70 shadow-lg p-6 flex flex-col gap-5 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 pointer-events-none" />
         <div className="relative">
           <div className="flex items-center gap-2 mb-1">
@@ -1083,7 +1083,7 @@ function AuthModal({
 
 function PrivacyNotice() {
   return (
-    <div className="rounded-2xl bg-slate-800/40 border border-slate-700/40 p-5 space-y-3">
+    <div className="rounded-2xl bg-slate-800 border border-slate-600 shadow-md p-5 space-y-3">
       <div className="flex items-center gap-2">
         <svg
           className="w-4 h-4 text-slate-400 flex-shrink-0"
@@ -1287,12 +1287,14 @@ function UCATSection({
           </div>
 
           {/* Benefit statement */}
-          <p className="text-slate-400 text-sm leading-relaxed border-l-2 border-blue-600/50 pl-3 mb-5 italic">
-            Know exactly what&apos;s slowing you down — not just what you got wrong.
-          </p>
+          <div className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 mb-5 border-l-4 border-l-blue-500">
+            <p className="text-slate-300 text-sm leading-relaxed italic">
+              Know exactly what&apos;s slowing you down — not just what you got wrong.
+            </p>
+          </div>
 
           {/* Eye-tracking CTA banner */}
-          <div className="rounded-xl bg-blue-900/20 border border-blue-600/30 px-4 py-3 flex items-center justify-between gap-3">
+          <div className="rounded-xl bg-blue-900/50 border border-blue-500/70 shadow-md px-4 py-3 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="text-blue-300 text-sm font-semibold">Try Eye Tracking</p>
               <p className="text-slate-400 text-xs mt-0.5 leading-relaxed">
@@ -1316,7 +1318,7 @@ function UCATSection({
         </div>
 
         {/* Feedback explainer */}
-        <div className="mb-8 rounded-2xl bg-slate-800/40 border border-slate-700/40 p-5 space-y-4">
+        <div className="mb-8 rounded-2xl bg-slate-800 border border-slate-600 shadow-md p-5 space-y-4">
           <h3 className="text-white font-semibold text-sm">
             What does feedback look like?
           </h3>
