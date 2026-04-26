@@ -163,7 +163,9 @@ function EyeTrackingDemo() {
   const faceLandmarkerRef = useRef<FaceLandmarkerInstance | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const neutralRef = useRef<number | null>(null);
+  const neutralHorizRef = useRef<number | null>(null);
   const calibSamplesRef = useRef<number[]>([]);
+  const calibHorizSamplesRef = useRef<number[]>([]);
 
   // Keep stateRef in sync so the RAF loop (a closure) sees current state
   useEffect(() => { stateRef.current = state; }, [state]);
@@ -213,7 +215,7 @@ function EyeTrackingDemo() {
     [detectZone]
   );
 
-  // Per-frame detection loop — reads iris landmarks and maps vertical position to screen Y
+  // Per-frame detection loop — reads iris landmarks and maps to screen coords
   const runLoop = useCallback(() => {
     const video = videoRef.current;
     const lm_ref = faceLandmarkerRef.current;
@@ -224,24 +226,37 @@ function EyeTrackingDemo() {
     const results = lm_ref.detectForVideo(video, performance.now());
     if (results.faceLandmarks?.[0]) {
       const lm = results.faceLandmarks[0];
-      // Vertical iris ratio within eye socket: 0 = looking up, 1 = looking down
+
+      // Vertical iris ratio within eye socket (0=looking up, 1=looking down)
       const eyeH_L = lm[L_EYE_BOT].y - lm[L_EYE_TOP].y;
       const eyeH_R = lm[R_EYE_BOT].y - lm[R_EYE_TOP].y;
       const lVert = eyeH_L > 0.001 ? (lm[L_IRIS].y - lm[L_EYE_TOP].y) / eyeH_L : 0.5;
       const rVert = eyeH_R > 0.001 ? (lm[R_IRIS].y - lm[R_EYE_TOP].y) / eyeH_R : 0.5;
       const vertRatio = Math.max(0, Math.min(1, (lVert + rVert) / 2));
 
+      // Horizontal: iris X relative to nose tip (lm 1)
+      // In raw (non-mirrored) webcam frame, looking screen-right = iris moves to lower x
+      const irisX = (lm[L_IRIS].x + lm[R_IRIS].x) / 2;
+      const horizDeviation = irisX - lm[1].x;
+
       if (stateRef.current === "calibrating") {
         calibSamplesRef.current.push(vertRatio);
+        calibHorizSamplesRef.current.push(horizDeviation);
       } else if (stateRef.current === "active") {
-        const neutral = neutralRef.current ?? 0.5;
-        // Amplify iris deflection from neutral to cover the full screen
-        const GAIN = 3.2;
+        const neutralV = neutralRef.current ?? 0.5;
+        const neutralH = neutralHorizRef.current ?? 0;
+        const GAIN_V = 7.0;
+        const GAIN_H = 5.0;
         const screenY = Math.max(0, Math.min(
           window.innerHeight - 1,
-          window.innerHeight * 0.5 + (vertRatio - neutral) * GAIN * window.innerHeight
+          window.innerHeight * 0.5 + (vertRatio - neutralV) * GAIN_V * window.innerHeight
         ));
-        recordGaze(window.innerWidth / 2, screenY);
+        // Invert horizontal: looking screen-right = lower iris X = negative deviation
+        const screenX = Math.max(0, Math.min(
+          window.innerWidth - 1,
+          window.innerWidth * 0.5 - (horizDeviation - neutralH) * GAIN_H * window.innerWidth
+        ));
+        recordGaze(screenX, screenY);
       }
     }
     animFrameRef.current = requestAnimationFrame(runLoop);
@@ -284,6 +299,7 @@ function EyeTrackingDemo() {
       faceLandmarkerRef.current = landmarker as FaceLandmarkerInstance;
 
       calibSamplesRef.current = [];
+      calibHorizSamplesRef.current = [];
       animFrameRef.current = requestAnimationFrame(runLoop);
       setGazeActive(true);
       setCalibCountdown(3);
@@ -311,6 +327,9 @@ function EyeTrackingDemo() {
       const samples = calibSamplesRef.current;
       neutralRef.current =
         samples.length > 0 ? samples.reduce((a, b) => a + b) / samples.length : 0.5;
+      const hSamples = calibHorizSamplesRef.current;
+      neutralHorizRef.current =
+        hSamples.length > 0 ? hSamples.reduce((a, b) => a + b) / hSamples.length : 0;
       fetchQuestion();
     }, 3600);
     return () => {
@@ -381,7 +400,9 @@ function EyeTrackingDemo() {
     faceLandmarkerRef.current?.close();
     faceLandmarkerRef.current = null;
     neutralRef.current = null;
+    neutralHorizRef.current = null;
     calibSamplesRef.current = [];
+    calibHorizSamplesRef.current = [];
   };
 
   const reset = () => {
@@ -551,26 +572,25 @@ function EyeTrackingDemo() {
               height: 44,
             }}
           >
-            {/* Soft glow behind ring */}
+            {/* Soft glow */}
             <div
               style={{
                 position: "absolute",
-                inset: -10,
+                inset: -8,
                 borderRadius: "50%",
-                background: "rgba(255,255,255,0.07)",
-                filter: "blur(6px)",
+                background: "rgba(6,182,212,0.08)",
+                filter: "blur(5px)",
               }}
             />
-            {/* White border ring */}
+            {/* Cyan ring */}
             <div
               style={{
                 position: "absolute",
                 inset: 0,
                 borderRadius: "50%",
-                border: "2.5px solid rgba(255,255,255,0.92)",
-                boxShadow:
-                  "0 0 10px rgba(255,255,255,0.55), inset 0 0 6px rgba(255,255,255,0.08)",
-                background: "rgba(255,255,255,0.04)",
+                border: "2px solid rgba(6,182,212,0.7)",
+                boxShadow: "0 0 8px rgba(6,182,212,0.35)",
+                background: "rgba(6,182,212,0.04)",
               }}
             />
             {/* Centre dot */}
@@ -580,11 +600,10 @@ function EyeTrackingDemo() {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%,-50%)",
-                width: 5,
-                height: 5,
+                width: 4,
+                height: 4,
                 borderRadius: "50%",
-                background: "white",
-                boxShadow: "0 0 4px rgba(255,255,255,0.9)",
+                background: "rgba(6,182,212,0.85)",
               }}
             />
           </div>
