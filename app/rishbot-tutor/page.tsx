@@ -1141,7 +1141,7 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
   ];
 
   return (
-    <div className="min-h-[calc(100vh-57px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+    <div className="min-h-[calc(100vh-49px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
       <div className="max-w-4xl mx-auto px-4 pt-10 pb-20">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -1242,7 +1242,7 @@ function UCATSection({
   onFreePlan: () => void;
 }) {
   return (
-    <div className="min-h-[calc(100vh-57px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+    <div className="min-h-[calc(100vh-49px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
       <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
         <button
           onClick={onBack}
@@ -1351,7 +1351,7 @@ function UCATSection({
 
 function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
   return (
-    <div className="min-h-[calc(100vh-57px)] bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center px-4 py-16">
+    <div className="min-h-[calc(100vh-49px)] bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center px-4 py-16">
       <PhloemAILogo />
 
       <div className="mt-6 text-center">
@@ -1359,15 +1359,15 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
           AI Medical Admissions Tutor
         </p>
         <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
-          Meet <span className="text-blue-400">PhloemAI</span>
+          Meet <span className="text-blue-400">Phloem</span>
         </h1>
       </div>
 
       <p className="mt-4 text-center text-slate-400 text-base max-w-xl leading-relaxed">
         AI-powered preparation for UCAT, medicine and dentistry interviews,
         built by{" "}
-        <span className="text-blue-400 font-medium">@medwithrish</span> — a
-        leading Medical admissions specialist.
+        <span className="text-blue-400 font-medium">@medwithrish</span> - a
+        leading Medical admissions specialist, having helped numerous students ace their UCAT, and multiple students into Cambridge medicine as well as other Russel group universities. 
       </p>
 
       {/* Feature badges */}
