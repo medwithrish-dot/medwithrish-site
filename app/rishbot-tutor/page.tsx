@@ -103,8 +103,6 @@ const ZONE_IDS: ZoneId[] = ["passage", "question", "answers", "timer"];
 // ── MediaPipe iris landmark indices ───────────────────────────────────────────
 
 const L_IRIS = 468, R_IRIS = 473;
-const L_EYE_TOP = 159, L_EYE_BOT = 145;
-const R_EYE_TOP = 386, R_EYE_BOT = 374;
 
 // ── Question type (from /api/rishbot/question) ────────────────────────────────
 
@@ -227,34 +225,29 @@ function EyeTrackingDemo() {
     if (results.faceLandmarks?.[0]) {
       const lm = results.faceLandmarks[0];
 
-      // Vertical iris ratio within eye socket (0=looking up, 1=looking down)
-      const eyeH_L = lm[L_EYE_BOT].y - lm[L_EYE_TOP].y;
-      const eyeH_R = lm[R_EYE_BOT].y - lm[R_EYE_TOP].y;
-      const lVert = eyeH_L > 0.001 ? (lm[L_IRIS].y - lm[L_EYE_TOP].y) / eyeH_L : 0.5;
-      const rVert = eyeH_R > 0.001 ? (lm[R_IRIS].y - lm[R_EYE_TOP].y) / eyeH_R : 0.5;
-      const vertRatio = Math.max(0, Math.min(1, (lVert + rVert) / 2));
-
-      // Horizontal: iris X relative to nose tip (lm 1)
-      // In raw (non-mirrored) webcam frame, looking screen-right = iris moves to lower x
+      // Use absolute iris position in the video frame (0–1 normalised).
+      // This is simpler and more sensitive than the eye-socket ratio approach:
+      // any eye movement shifts iris.y / iris.x directly, no eyelid landmarks needed.
+      const irisY = (lm[L_IRIS].y + lm[R_IRIS].y) / 2;
       const irisX = (lm[L_IRIS].x + lm[R_IRIS].x) / 2;
-      const horizDeviation = irisX - lm[1].x;
 
       if (stateRef.current === "calibrating") {
-        calibSamplesRef.current.push(vertRatio);
-        calibHorizSamplesRef.current.push(horizDeviation);
+        calibSamplesRef.current.push(irisY);
+        calibHorizSamplesRef.current.push(irisX);
       } else if (stateRef.current === "active") {
-        const neutralV = neutralRef.current ?? 0.5;
-        const neutralH = neutralHorizRef.current ?? 0;
-        const GAIN_V = 7.0;
-        const GAIN_H = 5.0;
+        const neutralY = neutralRef.current ?? 0.5;
+        const neutralX = neutralHorizRef.current ?? 0.5;
+        // High gains: a small iris shift covers meaningful screen distance.
+        // Front-facing cameras return mirrored data → invert horizontal.
+        const GAIN_V = 28;
+        const GAIN_H = 22;
         const screenY = Math.max(0, Math.min(
           window.innerHeight - 1,
-          window.innerHeight * 0.5 + (vertRatio - neutralV) * GAIN_V * window.innerHeight
+          window.innerHeight * 0.5 + (irisY - neutralY) * GAIN_V * window.innerHeight
         ));
-        // Invert horizontal: looking screen-right = lower iris X = negative deviation
         const screenX = Math.max(0, Math.min(
           window.innerWidth - 1,
-          window.innerWidth * 0.5 - (horizDeviation - neutralH) * GAIN_H * window.innerWidth
+          window.innerWidth * 0.5 - (irisX - neutralX) * GAIN_H * window.innerWidth
         ));
         recordGaze(screenX, screenY);
       }
