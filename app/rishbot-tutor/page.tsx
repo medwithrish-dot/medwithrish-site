@@ -162,6 +162,7 @@ function EyeTrackingDemo() {
   const [calibStep, setCalibStep] = useState(0);
   const [calibClicksAtStep, setCalibClicksAtStep] = useState(0);
   const [gazeActive, setGazeActive] = useState(false);
+  const [gazeDataReceived, setGazeDataReceived] = useState(false);
   const [wgError, setWgError] = useState(false);
   const [gazePos, setGazePos] = useState<{ x: number; y: number } | null>(null);
 
@@ -208,6 +209,7 @@ function EyeTrackingDemo() {
       // Always update the gaze position so the ring is visible as soon as active
       setGazePos({ x, y });
       if (stateRef.current !== "active") return;
+      setGazeDataReceived(true);
       const now = Date.now();
       const elapsed = now - lastTimeRef.current;
       setZoneTimes((prev) => ({
@@ -287,6 +289,7 @@ function EyeTrackingDemo() {
 
   const fetchQuestion = async () => {
     setState("loading");
+    setGazeDataReceived(false);
     try {
       const res = await fetch("/api/rishbot/question");
       if (!res.ok) throw new Error("api error");
@@ -334,6 +337,7 @@ function EyeTrackingDemo() {
     setSelected(null);
     setQuestion(null);
     setGazeActive(false);
+    setGazeDataReceived(false);
     setCalibStep(0);
     setCalibClicksAtStep(0);
     setWgError(false);
@@ -347,6 +351,12 @@ function EyeTrackingDemo() {
   const coachingMessage = useMemo(() => {
     if (!question || !selected) return "";
     const correct = selected === question.correct;
+    const result = correct
+      ? `Correct. ${question.explanation}`
+      : `The correct answer was ${question.correct}. ${question.explanation}`;
+
+    if (!gazeDataReceived) return result;
+
     const { passage: p, question: q, answers: a, timer: t } = zonePcts;
     const tips: string[] = [];
     if (p > 55 && q < 12)
@@ -365,13 +375,9 @@ function EyeTrackingDemo() {
       tips.push(
         "You spent little time reviewing the answer options. Comparing all four choices before committing can reduce impulsive selections."
       );
-    tips.push(
-      correct
-        ? `Correct. ${question.explanation}`
-        : `The correct answer was ${question.correct}. ${question.explanation}`
-    );
+    tips.push(result);
     return tips.join(" ");
-  }, [question, selected, zonePcts]);
+  }, [question, selected, zonePcts, gazeDataReceived]);
 
   // ── Idle state ──────────────────────────────────────────────────────────────
   if (state === "idle") {
@@ -710,21 +716,27 @@ function EyeTrackingDemo() {
           </div>
 
           {/* Zone stats */}
-          <div className="grid grid-cols-4 gap-1.5">
-            {ZONE_IDS.map((id) => (
-              <div
-                key={id}
-                className={`rounded-xl p-2 text-center border transition-all duration-300 ${
-                  activeZone === id && state === "active"
-                    ? ZONE[id].active_stat
-                    : ZONE[id].inactive_stat
-                }`}
-              >
-                <div className="text-sm font-bold">{zonePcts[id]}%</div>
-                <div className="text-xs opacity-70">{ZONE[id].label}</div>
-              </div>
-            ))}
-          </div>
+          {gazeDataReceived ? (
+            <div className="grid grid-cols-4 gap-1.5">
+              {ZONE_IDS.map((id) => (
+                <div
+                  key={id}
+                  className={`rounded-xl p-2 text-center border transition-all duration-300 ${
+                    activeZone === id && state === "active"
+                      ? ZONE[id].active_stat
+                      : ZONE[id].inactive_stat
+                  }`}
+                >
+                  <div className="text-sm font-bold">{zonePcts[id]}%</div>
+                  <div className="text-xs opacity-70">{ZONE[id].label}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl p-2 text-center border border-slate-700/50 bg-slate-800/30 text-xs text-slate-500">
+              Eye tracking data not recorded
+            </div>
+          )}
 
           {/* AI coaching after answer */}
           {state === "answered" && (
