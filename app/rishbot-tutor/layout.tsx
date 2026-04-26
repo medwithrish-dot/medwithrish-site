@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Rishbot Tutor | MedWithRish",
+  title: "PhloemAI | MedWithRish",
   description:
-    "AI Healthcare Admissions tutor designed by leading Medical admissions specialist @medwithrish. UCAT prep with eye-tracking insights.",
+    "AI-powered preparation for UCAT, medicine and dentistry interviews, built by @medwithrish — a leading Medical admissions specialist.",
 };
 
 export default function RishbotLayout({

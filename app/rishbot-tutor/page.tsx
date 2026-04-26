@@ -7,42 +7,14 @@ import Navbar from "@/components/Navbar";
 
 type View = "landing" | "ucat" | "dashboard";
 
-// ── Eye Animation (landing hero) ──────────────────────────────────────────────
+// ── PhloemAI Logo (landing hero) ─────────────────────────────────────────────
 
-function EyeAnimation() {
+function PhloemAILogo() {
   return (
-    <div className="relative flex items-center justify-center w-40 h-40">
-      <div
-        className="absolute w-40 h-40 rounded-full border border-blue-600/20 animate-ping"
-        style={{ animationDuration: "2.5s" }}
-      />
-      <div
-        className="absolute w-32 h-32 rounded-full border border-blue-500/15 animate-ping"
-        style={{ animationDuration: "2s", animationDelay: "0.4s" }}
-      />
-      <div className="absolute w-28 h-28 rounded-full bg-blue-900/20 blur-xl" />
-      <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-slate-800 to-blue-950 border border-blue-600/40 flex items-center justify-center shadow-none">
-        <svg className="w-14 h-9" viewBox="0 0 80 48" fill="none">
-          <path
-            d="M4 24 C20 4, 60 4, 76 24 C60 44, 20 44, 4 24 Z"
-            stroke="#22d3ee"
-            strokeWidth="2"
-            fill="none"
-          />
-          <circle cx="40" cy="24" r="13" fill="#0e7490" />
-          <circle cx="40" cy="24" r="7" fill="#0f172a" />
-          <circle cx="35" cy="20" r="2.5" fill="white" opacity="0.35" />
-          <line
-            x1="40" y1="17" x2="40" y2="31"
-            stroke="#22d3ee" strokeWidth="0.8" opacity="0.5"
-          />
-          <line
-            x1="33" y1="24" x2="47" y2="24"
-            stroke="#22d3ee" strokeWidth="0.8" opacity="0.5"
-          />
-        </svg>
-        <div className="absolute bottom-2 right-2 w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse" />
-      </div>
+    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center shadow-lg border border-blue-500/20">
+      <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
+      </svg>
     </div>
   );
 }
@@ -1025,7 +997,7 @@ function AuthModal({
         <div className="mb-5">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl font-black text-white">
-              Rishbot
+              PhloemAI
             </span>
           </div>
           <p className="text-slate-400 text-sm">
@@ -1131,7 +1103,7 @@ function PrivacyNotice() {
       </div>
       <div className="space-y-2 text-xs text-slate-400 leading-relaxed">
         <p>
-          Rishbot may use your webcam to estimate broad attention zones during
+          PhloemAI may use your webcam to estimate broad attention zones during
           practice. This is entirely optional — you can use the full tutor
           without enabling webcam tracking.
         </p>
@@ -1289,7 +1261,7 @@ function UCATSection({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          Back to Rishbot
+          Back to PhloemAI
         </button>
 
         <div className="mb-8">
@@ -1377,29 +1349,32 @@ function UCATSection({
 
 // ── Landing Hero ──────────────────────────────────────────────────────────────
 
-function RishbotHero({ onUCATClick }: { onUCATClick: () => void }) {
+function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
   return (
-    <div className="min-h-[calc(100vh-73px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex flex-col items-center justify-center px-4 py-16">
-      <EyeAnimation />
+    <div className="min-h-[calc(100vh-73px)] bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center px-4 py-16">
+      <PhloemAILogo />
 
-      <h1 className="mt-6 text-4xl sm:text-5xl font-black text-white text-center leading-tight">
-        Hi! I&apos;m{" "}
-        <span className="text-white">
-          Rishbot!
-        </span>
-      </h1>
+      <div className="mt-6 text-center">
+        <p className="text-xs font-semibold uppercase tracking-widest text-blue-400 mb-3">
+          AI Medical Admissions Tutor
+        </p>
+        <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
+          Meet <span className="text-blue-400">PhloemAI</span>
+        </h1>
+      </div>
 
-      <p className="mt-4 text-center text-slate-300 text-lg max-w-xl leading-relaxed">
-        I am an AI Healthcare Admissions tutor designed by leading Medical
-        admissions specialist{" "}
-        <span className="text-blue-400 font-semibold">@medwithrish</span>.
+      <p className="mt-4 text-center text-slate-400 text-base max-w-xl leading-relaxed">
+        AI-powered preparation for UCAT, medicine and dentistry interviews,
+        built by{" "}
+        <span className="text-blue-400 font-medium">@medwithrish</span> — a
+        leading Medical admissions specialist.
       </p>
 
-      {/* Feature badge */}
+      {/* Feature badges */}
       <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-900/30 border border-blue-500/25 text-xs text-blue-300">
+        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-xs text-slate-300">
           <svg
-            className="w-3.5 h-3.5"
+            className="w-3.5 h-3.5 text-blue-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -1416,12 +1391,12 @@ function RishbotHero({ onUCATClick }: { onUCATClick: () => void }) {
               d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
             />
           </svg>
-          Eye-Tracking Enabled
+          Attention Analysis
         </span>
-        <span className="px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/25 text-xs text-blue-300">
+        <span className="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-xs text-slate-300">
           AI-Powered Coaching
         </span>
-        <span className="px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-400/25 text-xs text-purple-300">
+        <span className="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-xs text-slate-300">
           Healthcare Admissions Specialist
         </span>
       </div>
@@ -1504,7 +1479,7 @@ export default function RishbotTutorPage() {
       <Navbar />
 
       {view === "landing" && (
-        <RishbotHero onUCATClick={() => setView("ucat")} />
+        <TutorHero onUCATClick={() => setView("ucat")} />
       )}
 
       {view === "ucat" && (

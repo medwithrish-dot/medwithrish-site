@@ -62,7 +62,7 @@ const navItems: {
     ],
   },
 
-  { label: "Rishbot Tutor", href: "/rishbot-tutor", special: true },
+  { label: "PhloemAI", href: "/rishbot-tutor", special: true },
   { label: "Contact", href: "/contact" },
 ];
 
