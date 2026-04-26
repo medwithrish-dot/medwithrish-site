@@ -104,6 +104,13 @@ const ZONE_IDS: ZoneId[] = ["passage", "question", "answers", "timer"];
 
 const L_IRIS = 468, R_IRIS = 473;
 
+// 3-point vertical calibration: top → centre → bottom
+const CALIB_PHASES = [
+  { label: "the top of the screen", y: 10 },
+  { label: "the centre",            y: 50 },
+  { label: "the bottom",            y: 90 },
+] as const;
+
 // ── Question type (from /api/rishbot/question) ────────────────────────────────
 
 type QuestionData = {
@@ -141,7 +148,8 @@ function EyeTrackingDemo() {
   const [zoneTimes, setZoneTimes] = useState<Record<ZoneId, number>>({
     passage: 0, question: 0, answers: 0, timer: 0,
   });
-  const [calibCountdown, setCalibCountdown] = useState(3);
+  const [calibPhase, setCalibPhase] = useState(0);
+  const [calibCountdown, setCalibCountdown] = useState(2);
   const [gazeActive, setGazeActive] = useState(false);
   const [gazeDataReceived, setGazeDataReceived] = useState(false);
   const [wgError, setWgError] = useState(false);
@@ -162,7 +170,9 @@ function EyeTrackingDemo() {
   const animFrameRef = useRef<number | null>(null);
   const neutralRef = useRef<number | null>(null);
   const neutralHorizRef = useRef<number | null>(null);
-  const calibSamplesRef = useRef<number[]>([]);
+  const gainVRef = useRef<number>(60);
+  const calibPhaseRef = useRef(0);
+  const calibPhaseSamples = useRef<[number[], number[], number[]]>([[], [], []]);
   const calibHorizSamplesRef = useRef<number[]>([]);
 
   // Keep stateRef in sync so the RAF loop (a closure) sees current state
@@ -235,12 +245,13 @@ function EyeTrackingDemo() {
       const gazeX = (lm[L_IRIS].x + lm[R_IRIS].x) / 2 - headRefX;
 
       if (stateRef.current === "calibrating") {
-        calibSamplesRef.current.push(gazeY);
-        calibHorizSamplesRef.current.push(gazeX);
+        const ph = calibPhaseRef.current;
+        calibPhaseSamples.current[ph]?.push(gazeY);
+        if (ph === 1) calibHorizSamplesRef.current.push(gazeX);
       } else if (stateRef.current === "active") {
         const neutralY = neutralRef.current ?? 0;
         const neutralX = neutralHorizRef.current ?? 0;
-        const GAIN_V = 60;
+        const GAIN_V = gainVRef.current;
         const GAIN_H = 25;
         const screenY = Math.max(0, Math.min(
           window.innerHeight - 1,
@@ -292,7 +303,7 @@ function EyeTrackingDemo() {
       });
       faceLandmarkerRef.current = landmarker as FaceLandmarkerInstance;
 
-      calibSamplesRef.current = [];
+      calibPhaseSamples.current = [[], [], []];
       calibHorizSamplesRef.current = [];
       animFrameRef.current = requestAnimationFrame(runLoop);
       setGazeActive(true);
@@ -309,28 +320,53 @@ function EyeTrackingDemo() {
     }
   };
 
-  // Calibration: collect iris samples for 3 seconds then derive neutral gaze position
+  // 3-point calibration: top → centre → bottom, 2.5 s per phase.
+  // After all phases, derive personalised vertical gain from the measured range.
   useEffect(() => {
     if (state !== "calibrating") return;
-    calibSamplesRef.current = [];
-    const countInterval = setInterval(() => {
-      setCalibCountdown(c => Math.max(0, c - 1));
-    }, 1000);
-    const doneTimeout = setTimeout(() => {
-      clearInterval(countInterval);
-      const samples = calibSamplesRef.current;
-      neutralRef.current =
-        samples.length > 0 ? samples.reduce((a, b) => a + b) / samples.length : 0.5;
-      const hSamples = calibHorizSamplesRef.current;
-      neutralHorizRef.current =
-        hSamples.length > 0 ? hSamples.reduce((a, b) => a + b) / hSamples.length : 0;
+
+    calibPhaseSamples.current = [[], [], []];
+    calibHorizSamplesRef.current = [];
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const intervals: ReturnType<typeof setInterval>[] = [];
+
+    const avg = (arr: number[]) =>
+      arr.length > 0 ? arr.reduce((a, b) => a + b) / arr.length : null;
+
+    const finish = () => {
+      const topG    = avg(calibPhaseSamples.current[0]);
+      const centerG = avg(calibPhaseSamples.current[1]);
+      const bottomG = avg(calibPhaseSamples.current[2]);
+      neutralRef.current = centerG ?? 0;
+      if (topG !== null && bottomG !== null && bottomG - topG > 0.0005) {
+        // Map 80 % of viewport height to the full measured gaze range
+        gainVRef.current = Math.min(200, Math.max(30, 0.8 / (bottomG - topG)));
+      } else {
+        gainVRef.current = 60;
+      }
+      neutralHorizRef.current = avg(calibHorizSamplesRef.current) ?? 0;
       fetchQuestion();
-    }, 3600);
-    return () => {
-      clearInterval(countInterval);
-      clearTimeout(doneTimeout);
     };
-    // fetchQuestion is defined below; stable across renders
+
+    const runPhase = (phase: number) => {
+      calibPhaseRef.current = phase;
+      setCalibPhase(phase);
+      setCalibCountdown(2);
+      const ci = setInterval(() => setCalibCountdown(c => Math.max(0, c - 1)), 1000);
+      intervals.push(ci);
+      const t = setTimeout(() => {
+        clearInterval(ci);
+        if (phase < 2) runPhase(phase + 1);
+        else finish();
+      }, 2600);
+      timers.push(t);
+    };
+
+    runPhase(0);
+    return () => {
+      timers.forEach(clearTimeout);
+      intervals.forEach(clearInterval);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
@@ -395,7 +431,8 @@ function EyeTrackingDemo() {
     faceLandmarkerRef.current = null;
     neutralRef.current = null;
     neutralHorizRef.current = null;
-    calibSamplesRef.current = [];
+    gainVRef.current = 60;
+    calibPhaseSamples.current = [[], [], []];
     calibHorizSamplesRef.current = [];
   };
 
@@ -509,30 +546,50 @@ function EyeTrackingDemo() {
 
   // ── Calibration ─────────────────────────────────────────────────────────────
   if (state === "calibrating") {
+    const phase = CALIB_PHASES[calibPhase];
     return (
-      <div className="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center gap-8 text-center px-6">
-        <div className="space-y-2">
-          <p className="text-white font-bold text-xl">Calibrating Eye Tracking</p>
-          <p className="text-slate-400 text-sm max-w-xs leading-relaxed">
-            Look directly at the dot below and hold still while we record your neutral gaze position.
+      <div className="fixed inset-0 z-[100] bg-slate-950">
+        {/* Instructions pinned to top */}
+        <div className="absolute top-6 left-0 right-0 flex flex-col items-center gap-3">
+          <p className="text-white font-bold text-lg">Eye Tracking Calibration</p>
+          <p className="text-slate-400 text-sm">
+            Look at the dot — <span className="text-cyan-400 font-medium">{phase.label}</span>
           </p>
-        </div>
-        {/* Target dot */}
-        <div className="relative flex items-center justify-center">
-          <div
-            className="absolute w-28 h-28 rounded-full border border-cyan-400/30 animate-ping"
-            style={{ animationDuration: "1.5s" }}
-          />
-          <div className="w-10 h-10 rounded-full bg-cyan-400 flex items-center justify-center shadow-[0_0_36px_rgba(6,182,212,0.8)]">
-            <div className="w-3 h-3 rounded-full bg-slate-900" />
+          {/* Phase progress dots */}
+          <div className="flex gap-2">
+            {CALIB_PHASES.map((_, i) => (
+              <div
+                key={i}
+                className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${
+                  i < calibPhase ? "bg-cyan-400" : i === calibPhase ? "bg-white" : "bg-slate-700"
+                }`}
+              />
+            ))}
           </div>
         </div>
-        {/* Countdown */}
-        <div className="text-7xl font-black text-cyan-400 tabular-nums leading-none">
-          {calibCountdown > 0 ? calibCountdown : "✓"}
+
+        {/* Moving calibration dot */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{ top: `${phase.y}%` }}
+        >
+          <div className="relative flex items-center justify-center">
+            <div
+              className="absolute w-20 h-20 rounded-full border border-cyan-400/30 animate-ping"
+              style={{ animationDuration: "1.2s" }}
+            />
+            <div className="w-9 h-9 rounded-full bg-cyan-400 flex items-center justify-center shadow-[0_0_32px_rgba(6,182,212,0.9)]">
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
+            </div>
+          </div>
+          {/* Countdown under the dot */}
+          <div className="text-center mt-4 text-4xl font-black text-cyan-400 tabular-nums">
+            {calibCountdown > 0 ? calibCountdown : "✓"}
+          </div>
         </div>
-        <p className="text-slate-500 text-xs">
-          Your webcam preview is shown bottom-right · no video is stored
+
+        <p className="absolute bottom-4 left-0 right-0 text-center text-slate-600 text-xs">
+          Webcam preview bottom-right · no video stored
         </p>
       </div>
     );
