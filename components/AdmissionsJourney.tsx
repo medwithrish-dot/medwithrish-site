@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 const stages = [
@@ -151,30 +151,27 @@ function buttonClasses(variant: string) {
 }
 
 export default function AdmissionsJourney() {
-  const [openStage, setOpenStage] = useState<string | null>("04");
-const submissionRef = useRef<HTMLDivElement | null>(null);
-const journeyRef = useRef<HTMLElement | null>(null);
+  const submissionRef = useRef<HTMLDivElement | null>(null);
+  const journeyRef = useRef<HTMLElement | null>(null);
+  const shouldScrollRef = useRef(false);
+  const searchParams = useSearchParams();
 
+  const urlStage = useMemo(() => {
+    const s = searchParams.get("stage");
+    return s ? s.padStart(2, "0") : null;
+  }, [searchParams]);
 
-const shouldScrollRef = useRef(false);
-const searchParams = useSearchParams();
+  // "~url" means no user override — follow URL param or default
+  const [userStage, setUserStage] = useState<string | null>("~url");
+  const openStage = userStage === "~url" ? (urlStage ?? "04") : userStage;
+  const setOpenStage = (stage: string | null) => setUserStage(stage ?? null);
 
-useEffect(() => {
-  const stage = searchParams.get("stage");
-  const scrollTarget = searchParams.get("scroll");
-
-  if (stage) {
-    const formattedStage = stage.padStart(2, "0");
-    setOpenStage(formattedStage);
-
-    if (
-      formattedStage === "05" &&
-      scrollTarget === "ps-submission"
-    ) {
+  useEffect(() => {
+    const scrollTarget = searchParams.get("scroll");
+    if (urlStage === "05" && scrollTarget === "ps-submission") {
       shouldScrollRef.current = true;
     }
-  }
-}, [searchParams]);
+  }, [urlStage, searchParams]);
 
 useEffect(() => {
   if (openStage === "05" && shouldScrollRef.current) {

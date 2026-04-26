@@ -68,7 +68,7 @@ export default function WorkExperienceGuidePage() {
           <div className="mt-5 space-y-5 text-base leading-8 text-gray-700">
             <p>
               Many students misunderstand work experience. They think the goal is
-              to find the most impressive hospital, clinic, or consultant. In reality, you'll find medical work experience is generally used for your personal statement and in interviews, where for a lot of universities you can get through the admissions process with 0 work experience and still get an offer. For example - <em>What did you learn in your work experience?</em> You can answer using an example of virtual medical work experience, which can easily be found on the internet as quick courses.
+              to find the most impressive hospital, clinic, or consultant. In reality, you&apos;ll find medical work experience is generally used for your personal statement and in interviews, where for a lot of universities you can get through the admissions process with 0 work experience and still get an offer. For example - <em>What did you learn in your work experience?</em> You can answer using an example of virtual medical work experience, which can easily be found on the internet as quick courses.
             </p>
 
             <p>
@@ -161,7 +161,7 @@ export default function WorkExperienceGuidePage() {
 
             <p>
               In a personal statement, you might use one short example to show
-              insight, reflection, or motivation. In interviews, there is usually a specific station about work experience, with questions generally being <em>'What did you learn from your work experience?' </em> or even <em>'Why do you think medical schools usually ask you to undertake medical work experience?' </em>. You can also use work
+              insight, reflection, or motivation. In interviews, there is usually a specific station about work experience, with questions generally being <em>&apos;What did you learn from your work experience?&apos; </em> or even <em>&apos;Why do you think medical schools usually ask you to undertake medical work experience?&apos; </em>. You can also use work
               experience to discuss communication, empathy, teamwork, ethical
               challenges, and the realities of patient care.
             </p>

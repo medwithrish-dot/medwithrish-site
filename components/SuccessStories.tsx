@@ -125,7 +125,7 @@ export default function SuccessStories() {
         </h3>
 
         <p className="mt-3 text-sm leading-7 text-gray-600 md:text-base">
-          This is one of MULTIPLE students who I have helped get a UCAT score that was within the top 5%. This particular student went from 'failing' his UCAT mock-tests to out-competing approximately 40,000 test-takers, using my guidance and resources!
+          This is one of MULTIPLE students who I have helped get a UCAT score that was within the top 5%. This particular student went from &apos;failing&apos; his UCAT mock-tests to out-competing approximately 40,000 test-takers, using my guidance and resources!
         </p>
 
         <div className="mt-4 inline-flex rounded-full bg-yellow-100 px-3 py-1.5 text-xs font-semibold text-yellow-800">

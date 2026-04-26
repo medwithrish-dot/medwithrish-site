@@ -132,7 +132,7 @@ function EyeTrackingDemo() {
   const answersRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<HTMLSpanElement>(null);
   const lastZoneRef = useRef<ZoneId>("passage");
-  const lastTimeRef = useRef<number>(Date.now());
+  const lastTimeRef = useRef<number>(0);
   const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stateRef = useRef<SessionState>("idle");
 
@@ -196,11 +196,12 @@ function EyeTrackingDemo() {
   );
 
   // Per-frame detection loop - reads iris landmarks and maps to screen coords
+  const runLoopRef = useRef<() => void>(() => {});
   const runLoop = useCallback(() => {
     const video = videoRef.current;
     const lm_ref = faceLandmarkerRef.current;
     if (!video || !lm_ref || video.readyState < 2) {
-      animFrameRef.current = requestAnimationFrame(runLoop);
+      animFrameRef.current = requestAnimationFrame(runLoopRef.current);
       return;
     }
     const results = lm_ref.detectForVideo(video, performance.now());
@@ -236,8 +237,9 @@ function EyeTrackingDemo() {
         recordGaze(screenX, screenY);
       }
     }
-    animFrameRef.current = requestAnimationFrame(runLoop);
+    animFrameRef.current = requestAnimationFrame(runLoopRef.current);
   }, [recordGaze]);
+  useEffect(() => { runLoopRef.current = runLoop; }, [runLoop]);
 
   // Start MediaPipe eye tracking and begin calibration
   const startEyeTracking = async () => {
@@ -292,6 +294,23 @@ function EyeTrackingDemo() {
     }
   };
 
+  const fetchQuestion = async () => {
+    setState("loading");
+    setGazeDataReceived(false);
+    try {
+      const res = await fetch("/api/rishbot/question");
+      if (!res.ok) throw new Error("api error");
+      const data: QuestionData = await res.json();
+      setQuestion(data);
+      setTimeLeft(120);
+      setZoneTimes({ passage: 0, question: 0, answers: 0, timer: 0 });
+      lastTimeRef.current = Date.now();
+      setState("active");
+    } catch {
+      setState("idle");
+    }
+  };
+
   // 3-point calibration: top → centre → bottom, 2.5 s per phase.
   // After all phases, derive personalised vertical gain from the measured range.
   useEffect(() => {
@@ -339,25 +358,7 @@ function EyeTrackingDemo() {
       timers.forEach(clearTimeout);
       intervals.forEach(clearInterval);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
-
-  const fetchQuestion = async () => {
-    setState("loading");
-    setGazeDataReceived(false);
-    try {
-      const res = await fetch("/api/rishbot/question");
-      if (!res.ok) throw new Error("api error");
-      const data: QuestionData = await res.json();
-      setQuestion(data);
-      setTimeLeft(120);
-      setZoneTimes({ passage: 0, question: 0, answers: 0, timer: 0 });
-      lastTimeRef.current = Date.now();
-      setState("active");
-    } catch {
-      setState("idle");
-    }
-  };
 
   // Countdown timer
   useEffect(() => {
@@ -373,7 +374,7 @@ function EyeTrackingDemo() {
     };
   }, [state]);
 
-  const submitAnswer = (key: AnswerKey) => {
+  const submitAnswer = useCallback((key: AnswerKey) => {
     if (state !== "active") return;
     if (timerIdRef.current) clearInterval(timerIdRef.current);
     const elapsed = Date.now() - lastTimeRef.current;
@@ -387,7 +388,7 @@ function EyeTrackingDemo() {
       cancelAnimationFrame(animFrameRef.current);
       animFrameRef.current = null;
     }
-  };
+  }, [state]);
 
   const stopTracking = () => {
     if (animFrameRef.current) {
@@ -472,7 +473,7 @@ function EyeTrackingDemo() {
           </div>
           <div>
             <h3 className="text-slate-900 font-bold text-base">
-              Gain insights through your sight
+              DEMO - Gain insights through your sight
             </h3>
             <p className="text-slate-700 text-sm mt-1 leading-relaxed">
               PhloemAI&apos;s optional attention tracker uses your webcam to estimate
