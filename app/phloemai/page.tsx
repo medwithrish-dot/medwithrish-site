@@ -901,7 +901,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
       </div>
 
       {/* Premium */}
-      <div className="relative rounded-2xl bg-gradient-to-b from-blue-900/60 to-slate-800 border border-blue-500/70 shadow-lg p-6 flex flex-col gap-5 overflow-hidden">
+      <div className="relative rounded-2xl bg-slate-800 border border-blue-500/70 shadow-lg p-6 flex flex-col gap-5 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 pointer-events-none" />
         <div className="relative">
           <div className="flex items-center gap-2 mb-1">
@@ -1141,7 +1141,7 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
   ];
 
   return (
-    <div className="min-h-[calc(100vh-49px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+    <div className="min-h-[calc(100vh-49px)] bg-slate-950">
       <div className="max-w-4xl mx-auto px-4 pt-10 pb-20">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -1242,7 +1242,7 @@ function UCATSection({
   onFreePlan: () => void;
 }) {
   return (
-    <div className="min-h-[calc(100vh-49px)] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+    <div className="min-h-[calc(100vh-49px)] bg-slate-950">
       <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
         <button
           onClick={onBack}
