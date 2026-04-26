@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import Navbar from "@/components/Navbar";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -99,284 +99,576 @@ const ZONE = {
 
 type ZoneId = keyof typeof ZONE;
 const ZONE_IDS: ZoneId[] = ["passage", "question", "answers", "timer"];
-const DEMO_CYCLE: ZoneId[] = [
-  "passage", "passage", "question", "answers", "passage", "answers", "timer", "question",
-];
 
-function TrackingDot({ active }: { active: boolean }) {
-  return (
-    <span
-      className={`inline-flex items-center gap-1 text-xs animate-pulse ${
-        active ? "" : "opacity-0"
-      }`}
-    >
-      <span className="w-1.5 h-1.5 rounded-full bg-current inline-block" />
-      tracking
-    </span>
-  );
+// ── WebGazer type (loaded from CDN at runtime) ────────────────────────────────
+
+interface WebGazerInstance {
+  setGazeListener(
+    fn: (data: { x: number; y: number } | null, clock: number) => void
+  ): WebGazerInstance;
+  begin(): WebGazerInstance;
+  end(): void;
+  showVideoPreview(v: boolean): WebGazerInstance;
+  showPredictionPoints(v: boolean): WebGazerInstance;
+  saveDataAcrossSessions(v: boolean): WebGazerInstance;
+  clearData(): void;
+  pause(): void;
+  resume(): void;
 }
 
+declare global {
+  interface Window {
+    webgazer?: WebGazerInstance;
+  }
+}
+
+// ── Question type (from /api/rishbot/question) ────────────────────────────────
+
+type QuestionData = {
+  passage: string;
+  question: string;
+  options: { A: string; B: string; C: string; D: string };
+  correct: "A" | "B" | "C" | "D";
+  explanation: string;
+};
+
+type AnswerKey = "A" | "B" | "C" | "D";
+type SessionState =
+  | "idle"
+  | "enabling"
+  | "calibrating"
+  | "loading"
+  | "active"
+  | "answered";
+
+// 3×3 grid — percentages of viewport width/height
+const CALIB_POINTS = [
+  { x: 15, y: 15 }, { x: 50, y: 15 }, { x: 85, y: 15 },
+  { x: 15, y: 50 }, { x: 50, y: 50 }, { x: 85, y: 50 },
+  { x: 15, y: 85 }, { x: 50, y: 85 }, { x: 85, y: 85 },
+];
+
+// ── EyeTrackingDemo ───────────────────────────────────────────────────────────
+
 function EyeTrackingDemo() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const [camState, setCamState] = useState<
-    "idle" | "requesting" | "granted" | "denied"
-  >("idle");
+  const [state, setState] = useState<SessionState>("idle");
+  const [question, setQuestion] = useState<QuestionData | null>(null);
+  const [selected, setSelected] = useState<AnswerKey | null>(null);
+  const [timeLeft, setTimeLeft] = useState(120);
   const [activeZone, setActiveZone] = useState<ZoneId>("passage");
+  const [zoneTimes, setZoneTimes] = useState<Record<ZoneId, number>>({
+    passage: 0, question: 0, answers: 0, timer: 0,
+  });
+  const [calibStep, setCalibStep] = useState(0);
+  const [gazeActive, setGazeActive] = useState(false);
+  const [wgError, setWgError] = useState(false);
 
-  useEffect(() => {
-    if (camState !== "granted") return;
-    let i = 0;
-    const id = setInterval(() => {
-      setActiveZone(DEMO_CYCLE[i % DEMO_CYCLE.length]);
-      i++;
-    }, 2000);
-    return () => clearInterval(id);
-  }, [camState]);
+  const passageRef = useRef<HTMLDivElement>(null);
+  const questionRef = useRef<HTMLDivElement>(null);
+  const answersRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<HTMLSpanElement>(null);
+  const lastZoneRef = useRef<ZoneId>("passage");
+  const lastTimeRef = useRef<number>(Date.now());
+  const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stateRef = useRef<SessionState>("idle");
 
-  useEffect(() => {
-    // Start demo animation immediately even without webcam
-    let i = 0;
-    const id = setInterval(() => {
-      setActiveZone(DEMO_CYCLE[i % DEMO_CYCLE.length]);
-      i++;
-    }, 2000);
-    return () => clearInterval(id);
+  // Keep stateRef in sync so the WebGazer listener (a closure) sees current state
+  useEffect(() => { stateRef.current = state; }, [state]);
+
+  // Zone percentages derived from actual dwell times
+  const zonePcts = useMemo(() => {
+    const total = Object.values(zoneTimes).reduce((s, v) => s + v, 0);
+    if (total === 0) return { passage: 0, question: 0, answers: 0, timer: 0 };
+    return Object.fromEntries(
+      ZONE_IDS.map((id) => [id, Math.round((zoneTimes[id] / total) * 100)])
+    ) as Record<ZoneId, number>;
+  }, [zoneTimes]);
+
+  const detectZone = useCallback((x: number, y: number): ZoneId => {
+    const checks: [ZoneId, React.RefObject<HTMLElement>][] = [
+      ["passage",  passageRef  as React.RefObject<HTMLElement>],
+      ["question", questionRef as React.RefObject<HTMLElement>],
+      ["answers",  answersRef  as React.RefObject<HTMLElement>],
+    ];
+    for (const [id, ref] of checks) {
+      const r = ref.current?.getBoundingClientRect();
+      if (r && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom)
+        return id;
+    }
+    const tr = timerRef.current?.getBoundingClientRect();
+    if (tr && y <= tr.bottom + 40 && Math.abs(x - (tr.left + tr.width / 2)) < 120)
+      return "timer";
+    return lastZoneRef.current;
   }, []);
 
-  useEffect(() => {
-    return () => {
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-    };
-  }, []);
+  const recordGaze = useCallback(
+    (x: number, y: number) => {
+      if (stateRef.current !== "active") return;
+      const now = Date.now();
+      const elapsed = now - lastTimeRef.current;
+      setZoneTimes((prev) => ({
+        ...prev,
+        [lastZoneRef.current]: prev[lastZoneRef.current] + elapsed,
+      }));
+      lastTimeRef.current = now;
+      const zone = detectZone(x, y);
+      lastZoneRef.current = zone;
+      setActiveZone(zone);
+    },
+    [detectZone]
+  );
 
-  const requestWebcam = async () => {
-    setCamState("requesting");
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: false,
+  // Load WebGazer from CDN then begin calibration
+  const enableEyeTracking = async () => {
+    setState("enabling");
+    const loadScript = () =>
+      new Promise<void>((res, rej) => {
+        if (window.webgazer) { res(); return; }
+        const s = document.createElement("script");
+        s.src = "https://webgazer.cs.brown.edu/webgazer.js";
+        s.onload = () => res();
+        s.onerror = () => rej(new Error("load failed"));
+        document.head.appendChild(s);
       });
-      streamRef.current = stream;
-      if (videoRef.current) videoRef.current.srcObject = stream;
-      setCamState("granted");
+
+    try {
+      await loadScript();
+      window.webgazer!
+        .saveDataAcrossSessions(false)
+        .setGazeListener((data) => {
+          if (data) recordGaze(data.x, data.y);
+        })
+        .begin();
+      // Show WebGazer's built-in video + red prediction dot during calibration
+      window.webgazer!.showVideoPreview(true).showPredictionPoints(true);
+      setGazeActive(true);
+      setCalibStep(0);
+      setState("calibrating");
     } catch {
-      setCamState("denied");
+      setWgError(true);
+      setState("idle");
     }
   };
 
-  return (
-    <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-5 space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center flex-shrink-0">
-            <svg
-              className="w-4 h-4 text-cyan-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
-            </svg>
-          </div>
-          <div>
-            <p className="text-white text-sm font-semibold">
-              Eye-Tracking Demo
-            </p>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-400/10 text-cyan-400 border border-cyan-400/20">
-              Free tier · demo mode
-            </span>
-          </div>
-        </div>
-        <div
-          className={`flex items-center gap-1.5 text-xs ${
-            camState === "granted" ? "text-green-400" : "text-slate-500"
-          }`}
-        >
-          <div
-            className={`w-1.5 h-1.5 rounded-full ${
-              camState === "granted"
-                ? "bg-green-400 animate-pulse"
-                : "bg-slate-500"
-            }`}
-          />
-          {camState === "granted" ? "Live" : "Demo"}
-        </div>
-      </div>
+  const handleCalibClick = () => {
+    const next = calibStep + 1;
+    if (next >= CALIB_POINTS.length) {
+      // Calibration complete — hide video preview, keep prediction dot
+      window.webgazer?.showVideoPreview(false);
+      fetchQuestion();
+    } else {
+      setCalibStep(next);
+    }
+  };
 
-      {/* Simulated UCAT screen */}
-      <div className="rounded-xl overflow-hidden border border-slate-600/50 text-xs">
-        <div className="flex items-center justify-between px-3 py-2 bg-slate-700/80">
-          <span className="text-slate-300">Verbal Reasoning — Q3 of 11</span>
+  const fetchQuestion = async () => {
+    setState("loading");
+    try {
+      const res = await fetch("/api/rishbot/question");
+      if (!res.ok) throw new Error("api error");
+      const data: QuestionData = await res.json();
+      setQuestion(data);
+      setTimeLeft(120);
+      setZoneTimes({ passage: 0, question: 0, answers: 0, timer: 0 });
+      lastTimeRef.current = Date.now();
+      setState("active");
+    } catch {
+      setState("idle");
+    }
+  };
+
+  // Countdown timer
+  useEffect(() => {
+    if (state !== "active") return;
+    timerIdRef.current = setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) { setState("answered"); return 0; }
+        return t - 1;
+      });
+    }, 1000);
+    return () => {
+      if (timerIdRef.current) clearInterval(timerIdRef.current);
+    };
+  }, [state]);
+
+  const submitAnswer = (key: AnswerKey) => {
+    if (state !== "active") return;
+    if (timerIdRef.current) clearInterval(timerIdRef.current);
+    const elapsed = Date.now() - lastTimeRef.current;
+    setZoneTimes((prev) => ({
+      ...prev,
+      [lastZoneRef.current]: prev[lastZoneRef.current] + elapsed,
+    }));
+    setSelected(key);
+    setState("answered");
+    window.webgazer?.pause();
+  };
+
+  const reset = () => {
+    window.webgazer?.clearData();
+    window.webgazer?.end();
+    setSelected(null);
+    setQuestion(null);
+    setGazeActive(false);
+    setCalibStep(0);
+    setWgError(false);
+    setState("idle");
+  };
+
+  const formatTime = (s: number) =>
+    `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+  const coachingMessage = useMemo(() => {
+    if (!question || !selected) return "";
+    const correct = selected === question.correct;
+    const { passage: p, question: q, answers: a, timer: t } = zonePcts;
+    const tips: string[] = [];
+    if (p > 55 && q < 12)
+      tips.push(
+        "You spent most time on the passage before reading the question. Try reading the question stem first to direct your search for evidence."
+      );
+    else if (q < 8)
+      tips.push(
+        "Very little time on the question stem — make sure you fully understand what is being asked before scanning the passage."
+      );
+    if (t > 12)
+      tips.push(
+        "Frequent timer checks may indicate time pressure. Practising pacing can free up more attention for the content itself."
+      );
+    if (a < 10 && !correct)
+      tips.push(
+        "You spent little time reviewing the answer options. Comparing all four choices before committing can reduce impulsive selections."
+      );
+    tips.push(
+      correct
+        ? `Correct. ${question.explanation}`
+        : `The correct answer was ${question.correct}. ${question.explanation}`
+    );
+    return tips.join(" ");
+  }, [question, selected, zonePcts]);
+
+  // ── Idle state ──────────────────────────────────────────────────────────────
+  if (state === "idle") {
+    return (
+      <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 space-y-4 text-center">
+        <div className="w-14 h-14 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center mx-auto">
+          <svg
+            className="w-7 h-7 text-cyan-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-white font-bold text-base">
+            UCAT Practice with Eye Tracking
+          </h3>
+          <p className="text-slate-400 text-sm mt-1 leading-relaxed">
+            AI generates a real UCAT passage and question. Your webcam tracks
+            which zone your eyes are actually looking at — Passage, Question,
+            Answers, or Timer.
+          </p>
+        </div>
+        {wgError && (
+          <p className="text-xs text-red-400">
+            Could not load eye-tracking library. Try the practice-only option below.
+          </p>
+        )}
+        <div className="space-y-2">
+          <button
+            onClick={enableEyeTracking}
+            className="w-full py-2.5 rounded-xl bg-cyan-500 text-white text-sm font-semibold hover:bg-cyan-400 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.25)]"
+          >
+            Enable Eye Tracking + Start →
+          </button>
+          <button
+            onClick={fetchQuestion}
+            className="w-full py-2 rounded-xl border border-slate-600 text-slate-400 text-sm hover:text-white hover:border-slate-500 transition-colors"
+          >
+            Skip eye tracking — just practise
+          </button>
+        </div>
+        <p className="text-xs text-slate-500">
+          Webcam required for eye tracking. No video is recorded or stored.
+        </p>
+      </div>
+    );
+  }
+
+  // ── Loading WebGazer ────────────────────────────────────────────────────────
+  if (state === "enabling") {
+    return (
+      <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-10 text-center space-y-3">
+        <div className="w-6 h-6 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin mx-auto" />
+        <p className="text-slate-300 text-sm">Loading eye-tracking…</p>
+        <p className="text-slate-500 text-xs">Webcam permission prompt may appear</p>
+      </div>
+    );
+  }
+
+  // ── Calibration ─────────────────────────────────────────────────────────────
+  if (state === "calibrating") {
+    const pt = CALIB_POINTS[calibStep];
+    return (
+      <div className="fixed inset-0 z-[100] bg-slate-950">
+        <div className="absolute top-6 left-0 right-0 text-center pointer-events-none">
+          <p className="text-white font-semibold text-sm">Eye-Tracking Calibration</p>
+          <p className="text-slate-400 text-xs mt-1">
+            Look directly at each dot and click it — {calibStep + 1} of{" "}
+            {CALIB_POINTS.length}
+          </p>
+          <div className="flex justify-center gap-1.5 mt-3">
+            {CALIB_POINTS.map((_, i) => (
+              <div
+                key={i}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  i < calibStep
+                    ? "bg-cyan-400"
+                    : i === calibStep
+                    ? "bg-white animate-pulse"
+                    : "bg-slate-600"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+        {/* Calibration dot */}
+        <button
+          onClick={handleCalibClick}
+          className="absolute w-9 h-9 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400 hover:bg-white transition-colors shadow-[0_0_24px_rgba(6,182,212,0.7)] flex items-center justify-center"
+          style={{ left: `${pt.x}%`, top: `${pt.y}%` }}
+          aria-label={`Calibration point ${calibStep + 1}`}
+        >
+          <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
+        </button>
+      </div>
+    );
+  }
+
+  // ── Fetching question ───────────────────────────────────────────────────────
+  if (state === "loading") {
+    return (
+      <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-10 text-center space-y-3">
+        <div className="w-6 h-6 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin mx-auto" />
+        <p className="text-slate-300 text-sm">Generating UCAT question…</p>
+      </div>
+    );
+  }
+
+  // ── Active question ─────────────────────────────────────────────────────────
+  if ((state === "active" || state === "answered") && question) {
+    const timeCritical = timeLeft < 30 && state === "active";
+    return (
+      <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl overflow-hidden">
+        {/* Top bar */}
+        <div className="flex items-center justify-between px-4 py-3 bg-slate-700/80 border-b border-slate-600/50">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="px-2 py-0.5 rounded bg-slate-600 text-slate-200 font-medium">
+              Verbal Reasoning
+            </span>
+            {gazeActive && state === "active" && (
+              <span className="flex items-center gap-1 text-cyan-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse inline-block" />
+                Eye tracking active
+              </span>
+            )}
+          </div>
           <span
-            className={`font-mono font-bold transition-colors duration-300 ${
-              activeZone === "timer" ? "text-yellow-300" : "text-slate-400"
+            ref={timerRef}
+            className={`font-mono font-bold text-sm transition-colors ${
+              state === "answered"
+                ? "text-slate-500"
+                : timeCritical
+                ? "text-red-400 animate-pulse"
+                : "text-white"
             }`}
           >
-            01:23
+            {formatTime(timeLeft)}
           </span>
         </div>
 
-        {/* Passage */}
-        <div
-          className={`m-2 rounded-lg p-3 border transition-all duration-500 ${
-            activeZone === "passage"
-              ? ZONE.passage.active_box
-              : ZONE.passage.inactive_box
-          }`}
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <span
-              className={`font-semibold uppercase tracking-wide ${
-                activeZone === "passage"
-                  ? ZONE.passage.badge
-                  : "text-slate-500"
-              }`}
-            >
-              Passage
-            </span>
-            <span className={ZONE.passage.tracking}>
-              <TrackingDot active={activeZone === "passage"} />
-            </span>
+        <div className="p-4 space-y-3">
+          {/* Passage */}
+          <div
+            ref={passageRef}
+            className={`rounded-xl p-4 border transition-all duration-300 ${
+              activeZone === "passage" && state === "active"
+                ? ZONE.passage.active_box
+                : ZONE.passage.inactive_box
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span
+                className={`text-xs font-semibold uppercase tracking-wide ${
+                  activeZone === "passage" && state === "active"
+                    ? ZONE.passage.badge
+                    : "text-slate-500"
+                }`}
+              >
+                Passage
+              </span>
+              {activeZone === "passage" && state === "active" && (
+                <span className="flex items-center gap-1 text-xs text-blue-400 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+                  tracking
+                </span>
+              )}
+            </div>
+            <p className="text-slate-200 text-sm leading-relaxed">
+              {question.passage}
+            </p>
           </div>
-          <div className="space-y-1.5">
-            {[100, 83, 100, 70, 88].map((w, i) => (
+
+          {/* Question stem */}
+          <div
+            ref={questionRef}
+            className={`rounded-xl p-3 border transition-all duration-300 ${
+              activeZone === "question" && state === "active"
+                ? ZONE.question.active_box
+                : ZONE.question.inactive_box
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-1.5">
+              <span
+                className={`text-xs font-semibold uppercase tracking-wide ${
+                  activeZone === "question" && state === "active"
+                    ? ZONE.question.badge
+                    : "text-slate-500"
+                }`}
+              >
+                Question
+              </span>
+              {activeZone === "question" && state === "active" && (
+                <span className="flex items-center gap-1 text-xs text-purple-400 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block" />
+                  tracking
+                </span>
+              )}
+            </div>
+            <p className="text-slate-200 text-sm font-medium">
+              {question.question}
+            </p>
+          </div>
+
+          {/* Answer options */}
+          <div
+            ref={answersRef}
+            className={`rounded-xl p-3 border transition-all duration-300 ${
+              activeZone === "answers" && state === "active"
+                ? ZONE.answers.active_box
+                : ZONE.answers.inactive_box
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span
+                className={`text-xs font-semibold uppercase tracking-wide ${
+                  activeZone === "answers" && state === "active"
+                    ? ZONE.answers.badge
+                    : "text-slate-500"
+                }`}
+              >
+                Answers
+              </span>
+              {activeZone === "answers" && state === "active" && (
+                <span className="flex items-center gap-1 text-xs text-green-400 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+                  tracking
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              {(["A", "B", "C", "D"] as AnswerKey[]).map((key) => {
+                const isSelected = selected === key;
+                const isCorrect =
+                  state === "answered" && key === question.correct;
+                const isWrong =
+                  state === "answered" &&
+                  isSelected &&
+                  key !== question.correct;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => submitAnswer(key)}
+                    disabled={state === "answered"}
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm border transition-all ${
+                      isCorrect
+                        ? "border-green-400 bg-green-900/30 text-green-200"
+                        : isWrong
+                        ? "border-red-400 bg-red-900/30 text-red-300"
+                        : isSelected
+                        ? "border-cyan-400 bg-cyan-900/30 text-cyan-200"
+                        : state === "active"
+                        ? "border-slate-600 bg-slate-700/50 text-slate-200 hover:border-slate-500 hover:bg-slate-700"
+                        : "border-slate-700 bg-slate-800/30 text-slate-500"
+                    }`}
+                  >
+                    <span className="font-bold mr-2">{key}.</span>
+                    {question.options[key]}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Zone stats */}
+          <div className="grid grid-cols-4 gap-1.5">
+            {ZONE_IDS.map((id) => (
               <div
-                key={i}
-                className="h-1.5 rounded bg-slate-600/50"
-                style={{ width: `${w}%` }}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Question */}
-        <div
-          className={`mx-2 mb-2 rounded-lg p-3 border transition-all duration-500 ${
-            activeZone === "question"
-              ? ZONE.question.active_box
-              : ZONE.question.inactive_box
-          }`}
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <span
-              className={`font-semibold uppercase tracking-wide ${
-                activeZone === "question"
-                  ? ZONE.question.badge
-                  : "text-slate-500"
-              }`}
-            >
-              Question
-            </span>
-            <span className={ZONE.question.tracking}>
-              <TrackingDot active={activeZone === "question"} />
-            </span>
-          </div>
-          <div className="h-1.5 rounded bg-slate-600/50 w-3/4" />
-        </div>
-
-        {/* Answers */}
-        <div
-          className={`mx-2 mb-2 rounded-lg p-3 border transition-all duration-500 ${
-            activeZone === "answers"
-              ? ZONE.answers.active_box
-              : ZONE.answers.inactive_box
-          }`}
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <span
-              className={`font-semibold uppercase tracking-wide ${
-                activeZone === "answers"
-                  ? ZONE.answers.badge
-                  : "text-slate-500"
-              }`}
-            >
-              Answers
-            </span>
-            <span className={ZONE.answers.tracking}>
-              <TrackingDot active={activeZone === "answers"} />
-            </span>
-          </div>
-          <div className="space-y-1.5">
-            {["A", "B", "C", "D"].map((l) => (
-              <div key={l} className="flex gap-2 items-center">
-                <span className="text-slate-500 w-3">{l}</span>
-                <div className="h-1.5 rounded bg-slate-600/50 flex-1" />
+                key={id}
+                className={`rounded-xl p-2 text-center border transition-all duration-300 ${
+                  activeZone === id && state === "active"
+                    ? ZONE[id].active_stat
+                    : ZONE[id].inactive_stat
+                }`}
+              >
+                <div className="text-sm font-bold">{zonePcts[id]}%</div>
+                <div className="text-xs opacity-70">{ZONE[id].label}</div>
               </div>
             ))}
           </div>
+
+          {/* AI coaching after answer */}
+          {state === "answered" && (
+            <div
+              className={`rounded-xl p-4 border text-sm leading-relaxed ${
+                selected === question.correct
+                  ? "border-green-400/40 bg-green-900/20"
+                  : "border-red-400/40 bg-red-900/20"
+              }`}
+            >
+              <div
+                className={`flex items-center gap-2 mb-2 font-semibold text-sm ${
+                  selected === question.correct
+                    ? "text-green-300"
+                    : "text-red-300"
+                }`}
+              >
+                {selected === question.correct ? "✓ Correct" : "✗ Incorrect"}
+                <span className="text-xs font-normal text-slate-400">
+                  · AI coaching
+                </span>
+              </div>
+              <p className="text-slate-300 text-xs leading-relaxed">
+                {coachingMessage}
+              </p>
+              <button
+                onClick={reset}
+                className="mt-3 text-xs px-3 py-1.5 rounded-lg border border-slate-600 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+              >
+                New question →
+              </button>
+            </div>
+          )}
         </div>
       </div>
+    );
+  }
 
-      {/* Zone percentage bars */}
-      <div className="grid grid-cols-4 gap-1.5">
-        {ZONE_IDS.map((id) => (
-          <div
-            key={id}
-            className={`rounded-xl p-2 text-center border transition-all duration-300 ${
-              activeZone === id
-                ? ZONE[id].active_stat
-                : ZONE[id].inactive_stat
-            }`}
-          >
-            <div className="text-sm font-bold">{ZONE[id].pct}%</div>
-            <div className="text-xs opacity-70">{ZONE[id].label}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Webcam */}
-      {camState === "idle" && (
-        <button
-          onClick={requestWebcam}
-          className="w-full py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-400/25 text-cyan-400 text-sm font-medium hover:bg-cyan-500/20 transition-colors"
-        >
-          Enable Webcam Tracking (Optional) →
-        </button>
-      )}
-      {camState === "requesting" && (
-        <div className="py-2 text-center text-sm text-slate-400 animate-pulse">
-          Requesting camera permission…
-        </div>
-      )}
-      {camState === "granted" && (
-        <div className="rounded-xl overflow-hidden border border-cyan-400/30">
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline
-            className="w-full h-28 object-cover bg-slate-900"
-          />
-          <div className="px-3 py-1.5 bg-slate-800 text-xs text-green-400">
-            ✓ Live — no video recorded or stored
-          </div>
-        </div>
-      )}
-      {camState === "denied" && (
-        <div className="py-2.5 px-4 rounded-xl bg-slate-800 border border-slate-600 text-sm text-slate-400">
-          Webcam not available. The tutor works fully without it.
-        </div>
-      )}
-
-      <p className="text-xs text-slate-500 leading-relaxed">
-        Attention zones are estimated only — not medical-grade or guaranteed
-        accurate. No video is recorded or stored. Webcam access is entirely
-        optional.
-      </p>
-    </div>
-  );
+  return null;
 }
 
 // ── Plan Cards ────────────────────────────────────────────────────────────────
