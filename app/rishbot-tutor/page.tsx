@@ -106,7 +106,7 @@ interface WebGazerInstance {
   setGazeListener(
     fn: (data: { x: number; y: number } | null, clock: number) => void
   ): WebGazerInstance;
-  begin(): WebGazerInstance;
+  begin(): Promise<void>;
   end(): void;
   showVideoPreview(v: boolean): WebGazerInstance;
   showPredictionPoints(v: boolean): WebGazerInstance;
@@ -160,6 +160,7 @@ function EyeTrackingDemo() {
     passage: 0, question: 0, answers: 0, timer: 0,
   });
   const [calibStep, setCalibStep] = useState(0);
+  const [calibClicksAtStep, setCalibClicksAtStep] = useState(0);
   const [gazeActive, setGazeActive] = useState(false);
   const [wgError, setWgError] = useState(false);
   const [gazePos, setGazePos] = useState<{ x: number; y: number } | null>(null);
@@ -236,16 +237,19 @@ function EyeTrackingDemo() {
 
     try {
       await loadScript();
+      // begin() is async — must await so the webcam is fully initialised
+      // before calibration starts
       window.webgazer!
         .saveDataAcrossSessions(false)
         .setGazeListener((data) => {
           if (data) recordGaze(data.x, data.y);
-        })
-        .begin();
-      // Show WebGazer's built-in video + red prediction dot during calibration
+        });
+      await window.webgazer!.begin();
+      // Show WebGazer's video feed + prediction dot so user can confirm tracking
       window.webgazer!.showVideoPreview(true).showPredictionPoints(true);
       setGazeActive(true);
       setCalibStep(0);
+      setCalibClicksAtStep(0);
       setState("calibrating");
     } catch {
       setWgError(true);
@@ -253,14 +257,24 @@ function EyeTrackingDemo() {
     }
   };
 
+  // WebGazer needs multiple clicks per point to build a reliable regression model.
+  // 3 clicks × 9 points = 27 training samples — enough for usable accuracy.
+  const CLICKS_PER_POINT = 3;
+
   const handleCalibClick = () => {
-    const next = calibStep + 1;
-    if (next >= CALIB_POINTS.length) {
-      // Calibration complete — hide WebGazer's overlays; we render our own gaze ring
+    const nextClicks = calibClicksAtStep + 1;
+    if (nextClicks < CLICKS_PER_POINT) {
+      setCalibClicksAtStep(nextClicks);
+      return;
+    }
+    // All clicks done for this point — advance
+    setCalibClicksAtStep(0);
+    const nextStep = calibStep + 1;
+    if (nextStep >= CALIB_POINTS.length) {
       window.webgazer?.showVideoPreview(false).showPredictionPoints(false);
       fetchQuestion();
     } else {
-      setCalibStep(next);
+      setCalibStep(nextStep);
     }
   };
 
@@ -314,6 +328,7 @@ function EyeTrackingDemo() {
     setQuestion(null);
     setGazeActive(false);
     setCalibStep(0);
+    setCalibClicksAtStep(0);
     setWgError(false);
     setGazePos(null);
     setState("idle");
@@ -422,30 +437,46 @@ function EyeTrackingDemo() {
         <div className="absolute top-6 left-0 right-0 text-center pointer-events-none">
           <p className="text-white font-semibold text-sm">Eye-Tracking Calibration</p>
           <p className="text-slate-400 text-xs mt-1">
-            Look directly at each dot and click it — {calibStep + 1} of{" "}
-            {CALIB_POINTS.length}
+            Look directly at the dot and click it {CLICKS_PER_POINT} times
           </p>
-          <div className="flex justify-center gap-1.5 mt-3">
+          <p className="text-slate-500 text-xs mt-0.5">
+            Point {calibStep + 1} of {CALIB_POINTS.length}
+          </p>
+          {/* Per-point click progress */}
+          <div className="flex justify-center gap-1.5 mt-2">
+            {Array.from({ length: CLICKS_PER_POINT }).map((_, i) => (
+              <div
+                key={i}
+                className={`w-3 h-3 rounded-full border-2 transition-all duration-150 ${
+                  i < calibClicksAtStep
+                    ? "bg-cyan-400 border-cyan-400"
+                    : i === calibClicksAtStep
+                    ? "border-white animate-pulse"
+                    : "border-slate-600"
+                }`}
+              />
+            ))}
+          </div>
+          {/* Overall point progress */}
+          <div className="flex justify-center gap-1 mt-2">
             {CALIB_POINTS.map((_, i) => (
               <div
                 key={i}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  i < calibStep
-                    ? "bg-cyan-400"
-                    : i === calibStep
-                    ? "bg-white animate-pulse"
-                    : "bg-slate-600"
+                className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                  i < calibStep ? "bg-cyan-400" : i === calibStep ? "bg-white" : "bg-slate-700"
                 }`}
               />
             ))}
           </div>
         </div>
-        {/* Calibration dot */}
+        {/* Calibration dot — pulses after first click to confirm registration */}
         <button
           onClick={handleCalibClick}
-          className="absolute w-9 h-9 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400 hover:bg-white transition-colors shadow-[0_0_24px_rgba(6,182,212,0.7)] flex items-center justify-center"
+          className={`absolute w-9 h-9 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all shadow-[0_0_24px_rgba(6,182,212,0.7)] flex items-center justify-center ${
+            calibClicksAtStep > 0 ? "bg-white scale-110" : "bg-cyan-400 hover:bg-white"
+          }`}
           style={{ left: `${pt.x}%`, top: `${pt.y}%` }}
-          aria-label={`Calibration point ${calibStep + 1}`}
+          aria-label={`Calibration point ${calibStep + 1}, click ${calibClicksAtStep + 1} of ${CLICKS_PER_POINT}`}
         >
           <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
         </button>
