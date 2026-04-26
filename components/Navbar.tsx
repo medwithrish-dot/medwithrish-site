@@ -7,6 +7,7 @@ const navItems: {
   label: string;
   href?: string;
   bold?: boolean;
+  special?: boolean;
   items?: { label: string; href: string; external?: boolean }[];
 }[] = [
   { label: "Journey", href: "#journey", bold: true },
@@ -61,7 +62,8 @@ const navItems: {
     ],
   },
 
-  { label: "Contact",href: "/contact"},
+  { label: "Rishbot Tutor", href: "/rishbot-tutor", special: true },
+  { label: "Contact", href: "/contact" },
 ];
 
 function Chevron() {
@@ -153,11 +155,13 @@ export default function Navbar() {
                 <Link
                   key={item.label}
                   href={item.href || "#"}
-                  className={`transition ${
-                    item.bold
-                      ? "font-semibold text-gray-900 hover:text-blue-600"
-                      : "text-gray-700 hover:text-blue-600"
-                  }`}
+                  className={
+                    item.special
+                      ? "rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:from-cyan-400 hover:to-blue-500"
+                      : item.bold
+                      ? "font-semibold text-gray-900 transition hover:text-blue-600"
+                      : "text-gray-700 transition hover:text-blue-600"
+                  }
                 >
                   {item.label}
                 </Link>
@@ -242,9 +246,13 @@ export default function Navbar() {
                   <Link
                     key={item.label}
                     href={item.href || "#"}
-                    className={`block rounded-xl px-4 py-3 text-sm ${
-                      item.bold ? "font-semibold text-gray-900" : "font-medium text-gray-700"
-                    }`}
+                    className={
+                      item.special
+                        ? "block rounded-xl px-4 py-3 text-sm font-semibold text-cyan-600 bg-cyan-50 border border-cyan-200"
+                        : item.bold
+                        ? "block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900"
+                        : "block rounded-xl px-4 py-3 text-sm font-medium text-gray-700"
+                    }
                   >
                     {item.label}
                   </Link>
