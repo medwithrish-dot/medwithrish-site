@@ -456,32 +456,41 @@ function EyeTrackingDemo() {
   // ── Idle state ──────────────────────────────────────────────────────────────
   if (state === "idle") {
     return (
-      <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 space-y-4 text-center">
-        <div className="w-14 h-14 rounded-2xl bg-blue-900/30 border border-blue-700/40 flex items-center justify-center mx-auto">
-          <svg
-            className="w-7 h-7 text-blue-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-        </div>
-        <div>
-          <h3 className="text-white font-bold text-base">
-            UCAT Practice with Eye Tracking
-          </h3>
-          <p className="text-slate-400 text-sm mt-1 leading-relaxed">
-            AI generates a real UCAT passage and question. Your webcam tracks
-            which zone your eyes are actually looking at — Passage, Question,
-            Answers, or Timer.
-          </p>
+      <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 space-y-4">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-xl bg-blue-900/30 border border-blue-700/40 flex items-center justify-center flex-shrink-0">
+            <svg
+              className="w-6 h-6 text-blue-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-white font-bold text-base">
+              Gain insights through your sight
+            </h3>
+            <p className="text-slate-400 text-sm mt-1 leading-relaxed">
+              PhloemAI&apos;s optional attention tracker uses your webcam to detect
+              which zone you&apos;re focused on during each question —{" "}
+              <span className="text-slate-300">Passage</span>,{" "}
+              <span className="text-slate-300">Question</span>,{" "}
+              <span className="text-slate-300">Answers</span>, or{" "}
+              <span className="text-slate-300">Timer</span>. It shows{" "}
+              <em>how</em> you read, not just what you got wrong.
+            </p>
+            <p className="text-slate-500 text-xs mt-2">
+              Used during UCAT practice sessions only. Entirely optional — no video is ever recorded or stored.
+            </p>
+          </div>
         </div>
         {wgError && (
           <p className="text-xs text-red-400">
-            Could not load eye-tracking library. Try the practice-only option below.
+            Could not load eye-tracking. Try the practice-only option below.
           </p>
         )}
         <div className="space-y-2">
@@ -498,9 +507,6 @@ function EyeTrackingDemo() {
             Skip eye tracking — just practise
           </button>
         </div>
-        <p className="text-xs text-slate-500">
-          Webcam required for eye tracking. No video is recorded or stored.
-        </p>
       </div>
     );
   }
@@ -840,21 +846,21 @@ function EyeTrackingDemo() {
 
 function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
   const freeFeatures = [
-    "Basic UCAT practice sessions",
-    "Overall accuracy & time taken",
-    "Section-level results",
-    'Simple timing feedback (e.g. "slower than expected")',
-    "Webcam eye-tracking demo",
-    "Limited AI coaching summary",
+    "Practice real UCAT-style questions across all sections",
+    "Track your accuracy and speed over time",
+    "See section-level result breakdowns",
+    "Get timing feedback to spot where you lose time",
+    "Try the webcam attention-tracking demo",
+    "Receive an AI coaching summary after each session",
   ];
 
   const premiumFeatures = [
-    "Full weakness detection by section & question subtype",
-    "Timing weakness analysis per question type",
-    "Accuracy trend tracking across sessions",
-    "Personalised next-session recommendations",
-    "AI coaching reports from structured performance data",
-    'Advanced eye-pattern insights (e.g. "You rarely read the question before selecting an answer")',
+    "Pinpoint exactly which question subtypes you struggle with",
+    "See timing breakdowns by question type, not just section",
+    "Track accuracy trends across multiple sessions",
+    "Get a personalised focus plan before every session",
+    "Receive detailed AI coaching reports based on your data",
+    "Unlock advanced attention insights — e.g. 'You skip the question stem 40% of the time'",
   ];
 
   return (
@@ -880,11 +886,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
                 stroke="currentColor"
                 strokeWidth={2.5}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
               <span>{f}</span>
             </li>
@@ -924,17 +926,16 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
                 stroke="currentColor"
                 strokeWidth={2.5}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
               <span>{f}</span>
             </li>
           ))}
         </ul>
-        <div className="relative">
+        <div className="relative space-y-3">
+          <p className="text-xs text-slate-400 leading-relaxed border border-blue-500/20 bg-blue-900/10 rounded-xl px-3 py-2.5">
+            Premium unlocks advanced weakness detection and personalised AI coaching reports — so you always know exactly what to work on next.
+          </p>
           <button
             disabled
             className="w-full py-2.5 rounded-xl bg-blue-500/15 border border-blue-400/25 text-blue-400/40 text-sm font-semibold cursor-not-allowed"
@@ -1098,24 +1099,23 @@ function PrivacyNotice() {
           />
         </svg>
         <span className="text-sm font-semibold text-slate-300">
-          Privacy &amp; Eye-Tracking Notice
+          Your data is secure.
         </span>
       </div>
       <div className="space-y-2 text-xs text-slate-400 leading-relaxed">
         <p>
-          PhloemAI may use your webcam to estimate broad attention zones during
-          practice. This is entirely optional — you can use the full tutor
-          without enabling webcam tracking.
+          All performance data and eye-tracking insights are encrypted and used
+          only to improve your learning experience. Eye tracking is entirely
+          optional — you can use the full tutor without enabling your webcam.
         </p>
         <p>
-          We do not record or store webcam video. Eye-tracking results are
-          approximate and are used only to provide educational feedback. This
-          system is not medical-grade, diagnostic, or guaranteed accurate.
+          No webcam video is ever recorded or stored. Attention analysis
+          estimates broad focus zones only and is not medical-grade or
+          diagnostic.
         </p>
         <p>
           AI feedback is educational guidance only and does not guarantee exam
-          outcomes. Performance data may be stored to your account to enable
-          feedback features. You can opt out or request deletion at any time by
+          outcomes. You can request deletion of your data at any time by
           contacting{" "}
           <a
             href="mailto:medwithrish@gmail.com"
@@ -1265,20 +1265,49 @@ function UCATSection({
         </button>
 
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3 mb-4">
             <span className="text-3xl">🧠</span>
             <div>
               <h1 className="text-2xl font-bold text-white">UCAT Tutor</h1>
-              <p className="text-slate-400 text-sm">
-                AI-powered preparation with optional eye-tracking
+              <p className="text-slate-500 text-xs font-medium mt-0.5">
+                Built by MedWithRish — Medical Admissions Specialist
               </p>
             </div>
           </div>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            Choose your plan below. The free tier includes basic practice
-            feedback and the eye-tracking demo. Premium unlocks deep weakness
-            detection and full AI coaching reports.
+
+          <div className="mb-5 space-y-1">
+            <p className="text-slate-100 text-base font-semibold leading-snug">
+              Train smarter with AI-powered UCAT preparation.
+            </p>
+            <p className="text-slate-400 text-sm">Identify weaknesses.</p>
+            <p className="text-slate-400 text-sm">
+              <span className="text-blue-400 font-medium">Gain insights through your sight</span> — track your focus with optional eye-tracking.
+            </p>
+            <p className="text-slate-400 text-sm">Improve faster.</p>
+          </div>
+
+          {/* Benefit statement */}
+          <p className="text-slate-400 text-sm leading-relaxed border-l-2 border-blue-600/50 pl-3 mb-5 italic">
+            Know exactly what&apos;s slowing you down — not just what you got wrong.
           </p>
+
+          {/* Eye-tracking CTA banner */}
+          <div className="rounded-xl bg-blue-900/20 border border-blue-600/30 px-4 py-3 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-blue-300 text-sm font-semibold">Try Eye Tracking</p>
+              <p className="text-slate-400 text-xs mt-0.5 leading-relaxed">
+                See which parts of each question you focus on — live, using your webcam. No video stored.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                document.getElementById("eye-tracking-demo")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="flex-shrink-0 text-xs px-3 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-500 transition-colors whitespace-nowrap"
+            >
+              Try Demo →
+            </button>
+          </div>
         </div>
 
         {/* Plan cards */}
@@ -1337,7 +1366,7 @@ function UCATSection({
         </div>
 
         {/* Eye tracking demo */}
-        <div className="mb-8">
+        <div className="mb-8" id="eye-tracking-demo">
           <EyeTrackingDemo />
         </div>
 
