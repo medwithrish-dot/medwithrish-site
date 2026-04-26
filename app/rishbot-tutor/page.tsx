@@ -204,6 +204,8 @@ function EyeTrackingDemo() {
 
   const recordGaze = useCallback(
     (x: number, y: number) => {
+      // Always update the gaze position so the ring is visible as soon as active
+      setGazePos({ x, y });
       if (stateRef.current !== "active") return;
       const now = Date.now();
       const elapsed = now - lastTimeRef.current;
@@ -215,7 +217,6 @@ function EyeTrackingDemo() {
       const zone = detectZone(x, y);
       lastZoneRef.current = zone;
       setActiveZone(zone);
-      setGazePos({ x, y });
     },
     [detectZone]
   );
@@ -467,18 +468,55 @@ function EyeTrackingDemo() {
     const timeCritical = timeLeft < 30 && state === "active";
     return (
       <>
-        {/* Gaze ring — fixed, pointer-events-none so it never blocks clicks */}
+        {/* Gaze ring — explicit pixel offsets, no transforms, no ambiguity */}
         {gazeActive && gazePos && state === "active" && (
           <div
-            className="fixed z-[200] pointer-events-none -translate-x-1/2 -translate-y-1/2"
-            style={{ left: gazePos.x, top: gazePos.y }}
+            style={{
+              position: "fixed",
+              zIndex: 9999,
+              pointerEvents: "none",
+              left: gazePos.x - 22,
+              top: gazePos.y - 22,
+              width: 44,
+              height: 44,
+            }}
           >
-            {/* Outer soft glow */}
-            <div className="absolute w-12 h-12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/10 blur-sm" />
-            {/* Main ring */}
-            <div className="w-8 h-8 rounded-full border-2 border-white shadow-[0_0_12px_rgba(255,255,255,0.6)] bg-white/5 -translate-x-1/2 -translate-y-1/2 absolute" />
+            {/* Soft glow behind ring */}
+            <div
+              style={{
+                position: "absolute",
+                inset: -10,
+                borderRadius: "50%",
+                background: "rgba(255,255,255,0.07)",
+                filter: "blur(6px)",
+              }}
+            />
+            {/* White border ring */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: "50%",
+                border: "2.5px solid rgba(255,255,255,0.92)",
+                boxShadow:
+                  "0 0 10px rgba(255,255,255,0.55), inset 0 0 6px rgba(255,255,255,0.08)",
+                background: "rgba(255,255,255,0.04)",
+              }}
+            />
             {/* Centre dot */}
-            <div className="w-1.5 h-1.5 rounded-full bg-white -translate-x-1/2 -translate-y-1/2 absolute" />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%,-50%)",
+                width: 5,
+                height: 5,
+                borderRadius: "50%",
+                background: "white",
+                boxShadow: "0 0 4px rgba(255,255,255,0.9)",
+              }}
+            />
           </div>
         )}
 
