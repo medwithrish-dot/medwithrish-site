@@ -162,6 +162,7 @@ function EyeTrackingDemo() {
   const [calibStep, setCalibStep] = useState(0);
   const [gazeActive, setGazeActive] = useState(false);
   const [wgError, setWgError] = useState(false);
+  const [gazePos, setGazePos] = useState<{ x: number; y: number } | null>(null);
 
   const passageRef = useRef<HTMLDivElement>(null);
   const questionRef = useRef<HTMLDivElement>(null);
@@ -214,6 +215,7 @@ function EyeTrackingDemo() {
       const zone = detectZone(x, y);
       lastZoneRef.current = zone;
       setActiveZone(zone);
+      setGazePos({ x, y });
     },
     [detectZone]
   );
@@ -253,8 +255,8 @@ function EyeTrackingDemo() {
   const handleCalibClick = () => {
     const next = calibStep + 1;
     if (next >= CALIB_POINTS.length) {
-      // Calibration complete — hide video preview, keep prediction dot
-      window.webgazer?.showVideoPreview(false);
+      // Calibration complete — hide WebGazer's overlays; we render our own gaze ring
+      window.webgazer?.showVideoPreview(false).showPredictionPoints(false);
       fetchQuestion();
     } else {
       setCalibStep(next);
@@ -312,6 +314,7 @@ function EyeTrackingDemo() {
     setGazeActive(false);
     setCalibStep(0);
     setWgError(false);
+    setGazePos(null);
     setState("idle");
   };
 
@@ -463,6 +466,22 @@ function EyeTrackingDemo() {
   if ((state === "active" || state === "answered") && question) {
     const timeCritical = timeLeft < 30 && state === "active";
     return (
+      <>
+        {/* Gaze ring — fixed, pointer-events-none so it never blocks clicks */}
+        {gazeActive && gazePos && state === "active" && (
+          <div
+            className="fixed z-[200] pointer-events-none -translate-x-1/2 -translate-y-1/2"
+            style={{ left: gazePos.x, top: gazePos.y }}
+          >
+            {/* Outer soft glow */}
+            <div className="absolute w-12 h-12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/10 blur-sm" />
+            {/* Main ring */}
+            <div className="w-8 h-8 rounded-full border-2 border-white shadow-[0_0_12px_rgba(255,255,255,0.6)] bg-white/5 -translate-x-1/2 -translate-y-1/2 absolute" />
+            {/* Centre dot */}
+            <div className="w-1.5 h-1.5 rounded-full bg-white -translate-x-1/2 -translate-y-1/2 absolute" />
+          </div>
+        )}
+
       <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl overflow-hidden">
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 bg-slate-700/80 border-b border-slate-600/50">
@@ -665,6 +684,7 @@ function EyeTrackingDemo() {
           )}
         </div>
       </div>
+      </>
     );
   }
 
