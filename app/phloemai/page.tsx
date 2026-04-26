@@ -195,7 +195,7 @@ function EyeTrackingDemo() {
     [detectZone]
   );
 
-  // Per-frame detection loop — reads iris landmarks and maps to screen coords
+  // Per-frame detection loop - reads iris landmarks and maps to screen coords
   const runLoop = useCallback(() => {
     const video = videoRef.current;
     const lm_ref = faceLandmarkerRef.current;
@@ -439,7 +439,7 @@ function EyeTrackingDemo() {
       );
     else if (q < 8)
       tips.push(
-        "Very little time on the question stem — make sure you fully understand what is being asked before scanning the passage."
+        "Very little time on the question stem - make sure you fully understand what is being asked before scanning the passage."
       );
     if (t > 12)
       tips.push(
@@ -476,7 +476,7 @@ function EyeTrackingDemo() {
             </h3>
             <p className="text-slate-700 text-sm mt-1 leading-relaxed">
               PhloemAI&apos;s optional attention tracker uses your webcam to estimate
-              which zone you&apos;re focused on during each question —{" "}
+              which zone you&apos;re focused on during each question -{" "}
               <span className="text-slate-900 font-medium">Passage</span>,{" "}
               <span className="text-slate-900 font-medium">Question</span>,{" "}
               <span className="text-slate-900 font-medium">Answers</span>, or{" "}
@@ -484,7 +484,7 @@ function EyeTrackingDemo() {
               <em>how</em> you read, not just what you got wrong.
             </p>
             <p className="text-slate-500 text-xs mt-2">
-              Used during UCAT practice sessions only. Entirely optional — no video is ever recorded or stored.
+              Used during UCAT practice sessions only. Entirely optional - no video is ever recorded or stored.
             </p>
           </div>
         </div>
@@ -504,7 +504,7 @@ function EyeTrackingDemo() {
             onClick={fetchQuestion}
             className="w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-sm hover:text-slate-900 hover:border-slate-400 transition-colors cursor-pointer"
           >
-            Skip eye tracking — just practise
+            Skip eye tracking - just practise
           </button>
         </div>
       </div>
@@ -531,7 +531,7 @@ function EyeTrackingDemo() {
         <div className="absolute top-6 left-0 right-0 flex flex-col items-center gap-3">
           <p className="text-white font-bold text-lg">Eye Tracking Calibration</p>
           <p className="text-slate-400 text-sm">
-            Look at the dot — <span className="text-blue-400 font-medium">{phase.label}</span>
+            Look at the dot - <span className="text-blue-400 font-medium">{phase.label}</span>
           </p>
           {/* Phase progress dots */}
           <div className="flex gap-2">
@@ -588,7 +588,7 @@ function EyeTrackingDemo() {
     const timeCritical = timeLeft < 30 && state === "active";
     return (
       <>
-        {/* Gaze ring — explicit pixel offsets, no transforms, no ambiguity */}
+        {/* Gaze ring - explicit pixel offsets, no transforms, no ambiguity */}
         {gazeActive && gazePos && state === "active" && (
           <div
             style={{
@@ -860,7 +860,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
     "Track accuracy trends across multiple sessions",
     "Get a personalised focus plan before every session",
     "Receive detailed AI coaching reports based on your data",
-    "Unlock advanced attention insights — e.g. 'You skip the question stem 40% of the time'",
+    "Unlock advanced attention insights - e.g. 'You skip the question stem 40% of the time'",
   ];
 
   return (
@@ -913,7 +913,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
             </span>
           </div>
           <div className="mt-1 text-3xl font-black text-slate-400">
-            £—
+            £-
           </div>
         </div>
         <ul className="relative flex-1 space-y-2 text-sm text-slate-400">
@@ -934,7 +934,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
         </ul>
         <div className="relative space-y-3">
           <p className="text-xs text-slate-500 leading-relaxed border border-blue-100 bg-blue-50 rounded-xl px-3 py-2.5">
-            Premium unlocks advanced weakness detection and personalised AI coaching reports — so you always know exactly what to work on next.
+            Premium unlocks advanced weakness detection and personalised AI coaching reports - so you always know exactly what to work on next.
           </p>
           <button
             disabled
@@ -1106,7 +1106,7 @@ function PrivacyNotice() {
         <p>
           All performance data and eye-tracking insights are encrypted and used
           only to improve your learning experience. Eye tracking is entirely
-          optional — you can use the full tutor without enabling your webcam.
+          optional - you can use the full tutor without enabling your webcam.
         </p>
         <p>
           No webcam video is ever recorded or stored. Attention analysis
@@ -1162,8 +1162,8 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
         <div className="grid grid-cols-3 gap-3 mb-8">
           {[
             { label: "Sessions", value: "0" },
-            { label: "Avg Accuracy", value: "—" },
-            { label: "Avg Time / Q", value: "—" },
+            { label: "Avg Accuracy", value: "-" },
+            { label: "Avg Time / Q", value: "-" },
           ].map((s) => (
             <div
               key={s.label}
@@ -1185,7 +1185,7 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
               <div>
                 <div className="text-sm font-semibold text-white">{sec}</div>
                 <div className="text-xs text-slate-500 mt-0.5">
-                  No sessions yet — start practising
+                  No sessions yet - start practising
                 </div>
               </div>
               <div className="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center group-hover:bg-blue-800/30 transition-colors">
@@ -1270,7 +1270,7 @@ function UCATSection({
             <div>
               <h1 className="text-2xl font-bold text-slate-900">UCAT Tutor</h1>
               <p className="text-slate-600 text-xs font-medium mt-0.5">
-                Built by MedWithRish — Medical Admissions Specialist
+                Built by MedWithRish - Medical Admissions Specialist
               </p>
             </div>
           </div>
@@ -1281,7 +1281,7 @@ function UCATSection({
             </p>
             <p className="text-slate-700 text-sm">Identify weaknesses.</p>
             <p className="text-slate-700 text-sm">
-              <span className="text-blue-600 font-medium">Gain insights through your sight</span> — track your focus with optional eye-tracking.
+              <span className="text-blue-600 font-medium">Gain insights through your sight</span> - track your focus with optional eye-tracking.
             </p>
             <p className="text-slate-700 text-sm">Improve faster.</p>
           </div>
@@ -1289,7 +1289,7 @@ function UCATSection({
           {/* Benefit statement */}
           <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 mb-5 border-l-4 border-l-blue-500">
             <p className="text-slate-800 text-sm leading-relaxed italic">
-              Know exactly what&apos;s slowing you down — not just what you got wrong.
+              Know exactly what&apos;s slowing you down - not just what you got wrong.
             </p>
           </div>
 
@@ -1298,7 +1298,7 @@ function UCATSection({
             <div className="min-w-0">
               <p className="text-white text-sm font-semibold">Try Eye Tracking</p>
               <p className="text-blue-100 text-xs mt-0.5 leading-relaxed">
-                See which parts of each question you focus on — live, using your webcam. No video stored.
+                See which parts of each question you focus on - live, using your webcam. No video stored.
               </p>
             </div>
             <button
@@ -1325,7 +1325,7 @@ function UCATSection({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
               <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
-                Free — Basic Feedback
+                Free - Basic Feedback
               </div>
               <ul className="space-y-1.5 text-xs text-slate-700">
                 {[
@@ -1343,7 +1343,7 @@ function UCATSection({
             </div>
             <div>
               <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">
-                Premium — Full Weakness Detection
+                Premium - Full Weakness Detection
               </div>
               <ul className="space-y-1.5 text-xs text-slate-400">
                 {[
@@ -1407,7 +1407,15 @@ function HowItWorksPanel({
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {open && <div className="px-5 pb-5">{children}</div>}
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="px-5 pb-5">{children}</div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1438,7 +1446,7 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
       <p className="mt-3 text-center text-slate-700 text-sm max-w-xl leading-relaxed">
         AI-powered preparation for UCAT, medicine and dentistry interviews,
         built by{" "}
-        <span className="text-blue-600 font-medium">@medwithrish</span> — a
+        <span className="text-blue-600 font-medium">@medwithrish</span> - a
         leading Medical admissions specialist.
       </p>
 
@@ -1461,7 +1469,7 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
 
       {/* Three subject cards */}
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl">
-        {/* UCAT — active */}
+        {/* UCAT - active */}
         <div className="group relative rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all duration-200 p-5 flex flex-col">
           <div className="text-3xl mb-2 text-center">🧠</div>
           <div className="text-slate-900 font-bold text-base mb-1 text-center">UCAT</div>
@@ -1489,7 +1497,7 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
           </div>
         </div>
 
-        {/* Medicine Interview — WIP */}
+        {/* Medicine Interview - WIP */}
         <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center opacity-60 cursor-not-allowed select-none">
           <div className="text-3xl mb-2">🏥</div>
           <div className="text-slate-900 font-bold text-base mb-1">Medicine Interview</div>
@@ -1501,7 +1509,7 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
           </p>
         </div>
 
-        {/* Dentistry Interview — WIP */}
+        {/* Dentistry Interview - WIP */}
         <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center opacity-60 cursor-not-allowed select-none">
           <div className="text-3xl mb-2">🦷</div>
           <div className="text-slate-900 font-bold text-base mb-1">Dentistry Interview</div>
@@ -1524,8 +1532,8 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
           <HowItWorksPanel title="UCAT Preparation" accent="blue">
             <ol className="space-y-3">
               {[
-                "Practice real UCAT-style questions across all sections — Verbal Reasoning, Decision Making, Quantitative Reasoning, and Abstract Reasoning.",
-                "AI identifies your bad habits — unfocused reading patterns, spending too long on the wrong areas, weak technique, and timing issues pinpointed by question type.",
+                "Practice real UCAT-style questions across all sections - Verbal Reasoning, Decision Making, Quantitative Reasoning, and Abstract Reasoning.",
+                "AI identifies your bad habits - unfocused reading patterns, spending too long on the wrong areas, weak technique, and timing issues pinpointed by question type.",
                 "AI delivers tried-and-tested strategies tailored to your specific weaknesses, so you know exactly what to change and how.",
                 "Apply the fixes in your own revision and track your accuracy and speed improving over time.",
               ].map((text, i) => (
@@ -1542,8 +1550,8 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
           <HowItWorksPanel title="Medicine & Dentistry Interviews" accent="violet">
             <ol className="space-y-3">
               {[
-                "Practice MMI stations and panel interview questions tailored to medicine and dentistry — ethics, clinical scenarios, motivation, and more.",
-                "AI analyses your answers for structure, clinical reasoning, and depth — identifying the gaps that cost applicants places.",
+                "Practice MMI stations and panel interview questions tailored to medicine and dentistry - ethics, clinical scenarios, motivation, and more.",
+                "AI analyses your answers for structure, clinical reasoning, and depth - identifying the gaps that cost applicants places.",
                 "AI gives you proven frameworks and concrete improvements based on what actually works in real interviews.",
                 "Refine your responses, build consistency, and walk into your interview prepared and confident.",
               ].map((text, i) => (
