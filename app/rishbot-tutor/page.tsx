@@ -100,27 +100,11 @@ const ZONE = {
 type ZoneId = keyof typeof ZONE;
 const ZONE_IDS: ZoneId[] = ["passage", "question", "answers", "timer"];
 
-// ── WebGazer type (loaded from CDN at runtime) ────────────────────────────────
+// ── MediaPipe iris landmark indices ───────────────────────────────────────────
 
-interface WebGazerInstance {
-  setGazeListener(
-    fn: (data: { x: number; y: number } | null, clock: number) => void
-  ): WebGazerInstance;
-  begin(): Promise<void>;
-  end(): void;
-  showVideoPreview(v: boolean): WebGazerInstance;
-  showPredictionPoints(v: boolean): WebGazerInstance;
-  saveDataAcrossSessions(v: boolean): WebGazerInstance;
-  clearData(): void;
-  pause(): void;
-  resume(): void;
-}
-
-declare global {
-  interface Window {
-    webgazer?: WebGazerInstance;
-  }
-}
+const L_IRIS = 468, R_IRIS = 473;
+const L_EYE_TOP = 159, L_EYE_BOT = 145;
+const R_EYE_TOP = 386, R_EYE_BOT = 374;
 
 // ── Question type (from /api/rishbot/question) ────────────────────────────────
 
@@ -141,14 +125,14 @@ type SessionState =
   | "active"
   | "answered";
 
-// 3×3 grid — percentages of viewport width/height
-const CALIB_POINTS = [
-  { x: 15, y: 15 }, { x: 50, y: 15 }, { x: 85, y: 15 },
-  { x: 15, y: 50 }, { x: 50, y: 50 }, { x: 85, y: 50 },
-  { x: 15, y: 85 }, { x: 50, y: 85 }, { x: 85, y: 85 },
-];
-
 // ── EyeTrackingDemo ───────────────────────────────────────────────────────────
+
+// MediaPipe FaceLandmarker type (minimal surface we use)
+type Landmark = { x: number; y: number; z: number };
+type FaceLandmarkerInstance = {
+  detectForVideo: (v: HTMLVideoElement, t: number) => { faceLandmarks?: Landmark[][] };
+  close: () => void;
+};
 
 function EyeTrackingDemo() {
   const [state, setState] = useState<SessionState>("idle");
@@ -159,8 +143,7 @@ function EyeTrackingDemo() {
   const [zoneTimes, setZoneTimes] = useState<Record<ZoneId, number>>({
     passage: 0, question: 0, answers: 0, timer: 0,
   });
-  const [calibStep, setCalibStep] = useState(0);
-  const [calibClicksAtStep, setCalibClicksAtStep] = useState(0);
+  const [calibCountdown, setCalibCountdown] = useState(3);
   const [gazeActive, setGazeActive] = useState(false);
   const [gazeDataReceived, setGazeDataReceived] = useState(false);
   const [wgError, setWgError] = useState(false);
@@ -175,7 +158,14 @@ function EyeTrackingDemo() {
   const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stateRef = useRef<SessionState>("idle");
 
-  // Keep stateRef in sync so the WebGazer listener (a closure) sees current state
+  // MediaPipe refs
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const faceLandmarkerRef = useRef<FaceLandmarkerInstance | null>(null);
+  const animFrameRef = useRef<number | null>(null);
+  const neutralRef = useRef<number | null>(null);
+  const calibSamplesRef = useRef<number[]>([]);
+
+  // Keep stateRef in sync so the RAF loop (a closure) sees current state
   useEffect(() => { stateRef.current = state; }, [state]);
 
   // Zone percentages derived from actual dwell times
@@ -206,7 +196,6 @@ function EyeTrackingDemo() {
 
   const recordGaze = useCallback(
     (x: number, y: number) => {
-      // Always update the gaze position so the ring is visible as soon as active
       setGazePos({ x, y });
       if (stateRef.current !== "active") return;
       setGazeDataReceived(true);
@@ -224,68 +213,113 @@ function EyeTrackingDemo() {
     [detectZone]
   );
 
-  // Load WebGazer from CDN then begin calibration
-  const enableEyeTracking = async () => {
-    setState("enabling");
-    const loadScript = () =>
-      new Promise<void>((res, rej) => {
-        if (window.webgazer) { res(); return; }
-        const s = document.createElement("script");
-        s.src = "https://webgazer.cs.brown.edu/webgazer.js";
-        s.onload = () => res();
-        s.onerror = () => rej(new Error("load failed"));
-        document.head.appendChild(s);
-      });
-
-    try {
-      await loadScript();
-
-      window.webgazer!
-        .saveDataAcrossSessions(false)
-        .setGazeListener((data) => {
-          if (data) recordGaze(data.x, data.y);
-        });
-
-      // Some CDN builds auto-start on load, making a second begin() throw.
-      // Swallow that error — if the webcam is already running, we're fine.
-      try {
-        await window.webgazer!.begin();
-      } catch {
-        // already running or model error — proceed to calibration regardless
-      }
-
-      window.webgazer!.showVideoPreview(true).showPredictionPoints(true);
-      setGazeActive(true);
-      setCalibStep(0);
-      setCalibClicksAtStep(0);
-      setState("calibrating");
-    } catch {
-      // loadScript itself failed (network error, CSP block, etc.)
-      setWgError(true);
-      setState("idle");
-    }
-  };
-
-  // WebGazer needs multiple clicks per point to build a reliable regression model.
-  // 3 clicks × 9 points = 27 training samples — enough for usable accuracy.
-  const CLICKS_PER_POINT = 3;
-
-  const handleCalibClick = () => {
-    const nextClicks = calibClicksAtStep + 1;
-    if (nextClicks < CLICKS_PER_POINT) {
-      setCalibClicksAtStep(nextClicks);
+  // Per-frame detection loop — reads iris landmarks and maps vertical position to screen Y
+  const runLoop = useCallback(() => {
+    const video = videoRef.current;
+    const lm_ref = faceLandmarkerRef.current;
+    if (!video || !lm_ref || video.readyState < 2) {
+      animFrameRef.current = requestAnimationFrame(runLoop);
       return;
     }
-    // All clicks done for this point — advance
-    setCalibClicksAtStep(0);
-    const nextStep = calibStep + 1;
-    if (nextStep >= CALIB_POINTS.length) {
-      window.webgazer?.showVideoPreview(false).showPredictionPoints(false);
-      fetchQuestion();
-    } else {
-      setCalibStep(nextStep);
+    const results = lm_ref.detectForVideo(video, performance.now());
+    if (results.faceLandmarks?.[0]) {
+      const lm = results.faceLandmarks[0];
+      // Vertical iris ratio within eye socket: 0 = looking up, 1 = looking down
+      const eyeH_L = lm[L_EYE_BOT].y - lm[L_EYE_TOP].y;
+      const eyeH_R = lm[R_EYE_BOT].y - lm[R_EYE_TOP].y;
+      const lVert = eyeH_L > 0.001 ? (lm[L_IRIS].y - lm[L_EYE_TOP].y) / eyeH_L : 0.5;
+      const rVert = eyeH_R > 0.001 ? (lm[R_IRIS].y - lm[R_EYE_TOP].y) / eyeH_R : 0.5;
+      const vertRatio = Math.max(0, Math.min(1, (lVert + rVert) / 2));
+
+      if (stateRef.current === "calibrating") {
+        calibSamplesRef.current.push(vertRatio);
+      } else if (stateRef.current === "active") {
+        const neutral = neutralRef.current ?? 0.5;
+        // Amplify iris deflection from neutral to cover the full screen
+        const GAIN = 3.2;
+        const screenY = Math.max(0, Math.min(
+          window.innerHeight - 1,
+          window.innerHeight * 0.5 + (vertRatio - neutral) * GAIN * window.innerHeight
+        ));
+        recordGaze(window.innerWidth / 2, screenY);
+      }
+    }
+    animFrameRef.current = requestAnimationFrame(runLoop);
+  }, [recordGaze]);
+
+  // Start MediaPipe eye tracking and begin calibration
+  const startEyeTracking = async () => {
+    setState("enabling");
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user", width: 640, height: 480 },
+      });
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.muted = true;
+      // Small mirrored preview bottom-right so user can see their face
+      video.style.cssText =
+        "position:fixed;bottom:12px;right:12px;width:120px;height:90px;border-radius:10px;z-index:9000;opacity:0.85;transform:scaleX(-1);object-fit:cover;border:1px solid rgba(6,182,212,0.4)";
+      document.body.appendChild(video);
+      videoRef.current = video;
+      await video.play();
+
+      const { FaceLandmarker, FilesetResolver } = await import("@mediapipe/tasks-vision");
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.34/wasm"
+      );
+      const landmarker = await FaceLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath:
+            "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+          delegate: "GPU",
+        },
+        runningMode: "VIDEO",
+        numFaces: 1,
+        outputFaceBlendshapes: false,
+        outputFacialTransformationMatrixes: false,
+      });
+      faceLandmarkerRef.current = landmarker as FaceLandmarkerInstance;
+
+      calibSamplesRef.current = [];
+      animFrameRef.current = requestAnimationFrame(runLoop);
+      setGazeActive(true);
+      setCalibCountdown(3);
+      setState("calibrating");
+    } catch {
+      setWgError(true);
+      setState("idle");
+      if (videoRef.current) {
+        (videoRef.current.srcObject as MediaStream | null)?.getTracks().forEach(t => t.stop());
+        videoRef.current.remove();
+        videoRef.current = null;
+      }
     }
   };
+
+  // Calibration: collect iris samples for 3 seconds then derive neutral gaze position
+  useEffect(() => {
+    if (state !== "calibrating") return;
+    calibSamplesRef.current = [];
+    const countInterval = setInterval(() => {
+      setCalibCountdown(c => Math.max(0, c - 1));
+    }, 1000);
+    const doneTimeout = setTimeout(() => {
+      clearInterval(countInterval);
+      const samples = calibSamplesRef.current;
+      neutralRef.current =
+        samples.length > 0 ? samples.reduce((a, b) => a + b) / samples.length : 0.5;
+      fetchQuestion();
+    }, 3600);
+    return () => {
+      clearInterval(countInterval);
+      clearTimeout(doneTimeout);
+    };
+    // fetchQuestion is defined below; stable across renders
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   const fetchQuestion = async () => {
     setState("loading");
@@ -328,18 +362,34 @@ function EyeTrackingDemo() {
     }));
     setSelected(key);
     setState("answered");
-    window.webgazer?.pause();
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
+  };
+
+  const stopTracking = () => {
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
+    if (videoRef.current) {
+      (videoRef.current.srcObject as MediaStream | null)?.getTracks().forEach(t => t.stop());
+      videoRef.current.remove();
+      videoRef.current = null;
+    }
+    faceLandmarkerRef.current?.close();
+    faceLandmarkerRef.current = null;
+    neutralRef.current = null;
+    calibSamplesRef.current = [];
   };
 
   const reset = () => {
-    window.webgazer?.clearData();
-    window.webgazer?.end();
+    stopTracking();
     setSelected(null);
     setQuestion(null);
     setGazeActive(false);
     setGazeDataReceived(false);
-    setCalibStep(0);
-    setCalibClicksAtStep(0);
     setWgError(false);
     setGazePos(null);
     setState("idle");
@@ -412,7 +462,7 @@ function EyeTrackingDemo() {
         )}
         <div className="space-y-2">
           <button
-            onClick={enableEyeTracking}
+            onClick={startEyeTracking}
             className="w-full py-2.5 rounded-xl bg-cyan-500 text-white text-sm font-semibold hover:bg-cyan-400 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.25)]"
           >
             Enable Eye Tracking + Start →
@@ -444,55 +494,31 @@ function EyeTrackingDemo() {
 
   // ── Calibration ─────────────────────────────────────────────────────────────
   if (state === "calibrating") {
-    const pt = CALIB_POINTS[calibStep];
     return (
-      <div className="fixed inset-0 z-[100] bg-slate-950">
-        <div className="absolute top-6 left-0 right-0 text-center pointer-events-none">
-          <p className="text-white font-semibold text-sm">Eye-Tracking Calibration</p>
-          <p className="text-slate-400 text-xs mt-1">
-            Look directly at the dot and click it {CLICKS_PER_POINT} times
+      <div className="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center gap-8 text-center px-6">
+        <div className="space-y-2">
+          <p className="text-white font-bold text-xl">Calibrating Eye Tracking</p>
+          <p className="text-slate-400 text-sm max-w-xs leading-relaxed">
+            Look directly at the dot below and hold still while we record your neutral gaze position.
           </p>
-          <p className="text-slate-500 text-xs mt-0.5">
-            Point {calibStep + 1} of {CALIB_POINTS.length}
-          </p>
-          {/* Per-point click progress */}
-          <div className="flex justify-center gap-1.5 mt-2">
-            {Array.from({ length: CLICKS_PER_POINT }).map((_, i) => (
-              <div
-                key={i}
-                className={`w-3 h-3 rounded-full border-2 transition-all duration-150 ${
-                  i < calibClicksAtStep
-                    ? "bg-cyan-400 border-cyan-400"
-                    : i === calibClicksAtStep
-                    ? "border-white animate-pulse"
-                    : "border-slate-600"
-                }`}
-              />
-            ))}
-          </div>
-          {/* Overall point progress */}
-          <div className="flex justify-center gap-1 mt-2">
-            {CALIB_POINTS.map((_, i) => (
-              <div
-                key={i}
-                className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                  i < calibStep ? "bg-cyan-400" : i === calibStep ? "bg-white" : "bg-slate-700"
-                }`}
-              />
-            ))}
+        </div>
+        {/* Target dot */}
+        <div className="relative flex items-center justify-center">
+          <div
+            className="absolute w-28 h-28 rounded-full border border-cyan-400/30 animate-ping"
+            style={{ animationDuration: "1.5s" }}
+          />
+          <div className="w-10 h-10 rounded-full bg-cyan-400 flex items-center justify-center shadow-[0_0_36px_rgba(6,182,212,0.8)]">
+            <div className="w-3 h-3 rounded-full bg-slate-900" />
           </div>
         </div>
-        {/* Calibration dot — pulses after first click to confirm registration */}
-        <button
-          onClick={handleCalibClick}
-          className={`absolute w-9 h-9 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all shadow-[0_0_24px_rgba(6,182,212,0.7)] flex items-center justify-center ${
-            calibClicksAtStep > 0 ? "bg-white scale-110" : "bg-cyan-400 hover:bg-white"
-          }`}
-          style={{ left: `${pt.x}%`, top: `${pt.y}%` }}
-          aria-label={`Calibration point ${calibStep + 1}, click ${calibClicksAtStep + 1} of ${CLICKS_PER_POINT}`}
-        >
-          <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
-        </button>
+        {/* Countdown */}
+        <div className="text-7xl font-black text-cyan-400 tabular-nums leading-none">
+          {calibCountdown > 0 ? calibCountdown : "✓"}
+        </div>
+        <p className="text-slate-500 text-xs">
+          Your webcam preview is shown bottom-right · no video is stored
+        </p>
       </div>
     );
   }
