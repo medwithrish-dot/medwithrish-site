@@ -26,46 +26,46 @@ const ZONE = {
   passage: {
     label: "Passage",
     pct: 68,
-    active_box: "border-blue-400 bg-blue-900/30",
-    inactive_box: "border-slate-600/30 bg-slate-800/20",
-    badge: "text-blue-400",
-    dot: "bg-blue-400",
-    active_stat: "border-blue-400/40 bg-blue-900/25 text-blue-400",
-    inactive_stat: "border-slate-600/20 bg-slate-800/30 text-slate-500",
-    tracking: "text-blue-400",
+    active_box: "border-blue-400 bg-blue-50",
+    inactive_box: "border-slate-200 bg-white",
+    badge: "text-blue-600",
+    dot: "bg-blue-500",
+    active_stat: "border-blue-300 bg-blue-50 text-blue-600",
+    inactive_stat: "border-slate-200 bg-white text-slate-400",
+    tracking: "text-blue-600",
   },
   question: {
     label: "Question",
     pct: 7,
-    active_box: "border-purple-400 bg-purple-900/30",
-    inactive_box: "border-slate-600/30 bg-slate-800/20",
-    badge: "text-purple-400",
-    dot: "bg-purple-400",
-    active_stat: "border-purple-400/40 bg-purple-900/25 text-purple-400",
-    inactive_stat: "border-slate-600/20 bg-slate-800/30 text-slate-500",
-    tracking: "text-purple-400",
+    active_box: "border-violet-400 bg-violet-50",
+    inactive_box: "border-slate-200 bg-white",
+    badge: "text-violet-600",
+    dot: "bg-violet-500",
+    active_stat: "border-violet-300 bg-violet-50 text-violet-600",
+    inactive_stat: "border-slate-200 bg-white text-slate-400",
+    tracking: "text-violet-600",
   },
   answers: {
     label: "Answers",
     pct: 20,
-    active_box: "border-green-400 bg-green-900/30",
-    inactive_box: "border-slate-600/30 bg-slate-800/20",
-    badge: "text-green-400",
-    dot: "bg-green-400",
-    active_stat: "border-green-400/40 bg-green-900/25 text-green-400",
-    inactive_stat: "border-slate-600/20 bg-slate-800/30 text-slate-500",
-    tracking: "text-green-400",
+    active_box: "border-green-400 bg-green-50",
+    inactive_box: "border-slate-200 bg-white",
+    badge: "text-green-600",
+    dot: "bg-green-500",
+    active_stat: "border-green-300 bg-green-50 text-green-600",
+    inactive_stat: "border-slate-200 bg-white text-slate-400",
+    tracking: "text-green-600",
   },
   timer: {
     label: "Timer",
     pct: 5,
-    active_box: "border-yellow-400 bg-yellow-900/30",
-    inactive_box: "border-slate-600/30 bg-slate-800/20",
-    badge: "text-yellow-400",
-    dot: "bg-yellow-400",
-    active_stat: "border-yellow-400/40 bg-yellow-900/25 text-yellow-400",
-    inactive_stat: "border-slate-600/20 bg-slate-800/30 text-slate-500",
-    tracking: "text-yellow-400",
+    active_box: "border-amber-400 bg-amber-50",
+    inactive_box: "border-slate-200 bg-white",
+    badge: "text-amber-600",
+    dot: "bg-amber-500",
+    active_stat: "border-amber-300 bg-amber-50 text-amber-600",
+    inactive_stat: "border-slate-200 bg-white text-slate-400",
+    tracking: "text-amber-600",
   },
 } as const;
 
@@ -456,11 +456,11 @@ function EyeTrackingDemo() {
   // ── Idle state ──────────────────────────────────────────────────────────────
   if (state === "idle") {
     return (
-      <div className="bg-slate-800 border border-slate-600 shadow-md rounded-2xl p-6 space-y-4">
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 space-y-4">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-blue-900/30 border border-blue-700/40 flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-blue-100 border border-blue-200 flex items-center justify-center flex-shrink-0">
             <svg
-              className="w-6 h-6 text-blue-400"
+              className="w-6 h-6 text-blue-600"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -471,38 +471,38 @@ function EyeTrackingDemo() {
             </svg>
           </div>
           <div>
-            <h3 className="text-white font-bold text-base">
+            <h3 className="text-slate-900 font-bold text-base">
               Gain insights through your sight
             </h3>
-            <p className="text-slate-400 text-sm mt-1 leading-relaxed">
-              PhloemAI&apos;s optional attention tracker uses your webcam to detect
+            <p className="text-slate-500 text-sm mt-1 leading-relaxed">
+              PhloemAI&apos;s optional attention tracker uses your webcam to estimate
               which zone you&apos;re focused on during each question —{" "}
-              <span className="text-slate-300">Passage</span>,{" "}
-              <span className="text-slate-300">Question</span>,{" "}
-              <span className="text-slate-300">Answers</span>, or{" "}
-              <span className="text-slate-300">Timer</span>. It shows{" "}
+              <span className="text-slate-700 font-medium">Passage</span>,{" "}
+              <span className="text-slate-700 font-medium">Question</span>,{" "}
+              <span className="text-slate-700 font-medium">Answers</span>, or{" "}
+              <span className="text-slate-700 font-medium">Timer</span>. It shows{" "}
               <em>how</em> you read, not just what you got wrong.
             </p>
-            <p className="text-slate-500 text-xs mt-2">
+            <p className="text-slate-400 text-xs mt-2">
               Used during UCAT practice sessions only. Entirely optional — no video is ever recorded or stored.
             </p>
           </div>
         </div>
         {wgError && (
-          <p className="text-xs text-red-400">
+          <p className="text-xs text-red-500">
             Could not load eye-tracking. Try the practice-only option below.
           </p>
         )}
         <div className="space-y-2">
           <button
             onClick={startEyeTracking}
-            className="w-full py-2.5 rounded-xl bg-blue-700 text-white text-sm font-semibold hover:bg-blue-600 transition-colors shadow-sm"
+            className="w-full py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm"
           >
             Enable Eye Tracking + Start →
           </button>
           <button
             onClick={fetchQuestion}
-            className="w-full py-2 rounded-xl border border-slate-600 text-slate-400 text-sm hover:text-white hover:border-slate-500 transition-colors"
+            className="w-full py-2 rounded-xl border border-slate-200 text-slate-500 text-sm hover:text-slate-900 hover:border-slate-400 transition-colors"
           >
             Skip eye tracking — just practise
           </button>
@@ -514,10 +514,10 @@ function EyeTrackingDemo() {
   // ── Loading WebGazer ────────────────────────────────────────────────────────
   if (state === "enabling") {
     return (
-      <div className="bg-slate-800 border border-slate-600 shadow-md rounded-2xl p-10 text-center space-y-3">
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-10 text-center space-y-3">
         <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto" />
-        <p className="text-slate-300 text-sm">Loading eye-tracking…</p>
-        <p className="text-slate-500 text-xs">Webcam permission prompt may appear</p>
+        <p className="text-slate-700 text-sm">Loading eye-tracking…</p>
+        <p className="text-slate-400 text-xs">Webcam permission prompt may appear</p>
       </div>
     );
   }
@@ -576,9 +576,9 @@ function EyeTrackingDemo() {
   // ── Fetching question ───────────────────────────────────────────────────────
   if (state === "loading") {
     return (
-      <div className="bg-slate-800 border border-slate-600 shadow-md rounded-2xl p-10 text-center space-y-3">
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-10 text-center space-y-3">
         <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto" />
-        <p className="text-slate-300 text-sm">Generating UCAT question…</p>
+        <p className="text-slate-700 text-sm">Generating UCAT question…</p>
       </div>
     );
   }
@@ -627,16 +627,16 @@ function EyeTrackingDemo() {
           </div>
         )}
 
-      <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl overflow-hidden">
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
         {/* Top bar */}
-        <div className="flex items-center justify-between px-4 py-3 bg-slate-700/80 border-b border-slate-600/50">
+        <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
           <div className="flex items-center gap-2 text-xs">
-            <span className="px-2 py-0.5 rounded bg-slate-600 text-slate-200 font-medium">
+            <span className="px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-medium">
               Verbal Reasoning
             </span>
             {gazeActive && state === "active" && (
-              <span className="flex items-center gap-1 text-blue-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse inline-block" />
+              <span className="flex items-center gap-1 text-blue-600">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse inline-block" />
                 Eye tracking active
               </span>
             )}
@@ -645,10 +645,10 @@ function EyeTrackingDemo() {
             ref={timerRef}
             className={`font-mono font-bold text-sm transition-colors ${
               state === "answered"
-                ? "text-slate-500"
+                ? "text-slate-400"
                 : timeCritical
-                ? "text-red-400 animate-pulse"
-                : "text-white"
+                ? "text-red-500 animate-pulse"
+                : "text-slate-900"
             }`}
           >
             {formatTime(timeLeft)}
@@ -676,13 +676,13 @@ function EyeTrackingDemo() {
                 Passage
               </span>
               {activeZone === "passage" && state === "active" && (
-                <span className="flex items-center gap-1 text-xs text-blue-400 animate-pulse">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+                <span className="flex items-center gap-1 text-xs text-blue-600 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block" />
                   tracking
                 </span>
               )}
             </div>
-            <p className="text-slate-200 text-sm leading-relaxed">
+            <p className="text-slate-800 text-sm leading-relaxed">
               {question.passage}
             </p>
           </div>
@@ -707,13 +707,13 @@ function EyeTrackingDemo() {
                 Question
               </span>
               {activeZone === "question" && state === "active" && (
-                <span className="flex items-center gap-1 text-xs text-purple-400 animate-pulse">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block" />
+                <span className="flex items-center gap-1 text-xs text-violet-600 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-500 inline-block" />
                   tracking
                 </span>
               )}
             </div>
-            <p className="text-slate-200 text-sm font-medium">
+            <p className="text-slate-800 text-sm font-medium">
               {question.question}
             </p>
           </div>
@@ -738,8 +738,8 @@ function EyeTrackingDemo() {
                 Answers
               </span>
               {activeZone === "answers" && state === "active" && (
-                <span className="flex items-center gap-1 text-xs text-green-400 animate-pulse">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+                <span className="flex items-center gap-1 text-xs text-green-600 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
                   tracking
                 </span>
               )}
@@ -760,14 +760,14 @@ function EyeTrackingDemo() {
                     disabled={state === "answered"}
                     className={`w-full text-left px-4 py-2.5 rounded-xl text-sm border transition-all ${
                       isCorrect
-                        ? "border-green-400 bg-green-900/30 text-green-200"
+                        ? "border-green-400 bg-green-50 text-green-800"
                         : isWrong
-                        ? "border-red-400 bg-red-900/30 text-red-300"
+                        ? "border-red-400 bg-red-50 text-red-700"
                         : isSelected
-                        ? "border-blue-500 bg-blue-900/30 text-blue-200"
+                        ? "border-blue-500 bg-blue-50 text-blue-800"
                         : state === "active"
-                        ? "border-slate-600 bg-slate-700/50 text-slate-200 hover:border-slate-500 hover:bg-slate-700"
-                        : "border-slate-700 bg-slate-800/30 text-slate-500"
+                        ? "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50"
+                        : "border-slate-200 bg-slate-50 text-slate-400"
                     }`}
                   >
                     <span className="font-bold mr-2">{key}.</span>
@@ -796,7 +796,7 @@ function EyeTrackingDemo() {
               ))}
             </div>
           ) : (
-            <div className="rounded-xl p-2 text-center border border-slate-700/50 bg-slate-800/30 text-xs text-slate-500">
+            <div className="rounded-xl p-2 text-center border border-slate-200 bg-slate-50 text-xs text-slate-400">
               Eye tracking data not recorded
             </div>
           )}
@@ -806,15 +806,15 @@ function EyeTrackingDemo() {
             <div
               className={`rounded-xl p-4 border text-sm leading-relaxed ${
                 selected === question.correct
-                  ? "border-green-400/40 bg-green-900/20"
-                  : "border-red-400/40 bg-red-900/20"
+                  ? "border-green-300 bg-green-50"
+                  : "border-red-300 bg-red-50"
               }`}
             >
               <div
                 className={`flex items-center gap-2 mb-2 font-semibold text-sm ${
                   selected === question.correct
-                    ? "text-green-300"
-                    : "text-red-300"
+                    ? "text-green-700"
+                    : "text-red-700"
                 }`}
               >
                 {selected === question.correct ? "✓ Correct" : "✗ Incorrect"}
@@ -822,12 +822,12 @@ function EyeTrackingDemo() {
                   · AI coaching
                 </span>
               </div>
-              <p className="text-slate-300 text-xs leading-relaxed">
+              <p className="text-slate-600 text-xs leading-relaxed">
                 {coachingMessage}
               </p>
               <button
                 onClick={reset}
-                className="mt-3 text-xs px-3 py-1.5 rounded-lg border border-slate-600 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+                className="mt-3 text-xs px-3 py-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-slate-900 hover:border-slate-400 transition-colors"
               >
                 New question →
               </button>
@@ -866,21 +866,21 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {/* Free */}
-      <div className="rounded-2xl bg-slate-800 border border-slate-600 shadow-lg p-6 flex flex-col gap-5">
+      <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-6 flex flex-col gap-5">
         <div>
           <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
             Free Plan
           </span>
-          <div className="mt-1 text-3xl font-black text-white">
+          <div className="mt-1 text-3xl font-black text-slate-900">
             £0{" "}
             <span className="text-sm font-normal text-slate-400">/ month</span>
           </div>
         </div>
-        <ul className="flex-1 space-y-2 text-sm text-slate-300">
+        <ul className="flex-1 space-y-2 text-sm text-slate-600">
           {freeFeatures.map((f) => (
             <li key={f} className="flex items-start gap-2">
               <svg
-                className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0"
+                className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -894,33 +894,33 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
         </ul>
         <button
           onClick={onFreeClick}
-          className="w-full py-2.5 rounded-xl bg-blue-700 text-white text-sm font-semibold hover:bg-blue-600 transition-colors shadow-sm"
+          className="w-full py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm"
         >
           Get Started Free
         </button>
       </div>
 
       {/* Premium */}
-      <div className="relative rounded-2xl bg-slate-800 border border-blue-500/70 shadow-lg p-6 flex flex-col gap-5 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 pointer-events-none" />
+      <div className="relative rounded-2xl bg-white border border-blue-200 shadow-sm p-6 flex flex-col gap-5 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/60 to-violet-50/40 pointer-events-none rounded-2xl" />
         <div className="relative">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-widest text-blue-400">
+            <span className="text-xs font-semibold uppercase tracking-widest text-blue-600">
               Premium Plan
             </span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-600 border border-blue-200">
               Coming Soon
             </span>
           </div>
-          <div className="mt-1 text-3xl font-black text-white opacity-50">
+          <div className="mt-1 text-3xl font-black text-slate-400">
             £—
           </div>
         </div>
-        <ul className="relative flex-1 space-y-2 text-sm text-slate-500">
+        <ul className="relative flex-1 space-y-2 text-sm text-slate-400">
           {premiumFeatures.map((f) => (
             <li key={f} className="flex items-start gap-2">
               <svg
-                className="w-4 h-4 text-blue-400/40 mt-0.5 flex-shrink-0"
+                className="w-4 h-4 text-blue-300 mt-0.5 flex-shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -933,12 +933,12 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
           ))}
         </ul>
         <div className="relative space-y-3">
-          <p className="text-xs text-slate-400 leading-relaxed border border-blue-500/20 bg-blue-900/10 rounded-xl px-3 py-2.5">
+          <p className="text-xs text-slate-500 leading-relaxed border border-blue-100 bg-blue-50 rounded-xl px-3 py-2.5">
             Premium unlocks advanced weakness detection and personalised AI coaching reports — so you always know exactly what to work on next.
           </p>
           <button
             disabled
-            className="w-full py-2.5 rounded-xl bg-blue-500/15 border border-blue-400/25 text-blue-400/40 text-sm font-semibold cursor-not-allowed"
+            className="w-full py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-400 text-sm font-semibold cursor-not-allowed"
           >
             Coming Soon
           </button>
@@ -1083,10 +1083,10 @@ function AuthModal({
 
 function PrivacyNotice() {
   return (
-    <div className="rounded-2xl bg-slate-800 border border-slate-600 shadow-md p-5 space-y-3">
+    <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5 space-y-3">
       <div className="flex items-center gap-2">
         <svg
-          className="w-4 h-4 text-slate-400 flex-shrink-0"
+          className="w-4 h-4 text-blue-500 flex-shrink-0"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -1098,11 +1098,11 @@ function PrivacyNotice() {
             d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
           />
         </svg>
-        <span className="text-sm font-semibold text-slate-300">
+        <span className="text-sm font-semibold text-slate-800">
           Your data is secure.
         </span>
       </div>
-      <div className="space-y-2 text-xs text-slate-400 leading-relaxed">
+      <div className="space-y-2 text-xs text-slate-500 leading-relaxed">
         <p>
           All performance data and eye-tracking insights are encrypted and used
           only to improve your learning experience. Eye tracking is entirely
@@ -1141,7 +1141,7 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
   ];
 
   return (
-    <div className="min-h-[calc(100vh-49px)] bg-slate-950">
+    <div className="min-h-[calc(100vh-49px)] bg-[#EEF4FF]">
       <div className="max-w-4xl mx-auto px-4 pt-10 pb-20">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -1242,11 +1242,11 @@ function UCATSection({
   onFreePlan: () => void;
 }) {
   return (
-    <div className="min-h-[calc(100vh-49px)] bg-slate-950">
+    <div className="min-h-[calc(100vh-49px)] bg-[#EEF4FF]">
       <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-slate-400 hover:text-white text-sm mb-8 transition-colors"
+          className="flex items-center gap-2 text-slate-500 hover:text-slate-900 text-sm mb-8 transition-colors"
         >
           <svg
             className="w-4 h-4"
@@ -1268,36 +1268,36 @@ function UCATSection({
           <div className="flex items-center gap-3 mb-4">
             <span className="text-3xl">🧠</span>
             <div>
-              <h1 className="text-2xl font-bold text-white">UCAT Tutor</h1>
-              <p className="text-slate-500 text-xs font-medium mt-0.5">
+              <h1 className="text-2xl font-bold text-slate-900">UCAT Tutor</h1>
+              <p className="text-slate-400 text-xs font-medium mt-0.5">
                 Built by MedWithRish — Medical Admissions Specialist
               </p>
             </div>
           </div>
 
           <div className="mb-5 space-y-1">
-            <p className="text-slate-100 text-base font-semibold leading-snug">
+            <p className="text-slate-900 text-base font-semibold leading-snug">
               Train smarter with AI-powered UCAT preparation.
             </p>
-            <p className="text-slate-400 text-sm">Identify weaknesses.</p>
-            <p className="text-slate-400 text-sm">
-              <span className="text-blue-400 font-medium">Gain insights through your sight</span> — track your focus with optional eye-tracking.
+            <p className="text-slate-500 text-sm">Identify weaknesses.</p>
+            <p className="text-slate-500 text-sm">
+              <span className="text-blue-600 font-medium">Gain insights through your sight</span> — track your focus with optional eye-tracking.
             </p>
-            <p className="text-slate-400 text-sm">Improve faster.</p>
+            <p className="text-slate-500 text-sm">Improve faster.</p>
           </div>
 
           {/* Benefit statement */}
-          <div className="bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 mb-5 border-l-4 border-l-blue-500">
-            <p className="text-slate-300 text-sm leading-relaxed italic">
+          <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 mb-5 border-l-4 border-l-blue-500">
+            <p className="text-slate-600 text-sm leading-relaxed italic">
               Know exactly what&apos;s slowing you down — not just what you got wrong.
             </p>
           </div>
 
           {/* Eye-tracking CTA banner */}
-          <div className="rounded-xl bg-blue-900/50 border border-blue-500/70 shadow-md px-4 py-3 flex items-center justify-between gap-3">
+          <div className="rounded-xl bg-blue-600 px-4 py-3 flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-blue-300 text-sm font-semibold">Try Eye Tracking</p>
-              <p className="text-slate-400 text-xs mt-0.5 leading-relaxed">
+              <p className="text-white text-sm font-semibold">Try Eye Tracking</p>
+              <p className="text-blue-100 text-xs mt-0.5 leading-relaxed">
                 See which parts of each question you focus on — live, using your webcam. No video stored.
               </p>
             </div>
@@ -1305,7 +1305,7 @@ function UCATSection({
               onClick={() => {
                 document.getElementById("eye-tracking-demo")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="flex-shrink-0 text-xs px-3 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-500 transition-colors whitespace-nowrap"
+              className="flex-shrink-0 text-xs px-3 py-2 rounded-lg bg-white text-blue-600 font-semibold hover:bg-blue-50 transition-colors whitespace-nowrap"
             >
               Try Demo →
             </button>
@@ -1318,16 +1318,16 @@ function UCATSection({
         </div>
 
         {/* Feedback explainer */}
-        <div className="mb-8 rounded-2xl bg-slate-800 border border-slate-600 shadow-md p-5 space-y-4">
-          <h3 className="text-white font-semibold text-sm">
+        <div className="mb-8 rounded-2xl bg-white border border-slate-200 shadow-sm p-5 space-y-4">
+          <h3 className="text-slate-900 font-semibold text-sm">
             What does feedback look like?
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <div className="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-2">
+              <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
                 Free — Basic Feedback
               </div>
-              <ul className="space-y-1.5 text-xs text-slate-400">
+              <ul className="space-y-1.5 text-xs text-slate-500">
                 {[
                   "Overall accuracy (e.g. 7/11 correct)",
                   "Time taken for the full question set",
@@ -1335,19 +1335,17 @@ function UCATSection({
                   '"You were slower than expected on this set"',
                 ].map((t) => (
                   <li key={t} className="flex gap-2">
-                    <span className="text-blue-400 mt-0.5 flex-shrink-0">
-                      ·
-                    </span>
+                    <span className="text-blue-500 mt-0.5 flex-shrink-0">·</span>
                     {t}
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <div className="text-xs font-semibold text-blue-400/70 uppercase tracking-wide mb-2">
+              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">
                 Premium — Full Weakness Detection
               </div>
-              <ul className="space-y-1.5 text-xs text-slate-500">
+              <ul className="space-y-1.5 text-xs text-slate-400">
                 {[
                   "Breakdown by section and question subtype",
                   "Repeated weakness patterns over time",
@@ -1356,9 +1354,7 @@ function UCATSection({
                   "Specific recommended next-session focus",
                 ].map((t) => (
                   <li key={t} className="flex gap-2">
-                    <span className="text-blue-400/40 mt-0.5 flex-shrink-0">
-                      ·
-                    </span>
+                    <span className="text-slate-300 mt-0.5 flex-shrink-0">·</span>
                     {t}
                   </li>
                 ))}
@@ -1368,7 +1364,7 @@ function UCATSection({
         </div>
 
         {/* Eye tracking demo */}
-        <div className="mb-8" id="eye-tracking-demo">
+        <div className="mb-8" id="eye-demo">
           <EyeTrackingDemo />
         </div>
 
@@ -1381,101 +1377,110 @@ function UCATSection({
 // ── Landing Hero ──────────────────────────────────────────────────────────────
 
 function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
+  const handleDemoClick = () => {
+    onUCATClick();
+    setTimeout(() => {
+      document.getElementById("eye-demo")?.scrollIntoView({ behavior: "smooth" });
+    }, 150);
+  };
+
   return (
-    <div className="min-h-[calc(100vh-49px)] bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center px-4 py-16">
+    <div className="min-h-[calc(100vh-49px)] bg-[#EEF4FF] flex flex-col items-center justify-center px-4 py-16">
       <PhloemAILogo />
 
       <div className="mt-6 text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-blue-400 mb-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-blue-500 mb-3">
           AI Medical Admissions Tutor
         </p>
-        <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
-          Meet <span className="text-blue-400">Phloem</span>
+        <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight">
+          Meet <span className="text-blue-600">PhloemAI</span>
         </h1>
       </div>
 
-      <p className="mt-4 text-center text-slate-400 text-base max-w-xl leading-relaxed">
+      <p className="mt-4 text-center text-slate-500 text-base max-w-xl leading-relaxed">
         AI-powered preparation for UCAT, medicine and dentistry interviews,
         built by{" "}
-        <span className="text-blue-400 font-medium">@medwithrish</span> - a
-        leading Medical admissions specialist, having helped numerous students ace their UCAT, and multiple students into Cambridge medicine as well as other Russel group universities. 
+        <span className="text-blue-600 font-medium">@medwithrish</span> — a
+        leading Medical admissions specialist.
       </p>
 
       {/* Feature badges */}
       <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-xs text-slate-300">
+        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-600 shadow-sm">
           <svg
-            className="w-3.5 h-3.5 text-blue-400"
+            className="w-3.5 h-3.5 text-blue-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={2}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
           Attention Analysis
         </span>
-        <span className="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-xs text-slate-300">
+        <span className="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-600 shadow-sm">
           AI-Powered Coaching
         </span>
-        <span className="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-xs text-slate-300">
+        <span className="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-600 shadow-sm">
           Healthcare Admissions Specialist
         </span>
       </div>
 
-      {/* Three subject buttons */}
+      {/* Three subject cards */}
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl">
         {/* UCAT — active */}
-        <button
-          onClick={onUCATClick}
-          className="group relative rounded-2xl overflow-hidden border border-blue-600/40 bg-slate-900/60 p-6 text-center hover:border-blue-500/80 hover:shadow-md transition-all duration-300 cursor-pointer"
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-900/0 to-blue-900/10 group-hover:to-blue-900/20 transition-all duration-300" />
-          <div className="relative">
-            <div className="text-4xl mb-3">🧠</div>
-            <div className="text-white font-bold text-lg mb-1">UCAT</div>
-            <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-blue-800/30 border border-blue-500/30 text-blue-300 font-medium">
+        <div className="group relative rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all duration-200 p-6 flex flex-col">
+          <div className="text-4xl mb-3 text-center">🧠</div>
+          <div className="text-slate-900 font-bold text-lg mb-1 text-center">UCAT</div>
+          <div className="flex justify-center mb-3">
+            <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-blue-100 border border-blue-200 text-blue-600 font-medium">
               Available Now
             </span>
-            <p className="mt-3 text-xs text-slate-400 leading-relaxed">
-              Practice questions with AI coaching and attention tracking
-            </p>
           </div>
-        </button>
+          <p className="text-xs text-slate-500 leading-relaxed text-center mb-4">
+            Practice questions with AI coaching and attention tracking
+          </p>
+          <div className="mt-auto space-y-2">
+            <button
+              onClick={handleDemoClick}
+              className="w-full py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Try UCAT Demo →
+            </button>
+            <button
+              onClick={onUCATClick}
+              className="w-full py-2 rounded-xl border border-slate-200 text-slate-500 text-xs hover:border-slate-400 hover:text-slate-700 transition-colors"
+            >
+              Open UCAT Tutor
+            </button>
+          </div>
+        </div>
 
         {/* Medicine Interview — WIP */}
-        <div className="relative rounded-2xl border border-slate-700/40 bg-slate-900/30 p-6 text-center opacity-55 cursor-not-allowed select-none">
+        <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center opacity-60 cursor-not-allowed select-none">
           <div className="text-4xl mb-3">🏥</div>
-          <div className="text-white font-bold text-lg mb-1">
+          <div className="text-slate-700 font-bold text-lg mb-1">
             Medicine Interview
           </div>
-          <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-yellow-500/15 border border-yellow-400/30 text-yellow-400 font-medium">
+          <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-600 font-medium">
             Work in Progress
           </span>
-          <p className="mt-3 text-xs text-slate-500 leading-relaxed">
+          <p className="mt-3 text-xs text-slate-400 leading-relaxed">
             MMI and panel interview preparation
           </p>
         </div>
 
         {/* Dentistry Interview — WIP */}
-        <div className="relative rounded-2xl border border-slate-700/40 bg-slate-900/30 p-6 text-center opacity-55 cursor-not-allowed select-none">
+        <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center opacity-60 cursor-not-allowed select-none">
           <div className="text-4xl mb-3">🦷</div>
-          <div className="text-white font-bold text-lg mb-1">
+          <div className="text-slate-700 font-bold text-lg mb-1">
             Dentistry Interview
           </div>
-          <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-yellow-500/15 border border-yellow-400/30 text-yellow-400 font-medium">
+          <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-600 font-medium">
             Work in Progress
           </span>
-          <p className="mt-3 text-xs text-slate-500 leading-relaxed">
+          <p className="mt-3 text-xs text-slate-400 leading-relaxed">
             Dentistry-specific interview preparation
           </p>
         </div>
