@@ -237,21 +237,28 @@ function EyeTrackingDemo() {
 
     try {
       await loadScript();
-      // begin() is async — must await so the webcam is fully initialised
-      // before calibration starts
+
       window.webgazer!
         .saveDataAcrossSessions(false)
         .setGazeListener((data) => {
           if (data) recordGaze(data.x, data.y);
         });
-      await window.webgazer!.begin();
-      // Show WebGazer's video feed + prediction dot so user can confirm tracking
+
+      // Some CDN builds auto-start on load, making a second begin() throw.
+      // Swallow that error — if the webcam is already running, we're fine.
+      try {
+        await window.webgazer!.begin();
+      } catch {
+        // already running or model error — proceed to calibration regardless
+      }
+
       window.webgazer!.showVideoPreview(true).showPredictionPoints(true);
       setGazeActive(true);
       setCalibStep(0);
       setCalibClicksAtStep(0);
       setState("calibrating");
     } catch {
+      // loadScript itself failed (network error, CSP block, etc.)
       setWgError(true);
       setState("idle");
     }
