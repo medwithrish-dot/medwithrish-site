@@ -474,16 +474,16 @@ function EyeTrackingDemo() {
             <h3 className="text-slate-900 font-bold text-base">
               Gain insights through your sight
             </h3>
-            <p className="text-slate-500 text-sm mt-1 leading-relaxed">
+            <p className="text-slate-700 text-sm mt-1 leading-relaxed">
               PhloemAI&apos;s optional attention tracker uses your webcam to estimate
               which zone you&apos;re focused on during each question —{" "}
-              <span className="text-slate-700 font-medium">Passage</span>,{" "}
-              <span className="text-slate-700 font-medium">Question</span>,{" "}
-              <span className="text-slate-700 font-medium">Answers</span>, or{" "}
-              <span className="text-slate-700 font-medium">Timer</span>. It shows{" "}
+              <span className="text-slate-900 font-medium">Passage</span>,{" "}
+              <span className="text-slate-900 font-medium">Question</span>,{" "}
+              <span className="text-slate-900 font-medium">Answers</span>, or{" "}
+              <span className="text-slate-900 font-medium">Timer</span>. It shows{" "}
               <em>how</em> you read, not just what you got wrong.
             </p>
-            <p className="text-slate-400 text-xs mt-2">
+            <p className="text-slate-500 text-xs mt-2">
               Used during UCAT practice sessions only. Entirely optional — no video is ever recorded or stored.
             </p>
           </div>
@@ -496,13 +496,13 @@ function EyeTrackingDemo() {
         <div className="space-y-2">
           <button
             onClick={startEyeTracking}
-            className="w-full py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm"
+            className="w-full py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm cursor-pointer"
           >
             Enable Eye Tracking + Start →
           </button>
           <button
             onClick={fetchQuestion}
-            className="w-full py-2 rounded-xl border border-slate-200 text-slate-500 text-sm hover:text-slate-900 hover:border-slate-400 transition-colors"
+            className="w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-sm hover:text-slate-900 hover:border-slate-400 transition-colors cursor-pointer"
           >
             Skip eye tracking — just practise
           </button>
@@ -758,7 +758,7 @@ function EyeTrackingDemo() {
                     key={key}
                     onClick={() => submitAnswer(key)}
                     disabled={state === "answered"}
-                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm border transition-all ${
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm border transition-all cursor-pointer ${
                       isCorrect
                         ? "border-green-400 bg-green-50 text-green-800"
                         : isWrong
@@ -822,12 +822,12 @@ function EyeTrackingDemo() {
                   · AI coaching
                 </span>
               </div>
-              <p className="text-slate-600 text-xs leading-relaxed">
+              <p className="text-slate-700 text-xs leading-relaxed">
                 {coachingMessage}
               </p>
               <button
                 onClick={reset}
-                className="mt-3 text-xs px-3 py-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-slate-900 hover:border-slate-400 transition-colors"
+                className="mt-3 text-xs px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 hover:text-slate-900 hover:border-slate-400 transition-colors cursor-pointer"
               >
                 New question →
               </button>
@@ -876,7 +876,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
             <span className="text-sm font-normal text-slate-400">/ month</span>
           </div>
         </div>
-        <ul className="flex-1 space-y-2 text-sm text-slate-600">
+        <ul className="flex-1 space-y-2 text-sm text-slate-800">
           {freeFeatures.map((f) => (
             <li key={f} className="flex items-start gap-2">
               <svg
@@ -894,7 +894,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
         </ul>
         <button
           onClick={onFreeClick}
-          className="w-full py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm"
+          className="w-full py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm cursor-pointer"
         >
           Get Started Free
         </button>
@@ -978,7 +978,7 @@ function AuthModal({
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
+          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors cursor-pointer"
         >
           <svg
             className="w-5 h-5"
@@ -1011,7 +1011,7 @@ function AuthModal({
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                 tab === t
                   ? "bg-blue-700 text-white"
                   : "text-slate-400 hover:text-white"
@@ -1064,7 +1064,7 @@ function AuthModal({
           </div>
           <button
             type="submit"
-            className="w-full py-2.5 rounded-xl bg-blue-700 text-white text-sm font-semibold hover:bg-blue-600 transition-colors mt-1 shadow-sm"
+            className="w-full py-2.5 rounded-xl bg-blue-700 text-white text-sm font-semibold hover:bg-blue-600 transition-colors mt-1 shadow-sm cursor-pointer"
           >
             {tab === "signup" ? "Create Free Account" : "Log In"}
           </button>
@@ -1102,7 +1102,7 @@ function PrivacyNotice() {
           Your data is secure.
         </span>
       </div>
-      <div className="space-y-2 text-xs text-slate-500 leading-relaxed">
+      <div className="space-y-2 text-xs text-slate-700 leading-relaxed">
         <p>
           All performance data and eye-tracking insights are encrypted and used
           only to improve your learning experience. Eye tracking is entirely
@@ -1119,7 +1119,7 @@ function PrivacyNotice() {
           contacting{" "}
           <a
             href="mailto:medwithrish@gmail.com"
-            className="text-blue-400 hover:underline"
+            className="text-blue-600 hover:underline"
           >
             medwithrish@gmail.com
           </a>
@@ -1152,7 +1152,7 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
           </div>
           <button
             onClick={onLogout}
-            className="text-sm text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg border border-slate-600 hover:border-slate-500"
+            className="text-sm text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg border border-slate-600 hover:border-slate-500 cursor-pointer"
           >
             Log out
           </button>
@@ -1246,7 +1246,7 @@ function UCATSection({
       <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-slate-500 hover:text-slate-900 text-sm mb-8 transition-colors"
+          className="flex items-center gap-2 text-slate-700 hover:text-slate-900 text-sm mb-8 transition-colors cursor-pointer"
         >
           <svg
             className="w-4 h-4"
@@ -1269,7 +1269,7 @@ function UCATSection({
             <span className="text-3xl">🧠</span>
             <div>
               <h1 className="text-2xl font-bold text-slate-900">UCAT Tutor</h1>
-              <p className="text-slate-400 text-xs font-medium mt-0.5">
+              <p className="text-slate-600 text-xs font-medium mt-0.5">
                 Built by MedWithRish — Medical Admissions Specialist
               </p>
             </div>
@@ -1279,16 +1279,16 @@ function UCATSection({
             <p className="text-slate-900 text-base font-semibold leading-snug">
               Train smarter with AI-powered UCAT preparation.
             </p>
-            <p className="text-slate-500 text-sm">Identify weaknesses.</p>
-            <p className="text-slate-500 text-sm">
+            <p className="text-slate-700 text-sm">Identify weaknesses.</p>
+            <p className="text-slate-700 text-sm">
               <span className="text-blue-600 font-medium">Gain insights through your sight</span> — track your focus with optional eye-tracking.
             </p>
-            <p className="text-slate-500 text-sm">Improve faster.</p>
+            <p className="text-slate-700 text-sm">Improve faster.</p>
           </div>
 
           {/* Benefit statement */}
           <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 mb-5 border-l-4 border-l-blue-500">
-            <p className="text-slate-600 text-sm leading-relaxed italic">
+            <p className="text-slate-800 text-sm leading-relaxed italic">
               Know exactly what&apos;s slowing you down — not just what you got wrong.
             </p>
           </div>
@@ -1305,7 +1305,7 @@ function UCATSection({
               onClick={() => {
                 document.getElementById("eye-tracking-demo")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="flex-shrink-0 text-xs px-3 py-2 rounded-lg bg-white text-blue-600 font-semibold hover:bg-blue-50 transition-colors whitespace-nowrap"
+              className="flex-shrink-0 text-xs px-3 py-2 rounded-lg bg-white text-blue-600 font-semibold hover:bg-blue-50 transition-colors whitespace-nowrap cursor-pointer"
             >
               Try Demo →
             </button>
@@ -1327,7 +1327,7 @@ function UCATSection({
               <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
                 Free — Basic Feedback
               </div>
-              <ul className="space-y-1.5 text-xs text-slate-500">
+              <ul className="space-y-1.5 text-xs text-slate-700">
                 {[
                   "Overall accuracy (e.g. 7/11 correct)",
                   "Time taken for the full question set",
@@ -1385,11 +1385,11 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
   };
 
   return (
-    <div className="min-h-[calc(100vh-49px)] bg-[#EEF4FF] flex flex-col items-center justify-center px-4 py-16">
+    <div className="bg-[#EEF4FF] flex flex-col items-center px-4 pt-8 pb-10">
       <PhloemAILogo />
 
-      <div className="mt-6 text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-blue-500 mb-3">
+      <div className="mt-4 text-center">
+        <p className="text-xs font-semibold uppercase tracking-widest text-blue-500 mb-2">
           AI Medical Admissions Tutor
         </p>
         <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight">
@@ -1397,7 +1397,7 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
         </h1>
       </div>
 
-      <p className="mt-4 text-center text-slate-500 text-base max-w-xl leading-relaxed">
+      <p className="mt-3 text-center text-slate-700 text-sm max-w-xl leading-relaxed">
         AI-powered preparation for UCAT, medicine and dentistry interviews,
         built by{" "}
         <span className="text-blue-600 font-medium">@medwithrish</span> — a
@@ -1405,52 +1405,46 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
       </p>
 
       {/* Feature badges */}
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-600 shadow-sm">
-          <svg
-            className="w-3.5 h-3.5 text-blue-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+        <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs text-slate-800 shadow-sm">
+          <svg className="w-3.5 h-3.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
           Attention Analysis
         </span>
-        <span className="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-600 shadow-sm">
+        <span className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs text-slate-800 shadow-sm">
           AI-Powered Coaching
         </span>
-        <span className="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-600 shadow-sm">
+        <span className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs text-slate-800 shadow-sm">
           Healthcare Admissions Specialist
         </span>
       </div>
 
       {/* Three subject cards */}
-      <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl">
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl">
         {/* UCAT — active */}
-        <div className="group relative rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all duration-200 p-6 flex flex-col">
-          <div className="text-4xl mb-3 text-center">🧠</div>
-          <div className="text-slate-900 font-bold text-lg mb-1 text-center">UCAT</div>
-          <div className="flex justify-center mb-3">
-            <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-blue-100 border border-blue-200 text-blue-600 font-medium">
+        <div className="group relative rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all duration-200 p-5 flex flex-col">
+          <div className="text-3xl mb-2 text-center">🧠</div>
+          <div className="text-slate-900 font-bold text-base mb-1 text-center">UCAT</div>
+          <div className="flex justify-center mb-2">
+            <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-blue-100 border border-blue-200 text-blue-700 font-medium">
               Available Now
             </span>
           </div>
-          <p className="text-xs text-slate-500 leading-relaxed text-center mb-4">
+          <p className="text-xs text-slate-700 leading-relaxed text-center mb-3">
             Practice questions with AI coaching and attention tracking
           </p>
           <div className="mt-auto space-y-2">
             <button
               onClick={handleDemoClick}
-              className="w-full py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+              className="w-full py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
             >
               Try UCAT Demo →
             </button>
             <button
               onClick={onUCATClick}
-              className="w-full py-2 rounded-xl border border-slate-200 text-slate-500 text-xs hover:border-slate-400 hover:text-slate-700 transition-colors"
+              className="w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-xs hover:border-slate-400 hover:text-slate-900 transition-colors cursor-pointer"
             >
               Open UCAT Tutor
             </button>
@@ -1458,29 +1452,25 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
         </div>
 
         {/* Medicine Interview — WIP */}
-        <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center opacity-60 cursor-not-allowed select-none">
-          <div className="text-4xl mb-3">🏥</div>
-          <div className="text-slate-700 font-bold text-lg mb-1">
-            Medicine Interview
-          </div>
-          <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-600 font-medium">
+        <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center opacity-60 cursor-not-allowed select-none">
+          <div className="text-3xl mb-2">🏥</div>
+          <div className="text-slate-900 font-bold text-base mb-1">Medicine Interview</div>
+          <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-medium">
             Work in Progress
           </span>
-          <p className="mt-3 text-xs text-slate-400 leading-relaxed">
+          <p className="mt-2 text-xs text-slate-600 leading-relaxed">
             MMI and panel interview preparation
           </p>
         </div>
 
         {/* Dentistry Interview — WIP */}
-        <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center opacity-60 cursor-not-allowed select-none">
-          <div className="text-4xl mb-3">🦷</div>
-          <div className="text-slate-700 font-bold text-lg mb-1">
-            Dentistry Interview
-          </div>
-          <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-600 font-medium">
+        <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center opacity-60 cursor-not-allowed select-none">
+          <div className="text-3xl mb-2">🦷</div>
+          <div className="text-slate-900 font-bold text-base mb-1">Dentistry Interview</div>
+          <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-medium">
             Work in Progress
           </span>
-          <p className="mt-3 text-xs text-slate-400 leading-relaxed">
+          <p className="mt-2 text-xs text-slate-600 leading-relaxed">
             Dentistry-specific interview preparation
           </p>
         </div>
@@ -1511,7 +1501,7 @@ export default function RishbotTutorPage() {
   };
 
   return (
-    <div className="bg-slate-900">
+    <div className="bg-[#EEF4FF]">
       <Navbar />
 
       {view === "landing" && (
