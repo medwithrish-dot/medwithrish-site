@@ -1374,6 +1374,44 @@ function UCATSection({
   );
 }
 
+// ── How It Works Panel ────────────────────────────────────────────────────────
+
+function HowItWorksPanel({
+  title,
+  accent,
+  children,
+}: {
+  title: string;
+  accent: "blue" | "violet";
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(true);
+  const dotColor = accent === "blue" ? "bg-blue-600" : "bg-violet-500";
+  return (
+    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer"
+      >
+        <div className="flex items-center gap-2.5">
+          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${dotColor}`} />
+          <span className="font-semibold text-slate-900 text-sm">{title}</span>
+        </div>
+        <svg
+          className={`w-4 h-4 text-slate-400 transition-transform duration-200 flex-shrink-0 ${open ? "rotate-180" : ""}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {open && <div className="px-5 pb-5">{children}</div>}
+    </div>
+  );
+}
+
 // ── Landing Hero ──────────────────────────────────────────────────────────────
 
 function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
@@ -1473,6 +1511,79 @@ function TutorHero({ onUCATClick }: { onUCATClick: () => void }) {
           <p className="mt-2 text-xs text-slate-600 leading-relaxed">
             Dentistry-specific interview preparation
           </p>
+        </div>
+      </div>
+
+      {/* How It Works */}
+      <div className="mt-10 w-full max-w-2xl">
+        <div className="text-center mb-5">
+          <h2 className="text-2xl font-bold text-slate-900">How it works</h2>
+          <p className="text-slate-600 text-sm mt-1">A simple loop that gets results</p>
+        </div>
+        <div className="space-y-3">
+          <HowItWorksPanel title="UCAT Preparation" accent="blue">
+            <ol className="space-y-3">
+              {[
+                "Practice real UCAT-style questions across all sections — Verbal Reasoning, Decision Making, Quantitative Reasoning, and Abstract Reasoning.",
+                "AI identifies your bad habits — unfocused reading patterns, spending too long on the wrong areas, weak technique, and timing issues pinpointed by question type.",
+                "AI delivers tried-and-tested strategies tailored to your specific weaknesses, so you know exactly what to change and how.",
+                "Apply the fixes in your own revision and track your accuracy and speed improving over time.",
+              ].map((text, i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mt-0.5">
+                    {i + 1}
+                  </span>
+                  <p className="text-slate-700 text-sm leading-relaxed">{text}</p>
+                </li>
+              ))}
+            </ol>
+          </HowItWorksPanel>
+
+          <HowItWorksPanel title="Medicine & Dentistry Interviews" accent="violet">
+            <ol className="space-y-3">
+              {[
+                "Practice MMI stations and panel interview questions tailored to medicine and dentistry — ethics, clinical scenarios, motivation, and more.",
+                "AI analyses your answers for structure, clinical reasoning, and depth — identifying the gaps that cost applicants places.",
+                "AI gives you proven frameworks and concrete improvements based on what actually works in real interviews.",
+                "Refine your responses, build consistency, and walk into your interview prepared and confident.",
+              ].map((text, i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-violet-500 text-white text-xs font-bold flex items-center justify-center mt-0.5">
+                    {i + 1}
+                  </span>
+                  <p className="text-slate-700 text-sm leading-relaxed">{text}</p>
+                </li>
+              ))}
+            </ol>
+          </HowItWorksPanel>
+        </div>
+      </div>
+
+      {/* Who Is PhloemAI For? */}
+      <div className="mt-6 w-full max-w-2xl">
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+          <h2 className="text-lg font-bold text-slate-900 mb-4">Who Is PhloemAI For?</h2>
+          <ul className="space-y-3">
+            {[
+              "Applicants who want 24/7 tutoring support",
+              "UCAT students aiming for top scores and high-end universities",
+              "Medicine applicants preparing for interviews",
+              "Dentistry applicants needing structured practice",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2.5">
+                <svg
+                  className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-slate-800 text-sm">{item}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
