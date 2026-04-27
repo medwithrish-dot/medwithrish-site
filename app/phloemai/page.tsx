@@ -23,9 +23,9 @@ function PhloemAILogo() {
 
 // All class strings are explicit so Tailwind can extract them at build time.
 const ZONE = {
-  passage: {
-    label: "Passage",
-    pct: 68,
+  sectionA: {
+    label: "Section A",
+    pct: 42,
     active_box: "border-blue-400 bg-blue-50",
     inactive_box: "border-slate-200 bg-white",
     badge: "text-blue-600",
@@ -33,6 +33,17 @@ const ZONE = {
     active_stat: "border-blue-300 bg-blue-50 text-blue-600",
     inactive_stat: "border-slate-200 bg-white text-slate-400",
     tracking: "text-blue-600",
+  },
+  sectionB: {
+    label: "Section B",
+    pct: 26,
+    active_box: "border-cyan-400 bg-cyan-50",
+    inactive_box: "border-slate-200 bg-white",
+    badge: "text-cyan-600",
+    dot: "bg-cyan-500",
+    active_stat: "border-cyan-300 bg-cyan-50 text-cyan-600",
+    inactive_stat: "border-slate-200 bg-white text-slate-400",
+    tracking: "text-cyan-600",
   },
   question: {
     label: "Question",
@@ -56,21 +67,16 @@ const ZONE = {
     inactive_stat: "border-slate-200 bg-white text-slate-400",
     tracking: "text-green-600",
   },
-  timer: {
-    label: "Timer",
-    pct: 5,
-    active_box: "border-amber-400 bg-amber-50",
-    inactive_box: "border-slate-200 bg-white",
-    badge: "text-amber-600",
-    dot: "bg-amber-500",
-    active_stat: "border-amber-300 bg-amber-50 text-amber-600",
-    inactive_stat: "border-slate-200 bg-white text-slate-400",
-    tracking: "text-amber-600",
-  },
 } as const;
 
 type ZoneId = keyof typeof ZONE;
-const ZONE_IDS: ZoneId[] = ["passage", "question", "answers", "timer"];
+const ZONE_IDS: ZoneId[] = ["sectionA", "sectionB", "question", "answers"];
+const emptyZoneTimes = (): Record<ZoneId, number> => ({
+  sectionA: 0,
+  sectionB: 0,
+  question: 0,
+  answers: 0,
+});
 
 // ── MediaPipe iris landmark indices ───────────────────────────────────────────
 
@@ -86,12 +92,27 @@ const CALIB_PHASES = [
 // ── Question type (from /api/rishbot/question) ────────────────────────────────
 
 type QuestionData = {
-  passage: string;
+  sectionA?: string;
+  sectionB?: string;
+  passage?: string;
   question: string;
   options: { A: string; B: string; C: string; D: string };
   correct: "A" | "B" | "C" | "D";
   explanation: string;
 };
+
+function getPassageSections(question: QuestionData) {
+  if (question.sectionA && question.sectionB) {
+    return { sectionA: question.sectionA, sectionB: question.sectionB };
+  }
+
+  const words = (question.passage ?? "").trim().split(/\s+/);
+  const midpoint = Math.ceil(words.length / 2);
+  return {
+    sectionA: words.slice(0, midpoint).join(" "),
+    sectionB: words.slice(midpoint).join(" "),
+  };
+}
 
 type AnswerKey = "A" | "B" | "C" | "D";
 type SessionState =
@@ -116,10 +137,8 @@ function EyeTrackingDemo() {
   const [question, setQuestion] = useState<QuestionData | null>(null);
   const [selected, setSelected] = useState<AnswerKey | null>(null);
   const [timeLeft, setTimeLeft] = useState(120);
-  const [activeZone, setActiveZone] = useState<ZoneId>("passage");
-  const [zoneTimes, setZoneTimes] = useState<Record<ZoneId, number>>({
-    passage: 0, question: 0, answers: 0, timer: 0,
-  });
+  const [activeZone, setActiveZone] = useState<ZoneId>("sectionA");
+  const [zoneTimes, setZoneTimes] = useState<Record<ZoneId, number>>(emptyZoneTimes);
   const [calibPhase, setCalibPhase] = useState(0);
   const [calibCountdown, setCalibCountdown] = useState(2);
   const [gazeActive, setGazeActive] = useState(false);
@@ -127,11 +146,11 @@ function EyeTrackingDemo() {
   const [wgError, setWgError] = useState(false);
   const [gazePos, setGazePos] = useState<{ x: number; y: number } | null>(null);
 
-  const passageRef = useRef<HTMLDivElement>(null);
+  const sectionARef = useRef<HTMLDivElement>(null);
+  const sectionBRef = useRef<HTMLDivElement>(null);
   const questionRef = useRef<HTMLDivElement>(null);
   const answersRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<HTMLSpanElement>(null);
-  const lastZoneRef = useRef<ZoneId>("passage");
+  const lastZoneRef = useRef<ZoneId>("sectionA");
   const lastTimeRef = useRef<number>(0);
   const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stateRef = useRef<SessionState>("idle");
@@ -153,7 +172,7 @@ function EyeTrackingDemo() {
   // Zone percentages derived from actual dwell times
   const zonePcts = useMemo(() => {
     const total = Object.values(zoneTimes).reduce((s, v) => s + v, 0);
-    if (total === 0) return { passage: 0, question: 0, answers: 0, timer: 0 };
+    if (total === 0) return emptyZoneTimes();
     return Object.fromEntries(
       ZONE_IDS.map((id) => [id, Math.round((zoneTimes[id] / total) * 100)])
     ) as Record<ZoneId, number>;
@@ -161,7 +180,8 @@ function EyeTrackingDemo() {
 
   const detectZone = useCallback((x: number, y: number): ZoneId => {
     const checks: [ZoneId, React.RefObject<HTMLElement>][] = [
-      ["passage",  passageRef  as React.RefObject<HTMLElement>],
+      ["sectionA", sectionARef as React.RefObject<HTMLElement>],
+      ["sectionB", sectionBRef as React.RefObject<HTMLElement>],
       ["question", questionRef as React.RefObject<HTMLElement>],
       ["answers",  answersRef  as React.RefObject<HTMLElement>],
     ];
@@ -170,9 +190,6 @@ function EyeTrackingDemo() {
       if (r && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom)
         return id;
     }
-    const tr = timerRef.current?.getBoundingClientRect();
-    if (tr && y <= tr.bottom + 40 && Math.abs(x - (tr.left + tr.width / 2)) < 120)
-      return "timer";
     return lastZoneRef.current;
   }, []);
 
@@ -303,7 +320,8 @@ function EyeTrackingDemo() {
       const data: QuestionData = await res.json();
       setQuestion(data);
       setTimeLeft(120);
-      setZoneTimes({ passage: 0, question: 0, answers: 0, timer: 0 });
+      setZoneTimes(emptyZoneTimes());
+      lastZoneRef.current = "sectionA";
       lastTimeRef.current = Date.now();
       setState("active");
     } catch {
@@ -432,19 +450,16 @@ function EyeTrackingDemo() {
 
     if (!gazeDataReceived) return result;
 
-    const { passage: p, question: q, answers: a, timer: t } = zonePcts;
+    const sectionTotal = zonePcts.sectionA + zonePcts.sectionB;
+    const { question: q, answers: a } = zonePcts;
     const tips: string[] = [];
-    if (p > 55 && q < 12)
+    if (sectionTotal > 55 && q < 12)
       tips.push(
-        "You spent most time on the passage before reading the question. Try reading the question stem first to direct your search for evidence."
+        "You spent most time on the passage sections before reading the question. Try reading the question stem first to direct your search for evidence."
       );
     else if (q < 8)
       tips.push(
         "Very little time on the question stem - make sure you fully understand what is being asked before scanning the passage."
-      );
-    if (t > 12)
-      tips.push(
-        "Frequent timer checks may indicate time pressure. Practising pacing can free up more attention for the content itself."
       );
     if (a < 10 && !correct)
       tips.push(
@@ -483,10 +498,10 @@ function EyeTrackingDemo() {
             <p className="text-slate-700 text-sm mt-1 leading-relaxed">
               PhloemAI&apos;s optional attention tracker uses your webcam to estimate
               which zone you&apos;re focused on during each question -{" "}
-              <span className="text-slate-900 font-medium">Passage</span>,{" "}
+              <span className="text-slate-900 font-medium">Section A</span>,{" "}
+              <span className="text-slate-900 font-medium">Section B</span>,{" "}
               <span className="text-slate-900 font-medium">Question</span>,{" "}
-              <span className="text-slate-900 font-medium">Answers</span>, or{" "}
-              <span className="text-slate-900 font-medium">Timer</span>. It shows{" "}
+              or <span className="text-slate-900 font-medium">Answers</span>. It shows{" "}
               <em>how</em> you read, not just what you got wrong.
             </p>
             <p className="text-slate-500 text-xs mt-2">
@@ -592,6 +607,7 @@ function EyeTrackingDemo() {
   // ── Active question ─────────────────────────────────────────────────────────
   if ((state === "active" || state === "answered") && question) {
     const timeCritical = timeLeft < 30 && state === "active";
+    const passageSections = getPassageSections(question);
     return (
       <>
         {/* Gaze ring - explicit pixel offsets, no transforms, no ambiguity */}
@@ -648,7 +664,6 @@ function EyeTrackingDemo() {
             )}
           </div>
           <span
-            ref={timerRef}
             className={`font-mono font-bold text-sm transition-colors ${
               state === "answered"
                 ? "text-slate-400"
@@ -662,26 +677,26 @@ function EyeTrackingDemo() {
         </div>
 
         <div className="p-4 space-y-3">
-          {/* Passage */}
+          {/* Passage section A */}
           <div
-            ref={passageRef}
+            ref={sectionARef}
             className={`rounded-xl p-4 border transition-all duration-300 ${
-              activeZone === "passage" && state === "active"
-                ? ZONE.passage.active_box
-                : ZONE.passage.inactive_box
+              activeZone === "sectionA" && state === "active"
+                ? ZONE.sectionA.active_box
+                : ZONE.sectionA.inactive_box
             }`}
           >
             <div className="flex items-center gap-2 mb-2">
               <span
                 className={`text-xs font-semibold uppercase tracking-wide ${
-                  activeZone === "passage" && state === "active"
-                    ? ZONE.passage.badge
+                  activeZone === "sectionA" && state === "active"
+                    ? ZONE.sectionA.badge
                     : "text-slate-500"
                 }`}
               >
-                Passage
+                Section A
               </span>
-              {activeZone === "passage" && state === "active" && (
+              {activeZone === "sectionA" && state === "active" && (
                 <span className="flex items-center gap-1 text-xs text-blue-600 animate-pulse">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block" />
                   tracking
@@ -689,7 +704,38 @@ function EyeTrackingDemo() {
               )}
             </div>
             <p className="text-slate-800 text-sm leading-relaxed">
-              {question.passage}
+              {passageSections.sectionA}
+            </p>
+          </div>
+
+          {/* Passage section B */}
+          <div
+            ref={sectionBRef}
+            className={`rounded-xl p-4 border transition-all duration-300 ${
+              activeZone === "sectionB" && state === "active"
+                ? ZONE.sectionB.active_box
+                : ZONE.sectionB.inactive_box
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span
+                className={`text-xs font-semibold uppercase tracking-wide ${
+                  activeZone === "sectionB" && state === "active"
+                    ? ZONE.sectionB.badge
+                    : "text-slate-500"
+                }`}
+              >
+                Section B
+              </span>
+              {activeZone === "sectionB" && state === "active" && (
+                <span className="flex items-center gap-1 text-xs text-cyan-600 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 inline-block" />
+                  tracking
+                </span>
+              )}
+            </div>
+            <p className="text-slate-800 text-sm leading-relaxed">
+              {passageSections.sectionB}
             </p>
           </div>
 
