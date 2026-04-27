@@ -23,9 +23,9 @@ function PhloemAILogo() {
 
 // All class strings are explicit so Tailwind can extract them at build time.
 const ZONE = {
-  sectionA: {
-    label: "Section A",
-    pct: 42,
+  stem: {
+    label: "STEM",
+    pct: 68,
     active_box: "border-blue-400 bg-blue-50",
     inactive_box: "border-slate-200 bg-white",
     badge: "text-blue-600",
@@ -33,17 +33,6 @@ const ZONE = {
     active_stat: "border-blue-300 bg-blue-50 text-blue-600",
     inactive_stat: "border-slate-200 bg-white text-slate-400",
     tracking: "text-blue-600",
-  },
-  sectionB: {
-    label: "Section B",
-    pct: 26,
-    active_box: "border-cyan-400 bg-cyan-50",
-    inactive_box: "border-slate-200 bg-white",
-    badge: "text-cyan-600",
-    dot: "bg-cyan-500",
-    active_stat: "border-cyan-300 bg-cyan-50 text-cyan-600",
-    inactive_stat: "border-slate-200 bg-white text-slate-400",
-    tracking: "text-cyan-600",
   },
   question: {
     label: "Question",
@@ -70,13 +59,23 @@ const ZONE = {
 } as const;
 
 type ZoneId = keyof typeof ZONE;
-const ZONE_IDS: ZoneId[] = ["sectionA", "sectionB", "question", "answers"];
+type ActiveRegion = ZoneId | "unknown";
+type GazeSample = { x: number; y: number; at: number };
+type ZoneScores = Record<ZoneId, number>;
+
+const ZONE_IDS: ZoneId[] = ["stem", "question", "answers"];
 const emptyZoneTimes = (): Record<ZoneId, number> => ({
-  sectionA: 0,
-  sectionB: 0,
+  stem: 0,
   question: 0,
   answers: 0,
 });
+
+const SMOOTHING_SAMPLE_COUNT = 8;
+const INTENT_WINDOW_MS = 650;
+const MIN_REGION_DWELL_MS = 400;
+const FUZZY_PADDING_RATIO = 0.18;
+const FUZZY_MIN_PADDING_PX = 18;
+const INTENT_SCORE_THRESHOLD = 0.2;
 
 // ── MediaPipe iris landmark indices ───────────────────────────────────────────
 
@@ -101,17 +100,12 @@ type QuestionData = {
   explanation: string;
 };
 
-function getPassageSections(question: QuestionData) {
+function getStemText(question: QuestionData) {
   if (question.sectionA && question.sectionB) {
-    return { sectionA: question.sectionA, sectionB: question.sectionB };
+    return `${question.sectionA}\n\n${question.sectionB}`;
   }
 
-  const words = (question.passage ?? "").trim().split(/\s+/);
-  const midpoint = Math.ceil(words.length / 2);
-  return {
-    sectionA: words.slice(0, midpoint).join(" "),
-    sectionB: words.slice(midpoint).join(" "),
-  };
+  return question.passage ?? "";
 }
 
 type AnswerKey = "A" | "B" | "C" | "D";
@@ -132,25 +126,50 @@ type FaceLandmarkerInstance = {
   close: () => void;
 };
 
+function isPrimaryRegion(region: ActiveRegion): region is ZoneId {
+  return region !== "unknown";
+}
+
+function scoreRectIntent(x: number, y: number, rect: DOMRectReadOnly) {
+  const padX = Math.max(FUZZY_MIN_PADDING_PX, rect.width * FUZZY_PADDING_RATIO);
+  const padY = Math.max(FUZZY_MIN_PADDING_PX, rect.height * FUZZY_PADDING_RATIO);
+  const outsideX = x < rect.left ? rect.left - x : x > rect.right ? x - rect.right : 0;
+  const outsideY = y < rect.top ? rect.top - y : y > rect.bottom ? y - rect.bottom : 0;
+  const outsideScore = Math.max(outsideX / padX, outsideY / padY);
+
+  if (outsideScore > 1) return 0;
+
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  const centerDistance = Math.hypot(x - centerX, y - centerY);
+  const maxCenterDistance = Math.max(1, Math.hypot(rect.width / 2 + padX, rect.height / 2 + padY));
+  const centerScore = Math.max(0, 1 - centerDistance / maxCenterDistance);
+
+  return (1 - outsideScore) * 0.85 + centerScore * 0.15;
+}
+
 function EyeTrackingDemo() {
   const [state, setState] = useState<SessionState>("idle");
   const [question, setQuestion] = useState<QuestionData | null>(null);
   const [selected, setSelected] = useState<AnswerKey | null>(null);
   const [timeLeft, setTimeLeft] = useState(120);
-  const [activeZone, setActiveZone] = useState<ZoneId>("sectionA");
+  const [activeZone, setActiveZone] = useState<ActiveRegion>("unknown");
   const [zoneTimes, setZoneTimes] = useState<Record<ZoneId, number>>(emptyZoneTimes);
   const [calibPhase, setCalibPhase] = useState(0);
   const [calibCountdown, setCalibCountdown] = useState(2);
   const [gazeActive, setGazeActive] = useState(false);
   const [gazeDataReceived, setGazeDataReceived] = useState(false);
   const [wgError, setWgError] = useState(false);
-  const [gazePos, setGazePos] = useState<{ x: number; y: number } | null>(null);
 
-  const sectionARef = useRef<HTMLDivElement>(null);
-  const sectionBRef = useRef<HTMLDivElement>(null);
+  const stemRef = useRef<HTMLDivElement>(null);
   const questionRef = useRef<HTMLDivElement>(null);
   const answersRef = useRef<HTMLDivElement>(null);
-  const lastZoneRef = useRef<ZoneId>("sectionA");
+  const activeRegionRef = useRef<ActiveRegion>("unknown");
+  const candidateRegionRef = useRef<ActiveRegion>("unknown");
+  const candidateRegionSinceRef = useRef<number>(0);
+  const rawGazeRef = useRef<{ x: number; y: number } | null>(null);
+  const gazeSamplesRef = useRef<GazeSample[]>([]);
+  const intentSamplesRef = useRef<{ at: number; scores: ZoneScores }[]>([]);
   const lastTimeRef = useRef<number>(0);
   const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stateRef = useRef<SessionState>("idle");
@@ -178,38 +197,110 @@ function EyeTrackingDemo() {
     ) as Record<ZoneId, number>;
   }, [zoneTimes]);
 
-  const detectZone = useCallback((x: number, y: number): ZoneId => {
-    const checks: [ZoneId, React.RefObject<HTMLElement>][] = [
-      ["sectionA", sectionARef as React.RefObject<HTMLElement>],
-      ["sectionB", sectionBRef as React.RefObject<HTMLElement>],
-      ["question", questionRef as React.RefObject<HTMLElement>],
-      ["answers",  answersRef  as React.RefObject<HTMLElement>],
+  const scoreRegions = useCallback((x: number, y: number): ZoneScores => {
+    const scores: ZoneScores = { stem: 0, question: 0, answers: 0 };
+    const refs = [
+      { id: "stem" as const, element: stemRef.current },
+      { id: "question" as const, element: questionRef.current },
+      { id: "answers" as const, element: answersRef.current },
     ];
-    for (const [id, ref] of checks) {
-      const r = ref.current?.getBoundingClientRect();
-      if (r && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom)
-        return id;
+
+    for (const { id, element } of refs) {
+      const rect = element?.getBoundingClientRect();
+      if (rect) scores[id] = scoreRectIntent(x, y, rect);
     }
-    return lastZoneRef.current;
+
+    return scores;
+  }, []);
+
+  const detectIntentRegion = useCallback(
+    (x: number, y: number, now: number): ActiveRegion => {
+      rawGazeRef.current = { x, y };
+      gazeSamplesRef.current.push({ x, y, at: now });
+      if (gazeSamplesRef.current.length > SMOOTHING_SAMPLE_COUNT) {
+        gazeSamplesRef.current.shift();
+      }
+
+      const smoothed = gazeSamplesRef.current.reduce(
+        (acc, sample) => ({ x: acc.x + sample.x, y: acc.y + sample.y }),
+        { x: 0, y: 0 }
+      );
+      const sampleCount = Math.max(1, gazeSamplesRef.current.length);
+      const scores = scoreRegions(smoothed.x / sampleCount, smoothed.y / sampleCount);
+
+      intentSamplesRef.current.push({ at: now, scores });
+      intentSamplesRef.current = intentSamplesRef.current.filter(
+        (sample) => now - sample.at <= INTENT_WINDOW_MS
+      );
+
+      const totals: ZoneScores = { stem: 0, question: 0, answers: 0 };
+      let totalWeight = 0;
+      for (const sample of intentSamplesRef.current) {
+        const ageRatio = Math.min(1, (now - sample.at) / INTENT_WINDOW_MS);
+        const weight = 1 - ageRatio * 0.55;
+        totalWeight += weight;
+        for (const id of ZONE_IDS) totals[id] += sample.scores[id] * weight;
+      }
+
+      if (totalWeight <= 0) return "unknown";
+
+      let bestRegion: ZoneId = "stem";
+      let bestScore = totals.stem / totalWeight;
+      for (const id of ZONE_IDS) {
+        const score = totals[id] / totalWeight;
+        if (score > bestScore) {
+          bestRegion = id;
+          bestScore = score;
+        }
+      }
+
+      return bestScore >= INTENT_SCORE_THRESHOLD ? bestRegion : "unknown";
+    },
+    [scoreRegions]
+  );
+
+  const commitStableRegion = useCallback((nextRegion: ActiveRegion, now: number) => {
+    const currentRegion = activeRegionRef.current;
+
+    if (nextRegion === currentRegion) {
+      candidateRegionRef.current = nextRegion;
+      candidateRegionSinceRef.current = now;
+      return currentRegion;
+    }
+
+    if (candidateRegionRef.current !== nextRegion) {
+      candidateRegionRef.current = nextRegion;
+      candidateRegionSinceRef.current = now;
+      return currentRegion;
+    }
+
+    if (now - candidateRegionSinceRef.current < MIN_REGION_DWELL_MS) {
+      return currentRegion;
+    }
+
+    activeRegionRef.current = nextRegion;
+    setActiveZone(nextRegion);
+    return nextRegion;
   }, []);
 
   const recordGaze = useCallback(
     (x: number, y: number) => {
-      setGazePos({ x, y });
       if (stateRef.current !== "active") return;
       setGazeDataReceived(true);
       const now = Date.now();
-      const elapsed = now - lastTimeRef.current;
-      setZoneTimes((prev) => ({
-        ...prev,
-        [lastZoneRef.current]: prev[lastZoneRef.current] + elapsed,
-      }));
+      const elapsed = lastTimeRef.current > 0 ? now - lastTimeRef.current : 0;
+      const elapsedRegion = activeRegionRef.current;
+      if (elapsed > 0 && isPrimaryRegion(elapsedRegion)) {
+        setZoneTimes((prev) => ({
+          ...prev,
+          [elapsedRegion]: prev[elapsedRegion] + elapsed,
+        }));
+      }
       lastTimeRef.current = now;
-      const zone = detectZone(x, y);
-      lastZoneRef.current = zone;
-      setActiveZone(zone);
+      const intentRegion = detectIntentRegion(x, y, now);
+      commitStableRegion(intentRegion, now);
     },
-    [detectZone]
+    [commitStableRegion, detectIntentRegion]
   );
 
   // Per-frame detection loop - reads iris landmarks and maps to screen coords
@@ -321,7 +412,12 @@ function EyeTrackingDemo() {
       setQuestion(data);
       setTimeLeft(120);
       setZoneTimes(emptyZoneTimes());
-      lastZoneRef.current = "sectionA";
+      activeRegionRef.current = "unknown";
+      candidateRegionRef.current = "unknown";
+      candidateRegionSinceRef.current = Date.now();
+      gazeSamplesRef.current = [];
+      intentSamplesRef.current = [];
+      setActiveZone("unknown");
       lastTimeRef.current = Date.now();
       setState("active");
     } catch {
@@ -396,10 +492,13 @@ function EyeTrackingDemo() {
     if (state !== "active") return;
     if (timerIdRef.current) clearInterval(timerIdRef.current);
     const elapsed = Date.now() - lastTimeRef.current;
-    setZoneTimes((prev) => ({
-      ...prev,
-      [lastZoneRef.current]: prev[lastZoneRef.current] + elapsed,
-    }));
+    const elapsedRegion = activeRegionRef.current;
+    if (isPrimaryRegion(elapsedRegion)) {
+      setZoneTimes((prev) => ({
+        ...prev,
+        [elapsedRegion]: prev[elapsedRegion] + elapsed,
+      }));
+    }
     setSelected(key);
     setState("answered");
     if (animFrameRef.current) {
@@ -425,6 +524,12 @@ function EyeTrackingDemo() {
     gainVRef.current = 60;
     calibPhaseSamples.current = [[], [], []];
     calibHorizSamplesRef.current = [];
+    rawGazeRef.current = null;
+    gazeSamplesRef.current = [];
+    intentSamplesRef.current = [];
+    activeRegionRef.current = "unknown";
+    candidateRegionRef.current = "unknown";
+    candidateRegionSinceRef.current = 0;
   };
 
   const reset = () => {
@@ -434,7 +539,7 @@ function EyeTrackingDemo() {
     setGazeActive(false);
     setGazeDataReceived(false);
     setWgError(false);
-    setGazePos(null);
+    setActiveZone("unknown");
     setState("idle");
   };
 
@@ -450,12 +555,12 @@ function EyeTrackingDemo() {
 
     if (!gazeDataReceived) return result;
 
-    const sectionTotal = zonePcts.sectionA + zonePcts.sectionB;
+    const stem = zonePcts.stem;
     const { question: q, answers: a } = zonePcts;
     const tips: string[] = [];
-    if (sectionTotal > 55 && q < 12)
+    if (stem > 55 && q < 12)
       tips.push(
-        "You spent most time on the passage sections before reading the question. Try reading the question stem first to direct your search for evidence."
+        "You spent most time on the stem before reading the question. Try reading the question stem first to direct your search for evidence."
       );
     else if (q < 8)
       tips.push(
@@ -498,8 +603,7 @@ function EyeTrackingDemo() {
             <p className="text-slate-700 text-sm mt-1 leading-relaxed">
               PhloemAI&apos;s optional attention tracker uses your webcam to estimate
               which zone you&apos;re focused on during each question -{" "}
-              <span className="text-slate-900 font-medium">Section A</span>,{" "}
-              <span className="text-slate-900 font-medium">Section B</span>,{" "}
+              <span className="text-slate-900 font-medium">STEM</span>,{" "}
               <span className="text-slate-900 font-medium">Question</span>,{" "}
               or <span className="text-slate-900 font-medium">Answers</span>. It shows{" "}
               <em>how</em> you read, not just what you got wrong.
@@ -608,48 +712,8 @@ function EyeTrackingDemo() {
   // ── Active question ─────────────────────────────────────────────────────────
   if ((state === "active" || state === "answered") && question) {
     const timeCritical = timeLeft < 30 && state === "active";
-    const passageSections = getPassageSections(question);
+    const stemText = getStemText(question);
     return (
-      <>
-        {/* Gaze ring - explicit pixel offsets, no transforms, no ambiguity */}
-        {gazeActive && gazePos && state === "active" && (
-          <div
-            style={{
-              position: "fixed",
-              zIndex: 9999,
-              pointerEvents: "none",
-              left: gazePos.x - 22,
-              top: gazePos.y - 22,
-              width: 44,
-              height: 44,
-            }}
-          >
-            {/* Ring */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                borderRadius: "50%",
-                border: "1.5px solid rgba(148,163,184,0.55)",
-                background: "rgba(255,255,255,0.03)",
-              }}
-            />
-            {/* Centre dot */}
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%,-50%)",
-                width: 3,
-                height: 3,
-                borderRadius: "50%",
-                background: "rgba(148,163,184,0.7)",
-              }}
-            />
-          </div>
-        )}
-
       <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
@@ -678,65 +742,34 @@ function EyeTrackingDemo() {
         </div>
 
         <div className="p-4 space-y-3">
-          {/* Passage section A */}
+          {/* Stem */}
           <div
-            ref={sectionARef}
+            ref={stemRef}
             className={`rounded-xl p-4 border transition-all duration-300 ${
-              activeZone === "sectionA" && state === "active"
-                ? ZONE.sectionA.active_box
-                : ZONE.sectionA.inactive_box
+              activeZone === "stem" && state === "active"
+                ? ZONE.stem.active_box
+                : ZONE.stem.inactive_box
             }`}
           >
             <div className="flex items-center gap-2 mb-2">
               <span
                 className={`text-xs font-semibold uppercase tracking-wide ${
-                  activeZone === "sectionA" && state === "active"
-                    ? ZONE.sectionA.badge
+                  activeZone === "stem" && state === "active"
+                    ? ZONE.stem.badge
                     : "text-slate-500"
                 }`}
               >
-                Section A
+                STEM
               </span>
-              {activeZone === "sectionA" && state === "active" && (
+              {activeZone === "stem" && state === "active" && (
                 <span className="flex items-center gap-1 text-xs text-blue-600 animate-pulse">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block" />
                   tracking
                 </span>
               )}
             </div>
-            <p className="text-slate-800 text-sm leading-relaxed">
-              {passageSections.sectionA}
-            </p>
-          </div>
-
-          {/* Passage section B */}
-          <div
-            ref={sectionBRef}
-            className={`rounded-xl p-4 border transition-all duration-300 ${
-              activeZone === "sectionB" && state === "active"
-                ? ZONE.sectionB.active_box
-                : ZONE.sectionB.inactive_box
-            }`}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <span
-                className={`text-xs font-semibold uppercase tracking-wide ${
-                  activeZone === "sectionB" && state === "active"
-                    ? ZONE.sectionB.badge
-                    : "text-slate-500"
-                }`}
-              >
-                Section B
-              </span>
-              {activeZone === "sectionB" && state === "active" && (
-                <span className="flex items-center gap-1 text-xs text-cyan-600 animate-pulse">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 inline-block" />
-                  tracking
-                </span>
-              )}
-            </div>
-            <p className="text-slate-800 text-sm leading-relaxed">
-              {passageSections.sectionB}
+            <p className="text-slate-800 text-sm leading-relaxed whitespace-pre-line">
+              {stemText}
             </p>
           </div>
 
@@ -833,7 +866,7 @@ function EyeTrackingDemo() {
 
           {/* Zone stats */}
           {gazeDataReceived ? (
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="grid grid-cols-3 gap-1.5">
               {ZONE_IDS.map((id) => (
                 <div
                   key={id}
@@ -888,7 +921,6 @@ function EyeTrackingDemo() {
           )}
         </div>
       </div>
-      </>
     );
   }
 
