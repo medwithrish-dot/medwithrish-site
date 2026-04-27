@@ -472,6 +472,11 @@ function EyeTrackingDemo() {
             </svg>
           </div>
           <div>
+            <div className="mb-3 rounded-xl border border-blue-100 bg-blue-50 px-3 py-2">
+              <p className="text-xs font-semibold text-blue-700">
+                For best experience: stay arm&apos;s length away from the camera, stay still, and keep your eyes parallel to the camera.
+              </p>
+            </div>
             <h3 className="text-slate-900 font-bold text-base">
               DEMO - Gain insights through your sight
             </h3>
