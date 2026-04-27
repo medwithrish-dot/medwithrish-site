@@ -241,7 +241,7 @@ function EyeTrackingDemo() {
       } else if (stateRef.current === "active") {
         const neutralY = neutralRef.current ?? 0;
         const neutralX = neutralHorizRef.current ?? 0;
-        const GAIN_V = gainVRef.current * 1.2;
+        const GAIN_V = gainVRef.current * 1.32;
         const GAIN_H = 25;
         const screenY = Math.max(0, Math.min(
           window.innerHeight - 1,
@@ -506,6 +506,7 @@ function EyeTrackingDemo() {
             </p>
             <p className="text-slate-500 text-xs mt-2">
               Used during UCAT practice sessions only. Entirely optional - no video is ever recorded or stored.
+              Eye tracking will not work without webcam permission, and it is not supported on mobile.
             </p>
           </div>
         </div>
