@@ -160,6 +160,8 @@ function EyeTrackingDemo() {
   const [gazeActive, setGazeActive] = useState(false);
   const [gazeDataReceived, setGazeDataReceived] = useState(false);
   const [wgError, setWgError] = useState(false);
+  const [showGazeRing, setShowGazeRing] = useState(true);
+  const [gazePos, setGazePos] = useState<{ x: number; y: number } | null>(null);
 
   const stemRef = useRef<HTMLDivElement>(null);
   const questionRef = useRef<HTMLDivElement>(null);
@@ -286,6 +288,7 @@ function EyeTrackingDemo() {
   const recordGaze = useCallback(
     (x: number, y: number) => {
       if (stateRef.current !== "active") return;
+      setGazePos({ x, y });
       setGazeDataReceived(true);
       const now = Date.now();
       const elapsed = lastTimeRef.current > 0 ? now - lastTimeRef.current : 0;
@@ -525,6 +528,7 @@ function EyeTrackingDemo() {
     calibPhaseSamples.current = [[], [], []];
     calibHorizSamplesRef.current = [];
     rawGazeRef.current = null;
+    setGazePos(null);
     gazeSamplesRef.current = [];
     intentSamplesRef.current = [];
     activeRegionRef.current = "unknown";
@@ -714,6 +718,43 @@ function EyeTrackingDemo() {
     const timeCritical = timeLeft < 30 && state === "active";
     const stemText = getStemText(question);
     return (
+      <>
+        {gazeActive && showGazeRing && gazePos && state === "active" && (
+          <div
+            style={{
+              position: "fixed",
+              zIndex: 9999,
+              pointerEvents: "none",
+              left: gazePos.x - 22,
+              top: gazePos.y - 22,
+              width: 44,
+              height: 44,
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: "50%",
+                border: "1.5px solid rgba(148,163,184,0.55)",
+                background: "rgba(255,255,255,0.03)",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%,-50%)",
+                width: 3,
+                height: 3,
+                borderRadius: "50%",
+                background: "rgba(148,163,184,0.7)",
+              }}
+            />
+          </div>
+        )}
+
       <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
@@ -728,17 +769,30 @@ function EyeTrackingDemo() {
               </span>
             )}
           </div>
-          <span
-            className={`font-mono font-bold text-sm transition-colors ${
-              state === "answered"
-                ? "text-slate-400"
-                : timeCritical
-                ? "text-red-500 animate-pulse"
-                : "text-slate-900"
-            }`}
-          >
-            {formatTime(timeLeft)}
-          </span>
+          <div className="flex items-center gap-3">
+            {gazeActive && state === "active" && (
+              <label className="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={showGazeRing}
+                  onChange={(event) => setShowGazeRing(event.target.checked)}
+                  className="h-3.5 w-3.5 rounded border-slate-300 text-blue-600"
+                />
+                Gaze ring
+              </label>
+            )}
+            <span
+              className={`font-mono font-bold text-sm transition-colors ${
+                state === "answered"
+                  ? "text-slate-400"
+                  : timeCritical
+                  ? "text-red-500 animate-pulse"
+                  : "text-slate-900"
+              }`}
+            >
+              {formatTime(timeLeft)}
+            </span>
+          </div>
         </div>
 
         <div className="p-4 space-y-3">
@@ -921,6 +975,7 @@ function EyeTrackingDemo() {
           )}
         </div>
       </div>
+      </>
     );
   }
 
