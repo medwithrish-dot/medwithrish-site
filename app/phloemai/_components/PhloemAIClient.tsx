@@ -21,15 +21,41 @@ import {
   type AttentionTrackingSnapshot,
   useAttentionTracker,
 } from "../_lib/useAttentionTracker";
+import {
+  Activity,
+  AlertTriangle,
+  ArrowRight,
+  BadgeCheck,
+  Brain,
+  Check,
+  CheckCircle,
+  Eye,
+  LockKeyhole,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Timer,
+  UserRound,
+} from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 // ── PhloemAI Logo (landing hero) ─────────────────────────────────────────────
 
-function PhloemAILogo() {
+function PhloemAILogo({ compact = false }: { compact?: boolean } = {}) {
   return (
-    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center shadow-lg border border-blue-500/20">
-      <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+    <div
+      className={`${
+        compact ? "w-9 h-9 rounded-xl" : "w-16 h-16 rounded-2xl"
+      } bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center shadow-lg border border-blue-500/20`}
+    >
+      <svg
+        className={`${compact ? "w-5 h-5" : "w-8 h-8"} text-white`}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.5}
+      >
         <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
       </svg>
     </div>
@@ -320,7 +346,7 @@ export function AttentionTrackingDemo() {
         }
         if (finalZonePcts.sectionB < finalZonePcts.sectionA) {
           issues.push(
-            `Section B received less focus than Section A (${sectionBToAPct}% as much time).`
+            `Uneven focus: focus on Section B was only ${sectionBToAPct}% of Section A.`
           );
         }
         if (sectionARevisits >= 3) {
@@ -370,8 +396,8 @@ export function AttentionTrackingDemo() {
             value: String(regionSwitches),
           },
           {
-            label: "B vs A focus",
-            value: finalZonePcts.sectionA > 0 ? `${sectionBToAPct}%` : "N/A",
+            label: "Uneven focus",
+            value: finalZonePcts.sectionA > 0 ? `B was only ${sectionBToAPct}% of A` : "N/A",
           },
           {
             label: "A/B flips",
@@ -1533,7 +1559,498 @@ function HowItWorksPanel({
 
 // ── Landing Hero ──────────────────────────────────────────────────────────────
 
+function RedesignedTutorHero() {
+  const featureCards = [
+    {
+      title: "Timing patterns",
+      text: "See where you spent too long, and how it affected your accuracy.",
+      icon: Timer,
+      iconWrap: "bg-blue-50 text-blue-600",
+    },
+    {
+      title: "Attention tracking",
+      text: "Understand where you focused most, skipped key text, or over-checked answers.",
+      icon: Eye,
+      iconWrap: "bg-cyan-50 text-cyan-600",
+    },
+    {
+      title: "AI mistake diagnosis",
+      text: "PhloemAI explains the habit behind the miss, not just the right answer.",
+      icon: Brain,
+      iconWrap: "bg-violet-50 text-violet-600",
+    },
+    {
+      title: "Personalised next step",
+      text: "Get a focused recommendation for what to fix in the next question set.",
+      icon: Target,
+      iconWrap: "bg-orange-50 text-orange-600",
+    },
+  ];
+
+  const freeFeatures = [
+    "10-minute UCAT diagnostic",
+    "Basic timing and accuracy feedback",
+    "One AI diagnosis summary",
+    "Attention demo access",
+  ];
+
+  const productCards = [
+    {
+      title: "UCAT",
+      status: "Available Now",
+      text: "Full-length practice, AI diagnosis, attention tracking, and personalised coaching.",
+      icon: Brain,
+      action: "Open UCAT Tutor",
+      href: "/phloemai/ucat-tutor",
+      active: true,
+    },
+    {
+      title: "Medicine Interview",
+      status: "Coming Soon",
+      text: "Realistic MMI and panel preparation with answer feedback.",
+      icon: UserRound,
+      action: "Notify Me",
+      active: false,
+    },
+    {
+      title: "Dentistry Interview",
+      status: "Coming Soon",
+      text: "Dentistry-specific interview practice with confidence scoring.",
+      icon: BadgeCheck,
+      action: "Notify Me",
+      active: false,
+    },
+  ];
+
+  return (
+    <div className="bg-white">
+      <section className="bg-[#050b1f] text-white">
+        <div className="mx-auto max-w-7xl px-6 pt-10 pb-8 lg:px-8 lg:pt-14">
+          <div className="grid items-center gap-10 lg:grid-cols-[1fr_0.92fr]">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-cyan-200">
+                <Activity className="h-4 w-4" aria-hidden="true" />
+                AI Medical Admissions Tutor
+              </div>
+
+              <h1 className="mt-6 max-w-2xl text-5xl font-black leading-[0.95] text-white sm:text-6xl lg:text-7xl">
+                Phloem<span className="text-blue-500">AI</span>
+              </h1>
+
+              <p className="mt-5 max-w-xl text-2xl font-bold leading-tight text-white sm:text-3xl">
+                The AI tutor that shows why you lose marks.
+              </p>
+
+              <p className="mt-5 max-w-xl text-sm leading-7 text-slate-200 sm:text-base">
+                PhloemAI analyses your timing, confidence, attention patterns,
+                answer changes and optional eye + mouse tracking to diagnose
+                mistakes and recommend exactly what to fix next.
+              </p>
+
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/phloemai/ucat-tutor"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
+                >
+                  Start Free
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/phloemai/ucat-demo"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-blue-400/45 bg-blue-500/10 px-6 text-sm font-bold text-blue-100 transition-colors hover:border-blue-300 hover:bg-blue-500/20"
+                >
+                  <Eye className="h-4 w-4" aria-hidden="true" />
+                  Try Attention Demo
+                </Link>
+              </div>
+
+              <p className="mt-5 text-xs leading-relaxed text-slate-300">
+                No card needed | 10-minute diagnostic | Optional eye + mouse tracking
+              </p>
+
+              <div className="mt-8 grid max-w-2xl gap-5 md:grid-cols-[220px_1fr] md:items-center">
+                <div className="aspect-[4/3] overflow-hidden rounded-2xl border border-white/15 bg-slate-900/70 shadow-xl shadow-black/20">
+                  <div className="flex h-full items-center justify-center bg-blue-950/70">
+                    <span className="text-5xl font-black tracking-tight text-blue-200">
+                      MR
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wide text-cyan-200">
+                    Built by MedWithRish
+                  </p>
+                  <h2 className="mt-2 text-2xl font-black leading-tight text-white">
+                    UCAT strategy from a real tutor, not a generic question bank.
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-slate-300">
+                    I am Rish, the UCAT tutor behind MedWithRish. PhloemAI is
+                    built around the patterns I look for in lessons: timing
+                    traps, weak review habits, missed question wording, and the
+                    exact strategy change that moves a student forward.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-blue-400/45 bg-slate-950/70 p-5 shadow-2xl shadow-blue-950/25">
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <PhloemAILogo compact />
+                  <div>
+                    <h2 className="text-xl font-black text-white">AI Diagnosis</h2>
+                    <p className="text-xs text-slate-400">Based on your attempt</p>
+                  </div>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                  <div className="text-sm font-bold text-white">UCAT Practice</div>
+                  <div className="flex items-center justify-end gap-1.5 text-xs text-slate-300">
+                    Live Analysis
+                    <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="rounded-2xl border border-red-400/25 bg-red-500/8 p-4">
+                  <div className="flex gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-500/12 text-red-300 ring-1 ring-red-400/25">
+                      <AlertTriangle className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-red-300">Major issues</h3>
+                      <ul className="mt-2 space-y-1.5 text-sm leading-6 text-slate-100">
+                        <li>Spent too long reading extra information</li>
+                        <li>Slow with calculator</li>
+                        <li>18s over target</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-cyan-400/25 bg-cyan-500/8 p-4">
+                  <div className="flex gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-cyan-500/12 text-cyan-200 ring-1 ring-cyan-400/25">
+                      <Eye className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-cyan-200">Minor issues</h3>
+                      <ul className="mt-2 space-y-1.5 text-sm leading-6 text-slate-100">
+                        <li>Read stem before question</li>
+                        <li>Kept re-reading stem with correct answer</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-violet-400/25 bg-violet-500/8 p-4">
+                  <div className="flex gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-violet-500/12 text-violet-200 ring-1 ring-violet-400/25">
+                      <Sparkles className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-violet-200">Fixes</h3>
+                      <ul className="mt-2 space-y-1.5 text-sm leading-6 text-slate-100">
+                        <li>Calculator speed practice</li>
+                        <li>Timed QR sets with confidence review</li>
+                        <li>Read the question before mining the stem</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-3 text-xs text-slate-400">
+                Based on timing, answer changes and attention behaviour.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-white/15 bg-white/6 p-4 sm:flex sm:items-center sm:justify-between sm:gap-6">
+            <div className="flex items-center gap-4">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-blue-400/30 bg-blue-500/10 text-blue-200">
+                <Target className="h-8 w-8" aria-hidden="true" />
+              </div>
+              <div>
+                <h2 className="text-lg font-black text-white">
+                  Try the 60-second Attention Demo
+                </h2>
+                <p className="mt-1 text-sm text-slate-300">
+                  See which parts of a question you focus on live.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/phloemai/ucat-demo"
+              className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white px-5 text-sm font-bold text-slate-950 transition-colors hover:bg-blue-50 sm:mt-0 sm:w-auto"
+            >
+              Try Demo Now
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+        <h2 className="text-center text-3xl font-black text-slate-950">
+          What your normal question bank misses
+        </h2>
+
+        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {featureCards.map((feature) => {
+            const Icon = feature.icon;
+            return (
+              <div
+                key={feature.title}
+                className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+              >
+                <div
+                  className={`flex h-12 w-12 items-center justify-center rounded-full ${feature.iconWrap}`}
+                >
+                  <Icon className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <h3 className="mt-5 text-sm font-black text-slate-950">
+                  {feature.title}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-700">
+                  {feature.text}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <h2 className="text-center text-3xl font-black text-slate-950">
+            Why this feels different
+          </h2>
+          <div className="mt-5 grid gap-5 lg:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-white p-6">
+              <div className="mb-4 flex items-center gap-2 text-sm font-bold text-slate-600">
+                <Brain className="h-5 w-5" aria-hidden="true" />
+                Ordinary question banks
+              </div>
+              <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
+                <div className="mb-4 h-3 w-16 rounded-full bg-slate-200" />
+                <div className="mb-2 h-2 w-48 rounded-full bg-slate-200" />
+                <div className="h-2 w-72 max-w-full rounded-full bg-slate-200" />
+                <div className="mt-5 rounded-lg bg-red-50 p-4 text-sm font-semibold text-red-700">
+                  You got it wrong. The answer is C.
+                </div>
+              </div>
+              <p className="mt-5 text-center text-sm text-slate-600">
+                Tells you what you got wrong.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-blue-500 bg-white p-6 shadow-sm shadow-blue-100">
+              <div className="mb-4 flex items-center gap-2 text-sm font-bold text-blue-700">
+                <CheckCircle className="h-5 w-5" aria-hidden="true" />
+                PhloemAI
+              </div>
+              <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {["Timing", "Attention", "Confidence", "Answer change"].map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-lg font-semibold leading-8 text-slate-900">
+                  You focused on a distractor, skipped the key stem words, and
+                  changed from the correct answer near the end.
+                </p>
+              </div>
+              <p className="mt-5 text-center text-sm text-slate-700">
+                Shows you why and what to fix next.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <h2 className="text-3xl font-black text-slate-950">
+            Start with a free diagnostic.
+          </h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Try PhloemAI before upgrading. No card needed.
+          </p>
+        </div>
+
+        <div className="mx-auto mt-6 grid max-w-5xl gap-6 lg:grid-cols-2">
+          <div className="rounded-2xl border border-blue-500 bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between gap-4">
+              <h3 className="text-lg font-black text-slate-950">Free Diagnostic</h3>
+              <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+                Best for trying PhloemAI
+              </span>
+            </div>
+            <div className="mt-3 text-4xl font-black text-slate-950">GBP 0</div>
+            <ul className="mt-5 space-y-3 text-sm text-slate-700">
+              {freeFeatures.map((item) => (
+                <li key={item} className="flex gap-2">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/phloemai/ucat-tutor"
+              className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white transition-colors hover:bg-blue-700"
+            >
+              Start Free
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between gap-4">
+              <h3 className="text-lg font-black text-slate-950">Full PhloemAI Tutor</h3>
+              <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-bold text-violet-700">
+                Coming Soon
+              </span>
+            </div>
+            <div className="mt-4 w-fit rounded-full bg-violet-50 px-3 py-1 text-xs font-bold text-violet-700">
+              Best for full UCAT prep
+            </div>
+            <ul className="mt-5 space-y-3 text-sm text-slate-700">
+              {[
+                "AI feedback after every session",
+                "Major/minor issue detection",
+                "Personalised fixes and drills",
+                "Progress tracking over time",
+              ].map((item) => (
+                <li key={item} className="flex gap-2">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-violet-600" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              disabled
+              className="mt-6 h-11 w-full rounded-lg border border-violet-300 text-sm font-bold text-violet-700"
+            >
+              Join Waitlist
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <h2 className="text-2xl font-black text-slate-950">
+            Available now. More coming soon.
+          </h2>
+        </div>
+
+        <div className="mt-5 grid gap-5 lg:grid-cols-3">
+          {productCards.map((product) => {
+            const Icon = product.icon;
+            const content = (
+              <>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
+                        product.active
+                          ? "bg-blue-50 text-blue-600"
+                          : "bg-slate-100 text-slate-400"
+                      }`}
+                    >
+                      <Icon className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3 className="font-black text-slate-950">{product.title}</h3>
+                      <span
+                        className={`mt-1 inline-block rounded-full px-2.5 py-1 text-xs font-bold ${
+                          product.active
+                            ? "bg-blue-600 text-white"
+                            : "bg-violet-50 text-violet-700"
+                        }`}
+                      >
+                        {product.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-4 min-h-16 text-sm leading-6 text-slate-700">
+                  {product.text}
+                </p>
+                <div
+                  className={`mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg text-sm font-bold ${
+                    product.active
+                      ? "bg-blue-600 text-white"
+                      : "border border-violet-300 text-violet-700"
+                  }`}
+                >
+                  {product.action}
+                  {product.active && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
+                </div>
+              </>
+            );
+
+            return product.active && product.href ? (
+              <Link
+                key={product.title}
+                href={product.href}
+                className="rounded-2xl border border-blue-500 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+              >
+                {content}
+              </Link>
+            ) : (
+              <div
+                key={product.title}
+                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+              >
+                {content}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 grid gap-4 border-t border-slate-200 pt-6 text-sm text-slate-700 sm:grid-cols-3">
+          {[
+            {
+              icon: LockKeyhole,
+              title: "Optional tracking",
+              text: "Eye + mouse tracking is optional and privacy-first.",
+            },
+            {
+              icon: ShieldCheck,
+              title: "No video stored",
+              text: "Webcam data is not recorded or stored.",
+            },
+            {
+              icon: UserRound,
+              title: "You are in control",
+              text: "Pause or avoid tracking whenever you want.",
+            },
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <div key={item.title} className="flex gap-3">
+                <Icon className="mt-1 h-6 w-6 shrink-0 text-slate-600" aria-hidden="true" />
+                <div>
+                  <h3 className="font-bold text-slate-950">{item.title}</h3>
+                  <p className="mt-1 leading-6">{item.text}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function TutorHero() {
+  const showLegacyLanding = process.env.NEXT_PUBLIC_PHLOEMAI_LEGACY_LANDING === "1";
+  if (!showLegacyLanding) {
+    return <RedesignedTutorHero />;
+  }
+
   return (
     <div className="flex flex-col items-center px-4 pt-8 pb-10">
       <PhloemAILogo />
