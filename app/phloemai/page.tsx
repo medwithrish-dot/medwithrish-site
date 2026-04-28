@@ -62,6 +62,8 @@ type ZoneId = keyof typeof ZONE;
 type ActiveRegion = ZoneId | "unknown";
 type GazeSample = { x: number; y: number; at: number };
 type ZoneScores = Record<ZoneId, number>;
+type RegionTransition = { from: ZoneId; to: ZoneId; at: number };
+type AnswerChoiceEvent = { key: AnswerKey; at: number };
 
 const ZONE_IDS: ZoneId[] = ["stem", "question", "answers"];
 const emptyZoneTimes = (): Record<ZoneId, number> => ({
@@ -76,6 +78,7 @@ const MIN_REGION_DWELL_MS = 400;
 const FUZZY_PADDING_RATIO = 0.18;
 const FUZZY_MIN_PADDING_PX = 18;
 const INTENT_SCORE_THRESHOLD = 0.2;
+const EARLY_FOCUS_WINDOW_MS = 10000;
 
 // ── MediaPipe iris landmark indices ───────────────────────────────────────────
 
@@ -109,6 +112,24 @@ function getStemText(question: QuestionData) {
 }
 
 type AnswerKey = "A" | "B" | "C" | "D";
+const ANSWER_KEYS: AnswerKey[] = ["A", "B", "C", "D"];
+const emptyAnswerTimes = (): Record<AnswerKey, number> => ({
+  A: 0,
+  B: 0,
+  C: 0,
+  D: 0,
+});
+type FeedbackInsights = {
+  result: string;
+  issues: string[];
+  metrics: { label: string; value: string }[];
+};
+const emptyFeedbackInsights = (): FeedbackInsights => ({
+  result: "",
+  issues: [],
+  metrics: [],
+});
+
 type SessionState =
   | "idle"
   | "enabling"
@@ -152,6 +173,8 @@ function EyeTrackingDemo() {
   const [state, setState] = useState<SessionState>("idle");
   const [question, setQuestion] = useState<QuestionData | null>(null);
   const [selected, setSelected] = useState<AnswerKey | null>(null);
+  const [confirmedAnswer, setConfirmedAnswer] = useState<AnswerKey | null>(null);
+  const [feedbackInsights, setFeedbackInsights] = useState<FeedbackInsights>(emptyFeedbackInsights);
   const [timeLeft, setTimeLeft] = useState(120);
   const [activeZone, setActiveZone] = useState<ActiveRegion>("unknown");
   const [zoneTimes, setZoneTimes] = useState<Record<ZoneId, number>>(emptyZoneTimes);
@@ -172,6 +195,16 @@ function EyeTrackingDemo() {
   const rawGazeRef = useRef<{ x: number; y: number } | null>(null);
   const gazeSamplesRef = useRef<GazeSample[]>([]);
   const intentSamplesRef = useRef<{ at: number; scores: ZoneScores }[]>([]);
+  const questionStartTimeRef = useRef<number>(0);
+  const earlyZoneTimesRef = useRef<Record<ZoneId, number>>(emptyZoneTimes());
+  const firstPrimaryRegionRef = useRef<ZoneId | null>(null);
+  const regionTransitionsRef = useRef<RegionTransition[]>([]);
+  const regionSwitchCountRef = useRef(0);
+  const answerSelectionHistoryRef = useRef<AnswerChoiceEvent[]>([]);
+  const answerSwitchCountRef = useRef(0);
+  const answerHoverTimesRef = useRef<Record<AnswerKey, number>>(emptyAnswerTimes());
+  const answerHoverSwitchCountRef = useRef(0);
+  const currentAnswerHoverRef = useRef<{ key: AnswerKey; startedAt: number } | null>(null);
   const lastTimeRef = useRef<number>(0);
   const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stateRef = useRef<SessionState>("idle");
@@ -198,6 +231,25 @@ function EyeTrackingDemo() {
       ZONE_IDS.map((id) => [id, Math.round((zoneTimes[id] / total) * 100)])
     ) as Record<ZoneId, number>;
   }, [zoneTimes]);
+
+  const recordEarlyDwell = useCallback((region: ZoneId, from: number, to: number) => {
+    const sessionStart = questionStartTimeRef.current;
+    if (!sessionStart || to <= from) return;
+
+    const earlyWindowEnd = sessionStart + EARLY_FOCUS_WINDOW_MS;
+    const overlap = Math.max(0, Math.min(to, earlyWindowEnd) - Math.max(from, sessionStart));
+    if (overlap > 0) {
+      earlyZoneTimesRef.current[region] += overlap;
+    }
+  }, []);
+
+  const finalizeAnswerHover = useCallback((now = Date.now()) => {
+    const hover = currentAnswerHoverRef.current;
+    if (!hover) return;
+
+    answerHoverTimesRef.current[hover.key] += Math.max(0, now - hover.startedAt);
+    currentAnswerHoverRef.current = null;
+  }, []);
 
   const scoreRegions = useCallback((x: number, y: number): ZoneScores => {
     const scores: ZoneScores = { stem: 0, question: 0, answers: 0 };
@@ -280,6 +332,21 @@ function EyeTrackingDemo() {
       return currentRegion;
     }
 
+    if (isPrimaryRegion(nextRegion)) {
+      if (!firstPrimaryRegionRef.current) {
+        firstPrimaryRegionRef.current = nextRegion;
+      }
+
+      if (isPrimaryRegion(currentRegion) && currentRegion !== nextRegion) {
+        regionSwitchCountRef.current += 1;
+        regionTransitionsRef.current.push({
+          from: currentRegion,
+          to: nextRegion,
+          at: now,
+        });
+      }
+    }
+
     activeRegionRef.current = nextRegion;
     setActiveZone(nextRegion);
     return nextRegion;
@@ -291,19 +358,21 @@ function EyeTrackingDemo() {
       setGazePos({ x, y });
       setGazeDataReceived(true);
       const now = Date.now();
-      const elapsed = lastTimeRef.current > 0 ? now - lastTimeRef.current : 0;
+      const previousTime = lastTimeRef.current > 0 ? lastTimeRef.current : now;
+      const elapsed = now - previousTime;
       const elapsedRegion = activeRegionRef.current;
       if (elapsed > 0 && isPrimaryRegion(elapsedRegion)) {
         setZoneTimes((prev) => ({
           ...prev,
           [elapsedRegion]: prev[elapsedRegion] + elapsed,
         }));
+        recordEarlyDwell(elapsedRegion, previousTime, now);
       }
       lastTimeRef.current = now;
       const intentRegion = detectIntentRegion(x, y, now);
       commitStableRegion(intentRegion, now);
     },
-    [commitStableRegion, detectIntentRegion]
+    [commitStableRegion, detectIntentRegion, recordEarlyDwell]
   );
 
   // Per-frame detection loop - reads iris landmarks and maps to screen coords
@@ -412,16 +481,30 @@ function EyeTrackingDemo() {
       const res = await fetch("/api/rishbot/question");
       if (!res.ok) throw new Error("api error");
       const data: QuestionData = await res.json();
+      const now = Date.now();
       setQuestion(data);
+      setSelected(null);
+      setConfirmedAnswer(null);
+      setFeedbackInsights(emptyFeedbackInsights());
       setTimeLeft(120);
       setZoneTimes(emptyZoneTimes());
       activeRegionRef.current = "unknown";
       candidateRegionRef.current = "unknown";
-      candidateRegionSinceRef.current = Date.now();
+      candidateRegionSinceRef.current = now;
+      questionStartTimeRef.current = now;
+      earlyZoneTimesRef.current = emptyZoneTimes();
+      firstPrimaryRegionRef.current = null;
+      regionTransitionsRef.current = [];
+      regionSwitchCountRef.current = 0;
+      answerSelectionHistoryRef.current = [];
+      answerSwitchCountRef.current = 0;
+      answerHoverTimesRef.current = emptyAnswerTimes();
+      answerHoverSwitchCountRef.current = 0;
+      currentAnswerHoverRef.current = null;
       gazeSamplesRef.current = [];
       intentSamplesRef.current = [];
       setActiveZone("unknown");
-      lastTimeRef.current = Date.now();
+      lastTimeRef.current = now;
       setState("active");
     } catch {
       setState("idle");
@@ -477,39 +560,6 @@ function EyeTrackingDemo() {
     };
   }, [state]);
 
-  // Countdown timer
-  useEffect(() => {
-    if (state !== "active") return;
-    timerIdRef.current = setInterval(() => {
-      setTimeLeft((t) => {
-        if (t <= 1) { setState("answered"); return 0; }
-        return t - 1;
-      });
-    }, 1000);
-    return () => {
-      if (timerIdRef.current) clearInterval(timerIdRef.current);
-    };
-  }, [state]);
-
-  const submitAnswer = useCallback((key: AnswerKey) => {
-    if (state !== "active") return;
-    if (timerIdRef.current) clearInterval(timerIdRef.current);
-    const elapsed = Date.now() - lastTimeRef.current;
-    const elapsedRegion = activeRegionRef.current;
-    if (isPrimaryRegion(elapsedRegion)) {
-      setZoneTimes((prev) => ({
-        ...prev,
-        [elapsedRegion]: prev[elapsedRegion] + elapsed,
-      }));
-    }
-    setSelected(key);
-    setState("answered");
-    if (animFrameRef.current) {
-      cancelAnimationFrame(animFrameRef.current);
-      animFrameRef.current = null;
-    }
-  }, [state]);
-
   const stopTracking = () => {
     if (animFrameRef.current) {
       cancelAnimationFrame(animFrameRef.current);
@@ -534,11 +584,23 @@ function EyeTrackingDemo() {
     activeRegionRef.current = "unknown";
     candidateRegionRef.current = "unknown";
     candidateRegionSinceRef.current = 0;
+    questionStartTimeRef.current = 0;
+    earlyZoneTimesRef.current = emptyZoneTimes();
+    firstPrimaryRegionRef.current = null;
+    regionTransitionsRef.current = [];
+    regionSwitchCountRef.current = 0;
+    answerSelectionHistoryRef.current = [];
+    answerSwitchCountRef.current = 0;
+    answerHoverTimesRef.current = emptyAnswerTimes();
+    answerHoverSwitchCountRef.current = 0;
+    currentAnswerHoverRef.current = null;
   };
 
   const reset = () => {
     stopTracking();
     setSelected(null);
+    setConfirmedAnswer(null);
+    setFeedbackInsights(emptyFeedbackInsights());
     setQuestion(null);
     setGazeActive(false);
     setGazeDataReceived(false);
@@ -550,35 +612,208 @@ function EyeTrackingDemo() {
   const formatTime = (s: number) =>
     `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 
-  const coachingMessage = useMemo(() => {
-    if (!question || !selected) return "";
-    const correct = selected === question.correct;
-    const result = correct
-      ? `Correct. ${question.explanation}`
-      : `The correct answer was ${question.correct}. ${question.explanation}`;
+  const buildFeedbackInsights = useCallback(
+    (finalAnswer: AnswerKey | null, finalZoneTimes: Record<ZoneId, number>): FeedbackInsights => {
+      if (!question) return emptyFeedbackInsights();
 
-    if (!gazeDataReceived) return result;
+      const correct = finalAnswer === question.correct;
+      const result = !finalAnswer
+        ? `No answer was confirmed. The correct answer was ${question.correct}. ${question.explanation}`
+        : correct
+        ? `Correct. ${question.explanation}`
+        : `The correct answer was ${question.correct}. ${question.explanation}`;
 
-    const stem = zonePcts.stem;
-    const { question: q, answers: a } = zonePcts;
-    const tips: string[] = [];
-    if (stem > 55 && q < 12)
-      tips.push(
-        "You spent most time on the stem before reading the question. Try reading the question stem first to direct your search for evidence."
+      const finalTotal = Object.values(finalZoneTimes).reduce((sum, value) => sum + value, 0);
+      const finalZonePcts = Object.fromEntries(
+        ZONE_IDS.map((id) => [
+          id,
+          finalTotal > 0 ? Math.round((finalZoneTimes[id] / finalTotal) * 100) : 0,
+        ])
+      ) as Record<ZoneId, number>;
+      const earlyTimes = { ...earlyZoneTimesRef.current };
+      const earlyTotal = Object.values(earlyTimes).reduce((sum, value) => sum + value, 0);
+      let earlyDominant: ZoneId | null = null;
+      let earlyDominantPct = 0;
+
+      for (const id of ZONE_IDS) {
+        const pct = earlyTotal > 0 ? Math.round((earlyTimes[id] / earlyTotal) * 100) : 0;
+        if (pct > earlyDominantPct) {
+          earlyDominant = id;
+          earlyDominantPct = pct;
+        }
+      }
+
+      const firstRegion = firstPrimaryRegionRef.current;
+      const stemQuestionFlips = regionTransitionsRef.current.filter(
+        ({ from, to }) =>
+          (from === "stem" && to === "question") ||
+          (from === "question" && to === "stem")
+      ).length;
+      const answerHoverSeconds = Math.round(
+        Object.values(answerHoverTimesRef.current).reduce((sum, value) => sum + value, 0) / 1000
       );
-    else if (q < 8)
-      tips.push(
-        "Very little time on the question stem - make sure you fully understand what is being asked before scanning the passage."
-      );
-    if (a < 10 && !correct)
-      tips.push(
-        "You spent little time reviewing the answer options. Comparing all four choices before committing can reduce impulsive selections."
-      );
-    tips.push(result);
-    return tips.join(" ");
-  }, [question, selected, zonePcts, gazeDataReceived]);
+      const hoveredOptionCount = ANSWER_KEYS.filter(
+        (key) => answerHoverTimesRef.current[key] > 250
+      ).length;
+      const answerSwitches = answerSwitchCountRef.current;
+      const regionSwitches = regionSwitchCountRef.current;
+      const answerHoverSwitches = answerHoverSwitchCountRef.current;
+
+      const issues: string[] = [];
+      if (!finalAnswer) {
+        issues.push("No answer was confirmed before the timer ended.");
+      }
+
+      if (!gazeDataReceived) {
+        issues.push("Eye tracking data was not recorded for this attempt.");
+      } else {
+        if (firstRegion === "stem" || (earlyDominant === "stem" && earlyDominantPct >= 50)) {
+          issues.push(
+            `Early focus leaned STEM-first${earlyDominant ? ` (${earlyDominantPct}% of the first 10s)` : ""}.`
+          );
+        }
+        if (finalZonePcts.question < 8) {
+          issues.push("QUESTION received very little stable focus time.");
+        }
+        if (stemQuestionFlips >= 4) {
+          issues.push(`${stemQuestionFlips} STEM/QUESTION flips suggest you may have been re-checking the ask repeatedly.`);
+        } else if (regionSwitches >= 8) {
+          issues.push(`${regionSwitches} total region switches suggest a scattered reading path.`);
+        }
+        if (finalZonePcts.answers < 10 && !correct) {
+          issues.push("ANSWERS received little review time before the final choice.");
+        }
+      }
+
+      if (answerSwitches >= 2) {
+        issues.push(`${answerSwitches} answer-choice switches before confirming.`);
+      }
+      if (answerHoverSeconds >= 6 && hoveredOptionCount >= 2) {
+        issues.push(`Hovered across ${hoveredOptionCount} answer options for about ${answerHoverSeconds}s.`);
+      }
+      if (answerHoverSwitches >= 3) {
+        issues.push(`${answerHoverSwitches} answer hover switches before confirming.`);
+      }
+      if (issues.length === 0) {
+        issues.push("No major focus issues detected in this attempt.");
+      }
+
+      return {
+        result,
+        issues,
+        metrics: [
+          {
+            label: "First focus",
+            value: firstRegion ? ZONE[firstRegion].label : "UNKNOWN",
+          },
+          {
+            label: "Region switches",
+            value: String(regionSwitches),
+          },
+          {
+            label: "STEM/Q flips",
+            value: String(stemQuestionFlips),
+          },
+          {
+            label: "Answer switches",
+            value: String(answerSwitches),
+          },
+        ],
+      };
+    },
+    [gazeDataReceived, question]
+  );
 
   // ── Idle state ──────────────────────────────────────────────────────────────
+  const finishQuestion = useCallback(
+    (finalAnswer: AnswerKey | null) => {
+      if (stateRef.current !== "active") return;
+      if (timerIdRef.current) clearInterval(timerIdRef.current);
+
+      const now = Date.now();
+      const previousTime = lastTimeRef.current > 0 ? lastTimeRef.current : now;
+      const elapsed = now - previousTime;
+      const elapsedRegion = activeRegionRef.current;
+      let finalZoneTimes = zoneTimes;
+
+      if (elapsed > 0 && isPrimaryRegion(elapsedRegion)) {
+        finalZoneTimes = {
+          ...zoneTimes,
+          [elapsedRegion]: zoneTimes[elapsedRegion] + elapsed,
+        };
+        setZoneTimes(finalZoneTimes);
+        recordEarlyDwell(elapsedRegion, previousTime, now);
+      }
+
+      finalizeAnswerHover(now);
+      setConfirmedAnswer(finalAnswer);
+      setFeedbackInsights(buildFeedbackInsights(finalAnswer, finalZoneTimes));
+      lastTimeRef.current = now;
+      setState("answered");
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+        animFrameRef.current = null;
+      }
+    },
+    [buildFeedbackInsights, finalizeAnswerHover, recordEarlyDwell, zoneTimes]
+  );
+
+  // Countdown timer
+  useEffect(() => {
+    if (state !== "active") return;
+    timerIdRef.current = setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          finishQuestion(null);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => {
+      if (timerIdRef.current) clearInterval(timerIdRef.current);
+    };
+  }, [finishQuestion, state]);
+
+  const selectAnswer = useCallback((key: AnswerKey) => {
+    if (state !== "active") return;
+
+    const now = Date.now();
+    if (selected && selected !== key) {
+      answerSwitchCountRef.current += 1;
+    }
+    if (selected !== key) {
+      answerSelectionHistoryRef.current.push({ key, at: now });
+    }
+    setSelected(key);
+  }, [selected, state]);
+
+  const confirmAnswer = useCallback(() => {
+    if (state !== "active" || !selected) return;
+    finishQuestion(selected);
+  }, [finishQuestion, selected, state]);
+
+  const handleAnswerHoverStart = useCallback((key: AnswerKey) => {
+    if (stateRef.current !== "active") return;
+
+    const now = Date.now();
+    const current = currentAnswerHoverRef.current;
+    if (current?.key === key) return;
+
+    if (current) {
+      answerHoverTimesRef.current[current.key] += Math.max(0, now - current.startedAt);
+      answerHoverSwitchCountRef.current += 1;
+    }
+
+    currentAnswerHoverRef.current = { key, startedAt: now };
+  }, []);
+
+  const handleAnswerHoverEnd = useCallback((key: AnswerKey) => {
+    const current = currentAnswerHoverRef.current;
+    if (!current || current.key !== key) return;
+    finalizeAnswerHover();
+  }, [finalizeAnswerHover]);
+
   if (state === "idle") {
     return (
       <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 space-y-4">
@@ -885,18 +1120,21 @@ function EyeTrackingDemo() {
               )}
             </div>
             <div className="space-y-2">
-              {(["A", "B", "C", "D"] as AnswerKey[]).map((key) => {
-                const isSelected = selected === key;
+              {ANSWER_KEYS.map((key) => {
+                const isSelected =
+                  state === "answered" ? confirmedAnswer === key : selected === key;
                 const isCorrect =
                   state === "answered" && key === question.correct;
                 const isWrong =
                   state === "answered" &&
-                  isSelected &&
+                  confirmedAnswer === key &&
                   key !== question.correct;
                 return (
                   <button
                     key={key}
-                    onClick={() => submitAnswer(key)}
+                    onClick={() => selectAnswer(key)}
+                    onMouseEnter={() => handleAnswerHoverStart(key)}
+                    onMouseLeave={() => handleAnswerHoverEnd(key)}
                     disabled={state === "answered"}
                     className={`w-full text-left px-4 py-2.5 rounded-xl text-sm border transition-all cursor-pointer ${
                       isCorrect
@@ -916,6 +1154,25 @@ function EyeTrackingDemo() {
                 );
               })}
             </div>
+            {state === "active" && (
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <p className="text-xs text-slate-500">
+                  {selected ? `Selected ${selected}` : "Choose an option before confirming."}
+                </p>
+                <button
+                  type="button"
+                  onClick={confirmAnswer}
+                  disabled={!selected}
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    selected
+                      ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                      : "bg-slate-100 text-slate-400 cursor-not-allowed"
+                  }`}
+                >
+                  Confirm answer
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Zone stats */}
@@ -945,26 +1202,72 @@ function EyeTrackingDemo() {
           {state === "answered" && (
             <div
               className={`rounded-xl p-4 border text-sm leading-relaxed ${
-                selected === question.correct
+                confirmedAnswer && confirmedAnswer === question.correct
                   ? "border-green-300 bg-green-50"
                   : "border-red-300 bg-red-50"
               }`}
             >
               <div
                 className={`flex items-center gap-2 mb-2 font-semibold text-sm ${
-                  selected === question.correct
+                  confirmedAnswer && confirmedAnswer === question.correct
                     ? "text-green-700"
                     : "text-red-700"
                 }`}
               >
-                {selected === question.correct ? "✓ Correct" : "✗ Incorrect"}
+                {!confirmedAnswer
+                  ? "No answer confirmed"
+                  : confirmedAnswer === question.correct
+                  ? "Correct"
+                  : "Incorrect"}
                 <span className="text-xs font-normal text-slate-400">
                   · AI coaching
                 </span>
               </div>
               <p className="text-slate-700 text-xs leading-relaxed">
-                {coachingMessage}
+                {feedbackInsights.result}
               </p>
+              <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {feedbackInsights.metrics.map((metric) => (
+                  <div
+                    key={metric.label}
+                    className="rounded-lg border border-slate-200 bg-white/80 px-2 py-2"
+                  >
+                    <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                      {metric.label}
+                    </div>
+                    <div className="mt-0.5 text-sm font-bold text-slate-800">
+                      {metric.value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 rounded-xl border border-slate-200 bg-white/85 p-3">
+                <div className="text-xs font-bold uppercase tracking-wide text-slate-900">
+                  ISSUES
+                </div>
+                <div className="mt-2 space-y-1.5">
+                  {feedbackInsights.issues.map((issue) => (
+                    <p key={issue} className="text-xs leading-relaxed text-slate-700">
+                      {issue}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-3 rounded-xl border border-slate-200 bg-slate-950 p-3 text-white">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-bold uppercase tracking-wide text-white">
+                      FIXES
+                    </div>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-300">
+                      Locked strategy map: reading order, re-check triggers, and answer-change rules tailored to this attempt.
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                    Lock / Upgrade to Premium
+                  </span>
+                </div>
+              </div>
               <button
                 onClick={reset}
                 className="mt-3 text-xs px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 hover:text-slate-900 hover:border-slate-400 transition-colors cursor-pointer"
