@@ -1625,65 +1625,65 @@ function RedesignedTutorHero() {
   return (
     <div className="bg-white">
       <section className="bg-[#050b1f] text-white">
-        <div className="mx-auto max-w-7xl px-6 pt-10 pb-8 lg:px-8 lg:pt-14">
-          <div className="grid items-center gap-10 lg:grid-cols-[1fr_0.92fr]">
+        <div className="mx-auto max-w-6xl px-5 pt-7 pb-6 lg:px-6 lg:pt-9">
+          <div className="grid items-center gap-8 lg:grid-cols-[0.92fr_0.78fr]">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-cyan-200">
-                <Activity className="h-4 w-4" aria-hidden="true" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-cyan-200">
+                <Activity className="h-3.5 w-3.5" aria-hidden="true" />
                 AI Medical Admissions Tutor
               </div>
 
-              <h1 className="mt-6 max-w-2xl text-5xl font-black leading-[0.95] text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-5 max-w-2xl text-4xl font-black leading-[0.95] text-white sm:text-5xl lg:text-6xl">
                 Phloem<span className="text-blue-500">AI</span>
               </h1>
 
-              <p className="mt-5 max-w-xl text-2xl font-bold leading-tight text-white sm:text-3xl">
+              <p className="mt-4 max-w-lg text-xl font-bold leading-tight text-white sm:text-2xl">
                 The AI tutor that shows why you lose marks.
               </p>
 
-              <p className="mt-5 max-w-xl text-sm leading-7 text-slate-200 sm:text-base">
+              <p className="mt-4 max-w-lg text-sm leading-6 text-slate-200">
                 PhloemAI analyses your timing, confidence, attention patterns,
                 answer changes and optional eye + mouse tracking to diagnose
                 mistakes and recommend exactly what to fix next.
               </p>
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/phloemai/ucat-tutor"
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
                 >
                   Start Free
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/phloemai/ucat-demo"
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-blue-400/45 bg-blue-500/10 px-6 text-sm font-bold text-blue-100 transition-colors hover:border-blue-300 hover:bg-blue-500/20"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-blue-400/45 bg-blue-500/10 px-5 text-sm font-bold text-blue-100 transition-colors hover:border-blue-300 hover:bg-blue-500/20"
                 >
                   <Eye className="h-4 w-4" aria-hidden="true" />
                   Try Attention Demo
                 </Link>
               </div>
 
-              <p className="mt-5 text-xs leading-relaxed text-slate-300">
+              <p className="mt-4 text-xs leading-relaxed text-slate-300">
                 No card needed | 10-minute diagnostic | Optional eye + mouse tracking
               </p>
 
-              <div className="mt-8 grid max-w-2xl gap-5 md:grid-cols-[220px_1fr] md:items-center">
-                <div className="aspect-[4/3] overflow-hidden rounded-2xl border border-white/15 bg-slate-900/70 shadow-xl shadow-black/20">
+              <div className="mt-6 grid max-w-xl gap-4 md:grid-cols-[160px_1fr] md:items-center">
+                <div className="aspect-[4/3] overflow-hidden rounded-xl border border-white/15 bg-slate-900/70 shadow-lg shadow-black/20">
                   <div className="flex h-full items-center justify-center bg-blue-950/70">
-                    <span className="text-5xl font-black tracking-tight text-blue-200">
+                    <span className="text-4xl font-black tracking-tight text-blue-200">
                       MR
                     </span>
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wide text-cyan-200">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-cyan-200">
                     Built by MedWithRish
                   </p>
-                  <h2 className="mt-2 text-2xl font-black leading-tight text-white">
+                  <h2 className="mt-1.5 text-xl font-black leading-tight text-white">
                     UCAT strategy from a real tutor, not a generic question bank.
                   </h2>
-                  <p className="mt-3 text-sm leading-6 text-slate-300">
+                  <p className="mt-2 text-xs leading-5 text-slate-300">
                     I am Rish, the UCAT tutor behind MedWithRish. PhloemAI is
                     built around the patterns I look for in lessons: timing
                     traps, weak review habits, missed question wording, and the
@@ -1693,33 +1693,33 @@ function RedesignedTutorHero() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-blue-400/45 bg-slate-950/70 p-5 shadow-2xl shadow-blue-950/25">
-              <div className="mb-4 flex items-center justify-between gap-4">
+            <div className="rounded-2xl border border-blue-400/45 bg-slate-950/70 p-4 shadow-xl shadow-blue-950/20">
+              <div className="mb-3 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <PhloemAILogo compact />
                   <div>
-                    <h2 className="text-xl font-black text-white">AI Diagnosis</h2>
+                    <h2 className="text-lg font-black text-white">AI Diagnosis</h2>
                     <p className="text-xs text-slate-400">Based on your attempt</p>
                   </div>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                  <div className="text-sm font-bold text-white">UCAT Practice</div>
-                  <div className="flex items-center justify-end gap-1.5 text-xs text-slate-300">
+                <div className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-right">
+                  <div className="text-xs font-bold text-white">UCAT Practice</div>
+                  <div className="flex items-center justify-end gap-1.5 text-[11px] text-slate-300">
                     Live Analysis
                     <span className="h-2 w-2 rounded-full bg-emerald-400" />
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <div className="rounded-2xl border border-red-400/25 bg-red-500/8 p-4">
-                  <div className="flex gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-500/12 text-red-300 ring-1 ring-red-400/25">
-                      <AlertTriangle className="h-6 w-6" aria-hidden="true" />
+              <div className="space-y-2.5">
+                <div className="rounded-xl border border-red-400/25 bg-red-500/8 p-3">
+                  <div className="flex gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-500/12 text-red-300 ring-1 ring-red-400/25">
+                      <AlertTriangle className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-red-300">Major issues</h3>
-                      <ul className="mt-2 space-y-1.5 text-sm leading-6 text-slate-100">
+                      <h3 className="text-sm font-bold text-red-300">Major issues</h3>
+                      <ul className="mt-1.5 space-y-1 text-xs leading-5 text-slate-100">
                         <li>Spent too long reading extra information</li>
                         <li>Slow with calculator</li>
                         <li>18s over target</li>
@@ -1728,14 +1728,14 @@ function RedesignedTutorHero() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-cyan-400/25 bg-cyan-500/8 p-4">
-                  <div className="flex gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-cyan-500/12 text-cyan-200 ring-1 ring-cyan-400/25">
-                      <Eye className="h-6 w-6" aria-hidden="true" />
+                <div className="rounded-xl border border-cyan-400/25 bg-cyan-500/8 p-3">
+                  <div className="flex gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cyan-500/12 text-cyan-200 ring-1 ring-cyan-400/25">
+                      <Eye className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-cyan-200">Minor issues</h3>
-                      <ul className="mt-2 space-y-1.5 text-sm leading-6 text-slate-100">
+                      <h3 className="text-sm font-bold text-cyan-200">Minor issues</h3>
+                      <ul className="mt-1.5 space-y-1 text-xs leading-5 text-slate-100">
                         <li>Read stem before question</li>
                         <li>Kept re-reading stem with correct answer</li>
                       </ul>
@@ -1743,14 +1743,14 @@ function RedesignedTutorHero() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-violet-400/25 bg-violet-500/8 p-4">
-                  <div className="flex gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-violet-500/12 text-violet-200 ring-1 ring-violet-400/25">
-                      <Sparkles className="h-6 w-6" aria-hidden="true" />
+                <div className="rounded-xl border border-violet-400/25 bg-violet-500/8 p-3">
+                  <div className="flex gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-500/12 text-violet-200 ring-1 ring-violet-400/25">
+                      <Sparkles className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-violet-200">Fixes</h3>
-                      <ul className="mt-2 space-y-1.5 text-sm leading-6 text-slate-100">
+                      <h3 className="text-sm font-bold text-violet-200">Fixes</h3>
+                      <ul className="mt-1.5 space-y-1 text-xs leading-5 text-slate-100">
                         <li>Calculator speed practice</li>
                         <li>Timed QR sets with confidence review</li>
                         <li>Read the question before mining the stem</li>
@@ -1766,23 +1766,23 @@ function RedesignedTutorHero() {
             </div>
           </div>
 
-          <div className="mt-8 rounded-2xl border border-white/15 bg-white/6 p-4 sm:flex sm:items-center sm:justify-between sm:gap-6">
-            <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-blue-400/30 bg-blue-500/10 text-blue-200">
-                <Target className="h-8 w-8" aria-hidden="true" />
+          <div className="mt-6 rounded-xl border border-white/15 bg-white/6 p-3 sm:flex sm:items-center sm:justify-between sm:gap-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-blue-400/30 bg-blue-500/10 text-blue-200">
+                <Target className="h-6 w-6" aria-hidden="true" />
               </div>
               <div>
-                <h2 className="text-lg font-black text-white">
+                <h2 className="text-base font-black text-white">
                   Try the 60-second Attention Demo
                 </h2>
-                <p className="mt-1 text-sm text-slate-300">
+                <p className="mt-0.5 text-xs text-slate-300">
                   See which parts of a question you focus on live.
                 </p>
               </div>
             </div>
             <Link
               href="/phloemai/ucat-demo"
-              className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white px-5 text-sm font-bold text-slate-950 transition-colors hover:bg-blue-50 sm:mt-0 sm:w-auto"
+              className="mt-3 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-bold text-slate-950 transition-colors hover:bg-blue-50 sm:mt-0 sm:w-auto"
             >
               Try Demo Now
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -1791,28 +1791,28 @@ function RedesignedTutorHero() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
-        <h2 className="text-center text-3xl font-black text-slate-950">
+      <section className="mx-auto max-w-6xl px-5 py-8 lg:px-6">
+        <h2 className="text-center text-2xl font-black text-slate-950">
           What your normal question bank misses
         </h2>
 
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {featureCards.map((feature) => {
             const Icon = feature.icon;
             return (
               <div
                 key={feature.title}
-                className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+                className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
               >
                 <div
-                  className={`flex h-12 w-12 items-center justify-center rounded-full ${feature.iconWrap}`}
+                  className={`flex h-10 w-10 items-center justify-center rounded-full ${feature.iconWrap}`}
                 >
-                  <Icon className="h-6 w-6" aria-hidden="true" />
+                  <Icon className="h-5 w-5" aria-hidden="true" />
                 </div>
-                <h3 className="mt-5 text-sm font-black text-slate-950">
+                <h3 className="mt-4 text-sm font-black text-slate-950">
                   {feature.title}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-700">
+                <p className="mt-1.5 text-xs leading-5 text-slate-700">
                   {feature.text}
                 </p>
               </div>
@@ -1820,76 +1820,76 @@ function RedesignedTutorHero() {
           })}
         </div>
 
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-          <h2 className="text-center text-3xl font-black text-slate-950">
+        <div className="mt-7 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <h2 className="text-center text-2xl font-black text-slate-950">
             Why this feels different
           </h2>
-          <div className="mt-5 grid gap-5 lg:grid-cols-2">
-            <div className="rounded-xl border border-slate-200 bg-white p-6">
-              <div className="mb-4 flex items-center gap-2 text-sm font-bold text-slate-600">
-                <Brain className="h-5 w-5" aria-hidden="true" />
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-white p-5">
+              <div className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-600">
+                <Brain className="h-4 w-4" aria-hidden="true" />
                 Ordinary question banks
               </div>
-              <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
-                <div className="mb-4 h-3 w-16 rounded-full bg-slate-200" />
+              <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                <div className="mb-3 h-3 w-16 rounded-full bg-slate-200" />
                 <div className="mb-2 h-2 w-48 rounded-full bg-slate-200" />
                 <div className="h-2 w-72 max-w-full rounded-full bg-slate-200" />
-                <div className="mt-5 rounded-lg bg-red-50 p-4 text-sm font-semibold text-red-700">
+                <div className="mt-4 rounded-lg bg-red-50 p-3 text-xs font-semibold text-red-700">
                   You got it wrong. The answer is C.
                 </div>
               </div>
-              <p className="mt-5 text-center text-sm text-slate-600">
+              <p className="mt-4 text-center text-xs text-slate-600">
                 Tells you what you got wrong.
               </p>
             </div>
 
-            <div className="rounded-xl border border-blue-500 bg-white p-6 shadow-sm shadow-blue-100">
-              <div className="mb-4 flex items-center gap-2 text-sm font-bold text-blue-700">
-                <CheckCircle className="h-5 w-5" aria-hidden="true" />
+            <div className="rounded-xl border border-blue-500 bg-white p-5 shadow-sm shadow-blue-100">
+              <div className="mb-3 flex items-center gap-2 text-sm font-bold text-blue-700">
+                <CheckCircle className="h-4 w-4" aria-hidden="true" />
                 PhloemAI
               </div>
-              <div className="rounded-lg border border-slate-100 bg-slate-50 p-4">
-                <div className="mb-4 flex flex-wrap gap-2">
+              <div className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                <div className="mb-3 flex flex-wrap gap-2">
                   {["Timing", "Attention", "Confidence", "Answer change"].map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700"
+                      className="rounded-full border border-blue-100 bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <p className="text-lg font-semibold leading-8 text-slate-900">
+                <p className="text-base font-semibold leading-7 text-slate-900">
                   You focused on a distractor, skipped the key stem words, and
                   changed from the correct answer near the end.
                 </p>
               </div>
-              <p className="mt-5 text-center text-sm text-slate-700">
+              <p className="mt-4 text-center text-xs text-slate-700">
                 Shows you why and what to fix next.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 text-center">
-          <h2 className="text-3xl font-black text-slate-950">
+        <div className="mt-7 text-center">
+          <h2 className="text-2xl font-black text-slate-950">
             Start with a free diagnostic.
           </h2>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-1.5 text-sm text-slate-600">
             Try PhloemAI before upgrading. No card needed.
           </p>
         </div>
 
-        <div className="mx-auto mt-6 grid max-w-5xl gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl border border-blue-500 bg-white p-6 shadow-sm">
+        <div className="mx-auto mt-5 grid max-w-4xl gap-5 lg:grid-cols-2">
+          <div className="rounded-2xl border border-blue-500 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between gap-4">
-              <h3 className="text-lg font-black text-slate-950">Free Diagnostic</h3>
-              <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+              <h3 className="text-base font-black text-slate-950">Free Diagnostic</h3>
+              <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">
                 Best for trying PhloemAI
               </span>
             </div>
-            <div className="mt-3 text-4xl font-black text-slate-950">GBP 0</div>
-            <ul className="mt-5 space-y-3 text-sm text-slate-700">
+            <div className="mt-2 text-3xl font-black text-slate-950">GBP 0</div>
+            <ul className="mt-4 space-y-2 text-sm text-slate-700">
               {freeFeatures.map((item) => (
                 <li key={item} className="flex gap-2">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
@@ -1899,24 +1899,24 @@ function RedesignedTutorHero() {
             </ul>
             <Link
               href="/phloemai/ucat-tutor"
-              className="mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white transition-colors hover:bg-blue-700"
+              className="mt-5 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white transition-colors hover:bg-blue-700"
             >
               Start Free
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between gap-4">
-              <h3 className="text-lg font-black text-slate-950">Full PhloemAI Tutor</h3>
-              <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-bold text-violet-700">
+              <h3 className="text-base font-black text-slate-950">Full PhloemAI Tutor</h3>
+              <span className="rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
                 Coming Soon
               </span>
             </div>
-            <div className="mt-4 w-fit rounded-full bg-violet-50 px-3 py-1 text-xs font-bold text-violet-700">
+            <div className="mt-3 w-fit rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
               Best for full UCAT prep
             </div>
-            <ul className="mt-5 space-y-3 text-sm text-slate-700">
+            <ul className="mt-4 space-y-2 text-sm text-slate-700">
               {[
                 "AI feedback after every session",
                 "Major/minor issue detection",
@@ -1932,20 +1932,20 @@ function RedesignedTutorHero() {
             <button
               type="button"
               disabled
-              className="mt-6 h-11 w-full rounded-lg border border-violet-300 text-sm font-bold text-violet-700"
+              className="mt-5 h-10 w-full rounded-lg border border-violet-300 text-sm font-bold text-violet-700"
             >
               Join Waitlist
             </button>
           </div>
         </div>
 
-        <div className="mt-8 text-center">
-          <h2 className="text-2xl font-black text-slate-950">
+        <div className="mt-7 text-center">
+          <h2 className="text-xl font-black text-slate-950">
             Available now. More coming soon.
           </h2>
         </div>
 
-        <div className="mt-5 grid gap-5 lg:grid-cols-3">
+        <div className="mt-4 grid gap-4 lg:grid-cols-3">
           {productCards.map((product) => {
             const Icon = product.icon;
             const content = (
@@ -1953,18 +1953,18 @@ function RedesignedTutorHero() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div
-                      className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
+                      className={`flex h-10 w-10 items-center justify-center rounded-xl ${
                         product.active
                           ? "bg-blue-50 text-blue-600"
                           : "bg-slate-100 text-slate-400"
                       }`}
                     >
-                      <Icon className="h-6 w-6" aria-hidden="true" />
+                      <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="font-black text-slate-950">{product.title}</h3>
+                      <h3 className="text-sm font-black text-slate-950">{product.title}</h3>
                       <span
-                        className={`mt-1 inline-block rounded-full px-2.5 py-1 text-xs font-bold ${
+                        className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[11px] font-bold ${
                           product.active
                             ? "bg-blue-600 text-white"
                             : "bg-violet-50 text-violet-700"
@@ -1975,11 +1975,11 @@ function RedesignedTutorHero() {
                     </div>
                   </div>
                 </div>
-                <p className="mt-4 min-h-16 text-sm leading-6 text-slate-700">
+                <p className="mt-3 min-h-12 text-xs leading-5 text-slate-700">
                   {product.text}
                 </p>
                 <div
-                  className={`mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg text-sm font-bold ${
+                  className={`mt-3 inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg text-sm font-bold ${
                     product.active
                       ? "bg-blue-600 text-white"
                       : "border border-violet-300 text-violet-700"
@@ -1995,14 +1995,14 @@ function RedesignedTutorHero() {
               <Link
                 key={product.title}
                 href={product.href}
-                className="rounded-2xl border border-blue-500 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+                className="rounded-xl border border-blue-500 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
               >
                 {content}
               </Link>
             ) : (
               <div
                 key={product.title}
-                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
               >
                 {content}
               </div>
@@ -2010,7 +2010,7 @@ function RedesignedTutorHero() {
           })}
         </div>
 
-        <div className="mt-8 grid gap-4 border-t border-slate-200 pt-6 text-sm text-slate-700 sm:grid-cols-3">
+        <div className="mt-7 grid gap-4 border-t border-slate-200 pt-5 text-xs text-slate-700 sm:grid-cols-3">
           {[
             {
               icon: LockKeyhole,
@@ -2031,10 +2031,10 @@ function RedesignedTutorHero() {
             const Icon = item.icon;
             return (
               <div key={item.title} className="flex gap-3">
-                <Icon className="mt-1 h-6 w-6 shrink-0 text-slate-600" aria-hidden="true" />
+                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-slate-600" aria-hidden="true" />
                 <div>
                   <h3 className="font-bold text-slate-950">{item.title}</h3>
-                  <p className="mt-1 leading-6">{item.text}</p>
+                  <p className="mt-1 leading-5">{item.text}</p>
                 </div>
               </div>
             );
