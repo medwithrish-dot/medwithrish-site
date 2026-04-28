@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import {
+  type RefObject,
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
@@ -9,6 +16,11 @@ import {
   getPassageSections,
   type QuestionData,
 } from "../_lib/ucatQuestion";
+import {
+  CALIB_PHASES,
+  type AttentionTrackingSnapshot,
+  useAttentionTracker,
+} from "../_lib/useAttentionTracker";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -71,68 +83,9 @@ const ZONE = {
 } as const;
 
 type ZoneId = keyof typeof ZONE;
-type ActiveRegion = ZoneId | "unknown";
-type TrackingMode = "none" | "mouse" | "eye";
-type GazeSample = { x: number; y: number; at: number };
-type ZoneScores = Record<ZoneId, number>;
-type RegionTransition = { from: ZoneId; to: ZoneId; at: number };
 type AnswerChoiceEvent = { key: AnswerKey; at: number };
 
 const ZONE_IDS: ZoneId[] = ["sectionA", "sectionB", "question", "answers"];
-const emptyZoneTimes = (): Record<ZoneId, number> => ({
-  sectionA: 0,
-  sectionB: 0,
-  question: 0,
-  answers: 0,
-});
-
-type TrackingProfile = {
-  smoothingSampleCount: number;
-  intentWindowMs: number;
-  minRegionDwellMs: number;
-  fuzzyPaddingRatio: number;
-  fuzzyMinPaddingPx: number;
-  intentScoreThreshold: number;
-};
-
-const TRACKING_PROFILES: Record<TrackingMode, TrackingProfile> = {
-  none: {
-    smoothingSampleCount: 8,
-    intentWindowMs: 650,
-    minRegionDwellMs: 400,
-    fuzzyPaddingRatio: 0.18,
-    fuzzyMinPaddingPx: 18,
-    intentScoreThreshold: 0.2,
-  },
-  eye: {
-    smoothingSampleCount: 8,
-    intentWindowMs: 650,
-    minRegionDwellMs: 400,
-    fuzzyPaddingRatio: 0.18,
-    fuzzyMinPaddingPx: 18,
-    intentScoreThreshold: 0.2,
-  },
-  mouse: {
-    smoothingSampleCount: 1,
-    intentWindowMs: 90,
-    minRegionDwellMs: 70,
-    fuzzyPaddingRatio: 0.04,
-    fuzzyMinPaddingPx: 4,
-    intentScoreThreshold: 0.08,
-  },
-};
-const EARLY_FOCUS_WINDOW_MS = 10000;
-
-// ── MediaPipe iris landmark indices ───────────────────────────────────────────
-
-const L_IRIS = 468, R_IRIS = 473;
-
-// 3-point vertical calibration: top → centre → bottom
-const CALIB_PHASES = [
-  { label: "the top of the screen", y: 10 },
-  { label: "the centre",            y: 50 },
-  { label: "the bottom",            y: 90 },
-] as const;
 
 // ── Question type (from /api/rishbot/question) ────────────────────────────────
 
@@ -157,47 +110,11 @@ const emptyFeedbackInsights = (): FeedbackInsights => ({
 
 type SessionState =
   | "idle"
-  | "enabling"
-  | "calibrating"
   | "loading"
   | "active"
   | "answered";
 
 // ── EyeTrackingDemo ───────────────────────────────────────────────────────────
-
-// MediaPipe FaceLandmarker type (minimal surface we use)
-type Landmark = { x: number; y: number; z: number };
-type FaceLandmarkerInstance = {
-  detectForVideo: (v: HTMLVideoElement, t: number) => { faceLandmarks?: Landmark[][] };
-  close: () => void;
-};
-
-function isPrimaryRegion(region: ActiveRegion): region is ZoneId {
-  return region !== "unknown";
-}
-
-function scoreRectIntent(
-  x: number,
-  y: number,
-  rect: DOMRectReadOnly,
-  profile: TrackingProfile
-) {
-  const padX = Math.max(profile.fuzzyMinPaddingPx, rect.width * profile.fuzzyPaddingRatio);
-  const padY = Math.max(profile.fuzzyMinPaddingPx, rect.height * profile.fuzzyPaddingRatio);
-  const outsideX = x < rect.left ? rect.left - x : x > rect.right ? x - rect.right : 0;
-  const outsideY = y < rect.top ? rect.top - y : y > rect.bottom ? y - rect.bottom : 0;
-  const outsideScore = Math.max(outsideX / padX, outsideY / padY);
-
-  if (outsideScore > 1) return 0;
-
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
-  const centerDistance = Math.hypot(x - centerX, y - centerY);
-  const maxCenterDistance = Math.max(1, Math.hypot(rect.width / 2 + padX, rect.height / 2 + padY));
-  const centerScore = Math.max(0, 1 - centerDistance / maxCenterDistance);
-
-  return (1 - outsideScore) * 0.85 + centerScore * 0.15;
-}
 
 export function AttentionTrackingDemo() {
   const [state, setState] = useState<SessionState>("idle");
@@ -206,79 +123,57 @@ export function AttentionTrackingDemo() {
   const [confirmedAnswer, setConfirmedAnswer] = useState<AnswerKey | null>(null);
   const [feedbackInsights, setFeedbackInsights] = useState<FeedbackInsights>(emptyFeedbackInsights);
   const [timeLeft, setTimeLeft] = useState(120);
-  const [activeZone, setActiveZone] = useState<ActiveRegion>("unknown");
-  const [zoneTimes, setZoneTimes] = useState<Record<ZoneId, number>>(emptyZoneTimes);
-  const [calibPhase, setCalibPhase] = useState(0);
-  const [calibCountdown, setCalibCountdown] = useState(2);
-  const [trackingMode, setTrackingMode] = useState<TrackingMode>("none");
-  const [gazeDataReceived, setGazeDataReceived] = useState(false);
-  const [wgError, setWgError] = useState(false);
-  const [showGazeRing, setShowGazeRing] = useState(true);
-  const [gazePos, setGazePos] = useState<{ x: number; y: number } | null>(null);
-
   const sectionARef = useRef<HTMLParagraphElement>(null);
   const sectionBRef = useRef<HTMLParagraphElement>(null);
   const questionRef = useRef<HTMLDivElement>(null);
   const answersRef = useRef<HTMLDivElement>(null);
-  const activeRegionRef = useRef<ActiveRegion>("unknown");
-  const candidateRegionRef = useRef<ActiveRegion>("unknown");
-  const candidateRegionSinceRef = useRef<number>(0);
-  const rawGazeRef = useRef<{ x: number; y: number } | null>(null);
-  const gazeSamplesRef = useRef<GazeSample[]>([]);
-  const intentSamplesRef = useRef<{ at: number; scores: ZoneScores }[]>([]);
-  const questionStartTimeRef = useRef<number>(0);
-  const earlyZoneTimesRef = useRef<Record<ZoneId, number>>(emptyZoneTimes());
-  const firstPrimaryRegionRef = useRef<ZoneId | null>(null);
-  const regionTransitionsRef = useRef<RegionTransition[]>([]);
-  const regionSwitchCountRef = useRef(0);
+  const zoneElements = useMemo(
+    () =>
+      ({
+        sectionA: sectionARef,
+        sectionB: sectionBRef,
+        question: questionRef,
+        answers: answersRef,
+      }) as Record<ZoneId, RefObject<Element | null>>,
+    []
+  );
+  const tracker = useAttentionTracker<ZoneId>({
+    zoneIds: ZONE_IDS,
+    zoneElements,
+    isActive: state === "active",
+  });
+  const activeZone = tracker.activeZone;
+  const calibCountdown = tracker.calibCountdown;
+  const calibPhase = tracker.calibPhase;
+  const eyeStatus = tracker.eyeStatus;
+  const finishAttempt = tracker.finishAttempt;
+  const getAttentionSnapshot = tracker.getSnapshot;
+  const gazeDataReceived = tracker.dataReceived;
+  const gazePos = tracker.pointer;
+  const resetAttentionAttempt = tracker.resetAttempt;
+  const resetAttentionTracker = tracker.resetTracker;
+  const ringLabel = tracker.trackingMode === "mouse" ? "Cursor ring" : "Tracking ring";
+  const setShowGazeRing = tracker.setShowRing;
+  const showGazeRing = tracker.showRing;
+  const beginEyeTracking = tracker.startEyeTracking;
+  const beginMouseTracking = tracker.startMouseTracking;
+  const beginPracticeOnly = tracker.startPracticeOnly;
+  const trackingActive = tracker.trackingActive;
+  const trackingLabel =
+    tracker.trackingMode === "mouse" ? "Mouse tracking active" : "Eye tracking active";
+  const wgError = tracker.error;
+  const zonePcts = tracker.zonePcts;
   const answerSelectionHistoryRef = useRef<AnswerChoiceEvent[]>([]);
   const answerSwitchCountRef = useRef(0);
   const answerHoverTimesRef = useRef<Record<AnswerKey, number>>(emptyAnswerTimes());
   const answerHoverSwitchCountRef = useRef(0);
   const currentAnswerHoverRef = useRef<{ key: AnswerKey; startedAt: number } | null>(null);
-  const lastTimeRef = useRef<number>(0);
   const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stateRef = useRef<SessionState>("idle");
 
-  // MediaPipe refs
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const faceLandmarkerRef = useRef<FaceLandmarkerInstance | null>(null);
-  const animFrameRef = useRef<number | null>(null);
-  const neutralRef = useRef<number | null>(null);
-  const neutralHorizRef = useRef<number | null>(null);
-  const gainVRef = useRef<number>(60);
-  const calibPhaseRef = useRef(0);
-  const calibPhaseSamples = useRef<[number[], number[], number[]]>([[], [], []]);
-  const calibHorizSamplesRef = useRef<number[]>([]);
-
-  // Keep stateRef in sync so the RAF loop (a closure) sees current state
-  useEffect(() => { stateRef.current = state; }, [state]);
-
-  const trackingActive = trackingMode !== "none";
-  const trackingProfile = TRACKING_PROFILES[trackingMode];
-  const trackingLabel =
-    trackingMode === "mouse" ? "Mouse tracking active" : "Eye tracking active";
-  const ringLabel = trackingMode === "mouse" ? "Cursor ring" : "Tracking ring";
-
-  // Zone percentages derived from actual dwell times
-  const zonePcts = useMemo(() => {
-    const total = Object.values(zoneTimes).reduce((s, v) => s + v, 0);
-    if (total === 0) return emptyZoneTimes();
-    return Object.fromEntries(
-      ZONE_IDS.map((id) => [id, Math.round((zoneTimes[id] / total) * 100)])
-    ) as Record<ZoneId, number>;
-  }, [zoneTimes]);
-
-  const recordEarlyDwell = useCallback((region: ZoneId, from: number, to: number) => {
-    const sessionStart = questionStartTimeRef.current;
-    if (!sessionStart || to <= from) return;
-
-    const earlyWindowEnd = sessionStart + EARLY_FOCUS_WINDOW_MS;
-    const overlap = Math.max(0, Math.min(to, earlyWindowEnd) - Math.max(from, sessionStart));
-    if (overlap > 0) {
-      earlyZoneTimesRef.current[region] += overlap;
-    }
-  }, []);
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   const finalizeAnswerHover = useCallback((now = Date.now()) => {
     const hover = currentAnswerHoverRef.current;
@@ -288,298 +183,16 @@ export function AttentionTrackingDemo() {
     currentAnswerHoverRef.current = null;
   }, []);
 
-  const scoreRegions = useCallback((x: number, y: number): ZoneScores => {
-    const scores: ZoneScores = { sectionA: 0, sectionB: 0, question: 0, answers: 0 };
-    const refs = [
-      { id: "sectionA" as const, element: sectionARef.current },
-      { id: "sectionB" as const, element: sectionBRef.current },
-      { id: "question" as const, element: questionRef.current },
-      { id: "answers" as const, element: answersRef.current },
-    ];
+  const resetAnswerTelemetry = useCallback(() => {
+    answerSelectionHistoryRef.current = [];
+    answerSwitchCountRef.current = 0;
+    answerHoverTimesRef.current = emptyAnswerTimes();
+    answerHoverSwitchCountRef.current = 0;
+    currentAnswerHoverRef.current = null;
+  }, []);
 
-    for (const { id, element } of refs) {
-      const rect = element?.getBoundingClientRect();
-      if (rect) scores[id] = scoreRectIntent(x, y, rect, trackingProfile);
-    }
-
-    return scores;
-  }, [trackingProfile]);
-
-  const detectIntentRegion = useCallback(
-    (x: number, y: number, now: number): ActiveRegion => {
-      rawGazeRef.current = { x, y };
-      gazeSamplesRef.current.push({ x, y, at: now });
-      if (gazeSamplesRef.current.length > trackingProfile.smoothingSampleCount) {
-        gazeSamplesRef.current.shift();
-      }
-
-      const smoothed = gazeSamplesRef.current.reduce(
-        (acc, sample) => ({ x: acc.x + sample.x, y: acc.y + sample.y }),
-        { x: 0, y: 0 }
-      );
-      const sampleCount = Math.max(1, gazeSamplesRef.current.length);
-      const scores = scoreRegions(smoothed.x / sampleCount, smoothed.y / sampleCount);
-
-      intentSamplesRef.current.push({ at: now, scores });
-      intentSamplesRef.current = intentSamplesRef.current.filter(
-        (sample) => now - sample.at <= trackingProfile.intentWindowMs
-      );
-
-      const totals: ZoneScores = { sectionA: 0, sectionB: 0, question: 0, answers: 0 };
-      let totalWeight = 0;
-      for (const sample of intentSamplesRef.current) {
-        const ageRatio = Math.min(1, (now - sample.at) / trackingProfile.intentWindowMs);
-        const weight = 1 - ageRatio * 0.55;
-        totalWeight += weight;
-        for (const id of ZONE_IDS) totals[id] += sample.scores[id] * weight;
-      }
-
-      if (totalWeight <= 0) return "unknown";
-
-      let bestRegion: ZoneId = "sectionA";
-      let bestScore = totals.sectionA / totalWeight;
-      for (const id of ZONE_IDS) {
-        const score = totals[id] / totalWeight;
-        if (score > bestScore) {
-          bestRegion = id;
-          bestScore = score;
-        }
-      }
-
-      return bestScore >= trackingProfile.intentScoreThreshold ? bestRegion : "unknown";
-    },
-    [scoreRegions, trackingProfile]
-  );
-
-  const commitStableRegion = useCallback((nextRegion: ActiveRegion, now: number) => {
-    const currentRegion = activeRegionRef.current;
-
-    if (trackingMode === "mouse") {
-      if (nextRegion === currentRegion) return currentRegion;
-
-      if (isPrimaryRegion(nextRegion)) {
-        if (!firstPrimaryRegionRef.current) {
-          firstPrimaryRegionRef.current = nextRegion;
-        }
-
-        if (isPrimaryRegion(currentRegion)) {
-          regionSwitchCountRef.current += 1;
-          regionTransitionsRef.current.push({
-            from: currentRegion,
-            to: nextRegion,
-            at: now,
-          });
-        }
-      }
-
-      candidateRegionRef.current = nextRegion;
-      candidateRegionSinceRef.current = now;
-      activeRegionRef.current = nextRegion;
-      setActiveZone(nextRegion);
-      return nextRegion;
-    }
-
-    if (nextRegion === currentRegion) {
-      candidateRegionRef.current = nextRegion;
-      candidateRegionSinceRef.current = now;
-      return currentRegion;
-    }
-
-    if (candidateRegionRef.current !== nextRegion) {
-      candidateRegionRef.current = nextRegion;
-      candidateRegionSinceRef.current = now;
-      return currentRegion;
-    }
-
-    if (now - candidateRegionSinceRef.current < trackingProfile.minRegionDwellMs) {
-      return currentRegion;
-    }
-
-    if (isPrimaryRegion(nextRegion)) {
-      if (!firstPrimaryRegionRef.current) {
-        firstPrimaryRegionRef.current = nextRegion;
-      }
-
-      if (isPrimaryRegion(currentRegion) && currentRegion !== nextRegion) {
-        regionSwitchCountRef.current += 1;
-        regionTransitionsRef.current.push({
-          from: currentRegion,
-          to: nextRegion,
-          at: now,
-        });
-      }
-    }
-
-    activeRegionRef.current = nextRegion;
-    setActiveZone(nextRegion);
-    return nextRegion;
-  }, [trackingMode, trackingProfile]);
-
-  const recordGaze = useCallback(
-    (x: number, y: number) => {
-      if (stateRef.current !== "active") return;
-      setGazePos({ x, y });
-      setGazeDataReceived(true);
-      const now = Date.now();
-      const previousTime = lastTimeRef.current > 0 ? lastTimeRef.current : now;
-      const elapsed = now - previousTime;
-      const elapsedRegion = activeRegionRef.current;
-      if (elapsed > 0 && isPrimaryRegion(elapsedRegion)) {
-        setZoneTimes((prev) => ({
-          ...prev,
-          [elapsedRegion]: prev[elapsedRegion] + elapsed,
-        }));
-        recordEarlyDwell(elapsedRegion, previousTime, now);
-      }
-      lastTimeRef.current = now;
-      const intentRegion = detectIntentRegion(x, y, now);
-      commitStableRegion(intentRegion, now);
-    },
-    [commitStableRegion, detectIntentRegion, recordEarlyDwell]
-  );
-
-  useEffect(() => {
-    if (state !== "active" || trackingMode !== "mouse") return;
-
-    let frameId: number | null = null;
-    let latestPoint: { x: number; y: number } | null = null;
-
-    const flushPoint = () => {
-      frameId = null;
-      if (!latestPoint) return;
-      recordGaze(latestPoint.x, latestPoint.y);
-    };
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (event.pointerType && event.pointerType !== "mouse") return;
-      latestPoint = { x: event.clientX, y: event.clientY };
-      if (frameId === null) {
-        frameId = requestAnimationFrame(flushPoint);
-      }
-    };
-
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      if (frameId !== null) cancelAnimationFrame(frameId);
-    };
-  }, [recordGaze, state, trackingMode]);
-
-  // Per-frame detection loop - reads iris landmarks and maps to screen coords
-  const runLoopRef = useRef<() => void>(() => {});
-  const runLoop = useCallback(() => {
-    const video = videoRef.current;
-    const lm_ref = faceLandmarkerRef.current;
-    if (!video || !lm_ref || video.readyState < 2) {
-      animFrameRef.current = requestAnimationFrame(runLoopRef.current);
-      return;
-    }
-    const results = lm_ref.detectForVideo(video, performance.now());
-    if (results.faceLandmarks?.[0]) {
-      const lm = results.faceLandmarks[0];
-
-      // Head-stabilised gaze: iris position relative to the midpoint of the
-      // inner eye corners (lm 133 = left, lm 362 = right). Both landmarks
-      // move with the head, so their midpoint cancels out head translation.
-      // Only actual eye rotation changes the iris-relative-to-head offset.
-      const headRefY = (lm[133].y + lm[362].y) / 2;
-      const headRefX = (lm[133].x + lm[362].x) / 2;
-      const gazeY = (lm[L_IRIS].y + lm[R_IRIS].y) / 2 - headRefY;
-      const gazeX = (lm[L_IRIS].x + lm[R_IRIS].x) / 2 - headRefX;
-
-      if (stateRef.current === "calibrating") {
-        const ph = calibPhaseRef.current;
-        calibPhaseSamples.current[ph]?.push(gazeY);
-        if (ph === 1) calibHorizSamplesRef.current.push(gazeX);
-      } else if (stateRef.current === "active") {
-        const neutralY = neutralRef.current ?? 0;
-        const neutralX = neutralHorizRef.current ?? 0;
-        const GAIN_V = gainVRef.current * 1.32;
-        const GAIN_H = 25;
-        const screenY = Math.max(0, Math.min(
-          window.innerHeight - 1,
-          window.innerHeight * 0.5 + (gazeY - neutralY) * GAIN_V * window.innerHeight
-        ));
-        const screenX = Math.max(0, Math.min(
-          window.innerWidth - 1,
-          window.innerWidth * 0.5 - (gazeX - neutralX) * GAIN_H * window.innerWidth
-        ));
-        recordGaze(screenX, screenY);
-      }
-    }
-    animFrameRef.current = requestAnimationFrame(runLoopRef.current);
-  }, [recordGaze]);
-  useEffect(() => { runLoopRef.current = runLoop; }, [runLoop]);
-
-  // Start MediaPipe eye tracking and begin calibration
-  const startEyeTracking = async () => {
-    setState("enabling");
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user", width: 640, height: 480 },
-      });
-      const video = document.createElement("video");
-      video.srcObject = stream;
-      video.autoplay = true;
-      video.playsInline = true;
-      video.muted = true;
-      // Small mirrored preview bottom-right so user can see their face
-      video.style.cssText =
-        "position:fixed;bottom:12px;right:12px;width:120px;height:90px;border-radius:10px;z-index:9000;opacity:0.85;transform:scaleX(-1);object-fit:cover;border:1px solid rgba(6,182,212,0.4)";
-      document.body.appendChild(video);
-      videoRef.current = video;
-      await video.play();
-
-      const { FaceLandmarker, FilesetResolver } = await import("@mediapipe/tasks-vision");
-      const vision = await FilesetResolver.forVisionTasks(
-        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.34/wasm"
-      );
-      const landmarker = await FaceLandmarker.createFromOptions(vision, {
-        baseOptions: {
-          modelAssetPath:
-            "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
-          delegate: "GPU",
-        },
-        runningMode: "VIDEO",
-        numFaces: 1,
-        outputFaceBlendshapes: false,
-        outputFacialTransformationMatrixes: false,
-      });
-      faceLandmarkerRef.current = landmarker as FaceLandmarkerInstance;
-
-      calibPhaseSamples.current = [[], [], []];
-      calibHorizSamplesRef.current = [];
-      animFrameRef.current = requestAnimationFrame(runLoop);
-      setTrackingMode("eye");
-      setCalibCountdown(3);
-      setState("calibrating");
-    } catch {
-      setWgError(true);
-      setTrackingMode("none");
-      setState("idle");
-      if (videoRef.current) {
-        (videoRef.current.srcObject as MediaStream | null)?.getTracks().forEach(t => t.stop());
-        videoRef.current.remove();
-        videoRef.current = null;
-      }
-    }
-  };
-
-  const startMouseTracking = () => {
-    setTrackingMode("mouse");
-    setWgError(false);
-    fetchQuestion();
-  };
-
-  const startPracticeOnly = () => {
-    setTrackingMode("none");
-    setGazeDataReceived(false);
-    fetchQuestion();
-  };
-
-  const fetchQuestion = async () => {
+  const fetchQuestion = useCallback(async () => {
     setState("loading");
-    setGazeDataReceived(false);
     try {
       const data = await fetchUCATQuestion();
       const now = Date.now();
@@ -588,125 +201,38 @@ export function AttentionTrackingDemo() {
       setConfirmedAnswer(null);
       setFeedbackInsights(emptyFeedbackInsights());
       setTimeLeft(120);
-      setZoneTimes(emptyZoneTimes());
-      activeRegionRef.current = "unknown";
-      candidateRegionRef.current = "unknown";
-      candidateRegionSinceRef.current = now;
-      questionStartTimeRef.current = now;
-      earlyZoneTimesRef.current = emptyZoneTimes();
-      firstPrimaryRegionRef.current = null;
-      regionTransitionsRef.current = [];
-      regionSwitchCountRef.current = 0;
-      answerSelectionHistoryRef.current = [];
-      answerSwitchCountRef.current = 0;
-      answerHoverTimesRef.current = emptyAnswerTimes();
-      answerHoverSwitchCountRef.current = 0;
-      currentAnswerHoverRef.current = null;
-      gazeSamplesRef.current = [];
-      intentSamplesRef.current = [];
-      setActiveZone("unknown");
-      lastTimeRef.current = now;
+      resetAttentionAttempt(now);
+      resetAnswerTelemetry();
+      stateRef.current = "active";
       setState("active");
     } catch {
+      stateRef.current = "idle";
       setState("idle");
     }
-  };
+  }, [resetAnswerTelemetry, resetAttentionAttempt]);
 
-  // 3-point calibration: top → centre → bottom, 2.5 s per phase.
-  // After all phases, derive personalised vertical gain from the measured range.
-  useEffect(() => {
-    if (state !== "calibrating") return;
+  const startEyeTracking = useCallback(() => {
+    void beginEyeTracking(fetchQuestion);
+  }, [beginEyeTracking, fetchQuestion]);
 
-    calibPhaseSamples.current = [[], [], []];
-    calibHorizSamplesRef.current = [];
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    const intervals: ReturnType<typeof setInterval>[] = [];
+  const startMouseTracking = useCallback(() => {
+    beginMouseTracking();
+    void fetchQuestion();
+  }, [beginMouseTracking, fetchQuestion]);
 
-    const avg = (arr: number[]) =>
-      arr.length > 0 ? arr.reduce((a, b) => a + b) / arr.length : null;
-
-    const finish = () => {
-      const topG    = avg(calibPhaseSamples.current[0]);
-      const centerG = avg(calibPhaseSamples.current[1]);
-      const bottomG = avg(calibPhaseSamples.current[2]);
-      neutralRef.current = centerG ?? 0;
-      if (topG !== null && bottomG !== null && bottomG - topG > 0.0005) {
-        // Map 80 % of viewport height to the full measured gaze range
-        gainVRef.current = Math.min(200, Math.max(30, 0.8 / (bottomG - topG)));
-      } else {
-        gainVRef.current = 60;
-      }
-      neutralHorizRef.current = avg(calibHorizSamplesRef.current) ?? 0;
-      fetchQuestion();
-    };
-
-    const runPhase = (phase: number) => {
-      calibPhaseRef.current = phase;
-      setCalibPhase(phase);
-      setCalibCountdown(2);
-      const ci = setInterval(() => setCalibCountdown(c => Math.max(0, c - 1)), 1000);
-      intervals.push(ci);
-      const t = setTimeout(() => {
-        clearInterval(ci);
-        if (phase < 2) runPhase(phase + 1);
-        else finish();
-      }, 2600);
-      timers.push(t);
-    };
-
-    runPhase(0);
-    return () => {
-      timers.forEach(clearTimeout);
-      intervals.forEach(clearInterval);
-    };
-  }, [state]);
-
-  const stopTracking = () => {
-    if (animFrameRef.current) {
-      cancelAnimationFrame(animFrameRef.current);
-      animFrameRef.current = null;
-    }
-    if (videoRef.current) {
-      (videoRef.current.srcObject as MediaStream | null)?.getTracks().forEach(t => t.stop());
-      videoRef.current.remove();
-      videoRef.current = null;
-    }
-    faceLandmarkerRef.current?.close();
-    faceLandmarkerRef.current = null;
-    neutralRef.current = null;
-    neutralHorizRef.current = null;
-    gainVRef.current = 60;
-    calibPhaseSamples.current = [[], [], []];
-    calibHorizSamplesRef.current = [];
-    rawGazeRef.current = null;
-    setGazePos(null);
-    gazeSamplesRef.current = [];
-    intentSamplesRef.current = [];
-    activeRegionRef.current = "unknown";
-    candidateRegionRef.current = "unknown";
-    candidateRegionSinceRef.current = 0;
-    questionStartTimeRef.current = 0;
-    earlyZoneTimesRef.current = emptyZoneTimes();
-    firstPrimaryRegionRef.current = null;
-    regionTransitionsRef.current = [];
-    regionSwitchCountRef.current = 0;
-    answerSelectionHistoryRef.current = [];
-    answerSwitchCountRef.current = 0;
-    answerHoverTimesRef.current = emptyAnswerTimes();
-    answerHoverSwitchCountRef.current = 0;
-    currentAnswerHoverRef.current = null;
-  };
+  const startPracticeOnly = useCallback(() => {
+    beginPracticeOnly();
+    void fetchQuestion();
+  }, [beginPracticeOnly, fetchQuestion]);
 
   const reset = () => {
-    stopTracking();
+    resetAttentionTracker();
     setSelected(null);
     setConfirmedAnswer(null);
     setFeedbackInsights(emptyFeedbackInsights());
     setQuestion(null);
-    setTrackingMode("none");
-    setGazeDataReceived(false);
-    setWgError(false);
-    setActiveZone("unknown");
+    resetAnswerTelemetry();
+    stateRef.current = "idle";
     setState("idle");
   };
 
@@ -714,7 +240,11 @@ export function AttentionTrackingDemo() {
     `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 
   const buildFeedbackInsights = useCallback(
-    (finalAnswer: AnswerKey | null, finalZoneTimes: Record<ZoneId, number>): FeedbackInsights => {
+    (
+      finalAnswer: AnswerKey | null,
+      finalZoneTimes: Record<ZoneId, number>,
+      focusSnapshot: AttentionTrackingSnapshot<ZoneId>
+    ): FeedbackInsights => {
       if (!question) return emptyFeedbackInsights();
 
       const correct = finalAnswer === question.correct;
@@ -731,7 +261,7 @@ export function AttentionTrackingDemo() {
           finalTotal > 0 ? Math.round((finalZoneTimes[id] / finalTotal) * 100) : 0,
         ])
       ) as Record<ZoneId, number>;
-      const earlyTimes = { ...earlyZoneTimesRef.current };
+      const earlyTimes = { ...focusSnapshot.earlyZoneTimes };
       const earlyTotal = Object.values(earlyTimes).reduce((sum, value) => sum + value, 0);
       let earlyDominant: ZoneId | null = null;
       let earlyDominantPct = 0;
@@ -744,18 +274,19 @@ export function AttentionTrackingDemo() {
         }
       }
 
-      const firstRegion = firstPrimaryRegionRef.current;
-      const sectionQuestionFlips = regionTransitionsRef.current.filter(
+      const firstRegion = focusSnapshot.firstPrimaryRegion;
+      const regionTransitions = focusSnapshot.regionTransitions;
+      const sectionQuestionFlips = regionTransitions.filter(
         ({ from, to }) =>
           ((from === "sectionA" || from === "sectionB") && to === "question") ||
           (from === "question" && (to === "sectionA" || to === "sectionB"))
       ).length;
-      const sectionASectionBFlips = regionTransitionsRef.current.filter(
+      const sectionASectionBFlips = regionTransitions.filter(
         ({ from, to }) =>
           (from === "sectionA" && to === "sectionB") ||
           (from === "sectionB" && to === "sectionA")
       ).length;
-      const sectionARevisits = regionTransitionsRef.current.filter(
+      const sectionARevisits = regionTransitions.filter(
         ({ to }) => to === "sectionA"
       ).length;
       const sectionBToAPct =
@@ -771,7 +302,7 @@ export function AttentionTrackingDemo() {
         (key) => answerHoverTimesRef.current[key] > 250
       ).length;
       const answerSwitches = answerSwitchCountRef.current;
-      const regionSwitches = regionSwitchCountRef.current;
+      const regionSwitches = focusSnapshot.regionSwitchCount;
       const answerHoverSwitches = answerHoverSwitchCountRef.current;
 
       const issues: string[] = [];
@@ -779,7 +310,7 @@ export function AttentionTrackingDemo() {
         issues.push("No answer was confirmed before the timer ended.");
       }
 
-      if (!gazeDataReceived) {
+      if (!focusSnapshot.dataReceived) {
         issues.push("Attention tracking data was not recorded for this attempt.");
       } else {
         if (firstRegion === "sectionA" || (earlyDominant === "sectionA" && earlyDominantPct >= 50)) {
@@ -861,7 +392,7 @@ export function AttentionTrackingDemo() {
         ],
       };
     },
-    [gazeDataReceived, question]
+    [question]
   );
 
   // ── Idle state ──────────────────────────────────────────────────────────────
@@ -871,31 +402,15 @@ export function AttentionTrackingDemo() {
       if (timerIdRef.current) clearInterval(timerIdRef.current);
 
       const now = Date.now();
-      const previousTime = lastTimeRef.current > 0 ? lastTimeRef.current : now;
-      const elapsed = now - previousTime;
-      const elapsedRegion = activeRegionRef.current;
-      let finalZoneTimes = zoneTimes;
-
-      if (elapsed > 0 && isPrimaryRegion(elapsedRegion)) {
-        finalZoneTimes = {
-          ...zoneTimes,
-          [elapsedRegion]: zoneTimes[elapsedRegion] + elapsed,
-        };
-        setZoneTimes(finalZoneTimes);
-        recordEarlyDwell(elapsedRegion, previousTime, now);
-      }
-
+      const finalZoneTimes = finishAttempt(now);
+      const focusSnapshot = getAttentionSnapshot();
       finalizeAnswerHover(now);
       setConfirmedAnswer(finalAnswer);
-      setFeedbackInsights(buildFeedbackInsights(finalAnswer, finalZoneTimes));
-      lastTimeRef.current = now;
+      setFeedbackInsights(buildFeedbackInsights(finalAnswer, finalZoneTimes, focusSnapshot));
+      stateRef.current = "answered";
       setState("answered");
-      if (animFrameRef.current) {
-        cancelAnimationFrame(animFrameRef.current);
-        animFrameRef.current = null;
-      }
     },
-    [buildFeedbackInsights, finalizeAnswerHover, recordEarlyDwell, zoneTimes]
+    [buildFeedbackInsights, finalizeAnswerHover, finishAttempt, getAttentionSnapshot]
   );
 
   // Countdown timer
@@ -954,7 +469,7 @@ export function AttentionTrackingDemo() {
     finalizeAnswerHover();
   }, [finalizeAnswerHover]);
 
-  if (state === "idle") {
+  if (state === "idle" && eyeStatus === "idle") {
     return (
       <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 space-y-4">
         <div className="flex items-start gap-4">
@@ -1023,7 +538,7 @@ export function AttentionTrackingDemo() {
   }
 
   // ── Loading WebGazer ────────────────────────────────────────────────────────
-  if (state === "enabling") {
+  if (eyeStatus === "enabling") {
     return (
       <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-10 text-center space-y-3">
         <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto" />
@@ -1034,7 +549,7 @@ export function AttentionTrackingDemo() {
   }
 
   // ── Calibration ─────────────────────────────────────────────────────────────
-  if (state === "calibrating") {
+  if (eyeStatus === "calibrating") {
     const phase = CALIB_PHASES[calibPhase];
     return (
       <div className="fixed inset-0 z-[100] bg-slate-950">
