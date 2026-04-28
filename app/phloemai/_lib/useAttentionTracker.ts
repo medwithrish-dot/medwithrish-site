@@ -90,7 +90,7 @@ const BASE_TRACKING_PROFILES: Record<TrackingMode, TrackingProfile> = {
     fuzzyPaddingRatio: 0.04,
     fuzzyMinPaddingPx: 4,
     intentScoreThreshold: 0.08,
-    maxDetectSpeedPxPerMs: 0.84,
+    maxDetectSpeedPxPerMs: 0.67,
     settleAfterTransitMs: 90,
   },
 };
