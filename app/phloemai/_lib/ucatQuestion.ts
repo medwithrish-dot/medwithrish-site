@@ -8,12 +8,35 @@ export type QuestionData = {
   explanation: string;
 };
 
-export function getStemText(question: QuestionData) {
+export function getPassageSections(question: QuestionData) {
   if (question.sectionA && question.sectionB) {
-    return `${question.sectionA}\n\n${question.sectionB}`;
+    return {
+      sectionA: question.sectionA,
+      sectionB: question.sectionB,
+    };
   }
 
-  return question.passage ?? "";
+  const passage = question.passage ?? "";
+  const paragraphs = passage
+    .split(/\n{2,}/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (paragraphs.length >= 2) {
+    return {
+      sectionA: paragraphs[0],
+      sectionB: paragraphs.slice(1).join("\n\n"),
+    };
+  }
+
+  const midpoint = Math.ceil(passage.length / 2);
+  const splitAt = passage.indexOf(". ", midpoint);
+  const fallbackSplit = splitAt > 0 ? splitAt + 1 : midpoint;
+
+  return {
+    sectionA: passage.slice(0, fallbackSplit).trim(),
+    sectionB: passage.slice(fallbackSplit).trim(),
+  };
 }
 
 export async function fetchUCATQuestion() {

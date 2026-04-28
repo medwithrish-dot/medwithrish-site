@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import {
   fetchUCATQuestion,
-  getStemText,
+  getPassageSections,
   type QuestionData,
 } from "../_lib/ucatQuestion";
 
@@ -28,9 +28,8 @@ function PhloemAILogo() {
 
 // All class strings are explicit so Tailwind can extract them at build time.
 const ZONE = {
-  stem: {
-    label: "STEM",
-    pct: 68,
+  sectionA: {
+    label: "Section A",
     active_box: "border-blue-400 bg-blue-50",
     inactive_box: "border-slate-200 bg-white",
     badge: "text-blue-600",
@@ -39,9 +38,18 @@ const ZONE = {
     inactive_stat: "border-slate-200 bg-white text-slate-400",
     tracking: "text-blue-600",
   },
+  sectionB: {
+    label: "Section B",
+    active_box: "border-cyan-400 bg-cyan-50",
+    inactive_box: "border-slate-200 bg-white",
+    badge: "text-cyan-600",
+    dot: "bg-cyan-500",
+    active_stat: "border-cyan-300 bg-cyan-50 text-cyan-600",
+    inactive_stat: "border-slate-200 bg-white text-slate-400",
+    tracking: "text-cyan-600",
+  },
   question: {
     label: "Question",
-    pct: 7,
     active_box: "border-violet-400 bg-violet-50",
     inactive_box: "border-slate-200 bg-white",
     badge: "text-violet-600",
@@ -52,7 +60,6 @@ const ZONE = {
   },
   answers: {
     label: "Answers",
-    pct: 20,
     active_box: "border-green-400 bg-green-50",
     inactive_box: "border-slate-200 bg-white",
     badge: "text-green-600",
@@ -71,19 +78,49 @@ type ZoneScores = Record<ZoneId, number>;
 type RegionTransition = { from: ZoneId; to: ZoneId; at: number };
 type AnswerChoiceEvent = { key: AnswerKey; at: number };
 
-const ZONE_IDS: ZoneId[] = ["stem", "question", "answers"];
+const ZONE_IDS: ZoneId[] = ["sectionA", "sectionB", "question", "answers"];
 const emptyZoneTimes = (): Record<ZoneId, number> => ({
-  stem: 0,
+  sectionA: 0,
+  sectionB: 0,
   question: 0,
   answers: 0,
 });
 
-const SMOOTHING_SAMPLE_COUNT = 8;
-const INTENT_WINDOW_MS = 650;
-const MIN_REGION_DWELL_MS = 400;
-const FUZZY_PADDING_RATIO = 0.18;
-const FUZZY_MIN_PADDING_PX = 18;
-const INTENT_SCORE_THRESHOLD = 0.2;
+type TrackingProfile = {
+  smoothingSampleCount: number;
+  intentWindowMs: number;
+  minRegionDwellMs: number;
+  fuzzyPaddingRatio: number;
+  fuzzyMinPaddingPx: number;
+  intentScoreThreshold: number;
+};
+
+const TRACKING_PROFILES: Record<TrackingMode, TrackingProfile> = {
+  none: {
+    smoothingSampleCount: 8,
+    intentWindowMs: 650,
+    minRegionDwellMs: 400,
+    fuzzyPaddingRatio: 0.18,
+    fuzzyMinPaddingPx: 18,
+    intentScoreThreshold: 0.2,
+  },
+  eye: {
+    smoothingSampleCount: 8,
+    intentWindowMs: 650,
+    minRegionDwellMs: 400,
+    fuzzyPaddingRatio: 0.18,
+    fuzzyMinPaddingPx: 18,
+    intentScoreThreshold: 0.2,
+  },
+  mouse: {
+    smoothingSampleCount: 1,
+    intentWindowMs: 90,
+    minRegionDwellMs: 70,
+    fuzzyPaddingRatio: 0.04,
+    fuzzyMinPaddingPx: 4,
+    intentScoreThreshold: 0.08,
+  },
+};
 const EARLY_FOCUS_WINDOW_MS = 10000;
 
 // ── MediaPipe iris landmark indices ───────────────────────────────────────────
@@ -139,9 +176,14 @@ function isPrimaryRegion(region: ActiveRegion): region is ZoneId {
   return region !== "unknown";
 }
 
-function scoreRectIntent(x: number, y: number, rect: DOMRectReadOnly) {
-  const padX = Math.max(FUZZY_MIN_PADDING_PX, rect.width * FUZZY_PADDING_RATIO);
-  const padY = Math.max(FUZZY_MIN_PADDING_PX, rect.height * FUZZY_PADDING_RATIO);
+function scoreRectIntent(
+  x: number,
+  y: number,
+  rect: DOMRectReadOnly,
+  profile: TrackingProfile
+) {
+  const padX = Math.max(profile.fuzzyMinPaddingPx, rect.width * profile.fuzzyPaddingRatio);
+  const padY = Math.max(profile.fuzzyMinPaddingPx, rect.height * profile.fuzzyPaddingRatio);
   const outsideX = x < rect.left ? rect.left - x : x > rect.right ? x - rect.right : 0;
   const outsideY = y < rect.top ? rect.top - y : y > rect.bottom ? y - rect.bottom : 0;
   const outsideScore = Math.max(outsideX / padX, outsideY / padY);
@@ -174,7 +216,8 @@ export function AttentionTrackingDemo() {
   const [showGazeRing, setShowGazeRing] = useState(true);
   const [gazePos, setGazePos] = useState<{ x: number; y: number } | null>(null);
 
-  const stemRef = useRef<HTMLDivElement>(null);
+  const sectionARef = useRef<HTMLParagraphElement>(null);
+  const sectionBRef = useRef<HTMLParagraphElement>(null);
   const questionRef = useRef<HTMLDivElement>(null);
   const answersRef = useRef<HTMLDivElement>(null);
   const activeRegionRef = useRef<ActiveRegion>("unknown");
@@ -212,6 +255,7 @@ export function AttentionTrackingDemo() {
   useEffect(() => { stateRef.current = state; }, [state]);
 
   const trackingActive = trackingMode !== "none";
+  const trackingProfile = TRACKING_PROFILES[trackingMode];
   const trackingLabel =
     trackingMode === "mouse" ? "Mouse tracking active" : "Eye tracking active";
   const ringLabel = trackingMode === "mouse" ? "Cursor ring" : "Tracking ring";
@@ -245,26 +289,27 @@ export function AttentionTrackingDemo() {
   }, []);
 
   const scoreRegions = useCallback((x: number, y: number): ZoneScores => {
-    const scores: ZoneScores = { stem: 0, question: 0, answers: 0 };
+    const scores: ZoneScores = { sectionA: 0, sectionB: 0, question: 0, answers: 0 };
     const refs = [
-      { id: "stem" as const, element: stemRef.current },
+      { id: "sectionA" as const, element: sectionARef.current },
+      { id: "sectionB" as const, element: sectionBRef.current },
       { id: "question" as const, element: questionRef.current },
       { id: "answers" as const, element: answersRef.current },
     ];
 
     for (const { id, element } of refs) {
       const rect = element?.getBoundingClientRect();
-      if (rect) scores[id] = scoreRectIntent(x, y, rect);
+      if (rect) scores[id] = scoreRectIntent(x, y, rect, trackingProfile);
     }
 
     return scores;
-  }, []);
+  }, [trackingProfile]);
 
   const detectIntentRegion = useCallback(
     (x: number, y: number, now: number): ActiveRegion => {
       rawGazeRef.current = { x, y };
       gazeSamplesRef.current.push({ x, y, at: now });
-      if (gazeSamplesRef.current.length > SMOOTHING_SAMPLE_COUNT) {
+      if (gazeSamplesRef.current.length > trackingProfile.smoothingSampleCount) {
         gazeSamplesRef.current.shift();
       }
 
@@ -277,13 +322,13 @@ export function AttentionTrackingDemo() {
 
       intentSamplesRef.current.push({ at: now, scores });
       intentSamplesRef.current = intentSamplesRef.current.filter(
-        (sample) => now - sample.at <= INTENT_WINDOW_MS
+        (sample) => now - sample.at <= trackingProfile.intentWindowMs
       );
 
-      const totals: ZoneScores = { stem: 0, question: 0, answers: 0 };
+      const totals: ZoneScores = { sectionA: 0, sectionB: 0, question: 0, answers: 0 };
       let totalWeight = 0;
       for (const sample of intentSamplesRef.current) {
-        const ageRatio = Math.min(1, (now - sample.at) / INTENT_WINDOW_MS);
+        const ageRatio = Math.min(1, (now - sample.at) / trackingProfile.intentWindowMs);
         const weight = 1 - ageRatio * 0.55;
         totalWeight += weight;
         for (const id of ZONE_IDS) totals[id] += sample.scores[id] * weight;
@@ -291,8 +336,8 @@ export function AttentionTrackingDemo() {
 
       if (totalWeight <= 0) return "unknown";
 
-      let bestRegion: ZoneId = "stem";
-      let bestScore = totals.stem / totalWeight;
+      let bestRegion: ZoneId = "sectionA";
+      let bestScore = totals.sectionA / totalWeight;
       for (const id of ZONE_IDS) {
         const score = totals[id] / totalWeight;
         if (score > bestScore) {
@@ -301,13 +346,38 @@ export function AttentionTrackingDemo() {
         }
       }
 
-      return bestScore >= INTENT_SCORE_THRESHOLD ? bestRegion : "unknown";
+      return bestScore >= trackingProfile.intentScoreThreshold ? bestRegion : "unknown";
     },
-    [scoreRegions]
+    [scoreRegions, trackingProfile]
   );
 
   const commitStableRegion = useCallback((nextRegion: ActiveRegion, now: number) => {
     const currentRegion = activeRegionRef.current;
+
+    if (trackingMode === "mouse") {
+      if (nextRegion === currentRegion) return currentRegion;
+
+      if (isPrimaryRegion(nextRegion)) {
+        if (!firstPrimaryRegionRef.current) {
+          firstPrimaryRegionRef.current = nextRegion;
+        }
+
+        if (isPrimaryRegion(currentRegion)) {
+          regionSwitchCountRef.current += 1;
+          regionTransitionsRef.current.push({
+            from: currentRegion,
+            to: nextRegion,
+            at: now,
+          });
+        }
+      }
+
+      candidateRegionRef.current = nextRegion;
+      candidateRegionSinceRef.current = now;
+      activeRegionRef.current = nextRegion;
+      setActiveZone(nextRegion);
+      return nextRegion;
+    }
 
     if (nextRegion === currentRegion) {
       candidateRegionRef.current = nextRegion;
@@ -321,7 +391,7 @@ export function AttentionTrackingDemo() {
       return currentRegion;
     }
 
-    if (now - candidateRegionSinceRef.current < MIN_REGION_DWELL_MS) {
+    if (now - candidateRegionSinceRef.current < trackingProfile.minRegionDwellMs) {
       return currentRegion;
     }
 
@@ -343,7 +413,7 @@ export function AttentionTrackingDemo() {
     activeRegionRef.current = nextRegion;
     setActiveZone(nextRegion);
     return nextRegion;
-  }, []);
+  }, [trackingMode, trackingProfile]);
 
   const recordGaze = useCallback(
     (x: number, y: number) => {
@@ -675,11 +745,25 @@ export function AttentionTrackingDemo() {
       }
 
       const firstRegion = firstPrimaryRegionRef.current;
-      const stemQuestionFlips = regionTransitionsRef.current.filter(
+      const sectionQuestionFlips = regionTransitionsRef.current.filter(
         ({ from, to }) =>
-          (from === "stem" && to === "question") ||
-          (from === "question" && to === "stem")
+          ((from === "sectionA" || from === "sectionB") && to === "question") ||
+          (from === "question" && (to === "sectionA" || to === "sectionB"))
       ).length;
+      const sectionASectionBFlips = regionTransitionsRef.current.filter(
+        ({ from, to }) =>
+          (from === "sectionA" && to === "sectionB") ||
+          (from === "sectionB" && to === "sectionA")
+      ).length;
+      const sectionARevisits = regionTransitionsRef.current.filter(
+        ({ to }) => to === "sectionA"
+      ).length;
+      const sectionBToAPct =
+        finalZonePcts.sectionA > 0
+          ? Math.round((finalZonePcts.sectionB / finalZonePcts.sectionA) * 100)
+          : finalZonePcts.sectionB > 0
+          ? 999
+          : 0;
       const answerHoverSeconds = Math.round(
         Object.values(answerHoverTimesRef.current).reduce((sum, value) => sum + value, 0) / 1000
       );
@@ -698,16 +782,29 @@ export function AttentionTrackingDemo() {
       if (!gazeDataReceived) {
         issues.push("Attention tracking data was not recorded for this attempt.");
       } else {
-        if (firstRegion === "stem" || (earlyDominant === "stem" && earlyDominantPct >= 50)) {
+        if (firstRegion === "sectionA" || (earlyDominant === "sectionA" && earlyDominantPct >= 50)) {
           issues.push(
-            `Early focus leaned STEM-first${earlyDominant ? ` (${earlyDominantPct}% of the first 10s)` : ""}.`
+            `Early focus leaned Section A-first${earlyDominant ? ` (${earlyDominantPct}% of the first 10s)` : ""}.`
           );
+        }
+        if (finalZonePcts.sectionB < finalZonePcts.sectionA) {
+          issues.push(
+            `Section B received less focus than Section A (${sectionBToAPct}% as much time).`
+          );
+        }
+        if (sectionARevisits >= 3) {
+          issues.push(
+            `${sectionARevisits} returns to Section A suggest you may be re-checking background context instead of mining Section B for the answer cue.`
+          );
+        }
+        if (finalZonePcts.sectionB < 15 && !correct) {
+          issues.push("Section B received very little focus, even though it often contains the decisive keyword or condition.");
         }
         if (finalZonePcts.question < 8) {
           issues.push("QUESTION received very little stable focus time.");
         }
-        if (stemQuestionFlips >= 4) {
-          issues.push(`${stemQuestionFlips} STEM/QUESTION flips suggest you may have been re-checking the ask repeatedly.`);
+        if (sectionQuestionFlips >= 4) {
+          issues.push(`${sectionQuestionFlips} passage/question flips suggest you may have been re-checking the ask repeatedly.`);
         } else if (regionSwitches >= 8) {
           issues.push(`${regionSwitches} total region switches suggest a scattered reading path.`);
         }
@@ -742,8 +839,20 @@ export function AttentionTrackingDemo() {
             value: String(regionSwitches),
           },
           {
-            label: "STEM/Q flips",
-            value: String(stemQuestionFlips),
+            label: "B vs A focus",
+            value: finalZonePcts.sectionA > 0 ? `${sectionBToAPct}%` : "N/A",
+          },
+          {
+            label: "A/B flips",
+            value: String(sectionASectionBFlips),
+          },
+          {
+            label: "A revisits",
+            value: String(sectionARevisits),
+          },
+          {
+            label: "Passage/Q flips",
+            value: String(sectionQuestionFlips),
           },
           {
             label: "Answer switches",
@@ -872,7 +981,8 @@ export function AttentionTrackingDemo() {
             </h3>
             <p className="text-slate-700 text-sm mt-1 leading-relaxed">
               PhloemAI can estimate which zone you focus on during each question -{" "}
-              <span className="text-slate-900 font-medium">STEM</span>,{" "}
+              <span className="text-slate-900 font-medium">Section A</span>,{" "}
+              <span className="text-slate-900 font-medium">Section B</span>,{" "}
               <span className="text-slate-900 font-medium">Question</span>,{" "}
               or <span className="text-slate-900 font-medium">Answers</span>. It shows{" "}
               <em>how</em> you read, not just what you got wrong.
@@ -885,7 +995,7 @@ export function AttentionTrackingDemo() {
         </div>
         {wgError && (
           <p className="text-xs text-red-500">
-            Could not load eye-tracking. Try the practice-only option below.
+            Could not load eye-tracking. Try mouse tracking or practice-only below.
           </p>
         )}
         <div className="space-y-2">
@@ -897,7 +1007,7 @@ export function AttentionTrackingDemo() {
           </button>
           <button
             onClick={startEyeTracking}
-            className="w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-sm hover:text-slate-900 hover:border-slate-400 transition-colors cursor-pointer"
+            className="w-full py-2 rounded-xl border-2 border-amber-400 bg-amber-50 text-amber-800 text-sm font-semibold shadow-sm hover:border-amber-500 hover:bg-amber-100 transition-colors cursor-pointer"
           >
             Enable Eye Tracking + Start →
           </button>
@@ -987,7 +1097,7 @@ export function AttentionTrackingDemo() {
   // ── Active question ─────────────────────────────────────────────────────────
   if ((state === "active" || state === "answered") && question) {
     const timeCritical = timeLeft < 30 && state === "active";
-    const stemText = getStemText(question);
+    const passageSections = getPassageSections(question);
     return (
       <>
         {trackingActive && showGazeRing && gazePos && state === "active" && (
@@ -1067,38 +1177,54 @@ export function AttentionTrackingDemo() {
         </div>
 
         <div className="p-4 space-y-3">
-          {/* Stem */}
+          {/* Passage */}
           <div
-            ref={stemRef}
             className={`rounded-xl p-4 border transition-all duration-300 ${
-              activeZone === "stem" && state === "active"
-                ? ZONE.stem.active_box
-                : ZONE.stem.inactive_box
+              (activeZone === "sectionA" || activeZone === "sectionB") && state === "active"
+                ? ZONE[activeZone].active_box
+                : ZONE.sectionA.inactive_box
             }`}
           >
             <div className="flex items-center gap-2 mb-2">
               <span
                 className={`text-xs font-semibold uppercase tracking-wide ${
-                  activeZone === "stem" && state === "active"
-                    ? ZONE.stem.badge
+                  (activeZone === "sectionA" || activeZone === "sectionB") && state === "active"
+                    ? ZONE[activeZone].badge
                     : "text-slate-500"
                 }`}
               >
-                STEM
+                Passage
               </span>
-              {activeZone === "stem" && state === "active" && (
-                <span className="flex items-center gap-1 text-xs text-blue-600 animate-pulse">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block" />
-                  tracking
+              {(activeZone === "sectionA" || activeZone === "sectionB") && state === "active" && (
+                <span className={`flex items-center gap-1 text-xs animate-pulse ${ZONE[activeZone].tracking}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full inline-block ${ZONE[activeZone].dot}`} />
+                  tracking {ZONE[activeZone].label}
                 </span>
               )}
             </div>
-            <p className="text-slate-800 text-sm leading-relaxed whitespace-pre-line">
-              {stemText}
+            <p
+              ref={sectionARef}
+              className={`-mx-1 rounded-lg px-1 py-0.5 text-slate-800 text-sm leading-relaxed transition-colors ${
+                activeZone === "sectionA" && state === "active"
+                  ? "bg-blue-100/60 ring-1 ring-blue-200"
+                  : ""
+              }`}
+            >
+              {passageSections.sectionA}
+            </p>
+            <p
+              ref={sectionBRef}
+              className={`-mx-1 mt-4 rounded-lg px-1 py-0.5 text-slate-800 text-sm leading-relaxed transition-colors ${
+                activeZone === "sectionB" && state === "active"
+                  ? "bg-cyan-100/70 ring-1 ring-cyan-200"
+                  : ""
+              }`}
+            >
+              {passageSections.sectionB}
             </p>
           </div>
 
-          {/* Question stem */}
+          {/* Question wording */}
           <div
             ref={questionRef}
             className={`rounded-xl p-3 border transition-all duration-300 ${
@@ -1213,7 +1339,7 @@ export function AttentionTrackingDemo() {
 
           {/* Zone stats */}
           {gazeDataReceived ? (
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
               {ZONE_IDS.map((id) => (
                 <div
                   key={id}
@@ -1262,7 +1388,7 @@ export function AttentionTrackingDemo() {
               <p className="text-slate-700 text-xs leading-relaxed">
                 {feedbackInsights.result}
               </p>
-              <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
                 {feedbackInsights.metrics.map((metric) => (
                   <div
                     key={metric.label}
@@ -1339,7 +1465,7 @@ function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
     "Track accuracy trends across multiple sessions",
     "Get a personalised focus plan before every session",
     "Receive detailed AI coaching reports based on your data",
-    "Unlock advanced attention insights - e.g. 'You skip the question stem 40% of the time'",
+    "Unlock advanced attention insights - e.g. 'You skip the question wording 40% of the time'",
   ];
 
   return (
@@ -2142,6 +2268,10 @@ export function UCATDemoPage() {
               Start with mouse tracking for the most precise desktop signal, or
               choose the optional webcam eye-tracking experiment. Only one mode
               runs at a time.
+            </p>
+            <p className="mt-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold leading-relaxed text-amber-800">
+              Eye tracking is best when at arm&apos;s length away from the
+              camera, sitting still and eyes parallel to the camera.
             </p>
           </div>
 
