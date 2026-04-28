@@ -1,0 +1,2169 @@
+"use client";
+
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
+import {
+  fetchUCATQuestion,
+  getStemText,
+  type QuestionData,
+} from "../_lib/ucatQuestion";
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+// ── PhloemAI Logo (landing hero) ─────────────────────────────────────────────
+
+function PhloemAILogo() {
+  return (
+    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center shadow-lg border border-blue-500/20">
+      <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
+      </svg>
+    </div>
+  );
+}
+
+// ── Eye Tracking Demo ─────────────────────────────────────────────────────────
+
+// All class strings are explicit so Tailwind can extract them at build time.
+const ZONE = {
+  stem: {
+    label: "STEM",
+    pct: 68,
+    active_box: "border-blue-400 bg-blue-50",
+    inactive_box: "border-slate-200 bg-white",
+    badge: "text-blue-600",
+    dot: "bg-blue-500",
+    active_stat: "border-blue-300 bg-blue-50 text-blue-600",
+    inactive_stat: "border-slate-200 bg-white text-slate-400",
+    tracking: "text-blue-600",
+  },
+  question: {
+    label: "Question",
+    pct: 7,
+    active_box: "border-violet-400 bg-violet-50",
+    inactive_box: "border-slate-200 bg-white",
+    badge: "text-violet-600",
+    dot: "bg-violet-500",
+    active_stat: "border-violet-300 bg-violet-50 text-violet-600",
+    inactive_stat: "border-slate-200 bg-white text-slate-400",
+    tracking: "text-violet-600",
+  },
+  answers: {
+    label: "Answers",
+    pct: 20,
+    active_box: "border-green-400 bg-green-50",
+    inactive_box: "border-slate-200 bg-white",
+    badge: "text-green-600",
+    dot: "bg-green-500",
+    active_stat: "border-green-300 bg-green-50 text-green-600",
+    inactive_stat: "border-slate-200 bg-white text-slate-400",
+    tracking: "text-green-600",
+  },
+} as const;
+
+type ZoneId = keyof typeof ZONE;
+type ActiveRegion = ZoneId | "unknown";
+type TrackingMode = "none" | "mouse" | "eye";
+type GazeSample = { x: number; y: number; at: number };
+type ZoneScores = Record<ZoneId, number>;
+type RegionTransition = { from: ZoneId; to: ZoneId; at: number };
+type AnswerChoiceEvent = { key: AnswerKey; at: number };
+
+const ZONE_IDS: ZoneId[] = ["stem", "question", "answers"];
+const emptyZoneTimes = (): Record<ZoneId, number> => ({
+  stem: 0,
+  question: 0,
+  answers: 0,
+});
+
+const SMOOTHING_SAMPLE_COUNT = 8;
+const INTENT_WINDOW_MS = 650;
+const MIN_REGION_DWELL_MS = 400;
+const FUZZY_PADDING_RATIO = 0.18;
+const FUZZY_MIN_PADDING_PX = 18;
+const INTENT_SCORE_THRESHOLD = 0.2;
+const EARLY_FOCUS_WINDOW_MS = 10000;
+
+// ── MediaPipe iris landmark indices ───────────────────────────────────────────
+
+const L_IRIS = 468, R_IRIS = 473;
+
+// 3-point vertical calibration: top → centre → bottom
+const CALIB_PHASES = [
+  { label: "the top of the screen", y: 10 },
+  { label: "the centre",            y: 50 },
+  { label: "the bottom",            y: 90 },
+] as const;
+
+// ── Question type (from /api/rishbot/question) ────────────────────────────────
+
+type AnswerKey = "A" | "B" | "C" | "D";
+const ANSWER_KEYS: AnswerKey[] = ["A", "B", "C", "D"];
+const emptyAnswerTimes = (): Record<AnswerKey, number> => ({
+  A: 0,
+  B: 0,
+  C: 0,
+  D: 0,
+});
+type FeedbackInsights = {
+  result: string;
+  issues: string[];
+  metrics: { label: string; value: string }[];
+};
+const emptyFeedbackInsights = (): FeedbackInsights => ({
+  result: "",
+  issues: [],
+  metrics: [],
+});
+
+type SessionState =
+  | "idle"
+  | "enabling"
+  | "calibrating"
+  | "loading"
+  | "active"
+  | "answered";
+
+// ── EyeTrackingDemo ───────────────────────────────────────────────────────────
+
+// MediaPipe FaceLandmarker type (minimal surface we use)
+type Landmark = { x: number; y: number; z: number };
+type FaceLandmarkerInstance = {
+  detectForVideo: (v: HTMLVideoElement, t: number) => { faceLandmarks?: Landmark[][] };
+  close: () => void;
+};
+
+function isPrimaryRegion(region: ActiveRegion): region is ZoneId {
+  return region !== "unknown";
+}
+
+function scoreRectIntent(x: number, y: number, rect: DOMRectReadOnly) {
+  const padX = Math.max(FUZZY_MIN_PADDING_PX, rect.width * FUZZY_PADDING_RATIO);
+  const padY = Math.max(FUZZY_MIN_PADDING_PX, rect.height * FUZZY_PADDING_RATIO);
+  const outsideX = x < rect.left ? rect.left - x : x > rect.right ? x - rect.right : 0;
+  const outsideY = y < rect.top ? rect.top - y : y > rect.bottom ? y - rect.bottom : 0;
+  const outsideScore = Math.max(outsideX / padX, outsideY / padY);
+
+  if (outsideScore > 1) return 0;
+
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  const centerDistance = Math.hypot(x - centerX, y - centerY);
+  const maxCenterDistance = Math.max(1, Math.hypot(rect.width / 2 + padX, rect.height / 2 + padY));
+  const centerScore = Math.max(0, 1 - centerDistance / maxCenterDistance);
+
+  return (1 - outsideScore) * 0.85 + centerScore * 0.15;
+}
+
+export function AttentionTrackingDemo() {
+  const [state, setState] = useState<SessionState>("idle");
+  const [question, setQuestion] = useState<QuestionData | null>(null);
+  const [selected, setSelected] = useState<AnswerKey | null>(null);
+  const [confirmedAnswer, setConfirmedAnswer] = useState<AnswerKey | null>(null);
+  const [feedbackInsights, setFeedbackInsights] = useState<FeedbackInsights>(emptyFeedbackInsights);
+  const [timeLeft, setTimeLeft] = useState(120);
+  const [activeZone, setActiveZone] = useState<ActiveRegion>("unknown");
+  const [zoneTimes, setZoneTimes] = useState<Record<ZoneId, number>>(emptyZoneTimes);
+  const [calibPhase, setCalibPhase] = useState(0);
+  const [calibCountdown, setCalibCountdown] = useState(2);
+  const [trackingMode, setTrackingMode] = useState<TrackingMode>("none");
+  const [gazeDataReceived, setGazeDataReceived] = useState(false);
+  const [wgError, setWgError] = useState(false);
+  const [showGazeRing, setShowGazeRing] = useState(true);
+  const [gazePos, setGazePos] = useState<{ x: number; y: number } | null>(null);
+
+  const stemRef = useRef<HTMLDivElement>(null);
+  const questionRef = useRef<HTMLDivElement>(null);
+  const answersRef = useRef<HTMLDivElement>(null);
+  const activeRegionRef = useRef<ActiveRegion>("unknown");
+  const candidateRegionRef = useRef<ActiveRegion>("unknown");
+  const candidateRegionSinceRef = useRef<number>(0);
+  const rawGazeRef = useRef<{ x: number; y: number } | null>(null);
+  const gazeSamplesRef = useRef<GazeSample[]>([]);
+  const intentSamplesRef = useRef<{ at: number; scores: ZoneScores }[]>([]);
+  const questionStartTimeRef = useRef<number>(0);
+  const earlyZoneTimesRef = useRef<Record<ZoneId, number>>(emptyZoneTimes());
+  const firstPrimaryRegionRef = useRef<ZoneId | null>(null);
+  const regionTransitionsRef = useRef<RegionTransition[]>([]);
+  const regionSwitchCountRef = useRef(0);
+  const answerSelectionHistoryRef = useRef<AnswerChoiceEvent[]>([]);
+  const answerSwitchCountRef = useRef(0);
+  const answerHoverTimesRef = useRef<Record<AnswerKey, number>>(emptyAnswerTimes());
+  const answerHoverSwitchCountRef = useRef(0);
+  const currentAnswerHoverRef = useRef<{ key: AnswerKey; startedAt: number } | null>(null);
+  const lastTimeRef = useRef<number>(0);
+  const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stateRef = useRef<SessionState>("idle");
+
+  // MediaPipe refs
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const faceLandmarkerRef = useRef<FaceLandmarkerInstance | null>(null);
+  const animFrameRef = useRef<number | null>(null);
+  const neutralRef = useRef<number | null>(null);
+  const neutralHorizRef = useRef<number | null>(null);
+  const gainVRef = useRef<number>(60);
+  const calibPhaseRef = useRef(0);
+  const calibPhaseSamples = useRef<[number[], number[], number[]]>([[], [], []]);
+  const calibHorizSamplesRef = useRef<number[]>([]);
+
+  // Keep stateRef in sync so the RAF loop (a closure) sees current state
+  useEffect(() => { stateRef.current = state; }, [state]);
+
+  const trackingActive = trackingMode !== "none";
+  const trackingLabel =
+    trackingMode === "mouse" ? "Mouse tracking active" : "Eye tracking active";
+  const ringLabel = trackingMode === "mouse" ? "Cursor ring" : "Tracking ring";
+
+  // Zone percentages derived from actual dwell times
+  const zonePcts = useMemo(() => {
+    const total = Object.values(zoneTimes).reduce((s, v) => s + v, 0);
+    if (total === 0) return emptyZoneTimes();
+    return Object.fromEntries(
+      ZONE_IDS.map((id) => [id, Math.round((zoneTimes[id] / total) * 100)])
+    ) as Record<ZoneId, number>;
+  }, [zoneTimes]);
+
+  const recordEarlyDwell = useCallback((region: ZoneId, from: number, to: number) => {
+    const sessionStart = questionStartTimeRef.current;
+    if (!sessionStart || to <= from) return;
+
+    const earlyWindowEnd = sessionStart + EARLY_FOCUS_WINDOW_MS;
+    const overlap = Math.max(0, Math.min(to, earlyWindowEnd) - Math.max(from, sessionStart));
+    if (overlap > 0) {
+      earlyZoneTimesRef.current[region] += overlap;
+    }
+  }, []);
+
+  const finalizeAnswerHover = useCallback((now = Date.now()) => {
+    const hover = currentAnswerHoverRef.current;
+    if (!hover) return;
+
+    answerHoverTimesRef.current[hover.key] += Math.max(0, now - hover.startedAt);
+    currentAnswerHoverRef.current = null;
+  }, []);
+
+  const scoreRegions = useCallback((x: number, y: number): ZoneScores => {
+    const scores: ZoneScores = { stem: 0, question: 0, answers: 0 };
+    const refs = [
+      { id: "stem" as const, element: stemRef.current },
+      { id: "question" as const, element: questionRef.current },
+      { id: "answers" as const, element: answersRef.current },
+    ];
+
+    for (const { id, element } of refs) {
+      const rect = element?.getBoundingClientRect();
+      if (rect) scores[id] = scoreRectIntent(x, y, rect);
+    }
+
+    return scores;
+  }, []);
+
+  const detectIntentRegion = useCallback(
+    (x: number, y: number, now: number): ActiveRegion => {
+      rawGazeRef.current = { x, y };
+      gazeSamplesRef.current.push({ x, y, at: now });
+      if (gazeSamplesRef.current.length > SMOOTHING_SAMPLE_COUNT) {
+        gazeSamplesRef.current.shift();
+      }
+
+      const smoothed = gazeSamplesRef.current.reduce(
+        (acc, sample) => ({ x: acc.x + sample.x, y: acc.y + sample.y }),
+        { x: 0, y: 0 }
+      );
+      const sampleCount = Math.max(1, gazeSamplesRef.current.length);
+      const scores = scoreRegions(smoothed.x / sampleCount, smoothed.y / sampleCount);
+
+      intentSamplesRef.current.push({ at: now, scores });
+      intentSamplesRef.current = intentSamplesRef.current.filter(
+        (sample) => now - sample.at <= INTENT_WINDOW_MS
+      );
+
+      const totals: ZoneScores = { stem: 0, question: 0, answers: 0 };
+      let totalWeight = 0;
+      for (const sample of intentSamplesRef.current) {
+        const ageRatio = Math.min(1, (now - sample.at) / INTENT_WINDOW_MS);
+        const weight = 1 - ageRatio * 0.55;
+        totalWeight += weight;
+        for (const id of ZONE_IDS) totals[id] += sample.scores[id] * weight;
+      }
+
+      if (totalWeight <= 0) return "unknown";
+
+      let bestRegion: ZoneId = "stem";
+      let bestScore = totals.stem / totalWeight;
+      for (const id of ZONE_IDS) {
+        const score = totals[id] / totalWeight;
+        if (score > bestScore) {
+          bestRegion = id;
+          bestScore = score;
+        }
+      }
+
+      return bestScore >= INTENT_SCORE_THRESHOLD ? bestRegion : "unknown";
+    },
+    [scoreRegions]
+  );
+
+  const commitStableRegion = useCallback((nextRegion: ActiveRegion, now: number) => {
+    const currentRegion = activeRegionRef.current;
+
+    if (nextRegion === currentRegion) {
+      candidateRegionRef.current = nextRegion;
+      candidateRegionSinceRef.current = now;
+      return currentRegion;
+    }
+
+    if (candidateRegionRef.current !== nextRegion) {
+      candidateRegionRef.current = nextRegion;
+      candidateRegionSinceRef.current = now;
+      return currentRegion;
+    }
+
+    if (now - candidateRegionSinceRef.current < MIN_REGION_DWELL_MS) {
+      return currentRegion;
+    }
+
+    if (isPrimaryRegion(nextRegion)) {
+      if (!firstPrimaryRegionRef.current) {
+        firstPrimaryRegionRef.current = nextRegion;
+      }
+
+      if (isPrimaryRegion(currentRegion) && currentRegion !== nextRegion) {
+        regionSwitchCountRef.current += 1;
+        regionTransitionsRef.current.push({
+          from: currentRegion,
+          to: nextRegion,
+          at: now,
+        });
+      }
+    }
+
+    activeRegionRef.current = nextRegion;
+    setActiveZone(nextRegion);
+    return nextRegion;
+  }, []);
+
+  const recordGaze = useCallback(
+    (x: number, y: number) => {
+      if (stateRef.current !== "active") return;
+      setGazePos({ x, y });
+      setGazeDataReceived(true);
+      const now = Date.now();
+      const previousTime = lastTimeRef.current > 0 ? lastTimeRef.current : now;
+      const elapsed = now - previousTime;
+      const elapsedRegion = activeRegionRef.current;
+      if (elapsed > 0 && isPrimaryRegion(elapsedRegion)) {
+        setZoneTimes((prev) => ({
+          ...prev,
+          [elapsedRegion]: prev[elapsedRegion] + elapsed,
+        }));
+        recordEarlyDwell(elapsedRegion, previousTime, now);
+      }
+      lastTimeRef.current = now;
+      const intentRegion = detectIntentRegion(x, y, now);
+      commitStableRegion(intentRegion, now);
+    },
+    [commitStableRegion, detectIntentRegion, recordEarlyDwell]
+  );
+
+  useEffect(() => {
+    if (state !== "active" || trackingMode !== "mouse") return;
+
+    let frameId: number | null = null;
+    let latestPoint: { x: number; y: number } | null = null;
+
+    const flushPoint = () => {
+      frameId = null;
+      if (!latestPoint) return;
+      recordGaze(latestPoint.x, latestPoint.y);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType && event.pointerType !== "mouse") return;
+      latestPoint = { x: event.clientX, y: event.clientY };
+      if (frameId === null) {
+        frameId = requestAnimationFrame(flushPoint);
+      }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      if (frameId !== null) cancelAnimationFrame(frameId);
+    };
+  }, [recordGaze, state, trackingMode]);
+
+  // Per-frame detection loop - reads iris landmarks and maps to screen coords
+  const runLoopRef = useRef<() => void>(() => {});
+  const runLoop = useCallback(() => {
+    const video = videoRef.current;
+    const lm_ref = faceLandmarkerRef.current;
+    if (!video || !lm_ref || video.readyState < 2) {
+      animFrameRef.current = requestAnimationFrame(runLoopRef.current);
+      return;
+    }
+    const results = lm_ref.detectForVideo(video, performance.now());
+    if (results.faceLandmarks?.[0]) {
+      const lm = results.faceLandmarks[0];
+
+      // Head-stabilised gaze: iris position relative to the midpoint of the
+      // inner eye corners (lm 133 = left, lm 362 = right). Both landmarks
+      // move with the head, so their midpoint cancels out head translation.
+      // Only actual eye rotation changes the iris-relative-to-head offset.
+      const headRefY = (lm[133].y + lm[362].y) / 2;
+      const headRefX = (lm[133].x + lm[362].x) / 2;
+      const gazeY = (lm[L_IRIS].y + lm[R_IRIS].y) / 2 - headRefY;
+      const gazeX = (lm[L_IRIS].x + lm[R_IRIS].x) / 2 - headRefX;
+
+      if (stateRef.current === "calibrating") {
+        const ph = calibPhaseRef.current;
+        calibPhaseSamples.current[ph]?.push(gazeY);
+        if (ph === 1) calibHorizSamplesRef.current.push(gazeX);
+      } else if (stateRef.current === "active") {
+        const neutralY = neutralRef.current ?? 0;
+        const neutralX = neutralHorizRef.current ?? 0;
+        const GAIN_V = gainVRef.current * 1.32;
+        const GAIN_H = 25;
+        const screenY = Math.max(0, Math.min(
+          window.innerHeight - 1,
+          window.innerHeight * 0.5 + (gazeY - neutralY) * GAIN_V * window.innerHeight
+        ));
+        const screenX = Math.max(0, Math.min(
+          window.innerWidth - 1,
+          window.innerWidth * 0.5 - (gazeX - neutralX) * GAIN_H * window.innerWidth
+        ));
+        recordGaze(screenX, screenY);
+      }
+    }
+    animFrameRef.current = requestAnimationFrame(runLoopRef.current);
+  }, [recordGaze]);
+  useEffect(() => { runLoopRef.current = runLoop; }, [runLoop]);
+
+  // Start MediaPipe eye tracking and begin calibration
+  const startEyeTracking = async () => {
+    setState("enabling");
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user", width: 640, height: 480 },
+      });
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.muted = true;
+      // Small mirrored preview bottom-right so user can see their face
+      video.style.cssText =
+        "position:fixed;bottom:12px;right:12px;width:120px;height:90px;border-radius:10px;z-index:9000;opacity:0.85;transform:scaleX(-1);object-fit:cover;border:1px solid rgba(6,182,212,0.4)";
+      document.body.appendChild(video);
+      videoRef.current = video;
+      await video.play();
+
+      const { FaceLandmarker, FilesetResolver } = await import("@mediapipe/tasks-vision");
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.34/wasm"
+      );
+      const landmarker = await FaceLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath:
+            "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+          delegate: "GPU",
+        },
+        runningMode: "VIDEO",
+        numFaces: 1,
+        outputFaceBlendshapes: false,
+        outputFacialTransformationMatrixes: false,
+      });
+      faceLandmarkerRef.current = landmarker as FaceLandmarkerInstance;
+
+      calibPhaseSamples.current = [[], [], []];
+      calibHorizSamplesRef.current = [];
+      animFrameRef.current = requestAnimationFrame(runLoop);
+      setTrackingMode("eye");
+      setCalibCountdown(3);
+      setState("calibrating");
+    } catch {
+      setWgError(true);
+      setTrackingMode("none");
+      setState("idle");
+      if (videoRef.current) {
+        (videoRef.current.srcObject as MediaStream | null)?.getTracks().forEach(t => t.stop());
+        videoRef.current.remove();
+        videoRef.current = null;
+      }
+    }
+  };
+
+  const startMouseTracking = () => {
+    setTrackingMode("mouse");
+    setWgError(false);
+    fetchQuestion();
+  };
+
+  const startPracticeOnly = () => {
+    setTrackingMode("none");
+    setGazeDataReceived(false);
+    fetchQuestion();
+  };
+
+  const fetchQuestion = async () => {
+    setState("loading");
+    setGazeDataReceived(false);
+    try {
+      const data = await fetchUCATQuestion();
+      const now = Date.now();
+      setQuestion(data);
+      setSelected(null);
+      setConfirmedAnswer(null);
+      setFeedbackInsights(emptyFeedbackInsights());
+      setTimeLeft(120);
+      setZoneTimes(emptyZoneTimes());
+      activeRegionRef.current = "unknown";
+      candidateRegionRef.current = "unknown";
+      candidateRegionSinceRef.current = now;
+      questionStartTimeRef.current = now;
+      earlyZoneTimesRef.current = emptyZoneTimes();
+      firstPrimaryRegionRef.current = null;
+      regionTransitionsRef.current = [];
+      regionSwitchCountRef.current = 0;
+      answerSelectionHistoryRef.current = [];
+      answerSwitchCountRef.current = 0;
+      answerHoverTimesRef.current = emptyAnswerTimes();
+      answerHoverSwitchCountRef.current = 0;
+      currentAnswerHoverRef.current = null;
+      gazeSamplesRef.current = [];
+      intentSamplesRef.current = [];
+      setActiveZone("unknown");
+      lastTimeRef.current = now;
+      setState("active");
+    } catch {
+      setState("idle");
+    }
+  };
+
+  // 3-point calibration: top → centre → bottom, 2.5 s per phase.
+  // After all phases, derive personalised vertical gain from the measured range.
+  useEffect(() => {
+    if (state !== "calibrating") return;
+
+    calibPhaseSamples.current = [[], [], []];
+    calibHorizSamplesRef.current = [];
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const intervals: ReturnType<typeof setInterval>[] = [];
+
+    const avg = (arr: number[]) =>
+      arr.length > 0 ? arr.reduce((a, b) => a + b) / arr.length : null;
+
+    const finish = () => {
+      const topG    = avg(calibPhaseSamples.current[0]);
+      const centerG = avg(calibPhaseSamples.current[1]);
+      const bottomG = avg(calibPhaseSamples.current[2]);
+      neutralRef.current = centerG ?? 0;
+      if (topG !== null && bottomG !== null && bottomG - topG > 0.0005) {
+        // Map 80 % of viewport height to the full measured gaze range
+        gainVRef.current = Math.min(200, Math.max(30, 0.8 / (bottomG - topG)));
+      } else {
+        gainVRef.current = 60;
+      }
+      neutralHorizRef.current = avg(calibHorizSamplesRef.current) ?? 0;
+      fetchQuestion();
+    };
+
+    const runPhase = (phase: number) => {
+      calibPhaseRef.current = phase;
+      setCalibPhase(phase);
+      setCalibCountdown(2);
+      const ci = setInterval(() => setCalibCountdown(c => Math.max(0, c - 1)), 1000);
+      intervals.push(ci);
+      const t = setTimeout(() => {
+        clearInterval(ci);
+        if (phase < 2) runPhase(phase + 1);
+        else finish();
+      }, 2600);
+      timers.push(t);
+    };
+
+    runPhase(0);
+    return () => {
+      timers.forEach(clearTimeout);
+      intervals.forEach(clearInterval);
+    };
+  }, [state]);
+
+  const stopTracking = () => {
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
+    if (videoRef.current) {
+      (videoRef.current.srcObject as MediaStream | null)?.getTracks().forEach(t => t.stop());
+      videoRef.current.remove();
+      videoRef.current = null;
+    }
+    faceLandmarkerRef.current?.close();
+    faceLandmarkerRef.current = null;
+    neutralRef.current = null;
+    neutralHorizRef.current = null;
+    gainVRef.current = 60;
+    calibPhaseSamples.current = [[], [], []];
+    calibHorizSamplesRef.current = [];
+    rawGazeRef.current = null;
+    setGazePos(null);
+    gazeSamplesRef.current = [];
+    intentSamplesRef.current = [];
+    activeRegionRef.current = "unknown";
+    candidateRegionRef.current = "unknown";
+    candidateRegionSinceRef.current = 0;
+    questionStartTimeRef.current = 0;
+    earlyZoneTimesRef.current = emptyZoneTimes();
+    firstPrimaryRegionRef.current = null;
+    regionTransitionsRef.current = [];
+    regionSwitchCountRef.current = 0;
+    answerSelectionHistoryRef.current = [];
+    answerSwitchCountRef.current = 0;
+    answerHoverTimesRef.current = emptyAnswerTimes();
+    answerHoverSwitchCountRef.current = 0;
+    currentAnswerHoverRef.current = null;
+  };
+
+  const reset = () => {
+    stopTracking();
+    setSelected(null);
+    setConfirmedAnswer(null);
+    setFeedbackInsights(emptyFeedbackInsights());
+    setQuestion(null);
+    setTrackingMode("none");
+    setGazeDataReceived(false);
+    setWgError(false);
+    setActiveZone("unknown");
+    setState("idle");
+  };
+
+  const formatTime = (s: number) =>
+    `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+  const buildFeedbackInsights = useCallback(
+    (finalAnswer: AnswerKey | null, finalZoneTimes: Record<ZoneId, number>): FeedbackInsights => {
+      if (!question) return emptyFeedbackInsights();
+
+      const correct = finalAnswer === question.correct;
+      const result = !finalAnswer
+        ? `No answer was confirmed. The correct answer was ${question.correct}. ${question.explanation}`
+        : correct
+        ? `Correct. ${question.explanation}`
+        : `The correct answer was ${question.correct}. ${question.explanation}`;
+
+      const finalTotal = Object.values(finalZoneTimes).reduce((sum, value) => sum + value, 0);
+      const finalZonePcts = Object.fromEntries(
+        ZONE_IDS.map((id) => [
+          id,
+          finalTotal > 0 ? Math.round((finalZoneTimes[id] / finalTotal) * 100) : 0,
+        ])
+      ) as Record<ZoneId, number>;
+      const earlyTimes = { ...earlyZoneTimesRef.current };
+      const earlyTotal = Object.values(earlyTimes).reduce((sum, value) => sum + value, 0);
+      let earlyDominant: ZoneId | null = null;
+      let earlyDominantPct = 0;
+
+      for (const id of ZONE_IDS) {
+        const pct = earlyTotal > 0 ? Math.round((earlyTimes[id] / earlyTotal) * 100) : 0;
+        if (pct > earlyDominantPct) {
+          earlyDominant = id;
+          earlyDominantPct = pct;
+        }
+      }
+
+      const firstRegion = firstPrimaryRegionRef.current;
+      const stemQuestionFlips = regionTransitionsRef.current.filter(
+        ({ from, to }) =>
+          (from === "stem" && to === "question") ||
+          (from === "question" && to === "stem")
+      ).length;
+      const answerHoverSeconds = Math.round(
+        Object.values(answerHoverTimesRef.current).reduce((sum, value) => sum + value, 0) / 1000
+      );
+      const hoveredOptionCount = ANSWER_KEYS.filter(
+        (key) => answerHoverTimesRef.current[key] > 250
+      ).length;
+      const answerSwitches = answerSwitchCountRef.current;
+      const regionSwitches = regionSwitchCountRef.current;
+      const answerHoverSwitches = answerHoverSwitchCountRef.current;
+
+      const issues: string[] = [];
+      if (!finalAnswer) {
+        issues.push("No answer was confirmed before the timer ended.");
+      }
+
+      if (!gazeDataReceived) {
+        issues.push("Attention tracking data was not recorded for this attempt.");
+      } else {
+        if (firstRegion === "stem" || (earlyDominant === "stem" && earlyDominantPct >= 50)) {
+          issues.push(
+            `Early focus leaned STEM-first${earlyDominant ? ` (${earlyDominantPct}% of the first 10s)` : ""}.`
+          );
+        }
+        if (finalZonePcts.question < 8) {
+          issues.push("QUESTION received very little stable focus time.");
+        }
+        if (stemQuestionFlips >= 4) {
+          issues.push(`${stemQuestionFlips} STEM/QUESTION flips suggest you may have been re-checking the ask repeatedly.`);
+        } else if (regionSwitches >= 8) {
+          issues.push(`${regionSwitches} total region switches suggest a scattered reading path.`);
+        }
+        if (finalZonePcts.answers < 10 && !correct) {
+          issues.push("ANSWERS received little review time before the final choice.");
+        }
+      }
+
+      if (answerSwitches >= 2) {
+        issues.push(`${answerSwitches} answer-choice switches before confirming.`);
+      }
+      if (answerHoverSeconds >= 6 && hoveredOptionCount >= 2) {
+        issues.push(`Hovered across ${hoveredOptionCount} answer options for about ${answerHoverSeconds}s.`);
+      }
+      if (answerHoverSwitches >= 3) {
+        issues.push(`${answerHoverSwitches} answer hover switches before confirming.`);
+      }
+      if (issues.length === 0) {
+        issues.push("No major focus issues detected in this attempt.");
+      }
+
+      return {
+        result,
+        issues,
+        metrics: [
+          {
+            label: "First focus",
+            value: firstRegion ? ZONE[firstRegion].label : "UNKNOWN",
+          },
+          {
+            label: "Region switches",
+            value: String(regionSwitches),
+          },
+          {
+            label: "STEM/Q flips",
+            value: String(stemQuestionFlips),
+          },
+          {
+            label: "Answer switches",
+            value: String(answerSwitches),
+          },
+        ],
+      };
+    },
+    [gazeDataReceived, question]
+  );
+
+  // ── Idle state ──────────────────────────────────────────────────────────────
+  const finishQuestion = useCallback(
+    (finalAnswer: AnswerKey | null) => {
+      if (stateRef.current !== "active") return;
+      if (timerIdRef.current) clearInterval(timerIdRef.current);
+
+      const now = Date.now();
+      const previousTime = lastTimeRef.current > 0 ? lastTimeRef.current : now;
+      const elapsed = now - previousTime;
+      const elapsedRegion = activeRegionRef.current;
+      let finalZoneTimes = zoneTimes;
+
+      if (elapsed > 0 && isPrimaryRegion(elapsedRegion)) {
+        finalZoneTimes = {
+          ...zoneTimes,
+          [elapsedRegion]: zoneTimes[elapsedRegion] + elapsed,
+        };
+        setZoneTimes(finalZoneTimes);
+        recordEarlyDwell(elapsedRegion, previousTime, now);
+      }
+
+      finalizeAnswerHover(now);
+      setConfirmedAnswer(finalAnswer);
+      setFeedbackInsights(buildFeedbackInsights(finalAnswer, finalZoneTimes));
+      lastTimeRef.current = now;
+      setState("answered");
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+        animFrameRef.current = null;
+      }
+    },
+    [buildFeedbackInsights, finalizeAnswerHover, recordEarlyDwell, zoneTimes]
+  );
+
+  // Countdown timer
+  useEffect(() => {
+    if (state !== "active") return;
+    timerIdRef.current = setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          finishQuestion(null);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => {
+      if (timerIdRef.current) clearInterval(timerIdRef.current);
+    };
+  }, [finishQuestion, state]);
+
+  const selectAnswer = useCallback((key: AnswerKey) => {
+    if (state !== "active") return;
+
+    const now = Date.now();
+    if (selected && selected !== key) {
+      answerSwitchCountRef.current += 1;
+    }
+    if (selected !== key) {
+      answerSelectionHistoryRef.current.push({ key, at: now });
+    }
+    setSelected(key);
+  }, [selected, state]);
+
+  const confirmAnswer = useCallback(() => {
+    if (state !== "active" || !selected) return;
+    finishQuestion(selected);
+  }, [finishQuestion, selected, state]);
+
+  const handleAnswerHoverStart = useCallback((key: AnswerKey) => {
+    if (stateRef.current !== "active") return;
+
+    const now = Date.now();
+    const current = currentAnswerHoverRef.current;
+    if (current?.key === key) return;
+
+    if (current) {
+      answerHoverTimesRef.current[current.key] += Math.max(0, now - current.startedAt);
+      answerHoverSwitchCountRef.current += 1;
+    }
+
+    currentAnswerHoverRef.current = { key, startedAt: now };
+  }, []);
+
+  const handleAnswerHoverEnd = useCallback((key: AnswerKey) => {
+    const current = currentAnswerHoverRef.current;
+    if (!current || current.key !== key) return;
+    finalizeAnswerHover();
+  }, [finalizeAnswerHover]);
+
+  if (state === "idle") {
+    return (
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 space-y-4">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-xl bg-blue-100 border border-blue-200 flex items-center justify-center flex-shrink-0">
+            <svg
+              className="w-6 h-6 text-blue-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </div>
+          <div>
+            <div className="mb-3 rounded-xl border border-blue-100 bg-blue-50 px-3 py-2">
+              <p className="text-xs font-semibold text-blue-700">
+                Mouse tracking is recommended on desktop: it is more precise, faster to start, and does not need webcam permission.
+              </p>
+            </div>
+            <h3 className="text-slate-900 font-bold text-base">
+              DEMO - Choose your attention tracker
+            </h3>
+            <p className="text-slate-700 text-sm mt-1 leading-relaxed">
+              PhloemAI can estimate which zone you focus on during each question -{" "}
+              <span className="text-slate-900 font-medium">STEM</span>,{" "}
+              <span className="text-slate-900 font-medium">Question</span>,{" "}
+              or <span className="text-slate-900 font-medium">Answers</span>. It shows{" "}
+              <em>how</em> you read, not just what you got wrong.
+            </p>
+            <p className="text-slate-500 text-xs mt-2">
+              Choose mouse tracking for precise cursor data, eye tracking for the webcam experiment, or practice-only with no attention data.
+              Modes are mutually exclusive so the question screen stays calm.
+            </p>
+          </div>
+        </div>
+        {wgError && (
+          <p className="text-xs text-red-500">
+            Could not load eye-tracking. Try the practice-only option below.
+          </p>
+        )}
+        <div className="space-y-2">
+          <button
+            onClick={startMouseTracking}
+            className="w-full py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm cursor-pointer"
+          >
+            Start with Mouse Tracking →
+          </button>
+          <button
+            onClick={startEyeTracking}
+            className="w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-sm hover:text-slate-900 hover:border-slate-400 transition-colors cursor-pointer"
+          >
+            Enable Eye Tracking + Start →
+          </button>
+          <button
+            onClick={startPracticeOnly}
+            className="w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-sm hover:text-slate-900 hover:border-slate-400 transition-colors cursor-pointer"
+          >
+            Practice only - no tracking
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Loading WebGazer ────────────────────────────────────────────────────────
+  if (state === "enabling") {
+    return (
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-10 text-center space-y-3">
+        <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto" />
+        <p className="text-slate-700 text-sm">Loading eye-tracking…</p>
+        <p className="text-slate-400 text-xs">Webcam permission prompt may appear</p>
+      </div>
+    );
+  }
+
+  // ── Calibration ─────────────────────────────────────────────────────────────
+  if (state === "calibrating") {
+    const phase = CALIB_PHASES[calibPhase];
+    return (
+      <div className="fixed inset-0 z-[100] bg-slate-950">
+        {/* Instructions pinned to top */}
+        <div className="absolute top-6 left-0 right-0 flex flex-col items-center gap-3">
+          <p className="text-white font-bold text-lg">Eye Tracking Calibration</p>
+          <p className="text-slate-400 text-sm">
+            Look at the dot - <span className="text-blue-400 font-medium">{phase.label}</span>
+          </p>
+          {/* Phase progress dots */}
+          <div className="flex gap-2">
+            {CALIB_PHASES.map((_, i) => (
+              <div
+                key={i}
+                className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${
+                  i < calibPhase ? "bg-blue-600" : i === calibPhase ? "bg-white" : "bg-slate-700"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Moving calibration dot */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{ top: `${phase.y}%` }}
+        >
+          <div className="relative flex items-center justify-center">
+            <div
+              className="absolute w-20 h-20 rounded-full border border-blue-500/30 animate-ping"
+              style={{ animationDuration: "1.2s" }}
+            />
+            <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center shadow-md">
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
+            </div>
+          </div>
+          {/* Countdown under the dot */}
+          <div className="text-center mt-4 text-4xl font-black text-blue-400 tabular-nums">
+            {calibCountdown > 0 ? calibCountdown : "✓"}
+          </div>
+        </div>
+
+        <p className="absolute bottom-4 left-0 right-0 text-center text-slate-600 text-xs">
+          Webcam preview bottom-right · no video stored
+        </p>
+      </div>
+    );
+  }
+
+  // ── Fetching question ───────────────────────────────────────────────────────
+  if (state === "loading") {
+    return (
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-10 text-center space-y-3">
+        <div className="w-6 h-6 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto" />
+        <p className="text-slate-700 text-sm">Generating UCAT question…</p>
+      </div>
+    );
+  }
+
+  // ── Active question ─────────────────────────────────────────────────────────
+  if ((state === "active" || state === "answered") && question) {
+    const timeCritical = timeLeft < 30 && state === "active";
+    const stemText = getStemText(question);
+    return (
+      <>
+        {trackingActive && showGazeRing && gazePos && state === "active" && (
+          <div
+            style={{
+              position: "fixed",
+              zIndex: 9999,
+              pointerEvents: "none",
+              left: gazePos.x - 22,
+              top: gazePos.y - 22,
+              width: 44,
+              height: 44,
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: "50%",
+                border: "1.5px solid rgba(148,163,184,0.55)",
+                background: "rgba(255,255,255,0.03)",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%,-50%)",
+                width: 3,
+                height: 3,
+                borderRadius: "50%",
+                background: "rgba(148,163,184,0.7)",
+              }}
+            />
+          </div>
+        )}
+
+      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
+        {/* Top bar */}
+        <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-medium">
+              Verbal Reasoning
+            </span>
+            {trackingActive && state === "active" && (
+              <span className="flex items-center gap-1 text-blue-600">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse inline-block" />
+                {trackingLabel}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            {trackingActive && state === "active" && (
+              <label className="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={showGazeRing}
+                  onChange={(event) => setShowGazeRing(event.target.checked)}
+                  className="h-3.5 w-3.5 rounded border-slate-300 text-blue-600"
+                />
+                {ringLabel}
+              </label>
+            )}
+            <span
+              className={`font-mono font-bold text-sm transition-colors ${
+                state === "answered"
+                  ? "text-slate-400"
+                  : timeCritical
+                  ? "text-red-500 animate-pulse"
+                  : "text-slate-900"
+              }`}
+            >
+              {formatTime(timeLeft)}
+            </span>
+          </div>
+        </div>
+
+        <div className="p-4 space-y-3">
+          {/* Stem */}
+          <div
+            ref={stemRef}
+            className={`rounded-xl p-4 border transition-all duration-300 ${
+              activeZone === "stem" && state === "active"
+                ? ZONE.stem.active_box
+                : ZONE.stem.inactive_box
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span
+                className={`text-xs font-semibold uppercase tracking-wide ${
+                  activeZone === "stem" && state === "active"
+                    ? ZONE.stem.badge
+                    : "text-slate-500"
+                }`}
+              >
+                STEM
+              </span>
+              {activeZone === "stem" && state === "active" && (
+                <span className="flex items-center gap-1 text-xs text-blue-600 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block" />
+                  tracking
+                </span>
+              )}
+            </div>
+            <p className="text-slate-800 text-sm leading-relaxed whitespace-pre-line">
+              {stemText}
+            </p>
+          </div>
+
+          {/* Question stem */}
+          <div
+            ref={questionRef}
+            className={`rounded-xl p-3 border transition-all duration-300 ${
+              activeZone === "question" && state === "active"
+                ? ZONE.question.active_box
+                : ZONE.question.inactive_box
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-1.5">
+              <span
+                className={`text-xs font-semibold uppercase tracking-wide ${
+                  activeZone === "question" && state === "active"
+                    ? ZONE.question.badge
+                    : "text-slate-500"
+                }`}
+              >
+                Question
+              </span>
+              {activeZone === "question" && state === "active" && (
+                <span className="flex items-center gap-1 text-xs text-violet-600 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-500 inline-block" />
+                  tracking
+                </span>
+              )}
+            </div>
+            <p className="text-slate-800 text-sm font-medium">
+              {question.question}
+            </p>
+          </div>
+
+          {/* Answer options */}
+          <div
+            ref={answersRef}
+            className={`rounded-xl p-3 border transition-all duration-300 ${
+              activeZone === "answers" && state === "active"
+                ? ZONE.answers.active_box
+                : ZONE.answers.inactive_box
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span
+                className={`text-xs font-semibold uppercase tracking-wide ${
+                  activeZone === "answers" && state === "active"
+                    ? ZONE.answers.badge
+                    : "text-slate-500"
+                }`}
+              >
+                Answers
+              </span>
+              {activeZone === "answers" && state === "active" && (
+                <span className="flex items-center gap-1 text-xs text-green-600 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
+                  tracking
+                </span>
+              )}
+            </div>
+            <div className="space-y-2">
+              {ANSWER_KEYS.map((key) => {
+                const isSelected =
+                  state === "answered" ? confirmedAnswer === key : selected === key;
+                const isCorrect =
+                  state === "answered" && key === question.correct;
+                const isWrong =
+                  state === "answered" &&
+                  confirmedAnswer === key &&
+                  key !== question.correct;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => selectAnswer(key)}
+                    onMouseEnter={() => handleAnswerHoverStart(key)}
+                    onMouseLeave={() => handleAnswerHoverEnd(key)}
+                    disabled={state === "answered"}
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm border transition-all cursor-pointer ${
+                      isCorrect
+                        ? "border-green-400 bg-green-50 text-green-800"
+                        : isWrong
+                        ? "border-red-400 bg-red-50 text-red-700"
+                        : isSelected
+                        ? "border-blue-500 bg-blue-50 text-blue-800"
+                        : state === "active"
+                        ? "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50"
+                        : "border-slate-200 bg-slate-50 text-slate-400"
+                    }`}
+                  >
+                    <span className="font-bold mr-2">{key}.</span>
+                    {question.options[key]}
+                  </button>
+                );
+              })}
+            </div>
+            {state === "active" && (
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <p className="text-xs text-slate-500">
+                  {selected ? `Selected ${selected}` : "Choose an option before confirming."}
+                </p>
+                <button
+                  type="button"
+                  onClick={confirmAnswer}
+                  disabled={!selected}
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    selected
+                      ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                      : "bg-slate-100 text-slate-400 cursor-not-allowed"
+                  }`}
+                >
+                  Confirm answer
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Zone stats */}
+          {gazeDataReceived ? (
+            <div className="grid grid-cols-3 gap-1.5">
+              {ZONE_IDS.map((id) => (
+                <div
+                  key={id}
+                  className={`rounded-xl p-2 text-center border transition-all duration-300 ${
+                    activeZone === id && state === "active"
+                      ? ZONE[id].active_stat
+                      : ZONE[id].inactive_stat
+                  }`}
+                >
+                  <div className="text-sm font-bold">{zonePcts[id]}%</div>
+                  <div className="text-xs opacity-70">{ZONE[id].label}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl p-2 text-center border border-slate-200 bg-slate-50 text-xs text-slate-400">
+              Attention tracking data not recorded
+            </div>
+          )}
+
+          {/* AI coaching after answer */}
+          {state === "answered" && (
+            <div
+              className={`rounded-xl p-4 border text-sm leading-relaxed ${
+                confirmedAnswer && confirmedAnswer === question.correct
+                  ? "border-green-300 bg-green-50"
+                  : "border-red-300 bg-red-50"
+              }`}
+            >
+              <div
+                className={`flex items-center gap-2 mb-2 font-semibold text-sm ${
+                  confirmedAnswer && confirmedAnswer === question.correct
+                    ? "text-green-700"
+                    : "text-red-700"
+                }`}
+              >
+                {!confirmedAnswer
+                  ? "No answer confirmed"
+                  : confirmedAnswer === question.correct
+                  ? "Correct"
+                  : "Incorrect"}
+                <span className="text-xs font-normal text-slate-400">
+                  · AI coaching
+                </span>
+              </div>
+              <p className="text-slate-700 text-xs leading-relaxed">
+                {feedbackInsights.result}
+              </p>
+              <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {feedbackInsights.metrics.map((metric) => (
+                  <div
+                    key={metric.label}
+                    className="rounded-lg border border-slate-200 bg-white/80 px-2 py-2"
+                  >
+                    <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                      {metric.label}
+                    </div>
+                    <div className="mt-0.5 text-sm font-bold text-slate-800">
+                      {metric.value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 rounded-xl border border-slate-200 bg-white/85 p-3">
+                <div className="text-xs font-bold uppercase tracking-wide text-slate-900">
+                  ISSUES
+                </div>
+                <div className="mt-2 space-y-1.5">
+                  {feedbackInsights.issues.map((issue) => (
+                    <p key={issue} className="text-xs leading-relaxed text-slate-700">
+                      {issue}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-3 rounded-xl border border-slate-200 bg-slate-950 p-3 text-white">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-bold uppercase tracking-wide text-white">
+                      FIXES
+                    </div>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-300">
+                      Locked strategy map: reading order, re-check triggers, and answer-change rules tailored to this attempt.
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                    Lock / Upgrade to Premium
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={reset}
+                className="mt-3 text-xs px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 hover:text-slate-900 hover:border-slate-400 transition-colors cursor-pointer"
+              >
+                New question →
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+      </>
+    );
+  }
+
+  return null;
+}
+
+// ── Plan Cards ────────────────────────────────────────────────────────────────
+
+function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
+  const freeFeatures = [
+    "Practice real UCAT-style questions across all sections",
+    "Track your accuracy and speed over time",
+    "See section-level result breakdowns",
+    "Get timing feedback to spot where you lose time",
+    "Try mouse tracking or the webcam attention-tracking demo",
+    "Receive an AI coaching summary after each session",
+  ];
+
+  const premiumFeatures = [
+    "Pinpoint exactly which question subtypes you struggle with",
+    "See timing breakdowns by question type, not just section",
+    "Track accuracy trends across multiple sessions",
+    "Get a personalised focus plan before every session",
+    "Receive detailed AI coaching reports based on your data",
+    "Unlock advanced attention insights - e.g. 'You skip the question stem 40% of the time'",
+  ];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Free */}
+      <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-6 flex flex-col gap-5">
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+            Free Plan
+          </span>
+          <div className="mt-1 text-3xl font-black text-slate-900">
+            £0{" "}
+            <span className="text-sm font-normal text-slate-400">/ month</span>
+          </div>
+        </div>
+        <ul className="flex-1 space-y-2 text-sm text-slate-800">
+          {freeFeatures.map((f) => (
+            <li key={f} className="flex items-start gap-2">
+              <svg
+                className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
+        <button
+          onClick={onFreeClick}
+          className="w-full py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm cursor-pointer"
+        >
+          Get Started Free
+        </button>
+      </div>
+
+      {/* Premium */}
+      <div className="relative rounded-2xl bg-white border border-blue-200 shadow-sm p-6 flex flex-col gap-5 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/60 to-violet-50/40 pointer-events-none rounded-2xl" />
+        <div className="relative">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-semibold uppercase tracking-widest text-blue-600">
+              Premium Plan
+            </span>
+            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-600 border border-blue-200">
+              Coming Soon
+            </span>
+          </div>
+          <div className="mt-1 text-3xl font-black text-slate-400">
+            £-
+          </div>
+        </div>
+        <ul className="relative flex-1 space-y-2 text-sm text-slate-400">
+          {premiumFeatures.map((f) => (
+            <li key={f} className="flex items-start gap-2">
+              <svg
+                className="w-4 h-4 text-blue-300 mt-0.5 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="relative space-y-3">
+          <p className="text-xs text-slate-500 leading-relaxed border border-blue-100 bg-blue-50 rounded-xl px-3 py-2.5">
+            Premium unlocks advanced weakness detection and personalised AI coaching reports - so you always know exactly what to work on next.
+          </p>
+          <button
+            disabled
+            className="w-full py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-400 text-sm font-semibold cursor-not-allowed"
+          >
+            Coming Soon
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Auth Modal ────────────────────────────────────────────────────────────────
+
+function AuthModal({
+  onClose,
+  onSuccess,
+}: {
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const [tab, setTab] = useState<"signup" | "login">("signup");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: replace with Supabase auth call
+    onSuccess();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <div className="relative bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl">
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors cursor-pointer"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+
+        <div className="mb-5">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-2xl font-black text-white">
+              PhloemAI
+            </span>
+          </div>
+          <p className="text-slate-400 text-sm">
+            Create a free account to start your UCAT preparation.
+          </p>
+        </div>
+
+        <div className="flex rounded-xl overflow-hidden bg-slate-800 p-0.5 mb-5">
+          {(["signup", "login"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                tab === t
+                  ? "bg-blue-700 text-white"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              {t === "signup" ? "Sign Up" : "Log In"}
+            </button>
+          ))}
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-3">
+          {tab === "signup" && (
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">
+                Full Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                required
+                className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-blue-600 transition-colors"
+              />
+            </div>
+          )}
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              required
+              className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-blue-600 transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+              className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-blue-600 transition-colors"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full py-2.5 rounded-xl bg-blue-700 text-white text-sm font-semibold hover:bg-blue-600 transition-colors mt-1 shadow-sm cursor-pointer"
+          >
+            {tab === "signup" ? "Create Free Account" : "Log In"}
+          </button>
+        </form>
+
+        <p className="text-xs text-slate-500 text-center mt-4 leading-relaxed">
+          Supabase authentication will be connected shortly. By continuing you
+          agree to our Terms of Service and Privacy Policy.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ── Privacy Notice ────────────────────────────────────────────────────────────
+
+function PrivacyNotice() {
+  return (
+    <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5 space-y-3">
+      <div className="flex items-center gap-2">
+        <svg
+          className="w-4 h-4 text-blue-500 flex-shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+          />
+        </svg>
+        <span className="text-sm font-semibold text-slate-800">
+          Your data is secure.
+        </span>
+      </div>
+      <div className="space-y-2 text-xs text-slate-700 leading-relaxed">
+        <p>
+          Performance data and attention-tracking insights are used only to
+          improve your learning experience. Tracking is entirely optional - you
+          can use the full tutor without mouse tracking or webcam access.
+        </p>
+        <p>
+          Mouse tracking uses cursor position only. No webcam video is ever
+          recorded or stored. Attention analysis estimates broad focus zones
+          only and is not medical-grade or diagnostic.
+        </p>
+        <p>
+          AI feedback is educational guidance only and does not guarantee exam
+          outcomes. You can request deletion of your data at any time by
+          contacting{" "}
+          <a
+            href="mailto:medwithrish@gmail.com"
+            className="text-blue-600 hover:underline"
+          >
+            medwithrish@gmail.com
+          </a>
+          .
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ── UCAT Dashboard (post-login placeholder) ───────────────────────────────────
+
+function UCATDashboard({ onLogout }: { onLogout: () => void }) {
+  const sections = [
+    "Verbal Reasoning",
+    "Decision Making",
+    "Quantitative Reasoning",
+    "Abstract Reasoning",
+  ];
+
+  return (
+    <div className="min-h-[calc(100vh-49px)]">
+      <div className="max-w-4xl mx-auto px-4 pt-10 pb-20">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-white">UCAT Practice</h1>
+            <p className="text-slate-400 text-sm mt-0.5">
+              Free Plan · AI-powered preparation
+            </p>
+          </div>
+          <button
+            onClick={onLogout}
+            className="text-sm text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg border border-slate-600 hover:border-slate-500 cursor-pointer"
+          >
+            Log out
+          </button>
+        </div>
+
+        {/* Stats row */}
+        <div className="grid grid-cols-3 gap-3 mb-8">
+          {[
+            { label: "Sessions", value: "0" },
+            { label: "Avg Accuracy", value: "-" },
+            { label: "Avg Time / Q", value: "-" },
+          ].map((s) => (
+            <div
+              key={s.label}
+              className="rounded-2xl bg-slate-800/60 border border-slate-700/50 p-4 text-center"
+            >
+              <div className="text-2xl font-black text-white">{s.value}</div>
+              <div className="text-xs text-slate-400 mt-0.5">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Sections */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+          {sections.map((sec) => (
+            <div
+              key={sec}
+              className="rounded-2xl bg-slate-800/50 border border-slate-700/50 p-5 flex items-center justify-between group hover:border-blue-600/40 transition-colors cursor-pointer"
+            >
+              <div>
+                <div className="text-sm font-semibold text-white">{sec}</div>
+                <div className="text-xs text-slate-500 mt-0.5">
+                  No sessions yet - start practising
+                </div>
+              </div>
+              <div className="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center group-hover:bg-blue-800/30 transition-colors">
+                <svg
+                  className="w-4 h-4 text-slate-400 group-hover:text-blue-400 transition-colors"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Premium upsell strip */}
+        <div className="rounded-2xl bg-gradient-to-r from-blue-950 to-slate-900 border border-blue-500/30 p-5 flex items-center justify-between mb-8">
+          <div>
+            <div className="text-sm font-semibold text-white">
+              Unlock Premium
+            </div>
+            <div className="text-xs text-slate-400 mt-0.5">
+              Full weakness detection, AI coaching reports &amp; advanced
+              attention-pattern insights
+            </div>
+          </div>
+          <span className="flex-shrink-0 text-xs px-3 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 font-medium">
+            Coming Soon
+          </span>
+        </div>
+
+        <AttentionTrackingDemo />
+        <div className="mt-6">
+          <PrivacyNotice />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── UCAT Section (plan selection) ─────────────────────────────────────────────
+
+function UCATSection({
+  onFreePlan,
+}: {
+  onFreePlan: () => void;
+}) {
+  return (
+    <div className="min-h-[calc(100vh-49px)]">
+      <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
+        <Link
+          href="/phloemai"
+          className="flex items-center gap-2 text-slate-700 hover:text-slate-900 text-sm mb-8 transition-colors cursor-pointer"
+        >
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          Back to PhloemAI
+        </Link>
+
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-3xl">🧠</span>
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900">UCAT Tutor</h1>
+              <p className="text-slate-600 text-xs font-medium mt-0.5">
+                Built by MedWithRish - Medical Admissions Specialist
+              </p>
+            </div>
+          </div>
+
+          <div className="mb-5 space-y-1">
+            <p className="text-slate-900 text-base font-semibold leading-snug">
+              Train smarter with AI-powered UCAT preparation.
+            </p>
+            <p className="text-slate-700 text-sm">Identify weaknesses.</p>
+            <p className="text-slate-700 text-sm">
+              <span className="text-blue-600 font-medium">Track your focus</span> with optional mouse or eye tracking.
+            </p>
+            <p className="text-slate-700 text-sm">Improve faster.</p>
+          </div>
+
+          {/* Benefit statement */}
+          <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 mb-5 border-l-4 border-l-blue-500">
+            <p className="text-slate-800 text-sm leading-relaxed italic">
+              Know exactly what&apos;s slowing you down - not just what you got wrong.
+            </p>
+          </div>
+
+          {/* Attention-tracking CTA banner */}
+          <div className="rounded-xl bg-blue-600 px-4 py-3 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-white text-sm font-semibold">Try Attention Tracking</p>
+              <p className="text-blue-100 text-xs mt-0.5 leading-relaxed">
+                See which parts of each question you focus on with mouse tracking or the webcam experiment.
+              </p>
+            </div>
+            <Link
+              href="/phloemai/ucat-demo"
+              className="flex-shrink-0 text-xs px-3 py-2 rounded-lg bg-white text-blue-600 font-semibold hover:bg-blue-50 transition-colors whitespace-nowrap cursor-pointer"
+            >
+              Try Demo →
+            </Link>
+          </div>
+        </div>
+
+        {/* Plan cards */}
+        <div className="mb-8">
+          <PlanCards onFreeClick={onFreePlan} />
+        </div>
+
+        {/* Feedback explainer */}
+        <div className="mb-8 rounded-2xl bg-white border border-slate-200 shadow-sm p-5 space-y-4">
+          <h3 className="text-slate-900 font-semibold text-sm">
+            What does feedback look like?
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
+                Free - Basic Feedback
+              </div>
+              <ul className="space-y-1.5 text-xs text-slate-700">
+                {[
+                  "Overall accuracy (e.g. 7/11 correct)",
+                  "Time taken for the full question set",
+                  "Section-level result breakdown",
+                  '"You were slower than expected on this set"',
+                ].map((t) => (
+                  <li key={t} className="flex gap-2">
+                    <span className="text-blue-500 mt-0.5 flex-shrink-0">·</span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">
+                Premium - Full Weakness Detection
+              </div>
+              <ul className="space-y-1.5 text-xs text-slate-400">
+                {[
+                  "Breakdown by section and question subtype",
+                  "Repeated weakness patterns over time",
+                  "Timing weaknesses by question type",
+                  '"QR percentage-change questions: 42 s above target"',
+                  "Specific recommended next-session focus",
+                ].map((t) => (
+                  <li key={t} className="flex gap-2">
+                    <span className="text-slate-300 mt-0.5 flex-shrink-0">·</span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <PrivacyNotice />
+      </div>
+    </div>
+  );
+}
+
+// ── How It Works Panel ────────────────────────────────────────────────────────
+
+function HowItWorksPanel({
+  title,
+  accent,
+  children,
+}: {
+  title: string;
+  accent: "blue" | "violet";
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(true);
+  const dotColor = accent === "blue" ? "bg-blue-600" : "bg-violet-500";
+  return (
+    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer"
+      >
+        <div className="flex items-center gap-2.5">
+          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${dotColor}`} />
+          <span className="font-semibold text-slate-900 text-sm">{title}</span>
+        </div>
+        <svg
+          className={`w-4 h-4 text-slate-400 transition-transform duration-200 flex-shrink-0 ${open ? "rotate-180" : ""}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="px-5 pb-5">{children}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Landing Hero ──────────────────────────────────────────────────────────────
+
+function TutorHero() {
+  return (
+    <div className="flex flex-col items-center px-4 pt-8 pb-10">
+      <PhloemAILogo />
+
+      <div className="mt-4 text-center">
+        <p className="text-xs font-semibold uppercase tracking-widest text-blue-500 mb-2">
+          AI Medical Admissions Tutor
+        </p>
+        <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight">
+          Meet <span className="text-blue-600">Phloem</span>
+        </h1>
+      </div>
+
+      <p className="mt-3 text-center text-slate-700 text-sm max-w-xl leading-relaxed">
+        AI-powered preparation for UCAT, medicine and dentistry interviews,
+        built by{" "}
+        <span className="text-blue-600 font-medium">@medwithrish</span> - a
+        leading Medical admissions specialist, having helped numerous students ace the UCAT and secure medicine offers like from universities such as Cambridge.
+      </p>
+
+      {/* Feature badges */}
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+        <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs text-slate-800 shadow-sm">
+          <svg className="w-3.5 h-3.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+      Mouse + Eye Attention Analysis
+        </span>
+        <span className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs text-slate-800 shadow-sm">
+          AI-Powered Coaching
+        </span>
+        <span className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs text-slate-800 shadow-sm">
+          Tutor-approved strategic guidance
+        </span>
+      </div>
+
+      {/* Three subject cards */}
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl">
+        {/* UCAT - active */}
+        <div className="group relative rounded-2xl bg-white border-2 border-blue-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-200 p-5 flex flex-col">
+          <div className="text-3xl mb-2 text-center">🧠</div>
+          <div className="text-slate-900 font-bold text-base mb-1 text-center">UCAT</div>
+          <div className="flex justify-center mb-2">
+            <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-blue-100 border border-blue-200 text-blue-700 font-medium">
+              Available Now
+            </span>
+          </div>
+          <p className="text-xs text-slate-700 leading-relaxed text-center mb-3">
+            Practice questions with AI coaching and attention tracking
+          </p>
+          <div className="mt-auto space-y-2">
+            <Link
+              href="/phloemai/ucat-demo"
+              className="block w-full py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors cursor-pointer text-center"
+            >
+              Try UCAT Demo →
+            </Link>
+            <Link
+              href="/phloemai/ucat-tutor"
+              className="block w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-xs hover:border-slate-400 hover:text-slate-900 transition-colors cursor-pointer text-center"
+            >
+              Open UCAT Tutor
+            </Link>
+          </div>
+        </div>
+
+        {/* Medicine Interview - WIP */}
+        <div className="relative rounded-2xl border-2 border-slate-200 bg-slate-50 p-5 text-center opacity-60 cursor-not-allowed select-none">
+          <div className="text-3xl mb-2">🏥</div>
+          <div className="text-slate-900 font-bold text-base mb-1">Medicine Interview</div>
+          <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-medium">
+            Work in Progress
+          </span>
+          <p className="mt-2 text-xs text-slate-600 leading-relaxed">
+            MMI and panel interview preparation
+          </p>
+        </div>
+
+        {/* Dentistry Interview - WIP */}
+        <div className="relative rounded-2xl border-2 border-slate-200 bg-slate-50 p-5 text-center opacity-60 cursor-not-allowed select-none">
+          <div className="text-3xl mb-2">🦷</div>
+          <div className="text-slate-900 font-bold text-base mb-1">Dentistry Interview</div>
+          <span className="inline-block text-xs px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-medium">
+            Work in Progress
+          </span>
+          <p className="mt-2 text-xs text-slate-600 leading-relaxed">
+            Dentistry-specific interview preparation
+          </p>
+        </div>
+      </div>
+
+      {/* How It Works */}
+      <div className="mt-10 w-full max-w-2xl">
+        <div className="text-center mb-5">
+          <h2 className="text-2xl font-bold text-slate-900">How it works</h2>
+          <p className="text-slate-600 text-sm mt-1">A simple loop that gets results</p>
+        </div>
+        <div className="space-y-3">
+          <HowItWorksPanel title="UCAT Preparation" accent="blue">
+            <ol className="space-y-3">
+              {[
+                "Practice real UCAT-style questions across all sections - Verbal Reasoning, Decision Making, Quantitative Reasoning, and Abstract Reasoning.",
+                "AI identifies your bad habits - unfocused reading patterns, spending too long on the wrong areas, weak technique, and timing issues pinpointed by question type.",
+                "AI delivers tried-and-tested strategies tailored to your specific weaknesses, so you know exactly what to change and how.",
+                "Apply the fixes in your own revision and track your accuracy and speed improving over time.",
+              ].map((text, i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mt-0.5">
+                    {i + 1}
+                  </span>
+                  <p className="text-slate-700 text-sm leading-relaxed">{text}</p>
+                </li>
+              ))}
+            </ol>
+          </HowItWorksPanel>
+
+          <HowItWorksPanel title="Medicine & Dentistry Interviews" accent="violet">
+            <ol className="space-y-3">
+              {[
+                "Practice MMI stations and panel interview questions tailored to medicine and dentistry - ethics, clinical scenarios, motivation, and more.",
+                "AI analyses your answers for structure, clinical reasoning, and depth - identifying the gaps that cost applicants places.",
+                "AI gives you proven frameworks and concrete improvements based on what actually works in real interviews.",
+                "Refine your responses, build consistency, and walk into your interview prepared and confident.",
+              ].map((text, i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-violet-500 text-white text-xs font-bold flex items-center justify-center mt-0.5">
+                    {i + 1}
+                  </span>
+                  <p className="text-slate-700 text-sm leading-relaxed">{text}</p>
+                </li>
+              ))}
+            </ol>
+          </HowItWorksPanel>
+        </div>
+      </div>
+
+      {/* Who Is PhloemAI For? */}
+      <div className="mt-6 w-full max-w-2xl">
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+          <h2 className="text-lg font-bold text-slate-900 mb-4">Who Is PhloemAI For?</h2>
+          <ul className="space-y-3">
+            {[
+              "Applicants who want 24/7 tutoring support",
+              "UCAT students aiming for top scores and high-end universities",
+              "Medicine applicants preparing for interviews",
+              "Dentistry applicants needing structured practice",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2.5">
+                <svg
+                  className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-slate-800 text-sm">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main Page ─────────────────────────────────────────────────────────────────
+
+export function PhloemAIPageShell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-[#EEF4FF] to-indigo-100">
+      <Navbar />
+      {children}
+    </div>
+  );
+}
+
+export function PhloemAILandingPage() {
+  return (
+    <PhloemAIPageShell>
+      <TutorHero />
+    </PhloemAIPageShell>
+  );
+}
+
+export function UCATTutorPage() {
+  const router = useRouter();
+  const [showAuth, setShowAuth] = useState(false);
+
+  const handleFreePlan = () => {
+    setShowAuth(true);
+  };
+
+  const handleAuthSuccess = () => {
+    setShowAuth(false);
+    router.push("/phloemai/dashboard");
+  };
+
+  return (
+    <PhloemAIPageShell>
+      <UCATSection onFreePlan={handleFreePlan} />
+      {showAuth && (
+        <AuthModal
+          onClose={() => setShowAuth(false)}
+          onSuccess={handleAuthSuccess}
+        />
+      )}
+    </PhloemAIPageShell>
+  );
+}
+
+export function UCATDemoPage() {
+  return (
+    <PhloemAIPageShell>
+      <div className="min-h-[calc(100vh-49px)]">
+        <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
+          <Link
+            href="/phloemai/ucat-tutor"
+            className="flex items-center gap-2 text-slate-700 hover:text-slate-900 text-sm mb-8 transition-colors cursor-pointer"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back to UCAT Tutor
+          </Link>
+
+          <div className="mb-6">
+            <p className="text-xs font-semibold uppercase tracking-widest text-blue-500 mb-2">
+              UCAT Demo
+            </p>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Try attention tracking
+            </h1>
+            <p className="mt-2 text-sm leading-relaxed text-slate-700">
+              Start with mouse tracking for the most precise desktop signal, or
+              choose the optional webcam eye-tracking experiment. Only one mode
+              runs at a time.
+            </p>
+          </div>
+
+          <div className="mb-8">
+            <AttentionTrackingDemo />
+          </div>
+
+          <PrivacyNotice />
+        </div>
+      </div>
+    </PhloemAIPageShell>
+  );
+}
+
+export function UCATDashboardPage() {
+  const router = useRouter();
+
+  return (
+    <PhloemAIPageShell>
+      <UCATDashboard onLogout={() => router.push("/phloemai")} />
+    </PhloemAIPageShell>
+  );
+}
+
+export default PhloemAILandingPage;
