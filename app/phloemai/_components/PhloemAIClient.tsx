@@ -1760,7 +1760,7 @@ function RedesignedTutorHero() {
                     </div>
                     <ul className="mt-1 space-y-0.5 text-[10px] leading-3 text-slate-100">
                       <li>Triaging</li>
-                      <li>Correctly spotted difficult questions to flag</li>
+                      <li>Correctly flagged difficult questions</li>
                     </ul>
                   </div>
                 </div>
