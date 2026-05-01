@@ -1664,9 +1664,8 @@ function RedesignedTutorHero() {
                   Try Attention Analysis Demo
                 </Link>
               </div>
-
-              <p className="mt-3 text-xs leading-relaxed text-slate-300">
-                No card needed | 10-minute diagnostic | Optional eye + mouse tracking
+              <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                (built by @medwithrish - leading medical admissions expert)
               </p>
 
               <div className="mt-6 grid max-w-xl gap-4 sm:grid-cols-3">
@@ -1878,7 +1877,7 @@ function RedesignedTutorHero() {
                 </div>
                 <p className="text-base font-semibold leading-7 text-slate-900">
                   You focused on a distractor, skipped the key stem words, and
-                  changed from the correct answer near the end.
+                  changed from the correct answer near the end. There were many re-reads of the stem. You were not confident and incorrect meaning it is likely a weakness. 
                 </p>
               </div>
               <p className="mt-4 text-center text-xs text-slate-700">

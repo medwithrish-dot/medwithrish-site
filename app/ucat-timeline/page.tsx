@@ -18,7 +18,7 @@ const keyIdeas = [
 const prepStages = [
   {
     title: "Weeks 1 + 2 - Learn the question types",
-    text: "Use free resources first to understand what each section looks like. The goal is not speed yet. The goal is familiarity.",
+    text: "Use free resources (like passmedicine) first to understand what each section looks like. The goal is not speed yet. The goal is familiarity.",
   },
   {
     title: "Weeks 3 + 4 - Learn techniques",
