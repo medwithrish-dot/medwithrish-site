@@ -1741,18 +1741,27 @@ function RedesignedTutorHero() {
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-cyan-400/25 bg-cyan-500/8 p-2.5">
-                  <div className="flex gap-2.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-500/12 text-cyan-200 ring-1 ring-cyan-400/25">
-                      <Eye className="h-4 w-4" aria-hidden="true" />
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="rounded-xl border border-cyan-400/25 bg-cyan-500/8 p-2">
+                    <div className="flex items-center gap-1.5">
+                      <Eye className="h-3.5 w-3.5 shrink-0 text-cyan-200" aria-hidden="true" />
+                      <h3 className="text-[11px] font-bold text-cyan-200">Minor issues</h3>
                     </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-cyan-200">Minor issues</h3>
-                      <ul className="mt-1 space-y-0.5 text-[11px] leading-4 text-slate-100">
-                        <li>Read stem before question</li>
-                        <li>Kept re-reading stem with correct answer</li>
-                      </ul>
+                    <ul className="mt-1 space-y-0.5 text-[10px] leading-3 text-slate-100">
+                      <li>Read stem before question</li>
+                      <li>Re-read stem despite correct answer</li>
+                    </ul>
+                  </div>
+
+                  <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/8 p-2">
+                    <div className="flex items-center gap-1.5">
+                      <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-emerald-200" aria-hidden="true" />
+                      <h3 className="text-[11px] font-bold text-emerald-200">Strengths</h3>
                     </div>
+                    <ul className="mt-1 space-y-0.5 text-[10px] leading-3 text-slate-100">
+                      <li>Triaging</li>
+                      <li>Correctly spotted difficult questions to flag</li>
+                    </ul>
                   </div>
                 </div>
 
@@ -1765,7 +1774,7 @@ function RedesignedTutorHero() {
                       <h3 className="text-xs font-bold text-violet-200">Fixes</h3>
                       <ul className="mt-1 space-y-0.5 text-[11px] leading-4 text-slate-100">
                         <li>Calculator speed practice</li>
-                        <li>Timed QR sets with confidence review</li>
+                        <li>7-minute timed QR sets until 85%+</li>
                         <li>Read the question before mining the stem</li>
                       </ul>
                     </div>
