@@ -8,9 +8,13 @@ import {
   useMemo,
   useCallback,
 } from "react";
+import type { Session, User } from "@supabase/supabase-js";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import {
+  createClient as createSupabaseClient,
+  hasSupabaseConfig,
+} from "@/utils/supabase/client";
 import {
   fetchUCATQuestion,
   getPassageSections,
@@ -26,17 +30,28 @@ import {
   AlertTriangle,
   ArrowRight,
   BadgeCheck,
+  BarChart3,
+  Bell,
+  Bookmark,
   Brain,
   Check,
   CheckCircle,
+  ChevronDown,
+  Clock3,
   Eye,
   Goal,
+  Home,
+  Info,
   LockKeyhole,
+  LogOut,
+  MessageSquare,
   ShieldCheck,
   Sparkles,
   Target,
   Timer,
   UserRound,
+  Wrench,
+  Zap,
 } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -1045,101 +1060,871 @@ function PrivacyNotice() {
 
 // ── UCAT Dashboard (post-login placeholder) ──────────────────────────────────
 
-function UCATDashboard({ onLogout }: { onLogout: () => void }) {
-  const sections = [
-    "Verbal Reasoning",
-    "Decision Making",
-    "Quantitative Reasoning",
-    "Abstract Reasoning",
-  ];
+type PhloemProfile = {
+  full_name: string | null;
+  current_plan: string | null;
+};
+
+type AuthMode = "signup" | "login";
+
+const sectionScores = [
+  {
+    code: "VR",
+    score: 72,
+    badgeClass: "bg-indigo-600 text-white",
+    barClass: "bg-indigo-600",
+  },
+  {
+    code: "DM",
+    score: 67,
+    badgeClass: "bg-blue-600 text-white",
+    barClass: "bg-blue-600",
+  },
+  {
+    code: "QR",
+    score: 54,
+    badgeClass: "bg-cyan-500 text-white",
+    barClass: "bg-cyan-500",
+  },
+  {
+    code: "AR",
+    score: 69,
+    badgeClass: "bg-orange-500 text-white",
+    barClass: "bg-orange-500",
+  },
+  {
+    code: "SJT",
+    score: 78,
+    badgeClass: "bg-pink-500 text-white",
+    barClass: "bg-pink-500",
+  },
+];
+
+const fixTasks = [
+  {
+    title: "QR Speed Drill",
+    meta: "7 min - Calculator-heavy questions",
+    icon: Zap,
+    iconClass: "bg-violet-100 text-violet-600",
+  },
+  {
+    title: "Timed QR mini-set",
+    meta: "10 questions - Focus on pace",
+    icon: Clock3,
+    iconClass: "bg-blue-100 text-blue-600",
+  },
+  {
+    title: "Review changed answers",
+    meta: "5 questions - Improve decision making",
+    icon: Eye,
+    iconClass: "bg-emerald-100 text-emerald-600",
+  },
+];
+
+const recentActivity = [
+  {
+    title: "Diagnostic completed",
+    time: "2 days ago",
+    icon: Activity,
+    iconClass: "bg-indigo-100 text-indigo-600",
+  },
+  {
+    title: "QR Speed Drill completed",
+    time: "Today, 9:41 AM",
+    icon: Zap,
+    iconClass: "bg-blue-100 text-blue-600",
+  },
+  {
+    title: "5 questions reviewed",
+    time: "Today, 9:15 AM",
+    icon: Bookmark,
+    iconClass: "bg-orange-100 text-orange-600",
+  },
+  {
+    title: "Progress updated",
+    time: "Yesterday, 8:12 PM",
+    icon: BarChart3,
+    iconClass: "bg-pink-100 text-pink-600",
+  },
+];
+
+const approachSteps = [
+  {
+    title: "Diagnose",
+    text: "Find the habits costing you marks",
+    icon: Activity,
+    iconClass: "bg-violet-100 text-indigo-600",
+  },
+  {
+    title: "AI Feedback",
+    text: "Understand why they happen",
+    icon: MessageSquare,
+    iconClass: "bg-blue-100 text-blue-600",
+  },
+  {
+    title: "Fixes",
+    text: "Get targeted tasks to improve",
+    icon: Wrench,
+    iconClass: "bg-emerald-100 text-emerald-600",
+  },
+  {
+    title: "Practice",
+    text: "Complete tasks and build new habits",
+    icon: Target,
+    iconClass: "bg-indigo-100 text-indigo-600",
+  },
+  {
+    title: "Progress",
+    text: "Track improvement and keep refining",
+    icon: BarChart3,
+    iconClass: "bg-blue-100 text-blue-600",
+  },
+];
+
+function getFirstName(user: User | null, profile: PhloemProfile | null) {
+  const profileName = profile?.full_name?.trim();
+  const metadataName =
+    typeof user?.user_metadata?.full_name === "string"
+      ? user.user_metadata.full_name.trim()
+      : "";
+  const fallback = user?.email?.split("@")[0] ?? "Rish";
+  return (profileName || metadataName || fallback).split(" ")[0];
+}
+
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
+function MetricCard({
+  label,
+  value,
+  delta,
+  direction,
+}: {
+  label: string;
+  value: string;
+  delta: string;
+  direction: "up" | "down";
+}) {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-4">
+      <p className="text-xs font-black text-slate-700">{label}</p>
+      <div className="mt-2 flex items-end gap-3">
+        <span className="text-3xl font-black leading-none text-[#0b1143]">
+          {value}
+        </span>
+        <span className="text-sm font-black text-emerald-500">
+          {direction === "up" ? "↑" : "↓"} {delta}
+        </span>
+      </div>
+      <p className="mt-2 text-xs font-bold text-slate-400">vs last 7 days</p>
+    </div>
+  );
+}
+
+function AuthPanel({
+  mode,
+  setMode,
+  fullName,
+  setFullName,
+  email,
+  setEmail,
+  password,
+  setPassword,
+  submitting,
+  message,
+  error,
+  onSubmit,
+}: {
+  mode: AuthMode;
+  setMode: (mode: AuthMode) => void;
+  fullName: string;
+  setFullName: (value: string) => void;
+  email: string;
+  setEmail: (value: string) => void;
+  password: string;
+  setPassword: (value: string) => void;
+  submitting: boolean;
+  message: string | null;
+  error: string | null;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+}) {
+  return (
+    <div className="min-h-screen bg-[#f8fbff] px-5 py-10 text-[#0b1143]">
+      <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[0.9fr_1fr] lg:items-center">
+        <div>
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
+              <Brain className="h-7 w-7" aria-hidden="true" />
+            </div>
+            <div>
+              <p className="text-2xl font-black">
+                Phloem<span className="text-blue-600">AI</span>
+              </p>
+              <p className="text-sm font-bold text-slate-500">UCAT Tutor</p>
+            </div>
+          </div>
+
+          <h1 className="mt-10 max-w-xl text-4xl font-black leading-tight sm:text-5xl">
+            Create your account to open the UCAT dashboard.
+          </h1>
+          <p className="mt-4 max-w-xl text-base font-medium leading-7 text-slate-600">
+            Your account stores diagnostics, AI feedback, fix tasks and progress
+            snapshots securely in Supabase.
+          </p>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            {[
+              ["Diagnose", "Start with a timed UCAT snapshot."],
+              ["Feedback", "See what is holding you back."],
+              ["Fix", "Turn diagnosis into tasks."],
+            ].map(([title, text]) => (
+              <div
+                key={title}
+                className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+              >
+                <p className="text-sm font-black text-blue-600">{title}</p>
+                <p className="mt-1 text-xs font-medium leading-5 text-slate-600">
+                  {text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="grid grid-cols-2 rounded-xl bg-slate-100 p-1">
+            {(["signup", "login"] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setMode(tab)}
+                className={`h-10 rounded-lg text-sm font-black transition-colors ${
+                  mode === tab
+                    ? "bg-white text-blue-600 shadow-sm"
+                    : "text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                {tab === "signup" ? "Create Account" : "Log In"}
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={onSubmit} className="mt-6 space-y-4">
+            {mode === "signup" && (
+              <label className="block">
+                <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                  Full name
+                </span>
+                <input
+                  value={fullName}
+                  onChange={(event) => setFullName(event.target.value)}
+                  className="mt-1 h-11 w-full rounded-xl border border-slate-200 px-3 text-sm font-medium text-slate-900 outline-none transition-colors focus:border-blue-500"
+                  placeholder="Rish"
+                  required
+                />
+              </label>
+            )}
+
+            <label className="block">
+              <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                Email
+              </span>
+              <input
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="mt-1 h-11 w-full rounded-xl border border-slate-200 px-3 text-sm font-medium text-slate-900 outline-none transition-colors focus:border-blue-500"
+                placeholder="you@example.com"
+                required
+              />
+            </label>
+
+            <label className="block">
+              <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                Password
+              </span>
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className="mt-1 h-11 w-full rounded-xl border border-slate-200 px-3 text-sm font-medium text-slate-900 outline-none transition-colors focus:border-blue-500"
+                placeholder="At least 8 characters"
+                minLength={8}
+                required
+              />
+            </label>
+
+            {error && (
+              <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">
+                {error}
+              </p>
+            )}
+            {message && (
+              <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700">
+                {message}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+            >
+              {submitting
+                ? "Working..."
+                : mode === "signup"
+                  ? "Create Account"
+                  : "Log In"}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MissingSupabaseConfig() {
+  return (
+    <div className="min-h-screen bg-[#f8fbff] px-5 py-10 text-[#0b1143]">
+      <div className="mx-auto max-w-xl rounded-2xl border border-amber-200 bg-white p-6 shadow-sm">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+          <LockKeyhole className="h-6 w-6" aria-hidden="true" />
+        </div>
+        <h1 className="mt-5 text-2xl font-black">
+          Add your Supabase keys to enable account creation.
+        </h1>
+        <p className="mt-2 text-sm font-medium leading-6 text-slate-600">
+          Add these to `.env.local`, then restart the dev server:
+        </p>
+        <pre className="mt-4 overflow-x-auto rounded-xl bg-slate-950 p-4 text-xs font-bold leading-6 text-slate-100">
+{`NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...`}
+        </pre>
+      </div>
+    </div>
+  );
+}
+
+function UCATDashboard() {
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<PhloemProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [authMode, setAuthMode] = useState<AuthMode>("signup");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [authMessage, setAuthMessage] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const supabaseReady = hasSupabaseConfig();
+  const supabase = useMemo(
+    () => (supabaseReady ? createSupabaseClient() : null),
+    [supabaseReady]
+  );
+
+  useEffect(() => {
+    if (!supabase) {
+      const stopLoading = window.setTimeout(() => setLoading(false), 0);
+      return () => window.clearTimeout(stopLoading);
+    }
+
+    const supabaseClient = supabase;
+    let mounted = true;
+
+    async function loadProfile(nextUser: User) {
+      const { data } = await supabaseClient
+        .from("profiles")
+        .select("full_name,current_plan")
+        .eq("id", nextUser.id)
+        .maybeSingle();
+
+      if (mounted) {
+        setProfile((data as PhloemProfile | null) ?? null);
+      }
+    }
+
+    async function loadSession() {
+      const {
+        data: { session: currentSession },
+      } = await supabaseClient.auth.getSession();
+
+      if (!mounted) return;
+
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
+
+      if (currentSession?.user) {
+        await loadProfile(currentSession.user);
+      } else {
+        setProfile(null);
+      }
+
+      setLoading(false);
+    }
+
+    void loadSession();
+
+    const {
+      data: { subscription },
+    } = supabaseClient.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession);
+      setUser(nextSession?.user ?? null);
+      setLoading(false);
+
+      if (nextSession?.user) {
+        void loadProfile(nextSession.user);
+      } else {
+        setProfile(null);
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+  const handleAuthSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!supabase) return;
+
+    setSubmitting(true);
+    setAuthError(null);
+    setAuthMessage(null);
+
+    try {
+      if (authMode === "signup") {
+        const trimmedName = fullName.trim();
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: trimmedName },
+            emailRedirectTo: `${window.location.origin}/phloemai/dashboard`,
+          },
+        });
+
+        if (error) throw error;
+
+        if (data.session) {
+          setSession(data.session);
+          setUser(data.user);
+          setAuthMessage("Account created. Opening your dashboard...");
+        } else {
+          setAuthMessage("Check your email to confirm your account, then log in.");
+        }
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) throw error;
+
+        setSession(data.session);
+        setUser(data.user);
+        setAuthMessage("Logged in.");
+      }
+    } catch (error) {
+      setAuthError(
+        error instanceof Error ? error.message : "Something went wrong."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    if (!supabase) return;
+    await supabase.auth.signOut();
+    setSession(null);
+    setUser(null);
+    setProfile(null);
+  };
+
+  if (!supabaseReady) {
+    return <MissingSupabaseConfig />;
+  }
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f8fbff] text-[#0b1143]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!session || !user) {
+    return (
+      <AuthPanel
+        mode={authMode}
+        setMode={setAuthMode}
+        fullName={fullName}
+        setFullName={setFullName}
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        submitting={submitting}
+        message={authMessage}
+        error={authError}
+        onSubmit={handleAuthSubmit}
+      />
+    );
+  }
+
+  const firstName = getFirstName(user, profile);
+  const plan = profile?.current_plan ?? "Free";
 
   return (
-    <div className="min-h-[calc(100vh-49px)]">
-      <div className="max-w-4xl mx-auto px-4 pt-10 pb-20">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-white">UCAT Practice</h1>
-            <p className="text-slate-400 text-sm mt-0.5">
-              Free Plan - AI-powered preparation
-            </p>
-          </div>
-          <button
-            onClick={onLogout}
-            className="text-sm text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg border border-slate-600 hover:border-slate-500 cursor-pointer"
-          >
-            Log out
-          </button>
-        </div>
-
-        {/* Stats row */}
-        <div className="grid grid-cols-3 gap-3 mb-8">
-          {[
-            { label: "Sessions", value: "0" },
-            { label: "Avg Accuracy", value: "-" },
-            { label: "Avg Time / Q", value: "-" },
-          ].map((s) => (
-            <div
-              key={s.label}
-              className="rounded-2xl bg-slate-800/60 border border-slate-700/50 p-4 text-center"
-            >
-              <div className="text-2xl font-black text-white">{s.value}</div>
-              <div className="text-xs text-slate-400 mt-0.5">{s.label}</div>
+    <div className="min-h-screen bg-[#f8fbff] text-[#0b1143]">
+      <div className="grid min-h-screen lg:grid-cols-[240px_1fr]">
+        <aside className="border-r border-slate-200 bg-white px-4 py-6">
+          <div className="flex items-center gap-3 px-1">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
+              <Brain className="h-7 w-7" aria-hidden="true" />
             </div>
-          ))}
-        </div>
+            <div>
+              <p className="text-xl font-black">
+                Phloem<span className="text-blue-600">AI</span>
+              </p>
+              <p className="text-sm font-bold text-slate-500">UCAT Tutor</p>
+            </div>
+          </div>
 
-        {/* Sections */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-          {sections.map((sec) => (
-            <div
-              key={sec}
-              className="rounded-2xl bg-slate-800/50 border border-slate-700/50 p-5 flex items-center justify-between group hover:border-blue-600/40 transition-colors cursor-pointer"
+          <nav className="mt-10 space-y-3">
+            {[
+              {
+                label: "Dashboard",
+                icon: Home,
+                href: "/phloemai/dashboard",
+                active: true,
+              },
+              {
+                label: "Diagnostic",
+                icon: Activity,
+                href: "/phloemai/dashboard",
+              },
+              { label: "Practice", icon: Target, href: "/phloemai/ucat-demo" },
+              { label: "Progress", icon: BarChart3, href: "#progress" },
+              { label: "Report", icon: Bookmark, href: "#report" },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-black transition-colors ${
+                    item.active
+                      ? "bg-indigo-50 text-blue-600 shadow-sm"
+                      : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="mt-24 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-blue-600">
+              <Sparkles className="h-6 w-6" aria-hidden="true" />
+            </div>
+            <h2 className="mt-4 text-sm font-black">
+              Unlock unlimited AI insights
+            </h2>
+            <p className="mt-3 text-sm font-medium leading-6 text-slate-600">
+              Go Premium for deeper analytics and personalised recommendations.
+            </p>
+            <button
+              type="button"
+              className="mt-5 h-10 w-full rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
             >
-              <div>
-                <div className="text-sm font-semibold text-white">{sec}</div>
-                <div className="text-xs text-slate-500 mt-0.5">
-                  No sessions yet - start practising
+              Upgrade Now
+            </button>
+          </div>
+
+          <div className="mt-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="text-sm font-medium text-slate-500">Current plan</p>
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-sm font-black">{plan}</span>
+              <button
+                type="button"
+                className="text-sm font-black text-blue-600 hover:text-blue-700"
+              >
+                View plans
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <main className="min-w-0">
+          <header className="flex flex-col gap-4 border-b border-slate-200 bg-white px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+            <div>
+              <h1 className="text-2xl font-black">
+                {getGreeting()}, {firstName}
+              </h1>
+              <p className="mt-2 text-sm font-medium text-slate-500">
+                Let&apos;s keep your UCAT prep on track.
+              </p>
+            </div>
+            <div className="flex items-center gap-5">
+              <button
+                type="button"
+                aria-label="Notifications"
+                className="rounded-lg p-2 text-slate-700 transition-colors hover:bg-slate-100 hover:text-blue-600"
+              >
+                <Bell className="h-5 w-5" aria-hidden="true" />
+              </button>
+              <div className="h-8 w-px bg-slate-200" />
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-100 text-sm font-black text-blue-600">
+                  {firstName.charAt(0).toUpperCase()}
+                </div>
+                <span className="hidden text-sm font-black sm:inline">
+                  {firstName}
+                </span>
+                <ChevronDown className="h-4 w-4 text-slate-500" aria-hidden="true" />
+              </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-red-600"
+                aria-label="Log out"
+              >
+                <LogOut className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+          </header>
+
+          <div className="grid gap-5 px-6 py-5 lg:grid-cols-[1.1fr_1fr] lg:px-8">
+            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sm font-black uppercase tracking-wider text-blue-600">
+                  Phloem personalised feedback
+                </p>
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+                >
+                  Expanded report
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+              <p className="mt-3 text-sm font-bold text-slate-600">
+                Based on your latest diagnostic (2 days ago)
+              </p>
+              <p className="mt-4 text-sm font-semibold leading-7 text-[#12184d]">
+                Your latest diagnostic found time pressure as the main factor
+                holding your score back. You&apos;re generally accurate across
+                the board, which is a strong foundation. Your score is being
+                held back by how time is managed in certain sections. In QR,
+                you&apos;re spending too long on calculator-heavy questions,
+                which eats into your overall pace. In VR, you occasionally
+                re-read longer stems, especially in the most information-dense
+                questions. In DM, you slow down when you&apos;re unsure,
+                particularly on harder logic questions, which affects your
+                rhythm. In SJT, your performance is relatively steady and
+                doesn&apos;t need urgent attention right now.
+              </p>
+
+              <div className="mt-6">
+                <h2 className="text-sm font-black">Section observations</h2>
+                <div className="mt-3 space-y-3 text-sm font-semibold text-[#12184d]">
+                  {[
+                    ["QR", "Accuracy is solid, but timing is your biggest limiter."],
+                    ["VR", "Good overall accuracy, but longer passages slow you down."],
+                    [
+                      "DM",
+                      "Performance is stable, though hesitation affects pace on harder logic questions.",
+                    ],
+                    [
+                      "SJT",
+                      "Consistent performance and not a priority weakness right now.",
+                    ],
+                  ].map(([code, text]) => {
+                    const match = sectionScores.find((item) => item.code === code);
+                    return (
+                      <div key={code} className="flex items-start gap-3">
+                        <span
+                          className={`mt-0.5 rounded px-2 py-0.5 text-xs font-black ${
+                            match?.badgeClass ?? "bg-slate-100 text-slate-600"
+                          }`}
+                        >
+                          {code}
+                        </span>
+                        <span className="text-slate-400">-</span>
+                        <span>{text}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-              <div className="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center group-hover:bg-blue-800/30 transition-colors">
-                <svg
-                  className="w-4 h-4 text-slate-400 group-hover:text-blue-400 transition-colors"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
+            </section>
+
+            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm font-black uppercase tracking-wide">
+                  Progress snapshot
+                </h2>
+                <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
               </div>
-            </div>
-          ))}
-        </div>
 
-        {/* Premium upsell strip */}
-        <div className="rounded-2xl bg-gradient-to-r from-blue-950 to-slate-900 border border-blue-500/30 p-5 flex items-center justify-between mb-8">
-          <div>
-            <div className="text-sm font-semibold text-white">
-              Unlock Premium
-            </div>
-            <div className="text-xs text-slate-400 mt-0.5">
-              Full weakness detection, AI coaching reports &amp; advanced
-              attention-pattern insights
-            </div>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <MetricCard
+                  label="Accuracy"
+                  value="63%"
+                  delta="6%"
+                  direction="up"
+                />
+                <MetricCard
+                  label="Avg. time / question"
+                  value="75s"
+                  delta="8s"
+                  direction="down"
+                />
+              </div>
+
+              <h3 className="mt-7 text-sm font-black">Section overview</h3>
+              <div className="mt-4 space-y-4">
+                {sectionScores.map((section) => (
+                  <div
+                    key={section.code}
+                    className="grid grid-cols-[44px_1fr_42px] items-center gap-4"
+                  >
+                    <span
+                      className={`rounded px-2 py-0.5 text-center text-xs font-black ${section.badgeClass}`}
+                    >
+                      {section.code}
+                    </span>
+                    <div className="h-1.5 overflow-hidden rounded-full bg-slate-200">
+                      <div
+                        className={`h-full rounded-full ${section.barClass}`}
+                        style={{ width: `${section.score}%` }}
+                      />
+                    </div>
+                    <span className="text-right text-sm font-black">
+                      {section.score}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h2 className="text-sm font-black uppercase tracking-wide">
+                Tasks from your fixes
+              </h2>
+              <div className="mt-4 space-y-3">
+                {fixTasks.map((task) => {
+                  const Icon = task.icon;
+                  return (
+                    <div key={task.title} className="flex items-center gap-4">
+                      <div
+                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${task.iconClass}`}
+                      >
+                        <Icon className="h-6 w-6" aria-hidden="true" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-sm font-black">{task.title}</h3>
+                        <p className="mt-1 text-xs font-bold text-slate-500">
+                          {task.meta}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className="h-10 rounded-lg border border-slate-200 px-5 text-sm font-black text-blue-600 transition-colors hover:border-blue-300 hover:bg-blue-50"
+                      >
+                        Start
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+              <button
+                type="button"
+                className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+              >
+                View all tasks
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </section>
+
+            <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h2 className="text-sm font-black uppercase tracking-wide">
+                Recent activity
+              </h2>
+              <div className="mt-4 space-y-3">
+                {recentActivity.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={item.title} className="flex items-center gap-4">
+                      <div
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${item.iconClass}`}
+                      >
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                      </div>
+                      <p className="min-w-0 flex-1 text-sm font-black">
+                        {item.title}
+                      </p>
+                      <span className="text-xs font-bold text-slate-400">
+                        {item.time}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+              <button
+                type="button"
+                className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+              >
+                View all activity
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </section>
+
+            <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
+              <h2 className="text-sm font-black uppercase tracking-wide">
+                The PhloemAI approach
+              </h2>
+              <div className="mt-5 grid gap-4 md:grid-cols-5">
+                {approachSteps.map((step, index) => {
+                  const Icon = step.icon;
+                  return (
+                    <div key={step.title} className="relative flex gap-3 md:block">
+                      <div
+                        className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${step.iconClass}`}
+                      >
+                        <Icon className="h-7 w-7" aria-hidden="true" />
+                      </div>
+                      <div className="md:mt-2">
+                        <h3 className="text-sm font-black text-blue-600">
+                          {step.title}
+                        </h3>
+                        <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                          {step.text}
+                        </p>
+                      </div>
+                      {index < approachSteps.length - 1 && (
+                        <ArrowRight
+                          className="absolute right-3 top-5 hidden h-5 w-5 text-slate-400 md:block"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
           </div>
-          <span className="flex-shrink-0 text-xs px-3 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 font-medium">
-            Coming Soon
-          </span>
-        </div>
-
-        <AttentionTrackingDemo />
-        <div className="mt-6">
-          <PrivacyNotice />
-        </div>
+        </main>
       </div>
     </div>
   );
@@ -1951,13 +2736,7 @@ export function UCATDemoPage() {
 }
 
 export function UCATDashboardPage() {
-  const router = useRouter();
-
-  return (
-    <PhloemAIPageShell>
-      <UCATDashboard onLogout={() => router.push("/phloemai")} />
-    </PhloemAIPageShell>
-  );
+  return <UCATDashboard />;
 }
 
 export default PhloemAILandingPage;
