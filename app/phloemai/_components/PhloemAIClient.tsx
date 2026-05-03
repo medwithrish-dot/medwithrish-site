@@ -989,244 +989,10 @@ export function AttentionTrackingDemo() {
   return null;
 }
 
-// ── Plan Cards ────────────────────────────────────────────────────────────────
 
-function PlanCards({ onFreeClick }: { onFreeClick: () => void }) {
-  const freeFeatures = [
-    "Practice real UCAT-style questions across all sections",
-    "Track your accuracy and speed over time",
-    "See section-level result breakdowns",
-    "Get timing feedback to spot where you lose time",
-    "Try mouse tracking or the webcam attention-tracking demo",
-    "Receive an AI coaching summary after each session",
-  ];
 
-  const premiumFeatures = [
-    "Pinpoint exactly which question subtypes you struggle with",
-    "See timing breakdowns by question type, not just section",
-    "Track accuracy trends across multiple sessions",
-    "Get a personalised focus plan before every session",
-    "Receive detailed AI coaching reports based on your data",
-    "Unlock advanced attention insights - e.g. 'You skip the question wording 40% of the time'",
-  ];
 
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {/* Free */}
-      <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-6 flex flex-col gap-5">
-        <div>
-          <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
-            Free Plan
-          </span>
-          <div className="mt-1 text-3xl font-black text-slate-900">
-            £0{" "}
-            <span className="text-sm font-normal text-slate-400">/ month</span>
-          </div>
-        </div>
-        <ul className="flex-1 space-y-2 text-sm text-slate-800">
-          {freeFeatures.map((f) => (
-            <li key={f} className="flex items-start gap-2">
-              <svg
-                className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2.5}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>{f}</span>
-            </li>
-          ))}
-        </ul>
-        <button
-          onClick={onFreeClick}
-          className="w-full py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm cursor-pointer"
-        >
-          Get Started Free
-        </button>
-      </div>
-
-      {/* Premium */}
-      <div className="relative rounded-2xl bg-white border border-blue-200 shadow-sm p-6 flex flex-col gap-5 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/60 to-violet-50/40 pointer-events-none rounded-2xl" />
-        <div className="relative">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-semibold uppercase tracking-widest text-blue-600">
-              Premium Plan
-            </span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-600 border border-blue-200">
-              Coming Soon
-            </span>
-          </div>
-          <div className="mt-1 text-3xl font-black text-slate-400">
-            £-
-          </div>
-        </div>
-        <ul className="relative flex-1 space-y-2 text-sm text-slate-400">
-          {premiumFeatures.map((f) => (
-            <li key={f} className="flex items-start gap-2">
-              <svg
-                className="w-4 h-4 text-blue-300 mt-0.5 flex-shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2.5}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>{f}</span>
-            </li>
-          ))}
-        </ul>
-        <div className="relative space-y-3">
-          <p className="text-xs text-slate-500 leading-relaxed border border-blue-100 bg-blue-50 rounded-xl px-3 py-2.5">
-            Premium unlocks advanced weakness detection and personalised AI coaching reports - so you always know exactly what to work on next.
-          </p>
-          <button
-            disabled
-            className="w-full py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-400 text-sm font-semibold cursor-not-allowed"
-          >
-            Coming Soon
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Auth Modal ────────────────────────────────────────────────────────────────
-
-function AuthModal({
-  onClose,
-  onSuccess,
-}: {
-  onClose: () => void;
-  onSuccess: () => void;
-}) {
-  const [tab, setTab] = useState<"signup" | "login">("signup");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: replace with Supabase auth call
-    onSuccess();
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="relative bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl">
-        <button
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors cursor-pointer"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-
-        <div className="mb-5">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl font-black text-white">
-              PhloemAI
-            </span>
-          </div>
-          <p className="text-slate-400 text-sm">
-            Create a free account to start your UCAT preparation.
-          </p>
-        </div>
-
-        <div className="flex rounded-xl overflow-hidden bg-slate-800 p-0.5 mb-5">
-          {(["signup", "login"] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-                tab === t
-                  ? "bg-blue-700 text-white"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              {t === "signup" ? "Sign Up" : "Log In"}
-            </button>
-          ))}
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-3">
-          {tab === "signup" && (
-            <div>
-              <label className="block text-xs text-slate-400 mb-1">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
-                required
-                className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-blue-600 transition-colors"
-              />
-            </div>
-          )}
-          <div>
-            <label className="block text-xs text-slate-400 mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-              className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-blue-600 transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-slate-400 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              className="w-full rounded-xl bg-slate-800 border border-slate-600 text-white text-sm px-4 py-2.5 placeholder:text-slate-500 focus:outline-none focus:border-blue-600 transition-colors"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full py-2.5 rounded-xl bg-blue-700 text-white text-sm font-semibold hover:bg-blue-600 transition-colors mt-1 shadow-sm cursor-pointer"
-          >
-            {tab === "signup" ? "Create Free Account" : "Log In"}
-          </button>
-        </form>
-
-        <p className="text-xs text-slate-500 text-center mt-4 leading-relaxed">
-          Supabase authentication will be connected shortly. By continuing you
-          agree to our Terms of Service and Privacy Policy.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// ── Privacy Notice ────────────────────────────────────────────────────────────
+// ── Privacy Notice ───────────────────────────────────────────────────────────
 
 function PrivacyNotice() {
   return (
@@ -1277,7 +1043,7 @@ function PrivacyNotice() {
   );
 }
 
-// ── UCAT Dashboard (post-login placeholder) ───────────────────────────────────
+// ── UCAT Dashboard (post-login placeholder) ──────────────────────────────────
 
 function UCATDashboard({ onLogout }: { onLogout: () => void }) {
   const sections = [
@@ -1294,7 +1060,7 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
           <div>
             <h1 className="text-2xl font-bold text-white">UCAT Practice</h1>
             <p className="text-slate-400 text-sm mt-0.5">
-              Free Plan · AI-powered preparation
+              Free Plan - AI-powered preparation
             </p>
           </div>
           <button
@@ -1374,139 +1140,6 @@ function UCATDashboard({ onLogout }: { onLogout: () => void }) {
         <div className="mt-6">
           <PrivacyNotice />
         </div>
-      </div>
-    </div>
-  );
-}
-
-// ── UCAT Section (plan selection) ─────────────────────────────────────────────
-
-function UCATSection({
-  onFreePlan,
-}: {
-  onFreePlan: () => void;
-}) {
-  return (
-    <div className="min-h-[calc(100vh-49px)]">
-      <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
-        <Link
-          href="/phloemai"
-          className="flex items-center gap-2 text-slate-700 hover:text-slate-900 text-sm mb-8 transition-colors cursor-pointer"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          Back to PhloemAI
-        </Link>
-
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-3xl">🧠</span>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900">UCAT Tutor</h1>
-              <p className="text-slate-600 text-xs font-medium mt-0.5">
-                Built by MedWithRish - Medical Admissions Specialist
-              </p>
-            </div>
-          </div>
-
-          <div className="mb-5 space-y-1">
-            <p className="text-slate-900 text-base font-semibold leading-snug">
-              Train smarter with AI-powered UCAT preparation.
-            </p>
-            <p className="text-slate-700 text-sm">Identify weaknesses.</p>
-            <p className="text-slate-700 text-sm">
-              <span className="text-blue-600 font-medium">Track your focus</span> with optional mouse or eye tracking.
-            </p>
-            <p className="text-slate-700 text-sm">Improve faster.</p>
-          </div>
-
-          {/* Benefit statement */}
-          <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 mb-5 border-l-4 border-l-blue-500">
-            <p className="text-slate-800 text-sm leading-relaxed italic">
-              Know exactly what&apos;s slowing you down - not just what you got wrong.
-            </p>
-          </div>
-
-          {/* Attention-tracking CTA banner */}
-          <div className="rounded-xl bg-blue-600 px-4 py-3 flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <p className="text-white text-sm font-semibold">Try Attention Tracking</p>
-              <p className="text-blue-100 text-xs mt-0.5 leading-relaxed">
-                See which parts of each question you focus on with mouse tracking or the webcam experiment.
-              </p>
-            </div>
-            <Link
-              href="/phloemai/ucat-demo"
-              className="flex-shrink-0 text-xs px-3 py-2 rounded-lg bg-white text-blue-600 font-semibold hover:bg-blue-50 transition-colors whitespace-nowrap cursor-pointer"
-            >
-              Try Demo →
-            </Link>
-          </div>
-        </div>
-
-        {/* Plan cards */}
-        <div className="mb-8">
-          <PlanCards onFreeClick={onFreePlan} />
-        </div>
-
-        {/* Feedback explainer */}
-        <div className="mb-8 rounded-2xl bg-white border border-slate-200 shadow-sm p-5 space-y-4">
-          <h3 className="text-slate-900 font-semibold text-sm">
-            What does feedback look like?
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
-                Free - Basic Feedback
-              </div>
-              <ul className="space-y-1.5 text-xs text-slate-700">
-                {[
-                  "Overall accuracy (e.g. 7/11 correct)",
-                  "Time taken for the full question set",
-                  "Section-level result breakdown",
-                  '"You were slower than expected on this set"',
-                ].map((t) => (
-                  <li key={t} className="flex gap-2">
-                    <span className="text-blue-500 mt-0.5 flex-shrink-0">·</span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">
-                Premium - Full Weakness Detection
-              </div>
-              <ul className="space-y-1.5 text-xs text-slate-400">
-                {[
-                  "Breakdown by section and question subtype",
-                  "Repeated weakness patterns over time",
-                  "Timing weaknesses by question type",
-                  '"QR percentage-change questions: 42 s above target"',
-                  "Specific recommended next-session focus",
-                ].map((t) => (
-                  <li key={t} className="flex gap-2">
-                    <span className="text-slate-300 mt-0.5 flex-shrink-0">·</span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <PrivacyNotice />
       </div>
     </div>
   );
@@ -1601,8 +1234,8 @@ function RedesignedTutorHero() {
       status: "Available Now",
       text: "Full-length practice, AI diagnosis, attention tracking, and personalised coaching.",
       icon: Brain,
-      action: "Open UCAT Tutor",
-      href: "/phloemai/ucat-tutor",
+      action: "Launch UCAT Tutor",
+      href: "/phloemai/dashboard",
       active: true,
     },
     {
@@ -1650,18 +1283,18 @@ function RedesignedTutorHero() {
 
               <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
                 <Link
-                  href="/phloemai/ucat-tutor"
+                  href="/phloemai/dashboard"
                   className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
                 >
-                  Start Free
+                  Launch UCAT Tutor
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <Link
-                  href="/phloemai/ucat-demo"
+                  href="/phloemai/dashboard"
                   className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-blue-400/45 bg-blue-500/10 px-4 text-sm font-bold text-blue-100 transition-colors hover:border-blue-300 hover:bg-blue-500/20"
                 >
-                  <Eye className="h-4 w-4" aria-hidden="true" />
-                  Try Attention Analysis Demo
+                  <Target className="h-4 w-4" aria-hidden="true" />
+                  Start Free Diagnostic
                 </Link>
               </div>
               <p className="mt-3 text-xs leading-relaxed text-slate-500">
@@ -1672,18 +1305,18 @@ function RedesignedTutorHero() {
                 {[
                   {
                     step: "1",
-                    title: "Practise",
+                    title: "Diagnosis",
                     text: "Complete a short timed UCAT set.",
                   },
                   {
                     step: "2",
-                    title: "Diagnose",
-                    text: "Get your personal diagnosis.",
+                    title: "Feedback",
+                    text: "Get your personalised AI feedback.",
                   },
                   {
                     step: "3",
                     title: "Fix",
-                    text: "Follow one clear next step.",
+                    text: "Follow clear next steps to fix issues with targeted practice.",
                   },
                 ].map((item, index) => (
                   <div
@@ -1886,7 +1519,7 @@ function RedesignedTutorHero() {
                 </div>
                 <p className="text-base font-semibold leading-7 text-slate-900">
                   You focused on a distractor, skipped the key stem words, and
-                  changed from the correct answer near the end. There were many re-reads of the stem. You were not confident and incorrect meaning it is likely a weakness. 
+                  changed from the correct answer near the end. There were many re-reads of the stem. You were incorrect and not confident meaning it is likely a weakness. 
                 </p>
               </div>
               <p className="mt-4 text-center text-xs text-slate-700">
@@ -1923,10 +1556,10 @@ function RedesignedTutorHero() {
               ))}
             </ul>
             <Link
-              href="/phloemai/ucat-tutor"
+              href="/phloemai/dashboard"
               className="mt-5 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white transition-colors hover:bg-blue-700"
             >
-              Start Free
+              Start Free Diagnostic
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
@@ -2135,10 +1768,10 @@ function TutorHero() {
               Try UCAT Demo →
             </Link>
             <Link
-              href="/phloemai/ucat-tutor"
+              href="/phloemai/dashboard"
               className="block w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-xs hover:border-slate-400 hover:text-slate-900 transition-colors cursor-pointer text-center"
             >
-              Open UCAT Tutor
+              Launch UCAT Tutor
             </Link>
           </div>
         </div>
@@ -2244,7 +1877,7 @@ function TutorHero() {
   );
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
+// ── Main Page ────────────────────────────────────────────────────────────────
 
 export function PhloemAIPageShell({ children }: { children: React.ReactNode }) {
   return (
@@ -2263,39 +1896,13 @@ export function PhloemAILandingPage() {
   );
 }
 
-export function UCATTutorPage() {
-  const router = useRouter();
-  const [showAuth, setShowAuth] = useState(false);
-
-  const handleFreePlan = () => {
-    setShowAuth(true);
-  };
-
-  const handleAuthSuccess = () => {
-    setShowAuth(false);
-    router.push("/phloemai/dashboard");
-  };
-
-  return (
-    <PhloemAIPageShell>
-      <UCATSection onFreePlan={handleFreePlan} />
-      {showAuth && (
-        <AuthModal
-          onClose={() => setShowAuth(false)}
-          onSuccess={handleAuthSuccess}
-        />
-      )}
-    </PhloemAIPageShell>
-  );
-}
-
 export function UCATDemoPage() {
   return (
     <PhloemAIPageShell>
       <div className="min-h-[calc(100vh-49px)]">
         <div className="max-w-3xl mx-auto px-4 pt-10 pb-20">
           <Link
-            href="/phloemai/ucat-tutor"
+            href="/phloemai"
             className="flex items-center gap-2 text-slate-700 hover:text-slate-900 text-sm mb-8 transition-colors cursor-pointer"
           >
             <svg
@@ -2311,7 +1918,7 @@ export function UCATDemoPage() {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            Back to UCAT Tutor
+            Back to PhloemAI
           </Link>
 
           <div className="mb-6">
