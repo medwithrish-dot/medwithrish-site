@@ -2304,6 +2304,37 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       }
     }
 
+    async function syncCheckoutIfNeeded(nextUser: User) {
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get("session_id");
+
+      if (params.get("checkout") !== "success" || !sessionId) return;
+
+      try {
+        const response = await fetch("/api/stripe/sync-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId }),
+        });
+        const data = (await response.json()) as { error?: string };
+
+        if (!response.ok) {
+          throw new Error(data.error ?? "Could not sync checkout.");
+        }
+
+        await loadProfile(nextUser);
+        window.history.replaceState(null, "", window.location.pathname);
+      } catch (error) {
+        if (mounted) {
+          setCheckoutError(
+            error instanceof Error
+              ? `Payment succeeded, but plan sync failed: ${error.message}`
+              : "Payment succeeded, but plan sync failed."
+          );
+        }
+      }
+    }
+
     async function loadSession() {
       const {
         data: { session: currentSession },
@@ -2316,6 +2347,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
       if (currentSession?.user) {
         await loadProfile(currentSession.user);
+        await syncCheckoutIfNeeded(currentSession.user);
       } else {
         setProfile(null);
       }

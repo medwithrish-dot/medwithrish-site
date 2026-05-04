@@ -69,7 +69,7 @@ export async function POST(request: Request) {
       client_reference_id: user.id,
       line_items: [{ price: priceId, quantity: 1 }],
       allow_promotion_codes: true,
-      success_url: `${siteUrl}/phloemai/dashboard?checkout=success`,
+      success_url: `${siteUrl}/phloemai/dashboard?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/phloemai/dashboard?checkout=cancelled`,
       metadata: {
         supabase_user_id: user.id,

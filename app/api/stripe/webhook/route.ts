@@ -1,78 +1,8 @@
 import type Stripe from "stripe";
 import { createStripeClient } from "@/utils/stripe";
-import { createAdminClient } from "@/utils/supabase/admin";
+import { syncStripeSubscription } from "@/utils/stripe-subscriptions";
 
 export const runtime = "nodejs";
-
-const paidStatuses = new Set(["active", "trialing"]);
-
-function getSubscriptionPeriodEnd(subscription: Stripe.Subscription) {
-  const value = (subscription as { current_period_end?: number })
-    .current_period_end;
-
-  return typeof value === "number"
-    ? new Date(value * 1000).toISOString()
-    : null;
-}
-
-function getCustomerId(customer: Stripe.Subscription["customer"]) {
-  return typeof customer === "string" ? customer : customer.id;
-}
-
-async function findUserIdForSubscription(
-  subscription: Stripe.Subscription,
-  admin: ReturnType<typeof createAdminClient>
-) {
-  const metadataUserId = subscription.metadata?.supabase_user_id;
-
-  if (metadataUserId) return metadataUserId;
-
-  const customerId = getCustomerId(subscription.customer);
-  const { data: profile } = await admin
-    .from("profiles")
-    .select("id")
-    .eq("stripe_customer_id", customerId)
-    .maybeSingle();
-
-  return typeof profile?.id === "string" ? profile.id : null;
-}
-
-async function syncSubscription(subscription: Stripe.Subscription) {
-  const admin = createAdminClient();
-  const userId = await findUserIdForSubscription(subscription, admin);
-
-  if (!userId) return;
-
-  const customerId = getCustomerId(subscription.customer);
-  const priceId = subscription.items.data[0]?.price.id ?? null;
-  const isPaid = paidStatuses.has(subscription.status);
-  const currentPeriodEnd = getSubscriptionPeriodEnd(subscription);
-
-  await admin.from("subscriptions").upsert(
-    {
-      user_id: userId,
-      stripe_customer_id: customerId,
-      stripe_subscription_id: subscription.id,
-      stripe_price_id: priceId,
-      status: subscription.status,
-      current_period_end: currentPeriodEnd,
-      cancel_at_period_end: subscription.cancel_at_period_end,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "stripe_subscription_id" }
-  );
-
-  await admin
-    .from("profiles")
-    .update({
-      current_plan: isPaid ? "premium" : "free",
-      stripe_customer_id: customerId,
-      stripe_subscription_id: subscription.id,
-      subscription_status: subscription.status,
-      premium_since: isPaid ? new Date().toISOString() : null,
-    })
-    .eq("id", userId);
-}
 
 export async function POST(request: Request) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -117,7 +47,7 @@ export async function POST(request: Request) {
       if (session.mode === "subscription" && subscriptionId) {
         const subscription =
           await stripe.subscriptions.retrieve(subscriptionId);
-        await syncSubscription(subscription);
+        await syncStripeSubscription(subscription);
       }
     }
 
@@ -125,7 +55,7 @@ export async function POST(request: Request) {
       event.type === "customer.subscription.updated" ||
       event.type === "customer.subscription.deleted"
     ) {
-      await syncSubscription(event.data.object as Stripe.Subscription);
+      await syncStripeSubscription(event.data.object as Stripe.Subscription);
     }
 
     return Response.json({ received: true });
