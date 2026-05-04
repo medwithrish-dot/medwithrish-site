@@ -37,3 +37,17 @@ body {
     transform: translateX(220%);
   }
 }
+
+.phloem-app-compact {
+  --phloem-app-scale: 0.94;
+  min-height: calc(100vh / var(--phloem-app-scale));
+  width: calc(100% / var(--phloem-app-scale));
+  zoom: var(--phloem-app-scale);
+}
+
+@supports not (zoom: 1) {
+  .phloem-app-compact {
+    transform: scale(var(--phloem-app-scale));
+    transform-origin: top left;
+  }
+}
