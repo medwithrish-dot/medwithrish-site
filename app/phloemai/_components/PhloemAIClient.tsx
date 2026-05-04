@@ -2284,10 +2284,6 @@ function AccountContent({
               />
             </label>
           </div>
-          <p className="mt-4 text-xs font-semibold leading-5 text-slate-500">
-            Editable profile fields can plug into Supabase next; this screen is
-            now routed and ready for that settings work.
-          </p>
         </section>
       </div>
     </div>
@@ -2537,6 +2533,28 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const pageMeta = dashboardPageMeta[view];
 
   useEffect(() => {
+    function resetCheckoutState() {
+      setCheckoutLoading(false);
+    }
+
+    function resetWhenVisible() {
+      if (document.visibilityState === "visible") {
+        resetCheckoutState();
+      }
+    }
+
+    window.addEventListener("pageshow", resetCheckoutState);
+    window.addEventListener("focus", resetCheckoutState);
+    document.addEventListener("visibilitychange", resetWhenVisible);
+
+    return () => {
+      window.removeEventListener("pageshow", resetCheckoutState);
+      window.removeEventListener("focus", resetCheckoutState);
+      document.removeEventListener("visibilitychange", resetWhenVisible);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!supabase) {
       const stopLoading = window.setTimeout(() => setLoading(false), 0);
       return () => window.clearTimeout(stopLoading);
@@ -2706,6 +2724,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       }
 
       window.location.assign(data.url);
+      window.setTimeout(() => setCheckoutLoading(false), 8000);
     } catch (error) {
       setCheckoutError(
         error instanceof Error ? error.message : "Could not start checkout."
@@ -2737,6 +2756,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       }
 
       window.location.assign(data.url);
+      window.setTimeout(() => setCheckoutLoading(false), 8000);
     } catch (error) {
       setCheckoutError(
         error instanceof Error
