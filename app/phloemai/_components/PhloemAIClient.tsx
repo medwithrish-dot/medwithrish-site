@@ -1066,6 +1066,33 @@ type PhloemProfile = {
 };
 
 type AuthMode = "signup" | "login";
+type DashboardView = "dashboard" | "diagnostic" | "practice" | "progress" | "report";
+
+const dashboardPageMeta: Record<
+  DashboardView,
+  { title: string; subtitle: string }
+> = {
+  dashboard: {
+    title: "Dashboard",
+    subtitle: "Let's keep your UCAT prep on track.",
+  },
+  diagnostic: {
+    title: "Diagnostic",
+    subtitle: "Run a quick diagnostic to find what is holding your score back.",
+  },
+  practice: {
+    title: "Practice",
+    subtitle: "Target the fixes from your latest diagnosis.",
+  },
+  progress: {
+    title: "Progress",
+    subtitle: "See whether your fixes are actually working.",
+  },
+  report: {
+    title: "Report",
+    subtitle: "Expanded breakdown from your latest diagnostic.",
+  },
+};
 
 const sectionScores = [
   {
@@ -1223,6 +1250,831 @@ function MetricCard({
       <p className="mt-2 text-xs font-bold text-slate-400">vs last 7 days</p>
     </div>
   );
+}
+
+function sectionStyle(code: string) {
+  return (
+    sectionScores.find((section) => section.code === code) ?? {
+      code,
+      score: 0,
+      badgeClass: "bg-slate-100 text-slate-600",
+      barClass: "bg-slate-400",
+    }
+  );
+}
+
+function ApproachBand({
+  title,
+  steps = approachSteps,
+}: {
+  title: string;
+  steps?: typeof approachSteps;
+}) {
+  return (
+    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 className="text-sm font-black uppercase tracking-wide">{title}</h2>
+      <div className="mt-5 grid gap-4 md:grid-cols-5">
+        {steps.map((step, index) => {
+          const Icon = step.icon;
+          return (
+            <div key={step.title} className="relative flex gap-3 md:block">
+              <div
+                className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${step.iconClass}`}
+              >
+                <Icon className="h-7 w-7" aria-hidden="true" />
+              </div>
+              <div className="md:mt-2">
+                <h3 className="text-sm font-black text-blue-600">
+                  {step.title}
+                </h3>
+                <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                  {step.text}
+                </p>
+              </div>
+              {index < steps.length - 1 && (
+                <ArrowRight
+                  className="absolute right-3 top-5 hidden h-5 w-5 text-slate-400 md:block"
+                  aria-hidden="true"
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function DiagnosticContent() {
+  const diagnosticHistory = [
+    {
+      code: "SJT",
+      date: "May 12, 2025",
+      age: "2 days ago",
+      issue: "Consistency is your biggest opportunity",
+      section: "Situational Judgement",
+      score: "61%",
+    },
+    {
+      code: "DM",
+      date: "May 5, 2025",
+      age: "1 week ago",
+      issue: "Hesitation reduces your accuracy",
+      section: "Decision Making",
+      score: "64%",
+    },
+    {
+      code: "VR",
+      date: "Apr 28, 2025",
+      age: "2 weeks ago",
+      issue: "Speeding impacts accuracy",
+      section: "Verbal Reasoning",
+      score: "62%",
+    },
+    {
+      code: "AR",
+      date: "Apr 21, 2025",
+      age: "3 weeks ago",
+      issue: "Question interpretation needs work",
+      section: "Abstract Reasoning",
+      score: "63%",
+    },
+  ];
+
+  const timingPrompts = [
+    ["Best before starting a study session", "Know where to focus your time.", Clock3],
+    ["After a few practice sets", "Track what's improving and what's not.", BarChart3],
+    ["When your score plateaus", "Find hidden gaps holding you back.", Activity],
+    ["Before a mock exam", "Check your readiness and key risks.", Target],
+  ] as const;
+
+  return (
+    <div className="space-y-5 px-6 py-5 lg:px-8">
+      <div className="grid gap-5 lg:grid-cols-[1.25fr_1fr]">
+        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex gap-5">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-blue-600">
+              <Activity className="h-7 w-7" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className="text-sm font-black uppercase tracking-wide">
+                Quick diagnostic
+              </h2>
+              <p className="mt-2 max-w-xl text-sm font-semibold leading-6 text-slate-600">
+                Answer 10 adaptive questions across all five sections. Get
+                instant AI feedback on your main challenges.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="mt-6 h-11 rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
+          >
+            Start diagnostic
+          </button>
+          <div className="mt-6 flex flex-wrap gap-3">
+            {["10 questions", "Timed", "AI feedback"].map((item) => (
+              <span
+                key={item}
+                className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-black text-slate-600"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-sm font-black uppercase tracking-wide">
+              Latest diagnostic
+            </h2>
+            <span className="text-xs font-black text-slate-400">2 days ago</span>
+          </div>
+          <div className="mt-7 flex gap-5">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-pink-100 text-base font-black text-pink-600">
+              SJT
+            </div>
+            <div>
+              <p className="text-sm font-black">Main finding</p>
+              <h3 className="mt-2 text-base font-black">
+                Consistency is your biggest opportunity
+              </h3>
+              <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+                Your timing and consistency in SJT are holding your overall
+                score back.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/phloemai/report"
+            className="mt-7 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+          >
+            Expanded report
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </section>
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-[1.25fr_0.85fr]">
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-sm font-black uppercase tracking-wide">
+            Diagnostic history
+          </h2>
+          <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
+            {diagnosticHistory.map((item) => {
+              const style = sectionStyle(item.code);
+              return (
+                <div
+                  key={item.date}
+                  className="grid gap-4 border-b border-slate-100 px-3 py-3 last:border-b-0 sm:grid-cols-[150px_1fr_90px_72px] sm:items-center"
+                >
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`rounded-full px-2.5 py-2 text-xs font-black ${style.badgeClass}`}
+                    >
+                      {item.code}
+                    </span>
+                    <div>
+                      <p className="text-sm font-black text-slate-600">
+                        {item.age}
+                      </p>
+                      <p className="text-xs font-bold text-slate-400">
+                        {item.date}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-black">{item.issue}</p>
+                    <p className="mt-1 text-xs font-bold text-slate-500">
+                      {item.section}
+                    </p>
+                  </div>
+                  <span className="w-fit rounded-full bg-pink-50 px-3 py-1 text-xs font-black text-pink-600">
+                    {item.score}
+                  </span>
+                  <button
+                    type="button"
+                    className="h-9 rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
+                  >
+                    View
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+          <button
+            type="button"
+            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+          >
+            View all diagnostics
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-sm font-black uppercase tracking-wide">
+            When to run a diagnostic
+          </h2>
+          <div className="mt-5 space-y-5">
+            {timingPrompts.map(([title, text, Icon]) => (
+              <div key={title} className="flex gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-blue-600">
+                  <Icon className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black">{title}</h3>
+                  <p className="mt-1 text-sm font-semibold leading-6 text-slate-500">
+                    {text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <ApproachBand
+        title="How diagnostics work"
+        steps={[
+          approachSteps[0],
+          approachSteps[1],
+          approachSteps[2],
+          approachSteps[3],
+        ]}
+      />
+    </div>
+  );
+}
+
+function PracticeContent() {
+  const practiceModes = [
+    ["Timed practice", "Simulate real test conditions.", Timer, "bg-blue-100 text-blue-600"],
+    ["Untimed practice", "Build accuracy without pressure.", Clock3, "bg-blue-100 text-blue-600"],
+    ["Mini mocks", "Short mocks to test readiness.", BarChart3, "bg-violet-100 text-violet-600"],
+    ["Incorrect questions", "Revisit and master mistakes.", AlertTriangle, "bg-red-100 text-red-500"],
+    ["Flagged questions", "Return to questions you flagged.", Bookmark, "bg-orange-100 text-orange-600"],
+  ] as const;
+
+  const recentPractice = [
+    ["QR", "QR Speed Drill", "10 questions - Timed", "66%", "Today, 9:41 AM"],
+    ["VR", "VR Timed Set", "15 questions - Timed", "72%", "Today, 8:12 AM"],
+    ["DM", "DM Mini-set", "10 questions - Untimed", "80%", "Yesterday, 7:35 PM"],
+    ["SJT", "SJT Mini-set", "10 questions - Untimed", "70%", "Yesterday, 6:02 PM"],
+  ] as const;
+
+  return (
+    <div className="space-y-5 px-6 py-5 lg:px-8">
+      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex gap-5">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-600">
+              <Zap className="h-8 w-8" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className="text-sm font-black uppercase tracking-wide">
+                Recommended from your fixes
+              </h2>
+              <h3 className="mt-6 text-lg font-black">
+                QR Speed Drill <span className="text-slate-400">- 7 min</span>
+              </h3>
+              <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+                Hesitation in QR is lowering your accuracy. Short, focused
+                drills build speed and confidence.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="h-12 rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
+          >
+            Start task
+          </button>
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 className="text-sm font-black uppercase tracking-wide">
+          Practice modes
+        </h2>
+        <div className="mt-4 grid gap-4 md:grid-cols-5">
+          {practiceModes.map(([title, text, Icon, iconClass]) => (
+            <button
+              type="button"
+              key={title}
+              className="rounded-xl border border-slate-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
+            >
+              <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconClass}`}>
+                <Icon className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <h3 className="mt-3 text-sm font-black">{title}</h3>
+              <p className="mt-2 min-h-10 text-xs font-bold leading-5 text-slate-500">
+                {text}
+              </p>
+              <ArrowRight className="ml-auto mt-2 h-4 w-4 text-blue-600" aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <div className="grid gap-5 lg:grid-cols-[1fr_1.05fr]">
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-sm font-black uppercase tracking-wide">
+            Practice by section
+          </h2>
+          <div className="mt-4 space-y-2">
+            {sectionScores.map((section) => (
+              <div
+                key={section.code}
+                className="grid gap-4 rounded-xl border border-slate-100 px-3 py-3 sm:grid-cols-[1fr_90px_110px_112px] sm:items-center"
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`rounded-lg px-3 py-2 text-xs font-black ${section.badgeClass}`}
+                  >
+                    {section.code}
+                  </span>
+                  <span className="text-sm font-black">
+                    {section.code === "QR"
+                      ? "Quantitative Reasoning"
+                      : section.code === "VR"
+                        ? "Verbal Reasoning"
+                        : section.code === "DM"
+                          ? "Decision Making"
+                          : section.code === "AR"
+                            ? "Abstract Reasoning"
+                            : "Situational Judgement"}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-400">Accuracy</p>
+                  <p className="text-sm font-black">{section.score}%</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-400">
+                    Avg. time / question
+                  </p>
+                  <p className="text-sm font-black">
+                    {section.code === "SJT" ? "-" : `${92 - section.score / 2}s`}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="h-9 rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
+                >
+                  Start practice
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+          >
+            View section insights
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-sm font-black uppercase tracking-wide">
+            Recent practice
+          </h2>
+          <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
+            {recentPractice.map(([code, title, meta, score, time]) => {
+              const style = sectionStyle(code);
+              return (
+                <div
+                  key={title}
+                  className="grid gap-4 border-b border-slate-100 px-3 py-3 last:border-b-0 sm:grid-cols-[1fr_80px_92px] sm:items-center"
+                >
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`rounded-lg px-3 py-2 text-xs font-black ${style.badgeClass}`}
+                    >
+                      {code}
+                    </span>
+                    <div>
+                      <p className="text-sm font-black">{title}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-500">
+                        {meta}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-black">{score}</p>
+                    <p className="text-xs font-bold text-slate-400">{time}</p>
+                  </div>
+                  <button
+                    type="button"
+                    className="h-9 rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
+                  >
+                    Review
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+          <button
+            type="button"
+            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+          >
+            View all practice
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </section>
+      </div>
+
+      <ApproachBand
+        title="Practice turns your fixes into improvement"
+        steps={[approachSteps[0], approachSteps[3], approachSteps[1], approachSteps[4]]}
+      />
+    </div>
+  );
+}
+
+function ProgressContent() {
+  const fixProgress = [
+    ["QR timing improving", "You're answering faster with similar accuracy.", "Improving", "bg-emerald-50 text-emerald-600", Clock3],
+    ["VR longer passages still slow", "Time per question is high on long passages.", "Needs work", "bg-orange-50 text-orange-600", Bookmark],
+    ["DM stable", "Accuracy steady; keep focusing on pace.", "Stable", "bg-indigo-50 text-indigo-600", Brain],
+    ["SJT consistent", "Solid results - maintain your approach.", "Strong", "bg-emerald-50 text-emerald-600", Sparkles],
+  ] as const;
+
+  const improvements = [
+    ["Accuracy improved to 63%", "New 7-day high", "Today, 9:41 AM", BarChart3],
+    ["Average time per question down to 75s", "8s faster than last 7 days", "Today, 9:20 AM", Clock3],
+    ["Best VR accuracy this month", "72% in last 7 days", "Yesterday, 7:18 PM", Sparkles],
+    ["Completed QR Speed Drill", "10 min drill", "Yesterday, 6:42 PM", Target],
+  ] as const;
+
+  return (
+    <div className="space-y-5 px-6 py-5 lg:px-8">
+      <div className="grid gap-4 lg:grid-cols-3">
+        <MetricCard label="Accuracy" value="63%" delta="6%" direction="up" />
+        <MetricCard
+          label="Average time / question"
+          value="75s"
+          delta="8s"
+          direction="down"
+        />
+        <MetricCard label="Tasks completed" value="18" delta="4" direction="up" />
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-[1fr_0.95fr]">
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-black">Accuracy over time</h2>
+            <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+          </div>
+          <div className="mt-4 flex gap-2">
+            {["7D", "30D", "90D", "All time"].map((tab, index) => (
+              <button
+                type="button"
+                key={tab}
+                className={`h-8 rounded-lg px-4 text-xs font-black ${
+                  index === 0
+                    ? "bg-blue-600 text-white"
+                    : "bg-slate-50 text-slate-500 hover:bg-blue-50 hover:text-blue-600"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+          <svg
+            className="mt-4 h-56 w-full overflow-visible"
+            viewBox="0 0 520 220"
+            role="img"
+            aria-label="Accuracy trend rising to 63 percent"
+          >
+            <line x1="34" y1="20" x2="34" y2="190" stroke="#dbe4f0" />
+            <line x1="34" y1="190" x2="500" y2="190" stroke="#dbe4f0" />
+            {[55, 105, 155].map((y) => (
+              <line
+                key={y}
+                x1="34"
+                y1={y}
+                x2="500"
+                y2={y}
+                stroke="#edf2f7"
+                strokeDasharray="4 4"
+              />
+            ))}
+            <polyline
+              fill="none"
+              stroke="#243cff"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="4"
+              points="34,145 90,132 145,136 200,120 255,128 310,122 365,124 420,113 475,113 500,108"
+            />
+            <circle cx="500" cy="108" r="7" fill="#243cff" />
+            <text x="482" y="92" fontSize="16" fontWeight="800" fill="#0b1143">
+              63%
+            </text>
+          </svg>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-black">Section performance</h2>
+            <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+          </div>
+          <div className="mt-8 grid h-56 grid-cols-4 items-end gap-6 border-b border-slate-200 px-5">
+            {sectionScores
+              .filter((section) => section.code !== "AR")
+              .map((section) => (
+                <div key={section.code} className="flex flex-col items-center gap-3">
+                  <span className="text-sm font-black">{section.score}%</span>
+                  <div
+                    className={`w-full max-w-16 rounded-t-lg ${section.barClass}`}
+                    style={{ height: `${section.score * 1.7}px` }}
+                  />
+                  <span className="text-xs font-black">{section.code}</span>
+                </div>
+              ))}
+          </div>
+        </section>
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-black">Fix progress</h2>
+            <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+          </div>
+          <div className="mt-4 space-y-4">
+            {fixProgress.map(([title, text, status, statusClass, Icon]) => (
+              <div key={title} className="flex items-center gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm font-black">{title}</h3>
+                  <p className="mt-1 text-xs font-bold text-slate-500">{text}</p>
+                </div>
+                <span className={`rounded-full px-4 py-1 text-xs font-black ${statusClass}`}>
+                  {status}
+                </span>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+          >
+            View all fix insights
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-black">Recent improvements</h2>
+            <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+          </div>
+          <div className="mt-4 space-y-4">
+            {improvements.map(([title, text, time, Icon]) => (
+              <div key={title} className="flex items-center gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-blue-600">
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm font-black">{title}</h3>
+                  <p className="mt-1 text-xs font-bold text-slate-500">{text}</p>
+                </div>
+                <span className="text-xs font-bold text-slate-400">{time}</span>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+          >
+            View all activity
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </section>
+      </div>
+
+      <ApproachBand title="The PhloemAI approach" />
+    </div>
+  );
+}
+
+function ReportContent() {
+  const issueGroups = [
+    {
+      title: "Major issues",
+      icon: AlertTriangle,
+      iconClass: "bg-red-50 text-red-500",
+      count: 3,
+      items: [
+        ["Hesitation in VR and DM is impacting accuracy.", "You're spending too long on average, especially on longer passages."],
+        ["Overthinking harder logic questions.", "You're second-guessing and changing answers."],
+        ["Inconsistent performance in SJT.", "Approach to situational judgement lacks a clear framework."],
+      ],
+    },
+    {
+      title: "Minor issues",
+      icon: Clock3,
+      iconClass: "bg-orange-50 text-orange-500",
+      count: 3,
+      items: [
+        ["Occasional timing spikes in QR.", "A few questions exceed the ideal time window."],
+        ["Careless errors in straightforward DM.", "Check for small arithmetic or interpretation slips."],
+        ["Passage scanning in VR needs more focus.", "Important details can be missed when skimming."],
+      ],
+    },
+    {
+      title: "Strengths",
+      icon: CheckCircle,
+      iconClass: "bg-emerald-50 text-emerald-600",
+      count: 3,
+      items: [
+        ["Solid accuracy in QR.", "You're consistently answering QR questions correctly."],
+        ["Good overall decision making.", "Changed answers often improve your score."],
+        ["Steady improvement over the last 7 days.", "Accuracy is up and time per question is down."],
+      ],
+    },
+    {
+      title: "Fixes",
+      icon: Wrench,
+      iconClass: "bg-indigo-50 text-indigo-600",
+      count: 4,
+      items: [
+        ["Improve VR pacing on long passages.", "Prioritise structure and main points."],
+        ["Use a 2-pass process for DM.", "First pass to solve, second pass to verify."],
+        ["Build a SJT decision framework.", "Practise identifying the best and worst options."],
+        ["Reduce overthinking in hard logic.", "Set a time cap and move on."],
+      ],
+    },
+  ];
+
+  const reviewRows = [
+    ["Slow questions", "16 questions", "> 90s spent"],
+    ["Changed answers", "12 questions", "8 improved"],
+    ["Flagged questions", "9 questions", "Marked during test"],
+    ["Long-passage VR behaviour", "5 passages", "Low accuracy"],
+  ];
+
+  return (
+    <div className="space-y-5 px-6 py-5 lg:px-8">
+      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="grid gap-5 md:grid-cols-[1fr_220px_220px] md:items-center">
+          <div className="flex gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-blue-600">
+              <Bookmark className="h-6 w-6" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className="text-sm font-black">Latest diagnostic</h2>
+              <p className="mt-1 text-xs font-bold text-slate-500">
+                Completed 2 days ago - 7 May 2025, 9:15 AM
+              </p>
+            </div>
+          </div>
+          <MetricCard label="Overall accuracy" value="63%" delta="6%" direction="up" />
+          <MetricCard
+            label="Avg. time / question"
+            value="75s"
+            delta="8s"
+            direction="down"
+          />
+        </div>
+      </section>
+
+      <div className="flex flex-wrap gap-3">
+        {["All", "QR", "VR", "DM", "SJT"].map((filter, index) => (
+          <button
+            type="button"
+            key={filter}
+            className={`h-8 rounded-full px-8 text-xs font-black ${
+              index === 0
+                ? "bg-blue-600 text-white"
+                : "border border-slate-200 bg-white text-slate-500 hover:bg-blue-50 hover:text-blue-600"
+            }`}
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        {issueGroups.map((group) => {
+          const Icon = group.icon;
+          return (
+            <section
+              key={group.title}
+              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-full ${group.iconClass}`}
+                  >
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h2 className="text-sm font-black">{group.title}</h2>
+                </div>
+                <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-black text-blue-600">
+                  {group.count}
+                </span>
+              </div>
+              <ul className="mt-5 space-y-4">
+                {group.items.map(([title, text]) => (
+                  <li key={title} className="text-sm">
+                    <p className="font-black">{title}</p>
+                    <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
+                      {text}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                className="mt-5 text-sm font-black text-blue-600 hover:text-blue-700"
+              >
+                Show more...
+              </button>
+            </section>
+          );
+        })}
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-[0.8fr_1fr]">
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-sm font-black uppercase tracking-wide text-blue-600">
+            Phloem personalised feedback
+          </h2>
+          <p className="mt-5 text-sm font-semibold leading-7 text-slate-600">
+            Your overall accuracy is solid, but timing is your biggest limiter.
+            Focus on pacing in VR and DM, and reduce overthinking on harder
+            logic questions. Keep building consistency in SJT with a clear
+            approach.
+          </p>
+          <button
+            type="button"
+            className="mt-5 text-sm font-black text-blue-600 hover:text-blue-700"
+          >
+            Show more...
+          </button>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-sm font-black uppercase tracking-wide">
+            Question review
+          </h2>
+          <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
+            {reviewRows.map(([title, count, note]) => (
+              <div
+                key={title}
+                className="grid gap-3 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[1fr_130px_150px_70px] sm:items-center"
+              >
+                <p className="text-sm font-black">{title}</p>
+                <p className="text-xs font-bold text-slate-500">{count}</p>
+                <p className="text-xs font-bold text-slate-500">{note}</p>
+                <button
+                  type="button"
+                  className="text-xs font-black text-blue-600 hover:text-blue-700"
+                >
+                  Review
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <section className="flex flex-col gap-4 rounded-xl border border-indigo-100 bg-indigo-50 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-blue-600">
+            <Target className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <p className="text-sm font-black">
+            Ready to improve?{" "}
+            <span className="font-semibold text-slate-600">
+              Start a recommended task based on your report.
+            </span>
+          </p>
+        </div>
+        <Link
+          href="/phloemai/practice"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white hover:bg-blue-700"
+        >
+          Start recommended task
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+      </section>
+    </div>
+  );
+}
+
+function DashboardSubpageContent({ view }: { view: Exclude<DashboardView, "dashboard"> }) {
+  if (view === "diagnostic") return <DiagnosticContent />;
+  if (view === "practice") return <PracticeContent />;
+  if (view === "progress") return <ProgressContent />;
+  return <ReportContent />;
 }
 
 function AuthPanel({
@@ -1410,7 +2262,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...`}
   );
 }
 
-function UCATDashboard() {
+function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<PhloemProfile | null>(null);
@@ -1422,11 +2274,14 @@ function UCATDashboard() {
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const supabaseReady = hasSupabaseConfig();
   const supabase = useMemo(
     () => (supabaseReady ? createSupabaseClient() : null),
     [supabaseReady]
   );
+  const pageMeta = dashboardPageMeta[view];
 
   useEffect(() => {
     if (!supabase) {
@@ -1548,6 +2403,32 @@ function UCATDashboard() {
     setProfile(null);
   };
 
+  const handleUpgrade = async () => {
+    setCheckoutLoading(true);
+    setCheckoutError(null);
+
+    try {
+      const response = await fetch("/api/stripe/create-checkout-session", {
+        method: "POST",
+      });
+      const data = (await response.json()) as {
+        url?: string;
+        error?: string;
+      };
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Could not start checkout.");
+      }
+
+      window.location.assign(data.url);
+    } catch (error) {
+      setCheckoutError(
+        error instanceof Error ? error.message : "Could not start checkout."
+      );
+      setCheckoutLoading(false);
+    }
+  };
+
   if (!supabaseReady) {
     return <MissingSupabaseConfig />;
   }
@@ -1580,7 +2461,7 @@ function UCATDashboard() {
   }
 
   const firstName = getFirstName(user, profile);
-  const plan = profile?.current_plan ?? "Free";
+  const plan = profile?.current_plan === "premium" ? "Premium" : "Free";
 
   return (
     <div className="min-h-screen bg-[#f8fbff] text-[#0b1143]">
@@ -1604,24 +2485,41 @@ function UCATDashboard() {
                 label: "Dashboard",
                 icon: Home,
                 href: "/phloemai/dashboard",
-                active: true,
+                view: "dashboard",
               },
               {
                 label: "Diagnostic",
                 icon: Activity,
-                href: "/phloemai/dashboard",
+                href: "/phloemai/diagnostic",
+                view: "diagnostic",
               },
-              { label: "Practice", icon: Target, href: "/phloemai/ucat-demo" },
-              { label: "Progress", icon: BarChart3, href: "#progress" },
-              { label: "Report", icon: Bookmark, href: "#report" },
+              {
+                label: "Practice",
+                icon: Target,
+                href: "/phloemai/practice",
+                view: "practice",
+              },
+              {
+                label: "Progress",
+                icon: BarChart3,
+                href: "/phloemai/progress",
+                view: "progress",
+              },
+              {
+                label: "Report",
+                icon: Bookmark,
+                href: "/phloemai/report",
+                view: "report",
+              },
             ].map((item) => {
               const Icon = item.icon;
+              const isActive = item.view === view;
               return (
                 <Link
                   key={item.label}
                   href={item.href}
                   className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-black transition-colors ${
-                    item.active
+                    isActive
                       ? "bg-indigo-50 text-blue-600 shadow-sm"
                       : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
                   }`}
@@ -1645,10 +2543,17 @@ function UCATDashboard() {
             </p>
             <button
               type="button"
+              onClick={handleUpgrade}
+              disabled={checkoutLoading}
               className="mt-5 h-10 w-full rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
             >
-              Upgrade Now
+              {checkoutLoading ? "Opening..." : "Upgrade Now"}
             </button>
+            {checkoutError && (
+              <p className="mt-3 text-xs font-bold leading-5 text-red-600">
+                {checkoutError}
+              </p>
+            )}
           </div>
 
           <div className="mt-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -1657,6 +2562,7 @@ function UCATDashboard() {
               <span className="text-sm font-black">{plan}</span>
               <button
                 type="button"
+                onClick={handleUpgrade}
                 className="text-sm font-black text-blue-600 hover:text-blue-700"
               >
                 View plans
@@ -1669,10 +2575,12 @@ function UCATDashboard() {
           <header className="flex flex-col gap-4 border-b border-slate-200 bg-white px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
             <div>
               <h1 className="text-2xl font-black">
-                {getGreeting()}, {firstName}
+                {view === "dashboard"
+                  ? `${getGreeting()}, ${firstName}`
+                  : pageMeta.title}
               </h1>
               <p className="mt-2 text-sm font-medium text-slate-500">
-                Let&apos;s keep your UCAT prep on track.
+                {pageMeta.subtitle}
               </p>
             </div>
             <div className="flex items-center gap-5">
@@ -1704,6 +2612,7 @@ function UCATDashboard() {
             </div>
           </header>
 
+          {view === "dashboard" ? (
           <div className="grid gap-5 px-6 py-5 lg:grid-cols-[1.1fr_1fr] lg:px-8">
             <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center justify-between gap-4">
@@ -1924,6 +2833,9 @@ function UCATDashboard() {
               </div>
             </section>
           </div>
+          ) : (
+            <DashboardSubpageContent view={view} />
+          )}
         </main>
       </div>
     </div>
@@ -2736,7 +3648,23 @@ export function UCATDemoPage() {
 }
 
 export function UCATDashboardPage() {
-  return <UCATDashboard />;
+  return <UCATDashboard view="dashboard" />;
+}
+
+export function UCATDiagnosticPage() {
+  return <UCATDashboard view="diagnostic" />;
+}
+
+export function UCATPracticePage() {
+  return <UCATDashboard view="practice" />;
+}
+
+export function UCATProgressPage() {
+  return <UCATDashboard view="progress" />;
+}
+
+export function UCATReportPage() {
+  return <UCATDashboard view="report" />;
 }
 
 export default PhloemAILandingPage;
