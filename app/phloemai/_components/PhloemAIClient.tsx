@@ -1066,7 +1066,13 @@ type PhloemProfile = {
 };
 
 type AuthMode = "signup" | "login";
-type DashboardView = "dashboard" | "diagnostic" | "practice" | "progress" | "report";
+type DashboardView =
+  | "dashboard"
+  | "diagnostic"
+  | "practice"
+  | "progress"
+  | "report"
+  | "account";
 
 const dashboardPageMeta: Record<
   DashboardView,
@@ -1092,6 +1098,10 @@ const dashboardPageMeta: Record<
     title: "Report",
     subtitle: "Expanded breakdown from your latest diagnostic.",
   },
+  account: {
+    title: "Account",
+    subtitle: "Manage your profile, plan and subscription.",
+  },
 };
 
 const sectionScores = [
@@ -1112,12 +1122,6 @@ const sectionScores = [
     score: 54,
     badgeClass: "bg-cyan-500 text-white",
     barClass: "bg-cyan-500",
-  },
-  {
-    code: "AR",
-    score: 69,
-    badgeClass: "bg-orange-500 text-white",
-    barClass: "bg-orange-500",
   },
   {
     code: "SJT",
@@ -1208,6 +1212,26 @@ const approachSteps = [
   },
 ];
 
+const dashboardFeedbackShort =
+  "Your latest diagnostic found time pressure as the main factor holding your score back. You're generally accurate across the board, which is a strong foundation.";
+
+const dashboardFeedbackFull =
+  "Your latest diagnostic found time pressure as the main factor holding your score back. You're generally accurate across the board, which is a strong foundation. Your score is being held back by how time is managed in certain sections. In QR, you're spending too long on calculator-heavy questions, which eats into your overall pace. In VR, you occasionally re-read longer stems, especially in the most information-dense questions. In DM, you slow down when you're unsure, particularly on harder logic questions, which affects your rhythm. In SJT, your performance is relatively steady and doesn't need urgent attention right now.";
+
+const reportFeedbackShort =
+  "Your overall accuracy is solid, but timing is your biggest limiter. Focus on pacing in VR and DM, and reduce overthinking on harder logic questions.";
+
+const reportFeedbackFull =
+  "Your overall accuracy is solid, but timing is your biggest limiter. Focus on pacing in VR and DM, and reduce overthinking on harder logic questions. Keep building consistency in SJT with a clear approach. Your strongest gains will come from short timed practice, reviewing changed answers, and tracking whether your speed improves without accuracy dropping.";
+
+type ReportIssueGroup = {
+  title: string;
+  icon: typeof AlertTriangle;
+  iconClass: string;
+  count: number;
+  items: Array<[string, string]>;
+};
+
 function getFirstName(user: User | null, profile: PhloemProfile | null) {
   const profileName = profile?.full_name?.trim();
   const metadataName =
@@ -1248,6 +1272,36 @@ function MetricCard({
         </span>
       </div>
       <p className="mt-2 text-xs font-bold text-slate-400">vs last 7 days</p>
+    </div>
+  );
+}
+
+function ExpandableText({
+  shortText,
+  fullText,
+  className,
+  buttonClassName = "mt-3 text-sm font-black text-blue-600 hover:text-blue-700",
+}: {
+  shortText: string;
+  fullText: string;
+  className: string;
+  buttonClassName?: string;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const canExpand = shortText !== fullText;
+
+  return (
+    <div>
+      <p className={className}>{expanded ? fullText : shortText}</p>
+      {canExpand && (
+        <button
+          type="button"
+          onClick={() => setExpanded((current) => !current)}
+          className={buttonClassName}
+        >
+          {expanded ? "Show less" : "Show more..."}
+        </button>
+      )}
     </div>
   );
 }
@@ -1305,6 +1359,50 @@ function ApproachBand({
   );
 }
 
+function ReportInsightCard({ group }: { group: ReportIssueGroup }) {
+  const [expanded, setExpanded] = useState(false);
+  const Icon = group.icon;
+  const visibleItems = expanded ? group.items : group.items.slice(0, 2);
+  const canExpand = group.items.length > 2;
+
+  return (
+    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div
+            className={`flex h-10 w-10 items-center justify-center rounded-full ${group.iconClass}`}
+          >
+            <Icon className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <h2 className="text-sm font-black">{group.title}</h2>
+        </div>
+        <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-black text-blue-600">
+          {group.count}
+        </span>
+      </div>
+      <ul className="mt-5 space-y-4">
+        {visibleItems.map(([title, text]) => (
+          <li key={title} className="text-sm">
+            <p className="font-black">{title}</p>
+            <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
+              {text}
+            </p>
+          </li>
+        ))}
+      </ul>
+      {canExpand && (
+        <button
+          type="button"
+          onClick={() => setExpanded((current) => !current)}
+          className="mt-5 text-sm font-black text-blue-600 hover:text-blue-700"
+        >
+          {expanded ? "Show less" : "Show more..."}
+        </button>
+      )}
+    </section>
+  );
+}
+
 function DiagnosticContent() {
   const diagnosticHistory = [
     {
@@ -1332,11 +1430,11 @@ function DiagnosticContent() {
       score: "62%",
     },
     {
-      code: "AR",
+      code: "QR",
       date: "Apr 21, 2025",
       age: "3 weeks ago",
-      issue: "Question interpretation needs work",
-      section: "Abstract Reasoning",
+      issue: "Multi-step data handling needs work",
+      section: "Quantitative Reasoning",
       score: "63%",
     },
   ];
@@ -1366,12 +1464,12 @@ function DiagnosticContent() {
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            className="mt-6 h-11 rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
+          <Link
+            href="/phloemai/question-bank"
+            className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
           >
             Start diagnostic
-          </button>
+          </Link>
           <div className="mt-6 flex flex-wrap gap-3">
             {["10 questions", "Timed", "AI feedback"].map((item) => (
               <span
@@ -1453,23 +1551,23 @@ function DiagnosticContent() {
                   <span className="w-fit rounded-full bg-pink-50 px-3 py-1 text-xs font-black text-pink-600">
                     {item.score}
                   </span>
-                  <button
-                    type="button"
+                  <Link
+                    href="/phloemai/report"
                     className="h-9 rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
                   >
                     View
-                  </button>
+                  </Link>
                 </div>
               );
             })}
           </div>
-          <button
-            type="button"
+          <Link
+            href="/phloemai/report"
             className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
           >
             View all diagnostics
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </button>
+          </Link>
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -1513,8 +1611,38 @@ function PracticeContent() {
     ["Untimed practice", "Build accuracy without pressure.", Clock3, "bg-blue-100 text-blue-600"],
     ["Mini mocks", "Short mocks to test readiness.", BarChart3, "bg-violet-100 text-violet-600"],
     ["Incorrect questions", "Revisit and master mistakes.", AlertTriangle, "bg-red-100 text-red-500"],
-    ["Flagged questions", "Return to questions you flagged.", Bookmark, "bg-orange-100 text-orange-600"],
   ] as const;
+
+  const practiceSections = [
+    {
+      code: "VR",
+      title: "Verbal Reasoning",
+      text: "Passage-based inference and comprehension.",
+      href: "/phloemai/question-bank/vr",
+      className: "bg-indigo-600 text-white",
+    },
+    {
+      code: "DM",
+      title: "Decision Making",
+      text: "Logic, probability and argument evaluation.",
+      href: "/phloemai/question-bank/dm",
+      className: "bg-blue-600 text-white",
+    },
+    {
+      code: "QR",
+      title: "Quantitative Reasoning",
+      text: "Short numerical problems and data interpretation.",
+      href: "/phloemai/question-bank/qr",
+      className: "bg-cyan-500 text-white",
+    },
+    {
+      code: "SJT",
+      title: "Situational Judgement",
+      text: "Professional judgement and appropriate actions.",
+      href: "/phloemai/question-bank/sjt",
+      className: "bg-pink-500 text-white",
+    },
+  ];
 
   const recentPractice = [
     ["QR", "QR Speed Drill", "10 questions - Timed", "66%", "Today, 9:41 AM"],
@@ -1544,12 +1672,55 @@ function PracticeContent() {
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            className="h-12 rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
+          <Link
+            href="/phloemai/question-bank/qr"
+            className="inline-flex h-12 items-center justify-center rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
           >
             Start task
-          </button>
+          </Link>
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-sm font-black uppercase tracking-wide">
+              Start a section
+            </h2>
+            <p className="mt-2 text-sm font-semibold text-slate-500">
+              Four clean entry points for the current UCAT sections.
+            </p>
+          </div>
+          <Link
+            href="/phloemai/question-bank"
+            className="inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+          >
+            Open question bank
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+        <div className="mt-5 grid gap-4 md:grid-cols-4">
+          {practiceSections.map((section) => (
+            <Link
+              key={section.code}
+              href={section.href}
+              className="rounded-xl border border-slate-200 bg-white p-5 transition-colors hover:border-blue-300 hover:bg-blue-50"
+            >
+              <span
+                className={`inline-flex rounded-lg px-3 py-1 text-sm font-black ${section.className}`}
+              >
+                {section.code}
+              </span>
+              <h3 className="mt-4 text-base font-black">{section.title}</h3>
+              <p className="mt-2 min-h-12 text-xs font-bold leading-5 text-slate-500">
+                {section.text}
+              </p>
+              <span className="mt-4 inline-flex items-center gap-2 text-sm font-black text-blue-600">
+                Practise
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -1557,10 +1728,10 @@ function PracticeContent() {
         <h2 className="text-sm font-black uppercase tracking-wide">
           Practice modes
         </h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-5">
+        <div className="mt-4 grid gap-4 md:grid-cols-4">
           {practiceModes.map(([title, text, Icon, iconClass]) => (
-            <button
-              type="button"
+            <Link
+              href="/phloemai/question-bank"
               key={title}
               className="rounded-xl border border-slate-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
             >
@@ -1572,7 +1743,7 @@ function PracticeContent() {
                 {text}
               </p>
               <ArrowRight className="ml-auto mt-2 h-4 w-4 text-blue-600" aria-hidden="true" />
-            </button>
+            </Link>
           ))}
         </div>
       </section>
@@ -1601,9 +1772,7 @@ function PracticeContent() {
                         ? "Verbal Reasoning"
                         : section.code === "DM"
                           ? "Decision Making"
-                          : section.code === "AR"
-                            ? "Abstract Reasoning"
-                            : "Situational Judgement"}
+                          : "Situational Judgement"}
                   </span>
                 </div>
                 <div>
@@ -1618,12 +1787,12 @@ function PracticeContent() {
                     {section.code === "SJT" ? "-" : `${92 - section.score / 2}s`}
                   </p>
                 </div>
-                <button
-                  type="button"
-                  className="h-9 rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
+                <Link
+                  href={`/phloemai/question-bank/${section.code.toLowerCase()}`}
+                  className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
                 >
                   Start practice
-                </button>
+                </Link>
               </div>
             ))}
           </div>
@@ -1665,12 +1834,12 @@ function PracticeContent() {
                     <p className="text-sm font-black">{score}</p>
                     <p className="text-xs font-bold text-slate-400">{time}</p>
                   </div>
-                  <button
-                    type="button"
-                    className="h-9 rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
+                  <Link
+                    href={`/phloemai/question-bank/${code.toLowerCase()}`}
+                    className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
                   >
                     Review
-                  </button>
+                  </Link>
                 </div>
               );
             })}
@@ -1782,9 +1951,7 @@ function ProgressContent() {
             <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
           </div>
           <div className="mt-8 grid h-56 grid-cols-4 items-end gap-6 border-b border-slate-200 px-5">
-            {sectionScores
-              .filter((section) => section.code !== "AR")
-              .map((section) => (
+            {sectionScores.map((section) => (
                 <div key={section.code} className="flex flex-col items-center gap-3">
                   <span className="text-sm font-black">{section.score}%</span>
                   <div
@@ -1864,7 +2031,7 @@ function ProgressContent() {
 }
 
 function ReportContent() {
-  const issueGroups = [
+  const issueGroups: ReportIssueGroup[] = [
     {
       title: "Major issues",
       icon: AlertTriangle,
@@ -1915,7 +2082,7 @@ function ReportContent() {
   const reviewRows = [
     ["Slow questions", "16 questions", "> 90s spent"],
     ["Changed answers", "12 questions", "8 improved"],
-    ["Flagged questions", "9 questions", "Marked during test"],
+    ["Marked for review", "9 questions", "Marked during test"],
     ["Long-passage VR behaviour", "5 passages", "Low accuracy"],
   ];
 
@@ -1961,45 +2128,9 @@ function ReportContent() {
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        {issueGroups.map((group) => {
-          const Icon = group.icon;
-          return (
-            <section
-              key={group.title}
-              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
-            >
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full ${group.iconClass}`}
-                  >
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                  <h2 className="text-sm font-black">{group.title}</h2>
-                </div>
-                <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-black text-blue-600">
-                  {group.count}
-                </span>
-              </div>
-              <ul className="mt-5 space-y-4">
-                {group.items.map(([title, text]) => (
-                  <li key={title} className="text-sm">
-                    <p className="font-black">{title}</p>
-                    <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
-                      {text}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                className="mt-5 text-sm font-black text-blue-600 hover:text-blue-700"
-              >
-                Show more...
-              </button>
-            </section>
-          );
-        })}
+        {issueGroups.map((group) => (
+          <ReportInsightCard key={group.title} group={group} />
+        ))}
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[0.8fr_1fr]">
@@ -2007,18 +2138,12 @@ function ReportContent() {
           <h2 className="text-sm font-black uppercase tracking-wide text-blue-600">
             Phloem personalised feedback
           </h2>
-          <p className="mt-5 text-sm font-semibold leading-7 text-slate-600">
-            Your overall accuracy is solid, but timing is your biggest limiter.
-            Focus on pacing in VR and DM, and reduce overthinking on harder
-            logic questions. Keep building consistency in SJT with a clear
-            approach.
-          </p>
-          <button
-            type="button"
-            className="mt-5 text-sm font-black text-blue-600 hover:text-blue-700"
-          >
-            Show more...
-          </button>
+          <ExpandableText
+            shortText={reportFeedbackShort}
+            fullText={reportFeedbackFull}
+            className="mt-5 text-sm font-semibold leading-7 text-slate-600"
+            buttonClassName="mt-5 text-sm font-black text-blue-600 hover:text-blue-700"
+          />
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -2070,10 +2195,137 @@ function ReportContent() {
   );
 }
 
-function DashboardSubpageContent({ view }: { view: Exclude<DashboardView, "dashboard"> }) {
+function AccountContent({
+  firstName,
+  plan,
+  email,
+  checkoutLoading,
+  onUpgrade,
+  onLogout,
+}: {
+  firstName: string;
+  plan: string;
+  email: string;
+  checkoutLoading: boolean;
+  onUpgrade: () => void;
+  onLogout: () => void;
+}) {
+  return (
+    <div className="space-y-5 px-6 py-5 lg:px-8">
+      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-black uppercase tracking-wide text-blue-600">
+              Account settings
+            </p>
+            <h2 className="mt-2 text-2xl font-black">{firstName}</h2>
+            <p className="mt-1 text-sm font-semibold text-slate-500">{email}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 px-5 text-sm font-black text-slate-700 hover:bg-slate-50"
+          >
+            Log out
+          </button>
+        </div>
+      </section>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-sm font-black uppercase tracking-wide">
+            Subscription
+          </h2>
+          <div className="mt-5 rounded-xl bg-indigo-50 p-5">
+            <p className="text-sm font-semibold text-slate-500">Current plan</p>
+            <p className="mt-2 text-3xl font-black">{plan}</p>
+            <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+              Premium unlocks unlimited AI insight cards and deeper personalised
+              recommendations.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onUpgrade}
+            disabled={checkoutLoading}
+            className="mt-5 h-11 rounded-lg bg-blue-600 px-6 text-sm font-black text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+          >
+            {plan === "Premium"
+              ? "Manage subscription"
+              : checkoutLoading
+                ? "Opening..."
+                : "Upgrade to Premium"}
+          </button>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-sm font-black uppercase tracking-wide">
+            Profile
+          </h2>
+          <div className="mt-5 space-y-4">
+            <label className="block">
+              <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                Display name
+              </span>
+              <input
+                value={firstName}
+                readOnly
+                className="mt-1 h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-bold text-slate-700"
+              />
+            </label>
+            <label className="block">
+              <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                Email
+              </span>
+              <input
+                value={email}
+                readOnly
+                className="mt-1 h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-bold text-slate-700"
+              />
+            </label>
+          </div>
+          <p className="mt-4 text-xs font-semibold leading-5 text-slate-500">
+            Editable profile fields can plug into Supabase next; this screen is
+            now routed and ready for that settings work.
+          </p>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function DashboardSubpageContent({
+  view,
+  firstName,
+  plan,
+  email,
+  checkoutLoading,
+  onUpgrade,
+  onLogout,
+}: {
+  view: Exclude<DashboardView, "dashboard">;
+  firstName: string;
+  plan: string;
+  email: string;
+  checkoutLoading: boolean;
+  onUpgrade: () => void;
+  onLogout: () => void;
+}) {
   if (view === "diagnostic") return <DiagnosticContent />;
   if (view === "practice") return <PracticeContent />;
   if (view === "progress") return <ProgressContent />;
+  if (view === "account") {
+    return (
+      <AccountContent
+        firstName={firstName}
+        plan={plan}
+        email={email}
+        checkoutLoading={checkoutLoading}
+        onUpgrade={onUpgrade}
+        onLogout={onLogout}
+      />
+    );
+  }
   return <ReportContent />;
 }
 
@@ -2276,6 +2528,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const [submitting, setSubmitting] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const supabaseReady = hasSupabaseConfig();
   const supabase = useMemo(
     () => (supabaseReady ? createSupabaseClient() : null),
@@ -2461,6 +2714,39 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     }
   };
 
+  const handleSubscriptionAction = async () => {
+    if (profile?.current_plan !== "premium") {
+      await handleUpgrade();
+      return;
+    }
+
+    setCheckoutLoading(true);
+    setCheckoutError(null);
+
+    try {
+      const response = await fetch("/api/stripe/create-portal-session", {
+        method: "POST",
+      });
+      const data = (await response.json()) as {
+        url?: string;
+        error?: string;
+      };
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Could not open billing portal.");
+      }
+
+      window.location.assign(data.url);
+    } catch (error) {
+      setCheckoutError(
+        error instanceof Error
+          ? error.message
+          : "Could not open billing portal."
+      );
+      setCheckoutLoading(false);
+    }
+  };
+
   if (!supabaseReady) {
     return <MissingSupabaseConfig />;
   }
@@ -2494,6 +2780,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
   const firstName = getFirstName(user, profile);
   const plan = profile?.current_plan === "premium" ? "Premium" : "Free";
+  const userEmail = user.email ?? "";
 
   return (
     <div className="min-h-screen bg-[#f8fbff] text-[#0b1143]">
@@ -2563,7 +2850,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
             })}
           </nav>
 
-          <div className="mt-24 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="mt-8 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-blue-600">
               <Sparkles className="h-6 w-6" aria-hidden="true" />
             </div>
@@ -2575,11 +2862,15 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
             </p>
             <button
               type="button"
-              onClick={handleUpgrade}
+              onClick={handleSubscriptionAction}
               disabled={checkoutLoading}
               className="mt-5 h-10 w-full rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
             >
-              {checkoutLoading ? "Opening..." : "Upgrade Now"}
+              {checkoutLoading
+                ? "Opening..."
+                : plan === "Premium"
+                  ? "Manage Billing"
+                  : "Upgrade Now"}
             </button>
             {checkoutError && (
               <p className="mt-3 text-xs font-bold leading-5 text-red-600">
@@ -2594,10 +2885,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               <span className="text-sm font-black">{plan}</span>
               <button
                 type="button"
-                onClick={handleUpgrade}
+                onClick={handleSubscriptionAction}
                 className="text-sm font-black text-blue-600 hover:text-blue-700"
               >
-                View plans
+                {plan === "Premium" ? "Manage" : "View plans"}
               </button>
             </div>
           </div>
@@ -2624,14 +2915,67 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                 <Bell className="h-5 w-5" aria-hidden="true" />
               </button>
               <div className="h-8 w-px bg-slate-200" />
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-100 text-sm font-black text-blue-600">
-                  {firstName.charAt(0).toUpperCase()}
-                </div>
-                <span className="hidden text-sm font-black sm:inline">
-                  {firstName}
-                </span>
-                <ChevronDown className="h-4 w-4 text-slate-500" aria-hidden="true" />
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setAccountMenuOpen((current) => !current)}
+                  className="flex items-center gap-3 rounded-xl px-2 py-1 transition-colors hover:bg-slate-50"
+                  aria-expanded={accountMenuOpen}
+                >
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-100 text-sm font-black text-blue-600">
+                    {firstName.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="hidden text-sm font-black sm:inline">
+                    {firstName}
+                  </span>
+                  <ChevronDown className="h-4 w-4 text-slate-500" aria-hidden="true" />
+                </button>
+                {accountMenuOpen && (
+                  <div className="absolute right-0 z-20 mt-2 w-64 rounded-xl border border-slate-200 bg-white p-2 shadow-xl">
+                    <div className="px-3 py-2">
+                      <p className="text-sm font-black">{firstName}</p>
+                      <p className="mt-1 truncate text-xs font-semibold text-slate-500">
+                        {userEmail}
+                      </p>
+                    </div>
+                    <Link
+                      href="/phloemai/account"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="block rounded-lg px-3 py-2 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                    >
+                      Account settings
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAccountMenuOpen(false);
+                        void handleSubscriptionAction();
+                      }}
+                      className="w-full rounded-lg px-3 py-2 text-left text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                    >
+                      {plan === "Premium"
+                        ? "Manage subscription"
+                        : "Upgrade subscription"}
+                    </button>
+                    <Link
+                      href="/phloemai/question-bank"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="block rounded-lg px-3 py-2 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                    >
+                      Open question bank
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAccountMenuOpen(false);
+                        void handleLogout();
+                      }}
+                      className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm font-black text-red-600 hover:bg-red-50"
+                    >
+                      Log out
+                    </button>
+                  </div>
+                )}
               </div>
               <button
                 type="button"
@@ -2651,30 +2995,22 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                 <p className="text-sm font-black uppercase tracking-wider text-blue-600">
                   Phloem personalised feedback
                 </p>
-                <button
-                  type="button"
+                <Link
+                  href="/phloemai/report"
                   className="inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
                 >
                   Expanded report
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </button>
+                </Link>
               </div>
               <p className="mt-3 text-sm font-bold text-slate-600">
                 Based on your latest diagnostic (2 days ago)
               </p>
-              <p className="mt-4 text-sm font-semibold leading-7 text-[#12184d]">
-                Your latest diagnostic found time pressure as the main factor
-                holding your score back. You&apos;re generally accurate across
-                the board, which is a strong foundation. Your score is being
-                held back by how time is managed in certain sections. In QR,
-                you&apos;re spending too long on calculator-heavy questions,
-                which eats into your overall pace. In VR, you occasionally
-                re-read longer stems, especially in the most information-dense
-                questions. In DM, you slow down when you&apos;re unsure,
-                particularly on harder logic questions, which affects your
-                rhythm. In SJT, your performance is relatively steady and
-                doesn&apos;t need urgent attention right now.
-              </p>
+              <ExpandableText
+                shortText={dashboardFeedbackShort}
+                fullText={dashboardFeedbackFull}
+                className="mt-4 text-sm font-semibold leading-7 text-[#12184d]"
+              />
 
               <div className="mt-6">
                 <h2 className="text-sm font-black">Section observations</h2>
@@ -2779,23 +3115,23 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                           {task.meta}
                         </p>
                       </div>
-                      <button
-                        type="button"
-                        className="h-10 rounded-lg border border-slate-200 px-5 text-sm font-black text-blue-600 transition-colors hover:border-blue-300 hover:bg-blue-50"
+                      <Link
+                        href="/phloemai/question-bank/qr"
+                        className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-200 px-5 text-sm font-black text-blue-600 transition-colors hover:border-blue-300 hover:bg-blue-50"
                       >
                         Start
-                      </button>
+                      </Link>
                     </div>
                   );
                 })}
               </div>
-              <button
-                type="button"
+              <Link
+                href="/phloemai/practice"
                 className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
               >
                 View all tasks
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </button>
+              </Link>
             </section>
 
             <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -2822,13 +3158,13 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                   );
                 })}
               </div>
-              <button
-                type="button"
+              <Link
+                href="/phloemai/progress"
                 className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
               >
                 View all activity
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </button>
+              </Link>
             </section>
 
             <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
@@ -2866,7 +3202,15 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
             </section>
           </div>
           ) : (
-            <DashboardSubpageContent view={view} />
+            <DashboardSubpageContent
+              view={view}
+              firstName={firstName}
+              plan={plan}
+              email={userEmail}
+              checkoutLoading={checkoutLoading}
+              onUpgrade={handleSubscriptionAction}
+              onLogout={handleLogout}
+            />
           )}
         </main>
       </div>
@@ -3122,7 +3466,7 @@ function RedesignedTutorHero() {
                     </div>
                     <ul className="mt-1 space-y-0.5 text-[10px] leading-3 text-slate-100">
                       <li>Triaging</li>
-                      <li>Correctly flagged difficult questions</li>
+                      <li>Correctly identified difficult questions</li>
                     </ul>
                   </div>
                 </div>
@@ -3540,7 +3884,7 @@ function TutorHero() {
           <HowItWorksPanel title="UCAT Preparation" accent="blue">
             <ol className="space-y-3">
               {[
-                "Practice real UCAT-style questions across all sections - Verbal Reasoning, Decision Making, Quantitative Reasoning, and Abstract Reasoning.",
+                "Practice real UCAT-style questions across Verbal Reasoning, Decision Making, Quantitative Reasoning, and Situational Judgement.",
                 "AI identifies your bad habits - unfocused reading patterns, spending too long on the wrong areas, weak technique, and timing issues pinpointed by question type.",
                 "AI delivers tried-and-tested strategies tailored to your specific weaknesses, so you know exactly what to change and how.",
                 "Apply the fixes in your own revision and track your accuracy and speed improving over time.",
@@ -3697,6 +4041,10 @@ export function UCATProgressPage() {
 
 export function UCATReportPage() {
   return <UCATDashboard view="report" />;
+}
+
+export function UCATAccountPage() {
+  return <UCATDashboard view="account" />;
 }
 
 export default PhloemAILandingPage;

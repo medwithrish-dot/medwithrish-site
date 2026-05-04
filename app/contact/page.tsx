@@ -87,6 +87,16 @@ export default function ContactPage() {
                 medwithrish@gmail.com
               </a>
 
+              <p className="mt-3 text-xs font-medium text-gray-400">
+                Prefer WhatsApp/text?{" "}
+                <a
+                  href="tel:+447305422619"
+                  className="font-semibold text-gray-500 transition hover:text-blue-600"
+                >
+                  +44 7305 422619
+                </a>
+              </p>
+
 <div className="mt-6 flex justify-center">
   <SocialLinks />
 </div>
