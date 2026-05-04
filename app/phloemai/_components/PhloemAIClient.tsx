@@ -3137,7 +3137,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                       </div>
                       <Link
                         href="/phloemai/question-bank/qr"
-                        className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-200 px-5 text-sm font-black text-blue-600 transition-colors hover:border-blue-300 hover:bg-blue-50"
+                        className="inline-flex h-10 items-center justify-center rounded-lg border border-amber-300 bg-amber-50 px-5 text-sm font-black text-amber-700 shadow-[inset_0_0_0_1px_rgba(245,158,11,0.18)] transition-colors hover:border-amber-400 hover:bg-amber-100 hover:text-amber-800"
                       >
                         Start
                       </Link>
@@ -3147,7 +3147,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               </div>
               <Link
                 href="/phloemai/practice"
-                className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+                className="mt-5 inline-flex items-center gap-2 text-sm font-black text-amber-700 hover:text-amber-800"
               >
                 View all tasks
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />

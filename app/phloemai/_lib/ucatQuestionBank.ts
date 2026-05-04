@@ -1,12 +1,58 @@
 export type UCATSection = "vr" | "dm" | "qr" | "sjt";
 export type UCATOptionKey = "A" | "B" | "C" | "D";
 
+export type UCATSubtypeId =
+  | "vr-tfc"
+  | "vr-inference"
+  | "vr-author"
+  | "vr-detail"
+  | "dm-syllogisms"
+  | "dm-logic"
+  | "dm-arguments"
+  | "dm-probability-data"
+  | "qr-graphs"
+  | "qr-percentages"
+  | "qr-rates-ratios"
+  | "qr-averages"
+  | "qr-units-geometry"
+  | "sjt-appropriateness"
+  | "sjt-importance"
+  | "sjt-communication"
+  | "sjt-integrity";
+
+export type UCATChartVisual =
+  | {
+      type: "bar";
+      title: string;
+      yLabel: string;
+      categories: Array<{ label: string; value: number }>;
+      max: number;
+      note?: string;
+    }
+  | {
+      type: "line";
+      title: string;
+      yLabel: string;
+      points: Array<{ label: string; value: number }>;
+      max: number;
+      note?: string;
+    }
+  | {
+      type: "table";
+      title: string;
+      headers: string[];
+      rows: string[][];
+      note?: string;
+    };
+
 export type UCATQuestion = {
   id: string;
   section: UCATSection;
+  subtype: UCATSubtypeId;
   title: string;
   leftTitle?: string;
   stimulus: string[];
+  visual?: UCATChartVisual;
   question: string;
   options: Array<{ key: UCATOptionKey; text: string }>;
   answer: UCATOptionKey;
@@ -19,43 +65,192 @@ export const UCAT_SECTIONS: Array<{
   title: string;
   bankTitle: string;
   description: string;
+  secondsPerQuestion: number;
 }> = [
   {
     slug: "vr",
     code: "VR",
     title: "Verbal Reasoning",
-    bankTitle: "Verbal Reasoning Question Bank 1",
-    description: "Read a passage and choose the option best supported by it.",
+    bankTitle: "Verbal Reasoning Practice",
+    description: "Passage comprehension, inference and author attitude.",
+    secondsPerQuestion: 64,
   },
   {
     slug: "dm",
     code: "DM",
     title: "Decision Making",
-    bankTitle: "Decision Making Question Bank 1",
-    description: "Use logic, probability and arguments to choose the best answer.",
+    bankTitle: "Decision Making Practice",
+    description: "Logic, syllogisms, probability, data and arguments.",
+    secondsPerQuestion: 64,
   },
   {
     slug: "qr",
     code: "QR",
     title: "Quantitative Reasoning",
-    bankTitle: "Quantitative Reasoning Question Bank 1",
-    description: "Work through short numerical scenarios and interpret data.",
+    bankTitle: "Quantitative Reasoning Practice",
+    description: "Numerical problem solving across graphs, rates and data.",
+    secondsPerQuestion: 41,
   },
   {
     slug: "sjt",
     code: "SJT",
     title: "Situational Judgement",
-    bankTitle: "Situational Judgement Question Bank 1",
-    description: "Judge professionalism, communication and patient-centred action.",
+    bankTitle: "Situational Judgement Practice",
+    description: "Appropriateness, importance and professional judgement.",
+    secondsPerQuestion: 26,
   },
 ];
+
+export const UCAT_SUBTYPES: Record<
+  UCATSection,
+  Array<{ id: UCATSubtypeId; label: string; description: string }>
+> = {
+  vr: [
+    {
+      id: "vr-tfc",
+      label: "True / false / can't tell",
+      description: "Judge whether a statement follows from the passage.",
+    },
+    {
+      id: "vr-inference",
+      label: "Inference",
+      description: "Choose the statement best supported by the text.",
+    },
+    {
+      id: "vr-author",
+      label: "Author's opinion",
+      description: "Identify tone, attitude or likely author agreement.",
+    },
+    {
+      id: "vr-detail",
+      label: "Main idea and detail",
+      description: "Find the purpose, detail or central reason in the passage.",
+    },
+  ],
+  dm: [
+    {
+      id: "dm-syllogisms",
+      label: "Syllogisms",
+      description: "Decide what must logically follow.",
+    },
+    {
+      id: "dm-logic",
+      label: "Logic puzzles",
+      description: "Apply rules, ordering and constraints.",
+    },
+    {
+      id: "dm-arguments",
+      label: "Arguments",
+      description: "Strengthen, weaken or evaluate reasoning.",
+    },
+    {
+      id: "dm-probability-data",
+      label: "Probability and data",
+      description: "Use probabilities, sets and short data displays.",
+    },
+  ],
+  qr: [
+    {
+      id: "qr-graphs",
+      label: "Graphs and tables",
+      description: "Interpret charts, tables and visual data.",
+    },
+    {
+      id: "qr-percentages",
+      label: "Percentages and finance",
+      description: "Work with change, discounts, tax and margins.",
+    },
+    {
+      id: "qr-rates-ratios",
+      label: "Rates, ratios and units",
+      description: "Scale quantities, speeds, unit costs and rates.",
+    },
+    {
+      id: "qr-averages",
+      label: "Averages and spread",
+      description: "Use mean, median, mode, range and totals.",
+    },
+    {
+      id: "qr-units-geometry",
+      label: "Geometry and conversions",
+      description: "Handle area, volume and everyday conversions.",
+    },
+  ],
+  sjt: [
+    {
+      id: "sjt-appropriateness",
+      label: "Appropriateness",
+      description: "Judge whether an action is suitable in context.",
+    },
+    {
+      id: "sjt-importance",
+      label: "Importance",
+      description: "Judge how important a consideration or action is.",
+    },
+    {
+      id: "sjt-communication",
+      label: "Communication and teamwork",
+      description: "Respond respectfully to patients, peers and colleagues.",
+    },
+    {
+      id: "sjt-integrity",
+      label: "Integrity and confidentiality",
+      description: "Protect trust, fairness and sensitive information.",
+    },
+  ],
+};
 
 export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: [
     {
-      id: "vr-001",
+      id: "vr-tfc-001",
       section: "vr",
-      title: "Verbal Reasoning Question Bank 1",
+      subtype: "vr-tfc",
+      title: "Verbal Reasoning Practice",
+      leftTitle: "Passage",
+      stimulus: [
+        "A city council introduced a cycle-hire scheme after a survey found that many residents made short journeys by car. The first docking stations were placed near rail stops and university buildings. During the first six months, most journeys lasted less than twenty minutes, and usage was highest on weekdays.",
+        "Transport officers cautioned that the scheme's effect on congestion was difficult to measure. Bus passenger numbers also changed during the same period, but a new bus timetable had been introduced at almost the same time. The council plans to compare data over three years before deciding whether to expand the scheme.",
+      ],
+      question:
+        "The cycle-hire scheme caused a fall in bus use. According to the passage, this statement is:",
+      options: [
+        { key: "A", text: "True" },
+        { key: "B", text: "False" },
+        { key: "C", text: "Can't tell" },
+        { key: "D", text: "Irrelevant to the passage" },
+      ],
+      answer: "C",
+      explanation:
+        "Bus passenger numbers changed, but the passage says a timetable change happened at almost the same time, so the cycle scheme cannot be identified as the cause.",
+    },
+    {
+      id: "vr-tfc-002",
+      section: "vr",
+      subtype: "vr-tfc",
+      title: "Verbal Reasoning Practice",
+      leftTitle: "Passage",
+      stimulus: [
+        "A coastal town restored a disused pier using a mixture of charitable donations and council funding. The restored pier now hosts craft stalls, a small exhibition space and seasonal music events. Local hotels reported higher weekend bookings in the summer after it reopened.",
+        "However, the restoration did not solve all of the town's economic problems. Several shops on the high street remained empty, and winter footfall was still low. The council argued that the pier should be viewed as one part of a wider plan rather than a complete solution.",
+      ],
+      question:
+        "The restored pier eliminated the town's economic difficulties. According to the passage, this statement is:",
+      options: [
+        { key: "A", text: "True" },
+        { key: "B", text: "False" },
+        { key: "C", text: "Can't tell" },
+        { key: "D", text: "Only true in winter" },
+      ],
+      answer: "B",
+      explanation:
+        "The passage says empty shops and low winter footfall remained, so the pier did not eliminate the economic difficulties.",
+    },
+    {
+      id: "vr-inference-001",
+      section: "vr",
+      subtype: "vr-inference",
+      title: "Verbal Reasoning Practice",
       leftTitle: "Passage",
       stimulus: [
         "In the late nineteenth century, several towns in northern England built covered market halls. These buildings were not simply places to buy food. They were also civic statements, designed to show that a town was orderly, prosperous and modern. Stallholders paid rent to the council, and inspectors checked weights, measures and hygiene more regularly than they had in open-air markets.",
@@ -73,29 +268,74 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "The passage says some traders welcomed the halls because bad weather no longer reduced trade. The other options use absolute claims not supported by the passage.",
     },
     {
-      id: "vr-002",
+      id: "vr-inference-002",
       section: "vr",
-      title: "Verbal Reasoning Question Bank 1",
+      subtype: "vr-inference",
+      title: "Verbal Reasoning Practice",
+      leftTitle: "Passage",
+      stimulus: [
+        "Researchers testing a new honey-based wound dressing found that it reduced bacterial growth in laboratory samples. The dressing was cheaper than some synthetic alternatives, but it had not yet been tested in large clinical trials. Nurses who used early samples said it was easy to apply, although some patients disliked its smell.",
+        "The research team argued that the dressing was promising but should not replace standard products until stronger evidence was available. They also noted that cost savings would matter only if the dressing performed at least as well as existing treatments in real patients.",
+      ],
+      question: "Which statement is best supported by the passage?",
+      options: [
+        { key: "A", text: "The dressing is ready to replace all standard wound products." },
+        { key: "B", text: "The dressing has shown potential but needs stronger clinical evidence." },
+        { key: "C", text: "Patients preferred the dressing to every synthetic alternative." },
+        { key: "D", text: "The dressing was more expensive than existing treatments." },
+      ],
+      answer: "B",
+      explanation:
+        "The team calls the dressing promising but says it should not replace standard products until better evidence is available.",
+    },
+    {
+      id: "vr-author-001",
+      section: "vr",
+      subtype: "vr-author",
+      title: "Verbal Reasoning Practice",
       leftTitle: "Passage",
       stimulus: [
         "Octopuses are often described as solitary animals, but this label can be misleading. In the wild, many species spend long periods alone, yet they also interact with rivals, potential mates and predators in complex ways. Some can change colour rapidly, not only to hide but also to signal aggression or uncertainty.",
         "Researchers are cautious about calling these signals a language. Unlike human speech, the displays do not appear to have fixed meanings in every context. A dark colour pattern, for example, may precede an attack in one situation but simply reflect stress in another. The same behaviour can therefore be informative without being symbolic.",
       ],
-      question: "Which statement is best supported by the passage?",
+      question:
+        "The author's attitude towards describing octopus colour displays as a language is best described as:",
       options: [
-        { key: "A", text: "Octopus colour displays always have fixed meanings." },
-        { key: "B", text: "Octopuses are incapable of interacting with other animals." },
-        { key: "C", text: "Researchers avoid overstating what octopus signals mean." },
-        { key: "D", text: "Octopus displays are identical to human language." },
+        { key: "A", text: "enthusiastic, because the displays always have fixed meanings." },
+        { key: "B", text: "dismissive, because octopuses rarely communicate." },
+        { key: "C", text: "cautious, because the displays vary with context." },
+        { key: "D", text: "certain, because the displays match human speech." },
       ],
       answer: "C",
       explanation:
-        "The passage says researchers are cautious about calling the signals a language and notes that the same display can mean different things in different contexts.",
+        "The passage says researchers are cautious and explains that the same display can mean different things in different contexts.",
     },
     {
-      id: "vr-003",
+      id: "vr-author-002",
       section: "vr",
-      title: "Verbal Reasoning Question Bank 1",
+      subtype: "vr-author",
+      title: "Verbal Reasoning Practice",
+      leftTitle: "Passage",
+      stimulus: [
+        "Several schools have replaced annual prize ceremonies with smaller termly recognition events. Supporters argue that pupils who improve steadily are more likely to be noticed, rather than only those who finish top of a year group. Critics worry that frequent awards reduce the meaning of success.",
+        "The author notes that both concerns have some force, but suggests that the design of the awards matters more than their frequency. A certificate for every minor task may feel empty, whereas a carefully chosen recognition of effort or contribution can reinforce the behaviour a school values.",
+      ],
+      question: "Which view would the author most likely support?",
+      options: [
+        { key: "A", text: "Frequent awards are always harmful." },
+        { key: "B", text: "Only academic winners should receive recognition." },
+        { key: "C", text: "Recognition can be useful if it is selective and meaningful." },
+        { key: "D", text: "Schools should avoid recognising effort or contribution." },
+      ],
+      answer: "C",
+      explanation:
+        "The author does not reject frequent awards entirely, but stresses that awards should be carefully chosen and meaningful.",
+    },
+    {
+      id: "vr-detail-001",
+      section: "vr",
+      subtype: "vr-detail",
+      title: "Verbal Reasoning Practice",
       leftTitle: "Passage",
       stimulus: [
         "A small island museum recently stopped displaying a set of navigational charts. The charts were fragile, and light exposure had begun to fade the ink. Instead, the museum created high-resolution digital copies and placed the originals in climate-controlled storage.",
@@ -112,12 +352,34 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       explanation:
         "The passage emphasises fragility, fading ink and preservation. It explicitly says visitor numbers did not fall.",
     },
+    {
+      id: "vr-detail-002",
+      section: "vr",
+      subtype: "vr-detail",
+      title: "Verbal Reasoning Practice",
+      leftTitle: "Passage",
+      stimulus: [
+        "A university archive began recruiting volunteers to describe old photographs. Many images had been donated without dates, locations or names. Volunteers were asked to record visible details such as street signs, clothing and shop fronts, which professional archivists could later check against other records.",
+        "The project did not allow volunteers to make final identifications. Archive staff said this prevented confident but inaccurate guesses from entering the catalogue. The aim was to speed up research while keeping the final record reliable.",
+      ],
+      question: "Why were volunteers asked to record visible details?",
+      options: [
+        { key: "A", text: "So they could replace professional archivists." },
+        { key: "B", text: "So archivists could later compare the details with other records." },
+        { key: "C", text: "So the archive could avoid checking their work." },
+        { key: "D", text: "So photographs without dates could be discarded." },
+      ],
+      answer: "B",
+      explanation:
+        "The passage says volunteers recorded details that professional archivists could later check against other records.",
+    },
   ],
   dm: [
     {
-      id: "dm-001",
+      id: "dm-logic-001",
       section: "dm",
-      title: "Decision Making Question Bank 1",
+      subtype: "dm-logic",
+      title: "Decision Making Practice",
       leftTitle: "Information",
       stimulus: [
         "A clinic runs four appointment types: blood test, review, vaccination and dressing change. Blood tests are always before 10:30. Reviews are never on Friday. Dressing changes are only on Tuesday or Thursday. Vaccinations can be on any weekday except Tuesday.",
@@ -135,9 +397,30 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "A blood test must be before 10:30, so it cannot be 11:00. Vaccinations cannot be on Tuesday. Dressing changes can be Tuesday, and reviews are allowed on Tuesday because they are only excluded on Friday.",
     },
     {
-      id: "dm-002",
+      id: "dm-logic-002",
       section: "dm",
-      title: "Decision Making Question Bank 1",
+      subtype: "dm-logic",
+      title: "Decision Making Practice",
+      leftTitle: "Information",
+      stimulus: [
+        "Four students, Hana, Idris, Maya and Theo, each give one presentation. Hana presents before Theo. Maya presents immediately after Idris. Theo does not present last.",
+      ],
+      question: "Which order is possible?",
+      options: [
+        { key: "A", text: "Hana, Idris, Maya, Theo" },
+        { key: "B", text: "Idris, Maya, Theo, Hana" },
+        { key: "C", text: "Maya, Idris, Hana, Theo" },
+        { key: "D", text: "Hana, Theo, Idris, Maya" },
+      ],
+      answer: "D",
+      explanation:
+        "Hana is before Theo, Maya is immediately after Idris, and Theo is not last. Only Hana, Theo, Idris, Maya satisfies all three rules.",
+    },
+    {
+      id: "dm-arguments-001",
+      section: "dm",
+      subtype: "dm-arguments",
+      title: "Decision Making Practice",
       leftTitle: "Argument",
       stimulus: [
         "A local council is considering extending library opening hours. Supporters say students need quiet study spaces after school. Opponents say online resources mean longer opening hours are unnecessary.",
@@ -155,9 +438,30 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "High use after school directly supports the claim that students need access during later hours. The other options either weaken, distract from, or do not directly support the argument.",
     },
     {
-      id: "dm-003",
+      id: "dm-arguments-002",
       section: "dm",
-      title: "Decision Making Question Bank 1",
+      subtype: "dm-arguments",
+      title: "Decision Making Practice",
+      leftTitle: "Argument",
+      stimulus: [
+        "A hospital manager argues that reminder texts should be stopped because missed appointment rates were unchanged in one small department last month. The manager says the texts are therefore pointless.",
+      ],
+      question: "Which option best identifies a weakness in the manager's argument?",
+      options: [
+        { key: "A", text: "The argument uses one small department and one month to judge the whole policy." },
+        { key: "B", text: "The argument explains how reminder texts are written." },
+        { key: "C", text: "The argument proves that patients dislike text messages." },
+        { key: "D", text: "The argument compares reminder texts with phone calls." },
+      ],
+      answer: "A",
+      explanation:
+        "The conclusion is too broad for the evidence. One department over one month may not represent the effect of reminder texts overall.",
+    },
+    {
+      id: "dm-probability-001",
+      section: "dm",
+      subtype: "dm-probability-data",
+      title: "Decision Making Practice",
       leftTitle: "Probability",
       stimulus: [
         "A box contains 5 blue tokens, 3 red tokens and 2 green tokens. One token is chosen at random and not replaced. A second token is then chosen at random.",
@@ -173,12 +477,287 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       explanation:
         "The probability is 5/10 for the first blue token, then 4/9 for the second blue token. 5/10 x 4/9 = 20/90 = 2/9.",
     },
+    {
+      id: "dm-probability-002",
+      section: "dm",
+      subtype: "dm-probability-data",
+      title: "Decision Making Practice",
+      leftTitle: "Data",
+      stimulus: [
+        "In a group of 40 applicants, 22 study biology, 18 study chemistry and 10 study both biology and chemistry.",
+      ],
+      question: "How many applicants study neither biology nor chemistry?",
+      options: [
+        { key: "A", text: "8" },
+        { key: "B", text: "10" },
+        { key: "C", text: "12" },
+        { key: "D", text: "14" },
+      ],
+      answer: "B",
+      explanation:
+        "The number studying at least one is 22 + 18 - 10 = 30. Therefore 40 - 30 = 10 study neither.",
+    },
+    {
+      id: "dm-syllogisms-001",
+      section: "dm",
+      subtype: "dm-syllogisms",
+      title: "Decision Making Practice",
+      leftTitle: "Syllogism",
+      stimulus: [
+        "All mentors at the centre are trained volunteers. No trained volunteers are paid employees.",
+      ],
+      question: "Which conclusion must follow?",
+      options: [
+        { key: "A", text: "No mentors at the centre are paid employees." },
+        { key: "B", text: "All paid employees are mentors." },
+        { key: "C", text: "Some trained volunteers are mentors." },
+        { key: "D", text: "No paid employees work at the centre." },
+      ],
+      answer: "A",
+      explanation:
+        "If all mentors are trained volunteers, and no trained volunteers are paid employees, then no mentors are paid employees.",
+    },
+    {
+      id: "dm-syllogisms-002",
+      section: "dm",
+      subtype: "dm-syllogisms",
+      title: "Decision Making Practice",
+      leftTitle: "Syllogism",
+      stimulus: [
+        "Some online courses include live tutorials. All courses with live tutorials require advance booking.",
+      ],
+      question: "Which conclusion must follow?",
+      options: [
+        { key: "A", text: "All online courses require advance booking." },
+        { key: "B", text: "Some online courses require advance booking." },
+        { key: "C", text: "No courses without live tutorials require advance booking." },
+        { key: "D", text: "All courses requiring advance booking include live tutorials." },
+      ],
+      answer: "B",
+      explanation:
+        "At least some online courses have live tutorials, and every course with live tutorials requires advance booking. Therefore some online courses require advance booking.",
+    },
   ],
   qr: [
     {
-      id: "qr-001",
+      id: "qr-graphs-001",
       section: "qr",
-      title: "Quantitative Reasoning Question Bank 1",
+      subtype: "qr-graphs",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Graph",
+      stimulus: [
+        "The bar chart shows attendances at an evening clinic over five weekdays.",
+      ],
+      visual: {
+        type: "bar",
+        title: "Evening clinic attendances",
+        yLabel: "Attendances",
+        max: 80,
+        categories: [
+          { label: "Mon", value: 42 },
+          { label: "Tue", value: 58 },
+          { label: "Wed", value: 51 },
+          { label: "Thu", value: 67 },
+          { label: "Fri", value: 62 },
+        ],
+        note: "Values are attendances per evening.",
+      },
+      question:
+        "The combined attendance on Wednesday and Thursday was what percentage of the combined attendance on Monday and Tuesday?",
+      options: [
+        { key: "A", text: "108%" },
+        { key: "B", text: "112%" },
+        { key: "C", text: "118%" },
+        { key: "D", text: "124%" },
+      ],
+      answer: "C",
+      explanation:
+        "Wednesday and Thursday total 51 + 67 = 118. Monday and Tuesday total 42 + 58 = 100. 118 as a percentage of 100 is 118%.",
+    },
+    {
+      id: "qr-graphs-002",
+      section: "qr",
+      subtype: "qr-graphs",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Graph",
+      stimulus: [
+        "The line graph shows average waiting time at a walk-in clinic from January to May.",
+      ],
+      visual: {
+        type: "line",
+        title: "Average waiting time",
+        yLabel: "Minutes",
+        max: 30,
+        points: [
+          { label: "Jan", value: 18 },
+          { label: "Feb", value: 22 },
+          { label: "Mar", value: 20 },
+          { label: "Apr", value: 16 },
+          { label: "May", value: 14 },
+        ],
+        note: "Average waiting time is shown to the nearest minute.",
+      },
+      question:
+        "From February to May, by approximately what percentage did the average waiting time decrease?",
+      options: [
+        { key: "A", text: "28%" },
+        { key: "B", text: "36%" },
+        { key: "C", text: "44%" },
+        { key: "D", text: "57%" },
+      ],
+      answer: "B",
+      explanation:
+        "The decrease is 22 - 14 = 8 minutes. 8/22 x 100 = 36.4%, which is approximately 36%.",
+    },
+    {
+      id: "qr-graphs-003",
+      section: "qr",
+      subtype: "qr-graphs",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Graph",
+      stimulus: [
+        "The bar chart shows the number of lab samples processed in one morning.",
+      ],
+      visual: {
+        type: "bar",
+        title: "Lab samples processed",
+        yLabel: "Samples",
+        max: 140,
+        categories: [
+          { label: "Blood", value: 120 },
+          { label: "Urine", value: 80 },
+          { label: "Swab", value: 64 },
+          { label: "Other", value: 36 },
+        ],
+        note: "Repeat testing is needed for 25% of blood samples and 10% of urine samples.",
+      },
+      question: "How many blood and urine samples in total need repeat testing?",
+      options: [
+        { key: "A", text: "32" },
+        { key: "B", text: "34" },
+        { key: "C", text: "38" },
+        { key: "D", text: "42" },
+      ],
+      answer: "C",
+      explanation:
+        "25% of 120 blood samples is 30. 10% of 80 urine samples is 8. Total repeat tests = 38.",
+    },
+    {
+      id: "qr-graphs-004",
+      section: "qr",
+      subtype: "qr-graphs",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Table",
+      stimulus: [
+        "The table shows bookings for three revision workshops.",
+      ],
+      visual: {
+        type: "table",
+        title: "Workshop bookings",
+        headers: ["Workshop", "Capacity", "Booked"],
+        rows: [
+          ["Verbal", "80", "68"],
+          ["Decision", "72", "54"],
+          ["Quantitative", "90", "81"],
+        ],
+        note: "Each booked place is paid for.",
+      },
+      question: "Which workshop has the highest percentage of places booked?",
+      options: [
+        { key: "A", text: "Verbal" },
+        { key: "B", text: "Decision" },
+        { key: "C", text: "Quantitative" },
+        { key: "D", text: "Verbal and Decision are tied" },
+      ],
+      answer: "C",
+      explanation:
+        "Verbal is 68/80 = 85%, Decision is 54/72 = 75%, and Quantitative is 81/90 = 90%. Quantitative is highest.",
+    },
+    {
+      id: "qr-percentages-001",
+      section: "qr",
+      subtype: "qr-percentages",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
+      stimulus: [
+        "A clinic ordered 240 vaccine doses. By noon, 35% had been used. By the end of the day, a further 78 doses had been used.",
+      ],
+      question: "How many doses were left at the end of the day?",
+      options: [
+        { key: "A", text: "72" },
+        { key: "B", text: "78" },
+        { key: "C", text: "84" },
+        { key: "D", text: "96" },
+      ],
+      answer: "B",
+      explanation:
+        "35% of 240 is 84. Total used = 84 + 78 = 162. Doses left = 240 - 162 = 78.",
+    },
+    {
+      id: "qr-percentages-002",
+      section: "qr",
+      subtype: "qr-percentages",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
+      stimulus: [
+        "A revision course costs GBP 180 before VAT. VAT is charged at 20%. A student receives a 15% discount on the pre-VAT price before VAT is added.",
+      ],
+      question: "What is the final price paid?",
+      options: [
+        { key: "A", text: "GBP 153.00" },
+        { key: "B", text: "GBP 183.60" },
+        { key: "C", text: "GBP 189.00" },
+        { key: "D", text: "GBP 216.00" },
+      ],
+      answer: "B",
+      explanation:
+        "15% off GBP 180 gives GBP 153. VAT at 20% adds GBP 30.60, so the final price is GBP 183.60.",
+    },
+    {
+      id: "qr-rates-001",
+      section: "qr",
+      subtype: "qr-rates-ratios",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
+      stimulus: [
+        "A packaging machine labels 480 packs in 2 hours 30 minutes. It works at a constant rate.",
+      ],
+      question: "How many packs does the machine label per hour?",
+      options: [
+        { key: "A", text: "160" },
+        { key: "B", text: "180" },
+        { key: "C", text: "192" },
+        { key: "D", text: "210" },
+      ],
+      answer: "C",
+      explanation:
+        "2 hours 30 minutes is 2.5 hours. 480 / 2.5 = 192 packs per hour.",
+    },
+    {
+      id: "qr-rates-002",
+      section: "qr",
+      subtype: "qr-rates-ratios",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
+      stimulus: [
+        "A fund of GBP 450 is split between three departments in the ratio 3:5:7.",
+      ],
+      question: "How much does the department with the largest share receive?",
+      options: [
+        { key: "A", text: "GBP 150" },
+        { key: "B", text: "GBP 180" },
+        { key: "C", text: "GBP 210" },
+        { key: "D", text: "GBP 240" },
+      ],
+      answer: "C",
+      explanation:
+        "The ratio has 3 + 5 + 7 = 15 parts. Each part is GBP 450 / 15 = GBP 30. The largest share is 7 parts, so 7 x GBP 30 = GBP 210.",
+    },
+    {
+      id: "qr-averages-001",
+      section: "qr",
+      subtype: "qr-averages",
+      title: "Quantitative Reasoning Practice",
       leftTitle: "Data",
       stimulus: [
         "A student tracks the number of UCAT questions completed over four days: Monday 24, Tuesday 36, Wednesday 30, Thursday 42.",
@@ -196,49 +775,72 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "Add the four values: 24 + 36 + 30 + 42 = 132. Divide by 4 to get 33.",
     },
     {
-      id: "qr-002",
+      id: "qr-averages-002",
       section: "qr",
-      title: "Quantitative Reasoning Question Bank 1",
+      subtype: "qr-averages",
+      title: "Quantitative Reasoning Practice",
       leftTitle: "Data",
       stimulus: [
-        "A clinic ordered 240 vaccine doses. By noon, 35% had been used. By the end of the day, a further 78 doses had been used.",
+        "Seven practice set scores were: 48%, 52%, 55%, 59%, 62%, 62% and 70%.",
       ],
-      question: "How many doses were left at the end of the day?",
+      question: "What is the range of the scores?",
       options: [
-        { key: "A", text: "72" },
-        { key: "B", text: "78" },
-        { key: "C", text: "84" },
-        { key: "D", text: "96" },
+        { key: "A", text: "18 percentage points" },
+        { key: "B", text: "20 percentage points" },
+        { key: "C", text: "22 percentage points" },
+        { key: "D", text: "24 percentage points" },
       ],
-      answer: "B",
+      answer: "C",
       explanation:
-        "35% of 240 is 84. Total used = 84 + 78 = 162. Doses left = 240 - 162 = 78.",
+        "The range is the highest value minus the lowest value: 70 - 48 = 22 percentage points.",
     },
     {
-      id: "qr-003",
+      id: "qr-geometry-001",
       section: "qr",
-      title: "Quantitative Reasoning Question Bank 1",
-      leftTitle: "Table",
+      subtype: "qr-units-geometry",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
       stimulus: [
-        "A revision course costs GBP 180 before VAT. VAT is charged at 20%. A student receives a 15% discount on the pre-VAT price before VAT is added.",
+        "A rectangular notice board is 1.8 m wide and 1.2 m high. A border of 10 cm is left around the inside edge before posters are placed.",
       ],
-      question: "What is the final price paid?",
+      question: "What is the poster area inside the border?",
       options: [
-        { key: "A", text: "GBP 153.00" },
-        { key: "B", text: "GBP 183.60" },
-        { key: "C", text: "GBP 189.00" },
-        { key: "D", text: "GBP 216.00" },
+        { key: "A", text: "1.60 m2" },
+        { key: "B", text: "1.80 m2" },
+        { key: "C", text: "2.00 m2" },
+        { key: "D", text: "2.16 m2" },
       ],
-      answer: "B",
+      answer: "A",
       explanation:
-        "15% off GBP 180 gives GBP 153. VAT at 20% adds GBP 30.60, so the final price is GBP 183.60.",
+        "A 10 cm border on both sides reduces width by 0.2 m and height by 0.2 m. Poster area = 1.6 x 1.0 = 1.60 m2.",
+    },
+    {
+      id: "qr-geometry-002",
+      section: "qr",
+      subtype: "qr-units-geometry",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
+      stimulus: [
+        "A walking route is 12 km long. Use 1 mile = 1.6 km.",
+      ],
+      question: "What is the length of the route in miles?",
+      options: [
+        { key: "A", text: "6.8 miles" },
+        { key: "B", text: "7.2 miles" },
+        { key: "C", text: "7.5 miles" },
+        { key: "D", text: "8.0 miles" },
+      ],
+      answer: "C",
+      explanation:
+        "12 km / 1.6 km per mile = 7.5 miles.",
     },
   ],
   sjt: [
     {
-      id: "sjt-001",
+      id: "sjt-appropriateness-001",
       section: "sjt",
-      title: "Situational Judgement Question Bank 1",
+      subtype: "sjt-appropriateness",
+      title: "Situational Judgement Practice",
       leftTitle: "Scenario",
       stimulus: [
         "You are shadowing a junior doctor on a ward. A patient asks you whether their test results show cancer. You have seen the results on the computer, but the doctor has not yet discussed them with the patient.",
@@ -255,9 +857,70 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "As a student observing, you should not disclose or interpret results. You should acknowledge the concern and direct the patient to the responsible doctor.",
     },
     {
-      id: "sjt-002",
+      id: "sjt-appropriateness-002",
       section: "sjt",
-      title: "Situational Judgement Question Bank 1",
+      subtype: "sjt-appropriateness",
+      title: "Situational Judgement Practice",
+      leftTitle: "Scenario",
+      stimulus: [
+        "You accidentally give a visitor the wrong directions in a hospital. Ten minutes later you see them looking distressed because they have missed the start of an appointment.",
+      ],
+      question: "How appropriate is it to apologise and help them find the right clinic?",
+      options: [
+        { key: "A", text: "Very appropriate" },
+        { key: "B", text: "Appropriate, but not ideal" },
+        { key: "C", text: "Inappropriate, but not awful" },
+        { key: "D", text: "Very inappropriate" },
+      ],
+      answer: "A",
+      explanation:
+        "Taking responsibility, apologising and helping the visitor is respectful and practical.",
+    },
+    {
+      id: "sjt-importance-001",
+      section: "sjt",
+      subtype: "sjt-importance",
+      title: "Situational Judgement Practice",
+      leftTitle: "Scenario",
+      stimulus: [
+        "During a placement, you notice a team member repeatedly entering patient rooms without using hand gel. You are unsure whether anyone else has noticed.",
+      ],
+      question: "How important is it to raise the concern with an appropriate member of staff?",
+      options: [
+        { key: "A", text: "Very important" },
+        { key: "B", text: "Important" },
+        { key: "C", text: "Of minor importance" },
+        { key: "D", text: "Not important at all" },
+      ],
+      answer: "A",
+      explanation:
+        "Infection control affects patient safety, so raising the concern appropriately is very important.",
+    },
+    {
+      id: "sjt-importance-002",
+      section: "sjt",
+      subtype: "sjt-importance",
+      title: "Situational Judgement Practice",
+      leftTitle: "Scenario",
+      stimulus: [
+        "After a group presentation, your tutor gives feedback that your explanation was accurate but too fast for the audience. You have another presentation next week.",
+      ],
+      question: "How important is it to reflect on the feedback before the next presentation?",
+      options: [
+        { key: "A", text: "Very important" },
+        { key: "B", text: "Important" },
+        { key: "C", text: "Of minor importance" },
+        { key: "D", text: "Not important at all" },
+      ],
+      answer: "A",
+      explanation:
+        "Reflecting on feedback before a similar task is central to improvement and professionalism.",
+    },
+    {
+      id: "sjt-communication-001",
+      section: "sjt",
+      subtype: "sjt-communication",
+      title: "Situational Judgement Practice",
       leftTitle: "Scenario",
       stimulus: [
         "During a group project, one member repeatedly misses meetings and submits their work late. The deadline is close, and the rest of the group is frustrated.",
@@ -274,9 +937,30 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "A private, respectful conversation explores whether there are underlying issues and gives the student a chance to improve before escalation.",
     },
     {
-      id: "sjt-003",
+      id: "sjt-communication-002",
       section: "sjt",
-      title: "Situational Judgement Question Bank 1",
+      subtype: "sjt-communication",
+      title: "Situational Judgement Practice",
+      leftTitle: "Scenario",
+      stimulus: [
+        "A patient becomes angry at reception because their appointment has been delayed. You are observing nearby and the receptionist is trying to stay calm.",
+      ],
+      question: "How appropriate is it to listen calmly and offer to find a staff member who can update them?",
+      options: [
+        { key: "A", text: "Very appropriate" },
+        { key: "B", text: "Appropriate, but not ideal" },
+        { key: "C", text: "Inappropriate, but not awful" },
+        { key: "D", text: "Very inappropriate" },
+      ],
+      answer: "A",
+      explanation:
+        "Listening calmly and seeking an appropriate update supports communication without pretending to have authority you do not have.",
+    },
+    {
+      id: "sjt-integrity-001",
+      section: "sjt",
+      subtype: "sjt-integrity",
+      title: "Situational Judgement Practice",
       leftTitle: "Scenario",
       stimulus: [
         "You notice another applicant sharing details online about interview stations they completed earlier that day. The medical school had clearly told candidates not to discuss station content.",
@@ -292,6 +976,26 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       explanation:
         "Ignoring known unfair behaviour undermines integrity. You should avoid using the information and consider reporting it through the appropriate channel.",
     },
+    {
+      id: "sjt-integrity-002",
+      section: "sjt",
+      subtype: "sjt-integrity",
+      title: "Situational Judgement Practice",
+      leftTitle: "Scenario",
+      stimulus: [
+        "A friend asks you to take a quick photo of a ward whiteboard because they are curious about how hospitals organise patients. The board includes patient names and bed numbers.",
+      ],
+      question: "How appropriate is it to take the photo if you do not share it publicly?",
+      options: [
+        { key: "A", text: "Very appropriate" },
+        { key: "B", text: "Appropriate, but not ideal" },
+        { key: "C", text: "Inappropriate, but not awful" },
+        { key: "D", text: "Very inappropriate" },
+      ],
+      answer: "D",
+      explanation:
+        "Taking a photo of identifiable patient information breaches confidentiality, even if you do not post it publicly.",
+    },
   ],
 };
 
@@ -301,4 +1005,12 @@ export function isUCATSection(value: string): value is UCATSection {
 
 export function getUCATSectionMeta(section: UCATSection) {
   return UCAT_SECTIONS.find((item) => item.slug === section) ?? UCAT_SECTIONS[0];
+}
+
+export function getUCATSubtypeMeta(subtype: UCATSubtypeId) {
+  return (
+    Object.values(UCAT_SUBTYPES)
+      .flat()
+      .find((item) => item.id === subtype) ?? UCAT_SUBTYPES.vr[0]
+  );
 }
