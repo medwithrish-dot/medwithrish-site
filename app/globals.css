@@ -38,12 +38,313 @@ body {
   }
 }
 
-.phloem-dashboard-zoom {
-  width: 125%;
-  min-height: 125vh;
-  zoom: 0.8;
+.phloem-dashboard-compact {
+  font-size: 14px;
 }
 
-.phloem-dashboard-zoom > .grid {
-  min-height: 125vh;
+.phloem-dashboard-compact .p-6 {
+  padding: 1rem;
+}
+
+.phloem-dashboard-compact .p-5 {
+  padding: 0.875rem;
+}
+
+.phloem-dashboard-compact .p-4 {
+  padding: 0.75rem;
+}
+
+.phloem-dashboard-compact .p-3 {
+  padding: 0.55rem;
+}
+
+.phloem-dashboard-compact .p-2 {
+  padding: 0.35rem;
+}
+
+.phloem-dashboard-compact .px-8 {
+  padding-left: 1.15rem;
+  padding-right: 1.15rem;
+}
+
+.phloem-dashboard-compact .px-6 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.phloem-dashboard-compact .px-5 {
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+}
+
+.phloem-dashboard-compact .px-4 {
+  padding-left: 0.7rem;
+  padding-right: 0.7rem;
+}
+
+.phloem-dashboard-compact .px-3 {
+  padding-left: 0.55rem;
+  padding-right: 0.55rem;
+}
+
+.phloem-dashboard-compact .py-6 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.phloem-dashboard-compact .py-5 {
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
+.phloem-dashboard-compact .py-4 {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+}
+
+.phloem-dashboard-compact .gap-6 {
+  gap: 1rem;
+}
+
+.phloem-dashboard-compact .gap-5 {
+  gap: 0.85rem;
+}
+
+.phloem-dashboard-compact .gap-4 {
+  gap: 0.7rem;
+}
+
+.phloem-dashboard-compact .gap-3 {
+  gap: 0.5rem;
+}
+
+.phloem-dashboard-compact .space-y-5 > :not(:last-child) {
+  margin-bottom: 0.85rem;
+}
+
+.phloem-dashboard-compact .space-y-4 > :not(:last-child) {
+  margin-bottom: 0.7rem;
+}
+
+.phloem-dashboard-compact .space-y-3 > :not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+.phloem-dashboard-compact .mt-10 {
+  margin-top: 1.6rem;
+}
+
+.phloem-dashboard-compact .mt-8 {
+  margin-top: 1.25rem;
+}
+
+.phloem-dashboard-compact .mt-7 {
+  margin-top: 1.05rem;
+}
+
+.phloem-dashboard-compact .mt-6 {
+  margin-top: 0.9rem;
+}
+
+.phloem-dashboard-compact .mt-5 {
+  margin-top: 0.8rem;
+}
+
+.phloem-dashboard-compact .mt-4 {
+  margin-top: 0.65rem;
+}
+
+.phloem-dashboard-compact .mt-3 {
+  margin-top: 0.5rem;
+}
+
+.phloem-dashboard-compact .mt-2 {
+  margin-top: 0.3rem;
+}
+
+.phloem-dashboard-compact .h-16 {
+  height: 3rem;
+}
+
+.phloem-dashboard-compact .w-16 {
+  width: 3rem;
+}
+
+.phloem-dashboard-compact .h-14 {
+  height: 2.55rem;
+}
+
+.phloem-dashboard-compact .w-14 {
+  width: 2.55rem;
+}
+
+.phloem-dashboard-compact .h-12 {
+  height: 2.25rem;
+}
+
+.phloem-dashboard-compact .w-12 {
+  width: 2.25rem;
+}
+
+.phloem-dashboard-compact .h-11 {
+  height: 2.05rem;
+}
+
+.phloem-dashboard-compact .w-11 {
+  width: 2.05rem;
+}
+
+.phloem-dashboard-compact .h-10 {
+  height: 1.9rem;
+}
+
+.phloem-dashboard-compact .w-10 {
+  width: 1.9rem;
+}
+
+.phloem-dashboard-compact .h-9 {
+  height: 1.75rem;
+}
+
+.phloem-dashboard-compact .h-56 {
+  height: 12rem;
+}
+
+.phloem-dashboard-compact .h-8 {
+  height: 1.5rem;
+}
+
+.phloem-dashboard-compact .w-8 {
+  width: 1.5rem;
+}
+
+.phloem-dashboard-compact .h-7 {
+  height: 1.25rem;
+}
+
+.phloem-dashboard-compact .w-7 {
+  width: 1.25rem;
+}
+
+.phloem-dashboard-compact .h-6 {
+  height: 1.1rem;
+}
+
+.phloem-dashboard-compact .w-6 {
+  width: 1.1rem;
+}
+
+.phloem-dashboard-compact .h-5 {
+  height: 0.95rem;
+}
+
+.phloem-dashboard-compact .w-5 {
+  width: 0.95rem;
+}
+
+.phloem-dashboard-compact .h-4 {
+  height: 0.8rem;
+}
+
+.phloem-dashboard-compact .w-4 {
+  width: 0.8rem;
+}
+
+.phloem-dashboard-compact .rounded-xl {
+  border-radius: 0.6rem;
+}
+
+.phloem-dashboard-compact .rounded-2xl {
+  border-radius: 0.75rem;
+}
+
+.phloem-dashboard-compact .text-4xl {
+  font-size: 1.75rem;
+  line-height: 2.05rem;
+}
+
+.phloem-dashboard-compact .text-3xl {
+  font-size: 1.45rem;
+  line-height: 1.7rem;
+}
+
+.phloem-dashboard-compact .text-2xl {
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+}
+
+.phloem-dashboard-compact .text-xl {
+  font-size: 1rem;
+  line-height: 1.35rem;
+}
+
+.phloem-dashboard-compact .text-lg {
+  font-size: 0.925rem;
+  line-height: 1.3rem;
+}
+
+.phloem-dashboard-compact .text-base {
+  font-size: 0.86rem;
+  line-height: 1.3rem;
+}
+
+.phloem-dashboard-compact .text-sm {
+  font-size: 0.74rem;
+  line-height: 1.05rem;
+}
+
+.phloem-dashboard-compact .text-xs {
+  font-size: 0.64rem;
+  line-height: 0.9rem;
+}
+
+.phloem-dashboard-compact .leading-7 {
+  line-height: 1.35rem;
+}
+
+.phloem-dashboard-compact .leading-6 {
+  line-height: 1.15rem;
+}
+
+.phloem-dashboard-compact .leading-5 {
+  line-height: 1rem;
+}
+
+.phloem-dashboard-compact .leading-4 {
+  line-height: 1rem;
+}
+
+.phloem-dashboard-compact .leading-none {
+  line-height: 1;
+}
+
+@media (min-width: 40rem) {
+  .phloem-dashboard-compact .sm\:p-6 {
+    padding: 1rem;
+  }
+
+  .phloem-dashboard-compact .sm\:text-xl {
+    font-size: 1rem;
+    line-height: 1.35rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .phloem-dashboard-compact .lg\:px-8 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .phloem-dashboard-compact .lg\:px-6 {
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+  }
+
+  .phloem-dashboard-compact .lg\:pt-5 {
+    padding-top: 0.875rem;
+  }
+
+  .phloem-dashboard-compact .lg\:gap-5 {
+    gap: 0.85rem;
+  }
 }
