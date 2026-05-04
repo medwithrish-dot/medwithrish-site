@@ -2867,8 +2867,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
   return (
     <div className="phloem-app-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
-      <div className="grid min-h-screen lg:grid-cols-[220px_1fr]">
-        <aside className="border-r border-slate-200 bg-white px-4 py-6">
+      <div className="grid min-h-screen lg:grid-cols-[190px_1fr]">
+        <aside className="border-r border-slate-200 bg-white px-3 py-5">
           <div className="flex items-center gap-3 px-1">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
               <Brain className="h-7 w-7" aria-hidden="true" />
