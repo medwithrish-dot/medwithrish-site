@@ -4,6 +4,47 @@ import { createClient as createServerSupabaseClient } from "@/utils/supabase/ser
 
 export const runtime = "nodejs";
 
+async function createCustomer({
+  admin,
+  stripe,
+  userId,
+  email,
+  fullName,
+}: {
+  admin: ReturnType<typeof createAdminClient>;
+  stripe: ReturnType<typeof createStripeClient>;
+  userId: string;
+  email?: string;
+  fullName?: string | null;
+}) {
+  const customer = await stripe.customers.create({
+    email,
+    name: fullName?.trim() ? fullName : undefined,
+    metadata: {
+      supabase_user_id: userId,
+    },
+  });
+
+  await admin
+    .from("profiles")
+    .update({ stripe_customer_id: customer.id })
+    .eq("id", userId);
+
+  return customer.id;
+}
+
+async function customerExists(
+  stripe: ReturnType<typeof createStripeClient>,
+  customerId: string
+) {
+  try {
+    const customer = await stripe.customers.retrieve(customerId);
+    return !customer.deleted;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const priceId = process.env.STRIPE_PREMIUM_PRICE_ID;
@@ -38,24 +79,19 @@ export async function POST(request: Request) {
         ? profile.stripe_customer_id
         : null;
 
+    if (customerId && !(await customerExists(stripe, customerId))) {
+      customerId = null;
+    }
+
     if (!customerId) {
-      const customer = await stripe.customers.create({
+      customerId = await createCustomer({
+        admin,
+        stripe,
+        userId: user.id,
         email: user.email ?? undefined,
-        name:
-          typeof profile?.full_name === "string" && profile.full_name.trim()
-            ? profile.full_name
-            : undefined,
-        metadata: {
-          supabase_user_id: user.id,
-        },
+        fullName:
+          typeof profile?.full_name === "string" ? profile.full_name : null,
       });
-
-      customerId = customer.id;
-
-      await admin
-        .from("profiles")
-        .update({ stripe_customer_id: customerId })
-        .eq("id", user.id);
     }
 
     const siteUrl =

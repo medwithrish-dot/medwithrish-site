@@ -36,6 +36,21 @@ export async function POST(request: Request) {
       "http://localhost:3000";
 
     const stripe = createStripeClient();
+    try {
+      const customer = await stripe.customers.retrieve(profile.stripe_customer_id);
+      if (customer.deleted) {
+        throw new Error("Deleted Stripe customer.");
+      }
+    } catch {
+      return Response.json(
+        {
+          error:
+            "This account is linked to an old Stripe test customer. Start a live checkout first.",
+        },
+        { status: 409 }
+      );
+    }
+
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: profile.stripe_customer_id,
       return_url: `${siteUrl}/phloemai/account`,
