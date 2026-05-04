@@ -2866,7 +2866,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const userEmail = user.email ?? "";
 
   return (
-    <div className="phloem-app-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
+    <div className="phloem-dashboard-zoom min-h-screen bg-[#f8fbff] text-[#0b1143]">
       <div className="grid min-h-screen lg:grid-cols-[190px_1fr]">
         <aside className="border-r border-slate-200 bg-white px-3 py-5">
           <div className="flex items-center gap-3 px-1">
