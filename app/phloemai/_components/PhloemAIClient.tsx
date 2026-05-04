@@ -15,6 +15,7 @@ import {
   createClient as createSupabaseClient,
   hasSupabaseConfig,
 } from "@/utils/supabase/client";
+import { ClientPremiumGate } from "./ClientPremiumGate";
 import {
   fetchUCATQuestion,
   getPassageSections,
@@ -1074,6 +1075,12 @@ type DashboardView =
   | "report"
   | "account";
 
+type PremiumGateProps = {
+  isPremium: boolean;
+  checkoutLoading: boolean;
+  onUpgrade: () => void | Promise<void>;
+};
+
 const dashboardPageMeta: Record<
   DashboardView,
   { title: string; subtitle: string }
@@ -1862,7 +1869,11 @@ function PracticeContent() {
   );
 }
 
-function ProgressContent() {
+function ProgressContent({
+  isPremium,
+  checkoutLoading,
+  onUpgrade,
+}: PremiumGateProps) {
   const fixProgress = [
     ["QR timing improving", "You're answering faster with similar accuracy.", "Improving", "bg-emerald-50 text-emerald-600", Clock3],
     ["VR longer passages still slow", "Time per question is high on long passages.", "Needs work", "bg-orange-50 text-orange-600", Bookmark],
@@ -1966,63 +1977,79 @@ function ProgressContent() {
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center gap-2">
-            <h2 className="text-sm font-black">Fix progress</h2>
-            <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
-          </div>
-          <div className="mt-4 space-y-4">
-            {fixProgress.map(([title, text, status, statusClass, Icon]) => (
-              <div key={title} className="flex items-center gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                  <Icon className="h-5 w-5" aria-hidden="true" />
+        <ClientPremiumGate
+          isPremium={isPremium}
+          checkoutLoading={checkoutLoading}
+          onUpgrade={onUpgrade}
+          title="Unlock fix progress"
+          description="Premium shows the exact fixes improving, what still needs work and the actions driving score gains."
+        >
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-black">Fix progress</h2>
+              <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+            </div>
+            <div className="mt-4 space-y-4">
+              {fixProgress.map(([title, text, status, statusClass, Icon]) => (
+                <div key={title} className="flex items-center gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-black">{title}</h3>
+                    <p className="mt-1 text-xs font-bold text-slate-500">{text}</p>
+                  </div>
+                  <span className={`rounded-full px-4 py-1 text-xs font-black ${statusClass}`}>
+                    {status}
+                  </span>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-black">{title}</h3>
-                  <p className="mt-1 text-xs font-bold text-slate-500">{text}</p>
-                </div>
-                <span className={`rounded-full px-4 py-1 text-xs font-black ${statusClass}`}>
-                  {status}
-                </span>
-              </div>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
-          >
-            View all fix insights
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </section>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+            >
+              View all fix insights
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </section>
+        </ClientPremiumGate>
 
-        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center gap-2">
-            <h2 className="text-sm font-black">Recent improvements</h2>
-            <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
-          </div>
-          <div className="mt-4 space-y-4">
-            {improvements.map(([title, text, time, Icon]) => (
-              <div key={title} className="flex items-center gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-blue-600">
-                  <Icon className="h-5 w-5" aria-hidden="true" />
+        <ClientPremiumGate
+          isPremium={isPremium}
+          checkoutLoading={checkoutLoading}
+          onUpgrade={onUpgrade}
+          title="Unlock improvement history"
+          description="Premium keeps the full timeline of meaningful changes, timing shifts and section-level movement."
+        >
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-black">Recent improvements</h2>
+              <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+            </div>
+            <div className="mt-4 space-y-4">
+              {improvements.map(([title, text, time, Icon]) => (
+                <div key={title} className="flex items-center gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-blue-600">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-black">{title}</h3>
+                    <p className="mt-1 text-xs font-bold text-slate-500">{text}</p>
+                  </div>
+                  <span className="text-xs font-bold text-slate-400">{time}</span>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-black">{title}</h3>
-                  <p className="mt-1 text-xs font-bold text-slate-500">{text}</p>
-                </div>
-                <span className="text-xs font-bold text-slate-400">{time}</span>
-              </div>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
-          >
-            View all activity
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </section>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+            >
+              View all activity
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </section>
+        </ClientPremiumGate>
       </div>
 
       <ApproachBand title="The PhloemAI approach" />
@@ -2030,7 +2057,11 @@ function ProgressContent() {
   );
 }
 
-function ReportContent() {
+function ReportContent({
+  isPremium,
+  checkoutLoading,
+  onUpgrade,
+}: PremiumGateProps) {
   const issueGroups: ReportIssueGroup[] = [
     {
       title: "Major issues",
@@ -2127,11 +2158,19 @@ function ReportContent() {
         ))}
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        {issueGroups.map((group) => (
-          <ReportInsightCard key={group.title} group={group} />
-        ))}
-      </div>
+      <ClientPremiumGate
+        isPremium={isPremium}
+        checkoutLoading={checkoutLoading}
+        onUpgrade={onUpgrade}
+        title="Unlock the full diagnostic report"
+        description="Premium reveals the full issues, strengths and fix map without rendering the report content for free accounts."
+      >
+        <div className="grid gap-5 lg:grid-cols-2">
+          {issueGroups.map((group) => (
+            <ReportInsightCard key={group.title} group={group} />
+          ))}
+        </div>
+      </ClientPremiumGate>
 
       <div className="grid gap-5 lg:grid-cols-[0.8fr_1fr]">
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -2146,29 +2185,37 @@ function ReportContent() {
           />
         </section>
 
-        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-sm font-black uppercase tracking-wide">
-            Question review
-          </h2>
-          <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
-            {reviewRows.map(([title, count, note]) => (
-              <div
-                key={title}
-                className="grid gap-3 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[1fr_130px_150px_70px] sm:items-center"
-              >
-                <p className="text-sm font-black">{title}</p>
-                <p className="text-xs font-bold text-slate-500">{count}</p>
-                <p className="text-xs font-bold text-slate-500">{note}</p>
-                <button
-                  type="button"
-                  className="text-xs font-black text-blue-600 hover:text-blue-700"
+        <ClientPremiumGate
+          isPremium={isPremium}
+          checkoutLoading={checkoutLoading}
+          onUpgrade={onUpgrade}
+          title="Unlock question review"
+          description="Premium shows slow questions, changed answers and marked-review patterns after each diagnostic."
+        >
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="text-sm font-black uppercase tracking-wide">
+              Question review
+            </h2>
+            <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
+              {reviewRows.map(([title, count, note]) => (
+                <div
+                  key={title}
+                  className="grid gap-3 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[1fr_130px_150px_70px] sm:items-center"
                 >
-                  Review
-                </button>
-              </div>
-            ))}
-          </div>
-        </section>
+                  <p className="text-sm font-black">{title}</p>
+                  <p className="text-xs font-bold text-slate-500">{count}</p>
+                  <p className="text-xs font-bold text-slate-500">{note}</p>
+                  <button
+                    type="button"
+                    className="text-xs font-black text-blue-600 hover:text-blue-700"
+                  >
+                    Review
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+        </ClientPremiumGate>
       </div>
 
       <section className="flex flex-col gap-4 rounded-xl border border-indigo-100 bg-indigo-50 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
@@ -2295,6 +2342,7 @@ function DashboardSubpageContent({
   firstName,
   plan,
   email,
+  isPremium,
   checkoutLoading,
   onUpgrade,
   onLogout,
@@ -2303,13 +2351,22 @@ function DashboardSubpageContent({
   firstName: string;
   plan: string;
   email: string;
+  isPremium: boolean;
   checkoutLoading: boolean;
   onUpgrade: () => void;
   onLogout: () => void;
 }) {
   if (view === "diagnostic") return <DiagnosticContent />;
   if (view === "practice") return <PracticeContent />;
-  if (view === "progress") return <ProgressContent />;
+  if (view === "progress") {
+    return (
+      <ProgressContent
+        isPremium={isPremium}
+        checkoutLoading={checkoutLoading}
+        onUpgrade={onUpgrade}
+      />
+    );
+  }
   if (view === "account") {
     return (
       <AccountContent
@@ -2322,7 +2379,13 @@ function DashboardSubpageContent({
       />
     );
   }
-  return <ReportContent />;
+  return (
+    <ReportContent
+      isPremium={isPremium}
+      checkoutLoading={checkoutLoading}
+      onUpgrade={onUpgrade}
+    />
+  );
 }
 
 function AuthPanel({
@@ -3227,6 +3290,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               firstName={firstName}
               plan={plan}
               email={userEmail}
+              isPremium={plan === "Premium"}
               checkoutLoading={checkoutLoading}
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}
