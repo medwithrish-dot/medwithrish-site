@@ -6,10 +6,13 @@ export type UCATSubtypeId =
   | "vr-inference"
   | "vr-author"
   | "vr-detail"
+  | "vr-summary"
   | "dm-syllogisms"
   | "dm-logic"
   | "dm-arguments"
   | "dm-probability-data"
+  | "dm-yes-no"
+  | "dm-venn-sets"
   | "qr-graphs"
   | "qr-percentages"
   | "qr-rates-ratios"
@@ -18,7 +21,8 @@ export type UCATSubtypeId =
   | "sjt-appropriateness"
   | "sjt-importance"
   | "sjt-communication"
-  | "sjt-integrity";
+  | "sjt-integrity"
+  | "sjt-ordering";
 
 export type UCATChartVisual =
   | {
@@ -139,6 +143,11 @@ export const UCAT_SUBTYPES: Record<
       label: "Main idea and detail",
       description: "Find the purpose, detail or central reason in the passage.",
     },
+    {
+      id: "vr-summary",
+      label: "Summary and structure",
+      description: "Select the best summary, title or structural role.",
+    },
   ],
   dm: [
     {
@@ -160,6 +169,16 @@ export const UCAT_SUBTYPES: Record<
       id: "dm-probability-data",
       label: "Probability and data",
       description: "Use probabilities, sets and short data displays.",
+    },
+    {
+      id: "dm-yes-no",
+      label: "Yes / no statements",
+      description: "Evaluate several conclusions against the same information.",
+    },
+    {
+      id: "dm-venn-sets",
+      label: "Venn and sets",
+      description: "Work with overlaps, exclusions and grouped information.",
     },
   ],
   qr: [
@@ -209,6 +228,11 @@ export const UCAT_SUBTYPES: Record<
       id: "sjt-integrity",
       label: "Integrity and confidentiality",
       description: "Protect trust, fairness and sensitive information.",
+    },
+    {
+      id: "sjt-ordering",
+      label: "Rank / order actions",
+      description: "Drag actions into the best professional order.",
     },
   ],
 };
@@ -384,6 +408,27 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       explanation:
         "The passage says volunteers recorded details that professional archivists could later check against other records.",
     },
+    {
+      id: "vr-summary-001",
+      section: "vr",
+      subtype: "vr-summary",
+      title: "Verbal Reasoning Practice",
+      leftTitle: "Passage",
+      stimulus: [
+        "Some hospitals have introduced quiet handover rooms where clinical staff exchange information at the end of a shift. The rooms are designed to reduce interruptions from phone calls, passing colleagues and corridor noise. Early feedback suggests staff feel less rushed when discussing complex patients.",
+        "However, managers have not claimed that quiet rooms alone prevent mistakes. Written notes, clear responsibility and enough overlap between shifts remain essential. The strongest argument for the rooms is that they remove one avoidable source of distraction from an already demanding process.",
+      ],
+      question: "Which option best summarises the passage?",
+      options: [
+        { key: "A", text: "Quiet handover rooms are useful because they reduce distraction, but they are not a complete solution." },
+        { key: "B", text: "Quiet handover rooms have been proven to eliminate clinical errors during shift changes." },
+        { key: "C", text: "Written notes are no longer necessary if handovers take place in quiet rooms." },
+        { key: "D", text: "Managers introduced quiet rooms mainly because staff disliked written records." },
+      ],
+      answer: "A",
+      explanation:
+        "The passage presents quiet rooms as helpful for reducing interruptions, while stressing that other safety measures remain essential.",
+    },
   ],
   dm: [
     {
@@ -507,6 +552,46 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       answer: "B",
       explanation:
         "The number studying at least one is 22 + 18 - 10 = 30. Therefore 40 - 30 = 10 study neither.",
+    },
+    {
+      id: "dm-yes-no-001",
+      section: "dm",
+      subtype: "dm-yes-no",
+      title: "Decision Making Practice",
+      leftTitle: "Information",
+      stimulus: [
+        "Every candidate who attends the morning assessment completes a written task. Some candidates who complete a written task also complete a role play. No candidate who attends the afternoon assessment completes a role play.",
+      ],
+      question: "Which statement must be answered 'yes'?",
+      options: [
+        { key: "A", text: "Do all candidates who complete a written task attend the morning assessment?" },
+        { key: "B", text: "Do some candidates who complete a role play complete a written task?" },
+        { key: "C", text: "Do all candidates who attend the afternoon assessment complete a written task?" },
+        { key: "D", text: "Do some candidates who attend the afternoon assessment complete a role play?" },
+      ],
+      answer: "B",
+      explanation:
+        "The information says some candidates who complete a written task also complete a role play, so those role-play candidates also completed a written task.",
+    },
+    {
+      id: "dm-venn-sets-001",
+      section: "dm",
+      subtype: "dm-venn-sets",
+      title: "Decision Making Practice",
+      leftTitle: "Information",
+      stimulus: [
+        "In a revision group of 60 students, 34 study Verbal Reasoning, 29 study Decision Making and 21 study Quantitative Reasoning. Twelve study both Verbal Reasoning and Decision Making, 9 study both Decision Making and Quantitative Reasoning, 8 study both Verbal Reasoning and Quantitative Reasoning, and 5 study all three.",
+      ],
+      question: "How many students study none of the three listed areas?",
+      options: [
+        { key: "A", text: "0" },
+        { key: "B", text: "4" },
+        { key: "C", text: "6" },
+        { key: "D", text: "9" },
+      ],
+      answer: "A",
+      explanation:
+        "At least one area = 34 + 29 + 21 - 12 - 9 - 8 + 5 = 60, so no students are outside the three groups.",
     },
     {
       id: "dm-syllogisms-001",
@@ -890,7 +975,7 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     {
       id: "sjt-appropriateness-003",
       section: "sjt",
-      subtype: "sjt-appropriateness",
+      subtype: "sjt-ordering",
       questionType: "drag-order",
       title: "Situational Judgement Practice",
       leftTitle: "Scenario",
@@ -1006,7 +1091,7 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     {
       id: "sjt-communication-003",
       section: "sjt",
-      subtype: "sjt-communication",
+      subtype: "sjt-ordering",
       questionType: "drag-order",
       title: "Situational Judgement Practice",
       leftTitle: "Scenario",

@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
+  Calculator,
   CheckCircle,
   Clock3,
+  Flag,
   GripVertical,
   HelpCircle,
   ListChecks,
@@ -30,6 +32,34 @@ import {
 } from "../_lib/ucatQuestionBank";
 
 type PracticeAnswer = UCATOptionKey | string[];
+type SessionLengthMode = "questions" | "minutes";
+type PracticePhase = "practice" | "review" | "marked";
+type TrackingPayload = Record<string, string | number | boolean | null>;
+type TrackingEvent = {
+  at: number;
+  type: string;
+  questionId?: string;
+  questionIndex?: number;
+  payload?: TrackingPayload;
+};
+type QuestionTiming = {
+  questionId: string;
+  visits: number;
+  totalMs: number;
+  answeredAtMs?: number;
+};
+
+const QUESTION_TARGETS = [5, 10, 15] as const;
+const MINUTE_TARGETS = [5, 10, 15] as const;
+
+function nowMs() {
+  return Date.now();
+}
+
+function clampQuestionCount(value: number, available: number) {
+  if (available <= 0) return 0;
+  return Math.max(1, Math.min(available, value));
+}
 
 function formatDuration(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60);
@@ -49,6 +79,33 @@ function getDragOrder(question: UCATQuestion, savedAnswer?: PracticeAnswer) {
   return Array.isArray(savedAnswer)
     ? savedAnswer
     : question.dragItems.map((item) => item.id);
+}
+
+function getAnswerText(question: UCATQuestion, answer?: PracticeAnswer) {
+  if (isUCATDragOrderQuestion(question)) {
+    const order = getDragOrder(question, answer);
+    return order.length > 0 ? "Ordered response" : "No response";
+  }
+
+  return typeof answer === "string"
+    ? question.options.find((option) => option.key === answer)?.text ?? answer
+    : "No answer";
+}
+
+function isAnswerCorrect(question: UCATQuestion, answer?: PracticeAnswer) {
+  if (isUCATDragOrderQuestion(question)) {
+    return sameOrder(getDragOrder(question, answer), question.answerOrder);
+  }
+
+  return typeof answer === "string" && answer === question.answer;
+}
+
+function isAnswered(question: UCATQuestion, answer?: PracticeAnswer) {
+  if (isUCATDragOrderQuestion(question)) {
+    return Array.isArray(answer) && answer.length === question.answerOrder.length;
+  }
+
+  return typeof answer === "string";
 }
 
 function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
@@ -371,19 +428,37 @@ function SectionHub() {
 function SectionSetup({
   section,
   selectedSubtypeIds,
-  timed,
   questionCount,
+  availableCount,
+  lengthMode,
+  questionTarget,
+  minuteTarget,
+  customMinutes,
+  timed,
   onSelectMixed,
   onToggleSubtype,
+  onLengthModeChange,
+  onQuestionTargetChange,
+  onMinuteTargetChange,
+  onCustomMinutesChange,
   onTimedChange,
   onStart,
 }: {
   section: UCATSection;
   selectedSubtypeIds: UCATSubtypeId[];
-  timed: boolean;
   questionCount: number;
+  availableCount: number;
+  lengthMode: SessionLengthMode;
+  questionTarget: number;
+  minuteTarget: number | "custom";
+  customMinutes: string;
+  timed: boolean;
   onSelectMixed: () => void;
   onToggleSubtype: (subtype: UCATSubtypeId) => void;
+  onLengthModeChange: (mode: SessionLengthMode) => void;
+  onQuestionTargetChange: (count: number) => void;
+  onMinuteTargetChange: (minutes: number | "custom") => void;
+  onCustomMinutesChange: (minutes: string) => void;
   onTimedChange: (timed: boolean) => void;
   onStart: () => void;
 }) {
@@ -391,7 +466,14 @@ function SectionSetup({
   const subtypes = UCAT_SUBTYPES[section];
   const allQuestionCount = UCAT_QUESTION_BANK[section].length;
   const mixedSelected = selectedSubtypeIds.length === 0;
-  const setTime = questionCount * meta.secondsPerQuestion;
+  const selectedMinutes =
+    minuteTarget === "custom"
+      ? Number(customMinutes) || 1
+      : minuteTarget;
+  const setTime =
+    lengthMode === "minutes"
+      ? Math.max(1, Math.round(selectedMinutes * 60))
+      : questionCount * meta.secondsPerQuestion;
 
   return (
     <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
@@ -418,7 +500,7 @@ function SectionSetup({
               </p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-black text-slate-700">
-              {questionCount} questions
+              {questionCount} of {availableCount} questions
             </div>
           </div>
 
@@ -482,18 +564,131 @@ function SectionSetup({
 
           <div className="mt-7">
             <h2 className="text-sm font-black uppercase tracking-wide text-slate-900">
+              Set length
+            </h2>
+            <div className="mt-3 grid gap-3 lg:grid-cols-2">
+              <div className="rounded-xl border border-slate-200 bg-white p-4">
+                <button
+                  type="button"
+                  onClick={() => onLengthModeChange("questions")}
+                  aria-pressed={lengthMode === "questions"}
+                  className={`inline-flex rounded-lg px-3 py-1 text-xs font-black ${
+                    lengthMode === "questions"
+                      ? "bg-blue-600 text-white"
+                      : "bg-slate-100 text-slate-600"
+                  }`}
+                >
+                  Number of questions
+                </button>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {QUESTION_TARGETS.map((count) => (
+                    <button
+                      key={count}
+                      type="button"
+                      onClick={() => {
+                        onLengthModeChange("questions");
+                        onQuestionTargetChange(count);
+                      }}
+                      className={`h-10 rounded-lg border px-4 text-sm font-black ${
+                        lengthMode === "questions" && questionTarget === count
+                          ? "border-blue-500 bg-blue-50 text-blue-700"
+                          : "border-slate-200 text-slate-700 hover:border-blue-300"
+                      }`}
+                    >
+                      {count}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs font-bold leading-5 text-slate-500">
+                  If fewer questions are available for your selected types, the
+                  closest available set is used.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-white p-4">
+                <button
+                  type="button"
+                  onClick={() => onLengthModeChange("minutes")}
+                  aria-pressed={lengthMode === "minutes"}
+                  className={`inline-flex rounded-lg px-3 py-1 text-xs font-black ${
+                    lengthMode === "minutes"
+                      ? "bg-blue-600 text-white"
+                      : "bg-slate-100 text-slate-600"
+                  }`}
+                >
+                  Time target
+                </button>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {MINUTE_TARGETS.map((minutes) => (
+                    <button
+                      key={minutes}
+                      type="button"
+                      onClick={() => {
+                        onLengthModeChange("minutes");
+                        onMinuteTargetChange(minutes);
+                      }}
+                      className={`h-10 rounded-lg border px-4 text-sm font-black ${
+                        lengthMode === "minutes" && minuteTarget === minutes
+                          ? "border-blue-500 bg-blue-50 text-blue-700"
+                          : "border-slate-200 text-slate-700 hover:border-blue-300"
+                      }`}
+                    >
+                      {minutes} min
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onLengthModeChange("minutes");
+                      onMinuteTargetChange("custom");
+                    }}
+                    className={`h-10 rounded-lg border px-4 text-sm font-black ${
+                      lengthMode === "minutes" && minuteTarget === "custom"
+                        ? "border-blue-500 bg-blue-50 text-blue-700"
+                        : "border-slate-200 text-slate-700 hover:border-blue-300"
+                    }`}
+                  >
+                    Custom
+                  </button>
+                </div>
+                {lengthMode === "minutes" && minuteTarget === "custom" && (
+                  <label className="mt-3 block">
+                    <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                      Minutes
+                    </span>
+                    <input
+                      type="number"
+                      min="1"
+                      max="60"
+                      value={customMinutes}
+                      onChange={(event) => onCustomMinutesChange(event.target.value)}
+                      className="mt-1 h-10 w-32 rounded-lg border border-slate-200 px-3 text-sm font-bold outline-none focus:border-blue-500"
+                    />
+                  </label>
+                )}
+                <p className="mt-3 text-xs font-bold leading-5 text-slate-500">
+                  Uses the official section pace to choose the closest question
+                  count for the minutes selected.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-7">
+            <h2 className="text-sm font-black uppercase tracking-wide text-slate-900">
               Timing
             </h2>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <button
                 type="button"
                 onClick={() => onTimedChange(false)}
+                disabled={lengthMode === "minutes"}
                 aria-pressed={!timed}
                 className={`flex items-center gap-3 rounded-xl border p-4 text-left transition-colors ${
                   !timed
                     ? "border-blue-500 bg-blue-50 text-blue-700"
                     : "border-slate-200 bg-white text-slate-700 hover:border-blue-300"
-                }`}
+                } disabled:cursor-not-allowed disabled:opacity-50`}
               >
                 <Clock3 className="h-5 w-5" aria-hidden="true" />
                 <div>
@@ -539,6 +734,114 @@ function SectionSetup({
   );
 }
 
+function ReviewScreen({
+  sectionTitle,
+  questions,
+  answers,
+  flags,
+  trackingEventCount,
+  timings,
+  onGoToQuestion,
+  onMark,
+}: {
+  sectionTitle: string;
+  questions: UCATQuestion[];
+  answers: Record<number, PracticeAnswer>;
+  flags: Record<number, boolean>;
+  trackingEventCount: number;
+  timings: Record<string, QuestionTiming>;
+  onGoToQuestion: (index: number) => void;
+  onMark: () => void;
+}) {
+  const answeredCount = questions.filter((question, index) =>
+    isAnswered(question, answers[index])
+  ).length;
+  const flaggedCount = Object.values(flags).filter(Boolean).length;
+  const totalSeconds = Math.round(
+    Object.values(timings).reduce((sum, item) => sum + item.totalMs, 0) / 1000
+  );
+
+  return (
+    <div className="min-h-screen bg-white font-sans text-black">
+      <header className="flex min-h-14 items-center justify-between bg-[#0078a8] px-3 py-2 text-white">
+        <h1 className="text-lg font-semibold sm:text-2xl">{sectionTitle}</h1>
+        <button
+          type="button"
+          onClick={onMark}
+          className="rounded-sm bg-white px-4 py-1.5 text-sm font-bold text-[#0078a8] hover:bg-slate-100"
+        >
+          Mark
+        </button>
+      </header>
+
+      <main className="mx-auto max-w-5xl px-5 py-6">
+        <h2 className="text-2xl font-bold">Review</h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-4">
+          {[
+            ["Answered", `${answeredCount}/${questions.length}`],
+            ["Flagged", String(flaggedCount)],
+            ["Events tracked", String(trackingEventCount)],
+            ["Time tracked", formatDuration(totalSeconds)],
+          ].map(([label, value]) => (
+            <div key={label} className="rounded-sm border border-slate-300 bg-slate-50 p-3">
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                {label}
+              </p>
+              <p className="mt-1 text-xl font-bold">{value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 overflow-hidden rounded-sm border border-slate-300">
+          {questions.map((question, index) => {
+            const answered = isAnswered(question, answers[index]);
+            const timing = timings[question.id];
+            return (
+              <button
+                key={question.id}
+                type="button"
+                onClick={() => onGoToQuestion(index)}
+                className="grid w-full gap-3 border-b border-slate-200 px-4 py-3 text-left last:border-b-0 hover:bg-blue-50 sm:grid-cols-[80px_1fr_120px_110px]"
+              >
+                <span className="text-sm font-bold">Q{index + 1}</span>
+                <span>
+                  <span className="block text-sm font-bold">
+                    {getUCATSubtypeMeta(question.subtype).label}
+                  </span>
+                  <span className="mt-1 block truncate text-xs font-semibold text-slate-500">
+                    {getAnswerText(question, answers[index])}
+                  </span>
+                </span>
+                <span
+                  className={`w-fit rounded-full px-2.5 py-1 text-xs font-bold ${
+                    answered
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "bg-amber-50 text-amber-700"
+                  }`}
+                >
+                  {answered ? "Answered" : "Incomplete"}
+                </span>
+                <span className="text-xs font-bold text-slate-500">
+                  {flags[index] ? "Flagged" : ""}
+                  {timing ? ` ${formatDuration(Math.round(timing.totalMs / 1000))}` : ""}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          onClick={onMark}
+          className="mt-6 inline-flex h-11 items-center justify-center rounded-sm bg-[#0078a8] px-8 text-base font-bold text-white hover:bg-[#00618a]"
+        >
+          Mark
+        </button>
+      </main>
+    </div>
+  );
+}
+
 export function UCATQuestionBankClient({ section }: { section?: string }) {
   const validSection = section && isUCATSection(section) ? section : null;
 
@@ -555,26 +858,108 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   const [selected, setSelected] = useState<UCATOptionKey | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [answers, setAnswers] = useState<Record<number, PracticeAnswer>>({});
+  const [flags, setFlags] = useState<Record<number, boolean>>({});
   const [dragOrder, setDragOrder] = useState<string[]>([]);
   const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
   const [selectedSubtypeIds, setSelectedSubtypeIds] = useState<UCATSubtypeId[]>(
     []
   );
+  const [lengthMode, setLengthMode] = useState<SessionLengthMode>("questions");
+  const [questionTarget, setQuestionTarget] = useState<number>(5);
+  const [minuteTarget, setMinuteTarget] = useState<number | "custom">(5);
+  const [customMinutes, setCustomMinutes] = useState("8");
   const [timed, setTimed] = useState(false);
   const [started, setStarted] = useState(false);
+  const [phase, setPhase] = useState<PracticePhase>("practice");
+  const [sessionQuestions, setSessionQuestions] = useState<UCATQuestion[]>([]);
   const [timeRemaining, setTimeRemaining] = useState(0);
+  const [calculatorOpen, setCalculatorOpen] = useState(false);
+  const [calcDisplay, setCalcDisplay] = useState("0");
+  const [calcStored, setCalcStored] = useState<number | null>(null);
+  const [calcOperator, setCalcOperator] = useState<string | null>(null);
+  const [calcWaiting, setCalcWaiting] = useState(false);
+  const [calcMemory, setCalcMemory] = useState(0);
+  const [lastMrcAt, setLastMrcAt] = useState(0);
+  const [trackingEventCount, setTrackingEventCount] = useState(0);
+  const [timingSnapshot, setTimingSnapshot] = useState<
+    Record<string, QuestionTiming>
+  >({});
+  const trackingEventsRef = useRef<TrackingEvent[]>([]);
+  const questionTimingRef = useRef<Record<string, QuestionTiming>>({});
+  const questionStartedAtRef = useRef(0);
+  const appRootRef = useRef<HTMLDivElement>(null);
 
   const sectionQuestions = useMemo(
     () => UCAT_QUESTION_BANK[validSection],
     [validSection]
   );
 
-  const questions = useMemo(() => {
+  const availableQuestions = useMemo(() => {
     if (selectedSubtypeIds.length === 0) return sectionQuestions;
     return sectionQuestions.filter((question) =>
       selectedSubtypeIds.includes(question.subtype)
     );
   }, [sectionQuestions, selectedSubtypeIds]);
+
+  const meta = getUCATSectionMeta(validSection);
+  const selectedMinutes =
+    minuteTarget === "custom" ? Number(customMinutes) || 1 : minuteTarget;
+  const desiredQuestionCount =
+    lengthMode === "minutes"
+      ? Math.max(1, Math.round((selectedMinutes * 60) / meta.secondsPerQuestion))
+      : questionTarget;
+  const setupQuestionCount = clampQuestionCount(
+    desiredQuestionCount,
+    availableQuestions.length
+  );
+  const setupTimeSeconds =
+    lengthMode === "minutes"
+      ? Math.max(1, Math.round(selectedMinutes * 60))
+      : setupQuestionCount * meta.secondsPerQuestion;
+  const questions = started ? sessionQuestions : availableQuestions;
+
+  const currentQuestionForTracking = questions[questionIndex];
+
+  const recordEvent = (type: string, payload?: TrackingPayload) => {
+    trackingEventsRef.current.push({
+      at: nowMs(),
+      type,
+      questionId: currentQuestionForTracking?.id,
+      questionIndex: started ? questionIndex : undefined,
+      payload,
+    });
+    setTrackingEventCount(trackingEventsRef.current.length);
+  };
+
+  const beginQuestionTiming = (question: UCATQuestion) => {
+    const existing = questionTimingRef.current[question.id];
+    questionTimingRef.current[question.id] = {
+      questionId: question.id,
+      visits: (existing?.visits ?? 0) + 1,
+      totalMs: existing?.totalMs ?? 0,
+      answeredAtMs: existing?.answeredAtMs,
+    };
+    questionStartedAtRef.current = nowMs();
+    setTimingSnapshot({ ...questionTimingRef.current });
+  };
+
+  const commitQuestionTiming = () => {
+    const activeQuestion = questions[questionIndex];
+    if (!activeQuestion) return;
+
+    const elapsed = Math.max(0, nowMs() - questionStartedAtRef.current);
+    const existing = questionTimingRef.current[activeQuestion.id] ?? {
+      questionId: activeQuestion.id,
+      visits: 0,
+      totalMs: 0,
+    };
+    questionTimingRef.current[activeQuestion.id] = {
+      ...existing,
+      totalMs: existing.totalMs + elapsed,
+    };
+    questionStartedAtRef.current = nowMs();
+    setTimingSnapshot({ ...questionTimingRef.current });
+  };
 
   useEffect(() => {
     if (!started || !timed) return;
@@ -586,9 +971,14 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     return () => window.clearInterval(intervalId);
   }, [started, timed]);
 
-  const meta = getUCATSectionMeta(validSection);
+  useEffect(() => {
+    if (started && phase !== "review") {
+      appRootRef.current?.focus();
+    }
+  }, [started, phase, questionIndex]);
 
   const toggleSubtype = (subtype: UCATSubtypeId) => {
+    recordEvent("setup_subtype_toggle", { subtype });
     setSelectedSubtypeIds((current) =>
       current.includes(subtype)
         ? current.filter((item) => item !== subtype)
@@ -597,14 +987,32 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   };
 
   const startPractice = () => {
+    const nextQuestions = availableQuestions.slice(0, setupQuestionCount);
+    if (nextQuestions.length === 0) return;
+
     setNavigatorOpen(false);
     setQuestionIndex(0);
     setSelected(null);
     setRevealed(false);
     setAnswers({});
-    setDragOrder(getDragOrder(questions[0]));
-    setTimeRemaining(questions.length * meta.secondsPerQuestion);
+    setFlags({});
+    setPhase("practice");
+    setSessionQuestions(nextQuestions);
+    setDragOrder(getDragOrder(nextQuestions[0]));
+    setTimeRemaining(setupTimeSeconds);
+    trackingEventsRef.current = [];
+    questionTimingRef.current = {};
+    setTimingSnapshot({});
+    setTrackingEventCount(0);
     setStarted(true);
+    beginQuestionTiming(nextQuestions[0]);
+    recordEvent("start_practice", {
+      section: validSection,
+      questionCount: nextQuestions.length,
+      lengthMode,
+      timed: lengthMode === "minutes" ? true : timed,
+      seconds: setupTimeSeconds,
+    });
   };
 
   if (!started) {
@@ -612,11 +1020,42 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       <SectionSetup
         section={validSection}
         selectedSubtypeIds={selectedSubtypeIds}
-        timed={timed}
-        questionCount={questions.length}
-        onSelectMixed={() => setSelectedSubtypeIds([])}
+        questionCount={setupQuestionCount}
+        availableCount={availableQuestions.length}
+        lengthMode={lengthMode}
+        questionTarget={questionTarget}
+        minuteTarget={minuteTarget}
+        customMinutes={customMinutes}
+        timed={lengthMode === "minutes" ? true : timed}
+        onSelectMixed={() => {
+          setSelectedSubtypeIds([]);
+          recordEvent("setup_mixed_selected");
+        }}
         onToggleSubtype={toggleSubtype}
-        onTimedChange={setTimed}
+        onLengthModeChange={(mode) => {
+          setLengthMode(mode);
+          if (mode === "minutes") setTimed(true);
+          recordEvent("setup_length_mode", { mode });
+        }}
+        onQuestionTargetChange={(count) => {
+          setQuestionTarget(count);
+          recordEvent("setup_question_target", { count });
+        }}
+        onMinuteTargetChange={(minutes) => {
+          setMinuteTarget(minutes);
+          setTimed(true);
+          recordEvent("setup_minute_target", {
+            minutes: minutes === "custom" ? "custom" : minutes,
+          });
+        }}
+        onCustomMinutesChange={(minutes) => {
+          setCustomMinutes(minutes);
+          recordEvent("setup_custom_minutes", { minutes });
+        }}
+        onTimedChange={(nextTimed) => {
+          setTimed(nextTimed);
+          recordEvent("setup_timed_toggle", { timed: nextTimed });
+        }}
         onStart={startPractice}
       />
     );
@@ -633,39 +1072,104 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     : selectedAnswer === question.answer;
 
   const chooseAnswer = (key: UCATOptionKey) => {
+    if (phase === "marked") return;
+
     setSelected(key);
     setAnswers((current) => ({ ...current, [questionIndex]: key }));
+    const activeQuestion = questions[questionIndex];
+    if (activeQuestion) {
+      const existing = questionTimingRef.current[activeQuestion.id];
+      questionTimingRef.current[activeQuestion.id] = {
+        questionId: activeQuestion.id,
+        visits: existing?.visits ?? 1,
+        totalMs: existing?.totalMs ?? 0,
+        answeredAtMs: nowMs(),
+      };
+      setTimingSnapshot({ ...questionTimingRef.current });
+    }
+    recordEvent("answer_select", { answer: key });
     setRevealed(false);
   };
 
   const goToQuestion = (index: number) => {
+    commitQuestionTiming();
     const nextAnswer = answers[index];
     setQuestionIndex(index);
     setSelected(typeof nextAnswer === "string" ? nextAnswer : null);
     setDragOrder(getDragOrder(questions[index], nextAnswer));
     setRevealed(false);
     setNavigatorOpen(false);
+    beginQuestionTiming(questions[index]);
+    recordEvent("go_to_question", { index: index + 1 });
   };
 
   const moveDragItem = (fromIndex: number, toIndex: number) => {
-    if (!isDragQuestion || fromIndex === toIndex) return;
+    if (!isDragQuestion || fromIndex === toIndex || phase === "marked") return;
 
     const next = [...dragOrder];
     const [moved] = next.splice(fromIndex, 1);
     next.splice(toIndex, 0, moved);
     setDragOrder(next);
     setAnswers((answerState) => ({ ...answerState, [questionIndex]: next }));
+    const activeQuestion = questions[questionIndex];
+    if (activeQuestion) {
+      const existing = questionTimingRef.current[activeQuestion.id];
+      questionTimingRef.current[activeQuestion.id] = {
+        questionId: activeQuestion.id,
+        visits: existing?.visits ?? 1,
+        totalMs: existing?.totalMs ?? 0,
+        answeredAtMs: nowMs(),
+      };
+      setTimingSnapshot({ ...questionTimingRef.current });
+    }
+    recordEvent("drag_reorder", { from: fromIndex + 1, to: toIndex + 1 });
     setRevealed(false);
   };
 
   const nextQuestion = () => {
     const nextIndex = Math.min(questionIndex + 1, questions.length - 1);
+    recordEvent("next_question", { to: nextIndex + 1 });
     goToQuestion(nextIndex);
   };
 
   const previousQuestion = () => {
     const nextIndex = Math.max(questionIndex - 1, 0);
+    recordEvent("previous_question", { to: nextIndex + 1 });
     goToQuestion(nextIndex);
+  };
+
+  const toggleFlag = () => {
+    setFlags((current) => {
+      const next = !current[questionIndex];
+      recordEvent("flag_toggle", { flagged: next });
+      return { ...current, [questionIndex]: next };
+    });
+  };
+
+  const openReview = () => {
+    commitQuestionTiming();
+    setNavigatorOpen(false);
+    setPhase("review");
+    recordEvent("review_open", {
+      answered: questions.filter((item, index) => isAnswered(item, answers[index]))
+        .length,
+      total: questions.length,
+    });
+  };
+
+  const markPractice = () => {
+    commitQuestionTiming();
+    setPhase("marked");
+    setQuestionIndex(0);
+    setSelected(typeof answers[0] === "string" ? answers[0] : null);
+    setDragOrder(getDragOrder(questions[0], answers[0]));
+    setRevealed(true);
+    beginQuestionTiming(questions[0]);
+    recordEvent("mark_practice", {
+      correct: questions.filter((item, index) => isAnswerCorrect(item, answers[index]))
+        .length,
+      total: questions.length,
+    });
   };
 
   const dragItemLookup = isDragQuestion
@@ -677,8 +1181,196 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         .join(" ")
     : "";
 
+  const answerRevealed = revealed || phase === "marked";
+  const supportsCalculator = validSection === "dm" || validSection === "qr";
+  const calcValue = Number(calcDisplay) || 0;
+
+  const recordCalculator = (action: string, value?: string) => {
+    recordEvent("calculator", { action, value: value ?? null });
+  };
+
+  const resetCalculator = () => {
+    setCalcDisplay("0");
+    setCalcStored(null);
+    setCalcOperator(null);
+    setCalcWaiting(false);
+    recordCalculator("clear");
+  };
+
+  const calculate = (stored: number, current: number, operator: string) => {
+    if (operator === "+") return stored + current;
+    if (operator === "-") return stored - current;
+    if (operator === "*") return stored * current;
+    if (operator === "/") return current === 0 ? 0 : stored / current;
+    return current;
+  };
+
+  const commitCalcOperation = (nextOperator?: string) => {
+    const current = Number(calcDisplay) || 0;
+    if (calcStored === null || calcOperator === null) {
+      setCalcStored(current);
+    } else {
+      const result = calculate(calcStored, current, calcOperator);
+      setCalcDisplay(String(Number(result.toFixed(8))));
+      setCalcStored(result);
+    }
+    setCalcOperator(nextOperator ?? null);
+    setCalcWaiting(true);
+    recordCalculator("operator", nextOperator ?? "=");
+  };
+
+  const inputCalcDigit = (digit: string) => {
+    setCalcDisplay((current) =>
+      calcWaiting || current === "0" ? digit : `${current}${digit}`
+    );
+    setCalcWaiting(false);
+    recordCalculator("digit", digit);
+  };
+
+  const inputCalcDecimal = () => {
+    setCalcDisplay((current) =>
+      calcWaiting ? "0." : current.includes(".") ? current : `${current}.`
+    );
+    setCalcWaiting(false);
+    recordCalculator("decimal");
+  };
+
+  const memoryRecallClear = () => {
+    const now = nowMs();
+    if (now - lastMrcAt < 700) {
+      setCalcMemory(0);
+      setCalcDisplay("0");
+      setLastMrcAt(0);
+      recordCalculator("memory_clear");
+      return;
+    }
+
+    setCalcDisplay(String(calcMemory));
+    setCalcWaiting(true);
+    setLastMrcAt(now);
+    recordCalculator("memory_recall");
+  };
+
+  const memoryAdd = (sign: 1 | -1) => {
+    setCalcMemory((current) => current + sign * calcValue);
+    setCalcWaiting(true);
+    recordCalculator(sign === 1 ? "memory_plus" : "memory_minus");
+  };
+
+  const toggleCalculator = () => {
+    if (!supportsCalculator) return;
+    setCalculatorOpen((current) => !current);
+    recordCalculator(calculatorOpen ? "close" : "open");
+  };
+
+  const handlePracticeKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const key = event.key.toLowerCase();
+
+    if (event.altKey) {
+      if (key === "n") {
+        event.preventDefault();
+        nextQuestion();
+        return;
+      }
+      if (key === "p") {
+        event.preventDefault();
+        previousQuestion();
+        return;
+      }
+      if (key === "c") {
+        event.preventDefault();
+        toggleCalculator();
+        return;
+      }
+      if (key === "f") {
+        event.preventDefault();
+        toggleFlag();
+        return;
+      }
+    }
+
+    if (phase !== "practice") return;
+
+    if (calculatorOpen && supportsCalculator) {
+      if (/^[0-9]$/.test(event.key)) {
+        event.preventDefault();
+        inputCalcDigit(event.key);
+        return;
+      }
+      if (event.key === ".") {
+        event.preventDefault();
+        inputCalcDecimal();
+        return;
+      }
+      if (["+", "-", "*", "/"].includes(event.key)) {
+        event.preventDefault();
+        commitCalcOperation(event.key);
+        return;
+      }
+      if (event.key === "Enter" || event.key === "=") {
+        event.preventDefault();
+        commitCalcOperation();
+        return;
+      }
+      if (event.key === "Backspace") {
+        event.preventDefault();
+        setCalcDisplay((current) =>
+          current.length > 1 ? current.slice(0, -1) : "0"
+        );
+        recordCalculator("backspace");
+        return;
+      }
+      if (key === "m") {
+        event.preventDefault();
+        memoryAdd(-1);
+        return;
+      }
+      if (key === "p") {
+        event.preventDefault();
+        memoryAdd(1);
+        return;
+      }
+      if (key === "c") {
+        event.preventDefault();
+        memoryRecallClear();
+        return;
+      }
+    }
+
+    if (!isDragQuestion && ["a", "b", "c", "d"].includes(key)) {
+      const optionKey = key.toUpperCase() as UCATOptionKey;
+      if (question.options.some((option) => option.key === optionKey)) {
+        event.preventDefault();
+        chooseAnswer(optionKey);
+      }
+    }
+  };
+
+  if (phase === "review") {
+    return (
+      <ReviewScreen
+        sectionTitle={meta.bankTitle}
+        questions={questions}
+        answers={answers}
+        flags={flags}
+        trackingEventCount={trackingEventCount}
+        timings={timingSnapshot}
+        onGoToQuestion={(index) => {
+          setPhase("practice");
+          goToQuestion(index);
+        }}
+        onMark={markPractice}
+      />
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-white font-sans text-black">
+    <div
+      ref={appRootRef}
+      className="min-h-screen bg-white font-sans text-black"
+      tabIndex={-1}
+      onKeyDown={handlePracticeKeyDown}
+    >
       <header className="flex min-h-14 items-center justify-between bg-[#0078a8] px-3 py-2 text-white">
         <div className="flex items-center gap-3">
           <Link
@@ -702,13 +1394,37 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
 
       <div className="flex min-h-9 items-center justify-between gap-3 border-b border-slate-400 bg-[#477dbc] px-2 text-white">
         <div className="flex items-center gap-4">
+          {supportsCalculator && (
+            <button
+              type="button"
+              onClick={toggleCalculator}
+              className="inline-flex items-center gap-1 text-sm font-semibold hover:underline sm:text-base"
+            >
+              <Calculator className="h-5 w-5" aria-hidden="true" />
+              Calculator
+            </button>
+          )}
           <button
             type="button"
-            onClick={() => setRevealed((current) => !current)}
-            className="inline-flex items-center gap-1 text-sm font-semibold hover:underline sm:text-base"
+            onClick={() => {
+              setRevealed((current) => !current);
+              recordEvent("explain_toggle", { revealed: !revealed });
+            }}
+            disabled={phase === "marked"}
+            className="inline-flex items-center gap-1 text-sm font-semibold hover:underline disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
           >
             <HelpCircle className="h-5 w-5" aria-hidden="true" />
-            {revealed ? "Hide Answer" : "Explain Answer"}
+            {answerRevealed ? "Hide Answer" : "Explain Answer"}
+          </button>
+          <button
+            type="button"
+            onClick={toggleFlag}
+            className={`inline-flex items-center gap-1 text-sm font-semibold hover:underline sm:text-base ${
+              flags[questionIndex] ? "text-amber-200" : ""
+            }`}
+          >
+            <Flag className="h-5 w-5" aria-hidden="true" />
+            Flag for review
           </button>
           <span className="hidden rounded-sm bg-white/15 px-2 py-1 text-xs font-bold sm:inline-flex">
             {subtype.label}
@@ -718,11 +1434,86 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           aria-label="Colour scheme"
           className="h-8 rounded-none border border-[#1c4e7d] bg-[#477dbc] px-2 text-sm font-semibold text-white"
           defaultValue="default"
+          onChange={(event) =>
+            recordEvent("colour_scheme_change", { scheme: event.target.value })
+          }
         >
           <option value="default">Colour Scheme</option>
           <option value="high-contrast">High Contrast</option>
         </select>
       </div>
+
+      {calculatorOpen && supportsCalculator && (
+        <div className="fixed left-4 top-28 z-30 w-64 rounded-sm border border-slate-700 bg-[#f3f4f6] p-3 text-black shadow-2xl">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-sm font-bold">Calculator</p>
+            <button
+              type="button"
+              onClick={toggleCalculator}
+              className="rounded-sm px-2 text-sm font-bold hover:bg-slate-200"
+            >
+              x
+            </button>
+          </div>
+          <div className="mb-2 rounded-sm border border-slate-500 bg-white px-2 py-2 text-right font-mono text-2xl">
+            {calcDisplay}
+          </div>
+          <div className="grid grid-cols-4 gap-1.5 text-sm font-bold">
+            <button type="button" onClick={memoryRecallClear} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              MRC
+            </button>
+            <button type="button" onClick={() => memoryAdd(-1)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              M-
+            </button>
+            <button type="button" onClick={() => memoryAdd(1)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              M+
+            </button>
+            <button type="button" onClick={resetCalculator} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              CE
+            </button>
+            {["7", "8", "9"].map((digit) => (
+              <button key={digit} type="button" onClick={() => inputCalcDigit(digit)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+                {digit}
+              </button>
+            ))}
+            <button type="button" onClick={() => commitCalcOperation("/")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              /
+            </button>
+            {["4", "5", "6"].map((digit) => (
+              <button key={digit} type="button" onClick={() => inputCalcDigit(digit)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+                {digit}
+              </button>
+            ))}
+            <button type="button" onClick={() => commitCalcOperation("*")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              *
+            </button>
+            {["1", "2", "3"].map((digit) => (
+              <button key={digit} type="button" onClick={() => inputCalcDigit(digit)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+                {digit}
+              </button>
+            ))}
+            <button type="button" onClick={() => commitCalcOperation("-")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              -
+            </button>
+            <button type="button" onClick={() => inputCalcDigit("0")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              0
+            </button>
+            <button type="button" onClick={inputCalcDecimal} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              .
+            </button>
+            <button type="button" onClick={() => commitCalcOperation()} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              =
+            </button>
+            <button type="button" onClick={() => commitCalcOperation("+")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+              +
+            </button>
+          </div>
+          <p className="mt-2 text-[11px] font-semibold leading-4 text-slate-600">
+            Shortcuts: Alt+C opens, / divides, * multiplies, M = M-, P = M+,
+            C recalls MRC and double C clears memory.
+          </p>
+        </div>
+      )}
 
       <main className="grid min-h-[calc(100vh-132px)] grid-cols-1 md:grid-cols-[1.15fr_0.85fr]">
         <section className="border-r-[6px] border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)]">
@@ -750,14 +1541,14 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
                 {dragOrder.map((itemId, index) => {
                   const itemText = dragItemLookup.get(itemId) ?? itemId;
                   const correctSlot =
-                    revealed && question.answerOrder[index] === itemId;
+                    answerRevealed && question.answerOrder[index] === itemId;
                   const wrongSlot =
-                    revealed && question.answerOrder[index] !== itemId;
+                    answerRevealed && question.answerOrder[index] !== itemId;
 
                   return (
                     <div
                       key={itemId}
-                      draggable
+                      draggable={phase !== "marked"}
                       onDragStart={() => setDraggedItemId(itemId)}
                       onDragOver={(event) => event.preventDefault()}
                       onDrop={() => {
@@ -790,8 +1581,8 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
             <div className="mt-6 space-y-5">
               {question.options.map((option) => {
                 const checked = selectedAnswer === option.key;
-                const correct = revealed && option.key === question.answer;
-                const wrong = revealed && checked && option.key !== question.answer;
+                const correct = answerRevealed && option.key === question.answer;
+                const wrong = answerRevealed && checked && option.key !== question.answer;
 
                 return (
                   <label
@@ -809,6 +1600,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
                       name={question.id}
                       checked={checked}
                       onChange={() => chooseAnswer(option.key)}
+                      disabled={phase === "marked"}
                       className="mt-1 h-4 w-4"
                     />
                     <span className="font-semibold">{option.key}.</span>
@@ -819,7 +1611,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
             </div>
           )}
 
-          {revealed && (
+          {answerRevealed && (
             <div
               className={`mt-8 rounded-sm border p-4 ${
                 isCorrect
@@ -864,9 +1656,11 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
                 className={`h-10 rounded-sm border text-sm font-bold ${
                   index === questionIndex
                     ? "border-[#0078a8] bg-[#0078a8] text-white"
-                    : answers[index]
-                      ? "border-emerald-400 bg-emerald-50 text-emerald-700"
-                      : "border-slate-300 bg-white text-slate-700"
+                    : flags[index]
+                      ? "border-amber-400 bg-amber-50 text-amber-700"
+                      : answers[index]
+                        ? "border-emerald-400 bg-emerald-50 text-emerald-700"
+                        : "border-slate-300 bg-white text-slate-700"
                 }`}
               >
                 {index + 1}
@@ -879,12 +1673,23 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       <footer className="fixed inset-x-0 bottom-0 flex h-10 items-center justify-between border-t-2 border-white bg-[#0078a8] text-white">
         <button
           type="button"
-          onClick={() => setStarted(false)}
+          onClick={() => {
+            commitQuestionTiming();
+            recordEvent("end_bank");
+            setStarted(false);
+          }}
           className="flex h-full items-center border-r-2 border-white px-3 text-lg font-semibold hover:bg-[#00618a]"
         >
           End Bank
         </button>
         <div className="flex h-full items-center">
+          <button
+            type="button"
+            onClick={openReview}
+            className="h-full border-l-2 border-white px-4 text-lg font-semibold hover:bg-[#00618a]"
+          >
+            Review
+          </button>
           <button
             type="button"
             onClick={previousQuestion}
@@ -895,7 +1700,10 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           </button>
           <button
             type="button"
-            onClick={() => setNavigatorOpen((current) => !current)}
+            onClick={() => {
+              setNavigatorOpen((current) => !current);
+              recordEvent("navigator_toggle", { open: !navigatorOpen });
+            }}
             className="flex h-full items-center gap-2 border-l-2 border-white px-4 text-lg font-semibold hover:bg-[#00618a]"
           >
             <ListChecks className="h-5 w-5" aria-hidden="true" />
