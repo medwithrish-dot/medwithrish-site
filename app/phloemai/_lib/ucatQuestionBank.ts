@@ -45,7 +45,7 @@ export type UCATChartVisual =
       note?: string;
     };
 
-export type UCATQuestion = {
+type UCATQuestionBase = {
   id: string;
   section: UCATSection;
   subtype: UCATSubtypeId;
@@ -54,10 +54,23 @@ export type UCATQuestion = {
   stimulus: string[];
   visual?: UCATChartVisual;
   question: string;
-  options: Array<{ key: UCATOptionKey; text: string }>;
-  answer: UCATOptionKey;
   explanation: string;
 };
+
+export type UCATSingleQuestion = UCATQuestionBase & {
+  questionType?: "single";
+  options: Array<{ key: UCATOptionKey; text: string }>;
+  answer: UCATOptionKey;
+};
+
+export type UCATDragOrderQuestion = UCATQuestionBase & {
+  questionType: "drag-order";
+  dragItems: Array<{ id: string; text: string }>;
+  answerOrder: string[];
+  instruction: string;
+};
+
+export type UCATQuestion = UCATSingleQuestion | UCATDragOrderQuestion;
 
 export const UCAT_SECTIONS: Array<{
   slug: UCATSection;
@@ -218,7 +231,6 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         { key: "A", text: "True" },
         { key: "B", text: "False" },
         { key: "C", text: "Can't tell" },
-        { key: "D", text: "Irrelevant to the passage" },
       ],
       answer: "C",
       explanation:
@@ -240,7 +252,6 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         { key: "A", text: "True" },
         { key: "B", text: "False" },
         { key: "C", text: "Can't tell" },
-        { key: "D", text: "Only true in winter" },
       ],
       answer: "B",
       explanation:
@@ -877,6 +888,42 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "Taking responsibility, apologising and helping the visitor is respectful and practical.",
     },
     {
+      id: "sjt-appropriateness-003",
+      section: "sjt",
+      subtype: "sjt-appropriateness",
+      questionType: "drag-order",
+      title: "Situational Judgement Practice",
+      leftTitle: "Scenario",
+      stimulus: [
+        "During a GP placement, you are asked to help organise patients in the waiting room. An elderly patient tells you they feel dizzy and may faint. At the same time, another patient says they have been waiting longer than everyone else and wants you to check their appointment time.",
+      ],
+      question:
+        "Drag the actions into the most appropriate order, from first to last.",
+      instruction:
+        "Prioritise immediate patient safety, then seek appropriate help and communicate calmly.",
+      dragItems: [
+        {
+          id: "safety",
+          text: "Make sure the dizzy patient is safely seated and not left standing.",
+        },
+        {
+          id: "staff",
+          text: "Alert a receptionist or clinician that the patient feels faint.",
+        },
+        {
+          id: "reassure",
+          text: "Reassure the waiting patient that someone will check their appointment when safe to do so.",
+        },
+        {
+          id: "check",
+          text: "Check the waiting patient's appointment time or ask reception to do so.",
+        },
+      ],
+      answerOrder: ["safety", "staff", "reassure", "check"],
+      explanation:
+        "Immediate safety comes first, then escalation to staff. The other patient's concern should be acknowledged, but administrative checking comes after the urgent risk has been managed.",
+    },
+    {
       id: "sjt-importance-001",
       section: "sjt",
       subtype: "sjt-importance",
@@ -957,6 +1004,42 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "Listening calmly and seeking an appropriate update supports communication without pretending to have authority you do not have.",
     },
     {
+      id: "sjt-communication-003",
+      section: "sjt",
+      subtype: "sjt-communication",
+      questionType: "drag-order",
+      title: "Situational Judgement Practice",
+      leftTitle: "Scenario",
+      stimulus: [
+        "You are working with two other students on a health-promotion stall. One student starts giving confident but inaccurate advice about antibiotics to a visitor. The visitor seems reassured and begins to walk away.",
+      ],
+      question:
+        "Drag the responses into the most appropriate order, from first to last.",
+      instruction:
+        "Correct misinformation respectfully while protecting the visitor and the team relationship.",
+      dragItems: [
+        {
+          id: "pause",
+          text: "Politely pause the conversation before the visitor leaves.",
+        },
+        {
+          id: "clarify",
+          text: "Clarify the accurate advice using the approved information leaflet.",
+        },
+        {
+          id: "private",
+          text: "Speak privately with the student afterwards about checking information before advising visitors.",
+        },
+        {
+          id: "lead",
+          text: "Let the stall lead know if inaccurate advice may already have been given to visitors.",
+        },
+      ],
+      answerOrder: ["pause", "clarify", "private", "lead"],
+      explanation:
+        "The visitor should not leave with inaccurate advice. Correct it using approved information, then address the teammate respectfully and escalate if there may be wider patient-safety or public-information risk.",
+    },
+    {
       id: "sjt-integrity-001",
       section: "sjt",
       subtype: "sjt-integrity",
@@ -1013,4 +1096,10 @@ export function getUCATSubtypeMeta(subtype: UCATSubtypeId) {
       .flat()
       .find((item) => item.id === subtype) ?? UCAT_SUBTYPES.vr[0]
   );
+}
+
+export function isUCATDragOrderQuestion(
+  question: UCATQuestion
+): question is UCATDragOrderQuestion {
+  return question.questionType === "drag-order";
 }

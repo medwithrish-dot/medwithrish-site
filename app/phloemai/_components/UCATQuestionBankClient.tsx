@@ -7,6 +7,7 @@ import {
   ArrowRight,
   CheckCircle,
   Clock3,
+  GripVertical,
   HelpCircle,
   ListChecks,
   Play,
@@ -17,19 +18,37 @@ import {
   getUCATSectionMeta,
   getUCATSubtypeMeta,
   isUCATSection,
+  isUCATDragOrderQuestion,
   UCAT_QUESTION_BANK,
   UCAT_SECTIONS,
   UCAT_SUBTYPES,
   type UCATChartVisual,
   type UCATOptionKey,
+  type UCATQuestion,
   type UCATSection,
   type UCATSubtypeId,
 } from "../_lib/ucatQuestionBank";
+
+type PracticeAnswer = UCATOptionKey | string[];
 
 function formatDuration(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function sameOrder(first: string[], second: string[]) {
+  return (
+    first.length === second.length &&
+    first.every((item, index) => item === second[index])
+  );
+}
+
+function getDragOrder(question: UCATQuestion, savedAnswer?: PracticeAnswer) {
+  if (!isUCATDragOrderQuestion(question)) return [];
+  return Array.isArray(savedAnswer)
+    ? savedAnswer
+    : question.dragItems.map((item) => item.id);
 }
 
 function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
@@ -70,17 +89,22 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     );
   }
 
-  const width = 420;
-  const height = 240;
-  const left = 46;
-  const right = 22;
-  const top = 34;
-  const bottom = 54;
+  const width = 560;
+  const height = 330;
+  const left = 66;
+  const right = 36;
+  const top = 42;
+  const bottom = 66;
   const chartWidth = width - left - right;
   const chartHeight = height - top - bottom;
   const valueToY = (value: number) =>
     top + chartHeight - (value / visual.max) * chartHeight;
-  const ticks = [0, visual.max / 2, visual.max];
+  const tickCount = 10;
+  const ticks = Array.from(
+    { length: tickCount + 1 },
+    (_, index) => (visual.max / tickCount) * index
+  );
+  const majorTicks = ticks.filter((_, index) => index % 2 === 0);
   const entries =
     visual.type === "bar" ? visual.categories : visual.points;
 
@@ -97,33 +121,27 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
       : [];
 
   return (
-    <div className="mt-6 rounded-sm border border-slate-300 bg-white p-3">
-      <h3 className="text-sm font-bold">{visual.title}</h3>
+    <div className="mt-6 rounded-sm border border-slate-300 bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
+      <h3 className="text-center text-sm font-bold">{visual.title}</h3>
       <div className="mt-2 overflow-x-auto">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="min-w-[360px] text-slate-800"
+          className="min-w-[460px] text-slate-800"
           role="img"
           aria-label={visual.title}
         >
-          <line
-            x1={left}
-            y1={top + chartHeight}
-            x2={left + chartWidth}
-            y2={top + chartHeight}
-            stroke="#334155"
-            strokeWidth="1.5"
-          />
-          <line
-            x1={left}
-            y1={top}
-            x2={left}
-            y2={top + chartHeight}
-            stroke="#334155"
-            strokeWidth="1.5"
+          <rect
+            x={left}
+            y={top}
+            width={chartWidth}
+            height={chartHeight}
+            fill="#fbfbfb"
+            stroke="#d4d4d4"
+            strokeWidth="1"
           />
           {ticks.map((tick) => {
             const y = valueToY(tick);
+            const major = majorTicks.includes(tick);
             return (
               <g key={tick}>
                 <line
@@ -131,36 +149,68 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   y1={y}
                   x2={left + chartWidth}
                   y2={y}
-                  stroke="#e2e8f0"
-                  strokeWidth="1"
+                  stroke={major ? "#9ca3af" : "#e5e7eb"}
+                  strokeWidth={major ? "1.1" : "0.7"}
                 />
-                <text
-                  x={left - 10}
-                  y={y + 4}
-                  textAnchor="end"
-                  fontSize="12"
-                  fill="#475569"
-                >
-                  {Math.round(tick)}
-                </text>
+                {major && (
+                  <text
+                    x={left - 12}
+                    y={y + 4}
+                    textAnchor="end"
+                    fontSize="13"
+                    fill="#27272a"
+                  >
+                    {Math.round(tick)}
+                  </text>
+                )}
               </g>
             );
           })}
+          {Array.from({ length: 10 }, (_, index) => {
+            const x = left + (index / 10) * chartWidth;
+            return (
+              <line
+                key={x}
+                x1={x}
+                y1={top}
+                x2={x}
+                y2={top + chartHeight}
+                stroke="#eeeeee"
+                strokeWidth="0.7"
+              />
+            );
+          })}
+          <line
+            x1={left}
+            y1={top + chartHeight}
+            x2={left + chartWidth}
+            y2={top + chartHeight}
+            stroke="#111827"
+            strokeWidth="1.8"
+          />
+          <line
+            x1={left}
+            y1={top}
+            x2={left}
+            y2={top + chartHeight}
+            stroke="#111827"
+            strokeWidth="1.8"
+          />
           <text
-            x={18}
+            x={22}
             y={top + chartHeight / 2}
-            transform={`rotate(-90 18 ${top + chartHeight / 2})`}
+            transform={`rotate(-90 22 ${top + chartHeight / 2})`}
             textAnchor="middle"
-            fontSize="12"
+            fontSize="14"
             fontWeight="700"
-            fill="#334155"
+            fill="#27272a"
           >
             {visual.yLabel}
           </text>
 
           {visual.type === "bar" &&
             visual.categories.map((category, index) => {
-              const gap = 16;
+              const gap = 22;
               const barWidth =
                 (chartWidth - gap * (visual.categories.length + 1)) /
                 visual.categories.length;
@@ -174,16 +224,17 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     y={y}
                     width={barWidth}
                     height={barHeight}
-                    rx="4"
-                    fill="#2563eb"
+                    fill="#8a8a8a"
+                    stroke="#1f2937"
+                    strokeWidth="1.2"
                   />
                   <text
                     x={x + barWidth / 2}
                     y={y - 7}
                     textAnchor="middle"
-                    fontSize="12"
+                    fontSize="13"
                     fontWeight="700"
-                    fill="#0f172a"
+                    fill="#111827"
                   >
                     {category.value}
                   </text>
@@ -191,9 +242,9 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     x={x + barWidth / 2}
                     y={top + chartHeight + 22}
                     textAnchor="middle"
-                    fontSize="12"
+                    fontSize="13"
                     fontWeight="700"
-                    fill="#334155"
+                    fill="#27272a"
                   >
                     {category.label}
                   </text>
@@ -206,21 +257,28 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
               <polyline
                 points={linePoints.map((point) => `${point.x},${point.y}`).join(" ")}
                 fill="none"
-                stroke="#2563eb"
+                stroke="#3f3f46"
                 strokeWidth="3"
                 strokeLinejoin="round"
                 strokeLinecap="round"
               />
               {linePoints.map((point) => (
                 <g key={point.label}>
-                  <circle cx={point.x} cy={point.y} r="5" fill="#2563eb" />
+                  <circle
+                    cx={point.x}
+                    cy={point.y}
+                    r="5"
+                    fill="#f8fafc"
+                    stroke="#111827"
+                    strokeWidth="2"
+                  />
                   <text
                     x={point.x}
                     y={point.y - 10}
                     textAnchor="middle"
-                    fontSize="12"
+                    fontSize="13"
                     fontWeight="700"
-                    fill="#0f172a"
+                    fill="#111827"
                   >
                     {point.value}
                   </text>
@@ -228,9 +286,9 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     x={point.x}
                     y={top + chartHeight + 22}
                     textAnchor="middle"
-                    fontSize="12"
+                    fontSize="13"
                     fontWeight="700"
-                    fill="#334155"
+                    fill="#27272a"
                   >
                     {point.label}
                   </text>
@@ -247,7 +305,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
         {entries.map((entry) => (
           <div
             key={entry.label}
-            className="flex items-center justify-between rounded-sm bg-slate-50 px-2 py-1"
+            className="flex items-center justify-between border-b border-slate-200 px-1 py-1"
           >
             <span>{entry.label}</span>
             <span>{entry.value}</span>
@@ -496,7 +554,9 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selected, setSelected] = useState<UCATOptionKey | null>(null);
   const [revealed, setRevealed] = useState(false);
-  const [answers, setAnswers] = useState<Record<number, UCATOptionKey>>({});
+  const [answers, setAnswers] = useState<Record<number, PracticeAnswer>>({});
+  const [dragOrder, setDragOrder] = useState<string[]>([]);
+  const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
   const [selectedSubtypeIds, setSelectedSubtypeIds] = useState<UCATSubtypeId[]>(
     []
   );
@@ -542,6 +602,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     setSelected(null);
     setRevealed(false);
     setAnswers({});
+    setDragOrder(getDragOrder(questions[0]));
     setTimeRemaining(questions.length * meta.secondsPerQuestion);
     setStarted(true);
   };
@@ -563,8 +624,13 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
 
   const question = questions[questionIndex];
   const subtype = getUCATSubtypeMeta(question.subtype);
-  const selectedAnswer = selected ?? answers[questionIndex] ?? null;
-  const isCorrect = selectedAnswer === question.answer;
+  const savedAnswer = answers[questionIndex];
+  const selectedAnswer =
+    selected ?? (typeof savedAnswer === "string" ? savedAnswer : null);
+  const isDragQuestion = isUCATDragOrderQuestion(question);
+  const isCorrect = isDragQuestion
+    ? sameOrder(dragOrder, question.answerOrder)
+    : selectedAnswer === question.answer;
 
   const chooseAnswer = (key: UCATOptionKey) => {
     setSelected(key);
@@ -573,10 +639,23 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   };
 
   const goToQuestion = (index: number) => {
+    const nextAnswer = answers[index];
     setQuestionIndex(index);
-    setSelected(answers[index] ?? null);
+    setSelected(typeof nextAnswer === "string" ? nextAnswer : null);
+    setDragOrder(getDragOrder(questions[index], nextAnswer));
     setRevealed(false);
     setNavigatorOpen(false);
+  };
+
+  const moveDragItem = (fromIndex: number, toIndex: number) => {
+    if (!isDragQuestion || fromIndex === toIndex) return;
+
+    const next = [...dragOrder];
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
+    setDragOrder(next);
+    setAnswers((answerState) => ({ ...answerState, [questionIndex]: next }));
+    setRevealed(false);
   };
 
   const nextQuestion = () => {
@@ -588,6 +667,15 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     const nextIndex = Math.max(questionIndex - 1, 0);
     goToQuestion(nextIndex);
   };
+
+  const dragItemLookup = isDragQuestion
+    ? new Map(question.dragItems.map((item) => [item.id, item.text]))
+    : new Map<string, string>();
+  const correctOrderText = isDragQuestion
+    ? question.answerOrder
+        .map((itemId, index) => `${index + 1}. ${dragItemLookup.get(itemId)}`)
+        .join(" ")
+    : "";
 
   return (
     <div className="min-h-screen bg-white font-sans text-black">
@@ -653,36 +741,83 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           </p>
           <p className="text-base leading-6 sm:text-lg">{question.question}</p>
 
-          <div className="mt-6 space-y-5">
-            {question.options.map((option) => {
-              const checked = selectedAnswer === option.key;
-              const correct = revealed && option.key === question.answer;
-              const wrong = revealed && checked && option.key !== question.answer;
+          {isDragQuestion ? (
+            <div className="mt-6">
+              <p className="rounded-sm border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold leading-6 text-slate-700">
+                {question.instruction}
+              </p>
+              <div className="mt-4 space-y-3">
+                {dragOrder.map((itemId, index) => {
+                  const itemText = dragItemLookup.get(itemId) ?? itemId;
+                  const correctSlot =
+                    revealed && question.answerOrder[index] === itemId;
+                  const wrongSlot =
+                    revealed && question.answerOrder[index] !== itemId;
 
-              return (
-                <label
-                  key={option.key}
-                  className={`grid cursor-pointer grid-cols-[24px_44px_1fr] items-start gap-3 rounded-sm border px-3 py-2 text-base leading-6 sm:text-lg ${
-                    correct
-                      ? "border-emerald-500 bg-emerald-50"
-                      : wrong
-                        ? "border-red-500 bg-red-50"
-                        : "border-transparent hover:border-slate-300"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name={question.id}
-                    checked={checked}
-                    onChange={() => chooseAnswer(option.key)}
-                    className="mt-1 h-4 w-4"
-                  />
-                  <span className="font-semibold">{option.key}.</span>
-                  <span>{option.text}</span>
-                </label>
-              );
-            })}
-          </div>
+                  return (
+                    <div
+                      key={itemId}
+                      draggable
+                      onDragStart={() => setDraggedItemId(itemId)}
+                      onDragOver={(event) => event.preventDefault()}
+                      onDrop={() => {
+                        if (!draggedItemId) return;
+                        moveDragItem(
+                          dragOrder.indexOf(draggedItemId),
+                          dragOrder.indexOf(itemId)
+                        );
+                        setDraggedItemId(null);
+                      }}
+                      className={`grid cursor-grab grid-cols-[34px_32px_1fr] items-center gap-3 rounded-sm border px-3 py-3 text-sm leading-6 active:cursor-grabbing sm:text-base ${
+                        correctSlot
+                          ? "border-emerald-500 bg-emerald-50"
+                          : wrongSlot
+                            ? "border-amber-400 bg-amber-50"
+                            : "border-slate-300 bg-white hover:border-slate-500"
+                      }`}
+                    >
+                      <span className="flex h-7 w-7 items-center justify-center rounded-sm border border-slate-300 bg-slate-100 text-sm font-bold">
+                        {index + 1}
+                      </span>
+                      <GripVertical className="h-5 w-5 text-slate-500" aria-hidden="true" />
+                      <span>{itemText}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="mt-6 space-y-5">
+              {question.options.map((option) => {
+                const checked = selectedAnswer === option.key;
+                const correct = revealed && option.key === question.answer;
+                const wrong = revealed && checked && option.key !== question.answer;
+
+                return (
+                  <label
+                    key={option.key}
+                    className={`grid cursor-pointer grid-cols-[24px_44px_1fr] items-start gap-3 rounded-sm border px-3 py-2 text-base leading-6 sm:text-lg ${
+                      correct
+                        ? "border-emerald-500 bg-emerald-50"
+                        : wrong
+                          ? "border-red-500 bg-red-50"
+                          : "border-transparent hover:border-slate-300"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name={question.id}
+                      checked={checked}
+                      onChange={() => chooseAnswer(option.key)}
+                      className="mt-1 h-4 w-4"
+                    />
+                    <span className="font-semibold">{option.key}.</span>
+                    <span>{option.text}</span>
+                  </label>
+                );
+              })}
+            </div>
+          )}
 
           {revealed && (
             <div
@@ -698,8 +833,15 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
                 ) : (
                   <XCircle className="h-5 w-5 text-amber-600" aria-hidden="true" />
                 )}
-                Correct answer: {question.answer}
+                {isDragQuestion
+                  ? "Correct order"
+                  : `Correct answer: ${question.answer}`}
               </div>
+              {isDragQuestion && (
+                <p className="mt-3 text-sm font-semibold leading-6 text-slate-800">
+                  {correctOrderText}
+                </p>
+              )}
               <p className="mt-3 text-sm leading-6 text-slate-800">
                 {question.explanation}
               </p>
