@@ -39,15 +39,217 @@ body {
 }
 
 .phloem-app-compact {
-  --phloem-app-scale: 0.94;
-  min-height: calc(100vh / var(--phloem-app-scale));
-  width: calc(100% / var(--phloem-app-scale));
-  zoom: var(--phloem-app-scale);
+  font-size: 15px;
 }
 
-@supports not (zoom: 1) {
-  .phloem-app-compact {
-    transform: scale(var(--phloem-app-scale));
-    transform-origin: top left;
-  }
+.phloem-app-compact .p-6 {
+  padding: 1.25rem;
+}
+
+.phloem-app-compact .p-5 {
+  padding: 1rem;
+}
+
+.phloem-app-compact .p-4 {
+  padding: 0.875rem;
+}
+
+.phloem-app-compact .p-3 {
+  padding: 0.65rem;
+}
+
+.phloem-app-compact .p-2 {
+  padding: 0.45rem;
+}
+
+.phloem-app-compact .px-8 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.phloem-app-compact .px-6 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.phloem-app-compact .px-5 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.phloem-app-compact .px-4 {
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+}
+
+.phloem-app-compact .px-3 {
+  padding-left: 0.65rem;
+  padding-right: 0.65rem;
+}
+
+.phloem-app-compact .py-6 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.phloem-app-compact .py-5 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.phloem-app-compact .py-4 {
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+}
+
+.phloem-app-compact .gap-6 {
+  gap: 1.25rem;
+}
+
+.phloem-app-compact .gap-5 {
+  gap: 1rem;
+}
+
+.phloem-app-compact .gap-4 {
+  gap: 0.875rem;
+}
+
+.phloem-app-compact .gap-3 {
+  gap: 0.65rem;
+}
+
+.phloem-app-compact .space-y-5 > :not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.phloem-app-compact .space-y-4 > :not(:last-child) {
+  margin-bottom: 0.875rem;
+}
+
+.phloem-app-compact .space-y-3 > :not(:last-child) {
+  margin-bottom: 0.65rem;
+}
+
+.phloem-app-compact .mt-10 {
+  margin-top: 2rem;
+}
+
+.phloem-app-compact .mt-8 {
+  margin-top: 1.6rem;
+}
+
+.phloem-app-compact .mt-7 {
+  margin-top: 1.35rem;
+}
+
+.phloem-app-compact .mt-6 {
+  margin-top: 1.15rem;
+}
+
+.phloem-app-compact .mt-5 {
+  margin-top: 1rem;
+}
+
+.phloem-app-compact .mt-4 {
+  margin-top: 0.85rem;
+}
+
+.phloem-app-compact .mt-3 {
+  margin-top: 0.65rem;
+}
+
+.phloem-app-compact .mt-2 {
+  margin-top: 0.4rem;
+}
+
+.phloem-app-compact .h-14 {
+  height: 3.1rem;
+}
+
+.phloem-app-compact .w-14 {
+  width: 3.1rem;
+}
+
+.phloem-app-compact .h-12 {
+  height: 2.65rem;
+}
+
+.phloem-app-compact .w-12 {
+  width: 2.65rem;
+}
+
+.phloem-app-compact .h-11 {
+  height: 2.4rem;
+}
+
+.phloem-app-compact .w-11 {
+  width: 2.4rem;
+}
+
+.phloem-app-compact .h-10 {
+  height: 2.2rem;
+}
+
+.phloem-app-compact .w-10 {
+  width: 2.2rem;
+}
+
+.phloem-app-compact .text-4xl {
+  font-size: 2rem;
+  line-height: 2.35rem;
+}
+
+.phloem-app-compact .text-3xl {
+  font-size: 1.65rem;
+  line-height: 1.95rem;
+}
+
+.phloem-app-compact .text-2xl {
+  font-size: 1.35rem;
+  line-height: 1.75rem;
+}
+
+.phloem-app-compact .text-xl {
+  font-size: 1.125rem;
+  line-height: 1.55rem;
+}
+
+.phloem-app-compact .text-lg {
+  font-size: 1rem;
+  line-height: 1.45rem;
+}
+
+.phloem-app-compact .text-base {
+  font-size: 0.925rem;
+  line-height: 1.45rem;
+}
+
+.phloem-app-compact .text-sm {
+  font-size: 0.8125rem;
+  line-height: 1.2rem;
+}
+
+.phloem-app-compact .text-xs {
+  font-size: 0.7rem;
+  line-height: 1rem;
+}
+
+.phloem-app-compact .leading-7 {
+  line-height: 1.55rem;
+}
+
+.phloem-app-compact .leading-6 {
+  line-height: 1.35rem;
+}
+
+.phloem-app-compact .leading-5 {
+  line-height: 1.15rem;
+}
+
+.phloem-app-compact .leading-4 {
+  line-height: 1rem;
+}
+
+.phloem-app-compact .leading-none {
+  line-height: 1;
 }
