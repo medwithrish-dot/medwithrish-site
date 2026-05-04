@@ -67,6 +67,15 @@ function formatDuration(totalSeconds: number) {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
+function normaliseMinuteTarget(value: number | string) {
+  const minutes = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(minutes) ? Math.max(1, minutes) : 1;
+}
+
+function minutesToSeconds(minutes: number) {
+  return Math.max(60, Math.round(minutes * 60));
+}
+
 function sameOrder(first: string[], second: string[]) {
   return (
     first.length === second.length &&
@@ -468,11 +477,11 @@ function SectionSetup({
   const mixedSelected = selectedSubtypeIds.length === 0;
   const selectedMinutes =
     minuteTarget === "custom"
-      ? Number(customMinutes) || 1
+      ? normaliseMinuteTarget(customMinutes)
       : minuteTarget;
   const setTime =
     lengthMode === "minutes"
-      ? Math.max(1, Math.round(selectedMinutes * 60))
+      ? minutesToSeconds(selectedMinutes)
       : questionCount * meta.secondsPerQuestion;
 
   return (
@@ -667,8 +676,8 @@ function SectionSetup({
                   </label>
                 )}
                 <p className="mt-3 text-xs font-bold leading-5 text-slate-500">
-                  Uses the official section pace to choose the closest question
-                  count for the minutes selected.
+                  Timer stays exact. The official section pace only chooses the
+                  closest question count.
                 </p>
               </div>
             </div>
@@ -872,6 +881,8 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   const [started, setStarted] = useState(false);
   const [phase, setPhase] = useState<PracticePhase>("practice");
   const [sessionQuestions, setSessionQuestions] = useState<UCATQuestion[]>([]);
+  const [sessionTimed, setSessionTimed] = useState(false);
+  const [sessionDurationSeconds, setSessionDurationSeconds] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const [calcDisplay, setCalcDisplay] = useState("0");
@@ -903,10 +914,13 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
 
   const meta = getUCATSectionMeta(validSection);
   const selectedMinutes =
-    minuteTarget === "custom" ? Number(customMinutes) || 1 : minuteTarget;
+    minuteTarget === "custom"
+      ? normaliseMinuteTarget(customMinutes)
+      : minuteTarget;
+  const selectedMinuteSeconds = minutesToSeconds(selectedMinutes);
   const desiredQuestionCount =
     lengthMode === "minutes"
-      ? Math.max(1, Math.round((selectedMinutes * 60) / meta.secondsPerQuestion))
+      ? Math.max(1, Math.round(selectedMinuteSeconds / meta.secondsPerQuestion))
       : questionTarget;
   const setupQuestionCount = clampQuestionCount(
     desiredQuestionCount,
@@ -914,7 +928,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   );
   const setupTimeSeconds =
     lengthMode === "minutes"
-      ? Math.max(1, Math.round(selectedMinutes * 60))
+      ? selectedMinuteSeconds
       : setupQuestionCount * meta.secondsPerQuestion;
   const questions = started ? sessionQuestions : availableQuestions;
 
@@ -962,14 +976,14 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   };
 
   useEffect(() => {
-    if (!started || !timed) return;
+    if (!started || !sessionTimed) return;
 
     const intervalId = window.setInterval(() => {
       setTimeRemaining((current) => Math.max(current - 1, 0));
     }, 1000);
 
     return () => window.clearInterval(intervalId);
-  }, [started, timed]);
+  }, [started, sessionTimed]);
 
   useEffect(() => {
     if (started && phase !== "review") {
@@ -999,6 +1013,8 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     setPhase("practice");
     setSessionQuestions(nextQuestions);
     setDragOrder(getDragOrder(nextQuestions[0]));
+    setSessionTimed(lengthMode === "minutes" || timed);
+    setSessionDurationSeconds(setupTimeSeconds);
     setTimeRemaining(setupTimeSeconds);
     trackingEventsRef.current = [];
     questionTimingRef.current = {};
@@ -1010,8 +1026,9 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       section: validSection,
       questionCount: nextQuestions.length,
       lengthMode,
-      timed: lengthMode === "minutes" ? true : timed,
+      timed: lengthMode === "minutes" || timed,
       seconds: setupTimeSeconds,
+      requestedMinutes: lengthMode === "minutes" ? selectedMinutes : null,
     });
   };
 
@@ -1050,6 +1067,9 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         }}
         onCustomMinutesChange={(minutes) => {
           setCustomMinutes(minutes);
+          setLengthMode("minutes");
+          setMinuteTarget("custom");
+          setTimed(true);
           recordEvent("setup_custom_minutes", { minutes });
         }}
         onTimedChange={(nextTimed) => {
@@ -1383,8 +1403,11 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           <h1 className="text-lg font-semibold sm:text-2xl">{meta.bankTitle}</h1>
         </div>
         <div className="flex items-center gap-2">
-          <div className="rounded-sm bg-[#00618a] px-3 py-1 text-sm font-semibold">
-            {timed ? formatDuration(timeRemaining) : "Untimed"}
+          <div
+            className="rounded-sm bg-[#00618a] px-3 py-1 text-sm font-semibold"
+            title={sessionTimed ? `Set time: ${formatDuration(sessionDurationSeconds)}` : undefined}
+          >
+            {sessionTimed ? formatDuration(timeRemaining) : "Untimed"}
           </div>
           <div className="rounded-sm bg-[#00618a] px-3 py-1 text-sm font-semibold">
             {questionIndex + 1} of {questions.length}
