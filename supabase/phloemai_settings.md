@@ -8,7 +8,7 @@ for production:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://ramtuouzzsrhejisruxf.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_y8TaLFxvRGCcHOJ-YZ2I4w_WdJWcRRn
-NEXT_PUBLIC_SITE_URL=https://medwithrish.com
+NEXT_PUBLIC_SITE_URL=https://www.medwithrish.com
 
 SUPABASE_SERVICE_ROLE_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
 
@@ -33,11 +33,12 @@ In Supabase Dashboard:
 
 - Authentication > Providers > Email: enabled.
 - Authentication > URL Configuration > Site URL:
-  - Production: `https://medwithrish.com`
+  - Production: `https://www.medwithrish.com`
   - Local, only if testing locally: `http://localhost:3000`
 - Authentication > URL Configuration > Redirect URLs:
   - `http://localhost:3000/phloemai/dashboard`
   - `http://localhost:3001/phloemai/dashboard`
+  - `https://www.medwithrish.com/phloemai/dashboard`
   - `https://medwithrish.com/phloemai/dashboard`
 - Authentication > Signups: enabled.
 - Email confirmations:
@@ -63,7 +64,7 @@ Create one recurring product/price in Stripe for Premium. Use that price ID as
 Create a webhook endpoint:
 
 ```text
-https://medwithrish.com/api/stripe/webhook
+https://www.medwithrish.com/api/stripe/webhook
 ```
 
 Subscribe it to these events:

@@ -16,6 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "MedWithRish",
   description: "Leading medical/dental admissions advice.",
+  icons: {
+    icon: [{ url: "/favicon.ico?v=2", sizes: "any" }],
+    shortcut: ["/favicon.ico?v=2"],
+  },
 };
 
 export default function RootLayout({
