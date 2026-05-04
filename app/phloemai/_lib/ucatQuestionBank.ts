@@ -18,6 +18,8 @@ export type UCATSubtypeId =
   | "qr-rates-ratios"
   | "qr-averages"
   | "qr-units-geometry"
+  | "qr-estimation"
+  | "qr-calculator-strategy"
   | "sjt-appropriateness"
   | "sjt-importance"
   | "sjt-communication"
@@ -184,28 +186,38 @@ export const UCAT_SUBTYPES: Record<
   qr: [
     {
       id: "qr-graphs",
-      label: "Graphs and tables",
-      description: "Interpret charts, tables and visual data.",
+      label: "Data displays",
+      description: "Interpret charts, tables, text-only data and visual trends.",
     },
     {
       id: "qr-percentages",
-      label: "Percentages and finance",
-      description: "Work with change, discounts, tax and margins.",
+      label: "Percentages, fractions and finance",
+      description: "Use percentage change, fractions, discounts, tax and margins.",
     },
     {
       id: "qr-rates-ratios",
-      label: "Rates, ratios and units",
+      label: "Rates, ratios and proportions",
       description: "Scale quantities, speeds, unit costs and rates.",
     },
     {
       id: "qr-averages",
-      label: "Averages and spread",
-      description: "Use mean, median, mode, range and totals.",
+      label: "Averages, totals and spread",
+      description: "Use mean, median, mode, range, totals and missing values.",
     },
     {
       id: "qr-units-geometry",
-      label: "Geometry and conversions",
-      description: "Handle area, volume and everyday conversions.",
+      label: "Units, geometry and scale",
+      description: "Handle conversions, area, volume and scaled measurements.",
+    },
+    {
+      id: "qr-estimation",
+      label: "Estimation and mental maths",
+      description: "Round, approximate and spot whether an answer is reasonable.",
+    },
+    {
+      id: "qr-calculator-strategy",
+      label: "Calculator and working strategy",
+      description: "Choose efficient calculator, noteboard and multi-step methods.",
     },
   ],
   sjt: [
@@ -929,6 +941,48 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       answer: "C",
       explanation:
         "12 km / 1.6 km per mile = 7.5 miles.",
+    },
+    {
+      id: "qr-estimation-001",
+      section: "qr",
+      subtype: "qr-estimation",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
+      stimulus: [
+        "A walk-in clinic recorded 1,984 appointments in April, 2,116 in May and 1,907 in June.",
+      ],
+      question:
+        "Using quick estimation, approximately how many appointments were recorded across the three months?",
+      options: [
+        { key: "A", text: "5,700" },
+        { key: "B", text: "6,000" },
+        { key: "C", text: "6,300" },
+        { key: "D", text: "6,600" },
+      ],
+      answer: "B",
+      explanation:
+        "Round the figures to 2,000, 2,100 and 1,900. The estimated total is 6,000, close to the exact total of 6,007.",
+    },
+    {
+      id: "qr-calculator-strategy-001",
+      section: "qr",
+      subtype: "qr-calculator-strategy",
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
+      stimulus: [
+        "A calculation requires finding 37.5% of 864 and then adding 12.5% of 864.",
+      ],
+      question:
+        "Which single calculation gives the same result most efficiently?",
+      options: [
+        { key: "A", text: "0.25 x 864" },
+        { key: "B", text: "0.5 x 864" },
+        { key: "C", text: "0.625 x 864" },
+        { key: "D", text: "1.5 x 864" },
+      ],
+      answer: "B",
+      explanation:
+        "37.5% + 12.5% = 50%, so the quickest equivalent calculation is 0.5 x 864.",
     },
   ],
   sjt: [
