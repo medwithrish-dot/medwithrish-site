@@ -1715,7 +1715,6 @@ function PracticeContent() {
   const mockTests = [
     ["Full mocks", "Run a complete UCAT-style mock when you need a full readiness check.", Timer, "bg-blue-100 text-blue-600"],
     ["Mini mocks", "Short mixed tests for momentum without committing to a full paper.", BarChart3, "bg-violet-100 text-violet-600"],
-    ["Subtest mocks", "Practice one UCAT section under realistic timing.", Clock3, "bg-cyan-100 text-cyan-600"],
     ["Review mocks", "Revisit marked and incorrect mock questions with feedback.", AlertTriangle, "bg-red-100 text-red-500"],
   ] as const;
 
@@ -1844,7 +1843,7 @@ function PracticeContent() {
         <p className="mt-2 text-sm font-semibold text-slate-500">
           Use mocks when you want exam-style timing, score pressure and review.
         </p>
-        <div className="mt-4 grid gap-4 md:grid-cols-4">
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
           {mockTests.map(([title, text, Icon, iconClass]) => (
             <Link
               href="/phloemai/question-bank"
