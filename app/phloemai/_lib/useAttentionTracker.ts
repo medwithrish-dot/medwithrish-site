@@ -159,7 +159,7 @@ export function useAttentionTracker<ZoneId extends string>({
   const [trackingMode, setTrackingMode] = useState<TrackingMode>("none");
   const [dataReceived, setDataReceived] = useState(false);
   const [error, setError] = useState(false);
-  const [showRing, setShowRing] = useState(true);
+  const [showRing, setShowRing] = useState(false);
   const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
   const [eyeStatus, setEyeStatus] = useState<"idle" | "enabling" | "calibrating">("idle");
 
@@ -183,7 +183,8 @@ export function useAttentionTracker<ZoneId extends string>({
   const neutralRef = useRef<number | null>(null);
   const neutralHorizRef = useRef<number | null>(null);
   const gainVRef = useRef<number>(60);
-  const gainHRef = useRef<number>(25);
+  const horizSlopeRef = useRef<number>(-25);
+  const horizInterceptRef = useRef<number>(0.5);
   const calibPhaseRef = useRef(0);
   const calibVertSamplesRef = useRef<number[][]>(
     CALIB_PHASES.map(() => [])
@@ -496,9 +497,7 @@ export function useAttentionTracker<ZoneId extends string>({
         calibHorizSamplesRef.current[ph]?.push(gazeX);
       } else if (activeRef.current) {
         const neutralY = neutralRef.current ?? 0;
-        const neutralX = neutralHorizRef.current ?? 0;
         const gainV = gainVRef.current * 1.32;
-        const gainH = gainHRef.current;
         const screenY = Math.max(
           0,
           Math.min(
@@ -510,7 +509,8 @@ export function useAttentionTracker<ZoneId extends string>({
           0,
           Math.min(
             window.innerWidth - 1,
-            window.innerWidth * 0.5 + (gazeX - neutralX) * gainH * window.innerWidth
+            (horizInterceptRef.current + horizSlopeRef.current * gazeX) *
+              window.innerWidth
           )
         );
         recordPoint(screenX, screenY);
@@ -609,11 +609,15 @@ export function useAttentionTracker<ZoneId extends string>({
       }
       neutralHorizRef.current = centerXG ?? 0;
       if (leftG !== null && rightG !== null && Math.abs(rightG - leftG) > 0.0005) {
-        const rawGain = 0.76 / (rightG - leftG);
-        const gainMagnitude = Math.min(160, Math.max(18, Math.abs(rawGain)));
-        gainHRef.current = Math.sign(rawGain || 1) * gainMagnitude;
+        const rawSlope = 0.76 / (rightG - leftG);
+        const slopeMagnitude = Math.min(160, Math.max(18, Math.abs(rawSlope)));
+        const slope = Math.sign(rawSlope || 1) * slopeMagnitude;
+        horizSlopeRef.current = slope;
+        horizInterceptRef.current = 0.12 - slope * leftG;
       } else {
-        gainHRef.current = 25;
+        const neutralX = centerXG ?? 0;
+        horizSlopeRef.current = -25;
+        horizInterceptRef.current = 0.5 + 25 * neutralX;
       }
       setEyeStatus("idle");
       afterEyeCalibrationRef.current?.();
@@ -628,7 +632,7 @@ export function useAttentionTracker<ZoneId extends string>({
       intervals.push(ci);
       const t = setTimeout(() => {
         clearInterval(ci);
-        if (phase < 2) runPhase(phase + 1);
+        if (phase < CALIB_PHASES.length - 1) runPhase(phase + 1);
         else finish();
       }, 2600);
       timers.push(t);
@@ -719,7 +723,8 @@ export function useAttentionTracker<ZoneId extends string>({
     neutralRef.current = null;
     neutralHorizRef.current = null;
     gainVRef.current = 60;
-    gainHRef.current = 25;
+    horizSlopeRef.current = -25;
+    horizInterceptRef.current = 0.5;
     calibVertSamplesRef.current = CALIB_PHASES.map(() => []);
     calibHorizSamplesRef.current = CALIB_PHASES.map(() => []);
     gazeSamplesRef.current = [];
