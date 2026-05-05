@@ -1144,86 +1144,103 @@ type MockPerformanceSeries = {
   title: string;
   subtitle: string;
   totalLabel: string;
+  scaleLabel: string;
+  scaleMin: number;
+  scaleMax: number;
   ticks: number[];
-  max: number;
-  points: Array<{ label: string; correct: number; incorrect: number }>;
+  points: Array<{
+    label: string;
+    correct: number;
+    incorrect: number;
+    scaled: number;
+  }>;
 };
 
 const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeries> = {
   VR: {
     title: "VR mini mocks",
-    subtitle: "Correct vs incorrect answers across recent Verbal Reasoning mini mocks.",
+    subtitle: "Scaled score across recent Verbal Reasoning mini mocks.",
     totalLabel: "24 questions each",
-    ticks: [0, 6, 12, 18, 24],
-    max: 24,
+    scaleLabel: "UCAT scaled score",
+    scaleMin: 300,
+    scaleMax: 900,
+    ticks: [300, 500, 700, 900],
     points: [
-      { label: "Set 1", correct: 14, incorrect: 10 },
-      { label: "Set 2", correct: 15, incorrect: 9 },
-      { label: "Set 3", correct: 15, incorrect: 9 },
-      { label: "Set 4", correct: 17, incorrect: 7 },
-      { label: "Set 5", correct: 18, incorrect: 6 },
-      { label: "Set 6", correct: 19, incorrect: 5 },
+      { label: "Set 1", correct: 14, incorrect: 10, scaled: 580 },
+      { label: "Set 2", correct: 15, incorrect: 9, scaled: 610 },
+      { label: "Set 3", correct: 15, incorrect: 9, scaled: 620 },
+      { label: "Set 4", correct: 17, incorrect: 7, scaled: 670 },
+      { label: "Set 5", correct: 18, incorrect: 6, scaled: 700 },
+      { label: "Set 6", correct: 19, incorrect: 5, scaled: 730 },
     ],
   },
   DM: {
     title: "DM mini mocks",
-    subtitle: "Correct vs incorrect answers across recent Decision Making mini mocks.",
+    subtitle: "Scaled score across recent Decision Making mini mocks.",
     totalLabel: "20 questions each",
-    ticks: [0, 5, 10, 15, 20],
-    max: 20,
+    scaleLabel: "UCAT scaled score",
+    scaleMin: 300,
+    scaleMax: 900,
+    ticks: [300, 500, 700, 900],
     points: [
-      { label: "Set 1", correct: 11, incorrect: 9 },
-      { label: "Set 2", correct: 12, incorrect: 8 },
-      { label: "Set 3", correct: 13, incorrect: 7 },
-      { label: "Set 4", correct: 13, incorrect: 7 },
-      { label: "Set 5", correct: 14, incorrect: 6 },
-      { label: "Set 6", correct: 15, incorrect: 5 },
+      { label: "Set 1", correct: 11, incorrect: 9, scaled: 570 },
+      { label: "Set 2", correct: 12, incorrect: 8, scaled: 600 },
+      { label: "Set 3", correct: 13, incorrect: 7, scaled: 630 },
+      { label: "Set 4", correct: 13, incorrect: 7, scaled: 650 },
+      { label: "Set 5", correct: 14, incorrect: 6, scaled: 670 },
+      { label: "Set 6", correct: 15, incorrect: 5, scaled: 700 },
     ],
   },
   QR: {
     title: "QR mini mocks",
-    subtitle: "Correct vs incorrect answers across recent Quantitative Reasoning mini mocks.",
+    subtitle: "Scaled score across recent Quantitative Reasoning mini mocks.",
     totalLabel: "20 questions each",
-    ticks: [0, 5, 10, 15, 20],
-    max: 20,
+    scaleLabel: "UCAT scaled score",
+    scaleMin: 300,
+    scaleMax: 900,
+    ticks: [300, 500, 700, 900],
     points: [
-      { label: "Set 1", correct: 9, incorrect: 11 },
-      { label: "Set 2", correct: 10, incorrect: 10 },
-      { label: "Set 3", correct: 11, incorrect: 9 },
-      { label: "Set 4", correct: 12, incorrect: 8 },
-      { label: "Set 5", correct: 13, incorrect: 7 },
-      { label: "Set 6", correct: 15, incorrect: 5 },
+      { label: "Set 1", correct: 9, incorrect: 11, scaled: 520 },
+      { label: "Set 2", correct: 10, incorrect: 10, scaled: 550 },
+      { label: "Set 3", correct: 11, incorrect: 9, scaled: 580 },
+      { label: "Set 4", correct: 12, incorrect: 8, scaled: 610 },
+      { label: "Set 5", correct: 13, incorrect: 7, scaled: 650 },
+      { label: "Set 6", correct: 15, incorrect: 5, scaled: 700 },
     ],
   },
   SJT: {
     title: "SJT mini mocks",
-    subtitle: "Correct vs incorrect answers across recent Situational Judgement mini mocks.",
+    subtitle: "Scaled score across recent Situational Judgement mini mocks.",
     totalLabel: "20 questions each",
-    ticks: [0, 5, 10, 15, 20],
-    max: 20,
+    scaleLabel: "UCAT scaled score",
+    scaleMin: 300,
+    scaleMax: 900,
+    ticks: [300, 500, 700, 900],
     points: [
-      { label: "Set 1", correct: 13, incorrect: 7 },
-      { label: "Set 2", correct: 14, incorrect: 6 },
-      { label: "Set 3", correct: 15, incorrect: 5 },
-      { label: "Set 4", correct: 15, incorrect: 5 },
-      { label: "Set 5", correct: 16, incorrect: 4 },
-      { label: "Set 6", correct: 17, incorrect: 3 },
+      { label: "Set 1", correct: 13, incorrect: 7, scaled: 610 },
+      { label: "Set 2", correct: 14, incorrect: 6, scaled: 640 },
+      { label: "Set 3", correct: 15, incorrect: 5, scaled: 680 },
+      { label: "Set 4", correct: 15, incorrect: 5, scaled: 700 },
+      { label: "Set 5", correct: 16, incorrect: 4, scaled: 740 },
+      { label: "Set 6", correct: 17, incorrect: 3, scaled: 770 },
     ],
   },
 };
 
 const fullMockPerformanceSeries: MockPerformanceSeries = {
   title: "Full mocks",
-  subtitle: "Correct vs incorrect answers across full UCAT-style mocks.",
+  subtitle: "Total scaled score across full UCAT-style mocks.",
   totalLabel: "228 questions each",
-  ticks: [0, 60, 120, 180, 240],
-  max: 240,
+  scaleLabel: "Total scaled score",
+  scaleMin: 1800,
+  scaleMax: 3200,
+  ticks: [1800, 2200, 2600, 3000],
   points: [
-    { label: "Mock 1", correct: 132, incorrect: 96 },
-    { label: "Mock 2", correct: 141, incorrect: 87 },
-    { label: "Mock 3", correct: 149, incorrect: 79 },
-    { label: "Mock 4", correct: 156, incorrect: 72 },
-    { label: "Mock 5", correct: 164, incorrect: 64 },
+    { label: "Mock 1", correct: 132, incorrect: 96, scaled: 2380 },
+    { label: "Mock 2", correct: 141, incorrect: 87, scaled: 2490 },
+    { label: "Mock 3", correct: 149, incorrect: 79, scaled: 2570 },
+    { label: "Mock 4", correct: 156, incorrect: 72, scaled: 2660 },
+    { label: "Mock 5", correct: 164, incorrect: 64, scaled: 2760 },
   ],
 };
 
@@ -1283,14 +1300,39 @@ const fixTasks = [
   },
 ];
 
-const dailyQuestionActivity = [
-  { day: "Mon", questions: 180, target: 200 },
-  { day: "Tue", questions: 220, target: 200 },
-  { day: "Wed", questions: 190, target: 200 },
-  { day: "Thu", questions: 210, target: 200 },
-  { day: "Fri", questions: 205, target: 200 },
-  { day: "Sat", questions: 215, target: 200 },
-  { day: "Sun", questions: 180, target: 200 },
+const dailyQuestionTarget = 200;
+const questionCalendarDays = [
+  { day: 1, questions: 0 },
+  { day: 2, questions: 75 },
+  { day: 3, questions: 120 },
+  { day: 4, questions: 180 },
+  { day: 5, questions: 220 },
+  { day: 6, questions: 190 },
+  { day: 7, questions: 210 },
+  { day: 8, questions: 205 },
+  { day: 9, questions: 215 },
+  { day: 10, questions: 180 },
+  { day: 11, questions: 200 },
+  { day: 12, questions: 240 },
+  { day: 13, questions: 160 },
+  { day: 14, questions: 230 },
+  { day: 15, questions: 205 },
+  { day: 16, questions: 210 },
+  { day: 17, questions: 185 },
+  { day: 18, questions: 0 },
+  { day: 19, questions: 0 },
+  { day: 20, questions: 0 },
+  { day: 21, questions: 0 },
+  { day: 22, questions: 0 },
+  { day: 23, questions: 0 },
+  { day: 24, questions: 0 },
+  { day: 25, questions: 0 },
+  { day: 26, questions: 0 },
+  { day: 27, questions: 0 },
+  { day: 28, questions: 0 },
+  { day: 29, questions: 0 },
+  { day: 30, questions: 0 },
+  { day: 31, questions: 0 },
 ] as const;
 
 const approachSteps = [
@@ -1442,36 +1484,44 @@ function getPointAccuracy(point: MockPerformanceSeries["points"][number]) {
 
 function MockPerformanceChart({ series }: { series: MockPerformanceSeries }) {
   const width = 560;
-  const height = 285;
-  const left = 54;
+  const height = 260;
+  const left = 58;
   const right = 24;
   const top = 26;
-  const bottom = 58;
+  const bottom = 54;
   const chartWidth = width - left - right;
   const chartHeight = height - top - bottom;
+  const scaleRange = Math.max(1, series.scaleMax - series.scaleMin);
   const valueToY = (value: number) =>
-    top + chartHeight - (value / series.max) * chartHeight;
+    top + chartHeight - ((value - series.scaleMin) / scaleRange) * chartHeight;
   const barSlot = chartWidth / series.points.length;
-  const barWidth = Math.min(54, barSlot * 0.5);
+  const barWidth = Math.min(46, barSlot * 0.46);
+  const getBarFill = (score: number) => {
+    const ratio = (score - series.scaleMin) / scaleRange;
+    if (ratio >= 0.72) return "#16a34a";
+    if (ratio >= 0.58) return "#22c55e";
+    if (ratio >= 0.44) return "#84cc16";
+    return "#a3e635";
+  };
 
   return (
-    <div className="mt-5">
+    <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50/60 px-3 pb-3 pt-2">
       <svg
-        className="h-72 w-full overflow-visible"
+        className="h-64 w-full overflow-visible"
         viewBox={`0 0 ${width} ${height}`}
         role="img"
-        aria-label={`${series.title} correct and incorrect answer chart`}
+        aria-label={`${series.title} scaled score chart`}
       >
         <text
           x="14"
           y={top + chartHeight / 2}
           textAnchor="middle"
-          fontSize="13"
+          fontSize="12"
           fontWeight="900"
           fill="#0b1143"
           transform={`rotate(-90 14 ${top + chartHeight / 2})`}
         >
-          Questions
+          Scaled score
         </text>
         {series.ticks.map((tick) => {
           const y = valueToY(tick);
@@ -1483,6 +1533,7 @@ function MockPerformanceChart({ series }: { series: MockPerformanceSeries }) {
                 x2={left + chartWidth}
                 y2={y}
                 stroke="#e5ebf3"
+                strokeDasharray="4 4"
               />
               <text
                 x={left - 12}
@@ -1507,38 +1558,28 @@ function MockPerformanceChart({ series }: { series: MockPerformanceSeries }) {
         />
         {series.points.map((point, index) => {
           const x = left + index * barSlot + (barSlot - barWidth) / 2;
-          const correctHeight = (point.correct / series.max) * chartHeight;
-          const incorrectHeight = (point.incorrect / series.max) * chartHeight;
-          const correctY = top + chartHeight - correctHeight;
-          const incorrectY = correctY - incorrectHeight;
           const total = getPointTotal(point);
+          const y = valueToY(point.scaled);
+          const barHeight = top + chartHeight - y;
           return (
             <g key={point.label}>
               <rect
                 x={x}
-                y={correctY}
+                y={y}
                 width={barWidth}
-                height={correctHeight}
-                rx="4"
-                fill="#8bc34a"
-              />
-              <rect
-                x={x}
-                y={incorrectY}
-                width={barWidth}
-                height={incorrectHeight}
-                rx="4"
-                fill="#f44336"
+                height={barHeight}
+                rx="8"
+                fill={getBarFill(point.scaled)}
               />
               <text
                 x={x + barWidth / 2}
-                y={incorrectY - 10}
+                y={y - 10}
                 textAnchor="middle"
-                fontSize="12"
+                fontSize="13"
                 fontWeight="900"
                 fill="#0b1143"
               >
-                {total}
+                {point.scaled}
               </text>
               <text
                 x={x + barWidth / 2}
@@ -1550,175 +1591,126 @@ function MockPerformanceChart({ series }: { series: MockPerformanceSeries }) {
               >
                 {point.label.replace(" ", "\u00a0")}
               </text>
+              <text
+                x={x + barWidth / 2}
+                y={top + chartHeight + 42}
+                textAnchor="middle"
+                fontSize="11"
+                fontWeight="800"
+                fill="#94a3b8"
+              >
+                {point.correct}/{total}
+              </text>
             </g>
           );
         })}
       </svg>
-      <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold text-[#0b1143]">
+      <div className="flex flex-wrap items-center justify-center gap-5 text-xs font-black text-slate-500">
         <span className="inline-flex items-center gap-2">
-          <span className="h-4 w-4 rounded bg-[#8bc34a]" />
-          Correct Answers
+          <span className="h-3 w-3 rounded bg-[#22c55e]" />
+          Scaled score
         </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="h-4 w-4 rounded bg-[#f44336]" />
-          Incorrect Answers
-        </span>
+        <span>{series.totalLabel}</span>
       </div>
     </div>
   );
 }
 
 function DailyQuestionsChart() {
-  const total = dailyQuestionActivity.reduce(
-    (sum, item) => sum + item.questions,
-    0
+  const recentDays = questionCalendarDays.slice(3, 10);
+  const average = Math.round(
+    recentDays.reduce((sum, item) => sum + item.questions, 0) /
+      recentDays.length
   );
-  const average = Math.round(total / dailyQuestionActivity.length);
-  const target = dailyQuestionActivity[0]?.target ?? 200;
-  const daysOnTarget = dailyQuestionActivity.filter(
-    (item) => item.questions >= item.target
+  const daysOnTarget = recentDays.filter(
+    (item) => item.questions >= dailyQuestionTarget
   ).length;
-  const width = 560;
-  const height = 250;
-  const left = 46;
-  const right = 24;
-  const top = 24;
-  const bottom = 44;
-  const chartWidth = width - left - right;
-  const chartHeight = height - top - bottom;
-  const maxValue = 260;
-  const valueToY = (value: number) =>
-    top + chartHeight - (value / maxValue) * chartHeight;
-  const targetY = valueToY(target);
-  const barSlot = chartWidth / dailyQuestionActivity.length;
-  const barWidth = Math.min(38, barSlot * 0.56);
+  const startOffset = 4;
+  const blanks = Array.from({ length: startOffset }, (_, index) => index);
+  const weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  const getHeatClass = (questions: number) => {
+    if (questions <= 0) return "bg-slate-100 text-slate-400 border-slate-100";
+    if (questions < 100) return "bg-emerald-100 text-emerald-700 border-emerald-100";
+    if (questions < 160) return "bg-emerald-200 text-emerald-800 border-emerald-200";
+    if (questions < dailyQuestionTarget)
+      return "bg-emerald-400 text-white border-emerald-400";
+    if (questions < 240) return "bg-emerald-600 text-white border-emerald-600";
+    return "bg-emerald-800 text-white border-emerald-800";
+  };
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="flex items-center gap-2">
-        <h2 className="text-sm font-black uppercase tracking-wide">
-          Questions done
-        </h2>
-        <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+    <section className="self-start rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-black uppercase tracking-wide">
+              Questions done
+            </h2>
+            <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+          </div>
+          <p className="mt-1 text-xs font-bold text-slate-500">
+            May 2026
+          </p>
+        </div>
+        <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700">
+          {dailyQuestionTarget}/day target
+        </span>
       </div>
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-          <p className="text-xs font-black text-slate-500">7-day average</p>
-          <p className="mt-1 text-2xl font-black text-[#0b1143]">
-            {average}/day
-          </p>
+      <div className="mt-4 grid gap-5 md:grid-cols-[340px_116px] md:items-start">
+        <div className="max-w-[340px]">
+          <div className="grid grid-cols-7 gap-1.5 text-center text-[11px] font-black text-slate-500">
+            {weekdays.map((day) => (
+              <span key={day}>{day}</span>
+            ))}
+          </div>
+          <div className="mt-2 grid grid-cols-7 gap-1.5">
+            {blanks.map((blank) => (
+              <div key={blank} className="aspect-square" />
+            ))}
+            {questionCalendarDays.map((item) => (
+              <div key={item.day} className="group relative">
+                <div
+                  title={`${item.questions}/${dailyQuestionTarget} questions`}
+                  aria-label={`May ${item.day}: ${item.questions} of ${dailyQuestionTarget} questions`}
+                  className={`flex aspect-square min-h-8 items-center justify-center rounded-lg border text-xs font-black transition-transform hover:-translate-y-0.5 ${getHeatClass(
+                    item.questions
+                  )}`}
+                >
+                  {item.day}
+                </div>
+                <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-950 px-2 py-1 text-[11px] font-black text-white shadow-lg group-hover:block">
+                  {item.questions}/{dailyQuestionTarget} questions
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="rounded-xl border border-amber-100 bg-amber-50 p-3">
-          <p className="text-xs font-black text-amber-700">Daily target</p>
-          <p className="mt-1 text-2xl font-black text-amber-700">
-            {target}
-          </p>
-        </div>
-        <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3">
-          <p className="text-xs font-black text-emerald-700">On target</p>
-          <p className="mt-1 text-2xl font-black text-emerald-700">
-            {daysOnTarget}/7
-          </p>
+        <div className="grid grid-cols-2 gap-2 md:block md:space-y-3">
+          <div>
+            <p className="text-xs font-bold text-slate-400">7-day average</p>
+            <p className="mt-1 text-xl font-black text-[#0b1143]">
+              {average}/day
+            </p>
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-400">On target</p>
+            <p className="mt-1 text-xl font-black text-emerald-700">
+              {daysOnTarget}/7
+            </p>
+          </div>
+          <div className="col-span-2 flex items-center gap-1.5 md:pt-1">
+            {[0, 80, 130, 180, 220].map((questions) => (
+              <span
+                key={questions}
+                className={`h-3 w-5 rounded ${getHeatClass(questions)
+                  .split(" ")
+                  .slice(0, 1)
+                  .join(" ")}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
-      <svg
-        className="mt-5 h-64 w-full overflow-visible"
-        viewBox={`0 0 ${width} ${height}`}
-        role="img"
-        aria-label="Questions completed per day with a 200 question target"
-      >
-        {[0, 100, 200].map((tick) => {
-          const y = valueToY(tick);
-          return (
-            <g key={tick}>
-              <line
-                x1={left}
-                y1={y}
-                x2={left + chartWidth}
-                y2={y}
-                stroke={tick === target ? "#f59e0b" : "#e5ebf3"}
-                strokeDasharray={tick === target ? "5 5" : "4 4"}
-                strokeWidth={tick === target ? 2 : 1}
-              />
-              <text
-                x={left - 12}
-                y={y + 4}
-                textAnchor="end"
-                fontSize="12"
-                fontWeight="800"
-                fill={tick === target ? "#b45309" : "#64748b"}
-              >
-                {tick}
-              </text>
-            </g>
-          );
-        })}
-        <text
-          x={left + chartWidth}
-          y={targetY - 8}
-          textAnchor="end"
-          fontSize="12"
-          fontWeight="900"
-          fill="#b45309"
-        >
-          200 target
-        </text>
-        <line x1={left} y1={top} x2={left} y2={top + chartHeight} stroke="#dbe4f0" />
-        <line
-          x1={left}
-          y1={top + chartHeight}
-          x2={left + chartWidth}
-          y2={top + chartHeight}
-          stroke="#dbe4f0"
-        />
-        {dailyQuestionActivity.map((item, index) => {
-          const x = left + index * barSlot + (barSlot - barWidth) / 2;
-          const y = valueToY(item.questions);
-          const heightForBar = top + chartHeight - y;
-          const isOnTarget = item.questions >= item.target;
-          return (
-            <g key={item.day}>
-              <rect
-                x={x}
-                y={y}
-                width={barWidth}
-                height={heightForBar}
-                rx="7"
-                fill={isOnTarget ? "#2563eb" : "#94a3b8"}
-              />
-              <line
-                x1={x - 3}
-                y1={targetY}
-                x2={x + barWidth + 3}
-                y2={targetY}
-                stroke="#f59e0b"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-              <text
-                x={x + barWidth / 2}
-                y={y - 10}
-                textAnchor="middle"
-                fontSize="12"
-                fontWeight="900"
-                fill="#0b1143"
-              >
-                {item.questions}
-              </text>
-              <text
-                x={x + barWidth / 2}
-                y={top + chartHeight + 26}
-                textAnchor="middle"
-                fontSize="12"
-                fontWeight="800"
-                fill="#64748b"
-              >
-                {item.day}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
     </section>
   );
 }
@@ -2400,8 +2392,9 @@ function ProgressContent({
   const firstPoint = performanceSeries.points[0];
   const currentPoint = performanceSeries.points[performanceSeries.points.length - 1];
   const currentAccuracy = currentPoint ? getPointAccuracy(currentPoint) : 0;
-  const firstAccuracy = firstPoint ? getPointAccuracy(firstPoint) : 0;
-  const accuracyGain = currentAccuracy - firstAccuracy;
+  const currentScaled = currentPoint?.scaled ?? 0;
+  const firstScaled = firstPoint?.scaled ?? 0;
+  const scaledGain = currentScaled - firstScaled;
   const currentTotal = currentPoint ? getPointTotal(currentPoint) : 0;
   const bankCompleted = questionBankProgress.reduce(
     (sum, item) => sum + item.completed,
@@ -2442,7 +2435,7 @@ function ProgressContent({
                   key={mode}
                   onClick={() => setGraphMode(mode)}
                   aria-pressed={graphMode === mode}
-                  className={`h-8 rounded-md px-4 text-xs font-black ${
+                  className={`h-8 min-w-[96px] whitespace-nowrap rounded-md px-4 text-xs font-black ${
                     graphMode === mode
                       ? "bg-blue-600 text-white shadow-sm"
                       : "text-slate-500 hover:bg-white hover:text-blue-600"
@@ -2479,28 +2472,31 @@ function ProgressContent({
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-              <p className="text-xs font-black text-slate-500">Latest accuracy</p>
+              <p className="text-xs font-black text-slate-500">Latest scaled</p>
               <p className="mt-1 text-2xl font-black text-[#0b1143]">
-                {currentAccuracy}%
+                {currentScaled}
               </p>
             </div>
             <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3">
-              <p className="text-xs font-black text-emerald-700">Improvement</p>
+              <p className="text-xs font-black text-emerald-700">Scaled gain</p>
               <p className="mt-1 text-2xl font-black text-emerald-700">
-                {accuracyGain > 0 ? "+" : ""}
-                {accuracyGain}%
+                {scaledGain > 0 ? "+" : ""}
+                {scaledGain}
               </p>
             </div>
             <div className="rounded-xl border border-blue-100 bg-blue-50 p-3">
-              <p className="text-xs font-black text-blue-700">Latest correct</p>
+              <p className="text-xs font-black text-blue-700">Raw accuracy</p>
               <p className="mt-1 text-2xl font-black text-blue-700">
-                {currentPoint?.correct ?? 0}/{currentTotal}
+                {currentAccuracy}%
+              </p>
+              <p className="mt-1 text-xs font-black text-blue-500">
+                {currentPoint?.correct ?? 0}/{currentTotal} correct
               </p>
             </div>
           </div>
 
           <div className="mt-3 text-xs font-black text-slate-400">
-            {performanceSeries.totalLabel}
+            {performanceSeries.scaleLabel}
           </div>
           <MockPerformanceChart series={performanceSeries} />
         </section>
