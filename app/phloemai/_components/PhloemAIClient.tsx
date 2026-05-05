@@ -1138,6 +1138,130 @@ const sectionScores = [
   },
 ];
 
+type MockGraphMode = "mini" | "full";
+type MiniMockSectionCode = "VR" | "DM" | "QR" | "SJT";
+type MockPerformanceSeries = {
+  title: string;
+  subtitle: string;
+  totalLabel: string;
+  ticks: number[];
+  max: number;
+  points: Array<{ label: string; correct: number; incorrect: number }>;
+};
+
+const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeries> = {
+  VR: {
+    title: "VR mini mocks",
+    subtitle: "Correct vs incorrect answers across recent Verbal Reasoning mini mocks.",
+    totalLabel: "24 questions each",
+    ticks: [0, 6, 12, 18, 24],
+    max: 24,
+    points: [
+      { label: "Set 1", correct: 14, incorrect: 10 },
+      { label: "Set 2", correct: 15, incorrect: 9 },
+      { label: "Set 3", correct: 15, incorrect: 9 },
+      { label: "Set 4", correct: 17, incorrect: 7 },
+      { label: "Set 5", correct: 18, incorrect: 6 },
+      { label: "Set 6", correct: 19, incorrect: 5 },
+    ],
+  },
+  DM: {
+    title: "DM mini mocks",
+    subtitle: "Correct vs incorrect answers across recent Decision Making mini mocks.",
+    totalLabel: "20 questions each",
+    ticks: [0, 5, 10, 15, 20],
+    max: 20,
+    points: [
+      { label: "Set 1", correct: 11, incorrect: 9 },
+      { label: "Set 2", correct: 12, incorrect: 8 },
+      { label: "Set 3", correct: 13, incorrect: 7 },
+      { label: "Set 4", correct: 13, incorrect: 7 },
+      { label: "Set 5", correct: 14, incorrect: 6 },
+      { label: "Set 6", correct: 15, incorrect: 5 },
+    ],
+  },
+  QR: {
+    title: "QR mini mocks",
+    subtitle: "Correct vs incorrect answers across recent Quantitative Reasoning mini mocks.",
+    totalLabel: "20 questions each",
+    ticks: [0, 5, 10, 15, 20],
+    max: 20,
+    points: [
+      { label: "Set 1", correct: 9, incorrect: 11 },
+      { label: "Set 2", correct: 10, incorrect: 10 },
+      { label: "Set 3", correct: 11, incorrect: 9 },
+      { label: "Set 4", correct: 12, incorrect: 8 },
+      { label: "Set 5", correct: 13, incorrect: 7 },
+      { label: "Set 6", correct: 15, incorrect: 5 },
+    ],
+  },
+  SJT: {
+    title: "SJT mini mocks",
+    subtitle: "Correct vs incorrect answers across recent Situational Judgement mini mocks.",
+    totalLabel: "20 questions each",
+    ticks: [0, 5, 10, 15, 20],
+    max: 20,
+    points: [
+      { label: "Set 1", correct: 13, incorrect: 7 },
+      { label: "Set 2", correct: 14, incorrect: 6 },
+      { label: "Set 3", correct: 15, incorrect: 5 },
+      { label: "Set 4", correct: 15, incorrect: 5 },
+      { label: "Set 5", correct: 16, incorrect: 4 },
+      { label: "Set 6", correct: 17, incorrect: 3 },
+    ],
+  },
+};
+
+const fullMockPerformanceSeries: MockPerformanceSeries = {
+  title: "Full mocks",
+  subtitle: "Correct vs incorrect answers across full UCAT-style mocks.",
+  totalLabel: "228 questions each",
+  ticks: [0, 60, 120, 180, 240],
+  max: 240,
+  points: [
+    { label: "Mock 1", correct: 132, incorrect: 96 },
+    { label: "Mock 2", correct: 141, incorrect: 87 },
+    { label: "Mock 3", correct: 149, incorrect: 79 },
+    { label: "Mock 4", correct: 156, incorrect: 72 },
+    { label: "Mock 5", correct: 164, incorrect: 64 },
+  ],
+};
+
+const questionBankProgress = [
+  {
+    code: "VR",
+    title: "Verbal Reasoning",
+    completed: 7,
+    total: 9,
+    focus: "Inference and longer passages next",
+    href: "/phloemai/question-bank/vr",
+  },
+  {
+    code: "DM",
+    title: "Decision Making",
+    completed: 6,
+    total: 10,
+    focus: "Syllogisms and logic puzzles next",
+    href: "/phloemai/question-bank/dm",
+  },
+  {
+    code: "QR",
+    title: "Quantitative Reasoning",
+    completed: 8,
+    total: 14,
+    focus: "Calculator-heavy data sets next",
+    href: "/phloemai/question-bank/qr",
+  },
+  {
+    code: "SJT",
+    title: "Situational Judgement",
+    completed: 6,
+    total: 10,
+    focus: "Ordering and integrity scenarios next",
+    href: "/phloemai/question-bank/sjt",
+  },
+] as const;
+
 const fixTasks = [
   {
     title: "QR Speed Drill",
@@ -1159,32 +1283,15 @@ const fixTasks = [
   },
 ];
 
-const recentActivity = [
-  {
-    title: "Diagnostic completed",
-    time: "2 days ago",
-    icon: Activity,
-    iconClass: "bg-indigo-100 text-indigo-600",
-  },
-  {
-    title: "QR Speed Drill completed",
-    time: "Today, 9:41 AM",
-    icon: Zap,
-    iconClass: "bg-blue-100 text-blue-600",
-  },
-  {
-    title: "5 questions reviewed",
-    time: "Today, 9:15 AM",
-    icon: Bookmark,
-    iconClass: "bg-orange-100 text-orange-600",
-  },
-  {
-    title: "Progress updated",
-    time: "Yesterday, 8:12 PM",
-    icon: BarChart3,
-    iconClass: "bg-pink-100 text-pink-600",
-  },
-];
+const dailyQuestionActivity = [
+  { day: "Mon", questions: 180, target: 200 },
+  { day: "Tue", questions: 220, target: 200 },
+  { day: "Wed", questions: 190, target: 200 },
+  { day: "Thu", questions: 210, target: 200 },
+  { day: "Fri", questions: 205, target: 200 },
+  { day: "Sat", questions: 215, target: 200 },
+  { day: "Sun", questions: 180, target: 200 },
+] as const;
 
 const approachSteps = [
   {
@@ -1321,6 +1428,298 @@ function sectionStyle(code: string) {
       badgeClass: "bg-slate-100 text-slate-600",
       barClass: "bg-slate-400",
     }
+  );
+}
+
+function getPointTotal(point: MockPerformanceSeries["points"][number]) {
+  return point.correct + point.incorrect;
+}
+
+function getPointAccuracy(point: MockPerformanceSeries["points"][number]) {
+  const total = getPointTotal(point);
+  return total > 0 ? Math.round((point.correct / total) * 100) : 0;
+}
+
+function MockPerformanceChart({ series }: { series: MockPerformanceSeries }) {
+  const width = 560;
+  const height = 285;
+  const left = 54;
+  const right = 24;
+  const top = 26;
+  const bottom = 58;
+  const chartWidth = width - left - right;
+  const chartHeight = height - top - bottom;
+  const valueToY = (value: number) =>
+    top + chartHeight - (value / series.max) * chartHeight;
+  const barSlot = chartWidth / series.points.length;
+  const barWidth = Math.min(54, barSlot * 0.5);
+
+  return (
+    <div className="mt-5">
+      <svg
+        className="h-72 w-full overflow-visible"
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-label={`${series.title} correct and incorrect answer chart`}
+      >
+        <text
+          x="14"
+          y={top + chartHeight / 2}
+          textAnchor="middle"
+          fontSize="13"
+          fontWeight="900"
+          fill="#0b1143"
+          transform={`rotate(-90 14 ${top + chartHeight / 2})`}
+        >
+          Questions
+        </text>
+        {series.ticks.map((tick) => {
+          const y = valueToY(tick);
+          return (
+            <g key={tick}>
+              <line
+                x1={left}
+                y1={y}
+                x2={left + chartWidth}
+                y2={y}
+                stroke="#e5ebf3"
+              />
+              <text
+                x={left - 12}
+                y={y + 4}
+                textAnchor="end"
+                fontSize="12"
+                fontWeight="800"
+                fill="#64748b"
+              >
+                {tick}
+              </text>
+            </g>
+          );
+        })}
+        <line x1={left} y1={top} x2={left} y2={top + chartHeight} stroke="#dbe4f0" />
+        <line
+          x1={left}
+          y1={top + chartHeight}
+          x2={left + chartWidth}
+          y2={top + chartHeight}
+          stroke="#dbe4f0"
+        />
+        {series.points.map((point, index) => {
+          const x = left + index * barSlot + (barSlot - barWidth) / 2;
+          const correctHeight = (point.correct / series.max) * chartHeight;
+          const incorrectHeight = (point.incorrect / series.max) * chartHeight;
+          const correctY = top + chartHeight - correctHeight;
+          const incorrectY = correctY - incorrectHeight;
+          const total = getPointTotal(point);
+          return (
+            <g key={point.label}>
+              <rect
+                x={x}
+                y={correctY}
+                width={barWidth}
+                height={correctHeight}
+                rx="4"
+                fill="#8bc34a"
+              />
+              <rect
+                x={x}
+                y={incorrectY}
+                width={barWidth}
+                height={incorrectHeight}
+                rx="4"
+                fill="#f44336"
+              />
+              <text
+                x={x + barWidth / 2}
+                y={incorrectY - 10}
+                textAnchor="middle"
+                fontSize="12"
+                fontWeight="900"
+                fill="#0b1143"
+              >
+                {total}
+              </text>
+              <text
+                x={x + barWidth / 2}
+                y={top + chartHeight + 26}
+                textAnchor="middle"
+                fontSize="12"
+                fontWeight="800"
+                fill="#64748b"
+              >
+                {point.label.replace(" ", "\u00a0")}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+      <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold text-[#0b1143]">
+        <span className="inline-flex items-center gap-2">
+          <span className="h-4 w-4 rounded bg-[#8bc34a]" />
+          Correct Answers
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="h-4 w-4 rounded bg-[#f44336]" />
+          Incorrect Answers
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function DailyQuestionsChart() {
+  const total = dailyQuestionActivity.reduce(
+    (sum, item) => sum + item.questions,
+    0
+  );
+  const average = Math.round(total / dailyQuestionActivity.length);
+  const target = dailyQuestionActivity[0]?.target ?? 200;
+  const daysOnTarget = dailyQuestionActivity.filter(
+    (item) => item.questions >= item.target
+  ).length;
+  const width = 560;
+  const height = 250;
+  const left = 46;
+  const right = 24;
+  const top = 24;
+  const bottom = 44;
+  const chartWidth = width - left - right;
+  const chartHeight = height - top - bottom;
+  const maxValue = 260;
+  const valueToY = (value: number) =>
+    top + chartHeight - (value / maxValue) * chartHeight;
+  const targetY = valueToY(target);
+  const barSlot = chartWidth / dailyQuestionActivity.length;
+  const barWidth = Math.min(38, barSlot * 0.56);
+
+  return (
+    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex items-center gap-2">
+        <h2 className="text-sm font-black uppercase tracking-wide">
+          Questions done
+        </h2>
+        <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+      </div>
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+          <p className="text-xs font-black text-slate-500">7-day average</p>
+          <p className="mt-1 text-2xl font-black text-[#0b1143]">
+            {average}/day
+          </p>
+        </div>
+        <div className="rounded-xl border border-amber-100 bg-amber-50 p-3">
+          <p className="text-xs font-black text-amber-700">Daily target</p>
+          <p className="mt-1 text-2xl font-black text-amber-700">
+            {target}
+          </p>
+        </div>
+        <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3">
+          <p className="text-xs font-black text-emerald-700">On target</p>
+          <p className="mt-1 text-2xl font-black text-emerald-700">
+            {daysOnTarget}/7
+          </p>
+        </div>
+      </div>
+      <svg
+        className="mt-5 h-64 w-full overflow-visible"
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-label="Questions completed per day with a 200 question target"
+      >
+        {[0, 100, 200].map((tick) => {
+          const y = valueToY(tick);
+          return (
+            <g key={tick}>
+              <line
+                x1={left}
+                y1={y}
+                x2={left + chartWidth}
+                y2={y}
+                stroke={tick === target ? "#f59e0b" : "#e5ebf3"}
+                strokeDasharray={tick === target ? "5 5" : "4 4"}
+                strokeWidth={tick === target ? 2 : 1}
+              />
+              <text
+                x={left - 12}
+                y={y + 4}
+                textAnchor="end"
+                fontSize="12"
+                fontWeight="800"
+                fill={tick === target ? "#b45309" : "#64748b"}
+              >
+                {tick}
+              </text>
+            </g>
+          );
+        })}
+        <text
+          x={left + chartWidth}
+          y={targetY - 8}
+          textAnchor="end"
+          fontSize="12"
+          fontWeight="900"
+          fill="#b45309"
+        >
+          200 target
+        </text>
+        <line x1={left} y1={top} x2={left} y2={top + chartHeight} stroke="#dbe4f0" />
+        <line
+          x1={left}
+          y1={top + chartHeight}
+          x2={left + chartWidth}
+          y2={top + chartHeight}
+          stroke="#dbe4f0"
+        />
+        {dailyQuestionActivity.map((item, index) => {
+          const x = left + index * barSlot + (barSlot - barWidth) / 2;
+          const y = valueToY(item.questions);
+          const heightForBar = top + chartHeight - y;
+          const isOnTarget = item.questions >= item.target;
+          return (
+            <g key={item.day}>
+              <rect
+                x={x}
+                y={y}
+                width={barWidth}
+                height={heightForBar}
+                rx="7"
+                fill={isOnTarget ? "#2563eb" : "#94a3b8"}
+              />
+              <line
+                x1={x - 3}
+                y1={targetY}
+                x2={x + barWidth + 3}
+                y2={targetY}
+                stroke="#f59e0b"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+              <text
+                x={x + barWidth / 2}
+                y={y - 10}
+                textAnchor="middle"
+                fontSize="12"
+                fontWeight="900"
+                fill="#0b1143"
+              >
+                {item.questions}
+              </text>
+              <text
+                x={x + barWidth / 2}
+                y={top + chartHeight + 26}
+                textAnchor="middle"
+                fontSize="12"
+                fontWeight="800"
+                fill="#64748b"
+              >
+                {item.day}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </section>
   );
 }
 
@@ -1978,6 +2377,8 @@ function ProgressContent({
   checkoutLoading,
   onUpgrade,
 }: PremiumGateProps) {
+  const [graphMode, setGraphMode] = useState<MockGraphMode>("mini");
+  const [miniSection, setMiniSection] = useState<MiniMockSectionCode>("QR");
   const fixProgress = [
     ["QR timing improving", "You're answering faster with similar accuracy.", "Improving", "bg-emerald-50 text-emerald-600", Clock3],
     ["VR longer passages still slow", "Time per question is high on long passages.", "Needs work", "bg-orange-50 text-orange-600", Bookmark],
@@ -1992,6 +2393,23 @@ function ProgressContent({
     ["Completed QR Speed Drill", "10 min drill", "Yesterday, 6:42 PM", Target],
   ] as const;
 
+  const performanceSeries =
+    graphMode === "full"
+      ? fullMockPerformanceSeries
+      : miniMockPerformanceSeries[miniSection];
+  const firstPoint = performanceSeries.points[0];
+  const currentPoint = performanceSeries.points[performanceSeries.points.length - 1];
+  const currentAccuracy = currentPoint ? getPointAccuracy(currentPoint) : 0;
+  const firstAccuracy = firstPoint ? getPointAccuracy(firstPoint) : 0;
+  const accuracyGain = currentAccuracy - firstAccuracy;
+  const currentTotal = currentPoint ? getPointTotal(currentPoint) : 0;
+  const bankCompleted = questionBankProgress.reduce(
+    (sum, item) => sum + item.completed,
+    0
+  );
+  const bankTotal = questionBankProgress.reduce((sum, item) => sum + item.total, 0);
+  const bankPercent = Math.round((bankCompleted / bankTotal) * 100);
+
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
       <div className="grid gap-4 lg:grid-cols-3">
@@ -2005,78 +2423,157 @@ function ProgressContent({
         <MetricCard label="Tasks completed" value="18" delta="4" direction="up" />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[1fr_0.95fr]">
+      <div className="grid gap-5 lg:grid-cols-[1.08fr_0.9fr]">
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center gap-2">
-            <h2 className="text-sm font-black">Accuracy over time</h2>
-            <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm font-black">Mock performance</h2>
+                <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+              </div>
+              <p className="mt-1 text-xs font-bold text-slate-500">
+                {performanceSeries.subtitle}
+              </p>
+            </div>
+            <div className="flex w-fit rounded-lg bg-slate-100 p-1">
+              {(["mini", "full"] as const).map((mode) => (
+                <button
+                  type="button"
+                  key={mode}
+                  onClick={() => setGraphMode(mode)}
+                  aria-pressed={graphMode === mode}
+                  className={`h-8 rounded-md px-4 text-xs font-black ${
+                    graphMode === mode
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-slate-500 hover:bg-white hover:text-blue-600"
+                  }`}
+                >
+                  {mode === "mini" ? "Mini mocks" : "Full mocks"}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="mt-4 flex gap-2">
-            {["7D", "30D", "90D", "All time"].map((tab, index) => (
-              <button
-                type="button"
-                key={tab}
-                className={`h-8 rounded-lg px-4 text-xs font-black ${
-                  index === 0
-                    ? "bg-blue-600 text-white"
-                    : "bg-slate-50 text-slate-500 hover:bg-blue-50 hover:text-blue-600"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+
+          {graphMode === "mini" && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {(["VR", "DM", "QR", "SJT"] as const).map((code) => {
+                const style = sectionStyle(code);
+                return (
+                  <button
+                    type="button"
+                    key={code}
+                    onClick={() => setMiniSection(code)}
+                    aria-pressed={miniSection === code}
+                    className={`h-8 rounded-lg px-4 text-xs font-black ${
+                      miniSection === code
+                        ? style.badgeClass
+                        : "bg-slate-50 text-slate-500 hover:bg-blue-50 hover:text-blue-600"
+                    }`}
+                  >
+                    {code}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+              <p className="text-xs font-black text-slate-500">Latest accuracy</p>
+              <p className="mt-1 text-2xl font-black text-[#0b1143]">
+                {currentAccuracy}%
+              </p>
+            </div>
+            <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3">
+              <p className="text-xs font-black text-emerald-700">Improvement</p>
+              <p className="mt-1 text-2xl font-black text-emerald-700">
+                {accuracyGain > 0 ? "+" : ""}
+                {accuracyGain}%
+              </p>
+            </div>
+            <div className="rounded-xl border border-blue-100 bg-blue-50 p-3">
+              <p className="text-xs font-black text-blue-700">Latest correct</p>
+              <p className="mt-1 text-2xl font-black text-blue-700">
+                {currentPoint?.correct ?? 0}/{currentTotal}
+              </p>
+            </div>
           </div>
-          <svg
-            className="mt-4 h-56 w-full overflow-visible"
-            viewBox="0 0 520 220"
-            role="img"
-            aria-label="Accuracy trend rising to 63 percent"
-          >
-            <line x1="34" y1="20" x2="34" y2="190" stroke="#dbe4f0" />
-            <line x1="34" y1="190" x2="500" y2="190" stroke="#dbe4f0" />
-            {[55, 105, 155].map((y) => (
-              <line
-                key={y}
-                x1="34"
-                y1={y}
-                x2="500"
-                y2={y}
-                stroke="#edf2f7"
-                strokeDasharray="4 4"
-              />
-            ))}
-            <polyline
-              fill="none"
-              stroke="#243cff"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="4"
-              points="34,145 90,132 145,136 200,120 255,128 310,122 365,124 420,113 475,113 500,108"
-            />
-            <circle cx="500" cy="108" r="7" fill="#243cff" />
-            <text x="482" y="92" fontSize="16" fontWeight="800" fill="#0b1143">
-              63%
-            </text>
-          </svg>
+
+          <div className="mt-3 text-xs font-black text-slate-400">
+            {performanceSeries.totalLabel}
+          </div>
+          <MockPerformanceChart series={performanceSeries} />
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center gap-2">
-            <h2 className="text-sm font-black">Section performance</h2>
-            <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-black">Question bank progress</h2>
+              <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+            </div>
+            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-600">
+              {bankPercent}%
+            </span>
           </div>
-          <div className="mt-8 grid h-56 grid-cols-4 items-end gap-6 border-b border-slate-200 px-5">
-            {sectionScores.map((section) => (
-                <div key={section.code} className="flex flex-col items-center gap-3">
-                  <span className="text-sm font-black">{section.score}%</span>
-                  <div
-                    className={`w-full max-w-16 rounded-t-lg ${section.barClass}`}
-                    style={{ height: `${section.score * 1.7}px` }}
-                  />
-                  <span className="text-xs font-black">{section.code}</span>
+          <p className="mt-2 text-xs font-bold text-slate-500">
+            {bankCompleted} of {bankTotal} questions completed
+          </p>
+          <div className="mt-5 space-y-3">
+            {questionBankProgress.map((item) => {
+              const style = sectionStyle(item.code);
+              const percent = Math.round((item.completed / item.total) * 100);
+              return (
+                <div
+                  key={item.code}
+                  className="rounded-xl border border-slate-100 p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`rounded-lg px-3 py-1 text-xs font-black ${style.badgeClass}`}
+                      >
+                        {item.code}
+                      </span>
+                      <div>
+                        <h3 className="text-sm font-black">{item.title}</h3>
+                        <p className="mt-1 text-xs font-bold text-slate-500">
+                          {item.focus}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-xs font-black text-slate-500">
+                      {item.completed}/{item.total}
+                    </span>
+                  </div>
+                  <div className="mt-3 grid grid-cols-[1fr_44px] items-center gap-3">
+                    <div className="h-2 overflow-hidden rounded-full bg-slate-200">
+                      <div
+                        className={`h-full rounded-full ${style.barClass}`}
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                    <span className="text-right text-xs font-black text-[#0b1143]">
+                      {percent}%
+                    </span>
+                  </div>
+                  <Link
+                    href={item.href}
+                    className="mt-3 inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+                  >
+                    Resume bank
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
                 </div>
-              ))}
+              );
+            })}
           </div>
+          <Link
+            href="/phloemai/question-bank"
+            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+          >
+            Open question bank
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
         </section>
       </div>
 
@@ -3329,38 +3826,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               </Link>
             </section>
 
-            <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-              <h2 className="text-sm font-black uppercase tracking-wide">
-                Recent activity
-              </h2>
-              <div className="mt-4 space-y-3">
-                {recentActivity.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div key={item.title} className="flex items-center gap-4">
-                      <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${item.iconClass}`}
-                      >
-                        <Icon className="h-5 w-5" aria-hidden="true" />
-                      </div>
-                      <p className="min-w-0 flex-1 text-sm font-black">
-                        {item.title}
-                      </p>
-                      <span className="text-xs font-bold text-slate-400">
-                        {item.time}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-              <Link
-                href="/phloemai/progress"
-                className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
-              >
-                View all activity
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-            </section>
+            <DailyQuestionsChart />
 
             <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
               <h2 className="text-sm font-black uppercase tracking-wide">
