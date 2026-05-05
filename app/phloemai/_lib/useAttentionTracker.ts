@@ -57,9 +57,11 @@ const L_IRIS = 468;
 const R_IRIS = 473;
 
 export const CALIB_PHASES = [
-  { label: "the top of the screen", y: 10 },
-  { label: "the centre", y: 50 },
-  { label: "the bottom", y: 90 },
+  { label: "the top of the screen", x: 50, y: 10 },
+  { label: "the centre", x: 50, y: 50 },
+  { label: "the bottom", x: 50, y: 90 },
+  { label: "the left side", x: 12, y: 50 },
+  { label: "the right side", x: 88, y: 50 },
 ] as const;
 
 const BASE_TRACKING_PROFILES: Record<TrackingMode, TrackingProfile> = {
@@ -181,9 +183,14 @@ export function useAttentionTracker<ZoneId extends string>({
   const neutralRef = useRef<number | null>(null);
   const neutralHorizRef = useRef<number | null>(null);
   const gainVRef = useRef<number>(60);
+  const gainHRef = useRef<number>(25);
   const calibPhaseRef = useRef(0);
-  const calibPhaseSamples = useRef<[number[], number[], number[]]>([[], [], []]);
-  const calibHorizSamplesRef = useRef<number[]>([]);
+  const calibVertSamplesRef = useRef<number[][]>(
+    CALIB_PHASES.map(() => [])
+  );
+  const calibHorizSamplesRef = useRef<number[][]>(
+    CALIB_PHASES.map(() => [])
+  );
   const afterEyeCalibrationRef = useRef<(() => void) | null>(null);
 
   const trackingProfile = trackingProfiles[trackingMode];
@@ -485,13 +492,13 @@ export function useAttentionTracker<ZoneId extends string>({
 
       if (eyeStatus === "calibrating") {
         const ph = calibPhaseRef.current;
-        calibPhaseSamples.current[ph]?.push(gazeY);
-        if (ph === 1) calibHorizSamplesRef.current.push(gazeX);
+        calibVertSamplesRef.current[ph]?.push(gazeY);
+        calibHorizSamplesRef.current[ph]?.push(gazeX);
       } else if (activeRef.current) {
         const neutralY = neutralRef.current ?? 0;
         const neutralX = neutralHorizRef.current ?? 0;
         const gainV = gainVRef.current * 1.32;
-        const gainH = 25;
+        const gainH = gainHRef.current;
         const screenY = Math.max(
           0,
           Math.min(
@@ -503,7 +510,7 @@ export function useAttentionTracker<ZoneId extends string>({
           0,
           Math.min(
             window.innerWidth - 1,
-            window.innerWidth * 0.5 - (gazeX - neutralX) * gainH * window.innerWidth
+            window.innerWidth * 0.5 + (gazeX - neutralX) * gainH * window.innerWidth
           )
         );
         recordPoint(screenX, screenY);
@@ -554,8 +561,8 @@ export function useAttentionTracker<ZoneId extends string>({
         });
         faceLandmarkerRef.current = landmarker as FaceLandmarkerInstance;
 
-        calibPhaseSamples.current = [[], [], []];
-        calibHorizSamplesRef.current = [];
+        calibVertSamplesRef.current = CALIB_PHASES.map(() => []);
+        calibHorizSamplesRef.current = CALIB_PHASES.map(() => []);
         animFrameRef.current = requestAnimationFrame(runLoop);
         setTrackingMode("eye");
         setCalibCountdown(3);
@@ -579,8 +586,8 @@ export function useAttentionTracker<ZoneId extends string>({
   useEffect(() => {
     if (eyeStatus !== "calibrating") return;
 
-    calibPhaseSamples.current = [[], [], []];
-    calibHorizSamplesRef.current = [];
+    calibVertSamplesRef.current = CALIB_PHASES.map(() => []);
+    calibHorizSamplesRef.current = CALIB_PHASES.map(() => []);
     const timers: ReturnType<typeof setTimeout>[] = [];
     const intervals: ReturnType<typeof setInterval>[] = [];
 
@@ -588,16 +595,26 @@ export function useAttentionTracker<ZoneId extends string>({
       arr.length > 0 ? arr.reduce((a, b) => a + b) / arr.length : null;
 
     const finish = () => {
-      const topG = avg(calibPhaseSamples.current[0]);
-      const centerG = avg(calibPhaseSamples.current[1]);
-      const bottomG = avg(calibPhaseSamples.current[2]);
+      const topG = avg(calibVertSamplesRef.current[0]);
+      const centerG = avg(calibVertSamplesRef.current[1]);
+      const bottomG = avg(calibVertSamplesRef.current[2]);
+      const leftG = avg(calibHorizSamplesRef.current[3]);
+      const centerXG = avg(calibHorizSamplesRef.current[1]);
+      const rightG = avg(calibHorizSamplesRef.current[4]);
       neutralRef.current = centerG ?? 0;
       if (topG !== null && bottomG !== null && bottomG - topG > 0.0005) {
         gainVRef.current = Math.min(200, Math.max(30, 0.8 / (bottomG - topG)));
       } else {
         gainVRef.current = 60;
       }
-      neutralHorizRef.current = avg(calibHorizSamplesRef.current) ?? 0;
+      neutralHorizRef.current = centerXG ?? 0;
+      if (leftG !== null && rightG !== null && Math.abs(rightG - leftG) > 0.0005) {
+        const rawGain = 0.76 / (rightG - leftG);
+        const gainMagnitude = Math.min(160, Math.max(18, Math.abs(rawGain)));
+        gainHRef.current = Math.sign(rawGain || 1) * gainMagnitude;
+      } else {
+        gainHRef.current = 25;
+      }
       setEyeStatus("idle");
       afterEyeCalibrationRef.current?.();
       afterEyeCalibrationRef.current = null;
@@ -660,7 +677,7 @@ export function useAttentionTracker<ZoneId extends string>({
   );
 
   const finishAttempt = useCallback(
-    (now = Date.now()) => {
+    (now = Date.now(), options: { keepTracking?: boolean } = {}) => {
       const previousTime = lastTimeRef.current > 0 ? lastTimeRef.current : now;
       const elapsed = now - previousTime;
       const elapsedRegion = activeRegionRef.current;
@@ -677,7 +694,7 @@ export function useAttentionTracker<ZoneId extends string>({
       }
 
       lastTimeRef.current = now;
-      if (animFrameRef.current) {
+      if (!options.keepTracking && animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
         animFrameRef.current = null;
       }
@@ -702,8 +719,9 @@ export function useAttentionTracker<ZoneId extends string>({
     neutralRef.current = null;
     neutralHorizRef.current = null;
     gainVRef.current = 60;
-    calibPhaseSamples.current = [[], [], []];
-    calibHorizSamplesRef.current = [];
+    gainHRef.current = 25;
+    calibVertSamplesRef.current = CALIB_PHASES.map(() => []);
+    calibHorizSamplesRef.current = CALIB_PHASES.map(() => []);
     gazeSamplesRef.current = [];
     intentSamplesRef.current = [];
     activeRegionRef.current = "unknown";

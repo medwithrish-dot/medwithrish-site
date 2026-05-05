@@ -617,8 +617,8 @@ export function AttentionTrackingDemo() {
 
         {/* Moving calibration dot */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
-          style={{ top: `${phase.y}%` }}
+          className="absolute -translate-x-1/2 -translate-y-1/2"
+          style={{ left: `${phase.x}%`, top: `${phase.y}%` }}
         >
           <div className="relative flex items-center justify-center">
             <div

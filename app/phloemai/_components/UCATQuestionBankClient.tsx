@@ -8,14 +8,21 @@ import {
   Calculator,
   CheckCircle,
   Clock3,
+  Eye,
   Flag,
   GripVertical,
   HelpCircle,
   ListChecks,
+  MousePointer2,
   Play,
   Timer,
   XCircle,
 } from "lucide-react";
+import {
+  CALIB_PHASES,
+  useAttentionTracker,
+  type TrackingMode,
+} from "../_lib/useAttentionTracker";
 import {
   getUCATSectionMeta,
   getUCATSubtypeMeta,
@@ -34,6 +41,7 @@ import {
 type PracticeAnswer = UCATOptionKey | string[];
 type SessionLengthMode = "questions" | "minutes";
 type PracticePhase = "practice" | "review" | "marked";
+type QuestionTrackingZone = "stimulus" | "question" | "answers";
 type TrackingPayload = Record<string, string | number | boolean | null>;
 type TrackingEvent = {
   at: number;
@@ -51,6 +59,11 @@ type QuestionTiming = {
 
 const QUESTION_TARGETS = [5, 10, 15] as const;
 const MINUTE_TARGETS = [5, 10, 15] as const;
+const QUESTION_TRACKING_ZONES: QuestionTrackingZone[] = [
+  "stimulus",
+  "question",
+  "answers",
+];
 
 function nowMs() {
   return Date.now();
@@ -434,6 +447,72 @@ function SectionHub() {
   );
 }
 
+function TrackingCalibrationScreen({
+  status,
+  calibPhase,
+  calibCountdown,
+}: {
+  status: "enabling" | "calibrating";
+  calibPhase: number;
+  calibCountdown: number;
+}) {
+  const phase = CALIB_PHASES[calibPhase] ?? CALIB_PHASES[0];
+
+  if (status === "enabling") {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950 text-white">
+        <div className="rounded-xl border border-white/10 bg-white/5 px-8 py-6 text-center shadow-2xl">
+          <Eye className="mx-auto h-8 w-8 text-blue-300" aria-hidden="true" />
+          <p className="mt-4 text-lg font-black">Loading eye tracking</p>
+          <p className="mt-2 text-sm font-semibold text-slate-300">
+            Allow camera access, then keep your head still for calibration.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-[100] bg-slate-950">
+      <div className="absolute left-0 right-0 top-6 flex flex-col items-center gap-3">
+        <p className="text-lg font-black text-white">Eye tracking calibration</p>
+        <p className="text-sm font-semibold text-slate-300">
+          Look at the dot - <span className="text-blue-300">{phase.label}</span>
+        </p>
+        <div className="flex gap-2">
+          {CALIB_PHASES.map((item, index) => (
+            <div
+              key={item.label}
+              className={`h-2.5 w-2.5 rounded-full ${
+                index < calibPhase
+                  ? "bg-blue-600"
+                  : index === calibPhase
+                    ? "bg-white"
+                    : "bg-slate-700"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div
+        className="absolute -translate-x-1/2 -translate-y-1/2"
+        style={{ left: `${phase.x}%`, top: `${phase.y}%` }}
+      >
+        <div className="relative flex items-center justify-center">
+          <div className="absolute h-20 w-20 animate-ping rounded-full border border-blue-500/30" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 shadow-md">
+            <div className="h-2.5 w-2.5 rounded-full bg-slate-950" />
+          </div>
+        </div>
+        <div className="mt-4 text-center text-4xl font-black tabular-nums text-blue-300">
+          {calibCountdown > 0 ? calibCountdown : "OK"}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SectionSetup({
   section,
   selectedSubtypeIds,
@@ -451,6 +530,12 @@ function SectionSetup({
   onMinuteTargetChange,
   onCustomMinutesChange,
   onTimedChange,
+  trackingMode,
+  trackingRingVisible,
+  trackingError,
+  trackingStarting,
+  onTrackingModeChange,
+  onTrackingRingChange,
   onStart,
 }: {
   section: UCATSection;
@@ -469,6 +554,12 @@ function SectionSetup({
   onMinuteTargetChange: (minutes: number | "custom") => void;
   onCustomMinutesChange: (minutes: string) => void;
   onTimedChange: (timed: boolean) => void;
+  trackingMode: TrackingMode;
+  trackingRingVisible: boolean;
+  trackingError: boolean;
+  trackingStarting: boolean;
+  onTrackingModeChange: (mode: TrackingMode) => void;
+  onTrackingRingChange: (visible: boolean) => void;
   onStart: () => void;
 }) {
   const meta = getUCATSectionMeta(section);
@@ -728,14 +819,81 @@ function SectionSetup({
             </div>
           </div>
 
+          <div className="mt-7">
+            <h2 className="text-sm font-black uppercase tracking-wide text-slate-900">
+              Attention tracking
+            </h2>
+            <div className="mt-3 grid gap-3 lg:grid-cols-3">
+              {[
+                {
+                  mode: "mouse" as const,
+                  title: "Mouse tracking",
+                  meta: "Recommended",
+                  icon: MousePointer2,
+                },
+                {
+                  mode: "eye" as const,
+                  title: "Experimental eye tracking",
+                  meta: "Camera",
+                  icon: Eye,
+                },
+                {
+                  mode: "none" as const,
+                  title: "Off",
+                  meta: "No tracking",
+                  icon: XCircle,
+                },
+              ].map((item) => {
+                const Icon = item.icon;
+                const active = trackingMode === item.mode;
+                return (
+                  <button
+                    key={item.mode}
+                    type="button"
+                    onClick={() => onTrackingModeChange(item.mode)}
+                    aria-pressed={active}
+                    className={`flex items-center gap-3 rounded-xl border p-4 text-left transition-colors ${
+                      active
+                        ? "border-blue-500 bg-blue-50 text-blue-700"
+                        : "border-slate-200 bg-white text-slate-700 hover:border-blue-300"
+                    }`}
+                  >
+                    <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-black">{item.title}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-500">
+                        {item.meta}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            <label className="mt-3 flex w-fit items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-black text-slate-700">
+              <input
+                type="checkbox"
+                checked={trackingRingVisible}
+                onChange={(event) => onTrackingRingChange(event.target.checked)}
+                disabled={trackingMode === "none"}
+                className="h-4 w-4"
+              />
+              Show tracking ring
+            </label>
+            {trackingError && trackingMode === "eye" && (
+              <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-black text-amber-700">
+                Eye tracking could not start. Mouse tracking is still available.
+              </p>
+            )}
+          </div>
+
           <button
             type="button"
             onClick={onStart}
-            disabled={questionCount === 0}
+            disabled={questionCount === 0 || trackingStarting}
             className="mt-7 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           >
             <Play className="h-4 w-4" aria-hidden="true" />
-            Start practice
+            {trackingStarting ? "Starting..." : "Start practice"}
           </button>
         </section>
       </div>
@@ -892,6 +1050,8 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   const [calcMemory, setCalcMemory] = useState(0);
   const [lastMrcAt, setLastMrcAt] = useState(0);
   const [trackingEventCount, setTrackingEventCount] = useState(0);
+  const [trackingModeChoice, setTrackingModeChoice] =
+    useState<TrackingMode>("mouse");
   const [timingSnapshot, setTimingSnapshot] = useState<
     Record<string, QuestionTiming>
   >({});
@@ -899,6 +1059,37 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   const questionTimingRef = useRef<Record<string, QuestionTiming>>({});
   const questionStartedAtRef = useRef(0);
   const appRootRef = useRef<HTMLDivElement>(null);
+  const stimulusRegionRef = useRef<HTMLElement>(null);
+  const questionRegionRef = useRef<HTMLDivElement>(null);
+  const answersRegionRef = useRef<HTMLDivElement>(null);
+  const zoneElements = useMemo(
+    () => ({
+      stimulus: stimulusRegionRef,
+      question: questionRegionRef,
+      answers: answersRegionRef,
+    }),
+    []
+  );
+  const attentionTracker = useAttentionTracker<QuestionTrackingZone>({
+    zoneIds: QUESTION_TRACKING_ZONES,
+    zoneElements,
+    isActive: started && phase === "practice",
+    profiles: {
+      eye: {
+        fuzzyPaddingRatio: 0.1,
+        fuzzyMinPaddingPx: 28,
+        intentScoreThreshold: 0.14,
+        minRegionDwellMs: 350,
+      },
+      mouse: {
+        fuzzyPaddingRatio: 0.025,
+        fuzzyMinPaddingPx: 6,
+        intentScoreThreshold: 0.06,
+        minRegionDwellMs: 60,
+      },
+    },
+  });
+  const resetAttentionTracker = attentionTracker.resetTracker;
 
   const sectionQuestions = useMemo(
     () => UCAT_QUESTION_BANK[validSection],
@@ -975,6 +1166,24 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     setTimingSnapshot({ ...questionTimingRef.current });
   };
 
+  const commitAttentionSnapshot = (reason: string) => {
+    if (attentionTracker.trackingMode === "none") return;
+
+    const zoneTimes = attentionTracker.finishAttempt(nowMs(), {
+      keepTracking: true,
+    });
+    const snapshot = attentionTracker.getSnapshot();
+    recordEvent("attention_snapshot", {
+      reason,
+      mode: snapshot.trackingMode,
+      dataReceived: snapshot.dataReceived,
+      switches: snapshot.regionSwitchCount,
+      stimulusMs: Math.round(zoneTimes.stimulus),
+      questionMs: Math.round(zoneTimes.question),
+      answersMs: Math.round(zoneTimes.answers),
+    });
+  };
+
   useEffect(() => {
     if (!started || !sessionTimed) return;
 
@@ -991,6 +1200,13 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     }
   }, [started, phase, questionIndex]);
 
+  useEffect(
+    () => () => {
+      resetAttentionTracker();
+    },
+    [resetAttentionTracker]
+  );
+
   const toggleSubtype = (subtype: UCATSubtypeId) => {
     recordEvent("setup_subtype_toggle", { subtype });
     setSelectedSubtypeIds((current) =>
@@ -1000,7 +1216,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     );
   };
 
-  const startPractice = () => {
+  const beginPracticeSession = (activeTrackingMode: TrackingMode) => {
     const nextQuestions = availableQuestions.slice(0, setupQuestionCount);
     if (nextQuestions.length === 0) return;
 
@@ -1022,6 +1238,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     setTrackingEventCount(0);
     setStarted(true);
     beginQuestionTiming(nextQuestions[0]);
+    attentionTracker.resetAttempt(nowMs());
     recordEvent("start_practice", {
       section: validSection,
       questionCount: nextQuestions.length,
@@ -1029,8 +1246,38 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       timed: lengthMode === "minutes" || timed,
       seconds: setupTimeSeconds,
       requestedMinutes: lengthMode === "minutes" ? selectedMinutes : null,
+      trackingMode: activeTrackingMode,
+      trackingRing: attentionTracker.showRing,
     });
   };
+
+  const startPractice = () => {
+    if (setupQuestionCount === 0) return;
+
+    if (trackingModeChoice === "eye") {
+      void attentionTracker.startEyeTracking(() => beginPracticeSession("eye"));
+      return;
+    }
+
+    if (trackingModeChoice === "mouse") {
+      attentionTracker.startMouseTracking();
+      beginPracticeSession("mouse");
+      return;
+    }
+
+    attentionTracker.startPracticeOnly();
+    beginPracticeSession("none");
+  };
+
+  if (!started && attentionTracker.eyeStatus !== "idle") {
+    return (
+      <TrackingCalibrationScreen
+        status={attentionTracker.eyeStatus}
+        calibPhase={attentionTracker.calibPhase}
+        calibCountdown={attentionTracker.calibCountdown}
+      />
+    );
+  }
 
   if (!started) {
     return (
@@ -1076,6 +1323,19 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           setTimed(nextTimed);
           recordEvent("setup_timed_toggle", { timed: nextTimed });
         }}
+        trackingMode={trackingModeChoice}
+        trackingRingVisible={attentionTracker.showRing}
+        trackingError={attentionTracker.error}
+        trackingStarting={attentionTracker.eyeStatus !== "idle"}
+        onTrackingModeChange={(mode) => {
+          setTrackingModeChoice(mode);
+          recordEvent("setup_tracking_mode", { mode });
+          if (mode === "none") attentionTracker.startPracticeOnly();
+        }}
+        onTrackingRingChange={(visible) => {
+          attentionTracker.setShowRing(visible);
+          recordEvent("setup_tracking_ring", { visible });
+        }}
         onStart={startPractice}
       />
     );
@@ -1113,6 +1373,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
 
   const goToQuestion = (index: number) => {
     commitQuestionTiming();
+    commitAttentionSnapshot("leave_question");
     const nextAnswer = answers[index];
     setQuestionIndex(index);
     setSelected(typeof nextAnswer === "string" ? nextAnswer : null);
@@ -1120,6 +1381,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     setRevealed(false);
     setNavigatorOpen(false);
     beginQuestionTiming(questions[index]);
+    attentionTracker.resetAttempt(nowMs());
     recordEvent("go_to_question", { index: index + 1 });
   };
 
@@ -1168,6 +1430,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
 
   const openReview = () => {
     commitQuestionTiming();
+    commitAttentionSnapshot("open_review");
     setNavigatorOpen(false);
     setPhase("review");
     recordEvent("review_open", {
@@ -1179,6 +1442,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
 
   const markPractice = () => {
     commitQuestionTiming();
+    commitAttentionSnapshot("mark_practice");
     setPhase("marked");
     setQuestionIndex(0);
     setSelected(typeof answers[0] === "string" ? answers[0] : null);
@@ -1391,6 +1655,19 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       tabIndex={-1}
       onKeyDown={handlePracticeKeyDown}
     >
+      {attentionTracker.trackingActive &&
+        attentionTracker.showRing &&
+        attentionTracker.pointer &&
+        phase === "practice" && (
+          <div
+            className="pointer-events-none fixed z-50 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-blue-500/80 shadow-[0_0_0_8px_rgba(37,99,235,0.12)]"
+            style={{
+              left: attentionTracker.pointer.x,
+              top: attentionTracker.pointer.y,
+            }}
+            aria-hidden="true"
+          />
+        )}
       <header className="flex min-h-14 items-center justify-between bg-[#0078a8] px-3 py-2 text-white">
         <div className="flex items-center gap-3">
           <Link
@@ -1403,6 +1680,26 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           <h1 className="text-lg font-semibold sm:text-2xl">{meta.bankTitle}</h1>
         </div>
         <div className="flex items-center gap-2">
+          <span className="hidden rounded-sm bg-[#00618a] px-3 py-1 text-sm font-semibold sm:inline-flex">
+            {attentionTracker.trackingMode === "mouse"
+              ? "Mouse tracking"
+              : attentionTracker.trackingMode === "eye"
+                ? "Eye tracking"
+                : "No tracking"}
+          </span>
+          {attentionTracker.trackingMode !== "none" && (
+            <label className="hidden items-center gap-1 rounded-sm bg-[#00618a] px-2 py-1 text-xs font-bold sm:inline-flex">
+              <input
+                type="checkbox"
+                checked={attentionTracker.showRing}
+                onChange={(event) =>
+                  attentionTracker.setShowRing(event.target.checked)
+                }
+                className="h-3.5 w-3.5"
+              />
+              Ring
+            </label>
+          )}
           <div
             className="rounded-sm bg-[#00618a] px-3 py-1 text-sm font-semibold"
             title={sessionTimed ? `Set time: ${formatDuration(sessionDurationSeconds)}` : undefined}
@@ -1539,7 +1836,10 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       )}
 
       <main className="grid min-h-[calc(100vh-132px)] grid-cols-1 md:grid-cols-[1.15fr_0.85fr]">
-        <section className="border-r-[6px] border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)]">
+        <section
+          ref={stimulusRegionRef}
+          className="border-r-[6px] border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)]"
+        >
           <h2 className="sr-only">{question.leftTitle ?? "Information"}</h2>
           <div className="max-w-4xl space-y-5 text-base leading-6 sm:text-lg">
             {question.stimulus.map((paragraph) => (
@@ -1550,13 +1850,15 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         </section>
 
         <section className="px-6 py-5">
-          <p className="mb-3 inline-flex rounded-sm bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">
-            {subtype.label}
-          </p>
-          <p className="text-base leading-6 sm:text-lg">{question.question}</p>
+          <div ref={questionRegionRef}>
+            <p className="mb-3 inline-flex rounded-sm bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">
+              {subtype.label}
+            </p>
+            <p className="text-base leading-6 sm:text-lg">{question.question}</p>
+          </div>
 
           {isDragQuestion ? (
-            <div className="mt-6">
+            <div ref={answersRegionRef} className="mt-6">
               <p className="rounded-sm border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold leading-6 text-slate-700">
                 {question.instruction}
               </p>
@@ -1601,7 +1903,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
               </div>
             </div>
           ) : (
-            <div className="mt-6 space-y-5">
+            <div ref={answersRegionRef} className="mt-6 space-y-5">
               {question.options.map((option) => {
                 const checked = selectedAnswer === option.key;
                 const correct = answerRevealed && option.key === question.answer;
@@ -1698,7 +2000,9 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           type="button"
           onClick={() => {
             commitQuestionTiming();
+            commitAttentionSnapshot("end_bank");
             recordEvent("end_bank");
+            attentionTracker.resetTracker();
             setStarted(false);
           }}
           className="flex h-full items-center border-r-2 border-white px-3 text-lg font-semibold hover:bg-[#00618a]"
