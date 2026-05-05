@@ -1144,7 +1144,6 @@ type MockHistoryPeriod = "7D" | "30D" | "90D" | "All time";
 type MockPerformanceSeries = {
   title: string;
   subtitle: string;
-  totalLabel: string;
   scaleLabel: string;
   scaleMin: number;
   scaleMax: number;
@@ -1161,7 +1160,6 @@ const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeri
   VR: {
     title: "PhloemAI VR mini mocks",
     subtitle: "Scaled score across recent Verbal Reasoning mini mocks.",
-    totalLabel: "24 questions each",
     scaleLabel: "UCAT scaled score",
     scaleMin: 300,
     scaleMax: 900,
@@ -1184,7 +1182,6 @@ const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeri
   DM: {
     title: "PhloemAI DM mini mocks",
     subtitle: "Scaled score across recent Decision Making mini mocks.",
-    totalLabel: "20 questions each",
     scaleLabel: "UCAT scaled score",
     scaleMin: 300,
     scaleMax: 900,
@@ -1207,7 +1204,6 @@ const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeri
   QR: {
     title: "PhloemAI QR mini mocks",
     subtitle: "Scaled score across recent Quantitative Reasoning mini mocks.",
-    totalLabel: "20 questions each",
     scaleLabel: "UCAT scaled score",
     scaleMin: 300,
     scaleMax: 900,
@@ -1230,7 +1226,6 @@ const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeri
   SJT: {
     title: "PhloemAI SJT mini mocks",
     subtitle: "Scaled score across recent Situational Judgement mini mocks.",
-    totalLabel: "20 questions each",
     scaleLabel: "UCAT scaled score",
     scaleMin: 300,
     scaleMax: 900,
@@ -1255,7 +1250,6 @@ const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeri
 const fullMockPerformanceSeries: MockPerformanceSeries = {
   title: "PhloemAI Full mocks",
   subtitle: "Total scaled score across full UCAT-style mocks.",
-  totalLabel: "228 questions each",
   scaleLabel: "Total scaled score",
   scaleMin: 1800,
   scaleMax: 3200,
@@ -1655,7 +1649,6 @@ function MockPerformanceChart({ series }: { series: MockPerformanceSeries }) {
           <span className="h-3 w-3 rounded bg-[#22c55e]" />
           Scaled score
         </span>
-        <span>{series.totalLabel}</span>
       </div>
     </div>
   );
