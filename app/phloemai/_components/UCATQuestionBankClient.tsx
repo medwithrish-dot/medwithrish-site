@@ -409,10 +409,10 @@ function SectionHub() {
 
         <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-black uppercase tracking-widest text-blue-700">
-            UCAT question bank
+            PhloemAI UCAT question bank
           </p>
           <h1 className="mt-3 text-3xl font-black text-slate-950">
-            Choose a section to practice
+            Choose a PhloemAI section to practice
           </h1>
           <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
             Pick a UCAT section, then choose mixed practice or target specific
@@ -429,7 +429,7 @@ function SectionHub() {
                   {section.code}
                 </span>
                 <h2 className="mt-4 text-lg font-black text-slate-950">
-                  {section.title}
+                  {section.bankTitle}
                 </h2>
                 <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
                   {section.description}
@@ -593,7 +593,7 @@ function SectionSetup({
                 {meta.code}
               </span>
               <h1 className="mt-4 text-3xl font-black text-slate-950">
-                {meta.title}
+                {meta.bankTitle}
               </h1>
               <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
                 {meta.description}

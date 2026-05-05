@@ -1140,6 +1140,7 @@ const sectionScores = [
 
 type MockGraphMode = "mini" | "full";
 type MiniMockSectionCode = "VR" | "DM" | "QR" | "SJT";
+type MockHistoryPeriod = "7D" | "30D" | "90D" | "All time";
 type MockPerformanceSeries = {
   title: string;
   subtitle: string;
@@ -1158,7 +1159,7 @@ type MockPerformanceSeries = {
 
 const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeries> = {
   VR: {
-    title: "VR mini mocks",
+    title: "PhloemAI VR mini mocks",
     subtitle: "Scaled score across recent Verbal Reasoning mini mocks.",
     totalLabel: "24 questions each",
     scaleLabel: "UCAT scaled score",
@@ -1166,16 +1167,22 @@ const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeri
     scaleMax: 900,
     ticks: [300, 500, 700, 900],
     points: [
-      { label: "Set 1", correct: 14, incorrect: 10, scaled: 580 },
-      { label: "Set 2", correct: 15, incorrect: 9, scaled: 610 },
-      { label: "Set 3", correct: 15, incorrect: 9, scaled: 620 },
-      { label: "Set 4", correct: 17, incorrect: 7, scaled: 670 },
-      { label: "Set 5", correct: 18, incorrect: 6, scaled: 700 },
-      { label: "Set 6", correct: 19, incorrect: 5, scaled: 730 },
+      { label: "Set 1", correct: 11, incorrect: 13, scaled: 500 },
+      { label: "Set 2", correct: 12, incorrect: 12, scaled: 530 },
+      { label: "Set 3", correct: 12, incorrect: 12, scaled: 550 },
+      { label: "Set 4", correct: 13, incorrect: 11, scaled: 560 },
+      { label: "Set 5", correct: 14, incorrect: 10, scaled: 580 },
+      { label: "Set 6", correct: 14, incorrect: 10, scaled: 590 },
+      { label: "Set 7", correct: 14, incorrect: 10, scaled: 580 },
+      { label: "Set 8", correct: 15, incorrect: 9, scaled: 610 },
+      { label: "Set 9", correct: 15, incorrect: 9, scaled: 620 },
+      { label: "Set 10", correct: 17, incorrect: 7, scaled: 670 },
+      { label: "Set 11", correct: 18, incorrect: 6, scaled: 700 },
+      { label: "Set 12", correct: 19, incorrect: 5, scaled: 730 },
     ],
   },
   DM: {
-    title: "DM mini mocks",
+    title: "PhloemAI DM mini mocks",
     subtitle: "Scaled score across recent Decision Making mini mocks.",
     totalLabel: "20 questions each",
     scaleLabel: "UCAT scaled score",
@@ -1183,16 +1190,22 @@ const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeri
     scaleMax: 900,
     ticks: [300, 500, 700, 900],
     points: [
-      { label: "Set 1", correct: 11, incorrect: 9, scaled: 570 },
-      { label: "Set 2", correct: 12, incorrect: 8, scaled: 600 },
-      { label: "Set 3", correct: 13, incorrect: 7, scaled: 630 },
-      { label: "Set 4", correct: 13, incorrect: 7, scaled: 650 },
-      { label: "Set 5", correct: 14, incorrect: 6, scaled: 670 },
-      { label: "Set 6", correct: 15, incorrect: 5, scaled: 700 },
+      { label: "Set 1", correct: 9, incorrect: 11, scaled: 500 },
+      { label: "Set 2", correct: 10, incorrect: 10, scaled: 520 },
+      { label: "Set 3", correct: 10, incorrect: 10, scaled: 540 },
+      { label: "Set 4", correct: 11, incorrect: 9, scaled: 555 },
+      { label: "Set 5", correct: 11, incorrect: 9, scaled: 565 },
+      { label: "Set 6", correct: 12, incorrect: 8, scaled: 580 },
+      { label: "Set 7", correct: 11, incorrect: 9, scaled: 570 },
+      { label: "Set 8", correct: 12, incorrect: 8, scaled: 600 },
+      { label: "Set 9", correct: 13, incorrect: 7, scaled: 630 },
+      { label: "Set 10", correct: 13, incorrect: 7, scaled: 650 },
+      { label: "Set 11", correct: 14, incorrect: 6, scaled: 670 },
+      { label: "Set 12", correct: 15, incorrect: 5, scaled: 700 },
     ],
   },
   QR: {
-    title: "QR mini mocks",
+    title: "PhloemAI QR mini mocks",
     subtitle: "Scaled score across recent Quantitative Reasoning mini mocks.",
     totalLabel: "20 questions each",
     scaleLabel: "UCAT scaled score",
@@ -1200,16 +1213,22 @@ const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeri
     scaleMax: 900,
     ticks: [300, 500, 700, 900],
     points: [
-      { label: "Set 1", correct: 9, incorrect: 11, scaled: 520 },
-      { label: "Set 2", correct: 10, incorrect: 10, scaled: 550 },
-      { label: "Set 3", correct: 11, incorrect: 9, scaled: 580 },
-      { label: "Set 4", correct: 12, incorrect: 8, scaled: 610 },
-      { label: "Set 5", correct: 13, incorrect: 7, scaled: 650 },
-      { label: "Set 6", correct: 15, incorrect: 5, scaled: 700 },
+      { label: "Set 1", correct: 7, incorrect: 13, scaled: 460 },
+      { label: "Set 2", correct: 8, incorrect: 12, scaled: 480 },
+      { label: "Set 3", correct: 8, incorrect: 12, scaled: 500 },
+      { label: "Set 4", correct: 9, incorrect: 11, scaled: 515 },
+      { label: "Set 5", correct: 9, incorrect: 11, scaled: 525 },
+      { label: "Set 6", correct: 10, incorrect: 10, scaled: 540 },
+      { label: "Set 7", correct: 9, incorrect: 11, scaled: 520 },
+      { label: "Set 8", correct: 10, incorrect: 10, scaled: 550 },
+      { label: "Set 9", correct: 11, incorrect: 9, scaled: 580 },
+      { label: "Set 10", correct: 12, incorrect: 8, scaled: 610 },
+      { label: "Set 11", correct: 13, incorrect: 7, scaled: 650 },
+      { label: "Set 12", correct: 15, incorrect: 5, scaled: 700 },
     ],
   },
   SJT: {
-    title: "SJT mini mocks",
+    title: "PhloemAI SJT mini mocks",
     subtitle: "Scaled score across recent Situational Judgement mini mocks.",
     totalLabel: "20 questions each",
     scaleLabel: "UCAT scaled score",
@@ -1217,18 +1236,24 @@ const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeri
     scaleMax: 900,
     ticks: [300, 500, 700, 900],
     points: [
-      { label: "Set 1", correct: 13, incorrect: 7, scaled: 610 },
-      { label: "Set 2", correct: 14, incorrect: 6, scaled: 640 },
-      { label: "Set 3", correct: 15, incorrect: 5, scaled: 680 },
-      { label: "Set 4", correct: 15, incorrect: 5, scaled: 700 },
-      { label: "Set 5", correct: 16, incorrect: 4, scaled: 740 },
-      { label: "Set 6", correct: 17, incorrect: 3, scaled: 770 },
+      { label: "Set 1", correct: 11, incorrect: 9, scaled: 540 },
+      { label: "Set 2", correct: 12, incorrect: 8, scaled: 570 },
+      { label: "Set 3", correct: 12, incorrect: 8, scaled: 590 },
+      { label: "Set 4", correct: 13, incorrect: 7, scaled: 600 },
+      { label: "Set 5", correct: 13, incorrect: 7, scaled: 620 },
+      { label: "Set 6", correct: 14, incorrect: 6, scaled: 650 },
+      { label: "Set 7", correct: 13, incorrect: 7, scaled: 610 },
+      { label: "Set 8", correct: 14, incorrect: 6, scaled: 640 },
+      { label: "Set 9", correct: 15, incorrect: 5, scaled: 680 },
+      { label: "Set 10", correct: 15, incorrect: 5, scaled: 700 },
+      { label: "Set 11", correct: 16, incorrect: 4, scaled: 740 },
+      { label: "Set 12", correct: 17, incorrect: 3, scaled: 770 },
     ],
   },
 };
 
 const fullMockPerformanceSeries: MockPerformanceSeries = {
-  title: "Full mocks",
+  title: "PhloemAI Full mocks",
   subtitle: "Total scaled score across full UCAT-style mocks.",
   totalLabel: "228 questions each",
   scaleLabel: "Total scaled score",
@@ -1236,18 +1261,21 @@ const fullMockPerformanceSeries: MockPerformanceSeries = {
   scaleMax: 3200,
   ticks: [1800, 2200, 2600, 3000],
   points: [
-    { label: "Mock 1", correct: 132, incorrect: 96, scaled: 2380 },
-    { label: "Mock 2", correct: 141, incorrect: 87, scaled: 2490 },
-    { label: "Mock 3", correct: 149, incorrect: 79, scaled: 2570 },
-    { label: "Mock 4", correct: 156, incorrect: 72, scaled: 2660 },
-    { label: "Mock 5", correct: 164, incorrect: 64, scaled: 2760 },
+    { label: "Mock 1", correct: 118, incorrect: 110, scaled: 2200 },
+    { label: "Mock 2", correct: 124, incorrect: 104, scaled: 2280 },
+    { label: "Mock 3", correct: 132, incorrect: 96, scaled: 2380 },
+    { label: "Mock 4", correct: 141, incorrect: 87, scaled: 2490 },
+    { label: "Mock 5", correct: 149, incorrect: 79, scaled: 2570 },
+    { label: "Mock 6", correct: 156, incorrect: 72, scaled: 2660 },
+    { label: "Mock 7", correct: 160, incorrect: 68, scaled: 2700 },
+    { label: "Mock 8", correct: 164, incorrect: 64, scaled: 2760 },
   ],
 };
 
 const questionBankProgress = [
   {
     code: "VR",
-    title: "Verbal Reasoning",
+    title: "PhloemAI Verbal Reasoning",
     completed: 7,
     total: 9,
     focus: "Inference and longer passages next",
@@ -1255,7 +1283,7 @@ const questionBankProgress = [
   },
   {
     code: "DM",
-    title: "Decision Making",
+    title: "PhloemAI Decision Making",
     completed: 6,
     total: 10,
     focus: "Syllogisms and logic puzzles next",
@@ -1263,7 +1291,7 @@ const questionBankProgress = [
   },
   {
     code: "QR",
-    title: "Quantitative Reasoning",
+    title: "PhloemAI Quantitative Reasoning",
     completed: 8,
     total: 14,
     focus: "Calculator-heavy data sets next",
@@ -1271,7 +1299,7 @@ const questionBankProgress = [
   },
   {
     code: "SJT",
-    title: "Situational Judgement",
+    title: "PhloemAI Situational Judgement",
     completed: 6,
     total: 10,
     focus: "Ordering and integrity scenarios next",
@@ -1480,6 +1508,23 @@ function getPointTotal(point: MockPerformanceSeries["points"][number]) {
 function getPointAccuracy(point: MockPerformanceSeries["points"][number]) {
   const total = getPointTotal(point);
   return total > 0 ? Math.round((point.correct / total) * 100) : 0;
+}
+
+function getMockPeriodPoints(
+  points: MockPerformanceSeries["points"],
+  period: MockHistoryPeriod
+) {
+  const countByPeriod: Record<MockHistoryPeriod, number> = {
+    "7D": 3,
+    "30D": 6,
+    "90D": 9,
+    "All time": points.length,
+  };
+  return points.slice(-countByPeriod[period]);
+}
+
+function getMockPeriodLabel(period: MockHistoryPeriod) {
+  return period === "All time" ? "all time" : `last ${period}`;
 }
 
 function MockPerformanceChart({ series }: { series: MockPerformanceSeries }) {
@@ -2104,36 +2149,36 @@ function DiagnosticContent({
 
 function PracticeContent() {
   const mockTests = [
-    ["Full mocks", "Run a complete UCAT-style mock when you need a full readiness check.", Timer, "bg-blue-100 text-blue-600"],
-    ["Mini mocks", "Short mixed tests for momentum without committing to a full paper.", BarChart3, "bg-violet-100 text-violet-600"],
-    ["Review mocks", "Revisit marked and incorrect mock questions with feedback.", AlertTriangle, "bg-red-100 text-red-500"],
+    ["PhloemAI Full mocks", "Run a complete UCAT-style mock when you need a full readiness check.", Timer, "bg-blue-100 text-blue-600"],
+    ["PhloemAI Mini mocks", "Short mixed tests for momentum without committing to a full paper.", BarChart3, "bg-violet-100 text-violet-600"],
+    ["PhloemAI Review mocks", "Revisit marked and incorrect mock questions with feedback.", AlertTriangle, "bg-red-100 text-red-500"],
   ] as const;
 
   const practiceSections = [
     {
       code: "VR",
-      title: "Verbal Reasoning",
+      title: "PhloemAI Verbal Reasoning",
       text: "Passage-based inference and comprehension.",
       href: "/phloemai/question-bank/vr",
       className: "bg-indigo-600 text-white",
     },
     {
       code: "DM",
-      title: "Decision Making",
+      title: "PhloemAI Decision Making",
       text: "Logic, probability and argument evaluation.",
       href: "/phloemai/question-bank/dm",
       className: "bg-blue-600 text-white",
     },
     {
       code: "QR",
-      title: "Quantitative Reasoning",
+      title: "PhloemAI Quantitative Reasoning",
       text: "Short numerical problems and data interpretation.",
       href: "/phloemai/question-bank/qr",
       className: "bg-cyan-500 text-white",
     },
     {
       code: "SJT",
-      title: "Situational Judgement",
+      title: "PhloemAI Situational Judgement",
       text: "Professional judgement and appropriate actions.",
       href: "/phloemai/question-bank/sjt",
       className: "bg-pink-500 text-white",
@@ -2371,6 +2416,7 @@ function ProgressContent({
 }: PremiumGateProps) {
   const [graphMode, setGraphMode] = useState<MockGraphMode>("mini");
   const [miniSection, setMiniSection] = useState<MiniMockSectionCode>("QR");
+  const [mockPeriod, setMockPeriod] = useState<MockHistoryPeriod>("30D");
   const fixProgress = [
     ["QR timing improving", "You're answering faster with similar accuracy.", "Improving", "bg-emerald-50 text-emerald-600", Clock3],
     ["VR longer passages still slow", "Time per question is high on long passages.", "Needs work", "bg-orange-50 text-orange-600", Bookmark],
@@ -2389,8 +2435,16 @@ function ProgressContent({
     graphMode === "full"
       ? fullMockPerformanceSeries
       : miniMockPerformanceSeries[miniSection];
-  const firstPoint = performanceSeries.points[0];
-  const currentPoint = performanceSeries.points[performanceSeries.points.length - 1];
+  const periodPoints = getMockPeriodPoints(performanceSeries.points, mockPeriod);
+  const visiblePerformanceSeries = {
+    ...performanceSeries,
+    subtitle: `${performanceSeries.subtitle} Showing ${getMockPeriodLabel(
+      mockPeriod
+    )}.`,
+    points: periodPoints,
+  };
+  const firstPoint = periodPoints[0];
+  const currentPoint = periodPoints[periodPoints.length - 1];
   const currentAccuracy = currentPoint ? getPointAccuracy(currentPoint) : 0;
   const currentScaled = currentPoint?.scaled ?? 0;
   const firstScaled = firstPoint?.scaled ?? 0;
@@ -2421,11 +2475,11 @@ function ProgressContent({
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-black">Mock performance</h2>
+                <h2 className="text-sm font-black">PhloemAI mock history</h2>
                 <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
               </div>
               <p className="mt-1 text-xs font-bold text-slate-500">
-                {performanceSeries.subtitle}
+                {visiblePerformanceSeries.subtitle}
               </p>
             </div>
             <div className="flex w-fit rounded-lg bg-slate-100 p-1">
@@ -2470,6 +2524,24 @@ function ProgressContent({
             </div>
           )}
 
+          <div className="mt-3 flex flex-wrap gap-2">
+            {(["7D", "30D", "90D", "All time"] as const).map((period) => (
+              <button
+                type="button"
+                key={period}
+                onClick={() => setMockPeriod(period)}
+                aria-pressed={mockPeriod === period}
+                className={`h-8 rounded-lg px-4 text-xs font-black ${
+                  mockPeriod === period
+                    ? "bg-slate-900 text-white"
+                    : "bg-slate-50 text-slate-500 hover:bg-blue-50 hover:text-blue-600"
+                }`}
+              >
+                {period}
+              </button>
+            ))}
+          </div>
+
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
               <p className="text-xs font-black text-slate-500">Latest scaled</p>
@@ -2498,7 +2570,7 @@ function ProgressContent({
           <div className="mt-3 text-xs font-black text-slate-400">
             {performanceSeries.scaleLabel}
           </div>
-          <MockPerformanceChart series={performanceSeries} />
+          <MockPerformanceChart series={visiblePerformanceSeries} />
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
