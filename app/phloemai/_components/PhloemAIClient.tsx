@@ -1410,7 +1410,11 @@ function ReportInsightCard({ group }: { group: ReportIssueGroup }) {
   );
 }
 
-function DiagnosticContent() {
+function DiagnosticContent({
+  isPremium,
+  checkoutLoading,
+  onUpgrade,
+}: PremiumGateProps) {
   const diagnosticHistory = [
     {
       code: "SJT",
@@ -1453,6 +1457,27 @@ function DiagnosticContent() {
     ["Before a mock exam", "Check your readiness and key risks.", Target],
   ] as const;
 
+  const premiumDiagnostics = [
+    {
+      title: "Daily free diagnostic",
+      text: "Premium users get one adaptive check-in every day at no extra cost.",
+      meta: "Included with Premium - AI feedback - trend tracking",
+      icon: Sparkles,
+      iconClass: "bg-amber-50 text-amber-600",
+      href: "/phloemai/question-bank",
+      cta: "Start daily diagnostic",
+    },
+    {
+      title: "Section deep-dive",
+      text: "Run a focused diagnostic on the section most likely to move your score.",
+      meta: "VR, DM, QR or SJT - targeted fixes",
+      icon: Target,
+      iconClass: "bg-indigo-50 text-blue-600",
+      href: "/phloemai/question-bank",
+      cta: "Choose section",
+    },
+  ] as const;
+
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
       <div className="grid gap-5 lg:grid-cols-[1.25fr_1fr]">
@@ -1463,11 +1488,11 @@ function DiagnosticContent() {
             </div>
             <div>
               <h2 className="text-sm font-black uppercase tracking-wide">
-                Quick diagnostic
+                Free diagnostic
               </h2>
               <p className="mt-2 max-w-xl text-sm font-semibold leading-6 text-slate-600">
-                Answer 10 adaptive questions across all five sections. Get
-                instant AI feedback on your main challenges.
+                Answer 10 adaptive questions across the UCAT sections and get a
+                clear first read on what is holding your score back.
               </p>
             </div>
           </div>
@@ -1475,10 +1500,10 @@ function DiagnosticContent() {
             href="/phloemai/question-bank"
             className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
           >
-            Start diagnostic
+            Start free diagnostic
           </Link>
           <div className="mt-6 flex flex-wrap gap-3">
-            {["10 questions", "Timed", "AI feedback"].map((item) => (
+            {["Free", "10 questions", "Timed", "AI feedback"].map((item) => (
               <span
                 key={item}
                 className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-black text-slate-600"
@@ -1520,6 +1545,80 @@ function DiagnosticContent() {
           </Link>
         </section>
       </div>
+
+      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-sm font-black uppercase tracking-wide">
+              Premium diagnostics
+            </h2>
+            <p className="mt-2 text-sm font-semibold text-slate-500">
+              Premium includes a fresh diagnostic every day, plus deeper checks
+              when you want to isolate a section.
+            </p>
+          </div>
+          <span
+            className={`w-fit rounded-full px-3 py-1 text-xs font-black ${
+              isPremium
+                ? "bg-emerald-50 text-emerald-600"
+                : "bg-amber-50 text-amber-700"
+            }`}
+          >
+            {isPremium ? "Daily diagnostic available" : "Premium unlock"}
+          </span>
+        </div>
+
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {premiumDiagnostics.map((diagnostic) => {
+            const Icon = diagnostic.icon;
+            return (
+              <div
+                key={diagnostic.title}
+                className={`rounded-xl border p-4 ${
+                  isPremium
+                    ? "border-slate-200 bg-white"
+                    : "border-amber-200 bg-amber-50/40"
+                }`}
+              >
+                <div className="flex gap-4">
+                  <div
+                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${diagnostic.iconClass}`}
+                  >
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black">{diagnostic.title}</h3>
+                    <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                      {diagnostic.text}
+                    </p>
+                    <p className="mt-2 text-xs font-black text-slate-400">
+                      {diagnostic.meta}
+                    </p>
+                  </div>
+                </div>
+                {isPremium ? (
+                  <Link
+                    href={diagnostic.href}
+                    className="mt-4 inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-5 text-xs font-black text-white hover:bg-blue-700"
+                  >
+                    {diagnostic.cta}
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => void onUpgrade()}
+                    disabled={checkoutLoading}
+                    className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-amber-300 bg-white px-5 text-xs font-black text-amber-700 hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    <LockKeyhole className="h-4 w-4" aria-hidden="true" />
+                    {checkoutLoading ? "Opening..." : "Upgrade to unlock"}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
       <div className="grid gap-5 lg:grid-cols-[1.25fr_0.85fr]">
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -1613,11 +1712,11 @@ function DiagnosticContent() {
 }
 
 function PracticeContent() {
-  const practiceModes = [
-    ["Timed practice", "Simulate real test conditions.", Timer, "bg-blue-100 text-blue-600"],
-    ["Untimed practice", "Build accuracy without pressure.", Clock3, "bg-blue-100 text-blue-600"],
-    ["Mini mocks", "Short mocks to test readiness.", BarChart3, "bg-violet-100 text-violet-600"],
-    ["Incorrect questions", "Revisit and master mistakes.", AlertTriangle, "bg-red-100 text-red-500"],
+  const mockTests = [
+    ["Full mocks", "Run a complete UCAT-style mock when you need a full readiness check.", Timer, "bg-blue-100 text-blue-600"],
+    ["Mini mocks", "Short mixed tests for momentum without committing to a full paper.", BarChart3, "bg-violet-100 text-violet-600"],
+    ["Subtest mocks", "Practice one UCAT section under realistic timing.", Clock3, "bg-cyan-100 text-cyan-600"],
+    ["Review mocks", "Revisit marked and incorrect mock questions with feedback.", AlertTriangle, "bg-red-100 text-red-500"],
   ] as const;
 
   const practiceSections = [
@@ -1656,6 +1755,13 @@ function PracticeContent() {
     ["VR", "VR Timed Set", "15 questions - Timed", "72%", "Today, 8:12 AM"],
     ["DM", "DM Mini-set", "10 questions - Untimed", "80%", "Yesterday, 7:35 PM"],
     ["SJT", "SJT Mini-set", "10 questions - Untimed", "70%", "Yesterday, 6:02 PM"],
+  ] as const;
+
+  const focusQueue = [
+    ["QR", "Calculator-heavy QR", "7 min drill - fix hesitation under time", "/phloemai/question-bank/qr", Timer],
+    ["VR", "Author opinion passages", "10 questions - tone and viewpoint", "/phloemai/question-bank/vr", Bookmark],
+    ["DM", "Syllogism accuracy", "8 questions - conclusion checking", "/phloemai/question-bank/dm", Brain],
+    ["SJT", "Response ordering", "Drag-and-drop judgement practice", "/phloemai/question-bank/sjt", Activity],
   ] as const;
 
   return (
@@ -1723,7 +1829,7 @@ function PracticeContent() {
                 {section.text}
               </p>
               <span className="mt-4 inline-flex items-center gap-2 text-sm font-black text-blue-600">
-                Practise
+                Practice
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </span>
             </Link>
@@ -1733,10 +1839,13 @@ function PracticeContent() {
 
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-sm font-black uppercase tracking-wide">
-          Practice modes
+          Mock tests
         </h2>
+        <p className="mt-2 text-sm font-semibold text-slate-500">
+          Use mocks when you want exam-style timing, score pressure and review.
+        </p>
         <div className="mt-4 grid gap-4 md:grid-cols-4">
-          {practiceModes.map(([title, text, Icon, iconClass]) => (
+          {mockTests.map(([title, text, Icon, iconClass]) => (
             <Link
               href="/phloemai/question-bank"
               key={title}
@@ -1758,58 +1867,54 @@ function PracticeContent() {
       <div className="grid gap-5 lg:grid-cols-[1fr_1.05fr]">
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-sm font-black uppercase tracking-wide">
-            Practice by section
+            Targeted skill queue
           </h2>
+          <p className="mt-2 text-sm font-semibold text-slate-500">
+            Suggested next sets based on the patterns in your latest diagnostic.
+          </p>
           <div className="mt-4 space-y-2">
-            {sectionScores.map((section) => (
+            {focusQueue.map(([code, title, meta, href, Icon]) => {
+              const style = sectionStyle(code);
+              return (
               <div
-                key={section.code}
-                className="grid gap-4 rounded-xl border border-slate-100 px-3 py-3 sm:grid-cols-[1fr_90px_110px_112px] sm:items-center"
+                key={title}
+                className="grid gap-4 rounded-xl border border-slate-100 px-3 py-3 sm:grid-cols-[64px_1fr_112px] sm:items-center"
               >
                 <div className="flex items-center gap-3">
                   <span
-                    className={`rounded-lg px-3 py-2 text-xs font-black ${section.badgeClass}`}
+                    className={`rounded-lg px-3 py-2 text-xs font-black ${style.badgeClass}`}
                   >
-                    {section.code}
-                  </span>
-                  <span className="text-sm font-black">
-                    {section.code === "QR"
-                      ? "Quantitative Reasoning"
-                      : section.code === "VR"
-                        ? "Verbal Reasoning"
-                        : section.code === "DM"
-                          ? "Decision Making"
-                          : "Situational Judgement"}
+                    {code}
                   </span>
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-400">Accuracy</p>
-                  <p className="text-sm font-black">{section.score}%</p>
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-400">
-                    Avg. time / question
-                  </p>
-                  <p className="text-sm font-black">
-                    {section.code === "SJT" ? "-" : `${92 - section.score / 2}s`}
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-blue-600">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black">{title}</p>
+                    <p className="mt-1 text-xs font-bold text-slate-500">
+                      {meta}
+                    </p>
+                  </div>
                 </div>
                 <Link
-                  href={`/phloemai/question-bank/${section.code.toLowerCase()}`}
+                  href={href}
                   className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
                 >
-                  Start practice
+                  Start
                 </Link>
               </div>
-            ))}
+            );
+            })}
           </div>
-          <button
-            type="button"
+          <Link
+            href="/phloemai/report"
             className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
           >
-            View section insights
+            View fix report
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </button>
+          </Link>
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -2104,7 +2209,7 @@ function ReportContent({
       items: [
         ["Improve VR pacing on long passages.", "Prioritise structure and main points."],
         ["Use a 2-pass process for DM.", "First pass to solve, second pass to verify."],
-        ["Build a SJT decision framework.", "Practise identifying the best and worst options."],
+        ["Build a SJT decision framework.", "Practice identifying the best and worst options."],
         ["Reduce overthinking in hard logic.", "Set a time cap and move on."],
       ],
     },
@@ -2356,7 +2461,15 @@ function DashboardSubpageContent({
   onUpgrade: () => void;
   onLogout: () => void;
 }) {
-  if (view === "diagnostic") return <DiagnosticContent />;
+  if (view === "diagnostic") {
+    return (
+      <DiagnosticContent
+        isPremium={isPremium}
+        checkoutLoading={checkoutLoading}
+        onUpgrade={onUpgrade}
+      />
+    );
+  }
   if (view === "practice") return <PracticeContent />;
   if (view === "progress") {
     return (

@@ -399,7 +399,7 @@ function SectionHub() {
             UCAT question bank
           </p>
           <h1 className="mt-3 text-3xl font-black text-slate-950">
-            Choose a section to practise
+            Choose a section to practice
           </h1>
           <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
             Pick a UCAT section, then choose mixed practice or target specific
