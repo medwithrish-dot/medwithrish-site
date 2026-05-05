@@ -1090,8 +1090,9 @@ const dashboardPageMeta: Record<
     subtitle: "Let's keep your UCAT prep on track.",
   },
   diagnostic: {
-    title: "Diagnostic",
-    subtitle: "Run a quick diagnostic to find what is holding your score back.",
+    title: "Diagnostic Hub",
+    subtitle:
+      "Diagnostics identify what's holding your UCAT score back so you can focus with confidence.",
   },
   practice: {
     title: "Practice",
@@ -1852,215 +1853,328 @@ function DiagnosticContent({
       issue: "Consistency is your biggest opportunity",
       section: "Situational Judgement",
       score: "61%",
-    },
-    {
-      code: "DM",
-      date: "May 5, 2025",
-      age: "1 week ago",
-      issue: "Hesitation reduces your accuracy",
-      section: "Decision Making",
-      score: "64%",
+      scoreClass: "bg-pink-50 text-pink-600",
     },
     {
       code: "VR",
-      date: "Apr 28, 2025",
-      age: "2 weeks ago",
-      issue: "Speeding impacts accuracy",
+      date: "May 10, 2025",
+      age: "4 days ago",
+      issue: "Accuracy can help you improve",
       section: "Verbal Reasoning",
-      score: "62%",
+      score: "68%",
+      scoreClass: "bg-emerald-50 text-emerald-600",
+    },
+    {
+      code: "DM",
+      date: "May 8, 2025",
+      age: "6 days ago",
+      issue: "Good progress - keep building speed",
+      section: "Decision Making",
+      score: "72%",
+      scoreClass: "bg-amber-50 text-amber-600",
     },
     {
       code: "QR",
-      date: "Apr 21, 2025",
-      age: "3 weeks ago",
+      date: "May 5, 2025",
+      age: "1 week ago",
       issue: "Multi-step data handling needs work",
       section: "Quantitative Reasoning",
       score: "63%",
+      scoreClass: "bg-cyan-50 text-cyan-600",
     },
   ];
 
   const timingPrompts = [
-    ["Best before starting a study session", "Know where to focus your time.", Clock3],
-    ["After a few practice sets", "Track what's improving and what's not.", BarChart3],
-    ["When your score plateaus", "Find hidden gaps holding you back.", Activity],
-    ["Before a mock exam", "Check your readiness and key risks.", Target],
+    [
+      "Best before starting a study session",
+      "Know where to focus your time for maximum impact.",
+      BarChart3,
+    ],
+    [
+      "After a few practice sets",
+      "Measure your progress and adjust your plan.",
+      Clock3,
+    ],
+    [
+      "When scores feel stuck",
+      "Get fresh insights to break through plateaus.",
+      Target,
+    ],
   ] as const;
 
-  const premiumDiagnostics = [
-    {
-      title: "Daily free diagnostic",
-      text: "Premium users get one adaptive check-in every day at no extra cost.",
-      meta: "Included with Premium - AI feedback - trend tracking",
-      icon: Sparkles,
-      iconClass: "bg-amber-50 text-amber-600",
-      href: "/phloemai/question-bank",
-      cta: "Start daily diagnostic",
-    },
+  const diagnosticTools = [
     {
       title: "Section deep-dive",
-      text: "Run a focused diagnostic on the section most likely to move your score.",
-      meta: "VR, DM, QR or SJT - targeted fixes",
+      text: "Explore underperformance in a specific section most likely to move your score.",
+      cta: "Choose section",
       icon: Target,
       iconClass: "bg-indigo-50 text-blue-600",
       href: "/phloemai/question-bank",
-      cta: "Choose section",
+      linkClass: "border-blue-100 text-blue-600 hover:bg-blue-50",
+    },
+    {
+      title: "Personalised feedback",
+      text: "Get AI-powered insights and targeted recommendations based on your results.",
+      cta: "See insights",
+      icon: Sparkles,
+      iconClass: "bg-violet-50 text-violet-600",
+      href: "/phloemai/report",
+      linkClass: "border-violet-100 text-violet-600 hover:bg-violet-50",
     },
   ] as const;
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
-      <div className="grid gap-5 lg:grid-cols-[1.25fr_1fr]">
-        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="flex gap-5">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-blue-600">
-              <Activity className="h-7 w-7" aria-hidden="true" />
-            </div>
-            <div>
-              <h2 className="text-sm font-black uppercase tracking-wide">
-                Free diagnostic
-              </h2>
-              <p className="mt-2 max-w-xl text-sm font-semibold leading-6 text-slate-600">
-                Answer 10 adaptive questions across the UCAT sections and get a
-                clear first read on what is holding your score back.
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/phloemai/question-bank"
-            className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
-          >
-            Start free diagnostic
-          </Link>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {["Free", "10 questions", "Timed", "AI feedback"].map((item) => (
-              <span
-                key={item}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-black text-slate-600"
-              >
-                {item}
-              </span>
-            ))}
-          </div>
-        </section>
-
-        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="text-sm font-black uppercase tracking-wide">
-              Latest diagnostic
-            </h2>
-            <span className="text-xs font-black text-slate-400">2 days ago</span>
-          </div>
-          <div className="mt-7 flex gap-5">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-pink-100 text-base font-black text-pink-600">
-              SJT
-            </div>
-            <div>
-              <p className="text-sm font-black">Main finding</p>
-              <h3 className="mt-2 text-base font-black">
-                Consistency is your biggest opportunity
-              </h3>
-              <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-                Your timing and consistency in SJT are holding your overall
-                score back.
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/phloemai/report"
-            className="mt-7 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
-          >
-            Expanded report
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-        </section>
-      </div>
-
-      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="grid gap-5 xl:grid-cols-[1.85fr_1fr]">
           <div>
-            <h2 className="text-sm font-black uppercase tracking-wide">
-              Premium diagnostics
-            </h2>
-            <p className="mt-2 text-sm font-semibold text-slate-500">
-              Premium includes a fresh diagnostic every day, plus deeper checks
-              when you want to isolate a section.
+            <p className="px-1 text-xs font-black uppercase tracking-wide text-blue-600">
+              Start your diagnostic
             </p>
-          </div>
-          <span
-            className={`w-fit rounded-full px-3 py-1 text-xs font-black ${
-              isPremium
-                ? "bg-emerald-50 text-emerald-600"
-                : "bg-amber-50 text-amber-700"
-            }`}
-          >
-            {isPremium ? "Daily diagnostic available" : "Premium unlock"}
-          </span>
-        </div>
-
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {premiumDiagnostics.map((diagnostic) => {
-            const Icon = diagnostic.icon;
-            return (
-              <div
-                key={diagnostic.title}
-                className={`rounded-xl border p-4 ${
-                  isPremium
-                    ? "border-slate-200 bg-white"
-                    : "border-amber-200 bg-amber-50/40"
-                }`}
-              >
-                <div className="flex gap-4">
-                  <div
-                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${diagnostic.iconClass}`}
-                  >
-                    <Icon className="h-6 w-6" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-black">{diagnostic.title}</h3>
-                    <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
-                      {diagnostic.text}
-                    </p>
-                    <p className="mt-2 text-xs font-black text-slate-400">
-                      {diagnostic.meta}
-                    </p>
-                  </div>
+            <div className="mt-3 grid gap-4 md:grid-cols-2">
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 p-5 text-white shadow-sm">
+                <div className="pointer-events-none absolute right-6 top-10 flex h-28 w-28 items-center justify-center rounded-full bg-white/20">
+                  <CheckCircle className="h-14 w-14" aria-hidden="true" />
                 </div>
+                <span className="relative inline-flex rounded-lg bg-emerald-900/25 px-3 py-2 text-[11px] font-black uppercase">
+                  Free first-read
+                </span>
+                <h2 className="relative mt-6 text-xl font-black">
+                  Start free diagnostic
+                </h2>
+                <p className="relative mt-2 max-w-[19rem] text-sm font-bold leading-6 text-emerald-50">
+                  Your first-read diagnostic to uncover key areas for
+                  improvement.
+                </p>
+                <ul className="relative mt-5 space-y-2 text-sm font-bold text-emerald-50">
+                  {[
+                    "10 adaptive questions",
+                    "First-read diagnostic",
+                    "Use 1 free credit",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-3">
+                      <CheckCircle className="h-4 w-4" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/phloemai/question-bank"
+                  className="relative mt-6 flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50"
+                >
+                  Start free diagnostic
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
+
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-violet-600 via-purple-700 to-indigo-900 p-5 text-white shadow-sm">
+                <div className="pointer-events-none absolute right-6 top-10 flex h-28 w-28 items-center justify-center rounded-full bg-white/20">
+                  <Clock3 className="h-14 w-14" aria-hidden="true" />
+                </div>
+                <span className="relative inline-flex rounded-lg bg-white/15 px-3 py-2 text-[11px] font-black uppercase">
+                  Premium daily check-in
+                </span>
+                <h2 className="relative mt-6 text-xl font-black">
+                  Start daily diagnostic
+                </h2>
+                <p className="relative mt-2 max-w-[19rem] text-sm font-bold leading-6 text-violet-50">
+                  A daily premium check-in to track progress and build
+                  consistency.
+                </p>
+                <ul className="relative mt-5 space-y-2 text-sm font-bold text-violet-50">
+                  {[
+                    "Quick daily pulse",
+                    "Tracks progress over time",
+                    "Fresh questions every day",
+                    "Premium daily check-in",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-3">
+                      <CheckCircle className="h-4 w-4" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
                 {isPremium ? (
                   <Link
-                    href={diagnostic.href}
-                    className="mt-4 inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-5 text-xs font-black text-white hover:bg-blue-700"
+                    href="/phloemai/question-bank"
+                    className="relative mt-6 flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-violet-700 shadow-sm transition-colors hover:bg-violet-50"
                   >
-                    {diagnostic.cta}
+                    Start daily diagnostic
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 ) : (
                   <button
                     type="button"
                     onClick={() => void onUpgrade()}
                     disabled={checkoutLoading}
-                    className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-amber-300 bg-white px-5 text-xs font-black text-amber-700 hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="relative mt-6 flex h-11 w-full items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-violet-700 shadow-sm transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <LockKeyhole className="h-4 w-4" aria-hidden="true" />
                     {checkoutLoading ? "Opening..." : "Upgrade to unlock"}
                   </button>
                 )}
               </div>
-            );
-          })}
+            </div>
+          </div>
+
+          <aside className="border-t border-slate-200 pt-4 xl:border-l xl:border-t-0 xl:pl-5 xl:pt-0">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-xs font-black uppercase tracking-wide">
+                Latest diagnostic
+              </h2>
+              <span className="text-xs font-black text-slate-500">
+                2 days ago
+              </span>
+            </div>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <span className="rounded-full bg-pink-50 px-3 py-1.5 text-xs font-black text-pink-600">
+                SJT
+              </span>
+              <span className="rounded-full bg-blue-50 px-3 py-1.5 text-xs font-black text-blue-600">
+                Main finding
+              </span>
+            </div>
+            <h3 className="mt-5 max-w-sm text-xl font-black leading-tight">
+              Consistency is your biggest opportunity
+            </h3>
+            <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-slate-600">
+              Your timing and consistency in SJT are holding your overall score
+              back.
+            </p>
+            <div className="mt-6 grid gap-2 sm:grid-cols-3 xl:grid-cols-3">
+              {([
+                ["On track", "Improving", Activity, "text-emerald-600"],
+                ["Last updated", "May 12, 2025", Clock3, "text-violet-600"],
+                ["Overall rank", "Top 38%", BarChart3, "text-blue-600"],
+              ] as const).map(([label, value, Icon, colorClass]) => (
+                <div
+                  key={label}
+                  className="rounded-lg border border-slate-200 bg-slate-50/70 p-3"
+                >
+                  <div className="flex items-center gap-2">
+                    <Icon
+                      className={`h-5 w-5 ${colorClass}`}
+                      aria-hidden="true"
+                    />
+                    <div>
+                      <p className="text-xs font-black text-slate-700">
+                        {label}
+                      </p>
+                      <p className="mt-0.5 text-xs font-bold text-slate-500">
+                        {value}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Link
+              href="/phloemai/report"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+            >
+              View full report
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </aside>
         </div>
       </section>
 
+      <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1.3fr]">
+        {diagnosticTools.map((tool) => {
+          const Icon = tool.icon;
+          return (
+            <section
+              key={tool.title}
+              className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+            >
+              <div className="flex gap-4">
+                <div
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${tool.iconClass}`}
+                >
+                  <Icon className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-black">{tool.title}</h2>
+                  <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                    {tool.text}
+                  </p>
+                  <Link
+                    href={tool.href}
+                    className={`mt-4 inline-flex h-9 items-center justify-center gap-2 rounded-lg border px-4 text-xs font-black ${tool.linkClass}`}
+                  >
+                    {tool.cta}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                </div>
+              </div>
+            </section>
+          );
+        })}
+
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="grid gap-4 sm:grid-cols-[1fr_190px] sm:items-center">
+            <div className="flex gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                <BadgeCheck className="h-6 w-6" aria-hidden="true" />
+              </div>
+              <div>
+                <h2 className="text-sm font-black">Your credits</h2>
+                <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                  Use credits to run free diagnostics and daily check-ins.
+                </p>
+                <Link
+                  href="/phloemai/account"
+                  className="mt-4 inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+                >
+                  Learn more about credits
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 overflow-hidden rounded-lg border border-slate-100 bg-slate-50">
+              <div
+                className="border-r border-slate-200 px-4 py-3 text-center"
+              >
+                <p className="text-[11px] font-black text-slate-600">
+                  Free credits
+                </p>
+                <p className="mt-2 text-3xl font-black text-blue-600">2</p>
+              </div>
+              <div className="px-4 py-3 text-center">
+                <p className="text-[11px] font-black text-slate-600">
+                  Daily access
+                </p>
+                <p className="mt-1 text-3xl font-black leading-none text-blue-600">
+                  &infin;
+                </p>
+                <p className="mt-1 text-[11px] font-black text-blue-600">
+                  Premium
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
       <div className="grid gap-5 lg:grid-cols-[1.25fr_0.85fr]">
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-sm font-black uppercase tracking-wide">
-            Diagnostic history
-          </h2>
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-sm font-black">Recent diagnostic history</h2>
+            <Link
+              href="/phloemai/report"
+              className="inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+            >
+              View all history
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
           <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
             {diagnosticHistory.map((item) => {
               const style = sectionStyle(item.code);
               return (
                 <div
                   key={item.date}
-                  className="grid gap-4 border-b border-slate-100 px-3 py-3 last:border-b-0 sm:grid-cols-[150px_1fr_90px_72px] sm:items-center"
+                  className="grid gap-4 border-b border-slate-100 px-3 py-3 last:border-b-0 sm:grid-cols-[1fr_auto_auto] sm:items-center"
                 >
                   <div className="flex items-center gap-3">
                     <span
@@ -2069,50 +2183,37 @@ function DiagnosticContent({
                       {item.code}
                     </span>
                     <div>
-                      <p className="text-sm font-black text-slate-600">
-                        {item.age}
-                      </p>
-                      <p className="text-xs font-bold text-slate-400">
-                        {item.date}
+                      <p className="text-sm font-black">{item.issue}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-500">
+                        {item.date} - {item.section}
                       </p>
                     </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-black">{item.issue}</p>
-                    <p className="mt-1 text-xs font-bold text-slate-500">
-                      {item.section}
-                    </p>
-                  </div>
-                  <span className="w-fit rounded-full bg-pink-50 px-3 py-1 text-xs font-black text-pink-600">
+                  <span
+                    className={`w-fit rounded-full px-3 py-1 text-xs font-black ${item.scoreClass}`}
+                  >
                     {item.score}
                   </span>
                   <Link
                     href="/phloemai/report"
-                    className="h-9 rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
+                    className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
                   >
-                    View
+                    View report
                   </Link>
                 </div>
               );
             })}
           </div>
-          <Link
-            href="/phloemai/report"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
-          >
-            View all diagnostics
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-sm font-black uppercase tracking-wide">
+          <h2 className="text-sm font-black">
             When to run a diagnostic
           </h2>
-          <div className="mt-5 space-y-5">
+          <div className="relative mt-5 space-y-5 before:absolute before:bottom-6 before:left-6 before:top-6 before:w-px before:bg-slate-200">
             {timingPrompts.map(([title, text, Icon]) => (
-              <div key={title} className="flex gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-blue-600">
+              <div key={title} className="relative flex gap-4">
+                <div className="z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-blue-600">
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </div>
                 <div>
@@ -3649,15 +3750,22 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
         <main className="min-w-0">
           <header className="flex flex-col gap-4 border-b border-slate-200 bg-white px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
-            <div>
-              <h1 className="text-2xl font-black">
-                {view === "dashboard"
-                  ? `${getGreeting()}, ${firstName}`
-                  : pageMeta.title}
-              </h1>
-              <p className="mt-2 text-sm font-medium text-slate-500">
-                {pageMeta.subtitle}
-              </p>
+            <div className="flex items-center gap-4">
+              {view === "diagnostic" && (
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-blue-600">
+                  <Activity className="h-7 w-7" aria-hidden="true" />
+                </div>
+              )}
+              <div>
+                <h1 className="text-2xl font-black">
+                  {view === "dashboard"
+                    ? `${getGreeting()}, ${firstName}`
+                    : pageMeta.title}
+                </h1>
+                <p className="mt-2 text-sm font-medium text-slate-500">
+                  {pageMeta.subtitle}
+                </p>
+              </div>
             </div>
             <div className="flex items-center gap-5">
               <button
