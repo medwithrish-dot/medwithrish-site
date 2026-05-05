@@ -55,6 +55,7 @@ export type UseAttentionTrackerOptions<ZoneId extends string> = {
 
 const L_IRIS = 468;
 const R_IRIS = 473;
+const HORIZONTAL_EYE_GAIN_SCALE = 0.7;
 
 export const CALIB_PHASES = [
   { label: "the top of the screen", x: 50, y: 10 },
@@ -183,7 +184,7 @@ export function useAttentionTracker<ZoneId extends string>({
   const neutralRef = useRef<number | null>(null);
   const neutralHorizRef = useRef<number | null>(null);
   const gainVRef = useRef<number>(60);
-  const horizSlopeRef = useRef<number>(-25);
+  const horizSlopeRef = useRef<number>(-25 * HORIZONTAL_EYE_GAIN_SCALE);
   const horizInterceptRef = useRef<number>(0.5);
   const calibPhaseRef = useRef(0);
   const calibVertSamplesRef = useRef<number[][]>(
@@ -609,15 +610,20 @@ export function useAttentionTracker<ZoneId extends string>({
       }
       neutralHorizRef.current = centerXG ?? 0;
       if (leftG !== null && rightG !== null && Math.abs(rightG - leftG) > 0.0005) {
-        const rawSlope = 0.76 / (rightG - leftG);
-        const slopeMagnitude = Math.min(160, Math.max(18, Math.abs(rawSlope)));
+        const rawSlope =
+          (0.76 * HORIZONTAL_EYE_GAIN_SCALE) / (rightG - leftG);
+        const slopeMagnitude = Math.min(
+          160 * HORIZONTAL_EYE_GAIN_SCALE,
+          Math.max(18 * HORIZONTAL_EYE_GAIN_SCALE, Math.abs(rawSlope))
+        );
         const slope = Math.sign(rawSlope || 1) * slopeMagnitude;
         horizSlopeRef.current = slope;
-        horizInterceptRef.current = 0.12 - slope * leftG;
+        horizInterceptRef.current = (0.5 - 0.38 * HORIZONTAL_EYE_GAIN_SCALE) - slope * leftG;
       } else {
         const neutralX = centerXG ?? 0;
-        horizSlopeRef.current = -25;
-        horizInterceptRef.current = 0.5 + 25 * neutralX;
+        const fallbackSlope = -25 * HORIZONTAL_EYE_GAIN_SCALE;
+        horizSlopeRef.current = fallbackSlope;
+        horizInterceptRef.current = 0.5 - fallbackSlope * neutralX;
       }
       setEyeStatus("idle");
       afterEyeCalibrationRef.current?.();
@@ -723,7 +729,7 @@ export function useAttentionTracker<ZoneId extends string>({
     neutralRef.current = null;
     neutralHorizRef.current = null;
     gainVRef.current = 60;
-    horizSlopeRef.current = -25;
+    horizSlopeRef.current = -25 * HORIZONTAL_EYE_GAIN_SCALE;
     horizInterceptRef.current = 0.5;
     calibVertSamplesRef.current = CALIB_PHASES.map(() => []);
     calibHorizSamplesRef.current = CALIB_PHASES.map(() => []);
