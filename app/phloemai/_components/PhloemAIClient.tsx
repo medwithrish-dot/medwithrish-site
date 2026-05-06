@@ -1115,11 +1115,11 @@ const dashboardPageMeta: Record<
   },
   practice: {
     title: "Practice",
-    subtitle: "Target the fixes from your latest diagnosis.",
+    subtitle: "Target the tasks from your personalised study plan.",
   },
   progress: {
     title: "Progress",
-    subtitle: "See whether your fixes are actually working.",
+    subtitle: "See whether your study plan is actually working.",
   },
   report: {
     title: "Report",
@@ -1362,8 +1362,8 @@ const approachSteps = [
     iconClass: "bg-blue-100 text-blue-600",
   },
   {
-    title: "Fixes",
-    text: "Get targeted tasks to improve",
+    title: "Study Plan",
+    text: "Get personalised tasks to improve",
     icon: Wrench,
     iconClass: "bg-emerald-100 text-emerald-600",
   },
@@ -1382,7 +1382,7 @@ const approachSteps = [
 ];
 
 const reportFeedbackShort =
-  "No AI report yet. Mark practice questions first, then wire the saved telemetry into the issue and fix rules.";
+  "No AI report yet. Mark practice questions first, then wire the saved telemetry into the study plan rules.";
 
 const reportFeedbackFull =
   reportFeedbackShort;
@@ -2092,7 +2092,7 @@ function PracticeContent() {
             </div>
             <div>
               <h2 className="text-sm font-black uppercase tracking-wide">
-                Recommended from your fixes
+                Recommended from your study plan
               </h2>
               <h3 className="mt-6 text-lg font-black">No recommended task yet</h3>
               <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
@@ -2237,7 +2237,7 @@ function PracticeContent() {
             href="/phloemai/report"
             className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
           >
-            View fix report
+            View study plan report
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </section>
@@ -2302,7 +2302,7 @@ function PracticeContent() {
       </div>
 
       <ApproachBand
-        title="Practice turns your fixes into improvement"
+        title="Practice turns your study plan into improvement"
         steps={[approachSteps[0], approachSteps[3], approachSteps[1], approachSteps[4]]}
       />
     </div>
@@ -2447,27 +2447,27 @@ function ProgressContent({
           isPremium={isPremium}
           checkoutLoading={checkoutLoading}
           onUpgrade={onUpgrade}
-          title="Unlock fix progress"
-          description="Premium shows the exact fixes improving, what still needs work and the actions driving score gains."
+          title="Unlock study plan progress"
+          description="Premium shows the exact tasks improving, what still needs work and the actions driving score gains."
         >
           <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-black">Fix progress</h2>
+              <h2 className="text-sm font-black">Study plan progress</h2>
               <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
             </div>
             <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
               <p className="text-sm font-black text-slate-700">
-                No fix progress yet.
+                No study plan progress yet.
               </p>
               <p className="mt-2 text-xs font-semibold text-slate-500">
-                Premium fix progress will be based on saved practice sessions.
+                Premium study plan progress will be based on saved practice sessions.
               </p>
             </div>
             <button
               type="button"
               className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
             >
-              View all fix insights
+              View all study plan insights
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </section>
@@ -2565,13 +2565,13 @@ function ReportContent({
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
         title="Unlock the full diagnostic report"
-        description="Premium reveals the full issues, strengths and fix map without rendering the report content for free accounts."
+        description="Premium reveals the full issues, strengths and study plan map without rendering the report content for free accounts."
       >
         <div className="grid gap-5 lg:grid-cols-2">
           {issueGroups.length === 0 ? (
             <section className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center lg:col-span-2">
               <p className="text-sm font-black text-slate-700">
-                No issues, strengths or fixes generated yet.
+                No issues, strengths or study plan tasks generated yet.
               </p>
               <p className="mt-2 text-xs font-semibold text-slate-500">
                 This report will use saved practice telemetry once the issue mapping is connected.
@@ -2869,7 +2869,8 @@ function AuthPanel({
             Create your account to open the UCAT dashboard.
           </h1>
           <p className="mt-4 max-w-xl text-base font-medium leading-7 text-slate-600">
-            Your account stores diagnostics, AI feedback, fix tasks and progress
+            Your account stores diagnostics, AI feedback, personalised study
+            plan tasks and progress
             snapshots securely in Supabase.
           </p>
 
@@ -3690,15 +3691,15 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <h2 className="text-sm font-black uppercase tracking-wide">
-                    Tasks from your fixes
+                    Personalised Study Plan/Tasks
                   </h2>
                   <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
-                    Your task queue will unlock after a diagnostic creates fix
-                    priorities.
+                    Your task queue will unlock after a diagnostic creates
+                    personalised study priorities.
                   </p>
                 </div>
                 <span className="w-fit rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-700">
-                  Awaiting fixes
+                  Awaiting study plan
                 </span>
               </div>
               <div className="mt-4 space-y-3">
@@ -3706,9 +3707,9 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                   <div className="rounded-xl border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-blue-50 p-4">
                     <div className="grid gap-3 sm:grid-cols-3">
                       {[
-                        ["1", "Main fix", "Most important score blocker"],
-                        ["2", "Drill", "Short targeted question set"],
-                        ["3", "Review", "Changed answers and slow items"],
+                        ["1", "Diagnostic", "Find the main score blocker"],
+                        ["2", "Fixes", "Turn it into targeted tasks"],
+                        ["3", "Improve", "Practise, review and track gains"],
                       ].map(([step, title, text]) => (
                         <div
                           key={title}
@@ -3726,8 +3727,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                     </div>
                     <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <p className="text-xs font-bold leading-5 text-slate-600">
-                        Once feedback is generated, this becomes your ordered
-                        practice queue.
+                        Once feedback is generated, this becomes your
+                        personalised study plan.
                       </p>
                       <Link
                         href="/phloemai/diagnostic"
@@ -3898,7 +3899,7 @@ function RedesignedTutorHero() {
     },
     {
       title: "Personalised next step",
-      text: "Get a focused recommendation for what to fix in the next question set.",
+      text: "Get a focused recommendation for what to work on in the next question set.",
       icon: Target,
       iconWrap: "bg-orange-50 text-orange-600",
     },
@@ -3961,7 +3962,7 @@ function RedesignedTutorHero() {
               <p className="mt-3 max-w-lg text-xs leading-5 text-slate-200">
                 PhloemAI analyses your timing, confidence, attention patterns,
                 answer changes and optional eye + mouse tracking to diagnose
-                mistakes and recommend exactly what to fix next.
+                mistakes and recommend exactly what to work on next.
               </p>
 
               <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
@@ -3988,18 +3989,18 @@ function RedesignedTutorHero() {
                 {[
                   {
                     step: "1",
-                    title: "Diagnosis",
+                    title: "Diagnostic",
                     text: "Complete a short timed UCAT set.",
                   },
                   {
                     step: "2",
-                    title: "Feedback",
-                    text: "Get your personalised AI feedback.",
+                    title: "Fixes",
+                    text: "Get your personalised study plan tasks.",
                   },
                   {
                     step: "3",
-                    title: "Fix",
-                    text: "Follow clear next steps to fix issues with targeted practice.",
+                    title: "Improve",
+                    text: "Practise targeted tasks and track gains.",
                   },
                 ].map((item, index) => (
                   <div
@@ -4087,7 +4088,9 @@ function RedesignedTutorHero() {
                       <Sparkles className="h-4 w-4" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="text-xs font-bold text-violet-200">Fixes</h3>
+                      <h3 className="text-xs font-bold text-violet-200">
+                        Study Plan
+                      </h3>
                       <ul className="mt-1 space-y-0.5 text-[11px] leading-4 text-slate-100">
                         <li>Calculator speed practice</li>
                         <li>7-minute timed QR sets until 85%+</li>
@@ -4206,7 +4209,7 @@ function RedesignedTutorHero() {
                 </p>
               </div>
               <p className="mt-4 text-center text-xs text-slate-700">
-                Shows you why and what to fix next.
+                Shows you why and what to work on next.
               </p>
             </div>
           </div>
@@ -4261,7 +4264,7 @@ function RedesignedTutorHero() {
               {[
                 "AI feedback after every session",
                 "Major/minor issue detection",
-                "Personalised fixes and drills",
+                "Personalised study plan and drills",
                 "Progress tracking over time",
               ].map((item) => (
                 <li key={item} className="flex gap-2">
@@ -4497,7 +4500,7 @@ function TutorHero() {
                 "Practice real UCAT-style questions across Verbal Reasoning, Decision Making, Quantitative Reasoning, and Situational Judgement.",
                 "AI identifies your bad habits - unfocused reading patterns, spending too long on the wrong areas, weak technique, and timing issues pinpointed by question type.",
                 "AI delivers tried-and-tested strategies tailored to your specific weaknesses, so you know exactly what to change and how.",
-                "Apply the fixes in your own revision and track your accuracy and speed improving over time.",
+                "Apply the study plan in your own revision and track your accuracy and speed improving over time.",
               ].map((text, i) => (
                 <li key={i} className="flex gap-3">
                   <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mt-0.5">
