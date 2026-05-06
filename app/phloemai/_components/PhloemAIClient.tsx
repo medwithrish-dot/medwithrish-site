@@ -1080,6 +1080,25 @@ type PremiumGateProps = {
   checkoutLoading: boolean;
   onUpgrade: () => void | Promise<void>;
 };
+type UCATSectionCode = "VR" | "DM" | "QR" | "SJT";
+type PracticeAttemptRow = {
+  question_id: string | null;
+  section: string | null;
+  answered: boolean | null;
+  correct: boolean | null;
+  total_seconds: number | null;
+  created_at: string | null;
+};
+type PracticeStats = {
+  sectionCompleted: Record<UCATSectionCode, number>;
+  totalCompleted: number;
+  totalAvailable: number;
+  accuracy: number;
+  avgSeconds: number;
+  hasCompletedQuestions: boolean;
+  questionCalendarDays: Array<{ day: number; questions: number }>;
+  monthLabel: string;
+};
 
 const dashboardPageMeta: Record<
   DashboardView,
@@ -1182,10 +1201,152 @@ const fixTasks: Array<{
 }> = [];
 
 const dailyQuestionTarget = 200;
-const questionCalendarDays = Array.from({ length: 31 }, (_, index) => ({
-  day: index + 1,
-  questions: 0,
-}));
+const sectionCodes: UCATSectionCode[] = ["VR", "DM", "QR", "SJT"];
+
+function emptySectionCounts(): Record<UCATSectionCode, number> {
+  return { VR: 0, DM: 0, QR: 0, SJT: 0 };
+}
+
+function getSectionTotal(code: UCATSectionCode) {
+  return questionBankProgress.find((item) => item.code === code)?.total ?? 0;
+}
+
+function getMonthShell() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  return {
+    year,
+    month,
+    monthLabel: now.toLocaleDateString("en-GB", {
+      month: "long",
+      year: "numeric",
+    }),
+    days: Array.from({ length: daysInMonth }, (_, index) => ({
+      day: index + 1,
+      questions: 0,
+    })),
+  };
+}
+
+function createEmptyPracticeStats(): PracticeStats {
+  const monthShell = getMonthShell();
+  return {
+    sectionCompleted: emptySectionCounts(),
+    totalCompleted: 0,
+    totalAvailable: questionBankProgress.reduce((sum, item) => sum + item.total, 0),
+    accuracy: 0,
+    avgSeconds: 0,
+    hasCompletedQuestions: false,
+    questionCalendarDays: monthShell.days,
+    monthLabel: monthShell.monthLabel,
+  };
+}
+
+function normaliseSectionCode(section: string | null): UCATSectionCode | null {
+  const code = section?.toUpperCase();
+  return sectionCodes.includes(code as UCATSectionCode)
+    ? (code as UCATSectionCode)
+    : null;
+}
+
+function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
+  const monthShell = getMonthShell();
+  const uniqueAnsweredBySection: Record<UCATSectionCode, Set<string>> = {
+    VR: new Set(),
+    DM: new Set(),
+    QR: new Set(),
+    SJT: new Set(),
+  };
+  let answeredAttempts = 0;
+  let correctAttempts = 0;
+  let totalSeconds = 0;
+
+  rows.forEach((row) => {
+    if (!row.answered) return;
+
+    const section = normaliseSectionCode(row.section);
+    if (!section) return;
+
+    answeredAttempts += 1;
+    if (row.correct) correctAttempts += 1;
+    totalSeconds += Math.max(0, row.total_seconds ?? 0);
+
+    if (row.question_id) {
+      uniqueAnsweredBySection[section].add(row.question_id);
+    }
+
+    if (row.created_at) {
+      const completedAt = new Date(row.created_at);
+      if (
+        completedAt.getFullYear() === monthShell.year &&
+        completedAt.getMonth() === monthShell.month
+      ) {
+        const dayIndex = completedAt.getDate() - 1;
+        if (monthShell.days[dayIndex]) {
+          monthShell.days[dayIndex].questions += 1;
+        }
+      }
+    }
+  });
+
+  const sectionCompleted = emptySectionCounts();
+  sectionCodes.forEach((code) => {
+    sectionCompleted[code] = Math.min(
+      getSectionTotal(code),
+      uniqueAnsweredBySection[code].size
+    );
+  });
+
+  const totalCompleted = sectionCodes.reduce(
+    (sum, code) => sum + sectionCompleted[code],
+    0
+  );
+  const totalAvailable = questionBankProgress.reduce(
+    (sum, item) => sum + item.total,
+    0
+  );
+
+  return {
+    sectionCompleted,
+    totalCompleted,
+    totalAvailable,
+    accuracy:
+      answeredAttempts > 0 ? Math.round((correctAttempts / answeredAttempts) * 100) : 0,
+    avgSeconds:
+      answeredAttempts > 0 ? Math.round(totalSeconds / answeredAttempts) : 0,
+    hasCompletedQuestions: answeredAttempts > 0,
+    questionCalendarDays: monthShell.days,
+    monthLabel: monthShell.monthLabel,
+  };
+}
+
+function getQuestionBankProgress(stats: PracticeStats) {
+  return questionBankProgress.map((item) => {
+    const code = item.code as UCATSectionCode;
+    const completed = stats.sectionCompleted[code];
+    return {
+      ...item,
+      completed,
+      focus:
+        completed > 0
+          ? `${completed} of ${item.total} questions completed`
+          : item.focus,
+    };
+  });
+}
+
+function getSectionScores(stats: PracticeStats) {
+  return sectionScores.map((section) => {
+    const code = section.code as UCATSectionCode;
+    const total = getSectionTotal(code);
+    return {
+      ...section,
+      score: total > 0 ? Math.round((stats.sectionCompleted[code] / total) * 100) : 0,
+    };
+  });
+}
 
 const approachSteps = [
   {
@@ -1325,16 +1486,20 @@ function sectionStyle(code: string) {
   );
 }
 
-function DailyQuestionsChart() {
-  const recentDays = questionCalendarDays.slice(3, 10);
+function DailyQuestionsChart({ practiceStats }: { practiceStats: PracticeStats }) {
+  const recentDays = practiceStats.questionCalendarDays.slice(-7);
   const average = Math.round(
-    recentDays.reduce((sum, item) => sum + item.questions, 0) /
-      recentDays.length
+    recentDays.length > 0
+      ? recentDays.reduce((sum, item) => sum + item.questions, 0) /
+          recentDays.length
+      : 0
   );
   const daysOnTarget = recentDays.filter(
     (item) => item.questions >= dailyQuestionTarget
   ).length;
-  const startOffset = 4;
+  const now = new Date();
+  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startOffset = (firstOfMonth.getDay() + 6) % 7;
   const blanks = Array.from({ length: startOffset }, (_, index) => index);
   const weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
   const getHeatClass = (questions: number) => {
@@ -1358,7 +1523,7 @@ function DailyQuestionsChart() {
             <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
           </div>
           <p className="mt-1 text-xs font-bold text-slate-500">
-            May 2026
+            {practiceStats.monthLabel}
           </p>
         </div>
         <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700">
@@ -1376,7 +1541,7 @@ function DailyQuestionsChart() {
             {blanks.map((blank) => (
               <div key={blank} className="aspect-square" />
             ))}
-            {questionCalendarDays.map((item) => (
+            {practiceStats.questionCalendarDays.map((item) => (
               <div key={item.day} className="group relative">
                 <div
                   title={`${item.questions}/${dailyQuestionTarget} questions`}
@@ -2154,20 +2319,25 @@ function ProgressContent({
   isPremium,
   checkoutLoading,
   onUpgrade,
-}: PremiumGateProps) {
-  const bankCompleted = questionBankProgress.reduce(
+  practiceStats,
+}: PremiumGateProps & { practiceStats: PracticeStats }) {
+  const progressItems = getQuestionBankProgress(practiceStats);
+  const bankCompleted = progressItems.reduce(
     (sum, item) => sum + item.completed,
     0
   );
-  const bankTotal = questionBankProgress.reduce((sum, item) => sum + item.total, 0);
+  const bankTotal = progressItems.reduce((sum, item) => sum + item.total, 0);
   const bankPercent = bankTotal > 0 ? Math.round((bankCompleted / bankTotal) * 100) : 0;
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
       <div className="grid gap-4 lg:grid-cols-3">
         {[
-          ["Accuracy", "-"],
-          ["Average time / question", "-"],
+          ["Accuracy", practiceStats.hasCompletedQuestions ? `${practiceStats.accuracy}%` : "-"],
+          [
+            "Average time / question",
+            practiceStats.hasCompletedQuestions ? `${practiceStats.avgSeconds}s` : "-",
+          ],
           ["Tasks completed", "0"],
         ].map(([label, value]) => (
           <div key={label} className="rounded-xl border border-slate-200 bg-white p-4">
@@ -2176,7 +2346,9 @@ function ProgressContent({
               {value}
             </p>
             <p className="mt-2 text-xs font-bold text-slate-400">
-              No saved practice yet
+              {practiceStats.hasCompletedQuestions
+                ? "From saved question attempts"
+                : "No saved practice yet"}
             </p>
           </div>
         ))}
@@ -2218,7 +2390,7 @@ function ProgressContent({
             {bankCompleted} of {bankTotal} questions completed
           </p>
           <div className="mt-5 space-y-3">
-            {questionBankProgress.map((item) => {
+            {progressItems.map((item) => {
               const style = sectionStyle(item.code);
               const percent = Math.round((item.completed / item.total) * 100);
               return (
@@ -2601,6 +2773,7 @@ function DashboardSubpageContent({
   email,
   isPremium,
   checkoutLoading,
+  practiceStats,
   onUpgrade,
   onLogout,
 }: {
@@ -2610,6 +2783,7 @@ function DashboardSubpageContent({
   email: string;
   isPremium: boolean;
   checkoutLoading: boolean;
+  practiceStats: PracticeStats;
   onUpgrade: () => void;
   onLogout: () => void;
 }) {
@@ -2629,6 +2803,7 @@ function DashboardSubpageContent({
         isPremium={isPremium}
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
+        practiceStats={practiceStats}
       />
     );
   }
@@ -2853,6 +3028,9 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [practiceStats, setPracticeStats] = useState<PracticeStats>(() =>
+    createEmptyPracticeStats()
+  );
   const supabaseReady = hasSupabaseConfig();
   const supabase = useMemo(
     () => (supabaseReady ? createSupabaseClient() : null),
@@ -2903,6 +3081,24 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       }
     }
 
+    async function loadPracticeStats(nextUser: User) {
+      const { data, error } = await supabaseClient
+        .from("practice_question_attempts")
+        .select("question_id,section,answered,correct,total_seconds,created_at")
+        .eq("user_id", nextUser.id)
+        .order("created_at", { ascending: false })
+        .limit(1500);
+
+      if (!mounted) return;
+
+      if (error) {
+        setPracticeStats(createEmptyPracticeStats());
+        return;
+      }
+
+      setPracticeStats(buildPracticeStats((data ?? []) as PracticeAttemptRow[]));
+    }
+
     async function syncCheckoutIfNeeded(nextUser: User) {
       const params = new URLSearchParams(window.location.search);
       const sessionId = params.get("session_id");
@@ -2946,9 +3142,11 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
       if (currentSession?.user) {
         await loadProfile(currentSession.user);
+        await loadPracticeStats(currentSession.user);
         await syncCheckoutIfNeeded(currentSession.user);
       } else {
         setProfile(null);
+        setPracticeStats(createEmptyPracticeStats());
       }
 
       setLoading(false);
@@ -2965,8 +3163,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
       if (nextSession?.user) {
         void loadProfile(nextSession.user);
+        void loadPracticeStats(nextSession.user);
       } else {
         setProfile(null);
+        setPracticeStats(createEmptyPracticeStats());
       }
     });
 
@@ -3032,6 +3232,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     setSession(null);
     setUser(null);
     setProfile(null);
+    setPracticeStats(createEmptyPracticeStats());
   };
 
   const handleUpgrade = async () => {
@@ -3129,6 +3330,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const firstName = getFirstName(user, profile);
   const plan = profile?.current_plan === "premium" ? "Premium" : "Free";
   const userEmail = user.email ?? "";
+  const dashboardSectionScores = getSectionScores(practiceStats);
+  const progressSummaryText = practiceStats.hasCompletedQuestions
+    ? "From saved question attempts"
+    : "No completed questions yet";
 
   return (
     <div className="phloem-dashboard-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
@@ -3385,8 +3590,18 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 {[
-                  ["Accuracy", "-"],
-                  ["Avg. time / question", "-"],
+                  [
+                    "Accuracy",
+                    practiceStats.hasCompletedQuestions
+                      ? `${practiceStats.accuracy}%`
+                      : "-",
+                  ],
+                  [
+                    "Avg. time / question",
+                    practiceStats.hasCompletedQuestions
+                      ? `${practiceStats.avgSeconds}s`
+                      : "-",
+                  ],
                 ].map(([label, value]) => (
                   <div key={label} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                     <p className="text-xs font-black text-slate-700">{label}</p>
@@ -3394,7 +3609,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                       {value}
                     </p>
                     <p className="mt-2 text-xs font-bold text-slate-400">
-                      No completed questions yet
+                      {progressSummaryText}
                     </p>
                   </div>
                 ))}
@@ -3402,7 +3617,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
               <h3 className="mt-7 text-sm font-black">Section overview</h3>
               <div className="mt-4 space-y-4">
-                {sectionScores.map((section) => (
+                {dashboardSectionScores.map((section) => (
                   <div
                     key={section.code}
                     className="grid grid-cols-[44px_1fr_42px] items-center gap-4"
@@ -3475,7 +3690,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               </Link>
             </section>
 
-            <DailyQuestionsChart />
+            <DailyQuestionsChart practiceStats={practiceStats} />
 
             <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
               <h2 className="text-sm font-black uppercase tracking-wide">
@@ -3519,6 +3734,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               email={userEmail}
               isPremium={plan === "Premium"}
               checkoutLoading={checkoutLoading}
+              practiceStats={practiceStats}
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}
             />

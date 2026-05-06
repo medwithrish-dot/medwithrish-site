@@ -214,6 +214,12 @@ function nowMs() {
   return Date.now();
 }
 
+function scrollToQuestionTop() {
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  });
+}
+
 function clampQuestionCount(value: number, available: number) {
   if (available <= 0) return 0;
   return Math.max(1, Math.min(available, value));
@@ -1541,6 +1547,12 @@ function DataPoint({ label, value }: { label: string; value: string }) {
   );
 }
 
+type VisibleDataPoint = {
+  label: string;
+  value: string;
+  show: boolean;
+};
+
 function QuestionDataCollectedPanel({
   item,
   compact = false,
@@ -1556,6 +1568,91 @@ function QuestionDataCollectedPanel({
   const regionTime = `${item.regionActivity.stimulusSeconds}s stimulus, ${item.regionActivity.questionSeconds}s question, ${item.regionActivity.answerSeconds}s answers`;
   const shortcutLabels =
     item.shortcuts.labels.length > 0 ? item.shortcuts.labels.join(", ") : "None";
+  const hasCalculatorInput =
+    item.calculator.keyboardPresses > 0 || item.calculator.buttonPresses > 0;
+  const hasCalculatorActions =
+    item.calculator.digitPresses > 0 ||
+    item.calculator.operators > 0 ||
+    item.calculator.backspaces > 0;
+  const hasRegionTime =
+    item.regionActivity.stimulusSeconds > 0 ||
+    item.regionActivity.questionSeconds > 0 ||
+    item.regionActivity.answerSeconds > 0;
+  const hasInterfaceEvents =
+    item.otherData.explanationToggles > 0 ||
+    item.otherData.flagToggles > 0 ||
+    item.otherData.navigatorOpens > 0 ||
+    item.otherData.reviewOpens > 0 ||
+    item.otherData.colourSchemeChanges > 0;
+  const dataPoints: VisibleDataPoint[] = [
+    {
+      label: "Timing",
+      value: `${item.totalSeconds}s total, ${item.visits} visit${item.visits === 1 ? "" : "s"}`,
+      show: item.totalSeconds > 0 || item.visits > 0,
+    },
+    {
+      label: "First/final answer time",
+      value: `First ${formatMsAsSeconds(item.firstAnsweredAtMs)}, final ${formatMsAsSeconds(item.answeredAtMs)}`,
+      show: item.firstAnsweredAtMs !== null || item.answeredAtMs !== null,
+    },
+    {
+      label: "Answer path",
+      value: formatAnswerPath(item),
+      show: item.answerPath.length > 0,
+    },
+    {
+      label: "Answer changes",
+      value: `${item.answerSwitches} switch${item.answerSwitches === 1 ? "" : "es"}; ${item.changedFromCorrect ? "right to wrong" : item.changedToCorrect ? "wrong to right" : "no correctness flip"}`,
+      show: item.answerSwitches > 0 || item.changedFromCorrect || item.changedToCorrect,
+    },
+    {
+      label: "Region flips",
+      value: `${item.regionActivity.totalSwitches} switches; ${item.regionActivity.questionAnswerFlips} Q/answer flips`,
+      show:
+        item.regionActivity.totalSwitches > 0 ||
+        item.regionActivity.questionAnswerFlips > 0 ||
+        item.regionActivity.stimulusQuestionFlips > 0 ||
+        item.regionActivity.stimulusAnswerFlips > 0,
+    },
+    {
+      label: "Region time",
+      value: regionTime,
+      show: hasRegionTime,
+    },
+    {
+      label: "Calculator input",
+      value: `${item.calculator.keyboardPresses} keyboard, ${item.calculator.buttonPresses} button`,
+      show: hasCalculatorInput,
+    },
+    {
+      label: "Calculator speed",
+      value: `Avg ${formatInputGap(item.calculator.avgInputGapMs)}, fastest ${formatInputGap(item.calculator.fastestInputGapMs)}`,
+      show: item.calculator.avgInputGapMs > 0 || item.calculator.fastestInputGapMs > 0,
+    },
+    {
+      label: "Memory buttons",
+      value: `${memoryTotal} total: MRC ${item.calculator.memoryRecall + item.calculator.memoryClear}, M- ${item.calculator.memoryMinus}, M+ ${item.calculator.memoryPlus}`,
+      show: memoryTotal > 0,
+    },
+    {
+      label: "Calculator actions",
+      value: `${item.calculator.digitPresses} digits, ${item.calculator.operators} operators, ${item.calculator.backspaces} backspaces`,
+      show: hasCalculatorActions,
+    },
+    {
+      label: "Shortcuts",
+      value: `${item.shortcuts.total} events: ${shortcutLabels}`,
+      show: item.shortcuts.total > 0,
+    },
+    {
+      label: "Interface",
+      value: `${item.otherData.explanationToggles} explain toggles, ${item.otherData.flagToggles} flag toggles`,
+      show: hasInterfaceEvents,
+    },
+  ];
+  const visibleDataPoints = dataPoints.filter((point) => point.show);
+
+  if (visibleDataPoints.length === 0) return null;
 
   return (
     <div className="mt-4 rounded-sm border border-slate-200 bg-slate-50 p-4">
@@ -1565,51 +1662,9 @@ function QuestionDataCollectedPanel({
           compact ? "sm:grid-cols-2" : "md:grid-cols-3"
         }`}
       >
-        <DataPoint
-          label="Timing"
-          value={`${item.totalSeconds}s total, ${item.visits} visit${item.visits === 1 ? "" : "s"}`}
-        />
-        <DataPoint
-          label="Answer timing"
-          value={`First ${formatMsAsSeconds(item.firstAnsweredAtMs)}, final ${formatMsAsSeconds(item.answeredAtMs)}`}
-        />
-        <DataPoint
-          label="Answer path"
-          value={formatAnswerPath(item)}
-        />
-        <DataPoint
-          label="Answer changes"
-          value={`${item.answerSwitches} switch${item.answerSwitches === 1 ? "" : "es"}; ${item.changedFromCorrect ? "right to wrong" : item.changedToCorrect ? "wrong to right" : "no correctness flip"}`}
-        />
-        <DataPoint
-          label="Region flips"
-          value={`${item.regionActivity.totalSwitches} switches; ${item.regionActivity.questionAnswerFlips} Q/answer flips`}
-        />
-        <DataPoint label="Region time" value={regionTime} />
-        <DataPoint
-          label="Calculator input"
-          value={`${item.calculator.keyboardPresses} keyboard, ${item.calculator.buttonPresses} button`}
-        />
-        <DataPoint
-          label="Calculator speed"
-          value={`Avg ${formatInputGap(item.calculator.avgInputGapMs)}, fastest ${formatInputGap(item.calculator.fastestInputGapMs)}`}
-        />
-        <DataPoint
-          label="Memory buttons"
-          value={`${memoryTotal} total: MRC ${item.calculator.memoryRecall + item.calculator.memoryClear}, M- ${item.calculator.memoryMinus}, M+ ${item.calculator.memoryPlus}`}
-        />
-        <DataPoint
-          label="Calculator actions"
-          value={`${item.calculator.digitPresses} digits, ${item.calculator.operators} operators, ${item.calculator.backspaces} backspaces`}
-        />
-        <DataPoint
-          label="Shortcuts"
-          value={`${item.shortcuts.total} events: ${shortcutLabels}`}
-        />
-        <DataPoint
-          label="Interface"
-          value={`${item.otherData.explanationToggles} explain toggles, ${item.otherData.flagToggles} flag toggles, ${item.trackingEventCount} events`}
-        />
+        {visibleDataPoints.map((point) => (
+          <DataPoint key={point.label} label={point.label} value={point.value} />
+        ))}
       </div>
     </div>
   );
@@ -1621,6 +1676,25 @@ function SessionDataCollectedPanel({ summary }: { summary: PracticeSessionSummar
     summary.calculator.memoryClear +
     summary.calculator.memoryMinus +
     summary.calculator.memoryPlus;
+  const hasCalculatorInput =
+    summary.calculator.keyboardPresses > 0 || summary.calculator.buttonPresses > 0;
+  const hasCalculatorSpeed =
+    summary.calculator.buttonAvgGapMs > 0 ||
+    summary.calculator.keyboardAvgGapMs > 0 ||
+    summary.calculator.avgInputGapMs > 0;
+  const hasRegionActivity =
+    summary.regionActivity.totalSwitches > 0 ||
+    summary.regionActivity.snapshots > 0 ||
+    summary.regionActivity.stimulusSeconds > 0 ||
+    summary.regionActivity.questionSeconds > 0 ||
+    summary.regionActivity.answerSeconds > 0;
+  const hasInterfaceActivity =
+    summary.shortcuts.total > 0 ||
+    summary.otherData.reviewOpens > 0 ||
+    summary.otherData.navigatorOpens > 0 ||
+    summary.otherData.explanationToggles > 0 ||
+    summary.otherData.flagToggles > 0 ||
+    summary.otherData.colourSchemeChanges > 0;
   const shortcutLabels =
     summary.shortcuts.labels.length > 0
       ? summary.shortcuts.labels.join(", ")
@@ -1630,77 +1704,192 @@ function SessionDataCollectedPanel({ summary }: { summary: PracticeSessionSummar
     {
       title: "Timing",
       points: [
-        ["Total time", formatDuration(summary.totalSeconds)],
-        ["Average per question", `${summary.avgSecondsPerQuestion}s`],
-        ["Timed mode", summary.timed ? formatDuration(summary.setSeconds) : "Untimed"],
-        ["Time remaining", formatDuration(summary.secondsRemaining)],
+        {
+          label: "Total time",
+          value: formatDuration(summary.totalSeconds),
+          show: summary.totalSeconds > 0,
+        },
+        {
+          label: "Average per question",
+          value: `${summary.avgSecondsPerQuestion}s`,
+          show: summary.avgSecondsPerQuestion > 0,
+        },
+        {
+          label: "Timed mode",
+          value: formatDuration(summary.setSeconds),
+          show: summary.timed,
+        },
+        {
+          label: "Time remaining",
+          value: formatDuration(summary.secondsRemaining),
+          show: summary.timed,
+        },
       ],
     },
     {
       title: "Answer Behaviour",
       points: [
-        ["Answered", `${summary.answeredQuestions}/${summary.totalQuestions}`],
-        ["Answer switches", String(summary.answerSwitches)],
-        ["Wrong to right", String(summary.changedToCorrect)],
-        ["Right to wrong", String(summary.changedFromCorrect)],
+        {
+          label: "Answered",
+          value: `${summary.answeredQuestions}/${summary.totalQuestions}`,
+          show: summary.answeredQuestions > 0,
+        },
+        {
+          label: "Answer switches",
+          value: String(summary.answerSwitches),
+          show: summary.answerSwitches > 0,
+        },
+        {
+          label: "Wrong to right",
+          value: String(summary.changedToCorrect),
+          show: summary.changedToCorrect > 0,
+        },
+        {
+          label: "Right to wrong",
+          value: String(summary.changedFromCorrect),
+          show: summary.changedFromCorrect > 0,
+        },
       ],
     },
     {
       title: "Attention Regions",
       points: [
-        ["Tracking mode", summary.trackingMode],
-        ["Region switches", String(summary.regionActivity.totalSwitches)],
-        ["Stimulus/question flips", String(summary.regionActivity.stimulusQuestionFlips)],
-        ["Question/answer flips", String(summary.regionActivity.questionAnswerFlips)],
-        ["Stimulus/answer flips", String(summary.regionActivity.stimulusAnswerFlips)],
-        [
-          "Region time",
-          `${summary.regionActivity.stimulusSeconds}s stimulus, ${summary.regionActivity.questionSeconds}s question, ${summary.regionActivity.answerSeconds}s answers`,
-        ],
+        {
+          label: "Tracking mode",
+          value: summary.trackingMode,
+          show: summary.trackingMode !== "none" && hasRegionActivity,
+        },
+        {
+          label: "Region switches",
+          value: String(summary.regionActivity.totalSwitches),
+          show: summary.regionActivity.totalSwitches > 0,
+        },
+        {
+          label: "Stimulus/question flips",
+          value: String(summary.regionActivity.stimulusQuestionFlips),
+          show: summary.regionActivity.stimulusQuestionFlips > 0,
+        },
+        {
+          label: "Question/answer flips",
+          value: String(summary.regionActivity.questionAnswerFlips),
+          show: summary.regionActivity.questionAnswerFlips > 0,
+        },
+        {
+          label: "Stimulus/answer flips",
+          value: String(summary.regionActivity.stimulusAnswerFlips),
+          show: summary.regionActivity.stimulusAnswerFlips > 0,
+        },
+        {
+          label: "Region time",
+          value: `${summary.regionActivity.stimulusSeconds}s stimulus, ${summary.regionActivity.questionSeconds}s question, ${summary.regionActivity.answerSeconds}s answers`,
+          show:
+            summary.regionActivity.stimulusSeconds > 0 ||
+            summary.regionActivity.questionSeconds > 0 ||
+            summary.regionActivity.answerSeconds > 0,
+        },
       ],
     },
     {
       title: "Calculator",
       points: [
-        ["Opens", String(summary.calculator.opens)],
-        [
-          "Input source",
-          `${summary.calculator.keyboardPresses} keyboard, ${summary.calculator.buttonPresses} button`,
-        ],
-        [
-          "Button speed",
-          `Avg ${formatInputGap(summary.calculator.buttonAvgGapMs)}`,
-        ],
-        [
-          "Keyboard speed",
-          `Avg ${formatInputGap(summary.calculator.keyboardAvgGapMs)}`,
-        ],
-        ["Operators", String(summary.calculator.operators)],
-        [
-          "Memory button usage",
-          `${memoryTotal} total: MRC ${summary.calculator.memoryRecall + summary.calculator.memoryClear}, M- ${summary.calculator.memoryMinus}, M+ ${summary.calculator.memoryPlus}`,
-        ],
-        [
-          "Calculation pauses",
-          `${summary.calculator.pauses} pauses over ${summary.calculator.pauseThresholdSeconds}s`,
-        ],
+        {
+          label: "Opens",
+          value: String(summary.calculator.opens),
+          show: summary.calculator.opens > 0,
+        },
+        {
+          label: "Input source",
+          value: `${summary.calculator.keyboardPresses} keyboard, ${summary.calculator.buttonPresses} button`,
+          show: hasCalculatorInput,
+        },
+        {
+          label: "Button speed",
+          value: `Avg ${formatInputGap(summary.calculator.buttonAvgGapMs)}`,
+          show: summary.calculator.buttonAvgGapMs > 0,
+        },
+        {
+          label: "Keyboard speed",
+          value: `Avg ${formatInputGap(summary.calculator.keyboardAvgGapMs)}`,
+          show: summary.calculator.keyboardAvgGapMs > 0,
+        },
+        {
+          label: "Average input gap",
+          value: formatInputGap(summary.calculator.avgInputGapMs),
+          show: hasCalculatorSpeed,
+        },
+        {
+          label: "Operators",
+          value: String(summary.calculator.operators),
+          show: summary.calculator.operators > 0,
+        },
+        {
+          label: "Memory button usage",
+          value: `${memoryTotal} total: MRC ${summary.calculator.memoryRecall + summary.calculator.memoryClear}, M- ${summary.calculator.memoryMinus}, M+ ${summary.calculator.memoryPlus}`,
+          show: memoryTotal > 0,
+        },
+        {
+          label: "Calculation pauses",
+          value: `${summary.calculator.pauses} pauses over ${summary.calculator.pauseThresholdSeconds}s`,
+          show: summary.calculator.pauses > 0,
+        },
       ],
     },
     {
       title: "Shortcuts And Interface",
       points: [
-        ["Shortcut events", String(summary.shortcuts.total)],
-        ["Shortcut labels", shortcutLabels],
-        ["Answer keys", String(summary.shortcuts.answerKeys)],
-        ["Navigation shortcuts", String(summary.shortcuts.navigation)],
-        ["Review opens", String(summary.otherData.reviewOpens)],
-        ["Navigator opens", String(summary.otherData.navigatorOpens)],
-        ["Explanation toggles", String(summary.otherData.explanationToggles)],
-        ["Flag toggles", String(summary.otherData.flagToggles)],
-        ["Colour changes", String(summary.otherData.colourSchemeChanges)],
+        {
+          label: "Shortcut events",
+          value: String(summary.shortcuts.total),
+          show: summary.shortcuts.total > 0,
+        },
+        {
+          label: "Shortcut labels",
+          value: shortcutLabels,
+          show: summary.shortcuts.labels.length > 0,
+        },
+        {
+          label: "Answer keys",
+          value: String(summary.shortcuts.answerKeys),
+          show: summary.shortcuts.answerKeys > 0,
+        },
+        {
+          label: "Navigation shortcuts",
+          value: String(summary.shortcuts.navigation),
+          show: summary.shortcuts.navigation > 0,
+        },
+        {
+          label: "Review opens",
+          value: String(summary.otherData.reviewOpens),
+          show: summary.otherData.reviewOpens > 0,
+        },
+        {
+          label: "Navigator opens",
+          value: String(summary.otherData.navigatorOpens),
+          show: summary.otherData.navigatorOpens > 0,
+        },
+        {
+          label: "Explanation toggles",
+          value: String(summary.otherData.explanationToggles),
+          show: summary.otherData.explanationToggles > 0,
+        },
+        {
+          label: "Flag toggles",
+          value: String(summary.otherData.flagToggles),
+          show: summary.otherData.flagToggles > 0,
+        },
+        {
+          label: "Colour changes",
+          value: String(summary.otherData.colourSchemeChanges),
+          show: summary.otherData.colourSchemeChanges > 0,
+        },
       ],
     },
-  ] as const;
+  ].map((section) => ({
+    ...section,
+    points: section.points.filter((point) => point.show),
+  })).filter((section) => section.points.length > 0);
+
+  if (!hasInterfaceActivity && sections.length === 0) return null;
 
   return (
     <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
@@ -1710,8 +1899,12 @@ function SessionDataCollectedPanel({ summary }: { summary: PracticeSessionSummar
           <div key={section.title} className="rounded-sm border border-slate-200 bg-slate-50 p-4">
             <h3 className="text-sm font-black text-slate-900">{section.title}</h3>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              {section.points.map(([label, value]) => (
-                <DataPoint key={label} label={label} value={value} />
+              {section.points.map((point) => (
+                <DataPoint
+                  key={point.label}
+                  label={point.label}
+                  value={point.value}
+                />
               ))}
             </div>
           </div>
@@ -2134,6 +2327,10 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   });
   const resetAttentionTracker = attentionTracker.resetTracker;
 
+  useEffect(() => {
+    scrollToQuestionTop();
+  }, []);
+
   const sectionQuestions = useMemo(
     () => UCAT_QUESTION_BANK[validSection],
     [validSection]
@@ -2463,6 +2660,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     const nextQuestions = availableQuestions.slice(0, setupQuestionCount);
     if (nextQuestions.length === 0) return;
 
+    scrollToQuestionTop();
     setNavigatorOpen(false);
     setQuestionIndex(0);
     setSelected(null);
@@ -2627,6 +2825,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   };
 
   const goToQuestion = (index: number) => {
+    scrollToQuestionTop();
     commitQuestionTiming();
     commitAttentionSnapshot("leave_question");
     const nextAnswer = answers[index];
@@ -2680,6 +2879,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   };
 
   const openReview = () => {
+    scrollToQuestionTop();
     commitQuestionTiming();
     commitAttentionSnapshot("open_review");
     setNavigatorOpen(false);
@@ -2692,6 +2892,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   };
 
   const markPractice = () => {
+    scrollToQuestionTop();
     commitQuestionTiming();
     commitAttentionSnapshot("mark_practice");
     const completedAt = nowMs();
@@ -2739,7 +2940,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     liveSummary?.questions[questionIndex] ?? null;
 
   const answerRevealed = revealed || phase === "marked";
-  const supportsCalculator = validSection === "dm" || validSection === "qr";
+  const supportsCalculator = true;
   const calcValue = Number(calcDisplay) || 0;
 
   const recordCalculator = (
