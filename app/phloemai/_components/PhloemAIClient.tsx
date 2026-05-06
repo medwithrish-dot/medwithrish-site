@@ -1573,9 +1573,6 @@ function DiagnosticContent({
             </p>
             <div className="mt-3 grid gap-4 md:grid-cols-2">
               <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 p-5 text-white shadow-sm">
-                <div className="pointer-events-none absolute right-6 top-10 flex h-28 w-28 items-center justify-center rounded-full bg-white/20">
-                  <CheckCircle className="h-14 w-14" aria-hidden="true" />
-                </div>
                 <span className="relative inline-flex rounded-lg bg-emerald-900/25 px-3 py-2 text-[11px] font-black uppercase">
                   Free first-read
                 </span>
@@ -1608,9 +1605,6 @@ function DiagnosticContent({
               </div>
 
               <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-violet-600 via-purple-700 to-indigo-900 p-5 text-white shadow-sm">
-                <div className="pointer-events-none absolute right-6 top-10 flex h-28 w-28 items-center justify-center rounded-full bg-white/20">
-                  <Clock3 className="h-14 w-14" aria-hidden="true" />
-                </div>
                 <span className="relative inline-flex rounded-lg bg-white/15 px-3 py-2 text-[11px] font-black uppercase">
                   Premium daily check-in
                 </span>
