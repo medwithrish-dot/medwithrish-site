@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  createClient as createSupabaseClient,
+  hasSupabaseConfig,
+} from "@/utils/supabase/client";
+import {
+  AlertTriangle,
   ArrowLeft,
   ArrowRight,
   Calculator,
@@ -13,8 +18,10 @@ import {
   GripVertical,
   HelpCircle,
   ListChecks,
+  LockKeyhole,
   MousePointer2,
   Play,
+  Target,
   Timer,
   XCircle,
 } from "lucide-react";
@@ -55,6 +62,144 @@ type QuestionTiming = {
   visits: number;
   totalMs: number;
   answeredAtMs?: number;
+};
+type SaveStatus = "idle" | "saving" | "saved" | "skipped" | "error";
+type SaveState = {
+  status: SaveStatus;
+  message: string;
+};
+type TimingBySubtype = {
+  subtype: UCATSubtypeId;
+  label: string;
+  questions: number;
+  answered: number;
+  correct: number;
+  flagged: number;
+  visits: number;
+  totalSeconds: number;
+  avgSeconds: number;
+};
+type AnswerPathEntry = {
+  answer: string;
+  answerText: string;
+  correct: boolean;
+  source: string;
+  atSeconds: number;
+};
+type CalculatorUsageSummary = {
+  opens: number;
+  buttonPresses: number;
+  keyboardPresses: number;
+  digitPresses: number;
+  decimalPresses: number;
+  backspaces: number;
+  operators: number;
+  memoryUses: number;
+  memoryPlus: number;
+  memoryMinus: number;
+  memoryRecall: number;
+  memoryClear: number;
+  pauses: number;
+  pauseThresholdSeconds: number;
+  avgInputGapMs: number;
+  fastestInputGapMs: number;
+  buttonAvgGapMs: number;
+  keyboardAvgGapMs: number;
+};
+type ShortcutUsageSummary = {
+  total: number;
+  answerKeys: number;
+  navigation: number;
+  calculator: number;
+  flag: number;
+  labels: string[];
+};
+type RegionActivitySummary = {
+  snapshots: number;
+  totalSwitches: number;
+  stimulusQuestionFlips: number;
+  questionAnswerFlips: number;
+  stimulusAnswerFlips: number;
+  stimulusRevisits: number;
+  questionRevisits: number;
+  answerRevisits: number;
+  stimulusSeconds: number;
+  questionSeconds: number;
+  answerSeconds: number;
+  trackingRecorded: boolean;
+};
+type InterfaceUsageSummary = {
+  reviewOpens: number;
+  navigatorOpens: number;
+  explanationToggles: number;
+  colourSchemeChanges: number;
+  nextClicks: number;
+  previousClicks: number;
+  flagToggles: number;
+  questionJumps: number;
+  endBankClicks: number;
+};
+type PracticeQuestionSummary = {
+  questionId: string;
+  questionIndex: number;
+  section: UCATSection;
+  subtype: UCATSubtypeId;
+  subtypeLabel: string;
+  questionText: string;
+  explanation: string;
+  answered: boolean;
+  correct: boolean;
+  flagged: boolean;
+  selectedAnswer: PracticeAnswer | null;
+  correctAnswer: PracticeAnswer;
+  selectedAnswerText: string;
+  correctAnswerText: string;
+  firstAnswerText: string;
+  answerPath: AnswerPathEntry[];
+  answerSelections: number;
+  totalSeconds: number;
+  visits: number;
+  answerSwitches: number;
+  changedToCorrect: boolean;
+  changedFromCorrect: boolean;
+  everCorrect: boolean;
+  everWrong: boolean;
+  firstAnsweredAtMs: number | null;
+  answeredAtMs: number | null;
+  calculator: CalculatorUsageSummary;
+  shortcuts: ShortcutUsageSummary;
+  regionActivity: RegionActivitySummary;
+  otherData: InterfaceUsageSummary;
+  trackingEventCount: number;
+};
+type PracticeSessionSummary = {
+  section: UCATSection;
+  sectionTitle: string;
+  startedAt: string;
+  completedAt: string;
+  totalQuestions: number;
+  answeredQuestions: number;
+  correctQuestions: number;
+  accuracy: number;
+  totalSeconds: number;
+  avgSecondsPerQuestion: number;
+  timed: boolean;
+  setSeconds: number;
+  secondsRemaining: number;
+  trackingMode: TrackingMode;
+  trackingEventCount: number;
+  flaggedQuestions: number;
+  answerSwitches: number;
+  changedQuestions: number;
+  answerEdits: number;
+  changedToCorrect: number;
+  changedFromCorrect: number;
+  timingBySubtype: TimingBySubtype[];
+  calculator: CalculatorUsageSummary;
+  shortcuts: ShortcutUsageSummary;
+  regionActivity: RegionActivitySummary;
+  otherData: InterfaceUsageSummary;
+  questions: PracticeQuestionSummary[];
 };
 
 const QUESTION_TARGETS = [5, 10, 15] as const;
@@ -128,6 +273,469 @@ function isAnswered(question: UCATQuestion, answer?: PracticeAnswer) {
   }
 
   return typeof answer === "string";
+}
+
+function getCorrectAnswerPayload(question: UCATQuestion): PracticeAnswer {
+  return isUCATDragOrderQuestion(question)
+    ? question.answerOrder
+    : question.answer;
+}
+
+function getCorrectAnswerText(question: UCATQuestion) {
+  if (isUCATDragOrderQuestion(question)) {
+    const itemLookup = new Map(question.dragItems.map((item) => [item.id, item.text]));
+    return question.answerOrder
+      .map((itemId, index) => `${index + 1}. ${itemLookup.get(itemId) ?? itemId}`)
+      .join(" ");
+  }
+
+  return getAnswerText(question, question.answer);
+}
+
+function payloadNumber(event: TrackingEvent, key: string) {
+  const value = event.payload?.[key];
+  return typeof value === "number" ? value : 0;
+}
+
+function payloadString(event: TrackingEvent, key: string) {
+  const value = event.payload?.[key];
+  return typeof value === "string" ? value : "";
+}
+
+function payloadBoolean(event: TrackingEvent, key: string) {
+  const value = event.payload?.[key];
+  return typeof value === "boolean" ? value : false;
+}
+
+function averageGapMs(events: TrackingEvent[]) {
+  if (events.length < 2) return 0;
+
+  const gaps = events
+    .slice(1)
+    .map((event, index) => event.at - events[index].at)
+    .filter((gap) => gap >= 0);
+
+  if (gaps.length === 0) return 0;
+  return Math.round(gaps.reduce((sum, gap) => sum + gap, 0) / gaps.length);
+}
+
+function fastestGapMs(events: TrackingEvent[]) {
+  if (events.length < 2) return 0;
+
+  const gaps = events
+    .slice(1)
+    .map((event, index) => event.at - events[index].at)
+    .filter((gap) => gap >= 0);
+
+  return gaps.length > 0 ? Math.min(...gaps) : 0;
+}
+
+function isCalculatorInputEvent(event: TrackingEvent) {
+  return [
+    "digit",
+    "decimal",
+    "operator",
+    "backspace",
+    "memory_plus",
+    "memory_minus",
+    "memory_recall",
+    "memory_clear",
+  ].includes(payloadString(event, "action"));
+}
+
+function summariseCalculatorUsage(events: TrackingEvent[]): CalculatorUsageSummary {
+  const calculatorEvents = events.filter((event) => event.type === "calculator");
+  const inputEvents = calculatorEvents.filter(isCalculatorInputEvent);
+  const buttonInputEvents = inputEvents.filter(
+    (event) => payloadString(event, "source") === "button"
+  );
+  const keyboardInputEvents = inputEvents.filter(
+    (event) => payloadString(event, "source") === "keyboard"
+  );
+  const pauseThresholdMs = 3000;
+  let pauses = 0;
+
+  inputEvents.forEach((event, index) => {
+    const previous = inputEvents[index - 1];
+    if (previous && event.at - previous.at >= pauseThresholdMs) {
+      pauses += 1;
+    }
+  });
+
+  return {
+    opens: calculatorEvents.filter(
+      (event) => payloadString(event, "action") === "open"
+    ).length,
+    buttonPresses: buttonInputEvents.length,
+    keyboardPresses: keyboardInputEvents.length,
+    digitPresses: calculatorEvents.filter(
+      (event) => payloadString(event, "action") === "digit"
+    ).length,
+    decimalPresses: calculatorEvents.filter(
+      (event) => payloadString(event, "action") === "decimal"
+    ).length,
+    backspaces: calculatorEvents.filter(
+      (event) => payloadString(event, "action") === "backspace"
+    ).length,
+    operators: calculatorEvents.filter(
+      (event) => payloadString(event, "action") === "operator"
+    ).length,
+    memoryUses: calculatorEvents.filter((event) =>
+      payloadString(event, "action").startsWith("memory_")
+    ).length,
+    memoryPlus: calculatorEvents.filter(
+      (event) => payloadString(event, "action") === "memory_plus"
+    ).length,
+    memoryMinus: calculatorEvents.filter(
+      (event) => payloadString(event, "action") === "memory_minus"
+    ).length,
+    memoryRecall: calculatorEvents.filter(
+      (event) => payloadString(event, "action") === "memory_recall"
+    ).length,
+    memoryClear: calculatorEvents.filter(
+      (event) => payloadString(event, "action") === "memory_clear"
+    ).length,
+    pauses,
+    pauseThresholdSeconds: pauseThresholdMs / 1000,
+    avgInputGapMs: averageGapMs(inputEvents),
+    fastestInputGapMs: fastestGapMs(inputEvents),
+    buttonAvgGapMs: averageGapMs(buttonInputEvents),
+    keyboardAvgGapMs: averageGapMs(keyboardInputEvents),
+  };
+}
+
+function summariseShortcutUsage(events: TrackingEvent[]): ShortcutUsageSummary {
+  const shortcutEvents = events.filter((event) => event.type === "shortcut");
+  const labels = Array.from(
+    new Set(
+      shortcutEvents
+        .map((event) => payloadString(event, "shortcut"))
+        .filter(Boolean)
+    )
+  );
+
+  return {
+    total: shortcutEvents.length,
+    answerKeys: shortcutEvents.filter(
+      (event) => payloadString(event, "action") === "answer"
+    ).length,
+    navigation: shortcutEvents.filter((event) =>
+      ["next_question", "previous_question"].includes(
+        payloadString(event, "action")
+      )
+    ).length,
+    calculator: shortcutEvents.filter(
+      (event) => payloadString(event, "action") === "calculator"
+    ).length,
+    flag: shortcutEvents.filter(
+      (event) => payloadString(event, "action") === "flag"
+    ).length,
+    labels,
+  };
+}
+
+function summariseRegionActivity(events: TrackingEvent[]): RegionActivitySummary {
+  return events
+    .filter((event) => event.type === "attention_snapshot")
+    .reduce<RegionActivitySummary>(
+      (acc, event) => ({
+        snapshots: acc.snapshots + 1,
+        totalSwitches: acc.totalSwitches + payloadNumber(event, "switches"),
+        stimulusQuestionFlips:
+          acc.stimulusQuestionFlips +
+          payloadNumber(event, "stimulusQuestionFlips"),
+        questionAnswerFlips:
+          acc.questionAnswerFlips + payloadNumber(event, "questionAnswerFlips"),
+        stimulusAnswerFlips:
+          acc.stimulusAnswerFlips + payloadNumber(event, "stimulusAnswerFlips"),
+        stimulusRevisits:
+          acc.stimulusRevisits + payloadNumber(event, "stimulusRevisits"),
+        questionRevisits:
+          acc.questionRevisits + payloadNumber(event, "questionRevisits"),
+        answerRevisits:
+          acc.answerRevisits + payloadNumber(event, "answerRevisits"),
+        stimulusSeconds:
+          acc.stimulusSeconds +
+          Math.round(payloadNumber(event, "stimulusMs") / 1000),
+        questionSeconds:
+          acc.questionSeconds +
+          Math.round(payloadNumber(event, "questionMs") / 1000),
+        answerSeconds:
+          acc.answerSeconds +
+          Math.round(payloadNumber(event, "answersMs") / 1000),
+        trackingRecorded:
+          acc.trackingRecorded || event.payload?.dataReceived === true,
+      }),
+      {
+        snapshots: 0,
+        totalSwitches: 0,
+        stimulusQuestionFlips: 0,
+        questionAnswerFlips: 0,
+        stimulusAnswerFlips: 0,
+        stimulusRevisits: 0,
+        questionRevisits: 0,
+        answerRevisits: 0,
+        stimulusSeconds: 0,
+        questionSeconds: 0,
+        answerSeconds: 0,
+        trackingRecorded: false,
+      }
+    );
+}
+
+function summariseInterfaceUsage(events: TrackingEvent[]): InterfaceUsageSummary {
+  return {
+    reviewOpens: events.filter((event) => event.type === "review_open").length,
+    navigatorOpens: events.filter(
+      (event) =>
+        event.type === "navigator_toggle" && event.payload?.open === true
+    ).length,
+    explanationToggles: events.filter((event) => event.type === "explain_toggle")
+      .length,
+    colourSchemeChanges: events.filter(
+      (event) => event.type === "colour_scheme_change"
+    ).length,
+    nextClicks: events.filter((event) => event.type === "next_question").length,
+    previousClicks: events.filter((event) => event.type === "previous_question")
+      .length,
+    flagToggles: events.filter((event) => event.type === "flag_toggle").length,
+    questionJumps: events.filter((event) => event.type === "go_to_question")
+      .length,
+    endBankClicks: events.filter((event) => event.type === "end_bank").length,
+  };
+}
+
+function buildQuestionSummary({
+  question,
+  index,
+  answer,
+  flagged,
+  timing,
+  events,
+}: {
+  question: UCATQuestion;
+  index: number;
+  answer?: PracticeAnswer;
+  flagged: boolean;
+  timing?: QuestionTiming;
+  events: TrackingEvent[];
+}): PracticeQuestionSummary {
+  const selectedAnswer = answer ?? null;
+  const answered = isAnswered(question, answer);
+  const correct = isAnswerCorrect(question, answer);
+  const answerEvents = events.filter((event) => event.type === "answer_select");
+  const dragEvents = events.filter((event) => event.type === "drag_reorder");
+  let previousAnswer = "";
+  let answerSwitches = 0;
+
+  answerEvents.forEach((event) => {
+    const nextAnswer = payloadString(event, "answer");
+    if (previousAnswer && nextAnswer && previousAnswer !== nextAnswer) {
+      answerSwitches += 1;
+    }
+    previousAnswer = nextAnswer || previousAnswer;
+  });
+
+  const answerPath = [...answerEvents, ...dragEvents]
+    .sort((first, second) => first.at - second.at)
+    .map((event): AnswerPathEntry => {
+      const source = payloadString(event, "source") || "drag";
+      const atSeconds = Math.round(payloadNumber(event, "questionElapsedMs") / 1000);
+
+      if (event.type === "drag_reorder") {
+        const answerText = payloadString(event, "order") || "Ordered response";
+        return {
+          answer: "order",
+          answerText,
+          correct: payloadBoolean(event, "correct"),
+          source,
+          atSeconds,
+        };
+      }
+
+      const answerKey = payloadString(event, "answer") as UCATOptionKey;
+      return {
+        answer: answerKey,
+        answerText: getAnswerText(question, answerKey),
+        correct: !isUCATDragOrderQuestion(question) && answerKey === question.answer,
+        source,
+        atSeconds,
+      };
+    });
+
+  const firstAnswer = answerPath[0];
+  const dragEdits = dragEvents.length;
+  const everCorrect = answerPath.some((item) => item.correct) || correct;
+  const everWrong = answerPath.some((item) => !item.correct);
+  const startedWrong = firstAnswer ? !firstAnswer.correct : false;
+  const startedCorrect = firstAnswer ? firstAnswer.correct : false;
+
+  return {
+    questionId: question.id,
+    questionIndex: index,
+    section: question.section,
+    subtype: question.subtype,
+    subtypeLabel: getUCATSubtypeMeta(question.subtype).label,
+    questionText: question.question,
+    explanation: question.explanation,
+    answered,
+    correct,
+    flagged,
+    selectedAnswer,
+    correctAnswer: getCorrectAnswerPayload(question),
+    selectedAnswerText: getAnswerText(question, answer),
+    correctAnswerText: getCorrectAnswerText(question),
+    firstAnswerText: firstAnswer?.answerText ?? "No answer selected",
+    answerPath,
+    answerSelections: answerEvents.length + dragEdits,
+    totalSeconds: Math.round((timing?.totalMs ?? 0) / 1000),
+    visits: timing?.visits ?? 0,
+    answerSwitches: answerSwitches + dragEdits,
+    changedToCorrect: startedWrong && correct,
+    changedFromCorrect: startedCorrect && answered && !correct,
+    everCorrect,
+    everWrong,
+    firstAnsweredAtMs:
+      answerPath.length > 0 ? answerPath[0].atSeconds * 1000 : null,
+    answeredAtMs: timing?.answeredAtMs ?? null,
+    calculator: summariseCalculatorUsage(events),
+    shortcuts: summariseShortcutUsage(events),
+    regionActivity: summariseRegionActivity(events),
+    otherData: summariseInterfaceUsage(events),
+    trackingEventCount: events.length,
+  };
+}
+
+function buildPracticeSessionSummary({
+  section,
+  sectionTitle,
+  questions,
+  answers,
+  flags,
+  timings,
+  events,
+  startedAt,
+  completedAt,
+  timed,
+  setSeconds,
+  secondsRemaining,
+  trackingMode,
+}: {
+  section: UCATSection;
+  sectionTitle: string;
+  questions: UCATQuestion[];
+  answers: Record<number, PracticeAnswer>;
+  flags: Record<number, boolean>;
+  timings: Record<string, QuestionTiming>;
+  events: TrackingEvent[];
+  startedAt: number;
+  completedAt: number;
+  timed: boolean;
+  setSeconds: number;
+  secondsRemaining: number;
+  trackingMode: TrackingMode;
+}): PracticeSessionSummary {
+  const eventsByQuestion = new Map<number, TrackingEvent[]>();
+
+  events.forEach((event) => {
+    if (typeof event.questionIndex !== "number") return;
+    eventsByQuestion.set(event.questionIndex, [
+      ...(eventsByQuestion.get(event.questionIndex) ?? []),
+      event,
+    ]);
+  });
+
+  const questionSummaries = questions.map((question, index) =>
+    buildQuestionSummary({
+      question,
+      index,
+      answer: answers[index],
+      flagged: Boolean(flags[index]),
+      timing: timings[question.id],
+      events: eventsByQuestion.get(index) ?? [],
+    })
+  );
+
+  const correctQuestions = questionSummaries.filter((item) => item.correct).length;
+  const answeredQuestions = questionSummaries.filter((item) => item.answered).length;
+  const flaggedQuestions = questionSummaries.filter((item) => item.flagged).length;
+  const answerSwitches = questionSummaries.reduce(
+    (sum, item) => sum + item.answerSwitches,
+    0
+  );
+  const changedQuestions = questionSummaries.filter(
+    (item) => item.answerSwitches > 0
+  ).length;
+  const changedToCorrect = questionSummaries.filter(
+    (item) => item.changedToCorrect
+  ).length;
+  const changedFromCorrect = questionSummaries.filter(
+    (item) => item.changedFromCorrect
+  ).length;
+  const totalSeconds = Math.round(
+    Object.values(timings).reduce((sum, item) => sum + item.totalMs, 0) / 1000
+  );
+  const accuracy =
+    questions.length > 0 ? Math.round((correctQuestions / questions.length) * 100) : 0;
+  const avgSecondsPerQuestion =
+    questions.length > 0 ? Math.round(totalSeconds / questions.length) : 0;
+
+  const timingBySubtypeMap = new Map<UCATSubtypeId, TimingBySubtype>();
+  questionSummaries.forEach((item) => {
+    const current = timingBySubtypeMap.get(item.subtype) ?? {
+      subtype: item.subtype,
+      label: item.subtypeLabel,
+      questions: 0,
+      answered: 0,
+      correct: 0,
+      flagged: 0,
+      visits: 0,
+      totalSeconds: 0,
+      avgSeconds: 0,
+    };
+    current.questions += 1;
+    current.answered += item.answered ? 1 : 0;
+    current.correct += item.correct ? 1 : 0;
+    current.flagged += item.flagged ? 1 : 0;
+    current.visits += item.visits;
+    current.totalSeconds += item.totalSeconds;
+    current.avgSeconds =
+      current.questions > 0 ? Math.round(current.totalSeconds / current.questions) : 0;
+    timingBySubtypeMap.set(item.subtype, current);
+  });
+
+  return {
+    section,
+    sectionTitle,
+    startedAt: new Date(startedAt).toISOString(),
+    completedAt: new Date(completedAt).toISOString(),
+    totalQuestions: questions.length,
+    answeredQuestions,
+    correctQuestions,
+    accuracy,
+    totalSeconds,
+    avgSecondsPerQuestion,
+    timed,
+    setSeconds,
+    secondsRemaining,
+    trackingMode,
+    trackingEventCount: events.length,
+    flaggedQuestions,
+    answerSwitches,
+    changedQuestions,
+    answerEdits: questionSummaries.reduce(
+      (sum, item) => sum + item.answerSwitches,
+      0
+    ),
+    changedToCorrect,
+    changedFromCorrect,
+    timingBySubtype: Array.from(timingBySubtypeMap.values()),
+    calculator: summariseCalculatorUsage(events),
+    shortcuts: summariseShortcutUsage(events),
+    regionActivity: summariseRegionActivity(events),
+    otherData: summariseInterfaceUsage(events),
+    questions: questionSummaries,
+  };
 }
 
 function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
@@ -901,6 +1509,218 @@ function SectionSetup({
   );
 }
 
+function formatMsAsSeconds(ms: number | null) {
+  if (!ms || ms <= 0) return "Not captured";
+  return `${Math.round(ms / 1000)}s`;
+}
+
+function formatInputGap(ms: number) {
+  if (ms <= 0) return "Not enough inputs";
+  return ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`;
+}
+
+function formatAnswerPath(item: PracticeQuestionSummary) {
+  if (item.answerPath.length === 0) return "No answer selected";
+
+  return item.answerPath
+    .map((entry) => {
+      const status = entry.correct ? "correct" : "wrong";
+      return `${entry.answer || entry.answerText} (${status}, ${entry.source}, ${entry.atSeconds}s)`;
+    })
+    .join(" -> ");
+}
+
+function DataPoint({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-sm border border-slate-200 bg-white px-3 py-2">
+      <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
+        {label}
+      </p>
+      <p className="mt-1 text-sm font-black text-slate-900">{value}</p>
+    </div>
+  );
+}
+
+function QuestionDataCollectedPanel({
+  item,
+  compact = false,
+}: {
+  item: PracticeQuestionSummary;
+  compact?: boolean;
+}) {
+  const memoryTotal =
+    item.calculator.memoryRecall +
+    item.calculator.memoryClear +
+    item.calculator.memoryMinus +
+    item.calculator.memoryPlus;
+  const regionTime = `${item.regionActivity.stimulusSeconds}s stimulus, ${item.regionActivity.questionSeconds}s question, ${item.regionActivity.answerSeconds}s answers`;
+  const shortcutLabels =
+    item.shortcuts.labels.length > 0 ? item.shortcuts.labels.join(", ") : "None";
+
+  return (
+    <div className="mt-4 rounded-sm border border-slate-200 bg-slate-50 p-4">
+      <h3 className="text-sm font-black text-slate-900">Data collected:</h3>
+      <div
+        className={`mt-3 grid gap-3 ${
+          compact ? "sm:grid-cols-2" : "md:grid-cols-3"
+        }`}
+      >
+        <DataPoint
+          label="Timing"
+          value={`${item.totalSeconds}s total, ${item.visits} visit${item.visits === 1 ? "" : "s"}`}
+        />
+        <DataPoint
+          label="Answer timing"
+          value={`First ${formatMsAsSeconds(item.firstAnsweredAtMs)}, final ${formatMsAsSeconds(item.answeredAtMs)}`}
+        />
+        <DataPoint
+          label="Answer path"
+          value={formatAnswerPath(item)}
+        />
+        <DataPoint
+          label="Answer changes"
+          value={`${item.answerSwitches} switch${item.answerSwitches === 1 ? "" : "es"}; ${item.changedFromCorrect ? "right to wrong" : item.changedToCorrect ? "wrong to right" : "no correctness flip"}`}
+        />
+        <DataPoint
+          label="Region flips"
+          value={`${item.regionActivity.totalSwitches} switches; ${item.regionActivity.questionAnswerFlips} Q/answer flips`}
+        />
+        <DataPoint label="Region time" value={regionTime} />
+        <DataPoint
+          label="Calculator input"
+          value={`${item.calculator.keyboardPresses} keyboard, ${item.calculator.buttonPresses} button`}
+        />
+        <DataPoint
+          label="Calculator speed"
+          value={`Avg ${formatInputGap(item.calculator.avgInputGapMs)}, fastest ${formatInputGap(item.calculator.fastestInputGapMs)}`}
+        />
+        <DataPoint
+          label="Memory buttons"
+          value={`${memoryTotal} total: MRC ${item.calculator.memoryRecall + item.calculator.memoryClear}, M- ${item.calculator.memoryMinus}, M+ ${item.calculator.memoryPlus}`}
+        />
+        <DataPoint
+          label="Calculator actions"
+          value={`${item.calculator.digitPresses} digits, ${item.calculator.operators} operators, ${item.calculator.backspaces} backspaces`}
+        />
+        <DataPoint
+          label="Shortcuts"
+          value={`${item.shortcuts.total} events: ${shortcutLabels}`}
+        />
+        <DataPoint
+          label="Interface"
+          value={`${item.otherData.explanationToggles} explain toggles, ${item.otherData.flagToggles} flag toggles, ${item.trackingEventCount} events`}
+        />
+      </div>
+    </div>
+  );
+}
+
+function SessionDataCollectedPanel({ summary }: { summary: PracticeSessionSummary }) {
+  const memoryTotal =
+    summary.calculator.memoryRecall +
+    summary.calculator.memoryClear +
+    summary.calculator.memoryMinus +
+    summary.calculator.memoryPlus;
+  const shortcutLabels =
+    summary.shortcuts.labels.length > 0
+      ? summary.shortcuts.labels.join(", ")
+      : "None used";
+
+  const sections = [
+    {
+      title: "Timing",
+      points: [
+        ["Total time", formatDuration(summary.totalSeconds)],
+        ["Average per question", `${summary.avgSecondsPerQuestion}s`],
+        ["Timed mode", summary.timed ? formatDuration(summary.setSeconds) : "Untimed"],
+        ["Time remaining", formatDuration(summary.secondsRemaining)],
+      ],
+    },
+    {
+      title: "Answer Behaviour",
+      points: [
+        ["Answered", `${summary.answeredQuestions}/${summary.totalQuestions}`],
+        ["Answer switches", String(summary.answerSwitches)],
+        ["Wrong to right", String(summary.changedToCorrect)],
+        ["Right to wrong", String(summary.changedFromCorrect)],
+      ],
+    },
+    {
+      title: "Attention Regions",
+      points: [
+        ["Tracking mode", summary.trackingMode],
+        ["Region switches", String(summary.regionActivity.totalSwitches)],
+        ["Stimulus/question flips", String(summary.regionActivity.stimulusQuestionFlips)],
+        ["Question/answer flips", String(summary.regionActivity.questionAnswerFlips)],
+        ["Stimulus/answer flips", String(summary.regionActivity.stimulusAnswerFlips)],
+        [
+          "Region time",
+          `${summary.regionActivity.stimulusSeconds}s stimulus, ${summary.regionActivity.questionSeconds}s question, ${summary.regionActivity.answerSeconds}s answers`,
+        ],
+      ],
+    },
+    {
+      title: "Calculator",
+      points: [
+        ["Opens", String(summary.calculator.opens)],
+        [
+          "Input source",
+          `${summary.calculator.keyboardPresses} keyboard, ${summary.calculator.buttonPresses} button`,
+        ],
+        [
+          "Button speed",
+          `Avg ${formatInputGap(summary.calculator.buttonAvgGapMs)}`,
+        ],
+        [
+          "Keyboard speed",
+          `Avg ${formatInputGap(summary.calculator.keyboardAvgGapMs)}`,
+        ],
+        ["Operators", String(summary.calculator.operators)],
+        [
+          "Memory button usage",
+          `${memoryTotal} total: MRC ${summary.calculator.memoryRecall + summary.calculator.memoryClear}, M- ${summary.calculator.memoryMinus}, M+ ${summary.calculator.memoryPlus}`,
+        ],
+        [
+          "Calculation pauses",
+          `${summary.calculator.pauses} pauses over ${summary.calculator.pauseThresholdSeconds}s`,
+        ],
+      ],
+    },
+    {
+      title: "Shortcuts And Interface",
+      points: [
+        ["Shortcut events", String(summary.shortcuts.total)],
+        ["Shortcut labels", shortcutLabels],
+        ["Answer keys", String(summary.shortcuts.answerKeys)],
+        ["Navigation shortcuts", String(summary.shortcuts.navigation)],
+        ["Review opens", String(summary.otherData.reviewOpens)],
+        ["Navigator opens", String(summary.otherData.navigatorOpens)],
+        ["Explanation toggles", String(summary.otherData.explanationToggles)],
+        ["Flag toggles", String(summary.otherData.flagToggles)],
+        ["Colour changes", String(summary.otherData.colourSchemeChanges)],
+      ],
+    },
+  ] as const;
+
+  return (
+    <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
+      <h2 className="text-lg font-black">Whole set data collected</h2>
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+        {sections.map((section) => (
+          <div key={section.title} className="rounded-sm border border-slate-200 bg-slate-50 p-4">
+            <h3 className="text-sm font-black text-slate-900">{section.title}</h3>
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              {section.points.map(([label, value]) => (
+                <DataPoint key={label} label={label} value={value} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ReviewScreen({
   sectionTitle,
   questions,
@@ -1009,6 +1829,218 @@ function ReviewScreen({
   );
 }
 
+function MarkedReviewScreen({
+  sectionTitle,
+  summary,
+  saveState,
+  onNewSet,
+}: {
+  sectionTitle: string;
+  summary: PracticeSessionSummary;
+  saveState: SaveState;
+  onNewSet: () => void;
+}) {
+  const saveClass =
+    saveState.status === "saved"
+      ? "bg-emerald-50 text-emerald-700"
+      : saveState.status === "error"
+        ? "bg-red-50 text-red-700"
+        : saveState.status === "saving"
+          ? "bg-blue-50 text-blue-700"
+          : "bg-slate-100 text-slate-600";
+
+  return (
+    <div className="min-h-screen bg-[#f6f8fb] font-sans text-[#111827]">
+      <header className="bg-[#0078a8] px-4 py-4 text-white">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-black uppercase tracking-wide text-blue-100">
+              Marked review
+            </p>
+            <h1 className="mt-1 text-2xl font-black">{sectionTitle}</h1>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/phloemai/diagnostic"
+              className="inline-flex h-10 items-center justify-center rounded-sm bg-white px-4 text-sm font-black text-[#0078a8] hover:bg-slate-100"
+            >
+              Check practice impact
+            </Link>
+            <button
+              type="button"
+              onClick={onNewSet}
+              className="inline-flex h-10 items-center justify-center rounded-sm border border-white/50 px-4 text-sm font-black text-white hover:bg-white/10"
+            >
+              New set
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-6xl space-y-6 px-5 py-6">
+        <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 className="text-2xl font-black">Review</h2>
+              <p className="mt-2 text-sm font-semibold text-slate-600">
+                {summary.correctQuestions}/{summary.totalQuestions} correct -
+                {summary.answeredQuestions}/{summary.totalQuestions} answered -
+                {summary.accuracy}% accuracy
+              </p>
+            </div>
+            <span className={`w-fit rounded-full px-3 py-1 text-xs font-black ${saveClass}`}>
+              {saveState.message}
+            </span>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-4">
+            {[
+              ["Accuracy", `${summary.accuracy}%`],
+              ["Avg time", `${summary.avgSecondsPerQuestion}s`],
+              ["Flags", String(summary.flaggedQuestions)],
+              ["Answer switches", String(summary.answerSwitches)],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-sm border border-slate-200 bg-slate-50 p-3">
+                <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+                  {label}
+                </p>
+                <p className="mt-1 text-2xl font-black">{value}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 space-y-4">
+            {summary.questions.map((item) => (
+              <article
+                key={item.questionId}
+                className="rounded-sm border border-slate-300 bg-white p-4"
+              >
+                <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+                      Q{item.questionIndex + 1} - {item.subtypeLabel}
+                    </p>
+                    <h3 className="mt-1 text-base font-black text-slate-950">
+                      {item.questionText}
+                    </h3>
+                    <p className="mt-2 text-sm font-semibold text-slate-600">
+                      Your answer: {item.selectedAnswerText}
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-slate-600">
+                      Correct: {item.correctAnswerText}
+                    </p>
+                  </div>
+                  <span
+                    className={`w-fit rounded-full px-2.5 py-1 text-xs font-black ${
+                      item.correct
+                        ? "bg-emerald-50 text-emerald-700"
+                        : item.answered
+                          ? "bg-red-50 text-red-700"
+                          : "bg-amber-50 text-amber-700"
+                    }`}
+                  >
+                    {item.correct ? "Correct" : item.answered ? "Incorrect" : "Unanswered"}
+                  </span>
+                </div>
+                <div className="mt-4 rounded-sm border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-sm font-black text-slate-900">
+                    Explanation
+                  </p>
+                  <p className="mt-2 text-sm font-semibold leading-6 text-slate-700">
+                    {item.explanation}
+                  </p>
+                </div>
+                <QuestionDataCollectedPanel item={item} />
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <SessionDataCollectedPanel summary={summary} />
+
+        <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
+          <h2 className="text-lg font-black">Question-type timing</h2>
+          <div className="mt-5 overflow-hidden rounded-sm border border-slate-200">
+            <div className="grid grid-cols-[1fr_70px_80px_80px_80px] bg-slate-100 px-3 py-2 text-xs font-black uppercase tracking-wide text-slate-600">
+              <span>Question type</span>
+              <span>Qs</span>
+              <span>Avg</span>
+              <span>Flags</span>
+              <span>Correct</span>
+            </div>
+            {summary.timingBySubtype.map((item) => (
+              <div
+                key={item.subtype}
+                className="grid grid-cols-[1fr_70px_80px_80px_80px] border-t border-slate-100 px-3 py-2 text-sm font-semibold"
+              >
+                <span>{item.label}</span>
+                <span>{item.questions}</span>
+                <span>{item.avgSeconds}s</span>
+                <span>{item.flagged}</span>
+                <span>{item.correct}/{item.questions}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div className="grid gap-5 lg:grid-cols-3">
+          <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="h-5 w-5 text-red-500" aria-hidden="true" />
+              <h2 className="text-lg font-black">Issues</h2>
+            </div>
+            <ul className="mt-4 space-y-3 text-sm font-semibold text-slate-700">
+              <li>Timing pattern needs review.</li>
+              <li>Answer uncertainty detected.</li>
+              <li>Calculator strategy may be limiting speed.</li>
+            </ul>
+            <p className="mt-5 rounded-sm bg-amber-50 px-3 py-2 text-xs font-black text-amber-800">
+              Want to know more? Upgrade to find out.
+            </p>
+          </section>
+
+          <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="h-5 w-5 text-emerald-600" aria-hidden="true" />
+              <h2 className="text-lg font-black">Strengths</h2>
+            </div>
+            <ul className="mt-4 space-y-3 text-sm font-semibold text-slate-700">
+              <li>Practice set completed and marked.</li>
+              <li>Enough telemetry was captured for analysis.</li>
+              <li>Review data is ready for pattern mapping.</li>
+            </ul>
+            <p className="mt-5 rounded-sm bg-amber-50 px-3 py-2 text-xs font-black text-amber-800">
+              Want to know more? Upgrade to find out.
+            </p>
+          </section>
+
+          <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-3">
+              <Target className="h-5 w-5 text-blue-600" aria-hidden="true" />
+              <h2 className="text-lg font-black">Personalised study plan</h2>
+            </div>
+            <div className="mt-4 rounded-sm border border-dashed border-slate-300 bg-slate-50 p-4">
+              <LockKeyhole className="h-5 w-5 text-slate-500" aria-hidden="true" />
+              <p className="mt-3 text-sm font-black text-slate-800">
+                Premium will turn these data points into exact fixes and drills.
+              </p>
+              <p className="mt-2 text-xs font-semibold leading-5 text-slate-500">
+                For now this stays locked while the rule mapping is being built.
+              </p>
+            </div>
+            <Link
+              href="/phloemai/diagnostic"
+              className="mt-4 inline-flex h-9 items-center justify-center rounded-sm bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
+            >
+              Check practice impact
+            </Link>
+          </section>
+        </div>
+      </main>
+    </div>
+  );
+}
+
 export function UCATQuestionBankClient({ section }: { section?: string }) {
   const validSection = section && isUCATSection(section) ? section : null;
 
@@ -1050,14 +2082,25 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   const [calcMemory, setCalcMemory] = useState(0);
   const [lastMrcAt, setLastMrcAt] = useState(0);
   const [trackingEventCount, setTrackingEventCount] = useState(0);
+  const [trackingEventsSnapshot, setTrackingEventsSnapshot] = useState<
+    TrackingEvent[]
+  >([]);
+  const [sessionStartedAt, setSessionStartedAt] = useState(0);
   const [trackingModeChoice, setTrackingModeChoice] =
     useState<TrackingMode>("mouse");
   const [timingSnapshot, setTimingSnapshot] = useState<
     Record<string, QuestionTiming>
   >({});
+  const [markedSummary, setMarkedSummary] =
+    useState<PracticeSessionSummary | null>(null);
+  const [saveState, setSaveState] = useState<SaveState>({
+    status: "idle",
+    message: "Not saved yet",
+  });
   const trackingEventsRef = useRef<TrackingEvent[]>([]);
   const questionTimingRef = useRef<Record<string, QuestionTiming>>({});
   const questionStartedAtRef = useRef(0);
+  const sessionStartedAtRef = useRef(0);
   const appRootRef = useRef<HTMLDivElement>(null);
   const stimulusRegionRef = useRef<HTMLElement>(null);
   const questionRegionRef = useRef<HTMLDivElement>(null);
@@ -1134,6 +2177,152 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       payload,
     });
     setTrackingEventCount(trackingEventsRef.current.length);
+    setTrackingEventsSnapshot([...trackingEventsRef.current]);
+  };
+
+  const liveSummary = useMemo(() => {
+    if (!started || questions.length === 0) return null;
+
+    const completedAt = nowMs();
+    return buildPracticeSessionSummary({
+      section: validSection,
+      sectionTitle: meta.bankTitle,
+      questions,
+      answers,
+      flags,
+      timings: timingSnapshot,
+      events: trackingEventsSnapshot,
+      startedAt: sessionStartedAt || completedAt,
+      completedAt,
+      timed: sessionTimed,
+      setSeconds: sessionDurationSeconds,
+      secondsRemaining: timeRemaining,
+      trackingMode: attentionTracker.trackingMode,
+    });
+  }, [
+    answers,
+    attentionTracker.trackingMode,
+    flags,
+    meta.bankTitle,
+    questions,
+    sessionDurationSeconds,
+    sessionTimed,
+    sessionStartedAt,
+    started,
+    timeRemaining,
+    timingSnapshot,
+    trackingEventsSnapshot,
+    validSection,
+  ]);
+
+  const persistPracticeSummary = async (
+    summary: PracticeSessionSummary,
+    events: TrackingEvent[]
+  ) => {
+    if (!hasSupabaseConfig()) {
+      setSaveState({
+        status: "skipped",
+        message: "Supabase not configured",
+      });
+      return;
+    }
+
+    setSaveState({ status: "saving", message: "Saving session..." });
+
+    try {
+      const supabase = createSupabaseClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setSaveState({
+          status: "skipped",
+          message: "Sign in to save this session",
+        });
+        return;
+      }
+
+      const { data: sessionRow, error: sessionError } = await supabase
+        .from("practice_sessions")
+        .insert({
+          user_id: user.id,
+          section: summary.section,
+          source: "question_bank",
+          total_questions: summary.totalQuestions,
+          answered_questions: summary.answeredQuestions,
+          correct_questions: summary.correctQuestions,
+          accuracy: summary.accuracy,
+          total_seconds: summary.totalSeconds,
+          avg_seconds_per_question: summary.avgSecondsPerQuestion,
+          tracking_mode: summary.trackingMode,
+          summary,
+          raw_events: events,
+          started_at: summary.startedAt,
+          completed_at: summary.completedAt,
+        })
+        .select("id")
+        .single();
+
+      if (sessionError) throw sessionError;
+
+      const sessionId =
+        typeof sessionRow?.id === "string" ? sessionRow.id : null;
+      if (!sessionId) throw new Error("Supabase did not return a session id.");
+
+      const questionRows = summary.questions.map((item) => ({
+        session_id: sessionId,
+        user_id: user.id,
+        question_id: item.questionId,
+        question_index: item.questionIndex,
+        section: item.section,
+        subtype: item.subtype,
+        answered: item.answered,
+        correct: item.correct,
+        flagged: item.flagged,
+        selected_answer: item.selectedAnswer,
+        correct_answer: item.correctAnswer,
+        total_seconds: item.totalSeconds,
+        visits: item.visits,
+        answered_at_ms: item.answeredAtMs,
+        answer_switches: item.answerSwitches,
+        metadata: {
+          subtypeLabel: item.subtypeLabel,
+          questionText: item.questionText,
+          selectedAnswerText: item.selectedAnswerText,
+          correctAnswerText: item.correctAnswerText,
+          firstAnswerText: item.firstAnswerText,
+          answerPath: item.answerPath,
+          answerSelections: item.answerSelections,
+          changedToCorrect: item.changedToCorrect,
+          changedFromCorrect: item.changedFromCorrect,
+          everCorrect: item.everCorrect,
+          everWrong: item.everWrong,
+          firstAnsweredAtMs: item.firstAnsweredAtMs,
+          calculator: item.calculator,
+          shortcuts: item.shortcuts,
+          regionActivity: item.regionActivity,
+          otherData: item.otherData,
+          trackingEventCount: item.trackingEventCount,
+        },
+      }));
+
+      const { error: questionError } = await supabase
+        .from("practice_question_attempts")
+        .insert(questionRows);
+
+      if (questionError) throw questionError;
+
+      setSaveState({ status: "saved", message: "Saved to Supabase" });
+    } catch (error) {
+      setSaveState({
+        status: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Could not save this session",
+      });
+    }
   };
 
   const beginQuestionTiming = (question: UCATQuestion) => {
@@ -1166,6 +2355,33 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     setTimingSnapshot({ ...questionTimingRef.current });
   };
 
+  const getActiveQuestionElapsedMs = () => {
+    const activeQuestion = questions[questionIndex];
+    if (!activeQuestion) return 0;
+
+    const existing = questionTimingRef.current[activeQuestion.id];
+    return (
+      (existing?.totalMs ?? 0) +
+      Math.max(0, nowMs() - questionStartedAtRef.current)
+    );
+  };
+
+  const markActiveQuestionAnswered = () => {
+    const activeQuestion = questions[questionIndex];
+    if (!activeQuestion) return 0;
+
+    const answeredAtMs = getActiveQuestionElapsedMs();
+    const existing = questionTimingRef.current[activeQuestion.id];
+    questionTimingRef.current[activeQuestion.id] = {
+      questionId: activeQuestion.id,
+      visits: existing?.visits ?? 1,
+      totalMs: existing?.totalMs ?? 0,
+      answeredAtMs,
+    };
+    setTimingSnapshot({ ...questionTimingRef.current });
+    return answeredAtMs;
+  };
+
   const commitAttentionSnapshot = (reason: string) => {
     if (attentionTracker.trackingMode === "none") return;
 
@@ -1173,6 +2389,21 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       keepTracking: true,
     });
     const snapshot = attentionTracker.getSnapshot();
+    const stimulusQuestionFlips = snapshot.regionTransitions.filter(
+      ({ from, to }) =>
+        (from === "stimulus" && to === "question") ||
+        (from === "question" && to === "stimulus")
+    ).length;
+    const questionAnswerFlips = snapshot.regionTransitions.filter(
+      ({ from, to }) =>
+        (from === "question" && to === "answers") ||
+        (from === "answers" && to === "question")
+    ).length;
+    const stimulusAnswerFlips = snapshot.regionTransitions.filter(
+      ({ from, to }) =>
+        (from === "stimulus" && to === "answers") ||
+        (from === "answers" && to === "stimulus")
+    ).length;
     recordEvent("attention_snapshot", {
       reason,
       mode: snapshot.trackingMode,
@@ -1181,6 +2412,18 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       stimulusMs: Math.round(zoneTimes.stimulus),
       questionMs: Math.round(zoneTimes.question),
       answersMs: Math.round(zoneTimes.answers),
+      stimulusQuestionFlips,
+      questionAnswerFlips,
+      stimulusAnswerFlips,
+      stimulusRevisits: snapshot.regionTransitions.filter(
+        ({ to }) => to === "stimulus"
+      ).length,
+      questionRevisits: snapshot.regionTransitions.filter(
+        ({ to }) => to === "question"
+      ).length,
+      answerRevisits: snapshot.regionTransitions.filter(
+        ({ to }) => to === "answers"
+      ).length,
     });
   };
 
@@ -1232,8 +2475,14 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     setSessionTimed(lengthMode === "minutes" || timed);
     setSessionDurationSeconds(setupTimeSeconds);
     setTimeRemaining(setupTimeSeconds);
+    setMarkedSummary(null);
+    setSaveState({ status: "idle", message: "Not saved yet" });
     trackingEventsRef.current = [];
+    setTrackingEventsSnapshot([]);
     questionTimingRef.current = {};
+    const startedAt = nowMs();
+    sessionStartedAtRef.current = startedAt;
+    setSessionStartedAt(startedAt);
     setTimingSnapshot({});
     setTrackingEventCount(0);
     setStarted(true);
@@ -1351,23 +2600,29 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     ? sameOrder(dragOrder, question.answerOrder)
     : selectedAnswer === question.answer;
 
-  const chooseAnswer = (key: UCATOptionKey) => {
+  const chooseAnswer = (key: UCATOptionKey, source: "click" | "keyboard" = "click") => {
     if (phase === "marked") return;
 
+    const previousAnswer = answers[questionIndex];
+    const previousAnswerKey =
+      typeof previousAnswer === "string" ? previousAnswer : null;
+    const questionElapsedMs = markActiveQuestionAnswered();
+    const correctAnswerKey = isUCATDragOrderQuestion(question)
+      ? null
+      : question.answer;
     setSelected(key);
     setAnswers((current) => ({ ...current, [questionIndex]: key }));
-    const activeQuestion = questions[questionIndex];
-    if (activeQuestion) {
-      const existing = questionTimingRef.current[activeQuestion.id];
-      questionTimingRef.current[activeQuestion.id] = {
-        questionId: activeQuestion.id,
-        visits: existing?.visits ?? 1,
-        totalMs: existing?.totalMs ?? 0,
-        answeredAtMs: nowMs(),
-      };
-      setTimingSnapshot({ ...questionTimingRef.current });
-    }
-    recordEvent("answer_select", { answer: key });
+    recordEvent("answer_select", {
+      answer: key,
+      source,
+      previousAnswer: previousAnswerKey,
+      correct: correctAnswerKey ? key === correctAnswerKey : false,
+      previousCorrect:
+        previousAnswerKey && correctAnswerKey
+          ? previousAnswerKey === correctAnswerKey
+          : null,
+      questionElapsedMs,
+    });
     setRevealed(false);
   };
 
@@ -1391,20 +2646,16 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     const next = [...dragOrder];
     const [moved] = next.splice(fromIndex, 1);
     next.splice(toIndex, 0, moved);
+    const questionElapsedMs = markActiveQuestionAnswered();
     setDragOrder(next);
     setAnswers((answerState) => ({ ...answerState, [questionIndex]: next }));
-    const activeQuestion = questions[questionIndex];
-    if (activeQuestion) {
-      const existing = questionTimingRef.current[activeQuestion.id];
-      questionTimingRef.current[activeQuestion.id] = {
-        questionId: activeQuestion.id,
-        visits: existing?.visits ?? 1,
-        totalMs: existing?.totalMs ?? 0,
-        answeredAtMs: nowMs(),
-      };
-      setTimingSnapshot({ ...questionTimingRef.current });
-    }
-    recordEvent("drag_reorder", { from: fromIndex + 1, to: toIndex + 1 });
+    recordEvent("drag_reorder", {
+      from: fromIndex + 1,
+      to: toIndex + 1,
+      order: next.join(" > "),
+      correct: sameOrder(next, question.answerOrder),
+      questionElapsedMs,
+    });
     setRevealed(false);
   };
 
@@ -1420,10 +2671,10 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     goToQuestion(nextIndex);
   };
 
-  const toggleFlag = () => {
+  const toggleFlag = (source: "button" | "keyboard" = "button") => {
     setFlags((current) => {
       const next = !current[questionIndex];
-      recordEvent("flag_toggle", { flagged: next });
+      recordEvent("flag_toggle", { flagged: next, source });
       return { ...current, [questionIndex]: next };
     });
   };
@@ -1443,17 +2694,37 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   const markPractice = () => {
     commitQuestionTiming();
     commitAttentionSnapshot("mark_practice");
+    const completedAt = nowMs();
+    recordEvent("mark_practice", {
+      correct: questions.filter((item, index) => isAnswerCorrect(item, answers[index]))
+        .length,
+      total: questions.length,
+    });
+    const finalEvents = [...trackingEventsRef.current];
+    const finalTimings = { ...questionTimingRef.current };
+    const summary = buildPracticeSessionSummary({
+      section: validSection,
+      sectionTitle: meta.bankTitle,
+      questions,
+      answers,
+      flags,
+      timings: finalTimings,
+      events: finalEvents,
+      startedAt: sessionStartedAtRef.current || completedAt,
+      completedAt,
+      timed: sessionTimed,
+      setSeconds: sessionDurationSeconds,
+      secondsRemaining: timeRemaining,
+      trackingMode: attentionTracker.trackingMode,
+    });
+    setMarkedSummary(summary);
     setPhase("marked");
     setQuestionIndex(0);
     setSelected(typeof answers[0] === "string" ? answers[0] : null);
     setDragOrder(getDragOrder(questions[0], answers[0]));
     setRevealed(true);
     beginQuestionTiming(questions[0]);
-    recordEvent("mark_practice", {
-      correct: questions.filter((item, index) => isAnswerCorrect(item, answers[index]))
-        .length,
-      total: questions.length,
-    });
+    void persistPracticeSummary(summary, finalEvents);
   };
 
   const dragItemLookup = isDragQuestion
@@ -1464,21 +2735,27 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         .map((itemId, index) => `${index + 1}. ${dragItemLookup.get(itemId)}`)
         .join(" ")
     : "";
+  const currentQuestionSummary =
+    liveSummary?.questions[questionIndex] ?? null;
 
   const answerRevealed = revealed || phase === "marked";
   const supportsCalculator = validSection === "dm" || validSection === "qr";
   const calcValue = Number(calcDisplay) || 0;
 
-  const recordCalculator = (action: string, value?: string) => {
-    recordEvent("calculator", { action, value: value ?? null });
+  const recordCalculator = (
+    action: string,
+    value?: string,
+    source: "button" | "keyboard" = "button"
+  ) => {
+    recordEvent("calculator", { action, value: value ?? null, source });
   };
 
-  const resetCalculator = () => {
+  const resetCalculator = (source: "button" | "keyboard" = "button") => {
     setCalcDisplay("0");
     setCalcStored(null);
     setCalcOperator(null);
     setCalcWaiting(false);
-    recordCalculator("clear");
+    recordCalculator("clear", undefined, source);
   };
 
   const calculate = (stored: number, current: number, operator: string) => {
@@ -1489,7 +2766,10 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     return current;
   };
 
-  const commitCalcOperation = (nextOperator?: string) => {
+  const commitCalcOperation = (
+    nextOperator?: string,
+    source: "button" | "keyboard" = "button"
+  ) => {
     const current = Number(calcDisplay) || 0;
     if (calcStored === null || calcOperator === null) {
       setCalcStored(current);
@@ -1500,51 +2780,57 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     }
     setCalcOperator(nextOperator ?? null);
     setCalcWaiting(true);
-    recordCalculator("operator", nextOperator ?? "=");
+    recordCalculator("operator", nextOperator ?? "=", source);
   };
 
-  const inputCalcDigit = (digit: string) => {
+  const inputCalcDigit = (
+    digit: string,
+    source: "button" | "keyboard" = "button"
+  ) => {
     setCalcDisplay((current) =>
       calcWaiting || current === "0" ? digit : `${current}${digit}`
     );
     setCalcWaiting(false);
-    recordCalculator("digit", digit);
+    recordCalculator("digit", digit, source);
   };
 
-  const inputCalcDecimal = () => {
+  const inputCalcDecimal = (source: "button" | "keyboard" = "button") => {
     setCalcDisplay((current) =>
       calcWaiting ? "0." : current.includes(".") ? current : `${current}.`
     );
     setCalcWaiting(false);
-    recordCalculator("decimal");
+    recordCalculator("decimal", undefined, source);
   };
 
-  const memoryRecallClear = () => {
+  const memoryRecallClear = (source: "button" | "keyboard" = "button") => {
     const now = nowMs();
     if (now - lastMrcAt < 700) {
       setCalcMemory(0);
       setCalcDisplay("0");
       setLastMrcAt(0);
-      recordCalculator("memory_clear");
+      recordCalculator("memory_clear", undefined, source);
       return;
     }
 
     setCalcDisplay(String(calcMemory));
     setCalcWaiting(true);
     setLastMrcAt(now);
-    recordCalculator("memory_recall");
+    recordCalculator("memory_recall", undefined, source);
   };
 
-  const memoryAdd = (sign: 1 | -1) => {
+  const memoryAdd = (
+    sign: 1 | -1,
+    source: "button" | "keyboard" = "button"
+  ) => {
     setCalcMemory((current) => current + sign * calcValue);
     setCalcWaiting(true);
-    recordCalculator(sign === 1 ? "memory_plus" : "memory_minus");
+    recordCalculator(sign === 1 ? "memory_plus" : "memory_minus", undefined, source);
   };
 
-  const toggleCalculator = () => {
+  const toggleCalculator = (source: "button" | "keyboard" = "button") => {
     if (!supportsCalculator) return;
     setCalculatorOpen((current) => !current);
-    recordCalculator(calculatorOpen ? "close" : "open");
+    recordCalculator(calculatorOpen ? "close" : "open", undefined, source);
   };
 
   const handlePracticeKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -1553,22 +2839,26 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     if (event.altKey) {
       if (key === "n") {
         event.preventDefault();
+        recordEvent("shortcut", { shortcut: "Alt+N", action: "next_question" });
         nextQuestion();
         return;
       }
       if (key === "p") {
         event.preventDefault();
+        recordEvent("shortcut", { shortcut: "Alt+P", action: "previous_question" });
         previousQuestion();
         return;
       }
       if (key === "c") {
         event.preventDefault();
-        toggleCalculator();
+        recordEvent("shortcut", { shortcut: "Alt+C", action: "calculator" });
+        toggleCalculator("keyboard");
         return;
       }
       if (key === "f") {
         event.preventDefault();
-        toggleFlag();
+        recordEvent("shortcut", { shortcut: "Alt+F", action: "flag" });
+        toggleFlag("keyboard");
         return;
       }
     }
@@ -1578,22 +2868,22 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     if (calculatorOpen && supportsCalculator) {
       if (/^[0-9]$/.test(event.key)) {
         event.preventDefault();
-        inputCalcDigit(event.key);
+        inputCalcDigit(event.key, "keyboard");
         return;
       }
       if (event.key === ".") {
         event.preventDefault();
-        inputCalcDecimal();
+        inputCalcDecimal("keyboard");
         return;
       }
       if (["+", "-", "*", "/"].includes(event.key)) {
         event.preventDefault();
-        commitCalcOperation(event.key);
+        commitCalcOperation(event.key, "keyboard");
         return;
       }
       if (event.key === "Enter" || event.key === "=") {
         event.preventDefault();
-        commitCalcOperation();
+        commitCalcOperation(undefined, "keyboard");
         return;
       }
       if (event.key === "Backspace") {
@@ -1601,22 +2891,22 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         setCalcDisplay((current) =>
           current.length > 1 ? current.slice(0, -1) : "0"
         );
-        recordCalculator("backspace");
+        recordCalculator("backspace", undefined, "keyboard");
         return;
       }
       if (key === "m") {
         event.preventDefault();
-        memoryAdd(-1);
+        memoryAdd(-1, "keyboard");
         return;
       }
       if (key === "p") {
         event.preventDefault();
-        memoryAdd(1);
+        memoryAdd(1, "keyboard");
         return;
       }
       if (key === "c") {
         event.preventDefault();
-        memoryRecallClear();
+        memoryRecallClear("keyboard");
         return;
       }
     }
@@ -1625,7 +2915,8 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       const optionKey = key.toUpperCase() as UCATOptionKey;
       if (question.options.some((option) => option.key === optionKey)) {
         event.preventDefault();
-        chooseAnswer(optionKey);
+        recordEvent("shortcut", { shortcut: optionKey, action: "answer" });
+        chooseAnswer(optionKey, "keyboard");
       }
     }
   };
@@ -1644,6 +2935,24 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           goToQuestion(index);
         }}
         onMark={markPractice}
+      />
+    );
+  }
+
+  if (phase === "marked" && markedSummary) {
+    return (
+      <MarkedReviewScreen
+        sectionTitle={meta.bankTitle}
+        summary={markedSummary}
+        saveState={saveState}
+        onNewSet={() => {
+          commitQuestionTiming();
+          attentionTracker.resetTracker();
+          setStarted(false);
+          setPhase("practice");
+          setMarkedSummary(null);
+          setSaveState({ status: "idle", message: "Not saved yet" });
+        }}
       />
     );
   }
@@ -1717,7 +3026,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           {supportsCalculator && (
             <button
               type="button"
-              onClick={toggleCalculator}
+              onClick={() => toggleCalculator()}
               className="inline-flex items-center gap-1 text-sm font-semibold hover:underline sm:text-base"
             >
               <Calculator className="h-5 w-5" aria-hidden="true" />
@@ -1738,7 +3047,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           </button>
           <button
             type="button"
-            onClick={toggleFlag}
+            onClick={() => toggleFlag()}
             className={`inline-flex items-center gap-1 text-sm font-semibold hover:underline sm:text-base ${
               flags[questionIndex] ? "text-amber-200" : ""
             }`}
@@ -1769,7 +3078,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
             <p className="text-sm font-bold">Calculator</p>
             <button
               type="button"
-              onClick={toggleCalculator}
+              onClick={() => toggleCalculator()}
               className="rounded-sm px-2 text-sm font-bold hover:bg-slate-200"
             >
               x
@@ -1779,7 +3088,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
             {calcDisplay}
           </div>
           <div className="grid grid-cols-4 gap-1.5 text-sm font-bold">
-            <button type="button" onClick={memoryRecallClear} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+            <button type="button" onClick={() => memoryRecallClear()} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
               MRC
             </button>
             <button type="button" onClick={() => memoryAdd(-1)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
@@ -1788,7 +3097,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
             <button type="button" onClick={() => memoryAdd(1)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
               M+
             </button>
-            <button type="button" onClick={resetCalculator} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+            <button type="button" onClick={() => resetCalculator()} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
               CE
             </button>
             {["7", "8", "9"].map((digit) => (
@@ -1818,7 +3127,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
             <button type="button" onClick={() => inputCalcDigit("0")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
               0
             </button>
-            <button type="button" onClick={inputCalcDecimal} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
+            <button type="button" onClick={() => inputCalcDecimal()} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
               .
             </button>
             <button type="button" onClick={() => commitCalcOperation()} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
@@ -1835,7 +3144,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         </div>
       )}
 
-      <main className="grid min-h-[calc(100vh-132px)] grid-cols-1 md:grid-cols-[1.15fr_0.85fr]">
+      <main className="grid min-h-[calc(100vh-132px)] grid-cols-1 pb-16 md:grid-cols-[1.15fr_0.85fr]">
         <section
           ref={stimulusRegionRef}
           className="border-r-[6px] border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)]"
@@ -1962,6 +3271,12 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
               <p className="mt-3 text-sm leading-6 text-slate-800">
                 {question.explanation}
               </p>
+              {currentQuestionSummary && (
+                <QuestionDataCollectedPanel
+                  item={currentQuestionSummary}
+                  compact
+                />
+              )}
             </div>
           )}
         </section>
@@ -2003,6 +3318,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
             commitAttentionSnapshot("end_bank");
             recordEvent("end_bank");
             attentionTracker.resetTracker();
+            setMarkedSummary(null);
             setStarted(false);
           }}
           className="flex h-full items-center border-r-2 border-white px-3 text-lg font-semibold hover:bg-[#00618a]"

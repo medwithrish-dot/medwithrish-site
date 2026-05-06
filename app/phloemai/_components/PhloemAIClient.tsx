@@ -1115,248 +1115,77 @@ const dashboardPageMeta: Record<
 const sectionScores = [
   {
     code: "VR",
-    score: 72,
+    score: 0,
     badgeClass: "bg-indigo-600 text-white",
     barClass: "bg-indigo-600",
   },
   {
     code: "DM",
-    score: 67,
+    score: 0,
     badgeClass: "bg-blue-600 text-white",
     barClass: "bg-blue-600",
   },
   {
     code: "QR",
-    score: 54,
+    score: 0,
     badgeClass: "bg-cyan-500 text-white",
     barClass: "bg-cyan-500",
   },
   {
     code: "SJT",
-    score: 78,
+    score: 0,
     badgeClass: "bg-pink-500 text-white",
     barClass: "bg-pink-500",
   },
 ];
 
-type MockGraphMode = "mini" | "full";
-type MiniMockSectionCode = "VR" | "DM" | "QR" | "SJT";
-type MockHistoryPeriod = "7D" | "30D" | "90D" | "All time";
-type MockPerformanceSeries = {
-  title: string;
-  subtitle: string;
-  scaleLabel: string;
-  scaleMin: number;
-  scaleMax: number;
-  ticks: number[];
-  points: Array<{
-    label: string;
-    correct: number;
-    incorrect: number;
-    scaled: number;
-  }>;
-};
-
-const miniMockPerformanceSeries: Record<MiniMockSectionCode, MockPerformanceSeries> = {
-  VR: {
-    title: "PhloemAI VR mini mocks",
-    subtitle: "Scaled score across recent Verbal Reasoning mini mocks.",
-    scaleLabel: "UCAT scaled score",
-    scaleMin: 300,
-    scaleMax: 900,
-    ticks: [300, 500, 700, 900],
-    points: [
-      { label: "Set 1", correct: 11, incorrect: 13, scaled: 500 },
-      { label: "Set 2", correct: 12, incorrect: 12, scaled: 530 },
-      { label: "Set 3", correct: 12, incorrect: 12, scaled: 550 },
-      { label: "Set 4", correct: 13, incorrect: 11, scaled: 560 },
-      { label: "Set 5", correct: 14, incorrect: 10, scaled: 580 },
-      { label: "Set 6", correct: 14, incorrect: 10, scaled: 590 },
-      { label: "Set 7", correct: 14, incorrect: 10, scaled: 580 },
-      { label: "Set 8", correct: 15, incorrect: 9, scaled: 610 },
-      { label: "Set 9", correct: 15, incorrect: 9, scaled: 620 },
-      { label: "Set 10", correct: 17, incorrect: 7, scaled: 670 },
-      { label: "Set 11", correct: 18, incorrect: 6, scaled: 700 },
-      { label: "Set 12", correct: 19, incorrect: 5, scaled: 730 },
-    ],
-  },
-  DM: {
-    title: "PhloemAI DM mini mocks",
-    subtitle: "Scaled score across recent Decision Making mini mocks.",
-    scaleLabel: "UCAT scaled score",
-    scaleMin: 300,
-    scaleMax: 900,
-    ticks: [300, 500, 700, 900],
-    points: [
-      { label: "Set 1", correct: 9, incorrect: 11, scaled: 500 },
-      { label: "Set 2", correct: 10, incorrect: 10, scaled: 520 },
-      { label: "Set 3", correct: 10, incorrect: 10, scaled: 540 },
-      { label: "Set 4", correct: 11, incorrect: 9, scaled: 555 },
-      { label: "Set 5", correct: 11, incorrect: 9, scaled: 565 },
-      { label: "Set 6", correct: 12, incorrect: 8, scaled: 580 },
-      { label: "Set 7", correct: 11, incorrect: 9, scaled: 570 },
-      { label: "Set 8", correct: 12, incorrect: 8, scaled: 600 },
-      { label: "Set 9", correct: 13, incorrect: 7, scaled: 630 },
-      { label: "Set 10", correct: 13, incorrect: 7, scaled: 650 },
-      { label: "Set 11", correct: 14, incorrect: 6, scaled: 670 },
-      { label: "Set 12", correct: 15, incorrect: 5, scaled: 700 },
-    ],
-  },
-  QR: {
-    title: "PhloemAI QR mini mocks",
-    subtitle: "Scaled score across recent Quantitative Reasoning mini mocks.",
-    scaleLabel: "UCAT scaled score",
-    scaleMin: 300,
-    scaleMax: 900,
-    ticks: [300, 500, 700, 900],
-    points: [
-      { label: "Set 1", correct: 7, incorrect: 13, scaled: 460 },
-      { label: "Set 2", correct: 8, incorrect: 12, scaled: 480 },
-      { label: "Set 3", correct: 8, incorrect: 12, scaled: 500 },
-      { label: "Set 4", correct: 9, incorrect: 11, scaled: 515 },
-      { label: "Set 5", correct: 9, incorrect: 11, scaled: 525 },
-      { label: "Set 6", correct: 10, incorrect: 10, scaled: 540 },
-      { label: "Set 7", correct: 9, incorrect: 11, scaled: 520 },
-      { label: "Set 8", correct: 10, incorrect: 10, scaled: 550 },
-      { label: "Set 9", correct: 11, incorrect: 9, scaled: 580 },
-      { label: "Set 10", correct: 12, incorrect: 8, scaled: 610 },
-      { label: "Set 11", correct: 13, incorrect: 7, scaled: 650 },
-      { label: "Set 12", correct: 15, incorrect: 5, scaled: 700 },
-    ],
-  },
-  SJT: {
-    title: "PhloemAI SJT mini mocks",
-    subtitle: "Scaled score across recent Situational Judgement mini mocks.",
-    scaleLabel: "UCAT scaled score",
-    scaleMin: 300,
-    scaleMax: 900,
-    ticks: [300, 500, 700, 900],
-    points: [
-      { label: "Set 1", correct: 11, incorrect: 9, scaled: 540 },
-      { label: "Set 2", correct: 12, incorrect: 8, scaled: 570 },
-      { label: "Set 3", correct: 12, incorrect: 8, scaled: 590 },
-      { label: "Set 4", correct: 13, incorrect: 7, scaled: 600 },
-      { label: "Set 5", correct: 13, incorrect: 7, scaled: 620 },
-      { label: "Set 6", correct: 14, incorrect: 6, scaled: 650 },
-      { label: "Set 7", correct: 13, incorrect: 7, scaled: 610 },
-      { label: "Set 8", correct: 14, incorrect: 6, scaled: 640 },
-      { label: "Set 9", correct: 15, incorrect: 5, scaled: 680 },
-      { label: "Set 10", correct: 15, incorrect: 5, scaled: 700 },
-      { label: "Set 11", correct: 16, incorrect: 4, scaled: 740 },
-      { label: "Set 12", correct: 17, incorrect: 3, scaled: 770 },
-    ],
-  },
-};
-
-const fullMockPerformanceSeries: MockPerformanceSeries = {
-  title: "PhloemAI Full mocks",
-  subtitle: "Total scaled score across full UCAT-style mocks.",
-  scaleLabel: "Total scaled score",
-  scaleMin: 1800,
-  scaleMax: 3200,
-  ticks: [1800, 2200, 2600, 3000],
-  points: [
-    { label: "Mock 1", correct: 118, incorrect: 110, scaled: 2200 },
-    { label: "Mock 2", correct: 124, incorrect: 104, scaled: 2280 },
-    { label: "Mock 3", correct: 132, incorrect: 96, scaled: 2380 },
-    { label: "Mock 4", correct: 141, incorrect: 87, scaled: 2490 },
-    { label: "Mock 5", correct: 149, incorrect: 79, scaled: 2570 },
-    { label: "Mock 6", correct: 156, incorrect: 72, scaled: 2660 },
-    { label: "Mock 7", correct: 160, incorrect: 68, scaled: 2700 },
-    { label: "Mock 8", correct: 164, incorrect: 64, scaled: 2760 },
-  ],
-};
-
 const questionBankProgress = [
   {
     code: "VR",
     title: "PhloemAI Verbal Reasoning",
-    completed: 7,
+    completed: 0,
     total: 9,
-    focus: "Inference and longer passages next",
+    focus: "No questions completed yet",
     href: "/phloemai/question-bank/vr",
   },
   {
     code: "DM",
     title: "PhloemAI Decision Making",
-    completed: 6,
+    completed: 0,
     total: 10,
-    focus: "Syllogisms and logic puzzles next",
+    focus: "No questions completed yet",
     href: "/phloemai/question-bank/dm",
   },
   {
     code: "QR",
     title: "PhloemAI Quantitative Reasoning",
-    completed: 8,
+    completed: 0,
     total: 14,
-    focus: "Calculator-heavy data sets next",
+    focus: "No questions completed yet",
     href: "/phloemai/question-bank/qr",
   },
   {
     code: "SJT",
     title: "PhloemAI Situational Judgement",
-    completed: 6,
+    completed: 0,
     total: 10,
-    focus: "Ordering and integrity scenarios next",
+    focus: "No questions completed yet",
     href: "/phloemai/question-bank/sjt",
   },
 ] as const;
 
-const fixTasks = [
-  {
-    title: "QR Speed Drill",
-    meta: "7 min - Calculator-heavy questions",
-    icon: Zap,
-    iconClass: "bg-violet-100 text-violet-600",
-  },
-  {
-    title: "Timed QR mini-set",
-    meta: "10 questions - Focus on pace",
-    icon: Clock3,
-    iconClass: "bg-blue-100 text-blue-600",
-  },
-  {
-    title: "Review changed answers",
-    meta: "5 questions - Improve decision making",
-    icon: Eye,
-    iconClass: "bg-emerald-100 text-emerald-600",
-  },
-];
+const fixTasks: Array<{
+  title: string;
+  meta: string;
+  icon: typeof Zap;
+  iconClass: string;
+}> = [];
 
 const dailyQuestionTarget = 200;
-const questionCalendarDays = [
-  { day: 1, questions: 0 },
-  { day: 2, questions: 75 },
-  { day: 3, questions: 120 },
-  { day: 4, questions: 180 },
-  { day: 5, questions: 220 },
-  { day: 6, questions: 190 },
-  { day: 7, questions: 210 },
-  { day: 8, questions: 205 },
-  { day: 9, questions: 215 },
-  { day: 10, questions: 180 },
-  { day: 11, questions: 200 },
-  { day: 12, questions: 240 },
-  { day: 13, questions: 160 },
-  { day: 14, questions: 230 },
-  { day: 15, questions: 205 },
-  { day: 16, questions: 210 },
-  { day: 17, questions: 185 },
-  { day: 18, questions: 0 },
-  { day: 19, questions: 0 },
-  { day: 20, questions: 0 },
-  { day: 21, questions: 0 },
-  { day: 22, questions: 0 },
-  { day: 23, questions: 0 },
-  { day: 24, questions: 0 },
-  { day: 25, questions: 0 },
-  { day: 26, questions: 0 },
-  { day: 27, questions: 0 },
-  { day: 28, questions: 0 },
-  { day: 29, questions: 0 },
-  { day: 30, questions: 0 },
-  { day: 31, questions: 0 },
-] as const;
+const questionCalendarDays = Array.from({ length: 31 }, (_, index) => ({
+  day: index + 1,
+  questions: 0,
+}));
 
 const approachSteps = [
   {
@@ -1392,16 +1221,16 @@ const approachSteps = [
 ];
 
 const dashboardFeedbackShort =
-  "Your latest diagnostic found time pressure as the main factor holding your score back. You're generally accurate across the board, which is a strong foundation.";
+  "No AI feedback yet. Complete and mark a practice set to start collecting the data needed for feedback.";
 
 const dashboardFeedbackFull =
-  "Your latest diagnostic found time pressure as the main factor holding your score back. You're generally accurate across the board, which is a strong foundation. Your score is being held back by how time is managed in certain sections. In QR, you're spending too long on calculator-heavy questions, which eats into your overall pace. In VR, you occasionally re-read longer stems, especially in the most information-dense questions. In DM, you slow down when you're unsure, particularly on harder logic questions, which affects your rhythm. In SJT, your performance is relatively steady and doesn't need urgent attention right now.";
+  dashboardFeedbackShort;
 
 const reportFeedbackShort =
-  "Your overall accuracy is solid, but timing is your biggest limiter. Focus on pacing in VR and DM, and reduce overthinking on harder logic questions.";
+  "No AI report yet. Mark practice questions first, then wire the saved telemetry into the issue and fix rules.";
 
 const reportFeedbackFull =
-  "Your overall accuracy is solid, but timing is your biggest limiter. Focus on pacing in VR and DM, and reduce overthinking on harder logic questions. Keep building consistency in SJT with a clear approach. Your strongest gains will come from short timed practice, reviewing changed answers, and tracking whether your speed improves without accuracy dropping.";
+  reportFeedbackShort;
 
 type ReportIssueGroup = {
   title: string;
@@ -1428,7 +1257,7 @@ function getGreeting() {
   return "Good evening";
 }
 
-function MetricCard({
+export function MetricCard({
   label,
   value,
   delta,
@@ -1493,165 +1322,6 @@ function sectionStyle(code: string) {
       badgeClass: "bg-slate-100 text-slate-600",
       barClass: "bg-slate-400",
     }
-  );
-}
-
-function getPointTotal(point: MockPerformanceSeries["points"][number]) {
-  return point.correct + point.incorrect;
-}
-
-function getPointAccuracy(point: MockPerformanceSeries["points"][number]) {
-  const total = getPointTotal(point);
-  return total > 0 ? Math.round((point.correct / total) * 100) : 0;
-}
-
-function getMockPeriodPoints(
-  points: MockPerformanceSeries["points"],
-  period: MockHistoryPeriod
-) {
-  const countByPeriod: Record<MockHistoryPeriod, number> = {
-    "7D": 3,
-    "30D": 6,
-    "90D": 9,
-    "All time": points.length,
-  };
-  return points.slice(-countByPeriod[period]);
-}
-
-function getMockPeriodLabel(period: MockHistoryPeriod) {
-  return period === "All time" ? "all time" : `last ${period}`;
-}
-
-function MockPerformanceChart({ series }: { series: MockPerformanceSeries }) {
-  const width = 560;
-  const height = 260;
-  const left = 58;
-  const right = 24;
-  const top = 26;
-  const bottom = 54;
-  const chartWidth = width - left - right;
-  const chartHeight = height - top - bottom;
-  const scaleRange = Math.max(1, series.scaleMax - series.scaleMin);
-  const valueToY = (value: number) =>
-    top + chartHeight - ((value - series.scaleMin) / scaleRange) * chartHeight;
-  const barSlot = chartWidth / series.points.length;
-  const barWidth = Math.min(46, barSlot * 0.46);
-  const getBarFill = (score: number) => {
-    const ratio = (score - series.scaleMin) / scaleRange;
-    if (ratio >= 0.72) return "#16a34a";
-    if (ratio >= 0.58) return "#22c55e";
-    if (ratio >= 0.44) return "#84cc16";
-    return "#a3e635";
-  };
-
-  return (
-    <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50/60 px-3 pb-3 pt-2">
-      <svg
-        className="h-64 w-full overflow-visible"
-        viewBox={`0 0 ${width} ${height}`}
-        role="img"
-        aria-label={`${series.title} scaled score chart`}
-      >
-        <text
-          x="14"
-          y={top + chartHeight / 2}
-          textAnchor="middle"
-          fontSize="12"
-          fontWeight="900"
-          fill="#0b1143"
-          transform={`rotate(-90 14 ${top + chartHeight / 2})`}
-        >
-          Scaled score
-        </text>
-        {series.ticks.map((tick) => {
-          const y = valueToY(tick);
-          return (
-            <g key={tick}>
-              <line
-                x1={left}
-                y1={y}
-                x2={left + chartWidth}
-                y2={y}
-                stroke="#e5ebf3"
-                strokeDasharray="4 4"
-              />
-              <text
-                x={left - 12}
-                y={y + 4}
-                textAnchor="end"
-                fontSize="12"
-                fontWeight="800"
-                fill="#64748b"
-              >
-                {tick}
-              </text>
-            </g>
-          );
-        })}
-        <line x1={left} y1={top} x2={left} y2={top + chartHeight} stroke="#dbe4f0" />
-        <line
-          x1={left}
-          y1={top + chartHeight}
-          x2={left + chartWidth}
-          y2={top + chartHeight}
-          stroke="#dbe4f0"
-        />
-        {series.points.map((point, index) => {
-          const x = left + index * barSlot + (barSlot - barWidth) / 2;
-          const total = getPointTotal(point);
-          const y = valueToY(point.scaled);
-          const barHeight = top + chartHeight - y;
-          return (
-            <g key={point.label}>
-              <rect
-                x={x}
-                y={y}
-                width={barWidth}
-                height={barHeight}
-                rx="8"
-                fill={getBarFill(point.scaled)}
-              />
-              <text
-                x={x + barWidth / 2}
-                y={y - 10}
-                textAnchor="middle"
-                fontSize="13"
-                fontWeight="900"
-                fill="#0b1143"
-              >
-                {point.scaled}
-              </text>
-              <text
-                x={x + barWidth / 2}
-                y={top + chartHeight + 26}
-                textAnchor="middle"
-                fontSize="12"
-                fontWeight="800"
-                fill="#64748b"
-              >
-                {point.label.replace(" ", "\u00a0")}
-              </text>
-              <text
-                x={x + barWidth / 2}
-                y={top + chartHeight + 42}
-                textAnchor="middle"
-                fontSize="11"
-                fontWeight="800"
-                fill="#94a3b8"
-              >
-                {point.correct}/{total}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-      <div className="flex flex-wrap items-center justify-center gap-5 text-xs font-black text-slate-500">
-        <span className="inline-flex items-center gap-2">
-          <span className="h-3 w-3 rounded bg-[#22c55e]" />
-          Scaled score
-        </span>
-      </div>
-    </div>
   );
 }
 
@@ -1845,44 +1515,14 @@ function DiagnosticContent({
   checkoutLoading,
   onUpgrade,
 }: PremiumGateProps) {
-  const diagnosticHistory = [
-    {
-      code: "SJT",
-      date: "May 12, 2025",
-      age: "2 days ago",
-      issue: "Consistency is your biggest opportunity",
-      section: "Situational Judgement",
-      score: "61%",
-      scoreClass: "bg-pink-50 text-pink-600",
-    },
-    {
-      code: "VR",
-      date: "May 10, 2025",
-      age: "4 days ago",
-      issue: "Accuracy can help you improve",
-      section: "Verbal Reasoning",
-      score: "68%",
-      scoreClass: "bg-emerald-50 text-emerald-600",
-    },
-    {
-      code: "DM",
-      date: "May 8, 2025",
-      age: "6 days ago",
-      issue: "Good progress - keep building speed",
-      section: "Decision Making",
-      score: "72%",
-      scoreClass: "bg-amber-50 text-amber-600",
-    },
-    {
-      code: "QR",
-      date: "May 5, 2025",
-      age: "1 week ago",
-      issue: "Multi-step data handling needs work",
-      section: "Quantitative Reasoning",
-      score: "63%",
-      scoreClass: "bg-cyan-50 text-cyan-600",
-    },
-  ];
+  const diagnosticHistory: Array<{
+    code: string;
+    date: string;
+    issue: string;
+    section: string;
+    score: string;
+    scoreClass: string;
+  }> = [];
 
   const timingPrompts = [
     [
@@ -1904,12 +1544,12 @@ function DiagnosticContent({
 
   const diagnosticTools = [
     {
-      title: "Section deep-dive",
-      text: "Explore underperformance in a specific section most likely to move your score.",
-      cta: "Choose section",
+      title: "You've improved by approximately X points / X deciles",
+      text: "Since using PhloemAI's UCAT Tutor Service.",
+      cta: "View progress",
       icon: Target,
       iconClass: "bg-indigo-50 text-blue-600",
-      href: "/phloemai/question-bank",
+      href: "/phloemai/progress",
       linkClass: "border-blue-100 text-blue-600 hover:bg-blue-50",
     },
     {
@@ -2022,30 +1662,24 @@ function DiagnosticContent({
               <h2 className="text-xs font-black uppercase tracking-wide">
                 Latest diagnostic
               </h2>
-              <span className="text-xs font-black text-slate-500">
-                2 days ago
-              </span>
+              <span className="text-xs font-black text-slate-500">Empty</span>
             </div>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <span className="rounded-full bg-pink-50 px-3 py-1.5 text-xs font-black text-pink-600">
-                SJT
-              </span>
-              <span className="rounded-full bg-blue-50 px-3 py-1.5 text-xs font-black text-blue-600">
-                Main finding
-              </span>
+            <div className="mt-7 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4">
+              <h3 className="max-w-sm text-xl font-black leading-tight">
+                No diagnostic completed yet
+              </h3>
+              <p className="mt-3 max-w-sm text-sm font-semibold leading-6 text-slate-600">
+                Mark a practice set or run a diagnostic to populate this panel with real data.
+              </p>
             </div>
-            <h3 className="mt-5 max-w-sm text-xl font-black leading-tight">
-              Consistency is your biggest opportunity
-            </h3>
             <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-slate-600">
-              Your timing and consistency in SJT are holding your overall score
-              back.
+              AI feedback will stay empty until there is saved practice or diagnostic data.
             </p>
             <div className="mt-6 grid gap-2 sm:grid-cols-3 xl:grid-cols-3">
               {([
-                ["On track", "Improving", Activity, "text-emerald-600"],
-                ["Last updated", "May 12, 2025", Clock3, "text-violet-600"],
-                ["Overall rank", "Top 38%", BarChart3, "text-blue-600"],
+                ["Status", "No data", Activity, "text-slate-500"],
+                ["Last updated", "Never", Clock3, "text-slate-500"],
+                ["Overall rank", "-", BarChart3, "text-slate-500"],
               ] as const).map(([label, value, Icon, colorClass]) => (
                 <div
                   key={label}
@@ -2138,7 +1772,7 @@ function DiagnosticContent({
                 <p className="text-[11px] font-black text-slate-600">
                   Free credits
                 </p>
-                <p className="mt-2 text-3xl font-black text-blue-600">2</p>
+                <p className="mt-2 text-3xl font-black text-blue-600">1</p>
               </div>
               <div className="px-4 py-3 text-center">
                 <p className="text-[11px] font-black text-slate-600">
@@ -2169,7 +1803,17 @@ function DiagnosticContent({
             </Link>
           </div>
           <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
-            {diagnosticHistory.map((item) => {
+            {diagnosticHistory.length === 0 ? (
+              <div className="px-4 py-8 text-center">
+                <p className="text-sm font-black text-slate-700">
+                  No diagnostics recorded yet.
+                </p>
+                <p className="mt-2 text-xs font-semibold text-slate-500">
+                  Completed diagnostics will appear here after they are saved.
+                </p>
+              </div>
+            ) : (
+            diagnosticHistory.map((item) => {
               const style = sectionStyle(item.code);
               return (
                 <div
@@ -2202,7 +1846,7 @@ function DiagnosticContent({
                   </Link>
                 </div>
               );
-            })}
+            }))}
           </div>
         </section>
 
@@ -2279,19 +1923,11 @@ function PracticeContent() {
     },
   ];
 
-  const recentPractice = [
-    ["QR", "QR Speed Drill", "10 questions - Timed", "66%", "Today, 9:41 AM"],
-    ["VR", "VR Timed Set", "15 questions - Timed", "72%", "Today, 8:12 AM"],
-    ["DM", "DM Mini-set", "10 questions - Untimed", "80%", "Yesterday, 7:35 PM"],
-    ["SJT", "SJT Mini-set", "10 questions - Untimed", "70%", "Yesterday, 6:02 PM"],
-  ] as const;
+  const recentPractice: Array<[string, string, string, string, string]> = [];
 
-  const focusQueue = [
-    ["QR", "Calculator-heavy QR", "7 min drill - fix hesitation under time", "/phloemai/question-bank/qr", Timer],
-    ["VR", "Author opinion passages", "10 questions - tone and viewpoint", "/phloemai/question-bank/vr", Bookmark],
-    ["DM", "Syllogism accuracy", "8 questions - conclusion checking", "/phloemai/question-bank/dm", Brain],
-    ["SJT", "Response ordering", "Drag-and-drop judgement practice", "/phloemai/question-bank/sjt", Activity],
-  ] as const;
+  const focusQueue: Array<
+    [string, string, string, string, typeof Timer]
+  > = [];
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
@@ -2305,20 +1941,17 @@ function PracticeContent() {
               <h2 className="text-sm font-black uppercase tracking-wide">
                 Recommended from your fixes
               </h2>
-              <h3 className="mt-6 text-lg font-black">
-                QR Speed Drill <span className="text-slate-400">- 7 min</span>
-              </h3>
+              <h3 className="mt-6 text-lg font-black">No recommended task yet</h3>
               <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-                Hesitation in QR is lowering your accuracy. Short, focused
-                drills build speed and confidence.
+                Complete and mark practice questions so PhloemAI can build a real task queue.
               </p>
             </div>
           </div>
           <Link
-            href="/phloemai/question-bank/qr"
+            href="/phloemai/question-bank"
             className="inline-flex h-12 items-center justify-center rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
           >
-            Start task
+            Start practice
           </Link>
         </div>
       </section>
@@ -2402,7 +2035,17 @@ function PracticeContent() {
             Suggested next sets based on the patterns in your latest diagnostic.
           </p>
           <div className="mt-4 space-y-2">
-            {focusQueue.map(([code, title, meta, href, Icon]) => {
+            {focusQueue.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+                <p className="text-sm font-black text-slate-700">
+                  Your targeted queue is empty.
+                </p>
+                <p className="mt-2 text-xs font-semibold text-slate-500">
+                  Saved practice data will decide what belongs here.
+                </p>
+              </div>
+            ) : (
+            focusQueue.map(([code, title, meta, href, Icon]) => {
               const style = sectionStyle(code);
               return (
               <div
@@ -2435,7 +2078,7 @@ function PracticeContent() {
                 </Link>
               </div>
             );
-            })}
+            }))}
           </div>
           <Link
             href="/phloemai/report"
@@ -2451,7 +2094,17 @@ function PracticeContent() {
             Recent practice
           </h2>
           <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
-            {recentPractice.map(([code, title, meta, score, time]) => {
+            {recentPractice.length === 0 ? (
+              <div className="px-4 py-8 text-center">
+                <p className="text-sm font-black text-slate-700">
+                  No practice sessions saved yet.
+                </p>
+                <p className="mt-2 text-xs font-semibold text-slate-500">
+                  Mark a question-bank set to add the first row.
+                </p>
+              </div>
+            ) : (
+            recentPractice.map(([code, title, meta, score, time]) => {
               const style = sectionStyle(code);
               return (
                 <div
@@ -2483,7 +2136,7 @@ function PracticeContent() {
                   </Link>
                 </div>
               );
-            })}
+            }))}
           </div>
           <button
             type="button"
@@ -2508,60 +2161,31 @@ function ProgressContent({
   checkoutLoading,
   onUpgrade,
 }: PremiumGateProps) {
-  const [graphMode, setGraphMode] = useState<MockGraphMode>("mini");
-  const [miniSection, setMiniSection] = useState<MiniMockSectionCode>("QR");
-  const [mockPeriod, setMockPeriod] = useState<MockHistoryPeriod>("30D");
-  const fixProgress = [
-    ["QR timing improving", "You're answering faster with similar accuracy.", "Improving", "bg-emerald-50 text-emerald-600", Clock3],
-    ["VR longer passages still slow", "Time per question is high on long passages.", "Needs work", "bg-orange-50 text-orange-600", Bookmark],
-    ["DM stable", "Accuracy steady; keep focusing on pace.", "Stable", "bg-indigo-50 text-indigo-600", Brain],
-    ["SJT consistent", "Solid results - maintain your approach.", "Strong", "bg-emerald-50 text-emerald-600", Sparkles],
-  ] as const;
-
-  const improvements = [
-    ["Accuracy improved to 63%", "New 7-day high", "Today, 9:41 AM", BarChart3],
-    ["Average time per question down to 75s", "8s faster than last 7 days", "Today, 9:20 AM", Clock3],
-    ["Best VR accuracy this month", "72% in last 7 days", "Yesterday, 7:18 PM", Sparkles],
-    ["Completed QR Speed Drill", "10 min drill", "Yesterday, 6:42 PM", Target],
-  ] as const;
-
-  const performanceSeries =
-    graphMode === "full"
-      ? fullMockPerformanceSeries
-      : miniMockPerformanceSeries[miniSection];
-  const periodPoints = getMockPeriodPoints(performanceSeries.points, mockPeriod);
-  const visiblePerformanceSeries = {
-    ...performanceSeries,
-    subtitle: `${performanceSeries.subtitle} Showing ${getMockPeriodLabel(
-      mockPeriod
-    )}.`,
-    points: periodPoints,
-  };
-  const firstPoint = periodPoints[0];
-  const currentPoint = periodPoints[periodPoints.length - 1];
-  const currentAccuracy = currentPoint ? getPointAccuracy(currentPoint) : 0;
-  const currentScaled = currentPoint?.scaled ?? 0;
-  const firstScaled = firstPoint?.scaled ?? 0;
-  const scaledGain = currentScaled - firstScaled;
-  const currentTotal = currentPoint ? getPointTotal(currentPoint) : 0;
   const bankCompleted = questionBankProgress.reduce(
     (sum, item) => sum + item.completed,
     0
   );
   const bankTotal = questionBankProgress.reduce((sum, item) => sum + item.total, 0);
-  const bankPercent = Math.round((bankCompleted / bankTotal) * 100);
+  const bankPercent = bankTotal > 0 ? Math.round((bankCompleted / bankTotal) * 100) : 0;
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
       <div className="grid gap-4 lg:grid-cols-3">
-        <MetricCard label="Accuracy" value="63%" delta="6%" direction="up" />
-        <MetricCard
-          label="Average time / question"
-          value="75s"
-          delta="8s"
-          direction="down"
-        />
-        <MetricCard label="Tasks completed" value="18" delta="4" direction="up" />
+        {[
+          ["Accuracy", "-"],
+          ["Average time / question", "-"],
+          ["Tasks completed", "0"],
+        ].map(([label, value]) => (
+          <div key={label} className="rounded-xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-black text-slate-700">{label}</p>
+            <p className="mt-2 text-3xl font-black leading-none text-slate-400">
+              {value}
+            </p>
+            <p className="mt-2 text-xs font-bold text-slate-400">
+              No saved practice yet
+            </p>
+          </div>
+        ))}
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1.08fr_0.9fr]">
@@ -2573,98 +2197,17 @@ function ProgressContent({
                 <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
               </div>
               <p className="mt-1 text-xs font-bold text-slate-500">
-                {visiblePerformanceSeries.subtitle}
-              </p>
-            </div>
-            <div className="flex w-fit rounded-lg bg-slate-100 p-1">
-              {(["mini", "full"] as const).map((mode) => (
-                <button
-                  type="button"
-                  key={mode}
-                  onClick={() => setGraphMode(mode)}
-                  aria-pressed={graphMode === mode}
-                  className={`h-8 min-w-[96px] whitespace-nowrap rounded-md px-4 text-xs font-black ${
-                    graphMode === mode
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "text-slate-500 hover:bg-white hover:text-blue-600"
-                  }`}
-                >
-                  {mode === "mini" ? "Mini mocks" : "Full mocks"}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {graphMode === "mini" && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {(["VR", "DM", "QR", "SJT"] as const).map((code) => {
-                const style = sectionStyle(code);
-                return (
-                  <button
-                    type="button"
-                    key={code}
-                    onClick={() => setMiniSection(code)}
-                    aria-pressed={miniSection === code}
-                    className={`h-8 rounded-lg px-4 text-xs font-black ${
-                      miniSection === code
-                        ? style.badgeClass
-                        : "bg-slate-50 text-slate-500 hover:bg-blue-50 hover:text-blue-600"
-                    }`}
-                  >
-                    {code}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          <div className="mt-3 flex flex-wrap gap-2">
-            {(["7D", "30D", "90D", "All time"] as const).map((period) => (
-              <button
-                type="button"
-                key={period}
-                onClick={() => setMockPeriod(period)}
-                aria-pressed={mockPeriod === period}
-                className={`h-8 rounded-lg px-4 text-xs font-black ${
-                  mockPeriod === period
-                    ? "bg-slate-900 text-white"
-                    : "bg-slate-50 text-slate-500 hover:bg-blue-50 hover:text-blue-600"
-                }`}
-              >
-                {period}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-              <p className="text-xs font-black text-slate-500">Latest scaled</p>
-              <p className="mt-1 text-2xl font-black text-[#0b1143]">
-                {currentScaled}
-              </p>
-            </div>
-            <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3">
-              <p className="text-xs font-black text-emerald-700">Scaled gain</p>
-              <p className="mt-1 text-2xl font-black text-emerald-700">
-                {scaledGain > 0 ? "+" : ""}
-                {scaledGain}
-              </p>
-            </div>
-            <div className="rounded-xl border border-blue-100 bg-blue-50 p-3">
-              <p className="text-xs font-black text-blue-700">Raw accuracy</p>
-              <p className="mt-1 text-2xl font-black text-blue-700">
-                {currentAccuracy}%
-              </p>
-              <p className="mt-1 text-xs font-black text-blue-500">
-                {currentPoint?.correct ?? 0}/{currentTotal} correct
+                Empty until mock or practice results are saved.
               </p>
             </div>
           </div>
 
-          <div className="mt-3 text-xs font-black text-slate-400">
-            {performanceSeries.scaleLabel}
+          <div className="mt-5 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-12 text-center">
+            <p className="text-sm font-black text-slate-700">No chart data yet.</p>
+            <p className="mt-2 text-xs font-semibold text-slate-500">
+              This will use saved practice sessions once they exist.
+            </p>
           </div>
-          <MockPerformanceChart series={visiblePerformanceSeries} />
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -2752,21 +2295,13 @@ function ProgressContent({
               <h2 className="text-sm font-black">Fix progress</h2>
               <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
             </div>
-            <div className="mt-4 space-y-4">
-              {fixProgress.map(([title, text, status, statusClass, Icon]) => (
-                <div key={title} className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-sm font-black">{title}</h3>
-                    <p className="mt-1 text-xs font-bold text-slate-500">{text}</p>
-                  </div>
-                  <span className={`rounded-full px-4 py-1 text-xs font-black ${statusClass}`}>
-                    {status}
-                  </span>
-                </div>
-              ))}
+            <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+              <p className="text-sm font-black text-slate-700">
+                No fix progress yet.
+              </p>
+              <p className="mt-2 text-xs font-semibold text-slate-500">
+                Premium fix progress will be based on saved practice sessions.
+              </p>
             </div>
             <button
               type="button"
@@ -2790,19 +2325,13 @@ function ProgressContent({
               <h2 className="text-sm font-black">Recent improvements</h2>
               <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
             </div>
-            <div className="mt-4 space-y-4">
-              {improvements.map(([title, text, time, Icon]) => (
-                <div key={title} className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-blue-600">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-sm font-black">{title}</h3>
-                    <p className="mt-1 text-xs font-bold text-slate-500">{text}</p>
-                  </div>
-                  <span className="text-xs font-bold text-slate-400">{time}</span>
-                </div>
-              ))}
+            <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+              <p className="text-sm font-black text-slate-700">
+                No improvement history yet.
+              </p>
+              <p className="mt-2 text-xs font-semibold text-slate-500">
+                This timeline will populate from real saved attempts.
+              </p>
             </div>
             <button
               type="button"
@@ -2825,60 +2354,9 @@ function ReportContent({
   checkoutLoading,
   onUpgrade,
 }: PremiumGateProps) {
-  const issueGroups: ReportIssueGroup[] = [
-    {
-      title: "Major issues",
-      icon: AlertTriangle,
-      iconClass: "bg-red-50 text-red-500",
-      count: 3,
-      items: [
-        ["Hesitation in VR and DM is impacting accuracy.", "You're spending too long on average, especially on longer passages."],
-        ["Overthinking harder logic questions.", "You're second-guessing and changing answers."],
-        ["Inconsistent performance in SJT.", "Approach to situational judgement lacks a clear framework."],
-      ],
-    },
-    {
-      title: "Minor issues",
-      icon: Clock3,
-      iconClass: "bg-orange-50 text-orange-500",
-      count: 3,
-      items: [
-        ["Occasional timing spikes in QR.", "A few questions exceed the ideal time window."],
-        ["Careless errors in straightforward DM.", "Check for small arithmetic or interpretation slips."],
-        ["Passage scanning in VR needs more focus.", "Important details can be missed when skimming."],
-      ],
-    },
-    {
-      title: "Strengths",
-      icon: CheckCircle,
-      iconClass: "bg-emerald-50 text-emerald-600",
-      count: 3,
-      items: [
-        ["Solid accuracy in QR.", "You're consistently answering QR questions correctly."],
-        ["Good overall decision making.", "Changed answers often improve your score."],
-        ["Steady improvement over the last 7 days.", "Accuracy is up and time per question is down."],
-      ],
-    },
-    {
-      title: "Fixes",
-      icon: Wrench,
-      iconClass: "bg-indigo-50 text-indigo-600",
-      count: 4,
-      items: [
-        ["Improve VR pacing on long passages.", "Prioritise structure and main points."],
-        ["Use a 2-pass process for DM.", "First pass to solve, second pass to verify."],
-        ["Build a SJT decision framework.", "Practice identifying the best and worst options."],
-        ["Reduce overthinking in hard logic.", "Set a time cap and move on."],
-      ],
-    },
-  ];
+  const issueGroups: ReportIssueGroup[] = [];
 
-  const reviewRows = [
-    ["Slow questions", "16 questions", "> 90s spent"],
-    ["Changed answers", "12 questions", "8 improved"],
-    ["Marked for review", "9 questions", "Marked during test"],
-    ["Long-passage VR behaviour", "5 passages", "Low accuracy"],
-  ];
+  const reviewRows: Array<[string, string, string]> = [];
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
@@ -2891,17 +2369,18 @@ function ReportContent({
             <div>
               <h2 className="text-sm font-black">Latest diagnostic</h2>
               <p className="mt-1 text-xs font-bold text-slate-500">
-                Completed 2 days ago - 7 May 2025, 9:15 AM
+                No diagnostic or marked practice report saved yet
               </p>
             </div>
           </div>
-          <MetricCard label="Overall accuracy" value="63%" delta="6%" direction="up" />
-          <MetricCard
-            label="Avg. time / question"
-            value="75s"
-            delta="8s"
-            direction="down"
-          />
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-black text-slate-700">Overall accuracy</p>
+            <p className="mt-2 text-3xl font-black text-slate-400">-</p>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-black text-slate-700">Avg. time / question</p>
+            <p className="mt-2 text-3xl font-black text-slate-400">-</p>
+          </div>
         </div>
       </section>
 
@@ -2929,9 +2408,20 @@ function ReportContent({
         description="Premium reveals the full issues, strengths and fix map without rendering the report content for free accounts."
       >
         <div className="grid gap-5 lg:grid-cols-2">
-          {issueGroups.map((group) => (
-            <ReportInsightCard key={group.title} group={group} />
-          ))}
+          {issueGroups.length === 0 ? (
+            <section className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center lg:col-span-2">
+              <p className="text-sm font-black text-slate-700">
+                No issues, strengths or fixes generated yet.
+              </p>
+              <p className="mt-2 text-xs font-semibold text-slate-500">
+                This report will use saved practice telemetry once the issue mapping is connected.
+              </p>
+            </section>
+          ) : (
+            issueGroups.map((group) => (
+              <ReportInsightCard key={group.title} group={group} />
+            ))
+          )}
         </div>
       </ClientPremiumGate>
 
@@ -2960,7 +2450,17 @@ function ReportContent({
               Question review
             </h2>
             <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
-              {reviewRows.map(([title, count, note]) => (
+              {reviewRows.length === 0 ? (
+                <div className="px-4 py-8 text-center">
+                  <p className="text-sm font-black text-slate-700">
+                    No question review rows yet.
+                  </p>
+                  <p className="mt-2 text-xs font-semibold text-slate-500">
+                    Slow questions, changed answers and flags will appear after saved practice.
+                  </p>
+                </div>
+              ) : (
+              reviewRows.map(([title, count, note]) => (
                 <div
                   key={title}
                   className="grid gap-3 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[1fr_130px_150px_70px] sm:items-center"
@@ -2975,7 +2475,7 @@ function ReportContent({
                     Review
                   </button>
                 </div>
-              ))}
+              )))}
             </div>
           </section>
         </ClientPremiumGate>
@@ -3865,7 +3365,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                 </Link>
               </div>
               <p className="mt-3 text-sm font-bold text-slate-600">
-                Based on your latest diagnostic (2 days ago)
+                No saved practice data yet
               </p>
               <ExpandableText
                 shortText={dashboardFeedbackShort}
@@ -3875,34 +3375,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
               <div className="mt-6">
                 <h2 className="text-sm font-black">Section observations</h2>
-                <div className="mt-3 space-y-3 text-sm font-semibold text-[#12184d]">
-                  {[
-                    ["QR", "Accuracy is solid, but timing is your biggest limiter."],
-                    ["VR", "Good overall accuracy, but longer passages slow you down."],
-                    [
-                      "DM",
-                      "Performance is stable, though hesitation affects pace on harder logic questions.",
-                    ],
-                    [
-                      "SJT",
-                      "Consistent performance and not a priority weakness right now.",
-                    ],
-                  ].map(([code, text]) => {
-                    const match = sectionScores.find((item) => item.code === code);
-                    return (
-                      <div key={code} className="flex items-start gap-3">
-                        <span
-                          className={`mt-0.5 rounded px-2 py-0.5 text-xs font-black ${
-                            match?.badgeClass ?? "bg-slate-100 text-slate-600"
-                          }`}
-                        >
-                          {code}
-                        </span>
-                        <span className="text-slate-400">-</span>
-                        <span>{text}</span>
-                      </div>
-                    );
-                  })}
+                <div className="mt-3 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-sm font-semibold text-slate-500">
+                  Nothing to show yet. Mark practice questions to fill this with real observations.
                 </div>
               </div>
             </section>
@@ -3916,18 +3390,20 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               </div>
 
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                <MetricCard
-                  label="Accuracy"
-                  value="63%"
-                  delta="6%"
-                  direction="up"
-                />
-                <MetricCard
-                  label="Avg. time / question"
-                  value="75s"
-                  delta="8s"
-                  direction="down"
-                />
+                {[
+                  ["Accuracy", "-"],
+                  ["Avg. time / question", "-"],
+                ].map(([label, value]) => (
+                  <div key={label} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="text-xs font-black text-slate-700">{label}</p>
+                    <p className="mt-2 text-3xl font-black leading-none text-slate-400">
+                      {value}
+                    </p>
+                    <p className="mt-2 text-xs font-bold text-slate-400">
+                      No completed questions yet
+                    </p>
+                  </div>
+                ))}
               </div>
 
               <h3 className="mt-7 text-sm font-black">Section overview</h3>
@@ -3961,7 +3437,17 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                 Tasks from your fixes
               </h2>
               <div className="mt-4 space-y-3">
-                {fixTasks.map((task) => {
+                {fixTasks.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+                    <p className="text-sm font-black text-slate-700">
+                      No fix tasks yet.
+                    </p>
+                    <p className="mt-2 text-xs font-semibold text-slate-500">
+                      The task list will use saved practice data, not placeholders.
+                    </p>
+                  </div>
+                ) : (
+                fixTasks.map((task) => {
                   const Icon = task.icon;
                   return (
                     <div key={task.title} className="flex items-center gap-4">
@@ -3984,7 +3470,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                       </Link>
                     </div>
                   );
-                })}
+                }))}
               </div>
               <Link
                 href="/phloemai/practice"
