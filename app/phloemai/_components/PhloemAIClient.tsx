@@ -1381,12 +1381,6 @@ const approachSteps = [
   },
 ];
 
-const dashboardFeedbackShort =
-  "No AI feedback yet. Complete and mark a diagnostic to start collecting the data needed for AI feedback.";
-
-const dashboardFeedbackFull =
-  dashboardFeedbackShort;
-
 const reportFeedbackShort =
   "No AI report yet. Mark practice questions first, then wire the saved telemetry into the issue and fix rules.";
 
@@ -3551,31 +3545,82 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
           {view === "dashboard" ? (
           <div className="grid gap-5 px-6 py-5 lg:grid-cols-[1.1fr_1fr] lg:px-8">
             <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center justify-between gap-4">
-                <p className="text-sm font-black uppercase tracking-wider text-blue-600">
-                  Phloem personalised feedback
-                </p>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <p className="text-sm font-black uppercase tracking-wider text-blue-600">
+                    Phloem personalised feedback
+                  </p>
+                  <h2 className="mt-3 text-xl font-black">
+                    Diagnostic feedback pending
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
+                    Complete and mark a diagnostic so PhloemAI can turn your
+                    timing, accuracy and answer behaviour into AI feedback.
+                  </p>
+                </div>
                 <Link
-                  href="/phloemai/report"
-                  className="inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+                  href="/phloemai/diagnostic"
+                  className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
                 >
-                  Expanded report
+                  Run diagnostic
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>
-              <p className="mt-3 text-sm font-bold text-slate-600">
-                No saved practice data yet
-              </p>
-              <ExpandableText
-                shortText={dashboardFeedbackShort}
-                fullText={dashboardFeedbackFull}
-                className="mt-4 text-sm font-semibold leading-7 text-[#12184d]"
-              />
 
-              <div className="mt-6">
-                <h2 className="text-sm font-black">Section observations</h2>
-                <div className="mt-3 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-sm font-semibold text-slate-500">
-                  Nothing to show yet. Mark practice questions to fill this with real observations.
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                {[
+                  ["Diagnostic", "Waiting", Activity, "bg-blue-50 text-blue-600"],
+                  [
+                    "Practice data",
+                    practiceStats.hasCompletedQuestions ? "Saved" : "Empty",
+                    BarChart3,
+                    practiceStats.hasCompletedQuestions
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "bg-slate-100 text-slate-500",
+                  ],
+                  ["AI feedback", "Pending", MessageSquare, "bg-violet-50 text-violet-600"],
+                ].map(([label, value, Icon, iconClass]) => (
+                  <div
+                    key={label as string}
+                    className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`flex h-9 w-9 items-center justify-center rounded-lg ${iconClass as string}`}
+                      >
+                        <Icon className="h-4 w-4" aria-hidden="true" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-black text-slate-700">
+                          {label as string}
+                        </p>
+                        <p className="mt-0.5 text-xs font-bold text-slate-500">
+                          {value as string}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50/60 p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h3 className="text-sm font-black text-blue-950">
+                      Section observations
+                    </h3>
+                    <p className="mt-1 text-xs font-bold leading-5 text-blue-700">
+                      Timing bottlenecks, changed-answer patterns and weak
+                      sections will appear here after a marked diagnostic.
+                    </p>
+                  </div>
+                  <Link
+                    href="/phloemai/report"
+                    className="inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+                  >
+                    Open report
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
                 </div>
               </div>
             </section>
@@ -3642,18 +3687,56 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
             </section>
 
             <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-              <h2 className="text-sm font-black uppercase tracking-wide">
-                Tasks from your fixes
-              </h2>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2 className="text-sm font-black uppercase tracking-wide">
+                    Tasks from your fixes
+                  </h2>
+                  <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
+                    Your task queue will unlock after a diagnostic creates fix
+                    priorities.
+                  </p>
+                </div>
+                <span className="w-fit rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-700">
+                  Awaiting fixes
+                </span>
+              </div>
               <div className="mt-4 space-y-3">
                 {fixTasks.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
-                    <p className="text-sm font-black text-slate-700">
-                      No fix tasks yet.
-                    </p>
-                    <p className="mt-2 text-xs font-semibold text-slate-500">
-                      The task list will use saved practice data, not placeholders.
-                    </p>
+                  <div className="rounded-xl border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-blue-50 p-4">
+                    <div className="grid gap-3 sm:grid-cols-3">
+                      {[
+                        ["1", "Main fix", "Most important score blocker"],
+                        ["2", "Drill", "Short targeted question set"],
+                        ["3", "Review", "Changed answers and slow items"],
+                      ].map(([step, title, text]) => (
+                        <div
+                          key={title}
+                          className="rounded-lg border border-white/80 bg-white/80 p-3 shadow-sm"
+                        >
+                          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+                            {step}
+                          </span>
+                          <h3 className="mt-3 text-sm font-black">{title}</h3>
+                          <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                            {text}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <p className="text-xs font-bold leading-5 text-slate-600">
+                        Once feedback is generated, this becomes your ordered
+                        practice queue.
+                      </p>
+                      <Link
+                        href="/phloemai/diagnostic"
+                        className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-lg bg-amber-600 px-4 text-xs font-black text-white transition-colors hover:bg-amber-700"
+                      >
+                        Start diagnostic
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      </Link>
+                    </div>
                   </div>
                 ) : (
                 fixTasks.map((task) => {
