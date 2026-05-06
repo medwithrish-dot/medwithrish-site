@@ -1221,7 +1221,7 @@ const approachSteps = [
 ];
 
 const dashboardFeedbackShort =
-  "No AI feedback yet. Complete and mark a practice set to start collecting the data needed for feedback.";
+  "No AI feedback yet. Complete and mark a diagnostic to start collecting the data needed for AI feedback.";
 
 const dashboardFeedbackFull =
   dashboardFeedbackShort;
@@ -1544,8 +1544,8 @@ function DiagnosticContent({
 
   const diagnosticTools = [
     {
-      title: "You've improved by approximately X points / X deciles",
-      text: "Since using PhloemAI's UCAT Tutor Service.",
+      title: "Score movement pending",
+      text: "Complete and mark diagnostics so PhloemAI can compare your points and deciles over time.",
       cta: "View progress",
       icon: Target,
       iconClass: "bg-indigo-50 text-blue-600",
@@ -1572,7 +1572,7 @@ function DiagnosticContent({
               Start your diagnostic
             </p>
             <div className="mt-3 grid gap-4 md:grid-cols-2">
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 p-5 text-white shadow-sm">
+              <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 p-5 text-white shadow-sm">
                 <div className="pointer-events-none absolute right-6 top-10 flex h-28 w-28 items-center justify-center rounded-full bg-white/20">
                   <CheckCircle className="h-14 w-14" aria-hidden="true" />
                 </div>
@@ -1600,14 +1600,14 @@ function DiagnosticContent({
                 </ul>
                 <Link
                   href="/phloemai/question-bank"
-                  className="relative mt-6 flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50"
+                  className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50"
                 >
                   Start free diagnostic
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>
 
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-violet-600 via-purple-700 to-indigo-900 p-5 text-white shadow-sm">
+              <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-violet-600 via-purple-700 to-indigo-900 p-5 text-white shadow-sm">
                 <div className="pointer-events-none absolute right-6 top-10 flex h-28 w-28 items-center justify-center rounded-full bg-white/20">
                   <Clock3 className="h-14 w-14" aria-hidden="true" />
                 </div>
@@ -1637,7 +1637,7 @@ function DiagnosticContent({
                 {isPremium ? (
                   <Link
                     href="/phloemai/question-bank"
-                    className="relative mt-6 flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-violet-700 shadow-sm transition-colors hover:bg-violet-50"
+                    className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-violet-700 shadow-sm transition-colors hover:bg-violet-50"
                   >
                     Start daily diagnostic
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -1647,7 +1647,7 @@ function DiagnosticContent({
                     type="button"
                     onClick={() => void onUpgrade()}
                     disabled={checkoutLoading}
-                    className="relative mt-6 flex h-11 w-full items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-violet-700 shadow-sm transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="relative mt-auto flex h-11 w-full items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-violet-700 shadow-sm transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <LockKeyhole className="h-4 w-4" aria-hidden="true" />
                     {checkoutLoading ? "Opening..." : "Upgrade to unlock"}
@@ -1979,7 +1979,7 @@ function PracticeContent() {
             <Link
               key={section.code}
               href={section.href}
-              className="rounded-xl border border-slate-200 bg-white p-5 transition-colors hover:border-blue-300 hover:bg-blue-50"
+              className="rounded-xl border border-slate-300 bg-white p-5 shadow-[0_5px_14px_rgba(15,23,42,0.06)] transition-colors hover:border-blue-300 hover:bg-blue-50 hover:shadow-[0_8px_18px_rgba(15,23,42,0.08)]"
             >
               <span
                 className={`inline-flex rounded-lg px-3 py-1 text-sm font-black ${section.className}`}
