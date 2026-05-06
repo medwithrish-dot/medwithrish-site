@@ -1028,7 +1028,7 @@ function PrivacyNotice() {
           />
         </svg>
         <span className="text-sm font-semibold text-slate-800">
-          Your data is secure.
+          Privacy and AI limits
         </span>
       </div>
       <div className="space-y-2 text-xs text-slate-700 leading-relaxed">
@@ -1054,6 +1054,17 @@ function PrivacyNotice() {
           </a>
           .
         </p>
+      </div>
+      <div className="flex flex-wrap gap-3 text-xs font-bold">
+        <Link href="/privacy-policy" className="text-blue-600 hover:underline">
+          Privacy Policy
+        </Link>
+        <Link href="/terms-and-conditions" className="text-blue-600 hover:underline">
+          Terms and Conditions
+        </Link>
+        <Link href="/phloemai-disclaimer" className="text-blue-600 hover:underline">
+          AI/Data Disclaimer
+        </Link>
       </div>
     </div>
   );
@@ -2831,6 +2842,8 @@ function AuthPanel({
   setEmail,
   password,
   setPassword,
+  legalAccepted,
+  setLegalAccepted,
   submitting,
   message,
   error,
@@ -2844,6 +2857,8 @@ function AuthPanel({
   setEmail: (value: string) => void;
   password: string;
   setPassword: (value: string) => void;
+  legalAccepted: boolean;
+  setLegalAccepted: (value: boolean) => void;
   submitting: boolean;
   message: string | null;
   error: string | null;
@@ -2956,6 +2971,47 @@ function AuthPanel({
               />
             </label>
 
+            {mode === "signup" && (
+              <div className="space-y-3 rounded-xl border border-blue-100 bg-blue-50/70 p-4">
+                <label className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={legalAccepted}
+                    onChange={(event) => setLegalAccepted(event.target.checked)}
+                    required
+                    className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300"
+                  />
+                  <span className="text-xs font-bold leading-5 text-slate-700">
+                    I agree to the{" "}
+                    <Link
+                      href="/terms-and-conditions"
+                      className="text-blue-700 underline"
+                    >
+                      Terms and Conditions
+                    </Link>{" "}
+                    and confirm I have read the{" "}
+                    <Link href="/privacy-policy" className="text-blue-700 underline">
+                      Privacy Policy
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      href="/phloemai-disclaimer"
+                      className="text-blue-700 underline"
+                    >
+                      AI/Data Disclaimer
+                    </Link>
+                    .
+                  </span>
+                </label>
+                <p className="text-xs font-semibold leading-5 text-slate-600">
+                  PhloemAI collects practice telemetry such as answers, timing,
+                  calculator use and optional attention tracking to provide
+                  feedback. Do not enter sensitive medical or third-party
+                  personal data.
+                </p>
+              </div>
+            )}
+
             {error && (
               <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">
                 {error}
@@ -3017,6 +3073,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [legalAccepted, setLegalAccepted] = useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -3181,12 +3238,26 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
     try {
       if (authMode === "signup") {
+        if (!legalAccepted) {
+          setAuthError(
+            "Please agree to the Terms and confirm you have read the Privacy Policy before creating an account."
+          );
+          return;
+        }
+
         const trimmedName = fullName.trim();
+        const acceptedAt = new Date().toISOString();
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: { full_name: trimmedName },
+            data: {
+              full_name: trimmedName,
+              legal_accepted_at: acceptedAt,
+              terms_version: "2026-05-07",
+              privacy_version: "2026-05-07",
+              phloemai_disclaimer_version: "2026-05-07",
+            },
             emailRedirectTo: `${window.location.origin}/phloemai/dashboard`,
           },
         });
@@ -3314,6 +3385,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
         setEmail={setEmail}
         password={password}
         setPassword={setPassword}
+        legalAccepted={legalAccepted}
+        setLegalAccepted={setLegalAccepted}
         submitting={submitting}
         message={authMessage}
         error={authError}
@@ -3438,6 +3511,32 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               >
                 {plan === "Premium" ? "Manage" : "View plans"}
               </button>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+              Legal
+            </p>
+            <div className="mt-3 space-y-2 text-xs font-bold">
+              <Link
+                href="/terms-and-conditions"
+                className="block text-slate-600 hover:text-blue-600"
+              >
+                Terms and Conditions
+              </Link>
+              <Link
+                href="/privacy-policy"
+                className="block text-slate-600 hover:text-blue-600"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="/phloemai-disclaimer"
+                className="block text-slate-600 hover:text-blue-600"
+              >
+                AI/Data Disclaimer
+              </Link>
             </div>
           </div>
         </aside>
@@ -4281,6 +4380,25 @@ function RedesignedTutorHero() {
               Join Waitlist
             </button>
           </div>
+        </div>
+
+        <div className="mx-auto mt-4 max-w-4xl rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-900">
+          PhloemAI is an independent educational tool. AI feedback, progress
+          estimates and attention tracking are not guarantees of UCAT,
+          admissions or interview outcomes. Practice telemetry is used to
+          provide feedback and progress tracking. Read the{" "}
+          <Link href="/privacy-policy" className="font-black underline">
+            Privacy Policy
+          </Link>
+          ,{" "}
+          <Link href="/terms-and-conditions" className="font-black underline">
+            Terms
+          </Link>{" "}
+          and{" "}
+          <Link href="/phloemai-disclaimer" className="font-black underline">
+            AI/Data Disclaimer
+          </Link>
+          .
         </div>
 
         <div className="mt-7 text-center">

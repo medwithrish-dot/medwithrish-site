@@ -1500,6 +1500,28 @@ function SectionSetup({
             )}
           </div>
 
+          <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-semibold leading-5 text-amber-900">
+            <p className="font-black uppercase tracking-wide">
+              Data and AI notice
+            </p>
+            <p className="mt-2">
+              When you mark a set, PhloemAI can save answers, timings, answer
+              switches, flags, calculator usage, keyboard shortcuts, navigation
+              activity and optional attention summaries for feedback. Mouse and
+              eye tracking are optional; webcam video is not stored. AI feedback
+              is educational support only and does not guarantee exam or
+              admissions outcomes.
+            </p>
+            <div className="mt-2 flex flex-wrap gap-3 font-black">
+              <Link href="/privacy-policy" className="text-blue-700 underline">
+                Privacy Policy
+              </Link>
+              <Link href="/phloemai-disclaimer" className="text-blue-700 underline">
+                AI/Data Disclaimer
+              </Link>
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={onStart}

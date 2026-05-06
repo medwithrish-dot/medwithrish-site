@@ -59,6 +59,9 @@ const navItems: {
     items: [
       { label: "All Guides", href: "/resources" },
       { label: "Notes", href: "https://payhip.com/Medwithrish" },
+      { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Terms and Conditions", href: "/terms-and-conditions" },
+      { label: "PhloemAI AI/Data Disclaimer", href: "/phloemai-disclaimer" },
     ],
   },
 

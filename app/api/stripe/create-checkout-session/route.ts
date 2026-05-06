@@ -105,6 +105,14 @@ export async function POST(request: Request) {
       client_reference_id: user.id,
       line_items: [{ price: priceId, quantity: 1 }],
       allow_promotion_codes: true,
+      consent_collection: {
+        terms_of_service: "required",
+      },
+      custom_text: {
+        terms_of_service_acceptance: {
+          message: `I agree to the [Terms and Conditions](${siteUrl}/terms-and-conditions) and confirm I have read the [Privacy Policy](${siteUrl}/privacy-policy).`,
+        },
+      },
       success_url: `${siteUrl}/phloemai/dashboard?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/phloemai/dashboard?checkout=cancelled`,
       metadata: {
