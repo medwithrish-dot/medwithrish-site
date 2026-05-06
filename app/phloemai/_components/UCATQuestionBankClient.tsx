@@ -1520,6 +1520,21 @@ function formatMsAsSeconds(ms: number | null) {
   return `${Math.round(ms / 1000)}s`;
 }
 
+function formatAnswerChoiceTiming(item: PracticeQuestionSummary) {
+  const firstChoice = formatMsAsSeconds(item.firstAnsweredAtMs);
+  const finalChoice = formatMsAsSeconds(item.answeredAtMs);
+
+  if (firstChoice === "Not captured" && finalChoice === "Not captured") {
+    return "Not captured";
+  }
+
+  if (firstChoice === finalChoice || item.answerSwitches === 0) {
+    return `Chosen at ${finalChoice}`;
+  }
+
+  return `First choice at ${firstChoice}; final choice at ${finalChoice}`;
+}
+
 function formatInputGap(ms: number) {
   if (ms <= 0) return "Not enough inputs";
   return ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`;
@@ -1591,8 +1606,8 @@ function QuestionDataCollectedPanel({
       show: item.totalSeconds > 0 || item.visits > 0,
     },
     {
-      label: "First/final answer time",
-      value: `First ${formatMsAsSeconds(item.firstAnsweredAtMs)}, final ${formatMsAsSeconds(item.answeredAtMs)}`,
+      label: "Answer choice timing",
+      value: formatAnswerChoiceTiming(item),
       show: item.firstAnsweredAtMs !== null || item.answeredAtMs !== null,
     },
     {
