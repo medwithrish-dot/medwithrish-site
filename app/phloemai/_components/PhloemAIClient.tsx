@@ -2040,36 +2040,36 @@ function DiagnosticContent({
 
 function PracticeContent() {
   const mockTests = [
-    ["PhloemAI Full mocks", "Run a complete UCAT-style mock when you need a full readiness check.", Timer, "bg-blue-100 text-blue-600"],
-    ["PhloemAI Mini mocks", "Short mixed tests for momentum without committing to a full paper.", BarChart3, "bg-violet-100 text-violet-600"],
-    ["PhloemAI Review mocks", "Revisit marked and incorrect mock questions with feedback.", AlertTriangle, "bg-red-100 text-red-500"],
+    ["Full mocks", "Run a complete UCAT-style mock when you need a full readiness check.", Timer, "bg-blue-100 text-blue-600"],
+    ["Mini mocks", "Short mixed tests for momentum without committing to a full paper.", BarChart3, "bg-violet-100 text-violet-600"],
+    ["Review mocks", "Revisit marked and incorrect mock questions with feedback.", AlertTriangle, "bg-red-100 text-red-500"],
   ] as const;
 
   const practiceSections = [
     {
       code: "VR",
-      title: "PhloemAI Verbal Reasoning",
+      title: "Verbal Reasoning",
       text: "Passage-based inference and comprehension.",
       href: "/phloemai/question-bank/vr",
       className: "bg-indigo-600 text-white",
     },
     {
       code: "DM",
-      title: "PhloemAI Decision Making",
+      title: "Decision Making",
       text: "Logic, probability and argument evaluation.",
       href: "/phloemai/question-bank/dm",
       className: "bg-blue-600 text-white",
     },
     {
       code: "QR",
-      title: "PhloemAI Quantitative Reasoning",
+      title: "Quantitative Reasoning",
       text: "Short numerical problems and data interpretation.",
       href: "/phloemai/question-bank/qr",
       className: "bg-cyan-500 text-white",
     },
     {
       code: "SJT",
-      title: "PhloemAI Situational Judgement",
+      title: "Situational Judgement",
       text: "Professional judgement and appropriate actions.",
       href: "/phloemai/question-bank/sjt",
       className: "bg-pink-500 text-white",
@@ -2096,7 +2096,7 @@ function PracticeContent() {
               </h2>
               <h3 className="mt-6 text-lg font-black">No recommended task yet</h3>
               <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-                Complete and mark practice questions so PhloemAI can build a real task queue.
+                Complete and mark practice questions to build a real task queue.
               </p>
             </div>
           </div>
@@ -2132,7 +2132,7 @@ function PracticeContent() {
             <Link
               key={section.code}
               href={section.href}
-              className="rounded-xl border border-slate-300 bg-white p-5 shadow-[0_5px_14px_rgba(15,23,42,0.06)] transition-colors hover:border-blue-300 hover:bg-blue-50 hover:shadow-[0_8px_18px_rgba(15,23,42,0.08)]"
+              className="rounded-xl border border-blue-100 bg-white p-5 shadow-[0_12px_28px_rgba(15,23,42,0.10)] ring-1 ring-blue-50 transition-all hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-[0_16px_34px_rgba(15,23,42,0.13)]"
             >
               <span
                 className={`inline-flex rounded-lg px-3 py-1 text-sm font-black ${section.className}`}
@@ -2164,7 +2164,7 @@ function PracticeContent() {
             <Link
               href="/phloemai/question-bank"
               key={title}
-              className="rounded-xl border border-slate-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
+              className="rounded-xl border border-slate-200 bg-white p-4 text-left shadow-[0_8px_22px_rgba(15,23,42,0.07)] transition-all hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-[0_12px_28px_rgba(15,23,42,0.10)]"
             >
               <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconClass}`}>
                 <Icon className="h-5 w-5" aria-hidden="true" />
