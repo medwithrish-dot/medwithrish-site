@@ -35,11 +35,13 @@ import {
   Bell,
   Bookmark,
   Brain,
+  Calculator,
   Check,
   CheckCircle,
   ChevronDown,
   Clock3,
   Eye,
+  Flag,
   Goal,
   Home,
   Info,
@@ -1393,18 +1395,358 @@ const approachSteps = [
 ];
 
 const reportFeedbackShort =
-  "No AI report yet. Mark practice questions first, then wire the saved telemetry into the study plan rules.";
+  "No AI feedback yet. Complete and mark a diagnostic or practice set to start turning issue signals into your personalised study plan.";
 
 const reportFeedbackFull =
-  reportFeedbackShort;
+  "Free users can see the detected issue labels. Premium unlocks the specific cause, supporting evidence and study task for each issue.";
 
-type ReportIssueGroup = {
+type ReportIssueDefinition = {
+  id: string;
   title: string;
   icon: typeof AlertTriangle;
   iconClass: string;
-  count: number;
-  items: Array<[string, string]>;
+  freeLabel: string;
+  short: string;
+  mainCause: string;
+  evidence: string[];
+  fix: string;
 };
+
+const freeReportIssueIds = [
+  "calculator",
+  "shortcuts",
+  "timing",
+  "answer-hesitation",
+  "review",
+  "flagging",
+  "navigation",
+  "reading",
+  "confidence",
+  "pacing",
+] as const;
+
+const reportIssueDefinitions: ReportIssueDefinition[] = [
+  {
+    id: "calculator",
+    title: "Inefficient calculator use",
+    freeLabel: "Inefficient calculator use detected",
+    short: "You may be losing time during calculation-heavy QR questions.",
+    mainCause:
+      "You pause mid-calculation, re-enter values after clearing, avoid memory buttons or use the calculator when estimation would be faster.",
+    evidence: [
+      "Calculator open rate and calculator-active time",
+      "Repeated clears, re-entered values and operator/digit patterns",
+      "Keyboard vs button input speed and memory button usage",
+    ],
+    fix: "Practise calculator setup, speed entry and memory recall drills.",
+    icon: Calculator,
+    iconClass: "bg-cyan-50 text-cyan-600",
+  },
+  {
+    id: "shortcuts",
+    title: "Ineffective keyboard use",
+    freeLabel: "Ineffective keyboard use detected",
+    short: "You may be spending extra time on manual clicks and transitions.",
+    mainCause:
+      "You rely on mouse navigation, mouse answer selection and manual calculator or flag controls instead of high-value keyboard shortcuts.",
+    evidence: [
+      "Answer-key usage compared with mouse selections",
+      "Alt+N, Alt+P, Alt+C and Alt+F usage",
+      "Transition delay after answering or flagging",
+    ],
+    fix: "Build shortcut habits for answers, next/previous, calculator and flagging.",
+    icon: Zap,
+    iconClass: "bg-violet-50 text-violet-600",
+  },
+  {
+    id: "timing",
+    title: "Time management issue",
+    freeLabel: "Time management issue detected",
+    short: "You may be over-investing time before locking in an answer.",
+    mainCause:
+      "You spend too long before first answer, get stuck on hard questions or lose time near the end of the set.",
+    evidence: [
+      "First-answer time and final-answer time",
+      "Time spikes by subtype and question position",
+      "Later-question speed changes and unanswered pressure",
+    ],
+    fix: "Use timed sets with hard-stop decisions and recovery drills.",
+    icon: Clock3,
+    iconClass: "bg-amber-50 text-amber-600",
+  },
+  {
+    id: "answer-hesitation",
+    title: "Answer uncertainty",
+    freeLabel: "Answer uncertainty detected",
+    short: "You may be second-guessing instead of using evidence to decide.",
+    mainCause:
+      "You switch repeatedly, delay between first and final answer or change correct answers to incorrect ones.",
+    evidence: [
+      "Answer switch count and first/final answer gap",
+      "Changed-from-correct and changed-to-correct rate",
+      "Review changes made without new evidence",
+    ],
+    fix: "Practise evidence-locking and answer-change rules.",
+    icon: MessageSquare,
+    iconClass: "bg-blue-50 text-blue-600",
+  },
+  {
+    id: "review",
+    title: "Review strategy issue",
+    freeLabel: "Review strategy issue detected",
+    short: "Your review time may not be going to the highest-value questions.",
+    mainCause:
+      "You review low-value questions, change correct answers, miss flagged questions or spend too long in the navigator.",
+    evidence: [
+      "Review opens and navigator time",
+      "Flagged questions revisited or missed",
+      "Answer changes made during review",
+    ],
+    fix: "Use a strict review order: flagged time-sinks, unanswered, then evidence-based changes only.",
+    icon: Bookmark,
+    iconClass: "bg-indigo-50 text-indigo-600",
+  },
+  {
+    id: "flagging",
+    title: "Flagging issue",
+    freeLabel: "Flagging issue detected",
+    short: "Your flags may not be separating time-sinks from safe questions.",
+    mainCause:
+      "You flag too many, flag too late, miss time-sink questions or flag easy items unnecessarily.",
+    evidence: [
+      "Flag toggles and flag timing",
+      "Flagged question accuracy and review return rate",
+      "Flags on easy, slow or already-finalised questions",
+    ],
+    fix: "Practise early flag decisions with a clear return threshold.",
+    icon: Flag,
+    iconClass: "bg-rose-50 text-rose-600",
+  },
+  {
+    id: "navigation",
+    title: "Navigation issue",
+    freeLabel: "Navigation issue detected",
+    short: "You may be losing time moving around the bank without a clear plan.",
+    mainCause:
+      "You revisit the same questions too often, overuse next/previous or jump around without a review strategy.",
+    evidence: [
+      "Question visits and repeated visits",
+      "Navigator opens and question jumps",
+      "Next/previous movement around finalised answers",
+    ],
+    fix: "Use a simple pass system: answer, flag, move; review only planned targets.",
+    icon: BarChart3,
+    iconClass: "bg-slate-100 text-slate-700",
+  },
+  {
+    id: "reading",
+    title: "Reading strategy issue",
+    freeLabel: "Reading strategy issue detected",
+    short: "You may be spending too long extracting the relevant information.",
+    mainCause:
+      "You spend too long in the stem or passage, revisit regions repeatedly or switch between passage and options too often.",
+    evidence: [
+      "Stimulus/question/answer region time",
+      "Region switches and revisits",
+      "First-answer delay after heavy reading",
+    ],
+    fix: "Practise question-first reading and key-information extraction drills.",
+    icon: Eye,
+    iconClass: "bg-cyan-50 text-cyan-600",
+  },
+  {
+    id: "confidence",
+    title: "Confidence judgement issue",
+    freeLabel: "Confidence judgement issue detected",
+    short: "Your sense of difficulty may not match your actual performance.",
+    mainCause:
+      "You underestimate or overestimate specific subtypes, spend too long on easy items or mark easy questions incorrectly.",
+    evidence: [
+      "Accuracy by labelled difficulty or confidence",
+      "Time spent on questions marked easy",
+      "Subtype-level overconfidence and underconfidence",
+    ],
+    fix: "Review miscalibrated questions and set confidence rules by subtype.",
+    icon: Brain,
+    iconClass: "bg-violet-50 text-violet-600",
+  },
+  {
+    id: "pacing",
+    title: "Pacing issue",
+    freeLabel: "Pacing issue detected",
+    short: "Your pace may be uneven across the bank.",
+    mainCause:
+      "You spend too long early, speed up too aggressively late or vary heavily between similar question types.",
+    evidence: [
+      "Time distribution across early, middle and final questions",
+      "Speed changes by subtype and question position",
+      "Accuracy drop after pace changes",
+    ],
+    fix: "Practise fixed-pace blocks with checkpoints every few questions.",
+    icon: Timer,
+    iconClass: "bg-blue-50 text-blue-600",
+  },
+  {
+    id: "question-type",
+    title: "Question-type weakness",
+    freeLabel: "Question-type weakness detected",
+    short: "Losses may be concentrated in a specific UCAT subtype.",
+    mainCause:
+      "Weakness is concentrated in a subtype such as QR percentages, DM syllogisms, VR inference or SJT appropriateness.",
+    evidence: [
+      "Accuracy by section and subtype",
+      "Average time by subtype",
+      "Repeated errors in the same question family",
+    ],
+    fix: "Prioritise the subtype causing the biggest score loss before broad practice.",
+    icon: Target,
+    iconClass: "bg-emerald-50 text-emerald-600",
+  },
+  {
+    id: "rushing",
+    title: "Rushing pattern",
+    freeLabel: "Rushing pattern detected",
+    short: "Fast answers may be costing avoidable marks.",
+    mainCause:
+      "You answer before enough information is read, skip key regions or make more errors in the final third.",
+    evidence: [
+      "Very short first-answer times",
+      "Accuracy on fast responses",
+      "Final-third error rate and skipped-region patterns",
+    ],
+    fix: "Use minimum-evidence checks before selecting an answer.",
+    icon: AlertTriangle,
+    iconClass: "bg-red-50 text-red-600",
+  },
+  {
+    id: "overthinking",
+    title: "Overthinking pattern",
+    freeLabel: "Overthinking pattern detected",
+    short: "You may be spending time after your first instinct is already right.",
+    mainCause:
+      "You keep revisiting, switch answers or spend too long after already selecting the correct answer.",
+    evidence: [
+      "Long total time despite correct first answer",
+      "Answer switches after a correct first instinct",
+      "Region revisits after answer selection",
+    ],
+    fix: "Practise lock-and-leave rules for evidence-backed first answers.",
+    icon: Brain,
+    iconClass: "bg-orange-50 text-orange-600",
+  },
+  {
+    id: "consistency",
+    title: "Consistency issue",
+    freeLabel: "Consistency issue detected",
+    short: "Performance may be unstable between similar questions.",
+    mainCause:
+      "Accuracy and timing vary heavily between similar question types or after longer questions.",
+    evidence: [
+      "Accuracy spread within the same subtype",
+      "Timing variance across similar questions",
+      "Performance dips after long questions",
+    ],
+    fix: "Use short repeated subtype sets until timing and accuracy stabilise.",
+    icon: BarChart3,
+    iconClass: "bg-indigo-50 text-indigo-600",
+  },
+  {
+    id: "end-bank",
+    title: "End-bank strategy issue",
+    freeLabel: "End-bank strategy issue detected",
+    short: "The final minutes may not be used well.",
+    mainCause:
+      "You end without reviewing flags, rush final questions, spend too long in review mode or leave changes too late.",
+    evidence: [
+      "End-bank clicks and final review time",
+      "Flagged questions left unseen",
+      "Late answer changes and final-third accuracy",
+    ],
+    fix: "Practise a final-two-minute review routine.",
+    icon: Goal,
+    iconClass: "bg-emerald-50 text-emerald-600",
+  },
+  {
+    id: "tool-switching",
+    title: "Tool-use issue",
+    freeLabel: "Tool-use issue detected",
+    short: "Switching tools may be interrupting question flow.",
+    mainCause:
+      "You lose time moving between calculator, navigator, question and answer areas.",
+    evidence: [
+      "Repeated calculator and navigator opens",
+      "Slow return to the question after tool use",
+      "Tool actions clustered inside one question",
+    ],
+    fix: "Practise deciding the tool before starting the question.",
+    icon: Wrench,
+    iconClass: "bg-slate-100 text-slate-700",
+  },
+  {
+    id: "accuracy-under-time",
+    title: "Timed accuracy issue",
+    freeLabel: "Timed accuracy issue detected",
+    short: "Accuracy may fall sharply when question time is compressed.",
+    mainCause:
+      "You can answer accurately with time available, but accuracy drops on compressed or later questions.",
+    evidence: [
+      "Accuracy by time band",
+      "Later-question accuracy under pressure",
+      "Hard subtype accuracy when paced tightly",
+    ],
+    fix: "Practise compressed-time sets after untimed accuracy is secure.",
+    icon: Clock3,
+    iconClass: "bg-amber-50 text-amber-600",
+  },
+  {
+    id: "answer-change",
+    title: "Answer-changing issue",
+    freeLabel: "Answer-changing issue detected",
+    short: "Answer changes may be reducing rather than improving accuracy.",
+    mainCause:
+      "You change correct answers after hesitation, during review or without new evidence.",
+    evidence: [
+      "Changed-from-correct rate",
+      "Time before answer changes",
+      "Review-mode changes without new information",
+    ],
+    fix: "Only change answers when you can name the new evidence.",
+    icon: MessageSquare,
+    iconClass: "bg-blue-50 text-blue-600",
+  },
+  {
+    id: "subtype-priority",
+    title: "Practice focus issue",
+    freeLabel: "Practice focus issue detected",
+    short: "Practice may be too broad for the weakness costing the most marks.",
+    mainCause:
+      "You spend too much time on low-yield subtypes or ignore the highest-impact weakness.",
+    evidence: [
+      "Subtype score-loss contribution",
+      "Practice distribution by subtype",
+      "High-impact weaknesses left under-practised",
+    ],
+    fix: "Build the next study block around the subtype causing the largest score loss.",
+    icon: Target,
+    iconClass: "bg-emerald-50 text-emerald-600",
+  },
+  {
+    id: "fatigue",
+    title: "Session fatigue pattern",
+    freeLabel: "Session fatigue pattern detected",
+    short: "Speed or accuracy may drop as the set goes on.",
+    mainCause:
+      "Accuracy, speed or decision quality drops later in the session after sustained work.",
+    evidence: [
+      "Accuracy and speed by question position",
+      "Late-session answer switches and flagging",
+      "Calculator pauses or revisits increasing over time",
+    ],
+    fix: "Practise longer sets with planned reset points.",
+    icon: Activity,
+    iconClass: "bg-violet-50 text-violet-600",
+  },
+];
 
 function getFirstName(user: User | null, profile: PhloemProfile | null) {
   const profileName = profile?.full_name?.trim();
@@ -1636,44 +1978,96 @@ function ApproachBand({
   );
 }
 
-function ReportInsightCard({ group }: { group: ReportIssueGroup }) {
-  const [expanded, setExpanded] = useState(false);
-  const Icon = group.icon;
-  const visibleItems = expanded ? group.items : group.items.slice(0, 2);
-  const canExpand = group.items.length > 2;
+function ReportIssueSignalCard({
+  issue,
+  isPremium,
+  hasSignals,
+  checkoutLoading,
+  onUpgrade,
+}: {
+  issue: ReportIssueDefinition;
+  isPremium: boolean;
+  hasSignals: boolean;
+  checkoutLoading: boolean;
+  onUpgrade: () => void | Promise<void>;
+}) {
+  const Icon = issue.icon;
+  const displayLabel = hasSignals
+    ? issue.freeLabel
+    : issue.freeLabel.replace(" detected", "").replace(" needs work", "");
 
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div
-            className={`flex h-10 w-10 items-center justify-center rounded-full ${group.iconClass}`}
+            className={`flex h-10 w-10 items-center justify-center rounded-full ${issue.iconClass}`}
           >
             <Icon className="h-5 w-5" aria-hidden="true" />
           </div>
-          <h2 className="text-sm font-black">{group.title}</h2>
+          <div>
+            <h2 className="text-sm font-black">{displayLabel}</h2>
+            <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
+              {issue.short}
+            </p>
+          </div>
         </div>
-        <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-black text-blue-600">
-          {group.count}
+        <span
+          className={`shrink-0 rounded-full px-3 py-1 text-xs font-black ${
+            hasSignals
+              ? "bg-amber-50 text-amber-700"
+              : "bg-slate-100 text-slate-500"
+          }`}
+        >
+          {hasSignals ? "Detected" : "Pending"}
         </span>
       </div>
-      <ul className="mt-5 space-y-4">
-        {visibleItems.map(([title, text]) => (
-          <li key={title} className="text-sm">
-            <p className="font-black">{title}</p>
-            <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">
-              {text}
+      <div className="relative mt-5 overflow-hidden rounded-xl border border-blue-100 bg-blue-50/50 p-4">
+        {!isPremium && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/70 text-center backdrop-blur-[2px]">
+            <LockKeyhole className="h-6 w-6 text-blue-600" aria-hidden="true" />
+            <p className="mt-2 text-xs font-black text-slate-900">
+              Specific analysis locked
             </p>
-          </li>
-        ))}
-      </ul>
-      {canExpand && (
+          </div>
+        )}
+        <div className={`space-y-4 ${!isPremium ? "select-none blur-[3px]" : ""}`}>
+          <div>
+            <p className="text-xs font-black uppercase tracking-wide text-blue-700">
+              Main cause:
+            </p>
+            <p className="mt-1 text-sm font-semibold leading-6 text-slate-700">
+              {issue.mainCause}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs font-black uppercase tracking-wide text-blue-700">
+              Supporting evidence:
+            </p>
+            <ul className="mt-2 space-y-1 text-sm font-semibold leading-6 text-slate-700">
+              {issue.evidence.map((item) => (
+                <li key={item}>- {item}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-xs font-black uppercase tracking-wide text-blue-700">
+              Study task:
+            </p>
+            <p className="mt-1 text-sm font-semibold leading-6 text-slate-700">
+              {issue.fix}
+            </p>
+          </div>
+        </div>
+      </div>
+      {!isPremium && (
         <button
           type="button"
-          onClick={() => setExpanded((current) => !current)}
-          className="mt-5 text-sm font-black text-blue-600 hover:text-blue-700"
+          onClick={onUpgrade}
+          disabled={checkoutLoading}
+          className="mt-5 inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-4 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
         >
-          {expanded ? "Show less" : "Show more..."}
+          {checkoutLoading ? "Opening..." : "Upgrade to unlock and find out more"}
         </button>
       )}
     </section>
@@ -2050,10 +2444,39 @@ function DiagnosticContent({
 }
 
 function PracticeContent() {
-  const mockTests = [
-    ["Full mocks", "Run a complete UCAT-style mock when you need a full readiness check.", Timer, "bg-blue-100 text-blue-600"],
-    ["Mini mocks", "Short mixed tests for momentum without committing to a full paper.", BarChart3, "bg-violet-100 text-violet-600"],
-    ["Review mocks", "Revisit marked and incorrect mock questions with feedback.", AlertTriangle, "bg-red-100 text-red-500"],
+  const mockAndSkillCards = [
+    {
+      title: "Full mocks",
+      text: "Run a complete UCAT-style mock when you need a full readiness check.",
+      icon: Timer,
+      iconClass: "bg-blue-100 text-blue-600",
+      href: "/phloemai/question-bank",
+      cta: "Start mock",
+    },
+    {
+      title: "Mini mocks",
+      text: "Short mixed tests for momentum without committing to a full paper.",
+      icon: BarChart3,
+      iconClass: "bg-violet-100 text-violet-600",
+      href: "/phloemai/question-bank",
+      cta: "Start mini mock",
+    },
+    {
+      title: "Review mocks",
+      text: "Revisit marked and incorrect mock questions with feedback.",
+      icon: AlertTriangle,
+      iconClass: "bg-red-100 text-red-500",
+      href: "/phloemai/question-bank",
+      cta: "Review",
+    },
+    {
+      title: "Calculator speed trainer",
+      text: "Rapid QR-style calculator drills for typing speed, memory buttons and fewer clears.",
+      icon: Calculator,
+      iconClass: "bg-cyan-100 text-cyan-600",
+      href: "/phloemai/question-bank/qr",
+      cta: "Train speed",
+    },
   ] as const;
 
   const practiceSections = [
@@ -2165,28 +2588,35 @@ function PracticeContent() {
 
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-sm font-black uppercase tracking-wide">
-          Mock tests
+          Practice Mock tests + Skills
         </h2>
         <p className="mt-2 text-sm font-semibold text-slate-500">
-          Use mocks when you want exam-style timing, score pressure and review.
+          Use mocks for exam pressure, then skill trainers for the behaviours
+          holding you back.
         </p>
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
-          {mockTests.map(([title, text, Icon, iconClass]) => (
+        <div className="mt-4 grid gap-4 md:grid-cols-4">
+          {mockAndSkillCards.map((card) => {
+            const Icon = card.icon;
+            return (
             <Link
-              href="/phloemai/question-bank"
-              key={title}
+              href={card.href}
+              key={card.title}
               className="rounded-xl border border-slate-200 bg-white p-4 text-left shadow-[0_8px_22px_rgba(15,23,42,0.07)] transition-all hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-[0_12px_28px_rgba(15,23,42,0.10)]"
             >
-              <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconClass}`}>
+              <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${card.iconClass}`}>
                 <Icon className="h-5 w-5" aria-hidden="true" />
               </div>
-              <h3 className="mt-3 text-sm font-black">{title}</h3>
+              <h3 className="mt-3 text-sm font-black">{card.title}</h3>
               <p className="mt-2 min-h-10 text-xs font-bold leading-5 text-slate-500">
-                {text}
+                {card.text}
               </p>
-              <ArrowRight className="ml-auto mt-2 h-4 w-4 text-blue-600" aria-hidden="true" />
+              <span className="mt-3 inline-flex items-center gap-2 text-xs font-black text-blue-600">
+                {card.cta}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </span>
             </Link>
-          ))}
+          );
+          })}
         </div>
       </section>
 
@@ -2524,10 +2954,17 @@ function ReportContent({
   isPremium,
   checkoutLoading,
   onUpgrade,
-}: PremiumGateProps) {
-  const issueGroups: ReportIssueGroup[] = [];
-
+  practiceStats,
+}: PremiumGateProps & { practiceStats: PracticeStats }) {
   const reviewRows: Array<[string, string, string]> = [];
+  const hasSignals = practiceStats.hasCompletedQuestions;
+  const freeIssueCards = reportIssueDefinitions.filter((issue) =>
+    freeReportIssueIds.includes(issue.id as (typeof freeReportIssueIds)[number])
+  );
+  const premiumOnlyIssueCards = reportIssueDefinitions.filter(
+    (issue) =>
+      !freeReportIssueIds.includes(issue.id as (typeof freeReportIssueIds)[number])
+  );
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
@@ -2540,17 +2977,23 @@ function ReportContent({
             <div>
               <h2 className="text-sm font-black">Latest diagnostic</h2>
               <p className="mt-1 text-xs font-bold text-slate-500">
-                No diagnostic or marked practice report saved yet
+                {hasSignals
+                  ? "Issue scan ready from saved practice data"
+                  : "No diagnostic or marked practice report saved yet"}
               </p>
             </div>
           </div>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-xs font-black text-slate-700">Overall accuracy</p>
-            <p className="mt-2 text-3xl font-black text-slate-400">-</p>
+            <p className="mt-2 text-3xl font-black text-slate-400">
+              {hasSignals ? `${practiceStats.accuracy}%` : "-"}
+            </p>
           </div>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-xs font-black text-slate-700">Avg. time / question</p>
-            <p className="mt-2 text-3xl font-black text-slate-400">-</p>
+            <p className="mt-2 text-3xl font-black text-slate-400">
+              {hasSignals ? `${practiceStats.avgSeconds}s` : "-"}
+            </p>
           </div>
         </div>
       </section>
@@ -2571,30 +3014,68 @@ function ReportContent({
         ))}
       </div>
 
-      <ClientPremiumGate
-        isPremium={isPremium}
-        checkoutLoading={checkoutLoading}
-        onUpgrade={onUpgrade}
-        title="Unlock the full diagnostic report"
-        description="Premium reveals the full issues, strengths and study plan map without rendering the report content for free accounts."
-      >
-        <div className="grid gap-5 lg:grid-cols-2">
-          {issueGroups.length === 0 ? (
-            <section className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center lg:col-span-2">
-              <p className="text-sm font-black text-slate-700">
-                No issues, strengths or study plan tasks generated yet.
-              </p>
-              <p className="mt-2 text-xs font-semibold text-slate-500">
-                This report will use saved practice telemetry once the issue mapping is connected.
-              </p>
-            </section>
-          ) : (
-            issueGroups.map((group) => (
-              <ReportInsightCard key={group.title} group={group} />
-            ))
-          )}
+      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h2 className="text-sm font-black uppercase tracking-wide">
+              Issue scan
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm font-semibold leading-6 text-slate-500">
+              Free shows the detected issue labels. Premium reveals the specific
+              cause, supporting evidence and study task for each issue.
+            </p>
+          </div>
+          <span
+            className={`w-fit rounded-full px-3 py-1 text-xs font-black ${
+              hasSignals
+                ? "bg-emerald-50 text-emerald-700"
+                : "bg-slate-100 text-slate-500"
+            }`}
+          >
+            {hasSignals ? "Saved data found" : "Waiting for marked set"}
+          </span>
         </div>
-      </ClientPremiumGate>
+
+        {!hasSignals && (
+          <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600">
+            Complete and mark a diagnostic or practice set to start detecting
+            these issues from your own telemetry.
+          </div>
+        )}
+
+        <div className="mt-5 grid gap-4 xl:grid-cols-2">
+          {freeIssueCards.map((issue) => (
+            <ReportIssueSignalCard
+              key={issue.id}
+              issue={issue}
+              isPremium={isPremium}
+              hasSignals={hasSignals}
+              checkoutLoading={checkoutLoading}
+              onUpgrade={onUpgrade}
+            />
+          ))}
+        </div>
+
+        {isPremium && (
+          <div className="mt-6">
+            <h3 className="text-sm font-black uppercase tracking-wide text-slate-700">
+              Additional premium checks
+            </h3>
+            <div className="mt-4 grid gap-4 xl:grid-cols-2">
+              {premiumOnlyIssueCards.map((issue) => (
+                <ReportIssueSignalCard
+                  key={issue.id}
+                  issue={issue}
+                  isPremium={isPremium}
+                  hasSignals={hasSignals}
+                  checkoutLoading={checkoutLoading}
+                  onUpgrade={onUpgrade}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
 
       <div className="grid gap-5 lg:grid-cols-[0.8fr_1fr]">
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -2829,6 +3310,7 @@ function DashboardSubpageContent({
       isPremium={isPremium}
       checkoutLoading={checkoutLoading}
       onUpgrade={onUpgrade}
+      practiceStats={practiceStats}
     />
   );
 }

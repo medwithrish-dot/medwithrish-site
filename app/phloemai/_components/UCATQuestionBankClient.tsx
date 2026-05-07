@@ -1575,7 +1575,7 @@ function formatAnswerPath(item: PracticeQuestionSummary) {
 
 function DataPoint({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-sm border border-slate-200 bg-white px-3 py-2">
+    <div className="rounded-md border border-slate-300 bg-white px-3 py-2 shadow-sm">
       <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
         {label}
       </p>
@@ -1692,7 +1692,7 @@ function QuestionDataCollectedPanel({
   if (visibleDataPoints.length === 0) return null;
 
   return (
-    <div className="mt-4 rounded-sm border border-slate-200 bg-slate-50 p-4">
+    <div className="mt-4 rounded-md border border-slate-300 bg-slate-100 p-4">
       <h3 className="text-sm font-black text-slate-900">Data collected:</h3>
       <div
         className={`mt-3 grid gap-3 ${
@@ -1929,11 +1929,11 @@ function SessionDataCollectedPanel({ summary }: { summary: PracticeSessionSummar
   if (!hasInterfaceActivity && sections.length === 0) return null;
 
   return (
-    <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
+    <section className="rounded-md border border-slate-400 bg-white p-5 shadow-md">
       <h2 className="text-lg font-black">Whole set data collected</h2>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         {sections.map((section) => (
-          <div key={section.title} className="rounded-sm border border-slate-200 bg-slate-50 p-4">
+          <div key={section.title} className="rounded-md border border-slate-300 bg-slate-100 p-4">
             <h3 className="text-sm font-black text-slate-900">{section.title}</h3>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {section.points.map((point) => (
@@ -1946,6 +1946,372 @@ function SessionDataCollectedPanel({ summary }: { summary: PracticeSessionSummar
             </div>
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+type MarkedIssueDetail = {
+  label: string;
+  cause: string;
+  evidence: string[];
+  fix: string;
+};
+
+type MarkedSessionInsights = {
+  issues: MarkedIssueDetail[];
+  strengths: string[];
+};
+
+function buildMarkedSessionInsights(
+  summary: PracticeSessionSummary
+): MarkedSessionInsights {
+  const memoryTotal =
+    summary.calculator.memoryRecall +
+    summary.calculator.memoryClear +
+    summary.calculator.memoryMinus +
+    summary.calculator.memoryPlus;
+  const totalVisits = summary.questions.reduce(
+    (sum, question) => sum + question.visits,
+    0
+  );
+  const questionTimes = summary.questions
+    .map((question) => question.totalSeconds)
+    .filter((seconds) => seconds > 0);
+  const maxQuestionTime = questionTimes.length > 0 ? Math.max(...questionTimes) : 0;
+  const minQuestionTime = questionTimes.length > 0 ? Math.min(...questionTimes) : 0;
+  const incorrectQuestions = summary.totalQuestions - summary.correctQuestions;
+  const issues: MarkedIssueDetail[] = [];
+  const addIssue = (
+    label: string,
+    cause: string,
+    evidence: string[],
+    fix: string
+  ) => {
+    issues.push({ label, cause, evidence, fix });
+  };
+
+  if (
+    summary.calculator.opens > 0 &&
+    (summary.calculator.pauses > 0 ||
+      summary.calculator.backspaces > 0 ||
+      memoryTotal === 0)
+  ) {
+    addIssue(
+      "Inefficient calculator use detected",
+      "Calculator use is adding friction through pauses, clears or low memory-button usage.",
+      [
+        `${summary.calculator.opens} calculator open${summary.calculator.opens === 1 ? "" : "s"}`,
+        `${summary.calculator.pauses} pause${summary.calculator.pauses === 1 ? "" : "s"} over ${summary.calculator.pauseThresholdSeconds}s`,
+        `${memoryTotal} memory-button use${memoryTotal === 1 ? "" : "s"}`,
+      ],
+      "Use calculator speed and memory-button drills."
+    );
+  }
+
+  if (summary.shortcuts.total < Math.max(2, Math.floor(summary.answeredQuestions / 2))) {
+    addIssue(
+      "Ineffective keyboard use detected",
+      "Most question movement or selection is happening manually rather than through shortcuts.",
+      [
+        `${summary.shortcuts.total} shortcut event${summary.shortcuts.total === 1 ? "" : "s"}`,
+        `${summary.shortcuts.answerKeys} answer-key selection${summary.shortcuts.answerKeys === 1 ? "" : "s"}`,
+        `${summary.shortcuts.navigation} navigation shortcut${summary.shortcuts.navigation === 1 ? "" : "s"}`,
+      ],
+      "Practise answer keys, Alt+N, Alt+P, Alt+C and Alt+F."
+    );
+  }
+
+  if (
+    (summary.timed && summary.secondsRemaining <= Math.max(10, summary.setSeconds * 0.1)) ||
+    maxQuestionTime > Math.max(30, summary.avgSecondsPerQuestion * 2)
+  ) {
+    addIssue(
+      "Time management issue detected",
+      "Time is bunching around harder questions or the set is ending with little recovery room.",
+      [
+        `${summary.avgSecondsPerQuestion}s average per question`,
+        `${formatDuration(summary.secondsRemaining)} remaining`,
+        `${maxQuestionTime}s slowest question`,
+      ],
+      "Use hard-stop timed sets with recovery after hard questions."
+    );
+  }
+
+  if (summary.answerSwitches > 0 || summary.changedFromCorrect > 0) {
+    addIssue(
+      "Answer uncertainty detected",
+      "Answer changes or delayed final choices suggest second-guessing.",
+      [
+        `${summary.answerSwitches} answer switch${summary.answerSwitches === 1 ? "" : "es"}`,
+        `${summary.changedFromCorrect} changed from correct`,
+        `${summary.changedToCorrect} changed to correct`,
+      ],
+      "Only change an answer when you can name new evidence."
+    );
+  }
+
+  if (summary.otherData.reviewOpens > 0 || summary.otherData.navigatorOpens > 0) {
+    addIssue(
+      "Review strategy issue detected",
+      "Review or navigator use needs a clearer priority order.",
+      [
+        `${summary.otherData.reviewOpens} review open${summary.otherData.reviewOpens === 1 ? "" : "s"}`,
+        `${summary.otherData.navigatorOpens} navigator open${summary.otherData.navigatorOpens === 1 ? "" : "s"}`,
+        `${summary.flaggedQuestions} flagged question${summary.flaggedQuestions === 1 ? "" : "s"}`,
+      ],
+      "Review flagged time-sinks first, then unanswered questions."
+    );
+  }
+
+  if (
+    (summary.flaggedQuestions === 0 && incorrectQuestions > 0) ||
+    summary.flaggedQuestions > Math.ceil(summary.totalQuestions * 0.4)
+  ) {
+    addIssue(
+      "Flagging issue detected",
+      "Flags are not yet separating time-sinks from safe questions.",
+      [
+        `${summary.flaggedQuestions} flag${summary.flaggedQuestions === 1 ? "" : "s"}`,
+        `${incorrectQuestions} incorrect or missed question${incorrectQuestions === 1 ? "" : "s"}`,
+        `${summary.otherData.flagToggles} flag toggle${summary.otherData.flagToggles === 1 ? "" : "s"}`,
+      ],
+      "Flag early only when a question is a genuine time-sink."
+    );
+  }
+
+  if (totalVisits > summary.totalQuestions + 1 || summary.otherData.questionJumps > 0) {
+    addIssue(
+      "Navigation issue detected",
+      "Question visits or jumps suggest movement without a fixed review strategy.",
+      [
+        `${totalVisits} total question visit${totalVisits === 1 ? "" : "s"}`,
+        `${summary.otherData.questionJumps} question jump${summary.otherData.questionJumps === 1 ? "" : "s"}`,
+        `${summary.otherData.nextClicks + summary.otherData.previousClicks} manual next/previous action${summary.otherData.nextClicks + summary.otherData.previousClicks === 1 ? "" : "s"}`,
+      ],
+      "Answer, flag, move, then return using a planned review order."
+    );
+  }
+
+  if (
+    summary.regionActivity.totalSwitches > 0 ||
+    summary.regionActivity.stimulusRevisits > 0 ||
+    summary.regionActivity.questionAnswerFlips > 0
+  ) {
+    addIssue(
+      "Reading strategy issue detected",
+      "Attention shifts suggest repeated searching between the question, stimulus and answers.",
+      [
+        `${summary.regionActivity.totalSwitches} region switch${summary.regionActivity.totalSwitches === 1 ? "" : "es"}`,
+        `${summary.regionActivity.stimulusRevisits} stimulus revisit${summary.regionActivity.stimulusRevisits === 1 ? "" : "s"}`,
+        `${summary.regionActivity.questionAnswerFlips} question/answer flip${summary.regionActivity.questionAnswerFlips === 1 ? "" : "s"}`,
+      ],
+      "Use question-first scanning and key-word extraction."
+    );
+  }
+
+  if (maxQuestionTime - minQuestionTime > Math.max(25, summary.avgSecondsPerQuestion * 2)) {
+    addIssue(
+      "Pacing issue detected",
+      "Time distribution is uneven across questions.",
+      [
+        `${maxQuestionTime}s slowest question`,
+        `${minQuestionTime}s fastest question`,
+        `${summary.avgSecondsPerQuestion}s average per question`,
+      ],
+      "Practise fixed-pace blocks with checkpoints."
+    );
+  }
+
+  const strengths = [
+    "Full question set marked",
+    `${summary.answeredQuestions}/${summary.totalQuestions} questions answered`,
+    summary.trackingEventCount > 0
+      ? "Question behaviour data captured"
+      : "Core answer and timing data captured",
+  ];
+
+  if (summary.correctQuestions > 0) {
+    strengths.push(`${summary.correctQuestions} correct answer${summary.correctQuestions === 1 ? "" : "s"} banked`);
+  }
+  if (summary.answerSwitches === 0) {
+    strengths.push("Stable answer selection");
+  }
+  if (summary.changedToCorrect > summary.changedFromCorrect) {
+    strengths.push("Answer changes helped more than they hurt");
+  }
+  if (summary.shortcuts.total > 0) {
+    strengths.push("Shortcut usage recorded");
+  }
+
+  return {
+    issues:
+      issues.length > 0
+        ? issues
+        : [
+            {
+              label: "No major issue signal detected from this set",
+              cause: "The marked set did not trigger a strong issue rule.",
+              evidence: [
+                `${summary.answeredQuestions}/${summary.totalQuestions} answered`,
+                `${summary.accuracy}% accuracy`,
+              ],
+              fix: "Keep building volume, then compare the next marked set for a clearer pattern.",
+            },
+          ],
+    strengths,
+  };
+}
+
+function MarkedSessionInsightsPanel({
+  insights,
+  isPremium,
+  checkoutLoading,
+  checkoutError,
+  onUpgrade,
+}: {
+  insights: MarkedSessionInsights;
+  isPremium: boolean;
+  checkoutLoading: boolean;
+  checkoutError: string | null;
+  onUpgrade: () => void | Promise<void>;
+}) {
+  const locked = !isPremium;
+
+  return (
+    <section className="rounded-lg border border-slate-500 bg-slate-950 p-5 text-white shadow-xl">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h2 className="text-lg font-black">
+            Issues, strengths and study plan
+          </h2>
+          <p className="mt-1 text-sm font-semibold leading-6 text-slate-300">
+            Generated after marking the full question set. Free shows the
+            detected labels; premium unlocks precise causes, evidence and study tasks.
+          </p>
+        </div>
+        {!locked && (
+          <Link
+            href="/phloemai/report"
+            className="inline-flex h-10 items-center justify-center rounded-md bg-emerald-400 px-4 text-xs font-black text-emerald-950 hover:bg-emerald-300"
+          >
+            Detailed analysis unlocked
+          </Link>
+        )}
+      </div>
+      {checkoutError && (
+        <p className="mt-3 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-xs font-black text-red-700">
+          {checkoutError}
+        </p>
+      )}
+      <div className="mt-5 grid gap-4 xl:grid-cols-[1.1fr_0.9fr_1fr]">
+        <div className="rounded-lg border border-red-200 bg-white p-4 text-slate-950 shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-100 text-red-600">
+              <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <h3 className="text-sm font-black">Issues detected</h3>
+          </div>
+          <div className="mt-4 space-y-3">
+            {insights.issues.slice(0, 5).map((issue) => (
+              <div key={issue.label} className="rounded-md border border-slate-200 bg-slate-50 p-3">
+                <p className="text-sm font-black leading-6 text-slate-900">
+                  {issue.label}
+                </p>
+                <div className="relative mt-3 overflow-hidden rounded-md border border-red-100 bg-red-50 p-3">
+                  {locked && (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/70 text-center backdrop-blur-[2px]">
+                      <LockKeyhole className="h-5 w-5 text-red-600" aria-hidden="true" />
+                      <p className="mt-2 text-xs font-black text-slate-900">
+                        Specific issue locked
+                      </p>
+                    </div>
+                  )}
+                  <div className={locked ? "select-none blur-[3px]" : ""}>
+                    <p className="text-xs font-black uppercase tracking-wide text-red-700">
+                      Main cause
+                    </p>
+                    <p className="mt-1 text-xs font-semibold leading-5 text-slate-700">
+                      {issue.cause}
+                    </p>
+                    <p className="mt-3 text-xs font-black uppercase tracking-wide text-red-700">
+                      Evidence
+                    </p>
+                    <ul className="mt-1 space-y-1 text-xs font-semibold leading-5 text-slate-700">
+                      {issue.evidence.map((item) => (
+                        <li key={item}>- {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              ))}
+            </div>
+          {locked && (
+            <button
+              type="button"
+              onClick={onUpgrade}
+              disabled={checkoutLoading}
+              className="mt-4 inline-flex h-10 w-full items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+            >
+              {checkoutLoading ? "Opening..." : "Upgrade to unlock and find out more"}
+            </button>
+          )}
+        </div>
+
+        <div className="rounded-lg border border-emerald-200 bg-white p-4 text-slate-950 shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-emerald-100 text-emerald-700">
+              <CheckCircle className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <h3 className="text-sm font-black">Strengths detected</h3>
+          </div>
+          <ul className="mt-4 space-y-2 text-sm font-semibold leading-6 text-slate-700">
+            {insights.strengths.slice(0, 6).map((item) => (
+              <li key={item}>- {item}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="rounded-lg border border-blue-200 bg-white p-4 text-slate-950 shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-blue-100 text-blue-700">
+              <Target className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <h3 className="text-sm font-black">Personalised study plan</h3>
+          </div>
+          {locked ? (
+            <div className="mt-4 rounded-md border border-dashed border-blue-200 bg-blue-50 p-4">
+              <LockKeyhole className="h-5 w-5 text-blue-600" aria-hidden="true" />
+              <p className="mt-3 text-sm font-black text-slate-900">
+                Detailed study tasks are locked.
+              </p>
+              <p className="mt-2 text-xs font-semibold leading-5 text-slate-600">
+                Upgrade to reveal the exact drills and review rules generated
+                from this marked set.
+              </p>
+            </div>
+          ) : (
+            <ol className="mt-4 space-y-3">
+              {insights.issues.slice(0, 4).map((issue, index) => (
+                <li
+                  key={issue.label}
+                  className="rounded-md border border-blue-100 bg-blue-50 p-3"
+                >
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+                    {index + 1}
+                  </span>
+                  <p className="mt-2 text-sm font-black text-slate-950">
+                    Study task for {issue.label.replace(" detected", "").toLowerCase()}
+                  </p>
+                  <p className="mt-1 text-xs font-semibold leading-5 text-slate-700">
+                    {issue.fix}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -2063,11 +2429,19 @@ function MarkedReviewScreen({
   sectionTitle,
   summary,
   saveState,
+  isPremium,
+  checkoutLoading,
+  checkoutError,
+  onUpgrade,
   onNewSet,
 }: {
   sectionTitle: string;
   summary: PracticeSessionSummary;
   saveState: SaveState;
+  isPremium: boolean;
+  checkoutLoading: boolean;
+  checkoutError: string | null;
+  onUpgrade: () => void | Promise<void>;
   onNewSet: () => void;
 }) {
   const saveClass =
@@ -2078,9 +2452,10 @@ function MarkedReviewScreen({
         : saveState.status === "saving"
           ? "bg-blue-50 text-blue-700"
           : "bg-slate-100 text-slate-600";
+  const insights = buildMarkedSessionInsights(summary);
 
   return (
-    <div className="min-h-screen bg-[#f6f8fb] font-sans text-[#111827]">
+    <div className="min-h-screen bg-[#e7edf7] font-sans text-[#111827]">
       <header className="bg-[#0078a8] px-4 py-4 text-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -2090,12 +2465,6 @@ function MarkedReviewScreen({
             <h1 className="mt-1 text-2xl font-black">{sectionTitle}</h1>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Link
-              href="/phloemai/diagnostic"
-              className="inline-flex h-10 items-center justify-center rounded-sm bg-white px-4 text-sm font-black text-[#0078a8] hover:bg-slate-100"
-            >
-              Check practice impact
-            </Link>
             <button
               type="button"
               onClick={onNewSet}
@@ -2108,7 +2477,7 @@ function MarkedReviewScreen({
       </header>
 
       <main className="mx-auto max-w-6xl space-y-6 px-5 py-6">
-        <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
+        <section className="rounded-md border border-slate-400 bg-white p-5 shadow-lg">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h2 className="text-2xl font-black">Review</h2>
@@ -2130,7 +2499,7 @@ function MarkedReviewScreen({
               ["Flags", String(summary.flaggedQuestions)],
               ["Answer switches", String(summary.answerSwitches)],
             ].map(([label, value]) => (
-              <div key={label} className="rounded-sm border border-slate-200 bg-slate-50 p-3">
+              <div key={label} className="rounded-md border border-slate-300 bg-slate-100 p-3 shadow-sm">
                 <p className="text-xs font-black uppercase tracking-wide text-slate-500">
                   {label}
                 </p>
@@ -2138,12 +2507,23 @@ function MarkedReviewScreen({
               </div>
             ))}
           </div>
+        </section>
 
-          <div className="mt-6 space-y-4">
+        <MarkedSessionInsightsPanel
+          insights={insights}
+          isPremium={isPremium}
+          checkoutLoading={checkoutLoading}
+          checkoutError={checkoutError}
+          onUpgrade={onUpgrade}
+        />
+
+        <section className="rounded-md border border-slate-400 bg-white p-5 shadow-lg">
+          <h2 className="text-lg font-black">Question-by-question review</h2>
+          <div className="mt-4 space-y-4">
             {summary.questions.map((item) => (
               <article
                 key={item.questionId}
-                className="rounded-sm border border-slate-300 bg-white p-4"
+                className="rounded-md border border-slate-400 bg-white p-4 shadow-sm"
               >
                 <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                   <div>
@@ -2172,7 +2552,7 @@ function MarkedReviewScreen({
                     {item.correct ? "Correct" : item.answered ? "Incorrect" : "Unanswered"}
                   </span>
                 </div>
-                <div className="mt-4 rounded-sm border border-slate-200 bg-slate-50 p-4">
+                <div className="mt-4 rounded-md border border-slate-300 bg-slate-100 p-4">
                   <p className="text-sm font-black text-slate-900">
                     Explanation
                   </p>
@@ -2188,10 +2568,10 @@ function MarkedReviewScreen({
 
         <SessionDataCollectedPanel summary={summary} />
 
-        <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
+        <section className="rounded-md border border-slate-400 bg-white p-5 shadow-md">
           <h2 className="text-lg font-black">Question-type timing</h2>
-          <div className="mt-5 overflow-hidden rounded-sm border border-slate-200">
-            <div className="grid grid-cols-[1fr_70px_80px_80px_80px] bg-slate-100 px-3 py-2 text-xs font-black uppercase tracking-wide text-slate-600">
+          <div className="mt-5 overflow-hidden rounded-md border border-slate-300">
+            <div className="grid grid-cols-[1fr_70px_80px_80px_80px] bg-slate-200 px-3 py-2 text-xs font-black uppercase tracking-wide text-slate-700">
               <span>Question type</span>
               <span>Qs</span>
               <span>Avg</span>
@@ -2213,59 +2593,6 @@ function MarkedReviewScreen({
           </div>
         </section>
 
-        <div className="grid gap-5 lg:grid-cols-3">
-          <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
-            <div className="flex items-center gap-3">
-              <AlertTriangle className="h-5 w-5 text-red-500" aria-hidden="true" />
-              <h2 className="text-lg font-black">Issues</h2>
-            </div>
-            <ul className="mt-4 space-y-3 text-sm font-semibold text-slate-700">
-              <li>Timing pattern needs review.</li>
-              <li>Answer uncertainty detected.</li>
-              <li>Calculator strategy may be limiting speed.</li>
-            </ul>
-            <p className="mt-5 rounded-sm bg-amber-50 px-3 py-2 text-xs font-black text-amber-800">
-              Want to know more? Upgrade to find out.
-            </p>
-          </section>
-
-          <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
-            <div className="flex items-center gap-3">
-              <CheckCircle className="h-5 w-5 text-emerald-600" aria-hidden="true" />
-              <h2 className="text-lg font-black">Strengths</h2>
-            </div>
-            <ul className="mt-4 space-y-3 text-sm font-semibold text-slate-700">
-              <li>Practice set completed and marked.</li>
-              <li>Enough telemetry was captured for analysis.</li>
-              <li>Review data is ready for pattern mapping.</li>
-            </ul>
-            <p className="mt-5 rounded-sm bg-amber-50 px-3 py-2 text-xs font-black text-amber-800">
-              Want to know more? Upgrade to find out.
-            </p>
-          </section>
-
-          <section className="rounded-sm border border-slate-300 bg-white p-5 shadow-sm">
-            <div className="flex items-center gap-3">
-              <Target className="h-5 w-5 text-blue-600" aria-hidden="true" />
-              <h2 className="text-lg font-black">Personalised study plan</h2>
-            </div>
-            <div className="mt-4 rounded-sm border border-dashed border-slate-300 bg-slate-50 p-4">
-              <LockKeyhole className="h-5 w-5 text-slate-500" aria-hidden="true" />
-              <p className="mt-3 text-sm font-black text-slate-800">
-                Premium will turn these data points into exact fixes and drills.
-              </p>
-              <p className="mt-2 text-xs font-semibold leading-5 text-slate-500">
-                For now this stays locked while the rule mapping is being built.
-              </p>
-            </div>
-            <Link
-              href="/phloemai/diagnostic"
-              className="mt-4 inline-flex h-9 items-center justify-center rounded-sm bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
-            >
-              Check practice impact
-            </Link>
-          </section>
-        </div>
       </main>
     </div>
   );
@@ -2327,6 +2654,9 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     status: "idle",
     message: "Not saved yet",
   });
+  const [isPremium, setIsPremium] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const trackingEventsRef = useRef<TrackingEvent[]>([]);
   const questionTimingRef = useRef<Record<string, QuestionTiming>>({});
   const questionStartedAtRef = useRef(0);
@@ -2366,6 +2696,40 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
 
   useEffect(() => {
     scrollToQuestionTop();
+  }, []);
+
+  useEffect(() => {
+    if (!hasSupabaseConfig()) return;
+
+    let mounted = true;
+
+    async function loadPlan() {
+      const supabase = createSupabaseClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!mounted || !user) {
+        if (mounted) setIsPremium(false);
+        return;
+      }
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("current_plan")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (mounted) {
+        setIsPremium(data?.current_plan === "premium");
+      }
+    }
+
+    void loadPlan();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const sectionQuestions = useMemo(
@@ -2556,6 +2920,40 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
             ? error.message
             : "Could not save this session",
       });
+    }
+  };
+
+  const handleUpgrade = async () => {
+    if (!hasSupabaseConfig()) {
+      window.location.assign("/phloemai/dashboard");
+      return;
+    }
+
+    setCheckoutLoading(true);
+    setCheckoutError(null);
+
+    try {
+      const response = await fetch("/api/stripe/create-checkout-session", {
+        method: "POST",
+      });
+      const data = (await response.json()) as { url?: string; error?: string };
+
+      if (response.status === 401) {
+        window.location.assign("/phloemai/dashboard");
+        return;
+      }
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Could not start checkout.");
+      }
+
+      window.location.assign(data.url);
+      window.setTimeout(() => setCheckoutLoading(false), 8000);
+    } catch (error) {
+      setCheckoutError(
+        error instanceof Error ? error.message : "Could not start checkout."
+      );
+      setCheckoutLoading(false);
     }
   };
 
@@ -3183,6 +3581,10 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         sectionTitle={meta.bankTitle}
         summary={markedSummary}
         saveState={saveState}
+        isPremium={isPremium}
+        checkoutLoading={checkoutLoading}
+        checkoutError={checkoutError}
+        onUpgrade={handleUpgrade}
         onNewSet={() => {
           commitQuestionTiming();
           attentionTracker.resetTracker();
