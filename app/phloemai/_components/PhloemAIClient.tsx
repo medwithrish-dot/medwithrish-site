@@ -1438,7 +1438,7 @@ const reportIssueDefinitions: ReportIssueDefinition[] = [
       "Repeated clears, re-entered values and operator/digit patterns",
       "Keyboard vs button input speed and memory button usage",
     ],
-    fix: "Practise calculator setup, speed entry and memory recall drills.",
+    fix: "15 minutes of calculator speed trainer.",
     icon: Calculator,
     iconClass: "bg-cyan-50 text-cyan-600",
   },

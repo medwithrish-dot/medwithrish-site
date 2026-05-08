@@ -26,6 +26,7 @@ Run these in the Supabase SQL Editor, in this order:
 
 1. `supabase/phloemai_setup.sql`
 2. `supabase/phloemai_stripe_setup.sql`
+3. `supabase/phloemai_practice_setup.sql`
 
 ## Auth Settings
 

@@ -32,22 +32,43 @@ import {
 } from "../_lib/useAttentionTracker";
 import {
   getUCATSectionMeta,
+  getUCATSjtIssueLabel,
   getUCATSubtypeMeta,
   isUCATSection,
+  isUCATDragCategoryQuestion,
   isUCATDragOrderQuestion,
+  isUCATMostLeastQuestion,
+  isUCATYesNoQuestion,
   UCAT_QUESTION_BANK,
   UCAT_SECTIONS,
   UCAT_SUBTYPES,
   type UCATChartVisual,
   type UCATOptionKey,
   type UCATQuestion,
+  type UCATQuestionTag,
   type UCATSection,
+  type UCATSingleQuestion,
+  type UCATSjtIssueTag,
   type UCATSubtypeId,
+  type UCATYesNoValue,
 } from "../_lib/ucatQuestionBank";
+import {
+  SUBTYPE_WEAKNESS_RULES,
+  getSubtypeWeaknessSeverity,
+  type SubtypeWeaknessRule,
+} from "../_lib/ucatWeaknessRules";
 
-type PracticeAnswer = UCATOptionKey | string[];
+type PracticeAnswerMap = Record<string, string>;
+type PracticeAnswer = UCATOptionKey | string[] | PracticeAnswerMap;
 type SessionLengthMode = "questions" | "minutes";
-type PracticePhase = "practice" | "review" | "marked";
+type PracticePhase = "practice" | "review" | "marked" | "marked-review";
+type PracticeAnswerStatus = "correct" | "partial" | "incorrect" | "unanswered";
+type PracticeAnswerScore = {
+  points: number;
+  maxPoints: number;
+  status: PracticeAnswerStatus;
+  feedback: string;
+};
 type QuestionTrackingZone = "stimulus" | "question" | "answers";
 type TrackingPayload = Record<string, string | number | boolean | null>;
 type TrackingEvent = {
@@ -149,6 +170,13 @@ type PracticeQuestionSummary = {
   explanation: string;
   answered: boolean;
   correct: boolean;
+  partial: boolean;
+  scorePoints: number;
+  maxScore: number;
+  resultStatus: PracticeAnswerStatus;
+  questionTags: UCATQuestionTag[];
+  issueTags: UCATSjtIssueTag[];
+  issueLabels: string[];
   flagged: boolean;
   selectedAnswer: PracticeAnswer | null;
   correctAnswer: PracticeAnswer;
@@ -181,6 +209,8 @@ type PracticeSessionSummary = {
   answeredQuestions: number;
   correctQuestions: number;
   accuracy: number;
+  scorePoints: number;
+  maxScore: number;
   totalSeconds: number;
   avgSecondsPerQuestion: number;
   timed: boolean;
@@ -231,6 +261,16 @@ function formatDuration(totalSeconds: number) {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
+function formatMarkValue(value: number) {
+  if (Number.isInteger(value)) return String(value);
+  return value.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+}
+
+function formatMarkScore(points: number, maxPoints: number) {
+  const markWord = maxPoints === 1 ? "mark" : "marks";
+  return `${formatMarkValue(points)}/${formatMarkValue(maxPoints)} ${markWord}`;
+}
+
 function normaliseMinuteTarget(value: number | string) {
   const minutes = typeof value === "number" ? value : Number(value);
   return Number.isFinite(minutes) ? Math.max(1, minutes) : 1;
@@ -247,6 +287,16 @@ function sameOrder(first: string[], second: string[]) {
   );
 }
 
+function isPracticeAnswerMap(answer?: PracticeAnswer): answer is PracticeAnswerMap {
+  return typeof answer === "object" && answer !== null && !Array.isArray(answer);
+}
+
+function isUCATSingleSelectQuestion(
+  question: UCATQuestion
+): question is UCATSingleQuestion {
+  return !question.questionType || question.questionType === "single";
+}
+
 function getDragOrder(question: UCATQuestion, savedAnswer?: PracticeAnswer) {
   if (!isUCATDragOrderQuestion(question)) return [];
   return Array.isArray(savedAnswer)
@@ -260,17 +310,212 @@ function getAnswerText(question: UCATQuestion, answer?: PracticeAnswer) {
     return order.length > 0 ? "Ordered response" : "No response";
   }
 
-  return typeof answer === "string"
+  if (isUCATDragCategoryQuestion(question)) {
+    if (!isPracticeAnswerMap(answer)) return "No answer";
+
+    const categoryLookup = new Map(
+      question.categories.map((category) => [category.id, category.label])
+    );
+    const placements = question.categoryItems.filter((item) => answer[item.id]);
+
+    if (placements.length === 0) return "No answer";
+
+    return placements
+      .map(
+        (item) =>
+          `${item.text}: ${categoryLookup.get(answer[item.id]) ?? answer[item.id]}`
+      )
+      .join(" | ");
+  }
+
+  if (isUCATYesNoQuestion(question)) {
+    if (!isPracticeAnswerMap(answer)) return "No answer";
+
+    const answeredCount = question.yesNoStatements.filter(
+      (statement) => answer[statement.id]
+    ).length;
+
+    if (answeredCount === 0) return "No answer";
+
+    return answeredCount === question.yesNoStatements.length
+      ? "All Yes/No statements answered"
+      : `${answeredCount}/${question.yesNoStatements.length} statements answered`;
+  }
+
+  if (isUCATMostLeastQuestion(question)) {
+    return isPracticeAnswerMap(answer) ? "Most/least response" : "No answer";
+  }
+
+  return isUCATSingleSelectQuestion(question) && typeof answer === "string"
     ? question.options.find((option) => option.key === answer)?.text ?? answer
     : "No answer";
 }
 
-function isAnswerCorrect(question: UCATQuestion, answer?: PracticeAnswer) {
-  if (isUCATDragOrderQuestion(question)) {
-    return sameOrder(getDragOrder(question, answer), question.answerOrder);
+function getDragCategoryPlacementScore(question: UCATQuestion, answer?: PracticeAnswer) {
+  if (!isUCATDragCategoryQuestion(question) || !isPracticeAnswerMap(answer)) {
+    return { placedCount: 0, correctCount: 0, totalCount: 0 };
   }
 
-  return typeof answer === "string" && answer === question.answer;
+  const categoryIds = new Set(question.categories.map((category) => category.id));
+  const totalCount = question.categoryItems.length;
+  const placedCount = question.categoryItems.filter((item) =>
+    categoryIds.has(answer[item.id])
+  ).length;
+  const correctCount = question.categoryItems.filter(
+    (item) => answer[item.id] === item.answerCategory
+  ).length;
+
+  return { placedCount, correctCount, totalCount };
+}
+
+function getYesNoStatementScore(question: UCATQuestion, answer?: PracticeAnswer) {
+  if (!isUCATYesNoQuestion(question) || !isPracticeAnswerMap(answer)) {
+    return { answeredCount: 0, correctCount: 0, totalCount: 0 };
+  }
+
+  const totalCount = question.yesNoStatements.length;
+  const answeredCount = question.yesNoStatements.filter((statement) =>
+    ["Yes", "No"].includes(answer[statement.id])
+  ).length;
+  const correctCount = question.yesNoStatements.filter(
+    (statement) => answer[statement.id] === statement.answer
+  ).length;
+
+  return { answeredCount, correctCount, totalCount };
+}
+
+function makeAnswerScore(
+  status: PracticeAnswerStatus,
+  points: number,
+  feedback: string,
+  maxPoints = 1
+): PracticeAnswerScore {
+  return { points, maxPoints, status, feedback };
+}
+
+function isSameSjtScaleSide(answer: UCATOptionKey, correctAnswer: UCATOptionKey) {
+  return (
+    (["A", "B"].includes(answer) && ["A", "B"].includes(correctAnswer)) ||
+    (["C", "D"].includes(answer) && ["C", "D"].includes(correctAnswer))
+  );
+}
+
+function isSjtPartialCreditAnswer(
+  question: UCATQuestion,
+  answer?: PracticeAnswer
+) {
+  return (
+    question.section === "sjt" &&
+    isUCATSingleSelectQuestion(question) &&
+    typeof answer === "string" &&
+    answer !== question.answer &&
+    isSameSjtScaleSide(answer as UCATOptionKey, question.answer)
+  );
+}
+
+function getAnswerScore(question: UCATQuestion, answer?: PracticeAnswer) {
+  if (isUCATDragOrderQuestion(question)) {
+    if (!Array.isArray(answer) || answer.length !== question.answerOrder.length) {
+      return makeAnswerScore("unanswered", 0, "No answer selected");
+    }
+
+    return sameOrder(answer, question.answerOrder)
+      ? makeAnswerScore("correct", 1, "Full mark awarded")
+      : makeAnswerScore("incorrect", 0, "Incorrect order");
+  }
+
+  if (isUCATDragCategoryQuestion(question)) {
+    const { placedCount, correctCount, totalCount } =
+      getDragCategoryPlacementScore(question, answer);
+    const wrongCount = totalCount - correctCount;
+
+    if (totalCount === 0 || placedCount === 0) {
+      return makeAnswerScore("unanswered", 0, "No answer selected");
+    }
+
+    if (correctCount === totalCount && placedCount === totalCount) {
+      return makeAnswerScore(
+        "correct",
+        1,
+        `${correctCount}/${totalCount} items correctly categorised`
+      );
+    }
+
+    if (placedCount === totalCount && wrongCount === 1) {
+      return makeAnswerScore(
+        "partial",
+        0.5,
+        `${correctCount}/${totalCount} items correctly categorised`
+      );
+    }
+
+    return makeAnswerScore(
+      "incorrect",
+      0,
+      `${correctCount}/${totalCount} items correctly categorised`
+    );
+  }
+
+  if (isUCATYesNoQuestion(question)) {
+    const { answeredCount, correctCount, totalCount } = getYesNoStatementScore(
+      question,
+      answer
+    );
+    const wrongCount = totalCount - correctCount;
+
+    if (totalCount === 0 || answeredCount < totalCount) {
+      return makeAnswerScore("unanswered", 0, "Not all statements answered");
+    }
+
+    if (correctCount === totalCount) {
+      return makeAnswerScore("correct", 1, "Full mark awarded");
+    }
+
+    if (wrongCount === 1) {
+      return makeAnswerScore(
+        "partial",
+        0.5,
+        `${correctCount}/${totalCount} statements correct`
+      );
+    }
+
+    return makeAnswerScore(
+      "incorrect",
+      0,
+      `${correctCount}/${totalCount} statements correct`
+    );
+  }
+
+  if (isUCATMostLeastQuestion(question)) {
+    if (!isAnswered(question, answer)) {
+      return makeAnswerScore("unanswered", 0, "No complete response selected");
+    }
+
+    return isPracticeAnswerMap(answer) &&
+      Object.entries(question.answerSlots).every(
+        ([slot, itemId]) => answer[slot] === itemId
+      )
+      ? makeAnswerScore("correct", 1, "Full mark awarded")
+      : makeAnswerScore("incorrect", 0, "Incorrect most/least response");
+  }
+
+  if (!isUCATSingleSelectQuestion(question) || typeof answer !== "string") {
+    return makeAnswerScore("unanswered", 0, "No answer selected");
+  }
+
+  if (answer === question.answer) {
+    return makeAnswerScore("correct", 1, "Full mark awarded");
+  }
+
+  if (isSjtPartialCreditAnswer(question, answer)) {
+    return makeAnswerScore("partial", 0.5, "Half mark awarded");
+  }
+
+  return makeAnswerScore("incorrect", 0, "Incorrect answer");
+}
+
+function isAnswerCorrect(question: UCATQuestion, answer?: PracticeAnswer) {
+  return getAnswerScore(question, answer).status === "correct";
 }
 
 function isAnswered(question: UCATQuestion, answer?: PracticeAnswer) {
@@ -278,13 +523,47 @@ function isAnswered(question: UCATQuestion, answer?: PracticeAnswer) {
     return Array.isArray(answer) && answer.length === question.answerOrder.length;
   }
 
-  return typeof answer === "string";
+  if (isUCATDragCategoryQuestion(question)) {
+    return getDragCategoryPlacementScore(question, answer).placedCount > 0;
+  }
+
+  if (isUCATYesNoQuestion(question)) {
+    return (
+      isPracticeAnswerMap(answer) &&
+      question.yesNoStatements.every((statement) =>
+        ["Yes", "No"].includes(answer[statement.id])
+      )
+    );
+  }
+
+  if (isUCATMostLeastQuestion(question)) {
+    return (
+      isPracticeAnswerMap(answer) &&
+      Object.keys(question.answerSlots).every((slot) => answer[slot])
+    );
+  }
+
+  return isUCATSingleSelectQuestion(question) && typeof answer === "string";
 }
 
 function getCorrectAnswerPayload(question: UCATQuestion): PracticeAnswer {
-  return isUCATDragOrderQuestion(question)
-    ? question.answerOrder
-    : question.answer;
+  if (isUCATDragOrderQuestion(question)) return question.answerOrder;
+
+  if (isUCATDragCategoryQuestion(question)) {
+    return Object.fromEntries(
+      question.categoryItems.map((item) => [item.id, item.answerCategory])
+    );
+  }
+
+  if (isUCATYesNoQuestion(question)) {
+    return Object.fromEntries(
+      question.yesNoStatements.map((statement) => [statement.id, statement.answer])
+    );
+  }
+
+  if (isUCATMostLeastQuestion(question)) return question.answerSlots;
+
+  return question.answer;
 }
 
 function getCorrectAnswerText(question: UCATQuestion) {
@@ -292,6 +571,29 @@ function getCorrectAnswerText(question: UCATQuestion) {
     const itemLookup = new Map(question.dragItems.map((item) => [item.id, item.text]));
     return question.answerOrder
       .map((itemId, index) => `${index + 1}. ${itemLookup.get(itemId) ?? itemId}`)
+      .join(" ");
+  }
+
+  if (isUCATDragCategoryQuestion(question)) {
+    return question.categories
+      .map((category) => {
+        const items = question.categoryItems
+          .filter((item) => item.answerCategory === category.id)
+          .map((item) => item.text);
+        return `${category.label}: ${items.join("; ")}`;
+      })
+      .join(" ");
+  }
+
+  if (isUCATYesNoQuestion(question)) {
+    return question.yesNoStatements
+      .map((statement, index) => `${index + 1}. ${statement.answer}`)
+      .join(" ");
+  }
+
+  if (isUCATMostLeastQuestion(question)) {
+    return Object.entries(question.answerSlots)
+      .map(([slot, itemId]) => `${slot}: ${itemId}`)
       .join(" ");
   }
 
@@ -527,15 +829,18 @@ function buildQuestionSummary({
   events: TrackingEvent[];
 }): PracticeQuestionSummary {
   const selectedAnswer = answer ?? null;
+  const answerScore = getAnswerScore(question, answer);
   const answered = isAnswered(question, answer);
-  const correct = isAnswerCorrect(question, answer);
+  const correct = answerScore.status === "correct";
   const answerEvents = events.filter((event) => event.type === "answer_select");
   const dragEvents = events.filter((event) => event.type === "drag_reorder");
   let previousAnswer = "";
   let answerSwitches = 0;
 
   answerEvents.forEach((event) => {
-    const nextAnswer = payloadString(event, "answer");
+    const nextAnswer = isUCATDragCategoryQuestion(question)
+      ? `${payloadString(event, "itemId")}:${payloadString(event, "answer")}`
+      : payloadString(event, "answer");
     if (previousAnswer && nextAnswer && previousAnswer !== nextAnswer) {
       answerSwitches += 1;
     }
@@ -559,11 +864,49 @@ function buildQuestionSummary({
         };
       }
 
+      if (isUCATDragCategoryQuestion(question)) {
+        const itemId = payloadString(event, "itemId");
+        const categoryId = payloadString(event, "answer");
+        const item = question.categoryItems.find(
+          (categoryItem) => categoryItem.id === itemId
+        );
+        const category = question.categories.find(
+          (categoryItem) => categoryItem.id === categoryId
+        );
+
+        return {
+          answer: `${itemId}:${categoryId}`,
+          answerText: `${item?.text ?? itemId}: ${
+            category?.label ?? categoryId
+          }`,
+          correct: item?.answerCategory === categoryId,
+          source,
+          atSeconds,
+        };
+      }
+
+      if (isUCATYesNoQuestion(question)) {
+        const statementId = payloadString(event, "statementId");
+        const selectedValue = payloadString(event, "answer");
+        const statement = question.yesNoStatements.find(
+          (item) => item.id === statementId
+        );
+
+        return {
+          answer: `${statementId}:${selectedValue}`,
+          answerText: `${statement?.text ?? statementId}: ${selectedValue}`,
+          correct: statement?.answer === selectedValue,
+          source,
+          atSeconds,
+        };
+      }
+
       const answerKey = payloadString(event, "answer") as UCATOptionKey;
       return {
         answer: answerKey,
         answerText: getAnswerText(question, answerKey),
-        correct: !isUCATDragOrderQuestion(question) && answerKey === question.answer,
+        correct:
+          isUCATSingleSelectQuestion(question) && answerKey === question.answer,
         source,
         atSeconds,
       };
@@ -586,6 +929,13 @@ function buildQuestionSummary({
     explanation: question.explanation,
     answered,
     correct,
+    partial: answerScore.status === "partial",
+    scorePoints: answerScore.points,
+    maxScore: answerScore.maxPoints,
+    resultStatus: answerScore.status,
+    questionTags: question.tags ?? [],
+    issueTags: question.issueTags ?? [],
+    issueLabels: (question.issueTags ?? []).map(getUCATSjtIssueLabel),
     flagged,
     selectedAnswer,
     correctAnswer: getCorrectAnswerPayload(question),
@@ -664,6 +1014,11 @@ function buildPracticeSessionSummary({
 
   const correctQuestions = questionSummaries.filter((item) => item.correct).length;
   const answeredQuestions = questionSummaries.filter((item) => item.answered).length;
+  const scorePoints = questionSummaries.reduce(
+    (sum, item) => sum + item.scorePoints,
+    0
+  );
+  const maxScore = questionSummaries.reduce((sum, item) => sum + item.maxScore, 0);
   const flaggedQuestions = questionSummaries.filter((item) => item.flagged).length;
   const answerSwitches = questionSummaries.reduce(
     (sum, item) => sum + item.answerSwitches,
@@ -682,7 +1037,7 @@ function buildPracticeSessionSummary({
     Object.values(timings).reduce((sum, item) => sum + item.totalMs, 0) / 1000
   );
   const accuracy =
-    questions.length > 0 ? Math.round((correctQuestions / questions.length) * 100) : 0;
+    maxScore > 0 ? Math.round((scorePoints / maxScore) * 100) : 0;
   const avgSecondsPerQuestion =
     questions.length > 0 ? Math.round(totalSeconds / questions.length) : 0;
 
@@ -719,6 +1074,8 @@ function buildPracticeSessionSummary({
     answeredQuestions,
     correctQuestions,
     accuracy,
+    scorePoints,
+    maxScore,
     totalSeconds,
     avgSecondsPerQuestion,
     timed,
@@ -782,6 +1139,123 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     );
   }
 
+  if (visual.type === "set-diagram") {
+    const width = 620;
+    const height = 420;
+    const shapePoints = (shape: (typeof visual.shapes)[number]) => {
+      const { x, y, width: shapeWidth, height: shapeHeight } = shape;
+
+      if (shape.shape === "triangle") {
+        return `${x + shapeWidth / 2},${y} ${x + shapeWidth},${y + shapeHeight} ${x},${y + shapeHeight}`;
+      }
+
+      if (shape.shape === "diamond") {
+        return `${x + shapeWidth / 2},${y} ${x + shapeWidth},${y + shapeHeight / 2} ${x + shapeWidth / 2},${y + shapeHeight} ${x},${y + shapeHeight / 2}`;
+      }
+
+      if (shape.shape === "hexagon") {
+        return `${x + shapeWidth * 0.25},${y} ${x + shapeWidth * 0.75},${y} ${x + shapeWidth},${y + shapeHeight / 2} ${x + shapeWidth * 0.75},${y + shapeHeight} ${x + shapeWidth * 0.25},${y + shapeHeight} ${x},${y + shapeHeight / 2}`;
+      }
+
+      return `${x + shapeWidth / 2},${y} ${x + shapeWidth},${y + shapeHeight * 0.38} ${x + shapeWidth * 0.82},${y + shapeHeight} ${x + shapeWidth * 0.18},${y + shapeHeight} ${x},${y + shapeHeight * 0.38}`;
+    };
+
+    return (
+      <div className="mt-6 rounded-sm border border-slate-300 bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
+        <h3 className="text-center text-sm font-bold">{visual.title}</h3>
+        <div className="mt-2 overflow-x-auto">
+          <svg
+            viewBox={`0 0 ${width} ${height}`}
+            className="min-w-[520px] text-slate-800"
+            role="img"
+            aria-label={visual.title}
+          >
+            {visual.shapes.map((shape) => {
+              const centerX = shape.x + shape.width / 2;
+              const centerY = shape.y + shape.height / 2;
+              const transform = shape.rotation
+                ? `rotate(${shape.rotation} ${centerX} ${centerY})`
+                : undefined;
+
+              if (shape.shape === "circle") {
+                return (
+                  <ellipse
+                    key={shape.id}
+                    cx={centerX}
+                    cy={centerY}
+                    rx={shape.width / 2}
+                    ry={shape.height / 2}
+                    transform={transform}
+                    fill="rgba(255,255,255,0.45)"
+                    stroke="#111827"
+                    strokeWidth="2"
+                  />
+                );
+              }
+
+              if (shape.shape === "rectangle") {
+                return (
+                  <rect
+                    key={shape.id}
+                    x={shape.x}
+                    y={shape.y}
+                    width={shape.width}
+                    height={shape.height}
+                    transform={transform}
+                    fill="rgba(255,255,255,0.45)"
+                    stroke="#111827"
+                    strokeWidth="2"
+                  />
+                );
+              }
+
+              return (
+                <polygon
+                  key={shape.id}
+                  points={shapePoints(shape)}
+                  transform={transform}
+                  fill="rgba(255,255,255,0.45)"
+                  stroke="#111827"
+                  strokeWidth="2"
+                />
+              );
+            })}
+            {visual.regionLabels.map((label) => (
+              <text
+                key={label.id}
+                x={label.x}
+                y={label.y}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontSize="17"
+                fontWeight="700"
+                fill="#111827"
+              >
+                {label.text}
+              </text>
+            ))}
+          </svg>
+        </div>
+        {visual.note && (
+          <p className="mt-2 text-xs font-semibold text-slate-600">{visual.note}</p>
+        )}
+        {visual.legend && (
+          <div className="mt-3 grid gap-2 text-xs font-semibold text-slate-700 sm:grid-cols-2">
+            {visual.legend.map((item) => (
+              <div
+                key={`${item.shape}-${item.label}`}
+                className="flex items-center justify-between border-b border-slate-200 px-1 py-1"
+              >
+                <span>{item.label}</span>
+                <span className="capitalize">{item.shape}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   const width = 560;
   const height = 330;
   const left = 66;
@@ -798,8 +1272,17 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     (_, index) => (visual.max / tickCount) * index
   );
   const majorTicks = ticks.filter((_, index) => index % 2 === 0);
-  const entries =
-    visual.type === "bar" ? visual.categories : visual.points;
+  const entries: Array<{ label: string; value: number }> =
+    visual.type === "bar"
+      ? visual.categories
+      : visual.type === "line"
+        ? visual.points
+        : visual.groups.flatMap((group) =>
+            group.values.map((value, index) => ({
+              label: `${group.label} - ${visual.seriesLabels[index]}`,
+              value,
+            }))
+          );
 
   const linePoints =
     visual.type === "line"
@@ -940,6 +1423,51 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     fill="#27272a"
                   >
                     {category.label}
+                  </text>
+                </g>
+              );
+            })}
+
+          {visual.type === "grouped-bar" &&
+            visual.groups.map((group, groupIndex) => {
+              const groupGap = 24;
+              const seriesCount = Math.max(1, visual.seriesLabels.length);
+              const groupWidth =
+                (chartWidth - groupGap * (visual.groups.length + 1)) /
+                visual.groups.length;
+              const barGap = 4;
+              const barWidth =
+                (groupWidth - barGap * (seriesCount - 1)) / seriesCount;
+              const x = left + groupGap + groupIndex * (groupWidth + groupGap);
+
+              return (
+                <g key={group.label}>
+                  {group.values.map((value, valueIndex) => {
+                    const barX = x + valueIndex * (barWidth + barGap);
+                    const y = valueToY(value);
+                    const barHeight = top + chartHeight - y;
+                    return (
+                      <rect
+                        key={`${group.label}-${visual.seriesLabels[valueIndex]}`}
+                        x={barX}
+                        y={y}
+                        width={barWidth}
+                        height={barHeight}
+                        fill={valueIndex % 2 === 0 ? "#8a8a8a" : "#c4c4c4"}
+                        stroke="#1f2937"
+                        strokeWidth="1.2"
+                      />
+                    );
+                  })}
+                  <text
+                    x={x + groupWidth / 2}
+                    y={top + chartHeight + 22}
+                    textAnchor="middle"
+                    fontSize="13"
+                    fontWeight="700"
+                    fill="#27272a"
+                  >
+                    {group.label}
                   </text>
                 </g>
               );
@@ -1956,12 +2484,296 @@ type MarkedIssueDetail = {
   cause: string;
   evidence: string[];
   fix: string;
+  studyFixes?: string[];
 };
 
 type MarkedSessionInsights = {
   issues: MarkedIssueDetail[];
   strengths: string[];
 };
+
+type WeakSubtypeSignal = {
+  rule: SubtypeWeaknessRule;
+  label: string;
+};
+
+type StudyPlanTask = {
+  id: string;
+  label: string;
+  fix: string;
+};
+
+const TARGETED_DRILL_SETS = 5;
+const TARGETED_DRILL_MINUTES = 7;
+const CALCULATOR_SPEED_TRAINER_FIX = "15 minutes of calculator speed trainer.";
+const CALCULATOR_HEAVY_DRILL_FIX =
+  "Complete 5 x 7-minute calculator-heavy QR drill sets until they feel controlled at pace.";
+const CONFIDENCE_RULE_FIX =
+  "Use the confidence rule: only change an answer when you can name new evidence.";
+const FLAGGING_TRAINER_FIX =
+  "Use the flagging trainer to spot hard questions sooner.";
+
+function joinHumanList(items: string[]) {
+  if (items.length <= 1) return items[0] ?? "";
+  if (items.length === 2) return `${items[0]} and ${items[1]}`;
+  return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
+}
+
+function weaknessCutoffPct(rule: SubtypeWeaknessRule) {
+  return (
+    rule.minorAtOrBelowPct ??
+    rule.minorBelowPct ??
+    rule.majorAtOrBelowPct ??
+    rule.repeatMajorAtOrBelowPct ??
+    70
+  );
+}
+
+function drillTargetPct(rule: SubtypeWeaknessRule) {
+  if (rule.subtype === "qr-calculator-strategy") return 85;
+
+  return Math.ceil((weaknessCutoffPct(rule) + 5) / 5) * 5;
+}
+
+function buildSubtypeDrillFix(weakSubtypes: WeakSubtypeSignal[]) {
+  if (weakSubtypes.length === 1) {
+    const item = weakSubtypes[0];
+    return `Complete ${TARGETED_DRILL_SETS} x ${TARGETED_DRILL_MINUTES}-minute ${item.label} drill sets until you are consistently above ${drillTargetPct(item.rule)}%.`;
+  }
+
+  return `Complete ${TARGETED_DRILL_SETS} x ${TARGETED_DRILL_MINUTES}-minute drill sets for each weak type: ${joinHumanList(weakSubtypes.map((item) => item.label))}. Move on once each type is consistently above its target.`;
+}
+
+function expectedPacingSpread(summary: PracticeSessionSummary) {
+  const timedQuestions = summary.questions.filter(
+    (question) => question.totalSeconds > 0
+  );
+  if (timedQuestions.length < 2) return false;
+
+  const maxQuestionTime = Math.max(
+    ...timedQuestions.map((question) => question.totalSeconds)
+  );
+  const minQuestionTime = Math.min(
+    ...timedQuestions.map((question) => question.totalSeconds)
+  );
+  const slowQuestions = timedQuestions.filter(
+    (question) => question.totalSeconds === maxQuestionTime
+  );
+  const fastQuestions = timedQuestions.filter(
+    (question) => question.totalSeconds === minQuestionTime
+  );
+  const slowWasExpected = slowQuestions.some((question) =>
+    question.questionTags.some((tag) =>
+      ["hard", "time-consuming", "multi-step", "calculator-heavy"].includes(tag)
+    )
+  );
+  const fastWasExpected = fastQuestions.some((question) =>
+    question.questionTags.some((tag) => ["easy", "quick"].includes(tag))
+  );
+
+  return slowWasExpected && fastWasExpected;
+}
+
+function buildStudyPlanTasks(issues: MarkedIssueDetail[]) {
+  const seen = new Set<string>();
+  const tasks: StudyPlanTask[] = [];
+
+  issues.forEach((issue) => {
+    const fixes = issue.studyFixes ?? [issue.fix];
+    fixes.forEach((fix) => {
+      const normalisedFix = fix.trim();
+      if (!normalisedFix || seen.has(normalisedFix)) return;
+      seen.add(normalisedFix);
+      tasks.push({
+        id: `${issue.label}-${tasks.length}`,
+        label: issue.label,
+        fix: normalisedFix,
+      });
+    });
+  });
+
+  return tasks;
+}
+
+function buildSubtypeWeaknessIssue(
+  summary: PracticeSessionSummary
+): MarkedIssueDetail | null {
+  const weakSubtypes = SUBTYPE_WEAKNESS_RULES.filter(
+    (rule) => rule.section === summary.section
+  ).flatMap((rule) => {
+    const questions = summary.questions.filter(
+      (question) => question.subtype === rule.subtype
+    );
+    const maxScore = questions.reduce((sum, question) => sum + question.maxScore, 0);
+
+    if (questions.length === 0 || maxScore === 0) return [];
+
+    const scorePoints = questions.reduce(
+      (sum, question) => sum + question.scorePoints,
+      0
+    );
+    const pct = (scorePoints / maxScore) * 100;
+    const severity = getSubtypeWeaknessSeverity(rule, pct);
+
+    if (!severity) return [];
+
+    return [
+      {
+        rule,
+        severity,
+        label: rule.label,
+        questionCount: questions.length,
+        scorePoints,
+        maxScore,
+        pct: Math.round(pct),
+      },
+    ];
+  });
+
+  if (weakSubtypes.length === 0) return null;
+
+  const typeList = weakSubtypes.map((item) => item.label).join(", ");
+  const fix = buildSubtypeDrillFix(weakSubtypes);
+
+  return {
+    label: "Specific question type weakness(es) detected",
+    cause: `Your losses are concentrated in ${typeList}. Borderline signals are treated as minor, while repeated clearly-below-borderline signals should become major diagnostic issues.`,
+    evidence: weakSubtypes.map(
+      (item) =>
+        `${item.label}: ${formatMarkScore(item.scorePoints, item.maxScore)} (${item.pct}%) from ${item.questionCount} question${item.questionCount === 1 ? "" : "s"}; ${item.severity} weakness signal; usual benchmark ${item.rule.expectedMarkText}; ${item.rule.minorText}. ${item.rule.repeatMajorText}`
+    ),
+    fix,
+    studyFixes: [fix],
+  };
+}
+
+function buildQrTimingWeaknessIssue(
+  summary: PracticeSessionSummary
+): MarkedIssueDetail | null {
+  if (summary.section !== "qr") return null;
+
+  const calculatorHeavyQuestions = summary.questions.filter((question) =>
+    question.questionTags.includes("calculator-heavy")
+  );
+  const timedQuestions = calculatorHeavyQuestions.filter(
+    (question) => question.totalSeconds > 0
+  );
+
+  if (timedQuestions.length === 0) return null;
+
+  const slowThresholdSeconds = 70;
+  const verySlowThresholdSeconds = 90;
+  const avgSeconds = Math.round(
+    timedQuestions.reduce((sum, question) => sum + question.totalSeconds, 0) /
+      timedQuestions.length
+  );
+  const slowCount = timedQuestions.filter(
+    (question) => question.totalSeconds >= slowThresholdSeconds
+  ).length;
+  const verySlowCount = timedQuestions.filter(
+    (question) => question.totalSeconds >= verySlowThresholdSeconds
+  ).length;
+  const keyboardGapSamples = timedQuestions
+    .map((question) => question.calculator.keyboardAvgGapMs)
+    .filter((gap) => gap > 0);
+  const avgKeyboardGap =
+    keyboardGapSamples.length > 0
+      ? Math.round(
+          keyboardGapSamples.reduce((sum, gap) => sum + gap, 0) /
+            keyboardGapSamples.length
+        )
+      : 0;
+  const timingWeakness =
+    (timedQuestions.length >= 2 && avgSeconds >= slowThresholdSeconds) ||
+    verySlowCount >= 2 ||
+    (timedQuestions.length === 1 &&
+      timedQuestions[0].totalSeconds >= verySlowThresholdSeconds + 10);
+
+  if (!timingWeakness) return null;
+
+  const evidence = [
+    `Calculator-heavy QR averaged ${avgSeconds}s; target is under ${slowThresholdSeconds}s, with strong QR aiming closer to 40-60s where possible.`,
+    `${slowCount}/${timedQuestions.length} calculator-heavy question${timedQuestions.length === 1 ? "" : "s"} took ${slowThresholdSeconds}s or more.`,
+    `${verySlowCount}/${timedQuestions.length} took ${verySlowThresholdSeconds}s or more.`,
+  ];
+
+  if (avgKeyboardGap > 0) {
+    evidence.push(
+      `Average keyboard-calculator input gap was ${avgKeyboardGap}ms; if typing speed is already strong, the bottleneck is likely setup, expression planning or re-entry.`
+    );
+  }
+
+  return {
+    label: "Calculator-heavy QR timing weakness detected",
+    cause:
+      "Calculator-heavy QR questions are taking too long relative to the section pace. This usually points to setup, calculation planning, re-entry or choosing calculation when estimation would be faster.",
+    evidence,
+    fix: CALCULATOR_HEAVY_DRILL_FIX,
+    studyFixes: [CALCULATOR_HEAVY_DRILL_FIX],
+  };
+}
+
+function buildSjtIssueTagWeaknessIssue(
+  summary: PracticeSessionSummary
+): MarkedIssueDetail | null {
+  if (summary.section !== "sjt") return null;
+
+  const issueMap = new Map<
+    UCATSjtIssueTag,
+    { scorePoints: number; maxScore: number; questions: number }
+  >();
+
+  summary.questions.forEach((question) => {
+    question.issueTags.forEach((issueTag) => {
+      const current = issueMap.get(issueTag) ?? {
+        scorePoints: 0,
+        maxScore: 0,
+        questions: 0,
+      };
+      current.scorePoints += question.scorePoints;
+      current.maxScore += question.maxScore;
+      current.questions += 1;
+      issueMap.set(issueTag, current);
+    });
+  });
+
+  const weakThemes = Array.from(issueMap.entries()).flatMap(
+    ([issueTag, item]) => {
+      if (item.questions < 2 || item.maxScore <= 0) return [];
+
+      const pct = (item.scorePoints / item.maxScore) * 100;
+      if (pct > 70) return [];
+
+      return [
+        {
+          issueTag,
+          label: getUCATSjtIssueLabel(issueTag),
+          scorePoints: item.scorePoints,
+          maxScore: item.maxScore,
+          questions: item.questions,
+          pct: Math.round(pct),
+          severity: pct <= 50 ? "major" : "minor",
+        },
+      ];
+    }
+  );
+
+  if (weakThemes.length === 0) return null;
+
+  const themeList = weakThemes.map((item) => item.label).join(", ");
+  const fix = `Drill similar SJT scenarios for ${themeList}.`;
+
+  return {
+    label: "SJT judgement theme weakness(es) detected",
+    cause: `Your SJT losses cluster around ${themeList}. Timing is not being treated as the issue here; this is about judgement themes.`,
+    evidence: weakThemes.map(
+      (item) =>
+        `${item.label}: ${formatMarkScore(item.scorePoints, item.maxScore)} (${item.pct}%) across ${item.questions} tagged question${item.questions === 1 ? "" : "s"}; ${item.severity} theme signal.`
+    ),
+    fix,
+    studyFixes: [fix],
+  };
+}
 
 function buildMarkedSessionInsights(
   summary: PracticeSessionSummary
@@ -1986,110 +2798,266 @@ function buildMarkedSessionInsights(
     label: string,
     cause: string,
     evidence: string[],
-    fix: string
+    fix: string,
+    studyFixes?: string[]
   ) => {
-    issues.push({ label, cause, evidence, fix });
+    issues.push({
+      label,
+      cause,
+      evidence,
+      fix,
+      studyFixes: studyFixes ?? (fix ? [fix] : []),
+    });
   };
+  const subtypeWeaknessIssue = buildSubtypeWeaknessIssue(summary);
+  const qrTimingWeaknessIssue = buildQrTimingWeaknessIssue(summary);
+  const sjtIssueTagWeaknessIssue = buildSjtIssueTagWeaknessIssue(summary);
 
-  if (
-    summary.calculator.opens > 0 &&
-    (summary.calculator.pauses > 0 ||
-      summary.calculator.backspaces > 0 ||
-      memoryTotal === 0)
-  ) {
-    addIssue(
-      "Inefficient calculator use detected",
-      "Calculator use is adding friction through pauses, clears or low memory-button usage.",
-      [
-        `${summary.calculator.opens} calculator open${summary.calculator.opens === 1 ? "" : "s"}`,
-        `${summary.calculator.pauses} pause${summary.calculator.pauses === 1 ? "" : "s"} over ${summary.calculator.pauseThresholdSeconds}s`,
-        `${memoryTotal} memory-button use${memoryTotal === 1 ? "" : "s"}`,
-      ],
-      "Use calculator speed and memory-button drills."
-    );
+  if (subtypeWeaknessIssue) {
+    issues.push(subtypeWeaknessIssue);
+  }
+  if (qrTimingWeaknessIssue) {
+    issues.push(qrTimingWeaknessIssue);
+  }
+  if (sjtIssueTagWeaknessIssue) {
+    issues.push(sjtIssueTagWeaknessIssue);
+  }
+
+  if (summary.calculator.opens > 0) {
+    const calculatorCauses: string[] = [];
+    const calculatorEvidence = [
+      `${summary.calculator.opens} calculator open${summary.calculator.opens === 1 ? "" : "s"}`,
+      `${summary.calculator.pauses} pause${summary.calculator.pauses === 1 ? "" : "s"} over ${summary.calculator.pauseThresholdSeconds}s`,
+      `${summary.calculator.backspaces} backspace${summary.calculator.backspaces === 1 ? "" : "s"}`,
+      `${memoryTotal} memory-button use${memoryTotal === 1 ? "" : "s"}`,
+      `${summary.calculator.keyboardPresses} keyboard input${summary.calculator.keyboardPresses === 1 ? "" : "s"}, ${summary.calculator.buttonPresses} button input${summary.calculator.buttonPresses === 1 ? "" : "s"}`,
+    ];
+    const calculatorStudyFixes: string[] = [];
+    const hasMultiCalculation =
+      summary.calculator.operators >= 4 ||
+      summary.questions.some(
+        (question) =>
+          question.questionTags.includes("calculator-heavy") &&
+          question.calculator.operators >= 3
+      );
+    const enteredMostlyWithButtons =
+      summary.calculator.buttonPresses >= 3 &&
+      summary.calculator.buttonPresses > summary.calculator.keyboardPresses;
+
+    if (hasMultiCalculation && memoryTotal === 0) {
+      calculatorCauses.push("Calculator memory buttons not used effectively");
+      calculatorStudyFixes.push(CALCULATOR_SPEED_TRAINER_FIX);
+    }
+    if (enteredMostlyWithButtons) {
+      calculatorCauses.push(
+        "Calculator entered with mouse/buttons instead of keyboard"
+      );
+      calculatorStudyFixes.push(CALCULATOR_SPEED_TRAINER_FIX);
+    }
+    if (summary.calculator.backspaces > 0) {
+      calculatorCauses.push("Calculator re-entry/backspace/clearing issue");
+      calculatorStudyFixes.push(CALCULATOR_SPEED_TRAINER_FIX);
+    }
+    if (summary.calculator.pauses > 0) {
+      calculatorCauses.push("Calculator setup hesitation before calculation");
+      calculatorStudyFixes.push(CALCULATOR_HEAVY_DRILL_FIX);
+    }
+
+    if (calculatorCauses.length > 0) {
+      const fix =
+        calculatorStudyFixes.includes(CALCULATOR_HEAVY_DRILL_FIX) &&
+        calculatorStudyFixes.includes(CALCULATOR_SPEED_TRAINER_FIX)
+          ? `${CALCULATOR_SPEED_TRAINER_FIX} ${CALCULATOR_HEAVY_DRILL_FIX}`
+          : calculatorStudyFixes[0] ?? "";
+
+      addIssue(
+        "Inefficient calculator use detected",
+        `Specific cause${calculatorCauses.length === 1 ? "" : "s"}: ${joinHumanList(calculatorCauses)}.`,
+        calculatorEvidence,
+        fix,
+        calculatorStudyFixes
+      );
+    }
   }
 
   if (summary.shortcuts.total < Math.max(2, Math.floor(summary.answeredQuestions / 2))) {
+    const singleChoiceAnswered = summary.questions.filter(
+      (question) => typeof question.selectedAnswer === "string"
+    ).length;
+    const keyboardCauses: string[] = [];
+
+    if (singleChoiceAnswered > 0 && summary.shortcuts.answerKeys === 0) {
+      keyboardCauses.push("Answer keyboard shortcuts not used");
+    }
+    if (
+      summary.shortcuts.navigation === 0 &&
+      summary.otherData.nextClicks + summary.otherData.previousClicks > 0
+    ) {
+      keyboardCauses.push("Navigation shortcuts not used");
+    }
+    if (
+      (summary.calculator.opens > 0 && summary.shortcuts.calculator === 0) ||
+      (summary.otherData.flagToggles > 0 && summary.shortcuts.flag === 0)
+    ) {
+      keyboardCauses.push("Calculator/flag shortcuts not used");
+    }
+
     addIssue(
       "Ineffective keyboard use detected",
-      "Most question movement or selection is happening manually rather than through shortcuts.",
+      keyboardCauses.length > 0
+        ? `Specific cause${keyboardCauses.length === 1 ? "" : "s"}: ${joinHumanList(keyboardCauses)}.`
+        : "Most question movement or selection is happening manually rather than through shortcuts.",
       [
         `${summary.shortcuts.total} shortcut event${summary.shortcuts.total === 1 ? "" : "s"}`,
         `${summary.shortcuts.answerKeys} answer-key selection${summary.shortcuts.answerKeys === 1 ? "" : "s"}`,
         `${summary.shortcuts.navigation} navigation shortcut${summary.shortcuts.navigation === 1 ? "" : "s"}`,
       ],
-      "Practise answer keys, Alt+N, Alt+P, Alt+C and Alt+F."
+      "Shortcut usage is being pointed out only; no study task added.",
+      []
     );
   }
 
-  if (
-    (summary.timed && summary.secondsRemaining <= Math.max(10, summary.setSeconds * 0.1)) ||
-    maxQuestionTime > Math.max(30, summary.avgSecondsPerQuestion * 2)
-  ) {
-    addIssue(
-      "Time management issue detected",
-      "Time is bunching around harder questions or the set is ending with little recovery room.",
-      [
-        `${summary.avgSecondsPerQuestion}s average per question`,
-        `${formatDuration(summary.secondsRemaining)} remaining`,
-        `${maxQuestionTime}s slowest question`,
-      ],
-      "Use hard-stop timed sets with recovery after hard questions."
-    );
+  if (summary.section !== "sjt") {
+    const ranOutNearEnd =
+      summary.timed &&
+      summary.secondsRemaining <= Math.max(10, summary.setSeconds * 0.1);
+    const spentTooLongOnTimeSink =
+      maxQuestionTime > Math.max(30, summary.avgSecondsPerQuestion * 2);
+    const timeCauses: string[] = [];
+    const timeStudyFixes: string[] = [];
+
+    if (ranOutNearEnd) {
+      timeCauses.push("Running out of time near the end");
+      timeStudyFixes.push(
+        `Complete ${TARGETED_DRILL_SETS} x ${TARGETED_DRILL_MINUTES}-minute timed drill sets to build speed.`
+      );
+    }
+    if (spentTooLongOnTimeSink) {
+      timeCauses.push("Spending too long on individual time-sink questions");
+      timeStudyFixes.push(FLAGGING_TRAINER_FIX);
+    }
+
+    if (timeCauses.length > 0) {
+      const fix = joinHumanList(timeStudyFixes);
+
+      addIssue(
+        "Time management issue detected",
+        `Specific cause${timeCauses.length === 1 ? "" : "s"}: ${joinHumanList(timeCauses)}.`,
+        [
+          `${summary.avgSecondsPerQuestion}s average per question`,
+          `${formatDuration(summary.secondsRemaining)} remaining`,
+          `${maxQuestionTime}s slowest question`,
+        ],
+        fix,
+        timeStudyFixes
+      );
+    }
   }
 
   if (summary.answerSwitches > 0 || summary.changedFromCorrect > 0) {
+    const answerCauses: string[] = [];
+    const answerStudyFixes: string[] = [];
+    const tooManyChanges =
+      summary.answerSwitches >= Math.max(2, Math.ceil(summary.totalQuestions * 0.2));
+
+    if (tooManyChanges) {
+      answerCauses.push("Changing answers too often");
+      answerStudyFixes.push(CONFIDENCE_RULE_FIX);
+    }
+    if (summary.changedFromCorrect > 0) {
+      answerCauses.push("Changing correct answers to incorrect answers");
+      answerStudyFixes.push(CONFIDENCE_RULE_FIX);
+    }
+    if (answerCauses.length === 0) {
+      answerCauses.push("Second-guessing without new evidence");
+    }
+
     addIssue(
       "Answer uncertainty detected",
-      "Answer changes or delayed final choices suggest second-guessing.",
+      `Specific cause${answerCauses.length === 1 ? "" : "s"}: ${joinHumanList(answerCauses)}.`,
       [
         `${summary.answerSwitches} answer switch${summary.answerSwitches === 1 ? "" : "es"}`,
         `${summary.changedFromCorrect} changed from correct`,
         `${summary.changedToCorrect} changed to correct`,
       ],
-      "Only change an answer when you can name new evidence."
+      answerStudyFixes[0] ?? "Second-guessing is being pointed out only; no study task added.",
+      answerStudyFixes
     );
   }
 
   if (summary.otherData.reviewOpens > 0 || summary.otherData.navigatorOpens > 0) {
+    const reviewCauses = ["Review opened without clear priority order"];
+
+    if (summary.flaggedQuestions > 0) {
+      reviewCauses.push("Reviewing flagged questions inefficiently");
+    }
+    if (summary.answeredQuestions < summary.totalQuestions) {
+      reviewCauses.push("Not reviewing unanswered questions first");
+    }
+
     addIssue(
       "Review strategy issue detected",
-      "Review or navigator use needs a clearer priority order.",
+      `Specific cause${reviewCauses.length === 1 ? "" : "s"}: ${joinHumanList(reviewCauses)}.`,
       [
         `${summary.otherData.reviewOpens} review open${summary.otherData.reviewOpens === 1 ? "" : "s"}`,
         `${summary.otherData.navigatorOpens} navigator open${summary.otherData.navigatorOpens === 1 ? "" : "s"}`,
         `${summary.flaggedQuestions} flagged question${summary.flaggedQuestions === 1 ? "" : "s"}`,
       ],
-      "Review flagged time-sinks first, then unanswered questions."
+      "Review order is being pointed out only; no study task added.",
+      []
     );
   }
 
   if (
     (summary.flaggedQuestions === 0 && incorrectQuestions > 0) ||
-    summary.flaggedQuestions > Math.ceil(summary.totalQuestions * 0.4)
+    summary.flaggedQuestions > Math.ceil(summary.totalQuestions * 0.4) ||
+    summary.otherData.flagToggles > Math.max(2, summary.flaggedQuestions)
   ) {
+    const flagCauses: string[] = [];
+
+    if (summary.flaggedQuestions === 0 && incorrectQuestions > 0) {
+      flagCauses.push("No flags used despite incorrect/missed questions");
+    }
+    if (summary.flaggedQuestions > Math.ceil(summary.totalQuestions * 0.4)) {
+      flagCauses.push("Too many questions flagged");
+    }
+    if (summary.otherData.flagToggles > Math.max(2, summary.flaggedQuestions)) {
+      flagCauses.push("Repeated flag toggling");
+    }
+
     addIssue(
       "Flagging issue detected",
-      "Flags are not yet separating time-sinks from safe questions.",
+      `Specific cause${flagCauses.length === 1 ? "" : "s"}: ${joinHumanList(flagCauses)}.`,
       [
         `${summary.flaggedQuestions} flag${summary.flaggedQuestions === 1 ? "" : "s"}`,
         `${incorrectQuestions} incorrect or missed question${incorrectQuestions === 1 ? "" : "s"}`,
         `${summary.otherData.flagToggles} flag toggle${summary.otherData.flagToggles === 1 ? "" : "s"}`,
       ],
-      "Flag early only when a question is a genuine time-sink."
+      "Flagging pattern is being pointed out only; no study task added.",
+      []
     );
   }
 
   if (totalVisits > summary.totalQuestions + 1 || summary.otherData.questionJumps > 0) {
+    const navigationCauses: string[] = [];
+
+    if (totalVisits > summary.totalQuestions + 1) {
+      navigationCauses.push("Excessive question revisits");
+    }
+    if (summary.otherData.questionJumps > 0) {
+      navigationCauses.push("Jumping around without a review strategy");
+    }
+
     addIssue(
       "Navigation issue detected",
-      "Question visits or jumps suggest movement without a fixed review strategy.",
+      `Specific cause${navigationCauses.length === 1 ? "" : "s"}: ${joinHumanList(navigationCauses)}.`,
       [
         `${totalVisits} total question visit${totalVisits === 1 ? "" : "s"}`,
         `${summary.otherData.questionJumps} question jump${summary.otherData.questionJumps === 1 ? "" : "s"}`,
         `${summary.otherData.nextClicks + summary.otherData.previousClicks} manual next/previous action${summary.otherData.nextClicks + summary.otherData.previousClicks === 1 ? "" : "s"}`,
       ],
-      "Answer, flag, move, then return using a planned review order."
+      "Navigation pattern is being pointed out only; no study task added.",
+      []
     );
   }
 
@@ -2098,19 +3066,37 @@ function buildMarkedSessionInsights(
     summary.regionActivity.stimulusRevisits > 0 ||
     summary.regionActivity.questionAnswerFlips > 0
   ) {
+    const readingCauses: string[] = [];
+
+    if (summary.regionActivity.totalSwitches > 0) {
+      readingCauses.push("Repeatedly switching between passage/stem/options");
+    }
+    if (summary.regionActivity.stimulusRevisits > 0) {
+      readingCauses.push("Re-reading stimulus too often");
+    }
+    if (summary.regionActivity.questionAnswerFlips > 0) {
+      readingCauses.push("Losing time between question and answer choices");
+    }
+
     addIssue(
       "Reading strategy issue detected",
-      "Attention shifts suggest repeated searching between the question, stimulus and answers.",
+      `Specific cause${readingCauses.length === 1 ? "" : "s"}: ${joinHumanList(readingCauses)}.`,
       [
         `${summary.regionActivity.totalSwitches} region switch${summary.regionActivity.totalSwitches === 1 ? "" : "es"}`,
         `${summary.regionActivity.stimulusRevisits} stimulus revisit${summary.regionActivity.stimulusRevisits === 1 ? "" : "s"}`,
         `${summary.regionActivity.questionAnswerFlips} question/answer flip${summary.regionActivity.questionAnswerFlips === 1 ? "" : "s"}`,
       ],
-      "Use question-first scanning and key-word extraction."
+      "Reading pattern is being pointed out only; no study task added.",
+      []
     );
   }
 
-  if (maxQuestionTime - minQuestionTime > Math.max(25, summary.avgSecondsPerQuestion * 2)) {
+  if (
+    summary.section !== "sjt" &&
+    maxQuestionTime - minQuestionTime >
+      Math.max(25, summary.avgSecondsPerQuestion * 2) &&
+    !expectedPacingSpread(summary)
+  ) {
     addIssue(
       "Pacing issue detected",
       "Time distribution is uneven across questions.",
@@ -2119,7 +3105,8 @@ function buildMarkedSessionInsights(
         `${minQuestionTime}s fastest question`,
         `${summary.avgSecondsPerQuestion}s average per question`,
       ],
-      "Practise fixed-pace blocks with checkpoints."
+      "Uneven pacing is being pointed out only; no study task added.",
+      []
     );
   }
 
@@ -2177,6 +3164,8 @@ function MarkedSessionInsightsPanel({
   onUpgrade: () => void | Promise<void>;
 }) {
   const locked = !isPremium;
+  const [issuesExpanded, setIssuesExpanded] = useState(false);
+  const studyPlanTasks = buildStudyPlanTasks(insights.issues).slice(0, 4);
 
   return (
     <section className="rounded-lg border border-slate-500 bg-slate-950 p-5 text-white shadow-xl">
@@ -2206,47 +3195,83 @@ function MarkedSessionInsightsPanel({
       )}
       <div className="mt-5 grid gap-4 xl:grid-cols-[1.1fr_0.9fr_1fr]">
         <div className="rounded-lg border border-red-200 bg-white p-4 text-slate-950 shadow-md">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-100 text-red-600">
-              <AlertTriangle className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <h3 className="text-sm font-black">Issues detected</h3>
-          </div>
-          <div className="mt-4 space-y-3">
-            {insights.issues.slice(0, 5).map((issue) => (
-              <div key={issue.label} className="rounded-md border border-slate-200 bg-slate-50 p-3">
-                <p className="text-sm font-black leading-6 text-slate-900">
-                  {issue.label}
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-100 text-red-600">
+                <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <div>
+                <h3 className="text-sm font-black">Issues detected</h3>
+                <p className="mt-1 text-xs font-semibold text-slate-500">
+                  {insights.issues.length} signal
+                  {insights.issues.length === 1 ? "" : "s"} found
                 </p>
-                <div className="relative mt-3 overflow-hidden rounded-md border border-red-100 bg-red-50 p-3">
-                  {locked && (
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/70 text-center backdrop-blur-[2px]">
-                      <LockKeyhole className="h-5 w-5 text-red-600" aria-hidden="true" />
-                      <p className="mt-2 text-xs font-black text-slate-900">
-                        Specific issue locked
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIssuesExpanded((current) => !current)}
+              className="shrink-0 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-black text-slate-700 hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+            >
+              {issuesExpanded ? "Hide details" : "Show details"}
+            </button>
+          </div>
+
+          <ul className="mt-4 space-y-2">
+            {insights.issues.map((issue) => (
+              <li
+                key={issue.label}
+                className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-black leading-6 text-slate-900"
+              >
+                {issue.label}
+              </li>
+            ))}
+          </ul>
+
+          {issuesExpanded && (
+            <div className="mt-4 space-y-3">
+              {insights.issues.map((issue) => (
+                <div
+                  key={issue.label}
+                  className="rounded-md border border-slate-200 bg-slate-50 p-3"
+                >
+                  <p className="text-sm font-black leading-6 text-slate-900">
+                    {issue.label}
+                  </p>
+                  <div className="relative mt-3 overflow-hidden rounded-md border border-red-100 bg-red-50 p-3">
+                    {locked && (
+                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/70 text-center backdrop-blur-[2px]">
+                        <LockKeyhole
+                          className="h-5 w-5 text-red-600"
+                          aria-hidden="true"
+                        />
+                        <p className="mt-2 text-xs font-black text-slate-900">
+                          Specific issue locked
+                        </p>
+                      </div>
+                    )}
+                    <div className={locked ? "select-none blur-[3px]" : ""}>
+                      <p className="text-xs font-black uppercase tracking-wide text-red-700">
+                        Main cause
                       </p>
+                      <p className="mt-1 text-xs font-semibold leading-5 text-slate-700">
+                        {issue.cause}
+                      </p>
+                      <p className="mt-3 text-xs font-black uppercase tracking-wide text-red-700">
+                        Evidence
+                      </p>
+                      <ul className="mt-1 space-y-1 text-xs font-semibold leading-5 text-slate-700">
+                        {issue.evidence.map((item) => (
+                          <li key={item}>- {item}</li>
+                        ))}
+                      </ul>
                     </div>
-                  )}
-                  <div className={locked ? "select-none blur-[3px]" : ""}>
-                    <p className="text-xs font-black uppercase tracking-wide text-red-700">
-                      Main cause
-                    </p>
-                    <p className="mt-1 text-xs font-semibold leading-5 text-slate-700">
-                      {issue.cause}
-                    </p>
-                    <p className="mt-3 text-xs font-black uppercase tracking-wide text-red-700">
-                      Evidence
-                    </p>
-                    <ul className="mt-1 space-y-1 text-xs font-semibold leading-5 text-slate-700">
-                      {issue.evidence.map((item) => (
-                        <li key={item}>- {item}</li>
-                      ))}
-                    </ul>
                   </div>
                 </div>
-              </div>
               ))}
             </div>
+          )}
+
           {locked && (
             <button
               type="button"
@@ -2292,24 +3317,33 @@ function MarkedSessionInsightsPanel({
               </p>
             </div>
           ) : (
-            <ol className="mt-4 space-y-3">
-              {insights.issues.slice(0, 4).map((issue, index) => (
-                <li
-                  key={issue.label}
-                  className="rounded-md border border-blue-100 bg-blue-50 p-3"
-                >
-                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
-                    {index + 1}
-                  </span>
-                  <p className="mt-2 text-sm font-black text-slate-950">
-                    Study task for {issue.label.replace(" detected", "").toLowerCase()}
-                  </p>
-                  <p className="mt-1 text-xs font-semibold leading-5 text-slate-700">
-                    {issue.fix}
-                  </p>
-                </li>
-              ))}
-            </ol>
+            <>
+              {studyPlanTasks.length > 0 ? (
+                <ol className="mt-4 space-y-3">
+                  {studyPlanTasks.map((task, index) => (
+                    <li
+                      key={task.id}
+                      className="rounded-md border border-blue-100 bg-blue-50 p-3"
+                    >
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+                        {index + 1}
+                      </span>
+                      <p className="mt-2 text-sm font-black text-slate-950">
+                        Study task
+                      </p>
+                      <p className="mt-1 text-xs font-semibold leading-5 text-slate-700">
+                        {task.fix}
+                      </p>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="mt-4 rounded-md border border-blue-100 bg-blue-50 p-3 text-xs font-semibold leading-5 text-slate-700">
+                  No extra study task from this set. Use the unlocked issue
+                  detail as behaviour feedback for the next attempt.
+                </p>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -2433,6 +3467,7 @@ function MarkedReviewScreen({
   checkoutLoading,
   checkoutError,
   onUpgrade,
+  onReviewAnswers,
   onNewSet,
 }: {
   sectionTitle: string;
@@ -2442,6 +3477,7 @@ function MarkedReviewScreen({
   checkoutLoading: boolean;
   checkoutError: string | null;
   onUpgrade: () => void | Promise<void>;
+  onReviewAnswers: () => void;
   onNewSet: () => void;
 }) {
   const saveClass =
@@ -2467,6 +3503,13 @@ function MarkedReviewScreen({
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
+              onClick={onReviewAnswers}
+              className="inline-flex h-10 items-center justify-center rounded-sm bg-white px-4 text-sm font-black text-[#0078a8] hover:bg-blue-50"
+            >
+              Review answers
+            </button>
+            <button
+              type="button"
               onClick={onNewSet}
               className="inline-flex h-10 items-center justify-center rounded-sm border border-white/50 px-4 text-sm font-black text-white hover:bg-white/10"
             >
@@ -2482,7 +3525,8 @@ function MarkedReviewScreen({
             <div>
               <h2 className="text-2xl font-black">Review</h2>
               <p className="mt-2 text-sm font-semibold text-slate-600">
-                {summary.correctQuestions}/{summary.totalQuestions} correct -
+                Score {formatMarkScore(summary.scorePoints, summary.maxScore)} -
+                {summary.correctQuestions}/{summary.totalQuestions} fully correct -
                 {summary.answeredQuestions}/{summary.totalQuestions} answered -
                 {summary.accuracy}% accuracy
               </p>
@@ -2494,10 +3538,10 @@ function MarkedReviewScreen({
 
           <div className="mt-5 grid gap-3 sm:grid-cols-4">
             {[
+              ["Score", formatMarkScore(summary.scorePoints, summary.maxScore)],
               ["Accuracy", `${summary.accuracy}%`],
               ["Avg time", `${summary.avgSecondsPerQuestion}s`],
               ["Flags", String(summary.flaggedQuestions)],
-              ["Answer switches", String(summary.answerSwitches)],
             ].map(([label, value]) => (
               <div key={label} className="rounded-md border border-slate-300 bg-slate-100 p-3 shadow-sm">
                 <p className="text-xs font-black uppercase tracking-wide text-slate-500">
@@ -2539,17 +3583,40 @@ function MarkedReviewScreen({
                     <p className="mt-1 text-sm font-semibold text-slate-600">
                       Correct: {item.correctAnswerText}
                     </p>
+                    <p className="mt-1 text-sm font-black text-slate-700">
+                      Score: {formatMarkScore(item.scorePoints, item.maxScore)}
+                    </p>
+                    {item.issueLabels.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {item.issueLabels.map((label) => (
+                          <span
+                            key={label}
+                            className="rounded-full border border-slate-300 bg-slate-100 px-2.5 py-1 text-[11px] font-black uppercase tracking-wide text-slate-600"
+                          >
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <span
                     className={`w-fit rounded-full px-2.5 py-1 text-xs font-black ${
-                      item.correct
+                      item.resultStatus === "correct"
                         ? "bg-emerald-50 text-emerald-700"
-                        : item.answered
+                        : item.resultStatus === "partial"
+                          ? "bg-yellow-50 text-yellow-700"
+                        : item.resultStatus === "incorrect"
                           ? "bg-red-50 text-red-700"
                           : "bg-amber-50 text-amber-700"
                     }`}
                   >
-                    {item.correct ? "Correct" : item.answered ? "Incorrect" : "Unanswered"}
+                    {item.resultStatus === "correct"
+                      ? "Correct"
+                      : item.resultStatus === "partial"
+                        ? "Half mark"
+                        : item.resultStatus === "incorrect"
+                          ? "Incorrect"
+                          : "Unanswered"}
                   </span>
                 </div>
                 <div className="mt-4 rounded-md border border-slate-300 bg-slate-100 p-4">
@@ -2661,6 +3728,9 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   const questionTimingRef = useRef<Record<string, QuestionTiming>>({});
   const questionStartedAtRef = useRef(0);
   const sessionStartedAtRef = useRef(0);
+  const phaseRef = useRef<PracticePhase>("practice");
+  const markedSummaryRef = useRef<PracticeSessionSummary | null>(null);
+  const markedInsightsHistoryActiveRef = useRef(false);
   const appRootRef = useRef<HTMLDivElement>(null);
   const stimulusRegionRef = useRef<HTMLElement>(null);
   const questionRegionRef = useRef<HTMLDivElement>(null);
@@ -2696,6 +3766,46 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
 
   useEffect(() => {
     scrollToQuestionTop();
+  }, []);
+
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
+
+  useEffect(() => {
+    markedSummaryRef.current = markedSummary;
+  }, [markedSummary]);
+
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const state = event.state as
+        | { phloemaiQuestionBankView?: string }
+        | null;
+
+      if (
+        state?.phloemaiQuestionBankView === "marked-insights" &&
+        markedSummaryRef.current
+      ) {
+        markedInsightsHistoryActiveRef.current = true;
+        phaseRef.current = "marked";
+        setNavigatorOpen(false);
+        setPhase("marked");
+        scrollToQuestionTop();
+        return;
+      }
+
+      if (phaseRef.current === "marked" && markedSummaryRef.current) {
+        markedInsightsHistoryActiveRef.current = false;
+        phaseRef.current = "marked-review";
+        setNavigatorOpen(false);
+        setRevealed(true);
+        setPhase("marked-review");
+        scrollToQuestionTop();
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   useEffect(() => {
@@ -2887,6 +3997,13 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         metadata: {
           subtypeLabel: item.subtypeLabel,
           questionText: item.questionText,
+          partial: item.partial,
+          scorePoints: item.scorePoints,
+          maxScore: item.maxScore,
+          resultStatus: item.resultStatus,
+          questionTags: item.questionTags,
+          issueTags: item.issueTags,
+          issueLabels: item.issueLabels,
           selectedAnswerText: item.selectedAnswerText,
           correctAnswerText: item.correctAnswerText,
           firstAnswerText: item.firstAnswerText,
@@ -3109,6 +4226,8 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     setSessionDurationSeconds(setupTimeSeconds);
     setTimeRemaining(setupTimeSeconds);
     setMarkedSummary(null);
+    markedSummaryRef.current = null;
+    markedInsightsHistoryActiveRef.current = false;
     setSaveState({ status: "idle", message: "Not saved yet" });
     trackingEventsRef.current = [];
     setTrackingEventsSnapshot([]);
@@ -3229,20 +4348,26 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   const selectedAnswer =
     selected ?? (typeof savedAnswer === "string" ? savedAnswer : null);
   const isDragQuestion = isUCATDragOrderQuestion(question);
-  const isCorrect = isDragQuestion
-    ? sameOrder(dragOrder, question.answerOrder)
-    : selectedAnswer === question.answer;
+  const isDragCategoryQuestion = isUCATDragCategoryQuestion(question);
+  const isYesNoQuestion = isUCATYesNoQuestion(question);
+  const isSingleQuestion = isUCATSingleSelectQuestion(question);
+  const dragCategoryAnswer =
+    isDragCategoryQuestion && isPracticeAnswerMap(savedAnswer) ? savedAnswer : {};
+  const yesNoAnswer =
+    isYesNoQuestion && isPracticeAnswerMap(savedAnswer) ? savedAnswer : {};
+  const currentAnswerForScore = isDragQuestion ? dragOrder : savedAnswer;
+  const currentAnswerScore = getAnswerScore(question, currentAnswerForScore);
+  const isCorrect = currentAnswerScore.status === "correct";
+  const isPartial = currentAnswerScore.status === "partial";
 
   const chooseAnswer = (key: UCATOptionKey, source: "click" | "keyboard" = "click") => {
-    if (phase === "marked") return;
+    if (phase !== "practice" || !isSingleQuestion) return;
 
     const previousAnswer = answers[questionIndex];
     const previousAnswerKey =
       typeof previousAnswer === "string" ? previousAnswer : null;
     const questionElapsedMs = markActiveQuestionAnswered();
-    const correctAnswerKey = isUCATDragOrderQuestion(question)
-      ? null
-      : question.answer;
+    const correctAnswerKey = question.answer;
     setSelected(key);
     setAnswers((current) => ({ ...current, [questionIndex]: key }));
     recordEvent("answer_select", {
@@ -3254,6 +4379,70 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         previousAnswerKey && correctAnswerKey
           ? previousAnswerKey === correctAnswerKey
           : null,
+      questionElapsedMs,
+    });
+    setRevealed(false);
+  };
+
+  const chooseYesNoAnswer = (
+    statementId: string,
+    value: UCATYesNoValue,
+    source: "click" | "keyboard" = "click"
+  ) => {
+    if (phase !== "practice" || !isYesNoQuestion) return;
+
+    const previousAnswer = answers[questionIndex];
+    const previousAnswerMap = isPracticeAnswerMap(previousAnswer)
+      ? previousAnswer
+      : {};
+    const previousValue = previousAnswerMap[statementId] ?? null;
+    const statement = question.yesNoStatements.find(
+      (item) => item.id === statementId
+    );
+    const questionElapsedMs = markActiveQuestionAnswered();
+    const nextAnswer = { ...previousAnswerMap, [statementId]: value };
+
+    setAnswers((current) => ({ ...current, [questionIndex]: nextAnswer }));
+    recordEvent("answer_select", {
+      answer: value,
+      statementId,
+      source,
+      previousAnswer: previousValue,
+      correct: statement ? value === statement.answer : false,
+      previousCorrect:
+        previousValue && statement ? previousValue === statement.answer : null,
+      questionElapsedMs,
+    });
+    setRevealed(false);
+  };
+
+  const chooseDragCategoryAnswer = (
+    itemId: string,
+    categoryId: string,
+    source: "click" | "drag" = "click"
+  ) => {
+    if (phase !== "practice" || !isDragCategoryQuestion) return;
+
+    const previousAnswer = answers[questionIndex];
+    const previousAnswerMap = isPracticeAnswerMap(previousAnswer)
+      ? previousAnswer
+      : {};
+    const previousCategory = previousAnswerMap[itemId] ?? null;
+    const item = question.categoryItems.find(
+      (categoryItem) => categoryItem.id === itemId
+    );
+    const questionElapsedMs = markActiveQuestionAnswered();
+    const nextAnswer = { ...previousAnswerMap, [itemId]: categoryId };
+
+    setAnswers((current) => ({ ...current, [questionIndex]: nextAnswer }));
+    recordEvent("answer_select", {
+      answer: categoryId,
+      itemId,
+      source,
+      previousAnswer: previousCategory,
+      correct: item ? categoryId === item.answerCategory : false,
+      previousCorrect:
+        previousCategory && item ? previousCategory === item.answerCategory : null,
       questionElapsedMs,
     });
     setRevealed(false);
@@ -3275,7 +4464,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   };
 
   const moveDragItem = (fromIndex: number, toIndex: number) => {
-    if (!isDragQuestion || fromIndex === toIndex || phase === "marked") return;
+    if (!isDragQuestion || fromIndex === toIndex || phase !== "practice") return;
 
     const next = [...dragOrder];
     const [moved] = next.splice(fromIndex, 1);
@@ -3306,11 +4495,47 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   };
 
   const toggleFlag = (source: "button" | "keyboard" = "button") => {
+    if (phase !== "practice") return;
+
     setFlags((current) => {
       const next = !current[questionIndex];
       recordEvent("flag_toggle", { flagged: next, source });
       return { ...current, [questionIndex]: next };
     });
+  };
+
+  const showMarkedInsights = () => {
+    if (
+      typeof window !== "undefined" &&
+      !markedInsightsHistoryActiveRef.current
+    ) {
+      window.history.pushState(
+        { phloemaiQuestionBankView: "marked-insights" },
+        "",
+        window.location.href
+      );
+      markedInsightsHistoryActiveRef.current = true;
+    }
+
+    phaseRef.current = "marked";
+    setNavigatorOpen(false);
+    setPhase("marked");
+    scrollToQuestionTop();
+  };
+
+  const reviewMarkedAnswers = () => {
+    const shouldStepBack =
+      typeof window !== "undefined" && markedInsightsHistoryActiveRef.current;
+    markedInsightsHistoryActiveRef.current = false;
+    phaseRef.current = "marked-review";
+    setNavigatorOpen(false);
+    setRevealed(true);
+    setPhase("marked-review");
+    scrollToQuestionTop();
+
+    if (shouldStepBack) {
+      window.setTimeout(() => window.history.back(), 0);
+    }
   };
 
   const openReview = () => {
@@ -3353,12 +4578,13 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       secondsRemaining: timeRemaining,
       trackingMode: attentionTracker.trackingMode,
     });
-    setMarkedSummary(summary);
-    setPhase("marked");
     setQuestionIndex(0);
     setSelected(typeof answers[0] === "string" ? answers[0] : null);
     setDragOrder(getDragOrder(questions[0], answers[0]));
     setRevealed(true);
+    markedSummaryRef.current = summary;
+    setMarkedSummary(summary);
+    showMarkedInsights();
     beginQuestionTiming(questions[0]);
     void persistPracticeSummary(summary, finalEvents);
   };
@@ -3372,9 +4598,13 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         .join(" ")
     : "";
   const currentQuestionSummary =
-    liveSummary?.questions[questionIndex] ?? null;
+    markedSummary?.questions[questionIndex] ??
+    liveSummary?.questions[questionIndex] ??
+    null;
+  const currentIssueLabels = (question.issueTags ?? []).map(getUCATSjtIssueLabel);
 
-  const answerRevealed = revealed || phase === "marked";
+  const reviewingMarkedAnswers = phase === "marked-review";
+  const answerRevealed = revealed || reviewingMarkedAnswers;
   const supportsCalculator = true;
   const calcValue = Number(calcDisplay) || 0;
 
@@ -3547,7 +4777,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       }
     }
 
-    if (!isDragQuestion && ["a", "b", "c", "d"].includes(key)) {
+    if (isSingleQuestion && ["a", "b", "c", "d", "e"].includes(key)) {
       const optionKey = key.toUpperCase() as UCATOptionKey;
       if (question.options.some((option) => option.key === optionKey)) {
         event.preventDefault();
@@ -3567,7 +4797,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         trackingEventCount={trackingEventCount}
         timings={timingSnapshot}
         onGoToQuestion={(index) => {
-          setPhase("practice");
+          setPhase(markedSummary ? "marked-review" : "practice");
           goToQuestion(index);
         }}
         onMark={markPractice}
@@ -3585,9 +4815,12 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         checkoutLoading={checkoutLoading}
         checkoutError={checkoutError}
         onUpgrade={handleUpgrade}
+        onReviewAnswers={reviewMarkedAnswers}
         onNewSet={() => {
           commitQuestionTiming();
           attentionTracker.resetTracker();
+          markedSummaryRef.current = null;
+          markedInsightsHistoryActiveRef.current = false;
           setStarted(false);
           setPhase("practice");
           setMarkedSummary(null);
@@ -3679,7 +4912,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
               setRevealed((current) => !current);
               recordEvent("explain_toggle", { revealed: !revealed });
             }}
-            disabled={phase === "marked"}
+            disabled={phase !== "practice"}
             className="inline-flex items-center gap-1 text-sm font-semibold hover:underline disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
           >
             <HelpCircle className="h-5 w-5" aria-hidden="true" />
@@ -3688,9 +4921,10 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
           <button
             type="button"
             onClick={() => toggleFlag()}
+            disabled={phase !== "practice"}
             className={`inline-flex items-center gap-1 text-sm font-semibold hover:underline sm:text-base ${
               flags[questionIndex] ? "text-amber-200" : ""
-            }`}
+            } disabled:cursor-not-allowed disabled:opacity-70`}
           >
             <Flag className="h-5 w-5" aria-hidden="true" />
             Flag for review
@@ -3800,9 +5034,19 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
 
         <section className="px-6 py-5">
           <div ref={questionRegionRef}>
-            <p className="mb-3 inline-flex rounded-sm bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">
-              {subtype.label}
-            </p>
+            <div className="mb-3 flex flex-wrap gap-2">
+              <p className="inline-flex rounded-sm bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">
+                {subtype.label}
+              </p>
+              {currentIssueLabels.map((label) => (
+                <span
+                  key={label}
+                  className="rounded-sm bg-yellow-50 px-2 py-1 text-xs font-black text-yellow-800"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
             <p className="text-base leading-6 sm:text-lg">{question.question}</p>
           </div>
 
@@ -3822,7 +5066,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
                   return (
                     <div
                       key={itemId}
-                      draggable={phase !== "marked"}
+                      draggable={phase === "practice"}
                       onDragStart={() => setDraggedItemId(itemId)}
                       onDragOver={(event) => event.preventDefault()}
                       onDrop={() => {
@@ -3851,11 +5095,140 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
                 })}
               </div>
             </div>
-          ) : (
+          ) : isDragCategoryQuestion ? (
+            <div ref={answersRegionRef} className="mt-6">
+              <p className="rounded-sm border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold leading-6 text-slate-700">
+                {question.instruction}
+              </p>
+              <div className="mt-4 space-y-3">
+                {question.categoryItems.map((item) => {
+                  const selectedCategory = dragCategoryAnswer[item.id];
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="grid gap-3 rounded-sm border border-slate-300 bg-white px-3 py-3 text-base leading-6 sm:grid-cols-[1fr_260px] sm:items-center sm:text-lg"
+                    >
+                      <div
+                        draggable={phase === "practice"}
+                        onDragStart={() => setDraggedItemId(item.id)}
+                        className="flex cursor-grab items-center gap-3 active:cursor-grabbing"
+                      >
+                        <GripVertical
+                          className="h-5 w-5 shrink-0 text-slate-500"
+                          aria-hidden="true"
+                        />
+                        <span>{item.text}</span>
+                      </div>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        {question.categories.map((category) => {
+                          const active = selectedCategory === category.id;
+                          const correct =
+                            answerRevealed && item.answerCategory === category.id;
+                          const wrong = answerRevealed && active && !correct;
+
+                          return (
+                            <button
+                              key={category.id}
+                              type="button"
+                              onClick={() =>
+                                chooseDragCategoryAnswer(item.id, category.id)
+                              }
+                              onDragOver={(event) => event.preventDefault()}
+                              onDrop={() => {
+                                if (draggedItemId === item.id) {
+                                  chooseDragCategoryAnswer(
+                                    item.id,
+                                    category.id,
+                                    "drag"
+                                  );
+                                }
+                                setDraggedItemId(null);
+                              }}
+                              disabled={phase !== "practice"}
+                              className={`min-h-10 rounded-sm border px-3 py-2 text-sm font-bold ${
+                                correct
+                                  ? "border-emerald-600 bg-emerald-100 text-emerald-800"
+                                  : wrong
+                                    ? "border-red-600 bg-red-100 text-red-800"
+                                    : active
+                                      ? "border-[#0078a8] bg-[#e6f5fb] text-[#00618a]"
+                                      : "border-slate-300 bg-white text-slate-700 hover:border-slate-500"
+                              } disabled:cursor-not-allowed disabled:opacity-80`}
+                            >
+                              {category.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : isYesNoQuestion ? (
+            <div ref={answersRegionRef} className="mt-6 space-y-4">
+              <p className="rounded-sm border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold leading-6 text-slate-700">
+                {question.instruction}
+              </p>
+              {question.yesNoStatements.map((statement) => {
+                const currentAnswer = yesNoAnswer[statement.id] as
+                  | UCATYesNoValue
+                  | undefined;
+
+                return (
+                  <div
+                    key={statement.id}
+                    className={`grid gap-3 rounded-sm border px-3 py-3 text-base leading-6 sm:grid-cols-[1fr_150px] sm:items-center sm:text-lg ${
+                      answerRevealed && currentAnswer === statement.answer
+                        ? "border-emerald-500 bg-emerald-50"
+                        : answerRevealed && currentAnswer
+                          ? "border-red-500 bg-red-50"
+                          : "border-slate-300 bg-white"
+                    }`}
+                  >
+                    <span>{statement.text}</span>
+                    <div className="grid grid-cols-2 gap-2">
+                      {(["Yes", "No"] as const).map((value) => {
+                        const active = currentAnswer === value;
+                        const correct =
+                          answerRevealed && statement.answer === value;
+                        const wrong = answerRevealed && active && !correct;
+
+                        return (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => chooseYesNoAnswer(statement.id, value)}
+                            disabled={phase !== "practice"}
+                            className={`h-10 rounded-sm border text-sm font-bold ${
+                              correct
+                                ? "border-emerald-600 bg-emerald-100 text-emerald-800"
+                                : wrong
+                                  ? "border-red-600 bg-red-100 text-red-800"
+                                  : active
+                                    ? "border-[#0078a8] bg-[#e6f5fb] text-[#00618a]"
+                                    : "border-slate-300 bg-white text-slate-700 hover:border-slate-500"
+                            } disabled:cursor-not-allowed disabled:opacity-80`}
+                          >
+                            {value}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : isSingleQuestion ? (
             <div ref={answersRegionRef} className="mt-6 space-y-5">
               {question.options.map((option) => {
                 const checked = selectedAnswer === option.key;
                 const correct = answerRevealed && option.key === question.answer;
+                const partial =
+                  answerRevealed &&
+                  checked &&
+                  isSjtPartialCreditAnswer(question, option.key);
                 const wrong = answerRevealed && checked && option.key !== question.answer;
 
                 return (
@@ -3864,6 +5237,8 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
                     className={`grid cursor-pointer grid-cols-[24px_44px_1fr] items-start gap-3 rounded-sm border px-3 py-2 text-base leading-6 sm:text-lg ${
                       correct
                         ? "border-emerald-500 bg-emerald-50"
+                        : partial
+                          ? "border-yellow-500 bg-yellow-50"
                         : wrong
                           ? "border-red-500 bg-red-50"
                           : "border-transparent hover:border-slate-300"
@@ -3874,7 +5249,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
                       name={question.id}
                       checked={checked}
                       onChange={() => chooseAnswer(option.key)}
-                      disabled={phase === "marked"}
+                      disabled={phase !== "practice"}
                       className="mt-1 h-4 w-4"
                     />
                     <span className="font-semibold">{option.key}.</span>
@@ -3883,29 +5258,58 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
                 );
               })}
             </div>
-          )}
+          ) : null}
 
           {answerRevealed && (
             <div
               className={`mt-8 rounded-sm border p-4 ${
                 isCorrect
                   ? "border-emerald-300 bg-emerald-50"
-                  : "border-amber-300 bg-amber-50"
+                  : isPartial
+                    ? "border-yellow-400 bg-yellow-50"
+                    : "border-red-300 bg-red-50"
               }`}
             >
               <div className="flex items-center gap-2 text-sm font-bold">
                 {isCorrect ? (
                   <CheckCircle className="h-5 w-5 text-emerald-600" aria-hidden="true" />
+                ) : isPartial ? (
+                  <AlertTriangle className="h-5 w-5 text-yellow-700" aria-hidden="true" />
                 ) : (
-                  <XCircle className="h-5 w-5 text-amber-600" aria-hidden="true" />
+                  <XCircle className="h-5 w-5 text-red-600" aria-hidden="true" />
                 )}
-                {isDragQuestion
-                  ? "Correct order"
-                  : `Correct answer: ${question.answer}`}
+                {isCorrect
+                  ? "Full mark awarded"
+                  : isPartial
+                    ? currentAnswerScore.feedback
+                    : currentAnswerScore.status === "unanswered"
+                      ? "No answer selected"
+                      : "Not quite"}
               </div>
+              <p className="mt-2 text-sm font-black text-slate-900">
+                {formatMarkScore(
+                  currentAnswerScore.points,
+                  currentAnswerScore.maxPoints
+                )}
+              </p>
               {isDragQuestion && (
                 <p className="mt-3 text-sm font-semibold leading-6 text-slate-800">
-                  {correctOrderText}
+                  Correct order: {correctOrderText}
+                </p>
+              )}
+              {isDragCategoryQuestion && (
+                <p className="mt-3 text-sm font-semibold leading-6 text-slate-800">
+                  Correct categories: {getCorrectAnswerText(question)}
+                </p>
+              )}
+              {isYesNoQuestion && (
+                <p className="mt-3 text-sm font-semibold leading-6 text-slate-800">
+                  Correct Yes/No answers: {getCorrectAnswerText(question)}
+                </p>
+              )}
+              {isSingleQuestion && (
+                <p className="mt-3 text-sm font-semibold leading-6 text-slate-800">
+                  Correct answer: {question.answer}
                 </p>
               )}
               <p className="mt-3 text-sm leading-6 text-slate-800">
@@ -3958,7 +5362,10 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
             commitAttentionSnapshot("end_bank");
             recordEvent("end_bank");
             attentionTracker.resetTracker();
+            markedSummaryRef.current = null;
+            markedInsightsHistoryActiveRef.current = false;
             setMarkedSummary(null);
+            setPhase("practice");
             setStarted(false);
           }}
           className="flex h-full items-center border-r-2 border-white px-3 text-lg font-semibold hover:bg-[#00618a]"
@@ -3968,10 +5375,10 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         <div className="flex h-full items-center">
           <button
             type="button"
-            onClick={openReview}
+            onClick={markedSummary ? showMarkedInsights : openReview}
             className="h-full border-l-2 border-white px-4 text-lg font-semibold hover:bg-[#00618a]"
           >
-            Review
+            {markedSummary ? "Summary" : "Review"}
           </button>
           <button
             type="button"

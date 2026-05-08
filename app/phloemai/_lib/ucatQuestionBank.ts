@@ -1,11 +1,18 @@
+import { ORIGINAL_DM_QUESTIONS } from "./ucatDmQuestions";
+import { ORIGINAL_QR_QUESTIONS } from "./ucatQrQuestions";
+import { SJT_QUESTIONS } from "./ucatSjtQuestions";
+
+// Future generated-bank work should first read ./ucatQuestionDesignNotes.md.
 export type UCATSection = "vr" | "dm" | "qr" | "sjt";
-export type UCATOptionKey = "A" | "B" | "C" | "D";
+export type UCATOptionKey = "A" | "B" | "C" | "D" | "E";
+export type UCATYesNoValue = "Yes" | "No";
 
 export type UCATSubtypeId =
   | "vr-tfc"
   | "vr-inference"
   | "vr-author"
   | "vr-detail"
+  | "vr-negative"
   | "vr-summary"
   | "dm-syllogisms"
   | "dm-logic"
@@ -22,9 +29,74 @@ export type UCATSubtypeId =
   | "qr-calculator-strategy"
   | "sjt-appropriateness"
   | "sjt-importance"
+  | "sjt-drag-drop"
   | "sjt-communication"
   | "sjt-integrity"
   | "sjt-ordering";
+
+export type UCATSetShape =
+  | "circle"
+  | "rectangle"
+  | "triangle"
+  | "pentagon"
+  | "diamond"
+  | "hexagon";
+
+export type UCATQuestionTag =
+  | "calculator-heavy"
+  | "time-consuming"
+  | "multi-step"
+  | "easy"
+  | "hard"
+  | "medium"
+  | "quick"
+  | "data-display"
+  | "text-stem"
+  | "set-based"
+  | "true-false-cant-tell"
+  | "detail-retrieval"
+  | "negative-except"
+  | "author-opinion"
+  | "inference-question"
+  | "hypothetical-scenario"
+  | "summary-structure";
+
+export type UCATMostLeastSlot = "most" | "least";
+
+export type UCATSjtIssueTag =
+  | "autonomy"
+  | "beneficence"
+  | "candour"
+  | "capacity-consent"
+  | "communication"
+  | "confidentiality"
+  | "escalation"
+  | "integrity"
+  | "justice"
+  | "non-maleficence"
+  | "patient-safety"
+  | "professional-boundaries"
+  | "respect-dignity"
+  | "scope-of-practice"
+  | "teamwork";
+
+export const UCAT_SJT_ISSUE_LABELS: Record<UCATSjtIssueTag, string> = {
+  autonomy: "Autonomy",
+  beneficence: "Beneficence",
+  candour: "Candour",
+  "capacity-consent": "Capacity and consent",
+  communication: "Communication",
+  confidentiality: "Confidentiality",
+  escalation: "Escalation",
+  integrity: "Integrity",
+  justice: "Justice",
+  "non-maleficence": "Non-maleficence",
+  "patient-safety": "Patient safety",
+  "professional-boundaries": "Professional boundaries",
+  "respect-dignity": "Respect and dignity",
+  "scope-of-practice": "Scope of practice",
+  teamwork: "Teamwork",
+};
 
 export type UCATChartVisual =
   | {
@@ -32,6 +104,15 @@ export type UCATChartVisual =
       title: string;
       yLabel: string;
       categories: Array<{ label: string; value: number }>;
+      max: number;
+      note?: string;
+    }
+  | {
+      type: "grouped-bar";
+      title: string;
+      yLabel: string;
+      seriesLabels: string[];
+      groups: Array<{ label: string; values: number[] }>;
       max: number;
       note?: string;
     }
@@ -49,16 +130,36 @@ export type UCATChartVisual =
       headers: string[];
       rows: string[][];
       note?: string;
+    }
+  | {
+      type: "set-diagram";
+      title: string;
+      shapes: Array<{
+        id: string;
+        label: string;
+        shape: UCATSetShape;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        rotation?: number;
+      }>;
+      regionLabels: Array<{ id: string; text: string; x: number; y: number }>;
+      legend?: Array<{ label: string; shape: UCATSetShape }>;
+      note?: string;
     };
 
 type UCATQuestionBase = {
   id: string;
   section: UCATSection;
   subtype: UCATSubtypeId;
+  setId?: string;
+  tags?: UCATQuestionTag[];
   title: string;
   leftTitle?: string;
   stimulus: string[];
   visual?: UCATChartVisual;
+  issueTags?: UCATSjtIssueTag[];
   question: string;
   explanation: string;
 };
@@ -76,7 +177,36 @@ export type UCATDragOrderQuestion = UCATQuestionBase & {
   instruction: string;
 };
 
-export type UCATQuestion = UCATSingleQuestion | UCATDragOrderQuestion;
+export type UCATDragCategoryQuestion = UCATQuestionBase & {
+  questionType: "drag-category";
+  instruction: string;
+  categories: Array<{ id: string; label: string }>;
+  categoryItems: Array<{ id: string; text: string; answerCategory: string }>;
+};
+
+export type UCATYesNoQuestion = UCATQuestionBase & {
+  questionType: "yes-no";
+  instruction: string;
+  yesNoStatements: Array<{
+    id: string;
+    text: string;
+    answer: UCATYesNoValue;
+  }>;
+};
+
+export type UCATMostLeastQuestion = UCATQuestionBase & {
+  questionType: "most-least";
+  instruction: string;
+  actionItems: Array<{ id: string; text: string }>;
+  answerSlots: Record<UCATMostLeastSlot, string>;
+};
+
+export type UCATQuestion =
+  | UCATSingleQuestion
+  | UCATDragOrderQuestion
+  | UCATDragCategoryQuestion
+  | UCATYesNoQuestion
+  | UCATMostLeastQuestion;
 
 export const UCAT_SECTIONS: Array<{
   slug: UCATSection;
@@ -146,6 +276,11 @@ export const UCAT_SUBTYPES: Record<
       description: "Find the purpose, detail or central reason in the passage.",
     },
     {
+      id: "vr-negative",
+      label: "Except / not supported",
+      description: "Find the false, unsupported or exception statement.",
+    },
+    {
       id: "vr-summary",
       label: "Summary and structure",
       description: "Select the best summary, title or structural role.",
@@ -155,32 +290,32 @@ export const UCAT_SUBTYPES: Record<
     {
       id: "dm-syllogisms",
       label: "Syllogisms",
-      description: "Decide what must logically follow.",
+      description: "Use Yes/No conclusions to decide what must follow.",
     },
     {
       id: "dm-logic",
-      label: "Logic puzzles",
+      label: "Logical puzzles",
       description: "Apply rules, ordering and constraints.",
     },
     {
       id: "dm-arguments",
-      label: "Arguments",
-      description: "Strengthen, weaken or evaluate reasoning.",
-    },
-    {
-      id: "dm-probability-data",
-      label: "Probability and data",
-      description: "Use probabilities, sets and short data displays.",
+      label: "Strongest argument",
+      description: "Pick the most relevant, evidence-based argument.",
     },
     {
       id: "dm-yes-no",
-      label: "Yes / no statements",
-      description: "Evaluate several conclusions against the same information.",
+      label: "Yes / no questions",
+      description: "Evaluate conclusions from a short paragraph or data set.",
     },
     {
       id: "dm-venn-sets",
-      label: "Venn and sets",
+      label: "Venn diagrams",
       description: "Work with overlaps, exclusions and grouped information.",
+    },
+    {
+      id: "dm-probability-data",
+      label: "Probability",
+      description: "Use chance, combinations and conditional probability.",
     },
   ],
   qr: [
@@ -232,6 +367,11 @@ export const UCAT_SUBTYPES: Record<
       description: "Judge how important a consideration or action is.",
     },
     {
+      id: "sjt-drag-drop",
+      label: "Drag and drop",
+      description: "Sort actions or considerations into the correct side.",
+    },
+    {
       id: "sjt-communication",
       label: "Communication and teamwork",
       description: "Respond respectfully to patients, peers and colleagues.",
@@ -249,705 +389,1615 @@ export const UCAT_SUBTYPES: Record<
   ],
 };
 
+const ORIGINAL_VR_QUESTIONS: UCATQuestion[] = [
+  {
+    id: "vr-bank-tfc-001",
+    section: "vr",
+    subtype: "vr-tfc",
+    setId: "vr-caption-screens",
+    tags: ["true-false-cant-tell", "easy", "quick", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Harborview Theatre piloted caption screens for Saturday matinee performances. The screens displayed dialogue and sound cues beside the stage. The aim was to improve access for deaf and hard-of-hearing visitors without changing the evening programme.",
+      "During the twelve-week trial, matinee ticket sales rose by 9%. Surveys from 130 attendees showed that most visitors who used captions also valued the sound cues. Managers said the sales rise could not be attributed solely to the screens, because a student discount began in the same week. A permanent installation will depend on repair costs and a review of sightlines.",
+    ],
+    question:
+      "The caption screens were used for evening performances during the trial. According to the passage, this statement is:",
+    options: [
+      { key: "A", text: "True" },
+      { key: "B", text: "False" },
+      { key: "C", text: "Can't tell" },
+    ],
+    answer: "B",
+    explanation:
+      "The passage states that the screens were piloted for Saturday matinee performances and that the evening programme was not changed.",
+  },
+  {
+    id: "vr-bank-tfc-002",
+    section: "vr",
+    subtype: "vr-tfc",
+    setId: "vr-caption-screens",
+    tags: ["true-false-cant-tell", "medium", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Harborview Theatre piloted caption screens for Saturday matinee performances. The screens displayed dialogue and sound cues beside the stage. The aim was to improve access for deaf and hard-of-hearing visitors without changing the evening programme.",
+      "During the twelve-week trial, matinee ticket sales rose by 9%. Surveys from 130 attendees showed that most visitors who used captions also valued the sound cues. Managers said the sales rise could not be attributed solely to the screens, because a student discount began in the same week. A permanent installation will depend on repair costs and a review of sightlines.",
+    ],
+    question:
+      "The increase in matinee ticket sales was caused by the caption screens. According to the passage, this statement is:",
+    options: [
+      { key: "A", text: "True" },
+      { key: "B", text: "False" },
+      { key: "C", text: "Can't tell" },
+    ],
+    answer: "C",
+    explanation:
+      "Sales rose, but the managers specifically say the rise cannot be attributed solely to the screens because a discount started at the same time.",
+  },
+  {
+    id: "vr-bank-tfc-003",
+    section: "vr",
+    subtype: "vr-tfc",
+    setId: "vr-caption-screens",
+    tags: [
+      "true-false-cant-tell",
+      "hard",
+      "time-consuming",
+      "text-stem",
+    ],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Harborview Theatre piloted caption screens for Saturday matinee performances. The screens displayed dialogue and sound cues beside the stage. The aim was to improve access for deaf and hard-of-hearing visitors without changing the evening programme.",
+      "During the twelve-week trial, matinee ticket sales rose by 9%. Surveys from 130 attendees showed that most visitors who used captions also valued the sound cues. Managers said the sales rise could not be attributed solely to the screens, because a student discount began in the same week. A permanent installation will depend on repair costs and a review of sightlines.",
+    ],
+    question:
+      "Most surveyed caption users found the sound-cue information useful. According to the passage, this statement is:",
+    options: [
+      { key: "A", text: "True" },
+      { key: "B", text: "False" },
+      { key: "C", text: "Can't tell" },
+    ],
+    answer: "A",
+    explanation:
+      "The passage states that most visitors who used captions also valued the sound cues.",
+  },
+  {
+    id: "vr-bank-detail-001",
+    section: "vr",
+    subtype: "vr-detail",
+    setId: "vr-seed-library",
+    tags: ["detail-retrieval", "easy", "quick", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Northbridge Library opened a seed-exchange drawer after local gardeners said commercial seed packs were often too large for small balconies. Members could take up to six packets each spring if they agreed to return seeds or growing notes at the end of the season. The library did not require successful harvesting; it valued records of what failed as well as what grew.",
+      "After the first year, basil and dwarf beans were the most borrowed seeds. Staff noticed that returned notes were often more useful than returned seeds because they helped choose varieties for shaded flats. The scheme was funded from the library's adult-learning budget, not from council parks money.",
+    ],
+    question: "Why did Northbridge Library open the seed-exchange drawer?",
+    options: [
+      { key: "A", text: "Commercial seed packs were often too large for balcony gardeners." },
+      { key: "B", text: "Council parks money had become unavailable." },
+      { key: "C", text: "The library wanted to stop members growing basil." },
+      { key: "D", text: "Members were required to harvest every packet successfully." },
+    ],
+    answer: "A",
+    explanation:
+      "The opening sentence gives the reason: local gardeners said commercial seed packs were often too large for small balconies.",
+  },
+  {
+    id: "vr-bank-detail-002",
+    section: "vr",
+    subtype: "vr-detail",
+    setId: "vr-seed-library",
+    tags: ["detail-retrieval", "medium", "quick", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Northbridge Library opened a seed-exchange drawer after local gardeners said commercial seed packs were often too large for small balconies. Members could take up to six packets each spring if they agreed to return seeds or growing notes at the end of the season. The library did not require successful harvesting; it valued records of what failed as well as what grew.",
+      "After the first year, basil and dwarf beans were the most borrowed seeds. Staff noticed that returned notes were often more useful than returned seeds because they helped choose varieties for shaded flats. The scheme was funded from the library's adult-learning budget, not from council parks money.",
+    ],
+    question: "According to the passage, the most borrowed seeds were:",
+    options: [
+      { key: "A", text: "carrots and basil." },
+      { key: "B", text: "basil and dwarf beans." },
+      { key: "C", text: "dwarf beans and tomatoes." },
+      { key: "D", text: "lettuce and carrots." },
+    ],
+    answer: "B",
+    explanation:
+      "The second paragraph states that basil and dwarf beans were the most borrowed seeds.",
+  },
+  {
+    id: "vr-bank-detail-003",
+    section: "vr",
+    subtype: "vr-detail",
+    setId: "vr-seed-library",
+    tags: ["detail-retrieval", "hard", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Northbridge Library opened a seed-exchange drawer after local gardeners said commercial seed packs were often too large for small balconies. Members could take up to six packets each spring if they agreed to return seeds or growing notes at the end of the season. The library did not require successful harvesting; it valued records of what failed as well as what grew.",
+      "After the first year, basil and dwarf beans were the most borrowed seeds. Staff noticed that returned notes were often more useful than returned seeds because they helped choose varieties for shaded flats. The scheme was funded from the library's adult-learning budget, not from council parks money.",
+    ],
+    question: "Returned notes were especially useful because they:",
+    options: [
+      { key: "A", text: "proved that every member had harvested successfully." },
+      { key: "B", text: "allowed the scheme to be funded by council parks money." },
+      { key: "C", text: "helped staff select varieties for shaded flats." },
+      { key: "D", text: "showed that basil should no longer be stocked." },
+    ],
+    answer: "C",
+    explanation:
+      "The passage says the notes helped staff choose varieties for shaded flats, which made them more useful than returned seeds.",
+  },
+  {
+    id: "vr-bank-negative-001",
+    section: "vr",
+    subtype: "vr-negative",
+    setId: "vr-rain-gardens",
+    tags: ["negative-except", "easy", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Riverside installed rain gardens along three streets where heavy rain often overwhelmed drains. The planted beds were designed to hold water temporarily, filter grit before it reached the river and make paved areas cooler in summer. Local volunteers helped plant them, partly because the council wanted residents to understand why some kerbs had been lowered.",
+      "Engineers said the gardens should reduce small floods but would not prevent flooding in major storms. Maintenance crews had to clear litter from the beds after market days, which made the pilot more demanding than expected. The council still extended the scheme to two more streets because sensors showed a slower rush of water into drains after ordinary rain.",
+    ],
+    question:
+      "Which of the following was not a stated aim of installing the rain gardens?",
+    options: [
+      { key: "A", text: "Holding water temporarily." },
+      { key: "B", text: "Filtering grit before it reached the river." },
+      { key: "C", text: "Cooling paved areas in summer." },
+      { key: "D", text: "Increasing market-stall sales." },
+    ],
+    answer: "D",
+    explanation:
+      "The passage lists water storage, grit filtering and cooling paved areas as aims. It does not mention market-stall sales as an aim.",
+  },
+  {
+    id: "vr-bank-negative-002",
+    section: "vr",
+    subtype: "vr-negative",
+    setId: "vr-rain-gardens",
+    tags: ["negative-except", "medium", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Riverside installed rain gardens along three streets where heavy rain often overwhelmed drains. The planted beds were designed to hold water temporarily, filter grit before it reached the river and make paved areas cooler in summer. Local volunteers helped plant them, partly because the council wanted residents to understand why some kerbs had been lowered.",
+      "Engineers said the gardens should reduce small floods but would not prevent flooding in major storms. Maintenance crews had to clear litter from the beds after market days, which made the pilot more demanding than expected. The council still extended the scheme to two more streets because sensors showed a slower rush of water into drains after ordinary rain.",
+    ],
+    question: "All of the following are true of the rain gardens except:",
+    options: [
+      { key: "A", text: "They were first installed along three streets." },
+      { key: "B", text: "They involved local volunteers." },
+      { key: "C", text: "They were expected to prevent flooding in major storms." },
+      { key: "D", text: "They were extended to two additional streets." },
+    ],
+    answer: "C",
+    explanation:
+      "Engineers said the gardens would not prevent flooding in major storms, so option C is the exception.",
+  },
+  {
+    id: "vr-bank-negative-003",
+    section: "vr",
+    subtype: "vr-negative",
+    setId: "vr-rain-gardens",
+    tags: [
+      "negative-except",
+      "hard",
+      "time-consuming",
+      "text-stem",
+    ],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Riverside installed rain gardens along three streets where heavy rain often overwhelmed drains. The planted beds were designed to hold water temporarily, filter grit before it reached the river and make paved areas cooler in summer. Local volunteers helped plant them, partly because the council wanted residents to understand why some kerbs had been lowered.",
+      "Engineers said the gardens should reduce small floods but would not prevent flooding in major storms. Maintenance crews had to clear litter from the beds after market days, which made the pilot more demanding than expected. The council still extended the scheme to two more streets because sensors showed a slower rush of water into drains after ordinary rain.",
+    ],
+    question: "Which statement is not supported by the passage?",
+    options: [
+      { key: "A", text: "Sensors provided evidence that ordinary rain reached drains more slowly." },
+      { key: "B", text: "The pilot required less maintenance than the council expected." },
+      { key: "C", text: "Lowered kerbs were part of the rain-garden design." },
+      { key: "D", text: "The gardens were intended to reduce smaller flooding problems." },
+    ],
+    answer: "B",
+    explanation:
+      "The passage says litter clearance made the pilot more demanding than expected, not less demanding.",
+  },
+  {
+    id: "vr-bank-author-001",
+    section: "vr",
+    subtype: "vr-author",
+    setId: "vr-remote-museums",
+    tags: ["author-opinion", "easy", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Several small museums now offer live video tours for classes that cannot travel. The author notes that these tours can bring rare collections to pupils who would otherwise never see them, and curators can adapt explanations to questions in real time. However, the author argues that remote tours are strongest when they prepare pupils for a later physical visit or support schools too far away to come.",
+      "According to the author, the weakness of remote tours is not that screens are inherently shallow. Rather, objects lose some scale, texture and presence when reduced to a camera view. A careful programme can reduce this loss, but it should not pretend that a streamed tour is identical to standing in a gallery.",
+    ],
+    question: "The author's view of live video museum tours is best described as:",
+    options: [
+      { key: "A", text: "hostile, because remote tours cannot teach pupils anything." },
+      { key: "B", text: "uncritical, because remote tours are identical to gallery visits." },
+      { key: "C", text: "supportive but cautious about their limits." },
+      { key: "D", text: "indifferent, because access to collections is not discussed." },
+    ],
+    answer: "C",
+    explanation:
+      "The author presents real benefits, especially for access, but also stresses that remote tours lose some qualities of a physical visit.",
+  },
+  {
+    id: "vr-bank-author-002",
+    section: "vr",
+    subtype: "vr-author",
+    setId: "vr-remote-museums",
+    tags: ["author-opinion", "medium", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Several small museums now offer live video tours for classes that cannot travel. The author notes that these tours can bring rare collections to pupils who would otherwise never see them, and curators can adapt explanations to questions in real time. However, the author argues that remote tours are strongest when they prepare pupils for a later physical visit or support schools too far away to come.",
+      "According to the author, the weakness of remote tours is not that screens are inherently shallow. Rather, objects lose some scale, texture and presence when reduced to a camera view. A careful programme can reduce this loss, but it should not pretend that a streamed tour is identical to standing in a gallery.",
+    ],
+    question: "Which statement would the author most likely support?",
+    options: [
+      { key: "A", text: "Remote tours should be avoided because screens are always superficial." },
+      { key: "B", text: "Remote tours are useful when they improve access or support later visits." },
+      { key: "C", text: "Curators cannot respond effectively during live video sessions." },
+      { key: "D", text: "Physical museum visits should no longer be encouraged." },
+    ],
+    answer: "B",
+    explanation:
+      "The author says remote tours are strongest when they help distant schools or prepare pupils for later physical visits.",
+  },
+  {
+    id: "vr-bank-author-003",
+    section: "vr",
+    subtype: "vr-author",
+    setId: "vr-remote-museums",
+    tags: [
+      "author-opinion",
+      "hard",
+      "time-consuming",
+      "text-stem",
+    ],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Several small museums now offer live video tours for classes that cannot travel. The author notes that these tours can bring rare collections to pupils who would otherwise never see them, and curators can adapt explanations to questions in real time. However, the author argues that remote tours are strongest when they prepare pupils for a later physical visit or support schools too far away to come.",
+      "According to the author, the weakness of remote tours is not that screens are inherently shallow. Rather, objects lose some scale, texture and presence when reduced to a camera view. A careful programme can reduce this loss, but it should not pretend that a streamed tour is identical to standing in a gallery.",
+    ],
+    question: "The author would most likely disagree with the claim that:",
+    options: [
+      { key: "A", text: "live video tours can be adapted to pupils' questions." },
+      { key: "B", text: "a streamed tour can fully replicate standing in a gallery." },
+      { key: "C", text: "some schools may be too far away to visit small museums." },
+      { key: "D", text: "careful planning can reduce some weaknesses of remote tours." },
+    ],
+    answer: "B",
+    explanation:
+      "The passage directly says remote tours should not pretend to be identical to standing in a gallery.",
+  },
+  {
+    id: "vr-bank-inference-001",
+    section: "vr",
+    subtype: "vr-inference",
+    setId: "vr-harbour-evidence",
+    tags: ["inference-question", "easy", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Marine archaeologists mapped a silted harbour using nineteenth-century dock plans, fishermen's memories and modern sonar. The dock plans showed where cranes and warehouses once stood, but the shoreline had shifted since they were drawn. Fishermen remembered snagging nets on buried timbers, although their descriptions placed the obstructions in broad areas rather than exact points.",
+      "Sonar located several straight-edged objects under the mud, yet it could not show whether they were parts of a pier, wreckage or modern debris. The team argued that the strongest conclusions came when two types of evidence pointed to the same location. They planned to excavate only the sites where documentary and sonar evidence overlapped.",
+    ],
+    question: "Which statement is best supported by the passage?",
+    options: [
+      { key: "A", text: "Combining evidence was more reliable than relying on one source alone." },
+      { key: "B", text: "The dock plans exactly matched the modern shoreline." },
+      { key: "C", text: "Sonar could identify every buried object with certainty." },
+      { key: "D", text: "Fishermen's memories were ignored by the research team." },
+    ],
+    answer: "A",
+    explanation:
+      "The team said the strongest conclusions came when two types of evidence pointed to the same location.",
+  },
+  {
+    id: "vr-bank-inference-002",
+    section: "vr",
+    subtype: "vr-inference",
+    setId: "vr-harbour-evidence",
+    tags: [
+      "inference-question",
+      "hypothetical-scenario",
+      "medium",
+      "text-stem",
+    ],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Marine archaeologists mapped a silted harbour using nineteenth-century dock plans, fishermen's memories and modern sonar. The dock plans showed where cranes and warehouses once stood, but the shoreline had shifted since they were drawn. Fishermen remembered snagging nets on buried timbers, although their descriptions placed the obstructions in broad areas rather than exact points.",
+      "Sonar located several straight-edged objects under the mud, yet it could not show whether they were parts of a pier, wreckage or modern debris. The team argued that the strongest conclusions came when two types of evidence pointed to the same location. They planned to excavate only the sites where documentary and sonar evidence overlapped.",
+    ],
+    question:
+      "If sonar identified an object in a place with no documentary evidence, what would the team most likely do first?",
+    options: [
+      { key: "A", text: "Excavate it immediately because sonar evidence was treated as conclusive." },
+      { key: "B", text: "Avoid prioritising it because the planned excavations required overlapping evidence." },
+      { key: "C", text: "Discard the sonar data because fishermen did not mention the location." },
+      { key: "D", text: "Assume it was definitely part of a pier." },
+    ],
+    answer: "B",
+    explanation:
+      "The team planned to excavate only sites where documentary and sonar evidence overlapped, so a sonar-only location would not be prioritised.",
+  },
+  {
+    id: "vr-bank-inference-003",
+    section: "vr",
+    subtype: "vr-inference",
+    setId: "vr-harbour-evidence",
+    tags: [
+      "inference-question",
+      "hard",
+      "time-consuming",
+      "text-stem",
+    ],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Marine archaeologists mapped a silted harbour using nineteenth-century dock plans, fishermen's memories and modern sonar. The dock plans showed where cranes and warehouses once stood, but the shoreline had shifted since they were drawn. Fishermen remembered snagging nets on buried timbers, although their descriptions placed the obstructions in broad areas rather than exact points.",
+      "Sonar located several straight-edged objects under the mud, yet it could not show whether they were parts of a pier, wreckage or modern debris. The team argued that the strongest conclusions came when two types of evidence pointed to the same location. They planned to excavate only the sites where documentary and sonar evidence overlapped.",
+    ],
+    question: "Which of the following can be inferred from the passage?",
+    options: [
+      { key: "A", text: "The fishermen gave precise coordinates for each obstruction." },
+      { key: "B", text: "Every straight-edged object under the mud was from the nineteenth century." },
+      { key: "C", text: "The team considered documentary evidence and sonar evidence stronger together." },
+      { key: "D", text: "The shoreline had remained unchanged since the dock plans were drawn." },
+    ],
+    answer: "C",
+    explanation:
+      "The team relied most on overlap between sources, showing that documentary and sonar evidence were considered stronger together.",
+  },
+  {
+    id: "vr-bank-summary-001",
+    section: "vr",
+    subtype: "vr-summary",
+    setId: "vr-mobile-library",
+    tags: ["summary-structure", "easy", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Westford Council sent a mobile library van to housing estates after the central library began closing early for building work. The van carried exam guides, children's books and laptops with mobile internet. It stopped for only ninety minutes in each area, so borrowers often reserved materials online before it arrived.",
+      "The service was praised for reaching readers who could not easily travel into town. Yet librarians found that short visits made it hard to give detailed research help, and unreliable mobile signal sometimes limited laptop use. A review recommended keeping the van after the main library reopened, but as an outreach supplement rather than a replacement.",
+    ],
+    question: "Which option best summarises the passage?",
+    options: [
+      { key: "A", text: "The mobile library was unsuccessful because no readers used it." },
+      { key: "B", text: "The mobile library replaced the central library permanently." },
+      { key: "C", text: "The mobile library improved access but had limits as a full library service." },
+      { key: "D", text: "The central library closed because borrowers preferred online reservations." },
+    ],
+    answer: "C",
+    explanation:
+      "The passage presents the van as useful for access while also describing limits such as short stops and unreliable signal.",
+  },
+  {
+    id: "vr-bank-summary-002",
+    section: "vr",
+    subtype: "vr-summary",
+    setId: "vr-mobile-library",
+    tags: ["summary-structure", "medium", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Westford Council sent a mobile library van to housing estates after the central library began closing early for building work. The van carried exam guides, children's books and laptops with mobile internet. It stopped for only ninety minutes in each area, so borrowers often reserved materials online before it arrived.",
+      "The service was praised for reaching readers who could not easily travel into town. Yet librarians found that short visits made it hard to give detailed research help, and unreliable mobile signal sometimes limited laptop use. A review recommended keeping the van after the main library reopened, but as an outreach supplement rather than a replacement.",
+    ],
+    question: "Which title best fits the passage?",
+    options: [
+      { key: "A", text: "Why mobile internet ended library outreach" },
+      { key: "B", text: "A useful but limited library outreach service" },
+      { key: "C", text: "The permanent closure of Westford Central Library" },
+      { key: "D", text: "How online reservations replaced books" },
+    ],
+    answer: "B",
+    explanation:
+      "The title captures both the benefits of outreach and the limits that prevent the van from replacing the main library.",
+  },
+  {
+    id: "vr-bank-summary-003",
+    section: "vr",
+    subtype: "vr-summary",
+    setId: "vr-mobile-library",
+    tags: ["summary-structure", "hard", "text-stem"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Westford Council sent a mobile library van to housing estates after the central library began closing early for building work. The van carried exam guides, children's books and laptops with mobile internet. It stopped for only ninety minutes in each area, so borrowers often reserved materials online before it arrived.",
+      "The service was praised for reaching readers who could not easily travel into town. Yet librarians found that short visits made it hard to give detailed research help, and unreliable mobile signal sometimes limited laptop use. A review recommended keeping the van after the main library reopened, but as an outreach supplement rather than a replacement.",
+    ],
+    question: "What is the main role of the second paragraph?",
+    options: [
+      { key: "A", text: "To weigh the service's benefits against its limitations and state the review's recommendation." },
+      { key: "B", text: "To explain why the central library began building work." },
+      { key: "C", text: "To list every book carried by the van." },
+      { key: "D", text: "To argue that online reservations made librarians unnecessary." },
+    ],
+    answer: "A",
+    explanation:
+      "The second paragraph gives praise, identifies limitations and reports the recommendation to keep the van as a supplement.",
+  },
+];
+
 export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: [
-    {
-      id: "vr-tfc-001",
-      section: "vr",
-      subtype: "vr-tfc",
-      title: "Verbal Reasoning Practice",
-      leftTitle: "Passage",
-      stimulus: [
-        "A city council introduced a cycle-hire scheme after a survey found that many residents made short journeys by car. The first docking stations were placed near rail stops and university buildings. During the first six months, most journeys lasted less than twenty minutes, and usage was highest on weekdays.",
-        "Transport officers cautioned that the scheme's effect on congestion was difficult to measure. Bus passenger numbers also changed during the same period, but a new bus timetable had been introduced at almost the same time. The council plans to compare data over three years before deciding whether to expand the scheme.",
-      ],
-      question:
-        "The cycle-hire scheme caused a fall in bus use. According to the passage, this statement is:",
-      options: [
-        { key: "A", text: "True" },
-        { key: "B", text: "False" },
-        { key: "C", text: "Can't tell" },
-      ],
-      answer: "C",
-      explanation:
-        "Bus passenger numbers changed, but the passage says a timetable change happened at almost the same time, so the cycle scheme cannot be identified as the cause.",
-    },
-    {
-      id: "vr-tfc-002",
-      section: "vr",
-      subtype: "vr-tfc",
-      title: "Verbal Reasoning Practice",
-      leftTitle: "Passage",
-      stimulus: [
-        "A coastal town restored a disused pier using a mixture of charitable donations and council funding. The restored pier now hosts craft stalls, a small exhibition space and seasonal music events. Local hotels reported higher weekend bookings in the summer after it reopened.",
-        "However, the restoration did not solve all of the town's economic problems. Several shops on the high street remained empty, and winter footfall was still low. The council argued that the pier should be viewed as one part of a wider plan rather than a complete solution.",
-      ],
-      question:
-        "The restored pier eliminated the town's economic difficulties. According to the passage, this statement is:",
-      options: [
-        { key: "A", text: "True" },
-        { key: "B", text: "False" },
-        { key: "C", text: "Can't tell" },
-      ],
-      answer: "B",
-      explanation:
-        "The passage says empty shops and low winter footfall remained, so the pier did not eliminate the economic difficulties.",
-    },
-    {
-      id: "vr-inference-001",
-      section: "vr",
-      subtype: "vr-inference",
-      title: "Verbal Reasoning Practice",
-      leftTitle: "Passage",
-      stimulus: [
-        "In the late nineteenth century, several towns in northern England built covered market halls. These buildings were not simply places to buy food. They were also civic statements, designed to show that a town was orderly, prosperous and modern. Stallholders paid rent to the council, and inspectors checked weights, measures and hygiene more regularly than they had in open-air markets.",
-        "Some traders complained that the halls made selling more expensive. Others welcomed the change because bad weather no longer reduced trade. Historians disagree about whether the halls mainly improved public health or whether they were built to raise municipal income. In many towns, both motives appear to have been present.",
-      ],
-      question: "According to the passage, covered market halls:",
-      options: [
-        { key: "A", text: "were introduced only to improve public health." },
-        { key: "B", text: "could benefit traders by reducing the effect of poor weather." },
-        { key: "C", text: "removed the need for council inspection." },
-        { key: "D", text: "were opposed by all stallholders because rents increased." },
-      ],
-      answer: "B",
-      explanation:
-        "The passage says some traders welcomed the halls because bad weather no longer reduced trade. The other options use absolute claims not supported by the passage.",
-    },
-    {
-      id: "vr-inference-002",
-      section: "vr",
-      subtype: "vr-inference",
-      title: "Verbal Reasoning Practice",
-      leftTitle: "Passage",
-      stimulus: [
-        "Researchers testing a new honey-based wound dressing found that it reduced bacterial growth in laboratory samples. The dressing was cheaper than some synthetic alternatives, but it had not yet been tested in large clinical trials. Nurses who used early samples said it was easy to apply, although some patients disliked its smell.",
-        "The research team argued that the dressing was promising but should not replace standard products until stronger evidence was available. They also noted that cost savings would matter only if the dressing performed at least as well as existing treatments in real patients.",
-      ],
-      question: "Which statement is best supported by the passage?",
-      options: [
-        { key: "A", text: "The dressing is ready to replace all standard wound products." },
-        { key: "B", text: "The dressing has shown potential but needs stronger clinical evidence." },
-        { key: "C", text: "Patients preferred the dressing to every synthetic alternative." },
-        { key: "D", text: "The dressing was more expensive than existing treatments." },
-      ],
-      answer: "B",
-      explanation:
-        "The team calls the dressing promising but says it should not replace standard products until better evidence is available.",
-    },
-    {
-      id: "vr-author-001",
-      section: "vr",
-      subtype: "vr-author",
-      title: "Verbal Reasoning Practice",
-      leftTitle: "Passage",
-      stimulus: [
-        "Octopuses are often described as solitary animals, but this label can be misleading. In the wild, many species spend long periods alone, yet they also interact with rivals, potential mates and predators in complex ways. Some can change colour rapidly, not only to hide but also to signal aggression or uncertainty.",
-        "Researchers are cautious about calling these signals a language. Unlike human speech, the displays do not appear to have fixed meanings in every context. A dark colour pattern, for example, may precede an attack in one situation but simply reflect stress in another. The same behaviour can therefore be informative without being symbolic.",
-      ],
-      question:
-        "The author's attitude towards describing octopus colour displays as a language is best described as:",
-      options: [
-        { key: "A", text: "enthusiastic, because the displays always have fixed meanings." },
-        { key: "B", text: "dismissive, because octopuses rarely communicate." },
-        { key: "C", text: "cautious, because the displays vary with context." },
-        { key: "D", text: "certain, because the displays match human speech." },
-      ],
-      answer: "C",
-      explanation:
-        "The passage says researchers are cautious and explains that the same display can mean different things in different contexts.",
-    },
-    {
-      id: "vr-author-002",
-      section: "vr",
-      subtype: "vr-author",
-      title: "Verbal Reasoning Practice",
-      leftTitle: "Passage",
-      stimulus: [
-        "Several schools have replaced annual prize ceremonies with smaller termly recognition events. Supporters argue that pupils who improve steadily are more likely to be noticed, rather than only those who finish top of a year group. Critics worry that frequent awards reduce the meaning of success.",
-        "The author notes that both concerns have some force, but suggests that the design of the awards matters more than their frequency. A certificate for every minor task may feel empty, whereas a carefully chosen recognition of effort or contribution can reinforce the behaviour a school values.",
-      ],
-      question: "Which view would the author most likely support?",
-      options: [
-        { key: "A", text: "Frequent awards are always harmful." },
-        { key: "B", text: "Only academic winners should receive recognition." },
-        { key: "C", text: "Recognition can be useful if it is selective and meaningful." },
-        { key: "D", text: "Schools should avoid recognising effort or contribution." },
-      ],
-      answer: "C",
-      explanation:
-        "The author does not reject frequent awards entirely, but stresses that awards should be carefully chosen and meaningful.",
-    },
-    {
-      id: "vr-detail-001",
-      section: "vr",
-      subtype: "vr-detail",
-      title: "Verbal Reasoning Practice",
-      leftTitle: "Passage",
-      stimulus: [
-        "A small island museum recently stopped displaying a set of navigational charts. The charts were fragile, and light exposure had begun to fade the ink. Instead, the museum created high-resolution digital copies and placed the originals in climate-controlled storage.",
-        "Visitor numbers did not fall after the change. In fact, the digital display allowed visitors to zoom into details that had previously been difficult to see. Some regular visitors missed the atmosphere of seeing the original objects, but the museum argued that preservation had to take priority over display.",
-      ],
-      question: "The museum's decision was mainly based on:",
-      options: [
-        { key: "A", text: "a need to protect the original charts from damage." },
-        { key: "B", text: "a fall in visitor numbers." },
-        { key: "C", text: "the belief that digital images are always more valuable than originals." },
-        { key: "D", text: "a lack of public interest in navigational history." },
-      ],
-      answer: "A",
-      explanation:
-        "The passage emphasises fragility, fading ink and preservation. It explicitly says visitor numbers did not fall.",
-    },
-    {
-      id: "vr-detail-002",
-      section: "vr",
-      subtype: "vr-detail",
-      title: "Verbal Reasoning Practice",
-      leftTitle: "Passage",
-      stimulus: [
-        "A university archive began recruiting volunteers to describe old photographs. Many images had been donated without dates, locations or names. Volunteers were asked to record visible details such as street signs, clothing and shop fronts, which professional archivists could later check against other records.",
-        "The project did not allow volunteers to make final identifications. Archive staff said this prevented confident but inaccurate guesses from entering the catalogue. The aim was to speed up research while keeping the final record reliable.",
-      ],
-      question: "Why were volunteers asked to record visible details?",
-      options: [
-        { key: "A", text: "So they could replace professional archivists." },
-        { key: "B", text: "So archivists could later compare the details with other records." },
-        { key: "C", text: "So the archive could avoid checking their work." },
-        { key: "D", text: "So photographs without dates could be discarded." },
-      ],
-      answer: "B",
-      explanation:
-        "The passage says volunteers recorded details that professional archivists could later check against other records.",
-    },
-    {
-      id: "vr-summary-001",
-      section: "vr",
-      subtype: "vr-summary",
-      title: "Verbal Reasoning Practice",
-      leftTitle: "Passage",
-      stimulus: [
-        "Some hospitals have introduced quiet handover rooms where clinical staff exchange information at the end of a shift. The rooms are designed to reduce interruptions from phone calls, passing colleagues and corridor noise. Early feedback suggests staff feel less rushed when discussing complex patients.",
-        "However, managers have not claimed that quiet rooms alone prevent mistakes. Written notes, clear responsibility and enough overlap between shifts remain essential. The strongest argument for the rooms is that they remove one avoidable source of distraction from an already demanding process.",
-      ],
-      question: "Which option best summarises the passage?",
-      options: [
-        { key: "A", text: "Quiet handover rooms are useful because they reduce distraction, but they are not a complete solution." },
-        { key: "B", text: "Quiet handover rooms have been proven to eliminate clinical errors during shift changes." },
-        { key: "C", text: "Written notes are no longer necessary if handovers take place in quiet rooms." },
-        { key: "D", text: "Managers introduced quiet rooms mainly because staff disliked written records." },
-      ],
-      answer: "A",
-      explanation:
-        "The passage presents quiet rooms as helpful for reducing interruptions, while stressing that other safety measures remain essential.",
-    },
+    ...ORIGINAL_VR_QUESTIONS,
   ],
   dm: [
-    {
-      id: "dm-logic-001",
-      section: "dm",
-      subtype: "dm-logic",
-      title: "Decision Making Practice",
-      leftTitle: "Information",
-      stimulus: [
-        "A clinic runs four appointment types: blood test, review, vaccination and dressing change. Blood tests are always before 10:30. Reviews are never on Friday. Dressing changes are only on Tuesday or Thursday. Vaccinations can be on any weekday except Tuesday.",
-      ],
-      question:
-        "Which of the following appointments could be scheduled on a Tuesday at 11:00?",
-      options: [
-        { key: "A", text: "Blood test only" },
-        { key: "B", text: "Dressing change only" },
-        { key: "C", text: "Dressing change or review" },
-        { key: "D", text: "Vaccination or dressing change" },
-      ],
-      answer: "C",
-      explanation:
-        "A blood test must be before 10:30, so it cannot be 11:00. Vaccinations cannot be on Tuesday. Dressing changes can be Tuesday, and reviews are allowed on Tuesday because they are only excluded on Friday.",
-    },
-    {
-      id: "dm-logic-002",
-      section: "dm",
-      subtype: "dm-logic",
-      title: "Decision Making Practice",
-      leftTitle: "Information",
-      stimulus: [
-        "Four students, Hana, Idris, Maya and Theo, each give one presentation. Hana presents before Theo. Maya presents immediately after Idris. Theo does not present last.",
-      ],
-      question: "Which order is possible?",
-      options: [
-        { key: "A", text: "Hana, Idris, Maya, Theo" },
-        { key: "B", text: "Idris, Maya, Theo, Hana" },
-        { key: "C", text: "Maya, Idris, Hana, Theo" },
-        { key: "D", text: "Hana, Theo, Idris, Maya" },
-      ],
-      answer: "D",
-      explanation:
-        "Hana is before Theo, Maya is immediately after Idris, and Theo is not last. Only Hana, Theo, Idris, Maya satisfies all three rules.",
-    },
-    {
-      id: "dm-arguments-001",
-      section: "dm",
-      subtype: "dm-arguments",
-      title: "Decision Making Practice",
-      leftTitle: "Argument",
-      stimulus: [
-        "A local council is considering extending library opening hours. Supporters say students need quiet study spaces after school. Opponents say online resources mean longer opening hours are unnecessary.",
-      ],
-      question:
-        "Which statement, if true, most strengthens the case for extending opening hours?",
-      options: [
-        { key: "A", text: "Most local students have reliable quiet study space at home." },
-        { key: "B", text: "Library use is highest between 3:30 pm and 6:30 pm." },
-        { key: "C", text: "The library's online catalogue was recently updated." },
-        { key: "D", text: "A neighbouring town reduced its library opening hours last year." },
-      ],
-      answer: "B",
-      explanation:
-        "High use after school directly supports the claim that students need access during later hours. The other options either weaken, distract from, or do not directly support the argument.",
-    },
-    {
-      id: "dm-arguments-002",
-      section: "dm",
-      subtype: "dm-arguments",
-      title: "Decision Making Practice",
-      leftTitle: "Argument",
-      stimulus: [
-        "A hospital manager argues that reminder texts should be stopped because missed appointment rates were unchanged in one small department last month. The manager says the texts are therefore pointless.",
-      ],
-      question: "Which option best identifies a weakness in the manager's argument?",
-      options: [
-        { key: "A", text: "The argument uses one small department and one month to judge the whole policy." },
-        { key: "B", text: "The argument explains how reminder texts are written." },
-        { key: "C", text: "The argument proves that patients dislike text messages." },
-        { key: "D", text: "The argument compares reminder texts with phone calls." },
-      ],
-      answer: "A",
-      explanation:
-        "The conclusion is too broad for the evidence. One department over one month may not represent the effect of reminder texts overall.",
-    },
-    {
-      id: "dm-probability-001",
-      section: "dm",
-      subtype: "dm-probability-data",
-      title: "Decision Making Practice",
-      leftTitle: "Probability",
-      stimulus: [
-        "A box contains 5 blue tokens, 3 red tokens and 2 green tokens. One token is chosen at random and not replaced. A second token is then chosen at random.",
-      ],
-      question: "What is the probability that both tokens are blue?",
-      options: [
-        { key: "A", text: "1/5" },
-        { key: "B", text: "2/9" },
-        { key: "C", text: "5/18" },
-        { key: "D", text: "1/4" },
-      ],
-      answer: "B",
-      explanation:
-        "The probability is 5/10 for the first blue token, then 4/9 for the second blue token. 5/10 x 4/9 = 20/90 = 2/9.",
-    },
-    {
-      id: "dm-probability-002",
-      section: "dm",
-      subtype: "dm-probability-data",
-      title: "Decision Making Practice",
-      leftTitle: "Data",
-      stimulus: [
-        "In a group of 40 applicants, 22 study biology, 18 study chemistry and 10 study both biology and chemistry.",
-      ],
-      question: "How many applicants study neither biology nor chemistry?",
-      options: [
-        { key: "A", text: "8" },
-        { key: "B", text: "10" },
-        { key: "C", text: "12" },
-        { key: "D", text: "14" },
-      ],
-      answer: "B",
-      explanation:
-        "The number studying at least one is 22 + 18 - 10 = 30. Therefore 40 - 30 = 10 study neither.",
-    },
-    {
-      id: "dm-yes-no-001",
-      section: "dm",
-      subtype: "dm-yes-no",
-      title: "Decision Making Practice",
-      leftTitle: "Information",
-      stimulus: [
-        "Every candidate who attends the morning assessment completes a written task. Some candidates who complete a written task also complete a role play. No candidate who attends the afternoon assessment completes a role play.",
-      ],
-      question: "Which statement must be answered 'yes'?",
-      options: [
-        { key: "A", text: "Do all candidates who complete a written task attend the morning assessment?" },
-        { key: "B", text: "Do some candidates who complete a role play complete a written task?" },
-        { key: "C", text: "Do all candidates who attend the afternoon assessment complete a written task?" },
-        { key: "D", text: "Do some candidates who attend the afternoon assessment complete a role play?" },
-      ],
-      answer: "B",
-      explanation:
-        "The information says some candidates who complete a written task also complete a role play, so those role-play candidates also completed a written task.",
-    },
-    {
-      id: "dm-venn-sets-001",
-      section: "dm",
-      subtype: "dm-venn-sets",
-      title: "Decision Making Practice",
-      leftTitle: "Information",
-      stimulus: [
-        "In a revision group of 60 students, 34 study Verbal Reasoning, 29 study Decision Making and 21 study Quantitative Reasoning. Twelve study both Verbal Reasoning and Decision Making, 9 study both Decision Making and Quantitative Reasoning, 8 study both Verbal Reasoning and Quantitative Reasoning, and 5 study all three.",
-      ],
-      question: "How many students study none of the three listed areas?",
-      options: [
-        { key: "A", text: "0" },
-        { key: "B", text: "4" },
-        { key: "C", text: "6" },
-        { key: "D", text: "9" },
-      ],
-      answer: "A",
-      explanation:
-        "At least one area = 34 + 29 + 21 - 12 - 9 - 8 + 5 = 60, so no students are outside the three groups.",
-    },
+    ...ORIGINAL_DM_QUESTIONS,
     {
       id: "dm-syllogisms-001",
       section: "dm",
       subtype: "dm-syllogisms",
+      tags: ["multi-step", "medium", "text-stem"],
+      questionType: "yes-no",
       title: "Decision Making Practice",
       leftTitle: "Syllogism",
       stimulus: [
-        "All mentors at the centre are trained volunteers. No trained volunteers are paid employees.",
+        "All medicines in Cabinet A require refrigeration. Some medicines in Cabinet A are antibiotics. No refrigerated item is kept on the ward trolley.",
       ],
-      question: "Which conclusion must follow?",
-      options: [
-        { key: "A", text: "No mentors at the centre are paid employees." },
-        { key: "B", text: "All paid employees are mentors." },
-        { key: "C", text: "Some trained volunteers are mentors." },
-        { key: "D", text: "No paid employees work at the centre." },
+      question:
+        "Place 'Yes' if the conclusion follows. Place 'No' if the conclusion does not follow.",
+      instruction: "Answer each conclusion using only the information given.",
+      yesNoStatements: [
+        { id: "antibiotics-refrigerated", text: "Some antibiotics require refrigeration.", answer: "Yes" },
+        { id: "cabinet-trolley", text: "No medicines in Cabinet A are kept on the ward trolley.", answer: "Yes" },
+        { id: "all-antibiotics", text: "All antibiotics require refrigeration.", answer: "No" },
+        { id: "refrigerated-trolley", text: "Some refrigerated items are kept on the ward trolley.", answer: "No" },
+        { id: "all-refrigerated-cabinet", text: "All refrigerated items are medicines in Cabinet A.", answer: "No" },
       ],
-      answer: "A",
       explanation:
-        "If all mentors are trained volunteers, and no trained volunteers are paid employees, then no mentors are paid employees.",
+        "Some Cabinet A medicines are antibiotics, and all Cabinet A medicines require refrigeration, so some antibiotics require refrigeration. Cabinet A medicines are refrigerated, and refrigerated items are not on the trolley. The wider claims about all antibiotics or all refrigerated items are not guaranteed.",
     },
     {
       id: "dm-syllogisms-002",
       section: "dm",
       subtype: "dm-syllogisms",
+      tags: ["multi-step", "medium", "text-stem"],
+      questionType: "yes-no",
       title: "Decision Making Practice",
       leftTitle: "Syllogism",
       stimulus: [
-        "Some online courses include live tutorials. All courses with live tutorials require advance booking.",
+        "Every person on the reserve list has completed the interview. No applicant who completed the interview is awaiting an identity check. Some applicants awaiting an identity check have paid the test fee.",
       ],
-      question: "Which conclusion must follow?",
+      question:
+        "Place 'Yes' if the conclusion follows. Place 'No' if the conclusion does not follow.",
+      instruction: "Answer each conclusion using only the information given.",
+      yesNoStatements: [
+        { id: "reserve-not-check", text: "No person on the reserve list is awaiting an identity check.", answer: "Yes" },
+        { id: "fee-and-check", text: "Some applicants who paid the test fee are awaiting an identity check.", answer: "Yes" },
+        { id: "interview-reserve", text: "Every applicant who completed the interview is on the reserve list.", answer: "No" },
+        { id: "reserve-paid", text: "Some people on the reserve list have paid the test fee.", answer: "No" },
+        { id: "check-not-interview", text: "No applicant awaiting an identity check has completed the interview.", answer: "Yes" },
+      ],
+      explanation:
+        "Reserve-list applicants have completed the interview, and interview-completers are not awaiting identity checks. The fee statement only tells us that some identity-check applicants have paid; it says nothing about reserve-list applicants paying.",
+    },
+    {
+      id: "dm-syllogisms-003",
+      section: "dm",
+      subtype: "dm-syllogisms",
+      tags: ["multi-step", "hard", "text-stem"],
+      questionType: "yes-no",
+      title: "Decision Making Practice",
+      leftTitle: "Syllogism",
+      stimulus: [
+        "All evening seminar attendees are second-year students. Some second-year students are peer mentors. No peer mentor is assigned to Group K.",
+      ],
+      question:
+        "Place 'Yes' if the conclusion follows. Place 'No' if the conclusion does not follow.",
+      instruction: "Answer each conclusion using only the information given.",
+      yesNoStatements: [
+        { id: "seminar-mentors", text: "Some evening seminar attendees are peer mentors.", answer: "No" },
+        { id: "mentors-not-k", text: "No peer mentors are assigned to Group K.", answer: "Yes" },
+        { id: "some-second-years-not-k", text: "Some second-year students are not assigned to Group K.", answer: "Yes" },
+        { id: "all-second-years-seminar", text: "All second-year students attend the evening seminar.", answer: "No" },
+        { id: "seminar-not-k", text: "No evening seminar attendee is assigned to Group K.", answer: "No" },
+      ],
+      explanation:
+        "The peer mentors mentioned are second-year students and are not in Group K, so at least some second-year students are not in Group K. Nothing connects evening seminar attendance to being a peer mentor or to Group K.",
+    },
+    {
+      id: "dm-logic-001",
+      section: "dm",
+      subtype: "dm-logic",
+      tags: ["multi-step", "medium", "text-stem"],
+      title: "Decision Making Practice",
+      leftTitle: "Information",
+      stimulus: [
+        "An interview circuit has four stations: Data, Teamwork, Motivation and Reflection. Data is immediately before Teamwork. Motivation is before Reflection. Teamwork is not last.",
+      ],
+      question: "Which station order is possible?",
       options: [
-        { key: "A", text: "All online courses require advance booking." },
-        { key: "B", text: "Some online courses require advance booking." },
-        { key: "C", text: "No courses without live tutorials require advance booking." },
-        { key: "D", text: "All courses requiring advance booking include live tutorials." },
+        { key: "A", text: "Data, Teamwork, Motivation, Reflection" },
+        { key: "B", text: "Motivation, Data, Reflection, Teamwork" },
+        { key: "C", text: "Reflection, Data, Teamwork, Motivation" },
+        { key: "D", text: "Motivation, Reflection, Data, Teamwork" },
+      ],
+      answer: "A",
+      explanation:
+        "Only A has Data immediately before Teamwork, Motivation before Reflection, and Teamwork somewhere other than last.",
+    },
+    {
+      id: "dm-logic-002",
+      section: "dm",
+      subtype: "dm-logic",
+      tags: ["time-consuming", "multi-step", "hard", "text-stem"],
+      title: "Decision Making Practice",
+      leftTitle: "Information",
+      stimulus: [
+        "Amina, Ben and Chloe each teach one subject: Biology, Chemistry or Physics. The subjects are taught in Rooms 1, 2 and 3. Physics is taught in Room 2. Chemistry is not taught in Room 3. Amina does not teach Chemistry. Ben teaches in the room numbered one less than Chloe's room.",
+      ],
+      question: "Who teaches Chemistry?",
+      options: [
+        { key: "A", text: "Amina" },
+        { key: "B", text: "Ben" },
+        { key: "C", text: "Chloe" },
+        { key: "D", text: "More information required" },
       ],
       answer: "B",
       explanation:
-        "At least some online courses have live tutorials, and every course with live tutorials requires advance booking. Therefore some online courses require advance booking.",
+        "Physics is in Room 2, and Chemistry cannot be in Room 3, so Chemistry is in Room 1. If Ben teaches one room lower than Chloe, Ben must be in Room 1 and Chloe in Room 2. Therefore Ben teaches Chemistry.",
+    },
+    {
+      id: "dm-logic-003",
+      section: "dm",
+      subtype: "dm-logic",
+      tags: ["multi-step", "medium", "text-stem"],
+      title: "Decision Making Practice",
+      leftTitle: "Information",
+      stimulus: [
+        "Four parcels, Red, Blue, Green and Yellow, are sent on Monday to Thursday, one parcel each day. Blue is sent immediately before Yellow. Green is sent after Red. Red is not sent on Monday.",
+      ],
+      question: "Which parcel is sent on Thursday?",
+      options: [
+        { key: "A", text: "Red" },
+        { key: "B", text: "Blue" },
+        { key: "C", text: "Green" },
+        { key: "D", text: "Yellow" },
+      ],
+      answer: "C",
+      explanation:
+        "Blue and Yellow must be Monday and Tuesday. Red then goes on Wednesday, leaving Green for Thursday.",
+    },
+    {
+      id: "dm-arguments-001",
+      section: "dm",
+      subtype: "dm-arguments",
+      tags: ["quick", "medium", "text-stem"],
+      title: "Decision Making Practice",
+      leftTitle: "Argument",
+      stimulus: [
+        "A health board is considering whether community pharmacies should offer free weekend blood-pressure checks.",
+      ],
+      question: "Select the strongest argument from the statements below.",
+      options: [
+        { key: "A", text: "Yes, because pharmacies already sell many health products." },
+        { key: "B", text: "Yes, because many working adults cannot attend weekday GP appointments and untreated high blood pressure can be serious." },
+        { key: "C", text: "No, because some people dislike waiting in pharmacies." },
+        { key: "D", text: "No, because blood-pressure cuffs come in several sizes." },
+      ],
+      answer: "B",
+      explanation:
+        "B directly addresses access and a meaningful health consequence. The other options are weak because they are irrelevant, minor or unsupported.",
+    },
+    {
+      id: "dm-arguments-002",
+      section: "dm",
+      subtype: "dm-arguments",
+      tags: ["quick", "medium", "text-stem"],
+      title: "Decision Making Practice",
+      leftTitle: "Argument",
+      stimulus: [
+        "A school is deciding whether to replace disposable lunch trays with washable trays.",
+      ],
+      question: "Select the strongest argument from the statements below.",
+      options: [
+        { key: "A", text: "Yes, because washable trays could reduce daily waste if the school has enough washing capacity." },
+        { key: "B", text: "Yes, because trays can be ordered in several colours." },
+        { key: "C", text: "No, because all pupils prefer disposable trays." },
+        { key: "D", text: "No, because lunchtime is often noisy." },
+      ],
+      answer: "A",
+      explanation:
+        "A links the proposal to the intended outcome and includes a practical condition. The other options are irrelevant or make unsupported absolute claims.",
+    },
+    {
+      id: "dm-arguments-003",
+      section: "dm",
+      subtype: "dm-arguments",
+      tags: ["quick", "medium", "text-stem"],
+      title: "Decision Making Practice",
+      leftTitle: "Argument",
+      stimulus: [
+        "A hospital trust is considering moving all follow-up appointments to video calls.",
+      ],
+      question: "Select the strongest argument from the statements below.",
+      options: [
+        { key: "A", text: "Yes, because video calls are a newer technology." },
+        { key: "B", text: "Yes, because some patients live far from hospital." },
+        { key: "C", text: "No, because some follow-ups require physical examination or private access to equipment that video calls cannot provide." },
+        { key: "D", text: "No, because computers sometimes need updates." },
+      ],
+      answer: "C",
+      explanation:
+        "C gives a direct reason why moving every follow-up online could be unsafe or unsuitable. B supports some video calls, but not moving all appointments.",
+    },
+    {
+      id: "dm-yes-no-001",
+      section: "dm",
+      subtype: "dm-yes-no",
+      tags: ["multi-step", "medium", "text-stem"],
+      questionType: "yes-no",
+      title: "Decision Making Practice",
+      leftTitle: "Data",
+      stimulus: [
+        "An online revision group has 74 members. Fifty use flashcards, 42 use timed sets, and 18 use both. Every member uses at least one of these two tools.",
+      ],
+      question:
+        "Place 'Yes' if the conclusion follows. Place 'No' if the conclusion does not follow.",
+      instruction: "Use the data to answer each conclusion.",
+      yesNoStatements: [
+        { id: "only-flashcards", text: "Exactly 30 members use only flashcards.", answer: "No" },
+        { id: "only-timed", text: "Exactly 24 members use only timed sets.", answer: "Yes" },
+        { id: "all-tools", text: "No members use neither flashcards nor timed sets.", answer: "Yes" },
+        { id: "flashcards-more-only", text: "More members use only flashcards than only timed sets.", answer: "Yes" },
+        { id: "both-less-quarter", text: "Fewer than a quarter of the members use both tools.", answer: "Yes" },
+      ],
+      explanation:
+        "Only flashcards is 50 - 18 = 32, and only timed sets is 42 - 18 = 24. Everyone uses at least one tool. Eighteen out of 74 is less than one quarter.",
+    },
+    {
+      id: "dm-yes-no-002",
+      section: "dm",
+      subtype: "dm-yes-no",
+      tags: ["multi-step", "medium", "text-stem"],
+      questionType: "yes-no",
+      title: "Decision Making Practice",
+      leftTitle: "Information",
+      stimulus: [
+        "A clinic introduced a new phone queue in January. In that month, the average wait to speak to reception fell from 18 minutes to 11 minutes. The clinic also hired two temporary receptionists during January. Patient satisfaction scores were not collected until February.",
+      ],
+      question:
+        "Place 'Yes' if the conclusion follows. Place 'No' if the conclusion does not follow.",
+      instruction: "Use the paragraph to answer each conclusion.",
+      yesNoStatements: [
+        { id: "wait-fell", text: "The average phone wait fell in January.", answer: "Yes" },
+        { id: "queue-caused-all", text: "The new phone queue alone caused the whole fall in waiting time.", answer: "No" },
+        { id: "jan-satisfaction", text: "Patient satisfaction scores improved in January.", answer: "No" },
+        { id: "temporary-staff", text: "At least one temporary receptionist was hired during January.", answer: "Yes" },
+        { id: "seven-minutes", text: "The average wait was 7 minutes lower than before.", answer: "Yes" },
+      ],
+      explanation:
+        "The fall in waiting time and temporary hires are stated. Causation is not proven because staffing changed too, and satisfaction was not collected until February.",
+    },
+    {
+      id: "dm-yes-no-003",
+      section: "dm",
+      subtype: "dm-yes-no",
+      tags: ["time-consuming", "multi-step", "data-display"],
+      questionType: "yes-no",
+      title: "Decision Making Practice",
+      leftTitle: "Data",
+      stimulus: [
+        "The table shows practice sets completed and reviewed by four students last week.",
+      ],
+      visual: {
+        type: "table",
+        title: "Weekly practice activity",
+        headers: ["Student", "Sets completed", "Sets reviewed"],
+        rows: [
+          ["Aria", "12", "8"],
+          ["Ben", "9", "9"],
+          ["Cara", "15", "10"],
+          ["Dev", "6", "4"],
+        ],
+      },
+      question:
+        "Place 'Yes' if the conclusion follows. Place 'No' if the conclusion does not follow.",
+      instruction: "Use the table to answer each conclusion.",
+      yesNoStatements: [
+        { id: "cara-most", text: "Cara completed the most practice sets.", answer: "Yes" },
+        { id: "ben-lower-proportion", text: "Ben reviewed a lower proportion of his completed sets than Aria.", answer: "No" },
+        { id: "dev-half-aria", text: "Dev completed half as many practice sets as Aria.", answer: "Yes" },
+        { id: "two-eighty", text: "Exactly two students reviewed at least 80% of their completed sets.", answer: "No" },
+        { id: "under-thirty", text: "Fewer than 30 sets were reviewed in total.", answer: "No" },
+      ],
+      explanation:
+        "Cara completed 15 sets, the highest total. Ben reviewed 9 out of 9, a higher proportion than Aria's 8 out of 12. The reviewed total is 31, and only Ben reached at least 80%.",
+    },
+    {
+      id: "dm-venn-sets-001",
+      section: "dm",
+      subtype: "dm-venn-sets",
+      tags: ["set-based", "data-display", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A revision society recorded which members attended three optional sessions. The numbers in the diagram show how many members are in each region.",
+      ],
+      visual: {
+        type: "set-diagram",
+        title: "Revision sessions attended",
+        shapes: [
+          { id: "clinic", label: "Clinic drills", shape: "circle", x: 90, y: 110, width: 240, height: 220 },
+          { id: "essay", label: "Essay plans", shape: "rectangle", x: 230, y: 120, width: 260, height: 190 },
+          { id: "interview", label: "Interview role-play", shape: "triangle", x: 240, y: 50, width: 290, height: 300 },
+        ],
+        regionLabels: [
+          { id: "clinic-only", text: "18", x: 150, y: 215 },
+          { id: "essay-only", text: "14", x: 440, y: 220 },
+          { id: "interview-only", text: "9", x: 385, y: 105 },
+          { id: "clinic-essay", text: "11", x: 255, y: 220 },
+          { id: "clinic-interview", text: "7", x: 290, y: 145 },
+          { id: "essay-interview", text: "10", x: 405, y: 160 },
+          { id: "all-three", text: "6", x: 330, y: 195 },
+        ],
+        legend: [
+          { label: "Clinic drills", shape: "circle" },
+          { label: "Essay plans", shape: "rectangle" },
+          { label: "Interview role-play", shape: "triangle" },
+        ],
+      },
+      question:
+        "How many members attended Essay plans and Interview role-play but not Clinic drills?",
+      options: [
+        { key: "A", text: "6" },
+        { key: "B", text: "10" },
+        { key: "C", text: "16" },
+        { key: "D", text: "23" },
+      ],
+      answer: "B",
+      explanation:
+        "The required region is inside Essay plans and Interview role-play, but outside Clinic drills. That region is labelled 10.",
+    },
+    {
+      id: "dm-venn-sets-002",
+      section: "dm",
+      subtype: "dm-venn-sets",
+      tags: ["set-based", "data-display", "multi-step", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "The diagram shows features of several medical procedures. Each number represents procedures in that exact region.",
+      ],
+      visual: {
+        type: "set-diagram",
+        title: "Procedure features",
+        shapes: [
+          { id: "long", label: "Long recovery", shape: "pentagon", x: 40, y: 60, width: 230, height: 230, rotation: -6 },
+          { id: "keyhole", label: "Keyhole", shape: "circle", x: 110, y: 140, width: 230, height: 210 },
+          { id: "invasive", label: "Invasive surgery", shape: "rectangle", x: 180, y: 110, width: 330, height: 190 },
+          { id: "fasting", label: "Fasting required", shape: "triangle", x: 300, y: 60, width: 300, height: 300 },
+        ],
+        regionLabels: [
+          { id: "long-only", text: "5", x: 130, y: 140 },
+          { id: "long-keyhole-invasive", text: "4", x: 220, y: 205 },
+          { id: "keyhole-only", text: "7", x: 175, y: 285 },
+          { id: "invasive-only", text: "8", x: 455, y: 215 },
+          { id: "fasting-only", text: "6", x: 500, y: 110 },
+          { id: "fasting-invasive", text: "9", x: 415, y: 165 },
+          { id: "keyhole-invasive-fasting", text: "3", x: 320, y: 205 },
+          { id: "long-fasting", text: "2", x: 255, y: 130 },
+        ],
+        legend: [
+          { label: "Long recovery", shape: "pentagon" },
+          { label: "Keyhole", shape: "circle" },
+          { label: "Invasive surgery", shape: "rectangle" },
+          { label: "Fasting required", shape: "triangle" },
+        ],
+      },
+      question:
+        "How many procedures require fasting and involve invasive surgery but do not involve keyhole surgery?",
+      options: [
+        { key: "A", text: "3" },
+        { key: "B", text: "8" },
+        { key: "C", text: "9" },
+        { key: "D", text: "12" },
+      ],
+      answer: "C",
+      explanation:
+        "The relevant region is in both Fasting required and Invasive surgery, while outside Keyhole. It is labelled 9.",
+    },
+    {
+      id: "dm-venn-sets-003",
+      section: "dm",
+      subtype: "dm-venn-sets",
+      tags: ["set-based", "data-display", "multi-step", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A scholarship panel recorded which applicants had volunteering, research and leadership experience. The numbers in the diagram show applicants in each exact region.",
+      ],
+      visual: {
+        type: "set-diagram",
+        title: "Applicant experience",
+        shapes: [
+          { id: "volunteering", label: "Volunteering", shape: "hexagon", x: 80, y: 80, width: 270, height: 230 },
+          { id: "research", label: "Research", shape: "diamond", x: 300, y: 70, width: 230, height: 240 },
+          { id: "leadership", label: "Leadership", shape: "circle", x: 190, y: 150, width: 260, height: 220 },
+          { id: "interview-course", label: "Interview course", shape: "rectangle", x: 230, y: 210, width: 300, height: 120 },
+        ],
+        regionLabels: [
+          { id: "vol-only", text: "21", x: 145, y: 170 },
+          { id: "research-only", text: "12", x: 455, y: 155 },
+          { id: "lead-only", text: "17", x: 295, y: 315 },
+          { id: "course-only", text: "8", x: 485, y: 285 },
+          { id: "vol-lead", text: "14", x: 250, y: 215 },
+          { id: "research-lead", text: "9", x: 385, y: 215 },
+          { id: "vol-research", text: "5", x: 315, y: 135 },
+          { id: "lead-course", text: "6", x: 350, y: 270 },
+          { id: "all-three", text: "4", x: 325, y: 205 },
+        ],
+        legend: [
+          { label: "Volunteering", shape: "hexagon" },
+          { label: "Research", shape: "diamond" },
+          { label: "Leadership", shape: "circle" },
+          { label: "Interview course", shape: "rectangle" },
+        ],
+      },
+      question:
+        "How many applicants had Leadership and Volunteering experience but not Research experience?",
+      options: [
+        { key: "A", text: "4" },
+        { key: "B", text: "14" },
+        { key: "C", text: "18" },
+        { key: "D", text: "23" },
+      ],
+      answer: "B",
+      explanation:
+        "The region inside Leadership and Volunteering but outside Research is labelled 14.",
+    },
+    {
+      id: "dm-probability-001",
+      section: "dm",
+      subtype: "dm-probability-data",
+      tags: ["multi-step", "medium", "text-stem"],
+      title: "Decision Making Practice",
+      leftTitle: "Probability",
+      stimulus: [
+        "A bag contains 4 red counters, 5 blue counters and 3 white counters. Two counters are chosen at random without replacement.",
+      ],
+      question: "What is the probability that exactly one of the two counters is red?",
+      options: [
+        { key: "A", text: "2/11" },
+        { key: "B", text: "16/33" },
+        { key: "C", text: "4/11" },
+        { key: "D", text: "8/33" },
+      ],
+      answer: "B",
+      explanation:
+        "Exactly one red can happen as red then not red or not red then red: (4/12 x 8/11) + (8/12 x 4/11) = 64/132 = 16/33.",
+    },
+    {
+      id: "dm-probability-002",
+      section: "dm",
+      subtype: "dm-probability-data",
+      tags: ["quick", "medium", "text-stem"],
+      title: "Decision Making Practice",
+      leftTitle: "Probability",
+      stimulus: [
+        "For a remote placement check, the probability that a student uploads the form on time is 0.8. The probability that their ID is verified on the first attempt is 0.9. These events are independent.",
+      ],
+      question:
+        "What is the probability that the student uploads the form on time and has their ID verified on the first attempt?",
+      options: [
+        { key: "A", text: "0.17" },
+        { key: "B", text: "0.72" },
+        { key: "C", text: "0.80" },
+        { key: "D", text: "0.98" },
+      ],
+      answer: "B",
+      explanation:
+        "For independent events, multiply the probabilities: 0.8 x 0.9 = 0.72.",
+    },
+    {
+      id: "dm-probability-003",
+      section: "dm",
+      subtype: "dm-probability-data",
+      tags: ["multi-step", "medium", "text-stem"],
+      title: "Decision Making Practice",
+      leftTitle: "Probability",
+      stimulus: [
+        "A standard deck has 52 cards and no jokers. One card is drawn at random.",
+      ],
+      question: "What is the probability that the card is either a heart or a queen?",
+      options: [
+        { key: "A", text: "4/13" },
+        { key: "B", text: "17/52" },
+        { key: "C", text: "1/4" },
+        { key: "D", text: "15/52" },
+      ],
+      answer: "A",
+      explanation:
+        "There are 13 hearts and 4 queens, but the queen of hearts has been counted twice. Favourable cards = 13 + 4 - 1 = 16, and 16/52 = 4/13.",
     },
   ],
   qr: [
+    ...ORIGINAL_QR_QUESTIONS,
     {
       id: "qr-graphs-001",
       section: "qr",
       subtype: "qr-graphs",
+      setId: "qr-student-priorities",
+      tags: ["data-display", "set-based", "easy", "quick"],
       title: "Quantitative Reasoning Practice",
       leftTitle: "Graph",
       stimulus: [
-        "The bar chart shows attendances at an evening clinic over five weekdays.",
+        "A student council surveyed 128 students about four campus issues. Each student chose one issue they considered most important and one issue they considered least important. The results are shown in the chart.",
       ],
       visual: {
-        type: "bar",
-        title: "Evening clinic attendances",
-        yLabel: "Attendances",
-        max: 80,
-        categories: [
-          { label: "Mon", value: 42 },
-          { label: "Tue", value: 58 },
-          { label: "Wed", value: 51 },
-          { label: "Thu", value: 67 },
-          { label: "Fri", value: 62 },
+        type: "grouped-bar",
+        title: "Student priorities survey",
+        yLabel: "Responses",
+        max: 60,
+        seriesLabels: ["Most important", "Least important"],
+        groups: [
+          { label: "Research spaces", values: [44, 18] },
+          { label: "Exam fees", values: [36, 22] },
+          { label: "Housing", values: [28, 48] },
+          { label: "Transport", values: [20, 40] },
         ],
-        note: "Values are attendances per evening.",
       },
       question:
-        "The combined attendance on Wednesday and Thursday was what percentage of the combined attendance on Monday and Tuesday?",
+        "How many more students selected Housing as least important than as most important?",
       options: [
-        { key: "A", text: "108%" },
-        { key: "B", text: "112%" },
-        { key: "C", text: "118%" },
-        { key: "D", text: "124%" },
+        { key: "A", text: "12" },
+        { key: "B", text: "20" },
+        { key: "C", text: "28" },
+        { key: "D", text: "48" },
       ],
-      answer: "C",
+      answer: "B",
       explanation:
-        "Wednesday and Thursday total 51 + 67 = 118. Monday and Tuesday total 42 + 58 = 100. 118 as a percentage of 100 is 118%.",
+        "Housing was selected as least important by 48 students and most important by 28 students. The difference is 20.",
     },
     {
       id: "qr-graphs-002",
       section: "qr",
       subtype: "qr-graphs",
+      setId: "qr-student-priorities",
+      tags: ["data-display", "set-based", "easy", "multi-step"],
       title: "Quantitative Reasoning Practice",
       leftTitle: "Graph",
       stimulus: [
-        "The line graph shows average waiting time at a walk-in clinic from January to May.",
+        "A student council surveyed 128 students about four campus issues. Each student chose one issue they considered most important and one issue they considered least important. The results are shown in the chart.",
       ],
       visual: {
-        type: "line",
-        title: "Average waiting time",
-        yLabel: "Minutes",
-        max: 30,
-        points: [
-          { label: "Jan", value: 18 },
-          { label: "Feb", value: 22 },
-          { label: "Mar", value: 20 },
-          { label: "Apr", value: 16 },
-          { label: "May", value: 14 },
+        type: "grouped-bar",
+        title: "Student priorities survey",
+        yLabel: "Responses",
+        max: 60,
+        seriesLabels: ["Most important", "Least important"],
+        groups: [
+          { label: "Research spaces", values: [44, 18] },
+          { label: "Exam fees", values: [36, 22] },
+          { label: "Housing", values: [28, 48] },
+          { label: "Transport", values: [20, 40] },
         ],
-        note: "Average waiting time is shown to the nearest minute.",
       },
-      question:
-        "From February to May, by approximately what percentage did the average waiting time decrease?",
+      question: "Which issue had a combined total of 58 responses?",
       options: [
-        { key: "A", text: "28%" },
-        { key: "B", text: "36%" },
-        { key: "C", text: "44%" },
-        { key: "D", text: "57%" },
+        { key: "A", text: "Research spaces" },
+        { key: "B", text: "Exam fees" },
+        { key: "C", text: "Housing" },
+        { key: "D", text: "Transport" },
       ],
       answer: "B",
       explanation:
-        "The decrease is 22 - 14 = 8 minutes. 8/22 x 100 = 36.4%, which is approximately 36%.",
+        "Exam fees had 36 most-important responses and 22 least-important responses. 36 + 22 = 58.",
     },
     {
       id: "qr-graphs-003",
       section: "qr",
       subtype: "qr-graphs",
+      setId: "qr-student-priorities",
+      tags: ["data-display", "set-based", "medium", "multi-step"],
       title: "Quantitative Reasoning Practice",
       leftTitle: "Graph",
       stimulus: [
-        "The bar chart shows the number of lab samples processed in one morning.",
+        "A student council surveyed 128 students about four campus issues. Each student chose one issue they considered most important and one issue they considered least important. The results are shown in the chart.",
       ],
       visual: {
-        type: "bar",
-        title: "Lab samples processed",
-        yLabel: "Samples",
-        max: 140,
-        categories: [
-          { label: "Blood", value: 120 },
-          { label: "Urine", value: 80 },
-          { label: "Swab", value: 64 },
-          { label: "Other", value: 36 },
+        type: "grouped-bar",
+        title: "Student priorities survey",
+        yLabel: "Responses",
+        max: 60,
+        seriesLabels: ["Most important", "Least important"],
+        groups: [
+          { label: "Research spaces", values: [44, 18] },
+          { label: "Exam fees", values: [36, 22] },
+          { label: "Housing", values: [28, 48] },
+          { label: "Transport", values: [20, 40] },
         ],
-        note: "Repeat testing is needed for 25% of blood samples and 10% of urine samples.",
       },
-      question: "How many blood and urine samples in total need repeat testing?",
+      question:
+        "What is the ratio of students selecting Research spaces or Exam fees as most important to students selecting Housing or Transport as least important?",
       options: [
-        { key: "A", text: "32" },
-        { key: "B", text: "34" },
-        { key: "C", text: "38" },
-        { key: "D", text: "42" },
+        { key: "A", text: "8:9" },
+        { key: "B", text: "9:10" },
+        { key: "C", text: "10:11" },
+        { key: "D", text: "11:12" },
       ],
       answer: "C",
       explanation:
-        "25% of 120 blood samples is 30. 10% of 80 urine samples is 8. Total repeat tests = 38.",
+        "Research spaces or Exam fees as most important = 44 + 36 = 80. Housing or Transport as least important = 48 + 40 = 88. 80:88 simplifies to 10:11.",
     },
     {
       id: "qr-graphs-004",
       section: "qr",
       subtype: "qr-graphs",
+      setId: "qr-student-priorities",
+      tags: ["data-display", "set-based", "hard", "multi-step", "time-consuming"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Table",
+      leftTitle: "Graph",
       stimulus: [
-        "The table shows bookings for three revision workshops.",
+        "A student council surveyed 128 students about four campus issues. Each student chose one issue they considered most important and one issue they considered least important. The results are shown in the chart.",
       ],
       visual: {
-        type: "table",
-        title: "Workshop bookings",
-        headers: ["Workshop", "Capacity", "Booked"],
-        rows: [
-          ["Verbal", "80", "68"],
-          ["Decision", "72", "54"],
-          ["Quantitative", "90", "81"],
+        type: "grouped-bar",
+        title: "Student priorities survey",
+        yLabel: "Responses",
+        max: 60,
+        seriesLabels: ["Most important", "Least important"],
+        groups: [
+          { label: "Research spaces", values: [44, 18] },
+          { label: "Exam fees", values: [36, 22] },
+          { label: "Housing", values: [28, 48] },
+          { label: "Transport", values: [20, 40] },
         ],
-        note: "Each booked place is paid for.",
       },
-      question: "Which workshop has the highest percentage of places booked?",
+      question:
+        "If one third of the students who selected Housing as least important were reallocated equally to Research spaces and Exam fees as least important, and 10 students who selected Transport as most important switched to Housing, what would be the ratio of least-important responses for Research spaces and Exam fees combined to most-important responses for Housing and Transport combined?",
       options: [
-        { key: "A", text: "Verbal" },
-        { key: "B", text: "Decision" },
-        { key: "C", text: "Quantitative" },
-        { key: "D", text: "Verbal and Decision are tied" },
+        { key: "A", text: "5:4" },
+        { key: "B", text: "7:6" },
+        { key: "C", text: "4:3" },
+        { key: "D", text: "3:2" },
       ],
-      answer: "C",
+      answer: "B",
       explanation:
-        "Verbal is 68/80 = 85%, Decision is 54/72 = 75%, and Quantitative is 81/90 = 90%. Quantitative is highest.",
+        "One third of 48 is 16, split as 8 to Research spaces and 8 to Exam fees. Their least-important total becomes 26 + 30 = 56. Housing most becomes 38 and Transport most becomes 10, total 48. 56:48 simplifies to 7:6.",
     },
     {
       id: "qr-percentages-001",
       section: "qr",
       subtype: "qr-percentages",
+      setId: "qr-course-completion",
+      tags: ["data-display", "set-based", "easy", "quick"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
+      leftTitle: "Table",
       stimulus: [
-        "A clinic ordered 240 vaccine doses. By noon, 35% had been used. By the end of the day, a further 78 doses had been used.",
+        "The table shows how many students enrolled in and completed four online practice courses.",
       ],
-      question: "How many doses were left at the end of the day?",
+      visual: {
+        type: "table",
+        title: "Course completion",
+        headers: ["Course", "Enrolled", "Completed"],
+        rows: [
+          ["Verbal Reasoning", "160", "132"],
+          ["Decision Making", "150", "120"],
+          ["Quantitative Reasoning", "180", "153"],
+          ["Situational Judgement", "120", "108"],
+        ],
+      },
+      question: "Which course had the highest completion percentage?",
       options: [
-        { key: "A", text: "72" },
-        { key: "B", text: "78" },
-        { key: "C", text: "84" },
-        { key: "D", text: "96" },
+        { key: "A", text: "Verbal Reasoning" },
+        { key: "B", text: "Decision Making" },
+        { key: "C", text: "Quantitative Reasoning" },
+        { key: "D", text: "Situational Judgement" },
       ],
-      answer: "B",
+      answer: "D",
       explanation:
-        "35% of 240 is 84. Total used = 84 + 78 = 162. Doses left = 240 - 162 = 78.",
+        "The completion rates are 82.5%, 80%, 85% and 90%. Situational Judgement is highest.",
     },
     {
       id: "qr-percentages-002",
       section: "qr",
       subtype: "qr-percentages",
+      setId: "qr-course-completion",
+      tags: ["data-display", "set-based", "easy", "multi-step"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
+      leftTitle: "Table",
       stimulus: [
-        "A revision course costs GBP 180 before VAT. VAT is charged at 20%. A student receives a 15% discount on the pre-VAT price before VAT is added.",
+        "The table shows how many students enrolled in and completed four online practice courses.",
       ],
-      question: "What is the final price paid?",
+      visual: {
+        type: "table",
+        title: "Course completion",
+        headers: ["Course", "Enrolled", "Completed"],
+        rows: [
+          ["Verbal Reasoning", "160", "132"],
+          ["Decision Making", "150", "120"],
+          ["Quantitative Reasoning", "180", "153"],
+          ["Situational Judgement", "120", "108"],
+        ],
+      },
+      question:
+        "How many students enrolled in Quantitative Reasoning but did not complete it?",
       options: [
-        { key: "A", text: "GBP 153.00" },
-        { key: "B", text: "GBP 183.60" },
-        { key: "C", text: "GBP 189.00" },
-        { key: "D", text: "GBP 216.00" },
+        { key: "A", text: "21" },
+        { key: "B", text: "24" },
+        { key: "C", text: "27" },
+        { key: "D", text: "30" },
       ],
-      answer: "B",
+      answer: "C",
       explanation:
-        "15% off GBP 180 gives GBP 153. VAT at 20% adds GBP 30.60, so the final price is GBP 183.60.",
+        "180 students enrolled in Quantitative Reasoning and 153 completed it, so 180 - 153 = 27 did not complete it.",
+    },
+    {
+      id: "qr-percentages-003",
+      section: "qr",
+      subtype: "qr-percentages",
+      setId: "qr-course-completion",
+      tags: ["data-display", "set-based", "medium", "calculator-heavy", "multi-step"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Table",
+      stimulus: [
+        "The table shows how many students enrolled in and completed four online practice courses.",
+      ],
+      visual: {
+        type: "table",
+        title: "Course completion",
+        headers: ["Course", "Enrolled", "Completed"],
+        rows: [
+          ["Verbal Reasoning", "160", "132"],
+          ["Decision Making", "150", "120"],
+          ["Quantitative Reasoning", "180", "153"],
+          ["Situational Judgement", "120", "108"],
+        ],
+      },
+      question:
+        "If Decision Making completions increased by 15% while enrolment stayed the same, what would the new completion percentage be?",
+      options: [
+        { key: "A", text: "82%" },
+        { key: "B", text: "88%" },
+        { key: "C", text: "92%" },
+        { key: "D", text: "95%" },
+      ],
+      answer: "C",
+      explanation:
+        "Decision Making completions would be 120 x 1.15 = 138. 138 out of 150 is 92%.",
+    },
+    {
+      id: "qr-percentages-004",
+      section: "qr",
+      subtype: "qr-percentages",
+      setId: "qr-course-completion",
+      tags: [
+        "data-display",
+        "set-based",
+        "hard",
+        "calculator-heavy",
+        "multi-step",
+        "time-consuming",
+      ],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Table",
+      stimulus: [
+        "The table shows how many students enrolled in and completed four online practice courses.",
+      ],
+      visual: {
+        type: "table",
+        title: "Course completion",
+        headers: ["Course", "Enrolled", "Completed"],
+        rows: [
+          ["Verbal Reasoning", "160", "132"],
+          ["Decision Making", "150", "120"],
+          ["Quantitative Reasoning", "180", "153"],
+          ["Situational Judgement", "120", "108"],
+        ],
+      },
+      question:
+        "How many additional completions are needed in total for every course to have at least a 90% completion rate?",
+      options: [
+        { key: "A", text: "24" },
+        { key: "B", text: "30" },
+        { key: "C", text: "36" },
+        { key: "D", text: "42" },
+      ],
+      answer: "C",
+      explanation:
+        "The 90% targets are 144, 135, 162 and 108 completions. Additional completions needed are 12, 15, 9 and 0, giving 36 in total.",
     },
     {
       id: "qr-rates-001",
       section: "qr",
       subtype: "qr-rates-ratios",
+      setId: "qr-mobile-clinic-routes",
+      tags: ["data-display", "set-based", "easy", "quick"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
+      leftTitle: "Table",
       stimulus: [
-        "A packaging machine labels 480 packs in 2 hours 30 minutes. It works at a constant rate.",
+        "A mobile phlebotomy team recorded travel distance, travel time and samples collected on four routes.",
       ],
-      question: "How many packs does the machine label per hour?",
+      visual: {
+        type: "table",
+        title: "Mobile clinic routes",
+        headers: ["Route", "Distance (km)", "Travel time (min)", "Samples"],
+        rows: [
+          ["North", "18", "24", "42"],
+          ["East", "30", "40", "55"],
+          ["South", "24", "30", "48"],
+          ["West", "36", "45", "60"],
+        ],
+      },
+      question: "Which route took exactly 1.25 minutes per kilometre?",
       options: [
-        { key: "A", text: "160" },
-        { key: "B", text: "180" },
-        { key: "C", text: "192" },
-        { key: "D", text: "210" },
+        { key: "A", text: "North" },
+        { key: "B", text: "East" },
+        { key: "C", text: "South" },
+        { key: "D", text: "West" },
       ],
       answer: "C",
       explanation:
-        "2 hours 30 minutes is 2.5 hours. 480 / 2.5 = 192 packs per hour.",
+        "South took 30 minutes over 24 km. 30 / 24 = 1.25 minutes per kilometre.",
     },
     {
       id: "qr-rates-002",
       section: "qr",
       subtype: "qr-rates-ratios",
+      setId: "qr-mobile-clinic-routes",
+      tags: ["data-display", "set-based", "easy", "multi-step"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
+      leftTitle: "Table",
       stimulus: [
-        "A fund of GBP 450 is split between three departments in the ratio 3:5:7.",
+        "A mobile phlebotomy team recorded travel distance, travel time and samples collected on four routes.",
       ],
-      question: "How much does the department with the largest share receive?",
+      visual: {
+        type: "table",
+        title: "Mobile clinic routes",
+        headers: ["Route", "Distance (km)", "Travel time (min)", "Samples"],
+        rows: [
+          ["North", "18", "24", "42"],
+          ["East", "30", "40", "55"],
+          ["South", "24", "30", "48"],
+          ["West", "36", "45", "60"],
+        ],
+      },
+      question: "Which route had the highest number of samples collected per kilometre?",
       options: [
-        { key: "A", text: "GBP 150" },
-        { key: "B", text: "GBP 180" },
-        { key: "C", text: "GBP 210" },
-        { key: "D", text: "GBP 240" },
+        { key: "A", text: "North" },
+        { key: "B", text: "East" },
+        { key: "C", text: "South" },
+        { key: "D", text: "West" },
+      ],
+      answer: "A",
+      explanation:
+        "North collected 42 samples over 18 km, about 2.33 samples per km. The other routes are lower.",
+    },
+    {
+      id: "qr-rates-003",
+      section: "qr",
+      subtype: "qr-rates-ratios",
+      setId: "qr-mobile-clinic-routes",
+      tags: ["data-display", "set-based", "medium", "calculator-heavy", "multi-step"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Table",
+      stimulus: [
+        "A mobile phlebotomy team recorded travel distance, travel time and samples collected on four routes.",
+      ],
+      visual: {
+        type: "table",
+        title: "Mobile clinic routes",
+        headers: ["Route", "Distance (km)", "Travel time (min)", "Samples"],
+        rows: [
+          ["North", "18", "24", "42"],
+          ["East", "30", "40", "55"],
+          ["South", "24", "30", "48"],
+          ["West", "36", "45", "60"],
+        ],
+      },
+      question:
+        "For the East route, what was the approximate rate of samples collected per hour of travel time?",
+      options: [
+        { key: "A", text: "73" },
+        { key: "B", text: "83" },
+        { key: "C", text: "92" },
+        { key: "D", text: "110" },
+      ],
+      answer: "B",
+      explanation:
+        "East collected 55 samples in 40 minutes. In 60 minutes, that is 55 x 60 / 40 = 82.5, approximately 83.",
+    },
+    {
+      id: "qr-rates-004",
+      section: "qr",
+      subtype: "qr-rates-ratios",
+      setId: "qr-mobile-clinic-routes",
+      tags: [
+        "data-display",
+        "set-based",
+        "hard",
+        "calculator-heavy",
+        "multi-step",
+        "time-consuming",
+      ],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Table",
+      stimulus: [
+        "A mobile phlebotomy team recorded travel distance, travel time and samples collected on four routes.",
+      ],
+      visual: {
+        type: "table",
+        title: "Mobile clinic routes",
+        headers: ["Route", "Distance (km)", "Travel time (min)", "Samples"],
+        rows: [
+          ["North", "18", "24", "42"],
+          ["East", "30", "40", "55"],
+          ["South", "24", "30", "48"],
+          ["West", "36", "45", "60"],
+        ],
+      },
+      question:
+        "If the West route distance increased by 25%, while its travel speed and samples-per-minute rate stayed the same, how many samples would be expected?",
+      options: [
+        { key: "A", text: "68" },
+        { key: "B", text: "72" },
+        { key: "C", text: "75" },
+        { key: "D", text: "80" },
       ],
       answer: "C",
       explanation:
-        "The ratio has 3 + 5 + 7 = 15 parts. Each part is GBP 450 / 15 = GBP 30. The largest share is 7 parts, so 7 x GBP 30 = GBP 210.",
+        "A 25% longer route at the same speed takes 25% longer. With the same samples-per-minute rate, samples also rise by 25%: 60 x 1.25 = 75.",
     },
     {
       id: "qr-averages-001",
       section: "qr",
       subtype: "qr-averages",
+      setId: "qr-mini-mock-scores",
+      tags: ["data-display", "set-based", "easy", "multi-step"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
-      stimulus: [
-        "A student tracks the number of UCAT questions completed over four days: Monday 24, Tuesday 36, Wednesday 30, Thursday 42.",
-      ],
-      question:
-        "What was the mean number of questions completed per day over these four days?",
+      leftTitle: "Table",
+      stimulus: ["Four students completed three mini-mocks. Their scaled scores are shown."],
+      visual: {
+        type: "table",
+        title: "Mini-mock scores",
+        headers: ["Student", "Mock 1", "Mock 2", "Mock 3"],
+        rows: [
+          ["Asha", "640", "680", "720"],
+          ["Ben", "700", "690", "710"],
+          ["Cara", "580", "620", "640"],
+          ["Dan", "760", "740", "720"],
+        ],
+      },
+      question: "Who had the highest mean score?",
       options: [
-        { key: "A", text: "30" },
-        { key: "B", text: "32" },
-        { key: "C", text: "33" },
-        { key: "D", text: "36" },
+        { key: "A", text: "Asha" },
+        { key: "B", text: "Ben" },
+        { key: "C", text: "Cara" },
+        { key: "D", text: "Dan" },
       ],
-      answer: "C",
+      answer: "D",
       explanation:
-        "Add the four values: 24 + 36 + 30 + 42 = 132. Divide by 4 to get 33.",
+        "Dan's mean is (760 + 740 + 720) / 3 = 740, higher than Asha, Ben and Cara.",
     },
     {
       id: "qr-averages-002",
       section: "qr",
       subtype: "qr-averages",
+      setId: "qr-mini-mock-scores",
+      tags: ["data-display", "set-based", "easy", "quick"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
-      stimulus: [
-        "Seven practice set scores were: 48%, 52%, 55%, 59%, 62%, 62% and 70%.",
-      ],
-      question: "What is the range of the scores?",
+      leftTitle: "Table",
+      stimulus: ["Four students completed three mini-mocks. Their scaled scores are shown."],
+      visual: {
+        type: "table",
+        title: "Mini-mock scores",
+        headers: ["Student", "Mock 1", "Mock 2", "Mock 3"],
+        rows: [
+          ["Asha", "640", "680", "720"],
+          ["Ben", "700", "690", "710"],
+          ["Cara", "580", "620", "640"],
+          ["Dan", "760", "740", "720"],
+        ],
+      },
+      question: "What is the range of Cara's scores?",
       options: [
-        { key: "A", text: "18 percentage points" },
-        { key: "B", text: "20 percentage points" },
-        { key: "C", text: "22 percentage points" },
-        { key: "D", text: "24 percentage points" },
+        { key: "A", text: "40" },
+        { key: "B", text: "50" },
+        { key: "C", text: "60" },
+        { key: "D", text: "70" },
       ],
       answer: "C",
       explanation:
-        "The range is the highest value minus the lowest value: 70 - 48 = 22 percentage points.",
+        "Cara's highest score is 640 and lowest score is 580. The range is 60.",
+    },
+    {
+      id: "qr-averages-003",
+      section: "qr",
+      subtype: "qr-averages",
+      setId: "qr-mini-mock-scores",
+      tags: ["data-display", "set-based", "medium", "calculator-heavy", "multi-step"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Table",
+      stimulus: ["Four students completed three mini-mocks. Their scaled scores are shown."],
+      visual: {
+        type: "table",
+        title: "Mini-mock scores",
+        headers: ["Student", "Mock 1", "Mock 2", "Mock 3"],
+        rows: [
+          ["Asha", "640", "680", "720"],
+          ["Ben", "700", "690", "710"],
+          ["Cara", "580", "620", "640"],
+          ["Dan", "760", "740", "720"],
+        ],
+      },
+      question: "What is the median of all 12 scores shown?",
+      options: [
+        { key: "A", text: "690" },
+        { key: "B", text: "695" },
+        { key: "C", text: "700" },
+        { key: "D", text: "710" },
+      ],
+      answer: "B",
+      explanation:
+        "Ordered scores are 580, 620, 640, 640, 680, 690, 700, 710, 720, 720, 740, 760. The median is (690 + 700) / 2 = 695.",
+    },
+    {
+      id: "qr-averages-004",
+      section: "qr",
+      subtype: "qr-averages",
+      setId: "qr-mini-mock-scores",
+      tags: [
+        "data-display",
+        "set-based",
+        "hard",
+        "calculator-heavy",
+        "multi-step",
+        "time-consuming",
+      ],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Table",
+      stimulus: ["Four students completed three mini-mocks. Their scaled scores are shown."],
+      visual: {
+        type: "table",
+        title: "Mini-mock scores",
+        headers: ["Student", "Mock 1", "Mock 2", "Mock 3"],
+        rows: [
+          ["Asha", "640", "680", "720"],
+          ["Ben", "700", "690", "710"],
+          ["Cara", "580", "620", "640"],
+          ["Dan", "760", "740", "720"],
+        ],
+      },
+      question:
+        "A fifth student scored 650, 710 and 740. What would be the mean of all 15 scores, to the nearest whole number?",
+      options: [
+        { key: "A", text: "683" },
+        { key: "B", text: "687" },
+        { key: "C", text: "690" },
+        { key: "D", text: "693" },
+      ],
+      answer: "B",
+      explanation:
+        "The original 12 scores total 8,200. The fifth student's scores total 2,100. Overall mean = 10,300 / 15 = 686.7, which rounds to 687.",
     },
     {
       id: "qr-geometry-001",
       section: "qr",
       subtype: "qr-units-geometry",
+      setId: "qr-community-pool",
+      tags: ["text-stem", "set-based", "easy", "multi-step"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
+      leftTitle: "Stem",
       stimulus: [
-        "A rectangular notice board is 1.8 m wide and 1.2 m high. A border of 10 cm is left around the inside edge before posters are placed.",
+        "A cuboidal community swimming pool has a width of 25 m, a length of 50 m and a depth of 3 m.",
+        "The pool regulations state that the pool can hold 1.5 people per square metre of floor area.",
       ],
-      question: "What is the poster area inside the border?",
+      question:
+        "If 80% of the total cuboidal volume can be filled with water, what volume of water can the pool hold?",
       options: [
-        { key: "A", text: "1.60 m2" },
-        { key: "B", text: "1.80 m2" },
-        { key: "C", text: "2.00 m2" },
-        { key: "D", text: "2.16 m2" },
+        { key: "A", text: "2,750 m3" },
+        { key: "B", text: "3,000 m3" },
+        { key: "C", text: "3,250 m3" },
+        { key: "D", text: "3,750 m3" },
       ],
-      answer: "A",
+      answer: "B",
       explanation:
-        "A 10 cm border on both sides reduces width by 0.2 m and height by 0.2 m. Poster area = 1.6 x 1.0 = 1.60 m2.",
+        "The cuboidal volume is 25 x 50 x 3 = 3,750 m3. 80% of this is 3,000 m3.",
     },
     {
       id: "qr-geometry-002",
       section: "qr",
       subtype: "qr-units-geometry",
+      setId: "qr-community-pool",
+      tags: ["text-stem", "set-based", "easy", "multi-step"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
+      leftTitle: "Stem",
       stimulus: [
-        "A walking route is 12 km long. Use 1 mile = 1.6 km.",
+        "A cuboidal community swimming pool has a width of 25 m, a length of 50 m and a depth of 3 m.",
+        "The pool regulations state that the pool can hold 1.5 people per square metre of floor area.",
       ],
-      question: "What is the length of the route in miles?",
+      question:
+        "On Saturday, the pool had 60% of the maximum number of customers allowed. How many people were in the pool?",
       options: [
-        { key: "A", text: "6.8 miles" },
-        { key: "B", text: "7.2 miles" },
-        { key: "C", text: "7.5 miles" },
-        { key: "D", text: "8.0 miles" },
+        { key: "A", text: "985 people" },
+        { key: "B", text: "1,065 people" },
+        { key: "C", text: "1,125 people" },
+        { key: "D", text: "1,250 people" },
       ],
       answer: "C",
       explanation:
-        "12 km / 1.6 km per mile = 7.5 miles.",
+        "The floor area is 25 x 50 = 1,250 m2. Maximum people = 1,250 x 1.5 = 1,875. 60% of 1,875 is 1,125.",
+    },
+    {
+      id: "qr-geometry-003",
+      section: "qr",
+      subtype: "qr-units-geometry",
+      setId: "qr-community-pool",
+      tags: ["text-stem", "set-based", "medium", "calculator-heavy", "multi-step"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Stem",
+      stimulus: [
+        "A cuboidal community swimming pool has a width of 25 m, a length of 50 m and a depth of 3 m.",
+        "The pool regulations state that the pool can hold 1.5 people per square metre of floor area.",
+      ],
+      question:
+        "During swimming lessons, the pool has 40% of the maximum number of people allowed. The ratio of children to adults is 5:1. How many adults are in the pool?",
+      options: [
+        { key: "A", text: "85 adults" },
+        { key: "B", text: "97 adults" },
+        { key: "C", text: "125 adults" },
+        { key: "D", text: "180 adults" },
+      ],
+      answer: "C",
+      explanation:
+        "Maximum people = 1,875. 40% of this is 750. In a 5:1 child-adult ratio, adults make up 1/6, so 750 / 6 = 125 adults.",
+    },
+    {
+      id: "qr-geometry-004",
+      section: "qr",
+      subtype: "qr-units-geometry",
+      setId: "qr-community-pool",
+      tags: [
+        "text-stem",
+        "set-based",
+        "hard",
+        "calculator-heavy",
+        "multi-step",
+        "time-consuming",
+      ],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Stem",
+      stimulus: [
+        "A cuboidal community swimming pool has a width of 25 m, a length of 50 m and a depth of 3 m.",
+        "The pool regulations state that the pool can hold 1.5 people per square metre of floor area.",
+      ],
+      question:
+        "A shallow teaching pool is built with length and width each equal to 50% of the main pool. Its total volume is 1/12 of the main pool. What is the depth of the shallow pool?",
+      options: [
+        { key: "A", text: "0.8 m" },
+        { key: "B", text: "1.0 m" },
+        { key: "C", text: "1.2 m" },
+        { key: "D", text: "1.5 m" },
+      ],
+      answer: "B",
+      explanation:
+        "Main volume is 3,750 m3, so the shallow pool volume is 312.5 m3. Its length is 25 m and width is 12.5 m, giving floor area 312.5 m2. Depth = 312.5 / 312.5 = 1 m.",
     },
     {
       id: "qr-estimation-001",
       section: "qr",
       subtype: "qr-estimation",
+      setId: "qr-appointment-estimates",
+      tags: ["text-stem", "set-based", "easy", "quick"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
+      leftTitle: "Stem",
       stimulus: [
         "A walk-in clinic recorded 1,984 appointments in April, 2,116 in May and 1,907 in June.",
       ],
@@ -961,19 +2011,87 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       ],
       answer: "B",
       explanation:
-        "Round the figures to 2,000, 2,100 and 1,900. The estimated total is 6,000, close to the exact total of 6,007.",
+        "Round the figures to about 2,000, 2,100 and 1,900. The estimated total is 6,000.",
+    },
+    {
+      id: "qr-estimation-002",
+      section: "qr",
+      subtype: "qr-estimation",
+      setId: "qr-appointment-estimates",
+      tags: ["text-stem", "set-based", "easy", "quick"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Stem",
+      stimulus: ["A practice platform logged 14,870 questions completed over a 30-day month."],
+      question:
+        "Which is the best estimate for the average number of questions completed per day?",
+      options: [
+        { key: "A", text: "400" },
+        { key: "B", text: "500" },
+        { key: "C", text: "600" },
+        { key: "D", text: "700" },
+      ],
+      answer: "B",
+      explanation:
+        "14,870 is close to 15,000. 15,000 / 30 = 500 questions per day.",
+    },
+    {
+      id: "qr-estimation-003",
+      section: "qr",
+      subtype: "qr-estimation",
+      setId: "qr-appointment-estimates",
+      tags: ["text-stem", "set-based", "medium", "multi-step"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Stem",
+      stimulus: [
+        "A hospital had 6,020 outpatient visits last month. About 49.8% required a follow-up message.",
+      ],
+      question:
+        "Which is the best estimate for the number of follow-up messages required?",
+      options: [
+        { key: "A", text: "2,400" },
+        { key: "B", text: "3,000" },
+        { key: "C", text: "3,600" },
+        { key: "D", text: "4,200" },
+      ],
+      answer: "B",
+      explanation:
+        "49.8% is approximately 50%, and 6,020 is approximately 6,000. Half of 6,000 is 3,000.",
+    },
+    {
+      id: "qr-estimation-004",
+      section: "qr",
+      subtype: "qr-estimation",
+      setId: "qr-appointment-estimates",
+      tags: ["text-stem", "set-based", "hard", "multi-step", "time-consuming"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Stem",
+      stimulus: [
+        "A clinic expects about 6,000 appointments next month. It predicts a 12% increase in bookings, then expects 5% of booked patients not to attend.",
+      ],
+      question:
+        "Which is the best estimate for the number of patients who will attend?",
+      options: [
+        { key: "A", text: "5,700" },
+        { key: "B", text: "6,100" },
+        { key: "C", text: "6,400" },
+        { key: "D", text: "6,900" },
+      ],
+      answer: "C",
+      explanation:
+        "6,000 increased by 12% is 6,720. If 5% do not attend, about 95% attend: 6,720 x 0.95 = 6,384, closest to 6,400.",
     },
     {
       id: "qr-calculator-strategy-001",
       section: "qr",
       subtype: "qr-calculator-strategy",
+      setId: "qr-efficient-working",
+      tags: ["text-stem", "set-based", "easy", "quick"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
+      leftTitle: "Stem",
       stimulus: [
         "A calculation requires finding 37.5% of 864 and then adding 12.5% of 864.",
       ],
-      question:
-        "Which single calculation gives the same result most efficiently?",
+      question: "Which single calculation gives the same result most efficiently?",
       options: [
         { key: "A", text: "0.25 x 864" },
         { key: "B", text: "0.5 x 864" },
@@ -984,241 +2102,70 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       explanation:
         "37.5% + 12.5% = 50%, so the quickest equivalent calculation is 0.5 x 864.",
     },
-  ],
-  sjt: [
     {
-      id: "sjt-appropriateness-001",
-      section: "sjt",
-      subtype: "sjt-appropriateness",
-      title: "Situational Judgement Practice",
-      leftTitle: "Scenario",
-      stimulus: [
-        "You are shadowing a junior doctor on a ward. A patient asks you whether their test results show cancer. You have seen the results on the computer, but the doctor has not yet discussed them with the patient.",
-      ],
-      question: "How appropriate is it to explain the result to the patient yourself?",
+      id: "qr-calculator-strategy-002",
+      section: "qr",
+      subtype: "qr-calculator-strategy",
+      setId: "qr-efficient-working",
+      tags: ["text-stem", "set-based", "easy", "quick"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Stem",
+      stimulus: ["A student needs to calculate 48% of 625 without writing out a long multiplication."],
+      question: "Which method is the most efficient?",
       options: [
-        { key: "A", text: "Very appropriate" },
-        { key: "B", text: "Appropriate, but not ideal" },
-        { key: "C", text: "Inappropriate, but not awful" },
-        { key: "D", text: "Very inappropriate" },
-      ],
-      answer: "D",
-      explanation:
-        "As a student observing, you should not disclose or interpret results. You should acknowledge the concern and direct the patient to the responsible doctor.",
-    },
-    {
-      id: "sjt-appropriateness-002",
-      section: "sjt",
-      subtype: "sjt-appropriateness",
-      title: "Situational Judgement Practice",
-      leftTitle: "Scenario",
-      stimulus: [
-        "You accidentally give a visitor the wrong directions in a hospital. Ten minutes later you see them looking distressed because they have missed the start of an appointment.",
-      ],
-      question: "How appropriate is it to apologise and help them find the right clinic?",
-      options: [
-        { key: "A", text: "Very appropriate" },
-        { key: "B", text: "Appropriate, but not ideal" },
-        { key: "C", text: "Inappropriate, but not awful" },
-        { key: "D", text: "Very inappropriate" },
+        { key: "A", text: "Find 50% of 625, then subtract 2% of 625" },
+        { key: "B", text: "Find 40% of 625, then divide by 8" },
+        { key: "C", text: "Find 60% of 625, then add 12% of 625" },
+        { key: "D", text: "Divide 625 by 48" },
       ],
       answer: "A",
       explanation:
-        "Taking responsibility, apologising and helping the visitor is respectful and practical.",
+        "48% = 50% - 2%. Half of 625 is quick to find, and 2% is also simple.",
     },
     {
-      id: "sjt-appropriateness-003",
-      section: "sjt",
-      subtype: "sjt-ordering",
-      questionType: "drag-order",
-      title: "Situational Judgement Practice",
-      leftTitle: "Scenario",
-      stimulus: [
-        "During a GP placement, you are asked to help organise patients in the waiting room. An elderly patient tells you they feel dizzy and may faint. At the same time, another patient says they have been waiting longer than everyone else and wants you to check their appointment time.",
-      ],
-      question:
-        "Drag the actions into the most appropriate order, from first to last.",
-      instruction:
-        "Prioritise immediate patient safety, then seek appropriate help and communicate calmly.",
-      dragItems: [
-        {
-          id: "safety",
-          text: "Make sure the dizzy patient is safely seated and not left standing.",
-        },
-        {
-          id: "staff",
-          text: "Alert a receptionist or clinician that the patient feels faint.",
-        },
-        {
-          id: "reassure",
-          text: "Reassure the waiting patient that someone will check their appointment when safe to do so.",
-        },
-        {
-          id: "check",
-          text: "Check the waiting patient's appointment time or ask reception to do so.",
-        },
-      ],
-      answerOrder: ["safety", "staff", "reassure", "check"],
-      explanation:
-        "Immediate safety comes first, then escalation to staff. The other patient's concern should be acknowledged, but administrative checking comes after the urgent risk has been managed.",
-    },
-    {
-      id: "sjt-importance-001",
-      section: "sjt",
-      subtype: "sjt-importance",
-      title: "Situational Judgement Practice",
-      leftTitle: "Scenario",
-      stimulus: [
-        "During a placement, you notice a team member repeatedly entering patient rooms without using hand gel. You are unsure whether anyone else has noticed.",
-      ],
-      question: "How important is it to raise the concern with an appropriate member of staff?",
+      id: "qr-calculator-strategy-003",
+      section: "qr",
+      subtype: "qr-calculator-strategy",
+      setId: "qr-efficient-working",
+      tags: ["text-stem", "set-based", "medium", "multi-step"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Stem",
+      stimulus: ["A student needs to calculate 17.5% of 840 efficiently."],
+      question: "Which expression is the most efficient equivalent calculation?",
       options: [
-        { key: "A", text: "Very important" },
-        { key: "B", text: "Important" },
-        { key: "C", text: "Of minor importance" },
-        { key: "D", text: "Not important at all" },
+        { key: "A", text: "10% of 840 + 5% of 840 + 2.5% of 840" },
+        { key: "B", text: "20% of 840 + 5% of 840" },
+        { key: "C", text: "25% of 840 - 10% of 840" },
+        { key: "D", text: "840 / 17.5" },
       ],
       answer: "A",
       explanation:
-        "Infection control affects patient safety, so raising the concern appropriately is very important.",
+        "17.5% can be split into 10% + 5% + 2.5%, all of which are quick to calculate from 840.",
     },
     {
-      id: "sjt-importance-002",
-      section: "sjt",
-      subtype: "sjt-importance",
-      title: "Situational Judgement Practice",
-      leftTitle: "Scenario",
+      id: "qr-calculator-strategy-004",
+      section: "qr",
+      subtype: "qr-calculator-strategy",
+      setId: "qr-efficient-working",
+      tags: ["text-stem", "set-based", "hard", "multi-step", "calculator-heavy"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Stem",
       stimulus: [
-        "After a group presentation, your tutor gives feedback that your explanation was accurate but too fast for the audience. You have another presentation next week.",
+        "A value rises by 20%, then falls by 15%, then rises by 10%. A student wants to replace this with one multiplier.",
       ],
-      question: "How important is it to reflect on the feedback before the next presentation?",
+      question: "Which multiplier gives the final value from the original value?",
       options: [
-        { key: "A", text: "Very important" },
-        { key: "B", text: "Important" },
-        { key: "C", text: "Of minor importance" },
-        { key: "D", text: "Not important at all" },
+        { key: "A", text: "0.952" },
+        { key: "B", text: "1.020" },
+        { key: "C", text: "1.122" },
+        { key: "D", text: "1.450" },
       ],
-      answer: "A",
+      answer: "C",
       explanation:
-        "Reflecting on feedback before a similar task is central to improvement and professionalism.",
-    },
-    {
-      id: "sjt-communication-001",
-      section: "sjt",
-      subtype: "sjt-communication",
-      title: "Situational Judgement Practice",
-      leftTitle: "Scenario",
-      stimulus: [
-        "During a group project, one member repeatedly misses meetings and submits their work late. The deadline is close, and the rest of the group is frustrated.",
-      ],
-      question: "How appropriate is it to speak to the student privately first?",
-      options: [
-        { key: "A", text: "Very appropriate" },
-        { key: "B", text: "Appropriate, but not ideal" },
-        { key: "C", text: "Inappropriate, but not awful" },
-        { key: "D", text: "Very inappropriate" },
-      ],
-      answer: "A",
-      explanation:
-        "A private, respectful conversation explores whether there are underlying issues and gives the student a chance to improve before escalation.",
-    },
-    {
-      id: "sjt-communication-002",
-      section: "sjt",
-      subtype: "sjt-communication",
-      title: "Situational Judgement Practice",
-      leftTitle: "Scenario",
-      stimulus: [
-        "A patient becomes angry at reception because their appointment has been delayed. You are observing nearby and the receptionist is trying to stay calm.",
-      ],
-      question: "How appropriate is it to listen calmly and offer to find a staff member who can update them?",
-      options: [
-        { key: "A", text: "Very appropriate" },
-        { key: "B", text: "Appropriate, but not ideal" },
-        { key: "C", text: "Inappropriate, but not awful" },
-        { key: "D", text: "Very inappropriate" },
-      ],
-      answer: "A",
-      explanation:
-        "Listening calmly and seeking an appropriate update supports communication without pretending to have authority you do not have.",
-    },
-    {
-      id: "sjt-communication-003",
-      section: "sjt",
-      subtype: "sjt-ordering",
-      questionType: "drag-order",
-      title: "Situational Judgement Practice",
-      leftTitle: "Scenario",
-      stimulus: [
-        "You are working with two other students on a health-promotion stall. One student starts giving confident but inaccurate advice about antibiotics to a visitor. The visitor seems reassured and begins to walk away.",
-      ],
-      question:
-        "Drag the responses into the most appropriate order, from first to last.",
-      instruction:
-        "Correct misinformation respectfully while protecting the visitor and the team relationship.",
-      dragItems: [
-        {
-          id: "pause",
-          text: "Politely pause the conversation before the visitor leaves.",
-        },
-        {
-          id: "clarify",
-          text: "Clarify the accurate advice using the approved information leaflet.",
-        },
-        {
-          id: "private",
-          text: "Speak privately with the student afterwards about checking information before advising visitors.",
-        },
-        {
-          id: "lead",
-          text: "Let the stall lead know if inaccurate advice may already have been given to visitors.",
-        },
-      ],
-      answerOrder: ["pause", "clarify", "private", "lead"],
-      explanation:
-        "The visitor should not leave with inaccurate advice. Correct it using approved information, then address the teammate respectfully and escalate if there may be wider patient-safety or public-information risk.",
-    },
-    {
-      id: "sjt-integrity-001",
-      section: "sjt",
-      subtype: "sjt-integrity",
-      title: "Situational Judgement Practice",
-      leftTitle: "Scenario",
-      stimulus: [
-        "You notice another applicant sharing details online about interview stations they completed earlier that day. The medical school had clearly told candidates not to discuss station content.",
-      ],
-      question: "How appropriate is it to ignore the post because it does not involve you directly?",
-      options: [
-        { key: "A", text: "Very appropriate" },
-        { key: "B", text: "Appropriate, but not ideal" },
-        { key: "C", text: "Inappropriate, but not awful" },
-        { key: "D", text: "Very inappropriate" },
-      ],
-      answer: "D",
-      explanation:
-        "Ignoring known unfair behaviour undermines integrity. You should avoid using the information and consider reporting it through the appropriate channel.",
-    },
-    {
-      id: "sjt-integrity-002",
-      section: "sjt",
-      subtype: "sjt-integrity",
-      title: "Situational Judgement Practice",
-      leftTitle: "Scenario",
-      stimulus: [
-        "A friend asks you to take a quick photo of a ward whiteboard because they are curious about how hospitals organise patients. The board includes patient names and bed numbers.",
-      ],
-      question: "How appropriate is it to take the photo if you do not share it publicly?",
-      options: [
-        { key: "A", text: "Very appropriate" },
-        { key: "B", text: "Appropriate, but not ideal" },
-        { key: "C", text: "Inappropriate, but not awful" },
-        { key: "D", text: "Very inappropriate" },
-      ],
-      answer: "D",
-      explanation:
-        "Taking a photo of identifiable patient information breaches confidentiality, even if you do not post it publicly.",
+        "The combined multiplier is 1.20 x 0.85 x 1.10 = 1.122.",
     },
   ],
+  sjt: SJT_QUESTIONS,
 };
 
 export function isUCATSection(value: string): value is UCATSection {
@@ -1237,8 +2184,30 @@ export function getUCATSubtypeMeta(subtype: UCATSubtypeId) {
   );
 }
 
+export function getUCATSjtIssueLabel(issueTag: UCATSjtIssueTag) {
+  return UCAT_SJT_ISSUE_LABELS[issueTag] ?? issueTag;
+}
+
 export function isUCATDragOrderQuestion(
   question: UCATQuestion
 ): question is UCATDragOrderQuestion {
   return question.questionType === "drag-order";
+}
+
+export function isUCATDragCategoryQuestion(
+  question: UCATQuestion
+): question is UCATDragCategoryQuestion {
+  return question.questionType === "drag-category";
+}
+
+export function isUCATYesNoQuestion(
+  question: UCATQuestion
+): question is UCATYesNoQuestion {
+  return question.questionType === "yes-no";
+}
+
+export function isUCATMostLeastQuestion(
+  question: UCATQuestion
+): question is UCATMostLeastQuestion {
+  return question.questionType === "most-least";
 }
