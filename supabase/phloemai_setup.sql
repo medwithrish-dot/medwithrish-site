@@ -21,6 +21,8 @@ create table if not exists public.diagnostic_attempts (
   accuracy numeric(5,2) check (accuracy >= 0 and accuracy <= 100),
   avg_seconds_per_question integer check (avg_seconds_per_question >= 0),
   ai_feedback text,
+  ai_feedback_requested_at timestamptz,
+  ai_feedback_status text not null default 'not_requested',
   metadata jsonb not null default '{}'::jsonb,
   started_at timestamptz not null default now(),
   completed_at timestamptz,

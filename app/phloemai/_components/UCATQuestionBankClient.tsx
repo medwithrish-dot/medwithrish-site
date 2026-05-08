@@ -10,6 +10,8 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  BadgeCheck,
+  BarChart3,
   Calculator,
   CheckCircle,
   Clock3,
@@ -21,6 +23,7 @@ import {
   LockKeyhole,
   MousePointer2,
   Play,
+  Sparkles,
   Target,
   Timer,
   XCircle,
@@ -63,6 +66,26 @@ type PracticeAnswer = UCATOptionKey | string[] | PracticeAnswerMap;
 type SessionLengthMode = "questions" | "minutes";
 type PracticePhase = "practice" | "review" | "marked" | "marked-review";
 type PracticeAnswerStatus = "correct" | "partial" | "incorrect" | "unanswered";
+type DiagnosticMode = "free-qr" | "full" | "full-section" | "subset";
+type DiagnosticSectionScore = {
+  label: string;
+  value: string;
+  helper: string;
+  metadata: {
+    rawScore: number;
+    maxScore: number;
+    accuracy: number;
+    scaledScore: number | null;
+    sjtBand: number | null;
+  };
+};
+type DiagnosticAiFeedbackState = {
+  requested: boolean;
+  status: string;
+  credits: number;
+  message: string | null;
+  requesting: boolean;
+};
 type PracticeAnswerScore = {
   points: number;
   maxPoints: number;
@@ -88,6 +111,13 @@ type SaveStatus = "idle" | "saving" | "saved" | "skipped" | "error";
 type SaveState = {
   status: SaveStatus;
   message: string;
+};
+type SavedFreeDiagnostic = {
+  summary: PracticeSessionSummary;
+  attemptId: string | null;
+  aiFeedbackRequestedAt: string | null;
+  aiFeedbackStatus: string | null;
+  credits: number;
 };
 type TimingBySubtype = {
   subtype: UCATSubtypeId;
@@ -234,6 +264,17 @@ type PracticeSessionSummary = {
 
 const QUESTION_TARGETS = [5, 10, 15] as const;
 const MINUTE_TARGETS = [5, 10, 15] as const;
+const FREE_QR_DIAGNOSTIC_QUESTION_COUNT = 16;
+const FREE_QR_DIAGNOSTIC_SECONDS = 10 * 60;
+const FREE_QR_DIAGNOSTIC_SOURCE = "free_qr_diagnostic";
+const FULL_SECTION_DIAGNOSTIC_SOURCE = "full_mock_section_diagnostic";
+const SUBSET_DIAGNOSTIC_SOURCE = "subset_mock_diagnostic";
+const FULL_MOCK_TARGETS: Record<UCATSection, number> = {
+  vr: 44,
+  dm: 29,
+  qr: 36,
+  sjt: 69,
+};
 const QUESTION_TRACKING_ZONES: QuestionTrackingZone[] = [
   "stimulus",
   "question",
@@ -259,6 +300,35 @@ function formatDuration(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function normaliseDiagnosticMode(value?: string | null): DiagnosticMode | null {
+  if (
+    value === "free-qr" ||
+    value === "full" ||
+    value === "full-section" ||
+    value === "subset"
+  ) {
+    return value;
+  }
+
+  return null;
+}
+
+function getPracticeSource(diagnosticMode: DiagnosticMode | null) {
+  if (diagnosticMode === "free-qr") return FREE_QR_DIAGNOSTIC_SOURCE;
+  if (diagnosticMode === "full-section") return FULL_SECTION_DIAGNOSTIC_SOURCE;
+  if (diagnosticMode === "subset") return SUBSET_DIAGNOSTIC_SOURCE;
+
+  return "question_bank";
+}
+
+function getDiagnosticTitle(diagnosticMode: DiagnosticMode | null) {
+  if (diagnosticMode === "free-qr") return "Free QR diagnostic";
+  if (diagnosticMode === "full-section") return "Full mock section";
+  if (diagnosticMode === "subset") return "Subset diagnostic";
+
+  return "Practice set";
 }
 
 function formatMarkValue(value: number) {
@@ -1679,8 +1749,10 @@ function SectionSetup({
   onTrackingModeChange,
   onTrackingRingChange,
   onStart,
+  diagnosticMode,
 }: {
   section: UCATSection;
+  diagnosticMode?: DiagnosticMode | null;
   selectedSubtypeIds: UCATSubtypeId[];
   questionCount: number;
   availableCount: number;
@@ -1721,11 +1793,11 @@ function SectionSetup({
     <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-5xl">
         <Link
-          href="/phloemai/practice"
+          href={diagnosticMode ? "/phloemai/diagnostic" : "/phloemai/practice"}
           className="inline-flex items-center gap-2 text-sm font-bold text-blue-700 hover:text-blue-900"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Back to practice
+          {diagnosticMode ? "Back to diagnostics" : "Back to practice"}
         </Link>
 
         <section className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -2057,7 +2129,191 @@ function SectionSetup({
             className="mt-7 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           >
             <Play className="h-4 w-4" aria-hidden="true" />
-            {trackingStarting ? "Starting..." : "Start practice"}
+            {trackingStarting
+              ? "Starting..."
+              : diagnosticMode
+                ? "Start diagnostic"
+                : "Start practice"}
+          </button>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function DiagnosticModeChooser({ mode }: { mode: Extract<DiagnosticMode, "full" | "subset"> }) {
+  const isFull = mode === "full";
+  const title = isFull ? "Full mock diagnostic" : "Subset mock diagnostic";
+  const description = isFull
+    ? "Run each UCAT section as a diagnostic section. Each section gives estimated scaled scoring, with SJT reported as Band 1-4."
+    : "Choose a section, then select the exact question types you want to diagnose.";
+
+  return (
+    <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
+      <div className="mx-auto max-w-5xl">
+        <Link
+          href="/phloemai/diagnostic"
+          className="inline-flex items-center gap-2 text-sm font-bold text-blue-700 hover:text-blue-900"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Back to diagnostics
+        </Link>
+
+        <section className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-xs font-black uppercase tracking-wide text-blue-600">
+                {isFull ? "Full mock" : "Subset mock"}
+              </p>
+              <h1 className="mt-2 text-3xl font-black text-slate-950">
+                {title}
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
+                {description}
+              </p>
+            </div>
+            <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
+              <p className="text-xs font-black uppercase tracking-wide text-blue-700">
+                Scoring
+              </p>
+              <p className="mt-1 text-sm font-black text-blue-950">
+                VR/DM/QR 300-900, SJT Band 1-4
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-7 grid gap-4 md:grid-cols-2">
+            {UCAT_SECTIONS.map((section) => {
+              const available = UCAT_QUESTION_BANK[section.slug].length;
+              const target = isFull
+                ? Math.min(FULL_MOCK_TARGETS[section.slug], available)
+                : available;
+              const href = `/phloemai/question-bank/${section.slug}?diagnostic=${
+                isFull ? "full-section" : "subset"
+              }`;
+              const Icon = section.slug === "sjt" ? BadgeCheck : BarChart3;
+
+              return (
+                <Link
+                  key={section.slug}
+                  href={href}
+                  className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-blue-600">
+                        <Icon className="h-6 w-6" aria-hidden="true" />
+                      </div>
+                      <div>
+                        <span className="inline-flex rounded bg-blue-600 px-2 py-1 text-xs font-black text-white">
+                          {section.code}
+                        </span>
+                        <h2 className="mt-3 text-lg font-black">
+                          {section.title}
+                        </h2>
+                        <p className="mt-1 text-sm font-semibold leading-6 text-slate-600">
+                          {isFull
+                            ? `${target} question diagnostic section.`
+                            : "Choose one or more question types before starting."}
+                        </p>
+                      </div>
+                    </div>
+                    <ArrowRight className="h-5 w-5 shrink-0 text-blue-600" />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function FixedDiagnosticStartScreen({
+  title,
+  subtitle,
+  section,
+  questionCount,
+  seconds,
+  lockedNotice,
+  loading,
+  onStart,
+}: {
+  title: string;
+  subtitle: string;
+  section: UCATSection;
+  questionCount: number;
+  seconds: number;
+  lockedNotice?: string;
+  loading?: boolean;
+  onStart: () => void;
+}) {
+  const meta = getUCATSectionMeta(section);
+
+  return (
+    <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
+      <div className="mx-auto max-w-4xl">
+        <Link
+          href="/phloemai/diagnostic"
+          className="inline-flex items-center gap-2 text-sm font-bold text-blue-700 hover:text-blue-900"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Back to diagnostics
+        </Link>
+
+        <section className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <span className="inline-flex rounded-lg bg-blue-600 px-3 py-1 text-sm font-black text-white">
+                {meta.code}
+              </span>
+              <h1 className="mt-4 text-3xl font-black text-slate-950">
+                {title}
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
+                {subtitle}
+              </p>
+            </div>
+            <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm font-black text-blue-950">
+              {questionCount} questions - {formatDuration(seconds)}
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {[
+              ["Mode", "Timed diagnostic"],
+              ["Report", "Issues + study plan"],
+              ["Scoring", section === "sjt" ? "Band 1-4" : "300-900 estimate"],
+            ].map(([label, value]) => (
+              <div
+                key={label}
+                className="rounded-lg border border-slate-200 bg-slate-50 p-3"
+              >
+                <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+                  {label}
+                </p>
+                <p className="mt-1 text-sm font-black text-slate-900">
+                  {value}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {lockedNotice && (
+            <p className="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-black leading-6 text-amber-900">
+              {lockedNotice}
+            </p>
+          )}
+
+          <button
+            type="button"
+            onClick={onStart}
+            disabled={loading}
+            className="mt-7 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+          >
+            <Play className="h-4 w-4" aria-hidden="true" />
+            {loading ? "Checking..." : "Start diagnostic"}
           </button>
         </section>
       </div>
@@ -2595,6 +2851,61 @@ function buildStudyPlanTasks(issues: MarkedIssueDetail[]) {
   return tasks;
 }
 
+function getEstimatedScaledScore(points: number, maxPoints: number) {
+  if (maxPoints <= 0) return 300;
+
+  const pct = Math.max(0, Math.min(1, points / maxPoints));
+  return Math.max(300, Math.min(900, Math.round((300 + pct * 600) / 10) * 10));
+}
+
+function getSjtBand(points: number, maxPoints: number) {
+  if (maxPoints <= 0) return 4;
+
+  const pct = (points / maxPoints) * 100;
+  if (pct >= 75) return 1;
+  if (pct >= 60) return 2;
+  if (pct >= 40) return 3;
+  return 4;
+}
+
+function getDiagnosticSectionScore(
+  summary: PracticeSessionSummary
+): DiagnosticSectionScore {
+  const rawScore = summary.scorePoints;
+  const maxScore = summary.maxScore;
+  const accuracy = maxScore > 0 ? Math.round((rawScore / maxScore) * 100) : 0;
+
+  if (summary.section === "sjt") {
+    const band = getSjtBand(rawScore, maxScore);
+    return {
+      label: "SJT band",
+      value: `Band ${band}`,
+      helper: "Estimated from your partial-credit SJT score.",
+      metadata: {
+        rawScore,
+        maxScore,
+        accuracy,
+        scaledScore: null,
+        sjtBand: band,
+      },
+    };
+  }
+
+  const scaledScore = getEstimatedScaledScore(rawScore, maxScore);
+  return {
+    label: "Estimated scaled score",
+    value: String(scaledScore),
+    helper: "Approximate 300-900 scaling from this diagnostic set.",
+    metadata: {
+      rawScore,
+      maxScore,
+      accuracy,
+      scaledScore,
+      sjtBand: null,
+    },
+  };
+}
+
 function buildSubtypeWeaknessIssue(
   summary: PracticeSessionSummary
 ): MarkedIssueDetail | null {
@@ -2643,7 +2954,7 @@ function buildSubtypeWeaknessIssue(
         `${item.label}: ${formatMarkScore(item.scorePoints, item.maxScore)} (${item.pct}%) from ${item.questionCount} question${item.questionCount === 1 ? "" : "s"}; ${item.severity} weakness signal; usual benchmark ${item.rule.expectedMarkText}; ${item.rule.minorText}. ${item.rule.repeatMajorText}`
     ),
     fix,
-    studyFixes: [fix],
+    studyFixes: weakSubtypes.map((item) => buildSubtypeDrillFix([item])),
   };
 }
 
@@ -2771,7 +3082,9 @@ function buildSjtIssueTagWeaknessIssue(
         `${item.label}: ${formatMarkScore(item.scorePoints, item.maxScore)} (${item.pct}%) across ${item.questions} tagged question${item.questions === 1 ? "" : "s"}; ${item.severity} theme signal.`
     ),
     fix,
-    studyFixes: [fix],
+    studyFixes: weakThemes.map(
+      (theme) => `Drill similar SJT scenarios for ${theme.label}.`
+    ),
   };
 }
 
@@ -3211,9 +3524,9 @@ function MarkedSessionInsightsPanel({
             <button
               type="button"
               onClick={() => setIssuesExpanded((current) => !current)}
-              className="shrink-0 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-black text-slate-700 hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+              className="shrink-0 rounded-md bg-red-600 px-4 py-2 text-xs font-black text-white shadow-md shadow-red-100 transition-colors hover:bg-red-700"
             >
-              {issuesExpanded ? "Hide details" : "Show details"}
+              {issuesExpanded ? "Hide details" : "Show detailed breakdown"}
             </button>
           </div>
 
@@ -3319,19 +3632,16 @@ function MarkedSessionInsightsPanel({
           ) : (
             <>
               {studyPlanTasks.length > 0 ? (
-                <ol className="mt-4 space-y-3">
+                <ol className="mt-4 space-y-2">
                   {studyPlanTasks.map((task, index) => (
                     <li
                       key={task.id}
-                      className="rounded-md border border-blue-100 bg-blue-50 p-3"
+                      className="grid grid-cols-[28px_1fr] gap-3 rounded-md border border-blue-100 bg-white p-3 shadow-sm"
                     >
-                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+                      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
                         {index + 1}
                       </span>
-                      <p className="mt-2 text-sm font-black text-slate-950">
-                        Study task
-                      </p>
-                      <p className="mt-1 text-xs font-semibold leading-5 text-slate-700">
+                      <p className="text-xs font-black leading-5 text-slate-800">
                         {task.fix}
                       </p>
                     </li>
@@ -3464,21 +3774,27 @@ function MarkedReviewScreen({
   summary,
   saveState,
   isPremium,
+  diagnosticMode,
+  aiFeedbackState,
   checkoutLoading,
   checkoutError,
   onUpgrade,
   onReviewAnswers,
   onNewSet,
+  onRequestAiFeedback,
 }: {
   sectionTitle: string;
   summary: PracticeSessionSummary;
   saveState: SaveState;
   isPremium: boolean;
+  diagnosticMode?: DiagnosticMode | null;
+  aiFeedbackState?: DiagnosticAiFeedbackState | null;
   checkoutLoading: boolean;
   checkoutError: string | null;
   onUpgrade: () => void | Promise<void>;
   onReviewAnswers: () => void;
-  onNewSet: () => void;
+  onNewSet?: () => void;
+  onRequestAiFeedback?: () => void | Promise<void>;
 }) {
   const saveClass =
     saveState.status === "saved"
@@ -3489,6 +3805,9 @@ function MarkedReviewScreen({
           ? "bg-blue-50 text-blue-700"
           : "bg-slate-100 text-slate-600";
   const insights = buildMarkedSessionInsights(summary);
+  const diagnosticScore = getDiagnosticSectionScore(summary);
+  const isDiagnostic = Boolean(diagnosticMode);
+  const analysisUnlocked = isPremium || diagnosticMode === "free-qr";
 
   return (
     <div className="min-h-screen bg-[#e7edf7] font-sans text-[#111827]">
@@ -3511,9 +3830,10 @@ function MarkedReviewScreen({
             <button
               type="button"
               onClick={onNewSet}
+              disabled={!onNewSet}
               className="inline-flex h-10 items-center justify-center rounded-sm border border-white/50 px-4 text-sm font-black text-white hover:bg-white/10"
             >
-              New set
+              {onNewSet ? "New set" : "Diagnostic locked"}
             </button>
           </div>
         </div>
@@ -3539,9 +3859,9 @@ function MarkedReviewScreen({
           <div className="mt-5 grid gap-3 sm:grid-cols-4">
             {[
               ["Score", formatMarkScore(summary.scorePoints, summary.maxScore)],
+              [diagnosticScore.label, diagnosticScore.value],
               ["Accuracy", `${summary.accuracy}%`],
               ["Avg time", `${summary.avgSecondsPerQuestion}s`],
-              ["Flags", String(summary.flaggedQuestions)],
             ].map(([label, value]) => (
               <div key={label} className="rounded-md border border-slate-300 bg-slate-100 p-3 shadow-sm">
                 <p className="text-xs font-black uppercase tracking-wide text-slate-500">
@@ -3551,15 +3871,82 @@ function MarkedReviewScreen({
               </div>
             ))}
           </div>
+          {isDiagnostic && (
+            <p className="mt-3 text-xs font-bold leading-5 text-slate-500">
+              {diagnosticScore.helper}
+            </p>
+          )}
         </section>
 
         <MarkedSessionInsightsPanel
           insights={insights}
-          isPremium={isPremium}
+          isPremium={analysisUnlocked}
           checkoutLoading={checkoutLoading}
           checkoutError={checkoutError}
           onUpgrade={onUpgrade}
         />
+
+        {diagnosticMode === "free-qr" && aiFeedbackState && (
+          <section className="rounded-md border border-violet-200 bg-white p-5 shadow-md">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-violet-100 text-violet-700">
+                  <Sparkles className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-black">AI feedback credit</h2>
+                  <p className="mt-1 text-sm font-semibold leading-6 text-slate-600">
+                    Free diagnostic gets one AI feedback unlock. Generation is
+                    queued only when you request it.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => void onRequestAiFeedback?.()}
+                disabled={
+                  aiFeedbackState.requesting ||
+                  aiFeedbackState.requested ||
+                  aiFeedbackState.credits <= 0
+                }
+                className="inline-flex h-11 items-center justify-center rounded-md bg-violet-600 px-5 text-sm font-black text-white shadow-md shadow-violet-100 hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+              >
+                {aiFeedbackState.requesting
+                  ? "Saving request..."
+                  : aiFeedbackState.requested
+                    ? "AI feedback requested"
+                    : "Use AI feedback credit"}
+              </button>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              {[
+                ["Credit", `${aiFeedbackState.credits}/1`],
+                ["Status", aiFeedbackState.status],
+                [
+                  "Generation",
+                  aiFeedbackState.requested ? "Queued" : "Not requested",
+                ],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="rounded-md border border-violet-100 bg-violet-50 p-3"
+                >
+                  <p className="text-xs font-black uppercase tracking-wide text-violet-700">
+                    {label}
+                  </p>
+                  <p className="mt-1 text-sm font-black text-slate-900">
+                    {value}
+                  </p>
+                </div>
+              ))}
+            </div>
+            {aiFeedbackState.message && (
+              <p className="mt-3 rounded-md border border-violet-100 bg-violet-50 px-3 py-2 text-xs font-black leading-5 text-violet-800">
+                {aiFeedbackState.message}
+              </p>
+            )}
+          </section>
+        )}
 
         <section className="rounded-md border border-slate-400 bg-white p-5 shadow-lg">
           <h2 className="text-lg font-black">Question-by-question review</h2>
@@ -3665,17 +4052,44 @@ function MarkedReviewScreen({
   );
 }
 
-export function UCATQuestionBankClient({ section }: { section?: string }) {
+export function UCATQuestionBankClient({
+  section,
+  diagnosticMode,
+}: {
+  section?: string;
+  diagnosticMode?: string | null;
+}) {
   const validSection = section && isUCATSection(section) ? section : null;
+  const validDiagnosticMode = normaliseDiagnosticMode(diagnosticMode);
+
+  if (!validSection && validDiagnosticMode === "full") {
+    return <DiagnosticModeChooser mode="full" />;
+  }
+
+  if (!validSection && validDiagnosticMode === "subset") {
+    return <DiagnosticModeChooser mode="subset" />;
+  }
 
   if (!validSection) {
     return <SectionHub />;
   }
 
-  return <UCATQuestionBankSection key={validSection} section={validSection} />;
+  return (
+    <UCATQuestionBankSection
+      key={`${validSection}-${validDiagnosticMode ?? "practice"}`}
+      section={validSection}
+      diagnosticMode={validDiagnosticMode}
+    />
+  );
 }
 
-function UCATQuestionBankSection({ section: validSection }: { section: UCATSection }) {
+function UCATQuestionBankSection({
+  section: validSection,
+  diagnosticMode,
+}: {
+  section: UCATSection;
+  diagnosticMode: DiagnosticMode | null;
+}) {
   const [navigatorOpen, setNavigatorOpen] = useState(false);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selected, setSelected] = useState<UCATOptionKey | null>(null);
@@ -3722,6 +4136,13 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     message: "Not saved yet",
   });
   const [isPremium, setIsPremium] = useState(false);
+  const [freeDiagnosticLoading, setFreeDiagnosticLoading] = useState(
+    diagnosticMode === "free-qr"
+  );
+  const [savedFreeDiagnostic, setSavedFreeDiagnostic] =
+    useState<SavedFreeDiagnostic | null>(null);
+  const [aiFeedbackState, setAiFeedbackState] =
+    useState<DiagnosticAiFeedbackState | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const trackingEventsRef = useRef<TrackingEvent[]>([]);
@@ -3854,6 +4275,21 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     );
   }, [sectionQuestions, selectedSubtypeIds]);
 
+  const fixedDiagnosticQuestions = useMemo(() => {
+    if (diagnosticMode === "free-qr") {
+      return sectionQuestions.slice(0, FREE_QR_DIAGNOSTIC_QUESTION_COUNT);
+    }
+
+    if (diagnosticMode === "full-section") {
+      return sectionQuestions.slice(
+        0,
+        Math.min(FULL_MOCK_TARGETS[validSection], sectionQuestions.length)
+      );
+    }
+
+    return null;
+  }, [diagnosticMode, sectionQuestions, validSection]);
+
   const meta = getUCATSectionMeta(validSection);
   const selectedMinutes =
     minuteTarget === "custom"
@@ -3865,16 +4301,155 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       ? Math.max(1, Math.round(selectedMinuteSeconds / meta.secondsPerQuestion))
       : questionTarget;
   const setupQuestionCount = clampQuestionCount(
-    desiredQuestionCount,
-    availableQuestions.length
+    fixedDiagnosticQuestions?.length ?? desiredQuestionCount,
+    fixedDiagnosticQuestions?.length ?? availableQuestions.length
   );
   const setupTimeSeconds =
-    lengthMode === "minutes"
-      ? selectedMinuteSeconds
-      : setupQuestionCount * meta.secondsPerQuestion;
-  const questions = started ? sessionQuestions : availableQuestions;
+    diagnosticMode === "free-qr"
+      ? FREE_QR_DIAGNOSTIC_SECONDS
+      : fixedDiagnosticQuestions
+        ? fixedDiagnosticQuestions.length * meta.secondsPerQuestion
+        : lengthMode === "minutes"
+          ? selectedMinuteSeconds
+          : setupQuestionCount * meta.secondsPerQuestion;
+  const questions = started
+    ? sessionQuestions
+    : fixedDiagnosticQuestions ?? availableQuestions;
 
   const currentQuestionForTracking = questions[questionIndex];
+
+  useEffect(() => {
+    if (diagnosticMode !== "free-qr") return;
+
+    let mounted = true;
+
+    async function loadSavedFreeDiagnostic() {
+      setFreeDiagnosticLoading(true);
+
+      if (!hasSupabaseConfig()) {
+        if (mounted) {
+          setFreeDiagnosticLoading(false);
+          setAiFeedbackState({
+            requested: false,
+            status: "Sign in required",
+            credits: 0,
+            message: "Create or log in to your account to use the free diagnostic.",
+            requesting: false,
+          });
+        }
+        return;
+      }
+
+      try {
+        const supabase = createSupabaseClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!mounted) return;
+
+        if (!user) {
+          setSavedFreeDiagnostic(null);
+          setAiFeedbackState({
+            requested: false,
+            status: "Sign in required",
+            credits: 0,
+            message: "Create or log in to your account to use the free diagnostic.",
+            requesting: false,
+          });
+          setFreeDiagnosticLoading(false);
+          return;
+        }
+
+        const { data: profileRow } = await supabase
+          .from("profiles")
+          .select("diagnostic_credits")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        const credits =
+          typeof profileRow?.diagnostic_credits === "number"
+            ? profileRow.diagnostic_credits
+            : 1;
+
+        const { data: practiceRow } = await supabase
+          .from("practice_sessions")
+          .select("summary")
+          .eq("user_id", user.id)
+          .eq("source", FREE_QR_DIAGNOSTIC_SOURCE)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        const { data: attemptRow } = await supabase
+          .from("diagnostic_attempts")
+          .select("id,ai_feedback_requested_at,ai_feedback_status,metadata")
+          .eq("user_id", user.id)
+          .eq("source", FREE_QR_DIAGNOSTIC_SOURCE)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (!mounted) return;
+
+        const metadata =
+          attemptRow?.metadata &&
+          typeof attemptRow.metadata === "object" &&
+          !Array.isArray(attemptRow.metadata)
+            ? (attemptRow.metadata as Record<string, unknown>)
+            : {};
+        const aiStatus =
+          typeof attemptRow?.ai_feedback_status === "string"
+            ? attemptRow.ai_feedback_status
+            : typeof metadata.aiFeedbackStatus === "string"
+            ? metadata.aiFeedbackStatus
+            : attemptRow?.ai_feedback_requested_at
+              ? "queued_no_api_key"
+              : "not_requested";
+        const requestedAt =
+          typeof attemptRow?.ai_feedback_requested_at === "string"
+            ? attemptRow.ai_feedback_requested_at
+            : null;
+        const savedSummary =
+          practiceRow?.summary &&
+          typeof practiceRow.summary === "object" &&
+          !Array.isArray(practiceRow.summary)
+            ? (practiceRow.summary as PracticeSessionSummary)
+            : null;
+
+        setAiFeedbackState({
+          requested: Boolean(requestedAt),
+          status: requestedAt ? aiStatus : "Ready",
+          credits: requestedAt ? 0 : credits,
+          message: requestedAt
+            ? "AI feedback request saved. Generation will run once the API key is wired."
+            : null,
+          requesting: false,
+        });
+
+        setSavedFreeDiagnostic(
+          savedSummary
+            ? {
+                summary: savedSummary,
+                attemptId:
+                  typeof attemptRow?.id === "string" ? attemptRow.id : null,
+                aiFeedbackRequestedAt: requestedAt,
+                aiFeedbackStatus: aiStatus,
+                credits,
+              }
+            : null
+        );
+      } finally {
+        if (mounted) setFreeDiagnosticLoading(false);
+      }
+    }
+
+    void loadSavedFreeDiagnostic();
+
+    return () => {
+      mounted = false;
+    };
+  }, [diagnosticMode]);
 
   const recordEvent = (type: string, payload?: TrackingPayload) => {
     trackingEventsRef.current.push({
@@ -3951,12 +4526,13 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         return;
       }
 
+      const source = getPracticeSource(diagnosticMode);
       const { data: sessionRow, error: sessionError } = await supabase
         .from("practice_sessions")
         .insert({
           user_id: user.id,
           section: summary.section,
-          source: "question_bank",
+          source,
           total_questions: summary.totalQuestions,
           answered_questions: summary.answeredQuestions,
           correct_questions: summary.correctQuestions,
@@ -4028,6 +4604,78 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
 
       if (questionError) throw questionError;
 
+      if (diagnosticMode) {
+        const scoreSummary = getDiagnosticSectionScore(summary);
+        const insights = buildMarkedSessionInsights(summary);
+        const studyPlanTasks = buildStudyPlanTasks(insights.issues);
+        const attemptMetadata = {
+          diagnosticMode,
+          sourceSessionId: sessionId,
+          summary,
+          insights,
+          studyPlanTasks,
+          sectionScore: scoreSummary.metadata,
+          aiFeedbackCreditAvailable: diagnosticMode === "free-qr",
+          aiFeedbackRequested: false,
+          aiFeedbackStatus: "not_requested",
+        };
+        const { data: attemptRow, error: attemptError } = await supabase
+          .from("diagnostic_attempts")
+          .insert({
+            user_id: user.id,
+            source,
+            total_questions: summary.totalQuestions,
+            accuracy: summary.accuracy,
+            avg_seconds_per_question: summary.avgSecondsPerQuestion,
+            ai_feedback_status:
+              diagnosticMode === "free-qr" ? "credit_available" : "not_requested",
+            metadata: attemptMetadata,
+            started_at: summary.startedAt,
+            completed_at: summary.completedAt,
+          })
+          .select("id")
+          .single();
+
+        if (attemptError) throw attemptError;
+
+        const attemptId =
+          typeof attemptRow?.id === "string" ? attemptRow.id : null;
+        if (!attemptId) {
+          throw new Error("Supabase did not return a diagnostic attempt id.");
+        }
+
+        const { error: sectionError } = await supabase
+          .from("diagnostic_sections")
+          .insert({
+            attempt_id: attemptId,
+            user_id: user.id,
+            section: summary.section.toUpperCase(),
+            score: summary.accuracy,
+            accuracy: summary.accuracy,
+            avg_seconds_per_question: summary.avgSecondsPerQuestion,
+            notes: `${scoreSummary.label}: ${scoreSummary.value}`,
+          });
+
+        if (sectionError) throw sectionError;
+
+        if (diagnosticMode === "free-qr") {
+          setSavedFreeDiagnostic({
+            summary,
+            attemptId,
+            aiFeedbackRequestedAt: null,
+            aiFeedbackStatus: "not_requested",
+            credits: 1,
+          });
+          setAiFeedbackState({
+            requested: false,
+            status: "Ready",
+            credits: 1,
+            message: null,
+            requesting: false,
+          });
+        }
+      }
+
       setSaveState({ status: "saved", message: "Saved to Supabase" });
     } catch (error) {
       setSaveState({
@@ -4071,6 +4719,125 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
         error instanceof Error ? error.message : "Could not start checkout."
       );
       setCheckoutLoading(false);
+    }
+  };
+
+  const requestFreeDiagnosticAiFeedback = async () => {
+    if (!savedFreeDiagnostic?.attemptId || !hasSupabaseConfig()) {
+      setAiFeedbackState((current) =>
+        current
+          ? {
+              ...current,
+              message: "Diagnostic attempt is not saved yet.",
+            }
+          : current
+      );
+      return;
+    }
+
+    setAiFeedbackState((current) =>
+      current ? { ...current, requesting: true, message: null } : current
+    );
+
+    try {
+      const supabase = createSupabaseClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) throw new Error("Sign in to request AI feedback.");
+
+      const { data: profileRow } = await supabase
+        .from("profiles")
+        .select("diagnostic_credits")
+        .eq("id", user.id)
+        .maybeSingle();
+      const credits =
+        typeof profileRow?.diagnostic_credits === "number"
+          ? profileRow.diagnostic_credits
+          : 1;
+
+      if (credits <= 0) {
+        throw new Error("No diagnostic AI feedback credit remaining.");
+      }
+
+      const requestedAt = new Date().toISOString();
+      const nextMetadata = {
+        aiFeedbackRequested: true,
+        aiFeedbackStatus: "queued_no_api_key",
+        aiFeedbackRequestedAt: requestedAt,
+      };
+      const { data: attemptBefore } = await supabase
+        .from("diagnostic_attempts")
+        .select("metadata")
+        .eq("id", savedFreeDiagnostic.attemptId)
+        .eq("user_id", user.id)
+        .maybeSingle();
+      const currentMetadata =
+        attemptBefore?.metadata &&
+        typeof attemptBefore.metadata === "object" &&
+        !Array.isArray(attemptBefore.metadata)
+          ? (attemptBefore.metadata as Record<string, unknown>)
+          : {};
+
+      const { error: attemptError } = await supabase
+        .from("diagnostic_attempts")
+        .update({
+          ai_feedback_requested_at: requestedAt,
+          ai_feedback_status: "queued_no_api_key",
+          metadata: {
+            ...currentMetadata,
+            ...(savedFreeDiagnostic.summary
+              ? {
+                  summary: savedFreeDiagnostic.summary,
+                }
+              : {}),
+            ...nextMetadata,
+          },
+        })
+        .eq("id", savedFreeDiagnostic.attemptId)
+        .eq("user_id", user.id);
+
+      if (attemptError) throw attemptError;
+
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({ diagnostic_credits: Math.max(0, credits - 1) })
+        .eq("id", user.id);
+
+      if (profileError) throw profileError;
+
+      setSavedFreeDiagnostic((current) =>
+        current
+          ? {
+              ...current,
+              aiFeedbackRequestedAt: requestedAt,
+              aiFeedbackStatus: "queued_no_api_key",
+              credits: Math.max(0, credits - 1),
+            }
+          : current
+      );
+      setAiFeedbackState({
+        requested: true,
+        status: "queued_no_api_key",
+        credits: Math.max(0, credits - 1),
+        message:
+          "AI feedback request saved. Generation will run once the API key is wired.",
+        requesting: false,
+      });
+    } catch (error) {
+      setAiFeedbackState((current) =>
+        current
+          ? {
+              ...current,
+              requesting: false,
+              message:
+                error instanceof Error
+                  ? error.message
+                  : "Could not save AI feedback request.",
+            }
+          : current
+      );
     }
   };
 
@@ -4209,8 +4976,11 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   };
 
   const beginPracticeSession = (activeTrackingMode: TrackingMode) => {
-    const nextQuestions = availableQuestions.slice(0, setupQuestionCount);
+    const nextQuestions =
+      fixedDiagnosticQuestions ?? availableQuestions.slice(0, setupQuestionCount);
     if (nextQuestions.length === 0) return;
+    const isFixedDiagnostic = Boolean(fixedDiagnosticQuestions);
+    const nextTimed = isFixedDiagnostic || lengthMode === "minutes" || timed;
 
     scrollToQuestionTop();
     setNavigatorOpen(false);
@@ -4222,7 +4992,7 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     setPhase("practice");
     setSessionQuestions(nextQuestions);
     setDragOrder(getDragOrder(nextQuestions[0]));
-    setSessionTimed(lengthMode === "minutes" || timed);
+    setSessionTimed(nextTimed);
     setSessionDurationSeconds(setupTimeSeconds);
     setTimeRemaining(setupTimeSeconds);
     setMarkedSummary(null);
@@ -4240,11 +5010,12 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     setStarted(true);
     beginQuestionTiming(nextQuestions[0]);
     attentionTracker.resetAttempt(nowMs());
-    recordEvent("start_practice", {
+    recordEvent(diagnosticMode ? "start_diagnostic" : "start_practice", {
       section: validSection,
+      diagnosticMode,
       questionCount: nextQuestions.length,
       lengthMode,
-      timed: lengthMode === "minutes" || timed,
+      timed: nextTimed,
       seconds: setupTimeSeconds,
       requestedMinutes: lengthMode === "minutes" ? selectedMinutes : null,
       trackingMode: activeTrackingMode,
@@ -4280,10 +5051,101 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
     );
   }
 
+  if (!started && diagnosticMode === "free-qr" && savedFreeDiagnostic) {
+    return (
+      <MarkedReviewScreen
+        sectionTitle="Free QR diagnostic"
+        summary={savedFreeDiagnostic.summary}
+        saveState={{ status: "saved", message: "Saved diagnostic report" }}
+        isPremium={true}
+        diagnosticMode={diagnosticMode}
+        aiFeedbackState={aiFeedbackState}
+        checkoutLoading={checkoutLoading}
+        checkoutError={checkoutError}
+        onUpgrade={handleUpgrade}
+        onReviewAnswers={() => {
+          const restoredQuestions = savedFreeDiagnostic.summary.questions
+            .map((item) =>
+              sectionQuestions.find((question) => question.id === item.questionId)
+            )
+            .filter((question): question is UCATQuestion => Boolean(question));
+          const restoredAnswers: Record<number, PracticeAnswer> = {};
+          const restoredFlags: Record<number, boolean> = {};
+
+          savedFreeDiagnostic.summary.questions.forEach((item, index) => {
+            if (item.selectedAnswer) restoredAnswers[index] = item.selectedAnswer;
+            if (item.flagged) restoredFlags[index] = true;
+          });
+
+          setMarkedSummary(savedFreeDiagnostic.summary);
+          markedSummaryRef.current = savedFreeDiagnostic.summary;
+          setQuestionIndex(0);
+          setAnswers(restoredAnswers);
+          setFlags(restoredFlags);
+          setSessionQuestions(restoredQuestions);
+          setStarted(true);
+          setRevealed(true);
+          phaseRef.current = "marked-review";
+          setPhase("marked-review");
+          scrollToQuestionTop();
+        }}
+        onRequestAiFeedback={requestFreeDiagnosticAiFeedback}
+      />
+    );
+  }
+
+  if (!started && diagnosticMode === "free-qr" && aiFeedbackState?.credits === 0) {
+    return (
+      <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
+        <div className="mx-auto max-w-3xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h1 className="text-2xl font-black">Free diagnostic unavailable</h1>
+          <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">
+            {aiFeedbackState.message ??
+              "Create or log in to your account to use the free diagnostic."}
+          </p>
+          <Link
+            href="/phloemai/dashboard"
+            className="mt-5 inline-flex h-11 items-center justify-center rounded-lg bg-blue-600 px-6 text-sm font-black text-white hover:bg-blue-700"
+          >
+            Go to account
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!started && fixedDiagnosticQuestions) {
+    return (
+      <FixedDiagnosticStartScreen
+        title={
+          diagnosticMode === "free-qr"
+            ? "Free QR diagnostic"
+            : `${meta.title} full mock section`
+        }
+        subtitle={
+          diagnosticMode === "free-qr"
+            ? "A fixed 10-minute QR diagnostic. It uses the same 16 questions for every account and cannot be reattempted after completion."
+            : "A timed diagnostic section using the available PhloemAI question bank. Your result will include estimated scaled scoring and issue detection."
+        }
+        section={validSection}
+        questionCount={fixedDiagnosticQuestions.length}
+        seconds={setupTimeSeconds}
+        lockedNotice={
+          diagnosticMode === "free-qr"
+            ? "Once completed, this report is saved to your account and shown again instead of allowing a reattempt."
+            : undefined
+        }
+        loading={freeDiagnosticLoading}
+        onStart={startPractice}
+      />
+    );
+  }
+
   if (!started) {
     return (
       <SectionSetup
         section={validSection}
+        diagnosticMode={diagnosticMode}
         selectedSubtypeIds={selectedSubtypeIds}
         questionCount={setupQuestionCount}
         availableCount={availableQuestions.length}
@@ -4808,24 +5670,35 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
   if (phase === "marked" && markedSummary) {
     return (
       <MarkedReviewScreen
-        sectionTitle={meta.bankTitle}
+        sectionTitle={
+          diagnosticMode
+            ? `${getDiagnosticTitle(diagnosticMode)} - ${meta.title}`
+            : meta.bankTitle
+        }
         summary={markedSummary}
         saveState={saveState}
-        isPremium={isPremium}
+        isPremium={isPremium || diagnosticMode === "free-qr"}
+        diagnosticMode={diagnosticMode}
+        aiFeedbackState={aiFeedbackState}
         checkoutLoading={checkoutLoading}
         checkoutError={checkoutError}
         onUpgrade={handleUpgrade}
         onReviewAnswers={reviewMarkedAnswers}
-        onNewSet={() => {
-          commitQuestionTiming();
-          attentionTracker.resetTracker();
-          markedSummaryRef.current = null;
-          markedInsightsHistoryActiveRef.current = false;
-          setStarted(false);
-          setPhase("practice");
-          setMarkedSummary(null);
-          setSaveState({ status: "idle", message: "Not saved yet" });
-        }}
+        onNewSet={
+          diagnosticMode === "free-qr"
+            ? undefined
+            : () => {
+                commitQuestionTiming();
+                attentionTracker.resetTracker();
+                markedSummaryRef.current = null;
+                markedInsightsHistoryActiveRef.current = false;
+                setStarted(false);
+                setPhase("practice");
+                setMarkedSummary(null);
+                setSaveState({ status: "idle", message: "Not saved yet" });
+              }
+        }
+        onRequestAiFeedback={requestFreeDiagnosticAiFeedback}
       />
     );
   }
@@ -4853,13 +5726,15 @@ function UCATQuestionBankSection({ section: validSection }: { section: UCATSecti
       <header className="flex min-h-14 items-center justify-between bg-[#0078a8] px-3 py-2 text-white">
         <div className="flex items-center gap-3">
           <Link
-            href="/phloemai/practice"
-            aria-label="Back to practice"
+            href={diagnosticMode ? "/phloemai/diagnostic" : "/phloemai/practice"}
+            aria-label={diagnosticMode ? "Back to diagnostics" : "Back to practice"}
             className="rounded-sm p-1 hover:bg-white/15"
           >
             <ArrowLeft className="h-5 w-5" aria-hidden="true" />
           </Link>
-          <h1 className="text-lg font-semibold sm:text-2xl">{meta.bankTitle}</h1>
+          <h1 className="text-lg font-semibold sm:text-2xl">
+            {diagnosticMode ? getDiagnosticTitle(diagnosticMode) : meta.bankTitle}
+          </h1>
         </div>
         <div className="flex items-center gap-2">
           <span className="hidden rounded-sm bg-[#00618a] px-3 py-1 text-sm font-semibold sm:inline-flex">

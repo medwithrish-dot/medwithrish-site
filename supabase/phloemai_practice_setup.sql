@@ -7,6 +7,10 @@ alter table public.profiles
   add column if not exists diagnostic_credits integer not null default 1
     check (diagnostic_credits >= 0);
 
+alter table public.diagnostic_attempts
+  add column if not exists ai_feedback_requested_at timestamptz,
+  add column if not exists ai_feedback_status text not null default 'not_requested';
+
 update public.profiles
 set diagnostic_credits = 1
 where current_plan = 'free';

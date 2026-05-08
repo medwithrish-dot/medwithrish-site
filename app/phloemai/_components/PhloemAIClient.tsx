@@ -1077,6 +1077,7 @@ function PrivacyNotice() {
 type PhloemProfile = {
   full_name: string | null;
   current_plan: string | null;
+  diagnostic_credits?: number | null;
 };
 
 type AuthMode = "signup" | "login";
@@ -2076,8 +2077,6 @@ function ReportIssueSignalCard({
 
 function DiagnosticContent({
   isPremium,
-  checkoutLoading,
-  onUpgrade,
 }: PremiumGateProps) {
   const diagnosticHistory: Array<{
     code: string;
@@ -2135,7 +2134,7 @@ function DiagnosticContent({
             <p className="px-1 text-xs font-black uppercase tracking-wide text-blue-600">
               Start your diagnostic
             </p>
-            <div className="mt-3 grid gap-4 md:grid-cols-2">
+            <div className="mt-3 grid gap-4 xl:grid-cols-3">
               <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 p-5 text-white shadow-sm">
                 <span className="relative inline-flex rounded-lg bg-emerald-900/25 px-3 py-2 text-[11px] font-black uppercase">
                   Free first-read
@@ -2144,14 +2143,13 @@ function DiagnosticContent({
                   Start free diagnostic
                 </h2>
                 <p className="relative mt-2 max-w-[19rem] text-sm font-bold leading-6 text-emerald-50">
-                  Your first-read diagnostic to uncover key areas for
-                  improvement.
+                  A fixed QR first-read to uncover key areas for improvement.
                 </p>
                 <ul className="relative mt-5 space-y-2 text-sm font-bold text-emerald-50">
                   {[
-                    "10 adaptive questions",
-                    "First-read diagnostic",
-                    "Use 1 free credit",
+                    "16 QR questions",
+                    "10 minutes",
+                    "Same report per account",
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3">
                       <CheckCircle className="h-4 w-4" aria-hidden="true" />
@@ -2160,7 +2158,7 @@ function DiagnosticContent({
                   ))}
                 </ul>
                 <Link
-                  href="/phloemai/question-bank"
+                  href="/phloemai/question-bank/qr?diagnostic=free-qr"
                   className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50"
                 >
                   Start free diagnostic
@@ -2168,23 +2166,21 @@ function DiagnosticContent({
                 </Link>
               </div>
 
-              <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-violet-600 via-purple-700 to-indigo-900 p-5 text-white shadow-sm">
+              <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 via-indigo-700 to-slate-950 p-5 text-white shadow-sm">
                 <span className="relative inline-flex rounded-lg bg-white/15 px-3 py-2 text-[11px] font-black uppercase">
-                  Premium daily check-in
+                  Four-section mock
                 </span>
                 <h2 className="relative mt-6 text-xl font-black">
-                  Start daily diagnostic
+                  Full mock diagnostic
                 </h2>
-                <p className="relative mt-2 max-w-[19rem] text-sm font-bold leading-6 text-violet-50">
-                  A daily premium check-in to track progress and build
-                  consistency.
+                <p className="relative mt-2 max-w-[19rem] text-sm font-bold leading-6 text-blue-50">
+                  Run VR, DM, QR and SJT diagnostic sections with scaled scoring.
                 </p>
-                <ul className="relative mt-5 space-y-2 text-sm font-bold text-violet-50">
+                <ul className="relative mt-5 space-y-2 text-sm font-bold text-blue-50">
                   {[
-                    "Quick daily pulse",
-                    "Tracks progress over time",
-                    "Fresh questions every day",
-                    "Premium daily check-in",
+                    "VR/DM/QR 300-900",
+                    "SJT Band 1-4",
+                    "Section issue detection",
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3">
                       <CheckCircle className="h-4 w-4" aria-hidden="true" />
@@ -2192,25 +2188,44 @@ function DiagnosticContent({
                     </li>
                   ))}
                 </ul>
-                {isPremium ? (
-                  <Link
-                    href="/phloemai/question-bank"
-                    className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-violet-700 shadow-sm transition-colors hover:bg-violet-50"
-                  >
-                    Start daily diagnostic
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => void onUpgrade()}
-                    disabled={checkoutLoading}
-                    className="relative mt-auto flex h-11 w-full items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-violet-700 shadow-sm transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    <LockKeyhole className="h-4 w-4" aria-hidden="true" />
-                    {checkoutLoading ? "Opening..." : "Upgrade to unlock"}
-                  </button>
-                )}
+                <Link
+                  href="/phloemai/question-bank?diagnostic=full"
+                  className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-blue-700 shadow-sm transition-colors hover:bg-blue-50"
+                >
+                  Choose sections
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
+
+              <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-violet-600 via-purple-700 to-indigo-900 p-5 text-white shadow-sm">
+                <span className="relative inline-flex rounded-lg bg-white/15 px-3 py-2 text-[11px] font-black uppercase">
+                  Specific subset
+                </span>
+                <h2 className="relative mt-6 text-xl font-black">
+                  Subset mock
+                </h2>
+                <p className="relative mt-2 max-w-[19rem] text-sm font-bold leading-6 text-violet-50">
+                  Pick a section and diagnose only the question types you want.
+                </p>
+                <ul className="relative mt-5 space-y-2 text-sm font-bold text-violet-50">
+                  {[
+                    "Choose section",
+                    "Choose question types",
+                    "Timed or custom length",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-3">
+                      <CheckCircle className="h-4 w-4" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/phloemai/question-bank?diagnostic=subset"
+                  className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-violet-700 shadow-sm transition-colors hover:bg-violet-50"
+                >
+                  Choose subset
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
               </div>
             </div>
           </div>
@@ -2337,10 +2352,10 @@ function DiagnosticContent({
                   Daily access
                 </p>
                 <p className="mt-1 text-3xl font-black leading-none text-blue-600">
-                  &infin;
+                  {isPremium ? "On" : "Locked"}
                 </p>
                 <p className="mt-1 text-[11px] font-black text-blue-600">
-                  Premium
+                  {isPremium ? "Premium" : "Upgrade"}
                 </p>
               </div>
             </div>
@@ -3161,6 +3176,7 @@ function AccountContent({
   firstName,
   plan,
   email,
+  diagnosticCredits,
   checkoutLoading,
   onUpgrade,
   onLogout,
@@ -3168,6 +3184,7 @@ function AccountContent({
   firstName: string;
   plan: string;
   email: string;
+  diagnosticCredits: number;
   checkoutLoading: boolean;
   onUpgrade: () => void;
   onLogout: () => void;
@@ -3247,6 +3264,27 @@ function AccountContent({
             </label>
           </div>
         </section>
+
+        <section className="rounded-xl border border-violet-100 bg-white p-6 shadow-sm lg:col-span-2">
+          <h2 className="text-sm font-black uppercase tracking-wide">
+            Diagnostic AI credit
+          </h2>
+          <div className="mt-5 grid gap-4 sm:grid-cols-[180px_1fr] sm:items-center">
+            <div className="rounded-xl bg-violet-50 p-5 text-center">
+              <p className="text-xs font-black uppercase tracking-wide text-violet-700">
+                Credits
+              </p>
+              <p className="mt-2 text-4xl font-black text-violet-700">
+                {diagnosticCredits}
+              </p>
+            </div>
+            <p className="text-sm font-semibold leading-6 text-slate-600">
+              Your free QR diagnostic can use one credit to request AI feedback.
+              The request is saved now; generation will run once the API key is
+              wired.
+            </p>
+          </div>
+        </section>
       </div>
     </div>
   );
@@ -3260,6 +3298,7 @@ function DashboardSubpageContent({
   isPremium,
   checkoutLoading,
   practiceStats,
+  diagnosticCredits,
   onUpgrade,
   onLogout,
 }: {
@@ -3270,6 +3309,7 @@ function DashboardSubpageContent({
   isPremium: boolean;
   checkoutLoading: boolean;
   practiceStats: PracticeStats;
+  diagnosticCredits: number;
   onUpgrade: () => void;
   onLogout: () => void;
 }) {
@@ -3299,6 +3339,7 @@ function DashboardSubpageContent({
         firstName={firstName}
         plan={plan}
         email={email}
+        diagnosticCredits={diagnosticCredits}
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
         onLogout={onLogout}
@@ -3606,7 +3647,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     async function loadProfile(nextUser: User) {
       const { data } = await supabaseClient
         .from("profiles")
-        .select("full_name,current_plan")
+        .select("full_name,current_plan,diagnostic_credits")
         .eq("id", nextUser.id)
         .maybeSingle();
 
@@ -3880,6 +3921,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const firstName = getFirstName(user, profile);
   const plan = profile?.current_plan === "premium" ? "Premium" : "Free";
   const userEmail = user.email ?? "";
+  const diagnosticCredits =
+    typeof profile?.diagnostic_credits === "number"
+      ? profile.diagnostic_credits
+      : 1;
   const dashboardSectionScores = getSectionScores(practiceStats);
   const progressSummaryText = practiceStats.hasCompletedQuestions
     ? "From saved question attempts"
@@ -4400,6 +4445,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               isPremium={plan === "Premium"}
               checkoutLoading={checkoutLoading}
               practiceStats={practiceStats}
+              diagnosticCredits={diagnosticCredits}
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}
             />
