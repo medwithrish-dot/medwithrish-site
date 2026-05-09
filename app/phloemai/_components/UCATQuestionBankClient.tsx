@@ -271,7 +271,7 @@ type PracticeSessionSummary = {
 
 const QUESTION_TARGETS = [5, 10, 15] as const;
 const MINUTE_TARGETS = [5, 10, 15] as const;
-const FREE_QR_DIAGNOSTIC_QUESTION_COUNT = 16;
+const FREE_QR_DIAGNOSTIC_QUESTION_COUNT = 14;
 const FREE_QR_DIAGNOSTIC_SECONDS = 10 * 60;
 const FREE_QR_DIAGNOSTIC_SOURCE = "free_qr_diagnostic";
 const FULL_SECTION_DIAGNOSTIC_SOURCE = "full_mock_section_diagnostic";
@@ -336,7 +336,7 @@ function getPracticeSource(diagnosticMode: DiagnosticMode | null) {
 
 function getDiagnosticTitle(diagnosticMode: DiagnosticMode | null) {
   if (diagnosticMode === "free-qr") return "Free QR diagnostic";
-  if (diagnosticMode === "full-section") return "Section mock diagnostic";
+  if (diagnosticMode === "full-section") return "Subset mock diagnostic";
   if (diagnosticMode === "subset") return "Custom diagnostic";
 
   return "Practice set";
@@ -1761,9 +1761,13 @@ function SectionSetup({
   onTrackingRingChange,
   onStart,
   diagnosticMode,
+  backHref,
+  backLabel,
 }: {
   section: UCATSection;
   diagnosticMode?: DiagnosticMode | null;
+  backHref?: string;
+  backLabel?: string;
   selectedSubtypeIds: UCATSubtypeId[];
   questionCount: number;
   availableCount: number;
@@ -1804,11 +1808,11 @@ function SectionSetup({
     <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-5xl">
         <Link
-          href={diagnosticMode ? "/phloemai/diagnostic" : "/phloemai/practice"}
+          href={diagnosticMode ? backHref ?? "/phloemai/diagnostic" : "/phloemai/practice"}
           className="inline-flex items-center gap-2 text-sm font-bold text-blue-700 hover:text-blue-900"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          {diagnosticMode ? "Back to diagnostics" : "Back to practice"}
+          {diagnosticMode ? backLabel ?? "Back to diagnostics" : "Back to practice"}
         </Link>
 
         <section className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -2183,13 +2187,13 @@ function PremiumDiagnosticChooser() {
             </h1>
             <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
               Use a full mock when you want the whole UCAT sequence. Use a
-              section mock when you only want one section under timed conditions.
+              subset mock when you only want one section under timed conditions.
             </p>
           </div>
 
           <div className="mt-7 grid gap-4 md:grid-cols-2">
             <Link
-              href="/phloemai/question-bank?diagnostic=full-mock"
+              href="/phloemai/diagnostic/full-mock"
               className="group rounded-xl border border-slate-300 bg-white p-5 shadow-sm transition-colors hover:border-slate-900"
             >
               <div className="flex items-start justify-between gap-4">
@@ -2220,20 +2224,20 @@ function PremiumDiagnosticChooser() {
             </Link>
 
             <Link
-              href="/phloemai/question-bank?diagnostic=section-mock"
+              href="/phloemai/diagnostic/subset-mock"
               className="group rounded-xl border border-blue-200 bg-blue-50/40 p-5 shadow-sm transition-colors hover:border-blue-500 hover:bg-blue-50"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <span className="inline-flex rounded-md bg-white px-2.5 py-1 text-xs font-bold text-blue-700 ring-1 ring-blue-200">
-                    Section mock
+                    Subset mock
                   </span>
                   <h2 className="mt-4 text-xl font-black text-slate-950">
                     One full section
                   </h2>
                   <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
                     Pick VR, DM, QR or SJT, then choose official timing or the
-                    15-minute sprint option.
+                    15-minute subset mock.
                   </p>
                 </div>
                 <ArrowRight
@@ -2246,7 +2250,7 @@ function PremiumDiagnosticChooser() {
                   One section
                 </span>
                 <span className="rounded-lg bg-white px-3 py-2">
-                  15 min optional
+                  15 min available
                 </span>
               </div>
             </Link>
@@ -2262,7 +2266,7 @@ function FullMockDiagnosticOverview() {
     <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-5xl">
         <Link
-          href="/phloemai/question-bank?diagnostic=full"
+          href="/phloemai/diagnostic/mock-options"
           className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -2284,7 +2288,7 @@ function FullMockDiagnosticOverview() {
               </p>
             </div>
             <Link
-              href="/phloemai/question-bank/vr?diagnostic=full-section"
+              href="/phloemai/diagnostic/full-mock/vr"
               className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 text-sm font-bold text-white hover:bg-slate-800"
             >
               Start VR
@@ -2302,7 +2306,7 @@ function FullMockDiagnosticOverview() {
               return (
                 <Link
                   key={section}
-                  href={`/phloemai/question-bank/${section}?diagnostic=full-section`}
+                  href={`/phloemai/diagnostic/full-mock/${section}`}
                   className="grid gap-4 p-4 transition-colors hover:bg-slate-50 sm:grid-cols-[auto_1fr_auto] sm:items-center"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
@@ -2340,16 +2344,16 @@ function DiagnosticModeChooser({
   mode: Extract<DiagnosticMode, "section-mock" | "subset">;
 }) {
   const isSectionMock = mode === "section-mock";
-  const title = isSectionMock ? "Choose a section mock" : "Custom diagnostic";
+  const title = isSectionMock ? "Choose a subset mock" : "Custom diagnostic";
   const description = isSectionMock
-    ? "Pick one UCAT section and run it as a full timed diagnostic section."
+    ? "Pick one UCAT section and run it as a timed subset mock."
     : "Choose a section, then select the exact question types you want to diagnose.";
 
   return (
     <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-5xl">
         <Link
-          href={isSectionMock ? "/phloemai/question-bank?diagnostic=full" : "/phloemai/diagnostic"}
+          href={isSectionMock ? "/phloemai/diagnostic/mock-options" : "/phloemai/diagnostic"}
           className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -2360,7 +2364,7 @@ function DiagnosticModeChooser({
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-wide text-blue-700">
-                {isSectionMock ? "Section mock" : "Custom"}
+                {isSectionMock ? "Subset mock" : "Custom"}
               </p>
               <h1 className="mt-2 text-3xl font-black text-slate-950">
                 {title}
@@ -2394,7 +2398,11 @@ function DiagnosticModeChooser({
               return (
                 <Link
                   key={section.slug}
-                  href={href}
+                  href={
+                    isSectionMock
+                      ? `/phloemai/diagnostic/subset-mock/${section.slug}`
+                      : href
+                  }
                   className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50/60"
                 >
                   <div className="flex items-start justify-between gap-4">
@@ -2436,6 +2444,8 @@ function FixedDiagnosticStartScreen({
   seconds,
   timingMode,
   onTimingModeChange,
+  backHref = "/phloemai/diagnostic",
+  backLabel = "Back to diagnostics",
   lockedNotice,
   loading,
   onStart,
@@ -2447,6 +2457,8 @@ function FixedDiagnosticStartScreen({
   seconds: number;
   timingMode?: SectionMockTimingMode;
   onTimingModeChange?: (mode: SectionMockTimingMode) => void;
+  backHref?: string;
+  backLabel?: string;
   lockedNotice?: string;
   loading?: boolean;
   onStart: () => void;
@@ -2458,11 +2470,11 @@ function FixedDiagnosticStartScreen({
     <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-4xl">
         <Link
-          href="/phloemai/diagnostic"
+          href={backHref}
           className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Back to diagnostics
+          {backLabel}
         </Link>
 
         <section className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -2520,7 +2532,7 @@ function FixedDiagnosticStartScreen({
                   },
                   {
                     mode: "short",
-                    label: "15-minute section mock",
+                    label: "15-minute subset mock",
                     helper:
                       "Short sprint for a quick read. Not recommended for your baseline.",
                     badge: "Not recommended",
@@ -4316,9 +4328,13 @@ function MarkedReviewScreen({
 export function UCATQuestionBankClient({
   section,
   diagnosticMode,
+  backHref,
+  backLabel,
 }: {
   section?: string;
   diagnosticMode?: string | null;
+  backHref?: string;
+  backLabel?: string;
 }) {
   const validSection = section && isUCATSection(section) ? section : null;
   const validDiagnosticMode = normaliseDiagnosticMode(diagnosticMode);
@@ -4348,6 +4364,8 @@ export function UCATQuestionBankClient({
       key={`${validSection}-${validDiagnosticMode ?? "practice"}`}
       section={validSection}
       diagnosticMode={validDiagnosticMode}
+      backHref={backHref}
+      backLabel={backLabel}
     />
   );
 }
@@ -4355,9 +4373,13 @@ export function UCATQuestionBankClient({
 function UCATQuestionBankSection({
   section: validSection,
   diagnosticMode,
+  backHref,
+  backLabel,
 }: {
   section: UCATSection;
   diagnosticMode: DiagnosticMode | null;
+  backHref?: string;
+  backLabel?: string;
 }) {
   const [navigatorOpen, setNavigatorOpen] = useState(false);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -5399,12 +5421,14 @@ function UCATQuestionBankSection({
         }
         subtitle={
           diagnosticMode === "free-qr"
-            ? "A fixed 10-minute QR diagnostic. It uses the same 16 questions for every account and cannot be reattempted after completion."
+            ? "A fixed 10-minute QR diagnostic with 14 questions. Complete it to save your first report."
             : "A timed diagnostic section using the available PhloemAI question bank. Your result will include estimated scaled scoring and issue detection."
         }
         section={validSection}
         questionCount={fixedDiagnosticQuestions.length}
         seconds={setupTimeSeconds}
+        backHref={backHref}
+        backLabel={backLabel}
         timingMode={
           diagnosticMode === "full-section" ? sectionMockTiming : undefined
         }
@@ -5432,6 +5456,8 @@ function UCATQuestionBankSection({
       <SectionSetup
         section={validSection}
         diagnosticMode={diagnosticMode}
+        backHref={backHref}
+        backLabel={backLabel}
         selectedSubtypeIds={selectedSubtypeIds}
         questionCount={setupQuestionCount}
         availableCount={availableQuestions.length}
@@ -6012,8 +6038,8 @@ function UCATQuestionBankSection({
       <header className="flex min-h-14 items-center justify-between bg-[#0078a8] px-3 py-2 text-white">
         <div className="flex items-center gap-3">
           <Link
-            href={diagnosticMode ? "/phloemai/diagnostic" : "/phloemai/practice"}
-            aria-label={diagnosticMode ? "Back to diagnostics" : "Back to practice"}
+            href={diagnosticMode ? backHref ?? "/phloemai/diagnostic" : "/phloemai/practice"}
+            aria-label={diagnosticMode ? backLabel ?? "Back to diagnostics" : "Back to practice"}
             className="rounded-sm p-1 hover:bg-white/15"
           >
             <ArrowLeft className="h-5 w-5" aria-hidden="true" />

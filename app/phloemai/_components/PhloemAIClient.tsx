@@ -2147,9 +2147,8 @@ function DiagnosticContent({
                 </p>
                 <ul className="relative mt-5 space-y-2 text-sm font-bold text-emerald-50">
                   {[
-                    "16 QR questions",
+                    "14 QR questions",
                     "10 minutes",
-                    "Same report per account",
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3">
                       <CheckCircle className="h-4 w-4" aria-hidden="true" />
@@ -2177,11 +2176,11 @@ function DiagnosticContent({
                   Choose a whole UCAT mock or a single full section with scaled
                   scoring.
                 </p>
-                <ul className="relative mt-5 space-y-2 text-sm font-bold text-blue-50">
+                <ul className="relative mb-8 mt-5 space-y-2 text-sm font-bold text-blue-50">
                   {[
                     "Full mock: VR 44, DM 35, QR 36, SJT 69",
-                    "Section mock with official timing",
-                    "15-minute section option",
+                    "Subset mock with official timing",
+                    "15-minute subset mock available",
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3">
                       <CheckCircle className="h-4 w-4" aria-hidden="true" />
@@ -2190,10 +2189,10 @@ function DiagnosticContent({
                   ))}
                 </ul>
                 <Link
-                  href="/phloemai/question-bank?diagnostic=full"
+                  href="/phloemai/diagnostic/mock-options"
                   className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-blue-700 shadow-sm transition-colors hover:bg-blue-50"
                 >
-                  Open mock options
+                  Choose mock type
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>
