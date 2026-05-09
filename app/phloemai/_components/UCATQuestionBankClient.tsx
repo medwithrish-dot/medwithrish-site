@@ -1620,7 +1620,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
 
 function SectionHub() {
   return (
-    <div className="min-h-screen bg-[#f6f7fb] px-4 py-8 text-[#111827]">
+    <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-5xl">
         <Link
           href="/phloemai/practice"
@@ -1801,7 +1801,7 @@ function SectionSetup({
       : questionCount * meta.secondsPerQuestion;
 
   return (
-    <div className="min-h-screen bg-[#f6f7fb] px-4 py-8 text-[#111827]">
+    <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-5xl">
         <Link
           href={diagnosticMode ? "/phloemai/diagnostic" : "/phloemai/practice"}
@@ -2163,7 +2163,7 @@ function PremiumDiagnosticChooser() {
   );
 
   return (
-    <div className="min-h-screen bg-[#f6f7fb] px-4 py-8 text-[#111827]">
+    <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-5xl">
         <Link
           href="/phloemai/diagnostic"
@@ -2259,7 +2259,7 @@ function PremiumDiagnosticChooser() {
 
 function FullMockDiagnosticOverview() {
   return (
-    <div className="min-h-screen bg-[#f6f7fb] px-4 py-8 text-[#111827]">
+    <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-5xl">
         <Link
           href="/phloemai/question-bank?diagnostic=full"
@@ -2346,7 +2346,7 @@ function DiagnosticModeChooser({
     : "Choose a section, then select the exact question types you want to diagnose.";
 
   return (
-    <div className="min-h-screen bg-[#f6f7fb] px-4 py-8 text-[#111827]">
+    <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-5xl">
         <Link
           href={isSectionMock ? "/phloemai/question-bank?diagnostic=full" : "/phloemai/diagnostic"}
@@ -2455,7 +2455,7 @@ function FixedDiagnosticStartScreen({
   const showTimingOptions = Boolean(timingMode && onTimingModeChange);
 
   return (
-    <div className="min-h-screen bg-[#f6f7fb] px-4 py-8 text-[#111827]">
+    <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-4xl">
         <Link
           href="/phloemai/diagnostic"
@@ -5371,7 +5371,7 @@ function UCATQuestionBankSection({
 
   if (!started && diagnosticMode === "free-qr" && aiFeedbackState?.credits === 0) {
     return (
-      <div className="min-h-screen bg-[#f6f7fb] px-4 py-8 text-[#111827]">
+      <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
         <div className="mx-auto max-w-3xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <h1 className="text-2xl font-black">Free diagnostic unavailable</h1>
           <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">

@@ -2131,81 +2131,67 @@ function DiagnosticContent({
       <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="grid gap-5 xl:grid-cols-[1.85fr_1fr]">
           <div>
-            <p className="px-1 text-xs font-bold uppercase tracking-wide text-blue-700">
+            <p className="px-1 text-xs font-black uppercase tracking-wide text-blue-600">
               Start your diagnostic
             </p>
             <div className="mt-3 grid gap-4 lg:grid-cols-2">
-              <div className="flex h-full flex-col rounded-xl border border-emerald-200 bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="inline-flex rounded-md bg-emerald-50 px-3 py-1 text-[11px] font-bold uppercase text-emerald-700">
-                    Free first-read
-                  </span>
-                  <span className="text-xs font-bold text-slate-400">QR</span>
-                </div>
-                <h2 className="mt-6 text-xl font-black text-slate-950">
+              <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 p-5 text-white shadow-sm">
+                <span className="relative inline-flex rounded-lg bg-emerald-900/25 px-3 py-2 text-[11px] font-black uppercase">
+                  Free first-read
+                </span>
+                <h2 className="relative mt-6 text-xl font-black">
                   Start free diagnostic
                 </h2>
-                <p className="mt-2 max-w-[19rem] text-sm font-semibold leading-6 text-slate-600">
+                <p className="relative mt-2 max-w-[19rem] text-sm font-bold leading-6 text-emerald-50">
                   A fixed QR first-read to uncover key areas for improvement.
                 </p>
-                <ul className="mt-5 space-y-2 text-sm font-semibold text-slate-700">
+                <ul className="relative mt-5 space-y-2 text-sm font-bold text-emerald-50">
                   {[
                     "16 QR questions",
                     "10 minutes",
                     "Same report per account",
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3">
-                      <CheckCircle
-                        className="h-4 w-4 text-emerald-600"
-                        aria-hidden="true"
-                      />
+                      <CheckCircle className="h-4 w-4" aria-hidden="true" />
                       {item}
                     </li>
                   ))}
                 </ul>
                 <Link
                   href="/phloemai/question-bank/qr?diagnostic=free-qr"
-                  className="mt-auto flex h-11 items-center justify-center gap-3 rounded-lg border border-emerald-200 bg-emerald-50 px-5 text-sm font-black text-emerald-700 transition-colors hover:bg-emerald-100"
+                  className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50"
                 >
                   Start free diagnostic
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>
 
-              <div className="flex h-full flex-col rounded-xl border border-slate-900 bg-slate-950 p-5 text-white shadow-sm">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="inline-flex rounded-md bg-white/10 px-3 py-1 text-[11px] font-bold uppercase text-blue-100">
-                    Premium diagnostic
-                  </span>
-                  <span className="text-xs font-bold text-slate-400">
-                    Full or section
-                  </span>
-                </div>
-                <h2 className="mt-6 text-xl font-black">
+              <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 via-indigo-700 to-slate-950 p-5 text-white shadow-sm">
+                <span className="relative inline-flex rounded-lg bg-white/15 px-3 py-2 text-[11px] font-black uppercase">
+                  Premium diagnostic
+                </span>
+                <h2 className="relative mt-6 text-xl font-black">
                   Mock diagnostic
                 </h2>
-                <p className="mt-2 max-w-[21rem] text-sm font-semibold leading-6 text-slate-300">
+                <p className="relative mt-2 max-w-[21rem] text-sm font-bold leading-6 text-blue-50">
                   Choose a whole UCAT mock or a single full section with scaled
                   scoring.
                 </p>
-                <ul className="mt-5 space-y-2 text-sm font-semibold text-slate-200">
+                <ul className="relative mt-5 space-y-2 text-sm font-bold text-blue-50">
                   {[
                     "Full mock: VR 44, DM 35, QR 36, SJT 69",
                     "Section mock with official timing",
                     "15-minute section option",
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3">
-                      <CheckCircle
-                        className="h-4 w-4 text-blue-300"
-                        aria-hidden="true"
-                      />
+                      <CheckCircle className="h-4 w-4" aria-hidden="true" />
                       {item}
                     </li>
                   ))}
                 </ul>
                 <Link
                   href="/phloemai/question-bank?diagnostic=full"
-                  className="mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-slate-950 shadow-sm transition-colors hover:bg-blue-50"
+                  className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-blue-700 shadow-sm transition-colors hover:bg-blue-50"
                 >
                   Open mock options
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -3372,7 +3358,7 @@ function AuthPanel({
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
   return (
-    <div className="min-h-screen bg-[#f6f7fb] px-5 py-10 text-[#111827]">
+    <div className="min-h-screen bg-[#f8fbff] px-5 py-10 text-[#0b1143]">
       <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[0.9fr_1fr] lg:items-center">
         <div>
           <div className="flex items-center gap-3">
@@ -3551,7 +3537,7 @@ function AuthPanel({
 
 function MissingSupabaseConfig() {
   return (
-    <div className="min-h-screen bg-[#f6f7fb] px-5 py-10 text-[#111827]">
+    <div className="min-h-screen bg-[#f8fbff] px-5 py-10 text-[#0b1143]">
       <div className="mx-auto max-w-xl rounded-2xl border border-amber-200 bg-white p-6 shadow-sm">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
           <LockKeyhole className="h-6 w-6" aria-hidden="true" />
@@ -3875,7 +3861,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f6f7fb] text-[#111827]">
+      <div className="flex min-h-screen items-center justify-center bg-[#f8fbff] text-[#0b1143]">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
       </div>
     );
@@ -3915,11 +3901,11 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     : "No completed questions yet";
 
   return (
-    <div className="phloem-dashboard-compact min-h-screen bg-[#f6f7fb] text-[#111827]">
+    <div className="phloem-dashboard-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
       <div className="grid min-h-screen lg:grid-cols-[190px_1fr]">
-        <aside className="border-r border-slate-200 bg-[#fbfcfe] px-3 py-5">
+        <aside className="border-r border-slate-200 bg-white px-3 py-5">
           <div className="flex items-center gap-3 px-1">
-            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
               <Brain className="h-7 w-7" aria-hidden="true" />
             </div>
             <div>
@@ -3969,9 +3955,9 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`flex h-12 w-full items-center gap-4 rounded-lg px-4 text-sm font-black transition-colors ${
+                  className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-black transition-colors ${
                     isActive
-                      ? "bg-white text-blue-700 shadow-sm ring-1 ring-slate-200"
+                      ? "bg-indigo-50 text-blue-600 shadow-sm"
                       : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
                   }`}
                 >
@@ -3983,7 +3969,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
           </nav>
 
           <div className="mt-8 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-blue-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-blue-600">
               <Sparkles className="h-6 w-6" aria-hidden="true" />
             </div>
             <h2 className="mt-4 text-sm font-black">
@@ -4053,10 +4039,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
         </aside>
 
         <main className="min-w-0">
-          <header className="flex flex-col gap-4 border-b border-slate-200 bg-white/95 px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+          <header className="flex flex-col gap-4 border-b border-slate-200 bg-white px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
             <div className="flex items-center gap-4">
               {view === "diagnostic" && (
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-blue-600">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-blue-600">
                   <Activity className="h-7 w-7" aria-hidden="true" />
                 </div>
               )}
