@@ -1,3 +1,5 @@
+import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
+import { PremiumDiagnosticLock } from "../../../_components/PremiumDiagnosticLock";
 import { UCATQuestionBankClient } from "../../../_components/UCATQuestionBankClient";
 import { UCAT_SECTIONS } from "../../../_lib/ucatQuestionBank";
 
@@ -11,6 +13,16 @@ export default async function Page({
   params: Promise<{ section: string }>;
 }) {
   const { section } = await params;
+  const { isPremium } = await getPhloemEntitlements();
+
+  if (!isPremium) {
+    return (
+      <PremiumDiagnosticLock
+        backHref="/phloemai/diagnostic/full-mock"
+        backLabel="Back to full mock"
+      />
+    );
+  }
 
   return (
     <UCATQuestionBankClient

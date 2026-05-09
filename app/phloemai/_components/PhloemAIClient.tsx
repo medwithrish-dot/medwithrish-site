@@ -1114,6 +1114,29 @@ type PracticeStats = {
   monthLabel: string;
 };
 
+type DashboardDiagnosticIssue = {
+  label: string;
+  cause?: string;
+  evidence?: string[];
+  fix?: string;
+};
+
+type DashboardDiagnosticTask = {
+  id: string;
+  fix: string;
+};
+
+type DashboardDiagnostic = {
+  section: UCATSectionCode;
+  accuracy: number;
+  issues: DashboardDiagnosticIssue[];
+  strengths: string[];
+  studyPlanTasks: DashboardDiagnosticTask[];
+  aiFeedbackText: string | null;
+  aiFeedbackStatus: string | null;
+  completedAt: string | null;
+};
+
 const dashboardPageMeta: Record<
   DashboardView,
   { title: string; subtitle: string }
@@ -3534,6 +3557,257 @@ function AuthPanel({
   );
 }
 
+function DashboardFeedbackPanel({
+  latestDiagnostic,
+  practiceStats,
+}: {
+  latestDiagnostic: DashboardDiagnostic | null;
+  practiceStats: PracticeStats;
+}) {
+  const hasDiagnostic = Boolean(latestDiagnostic);
+  const aiText = latestDiagnostic?.aiFeedbackText ?? null;
+  const aiStatusValue = aiText
+    ? "Ready"
+    : latestDiagnostic
+      ? latestDiagnostic.aiFeedbackStatus === "queued_no_api_key"
+        ? "Pending"
+        : latestDiagnostic.aiFeedbackStatus === "ready"
+          ? "Ready"
+          : "Not requested"
+      : "Pending";
+  const diagnosticStatusValue = hasDiagnostic ? "Saved" : "Waiting";
+  const diagnosticStatusClass = hasDiagnostic
+    ? "bg-emerald-50 text-emerald-700"
+    : "bg-blue-50 text-blue-600";
+  const aiStatusClass = aiText
+    ? "bg-emerald-50 text-emerald-700"
+    : "bg-violet-50 text-violet-600";
+
+  const sectionTabs: Array<{ code: UCATSectionCode; label: string }> = [
+    { code: "VR", label: "Verbal Reasoning" },
+    { code: "DM", label: "Decision Making" },
+    { code: "QR", label: "Quantitative Reasoning" },
+    { code: "SJT", label: "Situational Judgement" },
+  ];
+  const activeSection = latestDiagnostic?.section;
+  const issues = latestDiagnostic?.issues ?? [];
+  const strengths = latestDiagnostic?.strengths ?? [];
+  const fixes = latestDiagnostic?.studyPlanTasks ?? [];
+
+  return (
+    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-sm font-black uppercase tracking-wider text-blue-600">
+            Phloem personalised feedback
+          </p>
+          <h2 className="mt-3 text-xl font-black">
+            {hasDiagnostic
+              ? "Diagnostic feedback"
+              : "Diagnostic feedback pending"}
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
+            {hasDiagnostic
+              ? "Based on your free diagnostic. Issues, strengths and fixes per UCAT section."
+              : "Complete and mark a diagnostic so PhloemAI can turn your timing, accuracy and answer behaviour into AI feedback."}
+          </p>
+        </div>
+        {hasDiagnostic ? (
+          <Link
+            href="/phloemai/report"
+            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
+          >
+            Open report
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        ) : (
+          <Link
+            href="/phloemai/diagnostic"
+            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
+          >
+            Run diagnostic
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        )}
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+        {[
+          ["Diagnostic", diagnosticStatusValue, Activity, diagnosticStatusClass],
+          [
+            "Practice data",
+            practiceStats.hasCompletedQuestions ? "Saved" : "Empty",
+            BarChart3,
+            practiceStats.hasCompletedQuestions
+              ? "bg-emerald-50 text-emerald-700"
+              : "bg-slate-100 text-slate-500",
+          ],
+          ["AI feedback", aiStatusValue, MessageSquare, aiStatusClass],
+        ].map(([label, value, Icon, iconClass]) => (
+          <div
+            key={label as string}
+            className="rounded-xl border border-slate-200 bg-slate-50 p-3"
+          >
+            <div className="flex items-center gap-2">
+              <div
+                className={`flex h-9 w-9 items-center justify-center rounded-lg ${iconClass as string}`}
+              >
+                <Icon className="h-4 w-4" aria-hidden="true" />
+              </div>
+              <div>
+                <p className="text-xs font-black text-slate-700">
+                  {label as string}
+                </p>
+                <p className="mt-0.5 text-xs font-bold text-slate-500">
+                  {value as string}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {hasDiagnostic ? (
+        <>
+          <div className="mt-5 flex flex-wrap gap-1 rounded-md border border-slate-200 bg-slate-50 p-1">
+            {sectionTabs.map((tab) => {
+              const active = activeSection === tab.code;
+              return (
+                <span
+                  key={tab.code}
+                  className={`rounded-sm px-3 py-1 text-xs font-black uppercase tracking-wide ${
+                    active
+                      ? "bg-blue-600 text-white"
+                      : "text-slate-500"
+                  }`}
+                >
+                  {tab.code}
+                </span>
+              );
+            })}
+          </div>
+
+          {sectionTabs.map((tab) => {
+            const active = activeSection === tab.code;
+            if (!active) return null;
+            return (
+              <div key={tab.code} className="mt-4 grid gap-3 lg:grid-cols-3">
+                <div className="rounded-xl border border-red-100 bg-red-50/40 p-4">
+                  <h3 className="text-xs font-black uppercase tracking-wide text-red-700">
+                    Issues
+                  </h3>
+                  {issues.length === 0 ? (
+                    <p className="mt-2 text-xs font-semibold text-slate-500">
+                      No issues detected.
+                    </p>
+                  ) : (
+                    <ul className="mt-2 space-y-1.5 text-xs font-bold leading-5 text-slate-800">
+                      {issues.slice(0, 5).map((issue) => (
+                        <li key={issue.label}>- {issue.label}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4">
+                  <h3 className="text-xs font-black uppercase tracking-wide text-emerald-700">
+                    Strengths
+                  </h3>
+                  {strengths.length === 0 ? (
+                    <p className="mt-2 text-xs font-semibold text-slate-500">
+                      No strengths recorded.
+                    </p>
+                  ) : (
+                    <ul className="mt-2 space-y-1.5 text-xs font-bold leading-5 text-slate-800">
+                      {strengths.slice(0, 5).map((item) => (
+                        <li key={item}>- {item}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4">
+                  <h3 className="text-xs font-black uppercase tracking-wide text-blue-700">
+                    Fixes
+                  </h3>
+                  {fixes.length === 0 ? (
+                    <p className="mt-2 text-xs font-semibold text-slate-500">
+                      No fixes generated.
+                    </p>
+                  ) : (
+                    <ol className="mt-2 space-y-1.5 text-xs font-bold leading-5 text-slate-800">
+                      {fixes.slice(0, 4).map((task, index) => (
+                        <li key={task.id ?? index}>
+                          {index + 1}. {task.fix}
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+
+          {sectionTabs
+            .filter((tab) => tab.code !== activeSection)
+            .map((tab) => (
+              <div
+                key={tab.code}
+                className="mt-3 flex items-center justify-between rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-500"
+              >
+                <span>
+                  {tab.code} - {tab.label} not yet diagnosed
+                </span>
+                <Link
+                  href="/phloemai/diagnostic"
+                  className="text-blue-600 hover:text-blue-700"
+                >
+                  Run diagnostic
+                </Link>
+              </div>
+            ))}
+
+          {aiText && (
+            <div className="mt-5 rounded-xl border border-violet-100 bg-violet-50/40 p-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-violet-600" aria-hidden="true" />
+                <h3 className="text-xs font-black uppercase tracking-wide text-violet-700">
+                  AI feedback
+                </h3>
+              </div>
+              <div className="mt-2 space-y-2 text-xs leading-5 text-slate-800">
+                {aiText.split(/\n{2,}/).map((paragraph, index) => (
+                  <p key={index} className="whitespace-pre-wrap">
+                    {paragraph.trim()}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50/60 p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="text-sm font-black text-blue-950">
+                Section observations
+              </h3>
+              <p className="mt-1 text-xs font-bold leading-5 text-blue-700">
+                Timing bottlenecks, changed-answer patterns and weak sections will appear here after a marked diagnostic.
+              </p>
+            </div>
+            <Link
+              href="/phloemai/report"
+              className="inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+            >
+              Open report
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
 function MissingSupabaseConfig() {
   return (
     <div className="min-h-screen bg-[#f8fbff] px-5 py-10 text-[#0b1143]">
@@ -3575,6 +3849,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const [practiceStats, setPracticeStats] = useState<PracticeStats>(() =>
     createEmptyPracticeStats()
   );
+  const [latestDiagnostic, setLatestDiagnostic] =
+    useState<DashboardDiagnostic | null>(null);
   const supabaseReady = hasSupabaseConfig();
   const supabase = useMemo(
     () => (supabaseReady ? createSupabaseClient() : null),
@@ -3643,6 +3919,77 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       setPracticeStats(buildPracticeStats((data ?? []) as PracticeAttemptRow[]));
     }
 
+    async function loadLatestDiagnostic(nextUser: User) {
+      const { data, error } = await supabaseClient
+        .from("diagnostic_attempts")
+        .select(
+          "accuracy,completed_at,ai_feedback_status,metadata,source"
+        )
+        .eq("user_id", nextUser.id)
+        .order("completed_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!mounted) return;
+      if (error || !data) {
+        setLatestDiagnostic(null);
+        return;
+      }
+
+      const metadata =
+        data.metadata && typeof data.metadata === "object" && !Array.isArray(data.metadata)
+          ? (data.metadata as Record<string, unknown>)
+          : {};
+      const summary =
+        metadata.summary &&
+        typeof metadata.summary === "object" &&
+        !Array.isArray(metadata.summary)
+          ? (metadata.summary as Record<string, unknown>)
+          : null;
+      const sectionRaw =
+        typeof summary?.section === "string" ? summary.section.toUpperCase() : "QR";
+      const section = (
+        ["VR", "DM", "QR", "SJT"].includes(sectionRaw) ? sectionRaw : "QR"
+      ) as UCATSectionCode;
+      const insights =
+        metadata.insights &&
+        typeof metadata.insights === "object" &&
+        !Array.isArray(metadata.insights)
+          ? (metadata.insights as { issues?: unknown; strengths?: unknown })
+          : { issues: [], strengths: [] };
+      const issues = Array.isArray(insights.issues)
+        ? (insights.issues as DashboardDiagnosticIssue[])
+        : [];
+      const strengths = Array.isArray(insights.strengths)
+        ? (insights.strengths as string[])
+        : [];
+      const studyPlanTasks = Array.isArray(metadata.studyPlanTasks)
+        ? (metadata.studyPlanTasks as DashboardDiagnosticTask[])
+        : [];
+      const aiFeedbackText =
+        typeof metadata.aiFeedbackText === "string"
+          ? metadata.aiFeedbackText
+          : null;
+      const aiFeedbackStatus =
+        typeof data.ai_feedback_status === "string"
+          ? data.ai_feedback_status
+          : typeof metadata.aiFeedbackStatus === "string"
+            ? metadata.aiFeedbackStatus
+            : null;
+
+      setLatestDiagnostic({
+        section,
+        accuracy: typeof data.accuracy === "number" ? data.accuracy : 0,
+        issues,
+        strengths,
+        studyPlanTasks,
+        aiFeedbackText,
+        aiFeedbackStatus,
+        completedAt:
+          typeof data.completed_at === "string" ? data.completed_at : null,
+      });
+    }
+
     async function syncCheckoutIfNeeded(nextUser: User) {
       const params = new URLSearchParams(window.location.search);
       const sessionId = params.get("session_id");
@@ -3687,10 +4034,12 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       if (currentSession?.user) {
         await loadProfile(currentSession.user);
         await loadPracticeStats(currentSession.user);
+        await loadLatestDiagnostic(currentSession.user);
         await syncCheckoutIfNeeded(currentSession.user);
       } else {
         setProfile(null);
         setPracticeStats(createEmptyPracticeStats());
+        setLatestDiagnostic(null);
       }
 
       setLoading(false);
@@ -3708,9 +4057,11 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       if (nextSession?.user) {
         void loadProfile(nextSession.user);
         void loadPracticeStats(nextSession.user);
+        void loadLatestDiagnostic(nextSession.user);
       } else {
         setProfile(null);
         setPracticeStats(createEmptyPracticeStats());
+        setLatestDiagnostic(null);
       }
     });
 
@@ -4140,86 +4491,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
 
           {view === "dashboard" ? (
           <div className="grid gap-5 px-6 py-5 lg:grid-cols-[1.1fr_1fr] lg:px-8">
-            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <p className="text-sm font-black uppercase tracking-wider text-blue-600">
-                    Phloem personalised feedback
-                  </p>
-                  <h2 className="mt-3 text-xl font-black">
-                    Diagnostic feedback pending
-                  </h2>
-                  <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
-                    Complete and mark a diagnostic so PhloemAI can turn your
-                    timing, accuracy and answer behaviour into AI feedback.
-                  </p>
-                </div>
-                <Link
-                  href="/phloemai/diagnostic"
-                  className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
-                >
-                  Run diagnostic
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-              </div>
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                {[
-                  ["Diagnostic", "Waiting", Activity, "bg-blue-50 text-blue-600"],
-                  [
-                    "Practice data",
-                    practiceStats.hasCompletedQuestions ? "Saved" : "Empty",
-                    BarChart3,
-                    practiceStats.hasCompletedQuestions
-                      ? "bg-emerald-50 text-emerald-700"
-                      : "bg-slate-100 text-slate-500",
-                  ],
-                  ["AI feedback", "Pending", MessageSquare, "bg-violet-50 text-violet-600"],
-                ].map(([label, value, Icon, iconClass]) => (
-                  <div
-                    key={label as string}
-                    className="rounded-xl border border-slate-200 bg-slate-50 p-3"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`flex h-9 w-9 items-center justify-center rounded-lg ${iconClass as string}`}
-                      >
-                        <Icon className="h-4 w-4" aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-black text-slate-700">
-                          {label as string}
-                        </p>
-                        <p className="mt-0.5 text-xs font-bold text-slate-500">
-                          {value as string}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50/60 p-4">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <h3 className="text-sm font-black text-blue-950">
-                      Section observations
-                    </h3>
-                    <p className="mt-1 text-xs font-bold leading-5 text-blue-700">
-                      Timing bottlenecks, changed-answer patterns and weak
-                      sections will appear here after a marked diagnostic.
-                    </p>
-                  </div>
-                  <Link
-                    href="/phloemai/report"
-                    className="inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
-                  >
-                    Open report
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                </div>
-              </div>
-            </section>
+            <DashboardFeedbackPanel
+              latestDiagnostic={latestDiagnostic}
+              practiceStats={practiceStats}
+            />
 
             <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center gap-2">
