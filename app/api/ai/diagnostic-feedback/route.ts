@@ -1,0 +1,129 @@
+import Anthropic from "@anthropic-ai/sdk";
+import { NextResponse } from "next/server";
+
+type DiagnosticIssue = {
+  label: string;
+  cause?: string;
+  evidence?: string[];
+  fix?: string;
+};
+
+type DiagnosticFeedbackBody = {
+  section?: string;
+  accuracy?: number;
+  scorePoints?: number;
+  maxScore?: number;
+  answeredQuestions?: number;
+  totalQuestions?: number;
+  avgSecondsPerQuestion?: number;
+  issues?: DiagnosticIssue[];
+  strengths?: string[];
+  questionTimings?: Array<{
+    label: string;
+    avgSeconds: number;
+    correct: number;
+    questions: number;
+  }>;
+};
+
+export async function POST(request: Request) {
+  let body: DiagnosticFeedbackBody;
+  try {
+    body = (await request.json()) as DiagnosticFeedbackBody;
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 }
+    );
+  }
+
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json(
+      {
+        error:
+          "AI feedback is not configured yet. Set ANTHROPIC_API_KEY to enable generation.",
+      },
+      { status: 503 }
+    );
+  }
+
+  const issuesText =
+    body.issues
+      ?.map((issue, idx) => {
+        const evidence =
+          issue.evidence && issue.evidence.length > 0
+            ? `\n    Evidence: ${issue.evidence.join("; ")}`
+            : "";
+        const cause = issue.cause ? `\n    Cause hint: ${issue.cause}` : "";
+        return `  ${idx + 1}. ${issue.label}${cause}${evidence}`;
+      })
+      .join("\n") ?? "  (none reported)";
+
+  const strengthsText = body.strengths?.length
+    ? body.strengths.map((s) => `  - ${s}`).join("\n")
+    : "  (none reported)";
+
+  const timingText = body.questionTimings?.length
+    ? body.questionTimings
+        .map(
+          (t) =>
+            `  - ${t.label}: ${t.avgSeconds}s avg, ${t.correct}/${t.questions} correct`
+        )
+        .join("\n")
+    : "  (no breakdown)";
+
+  const userPrompt = `A UCAT student has just finished a ${
+    body.section?.toUpperCase() ?? "UCAT"
+  } diagnostic. Write personalised, direct feedback they can act on tonight.
+
+Their result:
+- Score: ${body.scorePoints ?? "?"}/${body.maxScore ?? "?"}
+- Accuracy: ${body.accuracy ?? "?"}%
+- Answered: ${body.answeredQuestions ?? "?"}/${body.totalQuestions ?? "?"}
+- Average time per question: ${body.avgSecondsPerQuestion ?? "?"}s
+
+Detected issues:
+${issuesText}
+
+Detected strengths:
+${strengthsText}
+
+Per question type timing:
+${timingText}
+
+Write 4-7 short paragraphs of feedback in plain prose. No headings, no bullet lists, no labels like "Main cause" or "Evidence". Speak directly to the student. Reference their actual numbers. Tell them what to drill, what timing target to aim for next session, and what to stop doing. Avoid generic UCAT advice; tie every sentence to their data. Do not pad. Output the feedback only - no preamble.`;
+
+  try {
+    const client = new Anthropic();
+    const msg = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 1200,
+      messages: [{ role: "user", content: userPrompt }],
+    });
+
+    const text = msg.content
+      .filter((block) => block.type === "text")
+      .map((block) => (block.type === "text" ? block.text : ""))
+      .join("")
+      .trim();
+
+    if (!text) {
+      return NextResponse.json(
+        { error: "AI returned an empty response." },
+        { status: 502 }
+      );
+    }
+
+    return NextResponse.json({ feedback: text });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "AI feedback generation failed.",
+      },
+      { status: 502 }
+    );
+  }
+}

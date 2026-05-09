@@ -409,7 +409,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "18,700 pounds" },
       { key: "C", text: "19,260 pounds" },
       { key: "D", text: "19,620 pounds" },
-      { key: "E", text: "20,700 pounds" },
     ],
     answer: "C",
     explanation:
@@ -432,7 +431,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "12,000 pounds" },
       { key: "C", text: "24,000 pounds" },
       { key: "D", text: "30,000 pounds" },
-      { key: "E", text: "48,000 pounds" },
     ],
     answer: "D",
     explanation:
@@ -461,7 +459,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "22,400 pounds" },
       { key: "C", text: "24,000 pounds" },
       { key: "D", text: "25,000 pounds" },
-      { key: "E", text: "31,740 pounds" },
     ],
     answer: "C",
     explanation:
@@ -491,7 +488,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "520.00 pounds" },
       { key: "C", text: "577.20 pounds" },
       { key: "D", text: "681.00 pounds" },
-      { key: "E", text: "840.00 pounds" },
     ],
     answer: "C",
     explanation:
@@ -513,7 +509,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "36" },
       { key: "C", text: "48" },
       { key: "D", text: "66" },
-      { key: "E", text: "84" },
     ],
     answer: "D",
     explanation:
@@ -535,7 +530,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "46.7%" },
       { key: "C", text: "60.0%" },
       { key: "D", text: "66.7%" },
-      { key: "E", text: "84.0%" },
     ],
     answer: "B",
     explanation:
@@ -558,7 +552,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "30.0%" },
       { key: "C", text: "33.3%" },
       { key: "D", text: "40.0%" },
-      { key: "E", text: "66.7%" },
     ],
     answer: "C",
     explanation:
@@ -587,7 +580,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "14:25" },
       { key: "C", text: "16:25" },
       { key: "D", text: "25:16" },
-      { key: "E", text: "48:75" },
     ],
     answer: "C",
     explanation:
@@ -610,7 +602,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "4:5" },
       { key: "C", text: "5:4" },
       { key: "D", text: "5:2" },
-      { key: "E", text: "25:10" },
     ],
     answer: "C",
     explanation:
@@ -633,7 +624,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "16 days" },
       { key: "C", text: "18 2/3 days" },
       { key: "D", text: "20 days" },
-      { key: "E", text: "22 1/3 days" },
     ],
     answer: "C",
     explanation:
@@ -662,7 +652,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "16 4/9 days" },
       { key: "C", text: "17 7/9 days" },
       { key: "D", text: "18 2/3 days" },
-      { key: "E", text: "20 days" },
     ],
     answer: "C",
     explanation:
@@ -692,7 +681,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "24 days" },
       { key: "C", text: "26 2/3 days" },
       { key: "D", text: "30 days" },
-      { key: "E", text: "33 1/3 days" },
     ],
     answer: "C",
     explanation:
@@ -715,7 +703,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "360,000 pounds" },
       { key: "C", text: "420,000 pounds" },
       { key: "D", text: "480,000 pounds" },
-      { key: "E", text: "528,000 pounds" },
     ],
     answer: "D",
     explanation:
@@ -743,7 +730,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "156,000 pounds" },
       { key: "C", text: "196,000 pounds" },
       { key: "D", text: "226,000 pounds" },
-      { key: "E", text: "288,000 pounds" },
     ],
     answer: "D",
     explanation:
@@ -766,7 +752,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "16.7%" },
       { key: "C", text: "20%" },
       { key: "D", text: "25%" },
-      { key: "E", text: "36%" },
     ],
     answer: "C",
     explanation:
@@ -796,7 +781,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "Decrease of 2,400 pounds" },
       { key: "C", text: "No change" },
       { key: "D", text: "Increase of 2,400 pounds" },
-      { key: "E", text: "Increase of 9,600 pounds" },
     ],
     answer: "B",
     explanation:
@@ -825,7 +809,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "280,000" },
       { key: "C", text: "320,000" },
       { key: "D", text: "480,000" },
-      { key: "E", text: "600,000" },
     ],
     answer: "B",
     explanation:
@@ -847,7 +830,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "360,000" },
       { key: "C", text: "540,000" },
       { key: "D", text: "612,000" },
-      { key: "E", text: "828,000" },
     ],
     answer: "C",
     explanation:
@@ -876,7 +858,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "200,000" },
       { key: "C", text: "240,000" },
       { key: "D", text: "360,000" },
-      { key: "E", text: "600,000" },
     ],
     answer: "C",
     explanation:
@@ -906,7 +887,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "162,000" },
       { key: "C", text: "210,000" },
       { key: "D", text: "243,000" },
-      { key: "E", text: "324,000" },
     ],
     answer: "D",
     explanation:
@@ -928,7 +908,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "1,320" },
       { key: "C", text: "1,460" },
       { key: "D", text: "1,700" },
-      { key: "E", text: "1,850" },
     ],
     answer: "C",
     explanation:
@@ -950,7 +929,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "52%" },
       { key: "C", text: "56%" },
       { key: "D", text: "60%" },
-      { key: "E", text: "65%" },
     ],
     answer: "C",
     explanation:
@@ -973,7 +951,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "36:19" },
       { key: "C", text: "3:5" },
       { key: "D", text: "5:9" },
-      { key: "E", text: "38:72" },
     ],
     answer: "A",
     explanation:
@@ -1003,7 +980,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "1,033" },
       { key: "C", text: "1,053" },
       { key: "D", text: "1,170" },
-      { key: "E", text: "3,160" },
     ],
     answer: "C",
     explanation:
@@ -1025,7 +1001,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "96 m2" },
       { key: "C", text: "144 m2" },
       { key: "D", text: "168 m2" },
-      { key: "E", text: "432 m2" },
     ],
     answer: "D",
     explanation:
@@ -1047,7 +1022,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "42:55:60" },
       { key: "C", text: "55:42:60" },
       { key: "D", text: "12:14:18" },
-      { key: "E", text: "168:220:240" },
     ],
     answer: "B",
     explanation:
@@ -1076,7 +1050,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "18 tins" },
       { key: "C", text: "20 tins" },
       { key: "D", text: "22 tins" },
-      { key: "E", text: "24 tins" },
     ],
     answer: "D",
     explanation:
@@ -1106,7 +1079,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "2,333.76 pounds" },
       { key: "C", text: "2,446.08 pounds" },
       { key: "D", text: "2,652.00 pounds" },
-      { key: "E", text: "2,970.24 pounds" },
     ],
     answer: "B",
     explanation:
@@ -1128,7 +1100,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "960" },
       { key: "C", text: "1,200" },
       { key: "D", text: "1,440" },
-      { key: "E", text: "2,400" },
     ],
     answer: "B",
     explanation:
@@ -1151,7 +1122,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "11:18" },
       { key: "C", text: "18:11" },
       { key: "D", text: "25:18" },
-      { key: "E", text: "36:55" },
     ],
     answer: "C",
     explanation:
@@ -1180,7 +1150,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "18/25" },
       { key: "C", text: "20/27" },
       { key: "D", text: "25/18" },
-      { key: "E", text: "5/3" },
     ],
     answer: "B",
     explanation:
@@ -1210,7 +1179,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "360" },
       { key: "C", text: "558" },
       { key: "D", text: "729" },
-      { key: "E", text: "900" },
     ],
     answer: "C",
     explanation:
@@ -1231,7 +1199,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "1,680 pounds" },
       { key: "C", text: "2,100 pounds" },
       { key: "D", text: "2,700 pounds" },
-      { key: "E", text: "3,360 pounds" },
     ],
     answer: "C",
     explanation:
@@ -1253,7 +1220,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "52 weeks" },
       { key: "C", text: "60 weeks" },
       { key: "D", text: "1 year and 20 weeks" },
-      { key: "E", text: "2 years" },
     ],
     answer: "C",
     explanation:
@@ -1281,7 +1247,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "230.40 pounds" },
       { key: "C", text: "288.00 pounds" },
       { key: "D", text: "480.00 pounds" },
-      { key: "E", text: "576.00 pounds" },
     ],
     answer: "B",
     explanation:
@@ -1310,7 +1275,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "144 pounds" },
       { key: "C", text: "180 pounds" },
       { key: "D", text: "288 pounds" },
-      { key: "E", text: "360 pounds" },
     ],
     answer: "C",
     explanation:
@@ -1331,7 +1295,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "108" },
       { key: "C", text: "118" },
       { key: "D", text: "126" },
-      { key: "E", text: "140" },
     ],
     answer: "D",
     explanation: "9 batches of 14 cupcakes gives 9 x 14 = 126 cupcakes.",
@@ -1351,7 +1314,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "40" },
       { key: "C", text: "42" },
       { key: "D", text: "48" },
-      { key: "E", text: "54" },
     ],
     answer: "C",
     explanation: "One-third of 126 is 42.",
@@ -1371,7 +1333,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "25" },
       { key: "C", text: "33" },
       { key: "D", text: "41" },
-      { key: "E", text: "66" },
     ],
     answer: "B",
     explanation:
@@ -1400,7 +1361,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "138.00 pounds" },
       { key: "C", text: "146.10 pounds" },
       { key: "D", text: "158.40 pounds" },
-      { key: "E", text: "184.50 pounds" },
     ],
     answer: "C",
     explanation:
@@ -1422,7 +1382,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "310" },
       { key: "C", text: "320" },
       { key: "D", text: "330" },
-      { key: "E", text: "340" },
     ],
     answer: "C",
     explanation: "Amira's total is 82 + 74 + 68 + 96 = 320.",
@@ -1444,7 +1403,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "5 percentage points" },
       { key: "C", text: "8 percentage points" },
       { key: "D", text: "12 percentage points" },
-      { key: "E", text: "20 percentage points" },
     ],
     answer: "B",
     explanation:
@@ -1467,7 +1425,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "78" },
       { key: "C", text: "80" },
       { key: "D", text: "90" },
-      { key: "E", text: "96" },
     ],
     answer: "D",
     explanation:
@@ -1497,7 +1454,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "75.0%" },
       { key: "C", text: "75.6%" },
       { key: "D", text: "76.2%" },
-      { key: "E", text: "78.1%" },
     ],
     answer: "C",
     explanation:
@@ -1519,7 +1475,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "960 pounds" },
       { key: "C", text: "1,152 pounds" },
       { key: "D", text: "1,440 pounds" },
-      { key: "E", text: "1,920 pounds" },
     ],
     answer: "C",
     explanation: "GP revenue is 24 appointments x 48 pounds = 1,152 pounds.",
@@ -1540,7 +1495,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "4 hours" },
       { key: "C", text: "5 hours" },
       { key: "D", text: "6 hours" },
-      { key: "E", text: "10 hours" },
     ],
     answer: "C",
     explanation:
@@ -1569,7 +1523,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "30.51 pounds" },
       { key: "C", text: "32.25 pounds" },
       { key: "D", text: "33.87 pounds" },
-      { key: "E", text: "36.00 pounds" },
     ],
     answer: "B",
     explanation:
@@ -1599,7 +1552,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "Decrease of 45 pounds" },
       { key: "C", text: "No change" },
       { key: "D", text: "Increase of 45 pounds" },
-      { key: "E", text: "Increase of 135 pounds" },
     ],
     answer: "B",
     explanation:
@@ -1621,7 +1573,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "Route B" },
       { key: "C", text: "Route C" },
       { key: "D", text: "Route D" },
-      { key: "E", text: "Routes A and C" },
     ],
     answer: "D",
     explanation:
@@ -1643,7 +1594,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "90" },
       { key: "C", text: "100" },
       { key: "D", text: "108" },
-      { key: "E", text: "120" },
     ],
     answer: "C",
     explanation:
@@ -1666,7 +1616,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "28 minutes" },
       { key: "C", text: "30 minutes" },
       { key: "D", text: "32 minutes" },
-      { key: "E", text: "36 minutes" },
     ],
     answer: "C",
     explanation:
@@ -1696,7 +1645,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "250.80 pounds" },
       { key: "C", text: "278.40 pounds" },
       { key: "D", text: "288.00 pounds" },
-      { key: "E", text: "312.00 pounds" },
     ],
     answer: "C",
     explanation:
@@ -1718,7 +1666,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "250 mg" },
       { key: "C", text: "300 mg" },
       { key: "D", text: "450 mg" },
-      { key: "E", text: "600 mg" },
     ],
     answer: "C",
     explanation: "Patient B has mass 30 kg, so the daily dose is 30 x 10 = 300 mg.",
@@ -1739,7 +1686,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "9 mL" },
       { key: "C", text: "12 mL" },
       { key: "D", text: "18 mL" },
-      { key: "E", text: "22.5 mL" },
     ],
     answer: "B",
     explanation:
@@ -1767,7 +1713,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "6.25 days" },
       { key: "C", text: "7.5 days" },
       { key: "D", text: "10 days" },
-      { key: "E", text: "12.5 days" },
     ],
     answer: "B",
     explanation:
@@ -1797,7 +1742,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "6 days" },
       { key: "C", text: "7 days" },
       { key: "D", text: "8 days" },
-      { key: "E", text: "9 days" },
     ],
     answer: "C",
     explanation:
@@ -1819,7 +1763,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "6.0 L" },
       { key: "C", text: "7.5 L" },
       { key: "D", text: "9.0 L" },
-      { key: "E", text: "12.0 L" },
     ],
     answer: "C",
     explanation:
@@ -1841,7 +1784,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "14.40 pounds" },
       { key: "C", text: "19.20 pounds" },
       { key: "D", text: "24.00 pounds" },
-      { key: "E", text: "32.00 pounds" },
     ],
     answer: "C",
     explanation:
@@ -1870,7 +1812,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "0.70 pounds" },
       { key: "C", text: "0.83 pounds" },
       { key: "D", text: "1.41 pounds" },
-      { key: "E", text: "16.86 pounds" },
     ],
     answer: "B",
     explanation:
@@ -1900,7 +1841,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "14.0 kg" },
       { key: "C", text: "14.6 kg" },
       { key: "D", text: "15.0 kg" },
-      { key: "E", text: "16.2 kg" },
     ],
     answer: "C",
     explanation:
@@ -1922,7 +1862,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "450 pounds" },
       { key: "C", text: "600 pounds" },
       { key: "D", text: "750 pounds" },
-      { key: "E", text: "900 pounds" },
     ],
     answer: "C",
     explanation: "Revenue from pen sets is 200 x 3.00 = 600 pounds.",
@@ -1943,7 +1882,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "180 pounds" },
       { key: "C", text: "240 pounds" },
       { key: "D", text: "360 pounds" },
-      { key: "E", text: "600 pounds" },
     ],
     answer: "C",
     explanation:
@@ -1972,7 +1910,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "39%" },
       { key: "C", text: "43%" },
       { key: "D", text: "57%" },
-      { key: "E", text: "75%" },
     ],
     answer: "C",
     explanation:
@@ -2002,7 +1939,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "Decrease of 40 pounds" },
       { key: "C", text: "No change" },
       { key: "D", text: "Increase of 40 pounds" },
-      { key: "E", text: "Increase of 70 pounds" },
     ],
     answer: "A",
     explanation:
@@ -2024,7 +1960,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "600 kWh" },
       { key: "C", text: "630 kWh" },
       { key: "D", text: "660 kWh" },
-      { key: "E", text: "720 kWh" },
     ],
     answer: "D",
     explanation: "March and April usage total 360 + 300 = 660 kWh.",
@@ -2045,7 +1980,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "315 kWh" },
       { key: "C", text: "330 kWh" },
       { key: "D", text: "345 kWh" },
-      { key: "E", text: "360 kWh" },
     ],
     answer: "C",
     explanation:
@@ -2073,7 +2007,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "83.60 pounds" },
       { key: "C", text: "93.60 pounds" },
       { key: "D", text: "96.00 pounds" },
-      { key: "E", text: "111.60 pounds" },
     ],
     answer: "C",
     explanation:
@@ -2103,7 +2036,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "85.10 pounds" },
       { key: "C", text: "89.44 pounds" },
       { key: "D", text: "93.60 pounds" },
-      { key: "E", text: "97.20 pounds" },
     ],
     answer: "B",
     explanation:
@@ -2125,7 +2057,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "142 pounds" },
       { key: "C", text: "152 pounds" },
       { key: "D", text: "164 pounds" },
-      { key: "E", text: "184 pounds" },
     ],
     answer: "C",
     explanation:
@@ -2148,7 +2079,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "124 pounds" },
       { key: "C", text: "144 pounds" },
       { key: "D", text: "164 pounds" },
-      { key: "E", text: "184 pounds" },
     ],
     answer: "B",
     explanation:
@@ -2177,7 +2107,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "11 months" },
       { key: "C", text: "12 months" },
       { key: "D", text: "13 months" },
-      { key: "E", text: "14 months" },
     ],
     answer: "C",
     explanation:
@@ -2207,7 +2136,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "284 pounds" },
       { key: "C", text: "314 pounds" },
       { key: "D", text: "344 pounds" },
-      { key: "E", text: "374 pounds" },
     ],
     answer: "C",
     explanation:
@@ -2229,7 +2157,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "1,500 cm3" },
       { key: "C", text: "3,000 cm3" },
       { key: "D", text: "4,500 cm3" },
-      { key: "E", text: "9,000 cm3" },
     ],
     answer: "C",
     explanation: "Small box volume = 20 x 15 x 10 = 3,000 cm3.",
@@ -2250,7 +2177,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "1:3" },
       { key: "C", text: "2:3" },
       { key: "D", text: "3:1" },
-      { key: "E", text: "3:9" },
     ],
     answer: "B",
     explanation:
@@ -2279,7 +2205,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "16" },
       { key: "C", text: "18" },
       { key: "D", text: "20" },
-      { key: "E", text: "24" },
     ],
     answer: "C",
     explanation:
@@ -2309,7 +2234,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "150" },
       { key: "C", text: "156" },
       { key: "D", text: "157" },
-      { key: "E", text: "160" },
     ],
     answer: "D",
     explanation:
@@ -2331,7 +2255,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "300 minutes" },
       { key: "C", text: "360 minutes" },
       { key: "D", text: "420 minutes" },
-      { key: "E", text: "480 minutes" },
     ],
     answer: "C",
     explanation: "Chemistry requires 120 samples x 3 minutes = 360 minutes of work.",
@@ -2352,7 +2275,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "100 minutes" },
       { key: "C", text: "120 minutes" },
       { key: "D", text: "180 minutes" },
-      { key: "E", text: "360 minutes" },
     ],
     answer: "C",
     explanation:
@@ -2374,7 +2296,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "Chemistry" },
       { key: "C", text: "Microbiology" },
       { key: "D", text: "Immunology" },
-      { key: "E", text: "All finish together" },
     ],
     answer: "D",
     explanation:
@@ -2404,7 +2325,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "60 minutes" },
       { key: "C", text: "72 minutes" },
       { key: "D", text: "90 minutes" },
-      { key: "E", text: "108 minutes" },
     ],
     answer: "C",
     explanation:
@@ -2426,7 +2346,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "90 pounds" },
       { key: "C", text: "100 pounds" },
       { key: "D", text: "108 pounds" },
-      { key: "E", text: "120 pounds" },
     ],
     answer: "C",
     explanation: "There are 8 adults at 12.50 pounds each, so the cost is 100 pounds.",
@@ -2448,7 +2367,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "300 pounds" },
       { key: "C", text: "323 pounds" },
       { key: "D", text: "325 pounds" },
-      { key: "E", text: "353 pounds" },
     ],
     answer: "C",
     explanation:
@@ -2477,7 +2395,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "10.50 pounds" },
       { key: "C", text: "10.77 pounds" },
       { key: "D", text: "10.83 pounds" },
-      { key: "E", text: "11.77 pounds" },
     ],
     answer: "D",
     explanation:
@@ -2507,7 +2424,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "281.30 pounds" },
       { key: "C", text: "283.30 pounds" },
       { key: "D", text: "295.55 pounds" },
-      { key: "E", text: "325.00 pounds" },
     ],
     answer: "C",
     explanation:
@@ -2529,7 +2445,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "2,160" },
       { key: "C", text: "2,280" },
       { key: "D", text: "2,360" },
-      { key: "E", text: "2,400" },
     ],
     answer: "C",
     explanation:
@@ -2551,7 +2466,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "57.60 pounds" },
       { key: "C", text: "72.00 pounds" },
       { key: "D", text: "144.00 pounds" },
-      { key: "E", text: "720.00 pounds" },
     ],
     answer: "B",
     explanation:
@@ -2579,7 +2493,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "1,392" },
       { key: "C", text: "1,440" },
       { key: "D", text: "1,488" },
-      { key: "E", text: "1,550" },
     ],
     answer: "C",
     explanation:
@@ -2608,7 +2521,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "4,642.80 pounds" },
       { key: "C", text: "4,942.80 pounds" },
       { key: "D", text: "5,102.40 pounds" },
-      { key: "E", text: "5,253.20 pounds" },
     ],
     answer: "C",
     explanation:
@@ -2630,7 +2542,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "9.0 km" },
       { key: "C", text: "10.0 km" },
       { key: "D", text: "12.5 km" },
-      { key: "E", text: "15.6 km" },
     ],
     answer: "C",
     explanation: "Route A is 12.5 cm on the map. 12.5 x 0.8 = 10.0 km.",
@@ -2651,7 +2562,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "11.2 km" },
       { key: "C", text: "12.0 km" },
       { key: "D", text: "14.4 km" },
-      { key: "E", text: "15.0 km" },
     ],
     answer: "C",
     explanation: "Route C is 15.0 cm on the map. 15.0 x 0.8 = 12.0 km.",
@@ -2678,7 +2588,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "125.5 minutes" },
       { key: "C", text: "127.5 minutes" },
       { key: "D", text: "132.0 minutes" },
-      { key: "E", text: "150.0 minutes" },
     ],
     answer: "C",
     explanation:
@@ -2708,7 +2617,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "45.6 minutes" },
       { key: "C", text: "51.6 minutes" },
       { key: "D", text: "57.6 minutes" },
-      { key: "E", text: "63.6 minutes" },
     ],
     answer: "C",
     explanation:
@@ -2730,7 +2638,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "24 m2" },
       { key: "C", text: "32 m2" },
       { key: "D", text: "40 m2" },
-      { key: "E", text: "64 m2" },
     ],
     answer: "D",
     explanation: "The vegetable bed area is 8 x 5 = 40 m2.",
@@ -2751,7 +2658,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "72 m2" },
       { key: "C", text: "79 m2" },
       { key: "D", text: "91 m2" },
-      { key: "E", text: "107 m2" },
     ],
     answer: "C",
     explanation:
@@ -2780,7 +2686,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "45.60 pounds" },
       { key: "C", text: "50.56 pounds" },
       { key: "D", text: "63.20 pounds" },
-      { key: "E", text: "79.00 pounds" },
     ],
     answer: "C",
     explanation:
@@ -2810,7 +2715,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "95.36 m2" },
       { key: "C", text: "101.16 m2" },
       { key: "D", text: "107.36 m2" },
-      { key: "E", text: "110.76 m2" },
     ],
     answer: "D",
     explanation:
@@ -2832,7 +2736,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "1.00 pound" },
       { key: "C", text: "1.20 pounds" },
       { key: "D", text: "1.50 pounds" },
-      { key: "E", text: "2.00 pounds" },
     ],
     answer: "B",
     explanation: "The Plus plan costs 15 pounds for 15 GB, so it is 1 pound per GB.",
@@ -2854,7 +2757,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "18 pounds" },
       { key: "C", text: "21 pounds" },
       { key: "D", text: "32 pounds" },
-      { key: "E", text: "70 pounds" },
     ],
     answer: "C",
     explanation:
@@ -2883,7 +2785,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "24 pounds" },
       { key: "C", text: "30 pounds" },
       { key: "D", text: "38 pounds" },
-      { key: "E", text: "42 pounds" },
     ],
     answer: "C",
     explanation:
@@ -2913,7 +2814,6 @@ export const ORIGINAL_QR_QUESTIONS: UCATQuestion[] = [
       { key: "B", text: "20.25 pounds" },
       { key: "C", text: "21.38 pounds" },
       { key: "D", text: "24.00 pounds" },
-      { key: "E", text: "36.00 pounds" },
     ],
     answer: "C",
     explanation:

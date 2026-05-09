@@ -64,7 +64,12 @@ import {
 type PracticeAnswerMap = Record<string, string>;
 type PracticeAnswer = UCATOptionKey | string[] | PracticeAnswerMap;
 type SessionLengthMode = "questions" | "minutes";
-type PracticePhase = "practice" | "review" | "marked" | "marked-review";
+type PracticePhase =
+  | "practice"
+  | "review"
+  | "diagnostic-complete"
+  | "marked"
+  | "marked-review";
 type PracticeAnswerStatus = "correct" | "partial" | "incorrect" | "unanswered";
 type DiagnosticMode =
   | "free-qr"
@@ -92,6 +97,7 @@ type DiagnosticAiFeedbackState = {
   credits: number;
   message: string | null;
   requesting: boolean;
+  text: string | null;
 };
 type PracticeAnswerScore = {
   points: number;
@@ -124,6 +130,7 @@ type SavedFreeDiagnostic = {
   attemptId: string | null;
   aiFeedbackRequestedAt: string | null;
   aiFeedbackStatus: string | null;
+  aiFeedbackText: string | null;
   credits: number;
 };
 type TimingBySubtype = {
@@ -2448,6 +2455,7 @@ function FixedDiagnosticStartScreen({
   backLabel = "Back to diagnostics",
   lockedNotice,
   loading,
+  showAiCredit,
   onStart,
 }: {
   title: string;
@@ -2461,13 +2469,14 @@ function FixedDiagnosticStartScreen({
   backLabel?: string;
   lockedNotice?: string;
   loading?: boolean;
+  showAiCredit?: boolean;
   onStart: () => void;
 }) {
   const meta = getUCATSectionMeta(section);
   const showTimingOptions = Boolean(timingMode && onTimingModeChange);
 
   return (
-    <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
+    <div className="min-h-screen bg-gradient-to-b from-[#eef3fb] via-[#f5f8fc] to-white px-4 py-10 text-[#111827]">
       <div className="mx-auto max-w-4xl">
         <Link
           href={backHref}
@@ -2477,43 +2486,68 @@ function FixedDiagnosticStartScreen({
           {backLabel}
         </Link>
 
-        <section className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <span className="inline-flex rounded-md bg-blue-600 px-3 py-1 text-sm font-bold text-white">
-                {meta.code}
-              </span>
-              <h1 className="mt-4 text-3xl font-black text-slate-950">
-                {title}
-              </h1>
-              <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
-                {subtitle}
-              </p>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm font-black text-slate-950">
-              {questionCount} questions - {formatDuration(seconds)}
+        <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md">
+          <div className="border-b border-slate-100 bg-gradient-to-br from-blue-50 via-white to-white px-7 pb-7 pt-7">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <span className="inline-flex rounded-md bg-blue-600 px-3 py-1 text-sm font-black tracking-wide text-white shadow-sm">
+                  {meta.code}
+                </span>
+                <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+                  {title}
+                </h1>
+                <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
+                  {subtitle}
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-right text-sm font-black text-slate-900 shadow-sm">
+                <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
+                  Length
+                </p>
+                <p className="mt-1 text-lg">
+                  {questionCount} questions
+                </p>
+                <p className="text-xs font-bold text-slate-500">
+                  {formatDuration(seconds)}
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            {[
-              ["Mode", "Timed diagnostic"],
-              ["Report", "Issues + study plan"],
-              ["Scoring", section === "sjt" ? "Band 1-4" : "300-900 estimate"],
-            ].map(([label, value]) => (
-              <div
-                key={label}
-                className="rounded-lg border border-slate-200 bg-slate-50 p-3"
-              >
-                <p className="text-xs font-black uppercase tracking-wide text-slate-500">
-                  {label}
-                </p>
-                <p className="mt-1 text-sm font-black text-slate-900">
-                  {value}
-                </p>
-              </div>
-            ))}
+          <div className="px-7 pt-6">
+            <div className={`grid gap-3 ${showAiCredit ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-3"}`}>
+              {[
+                ["Mode", "Timed diagnostic"],
+                ["Report", "Issues + study plan"],
+                ["Scoring", section === "sjt" ? "Band 1-4" : "300-900 estimate"],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="rounded-lg border border-slate-200 bg-slate-50 p-3"
+                >
+                  <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+                    {label}
+                  </p>
+                  <p className="mt-1 text-sm font-black text-slate-900">
+                    {value}
+                  </p>
+                </div>
+              ))}
+              {showAiCredit && (
+                <div className="rounded-lg border border-violet-200 bg-violet-50 p-3">
+                  <p className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wide text-violet-700">
+                    <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                    AI feedback
+                  </p>
+                  <p className="mt-1 text-sm font-black text-violet-900">
+                    1 free credit
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
+
+          <div className="px-7 pb-7">
 
           {showTimingOptions && (
             <div className="mt-6">
@@ -2583,11 +2617,12 @@ function FixedDiagnosticStartScreen({
             type="button"
             onClick={onStart}
             disabled={loading}
-            className="mt-7 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+            className="mt-7 inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 text-sm font-black text-white shadow-md shadow-blue-100 transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           >
             <Play className="h-4 w-4" aria-hidden="true" />
             {loading ? "Checking..." : "Start diagnostic"}
           </button>
+          </div>
         </section>
       </div>
     </div>
@@ -3736,22 +3771,55 @@ function buildMarkedSessionInsights(
   };
 }
 
+type DataSourceMode = "diagnostic" | "practice";
+type SectionFilter = "all" | UCATSection;
+
 function MarkedSessionInsightsPanel({
   insights,
   isPremium,
   checkoutLoading,
   checkoutError,
   onUpgrade,
+  sourceSection,
+  isDiagnosticSession,
 }: {
   insights: MarkedSessionInsights;
   isPremium: boolean;
   checkoutLoading: boolean;
   checkoutError: string | null;
   onUpgrade: () => void | Promise<void>;
+  sourceSection: UCATSection;
+  isDiagnosticSession: boolean;
 }) {
   const locked = !isPremium;
   const [issuesExpanded, setIssuesExpanded] = useState(false);
-  const studyPlanTasks = buildStudyPlanTasks(insights.issues).slice(0, 4);
+  const [dataSource, setDataSource] = useState<DataSourceMode>("diagnostic");
+  const [sectionFilter, setSectionFilter] = useState<SectionFilter>("all");
+
+  const dataMatches =
+    dataSource === "diagnostic" ? isDiagnosticSession : !isDiagnosticSession;
+  const sectionMatches =
+    sectionFilter === "all" || sectionFilter === sourceSection;
+  const visibleIssues = dataMatches && sectionMatches ? insights.issues : [];
+  const visibleStrengths =
+    dataMatches && sectionMatches ? insights.strengths : [];
+  const studyPlanTasks = buildStudyPlanTasks(visibleIssues).slice(0, 4);
+  const sectionTabs: Array<{ id: SectionFilter; label: string }> = [
+    { id: "all", label: "All" },
+    { id: "vr", label: "VR" },
+    { id: "dm", label: "DM" },
+    { id: "qr", label: "QR" },
+    { id: "sjt", label: "SJT" },
+  ];
+
+  const emptyMessage =
+    !dataMatches
+      ? dataSource === "practice"
+        ? "No practice question data yet. Run a practice set to populate this view."
+        : "No diagnostic data yet. Complete a diagnostic to populate this view."
+      : !sectionMatches
+        ? `No ${sectionFilter.toUpperCase()} data in this set. Run a ${sectionFilter.toUpperCase()} session to see issues here.`
+        : null;
 
   return (
     <section className="rounded-lg border border-slate-500 bg-slate-950 p-5 text-white shadow-xl">
@@ -3774,9 +3842,68 @@ function MarkedSessionInsightsPanel({
           </Link>
         )}
       </div>
+
+      <div className="mt-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div
+          role="tablist"
+          aria-label="Data source"
+          className="inline-flex w-fit rounded-md border border-slate-700 bg-slate-900 p-1"
+        >
+          {(["diagnostic", "practice"] as const).map((mode) => {
+            const active = dataSource === mode;
+            return (
+              <button
+                key={mode}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setDataSource(mode)}
+                className={`rounded-sm px-4 py-1.5 text-xs font-black uppercase tracking-wide transition-colors ${
+                  active
+                    ? "bg-white text-slate-900"
+                    : "text-slate-300 hover:text-white"
+                }`}
+              >
+                {mode === "diagnostic" ? "Diagnostic" : "Practice"}
+              </button>
+            );
+          })}
+        </div>
+        <div
+          role="tablist"
+          aria-label="Section"
+          className="inline-flex w-fit flex-wrap gap-1 rounded-md border border-slate-700 bg-slate-900 p-1"
+        >
+          {sectionTabs.map((tab) => {
+            const active = sectionFilter === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setSectionFilter(tab.id)}
+                className={`rounded-sm px-3 py-1.5 text-xs font-black uppercase tracking-wide transition-colors ${
+                  active
+                    ? "bg-white text-slate-900"
+                    : "text-slate-300 hover:text-white"
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {checkoutError && (
         <p className="mt-3 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-xs font-black text-red-700">
           {checkoutError}
+        </p>
+      )}
+      {emptyMessage && (
+        <p className="mt-4 rounded-md border border-slate-600 bg-slate-900 px-3 py-3 text-xs font-bold text-slate-300">
+          {emptyMessage}
         </p>
       )}
       <div className="mt-5 grid gap-4 xl:grid-cols-[1.1fr_0.9fr_1fr]">
@@ -3789,34 +3916,41 @@ function MarkedSessionInsightsPanel({
               <div>
                 <h3 className="text-sm font-black">Issues detected</h3>
                 <p className="mt-1 text-xs font-semibold text-slate-500">
-                  {insights.issues.length} signal
-                  {insights.issues.length === 1 ? "" : "s"} found
+                  {visibleIssues.length} signal
+                  {visibleIssues.length === 1 ? "" : "s"} found
                 </p>
               </div>
             </div>
             <button
               type="button"
               onClick={() => setIssuesExpanded((current) => !current)}
-              className="shrink-0 rounded-md bg-red-600 px-4 py-2 text-xs font-black text-white shadow-md shadow-red-100 transition-colors hover:bg-red-700"
+              disabled={visibleIssues.length === 0}
+              className="shrink-0 rounded-md bg-red-600 px-4 py-2 text-xs font-black text-white shadow-md shadow-red-100 transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-slate-300"
             >
               {issuesExpanded ? "Hide details" : "Show detailed breakdown"}
             </button>
           </div>
 
           <ul className="mt-4 space-y-2">
-            {insights.issues.map((issue) => (
-              <li
-                key={issue.label}
-                className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-black leading-6 text-slate-900"
-              >
-                {issue.label}
+            {visibleIssues.length === 0 ? (
+              <li className="rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold leading-5 text-slate-500">
+                No issues for the current filter.
               </li>
-            ))}
+            ) : (
+              visibleIssues.map((issue) => (
+                <li
+                  key={issue.label}
+                  className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-black leading-6 text-slate-900"
+                >
+                  {issue.label}
+                </li>
+              ))
+            )}
           </ul>
 
-          {issuesExpanded && (
+          {issuesExpanded && visibleIssues.length > 0 && (
             <div className="mt-4 space-y-3">
-              {insights.issues.map((issue) => (
+              {visibleIssues.map((issue) => (
                 <div
                   key={issue.label}
                   className="rounded-md border border-slate-200 bg-slate-50 p-3"
@@ -3878,9 +4012,15 @@ function MarkedSessionInsightsPanel({
             <h3 className="text-sm font-black">Strengths detected</h3>
           </div>
           <ul className="mt-4 space-y-2 text-sm font-semibold leading-6 text-slate-700">
-            {insights.strengths.slice(0, 6).map((item) => (
-              <li key={item}>- {item}</li>
-            ))}
+            {visibleStrengths.length === 0 ? (
+              <li className="rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-500">
+                No strengths for the current filter.
+              </li>
+            ) : (
+              visibleStrengths.slice(0, 6).map((item) => (
+                <li key={item}>- {item}</li>
+              ))
+            )}
           </ul>
         </div>
 
@@ -4157,68 +4297,67 @@ function MarkedReviewScreen({
           checkoutLoading={checkoutLoading}
           checkoutError={checkoutError}
           onUpgrade={onUpgrade}
+          sourceSection={summary.section as UCATSection}
+          isDiagnosticSession={isDiagnostic}
         />
 
         {diagnosticMode === "free-qr" && aiFeedbackState && (
-          <section className="rounded-md border border-violet-200 bg-white p-5 shadow-md">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-violet-100 text-violet-700">
-                  <Sparkles className="h-6 w-6" aria-hidden="true" />
+          aiFeedbackState.text ? (
+            <section className="rounded-md border border-violet-200 bg-white p-5 shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-violet-100 text-violet-700">
+                  <Sparkles className="h-5 w-5" aria-hidden="true" />
                 </div>
-                <div>
-                  <h2 className="text-lg font-black">AI feedback credit</h2>
-                  <p className="mt-1 text-sm font-semibold leading-6 text-slate-600">
-                    Free diagnostic gets one AI feedback unlock. Generation is
-                    queued only when you request it.
-                  </p>
-                </div>
+                <h2 className="text-lg font-black">AI feedback</h2>
               </div>
-              <button
-                type="button"
-                onClick={() => void onRequestAiFeedback?.()}
-                disabled={
-                  aiFeedbackState.requesting ||
-                  aiFeedbackState.requested ||
-                  aiFeedbackState.credits <= 0
-                }
-                className="inline-flex h-11 items-center justify-center rounded-md bg-violet-600 px-5 text-sm font-black text-white shadow-md shadow-violet-100 hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-              >
-                {aiFeedbackState.requesting
-                  ? "Saving request..."
-                  : aiFeedbackState.requested
-                    ? "AI feedback requested"
-                    : "Use AI feedback credit"}
-              </button>
-            </div>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
-              {[
-                ["Credit", `${aiFeedbackState.credits}/1`],
-                ["Status", aiFeedbackState.status],
-                [
-                  "Generation",
-                  aiFeedbackState.requested ? "Queued" : "Not requested",
-                ],
-              ].map(([label, value]) => (
-                <div
-                  key={label}
-                  className="rounded-md border border-violet-100 bg-violet-50 p-3"
-                >
-                  <p className="text-xs font-black uppercase tracking-wide text-violet-700">
-                    {label}
-                  </p>
-                  <p className="mt-1 text-sm font-black text-slate-900">
-                    {value}
-                  </p>
+              <div className="mt-4 space-y-3 text-sm leading-6 text-slate-800">
+                {aiFeedbackState.text
+                  .split(/\n{2,}/)
+                  .map((paragraph, index) => (
+                    <p key={index} className="whitespace-pre-wrap">
+                      {paragraph.trim()}
+                    </p>
+                  ))}
+              </div>
+            </section>
+          ) : (
+            <section className="rounded-md border border-violet-200 bg-white p-5 shadow-md">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-violet-100 text-violet-700">
+                    <Sparkles className="h-6 w-6" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-black">1 free AI feedback credit</h2>
+                    <p className="mt-1 text-sm font-semibold leading-6 text-slate-600">
+                      Use the credit to generate personalised written feedback
+                      from your diagnostic data.
+                    </p>
+                  </div>
                 </div>
-              ))}
-            </div>
-            {aiFeedbackState.message && (
-              <p className="mt-3 rounded-md border border-violet-100 bg-violet-50 px-3 py-2 text-xs font-black leading-5 text-violet-800">
-                {aiFeedbackState.message}
-              </p>
-            )}
-          </section>
+                <button
+                  type="button"
+                  onClick={() => void onRequestAiFeedback?.()}
+                  disabled={
+                    aiFeedbackState.requesting ||
+                    aiFeedbackState.credits <= 0
+                  }
+                  className="inline-flex h-11 items-center justify-center rounded-md bg-violet-600 px-5 text-sm font-black text-white shadow-md shadow-violet-100 hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                >
+                  {aiFeedbackState.requesting
+                    ? "Generating..."
+                    : aiFeedbackState.credits <= 0
+                      ? "No credit remaining"
+                      : "Use AI feedback credit"}
+                </button>
+              </div>
+              {aiFeedbackState.message && (
+                <p className="mt-4 rounded-md border border-violet-100 bg-violet-50 px-3 py-2 text-xs font-black leading-5 text-violet-800">
+                  {aiFeedbackState.message}
+                </p>
+              )}
+            </section>
+          )
         )}
 
         <section className="rounded-md border border-slate-400 bg-white p-5 shadow-lg">
@@ -4630,6 +4769,7 @@ function UCATQuestionBankSection({
             credits: 0,
             message: "Create or log in to your account to use the free diagnostic.",
             requesting: false,
+            text: null,
           });
         }
         return;
@@ -4651,6 +4791,7 @@ function UCATQuestionBankSection({
             credits: 0,
             message: "Create or log in to your account to use the free diagnostic.",
             requesting: false,
+            text: null,
           });
           setFreeDiagnosticLoading(false);
           return;
@@ -4711,15 +4852,24 @@ function UCATQuestionBankSection({
           !Array.isArray(practiceRow.summary)
             ? (practiceRow.summary as PracticeSessionSummary)
             : null;
+        const savedFeedbackText =
+          typeof metadata.aiFeedbackText === "string"
+            ? metadata.aiFeedbackText
+            : null;
 
         setAiFeedbackState({
           requested: Boolean(requestedAt),
-          status: requestedAt ? aiStatus : "Ready",
+          status: requestedAt
+            ? savedFeedbackText
+              ? "Feedback ready"
+              : aiStatus
+            : "Ready",
           credits: requestedAt ? 0 : credits,
-          message: requestedAt
-            ? "AI feedback request saved. Generation will run once the API key is wired."
+          message: requestedAt && !savedFeedbackText
+            ? "AI feedback request saved. Set ANTHROPIC_API_KEY to generate."
             : null,
           requesting: false,
+          text: savedFeedbackText,
         });
 
         setSavedFreeDiagnostic(
@@ -4730,6 +4880,7 @@ function UCATQuestionBankSection({
                   typeof attemptRow?.id === "string" ? attemptRow.id : null,
                 aiFeedbackRequestedAt: requestedAt,
                 aiFeedbackStatus: aiStatus,
+                aiFeedbackText: savedFeedbackText,
                 credits,
               }
             : null
@@ -4959,6 +5110,7 @@ function UCATQuestionBankSection({
             attemptId,
             aiFeedbackRequestedAt: null,
             aiFeedbackStatus: "not_requested",
+            aiFeedbackText: null,
             credits: 1,
           });
           setAiFeedbackState({
@@ -4967,6 +5119,7 @@ function UCATQuestionBankSection({
             credits: 1,
             message: null,
             requesting: false,
+            text: null,
           });
         }
       }
@@ -5056,12 +5209,54 @@ function UCATQuestionBankSection({
         throw new Error("No diagnostic AI feedback credit remaining.");
       }
 
+      const summary = savedFreeDiagnostic.summary;
+      const insights = buildMarkedSessionInsights(summary);
+
+      const aiResponse = await fetch("/api/ai/diagnostic-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          section: summary.section,
+          accuracy: summary.accuracy,
+          scorePoints: summary.scorePoints,
+          maxScore: summary.maxScore,
+          answeredQuestions: summary.answeredQuestions,
+          totalQuestions: summary.totalQuestions,
+          avgSecondsPerQuestion: summary.avgSecondsPerQuestion,
+          issues: insights.issues,
+          strengths: insights.strengths,
+          questionTimings: summary.timingBySubtype.map((t) => ({
+            label: t.label,
+            avgSeconds: t.avgSeconds,
+            correct: t.correct,
+            questions: t.questions,
+          })),
+        }),
+      });
+
+      const aiPayload = (await aiResponse.json()) as {
+        feedback?: string;
+        error?: string;
+      };
+
+      const aiOk = aiResponse.ok && Boolean(aiPayload.feedback);
+      const aiText = aiOk ? aiPayload.feedback ?? null : null;
+      const aiStatus = aiOk
+        ? "ready"
+        : aiResponse.status === 503
+          ? "queued_no_api_key"
+          : "error";
+      const aiMessage = aiOk
+        ? null
+        : aiPayload.error ?? "AI feedback could not be generated.";
+
       const requestedAt = new Date().toISOString();
-      const nextMetadata = {
+      const nextMetadata: Record<string, unknown> = {
         aiFeedbackRequested: true,
-        aiFeedbackStatus: "queued_no_api_key",
+        aiFeedbackStatus: aiStatus,
         aiFeedbackRequestedAt: requestedAt,
       };
+      if (aiText) nextMetadata.aiFeedbackText = aiText;
       const { data: attemptBefore } = await supabase
         .from("diagnostic_attempts")
         .select("metadata")
@@ -5079,7 +5274,7 @@ function UCATQuestionBankSection({
         .from("diagnostic_attempts")
         .update({
           ai_feedback_requested_at: requestedAt,
-          ai_feedback_status: "queued_no_api_key",
+          ai_feedback_status: aiStatus,
           metadata: {
             ...currentMetadata,
             ...(savedFreeDiagnostic.summary
@@ -5095,30 +5290,33 @@ function UCATQuestionBankSection({
 
       if (attemptError) throw attemptError;
 
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .update({ diagnostic_credits: Math.max(0, credits - 1) })
-        .eq("id", user.id);
+      if (aiOk) {
+        const { error: profileError } = await supabase
+          .from("profiles")
+          .update({ diagnostic_credits: Math.max(0, credits - 1) })
+          .eq("id", user.id);
 
-      if (profileError) throw profileError;
+        if (profileError) throw profileError;
+      }
 
       setSavedFreeDiagnostic((current) =>
         current
           ? {
               ...current,
               aiFeedbackRequestedAt: requestedAt,
-              aiFeedbackStatus: "queued_no_api_key",
-              credits: Math.max(0, credits - 1),
+              aiFeedbackStatus: aiStatus,
+              aiFeedbackText: aiText,
+              credits: aiOk ? Math.max(0, credits - 1) : credits,
             }
           : current
       );
       setAiFeedbackState({
         requested: true,
-        status: "queued_no_api_key",
-        credits: Math.max(0, credits - 1),
-        message:
-          "AI feedback request saved. Generation will run once the API key is wired.",
+        status: aiOk ? "Feedback ready" : aiStatus,
+        credits: aiOk ? Math.max(0, credits - 1) : credits,
+        message: aiMessage,
         requesting: false,
+        text: aiText,
       });
     } catch (error) {
       setAiFeedbackState((current) =>
@@ -5446,6 +5644,7 @@ function UCATQuestionBankSection({
             : undefined
         }
         loading={freeDiagnosticLoading}
+        showAiCredit={diagnosticMode === "free-qr"}
         onStart={startPractice}
       />
     );
@@ -5758,7 +5957,13 @@ function UCATQuestionBankSection({
     setRevealed(true);
     markedSummaryRef.current = summary;
     setMarkedSummary(summary);
-    showMarkedInsights();
+    if (diagnosticMode) {
+      phaseRef.current = "diagnostic-complete";
+      setNavigatorOpen(false);
+      setPhase("diagnostic-complete");
+    } else {
+      showMarkedInsights();
+    }
     beginQuestionTiming(questions[0]);
     void persistPracticeSummary(summary, finalEvents);
   };
@@ -5976,6 +6181,63 @@ function UCATQuestionBankSection({
         }}
         onMark={markPractice}
       />
+    );
+  }
+
+  if (phase === "diagnostic-complete" && markedSummary) {
+    const completionScore = getDiagnosticSectionScore(markedSummary);
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#eef3fb] via-[#f5f8fc] to-white px-4 py-12 text-[#111827]">
+        <div className="mx-auto max-w-2xl">
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md">
+            <div className="bg-gradient-to-br from-emerald-500 to-emerald-700 px-7 pb-8 pt-8 text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+                <CheckCircle className="h-7 w-7" aria-hidden="true" />
+              </div>
+              <h1 className="mt-5 text-3xl font-black tracking-tight sm:text-4xl">
+                Diagnostic complete
+              </h1>
+              <p className="mt-2 max-w-md text-sm font-semibold leading-6 text-emerald-50">
+                {diagnosticMode === "free-qr"
+                  ? "Your free QR diagnostic has been saved to your account."
+                  : "Your diagnostic has been saved."}
+              </p>
+            </div>
+            <div className="px-7 py-6">
+              <div className="grid gap-3 sm:grid-cols-3">
+                {[
+                  ["Score", formatMarkScore(markedSummary.scorePoints, markedSummary.maxScore)],
+                  [completionScore.label, completionScore.value],
+                  ["Accuracy", `${markedSummary.accuracy}%`],
+                ].map(([label, value]) => (
+                  <div
+                    key={label}
+                    className="rounded-lg border border-slate-200 bg-slate-50 p-3"
+                  >
+                    <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+                      {label}
+                    </p>
+                    <p className="mt-1 text-lg font-black text-slate-900">
+                      {value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={showMarkedInsights}
+                className="mt-7 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white shadow-md shadow-blue-100 transition-colors hover:bg-blue-700"
+              >
+                Open diagnostic report
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <p className="mt-3 text-center text-xs font-semibold text-slate-500">
+                Review issues, strengths and a personalised study plan.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -6208,7 +6470,7 @@ function UCATQuestionBankSection({
       <main className="grid min-h-[calc(100vh-132px)] grid-cols-1 pb-16 md:grid-cols-[1.15fr_0.85fr]">
         <section
           ref={stimulusRegionRef}
-          className="border-r-[6px] border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)]"
+          className="border-b-2 border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)] md:border-b-0 md:border-r-2"
         >
           <h2 className="sr-only">{question.leftTitle ?? "Information"}</h2>
           <div className="max-w-4xl space-y-5 text-base leading-6 sm:text-lg">
@@ -6408,7 +6670,7 @@ function UCATQuestionBankSection({
               })}
             </div>
           ) : isSingleQuestion ? (
-            <div ref={answersRegionRef} className="mt-6 space-y-5">
+            <div ref={answersRegionRef} className="mt-6 space-y-3">
               {question.options.map((option) => {
                 const checked = selectedAnswer === option.key;
                 const correct = answerRevealed && option.key === question.answer;
@@ -6421,14 +6683,16 @@ function UCATQuestionBankSection({
                 return (
                   <label
                     key={option.key}
-                    className={`grid cursor-pointer grid-cols-[24px_44px_1fr] items-start gap-3 rounded-sm border px-3 py-2 text-base leading-6 sm:text-lg ${
+                    className={`group grid cursor-pointer grid-cols-[20px_36px_1fr] items-start gap-3 rounded-md border px-4 py-3 text-base leading-6 transition-all sm:text-lg ${
                       correct
                         ? "border-emerald-500 bg-emerald-50"
                         : partial
                           ? "border-yellow-500 bg-yellow-50"
                         : wrong
                           ? "border-red-500 bg-red-50"
-                          : "border-transparent hover:border-slate-300"
+                          : checked
+                            ? "border-[#0078a8] bg-[#e6f2f8]"
+                            : "border-slate-200 bg-white hover:border-[#0078a8] hover:bg-[#f4faff]"
                     }`}
                   >
                     <input
@@ -6437,10 +6701,10 @@ function UCATQuestionBankSection({
                       checked={checked}
                       onChange={() => chooseAnswer(option.key)}
                       disabled={phase !== "practice"}
-                      className="mt-1 h-4 w-4"
+                      className="mt-1.5 h-4 w-4 accent-[#0078a8]"
                     />
-                    <span className="font-semibold">{option.key}.</span>
-                    <span>{option.text}</span>
+                    <span className="font-black text-slate-900">{option.key}.</span>
+                    <span className="text-slate-800">{option.text}</span>
                   </label>
                 );
               })}
