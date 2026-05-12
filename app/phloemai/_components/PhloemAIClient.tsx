@@ -2240,7 +2240,11 @@ function ReportIssueSignalCard({
 
 function DiagnosticContent({
   isPremium,
-}: PremiumGateProps) {
+  latestDiagnostic,
+}: PremiumGateProps & {
+  latestDiagnostic: DashboardDiagnostic | null;
+}) {
+  const hasDiagnostic = Boolean(latestDiagnostic);
   const diagnosticHistory: Array<{
     code: string;
     date: string;
@@ -2300,19 +2304,31 @@ function DiagnosticContent({
             <div className="mt-3 grid gap-4 lg:grid-cols-2">
               <div className="relative flex h-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-800 p-5 text-white shadow-sm">
                 <span className="relative inline-flex rounded-lg bg-emerald-900/25 px-3 py-2 text-[11px] font-black uppercase">
-                  Free first-read
+                  {hasDiagnostic ? "Report ready" : "Free first-read"}
                 </span>
                 <h2 className="relative mt-6 text-xl font-black">
-                  Start free diagnostic
+                  {hasDiagnostic ? "View free diagnostic report" : "Start free diagnostic"}
                 </h2>
                 <p className="relative mt-2 max-w-[19rem] text-sm font-bold leading-6 text-emerald-50">
-                  A fixed QR first-read to uncover key areas for improvement.
+                  {hasDiagnostic
+                    ? "Your latest diagnostic is saved with issues, strengths and next steps."
+                    : "A fixed QR first-read to uncover key areas for improvement."}
                 </p>
                 <ul className="relative mt-5 space-y-2 text-sm font-bold text-emerald-50">
-                  {[
-                    "14 QR questions",
-                    "10 minutes",
-                  ].map((item) => (
+                  {(hasDiagnostic
+                    ? [
+                        `${latestDiagnostic?.section ?? "QR"} diagnostic saved`,
+                        "Report and study tasks ready",
+                        latestDiagnostic?.aiFeedbackText
+                          ? "AI feedback ready"
+                          : "AI feedback status saved",
+                      ]
+                    : [
+                        "14 QR questions",
+                        "10 minutes",
+                        "1 FREE AI feedback credit",
+                      ]
+                  ).map((item) => (
                     <li key={item} className="flex items-center gap-3">
                       <CheckCircle className="h-4 w-4" aria-hidden="true" />
                       {item}
@@ -2320,10 +2336,10 @@ function DiagnosticContent({
                   ))}
                 </ul>
                 <Link
-                  href="/phloemai/question-bank/qr?diagnostic=free-qr"
+                  href={hasDiagnostic ? "/phloemai/report" : "/phloemai/question-bank/qr?diagnostic=free-qr"}
                   className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50"
                 >
-                  Start free diagnostic
+                  {hasDiagnostic ? "View report" : "Start free diagnostic"}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>
@@ -4461,6 +4477,7 @@ function DashboardSubpageContent({
         isPremium={isPremium}
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
+        latestDiagnostic={latestDiagnostic}
       />
     );
   }
@@ -5934,6 +5951,10 @@ function HowItWorksPanel({
 // ── Landing Hero ──────────────────────────────────────────────────────────────
 
 function RedesignedTutorHero() {
+  const [hasLandingDiagnosticReport, setHasLandingDiagnosticReport] =
+    useState(false);
+  const [premiumCheckoutLoading, setPremiumCheckoutLoading] = useState(false);
+  const [premiumCheckoutError, setPremiumCheckoutError] = useState<string | null>(null);
   const featureCards = [
     {
       title: "Timing patterns",
@@ -5962,10 +5983,19 @@ function RedesignedTutorHero() {
   ];
 
   const freeFeatures = [
-    "10-minute UCAT diagnostic",
-    "Basic timing and accuracy feedback",
-    "One AI diagnosis summary",
-    "Attention demo access",
+    "Practice questions",
+    "Mock exams",
+    "Skills trainers",
+    "Limited weakness + strengths insight",
+    "1 free diagnostic with AI feedback",
+  ];
+
+  const premiumFeatures = [
+    "Practice questions, mock exams and skills trainers",
+    "Advanced weakness + strengths diagnosis",
+    "Personalised study plan and drills",
+    "Daily diagnosis with AI feedback",
+    "Progress tracking over time",
   ];
 
   const productCards = [
@@ -5995,6 +6025,71 @@ function RedesignedTutorHero() {
       active: false,
     },
   ];
+
+  useEffect(() => {
+    if (!hasSupabaseConfig()) return;
+
+    let mounted = true;
+    const supabase = createSupabaseClient();
+
+    async function loadLandingDiagnosticStatus() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.user) return;
+
+      const { data } = await supabase
+        .from("diagnostic_attempts")
+        .select("completed_at")
+        .eq("user_id", session.user.id)
+        .order("completed_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (mounted) {
+        setHasLandingDiagnosticReport(Boolean(data));
+      }
+    }
+
+    void loadLandingDiagnosticStatus();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const handlePremiumCheckout = async () => {
+    setPremiumCheckoutLoading(true);
+    setPremiumCheckoutError(null);
+
+    try {
+      const response = await fetch("/api/stripe/create-checkout-session", {
+        method: "POST",
+      });
+      const data = (await response.json()) as {
+        url?: string;
+        error?: string;
+      };
+
+      if (response.status === 401) {
+        window.location.assign("/phloemai/dashboard");
+        return;
+      }
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Could not start checkout.");
+      }
+
+      window.location.assign(data.url);
+      window.setTimeout(() => setPremiumCheckoutLoading(false), 8000);
+    } catch (error) {
+      setPremiumCheckoutError(
+        error instanceof Error ? error.message : "Could not start checkout."
+      );
+      setPremiumCheckoutLoading(false);
+    }
+  };
 
   return (
     <div className="bg-white">
@@ -6276,7 +6371,7 @@ function RedesignedTutorHero() {
             Start with a free diagnostic.
           </h2>
           <p className="mt-1.5 text-sm text-slate-600">
-            Try PhloemAI before upgrading. No card needed.
+            Try the core tools first. Upgrade when you want deeper diagnosis and daily AI feedback.
           </p>
         </div>
 
@@ -6289,6 +6384,9 @@ function RedesignedTutorHero() {
               </span>
             </div>
             <div className="mt-2 text-3xl font-black text-slate-950">GBP 0</div>
+            <p className="mt-1 text-xs font-semibold text-slate-500">
+              No card needed.
+            </p>
             <ul className="mt-4 space-y-2 text-sm text-slate-700">
               {freeFeatures.map((item) => (
                 <li key={item} className="flex gap-2">
@@ -6298,31 +6396,30 @@ function RedesignedTutorHero() {
               ))}
             </ul>
             <Link
-              href="/phloemai/dashboard"
+              href={hasLandingDiagnosticReport ? "/phloemai/report" : "/phloemai/dashboard"}
               className="mt-5 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white transition-colors hover:bg-blue-700"
             >
-              Start Free Diagnostic
+              {hasLandingDiagnosticReport ? "View Report" : "Start Free Diagnostic"}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-violet-300 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between gap-4">
-              <h3 className="text-base font-black text-slate-950">Full PhloemAI Tutor</h3>
+              <h3 className="text-base font-black text-slate-950">PhloemAI Premium</h3>
               <span className="rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
-                Coming Soon
+                Premium
               </span>
             </div>
-            <div className="mt-3 w-fit rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
-              Best for full UCAT prep
+            <div className="mt-2 flex flex-wrap items-end gap-x-2 gap-y-1">
+              <span className="text-3xl font-black text-slate-950">GBP 14.99</span>
+              <span className="pb-1 text-sm font-bold text-slate-500">/ month</span>
             </div>
+            <p className="mt-2 w-fit rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
+              Best for full UCAT prep
+            </p>
             <ul className="mt-4 space-y-2 text-sm text-slate-700">
-              {[
-                "AI feedback after every session",
-                "Major/minor issue detection",
-                "Personalised study plan and drills",
-                "Progress tracking over time",
-              ].map((item) => (
+              {premiumFeatures.map((item) => (
                 <li key={item} className="flex gap-2">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-violet-600" aria-hidden="true" />
                   <span>{item}</span>
@@ -6331,11 +6428,17 @@ function RedesignedTutorHero() {
             </ul>
             <button
               type="button"
-              disabled
-              className="mt-5 h-10 w-full rounded-lg border border-violet-300 text-sm font-bold text-violet-700"
+              onClick={() => void handlePremiumCheckout()}
+              disabled={premiumCheckoutLoading}
+              className="mt-5 h-10 w-full rounded-lg bg-violet-600 text-sm font-bold text-white transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-300"
             >
-              Join Waitlist
+              {premiumCheckoutLoading ? "Opening checkout..." : "Upgrade to Premium"}
             </button>
+            {premiumCheckoutError && (
+              <p className="mt-3 text-xs font-bold leading-5 text-red-600">
+                {premiumCheckoutError}
+              </p>
+            )}
           </div>
         </div>
 

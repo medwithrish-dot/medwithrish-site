@@ -1,5 +1,23 @@
 import { ORIGINAL_DM_QUESTIONS } from "./ucatDmQuestions";
 import { ORIGINAL_QR_QUESTIONS } from "./ucatQrQuestions";
+import {
+  GENERATED_DM_QUESTIONS,
+  GENERATED_QR_QUESTIONS,
+  GENERATED_SJT_QUESTIONS,
+  GENERATED_VR_QUESTIONS,
+} from "./generatedUcatQuestions";
+import {
+  ROUND_TWO_DM_QUESTIONS,
+  ROUND_TWO_QR_QUESTIONS,
+  ROUND_TWO_SJT_QUESTIONS,
+  ROUND_TWO_VR_QUESTIONS,
+} from "./generatedUcatQuestionsRound2";
+import {
+  ROUND_THREE_DM_QUESTIONS,
+  ROUND_THREE_QR_QUESTIONS,
+  ROUND_THREE_SJT_QUESTIONS,
+  ROUND_THREE_VR_QUESTIONS,
+} from "./generatedUcatQuestionsRound3";
 import { SJT_QUESTIONS } from "./ucatSjtQuestions";
 
 // Future generated-bank work should first read ./ucatQuestionDesignNotes.md.
@@ -836,9 +854,15 @@ const ORIGINAL_VR_QUESTIONS: UCATQuestion[] = [
 export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: [
     ...ORIGINAL_VR_QUESTIONS,
+    ...GENERATED_VR_QUESTIONS,
+    ...ROUND_TWO_VR_QUESTIONS,
+    ...ROUND_THREE_VR_QUESTIONS,
   ],
   dm: [
     ...ORIGINAL_DM_QUESTIONS,
+    ...GENERATED_DM_QUESTIONS,
+    ...ROUND_TWO_DM_QUESTIONS,
+    ...ROUND_THREE_DM_QUESTIONS,
     {
       id: "dm-syllogisms-001",
       section: "dm",
@@ -1329,6 +1353,9 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   ],
   qr: [
     ...ORIGINAL_QR_QUESTIONS,
+    ...GENERATED_QR_QUESTIONS,
+    ...ROUND_TWO_QR_QUESTIONS,
+    ...ROUND_THREE_QR_QUESTIONS,
     {
       id: "qr-graphs-001",
       section: "qr",
@@ -2165,7 +2192,12 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "The combined multiplier is 1.20 x 0.85 x 1.10 = 1.122.",
     },
   ],
-  sjt: SJT_QUESTIONS,
+  sjt: [
+    ...SJT_QUESTIONS,
+    ...GENERATED_SJT_QUESTIONS,
+    ...ROUND_TWO_SJT_QUESTIONS,
+    ...ROUND_THREE_SJT_QUESTIONS,
+  ],
 };
 
 export function isUCATSection(value: string): value is UCATSection {
