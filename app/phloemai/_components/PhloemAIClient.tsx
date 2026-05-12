@@ -16,6 +16,7 @@ import {
   hasSupabaseConfig,
 } from "@/utils/supabase/client";
 import { ClientPremiumGate } from "./ClientPremiumGate";
+import { ExpandableAiFeedback } from "./ExpandableAiFeedback";
 import {
   fetchUCATQuestion,
   getPassageSections,
@@ -1086,6 +1087,7 @@ type DashboardView =
   | "diagnostic"
   | "practice"
   | "progress"
+  | "skills-trainers"
   | "report"
   | "account";
 
@@ -1123,6 +1125,7 @@ type DashboardDiagnosticIssue = {
 
 type DashboardDiagnosticTask = {
   id: string;
+  label?: string;
   fix: string;
 };
 
@@ -1157,6 +1160,10 @@ const dashboardPageMeta: Record<
   progress: {
     title: "Progress",
     subtitle: "See whether your study plan is actually working.",
+  },
+  "skills-trainers": {
+    title: "Skills Trainers",
+    subtitle: "Build the calculator speed and flagging judgement that protect marks under time.",
   },
   report: {
     title: "Report",
@@ -1229,13 +1236,6 @@ const questionBankProgress = [
     href: "/phloemai/question-bank/sjt",
   },
 ] as const;
-
-const fixTasks: Array<{
-  title: string;
-  meta: string;
-  icon: typeof Zap;
-  iconClass: string;
-}> = [];
 
 const dailyQuestionTarget = 200;
 const sectionCodes: UCATSectionCode[] = ["VR", "DM", "QR", "SJT"];
@@ -1418,12 +1418,6 @@ const approachSteps = [
   },
 ];
 
-const reportFeedbackShort =
-  "No AI feedback yet. Complete and mark a diagnostic or practice set to start turning issue signals into your personalised study plan.";
-
-const reportFeedbackFull =
-  "Free users can see the detected issue labels. Premium unlocks the specific cause, supporting evidence and study task for each issue.";
-
 type ReportIssueDefinition = {
   id: string;
   title: string;
@@ -1435,19 +1429,6 @@ type ReportIssueDefinition = {
   evidence: string[];
   fix: string;
 };
-
-const freeReportIssueIds = [
-  "calculator",
-  "shortcuts",
-  "timing",
-  "answer-hesitation",
-  "review",
-  "flagging",
-  "navigation",
-  "reading",
-  "confidence",
-  "pacing",
-] as const;
 
 const reportIssueDefinitions: ReportIssueDefinition[] = [
   {
@@ -1772,6 +1753,167 @@ const reportIssueDefinitions: ReportIssueDefinition[] = [
   },
 ];
 
+type StudyPlanDisplayTask = DashboardDiagnosticTask & {
+  title: string;
+  href: string;
+  icon: typeof Target;
+  iconClass: string;
+};
+
+type ReportSectionFilter = "All" | UCATSectionCode;
+
+function normaliseIssueText(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function getStudyPlanHref(fix: string, label?: string) {
+  const text = `${fix} ${label ?? ""}`.toLowerCase();
+
+  if (text.includes("calculator") || text.includes("multi-step")) {
+    return "/phloemai/skills-trainers#calculator";
+  }
+  if (text.includes("flag")) {
+    return "/phloemai/skills-trainers#flagging";
+  }
+  if (text.includes("sjt") || text.includes("judgement")) {
+    return "/phloemai/question-bank/sjt";
+  }
+  if (text.includes("verbal") || text.includes("passage") || text.includes("reading")) {
+    return "/phloemai/question-bank/vr";
+  }
+  if (text.includes("decision") || text.includes("syllogism") || text.includes("probability")) {
+    return "/phloemai/question-bank/dm";
+  }
+  if (text.includes("qr") || text.includes("percentage") || text.includes("ratio")) {
+    return "/phloemai/question-bank/qr";
+  }
+
+  return "/phloemai/practice";
+}
+
+function getStudyPlanIcon(fix: string, label?: string) {
+  const text = `${fix} ${label ?? ""}`.toLowerCase();
+
+  if (text.includes("calculator") || text.includes("multi-step")) {
+    return {
+      icon: Calculator,
+      iconClass: "bg-cyan-50 text-cyan-600",
+      title: "Calculator speed",
+    };
+  }
+  if (text.includes("flag")) {
+    return {
+      icon: Flag,
+      iconClass: "bg-rose-50 text-rose-600",
+      title: "Flagging judgement",
+    };
+  }
+  if (text.includes("shortcut")) {
+    return {
+      icon: Zap,
+      iconClass: "bg-violet-50 text-violet-600",
+      title: "Shortcut habits",
+    };
+  }
+  if (text.includes("timed") || text.includes("pace") || text.includes("speed")) {
+    return {
+      icon: Timer,
+      iconClass: "bg-amber-50 text-amber-600",
+      title: "Timed drill",
+    };
+  }
+
+  return {
+    icon: Target,
+    iconClass: "bg-indigo-50 text-blue-600",
+    title: label?.replace(" detected", "") ?? "Study task",
+  };
+}
+
+function getDiagnosticStudyPlanTasks(
+  latestDiagnostic: DashboardDiagnostic | null
+): StudyPlanDisplayTask[] {
+  const seen = new Set<string>();
+  const rawTasks: DashboardDiagnosticTask[] = [];
+
+  latestDiagnostic?.studyPlanTasks.forEach((task) => {
+    rawTasks.push(task);
+  });
+
+  latestDiagnostic?.issues.forEach((issue, index) => {
+    if (!issue.fix) return;
+    rawTasks.push({
+      id: `${issue.label}-${index}`,
+      label: issue.label,
+      fix: issue.fix,
+    });
+  });
+
+  return rawTasks.flatMap((task, index) => {
+    const fix = task.fix.trim();
+    const key = normaliseIssueText(fix);
+    if (!fix || seen.has(key)) return [];
+    seen.add(key);
+    const presentation = getStudyPlanIcon(fix, task.label);
+
+    return [
+      {
+        ...task,
+        id: task.id || `study-task-${index}`,
+        label: task.label,
+        fix,
+        href: getStudyPlanHref(fix, task.label),
+        ...presentation,
+      },
+    ];
+  });
+}
+
+function getReportIssueDefinitionForLabel(label: string) {
+  const normalised = normaliseIssueText(label);
+
+  return reportIssueDefinitions.find((issue) => {
+    const idWords = normaliseIssueText(issue.id);
+    const titleWords = normaliseIssueText(issue.title);
+    const freeWords = normaliseIssueText(issue.freeLabel);
+    return (
+      normalised.includes(idWords) ||
+      normalised.includes(titleWords) ||
+      freeWords.includes(normalised) ||
+      normalised.includes(freeWords.replace(" detected", ""))
+    );
+  });
+}
+
+function buildReportIssueCard(issue: DashboardDiagnosticIssue, index: number) {
+  const definition = getReportIssueDefinitionForLabel(issue.label);
+
+  return {
+    id: definition?.id ?? `${issue.label}-${index}`,
+    title: definition?.title ?? issue.label,
+    freeLabel: issue.label,
+    short:
+      definition?.short ??
+      issue.cause ??
+      issue.fix ??
+      "Detected from your latest diagnostic data.",
+    mainCause:
+      issue.cause ??
+      definition?.mainCause ??
+      "This issue was detected from your latest diagnostic data.",
+    evidence:
+      issue.evidence && issue.evidence.length > 0
+        ? issue.evidence
+        : definition?.evidence ?? ["Detected from the latest saved diagnostic."],
+    fix:
+      issue.fix ??
+      definition?.fix ??
+      "Review the linked feedback, then practise the matching question type.",
+    icon: definition?.icon ?? AlertTriangle,
+    iconClass: definition?.iconClass ?? "bg-red-50 text-red-600",
+  } satisfies ReportIssueDefinition;
+}
+
 function getFirstName(user: User | null, profile: PhloemProfile | null) {
   const profileName = profile?.full_name?.trim();
   const metadataName =
@@ -1812,36 +1954,6 @@ export function MetricCard({
         </span>
       </div>
       <p className="mt-2 text-xs font-bold text-slate-400">vs last 7 days</p>
-    </div>
-  );
-}
-
-function ExpandableText({
-  shortText,
-  fullText,
-  className,
-  buttonClassName = "mt-3 text-sm font-black text-blue-600 hover:text-blue-700",
-}: {
-  shortText: string;
-  fullText: string;
-  className: string;
-  buttonClassName?: string;
-}) {
-  const [expanded, setExpanded] = useState(false);
-  const canExpand = shortText !== fullText;
-
-  return (
-    <div>
-      <p className={className}>{expanded ? fullText : shortText}</p>
-      {canExpand && (
-        <button
-          type="button"
-          onClick={() => setExpanded((current) => !current)}
-          className={buttonClassName}
-        >
-          {expanded ? "Show less" : "Show more..."}
-        </button>
-      )}
     </div>
   );
 }
@@ -2450,7 +2562,13 @@ function DiagnosticContent({
   );
 }
 
-function PracticeContent() {
+function PracticeContent({
+  latestDiagnostic,
+}: {
+  latestDiagnostic: DashboardDiagnostic | null;
+}) {
+  const studyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
+  const recommendedTask = studyPlanTasks[0];
   const mockAndSkillCards = [
     {
       title: "Full mocks",
@@ -2481,8 +2599,16 @@ function PracticeContent() {
       text: "Rapid QR-style calculator drills for typing speed, memory buttons and fewer clears.",
       icon: Calculator,
       iconClass: "bg-cyan-100 text-cyan-600",
-      href: "/phloemai/question-bank/qr",
+      href: "/phloemai/skills-trainers#calculator",
       cta: "Train speed",
+    },
+    {
+      title: "Flagging trainer",
+      text: "Practise deciding which questions deserve a flag before they drain time.",
+      icon: Flag,
+      iconClass: "bg-rose-100 text-rose-600",
+      href: "/phloemai/skills-trainers#flagging",
+      cta: "Train flags",
     },
   ] as const;
 
@@ -2519,10 +2645,6 @@ function PracticeContent() {
 
   const recentPractice: Array<[string, string, string, string, string]> = [];
 
-  const focusQueue: Array<
-    [string, string, string, string, typeof Timer]
-  > = [];
-
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -2535,17 +2657,20 @@ function PracticeContent() {
               <h2 className="text-sm font-black uppercase tracking-wide">
                 Recommended from your study plan
               </h2>
-              <h3 className="mt-6 text-lg font-black">No recommended task yet</h3>
+              <h3 className="mt-6 text-lg font-black">
+                {recommendedTask?.title ?? "No recommended task yet"}
+              </h3>
               <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-                Complete and mark practice questions to build a real task queue.
+                {recommendedTask?.fix ??
+                  "Complete and mark practice questions to build a real task queue."}
               </p>
             </div>
           </div>
           <Link
-            href="/phloemai/question-bank"
+            href={recommendedTask?.href ?? "/phloemai/question-bank"}
             className="inline-flex h-12 items-center justify-center rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
           >
-            Start practice
+            {recommendedTask ? "Start task" : "Start practice"}
           </Link>
         </div>
       </section>
@@ -2601,7 +2726,7 @@ function PracticeContent() {
           Use mocks for exam pressure, then skill trainers for the behaviours
           holding you back.
         </p>
-        <div className="mt-4 grid gap-4 md:grid-cols-4">
+        <div className="mt-4 grid gap-4 md:grid-cols-5">
           {mockAndSkillCards.map((card) => {
             const Icon = card.icon;
             return (
@@ -2636,7 +2761,7 @@ function PracticeContent() {
             Suggested next sets based on the patterns in your latest diagnostic.
           </p>
           <div className="mt-4 space-y-2">
-            {focusQueue.length === 0 ? (
+            {studyPlanTasks.length === 0 ? (
               <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
                 <p className="text-sm font-black text-slate-700">
                   Your targeted queue is empty.
@@ -2646,33 +2771,33 @@ function PracticeContent() {
                 </p>
               </div>
             ) : (
-            focusQueue.map(([code, title, meta, href, Icon]) => {
-              const style = sectionStyle(code);
+            studyPlanTasks.map((task) => {
+              const Icon = task.icon;
               return (
               <div
-                key={title}
+                key={task.id}
                 className="grid gap-4 rounded-xl border border-slate-100 px-3 py-3 sm:grid-cols-[64px_1fr_112px] sm:items-center"
               >
                 <div className="flex items-center gap-3">
                   <span
-                    className={`rounded-lg px-3 py-2 text-xs font-black ${style.badgeClass}`}
+                    className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-black text-white"
                   >
-                    {code}
+                    {latestDiagnostic?.section ?? "Task"}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-blue-600">
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${task.iconClass}`}>
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-sm font-black">{title}</p>
+                    <p className="text-sm font-black">{task.title}</p>
                     <p className="mt-1 text-xs font-bold text-slate-500">
-                      {meta}
+                      {task.fix}
                     </p>
                   </div>
                 </div>
                 <Link
-                  href={href}
+                  href={task.href}
                   className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
                 >
                   Start
@@ -2739,13 +2864,13 @@ function PracticeContent() {
               );
             }))}
           </div>
-          <button
-            type="button"
+          <Link
+            href="/phloemai/question-bank"
             className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
           >
             View all practice
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </button>
+          </Link>
         </section>
       </div>
 
@@ -2753,6 +2878,394 @@ function PracticeContent() {
         title="Practice turns your study plan into improvement"
         steps={[approachSteps[0], approachSteps[3], approachSteps[1], approachSteps[4]]}
       />
+    </div>
+  );
+}
+
+type CalculatorTrainerMode = "speed" | "multi-step";
+type CalculatorTrainerProblem = {
+  prompt: string;
+  answer: number;
+  hint: string;
+};
+
+const initialCalculatorProblem: CalculatorTrainerProblem = {
+  prompt: "24 x 7",
+  answer: 168,
+  hint: "Type the answer, then press Enter.",
+};
+
+function randomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function createCalculatorProblem(
+  mode: CalculatorTrainerMode
+): CalculatorTrainerProblem {
+  if (mode === "multi-step") {
+    const repeated = randomInt(12, 38);
+    const divisor = randomInt(2, 5);
+    const multiplier = divisor * randomInt(2, 7);
+    const extra = divisor * randomInt(8, 30);
+    const answer = (repeated * multiplier + extra) / divisor;
+
+    return {
+      prompt: `(${repeated} x ${multiplier} + ${extra}) / ${divisor}`,
+      answer,
+      hint: `Repeated number: ${repeated}. Store it with MRC/M+ style memory if you are using the on-screen calculator.`,
+    };
+  }
+
+  const type = randomInt(1, 3);
+  if (type === 1) {
+    const percent = randomInt(8, 32);
+    const base = randomInt(12, 40) * 10;
+    return {
+      prompt: `${percent}% of ${base}`,
+      answer: (percent / 100) * base,
+      hint: "Keyboard entry usually beats clicking the calculator buttons.",
+    };
+  }
+  if (type === 2) {
+    const a = randomInt(16, 49);
+    const b = randomInt(6, 19);
+    return {
+      prompt: `${a} x ${b}`,
+      answer: a * b,
+      hint: "Use number keys and Enter so the motion becomes automatic.",
+    };
+  }
+
+  const numerator = randomInt(18, 84);
+  const denominator = randomInt(2, 9);
+  return {
+    prompt: `${numerator * denominator} / ${denominator}`,
+    answer: numerator,
+    hint: "Scan for simplifications before committing to full calculation.",
+  };
+}
+
+function isCloseNumber(input: string, answer: number) {
+  const parsed = Number(input);
+  if (!Number.isFinite(parsed)) return false;
+
+  return Math.abs(parsed - answer) <= 0.05;
+}
+
+const flaggingScenarios = [
+  {
+    section: "QR",
+    title: "Layered table calculation",
+    cue: "You have spent 55 seconds setting up a multi-row percentage change and still need two operations.",
+    shouldFlag: true,
+    reason: "Flag it. This is a likely time-sink, so bank easier marks first and return with a clean setup.",
+  },
+  {
+    section: "VR",
+    title: "Direct retrieval",
+    cue: "The stem asks for a named detail and the paragraph containing that phrase is already visible.",
+    shouldFlag: false,
+    reason: "Leave it. This is a fast retrieval question, so answer and move.",
+  },
+  {
+    section: "DM",
+    title: "Long logic chain",
+    cue: "The syllogism has several conditional statements and you cannot reduce them after 45 seconds.",
+    shouldFlag: true,
+    reason: "Flag it. You have enough evidence that the question could drain time without guaranteeing a mark.",
+  },
+  {
+    section: "SJT",
+    title: "Clear professional priority",
+    cue: "The action protects patient safety and escalates appropriately; the alternatives are clearly weaker.",
+    shouldFlag: false,
+    reason: "Leave it. A clear SJT priority should be answered confidently instead of revisited repeatedly.",
+  },
+  {
+    section: "QR",
+    title: "One-step ratio",
+    cue: "The numbers divide cleanly and the answer options are far apart.",
+    shouldFlag: false,
+    reason: "Leave it. Clean numbers and spaced options make this a good quick mark.",
+  },
+] as const;
+
+function SkillsTrainersContent({
+  latestDiagnostic,
+}: {
+  latestDiagnostic: DashboardDiagnostic | null;
+}) {
+  const studyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
+  const [calculatorMode, setCalculatorMode] =
+    useState<CalculatorTrainerMode>("speed");
+  const [calculatorProblem, setCalculatorProblem] =
+    useState<CalculatorTrainerProblem>(initialCalculatorProblem);
+  const [calculatorAnswer, setCalculatorAnswer] = useState("");
+  const [calculatorRunning, setCalculatorRunning] = useState(false);
+  const [calculatorTimeLeft, setCalculatorTimeLeft] = useState(60);
+  const [calculatorCorrect, setCalculatorCorrect] = useState(0);
+  const [calculatorTotal, setCalculatorTotal] = useState(0);
+  const [calculatorFeedback, setCalculatorFeedback] = useState(
+    "Start the timer, then answer as many as possible."
+  );
+  const [flagIndex, setFlagIndex] = useState(0);
+  const [flagCorrect, setFlagCorrect] = useState(0);
+  const [flagTotal, setFlagTotal] = useState(0);
+  const [flagChoice, setFlagChoice] = useState<boolean | null>(null);
+  const currentFlagScenario = flaggingScenarios[flagIndex % flaggingScenarios.length];
+
+  useEffect(() => {
+    if (!calculatorRunning) return;
+
+    const timer = window.setTimeout(() => {
+      const nextTime = Math.max(0, calculatorTimeLeft - 1);
+      setCalculatorTimeLeft(nextTime);
+
+      if (nextTime <= 0) {
+        setCalculatorRunning(false);
+        setCalculatorFeedback("Time. Review misses, then run another 60-second set.");
+      }
+    }, 1000);
+
+    return () => window.clearTimeout(timer);
+  }, [calculatorRunning, calculatorTimeLeft]);
+
+  const startCalculatorTrainer = (mode = calculatorMode) => {
+    setCalculatorMode(mode);
+    setCalculatorProblem(createCalculatorProblem(mode));
+    setCalculatorAnswer("");
+    setCalculatorRunning(true);
+    setCalculatorTimeLeft(60);
+    setCalculatorCorrect(0);
+    setCalculatorTotal(0);
+    setCalculatorFeedback("Timer running. Press Enter after each answer.");
+  };
+
+  const submitCalculatorAnswer = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!calculatorRunning || !calculatorAnswer.trim()) return;
+
+    const correct = isCloseNumber(calculatorAnswer, calculatorProblem.answer);
+    setCalculatorTotal((current) => current + 1);
+    setCalculatorCorrect((current) => current + (correct ? 1 : 0));
+    setCalculatorFeedback(
+      correct
+        ? "Correct. Next one."
+        : `Missed: ${calculatorProblem.answer}. Reset your setup and keep moving.`
+    );
+    setCalculatorProblem(createCalculatorProblem(calculatorMode));
+    setCalculatorAnswer("");
+  };
+
+  const chooseFlag = (shouldFlag: boolean) => {
+    if (flagChoice !== null) return;
+
+    const correct = shouldFlag === currentFlagScenario.shouldFlag;
+    setFlagChoice(shouldFlag);
+    setFlagTotal((current) => current + 1);
+    setFlagCorrect((current) => current + (correct ? 1 : 0));
+  };
+
+  const nextFlagScenario = () => {
+    setFlagChoice(null);
+    setFlagIndex((current) => current + 1);
+  };
+
+  const flagAnswered = flagChoice !== null;
+  const flagWasCorrect =
+    flagAnswered && flagChoice === currentFlagScenario.shouldFlag;
+
+  return (
+    <div className="space-y-5 px-6 py-5 lg:px-8">
+      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h2 className="text-sm font-black uppercase tracking-wide">
+              Skills Trainers
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm font-semibold leading-6 text-slate-500">
+              Short drills for the mechanics that show up inside your diagnostic fixes.
+            </p>
+          </div>
+          <span className="w-fit rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-700">
+            {studyPlanTasks.length} linked study task{studyPlanTasks.length === 1 ? "" : "s"}
+          </span>
+        </div>
+      </section>
+
+      <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
+        <section id="calculator" className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
+                  <Calculator className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-black uppercase tracking-wide">
+                    Calculator trainer
+                  </h2>
+                  <p className="mt-1 text-xs font-bold text-slate-500">
+                    Fast arithmetic and multi-step QR calculation sets.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-right">
+              <p className="text-xs font-black text-slate-500">Timer</p>
+              <p className="text-2xl font-black text-slate-950">{calculatorTimeLeft}s</p>
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-wrap gap-2">
+            {(["speed", "multi-step"] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => startCalculatorTrainer(mode)}
+                className={`rounded-lg px-4 py-2 text-xs font-black ${
+                  calculatorMode === mode
+                    ? "bg-blue-600 text-white"
+                    : "border border-slate-200 bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+                }`}
+              >
+                {mode === "speed" ? "Speed calculations" : "Multi-step calculations"}
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={submitCalculatorAnswer} className="mt-5 rounded-xl border border-cyan-100 bg-cyan-50/50 p-4">
+            <p className="text-xs font-black uppercase tracking-wide text-cyan-700">
+              Current calculation
+            </p>
+            <p className="mt-3 text-3xl font-black text-slate-950">
+              {calculatorProblem.prompt}
+            </p>
+            <p className="mt-2 text-xs font-semibold leading-5 text-slate-600">
+              {calculatorProblem.hint}
+            </p>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+              <input
+                value={calculatorAnswer}
+                onChange={(event) => setCalculatorAnswer(event.target.value)}
+                inputMode="decimal"
+                className="h-11 min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 text-sm font-black text-slate-900 outline-none focus:border-blue-400"
+                placeholder="Answer"
+              />
+              <button
+                type="submit"
+                disabled={!calculatorRunning}
+                className="inline-flex h-11 items-center justify-center rounded-lg bg-blue-600 px-6 text-sm font-black text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+              >
+                Check
+              </button>
+            </div>
+          </form>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            {[
+              ["Correct", String(calculatorCorrect)],
+              ["Attempted", String(calculatorTotal)],
+              [
+                "Accuracy",
+                calculatorTotal > 0
+                  ? `${Math.round((calculatorCorrect / calculatorTotal) * 100)}%`
+                  : "-",
+              ],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <p className="text-xs font-black text-slate-500">{label}</p>
+                <p className="mt-1 text-xl font-black text-slate-950">{value}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 rounded-xl border border-amber-100 bg-amber-50 p-4 text-sm font-semibold leading-6 text-amber-900">
+            <p>{calculatorFeedback}</p>
+            <p className="mt-2">
+              Tip: use keyboard shortcuts instead of clicking. For repeated numbers in multi-step calculations, use MRC/M+/M- memory buttons to avoid retyping.
+            </p>
+          </div>
+        </section>
+
+        <section id="flagging" className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+              <Flag className="h-6 w-6" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className="text-sm font-black uppercase tracking-wide">
+                Flagging trainer
+              </h2>
+              <p className="mt-1 text-xs font-bold text-slate-500">
+                Decide whether a question should be flagged before it steals time.
+              </p>
+            </div>
+          </div>
+
+          <article className="mt-5 rounded-xl border border-rose-100 bg-rose-50/40 p-4">
+            <div className="flex items-center justify-between gap-3">
+              <span className="rounded-lg bg-rose-600 px-3 py-1 text-xs font-black text-white">
+                {currentFlagScenario.section}
+              </span>
+              <span className="text-xs font-black text-slate-500">
+                {flagCorrect}/{flagTotal} correct
+              </span>
+            </div>
+            <h3 className="mt-4 text-lg font-black text-slate-950">
+              {currentFlagScenario.title}
+            </h3>
+            <p className="mt-2 text-sm font-semibold leading-6 text-slate-700">
+              {currentFlagScenario.cue}
+            </p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => chooseFlag(true)}
+                className="inline-flex h-11 items-center justify-center rounded-lg bg-rose-600 px-5 text-sm font-black text-white hover:bg-rose-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                disabled={flagAnswered}
+              >
+                Flag it
+              </button>
+              <button
+                type="button"
+                onClick={() => chooseFlag(false)}
+                className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 bg-white px-5 text-sm font-black text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:bg-slate-100"
+                disabled={flagAnswered}
+              >
+                Leave it
+              </button>
+            </div>
+          </article>
+
+          {flagAnswered && (
+            <div
+              className={`mt-4 rounded-xl border p-4 text-sm font-semibold leading-6 ${
+                flagWasCorrect
+                  ? "border-emerald-100 bg-emerald-50 text-emerald-900"
+                  : "border-red-100 bg-red-50 text-red-900"
+              }`}
+            >
+              <p className="font-black">
+                {flagWasCorrect ? "Correct decision." : "Not quite."}
+              </p>
+              <p className="mt-1">{currentFlagScenario.reason}</p>
+              <button
+                type="button"
+                onClick={nextFlagScenario}
+                className="mt-3 inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
+              >
+                Next scenario
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+          )}
+
+          <div className="mt-4 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm font-semibold leading-6 text-blue-950">
+            Flag questions that are likely to become time-sinks, then move on. Do not flag questions just because they feel uncomfortable if the evidence is already enough to answer.
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
@@ -2911,13 +3424,13 @@ function ProgressContent({
                 Premium study plan progress will be based on saved practice sessions.
               </p>
             </div>
-            <button
-              type="button"
+            <Link
+              href="/phloemai/report"
               className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
             >
               View all study plan insights
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </button>
+            </Link>
           </section>
         </ClientPremiumGate>
 
@@ -2941,13 +3454,13 @@ function ProgressContent({
                 This timeline will populate from real saved attempts.
               </p>
             </div>
-            <button
-              type="button"
+            <Link
+              href="/phloemai/question-bank"
               className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
             >
               View all activity
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </button>
+            </Link>
           </section>
         </ClientPremiumGate>
       </div>
@@ -2962,16 +3475,99 @@ function ReportContent({
   checkoutLoading,
   onUpgrade,
   practiceStats,
-}: PremiumGateProps & { practiceStats: PracticeStats }) {
+  latestDiagnostic,
+}: PremiumGateProps & {
+  practiceStats: PracticeStats;
+  latestDiagnostic: DashboardDiagnostic | null;
+}) {
+  const [reportFilter, setReportFilter] = useState<ReportSectionFilter>("All");
   const reviewRows: Array<[string, string, string]> = [];
-  const hasSignals = practiceStats.hasCompletedQuestions;
-  const freeIssueCards = reportIssueDefinitions.filter((issue) =>
-    freeReportIssueIds.includes(issue.id as (typeof freeReportIssueIds)[number])
-  );
-  const premiumOnlyIssueCards = reportIssueDefinitions.filter(
-    (issue) =>
-      !freeReportIssueIds.includes(issue.id as (typeof freeReportIssueIds)[number])
-  );
+  const hasDiagnostic = Boolean(latestDiagnostic);
+  const filterMatches =
+    reportFilter === "All" || latestDiagnostic?.section === reportFilter;
+  const diagnosticIssueCards =
+    latestDiagnostic && filterMatches
+      ? latestDiagnostic.issues.map(buildReportIssueCard)
+      : [];
+  const hasSignals = diagnosticIssueCards.length > 0;
+  const studyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
+  const recommendedTask = studyPlanTasks[0];
+  const feedbackStatus =
+    latestDiagnostic?.aiFeedbackText
+      ? "Ready"
+      : latestDiagnostic?.aiFeedbackStatus === "queued_no_api_key"
+        ? "Queued"
+        : latestDiagnostic
+          ? "Not requested"
+          : "Waiting";
+
+  const feedbackHelper =
+    latestDiagnostic?.aiFeedbackText
+      ? "Generated from your latest diagnostic."
+      : latestDiagnostic
+        ? "AI feedback has not been generated for this diagnostic yet."
+        : "Complete and mark a diagnostic to generate personalised written feedback.";
+
+  const reportFilters: ReportSectionFilter[] = ["All", "QR", "VR", "DM", "SJT"];
+
+  const latestDiagnosticSummary = hasDiagnostic
+    ? latestDiagnostic?.section
+      ? `Latest ${latestDiagnostic.section} diagnostic`
+      : "Latest diagnostic"
+    : "No diagnostic or marked practice report saved yet";
+
+  const metricAccuracy = hasDiagnostic
+    ? `${latestDiagnostic?.accuracy ?? 0}%`
+    : practiceStats.hasCompletedQuestions
+      ? `${practiceStats.accuracy}%`
+      : "-";
+  const metricAvgTime = practiceStats.hasCompletedQuestions
+    ? `${practiceStats.avgSeconds}s`
+    : "-";
+
+  const signalBadgeText = hasSignals
+    ? "Saved issue data found"
+    : hasDiagnostic
+      ? "No issues for this filter"
+      : "Waiting for diagnostic";
+
+  const signalBadgeClass = hasSignals
+    ? "bg-emerald-50 text-emerald-700"
+    : "bg-slate-100 text-slate-500";
+
+  const emptyIssueMessage =
+    hasDiagnostic && !filterMatches
+      ? `No ${reportFilter} issues in the latest ${latestDiagnostic?.section} diagnostic.`
+      : hasDiagnostic
+        ? "No issue labels were saved for this diagnostic."
+        : "Complete and mark a diagnostic to start detecting issues from your own telemetry.";
+
+  const noFeedbackActionHref = hasDiagnostic
+    ? "/phloemai/diagnostic"
+    : "/phloemai/diagnostic";
+  const noFeedbackActionLabel = hasDiagnostic ? "Open diagnostic" : "Run diagnostic";
+
+  const reportIssueIntro = hasDiagnostic
+    ? "Showing the issue labels, causes, supporting evidence and study tasks saved from your latest diagnostic."
+    : "Complete a diagnostic to replace generic guidance with your saved issue scan.";
+
+  const recommendedTaskHref = recommendedTask?.href ?? "/phloemai/practice";
+  const recommendedTaskText = recommendedTask
+    ? recommendedTask.fix
+    : "Start a recommended task based on your report.";
+
+  const filteredLabel =
+    reportFilter === "All"
+      ? "all sections"
+      : `${reportFilter} only`;
+
+  const hasAiFeedback = Boolean(latestDiagnostic?.aiFeedbackText);
+
+  const feedbackBadgeClass = hasAiFeedback
+    ? "bg-emerald-50 text-emerald-700"
+    : "bg-violet-50 text-violet-700";
+
+  const issueCardsToRender = diagnosticIssueCards;
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
@@ -2984,42 +3580,81 @@ function ReportContent({
             <div>
               <h2 className="text-sm font-black">Latest diagnostic</h2>
               <p className="mt-1 text-xs font-bold text-slate-500">
-                {hasSignals
-                  ? "Issue scan ready from saved practice data"
-                  : "No diagnostic or marked practice report saved yet"}
+                {latestDiagnosticSummary}
               </p>
             </div>
           </div>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-xs font-black text-slate-700">Overall accuracy</p>
             <p className="mt-2 text-3xl font-black text-slate-400">
-              {hasSignals ? `${practiceStats.accuracy}%` : "-"}
+              {metricAccuracy}
             </p>
           </div>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-xs font-black text-slate-700">Avg. time / question</p>
             <p className="mt-2 text-3xl font-black text-slate-400">
-              {hasSignals ? `${practiceStats.avgSeconds}s` : "-"}
+              {metricAvgTime}
             </p>
           </div>
         </div>
       </section>
 
       <div className="flex flex-wrap gap-3">
-        {["All", "QR", "VR", "DM", "SJT"].map((filter, index) => (
+        {reportFilters.map((filter) => {
+          const active = reportFilter === filter;
+          return (
           <button
             type="button"
             key={filter}
+            onClick={() => setReportFilter(filter)}
             className={`h-8 rounded-full px-8 text-xs font-black ${
-              index === 0
+              active
                 ? "bg-blue-600 text-white"
                 : "border border-slate-200 bg-white text-slate-500 hover:bg-blue-50 hover:text-blue-600"
             }`}
           >
             {filter}
           </button>
-        ))}
+        );
+        })}
       </div>
+
+      <section className="rounded-xl border border-violet-100 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h2 className="text-sm font-black uppercase tracking-wide text-blue-600">
+              Phloem personalised feedback
+            </h2>
+            <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
+              {feedbackHelper}
+            </p>
+          </div>
+          <span className={`w-fit rounded-full px-3 py-1 text-xs font-black ${feedbackBadgeClass}`}>
+            {feedbackStatus}
+          </span>
+        </div>
+        {latestDiagnostic?.aiFeedbackText ? (
+          <ExpandableAiFeedback
+            text={latestDiagnostic.aiFeedbackText}
+            className="mt-4 text-sm font-semibold leading-7 text-slate-700"
+            paragraphClassName="whitespace-pre-wrap"
+            buttonClassName="mt-4 text-sm font-black text-blue-600 hover:text-blue-700"
+          />
+        ) : (
+          <div className="mt-4 flex flex-col gap-3 rounded-xl border border-dashed border-violet-100 bg-violet-50/50 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm font-semibold leading-6 text-slate-600">
+              The generated feedback will appear here above the issue scan.
+            </p>
+            <Link
+              href={noFeedbackActionHref}
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
+            >
+              {noFeedbackActionLabel}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+        )}
+      </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -3028,73 +3663,79 @@ function ReportContent({
               Issue scan
             </h2>
             <p className="mt-2 max-w-3xl text-sm font-semibold leading-6 text-slate-500">
-              Free shows the detected issue labels. Premium reveals the specific
-              cause, supporting evidence and study task for each issue.
+              {reportIssueIntro}
             </p>
           </div>
-          <span
-            className={`w-fit rounded-full px-3 py-1 text-xs font-black ${
-              hasSignals
-                ? "bg-emerald-50 text-emerald-700"
-                : "bg-slate-100 text-slate-500"
-            }`}
-          >
-            {hasSignals ? "Saved data found" : "Waiting for marked set"}
+          <span className={`w-fit rounded-full px-3 py-1 text-xs font-black ${signalBadgeClass}`}>
+            {signalBadgeText}
           </span>
         </div>
 
+        <p className="mt-3 text-xs font-black uppercase tracking-wide text-slate-400">
+          Filter: {filteredLabel}
+        </p>
+
         {!hasSignals && (
           <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600">
-            Complete and mark a diagnostic or practice set to start detecting
-            these issues from your own telemetry.
+            {emptyIssueMessage}
           </div>
         )}
 
         <div className="mt-5 grid gap-4 xl:grid-cols-2">
-          {freeIssueCards.map((issue) => (
+          {issueCardsToRender.map((issue) => (
             <ReportIssueSignalCard
               key={issue.id}
               issue={issue}
               isPremium={isPremium}
-              hasSignals={hasSignals}
+              hasSignals
               checkoutLoading={checkoutLoading}
               onUpgrade={onUpgrade}
             />
           ))}
         </div>
-
-        {isPremium && (
-          <div className="mt-6">
-            <h3 className="text-sm font-black uppercase tracking-wide text-slate-700">
-              Additional premium checks
-            </h3>
-            <div className="mt-4 grid gap-4 xl:grid-cols-2">
-              {premiumOnlyIssueCards.map((issue) => (
-                <ReportIssueSignalCard
-                  key={issue.id}
-                  issue={issue}
-                  isPremium={isPremium}
-                  hasSignals={hasSignals}
-                  checkoutLoading={checkoutLoading}
-                  onUpgrade={onUpgrade}
-                />
-              ))}
-            </div>
-          </div>
-        )}
       </section>
 
       <div className="grid gap-5 lg:grid-cols-[0.8fr_1fr]">
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-sm font-black uppercase tracking-wide text-blue-600">
-            Phloem personalised feedback
+          <h2 className="text-sm font-black uppercase tracking-wide">
+            Personalised study plan
           </h2>
-          <ExpandableText
-            shortText={reportFeedbackShort}
-            fullText={reportFeedbackFull}
-            className="mt-5 text-sm font-semibold leading-7 text-slate-600"
-            buttonClassName="mt-5 text-sm font-black text-blue-600 hover:text-blue-700"
-          />
+          {studyPlanTasks.length > 0 ? (
+            <ol className="mt-4 space-y-3">
+              {studyPlanTasks.map((task, index) => {
+                const Icon = task.icon;
+                return (
+                  <li key={task.id} className="grid grid-cols-[36px_1fr] gap-3 rounded-xl border border-blue-100 bg-blue-50/40 p-3">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+                      {index + 1}
+                    </span>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Icon className="h-4 w-4 text-blue-600" aria-hidden="true" />
+                        <h3 className="text-xs font-black uppercase tracking-wide text-blue-700">
+                          {task.title}
+                        </h3>
+                      </div>
+                      <p className="mt-1 text-sm font-semibold leading-6 text-slate-700">
+                        {task.fix}
+                      </p>
+                      <Link
+                        href={task.href}
+                        className="mt-2 inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+                      >
+                        Start task
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      </Link>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <p className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600">
+              Study tasks will appear here as the saved fixes from your latest diagnostic.
+            </p>
+          )}
         </section>
 
         <ClientPremiumGate
@@ -3127,12 +3768,12 @@ function ReportContent({
                   <p className="text-sm font-black">{title}</p>
                   <p className="text-xs font-bold text-slate-500">{count}</p>
                   <p className="text-xs font-bold text-slate-500">{note}</p>
-                  <button
-                    type="button"
+                  <Link
+                    href="/phloemai/question-bank"
                     className="text-xs font-black text-blue-600 hover:text-blue-700"
                   >
                     Review
-                  </button>
+                  </Link>
                 </div>
               )))}
             </div>
@@ -3148,12 +3789,12 @@ function ReportContent({
           <p className="text-sm font-black">
             Ready to improve?{" "}
             <span className="font-semibold text-slate-600">
-              Start a recommended task based on your report.
+              {recommendedTaskText}
             </span>
           </p>
         </div>
         <Link
-          href="/phloemai/practice"
+          href={recommendedTaskHref}
           className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white hover:bg-blue-700"
         >
           Start recommended task
@@ -3290,6 +3931,7 @@ function DashboardSubpageContent({
   isPremium,
   checkoutLoading,
   practiceStats,
+  latestDiagnostic,
   diagnosticCredits,
   onUpgrade,
   onLogout,
@@ -3301,6 +3943,7 @@ function DashboardSubpageContent({
   isPremium: boolean;
   checkoutLoading: boolean;
   practiceStats: PracticeStats;
+  latestDiagnostic: DashboardDiagnostic | null;
   diagnosticCredits: number;
   onUpgrade: () => void;
   onLogout: () => void;
@@ -3314,7 +3957,12 @@ function DashboardSubpageContent({
       />
     );
   }
-  if (view === "practice") return <PracticeContent />;
+  if (view === "practice") {
+    return <PracticeContent latestDiagnostic={latestDiagnostic} />;
+  }
+  if (view === "skills-trainers") {
+    return <SkillsTrainersContent latestDiagnostic={latestDiagnostic} />;
+  }
   if (view === "progress") {
     return (
       <ProgressContent
@@ -3344,6 +3992,7 @@ function DashboardSubpageContent({
       checkoutLoading={checkoutLoading}
       onUpgrade={onUpgrade}
       practiceStats={practiceStats}
+      latestDiagnostic={latestDiagnostic}
     />
   );
 }
@@ -3669,6 +4318,24 @@ function DashboardFeedbackPanel({
 
       {hasDiagnostic ? (
         <>
+          {aiText && (
+            <div className="mt-5 rounded-xl border border-violet-100 bg-violet-50/40 p-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-violet-600" aria-hidden="true" />
+                <h3 className="text-xs font-black uppercase tracking-wide text-violet-700">
+                  AI feedback
+                </h3>
+              </div>
+              <ExpandableAiFeedback
+                text={aiText}
+                previewLength={300}
+                className="mt-2 text-xs font-semibold leading-5 text-slate-800"
+                paragraphClassName="whitespace-pre-wrap"
+                buttonClassName="mt-3 text-xs font-black text-violet-700 hover:text-violet-800"
+              />
+            </div>
+          )}
+
           <div className="mt-5 flex flex-wrap gap-1 rounded-md border border-slate-200 bg-slate-50 p-1">
             {sectionTabs.map((tab) => {
               const active = activeSection === tab.code;
@@ -3765,23 +4432,6 @@ function DashboardFeedbackPanel({
               </div>
             ))}
 
-          {aiText && (
-            <div className="mt-5 rounded-xl border border-violet-100 bg-violet-50/40 p-4">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-violet-600" aria-hidden="true" />
-                <h3 className="text-xs font-black uppercase tracking-wide text-violet-700">
-                  AI feedback
-                </h3>
-              </div>
-              <div className="mt-2 space-y-2 text-xs leading-5 text-slate-800">
-                {aiText.split(/\n{2,}/).map((paragraph, index) => (
-                  <p key={index} className="whitespace-pre-wrap">
-                    {paragraph.trim()}
-                  </p>
-                ))}
-              </div>
-            </div>
-          )}
         </>
       ) : (
         <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50/60 p-4">
@@ -3923,7 +4573,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       const { data, error } = await supabaseClient
         .from("diagnostic_attempts")
         .select(
-          "accuracy,completed_at,ai_feedback_status,metadata,source"
+          "accuracy,completed_at,ai_feedback,ai_feedback_status,metadata,source"
         )
         .eq("user_id", nextUser.id)
         .order("completed_at", { ascending: false })
@@ -3969,6 +4619,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       const aiFeedbackText =
         typeof metadata.aiFeedbackText === "string"
           ? metadata.aiFeedbackText
+          : typeof data.ai_feedback === "string"
+            ? data.ai_feedback
           : null;
       const aiFeedbackStatus =
         typeof data.ai_feedback_status === "string"
@@ -4246,6 +4898,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       ? profile.diagnostic_credits
       : 1;
   const dashboardSectionScores = getSectionScores(practiceStats);
+  const dashboardStudyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
   const progressSummaryText = practiceStats.hasCompletedQuestions
     ? "From saved question attempts"
     : "No completed questions yet";
@@ -4317,6 +4970,23 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               );
             })}
           </nav>
+
+          <div className="mt-8">
+            <p className="px-4 text-xs font-black uppercase tracking-wide text-slate-400">
+              Skills Trainers
+            </p>
+            <Link
+              href="/phloemai/skills-trainers"
+              className={`mt-3 flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-black transition-colors ${
+                view === "skills-trainers"
+                  ? "bg-indigo-50 text-blue-600 shadow-sm"
+                  : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+              }`}
+            >
+              <Zap className="h-5 w-5" aria-hidden="true" />
+              Calculator + Flags
+            </Link>
+          </div>
 
           <div className="mt-8 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-blue-600">
@@ -4564,16 +5234,23 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                     Personalised Study Plan/Tasks
                   </h2>
                   <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
-                    Your task queue will unlock after a diagnostic creates
-                    personalised study priorities.
+                    Every saved fix from your latest diagnostic becomes a task here.
                   </p>
                 </div>
-                <span className="w-fit rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-700">
-                  Awaiting study plan
+                <span
+                  className={`w-fit rounded-full px-3 py-1 text-xs font-black ${
+                    dashboardStudyPlanTasks.length > 0
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "bg-amber-50 text-amber-700"
+                  }`}
+                >
+                  {dashboardStudyPlanTasks.length > 0
+                    ? `${dashboardStudyPlanTasks.length} task${dashboardStudyPlanTasks.length === 1 ? "" : "s"}`
+                    : "Awaiting study plan"}
                 </span>
               </div>
               <div className="mt-4 space-y-3">
-                {fixTasks.length === 0 ? (
+                {dashboardStudyPlanTasks.length === 0 ? (
                   <div className="rounded-xl border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-blue-50 p-4">
                     <div className="grid gap-3 sm:grid-cols-3">
                       {[
@@ -4610,10 +5287,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                     </div>
                   </div>
                 ) : (
-                fixTasks.map((task) => {
+                dashboardStudyPlanTasks.map((task) => {
                   const Icon = task.icon;
                   return (
-                    <div key={task.title} className="flex items-center gap-4">
+                    <div key={task.id} className="flex items-center gap-4 rounded-xl border border-slate-100 bg-white p-3">
                       <div
                         className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${task.iconClass}`}
                       >
@@ -4622,11 +5299,11 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                       <div className="min-w-0 flex-1">
                         <h3 className="text-sm font-black">{task.title}</h3>
                         <p className="mt-1 text-xs font-bold text-slate-500">
-                          {task.meta}
+                          {task.fix}
                         </p>
                       </div>
                       <Link
-                        href="/phloemai/question-bank/qr"
+                        href={task.href}
                         className="inline-flex h-10 items-center justify-center rounded-lg border border-amber-300 bg-amber-50 px-5 text-sm font-black text-amber-700 shadow-[inset_0_0_0_1px_rgba(245,158,11,0.18)] transition-colors hover:border-amber-400 hover:bg-amber-100 hover:text-amber-800"
                       >
                         Start
@@ -4689,6 +5366,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               isPremium={plan === "Premium"}
               checkoutLoading={checkoutLoading}
               practiceStats={practiceStats}
+              latestDiagnostic={latestDiagnostic}
               diagnosticCredits={diagnosticCredits}
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}
@@ -5540,6 +6218,10 @@ export function UCATPracticePage() {
 
 export function UCATProgressPage() {
   return <UCATDashboard view="progress" />;
+}
+
+export function UCATSkillsTrainersPage() {
+  return <UCATDashboard view="skills-trainers" />;
 }
 
 export function UCATReportPage() {

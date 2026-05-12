@@ -6,6 +6,7 @@ import {
   createClient as createSupabaseClient,
   hasSupabaseConfig,
 } from "@/utils/supabase/client";
+import { ExpandableAiFeedback } from "./ExpandableAiFeedback";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -4291,16 +4292,6 @@ function MarkedReviewScreen({
           )}
         </section>
 
-        <MarkedSessionInsightsPanel
-          insights={insights}
-          isPremium={analysisUnlocked}
-          checkoutLoading={checkoutLoading}
-          checkoutError={checkoutError}
-          onUpgrade={onUpgrade}
-          sourceSection={summary.section as UCATSection}
-          isDiagnosticSession={isDiagnostic}
-        />
-
         {diagnosticMode === "free-qr" && aiFeedbackState && (
           aiFeedbackState.text ? (
             <section className="rounded-md border border-violet-200 bg-white p-5 shadow-md">
@@ -4308,17 +4299,19 @@ function MarkedReviewScreen({
                 <div className="flex h-10 w-10 items-center justify-center rounded-md bg-violet-100 text-violet-700">
                   <Sparkles className="h-5 w-5" aria-hidden="true" />
                 </div>
-                <h2 className="text-lg font-black">AI feedback</h2>
+                <div>
+                  <h2 className="text-lg font-black">AI feedback</h2>
+                  <p className="mt-1 text-sm font-semibold text-slate-500">
+                    Generated from this diagnostic and shown before the issue breakdown.
+                  </p>
+                </div>
               </div>
-              <div className="mt-4 space-y-3 text-sm leading-6 text-slate-800">
-                {aiFeedbackState.text
-                  .split(/\n{2,}/)
-                  .map((paragraph, index) => (
-                    <p key={index} className="whitespace-pre-wrap">
-                      {paragraph.trim()}
-                    </p>
-                  ))}
-              </div>
+              <ExpandableAiFeedback
+                text={aiFeedbackState.text}
+                className="mt-4 text-sm leading-6 text-slate-800"
+                paragraphClassName="whitespace-pre-wrap"
+                buttonClassName="mt-4 text-sm font-black text-violet-700 hover:text-violet-800"
+              />
             </section>
           ) : (
             <section className="rounded-md border border-violet-200 bg-white p-5 shadow-md">
@@ -4359,6 +4352,16 @@ function MarkedReviewScreen({
             </section>
           )
         )}
+
+        <MarkedSessionInsightsPanel
+          insights={insights}
+          isPremium={analysisUnlocked}
+          checkoutLoading={checkoutLoading}
+          checkoutError={checkoutError}
+          onUpgrade={onUpgrade}
+          sourceSection={summary.section as UCATSection}
+          isDiagnosticSession={isDiagnostic}
+        />
 
         <section className="rounded-md border border-slate-400 bg-white p-5 shadow-lg">
           <h2 className="text-lg font-black">Question-by-question review</h2>
@@ -4819,7 +4822,7 @@ function UCATQuestionBankSection({
 
         const { data: attemptRow } = await supabase
           .from("diagnostic_attempts")
-          .select("id,ai_feedback_requested_at,ai_feedback_status,metadata")
+          .select("id,ai_feedback,ai_feedback_requested_at,ai_feedback_status,metadata")
           .eq("user_id", user.id)
           .eq("source", FREE_QR_DIAGNOSTIC_SOURCE)
           .order("created_at", { ascending: false })
@@ -4855,6 +4858,8 @@ function UCATQuestionBankSection({
         const savedFeedbackText =
           typeof metadata.aiFeedbackText === "string"
             ? metadata.aiFeedbackText
+            : typeof attemptRow?.ai_feedback === "string"
+              ? attemptRow.ai_feedback
             : null;
 
         setAiFeedbackState({
@@ -5275,6 +5280,7 @@ function UCATQuestionBankSection({
         .update({
           ai_feedback_requested_at: requestedAt,
           ai_feedback_status: aiStatus,
+          ...(aiText ? { ai_feedback: aiText } : {}),
           metadata: {
             ...currentMetadata,
             ...(savedFreeDiagnostic.summary
