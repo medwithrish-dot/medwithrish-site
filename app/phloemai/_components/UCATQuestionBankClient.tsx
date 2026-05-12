@@ -3084,29 +3084,64 @@ function joinHumanList(items: string[]) {
   return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
 }
 
-function weaknessCutoffPct(rule: SubtypeWeaknessRule) {
-  return (
-    rule.minorAtOrBelowPct ??
-    rule.minorBelowPct ??
-    rule.majorAtOrBelowPct ??
-    rule.repeatMajorAtOrBelowPct ??
-    70
-  );
+function formatDrillTargetPct(pct: number) {
+  const roundedPct = Math.ceil(pct / 5) * 5;
+
+  return Number.isInteger(roundedPct) ? String(roundedPct) : roundedPct.toFixed(1);
 }
 
-function drillTargetPct(rule: SubtypeWeaknessRule) {
-  if (rule.subtype === "qr-calculator-strategy") return 85;
+function nextMarkPctFromRule(rule: SubtypeWeaknessRule) {
+  if (typeof rule.minorAtOrBelowPct !== "number") return null;
 
-  return Math.ceil((weaknessCutoffPct(rule) + 5) / 5) * 5;
+  const match = rule.minorText.match(/(\d+)\/(\d+)/);
+  if (!match) return null;
+
+  const score = Number(match[1]);
+  const maxScore = Number(match[2]);
+  if (!Number.isFinite(score) || !Number.isFinite(maxScore) || maxScore <= 0) {
+    return null;
+  }
+
+  const weaknessPct = (score / maxScore) * 100;
+  if (Math.abs(weaknessPct - rule.minorAtOrBelowPct) > 1) return null;
+
+  return ((score + 1) / maxScore) * 100;
+}
+
+function drillTargetText(rule: SubtypeWeaknessRule) {
+  if (rule.subtype === "qr-calculator-strategy") return "85% or above";
+
+  if (typeof rule.minorBelowPct === "number") {
+    return `${formatDrillTargetPct(rule.minorBelowPct)}% or above`;
+  }
+
+  if (typeof rule.minorAtOrBelowPct === "number") {
+    const nextMarkPct = nextMarkPctFromRule(rule);
+    if (nextMarkPct !== null) {
+      return `${formatDrillTargetPct(nextMarkPct)}% or above`;
+    }
+
+    return `above ${formatDrillTargetPct(rule.minorAtOrBelowPct)}%`;
+  }
+
+  const fallbackPct =
+    rule.majorAtOrBelowPct ?? rule.repeatMajorAtOrBelowPct ?? 70;
+  return `above ${formatDrillTargetPct(fallbackPct)}%`;
+}
+
+function formatSubtypeTargetList(weakSubtypes: WeakSubtypeSignal[]) {
+  return joinHumanList(
+    weakSubtypes.map((item) => `${item.label}: ${drillTargetText(item.rule)}`)
+  );
 }
 
 function buildSubtypeDrillFix(weakSubtypes: WeakSubtypeSignal[]) {
   if (weakSubtypes.length === 1) {
     const item = weakSubtypes[0];
-    return `Complete ${TARGETED_DRILL_SETS} x ${TARGETED_DRILL_MINUTES}-minute ${item.label} drill sets until you are consistently above ${drillTargetPct(item.rule)}%.`;
+    return `Complete ${TARGETED_DRILL_SETS} x ${TARGETED_DRILL_MINUTES}-minute ${item.label} drill sets until you are consistently ${drillTargetText(item.rule)}.`;
   }
 
-  return `Complete ${TARGETED_DRILL_SETS} x ${TARGETED_DRILL_MINUTES}-minute drill sets for each weak type: ${joinHumanList(weakSubtypes.map((item) => item.label))}. Move on once each type is consistently above its target.`;
+  return `Complete ${TARGETED_DRILL_SETS} x ${TARGETED_DRILL_MINUTES}-minute drill sets for each weak type: ${formatSubtypeTargetList(weakSubtypes)}.`;
 }
 
 function expectedPacingSpread(summary: PracticeSessionSummary) {

@@ -64,10 +64,10 @@ export const SUBTYPE_WEAKNESS_RULES: SubtypeWeaknessRule[] = [
     section: "dm",
     subtype: "dm-probability-data",
     label: "Probability",
-    minorAtOrBelowPct: (3 / 5) * 100,
+    minorBelowPct: 75,
     repeatMajorAtOrBelowPct: (2 / 5) * 100,
     expectedMarkText: "5 questions / 5 marks",
-    minorText: "3/5 marks or less is a weakness signal",
+    minorText: "below 75% is a weakness signal; on a 5-question set, that means 3/5 marks or less",
     repeatMajorText:
       "Repeated probability weakness signals should be promoted to a major report issue.",
   },
