@@ -3,6 +3,7 @@ import { UCAT_SECTIONS } from "../../_lib/ucatQuestionBank";
 
 type QuestionBankSectionSearchParams = {
   diagnostic?: string | string[];
+  review?: string | string[];
 };
 
 function getDiagnosticMode(searchParams: QuestionBankSectionSearchParams) {
@@ -11,6 +12,14 @@ function getDiagnosticMode(searchParams: QuestionBankSectionSearchParams) {
     : searchParams.diagnostic;
 
   return value;
+}
+
+function getReviewMode(searchParams: QuestionBankSectionSearchParams) {
+  const value = Array.isArray(searchParams.review)
+    ? searchParams.review[0]
+    : searchParams.review;
+
+  return value === "sets";
 }
 
 export function generateStaticParams() {
@@ -25,10 +34,12 @@ export default async function Page({
   searchParams: Promise<QuestionBankSectionSearchParams>;
 }) {
   const { section } = await params;
+  const resolvedSearchParams = await searchParams;
   return (
     <UCATQuestionBankClient
       section={section}
-      diagnosticMode={getDiagnosticMode(await searchParams)}
+      diagnosticMode={getDiagnosticMode(resolvedSearchParams)}
+      reviewMode={getReviewMode(resolvedSearchParams)}
     />
   );
 }

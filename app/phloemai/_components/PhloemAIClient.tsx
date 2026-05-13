@@ -1212,33 +1212,37 @@ const sectionScores = [
 const questionBankProgress = [
   {
     code: "VR",
+    section: "vr",
     title: "PhloemAI Verbal Reasoning",
     completed: 0,
-    total: 9,
+    total: UCAT_QUESTION_BANK.vr.length,
     focus: "No questions completed yet",
     href: "/phloemai/question-bank/vr",
   },
   {
     code: "DM",
+    section: "dm",
     title: "PhloemAI Decision Making",
     completed: 0,
-    total: 10,
+    total: UCAT_QUESTION_BANK.dm.length,
     focus: "No questions completed yet",
     href: "/phloemai/question-bank/dm",
   },
   {
     code: "QR",
+    section: "qr",
     title: "PhloemAI Quantitative Reasoning",
     completed: 0,
-    total: 14,
+    total: UCAT_QUESTION_BANK.qr.length,
     focus: "No questions completed yet",
     href: "/phloemai/question-bank/qr",
   },
   {
     code: "SJT",
+    section: "sjt",
     title: "PhloemAI Situational Judgement",
     completed: 0,
-    total: 10,
+    total: UCAT_QUESTION_BANK.sjt.length,
     focus: "No questions completed yet",
     href: "/phloemai/question-bank/sjt",
   },
@@ -1246,6 +1250,12 @@ const questionBankProgress = [
 
 const dailyQuestionTarget = 200;
 const sectionCodes: UCATSectionCode[] = ["VR", "DM", "QR", "SJT"];
+const questionBankQuestionIds: Record<UCATSectionCode, Set<string>> = {
+  VR: new Set(UCAT_QUESTION_BANK.vr.map((question) => question.id)),
+  DM: new Set(UCAT_QUESTION_BANK.dm.map((question) => question.id)),
+  QR: new Set(UCAT_QUESTION_BANK.qr.map((question) => question.id)),
+  SJT: new Set(UCAT_QUESTION_BANK.sjt.map((question) => question.id)),
+};
 
 function emptySectionCounts(): Record<UCATSectionCode, number> {
   return { VR: 0, DM: 0, QR: 0, SJT: 0 };
@@ -1297,7 +1307,7 @@ function normaliseSectionCode(section: string | null): UCATSectionCode | null {
 
 function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
   const monthShell = getMonthShell();
-  const uniqueAnsweredBySection: Record<UCATSectionCode, Set<string>> = {
+  const uniqueCompletedBySection: Record<UCATSectionCode, Set<string>> = {
     VR: new Set(),
     DM: new Set(),
     QR: new Set(),
@@ -1308,17 +1318,18 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
   let totalSeconds = 0;
 
   rows.forEach((row) => {
-    if (!row.answered) return;
-
     const section = normaliseSectionCode(row.section);
     if (!section) return;
 
-    answeredAttempts += 1;
-    if (row.correct) correctAttempts += 1;
-    totalSeconds += Math.max(0, row.total_seconds ?? 0);
+    const questionId = row.question_id;
+    if (!questionId || !questionBankQuestionIds[section].has(questionId)) return;
 
-    if (row.question_id) {
-      uniqueAnsweredBySection[section].add(row.question_id);
+    uniqueCompletedBySection[section].add(questionId);
+
+    if (row.answered) {
+      answeredAttempts += 1;
+      if (row.correct) correctAttempts += 1;
+      totalSeconds += Math.max(0, row.total_seconds ?? 0);
     }
 
     if (row.created_at) {
@@ -1339,7 +1350,7 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
   sectionCodes.forEach((code) => {
     sectionCompleted[code] = Math.min(
       getSectionTotal(code),
-      uniqueAnsweredBySection[code].size
+      uniqueCompletedBySection[code].size
     );
   });
 
@@ -1360,7 +1371,7 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
       answeredAttempts > 0 ? Math.round((correctAttempts / answeredAttempts) * 100) : 0,
     avgSeconds:
       answeredAttempts > 0 ? Math.round(totalSeconds / answeredAttempts) : 0,
-    hasCompletedQuestions: answeredAttempts > 0,
+    hasCompletedQuestions: totalCompleted > 0,
     questionCalendarDays: monthShell.days,
     monthLabel: monthShell.monthLabel,
   };
@@ -3031,11 +3042,12 @@ const flagTrainerSections: Array<{
   { code: "QR", label: "Quantitative Reasoning", slug: "qr" },
 ];
 
-const calculatorKeyRows = [
-  ["7", "8", "9", "Back"],
-  ["4", "5", "6", "C"],
-  ["1", "2", "3", "+/-"],
-  ["0", ".", "-", "="],
+const calculatorButtonRows = [
+  ["MRC", "M-", "M+", "CE"],
+  ["7", "8", "9", "/"],
+  ["4", "5", "6", "*"],
+  ["1", "2", "3", "-"],
+  ["0", ".", "=", "+"],
 ] as const;
 
 function formatTrainerClock(seconds: number) {
@@ -3047,6 +3059,18 @@ function getCalculatorModeLabel(mode: CalculatorTrainerMode) {
   if (mode === "calibration") return "9-second calibration";
   if (mode === "multi-step") return "Multi-step pressure";
   return "Speed pressure";
+}
+
+function calculateTrainerValue(stored: number, current: number, operator: string) {
+  if (operator === "+") return stored + current;
+  if (operator === "-") return stored - current;
+  if (operator === "*") return stored * current;
+  if (operator === "/") return current === 0 ? 0 : stored / current;
+  return current;
+}
+
+function getTrainerNowMs() {
+  return typeof performance !== "undefined" ? performance.now() : Date.now();
 }
 
 function getFlagDifficulty(question: UCATQuestion): FlagDifficulty {
@@ -3187,7 +3211,6 @@ function SkillsTrainersContent({
     useState<CalculatorTrainerMode>("calibration");
   const [calculatorProblem, setCalculatorProblem] =
     useState<CalculatorTrainerProblem>(initialCalculatorProblem);
-  const [calculatorAnswer, setCalculatorAnswer] = useState("");
   const [calculatorRunning, setCalculatorRunning] = useState(false);
   const [calculatorElapsedSeconds, setCalculatorElapsedSeconds] = useState(0);
   const [calculatorCorrect, setCalculatorCorrect] = useState(0);
@@ -3196,6 +3219,13 @@ function SkillsTrainersContent({
     "Open the trainer, then run the 9-second calibration."
   );
   const [calculatorInstructionsOpen, setCalculatorInstructionsOpen] = useState(false);
+  const [calcDisplay, setCalcDisplay] = useState("0");
+  const [calcStored, setCalcStored] = useState<number | null>(null);
+  const [calcOperator, setCalcOperator] = useState<string | null>(null);
+  const [calcWaiting, setCalcWaiting] = useState(false);
+  const [calcMemory, setCalcMemory] = useState(0);
+  const [lastMrcAt, setLastMrcAt] = useState(0);
+  const [flaggingOpen, setFlaggingOpen] = useState(false);
   const [flagSection, setFlagSection] = useState<FlagTrainerSection>("vr");
   const [flagIndex, setFlagIndex] = useState(0);
   const [flagCorrect, setFlagCorrect] = useState(0);
@@ -3226,6 +3256,7 @@ function SkillsTrainersContent({
       ? `${Math.round((calculatorCorrect / calculatorTotal) * 100)}%`
       : "-";
   const calculatorPromptTokens = calculatorProblem.prompt.split(" ");
+  const calcValue = Number(calcDisplay) || 0;
 
   useEffect(() => {
     if (!calculatorRunning) return;
@@ -3237,10 +3268,209 @@ function SkillsTrainersContent({
     return () => window.clearInterval(timer);
   }, [calculatorRunning]);
 
+  useEffect(() => {
+    if (!calculatorOpen) return;
+
+    const handleCalculatorKeyDown = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+
+      if (event.altKey && key === "c") {
+        event.preventDefault();
+        setCalculatorOpen((current) => !current);
+        return;
+      }
+
+      if (!calculatorRunning) return;
+
+      if (/^[0-9]$/.test(event.key)) {
+        event.preventDefault();
+        setCalcDisplay((current) =>
+          calcWaiting || current === "0" ? event.key : `${current}${event.key}`
+        );
+        setCalcWaiting(false);
+        return;
+      }
+      if (event.key === ".") {
+        event.preventDefault();
+        setCalcDisplay((current) =>
+          calcWaiting ? "0." : current.includes(".") ? current : `${current}.`
+        );
+        setCalcWaiting(false);
+        return;
+      }
+      if (["+", "-", "*", "/"].includes(event.key)) {
+        event.preventDefault();
+        const current = Number(calcDisplay) || 0;
+        if (calcStored === null || calcOperator === null) {
+          setCalcStored(current);
+        } else {
+          const result = calculateTrainerValue(calcStored, current, calcOperator);
+          setCalcDisplay(String(Number(result.toFixed(8))));
+          setCalcStored(result);
+        }
+        setCalcOperator(event.key);
+        setCalcWaiting(true);
+        return;
+      }
+      if (event.key === "Enter" || event.key === "=") {
+        event.preventDefault();
+        const current = Number(calcDisplay) || 0;
+        if (calcStored === null || calcOperator === null) {
+          setCalcStored(current);
+        } else {
+          const result = calculateTrainerValue(calcStored, current, calcOperator);
+          setCalcDisplay(String(Number(result.toFixed(8))));
+          setCalcStored(result);
+        }
+        setCalcOperator(null);
+        setCalcWaiting(true);
+        return;
+      }
+      if (event.key === "Backspace") {
+        event.preventDefault();
+        setCalcDisplay((current) =>
+          current.length > 1 ? current.slice(0, -1) : "0"
+        );
+        return;
+      }
+      if (key === "m") {
+        event.preventDefault();
+        setCalcMemory((current) => current - calcValue);
+        setCalcWaiting(true);
+        return;
+      }
+      if (key === "p") {
+        event.preventDefault();
+        setCalcMemory((current) => current + calcValue);
+        setCalcWaiting(true);
+        return;
+      }
+      if (key === "c") {
+        event.preventDefault();
+        const now = getTrainerNowMs();
+        if (now - lastMrcAt < 700) {
+          setCalcMemory(0);
+          setCalcDisplay("0");
+          setLastMrcAt(0);
+          return;
+        }
+        setCalcDisplay(String(calcMemory));
+        setCalcWaiting(true);
+        setLastMrcAt(now);
+      }
+    };
+
+    window.addEventListener("keydown", handleCalculatorKeyDown);
+    return () => window.removeEventListener("keydown", handleCalculatorKeyDown);
+  }, [
+    calculatorOpen,
+    calculatorRunning,
+    calcDisplay,
+    calcStored,
+    calcOperator,
+    calcWaiting,
+    calcValue,
+    calcMemory,
+    lastMrcAt,
+  ]);
+
+  const resetTrainerCalculator = () => {
+    setCalcDisplay("0");
+    setCalcStored(null);
+    setCalcOperator(null);
+    setCalcWaiting(false);
+  };
+
+  const clearTrainerCalculator = () => {
+    resetTrainerCalculator();
+  };
+
+  const commitTrainerCalcOperation = (nextOperator?: string) => {
+    const current = Number(calcDisplay) || 0;
+    if (calcStored === null || calcOperator === null) {
+      setCalcStored(current);
+    } else {
+      const result = calculateTrainerValue(calcStored, current, calcOperator);
+      setCalcDisplay(String(Number(result.toFixed(8))));
+      setCalcStored(result);
+    }
+    setCalcOperator(nextOperator ?? null);
+    setCalcWaiting(true);
+  };
+
+  const inputTrainerCalcDigit = (digit: string) => {
+    setCalcDisplay((current) =>
+      calcWaiting || current === "0" ? digit : `${current}${digit}`
+    );
+    setCalcWaiting(false);
+  };
+
+  const inputTrainerCalcDecimal = () => {
+    setCalcDisplay((current) =>
+      calcWaiting ? "0." : current.includes(".") ? current : `${current}.`
+    );
+    setCalcWaiting(false);
+  };
+
+  const memoryRecallClearTrainer = () => {
+    const now = getTrainerNowMs();
+    if (now - lastMrcAt < 700) {
+      setCalcMemory(0);
+      setCalcDisplay("0");
+      setLastMrcAt(0);
+      return;
+    }
+
+    setCalcDisplay(String(calcMemory));
+    setCalcWaiting(true);
+    setLastMrcAt(now);
+  };
+
+  const memoryAddTrainer = (sign: 1 | -1) => {
+    setCalcMemory((current) => current + sign * calcValue);
+    setCalcWaiting(true);
+  };
+
+  const pressTrainerCalculatorButton = (key: string) => {
+    if (!calculatorRunning) return;
+
+    if (/^[0-9]$/.test(key)) {
+      inputTrainerCalcDigit(key);
+      return;
+    }
+    if (key === ".") {
+      inputTrainerCalcDecimal();
+      return;
+    }
+    if (["+", "-", "*", "/"].includes(key)) {
+      commitTrainerCalcOperation(key);
+      return;
+    }
+    if (key === "=") {
+      commitTrainerCalcOperation();
+      return;
+    }
+    if (key === "CE") {
+      clearTrainerCalculator();
+      return;
+    }
+    if (key === "MRC") {
+      memoryRecallClearTrainer();
+      return;
+    }
+    if (key === "M-") {
+      memoryAddTrainer(-1);
+      return;
+    }
+    if (key === "M+") {
+      memoryAddTrainer(1);
+    }
+  };
+
   const prepareCalculatorTrainer = (mode: CalculatorTrainerMode) => {
     setCalculatorMode(mode);
     setCalculatorProblem(createCalculatorProblem(mode));
-    setCalculatorAnswer("");
+    resetTrainerCalculator();
     setCalculatorRunning(false);
     setCalculatorElapsedSeconds(0);
     setCalculatorFeedback(
@@ -3251,6 +3481,7 @@ function SkillsTrainersContent({
   };
 
   const openCalculatorTrainer = () => {
+    setFlaggingOpen(false);
     setCalculatorOpen(true);
     prepareCalculatorTrainer("calibration");
   };
@@ -3258,17 +3489,17 @@ function SkillsTrainersContent({
   const startCalculatorTrainer = (mode = calculatorMode) => {
     setCalculatorMode(mode);
     setCalculatorProblem(createCalculatorProblem(mode));
-    setCalculatorAnswer("");
+    resetTrainerCalculator();
     setCalculatorRunning(true);
     setCalculatorElapsedSeconds(0);
     setCalculatorFeedback(`${getCalculatorModeLabel(mode)} running.`);
   };
 
   const finishCalculatorProblem = () => {
-    if (!calculatorRunning || !calculatorAnswer.trim()) return;
+    if (!calculatorRunning) return;
 
     const elapsed = calculatorElapsedSeconds;
-    const correct = isCloseNumber(calculatorAnswer, calculatorProblem.answer);
+    const correct = isCloseNumber(calcDisplay, calculatorProblem.answer);
     const onTarget = elapsed <= calculatorProblem.targetSeconds;
     setCalculatorTotal((current) => current + 1);
     setCalculatorCorrect((current) => current + (correct ? 1 : 0));
@@ -3283,40 +3514,18 @@ function SkillsTrainersContent({
     setCalculatorElapsedSeconds(elapsed);
   };
 
-  const submitCalculatorAnswer = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    finishCalculatorProblem();
-  };
-
-  const pressCalculatorKey = (key: string) => {
-    if (key === "=") {
-      finishCalculatorProblem();
-      return;
-    }
-    if (!calculatorRunning) return;
-    if (key === "C") {
-      setCalculatorAnswer("");
-      return;
-    }
-    if (key === "Back") {
-      setCalculatorAnswer((current) => current.slice(0, -1));
-      return;
-    }
-    if (key === "+/-") {
-      setCalculatorAnswer((current) => {
-        if (!current) return "-";
-        return current.startsWith("-") ? current.slice(1) : `-${current}`;
-      });
-      return;
-    }
-    setCalculatorAnswer((current) => `${current}${key}`);
-  };
-
   const chooseFlagSection = (section: FlagTrainerSection) => {
     setFlagSection(section);
     setFlagIndex(0);
     setFlagCorrect(0);
     setFlagTotal(0);
+    setFlagChoice(null);
+  };
+
+  const openFlaggingTrainer = () => {
+    setCalculatorOpen(false);
+    setCalculatorRunning(false);
+    setFlaggingOpen(true);
     setFlagChoice(null);
   };
 
@@ -3370,7 +3579,7 @@ function SkillsTrainersContent({
                     Calculator speed trainer
                   </h2>
                   <p className="mt-1 text-xs font-bold text-slate-500">
-                    Timed number-pad entry with a 9-second calibration problem.
+                    Timed calculation using the same calculator and shortcuts as the question bank.
                   </p>
                 </div>
               </div>
@@ -3378,7 +3587,7 @@ function SkillsTrainersContent({
                 {[
                   ["Calibration", "9s"],
                   ["Mode", "Pressure"],
-                  ["Input", "Keypad"],
+                  ["Input", "UCAT calculator"],
                 ].map(([label, value]) => (
                   <div key={label} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <p className="text-xs font-black text-slate-500">{label}</p>
@@ -3403,7 +3612,7 @@ function SkillsTrainersContent({
                     Skills Trainers / Calculator Speed Trainer
                   </p>
                   <h2 className="mt-4 text-2xl font-black text-slate-950">
-                    Numeric pressure pad
+                    Calculator speed trainer
                   </h2>
                   <button
                     type="button"
@@ -3420,7 +3629,7 @@ function SkillsTrainersContent({
                   </button>
                   {calculatorInstructionsOpen && (
                     <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-slate-500">
-                      Start a pressure round, enter only the final answer, then press Enter or the equals key. The calibration calculation is set at 9 seconds.
+                      Start a pressure round, use the calculator exactly as you would in the question bank, then submit the displayed value. Keyboard shortcuts match the question calculator.
                     </p>
                   )}
                 </div>
@@ -3450,12 +3659,12 @@ function SkillsTrainersContent({
                 ))}
               </div>
 
-              <div className="mt-5 grid gap-5 xl:grid-cols-[1fr_320px]">
-                <form onSubmit={submitCalculatorAnswer} className="min-h-[470px] rounded-xl border border-slate-200 bg-white p-5">
+              <div className="mt-5 grid gap-5 xl:grid-cols-[1fr_280px]">
+                <div className="min-h-[470px] rounded-xl border border-slate-200 bg-white p-5">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <p className="text-sm font-black text-slate-950">
-                        Enter the following
+                        Use the calculator to solve
                       </p>
                       <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3 text-4xl font-black leading-none">
                         {calculatorPromptTokens.map((token, index) => (
@@ -3523,48 +3732,44 @@ function SkillsTrainersContent({
                       </div>
                     ))}
                   </div>
-                </form>
+                </div>
 
-                <div className="rounded-xl border border-slate-200 bg-slate-950 p-4 text-white shadow-sm">
-                  <div className="rounded-lg bg-slate-800 p-3">
-                    <p className="text-[11px] font-black uppercase tracking-wide text-cyan-200">
-                      Phloem numeric pad
-                    </p>
-                    <input
-                      value={calculatorAnswer}
-                      onChange={(event) =>
-                        setCalculatorAnswer(event.target.value.replace(/[^0-9.\-]/g, ""))
-                      }
-                      disabled={!calculatorRunning}
-                      inputMode="decimal"
-                      className="mt-3 h-12 w-full rounded-md border border-slate-600 bg-white px-3 text-right text-2xl font-black text-slate-950 outline-none focus:border-cyan-300 disabled:bg-slate-200"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-4 gap-2">
-                    {calculatorKeyRows.flat().map((key) => {
-                      const actionKey = ["Back", "C", "+/-", "="].includes(key);
-                      return (
+                <div className="w-64">
+                  <div className="w-64 rounded-sm border border-slate-700 bg-[#f3f4f6] p-3 text-black shadow-2xl">
+                    <div className="mb-2 flex items-center justify-between">
+                      <p className="text-sm font-bold">Calculator</p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCalculatorRunning(false);
+                          setCalculatorOpen(false);
+                        }}
+                        className="rounded-sm px-2 text-sm font-bold hover:bg-slate-200"
+                      >
+                        x
+                      </button>
+                    </div>
+                    <div className="mb-2 rounded-sm border border-slate-500 bg-white px-2 py-2 text-right font-mono text-2xl">
+                      {calcDisplay}
+                    </div>
+                    <div className="grid grid-cols-4 gap-1.5 text-sm font-bold">
+                      {calculatorButtonRows.flat().map((key) => (
                         <button
                           key={key}
                           type="button"
-                          onClick={() => pressCalculatorKey(key)}
-                          disabled={!calculatorRunning && key !== "="}
-                          className={`h-11 rounded-md text-sm font-black transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
-                            key === "="
-                              ? "bg-blue-600 text-white hover:bg-blue-700"
-                              : actionKey
-                                ? "bg-cyan-700 text-white hover:bg-cyan-600"
-                                : "bg-white text-slate-950 hover:bg-cyan-50"
-                          }`}
+                          onClick={() => pressTrainerCalculatorButton(key)}
+                          disabled={!calculatorRunning}
+                          className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {key}
                         </button>
-                      );
-                    })}
+                      ))}
+                    </div>
+                    <p className="mt-2 text-[11px] font-semibold leading-4 text-slate-600">
+                      Shortcuts: Alt+C closes, / divides, * multiplies, M = M-,
+                      P = M+, C recalls MRC and double C clears memory.
+                    </p>
                   </div>
-
                   <button
                     type="button"
                     onClick={() =>
@@ -3574,9 +3779,9 @@ function SkillsTrainersContent({
                     }
                     className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-lg bg-emerald-500 px-5 text-sm font-black text-white hover:bg-emerald-600"
                   >
-                    {calculatorRunning ? "Submit answer" : "Start timer"}
+                    {calculatorRunning ? "Submit calculator display" : "Start timer"}
                   </button>
-                  <p className="mt-4 rounded-lg border border-slate-700 bg-slate-900 p-3 text-sm font-semibold leading-6 text-slate-200">
+                  <p className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm font-semibold leading-6 text-slate-700">
                     {calculatorFeedback}
                   </p>
                 </div>
@@ -3585,37 +3790,162 @@ function SkillsTrainersContent({
           )}
         </section>
 
-        <section id="flagging" className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
-              <Flag className="h-6 w-6" aria-hidden="true" />
-            </div>
-            <div>
-              <h2 className="text-sm font-black uppercase tracking-wide">
-                Flagging trainer
-              </h2>
-              <p className="mt-1 text-xs font-bold text-slate-500">
-                Pick a section, then tag the hard questions before they drain time.
-              </p>
-            </div>
-          </div>
-          <FlaggingTrainerPanel
-            flagSection={flagSection}
-            currentFlagQuestion={currentFlagQuestion}
-            currentFlagDifficulty={currentFlagDifficulty}
-            flagAnswered={flagAnswered}
-            flagChoice={flagChoice}
-            flagCorrect={flagCorrect}
-            flagTotal={flagTotal}
-            flagWasCorrect={flagWasCorrect}
-            flagIndex={flagIndex}
-            flagQuestionCount={flagTrainerQuestions.length}
-            onChooseFlag={chooseFlag}
-            onChooseSection={chooseFlagSection}
-            onNext={nextFlagScenario}
-          />
+        <section
+          id="flagging"
+          className={`rounded-xl border border-slate-200 bg-white p-5 shadow-sm ${
+            flaggingOpen ? "xl:col-span-2" : ""
+          }`}
+        >
+          {!flaggingOpen ? (
+            <>
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+                  <Flag className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-black uppercase tracking-wide">
+                    Flagging trainer
+                  </h2>
+                  <p className="mt-1 text-xs font-bold text-slate-500">
+                    Open question-style drills, then decide whether each question is hard enough to flag.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                {flagTrainerSections.map((section) => (
+                  <button
+                    key={section.slug}
+                    type="button"
+                    onClick={() => chooseFlagSection(section.slug)}
+                    className={`rounded-xl border p-3 text-left ${
+                      flagSection === section.slug
+                        ? "border-rose-200 bg-rose-50 text-rose-700"
+                        : "border-slate-200 bg-slate-50 text-slate-700 hover:border-rose-200"
+                    }`}
+                  >
+                    <p className="text-sm font-black">{section.code}</p>
+                    <p className="mt-1 text-xs font-bold text-slate-500">
+                      {section.label}
+                    </p>
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={openFlaggingTrainer}
+                className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-rose-600 px-5 text-sm font-black text-white hover:bg-rose-700"
+              >
+                Open questions
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <p className="text-xs font-black text-slate-400">
+                    Skills Trainers / Flagging Trainer
+                  </p>
+                  <h2 className="mt-4 text-2xl font-black text-slate-950">
+                    Question flagging trainer
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-500">
+                    Read the question first, then decide whether it deserves a flag or should be answered now.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setFlaggingOpen(false)}
+                  className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-slate-600 hover:bg-slate-50"
+                >
+                  Back to trainers
+                </button>
+              </div>
+              <FlaggingTrainerPanel
+                flagSection={flagSection}
+                currentFlagQuestion={currentFlagQuestion}
+                currentFlagDifficulty={currentFlagDifficulty}
+                flagAnswered={flagAnswered}
+                flagChoice={flagChoice}
+                flagCorrect={flagCorrect}
+                flagTotal={flagTotal}
+                flagWasCorrect={flagWasCorrect}
+                flagIndex={flagIndex}
+                flagQuestionCount={flagTrainerQuestions.length}
+                onChooseFlag={chooseFlag}
+                onChooseSection={chooseFlagSection}
+                onNext={nextFlagScenario}
+              />
+            </>
+          )}
         </section>
       </div>
+    </div>
+  );
+}
+
+function FlagTrainerQuestionDetails({
+  question,
+}: {
+  question: UCATQuestion;
+}) {
+  return (
+    <div className="space-y-4">
+      <div className="space-y-3 text-sm font-semibold leading-6 text-slate-700">
+        {question.stimulus.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
+      </div>
+      <FlagTrainerVisual visual={question.visual} />
+      {"options" in question && (
+        <div className="space-y-2">
+          {question.options.map((option) => (
+            <div
+              key={option.key}
+              className="grid grid-cols-[32px_1fr] gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold leading-6 text-slate-700"
+            >
+              <span className="font-black text-slate-950">{option.key}.</span>
+              <span>{option.text}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {"yesNoStatements" in question && (
+        <div className="space-y-2">
+          {question.yesNoStatements.map((statement, index) => (
+            <div
+              key={statement.id}
+              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold leading-6 text-slate-700"
+            >
+              {index + 1}. {statement.text}
+            </div>
+          ))}
+        </div>
+      )}
+      {"categoryItems" in question && (
+        <div className="space-y-2">
+          {question.categoryItems.map((item, index) => (
+            <div
+              key={item.id}
+              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold leading-6 text-slate-700"
+            >
+              {index + 1}. {item.text}
+            </div>
+          ))}
+        </div>
+      )}
+      {"dragItems" in question && (
+        <div className="space-y-2">
+          {question.dragItems.map((item, index) => (
+            <div
+              key={item.id}
+              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold leading-6 text-slate-700"
+            >
+              {index + 1}. {item.text}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -3700,39 +4030,36 @@ function FlaggingTrainerPanel({
               </span>
             </div>
 
-            <div className="mt-4 grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-              <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+            <div className="mt-4 grid min-h-[560px] gap-4 xl:grid-cols-[1fr_0.78fr]">
+              <div className="rounded-xl border border-slate-100 bg-slate-50 p-5">
                 <p className="text-xs font-black uppercase tracking-wide text-slate-400">
                   Question {flagQuestionCount > 0 ? (flagIndex % flagQuestionCount) + 1 : 0} of {flagQuestionCount}
                 </p>
                 <h3 className="mt-3 text-base font-black text-slate-950">
                   {currentFlagQuestion.title}
                 </h3>
-                <div className="mt-3 max-h-56 space-y-3 overflow-y-auto pr-2 text-sm font-semibold leading-6 text-slate-700">
-                  {currentFlagQuestion.stimulus.slice(0, 2).map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-                  <FlagTrainerVisual visual={currentFlagQuestion.visual} />
+                <div className="mt-5 max-h-[440px] overflow-y-auto pr-2">
+                  <FlagTrainerQuestionDetails question={currentFlagQuestion} />
                 </div>
               </div>
 
-              <div className="rounded-xl border border-rose-100 bg-rose-50/40 p-4">
+              <div className="rounded-xl border border-rose-100 bg-rose-50/40 p-5">
                 <p className="text-xs font-black uppercase tracking-wide text-rose-600">
-                  Decide fast
+                  Hard or not hard?
                 </p>
-                <p className="mt-3 text-sm font-black leading-6 text-slate-950">
+                <p className="mt-3 text-lg font-black leading-7 text-slate-950">
                   {currentFlagQuestion.question}
                 </p>
                 {"instruction" in currentFlagQuestion && (
-                  <p className="mt-2 text-xs font-semibold leading-5 text-slate-600">
+                  <p className="mt-3 rounded-lg border border-rose-100 bg-white/80 px-3 py-2 text-sm font-semibold leading-6 text-slate-600">
                     {currentFlagQuestion.instruction}
                   </p>
                 )}
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   <button
                     type="button"
                     onClick={() => onChooseFlag(true)}
-                    className="inline-flex h-11 items-center justify-center rounded-lg bg-rose-600 px-5 text-sm font-black text-white hover:bg-rose-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                    className="inline-flex min-h-12 items-center justify-center rounded-lg bg-rose-600 px-5 text-sm font-black text-white hover:bg-rose-700 disabled:cursor-not-allowed disabled:bg-slate-300"
                     disabled={flagAnswered}
                   >
                     Tag as hard
@@ -3740,12 +4067,16 @@ function FlaggingTrainerPanel({
                   <button
                     type="button"
                     onClick={() => onChooseFlag(false)}
-                    className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 bg-white px-5 text-sm font-black text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:bg-slate-100"
+                    className="inline-flex min-h-12 items-center justify-center rounded-lg border border-slate-200 bg-white px-5 text-sm font-black text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:bg-slate-100"
                     disabled={flagAnswered}
                   >
                     Not hard
                   </button>
                 </div>
+                <p className="mt-4 text-xs font-semibold leading-5 text-slate-500">
+                  Judge the question, not whether you know the answer right now.
+                  Hard means it is likely to drain time under exam pressure.
+                </p>
               </div>
             </div>
           </article>
@@ -3870,7 +4201,9 @@ function ProgressContent({
           <div className="mt-5 space-y-3">
             {progressItems.map((item) => {
               const style = sectionStyle(item.code);
-              const percent = Math.round((item.completed / item.total) * 100);
+              const percent =
+                item.total > 0 ? Math.round((item.completed / item.total) * 100) : 0;
+              const allCompleted = item.total > 0 && item.completed >= item.total;
               return (
                 <div
                   key={item.code}
@@ -3906,10 +4239,10 @@ function ProgressContent({
                     </span>
                   </div>
                   <Link
-                    href={item.href}
+                    href={allCompleted ? `${item.href}?review=sets` : item.href}
                     className="mt-3 inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
                   >
-                    Resume bank
+                    {allCompleted ? "Review completed sets" : "Resume bank"}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </div>

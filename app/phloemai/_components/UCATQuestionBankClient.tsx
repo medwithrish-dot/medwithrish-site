@@ -276,6 +276,23 @@ type PracticeSessionSummary = {
   otherData: InterfaceUsageSummary;
   questions: PracticeQuestionSummary[];
 };
+type SavedPracticeSet = {
+  id: string;
+  summary: PracticeSessionSummary;
+  completedAt: string;
+  source: string | null;
+};
+type CompletedQuestionRow = {
+  question_id: string | null;
+  section: string | null;
+};
+type SavedPracticeSessionRow = {
+  id: string;
+  summary: unknown;
+  completed_at: string | null;
+  created_at: string | null;
+  source: string | null;
+};
 
 const QUESTION_TARGETS = [5, 10, 15] as const;
 const MINUTE_TARGETS = [5, 10, 15] as const;
@@ -340,6 +357,43 @@ function getPracticeSource(diagnosticMode: DiagnosticMode | null) {
   if (diagnosticMode === "subset") return SUBSET_DIAGNOSTIC_SOURCE;
 
   return "question_bank";
+}
+
+function normaliseSavedPracticeSet(
+  row: SavedPracticeSessionRow,
+  section: UCATSection
+): SavedPracticeSet | null {
+  if (
+    !row.summary ||
+    typeof row.summary !== "object" ||
+    Array.isArray(row.summary)
+  ) {
+    return null;
+  }
+
+  const summary = row.summary as PracticeSessionSummary;
+  if (summary.section !== section || !Array.isArray(summary.questions)) {
+    return null;
+  }
+
+  return {
+    id: row.id,
+    summary,
+    completedAt: row.completed_at ?? row.created_at ?? summary.completedAt,
+    source: row.source,
+  };
+}
+
+function formatSavedSetDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Saved set";
+
+  return date.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function getDiagnosticTitle(diagnosticMode: DiagnosticMode | null) {
@@ -1749,6 +1803,9 @@ function SectionSetup({
   selectedSubtypeIds,
   questionCount,
   availableCount,
+  completedQuestionIds,
+  savedPracticeSets,
+  progressLoading,
   lengthMode,
   questionTarget,
   minuteTarget,
@@ -1768,7 +1825,9 @@ function SectionSetup({
   onTrackingModeChange,
   onTrackingRingChange,
   onStart,
+  onReviewSavedSet,
   diagnosticMode,
+  reviewMode,
   backHref,
   backLabel,
 }: {
@@ -1779,6 +1838,9 @@ function SectionSetup({
   selectedSubtypeIds: UCATSubtypeId[];
   questionCount: number;
   availableCount: number;
+  completedQuestionIds: Set<string>;
+  savedPracticeSets: SavedPracticeSet[];
+  progressLoading: boolean;
   lengthMode: SessionLengthMode;
   questionTarget: number;
   minuteTarget: number | "custom";
@@ -1798,10 +1860,16 @@ function SectionSetup({
   onTrackingModeChange: (mode: TrackingMode) => void;
   onTrackingRingChange: (visible: boolean) => void;
   onStart: () => void;
+  onReviewSavedSet: (set: SavedPracticeSet) => void;
+  reviewMode?: boolean;
 }) {
   const meta = getUCATSectionMeta(section);
   const subtypes = UCAT_SUBTYPES[section];
-  const allQuestionCount = UCAT_QUESTION_BANK[section].length;
+  const sectionQuestionCount = UCAT_QUESTION_BANK[section].length;
+  const completedCount = UCAT_QUESTION_BANK[section].filter((question) =>
+    completedQuestionIds.has(question.id)
+  ).length;
+  const remainingQuestionCount = Math.max(0, sectionQuestionCount - completedCount);
   const mixedSelected = selectedSubtypeIds.length === 0;
   const selectedMinutes =
     minuteTarget === "custom"
@@ -1837,9 +1905,53 @@ function SectionSetup({
               </p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-black text-slate-700">
-              {questionCount} of {availableCount} questions
+              {progressLoading
+                ? "Loading progress..."
+                : `${questionCount} of ${availableCount} uncompleted questions`}
             </div>
           </div>
+
+          {!diagnosticMode && (
+            <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold leading-6 text-slate-600">
+              {progressLoading
+                ? "Checking your completed questions before building the next set."
+                : reviewMode && savedPracticeSets.length > 0
+                  ? "Review mode: open a completed set below. New practice only uses questions you have not completed yet."
+                : `${completedCount} completed, ${remainingQuestionCount} left in ${meta.code}. Completed questions will not appear again.`}
+            </div>
+          )}
+
+          {!diagnosticMode && savedPracticeSets.length > 0 && (
+            <div className="mt-5 rounded-xl border border-slate-200 bg-white p-4">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="text-sm font-black uppercase tracking-wide text-slate-900">
+                    Completed sets
+                  </h2>
+                  <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                    You can review completed sets, but their questions are locked out of new practice.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-3 grid gap-2 md:grid-cols-2">
+                {savedPracticeSets.slice(0, 6).map((set) => (
+                  <button
+                    key={set.id}
+                    type="button"
+                    onClick={() => onReviewSavedSet(set)}
+                    className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-left hover:border-blue-300 hover:bg-blue-50"
+                  >
+                    <p className="text-sm font-black text-slate-900">
+                      {formatSavedSetDate(set.completedAt)}
+                    </p>
+                    <p className="mt-1 text-xs font-bold text-slate-500">
+                      {set.summary.correctQuestions}/{set.summary.totalQuestions} correct - {set.summary.accuracy}%
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="mt-7">
             <h2 className="text-sm font-black uppercase tracking-wide text-slate-900">
@@ -1859,7 +1971,7 @@ function SectionSetup({
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-sm font-black">Mixed (all)</span>
                   <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-slate-500">
-                    {allQuestionCount}
+                    {diagnosticMode ? sectionQuestionCount : availableCount}
                   </span>
                 </div>
                 <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
@@ -1870,7 +1982,9 @@ function SectionSetup({
               {subtypes.map((subtype) => {
                 const active = selectedSubtypeIds.includes(subtype.id);
                 const count = UCAT_QUESTION_BANK[section].filter(
-                  (question) => question.subtype === subtype.id
+                  (question) =>
+                    question.subtype === subtype.id &&
+                    (diagnosticMode || !completedQuestionIds.has(question.id))
                 ).length;
                 return (
                   <button
@@ -2148,7 +2262,7 @@ function SectionSetup({
           <button
             type="button"
             onClick={onStart}
-            disabled={questionCount === 0 || trackingStarting}
+            disabled={progressLoading || questionCount === 0 || trackingStarting}
             className="mt-7 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           >
             <Play className="h-4 w-4" aria-hidden="true" />
@@ -2156,7 +2270,9 @@ function SectionSetup({
               ? "Starting..."
               : diagnosticMode
                 ? "Start diagnostic"
-                : "Start practice"}
+                : questionCount === 0
+                  ? "No uncompleted questions left"
+                  : "Start practice"}
           </button>
         </section>
       </div>
@@ -4505,11 +4621,13 @@ function MarkedReviewScreen({
 export function UCATQuestionBankClient({
   section,
   diagnosticMode,
+  reviewMode = false,
   backHref,
   backLabel,
 }: {
   section?: string;
   diagnosticMode?: string | null;
+  reviewMode?: boolean;
   backHref?: string;
   backLabel?: string;
 }) {
@@ -4538,9 +4656,10 @@ export function UCATQuestionBankClient({
 
   return (
     <UCATQuestionBankSection
-      key={`${validSection}-${validDiagnosticMode ?? "practice"}`}
+      key={`${validSection}-${validDiagnosticMode ?? "practice"}-${reviewMode ? "review" : "new"}`}
       section={validSection}
       diagnosticMode={validDiagnosticMode}
+      reviewMode={reviewMode}
       backHref={backHref}
       backLabel={backLabel}
     />
@@ -4550,11 +4669,13 @@ export function UCATQuestionBankClient({
 function UCATQuestionBankSection({
   section: validSection,
   diagnosticMode,
+  reviewMode,
   backHref,
   backLabel,
 }: {
   section: UCATSection;
   diagnosticMode: DiagnosticMode | null;
+  reviewMode: boolean;
   backHref?: string;
   backLabel?: string;
 }) {
@@ -4566,6 +4687,11 @@ function UCATQuestionBankSection({
   const [flags, setFlags] = useState<Record<number, boolean>>({});
   const [dragOrder, setDragOrder] = useState<string[]>([]);
   const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
+  const [draggedCategoryId, setDraggedCategoryId] = useState<string | null>(
+    null
+  );
+  const [draggedYesNoValue, setDraggedYesNoValue] =
+    useState<UCATYesNoValue | null>(null);
   const [selectedSubtypeIds, setSelectedSubtypeIds] = useState<UCATSubtypeId[]>(
     []
   );
@@ -4615,6 +4741,15 @@ function UCATQuestionBankSection({
     useState<DiagnosticAiFeedbackState | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [completedQuestionIds, setCompletedQuestionIds] = useState<Set<string>>(
+    () => new Set()
+  );
+  const [savedPracticeSets, setSavedPracticeSets] = useState<SavedPracticeSet[]>(
+    []
+  );
+  const [questionProgressLoading, setQuestionProgressLoading] = useState(
+    !diagnosticMode
+  );
   const trackingEventsRef = useRef<TrackingEvent[]>([]);
   const questionTimingRef = useRef<Record<string, QuestionTiming>>({});
   const questionStartedAtRef = useRef(0);
@@ -4733,17 +4868,112 @@ function UCATQuestionBankSection({
     };
   }, []);
 
+  useEffect(() => {
+    if (diagnosticMode) {
+      setCompletedQuestionIds(new Set());
+      setSavedPracticeSets([]);
+      setQuestionProgressLoading(false);
+      return;
+    }
+
+    let mounted = true;
+
+    async function loadQuestionProgress() {
+      setQuestionProgressLoading(true);
+
+      try {
+        if (!hasSupabaseConfig()) {
+          if (mounted) {
+            setCompletedQuestionIds(new Set());
+            setSavedPracticeSets([]);
+          }
+          return;
+        }
+
+        const supabase = createSupabaseClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!mounted) return;
+
+        if (!user) {
+          setCompletedQuestionIds(new Set());
+          setSavedPracticeSets([]);
+          return;
+        }
+
+        const sectionValues = [validSection, validSection.toUpperCase()];
+
+        const { data: questionRows, error: questionError } = await supabase
+          .from("practice_question_attempts")
+          .select("question_id,section")
+          .eq("user_id", user.id)
+          .in("section", sectionValues)
+          .limit(5000);
+
+        if (questionError) throw questionError;
+
+        const { data: sessionRows, error: sessionError } = await supabase
+          .from("practice_sessions")
+          .select("id,summary,completed_at,created_at,source")
+          .eq("user_id", user.id)
+          .in("section", sectionValues)
+          .order("completed_at", { ascending: false })
+          .limit(50);
+
+        if (sessionError) throw sessionError;
+
+        if (!mounted) return;
+
+        const completedIds = new Set(
+          ((questionRows ?? []) as CompletedQuestionRow[])
+            .map((row) => row.question_id)
+            .filter((questionId): questionId is string => Boolean(questionId))
+        );
+        const savedSets = ((sessionRows ?? []) as SavedPracticeSessionRow[])
+          .map((row) => normaliseSavedPracticeSet(row, validSection))
+          .filter((set): set is SavedPracticeSet => Boolean(set));
+
+        setCompletedQuestionIds(completedIds);
+        setSavedPracticeSets(savedSets);
+      } catch (error) {
+        console.error("Failed to load question progress", error);
+        if (mounted) {
+          setCompletedQuestionIds(new Set());
+          setSavedPracticeSets([]);
+        }
+      } finally {
+        if (mounted) setQuestionProgressLoading(false);
+      }
+    }
+
+    void loadQuestionProgress();
+
+    return () => {
+      mounted = false;
+    };
+  }, [diagnosticMode, validSection]);
+
   const sectionQuestions = useMemo(
     () => UCAT_QUESTION_BANK[validSection],
     [validSection]
   );
 
+  const uncompletedSectionQuestions = useMemo(() => {
+    if (diagnosticMode) return sectionQuestions;
+
+    return sectionQuestions.filter(
+      (question) => !completedQuestionIds.has(question.id)
+    );
+  }, [completedQuestionIds, diagnosticMode, sectionQuestions]);
+
   const availableQuestions = useMemo(() => {
-    if (selectedSubtypeIds.length === 0) return sectionQuestions;
-    return sectionQuestions.filter((question) =>
+    if (selectedSubtypeIds.length === 0) return uncompletedSectionQuestions;
+    return uncompletedSectionQuestions.filter((question) =>
       selectedSubtypeIds.includes(question.subtype)
     );
-  }, [sectionQuestions, selectedSubtypeIds]);
+  }, [selectedSubtypeIds, uncompletedSectionQuestions]);
 
   const fixedDiagnosticQuestions = useMemo(() => {
     if (diagnosticMode === "free-qr") {
@@ -5560,7 +5790,7 @@ function UCATQuestionBankSection({
   };
 
   const startPractice = () => {
-    if (setupQuestionCount === 0) return;
+    if (questionProgressLoading || setupQuestionCount === 0) return;
 
     if (trackingModeChoice === "eye") {
       void attentionTracker.startEyeTracking(() => beginPracticeSession("eye"));
@@ -5698,9 +5928,13 @@ function UCATQuestionBankSection({
         diagnosticMode={diagnosticMode}
         backHref={backHref}
         backLabel={backLabel}
+        reviewMode={reviewMode}
         selectedSubtypeIds={selectedSubtypeIds}
         questionCount={setupQuestionCount}
         availableCount={availableQuestions.length}
+        completedQuestionIds={completedQuestionIds}
+        savedPracticeSets={savedPracticeSets}
+        progressLoading={questionProgressLoading}
         lengthMode={lengthMode}
         questionTarget={questionTarget}
         minuteTarget={minuteTarget}
@@ -5752,6 +5986,7 @@ function UCATQuestionBankSection({
           recordEvent("setup_tracking_ring", { visible });
         }}
         onStart={startPractice}
+        onReviewSavedSet={reviewSavedPracticeSet}
       />
     );
   }
@@ -5773,6 +6008,9 @@ function UCATQuestionBankSection({
   const currentAnswerScore = getAnswerScore(question, currentAnswerForScore);
   const isCorrect = currentAnswerScore.status === "correct";
   const isPartial = currentAnswerScore.status === "partial";
+  const usesClassicDropLayout = isDragCategoryQuestion || isYesNoQuestion;
+  const isSjtDropLayout =
+    isDragCategoryQuestion && question.section === "sjt";
 
   const chooseAnswer = (key: UCATOptionKey, source: "click" | "keyboard" = "click") => {
     if (phase !== "practice" || !isSingleQuestion) return;
@@ -5801,7 +6039,7 @@ function UCATQuestionBankSection({
   const chooseYesNoAnswer = (
     statementId: string,
     value: UCATYesNoValue,
-    source: "click" | "keyboard" = "click"
+    source: "click" | "keyboard" | "drag" = "click"
   ) => {
     if (phase !== "practice" || !isYesNoQuestion) return;
 
@@ -5860,6 +6098,28 @@ function UCATQuestionBankSection({
       questionElapsedMs,
     });
     setRevealed(false);
+  };
+
+  const chooseNextDragCategoryAnswer = (
+    itemId: string,
+    selectedCategory?: string
+  ) => {
+    if (!isDragCategoryQuestion || question.categories.length === 0) return;
+
+    const currentIndex = selectedCategory
+      ? question.categories.findIndex((category) => category.id === selectedCategory)
+      : -1;
+    const nextCategory =
+      question.categories[(currentIndex + 1) % question.categories.length];
+
+    if (nextCategory) chooseDragCategoryAnswer(itemId, nextCategory.id);
+  };
+
+  const chooseNextYesNoAnswer = (
+    statementId: string,
+    currentAnswer?: UCATYesNoValue
+  ) => {
+    chooseYesNoAnswer(statementId, currentAnswer === "Yes" ? "No" : "Yes");
   };
 
   const goToQuestion = (index: number) => {
@@ -5952,6 +6212,48 @@ function UCATQuestionBankSection({
     }
   };
 
+  const reviewSavedPracticeSet = (set: SavedPracticeSet) => {
+    const restoredQuestions: UCATQuestion[] = [];
+    const restoredAnswers: Record<number, PracticeAnswer> = {};
+    const restoredFlags: Record<number, boolean> = {};
+
+    set.summary.questions.forEach((item) => {
+      const restoredQuestion = sectionQuestions.find(
+        (question) => question.id === item.questionId
+      );
+      if (!restoredQuestion) return;
+
+      const nextIndex = restoredQuestions.length;
+      restoredQuestions.push(restoredQuestion);
+      if (item.selectedAnswer) restoredAnswers[nextIndex] = item.selectedAnswer;
+      if (item.flagged) restoredFlags[nextIndex] = true;
+    });
+
+    if (restoredQuestions.length === 0) return;
+
+    commitQuestionTiming();
+    attentionTracker.resetTracker();
+    markedInsightsHistoryActiveRef.current = false;
+    markedSummaryRef.current = set.summary;
+    setMarkedSummary(set.summary);
+    setSessionQuestions(restoredQuestions);
+    setAnswers(restoredAnswers);
+    setFlags(restoredFlags);
+    setQuestionIndex(0);
+    setSelected(
+      typeof restoredAnswers[0] === "string"
+        ? (restoredAnswers[0] as UCATOptionKey)
+        : null
+    );
+    setDragOrder(getDragOrder(restoredQuestions[0], restoredAnswers[0]));
+    setRevealed(true);
+    setNavigatorOpen(false);
+    setStarted(true);
+    phaseRef.current = "marked";
+    setPhase("marked");
+    scrollToQuestionTop();
+  };
+
   const openReview = () => {
     scrollToQuestionTop();
     commitQuestionTiming();
@@ -5998,6 +6300,22 @@ function UCATQuestionBankSection({
     setRevealed(true);
     markedSummaryRef.current = summary;
     setMarkedSummary(summary);
+    if (!diagnosticMode) {
+      setCompletedQuestionIds((current) => {
+        const next = new Set(current);
+        summary.questions.forEach((item) => next.add(item.questionId));
+        return next;
+      });
+      setSavedPracticeSets((current) => [
+        {
+          id: `local-${summary.completedAt}`,
+          summary,
+          completedAt: summary.completedAt,
+          source: "question_bank",
+        },
+        ...current,
+      ]);
+    }
     if (diagnosticMode) {
       phaseRef.current = "diagnostic-complete";
       setNavigatorOpen(false);
@@ -6514,7 +6832,13 @@ function UCATQuestionBankSection({
           className="border-b-2 border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)] md:border-b-0 md:border-r-2"
         >
           <h2 className="sr-only">{question.leftTitle ?? "Information"}</h2>
-          <div className="max-w-4xl space-y-5 text-base leading-6 sm:text-lg">
+          <div
+            className={
+              usesClassicDropLayout
+                ? "max-w-5xl space-y-3 text-[15px] leading-[18px] text-black"
+                : "max-w-4xl space-y-5 text-base leading-6 sm:text-lg"
+            }
+          >
             {question.stimulus.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
@@ -6524,20 +6848,30 @@ function UCATQuestionBankSection({
 
         <section className="px-6 py-5">
           <div ref={questionRegionRef}>
-            <div className="mb-3 flex flex-wrap gap-2">
-              <p className="inline-flex rounded-sm bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">
-                {subtype.label}
-              </p>
-              {currentIssueLabels.map((label) => (
-                <span
-                  key={label}
-                  className="rounded-sm bg-yellow-50 px-2 py-1 text-xs font-black text-yellow-800"
-                >
-                  {label}
-                </span>
-              ))}
-            </div>
-            <p className="text-base leading-6 sm:text-lg">{question.question}</p>
+            {!usesClassicDropLayout && (
+              <div className="mb-3 flex flex-wrap gap-2">
+                <p className="inline-flex rounded-sm bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">
+                  {subtype.label}
+                </p>
+                {currentIssueLabels.map((label) => (
+                  <span
+                    key={label}
+                    className="rounded-sm bg-yellow-50 px-2 py-1 text-xs font-black text-yellow-800"
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
+            )}
+            <p
+              className={
+                usesClassicDropLayout
+                  ? "text-[15px] leading-[18px] text-black"
+                  : "text-base leading-6 sm:text-lg"
+              }
+            >
+              {question.question}
+            </p>
           </div>
 
           {isDragQuestion ? (
@@ -6586,129 +6920,204 @@ function UCATQuestionBankSection({
               </div>
             </div>
           ) : isDragCategoryQuestion ? (
-            <div ref={answersRegionRef} className="mt-6">
-              <p className="rounded-sm border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold leading-6 text-slate-700">
-                {question.instruction}
-              </p>
-              <div className="mt-4 space-y-3">
-                {question.categoryItems.map((item) => {
-                  const selectedCategory = dragCategoryAnswer[item.id];
+            <div ref={answersRegionRef} className="mt-8 max-w-[800px]">
+              <div className="flex items-start gap-4 text-[15px] leading-[18px] text-black max-lg:flex-col">
+                <div className="min-w-0 flex-1 space-y-3">
+                  {question.categoryItems.map((item) => {
+                    const selectedCategory = dragCategoryAnswer[item.id];
+                    const selectedCategoryLabel =
+                      question.categories.find(
+                        (category) => category.id === selectedCategory
+                      )?.label ?? "";
+                    const correct =
+                      answerRevealed &&
+                      selectedCategory === item.answerCategory;
+                    const wrong =
+                      answerRevealed &&
+                      Boolean(selectedCategory) &&
+                      selectedCategory !== item.answerCategory;
+                    const missed = answerRevealed && !selectedCategory;
 
-                  return (
-                    <div
-                      key={item.id}
-                      className="grid gap-3 rounded-sm border border-slate-300 bg-white px-3 py-3 text-base leading-6 sm:grid-cols-[1fr_260px] sm:items-center sm:text-lg"
-                    >
+                    return (
                       <div
-                        draggable={phase === "practice"}
-                        onDragStart={() => setDraggedItemId(item.id)}
-                        className="flex cursor-grab items-center gap-3 active:cursor-grabbing"
+                        key={item.id}
+                        className={`grid gap-3 ${
+                          isSjtDropLayout
+                            ? "sm:grid-cols-[minmax(0,1fr)_98px]"
+                            : "sm:grid-cols-[minmax(0,1fr)_78px]"
+                        }`}
                       >
-                        <GripVertical
-                          className="h-5 w-5 shrink-0 text-slate-500"
-                          aria-hidden="true"
-                        />
-                        <span>{item.text}</span>
+                        <div
+                          className={`flex min-h-[44px] items-center justify-center border px-3 py-2 text-center ${
+                            isSjtDropLayout ? "min-h-[66px]" : ""
+                          } ${
+                            correct
+                              ? "border-emerald-700 bg-emerald-50"
+                              : wrong || missed
+                                ? "border-red-700 bg-red-50"
+                                : "border-black bg-white"
+                          }`}
+                        >
+                          {item.text}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            chooseNextDragCategoryAnswer(
+                              item.id,
+                              selectedCategory
+                            )
+                          }
+                          onDragOver={(event) => event.preventDefault()}
+                          onDrop={() => {
+                            if (draggedCategoryId) {
+                              chooseDragCategoryAnswer(
+                                item.id,
+                                draggedCategoryId,
+                                "drag"
+                              );
+                            }
+                            setDraggedCategoryId(null);
+                          }}
+                          disabled={phase !== "practice"}
+                          aria-label={`Drop answer for ${item.text}`}
+                          className={`flex min-h-[44px] w-full items-center justify-center border px-2 text-center text-[14px] font-normal leading-[16px] ${
+                            isSjtDropLayout
+                              ? "min-h-[66px] bg-[#b9b1b1]"
+                              : "bg-white"
+                          } ${
+                            correct
+                              ? "border-emerald-700 text-emerald-900"
+                              : wrong || missed
+                                ? "border-red-700 text-red-900"
+                                : "border-black text-black"
+                          } disabled:cursor-not-allowed`}
+                        >
+                          {selectedCategoryLabel ? (
+                            selectedCategoryLabel
+                          ) : (
+                            <span className="sr-only">Drop answer here</span>
+                          )}
+                        </button>
                       </div>
-                      <div className="grid gap-2 sm:grid-cols-2">
-                        {question.categories.map((category) => {
-                          const active = selectedCategory === category.id;
-                          const correct =
-                            answerRevealed && item.answerCategory === category.id;
-                          const wrong = answerRevealed && active && !correct;
+                    );
+                  })}
+                </div>
 
-                          return (
-                            <button
-                              key={category.id}
-                              type="button"
-                              onClick={() =>
-                                chooseDragCategoryAnswer(item.id, category.id)
-                              }
-                              onDragOver={(event) => event.preventDefault()}
-                              onDrop={() => {
-                                if (draggedItemId === item.id) {
-                                  chooseDragCategoryAnswer(
-                                    item.id,
-                                    category.id,
-                                    "drag"
-                                  );
-                                }
-                                setDraggedItemId(null);
-                              }}
-                              disabled={phase !== "practice"}
-                              className={`min-h-10 rounded-sm border px-3 py-2 text-sm font-bold ${
-                                correct
-                                  ? "border-emerald-600 bg-emerald-100 text-emerald-800"
-                                  : wrong
-                                    ? "border-red-600 bg-red-100 text-red-800"
-                                    : active
-                                      ? "border-[#0078a8] bg-[#e6f5fb] text-[#00618a]"
-                                      : "border-slate-300 bg-white text-slate-700 hover:border-slate-500"
-                              } disabled:cursor-not-allowed disabled:opacity-80`}
-                            >
-                              {category.label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
+                <div
+                  className={
+                    isSjtDropLayout
+                      ? "w-[128px] shrink-0 border border-black bg-white p-3 max-lg:w-full"
+                      : "w-[96px] shrink-0 border border-black bg-[#cfcfcf] p-2 max-lg:w-full"
+                  }
+                >
+                  <div className={isSjtDropLayout ? "space-y-3" : "space-y-2"}>
+                    {question.categories.map((category) => (
+                      <button
+                        key={category.id}
+                        type="button"
+                        draggable={phase === "practice"}
+                        onDragStart={() => setDraggedCategoryId(category.id)}
+                        onDragEnd={() => setDraggedCategoryId(null)}
+                        disabled={phase !== "practice"}
+                        className={`flex w-full cursor-grab items-center justify-center border border-black bg-white px-2 text-center text-[15px] font-normal leading-[18px] text-black active:cursor-grabbing disabled:cursor-not-allowed ${
+                          isSjtDropLayout ? "min-h-[68px]" : "min-h-[44px]"
+                        }`}
+                      >
+                        {category.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           ) : isYesNoQuestion ? (
-            <div ref={answersRegionRef} className="mt-6 space-y-4">
-              <p className="rounded-sm border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold leading-6 text-slate-700">
-                {question.instruction}
-              </p>
-              {question.yesNoStatements.map((statement) => {
-                const currentAnswer = yesNoAnswer[statement.id] as
-                  | UCATYesNoValue
-                  | undefined;
+            <div ref={answersRegionRef} className="mt-8 max-w-[720px]">
+              <div className="flex items-start gap-4 text-[15px] leading-[18px] text-black max-lg:flex-col">
+                <div className="min-w-0 flex-1 space-y-3">
+                  {question.yesNoStatements.map((statement) => {
+                    const currentAnswer = yesNoAnswer[statement.id] as
+                      | UCATYesNoValue
+                      | undefined;
+                    const correct =
+                      answerRevealed && currentAnswer === statement.answer;
+                    const wrong =
+                      answerRevealed &&
+                      Boolean(currentAnswer) &&
+                      currentAnswer !== statement.answer;
+                    const missed = answerRevealed && !currentAnswer;
 
-                return (
-                  <div
-                    key={statement.id}
-                    className={`grid gap-3 rounded-sm border px-3 py-3 text-base leading-6 sm:grid-cols-[1fr_150px] sm:items-center sm:text-lg ${
-                      answerRevealed && currentAnswer === statement.answer
-                        ? "border-emerald-500 bg-emerald-50"
-                        : answerRevealed && currentAnswer
-                          ? "border-red-500 bg-red-50"
-                          : "border-slate-300 bg-white"
-                    }`}
-                  >
-                    <span>{statement.text}</span>
-                    <div className="grid grid-cols-2 gap-2">
-                      {(["Yes", "No"] as const).map((value) => {
-                        const active = currentAnswer === value;
-                        const correct =
-                          answerRevealed && statement.answer === value;
-                        const wrong = answerRevealed && active && !correct;
+                    return (
+                      <div
+                        key={statement.id}
+                        className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_78px]"
+                      >
+                        <div
+                          className={`flex min-h-[44px] items-center justify-center border px-3 py-2 text-center ${
+                            correct
+                              ? "border-emerald-700 bg-emerald-50"
+                              : wrong || missed
+                                ? "border-red-700 bg-red-50"
+                                : "border-black bg-white"
+                          }`}
+                        >
+                          {statement.text}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            chooseNextYesNoAnswer(statement.id, currentAnswer)
+                          }
+                          onDragOver={(event) => event.preventDefault()}
+                          onDrop={() => {
+                            if (draggedYesNoValue) {
+                              chooseYesNoAnswer(
+                                statement.id,
+                                draggedYesNoValue,
+                                "drag"
+                              );
+                            }
+                            setDraggedYesNoValue(null);
+                          }}
+                          disabled={phase !== "practice"}
+                          aria-label={`Drop Yes or No for ${statement.text}`}
+                          className={`flex min-h-[44px] w-full items-center justify-center border bg-white px-2 text-center text-[15px] font-normal leading-[18px] ${
+                            correct
+                              ? "border-emerald-700 text-emerald-900"
+                              : wrong || missed
+                                ? "border-red-700 text-red-900"
+                                : "border-black text-black"
+                          } disabled:cursor-not-allowed`}
+                        >
+                          {currentAnswer ? (
+                            currentAnswer
+                          ) : (
+                            <span className="sr-only">Drop answer here</span>
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
 
-                        return (
-                          <button
-                            key={value}
-                            type="button"
-                            onClick={() => chooseYesNoAnswer(statement.id, value)}
-                            disabled={phase !== "practice"}
-                            className={`h-10 rounded-sm border text-sm font-bold ${
-                              correct
-                                ? "border-emerald-600 bg-emerald-100 text-emerald-800"
-                                : wrong
-                                  ? "border-red-600 bg-red-100 text-red-800"
-                                  : active
-                                    ? "border-[#0078a8] bg-[#e6f5fb] text-[#00618a]"
-                                    : "border-slate-300 bg-white text-slate-700 hover:border-slate-500"
-                            } disabled:cursor-not-allowed disabled:opacity-80`}
-                          >
-                            {value}
-                          </button>
-                        );
-                      })}
-                    </div>
+                <div className="w-[96px] shrink-0 border border-black bg-[#cfcfcf] p-2 max-lg:w-full">
+                  <div className="space-y-2">
+                    {(["Yes", "No"] as const).map((value) => (
+                      <button
+                        key={value}
+                        type="button"
+                        draggable={phase === "practice"}
+                        onDragStart={() => setDraggedYesNoValue(value)}
+                        onDragEnd={() => setDraggedYesNoValue(null)}
+                        disabled={phase !== "practice"}
+                        className="flex min-h-[44px] w-full cursor-grab items-center justify-center border border-black bg-white px-2 text-center text-[15px] font-normal leading-[18px] text-black active:cursor-grabbing disabled:cursor-not-allowed"
+                      >
+                        {value}
+                      </button>
+                    ))}
                   </div>
-                );
-              })}
+                </div>
+              </div>
             </div>
           ) : isSingleQuestion ? (
             <div ref={answersRegionRef} className="mt-6 space-y-3">
