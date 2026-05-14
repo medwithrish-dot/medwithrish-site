@@ -2,8 +2,27 @@ import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
 import { PremiumDiagnosticLock } from "../../_components/PremiumDiagnosticLock";
 import { UCATQuestionBankClient } from "../../_components/UCATQuestionBankClient";
 
-export default async function Page() {
+type MockOptionsSearchParams = {
+  mock?: string | string[];
+};
+
+function getMockId(searchParams: MockOptionsSearchParams) {
+  return Array.isArray(searchParams.mock)
+    ? searchParams.mock[0]
+    : searchParams.mock;
+}
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<MockOptionsSearchParams>;
+}) {
   const { isPremium } = await getPhloemEntitlements();
   if (!isPremium) return <PremiumDiagnosticLock />;
-  return <UCATQuestionBankClient diagnosticMode="full" />;
+  return (
+    <UCATQuestionBankClient
+      diagnosticMode="full"
+      mockId={getMockId(await searchParams)}
+    />
+  );
 }

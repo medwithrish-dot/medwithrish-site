@@ -2379,10 +2379,10 @@ function DiagnosticContent({
                   ))}
                 </ul>
                 <Link
-                  href="/phloemai/diagnostic/mock-options"
+                  href="/phloemai/diagnostic/mocks"
                   className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-blue-700 shadow-sm transition-colors hover:bg-blue-50"
                 >
-                  Choose mock type
+                  Choose mock
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>
@@ -2630,7 +2630,7 @@ function PracticeContent({
       text: "Run a complete UCAT-style mock when you need a full readiness check.",
       icon: Timer,
       iconClass: "bg-blue-100 text-blue-600",
-      href: "/phloemai/question-bank",
+      href: "/phloemai/diagnostic/mocks",
       cta: "Start mock",
     },
     {
@@ -2638,7 +2638,7 @@ function PracticeContent({
       text: "Short mixed tests for momentum without committing to a full paper.",
       icon: BarChart3,
       iconClass: "bg-violet-100 text-violet-600",
-      href: "/phloemai/question-bank",
+      href: "/phloemai/diagnostic/subset-mock",
       cta: "Start mini mock",
     },
     {

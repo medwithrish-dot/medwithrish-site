@@ -15,9 +15,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.startsWith("http")
+    ? process.env.NEXT_PUBLIC_SITE_URL
+    : process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "https://www.medwithrish.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "MedWithRish",
   description: "Leading medical/dental admissions advice.",
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: [{ url: "/favicon.ico?v=2", sizes: "any" }],
     shortcut: ["/favicon.ico?v=2"],

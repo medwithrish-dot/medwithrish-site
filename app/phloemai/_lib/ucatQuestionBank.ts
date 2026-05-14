@@ -18,6 +18,12 @@ import {
   ROUND_THREE_SJT_QUESTIONS,
   ROUND_THREE_VR_QUESTIONS,
 } from "./generatedUcatQuestionsRound3";
+import {
+  ROUND_FOUR_DM_QUESTIONS,
+  ROUND_FOUR_QR_QUESTIONS,
+  ROUND_FOUR_SJT_QUESTIONS,
+  ROUND_FOUR_VR_QUESTIONS,
+} from "./generatedUcatQuestionsRound4";
 import { SJT_QUESTIONS } from "./ucatSjtQuestions";
 
 // Future generated-bank work should first read ./ucatQuestionDesignNotes.md.
@@ -857,12 +863,14 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     ...GENERATED_VR_QUESTIONS,
     ...ROUND_TWO_VR_QUESTIONS,
     ...ROUND_THREE_VR_QUESTIONS,
+    ...ROUND_FOUR_VR_QUESTIONS,
   ],
   dm: [
     ...ORIGINAL_DM_QUESTIONS,
     ...GENERATED_DM_QUESTIONS,
     ...ROUND_TWO_DM_QUESTIONS,
     ...ROUND_THREE_DM_QUESTIONS,
+    ...ROUND_FOUR_DM_QUESTIONS,
     {
       id: "dm-syllogisms-001",
       section: "dm",
@@ -1356,6 +1364,7 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     ...GENERATED_QR_QUESTIONS,
     ...ROUND_TWO_QR_QUESTIONS,
     ...ROUND_THREE_QR_QUESTIONS,
+    ...ROUND_FOUR_QR_QUESTIONS,
     {
       id: "qr-graphs-001",
       section: "qr",
@@ -2197,6 +2206,7 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     ...GENERATED_SJT_QUESTIONS,
     ...ROUND_TWO_SJT_QUESTIONS,
     ...ROUND_THREE_SJT_QUESTIONS,
+    ...ROUND_FOUR_SJT_QUESTIONS,
   ],
 };
 

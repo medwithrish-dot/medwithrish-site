@@ -4,6 +4,7 @@ import { UCAT_SECTIONS } from "../../_lib/ucatQuestionBank";
 type QuestionBankSectionSearchParams = {
   diagnostic?: string | string[];
   review?: string | string[];
+  mock?: string | string[];
 };
 
 function getDiagnosticMode(searchParams: QuestionBankSectionSearchParams) {
@@ -20,6 +21,14 @@ function getReviewMode(searchParams: QuestionBankSectionSearchParams) {
     : searchParams.review;
 
   return value === "sets";
+}
+
+function getMockId(searchParams: QuestionBankSectionSearchParams) {
+  const value = Array.isArray(searchParams.mock)
+    ? searchParams.mock[0]
+    : searchParams.mock;
+
+  return value;
 }
 
 export function generateStaticParams() {
@@ -40,6 +49,7 @@ export default async function Page({
       section={section}
       diagnosticMode={getDiagnosticMode(resolvedSearchParams)}
       reviewMode={getReviewMode(resolvedSearchParams)}
+      mockId={getMockId(resolvedSearchParams)}
     />
   );
 }
