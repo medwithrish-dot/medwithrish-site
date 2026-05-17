@@ -2727,8 +2727,12 @@ function PracticeContent({
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+      <section className="relative overflow-hidden rounded-xl border border-amber-200 bg-gradient-to-br from-amber-50/70 via-white to-white p-6 shadow-[0_16px_36px_rgba(180,122,32,0.14)] ring-1 ring-amber-100/80">
+        <div
+          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400"
+          aria-hidden="true"
+        />
+        <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex gap-5">
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-600">
               <Zap className="h-8 w-8" aria-hidden="true" />
@@ -2962,7 +2966,7 @@ function PracticeContent({
   );
 }
 
-type CalculatorTrainerMode = "calibration" | "speed" | "multi-step";
+type CalculatorTrainerMode = "calibration" | "multi-step";
 type CalculatorPromptNumberStatus =
   | "idle"
   | "active-correct"
@@ -2977,8 +2981,8 @@ type CalculatorTrainerProblem = {
 };
 
 const initialCalculatorProblem: CalculatorTrainerProblem = {
-  prompt: "15 + 4661 + 29 - 7035",
-  answer: -2330,
+  prompt: "84 + 1327 - 496 + 58",
+  answer: 973,
   hint: "Calibration target: 9 seconds.",
   targetSeconds: 9,
 };
@@ -2991,65 +2995,58 @@ function createCalculatorProblem(
   mode: CalculatorTrainerMode
 ): CalculatorTrainerProblem {
   if (mode === "calibration") {
-    return initialCalculatorProblem;
-  }
-
-  if (mode === "multi-step") {
-    const repeated = randomInt(12, 38);
-    const divisor = randomInt(2, 5);
-    const multiplier = divisor * randomInt(2, 7);
-    const extra = divisor * randomInt(8, 30);
-    const answer = (repeated * multiplier + extra) / divisor;
+    const a = randomInt(25, 180);
+    const b = randomInt(700, 4800);
+    const c = randomInt(20, 190);
+    const d = randomInt(350, 4200);
 
     return {
-      prompt: `(${repeated} x ${multiplier} + ${extra}) / ${divisor}`,
-      answer,
-      hint: `Repeated number: ${repeated}. Store it with MRC/M+ style memory if you are using the on-screen calculator.`,
-      targetSeconds: 14,
-    };
-  }
-
-  const type = randomInt(1, 4);
-  if (type === 1) {
-    const a = randomInt(11, 89);
-    const b = randomInt(1200, 7600);
-    const c = randomInt(12, 95);
-    const d = randomInt(900, 7200);
-    return {
-      prompt: `${a} + ${b} + ${c} - ${d}`,
-      answer: a + b + c - d,
-      hint: "Use the number pad rhythm first; clean entry beats correction.",
+      prompt: `${a} + ${b} - ${d} + ${c}`,
+      answer: a + b - d + c,
+      hint: "Calibration target: 9 seconds.",
       targetSeconds: 9,
     };
   }
-  if (type === 2) {
-    const percent = randomInt(8, 32);
-    const base = randomInt(12, 40) * 10;
+
+  const type = randomInt(1, 3);
+  if (type === 1) {
+    const a = randomInt(12, 39);
+    const b = randomInt(14, 68);
+    const c = randomInt(8, 27);
+    const d = randomInt(18, 74);
+
     return {
-      prompt: `${percent}% of ${base}`,
-      answer: (percent / 100) * base,
-      hint: "Keyboard entry usually beats clicking the calculator buttons.",
-      targetSeconds: 10,
+      prompt: `${a} x ${b} + ${c} x ${d}`,
+      answer: a * b + c * d,
+      hint: "Two products, then one final add. Use M+ to bank a product if that feels cleaner.",
+      targetSeconds: 16,
     };
   }
-  if (type === 3) {
-    const a = randomInt(16, 49);
-    const b = randomInt(6, 19);
+  if (type === 2) {
+    const a = randomInt(18, 55);
+    const b = randomInt(12, 45);
+    const c = randomInt(6, 22);
+    const d = randomInt(20, 85);
+
     return {
-      prompt: `${a} x ${b}`,
-      answer: a * b,
-      hint: "Use number keys, =, then Enter to submit so the motion becomes automatic.",
-      targetSeconds: 8,
+      prompt: `${a} x ${b} - ${c} x ${d}`,
+      answer: a * b - c * d,
+      hint: "Calculate both products first, then subtract the second from the first.",
+      targetSeconds: 16,
     };
   }
 
-  const numerator = randomInt(18, 84);
-  const denominator = randomInt(2, 9);
+  const a = randomInt(9, 34);
+  const b = randomInt(15, 62);
+  const c = randomInt(120, 680);
+  const d = randomInt(7, 28);
+  const e = randomInt(3, 16);
+
   return {
-    prompt: `${numerator * denominator} / ${denominator}`,
-    answer: numerator,
-    hint: "Scan for simplifications before committing to full calculation.",
-    targetSeconds: 7,
+    prompt: `${a} x ${b} + ${c} - ${d} x ${e}`,
+    answer: a * b + c - d * e,
+    hint: "Handle the multiplications as separate chunks, then combine the add/subtract terms.",
+    targetSeconds: 18,
   };
 }
 
@@ -3119,8 +3116,7 @@ function formatTrainerClock(seconds: number) {
 
 function getCalculatorModeLabel(mode: CalculatorTrainerMode) {
   if (mode === "calibration") return "9-second calibration";
-  if (mode === "multi-step") return "Multi-step pressure";
-  return "Speed pressure";
+  return "Multi-step calculations";
 }
 
 function calculateTrainerValue(stored: number, current: number, operator: string) {
@@ -3287,6 +3283,7 @@ function SkillsTrainersContent({
   const [calcWaiting, setCalcWaiting] = useState(false);
   const [calcMemory, setCalcMemory] = useState(0);
   const [lastMrcAt, setLastMrcAt] = useState(0);
+  const lastCalculatorPromptRef = useRef(initialCalculatorProblem.prompt);
   const [calculatorNumberStatuses, setCalculatorNumberStatuses] = useState<
     CalculatorPromptNumberStatus[]
   >(() => getCalculatorPromptNumbers(initialCalculatorProblem.prompt).map(() => "idle"));
@@ -3575,6 +3572,21 @@ function SkillsTrainersContent({
     resetCalculatorPromptProgress(problem);
   };
 
+  const createFreshCalculatorProblem = (mode: CalculatorTrainerMode) => {
+    let nextProblem = createCalculatorProblem(mode);
+
+    for (
+      let attempts = 0;
+      attempts < 6 && nextProblem.prompt === lastCalculatorPromptRef.current;
+      attempts += 1
+    ) {
+      nextProblem = createCalculatorProblem(mode);
+    }
+
+    lastCalculatorPromptRef.current = nextProblem.prompt;
+    return nextProblem;
+  };
+
   const clearTrainerCalculator = () => {
     resetTrainerCalculator();
   };
@@ -3672,7 +3684,7 @@ function SkillsTrainersContent({
   };
 
   const prepareCalculatorTrainer = (mode: CalculatorTrainerMode) => {
-    const nextProblem = createCalculatorProblem(mode);
+    const nextProblem = createFreshCalculatorProblem(mode);
     setCalculatorMode(mode);
     setCalculatorProblem(nextProblem);
     resetTrainerCalculator(nextProblem);
@@ -3680,8 +3692,8 @@ function SkillsTrainersContent({
     setCalculatorElapsedSeconds(0);
     setCalculatorFeedback(
       mode === "calibration"
-        ? "Ready for the 9-second calibration calculation."
-        : "Ready. Start when you want the pressure timer to begin."
+        ? "Ready for a fresh 9-second calibration calculation."
+        : "Ready for a fresh multi-step calculation."
     );
   };
 
@@ -3692,13 +3704,13 @@ function SkillsTrainersContent({
   };
 
   const startCalculatorTrainer = (mode = calculatorMode) => {
-    const nextProblem = createCalculatorProblem(mode);
+    const nextProblem = createFreshCalculatorProblem(mode);
     setCalculatorMode(mode);
     setCalculatorProblem(nextProblem);
     resetTrainerCalculator(nextProblem);
     setCalculatorRunning(true);
     setCalculatorElapsedSeconds(0);
-    setCalculatorFeedback(`${getCalculatorModeLabel(mode)} running.`);
+    setCalculatorFeedback(`${getCalculatorModeLabel(mode)} running with a new calculation.`);
   };
 
   const finishCalculatorProblem = () => {
@@ -3834,13 +3846,13 @@ function SkillsTrainersContent({
               </div>
 
               <div className="mt-6 flex flex-wrap gap-2">
-                {(["calibration", "speed", "multi-step"] as const).map((mode) => (
+                {(["calibration", "multi-step"] as const).map((mode) => (
                   <button
                     key={mode}
                     type="button"
-                    onClick={() => startCalculatorTrainer(mode)}
+                    onClick={() => prepareCalculatorTrainer(mode)}
                     className={`rounded-lg px-4 py-2 text-xs font-black ${
-                      calculatorMode === mode && calculatorRunning
+                      calculatorMode === mode
                         ? "bg-blue-600 text-white"
                         : "border border-slate-200 bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-600"
                     }`}
@@ -3979,9 +3991,18 @@ function SkillsTrainersContent({
                         ? finishCalculatorProblem()
                         : startCalculatorTrainer(calculatorMode)
                     }
-                    className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-lg bg-emerald-500 px-5 text-sm font-black text-white hover:bg-emerald-600"
+                    className={`mt-4 inline-flex h-14 w-full items-center justify-center gap-2 rounded-xl px-5 text-base font-black text-white shadow-lg ring-4 transition-colors ${
+                      calculatorRunning
+                        ? "bg-emerald-600 shadow-emerald-100 ring-emerald-100 hover:bg-emerald-700"
+                        : "bg-blue-600 shadow-blue-100 ring-blue-100 hover:bg-blue-700"
+                    }`}
                   >
-                    {calculatorRunning ? "Submit calculator display" : "Start timer"}
+                    <Timer className="h-5 w-5" aria-hidden="true" />
+                    {calculatorRunning
+                      ? "Submit answer"
+                      : calculatorTotal > 0
+                        ? "Start next calculation"
+                        : "Start trainer"}
                   </button>
                   <p className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm font-semibold leading-6 text-slate-700">
                     {calculatorFeedback}
@@ -4338,7 +4359,15 @@ function ProgressContent({
   checkoutLoading,
   onUpgrade,
   practiceStats,
-}: PremiumGateProps & { practiceStats: PracticeStats }) {
+  latestDiagnostic,
+  completedDashboardTaskIds,
+  removedDashboardTaskIds,
+}: PremiumGateProps & {
+  practiceStats: PracticeStats;
+  latestDiagnostic: DashboardDiagnostic | null;
+  completedDashboardTaskIds: Set<string>;
+  removedDashboardTaskIds: Set<string>;
+}) {
   const progressItems = getQuestionBankProgress(practiceStats);
   const bankCompleted = progressItems.reduce(
     (sum, item) => sum + item.completed,
@@ -4346,27 +4375,88 @@ function ProgressContent({
   );
   const bankTotal = progressItems.reduce((sum, item) => sum + item.total, 0);
   const bankPercent = bankTotal > 0 ? Math.round((bankCompleted / bankTotal) * 100) : 0;
+  const studyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
+  const completedOrClearedTaskIds = new Set([
+    ...completedDashboardTaskIds,
+    ...removedDashboardTaskIds,
+  ]);
+  const tickedStudyPlanTasks = studyPlanTasks.filter((task) =>
+    completedOrClearedTaskIds.has(task.id)
+  );
+  const taskProgressPercent =
+    studyPlanTasks.length > 0
+      ? Math.round((tickedStudyPlanTasks.length / studyPlanTasks.length) * 100)
+      : 0;
+  const activePracticeDays = practiceStats.questionCalendarDays.filter(
+    (day) => day.questions > 0
+  );
+  const maxDailyQuestions = Math.max(
+    1,
+    ...practiceStats.questionCalendarDays.map((day) => day.questions)
+  );
+  const sectionImprovementItems = sectionCodes.flatMap((code) => {
+    const answered = practiceStats.sectionAnswered[code];
+    if (answered === 0) return [];
+    const correct = practiceStats.sectionCorrect[code];
+    return [
+      {
+        title: `${code} accuracy`,
+        text: `${correct}/${answered} answered questions correct.`,
+        href: `/phloemai/question-bank/${code.toLowerCase()}`,
+      },
+    ];
+  });
+  const recentImprovementItems = [
+    ...tickedStudyPlanTasks.slice(0, 3).map((task) => ({
+      title: task.title,
+      text: task.fix,
+      href: task.href,
+    })),
+    ...sectionImprovementItems,
+  ].slice(0, 5);
+  const progressStatCards = [
+    {
+      label: "Accuracy",
+      value: practiceStats.hasCompletedQuestions
+        ? `${practiceStats.accuracy}%`
+        : "-",
+      helper: practiceStats.hasCompletedQuestions
+        ? "From saved question attempts"
+        : "No saved practice yet",
+    },
+    {
+      label: "Average time / question",
+      value: practiceStats.hasCompletedQuestions
+        ? `${practiceStats.avgSeconds}s`
+        : "-",
+      helper: practiceStats.hasCompletedQuestions
+        ? "Across answered practice questions"
+        : "No timed answers yet",
+    },
+    {
+      label: "Study plan tasks",
+      value:
+        studyPlanTasks.length > 0
+          ? `${tickedStudyPlanTasks.length}/${studyPlanTasks.length}`
+          : "0/0",
+      helper:
+        studyPlanTasks.length > 0
+          ? `${taskProgressPercent}% ticked off`
+          : "Run a diagnostic to create tasks",
+    },
+  ];
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
       <div className="grid gap-4 lg:grid-cols-3">
-        {[
-          ["Accuracy", practiceStats.hasCompletedQuestions ? `${practiceStats.accuracy}%` : "-"],
-          [
-            "Average time / question",
-            practiceStats.hasCompletedQuestions ? `${practiceStats.avgSeconds}s` : "-",
-          ],
-          ["Tasks completed", "0"],
-        ].map(([label, value]) => (
-          <div key={label} className="rounded-xl border border-slate-200 bg-white p-4">
-            <p className="text-xs font-black text-slate-700">{label}</p>
+        {progressStatCards.map((card) => (
+          <div key={card.label} className="rounded-xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-black text-slate-700">{card.label}</p>
             <p className="mt-2 text-3xl font-black leading-none text-slate-400">
-              {value}
+              {card.value}
             </p>
             <p className="mt-2 text-xs font-bold text-slate-400">
-              {practiceStats.hasCompletedQuestions
-                ? "From saved question attempts"
-                : "No saved practice yet"}
+              {card.helper}
             </p>
           </div>
         ))}
@@ -4377,20 +4467,61 @@ function ProgressContent({
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-black">PhloemAI mock history</h2>
+                <h2 className="text-sm font-black">Practice activity</h2>
                 <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
               </div>
               <p className="mt-1 text-xs font-bold text-slate-500">
-                Empty until mock or practice results are saved.
+                {bankCompleted} completed questions across {activePracticeDays.length} active day{activePracticeDays.length === 1 ? "" : "s"} in {practiceStats.monthLabel}.
               </p>
             </div>
+            <span className="w-fit rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-600">
+              {practiceStats.monthLabel}
+            </span>
           </div>
 
-          <div className="mt-5 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-12 text-center">
-            <p className="text-sm font-black text-slate-700">No chart data yet.</p>
-            <p className="mt-2 text-xs font-semibold text-slate-500">
-              This will use saved practice sessions once they exist.
-            </p>
+          <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+            {activePracticeDays.length === 0 ? (
+              <div className="py-8 text-center">
+                <p className="text-sm font-black text-slate-700">
+                  0 saved attempts this month.
+                </p>
+                <Link
+                  href="/phloemai/practice"
+                  className="mt-3 inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+                >
+                  Start a practice set
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
+            ) : (
+              <>
+                <div className="flex h-36 items-end gap-1">
+                  {practiceStats.questionCalendarDays.map((day) => (
+                    <div
+                      key={day.day}
+                      className="flex min-w-0 flex-1 flex-col items-center gap-1"
+                    >
+                      <div
+                        className={`w-full rounded-t ${
+                          day.questions > 0 ? "bg-blue-500" : "bg-slate-200"
+                        }`}
+                        style={{
+                          height: `${Math.max(
+                            day.questions > 0 ? 8 : 2,
+                            (day.questions / maxDailyQuestions) * 100
+                          )}%`,
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 flex items-center justify-between text-xs font-bold text-slate-500">
+                  <span>Day 1</span>
+                  <span>{bankCompleted} questions completed</span>
+                  <span>Today</span>
+                </div>
+              </>
+            )}
           </div>
         </section>
 
@@ -4477,23 +4608,64 @@ function ProgressContent({
           description="Premium shows the exact tasks improving, what still needs work and the actions driving score gains."
         >
           <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm font-black">Study plan progress</h2>
-              <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm font-black">Study plan progress</h2>
+                <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+              </div>
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700">
+                {taskProgressPercent}%
+              </span>
             </div>
-            <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
-              <p className="text-sm font-black text-slate-700">
-                No study plan progress yet.
-              </p>
-              <p className="mt-2 text-xs font-semibold text-slate-500">
-                Premium study plan progress will be based on saved practice sessions.
-              </p>
+            <p className="mt-2 text-xs font-bold text-slate-500">
+              {tickedStudyPlanTasks.length} of {studyPlanTasks.length} tasks ticked off.
+            </p>
+            <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200">
+              <div
+                className="h-full rounded-full bg-emerald-500"
+                style={{ width: `${taskProgressPercent}%` }}
+              />
             </div>
+            {tickedStudyPlanTasks.length === 0 ? (
+              <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+                <p className="text-sm font-black text-slate-700">
+                  No tasks ticked off yet.
+                </p>
+                <p className="mt-2 text-xs font-semibold text-slate-500">
+                  Tick tasks on the dashboard and they will appear here.
+                </p>
+              </div>
+            ) : (
+              <div className="mt-4 space-y-3">
+                {tickedStudyPlanTasks.map((task) => {
+                  const Icon = task.icon;
+                  return (
+                    <Link
+                      key={task.id}
+                      href={task.href}
+                      className="flex items-start gap-3 rounded-xl border border-emerald-100 bg-emerald-50/50 p-3 transition-colors hover:border-emerald-200 hover:bg-emerald-50"
+                    >
+                      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${task.iconClass}`}>
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="text-sm font-black text-slate-950">
+                          {task.title}
+                        </h3>
+                        <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                          {task.fix}
+                        </p>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
             <Link
-              href="/phloemai/report"
+              href="/phloemai/dashboard"
               className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
             >
-              View all study plan insights
+              Back to dashboard tasks
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </section>
@@ -4507,23 +4679,50 @@ function ProgressContent({
           description="Premium keeps the full timeline of meaningful changes, timing shifts and section-level movement."
         >
           <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm font-black">Recent improvements</h2>
-              <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm font-black">Recent improvements</h2>
+                <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+              </div>
+              <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-600">
+                {recentImprovementItems.length}
+              </span>
             </div>
-            <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
-              <p className="text-sm font-black text-slate-700">
-                No improvement history yet.
-              </p>
-              <p className="mt-2 text-xs font-semibold text-slate-500">
-                This timeline will populate from real saved attempts.
-              </p>
-            </div>
+            {recentImprovementItems.length === 0 ? (
+              <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+                <p className="text-sm font-black text-slate-700">
+                  No completed tasks or saved answers yet.
+                </p>
+                <p className="mt-2 text-xs font-semibold text-slate-500">
+                  Tick off study-plan tasks or complete practice questions to populate this card.
+                </p>
+              </div>
+            ) : (
+              <div className="mt-4 space-y-3">
+                {recentImprovementItems.map((item, index) => (
+                  <Link
+                    key={`${item.title}-${index}`}
+                    href={item.href}
+                    className="flex items-start justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 transition-colors hover:border-blue-200 hover:bg-blue-50/60"
+                  >
+                    <div>
+                      <h3 className="text-sm font-black text-slate-950">
+                        {item.title}
+                      </h3>
+                      <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                        {item.text}
+                      </p>
+                    </div>
+                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
+                  </Link>
+                ))}
+              </div>
+            )}
             <Link
               href="/phloemai/question-bank"
               className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
             >
-              View all activity
+              Open practice activity
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </section>
@@ -4997,6 +5196,8 @@ function DashboardSubpageContent({
   checkoutLoading,
   practiceStats,
   latestDiagnostic,
+  completedDashboardTaskIds,
+  removedDashboardTaskIds,
   diagnosticCredits,
   onUpgrade,
   onLogout,
@@ -5009,6 +5210,8 @@ function DashboardSubpageContent({
   checkoutLoading: boolean;
   practiceStats: PracticeStats;
   latestDiagnostic: DashboardDiagnostic | null;
+  completedDashboardTaskIds: Set<string>;
+  removedDashboardTaskIds: Set<string>;
   diagnosticCredits: number;
   onUpgrade: () => void;
   onLogout: () => void;
@@ -5036,6 +5239,9 @@ function DashboardSubpageContent({
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
         practiceStats={practiceStats}
+        latestDiagnostic={latestDiagnostic}
+        completedDashboardTaskIds={completedDashboardTaskIds}
+        removedDashboardTaskIds={removedDashboardTaskIds}
       />
     );
   }
@@ -5567,6 +5773,9 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const [completedDashboardTaskIds, setCompletedDashboardTaskIds] = useState<
     Set<string>
   >(() => new Set());
+  const [removedDashboardTaskIds, setRemovedDashboardTaskIds] = useState<
+    Set<string>
+  >(() => new Set());
   const [practiceStats, setPracticeStats] = useState<PracticeStats>(() =>
     createEmptyPracticeStats()
   );
@@ -5581,9 +5790,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const dashboardTaskStorageKey = latestDiagnostic?.completedAt
     ? `phloemai-dashboard-tasks:${latestDiagnostic.completedAt}`
     : "phloemai-dashboard-tasks:empty";
+  const dashboardRemovedTaskStorageKey = `${dashboardTaskStorageKey}:removed`;
 
   useEffect(() => {
-    const loadTaskTicks = window.setTimeout(() => {
+    const loadTaskState = window.setTimeout(() => {
       try {
         const saved = window.localStorage.getItem(dashboardTaskStorageKey);
         const taskIds = saved ? (JSON.parse(saved) as unknown) : [];
@@ -5597,10 +5807,24 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       } catch {
         setCompletedDashboardTaskIds(new Set());
       }
+
+      try {
+        const saved = window.localStorage.getItem(dashboardRemovedTaskStorageKey);
+        const taskIds = saved ? (JSON.parse(saved) as unknown) : [];
+        setRemovedDashboardTaskIds(
+          new Set(
+            Array.isArray(taskIds)
+              ? taskIds.filter((id) => typeof id === "string")
+              : []
+          )
+        );
+      } catch {
+        setRemovedDashboardTaskIds(new Set());
+      }
     }, 0);
 
-    return () => window.clearTimeout(loadTaskTicks);
-  }, [dashboardTaskStorageKey]);
+    return () => window.clearTimeout(loadTaskState);
+  }, [dashboardTaskStorageKey, dashboardRemovedTaskStorageKey]);
 
   const toggleDashboardTask = useCallback(
     (taskId: string) => {
@@ -5625,6 +5849,43 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       });
     },
     [dashboardTaskStorageKey]
+  );
+
+  const removeDashboardTask = useCallback(
+    (taskId: string) => {
+      setRemovedDashboardTaskIds((current) => {
+        const next = new Set(current);
+        next.add(taskId);
+
+        try {
+          window.localStorage.setItem(
+            dashboardRemovedTaskStorageKey,
+            JSON.stringify(Array.from(next))
+          );
+        } catch {
+          // Ignore private browsing or storage quota failures.
+        }
+
+        return next;
+      });
+
+      setCompletedDashboardTaskIds((current) => {
+        const next = new Set(current);
+        next.add(taskId);
+
+        try {
+          window.localStorage.setItem(
+            dashboardTaskStorageKey,
+            JSON.stringify(Array.from(next))
+          );
+        } catch {
+          // Ignore private browsing or storage quota failures.
+        }
+
+        return next;
+      });
+    },
+    [dashboardRemovedTaskStorageKey, dashboardTaskStorageKey]
   );
 
   useEffect(() => {
@@ -6023,9 +6284,18 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       ? dashboardSectionAccuracyScores
       : dashboardSectionProgressScores;
   const dashboardStudyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
-  const completedDashboardTaskCount = dashboardStudyPlanTasks.filter((task) =>
+  const visibleDashboardStudyPlanTasks = dashboardStudyPlanTasks.filter(
+    (task) => !removedDashboardTaskIds.has(task.id)
+  );
+  const completedDashboardTaskCount = visibleDashboardStudyPlanTasks.filter((task) =>
     completedDashboardTaskIds.has(task.id)
   ).length;
+  const dashboardTaskBadgeText =
+    dashboardStudyPlanTasks.length === 0
+      ? "Awaiting study plan"
+      : visibleDashboardStudyPlanTasks.length === 0
+        ? "Tasks cleared"
+        : `${completedDashboardTaskCount}/${visibleDashboardStudyPlanTasks.length} done`;
   const progressSummaryText = practiceStats.hasCompletedQuestions
     ? "From saved question attempts"
     : "No completed questions yet";
@@ -6297,7 +6567,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               practiceStats={practiceStats}
             />
 
-            <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <section className="self-start rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <h2 className="text-sm font-black uppercase tracking-wide">
@@ -6314,9 +6584,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                       : "bg-amber-50 text-amber-700"
                   }`}
                 >
-                  {dashboardStudyPlanTasks.length > 0
-                    ? `${completedDashboardTaskCount}/${dashboardStudyPlanTasks.length} done`
-                    : "Awaiting study plan"}
+                  {dashboardTaskBadgeText}
                 </span>
               </div>
               <div className="mt-4 space-y-3">
@@ -6356,8 +6624,12 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                       </Link>
                     </div>
                   </div>
+                ) : visibleDashboardStudyPlanTasks.length === 0 ? (
+                  <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-4 text-xs font-bold leading-5 text-emerald-700">
+                    Completed tasks have been cleared from this dashboard.
+                  </div>
                 ) : (
-                dashboardStudyPlanTasks.map((task) => {
+                visibleDashboardStudyPlanTasks.map((task) => {
                   const Icon = task.icon;
                   const completed = completedDashboardTaskIds.has(task.id);
                   return (
@@ -6366,22 +6638,33 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                       className={`flex items-center gap-3 rounded-xl border p-3 ${
                         completed
                           ? "border-emerald-100 bg-emerald-50/60"
-                          : "border-slate-100 bg-white"
+                        : "border-slate-100 bg-white"
                       }`}
                     >
-                      <button
-                        type="button"
-                        onClick={() => toggleDashboardTask(task.id)}
-                        aria-pressed={completed}
-                        aria-label={`${completed ? "Untick" : "Tick off"} ${task.title}`}
-                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border text-sm transition-colors ${
-                          completed
-                            ? "border-emerald-500 bg-emerald-500 text-white"
-                            : "border-slate-200 bg-white text-slate-300 hover:border-emerald-300 hover:text-emerald-500"
-                        }`}
-                      >
-                        <Check className="h-5 w-5" aria-hidden="true" />
-                      </button>
+                      <div className="flex w-12 shrink-0 flex-col items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => toggleDashboardTask(task.id)}
+                          aria-pressed={completed}
+                          aria-label={`${completed ? "Untick" : "Tick off"} ${task.title}`}
+                          className={`flex h-9 w-9 items-center justify-center rounded-lg border text-sm transition-colors ${
+                            completed
+                              ? "border-emerald-500 bg-emerald-500 text-white"
+                              : "border-slate-200 bg-white text-slate-300 hover:border-emerald-300 hover:text-emerald-500"
+                          }`}
+                        >
+                          <Check className="h-5 w-5" aria-hidden="true" />
+                        </button>
+                        {completed && (
+                          <button
+                            type="button"
+                            onClick={() => removeDashboardTask(task.id)}
+                            className="text-[11px] font-black leading-none text-rose-500 transition-colors hover:text-rose-600"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
                       <div
                         className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${task.iconClass}`}
                       >
@@ -6564,6 +6847,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               checkoutLoading={checkoutLoading}
               practiceStats={practiceStats}
               latestDiagnostic={latestDiagnostic}
+              completedDashboardTaskIds={completedDashboardTaskIds}
+              removedDashboardTaskIds={removedDashboardTaskIds}
               diagnosticCredits={diagnosticCredits}
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}

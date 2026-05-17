@@ -20,6 +20,7 @@ import {
   Flag,
   GripVertical,
   HelpCircle,
+  Info,
   ListChecks,
   LockKeyhole,
   MousePointer2,
@@ -329,26 +330,26 @@ const MOCK_LIBRARY: Array<{
 }> = [
   {
     id: "mock-a",
-    label: "Mock A",
-    title: "Baseline paper",
+    label: "Mock 1",
+    title: "Baseline set",
     description:
-      "A balanced paper for your first full run-through or a clean diagnostic reset.",
+      "A balanced first run for setting a starting point across the four UCAT sections.",
     focus: "Mixed difficulty",
-    badge: "Start here",
+    badge: "First pass",
   },
   {
     id: "mock-b",
-    label: "Mock B",
-    title: "Pressure paper",
+    label: "Mock 2",
+    title: "Timing set",
     description:
-      "A second sitting with the same section structure and a fresh question order.",
+      "A fresh sitting for checking whether timing and accuracy are moving together.",
     focus: "Timing pressure",
-    badge: "Follow-up",
+    badge: "Next pass",
   },
   {
     id: "mock-c",
-    label: "Mock C",
-    title: "Readiness paper",
+    label: "Mock 3",
+    title: "Review set",
     description:
       "A later check-in for comparing pace, accuracy and flagging decisions.",
     focus: "Final review",
@@ -2400,14 +2401,14 @@ function MockSetPicker({
   compact?: boolean;
 }) {
   return (
-    <div className={`grid gap-3 ${compact ? "md:grid-cols-3" : "lg:grid-cols-3"}`}>
+    <div className={`grid gap-2.5 ${compact ? "md:grid-cols-3" : "lg:grid-cols-3"}`}>
       {MOCK_LIBRARY.map((mock) => {
         const active = mock.id === selectedMockId;
         return (
           <Link
             key={mock.id}
             href={withMockQuery(baseHref, mock.id)}
-            className={`rounded-lg border p-4 transition-colors ${
+            className={`rounded-lg border p-3 transition-colors ${
               active
                 ? "border-blue-500 bg-blue-50 text-blue-800"
                 : "border-slate-200 bg-white text-slate-700 hover:border-blue-300"
@@ -2425,7 +2426,7 @@ function MockSetPicker({
                 {mock.badge}
               </span>
             </div>
-            <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
+            <p className="mt-1.5 text-xs font-bold leading-5 text-slate-500">
               {mock.focus}
             </p>
           </Link>
@@ -2560,16 +2561,16 @@ function MockStatusTabs({
   ];
 
   return (
-    <div className="flex flex-wrap gap-8 border-b border-slate-200 text-sm font-medium text-slate-600">
+    <div className="flex flex-wrap gap-5 border-b border-slate-200 text-xs font-bold text-slate-600">
       {tabs.map((tab) => (
         <button
           key={tab.value}
           type="button"
           onClick={() => onChange(tab.value)}
           aria-pressed={value === tab.value}
-          className={`h-11 border-b-2 ${
+          className={`h-9 border-b-2 ${
             value === tab.value
-              ? "border-red-500 text-slate-950"
+              ? "border-blue-600 text-slate-950"
               : "border-transparent hover:text-slate-900"
           }`}
         >
@@ -2584,24 +2585,27 @@ function MockLineGraph({
   selectedMock,
   launchHref,
   launchLabel,
-  sectionCode,
+  helperText,
+  quickLinks = [],
+  axisLabels = ["3,000", "2,000", "1,000", "0"],
 }: {
   selectedMock: (typeof MOCK_LIBRARY)[number];
   launchHref: string;
   launchLabel: string;
-  sectionCode?: string;
+  helperText: string;
+  quickLinks?: Array<{ label: string; href: string; active?: boolean }>;
+  axisLabels?: string[];
 }) {
   const activeIndex = Math.max(0, getMockIndex(selectedMock.id));
 
   return (
-    <div className="grid min-h-[340px] gap-4 lg:grid-cols-[250px_1fr]">
-      <div className="bg-slate-50 p-4">
-        <div className="grid h-[300px] grid-cols-[58px_1fr] gap-4">
-          <div className="flex flex-col justify-between border-r border-slate-200 pr-3 text-right text-sm text-slate-700">
-            <span>3,000</span>
-            <span>2,000</span>
-            <span>1,000</span>
-            <span>0</span>
+    <div className="grid gap-3 lg:grid-cols-[210px_1fr]">
+      <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+        <div className="grid h-[180px] grid-cols-[42px_1fr] gap-3">
+          <div className="flex flex-col justify-between border-r border-slate-200 pr-2 text-right text-xs font-bold text-slate-600">
+            {axisLabels.map((label) => (
+              <span key={label}>{label}</span>
+            ))}
           </div>
           <div className="relative border-b border-slate-300">
             {[25, 50, 75].map((top) => (
@@ -2613,61 +2617,79 @@ function MockLineGraph({
             ))}
             <svg
               className="absolute inset-0 h-full w-full overflow-visible"
-              viewBox="0 0 300 260"
+              viewBox="0 0 240 150"
               preserveAspectRatio="none"
               aria-hidden="true"
             >
               <polyline
-                points="24,226 150,226 276,226"
+                points="20,130 120,130 220,130"
                 fill="none"
-                stroke="#ef4444"
-                strokeWidth="3"
+                stroke="#2563eb"
+                strokeWidth="2.5"
                 strokeLinecap="round"
               />
               {MOCK_LIBRARY.map((mock, index) => {
-                const x = 24 + index * 126;
+                const x = 20 + index * 100;
                 return (
                   <circle
                     key={mock.id}
                     cx={x}
-                    cy="226"
-                    r={index === activeIndex ? 6 : 4}
-                    fill={index === activeIndex ? "#ef4444" : "#fecaca"}
+                    cy="130"
+                    r={index === activeIndex ? 5 : 3.5}
+                    fill={index === activeIndex ? "#2563eb" : "#bfdbfe"}
                   />
                 );
               })}
             </svg>
-            <div className="absolute inset-x-0 -bottom-8 grid grid-cols-3 text-center text-sm text-slate-700">
+            <div className="absolute inset-x-0 -bottom-7 grid grid-cols-3 text-center text-[11px] font-bold text-slate-600">
               {MOCK_LIBRARY.map((mock) => (
-                <span key={mock.id}>
-                  {sectionCode
-                    ? `${sectionCode}${String(getMockIndex(mock.id) + 1).padStart(2, "0")}`
-                    : `F0${getMockIndex(mock.id) + 1}`}
-                </span>
+                <span key={mock.id}>{mock.label}</span>
               ))}
             </div>
           </div>
         </div>
-        <p className="mt-10 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">
-          Mock score
+        <p className="mt-9 text-center text-[11px] font-black uppercase tracking-wide text-slate-500">
+          Score trend
         </p>
       </div>
 
-      <div className="flex min-h-[300px] items-center justify-center rounded-md bg-slate-50 p-6">
-        <div className="text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-red-500">
-            <ArrowRight className="h-6 w-6" aria-hidden="true" />
+      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
+              Selected
+            </p>
+            <h3 className="mt-1 text-base font-black text-slate-950">
+              {selectedMock.label}
+            </h3>
+            <p className="mt-1 max-w-xl text-xs font-semibold leading-5 text-slate-600">
+              {helperText}
+            </p>
           </div>
-          <p className="mt-7 text-sm font-black text-slate-950">
-            Ready for more?
-          </p>
           <Link
             href={launchHref}
-            className="mt-4 inline-flex h-12 items-center justify-center rounded-md bg-red-500 px-7 text-xs font-black uppercase tracking-[0.14em] text-white shadow-sm hover:bg-red-600"
+            className="inline-flex h-9 shrink-0 items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-black text-white shadow-sm transition-colors hover:bg-blue-700"
           >
             {launchLabel}
           </Link>
         </div>
+        {quickLinks.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {quickLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className={`inline-flex h-8 items-center justify-center rounded-md border px-3 text-xs font-black transition-colors ${
+                  link.active
+                    ? "border-blue-600 bg-blue-600 text-white"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-700"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -2678,34 +2700,46 @@ function FullMockPerformancePanel({
 }: {
   selectedMock: (typeof MOCK_LIBRARY)[number];
 }) {
+  const sectionLinks = FULL_MOCK_SECTION_ORDER.map((section) => {
+    const meta = getUCATSectionMeta(section);
+    return {
+      label: meta.code,
+      href: withMockQuery(`/phloemai/mocks/full/${section}`, selectedMock.id),
+    };
+  });
+
   return (
-    <section className="mt-5">
-      <div className="flex flex-col gap-4">
-        <h2 className="text-base font-black text-slate-950">
-          Performance Over Time
+    <section className="mt-4">
+      <div className="flex flex-col gap-3">
+        <h2 className="text-sm font-black text-slate-950">
+          Score History
         </h2>
-        <div className="flex flex-wrap gap-6 border-b border-slate-200 text-sm font-medium text-slate-600">
-          {["Overall", "Verbal Reasoning", "Decision Making", "Quantitative Reasoning", "Situational Judgement"].map((tab, index) => (
-            <button
-              key={tab}
-              type="button"
-              className={`border-b-2 pb-2 ${
-                index === 0
-                  ? "border-red-500 text-slate-950"
-                  : "border-transparent hover:text-slate-900"
-              }`}
+        <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-3 text-xs font-black text-slate-600">
+          <Link
+            href={withMockQuery("/phloemai/mocks/full", selectedMock.id)}
+            className="rounded-md bg-blue-600 px-3 py-1.5 text-white"
+          >
+            Overall
+          </Link>
+          {sectionLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="rounded-md border border-slate-200 px-3 py-1.5 transition-colors hover:border-blue-300 hover:text-blue-700"
             >
-              {tab}
-            </button>
+              {link.label}
+            </Link>
           ))}
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-4">
         <MockLineGraph
           selectedMock={selectedMock}
           launchHref={withMockQuery("/phloemai/mocks/full/vr", selectedMock.id)}
-          launchLabel={`Launch ${selectedMock.label}`}
+          launchLabel={`Start ${selectedMock.label}`}
+          helperText="Open a full-mock section from this paper. Scores will populate here after completed attempts."
+          quickLinks={sectionLinks}
         />
       </div>
     </section>
@@ -2725,24 +2759,24 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
       : MOCK_LIBRARY;
 
   return (
-    <div className="min-h-screen bg-[#e6e6e6] px-4 py-5 text-[#111827]">
-      <main className="mx-auto max-w-[1530px] bg-white px-6 py-7 shadow-sm">
+    <div className="min-h-screen bg-slate-100 px-3 py-4 text-[#111827]">
+      <main className="mx-auto max-w-6xl rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
         <div>
-          <h1 className="text-2xl font-black text-slate-950">Full Mocks</h1>
-          <p className="mt-2 text-sm font-medium text-slate-500">
-            Track your scores across full mock papers and launch the next mock.
+          <h1 className="text-xl font-black text-slate-950">Full Mocks</h1>
+          <p className="mt-1.5 text-xs font-semibold leading-5 text-slate-500">
+            Pick a mock, open a section, and keep the score view tidy as attempts build up.
           </p>
         </div>
 
         <FullMockPerformancePanel selectedMock={selectedMock} />
 
-        <div className="mt-7">
+        <div className="mt-5">
           <MockStatusTabs value={mockFilter} onChange={setMockFilter} />
         </div>
 
-        <div className="mt-4 space-y-3">
+        <div className="mt-3 space-y-2.5">
           {visibleMocks.length === 0 ? (
-            <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-6 text-sm font-bold text-slate-500">
+            <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-4 text-xs font-bold text-slate-500">
               No full mocks in this filter yet.
             </div>
           ) : visibleMocks.map((mock) => {
@@ -2751,20 +2785,20 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
             return (
               <article
                 key={mock.id}
-                className={`grid gap-4 rounded-md border p-6 transition-colors md:grid-cols-[1fr_auto] md:items-center ${
+                className={`grid gap-3 rounded-md border p-4 transition-colors md:grid-cols-[1fr_auto] md:items-center ${
                   active
-                    ? "border-red-200 bg-red-50/30"
-                    : "border-slate-200 bg-white hover:border-red-200"
+                    ? "border-blue-200 bg-blue-50/40"
+                    : "border-slate-200 bg-white hover:border-blue-200"
                 }`}
               >
                 <div>
-                  <h2 className="text-base font-black text-slate-950">
-                    {index === 0 ? "Full Diagnostic Mock" : `Full Mock ${index + 1}`}
+                  <h2 className="text-sm font-black text-slate-950">
+                    Mock {index + 1}
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-slate-500">
-                    Mock Ref. #F0{index + 1} - {totalTarget} questions across VR, DM, QR and SJT.
+                  <p className="mt-1.5 text-xs font-semibold leading-5 text-slate-500">
+                    {totalTarget} questions across VR, DM, QR and SJT. Start with any section.
                   </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-2.5 flex flex-wrap gap-1.5">
                     {FULL_MOCK_SECTION_ORDER.map((section) => {
                       const meta = getUCATSectionMeta(section);
                       return (
@@ -2774,7 +2808,7 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
                             `/phloemai/mocks/full/${section}`,
                             mock.id
                           )}
-                          className="inline-flex h-8 items-center justify-center rounded-md border border-slate-200 bg-white px-3 text-xs font-black text-slate-700 transition-colors hover:border-red-300 hover:text-red-600"
+                          className="inline-flex h-7 items-center justify-center rounded-md border border-slate-200 bg-white px-2.5 text-xs font-black text-slate-700 transition-colors hover:border-blue-300 hover:text-blue-700"
                         >
                           {meta.code}
                         </Link>
@@ -2784,9 +2818,9 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
                 </div>
                 <Link
                   href={withMockQuery("/phloemai/mocks/full/vr", mock.id)}
-                  className="inline-flex h-12 items-center justify-center rounded-md border border-red-500 px-8 text-xs font-black uppercase tracking-[0.14em] text-slate-950 transition-colors hover:bg-red-500 hover:text-white"
+                  className="inline-flex h-9 items-center justify-center rounded-md border border-blue-500 px-5 text-xs font-black text-blue-700 transition-colors hover:bg-blue-600 hover:text-white"
                 >
-                  {active ? "Continue" : "Attempt"}
+                  {active ? "Continue" : "Start"}
                 </Link>
               </article>
             );
@@ -2802,23 +2836,30 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
   const [mockFilter, setMockFilter] = useState<MockFilter>("all");
   const selectedMock = getMockDefinition(mockId);
   const activeMeta = getUCATSectionMeta(activeSection);
-  const selectedMockIndex = Math.max(0, getMockIndex(selectedMock.id));
+  const subtestSectionLinks = UCAT_SECTIONS.map((section) => ({
+    label: section.code,
+    href: withMockQuery(
+      `/phloemai/mocks/subtest/${section.slug}`,
+      selectedMock.id
+    ),
+    active: section.slug === activeSection,
+  }));
   const visibleMocks =
     mockFilter === "continue" || mockFilter === "attempted"
       ? []
       : MOCK_LIBRARY;
 
   return (
-    <div className="min-h-screen bg-[#e6e6e6] px-4 py-5 text-[#111827]">
-      <main className="mx-auto max-w-[1530px] bg-white px-6 py-7 shadow-sm">
+    <div className="min-h-screen bg-slate-100 px-3 py-4 text-[#111827]">
+      <main className="mx-auto max-w-6xl rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
         <div>
-          <h1 className="text-2xl font-black text-slate-950">Subtest Mocks</h1>
-          <p className="mt-2 text-sm font-medium text-slate-500">
-            Choose a UCAT section, then attempt individual timed subtest mocks.
+          <h1 className="text-xl font-black text-slate-950">Subtest Mocks</h1>
+          <p className="mt-1.5 text-xs font-semibold leading-5 text-slate-500">
+            Choose one section at a time, then start a compact timed set.
           </p>
         </div>
 
-        <div className="mt-7 grid gap-6 lg:grid-cols-[225px_1fr]">
+        <div className="mt-5 grid gap-5 lg:grid-cols-[180px_1fr]">
           <aside className="space-y-1">
             {UCAT_SECTIONS.map((section) => {
               const active = section.slug === activeSection;
@@ -2828,22 +2869,22 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
                   key={section.slug}
                   type="button"
                   onClick={() => setActiveSection(section.slug)}
-                  className={`relative grid w-full grid-cols-[26px_1fr] gap-3 px-4 py-4 text-left transition-colors ${
+                  className={`relative grid w-full grid-cols-[22px_1fr] gap-2.5 rounded-md px-3 py-3 text-left transition-colors ${
                     active
-                      ? "bg-slate-100 text-slate-950"
+                      ? "bg-blue-50 text-blue-800"
                       : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
                   }`}
                 >
                   {active && (
-                    <span className="absolute right-0 top-0 h-full w-1 bg-red-500" />
+                    <span className="absolute right-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-full bg-blue-600" />
                   )}
                   <Icon className="mt-0.5 h-4 w-4" aria-hidden="true" />
                   <span>
-                    <span className="block text-sm font-medium">
-                      {section.title}
+                    <span className="block text-xs font-black">
+                      {section.code}
                     </span>
-                    <span className="mt-1 block text-xs text-slate-500">
-                      0/{MOCK_LIBRARY.length}
+                    <span className="mt-0.5 block text-[11px] font-bold text-slate-500">
+                      {section.title}
                     </span>
                   </span>
                 </button>
@@ -2852,36 +2893,47 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
           </aside>
 
           <section>
-            <h2 className="text-xl font-black text-slate-950">
-              {activeMeta.title}
-            </h2>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <h2 className="text-base font-black text-slate-950">
+                {activeMeta.title}
+              </h2>
+              <Link
+                href={withMockQuery(
+                  `/phloemai/mocks/subtest/${activeSection}`,
+                  selectedMock.id
+                )}
+                className="inline-flex h-9 w-fit items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700"
+              >
+                Start {activeMeta.code}
+              </Link>
+            </div>
 
-            <div className="mt-7">
-              <h3 className="text-base font-black text-slate-950">
-                Performance Over Time
+            <div className="mt-5">
+              <h3 className="text-sm font-black text-slate-950">
+                Score History
               </h3>
-              <div className="mt-7">
+              <div className="mt-3">
                 <MockLineGraph
                   selectedMock={selectedMock}
                   launchHref={withMockQuery(
                     `/phloemai/mocks/subtest/${activeSection}`,
                     selectedMock.id
                   )}
-                  launchLabel={`Launch your first mock (${activeMeta.code}${String(
-                    selectedMockIndex + 1
-                  ).padStart(2, "0")})`}
-                  sectionCode={activeMeta.code}
+                  launchLabel={`Start ${selectedMock.label}`}
+                  helperText={`Open ${activeMeta.code} for ${selectedMock.label}. Completed subtest scores will appear in this compact history.`}
+                  quickLinks={subtestSectionLinks}
+                  axisLabels={["900", "700", "500", "0"]}
                 />
               </div>
             </div>
 
-            <div className="mt-7">
+            <div className="mt-5">
               <MockStatusTabs value={mockFilter} onChange={setMockFilter} />
             </div>
 
-            <div className="mt-4 space-y-3">
+            <div className="mt-3 space-y-2.5">
               {visibleMocks.length === 0 ? (
-                <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-6 text-sm font-bold text-slate-500">
+                <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-4 text-xs font-bold text-slate-500">
                   No {activeMeta.code} subtest mocks in this filter yet.
                 </div>
               ) : visibleMocks.map((mock) => {
@@ -2890,18 +2942,18 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
                 return (
                   <article
                     key={mock.id}
-                    className={`grid gap-4 rounded-md border p-6 transition-colors md:grid-cols-[1fr_auto] md:items-center ${
+                    className={`grid gap-3 rounded-md border p-4 transition-colors md:grid-cols-[1fr_auto] md:items-center ${
                       active
-                        ? "border-red-200 bg-red-50/30"
-                        : "border-slate-200 bg-white hover:border-red-200"
+                        ? "border-blue-200 bg-blue-50/40"
+                        : "border-slate-200 bg-white hover:border-blue-200"
                     }`}
                   >
                     <div>
-                      <h3 className="text-base font-black text-slate-950">
-                        {activeMeta.code} Subtest Mock {index + 1}
+                      <h3 className="text-sm font-black text-slate-950">
+                        Mock {index + 1}
                       </h3>
-                      <p className="mt-2 text-sm leading-6 text-slate-500">
-                        Mock Ref. #{activeMeta.code}{String(index + 1).padStart(2, "0")}
+                      <p className="mt-1.5 text-xs font-semibold leading-5 text-slate-500">
+                        {activeMeta.code} timed set for {activeMeta.title}.
                       </p>
                     </div>
                     <Link
@@ -2909,9 +2961,9 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
                         `/phloemai/mocks/subtest/${activeSection}`,
                         mock.id
                       )}
-                      className="inline-flex h-12 items-center justify-center rounded-md border border-red-500 px-8 text-xs font-black uppercase tracking-[0.14em] text-slate-950 transition-colors hover:bg-red-500 hover:text-white"
+                      className="inline-flex h-9 items-center justify-center rounded-md border border-blue-500 px-5 text-xs font-black text-blue-700 transition-colors hover:bg-blue-600 hover:text-white"
                     >
-                      {active ? "Continue" : "Attempt"}
+                      {active ? "Continue" : "Start"}
                     </Link>
                   </article>
                 );
@@ -5364,6 +5416,8 @@ function UCATQuestionBankSection({
   >({});
   const [markedSummary, setMarkedSummary] =
     useState<PracticeSessionSummary | null>(null);
+  const [unseenContentOpen, setUnseenContentOpen] = useState(false);
+  const [questionScrollSeen, setQuestionScrollSeen] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>({
     status: "idle",
     message: "Not saved yet",
@@ -5434,6 +5488,42 @@ function UCATQuestionBankSection({
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
+
+  useEffect(() => {
+    if (!started || phase !== "practice") {
+      setQuestionScrollSeen(true);
+      setUnseenContentOpen(false);
+      return;
+    }
+
+    let frameId = 0;
+
+    const updateScrollSeen = () => {
+      const documentElement = document.documentElement;
+      const pageHeight = Math.max(
+        documentElement.scrollHeight,
+        document.body.scrollHeight
+      );
+      const scrollBottom = window.scrollY + window.innerHeight;
+      const needsScroll = pageHeight - window.innerHeight > 48;
+
+      if (!needsScroll || scrollBottom >= pageHeight - 64) {
+        setQuestionScrollSeen(true);
+      }
+    };
+
+    setQuestionScrollSeen(false);
+    setUnseenContentOpen(false);
+    frameId = window.requestAnimationFrame(updateScrollSeen);
+    window.addEventListener("scroll", updateScrollSeen, { passive: true });
+    window.addEventListener("resize", updateScrollSeen);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.removeEventListener("scroll", updateScrollSeen);
+      window.removeEventListener("resize", updateScrollSeen);
+    };
+  }, [started, phase, questionIndex]);
 
   useEffect(() => {
     markedSummaryRef.current = markedSummary;
@@ -6668,7 +6758,6 @@ function UCATQuestionBankSection({
   }
 
   const question = questions[questionIndex];
-  const subtype = getUCATSubtypeMeta(question.subtype);
   const savedAnswer = answers[questionIndex];
   const selectedAnswer =
     selected ?? (typeof savedAnswer === "string" ? savedAnswer : null);
@@ -6798,6 +6887,31 @@ function UCATQuestionBankSection({
     chooseYesNoAnswer(statementId, currentAnswer === "Yes" ? "No" : "Yes");
   };
 
+  const hasUnseenScrollableContent = () => {
+    if (phase !== "practice" || questionScrollSeen) return false;
+
+    const documentElement = document.documentElement;
+    const pageHeight = Math.max(
+      documentElement.scrollHeight,
+      document.body.scrollHeight
+    );
+
+    return pageHeight - window.innerHeight > 48;
+  };
+
+  const guardScrollableContentBeforeLeaving = (
+    source: "next" | "previous" | "navigator" | "review"
+  ) => {
+    if (!hasUnseenScrollableContent()) return true;
+
+    setUnseenContentOpen(true);
+    recordEvent("unseen_content_prompt", {
+      source,
+      question: questionIndex + 1,
+    });
+    return false;
+  };
+
   const goToQuestion = (index: number) => {
     scrollToQuestionTop();
     commitQuestionTiming();
@@ -6811,6 +6925,16 @@ function UCATQuestionBankSection({
     beginQuestionTiming(questions[index]);
     attentionTracker.resetAttempt(nowMs());
     recordEvent("go_to_question", { index: index + 1 });
+  };
+
+  const requestGoToQuestion = (index: number) => {
+    if (index === questionIndex) {
+      setNavigatorOpen(false);
+      return;
+    }
+
+    if (!guardScrollableContentBeforeLeaving("navigator")) return;
+    goToQuestion(index);
   };
 
   const moveDragItem = (fromIndex: number, toIndex: number) => {
@@ -6834,12 +6958,16 @@ function UCATQuestionBankSection({
 
   const nextQuestion = () => {
     const nextIndex = Math.min(questionIndex + 1, questions.length - 1);
+    if (nextIndex === questionIndex) return;
+    if (!guardScrollableContentBeforeLeaving("next")) return;
     recordEvent("next_question", { to: nextIndex + 1 });
     goToQuestion(nextIndex);
   };
 
   const previousQuestion = () => {
     const nextIndex = Math.max(questionIndex - 1, 0);
+    if (nextIndex === questionIndex) return;
+    if (!guardScrollableContentBeforeLeaving("previous")) return;
     recordEvent("previous_question", { to: nextIndex + 1 });
     goToQuestion(nextIndex);
   };
@@ -6931,6 +7059,8 @@ function UCATQuestionBankSection({
   }
 
   const openReview = () => {
+    if (!guardScrollableContentBeforeLeaving("review")) return;
+
     scrollToQuestionTop();
     commitQuestionTiming();
     commitAttentionSnapshot("open_review");
@@ -7015,7 +7145,6 @@ function UCATQuestionBankSection({
     markedSummary?.questions[questionIndex] ??
     liveSummary?.questions[questionIndex] ??
     null;
-  const currentIssueLabels = (question.issueTags ?? []).map(getUCATSjtIssueLabel);
 
   const reviewingMarkedAnswers = phase === "marked-review";
   const answerRevealed = revealed || reviewingMarkedAnswers;
@@ -7412,9 +7541,6 @@ function UCATQuestionBankSection({
             <Flag className="h-5 w-5" aria-hidden="true" />
             Flag for review
           </button>
-          <span className="hidden rounded-sm bg-white/15 px-2 py-1 text-xs font-bold sm:inline-flex">
-            {subtype.label}
-          </span>
         </div>
         <select
           aria-label="Colour scheme"
@@ -7505,7 +7631,7 @@ function UCATQuestionBankSection({
         className={
           usesClassicDropLayout
             ? "min-h-[calc(100vh-132px)] pb-16"
-            : "grid min-h-[calc(100vh-132px)] grid-cols-1 pb-16 md:grid-cols-[1.15fr_0.85fr]"
+            : "grid min-h-[calc(100vh-132px)] grid-cols-1 pb-16 md:grid-cols-[3fr_2fr]"
         }
       >
         <section
@@ -7513,7 +7639,7 @@ function UCATQuestionBankSection({
           className={
             usesClassicDropLayout
               ? "px-5 pt-5"
-              : "border-b-2 border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)] md:border-b-0 md:border-r-2"
+              : "border-b-[8px] border-[#0078a8] px-7 py-7 md:min-h-[calc(100vh-132px)] md:border-b-0 md:border-r-[10px]"
           }
         >
           <h2 className="sr-only">{question.leftTitle ?? "Information"}</h2>
@@ -7521,7 +7647,7 @@ function UCATQuestionBankSection({
             className={
               usesClassicDropLayout
                 ? "max-w-[1100px] space-y-3 text-[20px] leading-[28px] text-black"
-                : "max-w-4xl space-y-5 text-base leading-6 sm:text-lg"
+                : "max-w-none space-y-7 text-[22px] leading-[28px] text-black"
             }
           >
             {question.stimulus.map((paragraph) => (
@@ -7531,28 +7657,13 @@ function UCATQuestionBankSection({
           </div>
         </section>
 
-        <section className={usesClassicDropLayout ? "px-5 py-3" : "px-6 py-5"}>
+        <section className={usesClassicDropLayout ? "px-5 py-3" : "px-7 py-7"}>
           <div ref={questionRegionRef}>
-            {!usesClassicDropLayout && (
-              <div className="mb-3 flex flex-wrap gap-2">
-                <p className="inline-flex rounded-sm bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">
-                  {subtype.label}
-                </p>
-                {currentIssueLabels.map((label) => (
-                  <span
-                    key={label}
-                    className="rounded-sm bg-yellow-50 px-2 py-1 text-xs font-black text-yellow-800"
-                  >
-                    {label}
-                  </span>
-                ))}
-              </div>
-            )}
             <p
               className={
                 usesClassicDropLayout
                   ? "max-w-[900px] text-[20px] leading-[28px] text-black"
-                  : "text-base leading-6 sm:text-lg"
+                  : "text-[22px] leading-[28px] text-black"
               }
             >
               {question.question}
@@ -7605,9 +7716,26 @@ function UCATQuestionBankSection({
               </div>
             </div>
           ) : isDragCategoryQuestion ? (
-            <div ref={answersRegionRef} className="mt-4 max-w-[900px]">
-              <div className="flex items-start gap-4 text-[15px] leading-[18px] text-black max-lg:flex-col">
-                <div className="min-w-0 flex-1 space-y-3">
+            <div
+              ref={answersRegionRef}
+              className={
+                isSjtDropLayout ? "mt-4 max-w-[900px]" : "mt-12 max-w-[1180px]"
+              }
+            >
+              <div
+                className={
+                  isSjtDropLayout
+                    ? "flex items-start gap-4 text-[15px] leading-[18px] text-black max-lg:flex-col"
+                    : "flex items-start gap-[14px] text-[22px] leading-[26px] text-black max-xl:flex-col"
+                }
+              >
+                <div
+                  className={
+                    isSjtDropLayout
+                      ? "min-w-0 flex-1 space-y-3"
+                      : "w-[960px] max-w-full space-y-5"
+                  }
+                >
                   {question.categoryItems.map((item) => {
                     const selectedCategory = dragCategoryAnswer[item.id];
                     const selectedCategoryLabel =
@@ -7626,15 +7754,15 @@ function UCATQuestionBankSection({
                     return (
                       <div
                         key={item.id}
-                        className={`grid gap-3 ${
+                        className={`grid ${
                           isSjtDropLayout
-                            ? "sm:grid-cols-[minmax(0,1fr)_98px]"
-                            : "sm:grid-cols-[minmax(0,1fr)_78px]"
+                            ? "gap-3 sm:grid-cols-[minmax(0,1fr)_98px]"
+                            : "gap-[18px] sm:grid-cols-[minmax(0,793px)_150px]"
                         }`}
                       >
                         <div
                           className={`flex min-h-[44px] items-center justify-center border px-3 py-2 text-center ${
-                            isSjtDropLayout ? "min-h-[66px]" : ""
+                            isSjtDropLayout ? "min-h-[66px]" : "min-h-[84px]"
                           } ${
                             correct
                               ? "border-emerald-700 bg-emerald-50"
@@ -7666,10 +7794,10 @@ function UCATQuestionBankSection({
                           }}
                           disabled={phase !== "practice"}
                           aria-label={`Drop answer for ${item.text}`}
-                          className={`flex min-h-[44px] w-full items-center justify-center border px-2 text-center text-[14px] font-normal leading-[16px] ${
+                          className={`flex min-h-[44px] w-full items-center justify-center border px-2 text-center font-normal ${
                             isSjtDropLayout
-                              ? "min-h-[66px] bg-[#b9b1b1]"
-                              : "bg-white"
+                              ? "min-h-[66px] bg-[#b9b1b1] text-[14px] leading-[16px]"
+                              : "min-h-[84px] bg-[#b9b1b1] text-[20px] leading-[24px]"
                           } ${
                             correct
                               ? "border-emerald-700 text-emerald-900"
@@ -7693,10 +7821,10 @@ function UCATQuestionBankSection({
                   className={
                     isSjtDropLayout
                       ? "w-[128px] shrink-0 border border-black bg-white p-3 max-lg:w-full"
-                      : "w-[96px] shrink-0 border border-black bg-[#cfcfcf] p-2 max-lg:w-full"
+                      : "mt-[75px] w-[180px] shrink-0 border border-black bg-[#d9d9d9] p-[14px] max-xl:mt-0 max-xl:w-full"
                   }
                 >
-                  <div className={isSjtDropLayout ? "space-y-3" : "space-y-2"}>
+                  <div className={isSjtDropLayout ? "space-y-3" : "space-y-[18px]"}>
                     {question.categories.map((category) => (
                       <button
                         key={category.id}
@@ -7705,8 +7833,10 @@ function UCATQuestionBankSection({
                         onDragStart={() => setDraggedCategoryId(category.id)}
                         onDragEnd={() => setDraggedCategoryId(null)}
                         disabled={phase !== "practice"}
-                        className={`flex w-full cursor-grab items-center justify-center border border-black bg-white px-2 text-center text-[15px] font-normal leading-[18px] text-black active:cursor-grabbing disabled:cursor-not-allowed ${
-                          isSjtDropLayout ? "min-h-[68px]" : "min-h-[44px]"
+                        className={`flex w-full cursor-grab items-center justify-center border border-black bg-white px-2 text-center font-normal text-black active:cursor-grabbing disabled:cursor-not-allowed ${
+                          isSjtDropLayout
+                            ? "min-h-[68px] text-[15px] leading-[18px]"
+                            : "min-h-[84px] text-[22px] leading-[26px]"
                         }`}
                       >
                         {category.label}
@@ -7717,9 +7847,9 @@ function UCATQuestionBankSection({
               </div>
             </div>
           ) : isYesNoQuestion ? (
-            <div ref={answersRegionRef} className="mt-4 max-w-[900px]">
-              <div className="flex items-start gap-4 text-[15px] leading-[18px] text-black max-lg:flex-col">
-                <div className="min-w-0 flex-1 space-y-3">
+            <div ref={answersRegionRef} className="mt-12 max-w-[1180px]">
+              <div className="flex items-start gap-[14px] text-[22px] leading-[26px] text-black max-xl:flex-col">
+                <div className="w-[960px] max-w-full space-y-5">
                   {question.yesNoStatements.map((statement) => {
                     const currentAnswer = yesNoAnswer[statement.id] as
                       | UCATYesNoValue
@@ -7735,10 +7865,10 @@ function UCATQuestionBankSection({
                     return (
                       <div
                         key={statement.id}
-                        className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_78px]"
+                        className="grid gap-[18px] sm:grid-cols-[minmax(0,793px)_150px]"
                       >
                         <div
-                          className={`flex min-h-[44px] items-center justify-center border px-3 py-2 text-center ${
+                          className={`flex min-h-[84px] items-center justify-center border px-5 py-3 text-center ${
                             correct
                               ? "border-emerald-700 bg-emerald-50"
                               : wrong || missed
@@ -7766,7 +7896,7 @@ function UCATQuestionBankSection({
                           }}
                           disabled={phase !== "practice"}
                           aria-label={`Drop Yes or No for ${statement.text}`}
-                          className={`flex min-h-[44px] w-full items-center justify-center border bg-white px-2 text-center text-[15px] font-normal leading-[18px] ${
+                          className={`flex min-h-[84px] w-full items-center justify-center border bg-[#b9b1b1] px-2 text-center text-[22px] font-normal leading-[26px] ${
                             correct
                               ? "border-emerald-700 text-emerald-900"
                               : wrong || missed
@@ -7785,8 +7915,8 @@ function UCATQuestionBankSection({
                   })}
                 </div>
 
-                <div className="w-[96px] shrink-0 border border-black bg-[#cfcfcf] p-2 max-lg:w-full">
-                  <div className="space-y-2">
+                <div className="mt-[75px] w-[180px] shrink-0 border border-black bg-[#d9d9d9] p-[14px] max-xl:mt-0 max-xl:w-full">
+                  <div className="space-y-[18px]">
                     {(["Yes", "No"] as const).map((value) => (
                       <button
                         key={value}
@@ -7795,7 +7925,7 @@ function UCATQuestionBankSection({
                         onDragStart={() => setDraggedYesNoValue(value)}
                         onDragEnd={() => setDraggedYesNoValue(null)}
                         disabled={phase !== "practice"}
-                        className="flex min-h-[44px] w-full cursor-grab items-center justify-center border border-black bg-white px-2 text-center text-[15px] font-normal leading-[18px] text-black active:cursor-grabbing disabled:cursor-not-allowed"
+                        className="flex min-h-[84px] w-full cursor-grab items-center justify-center border border-black bg-white px-2 text-center text-[22px] font-normal leading-[26px] text-black active:cursor-grabbing disabled:cursor-not-allowed"
                       >
                         {value}
                       </button>
@@ -7805,7 +7935,7 @@ function UCATQuestionBankSection({
               </div>
             </div>
           ) : isSingleQuestion ? (
-            <div ref={answersRegionRef} className="mt-6 space-y-3">
+            <div ref={answersRegionRef} className="mt-8 space-y-8">
               {question.options.map((option) => {
                 const checked = selectedAnswer === option.key;
                 const correct = answerRevealed && option.key === question.answer;
@@ -7818,16 +7948,14 @@ function UCATQuestionBankSection({
                 return (
                   <label
                     key={option.key}
-                    className={`group grid cursor-pointer grid-cols-[20px_36px_1fr] items-start gap-3 rounded-md border px-4 py-3 text-base leading-6 transition-all sm:text-lg ${
+                    className={`grid cursor-pointer grid-cols-[24px_56px_1fr] items-start gap-2 text-[22px] leading-[28px] text-black transition-colors ${
                       correct
-                        ? "border-emerald-500 bg-emerald-50"
+                        ? "text-emerald-700"
                         : partial
-                          ? "border-yellow-500 bg-yellow-50"
+                        ? "text-yellow-700"
                         : wrong
-                          ? "border-red-500 bg-red-50"
-                          : checked
-                            ? "border-[#0078a8] bg-[#e6f2f8]"
-                            : "border-slate-200 bg-white hover:border-[#0078a8] hover:bg-[#f4faff]"
+                          ? "text-red-700"
+                        : ""
                     }`}
                   >
                     <input
@@ -7838,8 +7966,8 @@ function UCATQuestionBankSection({
                       disabled={phase !== "practice"}
                       className="mt-1.5 h-4 w-4 accent-[#0078a8]"
                     />
-                    <span className="font-black text-slate-900">{option.key}.</span>
-                    <span className="text-slate-800">{option.text}</span>
+                    <span className="font-normal">{option.key}.</span>
+                    <span>{option.text}</span>
                   </label>
                 );
               })}
@@ -7912,6 +8040,40 @@ function UCATQuestionBankSection({
         </section>
       </main>
 
+      {unseenContentOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 px-4"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="unseen-content-title"
+        >
+          <div className="w-[min(860px,calc(100vw-2rem))] bg-[#0078a8] text-white shadow-2xl">
+            <div
+              id="unseen-content-title"
+              className="border-b border-white/80 px-4 py-3 text-2xl leading-8"
+            >
+              Unseen Content
+            </div>
+            <div className="flex items-start gap-5 px-10 py-7 text-2xl leading-8">
+              <Info className="mt-1 h-11 w-11 shrink-0" aria-hidden="true" />
+              <p>
+                You have not viewed the full question yet. Scroll through all
+                visible content before moving on.
+              </p>
+            </div>
+            <div className="pb-5 text-center">
+              <button
+                type="button"
+                onClick={() => setUnseenContentOpen(false)}
+                className="border border-white px-5 py-1 text-2xl leading-8 hover:bg-white/10"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {navigatorOpen && (
         <div className="fixed inset-x-3 bottom-14 z-10 rounded-sm border border-slate-500 bg-white p-4 shadow-xl md:left-auto md:right-4 md:w-80">
           <h2 className="text-sm font-bold uppercase tracking-wide">
@@ -7922,7 +8084,7 @@ function UCATQuestionBankSection({
               <button
                 key={item.id}
                 type="button"
-                onClick={() => goToQuestion(index)}
+                onClick={() => requestGoToQuestion(index)}
                 className={`h-10 rounded-sm border text-sm font-bold ${
                   index === questionIndex
                     ? "border-[#0078a8] bg-[#0078a8] text-white"
@@ -7966,14 +8128,16 @@ function UCATQuestionBankSection({
           >
             {markedSummary ? "Summary" : "Review"}
           </button>
-          <button
-            type="button"
-            onClick={previousQuestion}
-            disabled={questionIndex === 0}
-            className="h-full border-l-2 border-white px-4 text-lg font-semibold hover:bg-[#00618a] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Previous
-          </button>
+          {questionIndex > 0 && (
+            <button
+              type="button"
+              onClick={previousQuestion}
+              className="flex h-full items-center gap-1 border-l-2 border-white px-4 text-lg font-semibold hover:bg-[#00618a]"
+            >
+              <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+              Previous
+            </button>
+          )}
           <button
             type="button"
             onClick={() => {
