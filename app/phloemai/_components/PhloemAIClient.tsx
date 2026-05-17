@@ -36,6 +36,7 @@ import {
 import {
   Activity,
   AlertTriangle,
+  ArrowLeft,
   ArrowRight,
   BadgeCheck,
   BarChart3,
@@ -46,6 +47,7 @@ import {
   Check,
   CheckCircle,
   ChevronDown,
+  ClipboardList,
   Clock3,
   Eye,
   Flag,
@@ -1091,6 +1093,7 @@ type AuthMode = "signup" | "login";
 type DashboardView =
   | "dashboard"
   | "diagnostic"
+  | "mock-diagnostic"
   | "practice"
   | "progress"
   | "skills-trainers"
@@ -1162,6 +1165,10 @@ const dashboardPageMeta: Record<
     title: "Diagnostic Hub",
     subtitle:
       "Diagnostics identify what's holding your UCAT score back so you can focus with confidence.",
+  },
+  "mock-diagnostic": {
+    title: "Mock Diagnostic",
+    subtitle: "Choose the mock format you want to run today.",
   },
   practice: {
     title: "Practice",
@@ -2404,7 +2411,7 @@ function DiagnosticContent({
                   ))}
                 </ul>
                 <Link
-                  href="/phloemai/mocks/full"
+                  href="/phloemai/diagnostics/mock-diagnostic"
                   className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-blue-700 shadow-sm transition-colors hover:bg-blue-50"
                 >
                   Choose mock
@@ -2642,6 +2649,100 @@ function DiagnosticContent({
   );
 }
 
+function MockDiagnosticContent() {
+  const mockOptions = [
+    {
+      title: "Full mocks",
+      text: "Run a complete UCAT-style mock under full exam timing.",
+      cta: "Choose full mock",
+      href: "/phloemai/mocks/full",
+      icon: ClipboardList,
+      iconClass: "bg-blue-50 text-blue-600",
+      borderClass: "border-blue-200",
+      buttonClass: "bg-blue-600 text-white hover:bg-blue-700",
+    },
+    {
+      title: "Full subtest mocks",
+      text: "Complete one full section mock: VR, DM, QR or SJT.",
+      cta: "Choose subtest",
+      href: "/phloemai/mocks/subtest",
+      icon: Target,
+      iconClass: "bg-emerald-50 text-emerald-600",
+      borderClass: "border-emerald-200",
+      buttonClass: "bg-emerald-600 text-white hover:bg-emerald-700",
+    },
+    {
+      title: "15-minute sprint",
+      text: "Do a short timed sprint in any section for focused practice.",
+      cta: "Start sprint",
+      href: "/phloemai/mocks/subtest?timing=short",
+      icon: Timer,
+      iconClass: "bg-violet-50 text-violet-600",
+      borderClass: "border-violet-200",
+      buttonClass: "bg-violet-600 text-white hover:bg-violet-700",
+    },
+  ] as const;
+
+  return (
+    <div className="px-6 py-8 lg:px-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-sm font-black">
+          <Link href="/phloemai/diagnostic" className="text-blue-600 hover:text-blue-700">
+            Diagnostics
+          </Link>
+          <span className="mx-2 text-slate-300">/</span>
+          <span className="text-slate-500">Mock diagnostic</span>
+        </div>
+        <Link
+          href="/phloemai/diagnostic"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-blue-200 bg-white px-5 text-sm font-black text-blue-600 transition-colors hover:bg-blue-50"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Back to diagnostics
+        </Link>
+      </div>
+
+      <div className="mt-14">
+        <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
+          Choose your mock diagnostic
+        </h1>
+        <p className="mt-3 text-base font-semibold text-slate-500">
+          Pick the format you want to run today.
+        </p>
+      </div>
+
+      <div className="mt-8 grid gap-5 lg:grid-cols-3">
+        {mockOptions.map((option) => {
+          const Icon = option.icon;
+          return (
+            <Link
+              key={option.title}
+              href={option.href}
+              className={`group flex min-h-[300px] flex-col rounded-xl border bg-white p-5 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md ${option.borderClass}`}
+            >
+              <div
+                className={`mx-auto flex h-28 w-28 items-center justify-center rounded-full ${option.iconClass}`}
+              >
+                <Icon className="h-14 w-14" aria-hidden="true" />
+              </div>
+              <h2 className="mt-6 text-xl font-black">{option.title}</h2>
+              <p className="mx-auto mt-3 max-w-xs text-sm font-semibold leading-6 text-slate-600">
+                {option.text}
+              </p>
+              <span
+                className={`mt-auto inline-flex h-11 items-center justify-center gap-2 rounded-lg px-5 text-sm font-black transition-colors ${option.buttonClass}`}
+              >
+                {option.cta}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function PracticeContent({
   latestDiagnostic,
 }: {
@@ -2727,12 +2828,8 @@ function PracticeContent({
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
-      <section className="relative overflow-hidden rounded-xl border border-amber-200 bg-gradient-to-br from-amber-50/70 via-white to-white p-6 shadow-[0_16px_36px_rgba(180,122,32,0.14)] ring-1 ring-amber-100/80">
-        <div
-          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400"
-          aria-hidden="true"
-        />
-        <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex gap-5">
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-600">
               <Zap className="h-8 w-8" aria-hidden="true" />
@@ -2759,7 +2856,11 @@ function PracticeContent({
         </div>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="relative overflow-hidden rounded-xl border border-amber-200 bg-gradient-to-br from-amber-50/70 via-white to-white p-5 shadow-[0_16px_36px_rgba(180,122,32,0.14)] ring-1 ring-amber-100/80">
+        <div
+          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400"
+          aria-hidden="true"
+        />
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-sm font-black uppercase tracking-wide">
@@ -5226,6 +5327,9 @@ function DashboardSubpageContent({
       />
     );
   }
+  if (view === "mock-diagnostic") {
+    return <MockDiagnosticContent />;
+  }
   if (view === "practice") {
     return <PracticeContent latestDiagnostic={latestDiagnostic} />;
   }
@@ -6354,7 +6458,9 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               },
             ].map((item) => {
               const Icon = item.icon;
-              const isActive = item.view === view;
+              const isActive =
+                item.view === view ||
+                (item.view === "diagnostic" && view === "mock-diagnostic");
               return (
                 <Link
                   key={item.label}
@@ -6462,7 +6568,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
         <main className="min-w-0">
           <header className="flex flex-col gap-4 border-b border-slate-200 bg-white px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
             <div className="flex items-center gap-4">
-              {view === "diagnostic" && (
+              {(view === "diagnostic" || view === "mock-diagnostic") && (
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-blue-600">
                   <Activity className="h-7 w-7" aria-hidden="true" />
                 </div>
@@ -7778,6 +7884,10 @@ export function UCATDashboardPage() {
 
 export function UCATDiagnosticPage() {
   return <UCATDashboard view="diagnostic" />;
+}
+
+export function UCATMockDiagnosticPage() {
+  return <UCATDashboard view="mock-diagnostic" />;
 }
 
 export function UCATPracticePage() {

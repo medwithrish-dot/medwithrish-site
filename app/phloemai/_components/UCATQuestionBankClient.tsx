@@ -83,6 +83,7 @@ type DiagnosticMode =
 type MockId = "mock-a" | "mock-b" | "mock-c";
 type MockStartScope = "full-mock" | "subtest" | "diagnostic" | "free";
 type MockFilter = "all" | "continue" | "attempted" | "unattempted";
+type MockScoreMetric = "overall" | UCATSection;
 type SectionMockTimingMode = "official" | "short";
 type DiagnosticSectionScore = {
   label: string;
@@ -252,6 +253,9 @@ type PracticeQuestionSummary = {
 type PracticeSessionSummary = {
   section: UCATSection;
   sectionTitle: string;
+  mockId?: MockId | null;
+  mockScope?: MockStartScope | null;
+  mockLabel?: string | null;
   startedAt: string;
   completedAt: string;
   totalQuestions: number;
@@ -295,6 +299,21 @@ type SavedPracticeSessionRow = {
   summary: unknown;
   completed_at: string | null;
   created_at: string | null;
+  source: string | null;
+};
+type MockScoreRecord = {
+  value: number;
+  display: string;
+  completedAt: string;
+  accuracy: number;
+};
+type MockScoreMatrix = Record<
+  MockId,
+  Partial<Record<UCATSection, MockScoreRecord>>
+>;
+type MockScoreSessionRow = {
+  summary: unknown;
+  completed_at: string | null;
   source: string | null;
 };
 
@@ -419,6 +438,10 @@ function getMockIndex(mockId: MockId) {
   return Math.max(0, MOCK_LIBRARY.findIndex((mock) => mock.id === mockId));
 }
 
+function isMockId(value: unknown): value is MockId {
+  return MOCK_LIBRARY.some((mock) => mock.id === value);
+}
+
 function withMockQuery(path: string, mockId: MockId) {
   const separator = path.includes("?") ? "&" : "?";
   return `${path}${separator}mock=${mockId}`;
@@ -431,9 +454,15 @@ function getMockOrderedQuestions(
 ) {
   if (questions.length === 0) return questions;
 
-  const target = Math.min(FULL_MOCK_TARGETS[section], questions.length);
-  const start = (getMockIndex(mockId) * target) % questions.length;
-  return [...questions.slice(start), ...questions.slice(0, start)];
+  const standardisedQuestions = [...questions].sort((a, b) =>
+    a.id.localeCompare(b.id)
+  );
+  const target = Math.min(FULL_MOCK_TARGETS[section], standardisedQuestions.length);
+  const start = (getMockIndex(mockId) * target) % standardisedQuestions.length;
+  return [
+    ...standardisedQuestions.slice(start),
+    ...standardisedQuestions.slice(0, start),
+  ];
 }
 
 function getOfficialSectionSeconds(section: UCATSection, questionCount: number) {
@@ -452,6 +481,89 @@ function getPracticeSource(diagnosticMode: DiagnosticMode | null) {
   if (diagnosticMode === "subset") return SUBSET_DIAGNOSTIC_SOURCE;
 
   return "question_bank";
+}
+
+function createEmptyMockScoreMatrix(): MockScoreMatrix {
+  return MOCK_LIBRARY.reduce((matrix, mock) => {
+    matrix[mock.id] = {};
+    return matrix;
+  }, {} as MockScoreMatrix);
+}
+
+function normaliseSummaryMockId(summary: PracticeSessionSummary): MockId {
+  return isMockId(summary.mockId) ? summary.mockId : DEFAULT_MOCK_ID;
+}
+
+function getSectionScoreRecord(summary: PracticeSessionSummary): MockScoreRecord {
+  const score = getDiagnosticSectionScore(summary);
+  const completedAt = summary.completedAt;
+
+  if (summary.section === "sjt") {
+    const band = score.metadata.sjtBand ?? getSjtBand(summary.scorePoints, summary.maxScore);
+    return {
+      value: band,
+      display: `Band ${band}`,
+      completedAt,
+      accuracy: summary.accuracy,
+    };
+  }
+
+  const scaledScore =
+    score.metadata.scaledScore ??
+    getEstimatedScaledScore(summary.scorePoints, summary.maxScore);
+  return {
+    value: scaledScore,
+    display: String(scaledScore),
+    completedAt,
+    accuracy: summary.accuracy,
+  };
+}
+
+function buildMockScoreMatrix(
+  rows: MockScoreSessionRow[],
+  scope: Extract<MockStartScope, "full-mock" | "subtest"> = "full-mock"
+): MockScoreMatrix {
+  const matrix = createEmptyMockScoreMatrix();
+
+  rows.forEach((row) => {
+    if (
+      row.source !== FULL_SECTION_DIAGNOSTIC_SOURCE ||
+      !row.summary ||
+      typeof row.summary !== "object" ||
+      Array.isArray(row.summary)
+    ) {
+      return;
+    }
+
+    const summary = row.summary as PracticeSessionSummary;
+    if (!FULL_MOCK_SECTION_ORDER.includes(summary.section)) return;
+    if (summary.mockScope) {
+      if (summary.mockScope !== scope) return;
+    } else if (scope !== "full-mock") {
+      return;
+    }
+
+    const mockId = normaliseSummaryMockId(summary);
+    const section = summary.section;
+    const current = matrix[mockId][section];
+    const completedAt = summary.completedAt ?? row.completed_at ?? "";
+
+    if (
+      current &&
+      completedAt &&
+      current.completedAt &&
+      new Date(current.completedAt).getTime() > new Date(completedAt).getTime()
+    ) {
+      return;
+    }
+
+    matrix[mockId][section] = {
+      ...getSectionScoreRecord({ ...summary, completedAt }),
+      completedAt,
+    };
+  });
+
+  return matrix;
 }
 
 function normaliseSavedPracticeSet(
@@ -1203,6 +1315,9 @@ function buildQuestionSummary({
 function buildPracticeSessionSummary({
   section,
   sectionTitle,
+  mockId = null,
+  mockScope = null,
+  mockLabel = null,
   questions,
   answers,
   flags,
@@ -1217,6 +1332,9 @@ function buildPracticeSessionSummary({
 }: {
   section: UCATSection;
   sectionTitle: string;
+  mockId?: MockId | null;
+  mockScope?: MockStartScope | null;
+  mockLabel?: string | null;
   questions: UCATQuestion[];
   answers: Record<number, PracticeAnswer>;
   flags: Record<number, boolean>;
@@ -1306,6 +1424,9 @@ function buildPracticeSessionSummary({
   return {
     section,
     sectionTitle,
+    mockId,
+    mockScope,
+    mockLabel,
     startedAt: new Date(startedAt).toISOString(),
     completedAt: new Date(completedAt).toISOString(),
     totalQuestions: questions.length,
@@ -2391,6 +2512,74 @@ function getAvailableMockQuestionCount(section: UCATSection) {
   return Math.min(FULL_MOCK_TARGETS[section], UCAT_QUESTION_BANK[section].length);
 }
 
+function useMockScoreMatrix(
+  scope: Extract<MockStartScope, "full-mock" | "subtest">
+) {
+  const [scoreMatrix, setScoreMatrix] = useState<MockScoreMatrix>(() =>
+    createEmptyMockScoreMatrix()
+  );
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadScores() {
+      setLoading(true);
+
+      try {
+        if (!hasSupabaseConfig()) {
+          if (mounted) setScoreMatrix(createEmptyMockScoreMatrix());
+          return;
+        }
+
+        const supabase = createSupabaseClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!mounted) return;
+
+        if (!user) {
+          setScoreMatrix(createEmptyMockScoreMatrix());
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("practice_sessions")
+          .select("summary,completed_at,source")
+          .eq("user_id", user.id)
+          .eq("source", FULL_SECTION_DIAGNOSTIC_SOURCE)
+          .order("completed_at", { ascending: false })
+          .limit(250);
+
+        if (error) throw error;
+        if (mounted) {
+          setScoreMatrix(
+            buildMockScoreMatrix((data ?? []) as MockScoreSessionRow[], scope)
+          );
+        }
+      } catch (error) {
+        console.error("Failed to load full mock score history", error);
+        if (mounted) setScoreMatrix(createEmptyMockScoreMatrix());
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    void loadScores();
+
+    return () => {
+      mounted = false;
+    };
+  }, [scope]);
+
+  return { scoreMatrix, loading };
+}
+
+function useFullMockScoreMatrix() {
+  return useMockScoreMatrix("full-mock");
+}
+
 function MockSetPicker({
   selectedMockId,
   baseHref,
@@ -2581,115 +2770,230 @@ function MockStatusTabs({
   );
 }
 
-function MockLineGraph({
+function getMockMetricLabel(metric: MockScoreMetric) {
+  return metric === "overall" ? "Overall" : getUCATSectionMeta(metric).code;
+}
+
+function getMockMetricPoint(
+  scoreMatrix: MockScoreMatrix,
+  mockId: MockId,
+  metric: MockScoreMetric
+): MockScoreRecord | null {
+  const sectionScores = scoreMatrix[mockId] ?? {};
+
+  if (metric !== "overall") {
+    return sectionScores[metric] ?? null;
+  }
+
+  const scaledSections = (["vr", "dm", "qr"] as UCATSection[])
+    .map((section) => sectionScores[section])
+    .filter((record): record is MockScoreRecord => Boolean(record));
+
+  if (scaledSections.length === 0) return null;
+
+  const total = scaledSections.reduce((sum, record) => sum + record.value, 0);
+  const latestCompletedAt = scaledSections
+    .map((record) => record.completedAt)
+    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0];
+
+  return {
+    value: total,
+    display: String(total),
+    completedAt: latestCompletedAt,
+    accuracy: Math.round(
+      scaledSections.reduce((sum, record) => sum + record.accuracy, 0) /
+        scaledSections.length
+    ),
+  };
+}
+
+function MockStartPanel({
   selectedMock,
-  launchHref,
-  launchLabel,
-  helperText,
-  quickLinks = [],
-  axisLabels = ["3,000", "2,000", "1,000", "0"],
 }: {
   selectedMock: (typeof MOCK_LIBRARY)[number];
-  launchHref: string;
-  launchLabel: string;
-  helperText: string;
-  quickLinks?: Array<{ label: string; href: string; active?: boolean }>;
-  axisLabels?: string[];
+}) {
+  return (
+    <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+      <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
+        Standardised paper
+      </p>
+      <h3 className="mt-1 text-lg font-black text-slate-950">
+        Start {selectedMock.label}
+      </h3>
+      <p className="mt-2 text-xs font-semibold leading-5 text-slate-600">
+        Start the standardised paper with VR, then continue through DM, QR and
+        SJT.
+      </p>
+      <Link
+        href={withMockQuery("/phloemai/mocks/full/vr", selectedMock.id)}
+        className="mt-5 inline-flex h-10 w-full items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-black text-white shadow-sm transition-colors hover:bg-blue-700"
+      >
+        Start {selectedMock.label}
+      </Link>
+    </div>
+  );
+}
+
+function MockScoreGraph({
+  selectedMock,
+  metric,
+  scoreMatrix,
+  loading,
+}: {
+  selectedMock: (typeof MOCK_LIBRARY)[number];
+  metric: MockScoreMetric;
+  scoreMatrix: MockScoreMatrix;
+  loading: boolean;
 }) {
   const activeIndex = Math.max(0, getMockIndex(selectedMock.id));
+  const isSjt = metric === "sjt";
+  const isOverall = metric === "overall";
+  const axisLabels = isSjt
+    ? ["Band 1", "Band 2", "Band 3", "Band 4"]
+    : isOverall
+      ? ["2,700", "2,100", "1,500", "900", "0"]
+      : ["900", "700", "500", "300", "0"];
+  const chartWidth = 420;
+  const chartHeight = 190;
+  const left = 34;
+  const right = 392;
+  const top = 18;
+  const bottom = 150;
+  const maxValue = isOverall ? 2700 : 900;
+  const points = MOCK_LIBRARY.map((mock, index) => {
+    const score = getMockMetricPoint(scoreMatrix, mock.id, metric);
+    const x =
+      MOCK_LIBRARY.length === 1
+        ? (left + right) / 2
+        : left + ((right - left) / (MOCK_LIBRARY.length - 1)) * index;
+    const y = score
+      ? isSjt
+        ? top + ((score.value - 1) / 3) * (bottom - top)
+        : bottom - (Math.min(score.value, maxValue) / maxValue) * (bottom - top)
+      : null;
+
+    return { mock, score, x, y };
+  });
+  const plottedPoints = points.filter(
+    (point): point is typeof point & { y: number; score: MockScoreRecord } =>
+      typeof point.y === "number" && Boolean(point.score)
+  );
+  const linePoints = plottedPoints
+    .map((point) => `${point.x},${point.y}`)
+    .join(" ");
+  const hasScores = plottedPoints.length > 0;
+  const selectedScore = getMockMetricPoint(scoreMatrix, selectedMock.id, metric);
 
   return (
-    <div className="grid gap-3 lg:grid-cols-[210px_1fr]">
-      <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-        <div className="grid h-[180px] grid-cols-[42px_1fr] gap-3">
-          <div className="flex flex-col justify-between border-r border-slate-200 pr-2 text-right text-xs font-bold text-slate-600">
-            {axisLabels.map((label) => (
-              <span key={label}>{label}</span>
-            ))}
-          </div>
-          <div className="relative border-b border-slate-300">
-            {[25, 50, 75].map((top) => (
-              <div
-                key={top}
-                className="absolute left-0 right-0 border-t border-slate-200"
-                style={{ top: `${top}%` }}
-              />
-            ))}
-            <svg
-              className="absolute inset-0 h-full w-full overflow-visible"
-              viewBox="0 0 240 150"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-            >
-              <polyline
-                points="20,130 120,130 220,130"
-                fill="none"
-                stroke="#2563eb"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-              {MOCK_LIBRARY.map((mock, index) => {
-                const x = 20 + index * 100;
-                return (
-                  <circle
-                    key={mock.id}
-                    cx={x}
-                    cy="130"
-                    r={index === activeIndex ? 5 : 3.5}
-                    fill={index === activeIndex ? "#2563eb" : "#bfdbfe"}
-                  />
-                );
-              })}
-            </svg>
-            <div className="absolute inset-x-0 -bottom-7 grid grid-cols-3 text-center text-[11px] font-bold text-slate-600">
-              {MOCK_LIBRARY.map((mock) => (
-                <span key={mock.id}>{mock.label}</span>
-              ))}
-            </div>
-          </div>
+    <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
+            {getMockMetricLabel(metric)} score by full mock
+          </p>
+          <h3 className="mt-1 text-base font-black text-slate-950">
+            {selectedScore
+              ? `${selectedMock.label}: ${selectedScore.display}`
+              : `${selectedMock.label}: no saved score yet`}
+          </h3>
+          <p className="mt-1 text-xs font-semibold leading-5 text-slate-600">
+            {isOverall
+              ? "Overall is the saved VR + DM + QR scaled total. SJT is shown separately by band."
+              : "Each point comes from the latest saved timed section attempt for that mock."}
+          </p>
         </div>
-        <p className="mt-9 text-center text-[11px] font-black uppercase tracking-wide text-slate-500">
-          Score trend
-        </p>
+        {loading && (
+          <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-slate-500">
+            Loading scores
+          </span>
+        )}
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
-              Selected
-            </p>
-            <h3 className="mt-1 text-base font-black text-slate-950">
-              {selectedMock.label}
-            </h3>
-            <p className="mt-1 max-w-xl text-xs font-semibold leading-5 text-slate-600">
-              {helperText}
-            </p>
-          </div>
-          <Link
-            href={launchHref}
-            className="inline-flex h-9 shrink-0 items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-black text-white shadow-sm transition-colors hover:bg-blue-700"
-          >
-            {launchLabel}
-          </Link>
+      <div className="mt-4 grid gap-3 sm:grid-cols-[64px_1fr]">
+        <div className="flex h-[190px] flex-col justify-between text-right text-[11px] font-bold text-slate-500">
+          {axisLabels.map((label) => (
+            <span key={label}>{label}</span>
+          ))}
         </div>
-        {quickLinks.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {quickLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`inline-flex h-8 items-center justify-center rounded-md border px-3 text-xs font-black transition-colors ${
-                  link.active
-                    ? "border-blue-600 bg-blue-600 text-white"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-700"
-                }`}
-              >
-                {link.label}
-              </Link>
+        <div className="relative h-[210px]">
+          <svg
+            className="absolute inset-0 h-full w-full"
+            viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            {[0, 0.25, 0.5, 0.75, 1].map((ratio) => {
+              const y = top + ratio * (bottom - top);
+              return (
+                <line
+                  key={ratio}
+                  x1={left}
+                  x2={right}
+                  y1={y}
+                  y2={y}
+                  stroke="#dbe4ef"
+                  strokeWidth="1"
+                />
+              );
+            })}
+            <line
+              x1={left}
+              x2={left}
+              y1={top}
+              y2={bottom}
+              stroke="#cbd5e1"
+              strokeWidth="1"
+            />
+            <line
+              x1={left}
+              x2={right}
+              y1={bottom}
+              y2={bottom}
+              stroke="#cbd5e1"
+              strokeWidth="1"
+            />
+            {linePoints && plottedPoints.length > 1 && (
+              <polyline
+                points={linePoints}
+                fill="none"
+                stroke="#2563eb"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            )}
+            {points.map((point, index) => {
+              const active = index === activeIndex;
+              return (
+                <g key={point.mock.id}>
+                  <circle
+                    cx={point.x}
+                    cy={point.y ?? bottom}
+                    r={active ? 6 : 4.5}
+                    fill={point.score ? (active ? "#2563eb" : "#93c5fd") : "#e2e8f0"}
+                    stroke={active ? "#1d4ed8" : "#cbd5e1"}
+                    strokeWidth={active ? 2 : 1}
+                  />
+                </g>
+              );
+            })}
+          </svg>
+          <div className="absolute inset-x-0 bottom-0 grid grid-cols-3 text-center text-[11px] font-black text-slate-600">
+            {points.map((point) => (
+              <div key={point.mock.id}>
+                <p>{point.mock.label}</p>
+                <p className="mt-1 text-[10px] font-bold text-slate-400">
+                  {point.score?.display ?? "-"}
+                </p>
+              </div>
             ))}
           </div>
-        )}
+          {!hasScores && !loading && (
+            <div className="absolute inset-x-8 top-14 rounded-lg border border-dashed border-slate-300 bg-white/80 px-4 py-5 text-center text-xs font-bold text-slate-500">
+              Complete and save a full-mock section to plot your first score.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -2700,13 +3004,10 @@ function FullMockPerformancePanel({
 }: {
   selectedMock: (typeof MOCK_LIBRARY)[number];
 }) {
-  const sectionLinks = FULL_MOCK_SECTION_ORDER.map((section) => {
-    const meta = getUCATSectionMeta(section);
-    return {
-      label: meta.code,
-      href: withMockQuery(`/phloemai/mocks/full/${section}`, selectedMock.id),
-    };
-  });
+  const [selectedMetric, setSelectedMetric] =
+    useState<MockScoreMetric>("overall");
+  const { scoreMatrix, loading } = useFullMockScoreMatrix();
+  const metrics: MockScoreMetric[] = ["overall", ...FULL_MOCK_SECTION_ORDER];
 
   return (
     <section className="mt-4">
@@ -2715,31 +3016,31 @@ function FullMockPerformancePanel({
           Score History
         </h2>
         <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-3 text-xs font-black text-slate-600">
-          <Link
-            href={withMockQuery("/phloemai/mocks/full", selectedMock.id)}
-            className="rounded-md bg-blue-600 px-3 py-1.5 text-white"
-          >
-            Overall
-          </Link>
-          {sectionLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="rounded-md border border-slate-200 px-3 py-1.5 transition-colors hover:border-blue-300 hover:text-blue-700"
+          {metrics.map((metric) => (
+            <button
+              key={metric}
+              type="button"
+              onClick={() => setSelectedMetric(metric)}
+              aria-pressed={selectedMetric === metric}
+              className={`rounded-md px-3 py-1.5 transition-colors ${
+                selectedMetric === metric
+                  ? "bg-blue-600 text-white"
+                  : "border border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-700"
+              }`}
             >
-              {link.label}
-            </Link>
+              {getMockMetricLabel(metric)}
+            </button>
           ))}
         </div>
       </div>
 
-      <div className="mt-4">
-        <MockLineGraph
+      <div className="mt-4 grid gap-3 lg:grid-cols-[220px_1fr]">
+        <MockStartPanel selectedMock={selectedMock} />
+        <MockScoreGraph
           selectedMock={selectedMock}
-          launchHref={withMockQuery("/phloemai/mocks/full/vr", selectedMock.id)}
-          launchLabel={`Start ${selectedMock.label}`}
-          helperText="Open a full-mock section from this paper. Scores will populate here after completed attempts."
-          quickLinks={sectionLinks}
+          metric={selectedMetric}
+          scoreMatrix={scoreMatrix}
+          loading={loading}
         />
       </div>
     </section>
@@ -2836,14 +3137,7 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
   const [mockFilter, setMockFilter] = useState<MockFilter>("all");
   const selectedMock = getMockDefinition(mockId);
   const activeMeta = getUCATSectionMeta(activeSection);
-  const subtestSectionLinks = UCAT_SECTIONS.map((section) => ({
-    label: section.code,
-    href: withMockQuery(
-      `/phloemai/mocks/subtest/${section.slug}`,
-      selectedMock.id
-    ),
-    active: section.slug === activeSection,
-  }));
+  const { scoreMatrix, loading: scoreLoading } = useMockScoreMatrix("subtest");
   const visibleMocks =
     mockFilter === "continue" || mockFilter === "attempted"
       ? []
@@ -2913,16 +3207,11 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
                 Score History
               </h3>
               <div className="mt-3">
-                <MockLineGraph
+                <MockScoreGraph
                   selectedMock={selectedMock}
-                  launchHref={withMockQuery(
-                    `/phloemai/mocks/subtest/${activeSection}`,
-                    selectedMock.id
-                  )}
-                  launchLabel={`Start ${selectedMock.label}`}
-                  helperText={`Open ${activeMeta.code} for ${selectedMock.label}. Completed subtest scores will appear in this compact history.`}
-                  quickLinks={subtestSectionLinks}
-                  axisLabels={["900", "700", "500", "0"]}
+                  metric={activeSection}
+                  scoreMatrix={scoreMatrix}
+                  loading={scoreLoading}
                 />
               </div>
             </div>
@@ -5935,6 +6224,9 @@ function UCATQuestionBankSection({
     return buildPracticeSessionSummary({
       section: validSection,
       sectionTitle: meta.bankTitle,
+      mockId: diagnosticMode ? mockId : null,
+      mockScope: diagnosticMode ? fixedDiagnosticScope : null,
+      mockLabel: diagnosticMode ? selectedMock.label : null,
       questions,
       answers,
       flags,
@@ -5952,7 +6244,11 @@ function UCATQuestionBankSection({
     attentionTracker.trackingMode,
     flags,
     meta.bankTitle,
+    diagnosticMode,
+    fixedDiagnosticScope,
+    mockId,
     questions,
+    selectedMock.label,
     sessionDurationSeconds,
     sessionTimed,
     sessionStartedAt,
@@ -6086,6 +6382,9 @@ function UCATQuestionBankSection({
           diagnosticCredits > 0 ? "credit_available" : "not_requested";
         const attemptMetadata = {
           diagnosticMode,
+          mockId,
+          mockScope: fixedDiagnosticScope,
+          mockLabel: selectedMock.label,
           sourceSessionId: sessionId,
           summary,
           insights,
@@ -7088,6 +7387,9 @@ function UCATQuestionBankSection({
     const summary = buildPracticeSessionSummary({
       section: validSection,
       sectionTitle: meta.bankTitle,
+      mockId: diagnosticMode ? mockId : null,
+      mockScope: diagnosticMode ? fixedDiagnosticScope : null,
+      mockLabel: diagnosticMode ? selectedMock.label : null,
       questions,
       answers,
       flags,
