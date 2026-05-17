@@ -1143,6 +1143,7 @@ type DashboardDiagnosticTask = {
 };
 
 type DashboardDiagnostic = {
+  id: string;
   section: UCATSectionCode;
   accuracy: number;
   issues: DashboardDiagnosticIssue[];
@@ -1152,6 +1153,76 @@ type DashboardDiagnostic = {
   aiFeedbackStatus: string | null;
   completedAt: string | null;
 };
+
+type DiagnosticAttemptRow = {
+  id: string | null;
+  accuracy: number | null;
+  completed_at: string | null;
+  ai_feedback: string | null;
+  ai_feedback_status: string | null;
+  metadata: unknown;
+  source: string | null;
+};
+
+function normaliseDashboardDiagnostic(
+  row: DiagnosticAttemptRow,
+  index: number
+): DashboardDiagnostic {
+  const metadata =
+    row.metadata && typeof row.metadata === "object" && !Array.isArray(row.metadata)
+      ? (row.metadata as Record<string, unknown>)
+      : {};
+  const summary =
+    metadata.summary &&
+    typeof metadata.summary === "object" &&
+    !Array.isArray(metadata.summary)
+      ? (metadata.summary as Record<string, unknown>)
+      : null;
+  const sectionRaw =
+    typeof summary?.section === "string" ? summary.section.toUpperCase() : "QR";
+  const section = (
+    ["VR", "DM", "QR", "SJT"].includes(sectionRaw) ? sectionRaw : "QR"
+  ) as UCATSectionCode;
+  const insights =
+    metadata.insights &&
+    typeof metadata.insights === "object" &&
+    !Array.isArray(metadata.insights)
+      ? (metadata.insights as { issues?: unknown; strengths?: unknown })
+      : { issues: [], strengths: [] };
+  const issues = Array.isArray(insights.issues)
+    ? (insights.issues as DashboardDiagnosticIssue[])
+    : [];
+  const strengths = Array.isArray(insights.strengths)
+    ? (insights.strengths as string[])
+    : [];
+  const studyPlanTasks = Array.isArray(metadata.studyPlanTasks)
+    ? (metadata.studyPlanTasks as DashboardDiagnosticTask[])
+    : [];
+  const aiFeedbackText =
+    typeof metadata.aiFeedbackText === "string"
+      ? metadata.aiFeedbackText
+      : typeof row.ai_feedback === "string"
+        ? row.ai_feedback
+        : null;
+  const aiFeedbackStatus =
+    typeof row.ai_feedback_status === "string"
+      ? row.ai_feedback_status
+      : typeof metadata.aiFeedbackStatus === "string"
+        ? metadata.aiFeedbackStatus
+        : null;
+
+  return {
+    id: row.id ?? row.completed_at ?? `diagnostic-${index}`,
+    section,
+    accuracy: typeof row.accuracy === "number" ? row.accuracy : 0,
+    issues,
+    strengths,
+    studyPlanTasks,
+    aiFeedbackText,
+    aiFeedbackStatus,
+    completedAt: typeof row.completed_at === "string" ? row.completed_at : null,
+  };
+}
 
 const dashboardPageMeta: Record<
   DashboardView,
@@ -1937,6 +2008,33 @@ function getDiagnosticStudyPlanTasks(
         ...presentation,
       },
     ];
+  });
+}
+
+function getActiveDiagnosticStudyPlanTasks(
+  latestDiagnostic: DashboardDiagnostic | null,
+  completedTaskIds: Set<string>,
+  removedTaskIds: Set<string>
+): StudyPlanDisplayTask[] {
+  const hiddenTaskIds = new Set([...completedTaskIds, ...removedTaskIds]);
+
+  return getDiagnosticStudyPlanTasks(latestDiagnostic).filter(
+    (task) => !hiddenTaskIds.has(task.id)
+  );
+}
+
+function formatDiagnosticReportDate(value: string | null) {
+  if (!value) return "Date not saved";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Date not saved";
+
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -2745,11 +2843,21 @@ function MockDiagnosticContent() {
 
 function PracticeContent({
   latestDiagnostic,
+  completedDashboardTaskIds,
+  removedDashboardTaskIds,
 }: {
   latestDiagnostic: DashboardDiagnostic | null;
+  completedDashboardTaskIds: Set<string>;
+  removedDashboardTaskIds: Set<string>;
 }) {
-  const studyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
+  const allStudyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
+  const studyPlanTasks = getActiveDiagnosticStudyPlanTasks(
+    latestDiagnostic,
+    completedDashboardTaskIds,
+    removedDashboardTaskIds
+  );
   const recommendedTask = studyPlanTasks[0];
+  const completedCurrentPlan = allStudyPlanTasks.length > 0 && !recommendedTask;
   const mockAndSkillCards = [
     {
       title: "Full mocks",
@@ -2839,11 +2947,16 @@ function PracticeContent({
                 Recommended from your study plan
               </h2>
               <h3 className="mt-6 text-lg font-black">
-                {recommendedTask?.title ?? "No recommended task yet"}
+                {recommendedTask?.title ??
+                  (completedCurrentPlan
+                    ? "Current study plan cleared"
+                    : "No recommended task yet")}
               </h3>
               <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
                 {recommendedTask?.fix ??
-                  "Complete and mark practice questions to build a real task queue."}
+                  (completedCurrentPlan
+                    ? "Every task from your latest diagnostic has been ticked off."
+                    : "Complete and mark practice questions to build a real task queue.")}
               </p>
             </div>
           </div>
@@ -2949,10 +3062,14 @@ function PracticeContent({
             {studyPlanTasks.length === 0 ? (
               <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
                 <p className="text-sm font-black text-slate-700">
-                  Your targeted queue is empty.
+                  {completedCurrentPlan
+                    ? "Your current targeted queue is cleared."
+                    : "Your targeted queue is empty."}
                 </p>
                 <p className="mt-2 text-xs font-semibold text-slate-500">
-                  Saved practice data will decide what belongs here.
+                  {completedCurrentPlan
+                    ? "Run another diagnostic when you want a fresh task queue."
+                    : "Saved practice data will decide what belongs here."}
                 </p>
               </div>
             ) : (
@@ -4841,48 +4958,76 @@ function ReportContent({
   onUpgrade,
   practiceStats,
   latestDiagnostic,
+  diagnosticHistory,
+  completedDashboardTaskIds,
+  removedDashboardTaskIds,
 }: PremiumGateProps & {
   practiceStats: PracticeStats;
   latestDiagnostic: DashboardDiagnostic | null;
+  diagnosticHistory: DashboardDiagnostic[];
+  completedDashboardTaskIds: Set<string>;
+  removedDashboardTaskIds: Set<string>;
 }) {
   const [reportFilter, setReportFilter] = useState<ReportSectionFilter>("All");
-  const reviewRows: Array<[string, string, string]> = [];
-  const hasDiagnostic = Boolean(latestDiagnostic);
+  const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
+  const reportHistory =
+    diagnosticHistory.length > 0
+      ? diagnosticHistory
+      : latestDiagnostic
+        ? [latestDiagnostic]
+        : [];
+  const selectedDiagnostic =
+    reportHistory.find((report) => report.id === selectedReportId) ??
+    latestDiagnostic;
+  const selectedReportIsLatest =
+    Boolean(selectedDiagnostic?.id && latestDiagnostic?.id) &&
+    selectedDiagnostic?.id === latestDiagnostic?.id;
+  const hasDiagnostic = Boolean(selectedDiagnostic);
   const filterMatches =
-    reportFilter === "All" || latestDiagnostic?.section === reportFilter;
+    reportFilter === "All" || selectedDiagnostic?.section === reportFilter;
   const diagnosticIssueCards =
-    latestDiagnostic && filterMatches
-      ? latestDiagnostic.issues.map(buildReportIssueCard)
+    selectedDiagnostic && filterMatches
+      ? selectedDiagnostic.issues.map(buildReportIssueCard)
       : [];
   const hasSignals = diagnosticIssueCards.length > 0;
-  const studyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
+  const allStudyPlanTasks = getDiagnosticStudyPlanTasks(selectedDiagnostic);
+  const studyPlanTasks = getActiveDiagnosticStudyPlanTasks(
+    selectedDiagnostic,
+    completedDashboardTaskIds,
+    removedDashboardTaskIds
+  );
   const recommendedTask = studyPlanTasks[0];
+  const completedCurrentPlan = allStudyPlanTasks.length > 0 && !recommendedTask;
   const feedbackStatus =
-    latestDiagnostic?.aiFeedbackText
+    selectedDiagnostic?.aiFeedbackText
       ? "Ready"
-      : latestDiagnostic?.aiFeedbackStatus === "queued_no_api_key"
+      : selectedDiagnostic?.aiFeedbackStatus === "queued_no_api_key"
         ? "Queued"
-        : latestDiagnostic
+        : selectedDiagnostic
           ? "Not requested"
           : "Waiting";
 
   const feedbackHelper =
-    latestDiagnostic?.aiFeedbackText
-      ? "Generated from your latest diagnostic."
-      : latestDiagnostic
+    selectedDiagnostic?.aiFeedbackText
+      ? selectedReportIsLatest
+        ? "Generated from your latest diagnostic."
+        : "Generated from the selected previous diagnostic."
+      : selectedDiagnostic
         ? "AI feedback has not been generated for this diagnostic yet."
         : "Complete and mark a diagnostic to generate personalised written feedback.";
 
   const reportFilters: ReportSectionFilter[] = ["All", "QR", "VR", "DM", "SJT"];
 
   const latestDiagnosticSummary = hasDiagnostic
-    ? latestDiagnostic?.section
-      ? `Latest ${latestDiagnostic.section} diagnostic`
-      : "Latest diagnostic"
+    ? selectedDiagnostic?.section
+      ? `${selectedReportIsLatest ? "Latest" : "Selected"} ${selectedDiagnostic.section} diagnostic`
+      : selectedReportIsLatest
+        ? "Latest diagnostic"
+        : "Selected diagnostic"
     : "No diagnostic or marked practice report saved yet";
 
   const metricAccuracy = hasDiagnostic
-    ? `${latestDiagnostic?.accuracy ?? 0}%`
+    ? `${selectedDiagnostic?.accuracy ?? 0}%`
     : practiceStats.hasCompletedQuestions
       ? `${practiceStats.accuracy}%`
       : "-";
@@ -4892,7 +5037,7 @@ function ReportContent({
 
   const signalBadgeText = hasSignals
     ? "Saved issue data found"
-    : hasDiagnostic
+    : selectedDiagnostic
       ? "No issues for this filter"
       : "Waiting for diagnostic";
 
@@ -4902,7 +5047,7 @@ function ReportContent({
 
   const emptyIssueMessage =
     hasDiagnostic && !filterMatches
-      ? `No ${reportFilter} issues in the latest ${latestDiagnostic?.section} diagnostic.`
+      ? `No ${reportFilter} issues in the selected ${selectedDiagnostic?.section} diagnostic.`
       : hasDiagnostic
         ? "No issue labels were saved for this diagnostic."
         : "Complete and mark a diagnostic to start detecting issues from your own telemetry.";
@@ -4913,20 +5058,24 @@ function ReportContent({
   const noFeedbackActionLabel = hasDiagnostic ? "Open diagnostic" : "Run diagnostic";
 
   const reportIssueIntro = hasDiagnostic
-    ? "Showing the issue labels, causes, supporting evidence and study tasks saved from your latest diagnostic."
+    ? selectedReportIsLatest
+      ? "Showing the issue labels, causes, supporting evidence and study tasks saved from your latest diagnostic."
+      : "Showing the issue labels, causes, supporting evidence and study tasks saved from the selected previous diagnostic."
     : "Complete a diagnostic to replace generic guidance with your saved issue scan.";
 
   const recommendedTaskHref = recommendedTask?.href ?? "/phloemai/practice";
   const recommendedTaskText = recommendedTask
     ? recommendedTask.fix
-    : "Start a recommended task based on your report.";
+    : completedCurrentPlan
+      ? "All tasks from this report are ticked off."
+      : "Start a recommended task based on your report.";
 
   const filteredLabel =
     reportFilter === "All"
       ? "all sections"
       : `${reportFilter} only`;
 
-  const hasAiFeedback = Boolean(latestDiagnostic?.aiFeedbackText);
+  const hasAiFeedback = Boolean(selectedDiagnostic?.aiFeedbackText);
 
   const feedbackBadgeClass = hasAiFeedback
     ? "bg-emerald-50 text-emerald-700"
@@ -4943,7 +5092,9 @@ function ReportContent({
               <Bookmark className="h-6 w-6" aria-hidden="true" />
             </div>
             <div>
-              <h2 className="text-sm font-black">Latest diagnostic</h2>
+              <h2 className="text-sm font-black">
+                {selectedReportIsLatest ? "Latest diagnostic" : "Selected diagnostic"}
+              </h2>
               <p className="mt-1 text-xs font-bold text-slate-500">
                 {latestDiagnosticSummary}
               </p>
@@ -4998,9 +5149,9 @@ function ReportContent({
             {feedbackStatus}
           </span>
         </div>
-        {latestDiagnostic?.aiFeedbackText ? (
+        {selectedDiagnostic?.aiFeedbackText ? (
           <ExpandableAiFeedback
-            text={latestDiagnostic.aiFeedbackText}
+            text={selectedDiagnostic.aiFeedbackText}
             className="mt-4 text-sm font-semibold leading-7 text-slate-700"
             paragraphClassName="whitespace-pre-wrap"
             buttonClassName="mt-4 text-sm font-black text-blue-600 hover:text-blue-700"
@@ -5098,52 +5249,69 @@ function ReportContent({
             </ol>
           ) : (
             <p className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600">
-              Study tasks will appear here as the saved fixes from your latest diagnostic.
+              {completedCurrentPlan
+                ? "All tasks from this report are ticked off."
+                : "Study tasks will appear here as the saved fixes from your latest diagnostic."}
             </p>
           )}
         </section>
 
-        <ClientPremiumGate
-          isPremium={isPremium}
-          checkoutLoading={checkoutLoading}
-          onUpgrade={onUpgrade}
-          title="Unlock question review"
-          description="Premium shows slow questions, changed answers and marked-review patterns after each diagnostic."
-        >
-          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-sm font-black uppercase tracking-wide">
-              Question review
-            </h2>
-            <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
-              {reviewRows.length === 0 ? (
-                <div className="px-4 py-8 text-center">
-                  <p className="text-sm font-black text-slate-700">
-                    No question review rows yet.
-                  </p>
-                  <p className="mt-2 text-xs font-semibold text-slate-500">
-                    Slow questions, changed answers and flags will appear after saved practice.
-                  </p>
-                </div>
-              ) : (
-              reviewRows.map(([title, count, note]) => (
-                <div
-                  key={title}
-                  className="grid gap-3 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[1fr_130px_150px_70px] sm:items-center"
-                >
-                  <p className="text-sm font-black">{title}</p>
-                  <p className="text-xs font-bold text-slate-500">{count}</p>
-                  <p className="text-xs font-bold text-slate-500">{note}</p>
-                  <Link
-                    href="/phloemai/question-bank"
-                    className="text-xs font-black text-blue-600 hover:text-blue-700"
-                  >
-                    Review
-                  </Link>
-                </div>
-              )))}
+        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 className="text-sm font-black uppercase tracking-wide">
+                View previous reports
+              </h2>
+              <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
+                Open an earlier diagnostic to reload its AI feedback, issue scan
+                and study plan on this page.
+              </p>
             </div>
-          </section>
-        </ClientPremiumGate>
+            <span className="w-fit rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-600">
+              {reportHistory.length} saved
+            </span>
+          </div>
+          <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
+            {reportHistory.length === 0 ? (
+              <div className="px-4 py-8 text-center">
+                <p className="text-sm font-black text-slate-700">
+                  No previous reports yet.
+                </p>
+                <p className="mt-2 text-xs font-semibold text-slate-500">
+                  Saved diagnostics will appear here after you mark them.
+                </p>
+              </div>
+            ) : (
+              reportHistory.map((report, index) => {
+                const active = report.id === selectedDiagnostic?.id;
+                return (
+                  <button
+                    key={report.id}
+                    type="button"
+                    onClick={() => setSelectedReportId(report.id)}
+                    aria-pressed={active}
+                    className={`grid w-full gap-3 border-b border-slate-100 px-4 py-3 text-left transition-colors last:border-b-0 sm:grid-cols-[1fr_90px_86px] sm:items-center ${
+                      active
+                        ? "bg-blue-50 text-blue-800"
+                        : "bg-white text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    <div>
+                      <p className="text-sm font-black text-slate-950">
+                        {index === 0 ? "Latest report" : `Previous report ${index}`}
+                      </p>
+                      <p className="mt-1 text-xs font-bold text-slate-500">
+                        {formatDiagnosticReportDate(report.completedAt)}
+                      </p>
+                    </div>
+                    <span className="text-xs font-black">{report.section}</span>
+                    <span className="text-xs font-black">{report.accuracy}%</span>
+                  </button>
+                );
+              })
+            )}
+          </div>
+        </section>
       </div>
 
       <section className="flex flex-col gap-4 rounded-xl border border-indigo-100 bg-indigo-50 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
@@ -5162,7 +5330,7 @@ function ReportContent({
           href={recommendedTaskHref}
           className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white hover:bg-blue-700"
         >
-          Start recommended task
+          {recommendedTask ? "Start recommended task" : "Open practice"}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       </section>
@@ -5297,6 +5465,7 @@ function DashboardSubpageContent({
   checkoutLoading,
   practiceStats,
   latestDiagnostic,
+  diagnosticHistory,
   completedDashboardTaskIds,
   removedDashboardTaskIds,
   diagnosticCredits,
@@ -5311,6 +5480,7 @@ function DashboardSubpageContent({
   checkoutLoading: boolean;
   practiceStats: PracticeStats;
   latestDiagnostic: DashboardDiagnostic | null;
+  diagnosticHistory: DashboardDiagnostic[];
   completedDashboardTaskIds: Set<string>;
   removedDashboardTaskIds: Set<string>;
   diagnosticCredits: number;
@@ -5331,7 +5501,13 @@ function DashboardSubpageContent({
     return <MockDiagnosticContent />;
   }
   if (view === "practice") {
-    return <PracticeContent latestDiagnostic={latestDiagnostic} />;
+    return (
+      <PracticeContent
+        latestDiagnostic={latestDiagnostic}
+        completedDashboardTaskIds={completedDashboardTaskIds}
+        removedDashboardTaskIds={removedDashboardTaskIds}
+      />
+    );
   }
   if (view === "skills-trainers") {
     return <SkillsTrainersContent latestDiagnostic={latestDiagnostic} />;
@@ -5369,6 +5545,9 @@ function DashboardSubpageContent({
       onUpgrade={onUpgrade}
       practiceStats={practiceStats}
       latestDiagnostic={latestDiagnostic}
+      diagnosticHistory={diagnosticHistory}
+      completedDashboardTaskIds={completedDashboardTaskIds}
+      removedDashboardTaskIds={removedDashboardTaskIds}
     />
   );
 }
@@ -5408,6 +5587,14 @@ function AuthPanel({
     <div className="min-h-screen bg-[#f8fbff] px-5 py-10 text-[#0b1143]">
       <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[0.9fr_1fr] lg:items-center">
         <div>
+          <Link
+            href="/phloemai"
+            className="mb-8 inline-flex items-center gap-2 text-sm font-black text-slate-600 transition-colors hover:text-blue-700"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Back to PhloemAI
+          </Link>
+
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
               <Brain className="h-7 w-7" aria-hidden="true" />
@@ -5838,6 +6025,14 @@ function MissingSupabaseConfig() {
   return (
     <div className="min-h-screen bg-[#f8fbff] px-5 py-10 text-[#0b1143]">
       <div className="mx-auto max-w-xl rounded-2xl border border-amber-200 bg-white p-6 shadow-sm">
+        <Link
+          href="/phloemai"
+          className="mb-5 inline-flex items-center gap-2 text-sm font-black text-slate-600 transition-colors hover:text-blue-700"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Back to PhloemAI
+        </Link>
+
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
           <LockKeyhole className="h-6 w-6" aria-hidden="true" />
         </div>
@@ -5885,6 +6080,9 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   );
   const [latestDiagnostic, setLatestDiagnostic] =
     useState<DashboardDiagnostic | null>(null);
+  const [diagnosticHistory, setDiagnosticHistory] = useState<
+    DashboardDiagnostic[]
+  >([]);
   const supabaseReady = hasSupabaseConfig();
   const supabase = useMemo(
     () => (supabaseReady ? createSupabaseClient() : null),
@@ -6053,77 +6251,29 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       setPracticeStats(buildPracticeStats((data ?? []) as PracticeAttemptRow[]));
     }
 
-    async function loadLatestDiagnostic(nextUser: User) {
+    async function loadDiagnosticHistory(nextUser: User) {
       const { data, error } = await supabaseClient
         .from("diagnostic_attempts")
         .select(
-          "accuracy,completed_at,ai_feedback,ai_feedback_status,metadata,source"
+          "id,accuracy,completed_at,ai_feedback,ai_feedback_status,metadata,source"
         )
         .eq("user_id", nextUser.id)
         .order("completed_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
+        .limit(12);
 
       if (!mounted) return;
       if (error || !data) {
         setLatestDiagnostic(null);
+        setDiagnosticHistory([]);
         return;
       }
 
-      const metadata =
-        data.metadata && typeof data.metadata === "object" && !Array.isArray(data.metadata)
-          ? (data.metadata as Record<string, unknown>)
-          : {};
-      const summary =
-        metadata.summary &&
-        typeof metadata.summary === "object" &&
-        !Array.isArray(metadata.summary)
-          ? (metadata.summary as Record<string, unknown>)
-          : null;
-      const sectionRaw =
-        typeof summary?.section === "string" ? summary.section.toUpperCase() : "QR";
-      const section = (
-        ["VR", "DM", "QR", "SJT"].includes(sectionRaw) ? sectionRaw : "QR"
-      ) as UCATSectionCode;
-      const insights =
-        metadata.insights &&
-        typeof metadata.insights === "object" &&
-        !Array.isArray(metadata.insights)
-          ? (metadata.insights as { issues?: unknown; strengths?: unknown })
-          : { issues: [], strengths: [] };
-      const issues = Array.isArray(insights.issues)
-        ? (insights.issues as DashboardDiagnosticIssue[])
-        : [];
-      const strengths = Array.isArray(insights.strengths)
-        ? (insights.strengths as string[])
-        : [];
-      const studyPlanTasks = Array.isArray(metadata.studyPlanTasks)
-        ? (metadata.studyPlanTasks as DashboardDiagnosticTask[])
-        : [];
-      const aiFeedbackText =
-        typeof metadata.aiFeedbackText === "string"
-          ? metadata.aiFeedbackText
-          : typeof data.ai_feedback === "string"
-            ? data.ai_feedback
-          : null;
-      const aiFeedbackStatus =
-        typeof data.ai_feedback_status === "string"
-          ? data.ai_feedback_status
-          : typeof metadata.aiFeedbackStatus === "string"
-            ? metadata.aiFeedbackStatus
-            : null;
+      const history = (data as DiagnosticAttemptRow[]).map((row, index) =>
+        normaliseDashboardDiagnostic(row, index)
+      );
 
-      setLatestDiagnostic({
-        section,
-        accuracy: typeof data.accuracy === "number" ? data.accuracy : 0,
-        issues,
-        strengths,
-        studyPlanTasks,
-        aiFeedbackText,
-        aiFeedbackStatus,
-        completedAt:
-          typeof data.completed_at === "string" ? data.completed_at : null,
-      });
+      setDiagnosticHistory(history);
+      setLatestDiagnostic(history[0] ?? null);
     }
 
     async function syncCheckoutIfNeeded(nextUser: User) {
@@ -6170,12 +6320,13 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       if (currentSession?.user) {
         await loadProfile(currentSession.user);
         await loadPracticeStats(currentSession.user);
-        await loadLatestDiagnostic(currentSession.user);
+        await loadDiagnosticHistory(currentSession.user);
         await syncCheckoutIfNeeded(currentSession.user);
       } else {
         setProfile(null);
         setPracticeStats(createEmptyPracticeStats());
         setLatestDiagnostic(null);
+        setDiagnosticHistory([]);
       }
 
       setLoading(false);
@@ -6193,11 +6344,12 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       if (nextSession?.user) {
         void loadProfile(nextSession.user);
         void loadPracticeStats(nextSession.user);
-        void loadLatestDiagnostic(nextSession.user);
+        void loadDiagnosticHistory(nextSession.user);
       } else {
         setProfile(null);
         setPracticeStats(createEmptyPracticeStats());
         setLatestDiagnostic(null);
+        setDiagnosticHistory([]);
       }
     });
 
@@ -6278,6 +6430,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     setUser(null);
     setProfile(null);
     setPracticeStats(createEmptyPracticeStats());
+    setLatestDiagnostic(null);
+    setDiagnosticHistory([]);
   };
 
   const handleUpgrade = async () => {
@@ -6407,6 +6561,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     practiceStats.totalAvailable > 0
       ? Math.round((practiceStats.totalCompleted / practiceStats.totalAvailable) * 100)
       : 0;
+  const headerBackHref =
+    view === "dashboard" ? "/phloemai" : "/phloemai/dashboard";
+  const headerBackLabel =
+    view === "dashboard" ? "Back to PhloemAI" : "Back to dashboard";
 
   return (
     <div className="phloem-dashboard-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
@@ -6568,6 +6726,15 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
         <main className="min-w-0">
           <header className="flex flex-col gap-4 border-b border-slate-200 bg-white px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
             <div className="flex items-center gap-4">
+              <Link
+                href={headerBackHref}
+                aria-label={headerBackLabel}
+                title={headerBackLabel}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+              >
+                <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+              </Link>
+
               {(view === "diagnostic" || view === "mock-diagnostic") && (
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-blue-600">
                   <Activity className="h-7 w-7" aria-hidden="true" />
@@ -6953,6 +7120,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               checkoutLoading={checkoutLoading}
               practiceStats={practiceStats}
               latestDiagnostic={latestDiagnostic}
+              diagnosticHistory={diagnosticHistory}
               completedDashboardTaskIds={completedDashboardTaskIds}
               removedDashboardTaskIds={removedDashboardTaskIds}
               diagnosticCredits={diagnosticCredits}

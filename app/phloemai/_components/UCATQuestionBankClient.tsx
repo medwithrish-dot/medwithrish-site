@@ -80,11 +80,23 @@ type DiagnosticMode =
   | "section-mock"
   | "full-section"
   | "subset";
-type MockId = "mock-a" | "mock-b" | "mock-c";
-type MockStartScope = "full-mock" | "subtest" | "diagnostic" | "free";
+type MockId =
+  | "mock-a"
+  | "mock-b"
+  | "mock-c"
+  | "mock-d"
+  | "mock-e"
+  | "mock-f"
+  | "mock-g"
+  | "mock-h";
+type MockStartScope = "full-mock" | "subtest" | "sprint" | "diagnostic" | "free";
 type MockFilter = "all" | "continue" | "attempted" | "unattempted";
 type MockScoreMetric = "overall" | UCATSection;
 type SectionMockTimingMode = "official" | "short";
+type MockQuestionSetKind = Extract<
+  MockStartScope,
+  "full-mock" | "subtest" | "sprint" | "diagnostic"
+>;
 type DiagnosticSectionScore = {
   label: string;
   value: string;
@@ -374,6 +386,51 @@ const MOCK_LIBRARY: Array<{
     focus: "Final review",
     badge: "Review",
   },
+  {
+    id: "mock-d",
+    label: "Mock 4",
+    title: "Accuracy set",
+    description:
+      "A steadier paper for rebuilding accuracy while keeping standard timing pressure.",
+    focus: "Accuracy reset",
+    badge: "Accuracy",
+  },
+  {
+    id: "mock-e",
+    label: "Mock 5",
+    title: "Pressure set",
+    description:
+      "A sharper run for testing timing decisions, skipping and recovery after hard items.",
+    focus: "Exam pressure",
+    badge: "Pressure",
+  },
+  {
+    id: "mock-f",
+    label: "Mock 6",
+    title: "Consistency set",
+    description:
+      "A fresh mix for checking whether your section scores are holding across sittings.",
+    focus: "Consistency",
+    badge: "Stability",
+  },
+  {
+    id: "mock-g",
+    label: "Mock 7",
+    title: "Stretch set",
+    description:
+      "A later-stage paper for pushing pace while keeping answer discipline tight.",
+    focus: "Stretch",
+    badge: "Harder run",
+  },
+  {
+    id: "mock-h",
+    label: "Mock 8",
+    title: "Final check set",
+    description:
+      "A final comparison paper for reviewing readiness before consolidating weak areas.",
+    focus: "Readiness",
+    badge: "Final check",
+  },
 ];
 const QUESTION_TRACKING_ZONES: QuestionTrackingZone[] = [
   "stimulus",
@@ -430,6 +487,12 @@ function normaliseMockId(value?: string | null): MockId {
     : DEFAULT_MOCK_ID;
 }
 
+function normaliseSectionMockTimingMode(
+  value?: string | null
+): SectionMockTimingMode | null {
+  return value === "short" || value === "official" ? value : null;
+}
+
 function getMockDefinition(mockId: MockId) {
   return MOCK_LIBRARY.find((mock) => mock.id === mockId) ?? MOCK_LIBRARY[0];
 }
@@ -447,22 +510,75 @@ function withMockQuery(path: string, mockId: MockId) {
   return `${path}${separator}mock=${mockId}`;
 }
 
+function withSectionMockTimingQuery(
+  path: string,
+  mockId: MockId,
+  timingMode?: SectionMockTimingMode | null
+) {
+  const href = withMockQuery(path, mockId);
+  if (timingMode !== "short") return href;
+
+  return `${href}&timing=short`;
+}
+
+function getOfficialSecondsPerQuestion(section: UCATSection) {
+  return Math.max(
+    1,
+    Math.round(FULL_MOCK_SECTION_SECONDS[section] / FULL_MOCK_TARGETS[section])
+  );
+}
+
+function getSprintQuestionCount(section: UCATSection, available: number) {
+  if (available <= 0) return 0;
+
+  const secondsPerQuestion = getOfficialSecondsPerQuestion(section);
+  return clampQuestionCount(
+    Math.round(SECTION_MOCK_SHORT_SECONDS / secondsPerQuestion),
+    available
+  );
+}
+
+function getSprintSectionSeconds(section: UCATSection, questionCount: number) {
+  return questionCount * getOfficialSecondsPerQuestion(section);
+}
+
+function stableMockHash(value: string) {
+  let hash = 2166136261;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
 function getMockOrderedQuestions(
   questions: UCATQuestion[],
   section: UCATSection,
-  mockId: MockId
+  mockId: MockId,
+  setKind: MockQuestionSetKind = "full-mock"
 ) {
   if (questions.length === 0) return questions;
 
-  const standardisedQuestions = [...questions].sort((a, b) =>
-    a.id.localeCompare(b.id)
-  );
-  const target = Math.min(FULL_MOCK_TARGETS[section], standardisedQuestions.length);
-  const start = (getMockIndex(mockId) * target) % standardisedQuestions.length;
-  return [
-    ...standardisedQuestions.slice(start),
-    ...standardisedQuestions.slice(0, start),
-  ];
+  const setSeed = `${section}:${setKind}:${mockId}`;
+  const groups = new Map<string, UCATQuestion[]>();
+
+  questions.forEach((question) => {
+    const groupKey = question.setId ?? question.id;
+    groups.set(groupKey, [...(groups.get(groupKey) ?? []), question]);
+  });
+
+  return Array.from(groups.entries())
+    .sort(([firstKey], [secondKey]) => {
+      const firstHash = stableMockHash(`${setSeed}:${firstKey}`);
+      const secondHash = stableMockHash(`${setSeed}:${secondKey}`);
+
+      return firstHash - secondHash || firstKey.localeCompare(secondKey);
+    })
+    .flatMap(([, group]) =>
+      [...group].sort((first, second) => first.id.localeCompare(second.id))
+    );
 }
 
 function getOfficialSectionSeconds(section: UCATSection, questionCount: number) {
@@ -521,7 +637,8 @@ function getSectionScoreRecord(summary: PracticeSessionSummary): MockScoreRecord
 
 function buildMockScoreMatrix(
   rows: MockScoreSessionRow[],
-  scope: Extract<MockStartScope, "full-mock" | "subtest"> = "full-mock"
+  scope: Extract<MockStartScope, "full-mock" | "subtest" | "sprint"> =
+    "full-mock"
 ): MockScoreMatrix {
   const matrix = createEmptyMockScoreMatrix();
 
@@ -2513,7 +2630,7 @@ function getAvailableMockQuestionCount(section: UCATSection) {
 }
 
 function useMockScoreMatrix(
-  scope: Extract<MockStartScope, "full-mock" | "subtest">
+  scope: Extract<MockStartScope, "full-mock" | "subtest" | "sprint">
 ) {
   const [scoreMatrix, setScoreMatrix] = useState<MockScoreMatrix>(() =>
     createEmptyMockScoreMatrix()
@@ -2839,11 +2956,13 @@ function MockScoreGraph({
   metric,
   scoreMatrix,
   loading,
+  scoreScopeLabel = "full mock",
 }: {
   selectedMock: (typeof MOCK_LIBRARY)[number];
   metric: MockScoreMetric;
   scoreMatrix: MockScoreMatrix;
   loading: boolean;
+  scoreScopeLabel?: string;
 }) {
   const activeIndex = Math.max(0, getMockIndex(selectedMock.id));
   const isSjt = metric === "sjt";
@@ -2889,7 +3008,7 @@ function MockScoreGraph({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
-            {getMockMetricLabel(metric)} score by full mock
+            {getMockMetricLabel(metric)} score by {scoreScopeLabel}
           </p>
           <h3 className="mt-1 text-base font-black text-slate-950">
             {selectedScore
@@ -2899,7 +3018,7 @@ function MockScoreGraph({
           <p className="mt-1 text-xs font-semibold leading-5 text-slate-600">
             {isOverall
               ? "Overall is the saved VR + DM + QR scaled total. SJT is shown separately by band."
-              : "Each point comes from the latest saved timed section attempt for that mock."}
+              : `Each point comes from the latest saved timed ${scoreScopeLabel} attempt for that mock.`}
           </p>
         </div>
         {loading && (
@@ -2978,7 +3097,12 @@ function MockScoreGraph({
               );
             })}
           </svg>
-          <div className="absolute inset-x-0 bottom-0 grid grid-cols-3 text-center text-[11px] font-black text-slate-600">
+          <div
+            className="absolute inset-x-0 bottom-0 grid text-center text-[11px] font-black text-slate-600"
+            style={{
+              gridTemplateColumns: `repeat(${points.length}, minmax(0, 1fr))`,
+            }}
+          >
             {points.map((point) => (
               <div key={point.mock.id}>
                 <p>{point.mock.label}</p>
@@ -2990,7 +3114,7 @@ function MockScoreGraph({
           </div>
           {!hasScores && !loading && (
             <div className="absolute inset-x-8 top-14 rounded-lg border border-dashed border-slate-300 bg-white/80 px-4 py-5 text-center text-xs font-bold text-slate-500">
-              Complete and save a full-mock section to plot your first score.
+              Complete and save a {scoreScopeLabel} to plot your first score.
             </div>
           )}
         </div>
@@ -3062,6 +3186,14 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
   return (
     <div className="min-h-screen bg-slate-100 px-3 py-4 text-[#111827]">
       <main className="mx-auto max-w-6xl rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
+        <Link
+          href={withMockQuery("/phloemai/mocks", selectedMock.id)}
+          className="mb-4 inline-flex items-center gap-2 text-xs font-black text-slate-600 transition-colors hover:text-blue-700"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Back to mock library
+        </Link>
+
         <div>
           <h1 className="text-xl font-black text-slate-950">Full Mocks</h1>
           <p className="mt-1.5 text-xs font-semibold leading-5 text-slate-500">
@@ -3132,12 +3264,21 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
   );
 }
 
-function SubtestMockOverview({ mockId }: { mockId: MockId }) {
+function SubtestMockOverview({
+  mockId,
+  timingMode,
+}: {
+  mockId: MockId;
+  timingMode?: SectionMockTimingMode | null;
+}) {
   const [activeSection, setActiveSection] = useState<UCATSection>("vr");
   const [mockFilter, setMockFilter] = useState<MockFilter>("all");
   const selectedMock = getMockDefinition(mockId);
   const activeMeta = getUCATSectionMeta(activeSection);
-  const { scoreMatrix, loading: scoreLoading } = useMockScoreMatrix("subtest");
+  const isSprintMode = timingMode === "short";
+  const { scoreMatrix, loading: scoreLoading } = useMockScoreMatrix(
+    isSprintMode ? "sprint" : "subtest"
+  );
   const visibleMocks =
     mockFilter === "continue" || mockFilter === "attempted"
       ? []
@@ -3146,10 +3287,22 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
   return (
     <div className="min-h-screen bg-slate-100 px-3 py-4 text-[#111827]">
       <main className="mx-auto max-w-6xl rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
+        <Link
+          href={withMockQuery("/phloemai/mocks", selectedMock.id)}
+          className="mb-4 inline-flex items-center gap-2 text-xs font-black text-slate-600 transition-colors hover:text-blue-700"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Back to mock library
+        </Link>
+
         <div>
-          <h1 className="text-xl font-black text-slate-950">Subtest Mocks</h1>
+          <h1 className="text-xl font-black text-slate-950">
+            {isSprintMode ? "15-Minute Sprints" : "Subtest Mocks"}
+          </h1>
           <p className="mt-1.5 text-xs font-semibold leading-5 text-slate-500">
-            Choose one section at a time, then start a compact timed set.
+            {isSprintMode
+              ? "Choose one section at a time, then start a compact 15-minute set."
+              : "Choose one section at a time, then start a compact timed set."}
           </p>
         </div>
 
@@ -3192,13 +3345,16 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
                 {activeMeta.title}
               </h2>
               <Link
-                href={withMockQuery(
+                href={withSectionMockTimingQuery(
                   `/phloemai/mocks/subtest/${activeSection}`,
-                  selectedMock.id
+                  selectedMock.id,
+                  timingMode
                 )}
                 className="inline-flex h-9 w-fit items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700"
               >
-                Start {activeMeta.code}
+                {isSprintMode
+                  ? `Start 15-minute ${activeMeta.code}`
+                  : `Start ${activeMeta.code}`}
               </Link>
             </div>
 
@@ -3212,6 +3368,9 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
                   metric={activeSection}
                   scoreMatrix={scoreMatrix}
                   loading={scoreLoading}
+                  scoreScopeLabel={
+                    isSprintMode ? "15-minute sprint" : "subtest mock"
+                  }
                 />
               </div>
             </div>
@@ -3242,13 +3401,16 @@ function SubtestMockOverview({ mockId }: { mockId: MockId }) {
                         Mock {index + 1}
                       </h3>
                       <p className="mt-1.5 text-xs font-semibold leading-5 text-slate-500">
-                        {activeMeta.code} timed set for {activeMeta.title}.
+                        {isSprintMode
+                          ? `15-minute ${activeMeta.code} sprint for ${activeMeta.title}.`
+                          : `${activeMeta.code} timed set for ${activeMeta.title}.`}
                       </p>
                     </div>
                     <Link
-                      href={withMockQuery(
+                      href={withSectionMockTimingQuery(
                         `/phloemai/mocks/subtest/${activeSection}`,
-                        mock.id
+                        mock.id,
+                        timingMode
                       )}
                       className="inline-flex h-9 items-center justify-center rounded-md border border-blue-500 px-5 text-xs font-black text-blue-700 transition-colors hover:bg-blue-600 hover:text-white"
                     >
@@ -3452,6 +3614,8 @@ function MockStartBriefing({
       ? "Full mock section"
       : scope === "subtest"
         ? "Subtest mock"
+        : scope === "sprint"
+          ? "15-minute sprint"
         : scope === "free"
           ? "Free diagnostic"
           : "Diagnostic";
@@ -3470,6 +3634,8 @@ function MockStartBriefing({
           <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
             {scope === "full-mock"
               ? `${mock?.label ?? "This mock"} continues with ${meta.title}. Read this screen first; the section timer starts only after you press Start.`
+              : scope === "sprint"
+                ? `${mock ? `${mock.label}: ` : ""}${meta.code} sprint uses the closest question count to 15 minutes.`
               : `${mock ? `${mock.label}: ` : ""}${briefing.intro}`}
           </p>
         </div>
@@ -3531,6 +3697,7 @@ function FixedDiagnosticStartScreen({
   showAiCredit,
   mock,
   scope = "diagnostic",
+  startLabel = "Start diagnostic",
   onStart,
 }: {
   title: string;
@@ -3547,10 +3714,17 @@ function FixedDiagnosticStartScreen({
   showAiCredit?: boolean;
   mock?: (typeof MOCK_LIBRARY)[number];
   scope?: MockStartScope;
+  startLabel?: string;
   onStart: () => void;
 }) {
   const meta = getUCATSectionMeta(section);
   const showTimingOptions = Boolean(timingMode && onTimingModeChange);
+  const fullSectionQuestionCount = getAvailableMockQuestionCount(section);
+  const sprintQuestionCount = getSprintQuestionCount(
+    section,
+    UCAT_QUESTION_BANK[section].length
+  );
+  const sprintSeconds = getSprintSectionSeconds(section, sprintQuestionCount);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#eef3fb] via-[#f5f8fc] to-white px-4 py-10 text-[#111827]">
@@ -3594,7 +3768,16 @@ function FixedDiagnosticStartScreen({
           <div className="px-7 pt-6">
             <div className={`grid gap-3 ${showAiCredit ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-3"}`}>
               {[
-                ["Mode", scope === "full-mock" ? "Full mock" : scope === "subtest" ? "Subtest mock" : "Timed diagnostic"],
+                [
+                  "Mode",
+                  scope === "full-mock"
+                    ? "Full mock"
+                    : scope === "subtest"
+                      ? "Subtest mock"
+                      : scope === "sprint"
+                        ? "15-minute sprint"
+                        : "Timed diagnostic",
+                ],
                 ["Report", "Issues + study plan"],
                 ["Scoring", section === "sjt" ? "Band 1-4" : "300-900 estimate"],
               ].map(([label, value]) => (
@@ -3644,16 +3827,17 @@ function FixedDiagnosticStartScreen({
                   {
                     mode: "official",
                     label: "Official section timing",
-                    helper: `${formatReadableDuration(
-                      getOfficialSectionSeconds(section, questionCount)
-                    )} for this section.`,
+                    helper: `${fullSectionQuestionCount} questions, ${formatReadableDuration(
+                      getOfficialSectionSeconds(section, fullSectionQuestionCount)
+                    )}.`,
                     badge: "Recommended",
                   },
                   {
                     mode: "short",
                     label: "15-minute subset mock",
-                    helper:
-                      "Short sprint for a quick read. Not recommended for your baseline.",
+                    helper: `${sprintQuestionCount} questions, ${formatReadableDuration(
+                      sprintSeconds
+                    )}.`,
                     badge: "Not recommended",
                   },
                 ] as const).map((option) => {
@@ -3705,7 +3889,7 @@ function FixedDiagnosticStartScreen({
             className="mt-7 inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 text-sm font-black text-white shadow-md shadow-blue-100 transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           >
             <Play className="h-4 w-4" aria-hidden="true" />
-            {loading ? "Checking..." : "Start diagnostic"}
+            {loading ? "Checking..." : startLabel}
           </button>
           </div>
         </section>
@@ -5594,6 +5778,7 @@ export function UCATQuestionBankClient({
   section,
   diagnosticMode,
   mockId,
+  sectionMockTiming,
   reviewMode = false,
   backHref,
   backLabel,
@@ -5601,6 +5786,7 @@ export function UCATQuestionBankClient({
   section?: string;
   diagnosticMode?: string | null;
   mockId?: string | null;
+  sectionMockTiming?: string | null;
   reviewMode?: boolean;
   backHref?: string;
   backLabel?: string;
@@ -5608,6 +5794,8 @@ export function UCATQuestionBankClient({
   const validSection = section && isUCATSection(section) ? section : null;
   const validDiagnosticMode = normaliseDiagnosticMode(diagnosticMode);
   const validMockId = normaliseMockId(mockId);
+  const validSectionMockTiming =
+    normaliseSectionMockTimingMode(sectionMockTiming);
 
   if (!validSection && validDiagnosticMode === "full") {
     return <PremiumDiagnosticChooser mockId={validMockId} />;
@@ -5618,7 +5806,12 @@ export function UCATQuestionBankClient({
   }
 
   if (!validSection && validDiagnosticMode === "section-mock") {
-    return <SubtestMockOverview mockId={validMockId} />;
+    return (
+      <SubtestMockOverview
+        mockId={validMockId}
+        timingMode={validSectionMockTiming}
+      />
+    );
   }
 
   if (!validSection && validDiagnosticMode === "subset") {
@@ -5631,10 +5824,11 @@ export function UCATQuestionBankClient({
 
   return (
     <UCATQuestionBankSection
-      key={`${validSection}-${validDiagnosticMode ?? "practice"}-${validMockId}-${reviewMode ? "review" : "new"}`}
+      key={`${validSection}-${validDiagnosticMode ?? "practice"}-${validMockId}-${validSectionMockTiming ?? "default"}-${reviewMode ? "review" : "new"}`}
       section={validSection}
       diagnosticMode={validDiagnosticMode}
       mockId={validMockId}
+      initialSectionMockTiming={validSectionMockTiming}
       reviewMode={reviewMode}
       backHref={backHref}
       backLabel={backLabel}
@@ -5646,6 +5840,7 @@ function UCATQuestionBankSection({
   section: validSection,
   diagnosticMode,
   mockId,
+  initialSectionMockTiming,
   reviewMode,
   backHref,
   backLabel,
@@ -5653,6 +5848,7 @@ function UCATQuestionBankSection({
   section: UCATSection;
   diagnosticMode: DiagnosticMode | null;
   mockId: MockId;
+  initialSectionMockTiming: SectionMockTimingMode | null;
   reviewMode: boolean;
   backHref?: string;
   backLabel?: string;
@@ -5678,7 +5874,7 @@ function UCATQuestionBankSection({
   const [minuteTarget, setMinuteTarget] = useState<number | "custom">(5);
   const [customMinutes, setCustomMinutes] = useState("8");
   const [sectionMockTiming, setSectionMockTiming] =
-    useState<SectionMockTimingMode>("official");
+    useState<SectionMockTimingMode>(initialSectionMockTiming ?? "official");
   const [timed, setTimed] = useState(false);
   const [started, setStarted] = useState(false);
   const [phase, setPhase] = useState<PracticePhase>("practice");
@@ -6011,14 +6207,40 @@ function UCATQuestionBankSection({
     () => UCAT_QUESTION_BANK[validSection],
     [validSection]
   );
+  const sectionMockTimingLocked = initialSectionMockTiming === "short";
+  const fixedDiagnosticScope: MockStartScope =
+    diagnosticMode === "free-qr"
+      ? "free"
+      : backHref?.includes("/full-mock") || backHref?.includes("/mocks/full")
+        ? "full-mock"
+        : diagnosticMode === "subset"
+          ? "diagnostic"
+        : diagnosticMode === "full-section" && sectionMockTiming === "short"
+          ? "sprint"
+          : diagnosticMode
+            ? "subtest"
+            : "diagnostic";
+  const mockQuestionSetKind: MockQuestionSetKind =
+    fixedDiagnosticScope === "free" ? "diagnostic" : fixedDiagnosticScope;
 
   const sectionQuestions = useMemo(() => {
     if (diagnosticMode === "full-section" || diagnosticMode === "subset") {
-      return getMockOrderedQuestions(baseSectionQuestions, validSection, mockId);
+      return getMockOrderedQuestions(
+        baseSectionQuestions,
+        validSection,
+        mockId,
+        mockQuestionSetKind
+      );
     }
 
     return baseSectionQuestions;
-  }, [baseSectionQuestions, diagnosticMode, mockId, validSection]);
+  }, [
+    baseSectionQuestions,
+    diagnosticMode,
+    mockId,
+    mockQuestionSetKind,
+    validSection,
+  ]);
 
   const uncompletedSectionQuestions = useMemo(() => {
     if (diagnosticMode) return sectionQuestions;
@@ -6041,25 +6263,22 @@ function UCATQuestionBankSection({
     }
 
     if (diagnosticMode === "full-section") {
+      const questionCount =
+        sectionMockTiming === "short"
+          ? getSprintQuestionCount(validSection, sectionQuestions.length)
+          : Math.min(FULL_MOCK_TARGETS[validSection], sectionQuestions.length);
+
       return sectionQuestions.slice(
         0,
-        Math.min(FULL_MOCK_TARGETS[validSection], sectionQuestions.length)
+        questionCount
       );
     }
 
     return null;
-  }, [diagnosticMode, sectionQuestions, validSection]);
+  }, [diagnosticMode, sectionMockTiming, sectionQuestions, validSection]);
 
   const meta = getUCATSectionMeta(validSection);
   const selectedMock = getMockDefinition(mockId);
-  const fixedDiagnosticScope: MockStartScope =
-    diagnosticMode === "free-qr"
-      ? "free"
-      : backHref?.includes("/full-mock") || backHref?.includes("/mocks/full")
-        ? "full-mock"
-        : diagnosticMode
-          ? "subtest"
-          : "diagnostic";
   const selectedMinutes =
     minuteTarget === "custom"
       ? normaliseMinuteTarget(customMinutes)
@@ -6078,7 +6297,10 @@ function UCATQuestionBankSection({
       ? FREE_QR_DIAGNOSTIC_SECONDS
       : fixedDiagnosticQuestions
         ? diagnosticMode === "full-section" && sectionMockTiming === "short"
-          ? SECTION_MOCK_SHORT_SECONDS
+          ? getSprintSectionSeconds(
+              validSection,
+              fixedDiagnosticQuestions.length
+            )
           : diagnosticMode === "full-section"
             ? getOfficialSectionSeconds(
                 validSection,
@@ -6982,6 +7204,8 @@ function UCATQuestionBankSection({
         title={
           diagnosticMode === "free-qr"
             ? "Free QR diagnostic"
+            : fixedDiagnosticScope === "sprint"
+              ? `${selectedMock.label}: 15-minute ${meta.title} sprint`
             : `${selectedMock.label}: ${meta.title}`
         }
         subtitle={
@@ -6989,6 +7213,8 @@ function UCATQuestionBankSection({
             ? "A fixed 10-minute QR diagnostic with 14 questions. Complete it to save your first report."
             : fixedDiagnosticScope === "full-mock"
               ? `This is the ${meta.title} section from ${selectedMock.label}. Read the briefing, then start the timed section when you are ready.`
+              : fixedDiagnosticScope === "sprint"
+                ? `A 15-minute ${meta.title} sprint from ${selectedMock.label}, using the closest question count for this section.`
               : `A timed ${meta.title} subtest from ${selectedMock.label}. Your result includes estimated scoring and issue detection.`
         }
         section={validSection}
@@ -6997,10 +7223,12 @@ function UCATQuestionBankSection({
         backHref={backHref}
         backLabel={backLabel}
         timingMode={
-          diagnosticMode === "full-section" ? sectionMockTiming : undefined
+          diagnosticMode === "full-section" && !sectionMockTimingLocked
+            ? sectionMockTiming
+            : undefined
         }
         onTimingModeChange={
-          diagnosticMode === "full-section"
+          diagnosticMode === "full-section" && !sectionMockTimingLocked
             ? (mode) => {
                 setSectionMockTiming(mode);
                 recordEvent("setup_section_mock_timing", { mode });
@@ -7016,6 +7244,13 @@ function UCATQuestionBankSection({
         showAiCredit={diagnosticMode === "free-qr"}
         mock={diagnosticMode === "free-qr" ? undefined : selectedMock}
         scope={fixedDiagnosticScope}
+        startLabel={
+          fixedDiagnosticScope === "sprint"
+            ? "Start sprint"
+            : fixedDiagnosticScope === "full-mock"
+              ? "Start section"
+              : "Start diagnostic"
+        }
         onStart={startPractice}
       />
     );

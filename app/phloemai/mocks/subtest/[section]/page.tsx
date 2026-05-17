@@ -5,6 +5,7 @@ import { UCAT_SECTIONS } from "../../../_lib/ucatQuestionBank";
 
 type SubtestMockSectionSearchParams = {
   mock?: string | string[];
+  timing?: string | string[];
 };
 
 function getMockId(searchParams: SubtestMockSectionSearchParams) {
@@ -13,10 +14,21 @@ function getMockId(searchParams: SubtestMockSectionSearchParams) {
     : searchParams.mock;
 }
 
-function withMockBackHref(mockId?: string) {
-  return mockId
-    ? `/phloemai/mocks/subtest?mock=${encodeURIComponent(mockId)}`
-    : "/phloemai/mocks/subtest";
+function getSectionMockTiming(searchParams: SubtestMockSectionSearchParams) {
+  const value = Array.isArray(searchParams.timing)
+    ? searchParams.timing[0]
+    : searchParams.timing;
+
+  return value === "short" ? value : undefined;
+}
+
+function withMockBackHref(mockId?: string, timing?: string) {
+  const params = new URLSearchParams();
+  if (mockId) params.set("mock", mockId);
+  if (timing === "short") params.set("timing", timing);
+
+  const query = params.toString();
+  return query ? `/phloemai/mocks/subtest?${query}` : "/phloemai/mocks/subtest";
 }
 
 export function generateStaticParams() {
@@ -31,14 +43,21 @@ export default async function Page({
   searchParams: Promise<SubtestMockSectionSearchParams>;
 }) {
   const { section } = await params;
-  const mockId = getMockId(await searchParams);
+  const resolvedSearchParams = await searchParams;
+  const mockId = getMockId(resolvedSearchParams);
+  const sectionMockTiming = getSectionMockTiming(resolvedSearchParams);
+  const backHref = withMockBackHref(mockId, sectionMockTiming);
+  const backLabel =
+    sectionMockTiming === "short"
+      ? "Back to 15-minute sprints"
+      : "Back to subtest mocks";
   const { isPremium } = await getPhloemEntitlements();
 
   if (!isPremium) {
     return (
       <PremiumDiagnosticLock
-        backHref={withMockBackHref(mockId)}
-        backLabel="Back to subtest mocks"
+        backHref={backHref}
+        backLabel={backLabel}
       />
     );
   }
@@ -48,8 +67,9 @@ export default async function Page({
       section={section}
       diagnosticMode="full-section"
       mockId={mockId}
-      backHref={withMockBackHref(mockId)}
-      backLabel="Back to subtest mocks"
+      sectionMockTiming={sectionMockTiming}
+      backHref={backHref}
+      backLabel={backLabel}
     />
   );
 }
