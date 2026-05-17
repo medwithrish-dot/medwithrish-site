@@ -423,11 +423,6 @@ export const UCAT_SUBTYPES: Record<
       label: "Integrity and confidentiality",
       description: "Protect trust, fairness and sensitive information.",
     },
-    {
-      id: "sjt-ordering",
-      label: "Rank / order actions",
-      description: "Drag actions into the best professional order.",
-    },
   ],
 };
 
@@ -2237,7 +2232,7 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     ...ROUND_FIVE_SJT_QUESTIONS,
     ...ROUND_SIX_SJT_QUESTIONS,
     ...ROUND_SEVEN_SJT_QUESTIONS,
-  ],
+  ].filter((question) => question.questionType !== "drag-order"),
 };
 
 export function isUCATSection(value: string): value is UCATSection {

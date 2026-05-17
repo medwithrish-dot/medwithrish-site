@@ -1,6 +1,4 @@
-import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
-import { PremiumDiagnosticLock } from "../../../_components/PremiumDiagnosticLock";
-import { UCATQuestionBankClient } from "../../../_components/UCATQuestionBankClient";
+import { redirect } from "next/navigation";
 import { UCAT_SECTIONS } from "../../../_lib/ucatQuestionBank";
 
 type SubsetMockSectionSearchParams = {
@@ -11,12 +9,6 @@ function getMockId(searchParams: SubsetMockSectionSearchParams) {
   return Array.isArray(searchParams.mock)
     ? searchParams.mock[0]
     : searchParams.mock;
-}
-
-function withMockBackHref(mockId?: string) {
-  return mockId
-    ? `/phloemai/diagnostic/subset-mock?mock=${encodeURIComponent(mockId)}`
-    : "/phloemai/diagnostic/subset-mock";
 }
 
 export function generateStaticParams() {
@@ -32,24 +24,9 @@ export default async function Page({
 }) {
   const { section } = await params;
   const mockId = getMockId(await searchParams);
-  const { isPremium } = await getPhloemEntitlements();
-
-  if (!isPremium) {
-    return (
-      <PremiumDiagnosticLock
-        backHref={withMockBackHref(mockId)}
-        backLabel="Back to subset mock"
-      />
-    );
-  }
-
-  return (
-    <UCATQuestionBankClient
-      section={section}
-      diagnosticMode="full-section"
-      mockId={mockId}
-      backHref={withMockBackHref(mockId)}
-      backLabel="Back to subtest mock"
-    />
+  redirect(
+    mockId
+      ? `/phloemai/mocks/subtest/${section}?mock=${encodeURIComponent(mockId)}`
+      : `/phloemai/mocks/subtest/${section}`
   );
 }

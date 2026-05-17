@@ -1,6 +1,4 @@
-import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
-import { PremiumDiagnosticLock } from "../../_components/PremiumDiagnosticLock";
-import { UCATQuestionBankClient } from "../../_components/UCATQuestionBankClient";
+import { redirect } from "next/navigation";
 
 type SubsetMockSearchParams = {
   mock?: string | string[];
@@ -17,12 +15,10 @@ export default async function Page({
 }: {
   searchParams: Promise<SubsetMockSearchParams>;
 }) {
-  const { isPremium } = await getPhloemEntitlements();
-  if (!isPremium) return <PremiumDiagnosticLock />;
-  return (
-    <UCATQuestionBankClient
-      diagnosticMode="section-mock"
-      mockId={getMockId(await searchParams)}
-    />
+  const mockId = getMockId(await searchParams);
+  redirect(
+    mockId
+      ? `/phloemai/mocks/subtest?mock=${encodeURIComponent(mockId)}`
+      : "/phloemai/mocks/subtest"
   );
 }

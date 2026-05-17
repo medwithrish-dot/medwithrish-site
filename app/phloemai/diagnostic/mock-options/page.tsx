@@ -1,6 +1,4 @@
-import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
-import { PremiumDiagnosticLock } from "../../_components/PremiumDiagnosticLock";
-import { UCATQuestionBankClient } from "../../_components/UCATQuestionBankClient";
+import { redirect } from "next/navigation";
 
 type MockOptionsSearchParams = {
   mock?: string | string[];
@@ -17,12 +15,10 @@ export default async function Page({
 }: {
   searchParams: Promise<MockOptionsSearchParams>;
 }) {
-  const { isPremium } = await getPhloemEntitlements();
-  if (!isPremium) return <PremiumDiagnosticLock />;
-  return (
-    <UCATQuestionBankClient
-      diagnosticMode="full"
-      mockId={getMockId(await searchParams)}
-    />
+  const mockId = getMockId(await searchParams);
+  redirect(
+    mockId
+      ? `/phloemai/mocks/full?mock=${encodeURIComponent(mockId)}`
+      : "/phloemai/mocks/full"
   );
 }

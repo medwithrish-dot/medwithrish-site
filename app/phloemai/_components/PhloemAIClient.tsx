@@ -1113,6 +1113,8 @@ type PracticeAttemptRow = {
 };
 type PracticeStats = {
   sectionCompleted: Record<UCATSectionCode, number>;
+  sectionAnswered: Record<UCATSectionCode, number>;
+  sectionCorrect: Record<UCATSectionCode, number>;
   totalCompleted: number;
   totalAvailable: number;
   accuracy: number;
@@ -1121,6 +1123,7 @@ type PracticeStats = {
   questionCalendarDays: Array<{ day: number; questions: number }>;
   monthLabel: string;
 };
+type DashboardProgressSnapshotView = "accuracy" | "progress";
 
 type DashboardDiagnosticIssue = {
   label: string;
@@ -1288,6 +1291,8 @@ function createEmptyPracticeStats(): PracticeStats {
   const monthShell = getMonthShell();
   return {
     sectionCompleted: emptySectionCounts(),
+    sectionAnswered: emptySectionCounts(),
+    sectionCorrect: emptySectionCounts(),
     totalCompleted: 0,
     totalAvailable: questionBankProgress.reduce((sum, item) => sum + item.total, 0),
     accuracy: 0,
@@ -1313,6 +1318,8 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
     QR: new Set(),
     SJT: new Set(),
   };
+  const sectionAnswered = emptySectionCounts();
+  const sectionCorrect = emptySectionCounts();
   let answeredAttempts = 0;
   let correctAttempts = 0;
   let totalSeconds = 0;
@@ -1328,7 +1335,9 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
 
     if (row.answered) {
       answeredAttempts += 1;
+      sectionAnswered[section] += 1;
       if (row.correct) correctAttempts += 1;
+      if (row.correct) sectionCorrect[section] += 1;
       totalSeconds += Math.max(0, row.total_seconds ?? 0);
     }
 
@@ -1365,6 +1374,8 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
 
   return {
     sectionCompleted,
+    sectionAnswered,
+    sectionCorrect,
     totalCompleted,
     totalAvailable,
     accuracy:
@@ -1399,6 +1410,20 @@ function getSectionScores(stats: PracticeStats) {
     return {
       ...section,
       score: total > 0 ? Math.round((stats.sectionCompleted[code] / total) * 100) : 0,
+      helper: `${stats.sectionCompleted[code]}/${total} done`,
+    };
+  });
+}
+
+function getSectionAccuracyScores(stats: PracticeStats) {
+  return sectionScores.map((section) => {
+    const code = section.code as UCATSectionCode;
+    const answered = stats.sectionAnswered[code];
+    const correct = stats.sectionCorrect[code];
+    return {
+      ...section,
+      score: answered > 0 ? Math.round((correct / answered) * 100) : 0,
+      helper: answered > 0 ? `${correct}/${answered} correct` : "No answers yet",
     };
   });
 }
@@ -2379,7 +2404,7 @@ function DiagnosticContent({
                   ))}
                 </ul>
                 <Link
-                  href="/phloemai/diagnostic/mocks"
+                  href="/phloemai/mocks/full"
                   className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-blue-700 shadow-sm transition-colors hover:bg-blue-50"
                 >
                   Choose mock
@@ -2630,7 +2655,7 @@ function PracticeContent({
       text: "Run a complete UCAT-style mock when you need a full readiness check.",
       icon: Timer,
       iconClass: "bg-blue-100 text-blue-600",
-      href: "/phloemai/diagnostic/mocks",
+      href: "/phloemai/mocks/full",
       cta: "Start mock",
     },
     {
@@ -2638,7 +2663,7 @@ function PracticeContent({
       text: "Short mixed tests for momentum without committing to a full paper.",
       icon: BarChart3,
       iconClass: "bg-violet-100 text-violet-600",
-      href: "/phloemai/diagnostic/subset-mock",
+      href: "/phloemai/mocks/subtest",
       cta: "Start mini mock",
     },
     {
@@ -2938,6 +2963,12 @@ function PracticeContent({
 }
 
 type CalculatorTrainerMode = "calibration" | "speed" | "multi-step";
+type CalculatorPromptNumberStatus =
+  | "idle"
+  | "active-correct"
+  | "active-wrong"
+  | "complete-correct"
+  | "complete-wrong";
 type CalculatorTrainerProblem = {
   prompt: string;
   answer: number;
@@ -3007,7 +3038,7 @@ function createCalculatorProblem(
     return {
       prompt: `${a} x ${b}`,
       answer: a * b,
-      hint: "Use number keys and Enter so the motion becomes automatic.",
+      hint: "Use number keys, =, then Enter to submit so the motion becomes automatic.",
       targetSeconds: 8,
     };
   }
@@ -3027,6 +3058,37 @@ function isCloseNumber(input: string, answer: number) {
   if (!Number.isFinite(parsed)) return false;
 
   return Math.abs(parsed - answer) <= 0.05;
+}
+
+function getCalculatorPromptNumberText(token: string) {
+  return token.match(/-?\d+(?:\.\d+)?/)?.[0] ?? null;
+}
+
+function getCalculatorPromptNumbers(prompt: string) {
+  return prompt
+    .split(" ")
+    .map(getCalculatorPromptNumberText)
+    .filter((token): token is string => Boolean(token));
+}
+
+function normaliseCalculatorProgressText(value: string) {
+  const trimmed = value.trim();
+  if (trimmed === "") return "";
+  if (trimmed === "0" || trimmed === "0.") return trimmed;
+
+  return trimmed.replace(/^(-?)0+(?=\d)/, "$1");
+}
+
+function getCalculatorPromptNumberClass(status?: CalculatorPromptNumberStatus) {
+  if (status === "active-wrong" || status === "complete-wrong") {
+    return "text-red-500";
+  }
+
+  if (status === "active-correct" || status === "complete-correct") {
+    return "text-emerald-500";
+  }
+
+  return "text-slate-500";
 }
 
 type FlagTrainerSection = Extract<UCATSection, "vr" | "dm" | "qr">;
@@ -3225,6 +3287,10 @@ function SkillsTrainersContent({
   const [calcWaiting, setCalcWaiting] = useState(false);
   const [calcMemory, setCalcMemory] = useState(0);
   const [lastMrcAt, setLastMrcAt] = useState(0);
+  const [calculatorNumberStatuses, setCalculatorNumberStatuses] = useState<
+    CalculatorPromptNumberStatus[]
+  >(() => getCalculatorPromptNumbers(initialCalculatorProblem.prompt).map(() => "idle"));
+  const [calculatorActiveNumberIndex, setCalculatorActiveNumberIndex] = useState(0);
   const [flaggingOpen, setFlaggingOpen] = useState(false);
   const [flagSection, setFlagSection] = useState<FlagTrainerSection>("vr");
   const [flagIndex, setFlagIndex] = useState(0);
@@ -3256,7 +3322,114 @@ function SkillsTrainersContent({
       ? `${Math.round((calculatorCorrect / calculatorTotal) * 100)}%`
       : "-";
   const calculatorPromptTokens = calculatorProblem.prompt.split(" ");
+  const calculatorPromptNumbers = useMemo(
+    () => getCalculatorPromptNumbers(calculatorProblem.prompt),
+    [calculatorProblem.prompt]
+  );
   const calcValue = Number(calcDisplay) || 0;
+
+  const setCalculatorPromptNumberStatus = useCallback(
+    (index: number, status: CalculatorPromptNumberStatus) => {
+      setCalculatorNumberStatuses((current) => {
+        if (index < 0 || index >= calculatorPromptNumbers.length) return current;
+
+        const next = Array.from(
+          { length: calculatorPromptNumbers.length },
+          (_, itemIndex) => current[itemIndex] ?? "idle"
+        );
+        next[index] = status;
+        return next;
+      });
+    },
+    [calculatorPromptNumbers.length]
+  );
+
+  const resetCalculatorPromptProgress = useCallback(
+    (problem: CalculatorTrainerProblem) => {
+      setCalculatorNumberStatuses(
+        getCalculatorPromptNumbers(problem.prompt).map(() => "idle")
+      );
+      setCalculatorActiveNumberIndex(0);
+    },
+    []
+  );
+
+  const clearActiveCalculatorPromptNumber = useCallback(() => {
+    setCalculatorPromptNumberStatus(calculatorActiveNumberIndex, "idle");
+  }, [calculatorActiveNumberIndex, setCalculatorPromptNumberStatus]);
+
+  const updateCalculatorPromptProgress = useCallback(
+    (display: string) => {
+      const expected = calculatorPromptNumbers[calculatorActiveNumberIndex];
+      if (!expected) return;
+
+      const entered = normaliseCalculatorProgressText(display);
+      const target = normaliseCalculatorProgressText(expected);
+      const status = target.startsWith(entered)
+        ? "active-correct"
+        : "active-wrong";
+      setCalculatorPromptNumberStatus(calculatorActiveNumberIndex, status);
+    },
+    [
+      calculatorActiveNumberIndex,
+      calculatorPromptNumbers,
+      setCalculatorPromptNumberStatus,
+    ]
+  );
+
+  const finaliseCalculatorPromptNumber = useCallback(
+    (display = calcDisplay) => {
+      const expected = calculatorPromptNumbers[calculatorActiveNumberIndex];
+      if (!expected) return;
+
+      const entered = normaliseCalculatorProgressText(display);
+      const target = normaliseCalculatorProgressText(expected);
+      setCalculatorPromptNumberStatus(
+        calculatorActiveNumberIndex,
+        entered === target ? "complete-correct" : "complete-wrong"
+      );
+      setCalculatorActiveNumberIndex((current) =>
+        Math.min(current + 1, calculatorPromptNumbers.length)
+      );
+    },
+    [
+      calcDisplay,
+      calculatorActiveNumberIndex,
+      calculatorPromptNumbers,
+      setCalculatorPromptNumberStatus,
+    ]
+  );
+
+  const submitCalculatorTrainerDisplay = useCallback(() => {
+    if (!calculatorRunning) return;
+
+    if (!calcWaiting) {
+      finaliseCalculatorPromptNumber(calcDisplay);
+    }
+
+    const elapsed = calculatorElapsedSeconds;
+    const correct = isCloseNumber(calcDisplay, calculatorProblem.answer);
+    const onTarget = elapsed <= calculatorProblem.targetSeconds;
+    setCalculatorTotal((current) => current + 1);
+    setCalculatorCorrect((current) => current + (correct ? 1 : 0));
+    setCalculatorFeedback(
+      correct
+        ? onTarget
+          ? `Correct in ${elapsed.toFixed(1)}s. That is on target.`
+          : `Correct in ${elapsed.toFixed(1)}s. Aim for ${calculatorProblem.targetSeconds}s next time.`
+        : `Missed: ${calculatorProblem.answer}. Reset the entry pattern and go again.`
+    );
+    setCalculatorRunning(false);
+    setCalculatorElapsedSeconds(elapsed);
+  }, [
+    calcDisplay,
+    calcWaiting,
+    calculatorElapsedSeconds,
+    calculatorProblem.answer,
+    calculatorProblem.targetSeconds,
+    calculatorRunning,
+    finaliseCalculatorPromptNumber,
+  ]);
 
   useEffect(() => {
     if (!calculatorRunning) return;
@@ -3284,23 +3457,31 @@ function SkillsTrainersContent({
 
       if (/^[0-9]$/.test(event.key)) {
         event.preventDefault();
-        setCalcDisplay((current) =>
-          calcWaiting || current === "0" ? event.key : `${current}${event.key}`
-        );
+        const nextDisplay =
+          calcWaiting || calcDisplay === "0" ? event.key : `${calcDisplay}${event.key}`;
+        setCalcDisplay(nextDisplay);
         setCalcWaiting(false);
+        updateCalculatorPromptProgress(nextDisplay);
         return;
       }
       if (event.key === ".") {
         event.preventDefault();
-        setCalcDisplay((current) =>
-          calcWaiting ? "0." : current.includes(".") ? current : `${current}.`
-        );
+        const nextDisplay = calcWaiting
+          ? "0."
+          : calcDisplay.includes(".")
+            ? calcDisplay
+            : `${calcDisplay}.`;
+        setCalcDisplay(nextDisplay);
         setCalcWaiting(false);
+        updateCalculatorPromptProgress(nextDisplay);
         return;
       }
       if (["+", "-", "*", "/"].includes(event.key)) {
         event.preventDefault();
         const current = Number(calcDisplay) || 0;
+        if (!calcWaiting) {
+          finaliseCalculatorPromptNumber(calcDisplay);
+        }
         if (calcStored === null || calcOperator === null) {
           setCalcStored(current);
         } else {
@@ -3314,7 +3495,14 @@ function SkillsTrainersContent({
       }
       if (event.key === "Enter" || event.key === "=") {
         event.preventDefault();
+        if (event.key === "Enter") {
+          submitCalculatorTrainerDisplay();
+          return;
+        }
         const current = Number(calcDisplay) || 0;
+        if (!calcWaiting) {
+          finaliseCalculatorPromptNumber(calcDisplay);
+        }
         if (calcStored === null || calcOperator === null) {
           setCalcStored(current);
         } else {
@@ -3328,9 +3516,9 @@ function SkillsTrainersContent({
       }
       if (event.key === "Backspace") {
         event.preventDefault();
-        setCalcDisplay((current) =>
-          current.length > 1 ? current.slice(0, -1) : "0"
-        );
+        setCalcDisplay("0");
+        setCalcWaiting(false);
+        clearActiveCalculatorPromptNumber();
         return;
       }
       if (key === "m") {
@@ -3355,6 +3543,7 @@ function SkillsTrainersContent({
           return;
         }
         setCalcDisplay(String(calcMemory));
+        updateCalculatorPromptProgress(String(calcMemory));
         setCalcWaiting(true);
         setLastMrcAt(now);
       }
@@ -3372,13 +3561,18 @@ function SkillsTrainersContent({
     calcValue,
     calcMemory,
     lastMrcAt,
+    clearActiveCalculatorPromptNumber,
+    finaliseCalculatorPromptNumber,
+    submitCalculatorTrainerDisplay,
+    updateCalculatorPromptProgress,
   ]);
 
-  const resetTrainerCalculator = () => {
+  const resetTrainerCalculator = (problem = calculatorProblem) => {
     setCalcDisplay("0");
     setCalcStored(null);
     setCalcOperator(null);
     setCalcWaiting(false);
+    resetCalculatorPromptProgress(problem);
   };
 
   const clearTrainerCalculator = () => {
@@ -3387,6 +3581,9 @@ function SkillsTrainersContent({
 
   const commitTrainerCalcOperation = (nextOperator?: string) => {
     const current = Number(calcDisplay) || 0;
+    if (!calcWaiting) {
+      finaliseCalculatorPromptNumber(calcDisplay);
+    }
     if (calcStored === null || calcOperator === null) {
       setCalcStored(current);
     } else {
@@ -3399,17 +3596,22 @@ function SkillsTrainersContent({
   };
 
   const inputTrainerCalcDigit = (digit: string) => {
-    setCalcDisplay((current) =>
-      calcWaiting || current === "0" ? digit : `${current}${digit}`
-    );
+    const nextDisplay =
+      calcWaiting || calcDisplay === "0" ? digit : `${calcDisplay}${digit}`;
+    setCalcDisplay(nextDisplay);
     setCalcWaiting(false);
+    updateCalculatorPromptProgress(nextDisplay);
   };
 
   const inputTrainerCalcDecimal = () => {
-    setCalcDisplay((current) =>
-      calcWaiting ? "0." : current.includes(".") ? current : `${current}.`
-    );
+    const nextDisplay = calcWaiting
+      ? "0."
+      : calcDisplay.includes(".")
+        ? calcDisplay
+        : `${calcDisplay}.`;
+    setCalcDisplay(nextDisplay);
     setCalcWaiting(false);
+    updateCalculatorPromptProgress(nextDisplay);
   };
 
   const memoryRecallClearTrainer = () => {
@@ -3421,8 +3623,10 @@ function SkillsTrainersContent({
       return;
     }
 
-    setCalcDisplay(String(calcMemory));
+    const nextDisplay = String(calcMemory);
+    setCalcDisplay(nextDisplay);
     setCalcWaiting(true);
+    updateCalculatorPromptProgress(nextDisplay);
     setLastMrcAt(now);
   };
 
@@ -3468,9 +3672,10 @@ function SkillsTrainersContent({
   };
 
   const prepareCalculatorTrainer = (mode: CalculatorTrainerMode) => {
+    const nextProblem = createCalculatorProblem(mode);
     setCalculatorMode(mode);
-    setCalculatorProblem(createCalculatorProblem(mode));
-    resetTrainerCalculator();
+    setCalculatorProblem(nextProblem);
+    resetTrainerCalculator(nextProblem);
     setCalculatorRunning(false);
     setCalculatorElapsedSeconds(0);
     setCalculatorFeedback(
@@ -3487,31 +3692,17 @@ function SkillsTrainersContent({
   };
 
   const startCalculatorTrainer = (mode = calculatorMode) => {
+    const nextProblem = createCalculatorProblem(mode);
     setCalculatorMode(mode);
-    setCalculatorProblem(createCalculatorProblem(mode));
-    resetTrainerCalculator();
+    setCalculatorProblem(nextProblem);
+    resetTrainerCalculator(nextProblem);
     setCalculatorRunning(true);
     setCalculatorElapsedSeconds(0);
     setCalculatorFeedback(`${getCalculatorModeLabel(mode)} running.`);
   };
 
   const finishCalculatorProblem = () => {
-    if (!calculatorRunning) return;
-
-    const elapsed = calculatorElapsedSeconds;
-    const correct = isCloseNumber(calcDisplay, calculatorProblem.answer);
-    const onTarget = elapsed <= calculatorProblem.targetSeconds;
-    setCalculatorTotal((current) => current + 1);
-    setCalculatorCorrect((current) => current + (correct ? 1 : 0));
-    setCalculatorFeedback(
-      correct
-        ? onTarget
-          ? `Correct in ${elapsed.toFixed(1)}s. That is on target.`
-          : `Correct in ${elapsed.toFixed(1)}s. Aim for ${calculatorProblem.targetSeconds}s next time.`
-        : `Missed: ${calculatorProblem.answer}. Reset the entry pattern and go again.`
-    );
-    setCalculatorRunning(false);
-    setCalculatorElapsedSeconds(elapsed);
+    submitCalculatorTrainerDisplay();
   };
 
   const chooseFlagSection = (section: FlagTrainerSection) => {
@@ -3667,20 +3858,30 @@ function SkillsTrainersContent({
                         Use the calculator to solve
                       </p>
                       <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3 text-4xl font-black leading-none">
-                        {calculatorPromptTokens.map((token, index) => (
-                          <span
-                            key={`${token}-${index}`}
-                            className={
-                              index === 0
-                                ? "text-emerald-500"
-                                : ["+", "-", "x", "/"].includes(token)
-                                  ? "text-slate-400"
-                                  : "text-slate-500"
-                            }
-                          >
-                            {token}
-                          </span>
-                        ))}
+                        {calculatorPromptTokens.map((token, index) => {
+                          const promptNumberIndex = calculatorPromptTokens
+                            .slice(0, index + 1)
+                            .filter((item) => getCalculatorPromptNumberText(item)).length - 1;
+                          const isNumberToken = getCalculatorPromptNumberText(token) !== null;
+                          const status = isNumberToken
+                            ? calculatorNumberStatuses[promptNumberIndex]
+                            : undefined;
+
+                          return (
+                            <span
+                              key={`${token}-${index}`}
+                              className={
+                                isNumberToken
+                                  ? getCalculatorPromptNumberClass(status)
+                                  : ["+", "-", "x", "/"].includes(token)
+                                    ? "text-slate-400"
+                                    : "text-slate-500"
+                              }
+                            >
+                              {token}
+                            </span>
+                          );
+                        })}
                         <span className="text-slate-400">=</span>
                       </div>
                       <p className="mt-5 text-sm font-black text-slate-950">
@@ -3767,7 +3968,8 @@ function SkillsTrainersContent({
                     </div>
                     <p className="mt-2 text-[11px] font-semibold leading-4 text-slate-600">
                       Shortcuts: Alt+C closes, / divides, * multiplies, M = M-,
-                      P = M+, C recalls MRC and double C clears memory.
+                      P = M+, C recalls MRC, double C clears memory, Backspace clears entry,
+                      Enter submits.
                     </p>
                   </div>
                   <button
@@ -4038,7 +4240,20 @@ function FlaggingTrainerPanel({
                 <h3 className="mt-3 text-base font-black text-slate-950">
                   {currentFlagQuestion.title}
                 </h3>
-                <div className="mt-5 max-h-[440px] overflow-y-auto pr-2">
+                <div className="mt-4 rounded-lg border border-slate-200 bg-white px-4 py-3">
+                  <p className="text-xs font-black uppercase tracking-wide text-rose-600">
+                    Question
+                  </p>
+                  <p className="mt-2 text-lg font-black leading-7 text-slate-950">
+                    {currentFlagQuestion.question}
+                  </p>
+                  {"instruction" in currentFlagQuestion && (
+                    <p className="mt-3 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-sm font-semibold leading-6 text-slate-600">
+                      {currentFlagQuestion.instruction}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-5 max-h-[330px] overflow-y-auto pr-2">
                   <FlagTrainerQuestionDetails question={currentFlagQuestion} />
                 </div>
               </div>
@@ -4047,15 +4262,10 @@ function FlaggingTrainerPanel({
                 <p className="text-xs font-black uppercase tracking-wide text-rose-600">
                   Hard or not hard?
                 </p>
-                <p className="mt-3 text-lg font-black leading-7 text-slate-950">
-                  {currentFlagQuestion.question}
+                <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">
+                  Decide whether this question is worth flagging under exam pressure.
                 </p>
-                {"instruction" in currentFlagQuestion && (
-                  <p className="mt-3 rounded-lg border border-rose-100 bg-white/80 px-3 py-2 text-sm font-semibold leading-6 text-slate-600">
-                    {currentFlagQuestion.instruction}
-                  </p>
-                )}
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
                   <button
                     type="button"
                     onClick={() => onChooseFlag(true)}
@@ -4077,47 +4287,46 @@ function FlaggingTrainerPanel({
                   Judge the question, not whether you know the answer right now.
                   Hard means it is likely to drain time under exam pressure.
                 </p>
+                {flagAnswered && (
+                  <div
+                    className={`mt-5 rounded-xl border p-4 text-sm font-semibold leading-6 ${
+                      flagWasCorrect
+                        ? "border-emerald-100 bg-emerald-50 text-emerald-900"
+                        : "border-red-100 bg-red-50 text-red-900"
+                    }`}
+                  >
+                    <p className="font-black">
+                      {flagWasCorrect ? "Correct decision." : "Not quite."}
+                    </p>
+                    <p className="mt-1">
+                      This was tagged {currentFlagDifficulty}.{" "}
+                      {shouldFlag
+                        ? "Hard-tagged questions should be flagged so you can bank easier marks first."
+                        : "Easy and medium questions should usually be answered rather than parked."}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {currentFlagQuestion.tags?.map((tag) => (
+                        <span key={tag} className="rounded-full bg-white/80 px-3 py-1 text-xs font-black">
+                          {formatTrainerTag(tag)}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="mt-3 text-xs font-semibold">
+                      You chose: {flagChoice ? "tag as hard" : "not hard"}.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={onNext}
+                      className="mt-3 inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
+                    >
+                      Next question
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </article>
-
-          {flagAnswered && (
-            <div
-              className={`mt-4 rounded-xl border p-4 text-sm font-semibold leading-6 ${
-                flagWasCorrect
-                  ? "border-emerald-100 bg-emerald-50 text-emerald-900"
-                  : "border-red-100 bg-red-50 text-red-900"
-              }`}
-            >
-              <p className="font-black">
-                {flagWasCorrect ? "Correct decision." : "Not quite."}
-              </p>
-              <p className="mt-1">
-                This was tagged {currentFlagDifficulty}.{" "}
-                {shouldFlag
-                  ? "Hard-tagged questions should be flagged so you can bank easier marks first."
-                  : "Easy and medium questions should usually be answered rather than parked."}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {currentFlagQuestion.tags?.map((tag) => (
-                  <span key={tag} className="rounded-full bg-white/80 px-3 py-1 text-xs font-black">
-                    {formatTrainerTag(tag)}
-                  </span>
-                ))}
-              </div>
-              <p className="mt-3 text-xs font-semibold">
-                You chose: {flagChoice ? "tag as hard" : "not hard"}.
-              </p>
-              <button
-                type="button"
-                onClick={onNext}
-                className="mt-3 inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
-              >
-                Next question
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-          )}
         </>
       )}
     </div>
@@ -5353,6 +5562,11 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [progressSnapshotView, setProgressSnapshotView] =
+    useState<DashboardProgressSnapshotView>("accuracy");
+  const [completedDashboardTaskIds, setCompletedDashboardTaskIds] = useState<
+    Set<string>
+  >(() => new Set());
   const [practiceStats, setPracticeStats] = useState<PracticeStats>(() =>
     createEmptyPracticeStats()
   );
@@ -5364,6 +5578,54 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     [supabaseReady]
   );
   const pageMeta = dashboardPageMeta[view];
+  const dashboardTaskStorageKey = latestDiagnostic?.completedAt
+    ? `phloemai-dashboard-tasks:${latestDiagnostic.completedAt}`
+    : "phloemai-dashboard-tasks:empty";
+
+  useEffect(() => {
+    const loadTaskTicks = window.setTimeout(() => {
+      try {
+        const saved = window.localStorage.getItem(dashboardTaskStorageKey);
+        const taskIds = saved ? (JSON.parse(saved) as unknown) : [];
+        setCompletedDashboardTaskIds(
+          new Set(
+            Array.isArray(taskIds)
+              ? taskIds.filter((id) => typeof id === "string")
+              : []
+          )
+        );
+      } catch {
+        setCompletedDashboardTaskIds(new Set());
+      }
+    }, 0);
+
+    return () => window.clearTimeout(loadTaskTicks);
+  }, [dashboardTaskStorageKey]);
+
+  const toggleDashboardTask = useCallback(
+    (taskId: string) => {
+      setCompletedDashboardTaskIds((current) => {
+        const next = new Set(current);
+        if (next.has(taskId)) {
+          next.delete(taskId);
+        } else {
+          next.add(taskId);
+        }
+
+        try {
+          window.localStorage.setItem(
+            dashboardTaskStorageKey,
+            JSON.stringify(Array.from(next))
+          );
+        } catch {
+          // Ignore private browsing or storage quota failures.
+        }
+
+        return next;
+      });
+    },
+    [dashboardTaskStorageKey]
+  );
 
   useEffect(() => {
     function resetCheckoutState() {
@@ -5754,11 +6016,23 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     typeof profile?.diagnostic_credits === "number"
       ? profile.diagnostic_credits
       : 1;
-  const dashboardSectionScores = getSectionScores(practiceStats);
+  const dashboardSectionProgressScores = getSectionScores(practiceStats);
+  const dashboardSectionAccuracyScores = getSectionAccuracyScores(practiceStats);
+  const dashboardSectionScores =
+    progressSnapshotView === "accuracy"
+      ? dashboardSectionAccuracyScores
+      : dashboardSectionProgressScores;
   const dashboardStudyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
+  const completedDashboardTaskCount = dashboardStudyPlanTasks.filter((task) =>
+    completedDashboardTaskIds.has(task.id)
+  ).length;
   const progressSummaryText = practiceStats.hasCompletedQuestions
     ? "From saved question attempts"
     : "No completed questions yet";
+  const bankProgressPercent =
+    practiceStats.totalAvailable > 0
+      ? Math.round((practiceStats.totalCompleted / practiceStats.totalAvailable) * 100)
+      : 0;
 
   return (
     <div className="phloem-dashboard-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
@@ -6023,67 +6297,6 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               practiceStats={practiceStats}
             />
 
-            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center gap-2">
-                <h2 className="text-sm font-black uppercase tracking-wide">
-                  Progress snapshot
-                </h2>
-                <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
-              </div>
-
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                {[
-                  [
-                    "Accuracy",
-                    practiceStats.hasCompletedQuestions
-                      ? `${practiceStats.accuracy}%`
-                      : "-",
-                  ],
-                  [
-                    "Avg. time / question",
-                    practiceStats.hasCompletedQuestions
-                      ? `${practiceStats.avgSeconds}s`
-                      : "-",
-                  ],
-                ].map(([label, value]) => (
-                  <div key={label} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <p className="text-xs font-black text-slate-700">{label}</p>
-                    <p className="mt-2 text-3xl font-black leading-none text-slate-400">
-                      {value}
-                    </p>
-                    <p className="mt-2 text-xs font-bold text-slate-400">
-                      {progressSummaryText}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <h3 className="mt-7 text-sm font-black">Section overview</h3>
-              <div className="mt-4 space-y-4">
-                {dashboardSectionScores.map((section) => (
-                  <div
-                    key={section.code}
-                    className="grid grid-cols-[44px_1fr_42px] items-center gap-4"
-                  >
-                    <span
-                      className={`rounded px-2 py-0.5 text-center text-xs font-black ${section.badgeClass}`}
-                    >
-                      {section.code}
-                    </span>
-                    <div className="h-1.5 overflow-hidden rounded-full bg-slate-200">
-                      <div
-                        className={`h-full rounded-full ${section.barClass}`}
-                        style={{ width: `${section.score}%` }}
-                      />
-                    </div>
-                    <span className="text-right text-sm font-black">
-                      {section.score}%
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </section>
-
             <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
@@ -6102,7 +6315,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                   }`}
                 >
                   {dashboardStudyPlanTasks.length > 0
-                    ? `${dashboardStudyPlanTasks.length} task${dashboardStudyPlanTasks.length === 1 ? "" : "s"}`
+                    ? `${completedDashboardTaskCount}/${dashboardStudyPlanTasks.length} done`
                     : "Awaiting study plan"}
                 </span>
               </div>
@@ -6146,16 +6359,47 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                 ) : (
                 dashboardStudyPlanTasks.map((task) => {
                   const Icon = task.icon;
+                  const completed = completedDashboardTaskIds.has(task.id);
                   return (
-                    <div key={task.id} className="flex items-center gap-4 rounded-xl border border-slate-100 bg-white p-3">
+                    <div
+                      key={task.id}
+                      className={`flex items-center gap-3 rounded-xl border p-3 ${
+                        completed
+                          ? "border-emerald-100 bg-emerald-50/60"
+                          : "border-slate-100 bg-white"
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => toggleDashboardTask(task.id)}
+                        aria-pressed={completed}
+                        aria-label={`${completed ? "Untick" : "Tick off"} ${task.title}`}
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border text-sm transition-colors ${
+                          completed
+                            ? "border-emerald-500 bg-emerald-500 text-white"
+                            : "border-slate-200 bg-white text-slate-300 hover:border-emerald-300 hover:text-emerald-500"
+                        }`}
+                      >
+                        <Check className="h-5 w-5" aria-hidden="true" />
+                      </button>
                       <div
                         className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${task.iconClass}`}
                       >
                         <Icon className="h-6 w-6" aria-hidden="true" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="text-sm font-black">{task.title}</h3>
-                        <p className="mt-1 text-xs font-bold text-slate-500">
+                        <h3
+                          className={`text-sm font-black ${
+                            completed ? "text-slate-400 line-through" : ""
+                          }`}
+                        >
+                          {task.title}
+                        </h3>
+                        <p
+                          className={`mt-1 text-xs font-bold ${
+                            completed ? "text-slate-400" : "text-slate-500"
+                          }`}
+                        >
                           {task.fix}
                         </p>
                       </div>
@@ -6176,6 +6420,102 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                 View all tasks
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
+            </section>
+
+            <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-black uppercase tracking-wide">
+                    Progress snapshot
+                  </h2>
+                  <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                </div>
+                <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-1">
+                  {(["accuracy", "progress"] as const).map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => setProgressSnapshotView(option)}
+                      className={`rounded-md px-3 py-1.5 text-xs font-black capitalize transition-colors ${
+                        progressSnapshotView === option
+                          ? "bg-blue-600 text-white shadow-sm"
+                          : "text-slate-500 hover:text-blue-600"
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                {(progressSnapshotView === "accuracy"
+                  ? [
+                      [
+                        "Accuracy",
+                        practiceStats.hasCompletedQuestions
+                          ? `${practiceStats.accuracy}%`
+                          : "-",
+                      ],
+                      [
+                        "Avg. time / question",
+                        practiceStats.hasCompletedQuestions
+                          ? `${practiceStats.avgSeconds}s`
+                          : "-",
+                      ],
+                    ]
+                  : [
+                      [
+                        "Questions completed",
+                        `${practiceStats.totalCompleted}/${practiceStats.totalAvailable}`,
+                      ],
+                      ["Bank progress", `${bankProgressPercent}%`],
+                    ]
+                ).map(([label, value]) => (
+                  <div key={label} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="text-xs font-black text-slate-700">{label}</p>
+                    <p className="mt-2 text-3xl font-black leading-none text-slate-400">
+                      {value}
+                    </p>
+                    <p className="mt-2 text-xs font-bold text-slate-400">
+                      {progressSnapshotView === "accuracy"
+                        ? progressSummaryText
+                        : "From question-bank completion"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <h3 className="mt-7 text-sm font-black">
+                {progressSnapshotView === "accuracy"
+                  ? "Accuracy across sections"
+                  : "Progress through sections"}
+              </h3>
+              <div className="mt-4 space-y-4">
+                {dashboardSectionScores.map((section) => (
+                  <div key={section.code} className="space-y-1">
+                    <div className="grid grid-cols-[44px_1fr_42px] items-center gap-4">
+                      <span
+                        className={`rounded px-2 py-0.5 text-center text-xs font-black ${section.badgeClass}`}
+                      >
+                        {section.code}
+                      </span>
+                      <div className="h-1.5 overflow-hidden rounded-full bg-slate-200">
+                        <div
+                          className={`h-full rounded-full ${section.barClass}`}
+                          style={{ width: `${section.score}%` }}
+                        />
+                      </div>
+                      <span className="text-right text-sm font-black">
+                        {section.score}%
+                      </span>
+                    </div>
+                    <p className="pl-[60px] text-xs font-bold text-slate-400">
+                      {section.helper}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </section>
 
             <DailyQuestionsChart practiceStats={practiceStats} />

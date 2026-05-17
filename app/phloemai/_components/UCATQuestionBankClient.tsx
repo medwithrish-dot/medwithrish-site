@@ -81,6 +81,7 @@ type DiagnosticMode =
   | "subset";
 type MockId = "mock-a" | "mock-b" | "mock-c";
 type MockStartScope = "full-mock" | "subtest" | "diagnostic" | "free";
+type MockFilter = "all" | "continue" | "attempted" | "unattempted";
 type SectionMockTimingMode = "official" | "short";
 type DiagnosticSectionScore = {
   label: string;
@@ -128,7 +129,7 @@ type SaveState = {
   status: SaveStatus;
   message: string;
 };
-type SavedFreeDiagnostic = {
+type SavedDiagnosticAttempt = {
   summary: PracticeSessionSummary;
   attemptId: string | null;
   aiFeedbackRequestedAt: string | null;
@@ -491,7 +492,7 @@ function formatSavedSetDate(value: string) {
 
 function getDiagnosticTitle(diagnosticMode: DiagnosticMode | null) {
   if (diagnosticMode === "free-qr") return "Free QR diagnostic";
-  if (diagnosticMode === "full-section") return "Subset mock diagnostic";
+  if (diagnosticMode === "full-section") return "Mock diagnostic";
   if (diagnosticMode === "subset") return "Custom diagnostic";
 
   return "Practice set";
@@ -2434,41 +2435,6 @@ function MockSetPicker({
   );
 }
 
-function FullMockTimingTable() {
-  return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200">
-      <table className="min-w-full divide-y divide-slate-200 text-sm">
-        <thead className="bg-slate-50 text-left text-xs font-black uppercase tracking-wide text-slate-500">
-          <tr>
-            <th className="px-4 py-3">Section</th>
-            <th className="px-4 py-3">Questions</th>
-            <th className="px-4 py-3">Standard timing</th>
-            <th className="px-4 py-3">+25% timing</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-100 bg-white font-bold text-slate-700">
-          {FULL_MOCK_SECTION_ORDER.map((section) => {
-            const meta = getUCATSectionMeta(section);
-            const seconds = FULL_MOCK_SECTION_SECONDS[section];
-            return (
-              <tr key={section}>
-                <td className="px-4 py-3 text-slate-950">
-                  {meta.title}
-                </td>
-                <td className="px-4 py-3">{FULL_MOCK_TARGETS[section]}</td>
-                <td className="px-4 py-3">{formatReadableDuration(seconds)}</td>
-                <td className="px-4 py-3">
-                  {formatReadableDuration(Math.round(seconds * 1.25))}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
 function PremiumDiagnosticChooser({ mockId }: { mockId: MockId }) {
   const totalTarget = FULL_MOCK_SECTION_ORDER.reduce(
     (total, section) => total + FULL_MOCK_TARGETS[section],
@@ -2504,7 +2470,7 @@ function PremiumDiagnosticChooser({ mockId }: { mockId: MockId }) {
           <div className="mt-7">
             <MockSetPicker
               selectedMockId={mockId}
-              baseHref="/phloemai/diagnostic/mocks"
+              baseHref="/phloemai/mocks/full"
             />
           </div>
 
@@ -2526,7 +2492,7 @@ function PremiumDiagnosticChooser({ mockId }: { mockId: MockId }) {
                 label: "Full mock",
                 title: "Whole UCAT sequence",
                 text: `VR, DM, QR and SJT in order, ${totalTarget} questions in total.`,
-                href: withMockQuery("/phloemai/diagnostic/full-mock", mockId),
+                href: withMockQuery("/phloemai/mocks/full", mockId),
                 badgeClass: "bg-slate-950 text-white",
               },
               {
@@ -2542,7 +2508,7 @@ function PremiumDiagnosticChooser({ mockId }: { mockId: MockId }) {
                 title: "One timed subtest",
                 text:
                   "Pick VR, DM, QR or SJT, then use standard timing or the 15-minute sprint.",
-                href: withMockQuery("/phloemai/diagnostic/subset-mock", mockId),
+                href: withMockQuery("/phloemai/mocks/subtest", mockId),
                 badgeClass: "bg-white text-blue-700 ring-1 ring-blue-200",
               },
             ].map((option) => (
@@ -2579,114 +2545,381 @@ function PremiumDiagnosticChooser({ mockId }: { mockId: MockId }) {
   );
 }
 
-function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
-  const selectedMock = getMockDefinition(mockId);
+function MockStatusTabs({
+  value,
+  onChange,
+}: {
+  value: MockFilter;
+  onChange: (value: MockFilter) => void;
+}) {
+  const tabs: Array<{ value: MockFilter; label: string }> = [
+    { value: "all", label: "All" },
+    { value: "continue", label: "Continue" },
+    { value: "attempted", label: "Attempted" },
+    { value: "unattempted", label: "Unattempted" },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
-      <div className="mx-auto max-w-5xl">
-        <Link
-          href="/phloemai/diagnostic/mocks"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700"
+    <div className="flex flex-wrap gap-8 border-b border-slate-200 text-sm font-medium text-slate-600">
+      {tabs.map((tab) => (
+        <button
+          key={tab.value}
+          type="button"
+          onClick={() => onChange(tab.value)}
+          aria-pressed={value === tab.value}
+          className={`h-11 border-b-2 ${
+            value === tab.value
+              ? "border-red-500 text-slate-950"
+              : "border-transparent hover:text-slate-900"
+          }`}
         >
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Back to mock library
-        </Link>
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
 
-        <section className="mt-7 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-blue-700">
-                Full mock
-              </p>
-              <h1 className="mt-2 text-3xl font-black text-slate-950">
-                {selectedMock.label}: complete the UCAT sequence
-              </h1>
-              <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
-                Work through the four sections in order. Each section has its
-                own start briefing and saves as diagnostic data for your report.
-              </p>
-            </div>
-            <Link
-              href={withMockQuery("/phloemai/diagnostic/full-mock/vr", mockId)}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 text-sm font-bold text-white hover:bg-slate-800"
+function MockLineGraph({
+  selectedMock,
+  launchHref,
+  launchLabel,
+  sectionCode,
+}: {
+  selectedMock: (typeof MOCK_LIBRARY)[number];
+  launchHref: string;
+  launchLabel: string;
+  sectionCode?: string;
+}) {
+  const activeIndex = Math.max(0, getMockIndex(selectedMock.id));
+
+  return (
+    <div className="grid min-h-[340px] gap-4 lg:grid-cols-[250px_1fr]">
+      <div className="bg-slate-50 p-4">
+        <div className="grid h-[300px] grid-cols-[58px_1fr] gap-4">
+          <div className="flex flex-col justify-between border-r border-slate-200 pr-3 text-right text-sm text-slate-700">
+            <span>3,000</span>
+            <span>2,000</span>
+            <span>1,000</span>
+            <span>0</span>
+          </div>
+          <div className="relative border-b border-slate-300">
+            {[25, 50, 75].map((top) => (
+              <div
+                key={top}
+                className="absolute left-0 right-0 border-t border-slate-200"
+                style={{ top: `${top}%` }}
+              />
+            ))}
+            <svg
+              className="absolute inset-0 h-full w-full overflow-visible"
+              viewBox="0 0 300 260"
+              preserveAspectRatio="none"
+              aria-hidden="true"
             >
-              Start VR
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+              <polyline
+                points="24,226 150,226 276,226"
+                fill="none"
+                stroke="#ef4444"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+              {MOCK_LIBRARY.map((mock, index) => {
+                const x = 24 + index * 126;
+                return (
+                  <circle
+                    key={mock.id}
+                    cx={x}
+                    cy="226"
+                    r={index === activeIndex ? 6 : 4}
+                    fill={index === activeIndex ? "#ef4444" : "#fecaca"}
+                  />
+                );
+              })}
+            </svg>
+            <div className="absolute inset-x-0 -bottom-8 grid grid-cols-3 text-center text-sm text-slate-700">
+              {MOCK_LIBRARY.map((mock) => (
+                <span key={mock.id}>
+                  {sectionCode
+                    ? `${sectionCode}${String(getMockIndex(mock.id) + 1).padStart(2, "0")}`
+                    : `F0${getMockIndex(mock.id) + 1}`}
+                </span>
+              ))}
+            </div>
           </div>
+        </div>
+        <p className="mt-10 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Mock score
+        </p>
+      </div>
 
-          <div className="mt-6">
-            <MockSetPicker
-              selectedMockId={mockId}
-              baseHref="/phloemai/diagnostic/full-mock"
-              compact
-            />
+      <div className="flex min-h-[300px] items-center justify-center rounded-md bg-slate-50 p-6">
+        <div className="text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-red-500">
+            <ArrowRight className="h-6 w-6" aria-hidden="true" />
           </div>
+          <p className="mt-7 text-sm font-black text-slate-950">
+            Ready for more?
+          </p>
+          <Link
+            href={launchHref}
+            className="mt-4 inline-flex h-12 items-center justify-center rounded-md bg-red-500 px-7 text-xs font-black uppercase tracking-[0.14em] text-white shadow-sm hover:bg-red-600"
+          >
+            {launchLabel}
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-          <div className="mt-6 rounded-lg border border-blue-100 bg-blue-50/50 p-4">
-            <h2 className="text-sm font-black uppercase tracking-wide text-slate-950">
-              Before the first section
-            </h2>
-            <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-              Treat this like a real sitting: read the section note, start only
-              when you are ready, and keep the clock running once a section has
-              begun. The in-test help controls remain available, but the timer
-              does not pause while you use them.
-            </p>
-          </div>
+function FullMockPerformancePanel({
+  selectedMock,
+}: {
+  selectedMock: (typeof MOCK_LIBRARY)[number];
+}) {
+  return (
+    <section className="mt-5">
+      <div className="flex flex-col gap-4">
+        <h2 className="text-base font-black text-slate-950">
+          Performance Over Time
+        </h2>
+        <div className="flex flex-wrap gap-6 border-b border-slate-200 text-sm font-medium text-slate-600">
+          {["Overall", "Verbal Reasoning", "Decision Making", "Quantitative Reasoning", "Situational Judgement"].map((tab, index) => (
+            <button
+              key={tab}
+              type="button"
+              className={`border-b-2 pb-2 ${
+                index === 0
+                  ? "border-red-500 text-slate-950"
+                  : "border-transparent hover:text-slate-900"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      </div>
 
-          <div className="mt-5">
-            <FullMockTimingTable />
-          </div>
+      <div className="mt-6">
+        <MockLineGraph
+          selectedMock={selectedMock}
+          launchHref={withMockQuery("/phloemai/mocks/full/vr", selectedMock.id)}
+          launchLabel={`Launch ${selectedMock.label}`}
+        />
+      </div>
+    </section>
+  );
+}
 
-          <div className="mt-7 divide-y divide-slate-100 rounded-xl border border-slate-200">
-            {FULL_MOCK_SECTION_ORDER.map((section, index) => {
-              const meta = getUCATSectionMeta(section);
-              const available = getMockOrderedQuestions(
-                UCAT_QUESTION_BANK[section],
-                section,
-                mockId
-              ).slice(0, getAvailableMockQuestionCount(section)).length;
-              const target = FULL_MOCK_TARGETS[section];
-              const Icon = section === "sjt" ? BadgeCheck : BarChart3;
+function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
+  const [mockFilter, setMockFilter] = useState<MockFilter>("all");
+  const selectedMock = getMockDefinition(mockId);
+  const totalTarget = FULL_MOCK_SECTION_ORDER.reduce(
+    (total, section) => total + FULL_MOCK_TARGETS[section],
+    0
+  );
+  const visibleMocks =
+    mockFilter === "continue" || mockFilter === "attempted"
+      ? []
+      : MOCK_LIBRARY;
 
-              return (
+  return (
+    <div className="min-h-screen bg-[#e6e6e6] px-4 py-5 text-[#111827]">
+      <main className="mx-auto max-w-[1530px] bg-white px-6 py-7 shadow-sm">
+        <div>
+          <h1 className="text-2xl font-black text-slate-950">Full Mocks</h1>
+          <p className="mt-2 text-sm font-medium text-slate-500">
+            Track your scores across full mock papers and launch the next mock.
+          </p>
+        </div>
+
+        <FullMockPerformancePanel selectedMock={selectedMock} />
+
+        <div className="mt-7">
+          <MockStatusTabs value={mockFilter} onChange={setMockFilter} />
+        </div>
+
+        <div className="mt-4 space-y-3">
+          {visibleMocks.length === 0 ? (
+            <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-6 text-sm font-bold text-slate-500">
+              No full mocks in this filter yet.
+            </div>
+          ) : visibleMocks.map((mock) => {
+            const index = MOCK_LIBRARY.findIndex((item) => item.id === mock.id);
+            const active = mock.id === selectedMock.id;
+            return (
+              <article
+                key={mock.id}
+                className={`grid gap-4 rounded-md border p-6 transition-colors md:grid-cols-[1fr_auto] md:items-center ${
+                  active
+                    ? "border-red-200 bg-red-50/30"
+                    : "border-slate-200 bg-white hover:border-red-200"
+                }`}
+              >
+                <div>
+                  <h2 className="text-base font-black text-slate-950">
+                    {index === 0 ? "Full Diagnostic Mock" : `Full Mock ${index + 1}`}
+                  </h2>
+                  <p className="mt-2 text-sm leading-6 text-slate-500">
+                    Mock Ref. #F0{index + 1} - {totalTarget} questions across VR, DM, QR and SJT.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {FULL_MOCK_SECTION_ORDER.map((section) => {
+                      const meta = getUCATSectionMeta(section);
+                      return (
+                        <Link
+                          key={section}
+                          href={withMockQuery(
+                            `/phloemai/mocks/full/${section}`,
+                            mock.id
+                          )}
+                          className="inline-flex h-8 items-center justify-center rounded-md border border-slate-200 bg-white px-3 text-xs font-black text-slate-700 transition-colors hover:border-red-300 hover:text-red-600"
+                        >
+                          {meta.code}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
                 <Link
-                  key={section}
-                  href={withMockQuery(
-                    `/phloemai/diagnostic/full-mock/${section}`,
-                    mockId
-                  )}
-                  className="grid gap-4 p-4 transition-colors hover:bg-slate-50 sm:grid-cols-[auto_1fr_auto] sm:items-center"
+                  href={withMockQuery("/phloemai/mocks/full/vr", mock.id)}
+                  className="inline-flex h-12 items-center justify-center rounded-md border border-red-500 px-8 text-xs font-black uppercase tracking-[0.14em] text-slate-950 transition-colors hover:bg-red-500 hover:text-white"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
-                      Section {index + 1} - {meta.code}
-                    </p>
-                    <h2 className="mt-1 text-base font-black text-slate-950">
-                      {meta.title}
-                    </h2>
-                    <p className="mt-1 text-sm font-semibold leading-6 text-slate-600">
-                      {target} question target
-                      {available < target ? `, ${available} available now` : ""} -
-                      {" "}
-                      {formatReadableDuration(FULL_MOCK_SECTION_SECONDS[section])}.
-                    </p>
-                  </div>
-                  <span className="inline-flex items-center gap-2 text-sm font-bold text-blue-700">
-                    Open
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </span>
+                  {active ? "Continue" : "Attempt"}
                 </Link>
+              </article>
+            );
+          })}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function SubtestMockOverview({ mockId }: { mockId: MockId }) {
+  const [activeSection, setActiveSection] = useState<UCATSection>("vr");
+  const [mockFilter, setMockFilter] = useState<MockFilter>("all");
+  const selectedMock = getMockDefinition(mockId);
+  const activeMeta = getUCATSectionMeta(activeSection);
+  const selectedMockIndex = Math.max(0, getMockIndex(selectedMock.id));
+  const visibleMocks =
+    mockFilter === "continue" || mockFilter === "attempted"
+      ? []
+      : MOCK_LIBRARY;
+
+  return (
+    <div className="min-h-screen bg-[#e6e6e6] px-4 py-5 text-[#111827]">
+      <main className="mx-auto max-w-[1530px] bg-white px-6 py-7 shadow-sm">
+        <div>
+          <h1 className="text-2xl font-black text-slate-950">Subtest Mocks</h1>
+          <p className="mt-2 text-sm font-medium text-slate-500">
+            Choose a UCAT section, then attempt individual timed subtest mocks.
+          </p>
+        </div>
+
+        <div className="mt-7 grid gap-6 lg:grid-cols-[225px_1fr]">
+          <aside className="space-y-1">
+            {UCAT_SECTIONS.map((section) => {
+              const active = section.slug === activeSection;
+              const Icon = section.slug === "sjt" ? BadgeCheck : BarChart3;
+              return (
+                <button
+                  key={section.slug}
+                  type="button"
+                  onClick={() => setActiveSection(section.slug)}
+                  className={`relative grid w-full grid-cols-[26px_1fr] gap-3 px-4 py-4 text-left transition-colors ${
+                    active
+                      ? "bg-slate-100 text-slate-950"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"
+                  }`}
+                >
+                  {active && (
+                    <span className="absolute right-0 top-0 h-full w-1 bg-red-500" />
+                  )}
+                  <Icon className="mt-0.5 h-4 w-4" aria-hidden="true" />
+                  <span>
+                    <span className="block text-sm font-medium">
+                      {section.title}
+                    </span>
+                    <span className="mt-1 block text-xs text-slate-500">
+                      0/{MOCK_LIBRARY.length}
+                    </span>
+                  </span>
+                </button>
               );
             })}
-          </div>
-        </section>
-      </div>
+          </aside>
+
+          <section>
+            <h2 className="text-xl font-black text-slate-950">
+              {activeMeta.title}
+            </h2>
+
+            <div className="mt-7">
+              <h3 className="text-base font-black text-slate-950">
+                Performance Over Time
+              </h3>
+              <div className="mt-7">
+                <MockLineGraph
+                  selectedMock={selectedMock}
+                  launchHref={withMockQuery(
+                    `/phloemai/mocks/subtest/${activeSection}`,
+                    selectedMock.id
+                  )}
+                  launchLabel={`Launch your first mock (${activeMeta.code}${String(
+                    selectedMockIndex + 1
+                  ).padStart(2, "0")})`}
+                  sectionCode={activeMeta.code}
+                />
+              </div>
+            </div>
+
+            <div className="mt-7">
+              <MockStatusTabs value={mockFilter} onChange={setMockFilter} />
+            </div>
+
+            <div className="mt-4 space-y-3">
+              {visibleMocks.length === 0 ? (
+                <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 p-6 text-sm font-bold text-slate-500">
+                  No {activeMeta.code} subtest mocks in this filter yet.
+                </div>
+              ) : visibleMocks.map((mock) => {
+                const index = MOCK_LIBRARY.findIndex((item) => item.id === mock.id);
+                const active = mock.id === selectedMock.id;
+                return (
+                  <article
+                    key={mock.id}
+                    className={`grid gap-4 rounded-md border p-6 transition-colors md:grid-cols-[1fr_auto] md:items-center ${
+                      active
+                        ? "border-red-200 bg-red-50/30"
+                        : "border-slate-200 bg-white hover:border-red-200"
+                    }`}
+                  >
+                    <div>
+                      <h3 className="text-base font-black text-slate-950">
+                        {activeMeta.code} Subtest Mock {index + 1}
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-slate-500">
+                        Mock Ref. #{activeMeta.code}{String(index + 1).padStart(2, "0")}
+                      </p>
+                    </div>
+                    <Link
+                      href={withMockQuery(
+                        `/phloemai/mocks/subtest/${activeSection}`,
+                        mock.id
+                      )}
+                      className="inline-flex h-12 items-center justify-center rounded-md border border-red-500 px-8 text-xs font-black uppercase tracking-[0.14em] text-slate-950 transition-colors hover:bg-red-500 hover:text-white"
+                    >
+                      {active ? "Continue" : "Attempt"}
+                    </Link>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        </div>
+      </main>
     </div>
   );
 }
@@ -2705,14 +2938,14 @@ function DiagnosticModeChooser({
     ? "Pick a paper, then choose one UCAT section to run under timed mock conditions."
     : "Use the same mock list, choose a section, then select the question types you want to diagnose.";
   const pickerBaseHref = isSectionMock
-    ? "/phloemai/diagnostic/subset-mock"
+    ? "/phloemai/mocks/subtest"
     : "/phloemai/question-bank?diagnostic=subset";
 
   return (
     <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
       <div className="mx-auto max-w-5xl">
         <Link
-          href={isSectionMock ? "/phloemai/diagnostic/mocks" : "/phloemai/diagnostic"}
+          href={isSectionMock ? "/phloemai/mocks/full" : "/phloemai/diagnostic"}
           className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -2768,7 +3001,7 @@ function DiagnosticModeChooser({
                   href={
                     isSectionMock
                       ? withMockQuery(
-                          `/phloemai/diagnostic/subset-mock/${section.slug}`,
+                          `/phloemai/mocks/subtest/${section.slug}`,
                           mockId
                         )
                       : withMockQuery(href, mockId)
@@ -4767,6 +5000,10 @@ function MarkedReviewScreen({
   const diagnosticScore = getDiagnosticSectionScore(summary);
   const isDiagnostic = Boolean(diagnosticMode);
   const analysisUnlocked = isPremium || diagnosticMode === "free-qr";
+  const aiCreditLabel =
+    aiFeedbackState?.credits === 1
+      ? "1 AI diagnostic credit"
+      : `${aiFeedbackState?.credits ?? 0} AI diagnostic credits`;
 
   return (
     <div className="min-h-screen bg-[#e7edf7] font-sans text-[#111827]">
@@ -4837,7 +5074,7 @@ function MarkedReviewScreen({
           )}
         </section>
 
-        {diagnosticMode === "free-qr" && aiFeedbackState && (
+        {isDiagnostic && aiFeedbackState && onRequestAiFeedback && (
           aiFeedbackState.text ? (
             <section className="rounded-md border border-violet-200 bg-white p-5 shadow-md">
               <div className="flex items-center gap-3">
@@ -4866,10 +5103,10 @@ function MarkedReviewScreen({
                     <Sparkles className="h-6 w-6" aria-hidden="true" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-black">1 free AI feedback credit</h2>
+                    <h2 className="text-lg font-black">{aiCreditLabel}</h2>
                     <p className="mt-1 text-sm font-semibold leading-6 text-slate-600">
-                      Use the credit to generate personalised written feedback
-                      from your diagnostic data.
+                      Use a credit to generate personalised written feedback
+                      from this diagnostic.
                     </p>
                   </div>
                 </div>
@@ -4886,7 +5123,7 @@ function MarkedReviewScreen({
                     ? "Generating..."
                     : aiFeedbackState.credits <= 0
                       ? "No credit remaining"
-                      : "Use AI feedback credit"}
+                      : "Use AI diagnostic credit"}
                 </button>
               </div>
               {aiFeedbackState.message && (
@@ -5040,7 +5277,7 @@ export function UCATQuestionBankClient({
   }
 
   if (!validSection && validDiagnosticMode === "section-mock") {
-    return <DiagnosticModeChooser mode="section-mock" mockId={validMockId} />;
+    return <SubtestMockOverview mockId={validMockId} />;
   }
 
   if (!validSection && validDiagnosticMode === "subset") {
@@ -5135,8 +5372,8 @@ function UCATQuestionBankSection({
   const [freeDiagnosticLoading, setFreeDiagnosticLoading] = useState(
     diagnosticMode === "free-qr"
   );
-  const [savedFreeDiagnostic, setSavedFreeDiagnostic] =
-    useState<SavedFreeDiagnostic | null>(null);
+  const [savedDiagnosticAttempt, setSavedDiagnosticAttempt] =
+    useState<SavedDiagnosticAttempt | null>(null);
   const [aiFeedbackState, setAiFeedbackState] =
     useState<DiagnosticAiFeedbackState | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
@@ -5403,7 +5640,7 @@ function UCATQuestionBankSection({
   const fixedDiagnosticScope: MockStartScope =
     diagnosticMode === "free-qr"
       ? "free"
-      : backHref?.includes("/full-mock")
+      : backHref?.includes("/full-mock") || backHref?.includes("/mocks/full")
         ? "full-mock"
         : diagnosticMode
           ? "subtest"
@@ -5474,7 +5711,7 @@ function UCATQuestionBankSection({
         if (!mounted) return;
 
         if (!user) {
-          setSavedFreeDiagnostic(null);
+          setSavedDiagnosticAttempt(null);
           setAiFeedbackState({
             requested: false,
             status: "Sign in required",
@@ -5564,7 +5801,7 @@ function UCATQuestionBankSection({
           text: savedFeedbackText,
         });
 
-        setSavedFreeDiagnostic(
+        setSavedDiagnosticAttempt(
           savedSummary
             ? {
                 summary: savedSummary,
@@ -5746,6 +5983,17 @@ function UCATQuestionBankSection({
         const scoreSummary = getDiagnosticSectionScore(summary);
         const insights = buildMarkedSessionInsights(summary);
         const studyPlanTasks = buildStudyPlanTasks(insights.issues);
+        const { data: profileRow } = await supabase
+          .from("profiles")
+          .select("diagnostic_credits")
+          .eq("id", user.id)
+          .maybeSingle();
+        const diagnosticCredits =
+          typeof profileRow?.diagnostic_credits === "number"
+            ? profileRow.diagnostic_credits
+            : 1;
+        const aiFeedbackStatus =
+          diagnosticCredits > 0 ? "credit_available" : "not_requested";
         const attemptMetadata = {
           diagnosticMode,
           sourceSessionId: sessionId,
@@ -5753,9 +6001,9 @@ function UCATQuestionBankSection({
           insights,
           studyPlanTasks,
           sectionScore: scoreSummary.metadata,
-          aiFeedbackCreditAvailable: diagnosticMode === "free-qr",
+          aiFeedbackCreditAvailable: diagnosticCredits > 0,
           aiFeedbackRequested: false,
-          aiFeedbackStatus: "not_requested",
+          aiFeedbackStatus,
         };
         const { data: attemptRow, error: attemptError } = await supabase
           .from("diagnostic_attempts")
@@ -5765,8 +6013,7 @@ function UCATQuestionBankSection({
             total_questions: summary.totalQuestions,
             accuracy: summary.accuracy,
             avg_seconds_per_question: summary.avgSecondsPerQuestion,
-            ai_feedback_status:
-              diagnosticMode === "free-qr" ? "credit_available" : "not_requested",
+            ai_feedback_status: aiFeedbackStatus,
             metadata: attemptMetadata,
             started_at: summary.startedAt,
             completed_at: summary.completedAt,
@@ -5796,24 +6043,25 @@ function UCATQuestionBankSection({
 
         if (sectionError) throw sectionError;
 
-        if (diagnosticMode === "free-qr") {
-          setSavedFreeDiagnostic({
-            summary,
-            attemptId,
-            aiFeedbackRequestedAt: null,
-            aiFeedbackStatus: "not_requested",
-            aiFeedbackText: null,
-            credits: 1,
-          });
-          setAiFeedbackState({
-            requested: false,
-            status: "Ready",
-            credits: 1,
-            message: null,
-            requesting: false,
-            text: null,
-          });
-        }
+        setSavedDiagnosticAttempt({
+          summary,
+          attemptId,
+          aiFeedbackRequestedAt: null,
+          aiFeedbackStatus,
+          aiFeedbackText: null,
+          credits: diagnosticCredits,
+        });
+        setAiFeedbackState({
+          requested: false,
+          status: diagnosticCredits > 0 ? "Ready" : "No credit remaining",
+          credits: diagnosticCredits,
+          message:
+            diagnosticCredits > 0
+              ? null
+              : "No diagnostic AI feedback credits remaining.",
+          requesting: false,
+          text: null,
+        });
       }
 
       setSaveState({ status: "saved", message: "Saved to Supabase" });
@@ -5862,8 +6110,8 @@ function UCATQuestionBankSection({
     }
   };
 
-  const requestFreeDiagnosticAiFeedback = async () => {
-    if (!savedFreeDiagnostic?.attemptId || !hasSupabaseConfig()) {
+  const requestDiagnosticAiFeedback = async () => {
+    if (!savedDiagnosticAttempt?.attemptId || !hasSupabaseConfig()) {
       setAiFeedbackState((current) =>
         current
           ? {
@@ -5901,7 +6149,7 @@ function UCATQuestionBankSection({
         throw new Error("No diagnostic AI feedback credit remaining.");
       }
 
-      const summary = savedFreeDiagnostic.summary;
+      const summary = savedDiagnosticAttempt.summary;
       const insights = buildMarkedSessionInsights(summary);
 
       const aiResponse = await fetch("/api/ai/diagnostic-feedback", {
@@ -5952,7 +6200,7 @@ function UCATQuestionBankSection({
       const { data: attemptBefore } = await supabase
         .from("diagnostic_attempts")
         .select("metadata")
-        .eq("id", savedFreeDiagnostic.attemptId)
+        .eq("id", savedDiagnosticAttempt.attemptId)
         .eq("user_id", user.id)
         .maybeSingle();
       const currentMetadata =
@@ -5970,15 +6218,15 @@ function UCATQuestionBankSection({
           ...(aiText ? { ai_feedback: aiText } : {}),
           metadata: {
             ...currentMetadata,
-            ...(savedFreeDiagnostic.summary
+            ...(savedDiagnosticAttempt.summary
               ? {
-                  summary: savedFreeDiagnostic.summary,
+                  summary: savedDiagnosticAttempt.summary,
                 }
               : {}),
             ...nextMetadata,
           },
         })
-        .eq("id", savedFreeDiagnostic.attemptId)
+        .eq("id", savedDiagnosticAttempt.attemptId)
         .eq("user_id", user.id);
 
       if (attemptError) throw attemptError;
@@ -5992,7 +6240,7 @@ function UCATQuestionBankSection({
         if (profileError) throw profileError;
       }
 
-      setSavedFreeDiagnostic((current) =>
+      setSavedDiagnosticAttempt((current) =>
         current
           ? {
               ...current,
@@ -6240,11 +6488,11 @@ function UCATQuestionBankSection({
     );
   }
 
-  if (!started && diagnosticMode === "free-qr" && savedFreeDiagnostic) {
+  if (!started && diagnosticMode === "free-qr" && savedDiagnosticAttempt) {
     return (
       <MarkedReviewScreen
         sectionTitle="Free QR diagnostic"
-        summary={savedFreeDiagnostic.summary}
+        summary={savedDiagnosticAttempt.summary}
         saveState={{ status: "saved", message: "Saved diagnostic report" }}
         isPremium={true}
         diagnosticMode={diagnosticMode}
@@ -6253,7 +6501,7 @@ function UCATQuestionBankSection({
         checkoutError={checkoutError}
         onUpgrade={handleUpgrade}
         onReviewAnswers={() => {
-          const restoredQuestions = savedFreeDiagnostic.summary.questions
+          const restoredQuestions = savedDiagnosticAttempt.summary.questions
             .map((item) =>
               sectionQuestions.find((question) => question.id === item.questionId)
             )
@@ -6261,13 +6509,13 @@ function UCATQuestionBankSection({
           const restoredAnswers: Record<number, PracticeAnswer> = {};
           const restoredFlags: Record<number, boolean> = {};
 
-          savedFreeDiagnostic.summary.questions.forEach((item, index) => {
+          savedDiagnosticAttempt.summary.questions.forEach((item, index) => {
             if (item.selectedAnswer) restoredAnswers[index] = item.selectedAnswer;
             if (item.flagged) restoredFlags[index] = true;
           });
 
-          setMarkedSummary(savedFreeDiagnostic.summary);
-          markedSummaryRef.current = savedFreeDiagnostic.summary;
+          setMarkedSummary(savedDiagnosticAttempt.summary);
+          markedSummaryRef.current = savedDiagnosticAttempt.summary;
           setQuestionIndex(0);
           setAnswers(restoredAnswers);
           setFlags(restoredFlags);
@@ -6278,7 +6526,7 @@ function UCATQuestionBankSection({
           setPhase("marked-review");
           scrollToQuestionTop();
         }}
-        onRequestAiFeedback={requestFreeDiagnosticAiFeedback}
+        onRequestAiFeedback={requestDiagnosticAiFeedback}
       />
     );
   }
@@ -6920,9 +7168,8 @@ function UCATQuestionBankSection({
       }
       if (event.key === "Backspace") {
         event.preventDefault();
-        setCalcDisplay((current) =>
-          current.length > 1 ? current.slice(0, -1) : "0"
-        );
+        setCalcDisplay("0");
+        setCalcWaiting(false);
         recordCalculator("backspace", undefined, "keyboard");
         return;
       }
@@ -7059,7 +7306,7 @@ function UCATQuestionBankSection({
                 setSaveState({ status: "idle", message: "Not saved yet" });
               }
         }
-        onRequestAiFeedback={requestFreeDiagnosticAiFeedback}
+        onRequestAiFeedback={requestDiagnosticAiFeedback}
       />
     );
   }
@@ -7249,21 +7496,31 @@ function UCATQuestionBankSection({
           </div>
           <p className="mt-2 text-[11px] font-semibold leading-4 text-slate-600">
             Shortcuts: Alt+C opens, / divides, * multiplies, M = M-, P = M+,
-            C recalls MRC and double C clears memory.
+            C recalls MRC, double C clears memory, Backspace clears entry.
           </p>
         </div>
       )}
 
-      <main className="grid min-h-[calc(100vh-132px)] grid-cols-1 pb-16 md:grid-cols-[1.15fr_0.85fr]">
+      <main
+        className={
+          usesClassicDropLayout
+            ? "min-h-[calc(100vh-132px)] pb-16"
+            : "grid min-h-[calc(100vh-132px)] grid-cols-1 pb-16 md:grid-cols-[1.15fr_0.85fr]"
+        }
+      >
         <section
           ref={stimulusRegionRef}
-          className="border-b-2 border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)] md:border-b-0 md:border-r-2"
+          className={
+            usesClassicDropLayout
+              ? "px-5 pt-5"
+              : "border-b-2 border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)] md:border-b-0 md:border-r-2"
+          }
         >
           <h2 className="sr-only">{question.leftTitle ?? "Information"}</h2>
           <div
             className={
               usesClassicDropLayout
-                ? "max-w-5xl space-y-3 text-[15px] leading-[18px] text-black"
+                ? "max-w-[1100px] space-y-3 text-[20px] leading-[28px] text-black"
                 : "max-w-4xl space-y-5 text-base leading-6 sm:text-lg"
             }
           >
@@ -7274,7 +7531,7 @@ function UCATQuestionBankSection({
           </div>
         </section>
 
-        <section className="px-6 py-5">
+        <section className={usesClassicDropLayout ? "px-5 py-3" : "px-6 py-5"}>
           <div ref={questionRegionRef}>
             {!usesClassicDropLayout && (
               <div className="mb-3 flex flex-wrap gap-2">
@@ -7294,7 +7551,7 @@ function UCATQuestionBankSection({
             <p
               className={
                 usesClassicDropLayout
-                  ? "text-[15px] leading-[18px] text-black"
+                  ? "max-w-[900px] text-[20px] leading-[28px] text-black"
                   : "text-base leading-6 sm:text-lg"
               }
             >
@@ -7348,7 +7605,7 @@ function UCATQuestionBankSection({
               </div>
             </div>
           ) : isDragCategoryQuestion ? (
-            <div ref={answersRegionRef} className="mt-8 max-w-[800px]">
+            <div ref={answersRegionRef} className="mt-4 max-w-[900px]">
               <div className="flex items-start gap-4 text-[15px] leading-[18px] text-black max-lg:flex-col">
                 <div className="min-w-0 flex-1 space-y-3">
                   {question.categoryItems.map((item) => {
@@ -7460,7 +7717,7 @@ function UCATQuestionBankSection({
               </div>
             </div>
           ) : isYesNoQuestion ? (
-            <div ref={answersRegionRef} className="mt-8 max-w-[720px]">
+            <div ref={answersRegionRef} className="mt-4 max-w-[900px]">
               <div className="flex items-start gap-4 text-[15px] leading-[18px] text-black max-lg:flex-col">
                 <div className="min-w-0 flex-1 space-y-3">
                   {question.yesNoStatements.map((statement) => {
