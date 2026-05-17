@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createClient as createSupabaseClient,
   hasSupabaseConfig,
@@ -5741,6 +5741,8 @@ function UCATQuestionBankSection({
   const stimulusRegionRef = useRef<HTMLElement>(null);
   const questionRegionRef = useRef<HTMLDivElement>(null);
   const answersRegionRef = useRef<HTMLDivElement>(null);
+  const maxQuestionVisibleBottomRef = useRef(0);
+  const questionScrollSeenRef = useRef(false);
   const zoneElements = useMemo(
     () => ({
       stimulus: stimulusRegionRef,
@@ -5770,6 +5772,48 @@ function UCATQuestionBankSection({
   });
   const resetAttentionTracker = attentionTracker.resetTracker;
 
+  const getQuestionContentBottom = useCallback(() => {
+    const contentRegions = [
+      stimulusRegionRef.current,
+      questionRegionRef.current,
+      answersRegionRef.current,
+    ];
+
+    return contentRegions.reduce((bottom, element) => {
+      if (!element) return bottom;
+      const rect = element.getBoundingClientRect();
+      return Math.max(bottom, window.scrollY + rect.bottom);
+    }, 0);
+  }, []);
+
+  const evaluateQuestionScrollSeen = useCallback(() => {
+    const documentElement = document.documentElement;
+    const pageHeight = Math.max(
+      documentElement.scrollHeight,
+      document.body.scrollHeight
+    );
+    const visibleBottom = window.scrollY + window.innerHeight - 56;
+    const contentBottom = getQuestionContentBottom();
+    const needsScroll = pageHeight - window.innerHeight > 48;
+
+    maxQuestionVisibleBottomRef.current = Math.max(
+      maxQuestionVisibleBottomRef.current,
+      visibleBottom
+    );
+
+    const seen =
+      !needsScroll ||
+      visibleBottom >= contentBottom - 72 ||
+      maxQuestionVisibleBottomRef.current >= contentBottom - 96;
+
+    if (seen) {
+      questionScrollSeenRef.current = true;
+      setQuestionScrollSeen(true);
+    }
+
+    return seen;
+  }, [getQuestionContentBottom]);
+
   useEffect(() => {
     scrollToQuestionTop();
   }, []);
@@ -5780,6 +5824,8 @@ function UCATQuestionBankSection({
 
   useEffect(() => {
     if (!started || phase !== "practice") {
+      questionScrollSeenRef.current = true;
+      maxQuestionVisibleBottomRef.current = 0;
       setQuestionScrollSeen(true);
       setUnseenContentOpen(false);
       return;
@@ -5787,32 +5833,22 @@ function UCATQuestionBankSection({
 
     let frameId = 0;
 
-    const updateScrollSeen = () => {
-      const documentElement = document.documentElement;
-      const pageHeight = Math.max(
-        documentElement.scrollHeight,
-        document.body.scrollHeight
-      );
-      const scrollBottom = window.scrollY + window.innerHeight;
-      const needsScroll = pageHeight - window.innerHeight > 48;
-
-      if (!needsScroll || scrollBottom >= pageHeight - 64) {
-        setQuestionScrollSeen(true);
-      }
-    };
-
+    questionScrollSeenRef.current = false;
+    maxQuestionVisibleBottomRef.current = 0;
     setQuestionScrollSeen(false);
     setUnseenContentOpen(false);
-    frameId = window.requestAnimationFrame(updateScrollSeen);
-    window.addEventListener("scroll", updateScrollSeen, { passive: true });
-    window.addEventListener("resize", updateScrollSeen);
+    frameId = window.requestAnimationFrame(evaluateQuestionScrollSeen);
+    window.addEventListener("scroll", evaluateQuestionScrollSeen, {
+      passive: true,
+    });
+    window.addEventListener("resize", evaluateQuestionScrollSeen);
 
     return () => {
       window.cancelAnimationFrame(frameId);
-      window.removeEventListener("scroll", updateScrollSeen);
-      window.removeEventListener("resize", updateScrollSeen);
+      window.removeEventListener("scroll", evaluateQuestionScrollSeen);
+      window.removeEventListener("resize", evaluateQuestionScrollSeen);
     };
-  }, [started, phase, questionIndex]);
+  }, [evaluateQuestionScrollSeen, started, phase, questionIndex]);
 
   useEffect(() => {
     markedSummaryRef.current = markedSummary;
@@ -7187,15 +7223,11 @@ function UCATQuestionBankSection({
   };
 
   const hasUnseenScrollableContent = () => {
-    if (phase !== "practice" || questionScrollSeen) return false;
+    if (phase !== "practice" || questionScrollSeenRef.current || questionScrollSeen) {
+      return false;
+    }
 
-    const documentElement = document.documentElement;
-    const pageHeight = Math.max(
-      documentElement.scrollHeight,
-      document.body.scrollHeight
-    );
-
-    return pageHeight - window.innerHeight > 48;
+    return !evaluateQuestionScrollSeen();
   };
 
   const guardScrollableContentBeforeLeaving = (
@@ -7948,7 +7980,7 @@ function UCATQuestionBankSection({
           <div
             className={
               usesClassicDropLayout
-                ? "max-w-[1100px] space-y-3 text-[20px] leading-[28px] text-black"
+                ? "max-w-[920px] space-y-3 text-[18px] leading-[25px] text-black"
                 : "max-w-none space-y-7 text-[22px] leading-[28px] text-black"
             }
           >
@@ -7964,7 +7996,7 @@ function UCATQuestionBankSection({
             <p
               className={
                 usesClassicDropLayout
-                  ? "max-w-[900px] text-[20px] leading-[28px] text-black"
+                  ? "max-w-[820px] text-[18px] leading-[25px] text-black"
                   : "text-[22px] leading-[28px] text-black"
               }
             >
@@ -8021,21 +8053,21 @@ function UCATQuestionBankSection({
             <div
               ref={answersRegionRef}
               className={
-                isSjtDropLayout ? "mt-4 max-w-[900px]" : "mt-12 max-w-[1180px]"
+                isSjtDropLayout ? "mt-4 max-w-[900px]" : "mt-9 max-w-[790px]"
               }
             >
               <div
                 className={
                   isSjtDropLayout
                     ? "flex items-start gap-4 text-[15px] leading-[18px] text-black max-lg:flex-col"
-                    : "flex items-start gap-[14px] text-[22px] leading-[26px] text-black max-xl:flex-col"
+                    : "flex items-start gap-[10px] text-[15px] leading-[18px] text-black max-xl:flex-col"
                 }
               >
                 <div
                   className={
                     isSjtDropLayout
                       ? "min-w-0 flex-1 space-y-3"
-                      : "w-[960px] max-w-full space-y-5"
+                      : "w-[642px] max-w-full space-y-3"
                   }
                 >
                   {question.categoryItems.map((item) => {
@@ -8059,12 +8091,12 @@ function UCATQuestionBankSection({
                         className={`grid ${
                           isSjtDropLayout
                             ? "gap-3 sm:grid-cols-[minmax(0,1fr)_98px]"
-                            : "gap-[18px] sm:grid-cols-[minmax(0,793px)_150px]"
+                            : "gap-[12px] sm:grid-cols-[minmax(0,530px)_100px]"
                         }`}
                       >
                         <div
                           className={`flex min-h-[44px] items-center justify-center border px-3 py-2 text-center ${
-                            isSjtDropLayout ? "min-h-[66px]" : "min-h-[84px]"
+                            isSjtDropLayout ? "min-h-[66px]" : "min-h-[56px]"
                           } ${
                             correct
                               ? "border-emerald-700 bg-emerald-50"
@@ -8099,7 +8131,7 @@ function UCATQuestionBankSection({
                           className={`flex min-h-[44px] w-full items-center justify-center border px-2 text-center font-normal ${
                             isSjtDropLayout
                               ? "min-h-[66px] bg-[#b9b1b1] text-[14px] leading-[16px]"
-                              : "min-h-[84px] bg-[#b9b1b1] text-[20px] leading-[24px]"
+                              : "min-h-[56px] bg-[#b9b1b1] text-[14px] leading-[17px]"
                           } ${
                             correct
                               ? "border-emerald-700 text-emerald-900"
@@ -8123,10 +8155,10 @@ function UCATQuestionBankSection({
                   className={
                     isSjtDropLayout
                       ? "w-[128px] shrink-0 border border-black bg-white p-3 max-lg:w-full"
-                      : "mt-[75px] w-[180px] shrink-0 border border-black bg-[#d9d9d9] p-[14px] max-xl:mt-0 max-xl:w-full"
+                      : "mt-[50px] w-[120px] shrink-0 border border-black bg-[#d9d9d9] p-[9px] max-xl:mt-0 max-xl:w-full"
                   }
                 >
-                  <div className={isSjtDropLayout ? "space-y-3" : "space-y-[18px]"}>
+                  <div className={isSjtDropLayout ? "space-y-3" : "space-y-[12px]"}>
                     {question.categories.map((category) => (
                       <button
                         key={category.id}
@@ -8138,7 +8170,7 @@ function UCATQuestionBankSection({
                         className={`flex w-full cursor-grab items-center justify-center border border-black bg-white px-2 text-center font-normal text-black active:cursor-grabbing disabled:cursor-not-allowed ${
                           isSjtDropLayout
                             ? "min-h-[68px] text-[15px] leading-[18px]"
-                            : "min-h-[84px] text-[22px] leading-[26px]"
+                            : "min-h-[56px] text-[15px] leading-[18px]"
                         }`}
                       >
                         {category.label}
@@ -8149,9 +8181,9 @@ function UCATQuestionBankSection({
               </div>
             </div>
           ) : isYesNoQuestion ? (
-            <div ref={answersRegionRef} className="mt-12 max-w-[1180px]">
-              <div className="flex items-start gap-[14px] text-[22px] leading-[26px] text-black max-xl:flex-col">
-                <div className="w-[960px] max-w-full space-y-5">
+            <div ref={answersRegionRef} className="mt-9 max-w-[790px]">
+              <div className="flex items-start gap-[10px] text-[15px] leading-[18px] text-black max-xl:flex-col">
+                <div className="w-[642px] max-w-full space-y-3">
                   {question.yesNoStatements.map((statement) => {
                     const currentAnswer = yesNoAnswer[statement.id] as
                       | UCATYesNoValue
@@ -8167,10 +8199,10 @@ function UCATQuestionBankSection({
                     return (
                       <div
                         key={statement.id}
-                        className="grid gap-[18px] sm:grid-cols-[minmax(0,793px)_150px]"
+                        className="grid gap-[12px] sm:grid-cols-[minmax(0,530px)_100px]"
                       >
                         <div
-                          className={`flex min-h-[84px] items-center justify-center border px-5 py-3 text-center ${
+                          className={`flex min-h-[56px] items-center justify-center border px-4 py-2 text-center ${
                             correct
                               ? "border-emerald-700 bg-emerald-50"
                               : wrong || missed
@@ -8198,7 +8230,7 @@ function UCATQuestionBankSection({
                           }}
                           disabled={phase !== "practice"}
                           aria-label={`Drop Yes or No for ${statement.text}`}
-                          className={`flex min-h-[84px] w-full items-center justify-center border bg-[#b9b1b1] px-2 text-center text-[22px] font-normal leading-[26px] ${
+                          className={`flex min-h-[56px] w-full items-center justify-center border bg-[#b9b1b1] px-2 text-center text-[15px] font-normal leading-[18px] ${
                             correct
                               ? "border-emerald-700 text-emerald-900"
                               : wrong || missed
@@ -8217,8 +8249,8 @@ function UCATQuestionBankSection({
                   })}
                 </div>
 
-                <div className="mt-[75px] w-[180px] shrink-0 border border-black bg-[#d9d9d9] p-[14px] max-xl:mt-0 max-xl:w-full">
-                  <div className="space-y-[18px]">
+                <div className="mt-[50px] w-[120px] shrink-0 border border-black bg-[#d9d9d9] p-[9px] max-xl:mt-0 max-xl:w-full">
+                  <div className="space-y-[12px]">
                     {(["Yes", "No"] as const).map((value) => (
                       <button
                         key={value}
@@ -8227,7 +8259,7 @@ function UCATQuestionBankSection({
                         onDragStart={() => setDraggedYesNoValue(value)}
                         onDragEnd={() => setDraggedYesNoValue(null)}
                         disabled={phase !== "practice"}
-                        className="flex min-h-[84px] w-full cursor-grab items-center justify-center border border-black bg-white px-2 text-center text-[22px] font-normal leading-[26px] text-black active:cursor-grabbing disabled:cursor-not-allowed"
+                        className="flex min-h-[56px] w-full cursor-grab items-center justify-center border border-black bg-white px-2 text-center text-[15px] font-normal leading-[18px] text-black active:cursor-grabbing disabled:cursor-not-allowed"
                       >
                         {value}
                       </button>
