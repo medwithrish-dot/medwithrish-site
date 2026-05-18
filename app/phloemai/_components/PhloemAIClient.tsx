@@ -1114,6 +1114,18 @@ type PracticeAttemptRow = {
   total_seconds: number | null;
   created_at: string | null;
 };
+type PracticeSessionListRow = {
+  id: string | null;
+  section: string | null;
+  source: string | null;
+  total_questions: number | null;
+  answered_questions: number | null;
+  correct_questions: number | null;
+  accuracy: number | string | null;
+  summary: unknown;
+  completed_at: string | null;
+  created_at: string | null;
+};
 type PracticeStats = {
   sectionCompleted: Record<UCATSectionCode, number>;
   sectionAnswered: Record<UCATSectionCode, number>;
@@ -1125,6 +1137,19 @@ type PracticeStats = {
   hasCompletedQuestions: boolean;
   questionCalendarDays: Array<{ day: number; questions: number }>;
   monthLabel: string;
+};
+type RecentPracticeSet = {
+  id: string;
+  sectionCode: UCATSectionCode;
+  sectionSlug: string;
+  title: string;
+  completedAt: string | null;
+  answeredQuestions: number;
+  totalQuestions: number;
+  correctQuestions: number;
+  accuracy: number;
+  isIncomplete: boolean;
+  href: string;
 };
 type DashboardProgressSnapshotView = "accuracy" | "progress";
 
@@ -1388,6 +1413,80 @@ function normaliseSectionCode(section: string | null): UCATSectionCode | null {
     : null;
 }
 
+function getQuestionBankProgressItem(code: UCATSectionCode) {
+  return questionBankProgress.find((item) => item.code === code);
+}
+
+function getNumberValue(value: unknown, fallback = 0) {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string" && value.trim()) {
+    const numeric = Number(value);
+    if (Number.isFinite(numeric)) return numeric;
+  }
+
+  return fallback;
+}
+
+function getSummaryRecord(summary: unknown) {
+  return summary && typeof summary === "object" && !Array.isArray(summary)
+    ? (summary as Record<string, unknown>)
+    : {};
+}
+
+function normaliseRecentPracticeSet(
+  row: PracticeSessionListRow
+): RecentPracticeSet | null {
+  if (!row.id) return null;
+
+  const summary = getSummaryRecord(row.summary);
+  const section = normaliseSectionCode(
+    typeof summary.section === "string" ? summary.section : row.section
+  );
+
+  if (!section) return null;
+
+  const progressItem = getQuestionBankProgressItem(section);
+  const totalQuestions = getNumberValue(
+    summary.totalQuestions,
+    row.total_questions ?? 0
+  );
+  const answeredQuestions = getNumberValue(
+    summary.answeredQuestions,
+    row.answered_questions ?? 0
+  );
+  const correctQuestions = getNumberValue(
+    summary.correctQuestions,
+    row.correct_questions ?? 0
+  );
+  const accuracy = Math.round(
+    getNumberValue(summary.accuracy, getNumberValue(row.accuracy))
+  );
+  const completedAt =
+    (typeof summary.completedAt === "string" ? summary.completedAt : null) ??
+    row.completed_at ??
+    row.created_at;
+  const sectionSlug = section.toLowerCase();
+
+  return {
+    id: row.id,
+    sectionCode: section,
+    sectionSlug,
+    title:
+      typeof summary.sectionTitle === "string"
+        ? summary.sectionTitle
+        : progressItem?.title ?? `${section} practice set`,
+    completedAt,
+    answeredQuestions,
+    totalQuestions,
+    correctQuestions,
+    accuracy,
+    isIncomplete: totalQuestions > 0 && answeredQuestions < totalQuestions,
+    href: `/phloemai/question-bank/${sectionSlug}?set=${encodeURIComponent(
+      row.id
+    )}`,
+  };
+}
+
 function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
   const monthShell = getMonthShell();
   const uniqueCompletedBySection: Record<UCATSectionCode, Set<string>> = {
@@ -1409,25 +1508,24 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
     const questionId = row.question_id;
     if (!questionId || !questionBankQuestionIds[section].has(questionId)) return;
 
-    uniqueCompletedBySection[section].add(questionId);
-
     if (row.answered) {
+      uniqueCompletedBySection[section].add(questionId);
       answeredAttempts += 1;
       sectionAnswered[section] += 1;
       if (row.correct) correctAttempts += 1;
       if (row.correct) sectionCorrect[section] += 1;
       totalSeconds += Math.max(0, row.total_seconds ?? 0);
-    }
 
-    if (row.created_at) {
-      const completedAt = new Date(row.created_at);
-      if (
-        completedAt.getFullYear() === monthShell.year &&
-        completedAt.getMonth() === monthShell.month
-      ) {
-        const dayIndex = completedAt.getDate() - 1;
-        if (monthShell.days[dayIndex]) {
-          monthShell.days[dayIndex].questions += 1;
+      if (row.created_at) {
+        const completedAt = new Date(row.created_at);
+        if (
+          completedAt.getFullYear() === monthShell.year &&
+          completedAt.getMonth() === monthShell.month
+        ) {
+          const dayIndex = completedAt.getDate() - 1;
+          if (monthShell.days[dayIndex]) {
+            monthShell.days[dayIndex].questions += 1;
+          }
         }
       }
     }
@@ -2841,14 +2939,106 @@ function MockDiagnosticContent() {
   );
 }
 
+function RecentPracticeSetsPanel({
+  sets,
+  emptyTitle = "No practice sets saved yet.",
+  emptyText = "Mark a question-bank set to add the first row.",
+}: {
+  sets: RecentPracticeSet[];
+  emptyTitle?: string;
+  emptyText?: string;
+}) {
+  const incompleteSets = sets.filter((set) => set.isIncomplete);
+  const completedSets = sets.filter((set) => !set.isIncomplete);
+
+  if (sets.length === 0) {
+    return (
+      <Link
+        href="/phloemai/question-bank"
+        className="block rounded-xl border border-slate-100 bg-slate-50 px-4 py-8 text-center transition-colors hover:border-blue-200 hover:bg-blue-50/70"
+      >
+        <p className="text-sm font-black text-slate-700">{emptyTitle}</p>
+        <p className="mt-2 text-xs font-semibold text-slate-500">{emptyText}</p>
+        <span className="mt-4 inline-flex items-center justify-center gap-2 text-xs font-black text-blue-600">
+          Open question bank
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </span>
+      </Link>
+    );
+  }
+
+  const renderSet = (set: RecentPracticeSet) => {
+    const style = sectionStyle(set.sectionCode);
+    const answeredLabel = `${set.answeredQuestions}/${set.totalQuestions} answered`;
+    const scoreLabel =
+      set.answeredQuestions > 0
+        ? `${set.correctQuestions}/${set.answeredQuestions} correct - ${set.accuracy}%`
+        : "No answers yet";
+
+    return (
+      <Link
+        key={set.id}
+        href={set.href}
+        className="grid gap-3 border-t border-slate-100 px-3 py-3 transition-colors first:border-t-0 hover:bg-blue-50/70 sm:grid-cols-[1fr_120px_96px] sm:items-center"
+      >
+        <div className="flex min-w-0 items-center gap-3">
+          <span
+            className={`rounded-lg px-3 py-2 text-xs font-black ${style.badgeClass}`}
+          >
+            {set.sectionCode}
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-black">{set.title}</p>
+            <p className="mt-1 text-xs font-bold text-slate-500">
+              {answeredLabel}
+            </p>
+          </div>
+        </div>
+        <div>
+          <p className="text-sm font-black">{scoreLabel}</p>
+          <p className="text-xs font-bold text-slate-400">
+            {formatDiagnosticReportDate(set.completedAt)}
+          </p>
+        </div>
+        <span className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-xs font-black text-blue-600">
+          {set.isIncomplete ? "Continue" : "Review"}
+        </span>
+      </Link>
+    );
+  };
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-slate-100 bg-white">
+      {incompleteSets.length > 0 && (
+        <div>
+          <div className="bg-amber-50 px-3 py-2 text-xs font-black uppercase tracking-wide text-amber-700">
+            Incomplete sets
+          </div>
+          {incompleteSets.map(renderSet)}
+        </div>
+      )}
+      {completedSets.length > 0 && (
+        <div>
+          <div className="bg-slate-50 px-3 py-2 text-xs font-black uppercase tracking-wide text-slate-500">
+            Marked sets
+          </div>
+          {completedSets.map(renderSet)}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PracticeContent({
   latestDiagnostic,
   completedDashboardTaskIds,
   removedDashboardTaskIds,
+  recentPracticeSets,
 }: {
   latestDiagnostic: DashboardDiagnostic | null;
   completedDashboardTaskIds: Set<string>;
   removedDashboardTaskIds: Set<string>;
+  recentPracticeSets: RecentPracticeSet[];
 }) {
   const allStudyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
   const studyPlanTasks = getActiveDiagnosticStudyPlanTasks(
@@ -2932,7 +3122,6 @@ function PracticeContent({
     },
   ];
 
-  const recentPractice: Array<[string, string, string, string, string]> = [];
   const emptySkillQueueHref = completedCurrentPlan
     ? "/phloemai/diagnostic/mock-options"
     : "/phloemai/question-bank";
@@ -3132,56 +3321,8 @@ function PracticeContent({
           <h2 className="text-sm font-black uppercase tracking-wide">
             Recent practice
           </h2>
-          <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
-            {recentPractice.length === 0 ? (
-              <Link
-                href="/phloemai/question-bank"
-                className="block px-4 py-8 text-center transition-colors hover:bg-blue-50/70"
-              >
-                <p className="text-sm font-black text-slate-700">
-                  No practice sessions saved yet.
-                </p>
-                <p className="mt-2 text-xs font-semibold text-slate-500">
-                  Mark a question-bank set to add the first row.
-                </p>
-                <span className="mt-4 inline-flex items-center justify-center gap-2 text-xs font-black text-blue-600">
-                  Open question bank
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </span>
-              </Link>
-            ) : (
-            recentPractice.map(([code, title, meta, score, time]) => {
-              const style = sectionStyle(code);
-              const reviewHref = `/phloemai/question-bank/${code.toLowerCase()}`;
-              return (
-                <Link
-                  key={title}
-                  href={reviewHref}
-                  className="grid gap-4 border-b border-slate-100 px-3 py-3 transition-colors last:border-b-0 hover:bg-blue-50/70 sm:grid-cols-[1fr_80px_92px] sm:items-center"
-                >
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`rounded-lg px-3 py-2 text-xs font-black ${style.badgeClass}`}
-                    >
-                      {code}
-                    </span>
-                    <div>
-                      <p className="text-sm font-black">{title}</p>
-                      <p className="mt-1 text-xs font-bold text-slate-500">
-                        {meta}
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-sm font-black">{score}</p>
-                    <p className="text-xs font-bold text-slate-400">{time}</p>
-                  </div>
-                  <span className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-xs font-black text-blue-600">
-                    Review
-                  </span>
-                </Link>
-              );
-            }))}
+          <div className="mt-4">
+            <RecentPracticeSetsPanel sets={recentPracticeSets.slice(0, 6)} />
           </div>
           <Link
             href="/phloemai/question-bank"
@@ -4594,11 +4735,13 @@ function ProgressContent({
   checkoutLoading,
   onUpgrade,
   practiceStats,
+  recentPracticeSets,
   latestDiagnostic,
   completedDashboardTaskIds,
   removedDashboardTaskIds,
 }: PremiumGateProps & {
   practiceStats: PracticeStats;
+  recentPracticeSets: RecentPracticeSet[];
   latestDiagnostic: DashboardDiagnostic | null;
   completedDashboardTaskIds: Set<string>;
   removedDashboardTaskIds: Set<string>;
@@ -4624,10 +4767,6 @@ function ProgressContent({
       : 0;
   const activePracticeDays = practiceStats.questionCalendarDays.filter(
     (day) => day.questions > 0
-  );
-  const maxDailyQuestions = Math.max(
-    1,
-    ...practiceStats.questionCalendarDays.map((day) => day.questions)
   );
   const sectionImprovementItems = sectionCodes.flatMap((code) => {
     const answered = practiceStats.sectionAnswered[code];
@@ -4702,7 +4841,7 @@ function ProgressContent({
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-black">Practice activity</h2>
+                <h2 className="text-sm font-black">Recent sets</h2>
                 <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
               </div>
               <p className="mt-1 text-xs font-bold text-slate-500">
@@ -4714,49 +4853,12 @@ function ProgressContent({
             </span>
           </div>
 
-          <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
-            {activePracticeDays.length === 0 ? (
-              <div className="py-8 text-center">
-                <p className="text-sm font-black text-slate-700">
-                  0 saved attempts this month.
-                </p>
-                <Link
-                  href="/phloemai/practice"
-                  className="mt-3 inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
-                >
-                  Start a practice set
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-              </div>
-            ) : (
-              <>
-                <div className="flex h-36 items-end gap-1">
-                  {practiceStats.questionCalendarDays.map((day) => (
-                    <div
-                      key={day.day}
-                      className="flex min-w-0 flex-1 flex-col items-center gap-1"
-                    >
-                      <div
-                        className={`w-full rounded-t ${
-                          day.questions > 0 ? "bg-blue-500" : "bg-slate-200"
-                        }`}
-                        style={{
-                          height: `${Math.max(
-                            day.questions > 0 ? 8 : 2,
-                            (day.questions / maxDailyQuestions) * 100
-                          )}%`,
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-3 flex items-center justify-between text-xs font-bold text-slate-500">
-                  <span>Day 1</span>
-                  <span>{bankCompleted} questions completed</span>
-                  <span>Today</span>
-                </div>
-              </>
-            )}
+          <div className="mt-5">
+            <RecentPracticeSetsPanel
+              sets={recentPracticeSets.slice(0, 8)}
+              emptyTitle="No practice sets saved yet."
+              emptyText="Start a question-bank set and mark it when you are ready."
+            />
           </div>
         </section>
 
@@ -4814,10 +4916,10 @@ function ProgressContent({
                     </span>
                   </div>
                   <Link
-                    href={allCompleted ? `${item.href}?review=sets` : item.href}
+                    href={item.href}
                     className="mt-3 inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
                   >
-                    {allCompleted ? "Review completed sets" : "Resume bank"}
+                    {allCompleted ? "Open bank" : "Resume bank"}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </div>
@@ -5521,6 +5623,7 @@ function DashboardSubpageContent({
   isPremium,
   checkoutLoading,
   practiceStats,
+  recentPracticeSets,
   latestDiagnostic,
   diagnosticHistory,
   completedDashboardTaskIds,
@@ -5536,6 +5639,7 @@ function DashboardSubpageContent({
   isPremium: boolean;
   checkoutLoading: boolean;
   practiceStats: PracticeStats;
+  recentPracticeSets: RecentPracticeSet[];
   latestDiagnostic: DashboardDiagnostic | null;
   diagnosticHistory: DashboardDiagnostic[];
   completedDashboardTaskIds: Set<string>;
@@ -5563,6 +5667,7 @@ function DashboardSubpageContent({
         latestDiagnostic={latestDiagnostic}
         completedDashboardTaskIds={completedDashboardTaskIds}
         removedDashboardTaskIds={removedDashboardTaskIds}
+        recentPracticeSets={recentPracticeSets}
       />
     );
   }
@@ -5576,6 +5681,7 @@ function DashboardSubpageContent({
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
         practiceStats={practiceStats}
+        recentPracticeSets={recentPracticeSets}
         latestDiagnostic={latestDiagnostic}
         completedDashboardTaskIds={completedDashboardTaskIds}
         removedDashboardTaskIds={removedDashboardTaskIds}
@@ -6135,6 +6241,9 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const [practiceStats, setPracticeStats] = useState<PracticeStats>(() =>
     createEmptyPracticeStats()
   );
+  const [recentPracticeSets, setRecentPracticeSets] = useState<
+    RecentPracticeSet[]
+  >([]);
   const [latestDiagnostic, setLatestDiagnostic] =
     useState<DashboardDiagnostic | null>(null);
   const [diagnosticHistory, setDiagnosticHistory] = useState<
@@ -6308,6 +6417,41 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       setPracticeStats(buildPracticeStats((data ?? []) as PracticeAttemptRow[]));
     }
 
+    async function loadRecentPracticeSets(nextUser: User) {
+      const { data, error } = await supabaseClient
+        .from("practice_sessions")
+        .select(
+          "id,section,source,total_questions,answered_questions,correct_questions,accuracy,summary,completed_at,created_at"
+        )
+        .eq("user_id", nextUser.id)
+        .eq("source", "question_bank")
+        .order("completed_at", { ascending: false })
+        .limit(30);
+
+      if (!mounted) return;
+
+      if (error) {
+        setRecentPracticeSets([]);
+        return;
+      }
+
+      const sets = ((data ?? []) as PracticeSessionListRow[])
+        .map(normaliseRecentPracticeSet)
+        .filter((set): set is RecentPracticeSet => Boolean(set))
+        .sort((first, second) => {
+          if (first.isIncomplete !== second.isIncomplete) {
+            return first.isIncomplete ? -1 : 1;
+          }
+
+          return (
+            new Date(second.completedAt ?? 0).getTime() -
+            new Date(first.completedAt ?? 0).getTime()
+          );
+        });
+
+      setRecentPracticeSets(sets);
+    }
+
     async function loadDiagnosticHistory(nextUser: User) {
       const { data, error } = await supabaseClient
         .from("diagnostic_attempts")
@@ -6377,11 +6521,13 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       if (currentSession?.user) {
         await loadProfile(currentSession.user);
         await loadPracticeStats(currentSession.user);
+        await loadRecentPracticeSets(currentSession.user);
         await loadDiagnosticHistory(currentSession.user);
         await syncCheckoutIfNeeded(currentSession.user);
       } else {
         setProfile(null);
         setPracticeStats(createEmptyPracticeStats());
+        setRecentPracticeSets([]);
         setLatestDiagnostic(null);
         setDiagnosticHistory([]);
       }
@@ -6401,10 +6547,12 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       if (nextSession?.user) {
         void loadProfile(nextSession.user);
         void loadPracticeStats(nextSession.user);
+        void loadRecentPracticeSets(nextSession.user);
         void loadDiagnosticHistory(nextSession.user);
       } else {
         setProfile(null);
         setPracticeStats(createEmptyPracticeStats());
+        setRecentPracticeSets([]);
         setLatestDiagnostic(null);
         setDiagnosticHistory([]);
       }
@@ -6487,6 +6635,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     setUser(null);
     setProfile(null);
     setPracticeStats(createEmptyPracticeStats());
+    setRecentPracticeSets([]);
     setLatestDiagnostic(null);
     setDiagnosticHistory([]);
   };
@@ -7183,6 +7332,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               diagnosticCredits={diagnosticCredits}
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}
+              recentPracticeSets={recentPracticeSets}
             />
           )}
         </main>
@@ -7964,7 +8114,7 @@ function TutorHero() {
           <HowItWorksPanel title="UCAT Preparation" accent="blue">
             <ol className="space-y-3">
               {[
-                "Practice real UCAT-style questions across Verbal Reasoning, Decision Making, Quantitative Reasoning, and Situational Judgement.",
+                "Practise real UCAT-style questions across Verbal Reasoning, Decision Making, Quantitative Reasoning, and Situational Judgement.",
                 "AI identifies your bad habits - unfocused reading patterns, spending too long on the wrong areas, weak technique, and timing issues pinpointed by question type.",
                 "AI delivers tried-and-tested strategies tailored to your specific weaknesses, so you know exactly what to change and how.",
                 "Apply the study plan in your own revision and track your accuracy and speed improving over time.",
@@ -7982,7 +8132,7 @@ function TutorHero() {
           <HowItWorksPanel title="Medicine & Dentistry Interviews" accent="violet">
             <ol className="space-y-3">
               {[
-                "Practice MMI stations and panel interview questions tailored to medicine and dentistry - ethics, clinical scenarios, motivation, and more.",
+                "Practise MMI stations and panel interview questions tailored to medicine and dentistry - ethics, clinical scenarios, motivation, and more.",
                 "AI analyses your answers for structure, clinical reasoning, and depth - identifying the gaps that cost applicants places.",
                 "AI gives you proven frameworks and concrete improvements based on what actually works in real interviews.",
                 "Refine your responses, build consistency, and walk into your interview prepared and confident.",

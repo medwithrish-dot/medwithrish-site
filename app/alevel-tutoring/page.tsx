@@ -19,7 +19,7 @@ export default function Page() {
           title: "Best suited for",
           points: [
             "Students aiming to strengthen predicted grades.",
-            "Students working toward conditional offers.",
+            "Students working towards conditional offers.",
             "Students who need more structure and accountability.",
           ],
         },

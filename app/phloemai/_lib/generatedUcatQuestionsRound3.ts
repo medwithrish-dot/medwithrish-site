@@ -749,7 +749,7 @@ const QR_SALES_SETS: SalesSet[] = [
   { id: "qr-round3-student-cafe", title: "Student cafe sales", rows: [["Bagels", 120, 0.65, 2.4], ["Soup", 80, 0.9, 3.1], ["Brownies", 100, 0.5, 1.9], ["Salads", 55, 1.8, 4.6]] },
   { id: "qr-round3-club-merch", title: "Club merchandise", rows: [["Scarves", 60, 4.5, 10], ["Badges", 220, 0.2, 1], ["Caps", 75, 3.4, 8.2], ["Posters", 110, 0.7, 2.5]] },
   { id: "qr-round3-clinic-supplies", title: "Clinic supply orders", rows: [["Gloves", 500, 0.06, 0.18], ["Masks", 300, 0.12, 0.35], ["Aprons", 240, 0.08, 0.22], ["Goggles", 45, 2.6, 5.8]] },
-  { id: "qr-round3-festival-stall", title: "Festival stall sales", rows: [["Programs", 180, 0.55, 2], ["Lanyards", 150, 0.4, 1.5], ["Bottles", 90, 3.2, 7.5], ["Ponchos", 70, 1.6, 4]] },
+  { id: "qr-round3-festival-stall", title: "Festival stall sales", rows: [["Programmes", 180, 0.55, 2], ["Lanyards", 150, 0.4, 1.5], ["Bottles", 90, 3.2, 7.5], ["Ponchos", 70, 1.6, 4]] },
 ];
 
 function makeSalesSet(set: SalesSet, setIndex: number): UCATQuestion[] {

@@ -305,6 +305,7 @@ type SavedPracticeSet = {
 type CompletedQuestionRow = {
   question_id: string | null;
   section: string | null;
+  answered: boolean | null;
 };
 type SavedPracticeSessionRow = {
   id: string;
@@ -351,6 +352,7 @@ const FULL_MOCK_SECTION_SECONDS: Record<UCATSection, number> = {
 const FULL_MOCK_SECTION_ORDER: UCATSection[] = ["vr", "dm", "qr", "sjt"];
 const SECTION_MOCK_SHORT_SECONDS = 15 * 60;
 const DEFAULT_MOCK_ID: MockId = "mock-a";
+const TIMED_MOCK_SET_KINDS = ["full-mock", "subtest", "sprint"] as const;
 const MOCK_LIBRARY: Array<{
   id: MockId;
   label: string;
@@ -528,14 +530,15 @@ function getOfficialSecondsPerQuestion(section: UCATSection) {
   );
 }
 
+function getSprintQuestionTarget(section: UCATSection) {
+  const secondsPerQuestion = getOfficialSecondsPerQuestion(section);
+  return Math.max(1, Math.round(SECTION_MOCK_SHORT_SECONDS / secondsPerQuestion));
+}
+
 function getSprintQuestionCount(section: UCATSection, available: number) {
   if (available <= 0) return 0;
 
-  const secondsPerQuestion = getOfficialSecondsPerQuestion(section);
-  return clampQuestionCount(
-    Math.round(SECTION_MOCK_SHORT_SECONDS / secondsPerQuestion),
-    available
-  );
+  return clampQuestionCount(getSprintQuestionTarget(section), available);
 }
 
 function getSprintSectionSeconds(section: UCATSection, questionCount: number) {
@@ -553,15 +556,28 @@ function stableMockHash(value: string) {
   return hash >>> 0;
 }
 
-function getMockOrderedQuestions(
+type MockQuestionGroup = {
+  key: string;
+  questions: UCATQuestion[];
+};
+
+function getMockQuestionTarget(
+  section: UCATSection,
+  setKind: (typeof TIMED_MOCK_SET_KINDS)[number]
+) {
+  return setKind === "sprint"
+    ? getSprintQuestionTarget(section)
+    : FULL_MOCK_TARGETS[section];
+}
+
+function getMockQuestionGroups(
   questions: UCATQuestion[],
   section: UCATSection,
-  mockId: MockId,
-  setKind: MockQuestionSetKind = "full-mock"
+  mockId: MockId
 ) {
-  if (questions.length === 0) return questions;
+  if (questions.length === 0) return [];
 
-  const setSeed = `${section}:${setKind}:${mockId}`;
+  const setSeed = `${section}:${mockId}`;
   const groups = new Map<string, UCATQuestion[]>();
 
   questions.forEach((question) => {
@@ -576,9 +592,70 @@ function getMockOrderedQuestions(
 
       return firstHash - secondHash || firstKey.localeCompare(secondKey);
     })
-    .flatMap(([, group]) =>
-      [...group].sort((first, second) => first.id.localeCompare(second.id))
+    .map(([key, group]) => ({
+      key,
+      questions: [...group].sort((first, second) =>
+        first.id.localeCompare(second.id)
+      ),
+    }));
+}
+
+function flattenQuestionGroups(groups: MockQuestionGroup[]) {
+  return groups.flatMap((group) => group.questions);
+}
+
+function takeUnusedQuestionGroups(
+  groups: MockQuestionGroup[],
+  usedGroupKeys: Set<string>,
+  target: number
+) {
+  const selectedGroups: MockQuestionGroup[] = [];
+  let selectedQuestionCount = 0;
+
+  for (const group of groups) {
+    if (usedGroupKeys.has(group.key)) continue;
+
+    selectedGroups.push(group);
+    usedGroupKeys.add(group.key);
+    selectedQuestionCount += group.questions.length;
+
+    if (selectedQuestionCount >= target) break;
+  }
+
+  return selectedGroups;
+}
+
+function getMockOrderedQuestions(
+  questions: UCATQuestion[],
+  section: UCATSection,
+  mockId: MockId,
+  setKind: MockQuestionSetKind = "full-mock"
+) {
+  const orderedGroups = getMockQuestionGroups(questions, section, mockId);
+  if (orderedGroups.length === 0) return questions;
+
+  if (setKind === "diagnostic") {
+    return flattenQuestionGroups(orderedGroups);
+  }
+
+  const usedGroupKeys = new Set<string>();
+  const pools: Record<(typeof TIMED_MOCK_SET_KINDS)[number], UCATQuestion[]> = {
+    "full-mock": [],
+    subtest: [],
+    sprint: [],
+  };
+
+  TIMED_MOCK_SET_KINDS.forEach((timedSetKind) => {
+    const selectedGroups = takeUnusedQuestionGroups(
+      orderedGroups,
+      usedGroupKeys,
+      getMockQuestionTarget(section, timedSetKind)
     );
+
+    pools[timedSetKind] = flattenQuestionGroups(selectedGroups);
+  });
+
+  return pools[setKind];
 }
 
 function getOfficialSectionSeconds(section: UCATSection, questionCount: number) {
@@ -708,16 +785,8 @@ function normaliseSavedPracticeSet(
   };
 }
 
-function formatSavedSetDate(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Saved set";
-
-  return date.toLocaleString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+function isIncompleteSavedPracticeSet(set: SavedPracticeSet) {
+  return set.summary.answeredQuestions < set.summary.totalQuestions;
 }
 
 function getDiagnosticTitle(diagnosticMode: DiagnosticMode | null) {
@@ -2030,7 +2099,7 @@ function SectionHub() {
             PhloemAI UCAT question bank
           </p>
           <h1 className="mt-3 text-3xl font-black text-slate-950">
-            Choose a PhloemAI section to practice
+            Choose a PhloemAI section to practise
           </h1>
           <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
             Pick a UCAT section, then choose mixed practice or target specific
@@ -2137,7 +2206,6 @@ function SectionSetup({
   questionCount,
   availableCount,
   completedQuestionIds,
-  savedPracticeSets,
   progressLoading,
   lengthMode,
   questionTarget,
@@ -2158,9 +2226,7 @@ function SectionSetup({
   onTrackingModeChange,
   onTrackingRingChange,
   onStart,
-  onReviewSavedSet,
   diagnosticMode,
-  reviewMode,
   mock,
   backHref,
   backLabel,
@@ -2173,7 +2239,6 @@ function SectionSetup({
   questionCount: number;
   availableCount: number;
   completedQuestionIds: Set<string>;
-  savedPracticeSets: SavedPracticeSet[];
   progressLoading: boolean;
   lengthMode: SessionLengthMode;
   questionTarget: number;
@@ -2194,8 +2259,6 @@ function SectionSetup({
   onTrackingModeChange: (mode: TrackingMode) => void;
   onTrackingRingChange: (visible: boolean) => void;
   onStart: () => void;
-  onReviewSavedSet: (set: SavedPracticeSet) => void;
-  reviewMode?: boolean;
   mock?: (typeof MOCK_LIBRARY)[number];
 }) {
   const meta = getUCATSectionMeta(section);
@@ -2250,8 +2313,6 @@ function SectionSetup({
             <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold leading-6 text-slate-600">
               {progressLoading
                 ? "Checking your completed questions before building the next set."
-                : reviewMode && savedPracticeSets.length > 0
-                  ? "Review mode: open a completed set below. New practice only uses questions you have not completed yet."
                 : `${completedCount} completed, ${remainingQuestionCount} left in ${meta.code}. Completed questions will not appear again.`}
             </div>
           )}
@@ -2264,38 +2325,6 @@ function SectionSetup({
               scope="diagnostic"
               mock={mock}
             />
-          )}
-
-          {!diagnosticMode && savedPracticeSets.length > 0 && (
-            <div className="mt-5 rounded-xl border border-slate-200 bg-white p-4">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h2 className="text-sm font-black uppercase tracking-wide text-slate-900">
-                    Completed sets
-                  </h2>
-                  <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
-                    You can review completed sets, but their questions are locked out of new practice.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-3 grid gap-2 md:grid-cols-2">
-                {savedPracticeSets.slice(0, 6).map((set) => (
-                  <button
-                    key={set.id}
-                    type="button"
-                    onClick={() => onReviewSavedSet(set)}
-                    className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-left hover:border-blue-300 hover:bg-blue-50"
-                  >
-                    <p className="text-sm font-black text-slate-900">
-                      {formatSavedSetDate(set.completedAt)}
-                    </p>
-                    <p className="mt-1 text-xs font-bold text-slate-500">
-                      {set.summary.correctQuestions}/{set.summary.totalQuestions} correct - {set.summary.accuracy}%
-                    </p>
-                  </button>
-                ))}
-              </div>
-            </div>
           )}
 
           <div className="mt-7">
@@ -2625,8 +2654,23 @@ function SectionSetup({
   );
 }
 
-function getAvailableMockQuestionCount(section: UCATSection) {
-  return Math.min(FULL_MOCK_TARGETS[section], UCAT_QUESTION_BANK[section].length);
+function getAvailableMockQuestionCount(
+  section: UCATSection,
+  setKind: MockQuestionSetKind = "full-mock",
+  mockId: MockId = DEFAULT_MOCK_ID
+) {
+  const orderedQuestions = getMockOrderedQuestions(
+    UCAT_QUESTION_BANK[section],
+    section,
+    mockId,
+    setKind
+  );
+
+  if (setKind === "sprint") {
+    return getSprintQuestionCount(section, orderedQuestions.length);
+  }
+
+  return Math.min(FULL_MOCK_TARGETS[section], orderedQuestions.length);
 }
 
 function useMockScoreMatrix(
@@ -3490,7 +3534,7 @@ function DiagnosticModeChooser({
             {UCAT_SECTIONS.map((section) => {
               const available = UCAT_QUESTION_BANK[section.slug].length;
               const target = isSectionMock
-                ? getAvailableMockQuestionCount(section.slug)
+                ? getAvailableMockQuestionCount(section.slug, "subtest", mockId)
                 : available;
               const officialTarget = FULL_MOCK_TARGETS[section.slug];
               const href = `/phloemai/question-bank/${section.slug}?diagnostic=${
@@ -3690,6 +3734,12 @@ function FixedDiagnosticStartScreen({
   seconds,
   timingMode,
   onTimingModeChange,
+  trackingMode,
+  trackingRingVisible,
+  trackingError,
+  trackingStarting,
+  onTrackingModeChange,
+  onTrackingRingChange,
   backHref = "/phloemai/diagnostic",
   backLabel = "Back to diagnostics",
   lockedNotice,
@@ -3707,6 +3757,12 @@ function FixedDiagnosticStartScreen({
   seconds: number;
   timingMode?: SectionMockTimingMode;
   onTimingModeChange?: (mode: SectionMockTimingMode) => void;
+  trackingMode: TrackingMode;
+  trackingRingVisible: boolean;
+  trackingError: boolean;
+  trackingStarting?: boolean;
+  onTrackingModeChange: (mode: TrackingMode) => void;
+  onTrackingRingChange: (visible: boolean) => void;
   backHref?: string;
   backLabel?: string;
   lockedNotice?: string;
@@ -3719,10 +3775,22 @@ function FixedDiagnosticStartScreen({
 }) {
   const meta = getUCATSectionMeta(section);
   const showTimingOptions = Boolean(timingMode && onTimingModeChange);
-  const fullSectionQuestionCount = getAvailableMockQuestionCount(section);
-  const sprintQuestionCount = getSprintQuestionCount(
+  const mockIdForCounts = mock?.id ?? DEFAULT_MOCK_ID;
+  const officialTimingSetKind: MockQuestionSetKind =
+    scope === "full-mock"
+      ? "full-mock"
+      : scope === "diagnostic"
+        ? "diagnostic"
+        : "subtest";
+  const officialTimingQuestionCount = getAvailableMockQuestionCount(
     section,
-    UCAT_QUESTION_BANK[section].length
+    officialTimingSetKind,
+    mockIdForCounts
+  );
+  const sprintQuestionCount = getAvailableMockQuestionCount(
+    section,
+    "sprint",
+    mockIdForCounts
   );
   const sprintSeconds = getSprintSectionSeconds(section, sprintQuestionCount);
 
@@ -3827,14 +3895,14 @@ function FixedDiagnosticStartScreen({
                   {
                     mode: "official",
                     label: "Official section timing",
-                    helper: `${fullSectionQuestionCount} questions, ${formatReadableDuration(
-                      getOfficialSectionSeconds(section, fullSectionQuestionCount)
+                    helper: `${officialTimingQuestionCount} questions, ${formatReadableDuration(
+                      getOfficialSectionSeconds(section, officialTimingQuestionCount)
                     )}.`,
                     badge: "Recommended",
                   },
                   {
                     mode: "short",
-                    label: "15-minute subset mock",
+                    label: "15-minute sprint",
                     helper: `${sprintQuestionCount} questions, ${formatReadableDuration(
                       sprintSeconds
                     )}.`,
@@ -3876,6 +3944,73 @@ function FixedDiagnosticStartScreen({
             </div>
           )}
 
+          <div className="mt-6">
+            <h2 className="text-sm font-black uppercase tracking-wide text-slate-900">
+              Attention tracking
+            </h2>
+            <div className="mt-3 grid gap-3 lg:grid-cols-3">
+              {[
+                {
+                  mode: "mouse" as const,
+                  title: "Mouse tracking",
+                  meta: "Recommended",
+                  icon: MousePointer2,
+                },
+                {
+                  mode: "eye" as const,
+                  title: "Eye tracking",
+                  meta: "Camera",
+                  icon: Eye,
+                },
+                {
+                  mode: "none" as const,
+                  title: "None",
+                  meta: "No tracking",
+                  icon: XCircle,
+                },
+              ].map((item) => {
+                const Icon = item.icon;
+                const active = trackingMode === item.mode;
+                return (
+                  <button
+                    key={item.mode}
+                    type="button"
+                    onClick={() => onTrackingModeChange(item.mode)}
+                    aria-pressed={active}
+                    className={`flex items-center gap-3 rounded-xl border p-4 text-left transition-colors ${
+                      active
+                        ? "border-blue-500 bg-blue-50 text-blue-700"
+                        : "border-slate-200 bg-white text-slate-700 hover:border-blue-300"
+                    }`}
+                  >
+                    <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-black">{item.title}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-500">
+                        {item.meta}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            <label className="mt-3 flex w-fit items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-black text-slate-700">
+              <input
+                type="checkbox"
+                checked={trackingRingVisible}
+                onChange={(event) => onTrackingRingChange(event.target.checked)}
+                disabled={trackingMode === "none"}
+                className="h-4 w-4"
+              />
+              Show tracking ring
+            </label>
+            {trackingError && trackingMode === "eye" && (
+              <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-black text-amber-700">
+                Eye tracking could not start. Mouse tracking is still available.
+              </p>
+            )}
+          </div>
+
           {lockedNotice && (
             <p className="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-black leading-6 text-amber-900">
               {lockedNotice}
@@ -3885,11 +4020,11 @@ function FixedDiagnosticStartScreen({
           <button
             type="button"
             onClick={onStart}
-            disabled={loading}
+            disabled={loading || trackingStarting}
             className="mt-7 inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 text-sm font-black text-white shadow-md shadow-blue-100 transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           >
             <Play className="h-4 w-4" aria-hidden="true" />
-            {loading ? "Checking..." : startLabel}
+            {trackingStarting ? "Starting..." : loading ? "Checking..." : startLabel}
           </button>
           </div>
         </section>
@@ -5780,6 +5915,7 @@ export function UCATQuestionBankClient({
   mockId,
   sectionMockTiming,
   reviewMode = false,
+  practiceSetId,
   backHref,
   backLabel,
 }: {
@@ -5788,6 +5924,7 @@ export function UCATQuestionBankClient({
   mockId?: string | null;
   sectionMockTiming?: string | null;
   reviewMode?: boolean;
+  practiceSetId?: string | null;
   backHref?: string;
   backLabel?: string;
 }) {
@@ -5824,12 +5961,12 @@ export function UCATQuestionBankClient({
 
   return (
     <UCATQuestionBankSection
-      key={`${validSection}-${validDiagnosticMode ?? "practice"}-${validMockId}-${validSectionMockTiming ?? "default"}-${reviewMode ? "review" : "new"}`}
+      key={`${validSection}-${validDiagnosticMode ?? "practice"}-${validMockId}-${validSectionMockTiming ?? "default"}-${reviewMode ? "review" : "new"}-${practiceSetId ?? "fresh"}`}
       section={validSection}
       diagnosticMode={validDiagnosticMode}
       mockId={validMockId}
       initialSectionMockTiming={validSectionMockTiming}
-      reviewMode={reviewMode}
+      practiceSetId={practiceSetId}
       backHref={backHref}
       backLabel={backLabel}
     />
@@ -5841,7 +5978,7 @@ function UCATQuestionBankSection({
   diagnosticMode,
   mockId,
   initialSectionMockTiming,
-  reviewMode,
+  practiceSetId,
   backHref,
   backLabel,
 }: {
@@ -5849,7 +5986,7 @@ function UCATQuestionBankSection({
   diagnosticMode: DiagnosticMode | null;
   mockId: MockId;
   initialSectionMockTiming: SectionMockTimingMode | null;
-  reviewMode: boolean;
+  practiceSetId?: string | null;
   backHref?: string;
   backLabel?: string;
 }) {
@@ -5933,6 +6070,8 @@ function UCATQuestionBankSection({
   const phaseRef = useRef<PracticePhase>("practice");
   const markedSummaryRef = useRef<PracticeSessionSummary | null>(null);
   const markedInsightsHistoryActiveRef = useRef(false);
+  const resumedPracticeSessionIdRef = useRef<string | null>(null);
+  const handledPracticeSetIdRef = useRef<string | null>(null);
   const appRootRef = useRef<HTMLDivElement>(null);
   const stimulusRegionRef = useRef<HTMLElement>(null);
   const questionRegionRef = useRef<HTMLDivElement>(null);
@@ -6155,7 +6294,7 @@ function UCATQuestionBankSection({
 
         const { data: questionRows, error: questionError } = await supabase
           .from("practice_question_attempts")
-          .select("question_id,section")
+          .select("question_id,section,answered")
           .eq("user_id", user.id)
           .in("section", sectionValues)
           .limit(5000);
@@ -6167,6 +6306,7 @@ function UCATQuestionBankSection({
           .select("id,summary,completed_at,created_at,source")
           .eq("user_id", user.id)
           .in("section", sectionValues)
+          .eq("source", "question_bank")
           .order("completed_at", { ascending: false })
           .limit(50);
 
@@ -6176,6 +6316,7 @@ function UCATQuestionBankSection({
 
         const completedIds = new Set(
           ((questionRows ?? []) as CompletedQuestionRow[])
+            .filter((row) => row.answered)
             .map((row) => row.question_id)
             .filter((questionId): questionId is string => Boolean(questionId))
         );
@@ -6207,15 +6348,23 @@ function UCATQuestionBankSection({
     () => UCAT_QUESTION_BANK[validSection],
     [validSection]
   );
-  const sectionMockTimingLocked = initialSectionMockTiming === "short";
+  const isFullMockSection =
+    diagnosticMode === "full-section" &&
+    (backHref?.includes("/full-mock") || backHref?.includes("/mocks/full"));
+  const effectiveSectionMockTiming: SectionMockTimingMode = isFullMockSection
+    ? "official"
+    : sectionMockTiming;
+  const sectionMockTimingLocked =
+    initialSectionMockTiming === "short" || isFullMockSection;
   const fixedDiagnosticScope: MockStartScope =
     diagnosticMode === "free-qr"
       ? "free"
-      : backHref?.includes("/full-mock") || backHref?.includes("/mocks/full")
+      : isFullMockSection
         ? "full-mock"
         : diagnosticMode === "subset"
           ? "diagnostic"
-        : diagnosticMode === "full-section" && sectionMockTiming === "short"
+        : diagnosticMode === "full-section" &&
+            effectiveSectionMockTiming === "short"
           ? "sprint"
           : diagnosticMode
             ? "subtest"
@@ -6264,7 +6413,7 @@ function UCATQuestionBankSection({
 
     if (diagnosticMode === "full-section") {
       const questionCount =
-        sectionMockTiming === "short"
+        effectiveSectionMockTiming === "short"
           ? getSprintQuestionCount(validSection, sectionQuestions.length)
           : Math.min(FULL_MOCK_TARGETS[validSection], sectionQuestions.length);
 
@@ -6275,7 +6424,12 @@ function UCATQuestionBankSection({
     }
 
     return null;
-  }, [diagnosticMode, sectionMockTiming, sectionQuestions, validSection]);
+  }, [
+    diagnosticMode,
+    effectiveSectionMockTiming,
+    sectionQuestions,
+    validSection,
+  ]);
 
   const meta = getUCATSectionMeta(validSection);
   const selectedMock = getMockDefinition(mockId);
@@ -6296,7 +6450,8 @@ function UCATQuestionBankSection({
     diagnosticMode === "free-qr"
       ? FREE_QR_DIAGNOSTIC_SECONDS
       : fixedDiagnosticQuestions
-        ? diagnosticMode === "full-section" && sectionMockTiming === "short"
+        ? diagnosticMode === "full-section" &&
+          effectiveSectionMockTiming === "short"
           ? getSprintSectionSeconds(
               validSection,
               fixedDiagnosticQuestions.length
@@ -6519,7 +6674,8 @@ function UCATQuestionBankSection({
 
   const persistPracticeSummary = async (
     summary: PracticeSessionSummary,
-    events: TrackingEvent[]
+    events: TrackingEvent[],
+    existingSessionId?: string | null
   ) => {
     if (!hasSupabaseConfig()) {
       setSaveState({
@@ -6546,32 +6702,54 @@ function UCATQuestionBankSection({
       }
 
       const source = getPracticeSource(diagnosticMode);
-      const { data: sessionRow, error: sessionError } = await supabase
-        .from("practice_sessions")
-        .insert({
-          user_id: user.id,
-          section: summary.section,
-          source,
-          total_questions: summary.totalQuestions,
-          answered_questions: summary.answeredQuestions,
-          correct_questions: summary.correctQuestions,
-          accuracy: summary.accuracy,
-          total_seconds: summary.totalSeconds,
-          avg_seconds_per_question: summary.avgSecondsPerQuestion,
-          tracking_mode: summary.trackingMode,
-          summary,
-          raw_events: events,
-          started_at: summary.startedAt,
-          completed_at: summary.completedAt,
-        })
-        .select("id")
-        .single();
+      const sessionPayload = {
+        user_id: user.id,
+        section: summary.section,
+        source,
+        total_questions: summary.totalQuestions,
+        answered_questions: summary.answeredQuestions,
+        correct_questions: summary.correctQuestions,
+        accuracy: summary.accuracy,
+        total_seconds: summary.totalSeconds,
+        avg_seconds_per_question: summary.avgSecondsPerQuestion,
+        tracking_mode: summary.trackingMode,
+        summary,
+        raw_events: events,
+        started_at: summary.startedAt,
+        completed_at: summary.completedAt,
+      };
+      let sessionId = existingSessionId ?? null;
 
-      if (sessionError) throw sessionError;
+      if (sessionId && !diagnosticMode) {
+        const { error: sessionError } = await supabase
+          .from("practice_sessions")
+          .update(sessionPayload)
+          .eq("id", sessionId)
+          .eq("user_id", user.id);
 
-      const sessionId =
-        typeof sessionRow?.id === "string" ? sessionRow.id : null;
-      if (!sessionId) throw new Error("Supabase did not return a session id.");
+        if (sessionError) throw sessionError;
+
+        const { error: deleteError } = await supabase
+          .from("practice_question_attempts")
+          .delete()
+          .eq("session_id", sessionId)
+          .eq("user_id", user.id);
+
+        if (deleteError) throw deleteError;
+      } else {
+        const { data: sessionRow, error: sessionError } = await supabase
+          .from("practice_sessions")
+          .insert(sessionPayload)
+          .select("id")
+          .single();
+
+        if (sessionError) throw sessionError;
+
+        sessionId = typeof sessionRow?.id === "string" ? sessionRow.id : null;
+        if (!sessionId) throw new Error("Supabase did not return a session id.");
+      }
+
+      if (!sessionId) throw new Error("Practice session id is missing.");
 
       const questionRows = summary.questions.map((item) => ({
         session_id: sessionId,
@@ -7079,6 +7257,7 @@ function UCATQuestionBankSection({
     setMarkedSummary(null);
     markedSummaryRef.current = null;
     markedInsightsHistoryActiveRef.current = false;
+    resumedPracticeSessionIdRef.current = null;
     setSaveState({ status: "idle", message: "Not saved yet" });
     trackingEventsRef.current = [];
     setTrackingEventsSnapshot([]);
@@ -7098,7 +7277,7 @@ function UCATQuestionBankSection({
       questionCount: nextQuestions.length,
       lengthMode,
       sectionMockTiming:
-        diagnosticMode === "full-section" ? sectionMockTiming : null,
+        diagnosticMode === "full-section" ? effectiveSectionMockTiming : null,
       timed: nextTimed,
       seconds: setupTimeSeconds,
       requestedMinutes: lengthMode === "minutes" ? selectedMinutes : null,
@@ -7124,6 +7303,30 @@ function UCATQuestionBankSection({
     attentionTracker.startPracticeOnly();
     beginPracticeSession("none");
   };
+
+  useEffect(() => {
+    if (
+      !practiceSetId ||
+      started ||
+      questionProgressLoading ||
+      handledPracticeSetIdRef.current === practiceSetId
+    ) {
+      return;
+    }
+
+    const matchingSet = savedPracticeSets.find((set) => set.id === practiceSetId);
+    if (!matchingSet) return;
+
+    handledPracticeSetIdRef.current = practiceSetId;
+
+    if (isIncompleteSavedPracticeSet(matchingSet)) {
+      continueSavedPracticeSet(matchingSet);
+    } else {
+      reviewSavedPracticeSet(matchingSet);
+    }
+    // This opener intentionally runs once after the saved set rows hydrate.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [practiceSetId, questionProgressLoading, savedPracticeSets, started]);
 
   if (!started && attentionTracker.eyeStatus !== "idle") {
     return (
@@ -7235,6 +7438,19 @@ function UCATQuestionBankSection({
               }
             : undefined
         }
+        trackingMode={trackingModeChoice}
+        trackingRingVisible={attentionTracker.showRing}
+        trackingError={attentionTracker.error}
+        trackingStarting={attentionTracker.eyeStatus !== "idle"}
+        onTrackingModeChange={(mode) => {
+          setTrackingModeChoice(mode);
+          recordEvent("setup_tracking_mode", { mode });
+          if (mode === "none") attentionTracker.startPracticeOnly();
+        }}
+        onTrackingRingChange={(visible) => {
+          attentionTracker.setShowRing(visible);
+          recordEvent("setup_tracking_ring", { visible });
+        }}
         lockedNotice={
           diagnosticMode === "free-qr"
             ? "Once completed, this report is saved to your account and shown again instead of allowing a reattempt."
@@ -7263,12 +7479,10 @@ function UCATQuestionBankSection({
         diagnosticMode={diagnosticMode}
         backHref={backHref}
         backLabel={backLabel}
-        reviewMode={reviewMode}
         selectedSubtypeIds={selectedSubtypeIds}
         questionCount={setupQuestionCount}
         availableCount={availableQuestions.length}
         completedQuestionIds={completedQuestionIds}
-        savedPracticeSets={savedPracticeSets}
         progressLoading={questionProgressLoading}
         lengthMode={lengthMode}
         questionTarget={questionTarget}
@@ -7321,7 +7535,6 @@ function UCATQuestionBankSection({
           recordEvent("setup_tracking_ring", { visible });
         }}
         onStart={startPractice}
-        onReviewSavedSet={reviewSavedPracticeSet}
         mock={diagnosticMode ? selectedMock : undefined}
       />
     );
@@ -7582,7 +7795,7 @@ function UCATQuestionBankSection({
     }
   };
 
-  function reviewSavedPracticeSet(set: SavedPracticeSet) {
+  function getSavedPracticeSetSnapshot(set: SavedPracticeSet) {
     const restoredQuestions: UCATQuestion[] = [];
     const restoredAnswers: Record<number, PracticeAnswer> = {};
     const restoredFlags: Record<number, boolean> = {};
@@ -7595,15 +7808,25 @@ function UCATQuestionBankSection({
 
       const nextIndex = restoredQuestions.length;
       restoredQuestions.push(restoredQuestion);
-      if (item.selectedAnswer) restoredAnswers[nextIndex] = item.selectedAnswer;
+      if (item.selectedAnswer !== null) {
+        restoredAnswers[nextIndex] = item.selectedAnswer;
+      }
       if (item.flagged) restoredFlags[nextIndex] = true;
     });
+
+    return { restoredQuestions, restoredAnswers, restoredFlags };
+  }
+
+  function reviewSavedPracticeSet(set: SavedPracticeSet) {
+    const { restoredQuestions, restoredAnswers, restoredFlags } =
+      getSavedPracticeSetSnapshot(set);
 
     if (restoredQuestions.length === 0) return;
 
     commitQuestionTiming();
     attentionTracker.resetTracker();
     markedInsightsHistoryActiveRef.current = false;
+    resumedPracticeSessionIdRef.current = null;
     markedSummaryRef.current = set.summary;
     setMarkedSummary(set.summary);
     setSessionQuestions(restoredQuestions);
@@ -7621,6 +7844,70 @@ function UCATQuestionBankSection({
     setStarted(true);
     phaseRef.current = "marked";
     setPhase("marked");
+    scrollToQuestionTop();
+  }
+
+  function continueSavedPracticeSet(set: SavedPracticeSet) {
+    const { restoredQuestions, restoredAnswers, restoredFlags } =
+      getSavedPracticeSetSnapshot(set);
+
+    if (restoredQuestions.length === 0) return;
+
+    const firstIncompleteIndex = restoredQuestions.findIndex(
+      (item, index) => !isAnswered(item, restoredAnswers[index])
+    );
+    const startIndex = firstIncompleteIndex >= 0 ? firstIncompleteIndex : 0;
+    const startedAt = nowMs();
+    const remainingSeconds =
+      set.summary.timed && set.summary.secondsRemaining > 0
+        ? set.summary.secondsRemaining
+        : set.summary.setSeconds;
+
+    commitQuestionTiming();
+    attentionTracker.resetTracker();
+    markedInsightsHistoryActiveRef.current = false;
+    markedSummaryRef.current = null;
+    resumedPracticeSessionIdRef.current = set.id.startsWith("local-")
+      ? null
+      : set.id;
+    setMarkedSummary(null);
+    setSessionQuestions(restoredQuestions);
+    setAnswers(restoredAnswers);
+    setFlags(restoredFlags);
+    setQuestionIndex(startIndex);
+    setSelected(
+      typeof restoredAnswers[startIndex] === "string"
+        ? (restoredAnswers[startIndex] as UCATOptionKey)
+        : null
+    );
+    setDragOrder(
+      getDragOrder(restoredQuestions[startIndex], restoredAnswers[startIndex])
+    );
+    setRevealed(false);
+    setNavigatorOpen(false);
+    setPhase("practice");
+    phaseRef.current = "practice";
+    setSessionTimed(set.summary.timed);
+    setSessionDurationSeconds(set.summary.setSeconds || setupTimeSeconds);
+    setTimeRemaining(Math.max(0, remainingSeconds || setupTimeSeconds));
+    setSaveState({ status: "idle", message: "Continuing saved set" });
+    trackingEventsRef.current = [];
+    setTrackingEventsSnapshot([]);
+    questionTimingRef.current = {};
+    sessionStartedAtRef.current = startedAt;
+    setSessionStartedAt(startedAt);
+    setTimingSnapshot({});
+    setTrackingEventCount(0);
+    setStarted(true);
+    beginQuestionTiming(restoredQuestions[startIndex]);
+    attentionTracker.resetAttempt(nowMs());
+    recordEvent("continue_practice_set", {
+      setId: set.id,
+      section: validSection,
+      answered: set.summary.answeredQuestions,
+      total: set.summary.totalQuestions,
+      startQuestion: startIndex + 1,
+    });
     scrollToQuestionTop();
   }
 
@@ -7651,6 +7938,9 @@ function UCATQuestionBankSection({
     });
     const finalEvents = [...trackingEventsRef.current];
     const finalTimings = { ...questionTimingRef.current };
+    const resumedSessionId = !diagnosticMode
+      ? resumedPracticeSessionIdRef.current
+      : null;
     const summary = buildPracticeSessionSummary({
       section: validSection,
       sectionTitle: meta.bankTitle,
@@ -7678,18 +7968,24 @@ function UCATQuestionBankSection({
     if (!diagnosticMode) {
       setCompletedQuestionIds((current) => {
         const next = new Set(current);
-        summary.questions.forEach((item) => next.add(item.questionId));
+        summary.questions.forEach((item) => {
+          if (item.answered) next.add(item.questionId);
+        });
         return next;
       });
-      setSavedPracticeSets((current) => [
-        {
-          id: `local-${summary.completedAt}`,
+      setSavedPracticeSets((current) => {
+        const updatedSet = {
+          id: resumedSessionId ?? `local-${summary.completedAt}`,
           summary,
           completedAt: summary.completedAt,
           source: "question_bank",
-        },
-        ...current,
-      ]);
+        };
+
+        return [
+          updatedSet,
+          ...current.filter((set) => set.id !== updatedSet.id),
+        ];
+      });
     }
     if (diagnosticMode) {
       phaseRef.current = "diagnostic-complete";
@@ -7699,7 +7995,8 @@ function UCATQuestionBankSection({
       showMarkedInsights();
     }
     beginQuestionTiming(questions[0]);
-    void persistPracticeSummary(summary, finalEvents);
+    resumedPracticeSessionIdRef.current = null;
+    void persistPracticeSummary(summary, finalEvents, resumedSessionId);
   };
 
   const dragItemLookup = isDragQuestion
@@ -8200,7 +8497,7 @@ function UCATQuestionBankSection({
         className={
           usesClassicDropLayout
             ? "min-h-[calc(100vh-132px)] pb-16"
-            : "grid min-h-[calc(100vh-132px)] grid-cols-1 pb-16 md:grid-cols-[3fr_2fr]"
+            : "grid min-h-[calc(100vh-132px)] grid-cols-1 pb-16 md:grid-cols-[minmax(0,1.55fr)_minmax(360px,1fr)]"
         }
       >
         <section
@@ -8216,7 +8513,7 @@ function UCATQuestionBankSection({
             className={
               usesClassicDropLayout
                 ? "max-w-[920px] space-y-3 text-[18px] leading-[25px] text-black"
-                : "max-w-none space-y-7 text-[22px] leading-[28px] text-black"
+                : "max-w-none space-y-5 text-[20px] leading-[26px] text-black"
             }
           >
             {question.stimulus.map((paragraph) => (
@@ -8232,7 +8529,7 @@ function UCATQuestionBankSection({
               className={
                 usesClassicDropLayout
                   ? "max-w-[820px] text-[18px] leading-[25px] text-black"
-                  : "text-[22px] leading-[28px] text-black"
+                  : "text-[20px] leading-[25px] text-black"
               }
             >
               {question.question}
@@ -8504,7 +8801,7 @@ function UCATQuestionBankSection({
               </div>
             </div>
           ) : isSingleQuestion ? (
-            <div ref={answersRegionRef} className="mt-8 space-y-8">
+            <div ref={answersRegionRef} className="mt-7 space-y-6">
               {question.options.map((option) => {
                 const checked = selectedAnswer === option.key;
                 const correct = answerRevealed && option.key === question.answer;
@@ -8517,7 +8814,7 @@ function UCATQuestionBankSection({
                 return (
                   <label
                     key={option.key}
-                    className={`grid cursor-pointer grid-cols-[24px_56px_1fr] items-start gap-2 text-[22px] leading-[28px] text-black transition-colors ${
+                    className={`grid cursor-pointer grid-cols-[22px_42px_minmax(0,1fr)] items-start gap-2 text-[20px] leading-[25px] text-black transition-colors ${
                       correct
                         ? "text-emerald-700"
                         : partial
@@ -8533,7 +8830,7 @@ function UCATQuestionBankSection({
                       checked={checked}
                       onChange={() => chooseAnswer(option.key)}
                       disabled={phase !== "practice"}
-                      className="mt-1.5 h-4 w-4 accent-[#0078a8]"
+                      className="mt-1 h-4 w-4 accent-[#0078a8]"
                     />
                     <span className="font-normal">{option.key}.</span>
                     <span>{option.text}</span>

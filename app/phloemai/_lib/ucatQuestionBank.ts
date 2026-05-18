@@ -2,47 +2,20 @@ import { ORIGINAL_DM_QUESTIONS } from "./ucatDmQuestions";
 import { ORIGINAL_QR_QUESTIONS } from "./ucatQrQuestions";
 import {
   GENERATED_DM_QUESTIONS,
-  GENERATED_QR_QUESTIONS,
   GENERATED_SJT_QUESTIONS,
-  GENERATED_VR_QUESTIONS,
 } from "./generatedUcatQuestions";
 import {
-  ROUND_TWO_DM_QUESTIONS,
-  ROUND_TWO_QR_QUESTIONS,
   ROUND_TWO_SJT_QUESTIONS,
-  ROUND_TWO_VR_QUESTIONS,
 } from "./generatedUcatQuestionsRound2";
 import {
-  ROUND_THREE_DM_QUESTIONS,
-  ROUND_THREE_QR_QUESTIONS,
   ROUND_THREE_SJT_QUESTIONS,
-  ROUND_THREE_VR_QUESTIONS,
 } from "./generatedUcatQuestionsRound3";
 import {
-  ROUND_FOUR_DM_QUESTIONS,
-  ROUND_FOUR_QR_QUESTIONS,
   ROUND_FOUR_SJT_QUESTIONS,
-  ROUND_FOUR_VR_QUESTIONS,
 } from "./generatedUcatQuestionsRound4";
-import {
-  ROUND_FIVE_DM_QUESTIONS,
-  ROUND_FIVE_QR_QUESTIONS,
-  ROUND_FIVE_SJT_QUESTIONS,
-  ROUND_FIVE_VR_QUESTIONS,
-} from "./generatedUcatQuestionsRound5";
-import {
-  ROUND_SIX_DM_QUESTIONS,
-  ROUND_SIX_QR_QUESTIONS,
-  ROUND_SIX_SJT_QUESTIONS,
-  ROUND_SIX_VR_QUESTIONS,
-} from "./generatedUcatQuestionsRound6";
-import {
-  ROUND_SEVEN_DM_QUESTIONS,
-  ROUND_SEVEN_QR_QUESTIONS,
-  ROUND_SEVEN_SJT_QUESTIONS,
-  ROUND_SEVEN_VR_QUESTIONS,
-} from "./generatedUcatQuestionsRound7";
 import { SJT_QUESTIONS } from "./ucatSjtQuestions";
+import { HIGH_QUALITY_VR_QUESTIONS } from "./ucatVrQuestions";
+import { EXTRA_HIGH_QUALITY_VR_QUESTIONS } from "./ucatVrQuestionExtras";
 
 // Future generated-bank work should first read ./ucatQuestionDesignNotes.md.
 export type UCATSection = "vr" | "dm" | "qr" | "sjt";
@@ -426,7 +399,7 @@ export const UCAT_SUBTYPES: Record<
   ],
 };
 
-const ORIGINAL_VR_QUESTIONS: UCATQuestion[] = [
+export const LEGACY_VR_QUESTIONS: UCATQuestion[] = [
   {
     id: "vr-bank-tfc-001",
     section: "vr",
@@ -436,7 +409,7 @@ const ORIGINAL_VR_QUESTIONS: UCATQuestion[] = [
     title: "Verbal Reasoning Practice",
     leftTitle: "Passage",
     stimulus: [
-      "Harborview Theatre piloted caption screens for Saturday matinee performances. The screens displayed dialogue and sound cues beside the stage. The aim was to improve access for deaf and hard-of-hearing visitors without changing the evening programme.",
+      "Harbourview Theatre piloted caption screens for Saturday matinee performances. The screens displayed dialogue and sound cues beside the stage. The aim was to improve access for deaf and hard-of-hearing visitors without changing the evening programme.",
       "During the twelve-week trial, matinee ticket sales rose by 9%. Surveys from 130 attendees showed that most visitors who used captions also valued the sound cues. Managers said the sales rise could not be attributed solely to the screens, because a student discount began in the same week. A permanent installation will depend on repair costs and a review of sightlines.",
     ],
     question:
@@ -459,7 +432,7 @@ const ORIGINAL_VR_QUESTIONS: UCATQuestion[] = [
     title: "Verbal Reasoning Practice",
     leftTitle: "Passage",
     stimulus: [
-      "Harborview Theatre piloted caption screens for Saturday matinee performances. The screens displayed dialogue and sound cues beside the stage. The aim was to improve access for deaf and hard-of-hearing visitors without changing the evening programme.",
+      "Harbourview Theatre piloted caption screens for Saturday matinee performances. The screens displayed dialogue and sound cues beside the stage. The aim was to improve access for deaf and hard-of-hearing visitors without changing the evening programme.",
       "During the twelve-week trial, matinee ticket sales rose by 9%. Surveys from 130 attendees showed that most visitors who used captions also valued the sound cues. Managers said the sales rise could not be attributed solely to the screens, because a student discount began in the same week. A permanent installation will depend on repair costs and a review of sightlines.",
     ],
     question:
@@ -487,7 +460,7 @@ const ORIGINAL_VR_QUESTIONS: UCATQuestion[] = [
     title: "Verbal Reasoning Practice",
     leftTitle: "Passage",
     stimulus: [
-      "Harborview Theatre piloted caption screens for Saturday matinee performances. The screens displayed dialogue and sound cues beside the stage. The aim was to improve access for deaf and hard-of-hearing visitors without changing the evening programme.",
+      "Harbourview Theatre piloted caption screens for Saturday matinee performances. The screens displayed dialogue and sound cues beside the stage. The aim was to improve access for deaf and hard-of-hearing visitors without changing the evening programme.",
       "During the twelve-week trial, matinee ticket sales rose by 9%. Surveys from 130 attendees showed that most visitors who used captions also valued the sound cues. Managers said the sales rise could not be attributed solely to the screens, because a student discount began in the same week. A permanent installation will depend on repair costs and a review of sightlines.",
     ],
     question:
@@ -872,24 +845,12 @@ const ORIGINAL_VR_QUESTIONS: UCATQuestion[] = [
 
 export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: [
-    ...ORIGINAL_VR_QUESTIONS,
-    ...GENERATED_VR_QUESTIONS,
-    ...ROUND_TWO_VR_QUESTIONS,
-    ...ROUND_THREE_VR_QUESTIONS,
-    ...ROUND_FOUR_VR_QUESTIONS,
-    ...ROUND_FIVE_VR_QUESTIONS,
-    ...ROUND_SIX_VR_QUESTIONS,
-    ...ROUND_SEVEN_VR_QUESTIONS,
+    ...HIGH_QUALITY_VR_QUESTIONS,
+    ...EXTRA_HIGH_QUALITY_VR_QUESTIONS,
   ],
   dm: [
     ...ORIGINAL_DM_QUESTIONS,
     ...GENERATED_DM_QUESTIONS,
-    ...ROUND_TWO_DM_QUESTIONS,
-    ...ROUND_THREE_DM_QUESTIONS,
-    ...ROUND_FOUR_DM_QUESTIONS,
-    ...ROUND_FIVE_DM_QUESTIONS,
-    ...ROUND_SIX_DM_QUESTIONS,
-    ...ROUND_SEVEN_DM_QUESTIONS,
     {
       id: "dm-syllogisms-001",
       section: "dm",
@@ -1380,13 +1341,6 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   ],
   qr: [
     ...ORIGINAL_QR_QUESTIONS,
-    ...GENERATED_QR_QUESTIONS,
-    ...ROUND_TWO_QR_QUESTIONS,
-    ...ROUND_THREE_QR_QUESTIONS,
-    ...ROUND_FOUR_QR_QUESTIONS,
-    ...ROUND_FIVE_QR_QUESTIONS,
-    ...ROUND_SIX_QR_QUESTIONS,
-    ...ROUND_SEVEN_QR_QUESTIONS,
     {
       id: "qr-graphs-001",
       section: "qr",
@@ -2229,9 +2183,6 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     ...ROUND_TWO_SJT_QUESTIONS,
     ...ROUND_THREE_SJT_QUESTIONS,
     ...ROUND_FOUR_SJT_QUESTIONS,
-    ...ROUND_FIVE_SJT_QUESTIONS,
-    ...ROUND_SIX_SJT_QUESTIONS,
-    ...ROUND_SEVEN_SJT_QUESTIONS,
   ].filter((question) => question.questionType !== "drag-order"),
 };
 
