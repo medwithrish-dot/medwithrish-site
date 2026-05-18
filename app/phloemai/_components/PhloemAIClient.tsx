@@ -2933,6 +2933,12 @@ function PracticeContent({
   ];
 
   const recentPractice: Array<[string, string, string, string, string]> = [];
+  const emptySkillQueueHref = completedCurrentPlan
+    ? "/phloemai/diagnostic/mock-options"
+    : "/phloemai/question-bank";
+  const emptySkillQueueLabel = completedCurrentPlan
+    ? "Run another diagnostic"
+    : "Start practice";
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
@@ -2969,9 +2975,9 @@ function PracticeContent({
         </div>
       </section>
 
-      <section className="relative overflow-hidden rounded-xl border border-amber-200 bg-gradient-to-br from-amber-50/70 via-white to-white p-5 shadow-[0_16px_36px_rgba(180,122,32,0.14)] ring-1 ring-amber-100/80">
+      <section className="relative overflow-hidden rounded-xl border border-blue-100 bg-gradient-to-br from-blue-50/60 via-white to-slate-50 p-5 shadow-[0_14px_32px_rgba(37,99,235,0.08)] ring-1 ring-blue-50">
         <div
-          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400"
+          className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-blue-500 via-cyan-400 to-indigo-500"
           aria-hidden="true"
         />
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -3060,7 +3066,10 @@ function PracticeContent({
           </p>
           <div className="mt-4 space-y-2">
             {studyPlanTasks.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+              <Link
+                href={emptySkillQueueHref}
+                className="block rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center transition-colors hover:border-blue-200 hover:bg-blue-50/70"
+              >
                 <p className="text-sm font-black text-slate-700">
                   {completedCurrentPlan
                     ? "Your current targeted queue is cleared."
@@ -3071,14 +3080,19 @@ function PracticeContent({
                     ? "Run another diagnostic when you want a fresh task queue."
                     : "Saved practice data will decide what belongs here."}
                 </p>
-              </div>
+                <span className="mt-4 inline-flex items-center justify-center gap-2 text-xs font-black text-blue-600">
+                  {emptySkillQueueLabel}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </span>
+              </Link>
             ) : (
             studyPlanTasks.map((task) => {
               const Icon = task.icon;
               return (
-              <div
+              <Link
                 key={task.id}
-                className="grid gap-4 rounded-xl border border-slate-100 px-3 py-3 sm:grid-cols-[64px_1fr_112px] sm:items-center"
+                href={task.href}
+                className="grid gap-4 rounded-xl border border-slate-100 px-3 py-3 transition-colors hover:border-blue-200 hover:bg-blue-50/70 sm:grid-cols-[64px_1fr_112px] sm:items-center"
               >
                 <div className="flex items-center gap-3">
                   <span
@@ -3098,13 +3112,10 @@ function PracticeContent({
                     </p>
                   </div>
                 </div>
-                <Link
-                  href={task.href}
-                  className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
-                >
+                <span className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-xs font-black text-blue-600">
                   Start
-                </Link>
-              </div>
+                </span>
+              </Link>
             );
             }))}
           </div>
@@ -3123,21 +3134,30 @@ function PracticeContent({
           </h2>
           <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
             {recentPractice.length === 0 ? (
-              <div className="px-4 py-8 text-center">
+              <Link
+                href="/phloemai/question-bank"
+                className="block px-4 py-8 text-center transition-colors hover:bg-blue-50/70"
+              >
                 <p className="text-sm font-black text-slate-700">
                   No practice sessions saved yet.
                 </p>
                 <p className="mt-2 text-xs font-semibold text-slate-500">
                   Mark a question-bank set to add the first row.
                 </p>
-              </div>
+                <span className="mt-4 inline-flex items-center justify-center gap-2 text-xs font-black text-blue-600">
+                  Open question bank
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </span>
+              </Link>
             ) : (
             recentPractice.map(([code, title, meta, score, time]) => {
               const style = sectionStyle(code);
+              const reviewHref = `/phloemai/question-bank/${code.toLowerCase()}`;
               return (
-                <div
+                <Link
                   key={title}
-                  className="grid gap-4 border-b border-slate-100 px-3 py-3 last:border-b-0 sm:grid-cols-[1fr_80px_92px] sm:items-center"
+                  href={reviewHref}
+                  className="grid gap-4 border-b border-slate-100 px-3 py-3 transition-colors last:border-b-0 hover:bg-blue-50/70 sm:grid-cols-[1fr_80px_92px] sm:items-center"
                 >
                   <div className="flex items-center gap-3">
                     <span
@@ -3156,13 +3176,10 @@ function PracticeContent({
                     <p className="text-sm font-black">{score}</p>
                     <p className="text-xs font-bold text-slate-400">{time}</p>
                   </div>
-                  <Link
-                    href={`/phloemai/question-bank/${code.toLowerCase()}`}
-                    className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
-                  >
+                  <span className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-xs font-black text-blue-600">
                     Review
-                  </Link>
-                </div>
+                  </span>
+                </Link>
               );
             }))}
           </div>
@@ -5051,6 +5068,10 @@ function ReportContent({
       : hasDiagnostic
         ? "No issue labels were saved for this diagnostic."
         : "Complete and mark a diagnostic to start detecting issues from your own telemetry.";
+  const emptyIssueActionHref = hasDiagnostic
+    ? "/phloemai/practice"
+    : "/phloemai/diagnostic";
+  const emptyIssueActionLabel = hasDiagnostic ? "Open practice" : "Run diagnostic";
 
   const noFeedbackActionHref = hasDiagnostic
     ? "/phloemai/diagnostic"
@@ -5192,8 +5213,26 @@ function ReportContent({
         </p>
 
         {!hasSignals && (
-          <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600">
-            {emptyIssueMessage}
+          <div className="mt-4 flex flex-col gap-3 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+            <span>{emptyIssueMessage}</span>
+            {hasDiagnostic && !filterMatches ? (
+              <button
+                type="button"
+                onClick={() => setReportFilter("All")}
+                className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
+              >
+                Show all sections
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            ) : (
+              <Link
+                href={emptyIssueActionHref}
+                className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
+              >
+                {emptyIssueActionLabel}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            )}
           </div>
         )}
 
@@ -5221,38 +5260,49 @@ function ReportContent({
               {studyPlanTasks.map((task, index) => {
                 const Icon = task.icon;
                 return (
-                  <li key={task.id} className="grid grid-cols-[36px_1fr] gap-3 rounded-xl border border-blue-100 bg-blue-50/40 p-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
-                      {index + 1}
-                    </span>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <Icon className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                        <h3 className="text-xs font-black uppercase tracking-wide text-blue-700">
-                          {task.title}
-                        </h3>
+                  <li key={task.id}>
+                    <Link
+                      href={task.href}
+                      className="grid grid-cols-[36px_1fr] gap-3 rounded-xl border border-blue-100 bg-blue-50/40 p-3 transition-colors hover:border-blue-200 hover:bg-blue-50"
+                    >
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+                        {index + 1}
+                      </span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Icon className="h-4 w-4 text-blue-600" aria-hidden="true" />
+                          <h3 className="text-xs font-black uppercase tracking-wide text-blue-700">
+                            {task.title}
+                          </h3>
+                        </div>
+                        <p className="mt-1 text-sm font-semibold leading-6 text-slate-700">
+                          {task.fix}
+                        </p>
+                        <span className="mt-2 inline-flex items-center gap-2 text-xs font-black text-blue-600">
+                          Start task
+                          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                        </span>
                       </div>
-                      <p className="mt-1 text-sm font-semibold leading-6 text-slate-700">
-                        {task.fix}
-                      </p>
-                      <Link
-                        href={task.href}
-                        className="mt-2 inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
-                      >
-                        Start task
-                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                      </Link>
-                    </div>
+                    </Link>
                   </li>
                 );
               })}
             </ol>
           ) : (
-            <p className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600">
-              {completedCurrentPlan
-                ? "All tasks from this report are ticked off."
-                : "Study tasks will appear here as the saved fixes from your latest diagnostic."}
-            </p>
+            <Link
+              href={completedCurrentPlan ? "/phloemai/diagnostic" : "/phloemai/practice"}
+              className="mt-4 block rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50/70"
+            >
+              <span>
+                {completedCurrentPlan
+                  ? "All tasks from this report are ticked off."
+                  : "Study tasks will appear here as the saved fixes from your latest diagnostic."}
+              </span>
+              <span className="mt-3 inline-flex items-center gap-2 text-xs font-black text-blue-600">
+                {completedCurrentPlan ? "Run another diagnostic" : "Open practice"}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </span>
+            </Link>
           )}
         </section>
 
@@ -5273,14 +5323,21 @@ function ReportContent({
           </div>
           <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
             {reportHistory.length === 0 ? (
-              <div className="px-4 py-8 text-center">
+              <Link
+                href="/phloemai/diagnostic"
+                className="block px-4 py-8 text-center transition-colors hover:bg-blue-50/70"
+              >
                 <p className="text-sm font-black text-slate-700">
                   No previous reports yet.
                 </p>
                 <p className="mt-2 text-xs font-semibold text-slate-500">
                   Saved diagnostics will appear here after you mark them.
                 </p>
-              </div>
+                <span className="mt-4 inline-flex items-center justify-center gap-2 text-xs font-black text-blue-600">
+                  Run diagnostic
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </span>
+              </Link>
             ) : (
               reportHistory.map((report, index) => {
                 const active = report.id === selectedDiagnostic?.id;
