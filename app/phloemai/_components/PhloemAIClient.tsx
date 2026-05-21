@@ -1087,6 +1087,7 @@ type PhloemProfile = {
   full_name: string | null;
   current_plan: string | null;
   diagnostic_credits?: number | null;
+  ai_diagnostic_last_used_at?: string | null;
 };
 
 type AuthMode = "signup" | "login";
@@ -2136,6 +2137,63 @@ function formatDiagnosticReportDate(value: string | null) {
   });
 }
 
+const AI_DIAGNOSTIC_CREDIT_INTERVAL_MS = 24 * 60 * 60 * 1000;
+
+function formatDigitalCountdown(totalMs: number) {
+  const totalSeconds = Math.max(0, Math.ceil(totalMs / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function getNextAiDiagnosticCreditAt(lastUsedAt?: string | null) {
+  if (!lastUsedAt) return null;
+
+  const lastUsedMs = Date.parse(lastUsedAt);
+  if (!Number.isFinite(lastUsedMs)) return null;
+
+  return new Date(lastUsedMs + AI_DIAGNOSTIC_CREDIT_INTERVAL_MS).toISOString();
+}
+
+function getAiDiagnosticCreditDisplay({
+  plan,
+  diagnosticCredits,
+  lastUsedAt,
+  now,
+}: {
+  plan: string;
+  diagnosticCredits: number;
+  lastUsedAt?: string | null;
+  now: number;
+}) {
+  if (plan === "Premium") {
+    const nextAvailableAt = getNextAiDiagnosticCreditAt(lastUsedAt);
+    const nextMs = nextAvailableAt ? Date.parse(nextAvailableAt) : Number.NaN;
+
+    if (Number.isFinite(nextMs) && nextMs > now) {
+      return {
+        value: "0",
+        status: `Available in ${formatDigitalCountdown(nextMs - now)}`,
+        helper: "1 AI diagnostic credit refreshes every 24 hours.",
+      };
+    }
+
+    return {
+      value: "1/day",
+      status: "Available",
+      helper: "Premium includes 1 AI diagnostic credit every 24 hours.",
+    };
+  }
+
+  return {
+    value: String(Math.min(1, Math.max(0, diagnosticCredits))),
+    status: diagnosticCredits > 0 ? "Available" : "No free credit remaining",
+    helper: "Free accounts include 1 lifetime AI diagnostic credit.",
+  };
+}
+
 function getReportIssueDefinitionForLabel(label: string) {
   const normalised = normaliseIssueText(label);
 
@@ -2480,10 +2538,23 @@ function ReportIssueSignalCard({
 function DiagnosticContent({
   isPremium,
   latestDiagnostic,
+  plan,
+  diagnosticCredits,
+  aiDiagnosticLastUsedAt,
 }: PremiumGateProps & {
   latestDiagnostic: DashboardDiagnostic | null;
+  plan: string;
+  diagnosticCredits: number;
+  aiDiagnosticLastUsedAt?: string | null;
 }) {
+  const [creditNow, setCreditNow] = useState(() => Date.now());
   const hasDiagnostic = Boolean(latestDiagnostic);
+  const creditDisplay = getAiDiagnosticCreditDisplay({
+    plan,
+    diagnosticCredits,
+    lastUsedAt: aiDiagnosticLastUsedAt,
+    now: creditNow,
+  });
   const diagnosticHistory: Array<{
     code: string;
     date: string;
@@ -2532,6 +2603,14 @@ function DiagnosticContent({
     },
   ] as const;
 
+  useEffect(() => {
+    const nextAvailableAt = getNextAiDiagnosticCreditAt(aiDiagnosticLastUsedAt);
+    if (plan !== "Premium" || !nextAvailableAt) return;
+
+    const intervalId = window.setInterval(() => setCreditNow(Date.now()), 1000);
+    return () => window.clearInterval(intervalId);
+  }, [aiDiagnosticLastUsedAt, plan]);
+
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
       <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -2557,7 +2636,9 @@ function DiagnosticContent({
                   {(hasDiagnostic
                     ? [
                         `${latestDiagnostic?.section ?? "QR"} diagnostic saved`,
-                        "Report and study tasks ready",
+                        isPremium
+                          ? "Report and study tasks ready"
+                          : "Report ready; study plan locked",
                         latestDiagnostic?.aiFeedbackText
                           ? "AI feedback ready"
                           : "AI feedback status saved",
@@ -2565,7 +2646,7 @@ function DiagnosticContent({
                     : [
                         "14 QR questions",
                         "10 minutes",
-                        "1 FREE AI feedback credit",
+                        "1 lifetime AI feedback credit",
                       ]
                   ).map((item) => (
                     <li key={item} className="flex items-center gap-3">
@@ -2730,13 +2811,18 @@ function DiagnosticContent({
                 className="border-r border-slate-200 px-4 py-3 text-center"
               >
                 <p className="text-[11px] font-black text-slate-600">
-                  Free credits
+                  AI credit
                 </p>
-                <p className="mt-2 text-3xl font-black text-blue-600">1</p>
+                <p className="mt-2 text-3xl font-black text-blue-600">
+                  {creditDisplay.value}
+                </p>
+                <p className="mt-1 text-[11px] font-black text-blue-600">
+                  {creditDisplay.status}
+                </p>
               </div>
               <div className="px-4 py-3 text-center">
                 <p className="text-[11px] font-black text-slate-600">
-                  Daily access
+                  Premium diagnostics
                 </p>
                 <p className="mt-1 text-3xl font-black leading-none text-blue-600">
                   {isPremium ? "On" : "Locked"}
@@ -2746,6 +2832,9 @@ function DiagnosticContent({
                 </p>
               </div>
             </div>
+            <p className="text-[11px] font-bold leading-4 text-slate-500 sm:col-start-2">
+              {creditDisplay.helper}
+            </p>
           </div>
         </section>
       </div>
@@ -3034,11 +3123,17 @@ function PracticeContent({
   completedDashboardTaskIds,
   removedDashboardTaskIds,
   recentPracticeSets,
+  isPremium,
+  checkoutLoading,
+  onUpgrade,
 }: {
   latestDiagnostic: DashboardDiagnostic | null;
   completedDashboardTaskIds: Set<string>;
   removedDashboardTaskIds: Set<string>;
   recentPracticeSets: RecentPracticeSet[];
+  isPremium: boolean;
+  checkoutLoading: boolean;
+  onUpgrade: () => void;
 }) {
   const allStudyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
   const studyPlanTasks = getActiveDiagnosticStudyPlanTasks(
@@ -3131,38 +3226,47 @@ function PracticeContent({
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex gap-5">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-600">
-              <Zap className="h-8 w-8" aria-hidden="true" />
+      <ClientPremiumGate
+        isPremium={isPremium}
+        checkoutLoading={checkoutLoading}
+        onUpgrade={onUpgrade}
+        title="Unlock your personalised study plan"
+        description="Premium turns diagnostic issues into exact drills, review rules and recommended next tasks."
+        featureLabel="Premium study plan"
+      >
+        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex gap-5">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-600">
+                <Zap className="h-8 w-8" aria-hidden="true" />
+              </div>
+              <div>
+                <h2 className="text-sm font-black uppercase tracking-wide">
+                  Recommended from your study plan
+                </h2>
+                <h3 className="mt-6 text-lg font-black">
+                  {recommendedTask?.title ??
+                    (completedCurrentPlan
+                      ? "Current study plan cleared"
+                      : "No recommended task yet")}
+                </h3>
+                <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+                  {recommendedTask?.fix ??
+                    (completedCurrentPlan
+                      ? "Every task from your latest diagnostic has been ticked off."
+                      : "Complete and mark practice questions to build a real task queue.")}
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-sm font-black uppercase tracking-wide">
-                Recommended from your study plan
-              </h2>
-              <h3 className="mt-6 text-lg font-black">
-                {recommendedTask?.title ??
-                  (completedCurrentPlan
-                    ? "Current study plan cleared"
-                    : "No recommended task yet")}
-              </h3>
-              <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-                {recommendedTask?.fix ??
-                  (completedCurrentPlan
-                    ? "Every task from your latest diagnostic has been ticked off."
-                    : "Complete and mark practice questions to build a real task queue.")}
-              </p>
-            </div>
+            <Link
+              href={recommendedTask?.href ?? "/phloemai/question-bank"}
+              className="inline-flex h-12 items-center justify-center rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
+            >
+              {recommendedTask ? "Start task" : "Start practice"}
+            </Link>
           </div>
-          <Link
-            href={recommendedTask?.href ?? "/phloemai/question-bank"}
-            className="inline-flex h-12 items-center justify-center rounded-lg bg-blue-600 px-8 text-sm font-black text-white transition-colors hover:bg-blue-700"
-          >
-            {recommendedTask ? "Start task" : "Start practice"}
-          </Link>
-        </div>
-      </section>
+        </section>
+      </ClientPremiumGate>
 
       <section className="relative overflow-hidden rounded-xl border border-blue-100 bg-gradient-to-br from-blue-50/60 via-white to-slate-50 p-5 shadow-[0_14px_32px_rgba(37,99,235,0.08)] ring-1 ring-blue-50">
         <div
@@ -3246,76 +3350,85 @@ function PracticeContent({
       </section>
 
       <div className="grid gap-5 lg:grid-cols-[1fr_1.05fr]">
-        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-sm font-black uppercase tracking-wide">
-            Targeted skill queue
-          </h2>
-          <p className="mt-2 text-sm font-semibold text-slate-500">
-            Suggested next sets based on the patterns in your latest diagnostic.
-          </p>
-          <div className="mt-4 space-y-2">
-            {studyPlanTasks.length === 0 ? (
-              <Link
-                href={emptySkillQueueHref}
-                className="block rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center transition-colors hover:border-blue-200 hover:bg-blue-50/70"
-              >
-                <p className="text-sm font-black text-slate-700">
-                  {completedCurrentPlan
-                    ? "Your current targeted queue is cleared."
-                    : "Your targeted queue is empty."}
-                </p>
-                <p className="mt-2 text-xs font-semibold text-slate-500">
-                  {completedCurrentPlan
-                    ? "Run another diagnostic when you want a fresh task queue."
-                    : "Saved practice data will decide what belongs here."}
-                </p>
-                <span className="mt-4 inline-flex items-center justify-center gap-2 text-xs font-black text-blue-600">
-                  {emptySkillQueueLabel}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </span>
-              </Link>
-            ) : (
-            studyPlanTasks.map((task) => {
-              const Icon = task.icon;
-              return (
-              <Link
-                key={task.id}
-                href={task.href}
-                className="grid gap-4 rounded-xl border border-slate-100 px-3 py-3 transition-colors hover:border-blue-200 hover:bg-blue-50/70 sm:grid-cols-[64px_1fr_112px] sm:items-center"
-              >
-                <div className="flex items-center gap-3">
-                  <span
-                    className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-black text-white"
-                  >
-                    {latestDiagnostic?.section ?? "Task"}
+        <ClientPremiumGate
+          isPremium={isPremium}
+          checkoutLoading={checkoutLoading}
+          onUpgrade={onUpgrade}
+          title="Unlock targeted skill queue"
+          description="Premium keeps the diagnostic study plan visible as exact tasks you can start from practice."
+          featureLabel="Premium study plan"
+        >
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="text-sm font-black uppercase tracking-wide">
+              Targeted skill queue
+            </h2>
+            <p className="mt-2 text-sm font-semibold text-slate-500">
+              Suggested next sets based on the patterns in your latest diagnostic.
+            </p>
+            <div className="mt-4 space-y-2">
+              {studyPlanTasks.length === 0 ? (
+                <Link
+                  href={emptySkillQueueHref}
+                  className="block rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center transition-colors hover:border-blue-200 hover:bg-blue-50/70"
+                >
+                  <p className="text-sm font-black text-slate-700">
+                    {completedCurrentPlan
+                      ? "Your current targeted queue is cleared."
+                      : "Your targeted queue is empty."}
+                  </p>
+                  <p className="mt-2 text-xs font-semibold text-slate-500">
+                    {completedCurrentPlan
+                      ? "Run another diagnostic when you want a fresh task queue."
+                      : "Saved practice data will decide what belongs here."}
+                  </p>
+                  <span className="mt-4 inline-flex items-center justify-center gap-2 text-xs font-black text-blue-600">
+                    {emptySkillQueueLabel}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${task.iconClass}`}>
-                    <Icon className="h-5 w-5" aria-hidden="true" />
+                </Link>
+              ) : (
+              studyPlanTasks.map((task) => {
+                const Icon = task.icon;
+                return (
+                <Link
+                  key={task.id}
+                  href={task.href}
+                  className="grid gap-4 rounded-xl border border-slate-100 px-3 py-3 transition-colors hover:border-blue-200 hover:bg-blue-50/70 sm:grid-cols-[64px_1fr_112px] sm:items-center"
+                >
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-black text-white"
+                    >
+                      {latestDiagnostic?.section ?? "Task"}
+                    </span>
                   </div>
-                  <div>
-                    <p className="text-sm font-black">{task.title}</p>
-                    <p className="mt-1 text-xs font-bold text-slate-500">
-                      {task.fix}
-                    </p>
+                  <div className="flex items-center gap-3">
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${task.iconClass}`}>
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-black">{task.title}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-500">
+                        {task.fix}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <span className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-xs font-black text-blue-600">
-                  Start
-                </span>
-              </Link>
-            );
-            }))}
-          </div>
-          <Link
-            href="/phloemai/report"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
-          >
-            View study plan report
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-        </section>
+                  <span className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-xs font-black text-blue-600">
+                    Start
+                  </span>
+                </Link>
+              );
+              }))}
+            </div>
+            <Link
+              href="/phloemai/report"
+              className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
+            >
+              View study plan report
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </section>
+        </ClientPremiumGate>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-sm font-black uppercase tracking-wide">
@@ -5186,12 +5299,16 @@ function ReportContent({
       : "Showing the issue labels, causes, supporting evidence and study tasks saved from the selected previous diagnostic."
     : "Complete a diagnostic to replace generic guidance with your saved issue scan.";
 
-  const recommendedTaskHref = recommendedTask?.href ?? "/phloemai/practice";
-  const recommendedTaskText = recommendedTask
-    ? recommendedTask.fix
-    : completedCurrentPlan
-      ? "All tasks from this report are ticked off."
-      : "Start a recommended task based on your report.";
+  const recommendedTaskHref = isPremium
+    ? recommendedTask?.href ?? "/phloemai/practice"
+    : "/phloemai/account";
+  const recommendedTaskText = !isPremium
+    ? "Premium unlocks the personalised study plan tasks."
+    : recommendedTask
+      ? recommendedTask.fix
+      : completedCurrentPlan
+        ? "All tasks from this report are ticked off."
+        : "Start a recommended task based on your report.";
 
   const filteredLabel =
     reportFilter === "All"
@@ -5353,60 +5470,69 @@ function ReportContent({
       </section>
 
       <div className="grid gap-5 lg:grid-cols-[0.8fr_1fr]">
-        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-sm font-black uppercase tracking-wide">
-            Personalised study plan
-          </h2>
-          {studyPlanTasks.length > 0 ? (
-            <ol className="mt-4 space-y-3">
-              {studyPlanTasks.map((task, index) => {
-                const Icon = task.icon;
-                return (
-                  <li key={task.id}>
-                    <Link
-                      href={task.href}
-                      className="grid grid-cols-[36px_1fr] gap-3 rounded-xl border border-blue-100 bg-blue-50/40 p-3 transition-colors hover:border-blue-200 hover:bg-blue-50"
-                    >
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
-                        {index + 1}
-                      </span>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <Icon className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                          <h3 className="text-xs font-black uppercase tracking-wide text-blue-700">
-                            {task.title}
-                          </h3>
-                        </div>
-                        <p className="mt-1 text-sm font-semibold leading-6 text-slate-700">
-                          {task.fix}
-                        </p>
-                        <span className="mt-2 inline-flex items-center gap-2 text-xs font-black text-blue-600">
-                          Start task
-                          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        <ClientPremiumGate
+          isPremium={isPremium}
+          checkoutLoading={checkoutLoading}
+          onUpgrade={onUpgrade}
+          title="Unlock personalised study plan"
+          description="Premium reveals the exact drills and next tasks generated from this diagnostic report."
+          featureLabel="Premium study plan"
+        >
+          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="text-sm font-black uppercase tracking-wide">
+              Personalised study plan
+            </h2>
+            {studyPlanTasks.length > 0 ? (
+              <ol className="mt-4 space-y-3">
+                {studyPlanTasks.map((task, index) => {
+                  const Icon = task.icon;
+                  return (
+                    <li key={task.id}>
+                      <Link
+                        href={task.href}
+                        className="grid grid-cols-[36px_1fr] gap-3 rounded-xl border border-blue-100 bg-blue-50/40 p-3 transition-colors hover:border-blue-200 hover:bg-blue-50"
+                      >
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white">
+                          {index + 1}
                         </span>
-                      </div>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ol>
-          ) : (
-            <Link
-              href={completedCurrentPlan ? "/phloemai/diagnostic" : "/phloemai/practice"}
-              className="mt-4 block rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50/70"
-            >
-              <span>
-                {completedCurrentPlan
-                  ? "All tasks from this report are ticked off."
-                  : "Study tasks will appear here as the saved fixes from your latest diagnostic."}
-              </span>
-              <span className="mt-3 inline-flex items-center gap-2 text-xs font-black text-blue-600">
-                {completedCurrentPlan ? "Run another diagnostic" : "Open practice"}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </span>
-            </Link>
-          )}
-        </section>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <Icon className="h-4 w-4 text-blue-600" aria-hidden="true" />
+                            <h3 className="text-xs font-black uppercase tracking-wide text-blue-700">
+                              {task.title}
+                            </h3>
+                          </div>
+                          <p className="mt-1 text-sm font-semibold leading-6 text-slate-700">
+                            {task.fix}
+                          </p>
+                          <span className="mt-2 inline-flex items-center gap-2 text-xs font-black text-blue-600">
+                            Start task
+                            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                          </span>
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ol>
+            ) : (
+              <Link
+                href={completedCurrentPlan ? "/phloemai/diagnostic" : "/phloemai/practice"}
+                className="mt-4 block rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-semibold leading-6 text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50/70"
+              >
+                <span>
+                  {completedCurrentPlan
+                    ? "All tasks from this report are ticked off."
+                    : "Study tasks will appear here as the saved fixes from your latest diagnostic."}
+                </span>
+                <span className="mt-3 inline-flex items-center gap-2 text-xs font-black text-blue-600">
+                  {completedCurrentPlan ? "Run another diagnostic" : "Open practice"}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </span>
+              </Link>
+            )}
+          </section>
+        </ClientPremiumGate>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -5489,7 +5615,11 @@ function ReportContent({
           href={recommendedTaskHref}
           className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white hover:bg-blue-700"
         >
-          {recommendedTask ? "Start recommended task" : "Open practice"}
+          {!isPremium
+            ? "Upgrade"
+            : recommendedTask
+              ? "Start recommended task"
+              : "Open practice"}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       </section>
@@ -5502,6 +5632,7 @@ function AccountContent({
   plan,
   email,
   diagnosticCredits,
+  aiDiagnosticLastUsedAt,
   checkoutLoading,
   onUpgrade,
   onLogout,
@@ -5510,10 +5641,27 @@ function AccountContent({
   plan: string;
   email: string;
   diagnosticCredits: number;
+  aiDiagnosticLastUsedAt?: string | null;
   checkoutLoading: boolean;
   onUpgrade: () => void;
   onLogout: () => void;
 }) {
+  const [creditNow, setCreditNow] = useState(() => Date.now());
+  const creditDisplay = getAiDiagnosticCreditDisplay({
+    plan,
+    diagnosticCredits,
+    lastUsedAt: aiDiagnosticLastUsedAt,
+    now: creditNow,
+  });
+
+  useEffect(() => {
+    const nextAvailableAt = getNextAiDiagnosticCreditAt(aiDiagnosticLastUsedAt);
+    if (plan !== "Premium" || !nextAvailableAt) return;
+
+    const intervalId = window.setInterval(() => setCreditNow(Date.now()), 1000);
+    return () => window.clearInterval(intervalId);
+  }, [aiDiagnosticLastUsedAt, plan]);
+
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -5544,8 +5692,9 @@ function AccountContent({
             <p className="text-sm font-semibold text-slate-500">Current plan</p>
             <p className="mt-2 text-3xl font-black">{plan}</p>
             <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-              Premium unlocks unlimited AI insight cards and deeper personalised
-              recommendations.
+              Premium unlocks mock diagnostics, full mocks, subtest mocks,
+              15-minute sprints, deeper issue analysis and personalised study
+              plan tasks.
             </p>
           </div>
           <button
@@ -5597,16 +5746,18 @@ function AccountContent({
           <div className="mt-5 grid gap-4 sm:grid-cols-[180px_1fr] sm:items-center">
             <div className="rounded-xl bg-violet-50 p-5 text-center">
               <p className="text-xs font-black uppercase tracking-wide text-violet-700">
-                Credits
+                Credit
               </p>
               <p className="mt-2 text-4xl font-black text-violet-700">
-                {diagnosticCredits}
+                {creditDisplay.value}
+              </p>
+              <p className="mt-2 text-xs font-black text-violet-700">
+                {creditDisplay.status}
               </p>
             </div>
             <p className="text-sm font-semibold leading-6 text-slate-600">
-              Your free QR diagnostic can use one credit to request AI feedback.
-              The request is saved now; generation will run once the API key is
-              wired.
+              {creditDisplay.helper} AI feedback can only be generated from a
+              saved diagnostic attempt owned by your logged-in account.
             </p>
           </div>
         </section>
@@ -5629,6 +5780,7 @@ function DashboardSubpageContent({
   completedDashboardTaskIds,
   removedDashboardTaskIds,
   diagnosticCredits,
+  aiDiagnosticLastUsedAt,
   onUpgrade,
   onLogout,
 }: {
@@ -5645,6 +5797,7 @@ function DashboardSubpageContent({
   completedDashboardTaskIds: Set<string>;
   removedDashboardTaskIds: Set<string>;
   diagnosticCredits: number;
+  aiDiagnosticLastUsedAt?: string | null;
   onUpgrade: () => void;
   onLogout: () => void;
 }) {
@@ -5655,6 +5808,9 @@ function DashboardSubpageContent({
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
         latestDiagnostic={latestDiagnostic}
+        plan={plan}
+        diagnosticCredits={diagnosticCredits}
+        aiDiagnosticLastUsedAt={aiDiagnosticLastUsedAt}
       />
     );
   }
@@ -5668,6 +5824,9 @@ function DashboardSubpageContent({
         completedDashboardTaskIds={completedDashboardTaskIds}
         removedDashboardTaskIds={removedDashboardTaskIds}
         recentPracticeSets={recentPracticeSets}
+        isPremium={isPremium}
+        checkoutLoading={checkoutLoading}
+        onUpgrade={onUpgrade}
       />
     );
   }
@@ -5695,6 +5854,7 @@ function DashboardSubpageContent({
         plan={plan}
         email={email}
         diagnosticCredits={diagnosticCredits}
+        aiDiagnosticLastUsedAt={aiDiagnosticLastUsedAt}
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
         onLogout={onLogout}
@@ -5935,9 +6095,11 @@ function AuthPanel({
 function DashboardFeedbackPanel({
   latestDiagnostic,
   practiceStats,
+  isPremium,
 }: {
   latestDiagnostic: DashboardDiagnostic | null;
   practiceStats: PracticeStats;
+  isPremium: boolean;
 }) {
   const hasDiagnostic = Boolean(latestDiagnostic);
   const aiText = latestDiagnostic?.aiFeedbackText ?? null;
@@ -6125,6 +6287,13 @@ function DashboardFeedbackPanel({
                     <p className="mt-2 text-xs font-semibold text-slate-500">
                       No fixes generated.
                     </p>
+                  ) : !isPremium ? (
+                    <div className="mt-2 rounded-lg border border-dashed border-blue-200 bg-white/70 p-3">
+                      <LockKeyhole className="h-4 w-4 text-blue-600" aria-hidden="true" />
+                      <p className="mt-2 text-xs font-black text-slate-800">
+                        Personalised fixes are Premium.
+                      </p>
+                    </div>
                   ) : (
                     <ol className="mt-2 space-y-1.5 text-xs font-bold leading-5 text-slate-800">
                       {fixes.slice(0, 4).map((task, index) => (
@@ -6390,7 +6559,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     async function loadProfile(nextUser: User) {
       const { data } = await supabaseClient
         .from("profiles")
-        .select("full_name,current_plan,diagnostic_credits")
+        .select("full_name,current_plan,diagnostic_credits,ai_diagnostic_last_used_at")
         .eq("id", nextUser.id)
         .maybeSingle();
 
@@ -6741,6 +6910,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     typeof profile?.diagnostic_credits === "number"
       ? profile.diagnostic_credits
       : 1;
+  const aiDiagnosticLastUsedAt =
+    typeof profile?.ai_diagnostic_last_used_at === "string"
+      ? profile.ai_diagnostic_last_used_at
+      : null;
   const dashboardSectionProgressScores = getSectionScores(practiceStats);
   const dashboardSectionAccuracyScores = getSectionAccuracyScores(practiceStats);
   const dashboardSectionScores =
@@ -6864,10 +7037,11 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               <Sparkles className="h-6 w-6" aria-hidden="true" />
             </div>
             <h2 className="mt-4 text-sm font-black">
-              Unlock unlimited AI insights
+              Unlock Premium diagnostics
             </h2>
             <p className="mt-3 text-sm font-medium leading-6 text-slate-600">
-              Go Premium for deeper analytics and personalised recommendations.
+              Go Premium for full mocks, sprints, deeper analytics and a daily
+              AI diagnostic credit.
             </p>
             <button
               type="button"
@@ -7044,8 +7218,18 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
             <DashboardFeedbackPanel
               latestDiagnostic={latestDiagnostic}
               practiceStats={practiceStats}
+              isPremium={plan === "Premium"}
             />
 
+            <ClientPremiumGate
+              isPremium={plan === "Premium"}
+              checkoutLoading={checkoutLoading}
+              onUpgrade={handleSubscriptionAction}
+              title="Unlock your personalised study plan"
+              description="Premium turns saved diagnostic fixes into tasks on your dashboard."
+              featureLabel="Premium study plan"
+              className="self-start"
+            >
             <section className="self-start rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
@@ -7183,6 +7367,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </section>
+            </ClientPremiumGate>
 
             <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -7330,6 +7515,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               completedDashboardTaskIds={completedDashboardTaskIds}
               removedDashboardTaskIds={removedDashboardTaskIds}
               diagnosticCredits={diagnosticCredits}
+              aiDiagnosticLastUsedAt={aiDiagnosticLastUsedAt}
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}
               recentPracticeSets={recentPracticeSets}
@@ -7422,18 +7608,19 @@ function RedesignedTutorHero() {
   ];
 
   const freeFeatures = [
-    "Practice questions",
-    "Mock exams",
+    "Question bank practice",
     "Skills trainers",
-    "Limited weakness + strengths insight",
-    "1 free diagnostic with AI feedback",
+    "Free QR diagnostic",
+    "1 lifetime AI diagnostic credit",
+    "Basic score and issue labels",
   ];
 
   const premiumFeatures = [
-    "Practice questions, mock exams and skills trainers",
+    "Full mocks, subtest mocks and 15-minute sprints",
     "Advanced weakness + strengths diagnosis",
+    "Deeper issue causes, evidence and specific fixes",
     "Personalised study plan and drills",
-    "Daily diagnosis with AI feedback",
+    "1 AI diagnostic credit every 24 hours",
     "Progress tracking over time",
   ];
 
@@ -7810,7 +7997,7 @@ function RedesignedTutorHero() {
             Start with a free diagnostic.
           </h2>
           <p className="mt-1.5 text-sm text-slate-600">
-            Try the core tools first. Upgrade when you want deeper diagnosis and daily AI feedback.
+            Try the core tools first. Upgrade for mock diagnostics, deeper fixes and daily AI feedback.
           </p>
         </div>
 

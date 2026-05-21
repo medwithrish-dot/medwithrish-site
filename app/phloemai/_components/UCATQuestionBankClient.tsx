@@ -113,6 +113,8 @@ type DiagnosticAiFeedbackState = {
   requested: boolean;
   status: string;
   credits: number;
+  nextAvailableAt: string | null;
+  plan: "free" | "premium";
   message: string | null;
   requesting: boolean;
   text: string | null;
@@ -357,6 +359,7 @@ const FREE_QR_DIAGNOSTIC_SECONDS = 10 * 60;
 const FREE_QR_DIAGNOSTIC_SOURCE = "free_qr_diagnostic";
 const FULL_SECTION_DIAGNOSTIC_SOURCE = "full_mock_section_diagnostic";
 const SUBSET_DIAGNOSTIC_SOURCE = "subset_mock_diagnostic";
+const AI_DIAGNOSTIC_CREDIT_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const FULL_MOCK_TARGETS: Record<UCATSection, number> = {
   vr: 44,
   dm: 35,
@@ -463,7 +466,19 @@ const QUESTION_TRACKING_ZONES: QuestionTrackingZone[] = [
   "answers",
 ];
 
+function monotonicMs() {
+  if (typeof performance !== "undefined" && typeof performance.now === "function") {
+    return performance.now();
+  }
+
+  return Date.now();
+}
+
 function nowMs() {
+  if (typeof performance !== "undefined" && typeof performance.now === "function") {
+    return (performance.timeOrigin || Date.now() - performance.now()) + performance.now();
+  }
+
   return Date.now();
 }
 
@@ -482,6 +497,106 @@ function formatDuration(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function formatDigitalCountdown(totalMs: number) {
+  const totalSeconds = Math.max(0, Math.ceil(totalMs / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function getNextAiCreditAt(lastUsedAt?: string | null) {
+  if (!lastUsedAt) return null;
+
+  const lastUsedMs = Date.parse(lastUsedAt);
+  if (!Number.isFinite(lastUsedMs)) return null;
+
+  return new Date(lastUsedMs + AI_DIAGNOSTIC_CREDIT_INTERVAL_MS).toISOString();
+}
+
+function getAiCreditStateFromProfile(profile?: {
+  current_plan?: string | null;
+  diagnostic_credits?: number | null;
+  ai_diagnostic_last_used_at?: string | null;
+} | null): Pick<DiagnosticAiFeedbackState, "credits" | "nextAvailableAt" | "plan" | "status" | "message"> {
+  const plan = profile?.current_plan === "premium" ? "premium" : "free";
+
+  if (plan === "premium") {
+    const nextAvailableAt = getNextAiCreditAt(profile?.ai_diagnostic_last_used_at);
+    const nextMs = nextAvailableAt ? Date.parse(nextAvailableAt) : Number.NaN;
+    const available = !Number.isFinite(nextMs) || nextMs <= Date.now();
+
+    return {
+      plan,
+      credits: available ? 1 : 0,
+      nextAvailableAt: available ? null : nextAvailableAt,
+      status: available ? "Ready" : "Daily credit used",
+      message: available
+        ? null
+        : "Your next daily AI diagnostic credit is not available yet.",
+    };
+  }
+
+  const credits =
+    typeof profile?.diagnostic_credits === "number"
+      ? Math.min(1, Math.max(0, profile.diagnostic_credits))
+      : 1;
+
+  return {
+    plan,
+    credits,
+    nextAvailableAt: null,
+    status: credits > 0 ? "Ready" : "No credit remaining",
+    message:
+      credits > 0 ? null : "No diagnostic AI feedback credits remaining.",
+  };
+}
+
+function getAiCreditDisplay(
+  state: DiagnosticAiFeedbackState | null | undefined,
+  now = Date.now()
+) {
+  const nextMs = state?.nextAvailableAt
+    ? Date.parse(state.nextAvailableAt)
+    : Number.NaN;
+  const waiting = Number.isFinite(nextMs) && nextMs > now;
+  const available =
+    Boolean(state) &&
+    (state?.credits ?? 0) > 0 &&
+    !waiting;
+  const premiumRefreshAvailable =
+    state?.plan === "premium" && !waiting && (state?.credits ?? 0) <= 0;
+
+  if (available || premiumRefreshAvailable) {
+    return {
+      available: true,
+      label: "Available",
+      helper:
+        state?.plan === "premium"
+          ? "Premium includes 1 AI diagnostic credit every 24 hours."
+          : "Use this on your free diagnostic report.",
+    };
+  }
+
+  if (waiting) {
+    return {
+      available: false,
+      label: `Available in ${formatDigitalCountdown(nextMs - now)}`,
+      helper: "Your next daily AI diagnostic credit is reserved by server time.",
+    };
+  }
+
+  return {
+    available: false,
+    label: "No credit remaining",
+    helper:
+      state?.plan === "premium"
+        ? "Refresh the page to re-check your daily credit."
+        : "Free accounts include 1 AI diagnostic credit.",
+  };
 }
 
 function formatReadableDuration(totalSeconds: number) {
@@ -4080,6 +4195,7 @@ function FixedDiagnosticStartScreen({
   lockedNotice,
   loading,
   showAiCredit,
+  aiFeedbackState,
   mock,
   scope = "diagnostic",
   startLabel = "Start diagnostic",
@@ -4106,6 +4222,7 @@ function FixedDiagnosticStartScreen({
   lockedNotice?: string;
   loading?: boolean;
   showAiCredit?: boolean;
+  aiFeedbackState?: DiagnosticAiFeedbackState | null;
   mock?: (typeof MOCK_LIBRARY)[number];
   scope?: MockStartScope;
   startLabel?: string;
@@ -4115,7 +4232,15 @@ function FixedDiagnosticStartScreen({
   onStart: () => void;
 }) {
   const meta = getUCATSectionMeta(section);
+  const [creditNow, setCreditNow] = useState(() => Date.now());
   const showTimingOptions = Boolean(timingMode && onTimingModeChange);
+  const creditDisplay = aiFeedbackState
+    ? getAiCreditDisplay(aiFeedbackState, creditNow)
+    : {
+        available: false,
+        label: "Checking...",
+        helper: "AI credit status is checked from your account.",
+      };
   const mockIdForCounts = mock?.id ?? DEFAULT_MOCK_ID;
   const officialTimingSetKind: MockQuestionSetKind =
     scope === "full-mock"
@@ -4134,6 +4259,13 @@ function FixedDiagnosticStartScreen({
     mockIdForCounts
   );
   const sprintSeconds = getSprintSectionSeconds(section, sprintQuestionCount);
+
+  useEffect(() => {
+    if (!showAiCredit || !aiFeedbackState?.nextAvailableAt) return;
+
+    const intervalId = window.setInterval(() => setCreditNow(Date.now()), 1000);
+    return () => window.clearInterval(intervalId);
+  }, [aiFeedbackState?.nextAvailableAt, showAiCredit]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#eef3fb] via-[#f5f8fc] to-white px-4 py-10 text-[#111827]">
@@ -4209,7 +4341,10 @@ function FixedDiagnosticStartScreen({
                     AI feedback
                   </p>
                   <p className="mt-1 text-sm font-black text-violet-900">
-                    1 free credit
+                    {loading ? "Checking..." : creditDisplay.label}
+                  </p>
+                  <p className="mt-1 text-[11px] font-bold leading-4 text-violet-700">
+                    {creditDisplay.helper}
                   </p>
                 </div>
               )}
@@ -6035,11 +6170,22 @@ function MarkedReviewScreen({
   const insights = buildMarkedSessionInsights(summary);
   const diagnosticScore = getDiagnosticSectionScore(summary);
   const isDiagnostic = Boolean(diagnosticMode);
-  const analysisUnlocked = isPremium || diagnosticMode === "free-qr";
+  const analysisUnlocked = isPremium;
+  const [creditNow, setCreditNow] = useState(() => Date.now());
+  const aiCreditDisplay = getAiCreditDisplay(aiFeedbackState, creditNow);
   const aiCreditLabel =
-    aiFeedbackState?.credits === 1
-      ? "1 AI diagnostic credit"
-      : `${aiFeedbackState?.credits ?? 0} AI diagnostic credits`;
+    aiFeedbackState?.plan === "premium"
+      ? "Daily AI diagnostic credit"
+      : aiFeedbackState?.credits === 1
+        ? "1 AI diagnostic credit"
+        : `${aiFeedbackState?.credits ?? 0} AI diagnostic credits`;
+
+  useEffect(() => {
+    if (!aiFeedbackState?.nextAvailableAt || aiFeedbackState.text) return;
+
+    const intervalId = window.setInterval(() => setCreditNow(Date.now()), 1000);
+    return () => window.clearInterval(intervalId);
+  }, [aiFeedbackState?.nextAvailableAt, aiFeedbackState?.text]);
 
   return (
     <div className="min-h-screen bg-[#e7edf7] font-sans text-[#111827]">
@@ -6144,6 +6290,9 @@ function MarkedReviewScreen({
                       Use a credit to generate personalised written feedback
                       from this diagnostic.
                     </p>
+                    <p className="mt-2 w-fit rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-black text-violet-700">
+                      {aiCreditDisplay.label}
+                    </p>
                   </div>
                 </div>
                 <button
@@ -6151,14 +6300,14 @@ function MarkedReviewScreen({
                   onClick={() => void onRequestAiFeedback?.()}
                   disabled={
                     aiFeedbackState.requesting ||
-                    aiFeedbackState.credits <= 0
+                    !aiCreditDisplay.available
                   }
                   className="inline-flex h-11 items-center justify-center rounded-md bg-violet-600 px-5 text-sm font-black text-white shadow-md shadow-violet-100 hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-slate-300"
                 >
                   {aiFeedbackState.requesting
                     ? "Generating..."
-                    : aiFeedbackState.credits <= 0
-                      ? "No credit remaining"
+                    : !aiCreditDisplay.available
+                      ? aiCreditDisplay.label
                       : "Use AI diagnostic credit"}
                 </button>
               </div>
@@ -6446,6 +6595,7 @@ function UCATQuestionBankSection({
   const questionTimingRef = useRef<Record<string, QuestionTiming>>({});
   const questionStartedAtRef = useRef(0);
   const sessionStartedAtRef = useRef(0);
+  const sessionDeadlineMsRef = useRef<number | null>(null);
   const phaseRef = useRef<PracticePhase>("practice");
   const markedSummaryRef = useRef<PracticeSessionSummary | null>(null);
   const markedInsightsHistoryActiveRef = useRef(false);
@@ -6601,7 +6751,22 @@ function UCATQuestionBankSection({
   }, []);
 
   useEffect(() => {
-    if (!hasSupabaseConfig()) return;
+    if (!hasSupabaseConfig()) {
+      setIsPremium(false);
+      if (diagnosticMode && diagnosticMode !== "free-qr") {
+        setAiFeedbackState({
+          requested: false,
+          status: "Sign in required",
+          credits: 0,
+          nextAvailableAt: null,
+          plan: "free",
+          message: "Create or log in to your account to use AI feedback.",
+          requesting: false,
+          text: null,
+        });
+      }
+      return;
+    }
 
     let mounted = true;
 
@@ -6612,18 +6777,45 @@ function UCATQuestionBankSection({
       } = await supabase.auth.getUser();
 
       if (!mounted || !user) {
-        if (mounted) setIsPremium(false);
+        if (mounted) {
+          setIsPremium(false);
+          if (diagnosticMode && diagnosticMode !== "free-qr") {
+            setAiFeedbackState({
+              requested: false,
+              status: "Sign in required",
+              credits: 0,
+              nextAvailableAt: null,
+              plan: "free",
+              message: "Create or log in to your account to use AI feedback.",
+              requesting: false,
+              text: null,
+            });
+          }
+        }
         return;
       }
 
       const { data } = await supabase
         .from("profiles")
-        .select("current_plan")
+        .select("current_plan,diagnostic_credits,ai_diagnostic_last_used_at")
         .eq("id", user.id)
         .maybeSingle();
 
       if (mounted) {
-        setIsPremium(data?.current_plan === "premium");
+        const creditState = getAiCreditStateFromProfile(data);
+        setIsPremium(creditState.plan === "premium");
+        if (diagnosticMode && diagnosticMode !== "free-qr") {
+          setAiFeedbackState({
+            requested: false,
+            status: creditState.status,
+            credits: creditState.credits,
+            nextAvailableAt: creditState.nextAvailableAt,
+            plan: creditState.plan,
+            message: creditState.message,
+            requesting: false,
+            text: null,
+          });
+        }
       }
     }
 
@@ -6632,7 +6824,7 @@ function UCATQuestionBankSection({
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [diagnosticMode]);
 
   useEffect(() => {
     if (diagnosticMode) {
@@ -6943,6 +7135,8 @@ function UCATQuestionBankSection({
             requested: false,
             status: "Sign in required",
             credits: 0,
+            nextAvailableAt: null,
+            plan: "free",
             message: "Create or log in to your account to use the free diagnostic.",
             requesting: false,
             text: null,
@@ -6965,6 +7159,8 @@ function UCATQuestionBankSection({
             requested: false,
             status: "Sign in required",
             credits: 0,
+            nextAvailableAt: null,
+            plan: "free",
             message: "Create or log in to your account to use the free diagnostic.",
             requesting: false,
             text: null,
@@ -6975,14 +7171,12 @@ function UCATQuestionBankSection({
 
         const { data: profileRow } = await supabase
           .from("profiles")
-          .select("diagnostic_credits")
+          .select("current_plan,diagnostic_credits,ai_diagnostic_last_used_at")
           .eq("id", user.id)
           .maybeSingle();
 
-        const credits =
-          typeof profileRow?.diagnostic_credits === "number"
-            ? profileRow.diagnostic_credits
-            : 1;
+        const creditState = getAiCreditStateFromProfile(profileRow);
+        const credits = creditState.credits;
 
         const { data: practiceRow } = await supabase
           .from("practice_sessions")
@@ -7041,11 +7235,13 @@ function UCATQuestionBankSection({
             ? savedFeedbackText
               ? "Feedback ready"
               : aiStatus
-            : "Ready",
-          credits: requestedAt ? 0 : credits,
+            : creditState.status,
+          credits: requestedAt && savedFeedbackText ? creditState.credits : credits,
+          nextAvailableAt: creditState.nextAvailableAt,
+          plan: creditState.plan,
           message: requestedAt && !savedFeedbackText
             ? "AI feedback request saved. Set ANTHROPIC_API_KEY to generate."
-            : null,
+            : creditState.message,
           requesting: false,
           text: savedFeedbackText,
         });
@@ -7330,13 +7526,11 @@ function UCATQuestionBankSection({
         const studyPlanTasks = buildStudyPlanTasks(insights.issues);
         const { data: profileRow } = await supabase
           .from("profiles")
-          .select("diagnostic_credits")
+          .select("current_plan,diagnostic_credits,ai_diagnostic_last_used_at")
           .eq("id", user.id)
           .maybeSingle();
-        const diagnosticCredits =
-          typeof profileRow?.diagnostic_credits === "number"
-            ? profileRow.diagnostic_credits
-            : 1;
+        const creditState = getAiCreditStateFromProfile(profileRow);
+        const diagnosticCredits = creditState.credits;
         const aiFeedbackStatus =
           diagnosticCredits > 0 ? "credit_available" : "not_requested";
         const attemptMetadata = {
@@ -7350,6 +7544,7 @@ function UCATQuestionBankSection({
           studyPlanTasks,
           sectionScore: scoreSummary.metadata,
           aiFeedbackCreditAvailable: diagnosticCredits > 0,
+          aiFeedbackNextAvailableAt: creditState.nextAvailableAt,
           aiFeedbackRequested: false,
           aiFeedbackStatus,
         };
@@ -7401,12 +7596,11 @@ function UCATQuestionBankSection({
         });
         setAiFeedbackState({
           requested: false,
-          status: diagnosticCredits > 0 ? "Ready" : "No credit remaining",
+          status: creditState.status,
           credits: diagnosticCredits,
-          message:
-            diagnosticCredits > 0
-              ? null
-              : "No diagnostic AI feedback credits remaining.",
+          nextAvailableAt: creditState.nextAvailableAt,
+          plan: creditState.plan,
+          message: creditState.message,
           requesting: false,
           text: null,
         });
@@ -7476,27 +7670,6 @@ function UCATQuestionBankSection({
     );
 
     try {
-      const supabase = createSupabaseClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) throw new Error("Sign in to request AI feedback.");
-
-      const { data: profileRow } = await supabase
-        .from("profiles")
-        .select("diagnostic_credits")
-        .eq("id", user.id)
-        .maybeSingle();
-      const credits =
-        typeof profileRow?.diagnostic_credits === "number"
-          ? profileRow.diagnostic_credits
-          : 1;
-
-      if (credits <= 0) {
-        throw new Error("No diagnostic AI feedback credit remaining.");
-      }
-
       const summary = savedDiagnosticAttempt.summary;
       const insights = buildMarkedSessionInsights(summary);
 
@@ -7504,6 +7677,7 @@ function UCATQuestionBankSection({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          attemptId: savedDiagnosticAttempt.attemptId,
           section: summary.section,
           accuracy: summary.accuracy,
           scorePoints: summary.scorePoints,
@@ -7525,68 +7699,40 @@ function UCATQuestionBankSection({
       const aiPayload = (await aiResponse.json()) as {
         feedback?: string;
         error?: string;
+        requestedAt?: string | null;
+        status?: string;
+        credits?: number;
+        nextAvailableAt?: string | null;
+        plan?: "free" | "premium";
       };
 
       const aiOk = aiResponse.ok && Boolean(aiPayload.feedback);
-      const aiText = aiOk ? aiPayload.feedback ?? null : null;
-      const aiStatus = aiOk
-        ? "ready"
-        : aiResponse.status === 503
-          ? "queued_no_api_key"
-          : "error";
-      const aiMessage = aiOk
-        ? null
-        : aiPayload.error ?? "AI feedback could not be generated.";
-
-      const requestedAt = new Date().toISOString();
-      const nextMetadata: Record<string, unknown> = {
-        aiFeedbackRequested: true,
-        aiFeedbackStatus: aiStatus,
-        aiFeedbackRequestedAt: requestedAt,
-      };
-      if (aiText) nextMetadata.aiFeedbackText = aiText;
-      const { data: attemptBefore } = await supabase
-        .from("diagnostic_attempts")
-        .select("metadata")
-        .eq("id", savedDiagnosticAttempt.attemptId)
-        .eq("user_id", user.id)
-        .maybeSingle();
-      const currentMetadata =
-        attemptBefore?.metadata &&
-        typeof attemptBefore.metadata === "object" &&
-        !Array.isArray(attemptBefore.metadata)
-          ? (attemptBefore.metadata as Record<string, unknown>)
-          : {};
-
-      const { error: attemptError } = await supabase
-        .from("diagnostic_attempts")
-        .update({
-          ai_feedback_requested_at: requestedAt,
-          ai_feedback_status: aiStatus,
-          ...(aiText ? { ai_feedback: aiText } : {}),
-          metadata: {
-            ...currentMetadata,
-            ...(savedDiagnosticAttempt.summary
-              ? {
-                  summary: savedDiagnosticAttempt.summary,
-                }
-              : {}),
-            ...nextMetadata,
-          },
-        })
-        .eq("id", savedDiagnosticAttempt.attemptId)
-        .eq("user_id", user.id);
-
-      if (attemptError) throw attemptError;
-
-      if (aiOk) {
-        const { error: profileError } = await supabase
-          .from("profiles")
-          .update({ diagnostic_credits: Math.max(0, credits - 1) })
-          .eq("id", user.id);
-
-        if (profileError) throw profileError;
+      if (!aiOk) {
+        setAiFeedbackState((current) =>
+          current
+            ? {
+                ...current,
+                requesting: false,
+                credits:
+                  typeof aiPayload.credits === "number"
+                    ? aiPayload.credits
+                    : current.credits,
+                nextAvailableAt:
+                  aiPayload.nextAvailableAt ?? current.nextAvailableAt,
+                plan: aiPayload.plan ?? current.plan,
+                message:
+                  aiPayload.error ?? "AI feedback could not be generated.",
+              }
+            : current
+        );
+        return;
       }
+
+      const aiText = aiOk ? aiPayload.feedback ?? null : null;
+      const aiStatus = aiPayload.status ?? "ready";
+      const requestedAt = aiPayload.requestedAt ?? new Date().toISOString();
+      const remainingCredits =
+        typeof aiPayload.credits === "number" ? aiPayload.credits : 0;
 
       setSavedDiagnosticAttempt((current) =>
         current
@@ -7595,15 +7741,17 @@ function UCATQuestionBankSection({
               aiFeedbackRequestedAt: requestedAt,
               aiFeedbackStatus: aiStatus,
               aiFeedbackText: aiText,
-              credits: aiOk ? Math.max(0, credits - 1) : credits,
+              credits: remainingCredits,
             }
           : current
       );
       setAiFeedbackState({
         requested: true,
-        status: aiOk ? "Feedback ready" : aiStatus,
-        credits: aiOk ? Math.max(0, credits - 1) : credits,
-        message: aiMessage,
+        status: "Feedback ready",
+        credits: remainingCredits,
+        nextAvailableAt: aiPayload.nextAvailableAt ?? null,
+        plan: aiPayload.plan ?? aiFeedbackState?.plan ?? "free",
+        message: null,
         requesting: false,
         text: aiText,
       });
@@ -7726,14 +7874,29 @@ function UCATQuestionBankSection({
   };
 
   useEffect(() => {
-    if (!started || !sessionTimed) return;
+    if (!started || !sessionTimed) {
+      sessionDeadlineMsRef.current = null;
+      return;
+    }
 
-    const intervalId = window.setInterval(() => {
-      setTimeRemaining((current) => Math.max(current - 1, 0));
-    }, 1000);
+    if (sessionDeadlineMsRef.current === null) {
+      sessionDeadlineMsRef.current = monotonicMs() + timeRemaining * 1000;
+    }
+
+    const updateRemaining = () => {
+      const deadline = sessionDeadlineMsRef.current;
+      if (deadline === null) return;
+
+      setTimeRemaining(Math.max(0, Math.ceil((deadline - monotonicMs()) / 1000)));
+    };
+
+    updateRemaining();
+    const intervalId = window.setInterval(updateRemaining, 250);
 
     return () => window.clearInterval(intervalId);
-  }, [started, sessionTimed]);
+    // The deadline is set when a timed session starts or resumes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionTimed, started]);
 
   useEffect(() => {
     if (started && phase !== "review") {
@@ -7777,6 +7940,9 @@ function UCATQuestionBankSection({
     setSessionTimed(nextTimed);
     setSessionDurationSeconds(setupTimeSeconds);
     setTimeRemaining(setupTimeSeconds);
+    sessionDeadlineMsRef.current = nextTimed
+      ? monotonicMs() + setupTimeSeconds * 1000
+      : null;
     setMarkedSummary(null);
     markedSummaryRef.current = null;
     markedInsightsHistoryActiveRef.current = false;
@@ -7877,9 +8043,14 @@ function UCATQuestionBankSection({
     phaseRef.current = "practice";
     setSessionTimed(Boolean(draft.sessionTimed));
     setSessionDurationSeconds(draft.sessionDurationSeconds || setupTimeSeconds);
-    setTimeRemaining(
-      Math.max(0, draft.timeRemaining || draft.sessionDurationSeconds || setupTimeSeconds)
+    const restoredRemainingSeconds = Math.max(
+      0,
+      draft.timeRemaining || draft.sessionDurationSeconds || setupTimeSeconds
     );
+    setTimeRemaining(restoredRemainingSeconds);
+    sessionDeadlineMsRef.current = draft.sessionTimed
+      ? monotonicMs() + restoredRemainingSeconds * 1000
+      : null;
     setMarkedSummary(null);
     markedSummaryRef.current = null;
     markedInsightsHistoryActiveRef.current = false;
@@ -7946,7 +8117,7 @@ function UCATQuestionBankSection({
         sectionTitle="Free QR diagnostic"
         summary={savedDiagnosticAttempt.summary}
         saveState={{ status: "saved", message: "Saved diagnostic report" }}
-        isPremium={true}
+        isPremium={isPremium}
         diagnosticMode={diagnosticMode}
         aiFeedbackState={aiFeedbackState}
         checkoutLoading={checkoutLoading}
@@ -7983,7 +8154,13 @@ function UCATQuestionBankSection({
     );
   }
 
-  if (!started && diagnosticMode === "free-qr" && aiFeedbackState?.credits === 0) {
+  if (
+    !started &&
+    diagnosticMode === "free-qr" &&
+    aiFeedbackState?.credits === 0 &&
+    !aiFeedbackState.nextAvailableAt &&
+    aiFeedbackState.plan !== "premium"
+  ) {
     return (
       <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
         <div className="mx-auto max-w-3xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -8059,7 +8236,8 @@ function UCATQuestionBankSection({
             : undefined
         }
         loading={freeDiagnosticLoading}
-        showAiCredit={diagnosticMode === "free-qr"}
+        showAiCredit={Boolean(diagnosticMode)}
+        aiFeedbackState={aiFeedbackState}
         mock={diagnosticMode === "free-qr" ? undefined : selectedMock}
         scope={fixedDiagnosticScope}
         startLabel={
@@ -8494,7 +8672,11 @@ function UCATQuestionBankSection({
     phaseRef.current = "practice";
     setSessionTimed(set.summary.timed);
     setSessionDurationSeconds(set.summary.setSeconds || setupTimeSeconds);
-    setTimeRemaining(Math.max(0, remainingSeconds || setupTimeSeconds));
+    const restoredRemainingSeconds = Math.max(0, remainingSeconds || setupTimeSeconds);
+    setTimeRemaining(restoredRemainingSeconds);
+    sessionDeadlineMsRef.current = set.summary.timed
+      ? monotonicMs() + restoredRemainingSeconds * 1000
+      : null;
     setSaveState({ status: "idle", message: "Continuing saved set" });
     trackingEventsRef.current = [];
     setTrackingEventsSnapshot([]);
@@ -8573,6 +8755,7 @@ function UCATQuestionBankSection({
     if (canUseMockSessionDraft) {
       clearMockSessionDraft();
     }
+    sessionDeadlineMsRef.current = null;
     if (!diagnosticMode) {
       setCompletedQuestionIds((current) => {
         const next = new Set(current);
@@ -8900,7 +9083,7 @@ function UCATQuestionBankSection({
         }
         summary={markedSummary}
         saveState={saveState}
-        isPremium={isPremium || diagnosticMode === "free-qr"}
+        isPremium={isPremium}
         diagnosticMode={diagnosticMode}
         aiFeedbackState={aiFeedbackState}
         checkoutLoading={checkoutLoading}

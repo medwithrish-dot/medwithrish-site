@@ -1,3 +1,5 @@
+import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
+import { PremiumDiagnosticLock } from "../_components/PremiumDiagnosticLock";
 import { UCATQuestionBankClient } from "../_components/UCATQuestionBankClient";
 
 type QuestionBankSearchParams = {
@@ -21,15 +23,39 @@ function getMockId(searchParams: QuestionBankSearchParams) {
   return value;
 }
 
+function isPremiumDiagnosticMode(mode?: string | null) {
+  return (
+    mode === "full" ||
+    mode === "full-mock" ||
+    mode === "section-mock" ||
+    mode === "full-section" ||
+    mode === "subset"
+  );
+}
+
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<QuestionBankSearchParams>;
 }) {
   const resolvedSearchParams = await searchParams;
+  const diagnosticMode = getDiagnosticMode(resolvedSearchParams);
+
+  if (isPremiumDiagnosticMode(diagnosticMode)) {
+    const { isPremium } = await getPhloemEntitlements();
+    if (!isPremium) {
+      return (
+        <PremiumDiagnosticLock
+          backHref="/phloemai/diagnostic"
+          description="Mock diagnostics, full mocks, subtest mocks and 15-minute sprints are Premium. The free QR diagnostic stays available from the diagnostic page."
+        />
+      );
+    }
+  }
+
   return (
     <UCATQuestionBankClient
-      diagnosticMode={getDiagnosticMode(resolvedSearchParams)}
+      diagnosticMode={diagnosticMode}
       mockId={getMockId(resolvedSearchParams)}
     />
   );

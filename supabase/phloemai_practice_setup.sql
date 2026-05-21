@@ -5,7 +5,8 @@ create extension if not exists "pgcrypto";
 
 alter table public.profiles
   add column if not exists diagnostic_credits integer not null default 1
-    check (diagnostic_credits >= 0);
+    check (diagnostic_credits >= 0),
+  add column if not exists ai_diagnostic_last_used_at timestamptz;
 
 alter table public.diagnostic_attempts
   add column if not exists ai_feedback_requested_at timestamptz,

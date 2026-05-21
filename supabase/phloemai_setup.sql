@@ -9,6 +9,9 @@ create table if not exists public.profiles (
   full_name text,
   current_plan text not null default 'free'
     check (current_plan in ('free', 'premium')),
+  diagnostic_credits integer not null default 1
+    check (diagnostic_credits >= 0),
+  ai_diagnostic_last_used_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

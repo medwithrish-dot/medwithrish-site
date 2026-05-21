@@ -1,3 +1,5 @@
+import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
+import { PremiumDiagnosticLock } from "../../_components/PremiumDiagnosticLock";
 import { UCATQuestionBankClient } from "../../_components/UCATQuestionBankClient";
 import { UCAT_SECTIONS } from "../../_lib/ucatQuestionBank";
 
@@ -38,6 +40,16 @@ function getPracticeSetId(searchParams: QuestionBankSectionSearchParams) {
     : searchParams.set;
 
   return value;
+}
+
+function isPremiumDiagnosticMode(mode?: string | null) {
+  return (
+    mode === "full" ||
+    mode === "full-mock" ||
+    mode === "section-mock" ||
+    mode === "full-section" ||
+    mode === "subset"
+  );
 }
 
 function withMockQuery(path: string, mockId?: string) {
@@ -83,15 +95,32 @@ export default async function Page({
 }) {
   const { section } = await params;
   const resolvedSearchParams = await searchParams;
+  const diagnosticMode = getDiagnosticMode(resolvedSearchParams);
+  const backHref = getBackHref(resolvedSearchParams);
+  const backLabel = getBackLabel(resolvedSearchParams);
+
+  if (isPremiumDiagnosticMode(diagnosticMode)) {
+    const { isPremium } = await getPhloemEntitlements();
+    if (!isPremium) {
+      return (
+        <PremiumDiagnosticLock
+          backHref={backHref ?? "/phloemai/diagnostic"}
+          backLabel={backLabel ?? "Back to diagnostics"}
+          description="Mock diagnostics, full mocks, subtest mocks and 15-minute sprints are Premium. The free QR diagnostic stays available from the diagnostic page."
+        />
+      );
+    }
+  }
+
   return (
     <UCATQuestionBankClient
       section={section}
-      diagnosticMode={getDiagnosticMode(resolvedSearchParams)}
+      diagnosticMode={diagnosticMode}
       reviewMode={getReviewMode(resolvedSearchParams)}
       practiceSetId={getPracticeSetId(resolvedSearchParams)}
       mockId={getMockId(resolvedSearchParams)}
-      backHref={getBackHref(resolvedSearchParams)}
-      backLabel={getBackLabel(resolvedSearchParams)}
+      backHref={backHref}
+      backLabel={backLabel}
     />
   );
 }
