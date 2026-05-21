@@ -329,6 +329,26 @@ type MockScoreSessionRow = {
   completed_at: string | null;
   source: string | null;
 };
+type MockSessionDraft = {
+  version: 1;
+  section: UCATSection;
+  diagnosticMode: DiagnosticMode | null;
+  mockId: MockId;
+  mockScope: MockStartScope | null;
+  sectionMockTiming: SectionMockTimingMode | null;
+  questionIds: string[];
+  questionIndex: number;
+  answers: Record<string, PracticeAnswer>;
+  flags: Record<string, boolean>;
+  timings: Record<string, QuestionTiming>;
+  events: TrackingEvent[];
+  sessionTimed: boolean;
+  sessionDurationSeconds: number;
+  timeRemaining: number;
+  startedAt: number;
+  trackingMode: TrackingMode;
+  savedAt: string;
+};
 
 const QUESTION_TARGETS = [5, 10, 15] as const;
 const MINUTE_TARGETS = [5, 10, 15] as const;
@@ -353,6 +373,9 @@ const FULL_MOCK_SECTION_ORDER: UCATSection[] = ["vr", "dm", "qr", "sjt"];
 const SECTION_MOCK_SHORT_SECONDS = 15 * 60;
 const DEFAULT_MOCK_ID: MockId = "mock-a";
 const TIMED_MOCK_SET_KINDS = ["full-mock", "subtest", "sprint"] as const;
+const MOCK_SESSION_DRAFT_VERSION = 1;
+const MOCK_SESSION_DRAFT_PREFIX = "phloemai-mock-draft:v1:";
+const MOCK_SESSION_DRAFT_EVENT = "phloemai-mock-drafts-changed";
 const MOCK_LIBRARY: Array<{
   id: MockId;
   label: string;
@@ -510,6 +533,139 @@ function isMockId(value: unknown): value is MockId {
 function withMockQuery(path: string, mockId: MockId) {
   const separator = path.includes("?") ? "&" : "?";
   return `${path}${separator}mock=${mockId}`;
+}
+
+function getMockSessionDraftKey({
+  section,
+  diagnosticMode,
+  mockId,
+  mockScope,
+  sectionMockTiming,
+}: {
+  section: UCATSection;
+  diagnosticMode: DiagnosticMode | null;
+  mockId: MockId;
+  mockScope: MockStartScope | null;
+  sectionMockTiming: SectionMockTimingMode | null;
+}) {
+  return [
+    MOCK_SESSION_DRAFT_PREFIX,
+    section,
+    diagnosticMode ?? "practice",
+    mockId,
+    mockScope ?? "none",
+    sectionMockTiming ?? "default",
+  ].join(":");
+}
+
+function notifyMockSessionDraftsChanged() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new Event(MOCK_SESSION_DRAFT_EVENT));
+}
+
+function readMockSessionDraft(key: string): MockSessionDraft | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const rawDraft = window.localStorage.getItem(key);
+    if (!rawDraft) return null;
+
+    const draft = JSON.parse(rawDraft) as Partial<MockSessionDraft>;
+    if (
+      draft.version !== MOCK_SESSION_DRAFT_VERSION ||
+      !isUCATSection(String(draft.section)) ||
+      !isMockId(draft.mockId) ||
+      !Array.isArray(draft.questionIds) ||
+      draft.questionIds.length === 0
+    ) {
+      return null;
+    }
+
+    return draft as MockSessionDraft;
+  } catch {
+    return null;
+  }
+}
+
+function readAllMockSessionDrafts() {
+  if (typeof window === "undefined") return [];
+
+  const drafts: MockSessionDraft[] = [];
+
+  try {
+    for (let index = 0; index < window.localStorage.length; index += 1) {
+      const key = window.localStorage.key(index);
+      if (!key?.startsWith(MOCK_SESSION_DRAFT_PREFIX)) continue;
+      const draft = readMockSessionDraft(key);
+      if (draft) drafts.push(draft);
+    }
+  } catch {
+    return [];
+  }
+
+  return drafts.sort(
+    (first, second) =>
+      new Date(second.savedAt).getTime() - new Date(first.savedAt).getTime()
+  );
+}
+
+function removeMockSessionDraft(key: string) {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.removeItem(key);
+    notifyMockSessionDraftsChanged();
+  } catch {
+    // Local draft removal is best-effort only.
+  }
+}
+
+function saveMockSessionDraft(key: string, draft: MockSessionDraft) {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(key, JSON.stringify(draft));
+    notifyMockSessionDraftsChanged();
+  } catch {
+    // Ignore private browsing or storage quota failures.
+  }
+}
+
+function toNumberKeyedAnswers(
+  answers: Record<string, PracticeAnswer>
+): Record<number, PracticeAnswer> {
+  return Object.fromEntries(
+    Object.entries(answers).map(([index, answer]) => [Number(index), answer])
+  ) as Record<number, PracticeAnswer>;
+}
+
+function toNumberKeyedFlags(flags: Record<string, boolean>) {
+  return Object.fromEntries(
+    Object.entries(flags).map(([index, flag]) => [Number(index), Boolean(flag)])
+  ) as Record<number, boolean>;
+}
+
+function useMockSessionDrafts() {
+  const [drafts, setDrafts] = useState<MockSessionDraft[]>([]);
+
+  useEffect(() => {
+    const refreshDrafts = () => setDrafts(readAllMockSessionDrafts());
+
+    refreshDrafts();
+    window.addEventListener("storage", refreshDrafts);
+    window.addEventListener(MOCK_SESSION_DRAFT_EVENT, refreshDrafts);
+
+    return () => {
+      window.removeEventListener("storage", refreshDrafts);
+      window.removeEventListener(MOCK_SESSION_DRAFT_EVENT, refreshDrafts);
+    };
+  }, []);
+
+  return drafts;
+}
+
+function getMockLibraryHref(mockId: MockId) {
+  return withMockQuery("/phloemai/diagnostics/mock-diagnostic", mockId);
 }
 
 function withSectionMockTimingQuery(
@@ -2968,28 +3124,104 @@ function getMockMetricPoint(
   };
 }
 
+function getCompletedFullMockSections(
+  scoreMatrix: MockScoreMatrix,
+  mockId: MockId
+) {
+  const sectionScores = scoreMatrix[mockId] ?? {};
+
+  return FULL_MOCK_SECTION_ORDER.filter((section) => Boolean(sectionScores[section]));
+}
+
+function getNextFullMockSection(scoreMatrix: MockScoreMatrix, mockId: MockId) {
+  const sectionScores = scoreMatrix[mockId] ?? {};
+
+  return (
+    FULL_MOCK_SECTION_ORDER.find((section) => !sectionScores[section]) ??
+    FULL_MOCK_SECTION_ORDER[0]
+  );
+}
+
+function getFullMockDraftForMock(drafts: MockSessionDraft[], mockId: MockId) {
+  return drafts.find(
+    (draft) => draft.mockId === mockId && draft.mockScope === "full-mock"
+  );
+}
+
+function getSectionMockDraftForMock({
+  drafts,
+  mockId,
+  section,
+  scope,
+}: {
+  drafts: MockSessionDraft[];
+  mockId: MockId;
+  section: UCATSection;
+  scope: Extract<MockStartScope, "subtest" | "sprint">;
+}) {
+  return drafts.find(
+    (draft) =>
+      draft.mockId === mockId &&
+      draft.section === section &&
+      draft.mockScope === scope
+  );
+}
+
 function MockStartPanel({
   selectedMock,
+  scoreMatrix,
+  loading,
+  draft,
 }: {
   selectedMock: (typeof MOCK_LIBRARY)[number];
+  scoreMatrix: MockScoreMatrix;
+  loading: boolean;
+  draft?: MockSessionDraft | null;
 }) {
+  const completedSections = getCompletedFullMockSections(
+    scoreMatrix,
+    selectedMock.id
+  );
+  const mockComplete =
+    completedSections.length === FULL_MOCK_SECTION_ORDER.length;
+  const mockStarted = completedSections.length > 0;
+  const nextSection =
+    draft?.section ?? getNextFullMockSection(scoreMatrix, selectedMock.id);
+  const actionHref = mockComplete
+    ? "/phloemai/report"
+    : withMockQuery(`/phloemai/mocks/full/${nextSection}`, selectedMock.id);
+  const actionLabel = mockComplete
+    ? "Open diagnostic report"
+    : draft || mockStarted
+      ? `Continue ${selectedMock.label}`
+      : `Start ${selectedMock.label}`;
+
   return (
     <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
       <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
         Standardised paper
       </p>
       <h3 className="mt-1 text-lg font-black text-slate-950">
-        Start {selectedMock.label}
+        {mockComplete
+          ? `${selectedMock.label} complete`
+          : draft || mockStarted
+            ? `Continue ${selectedMock.label}`
+            : `Start ${selectedMock.label}`}
       </h3>
       <p className="mt-2 text-xs font-semibold leading-5 text-slate-600">
-        Start the standardised paper with VR, then continue through DM, QR and
-        SJT.
+        {mockComplete
+          ? "All four sections are saved. Open the diagnostic report for issue scan, study tasks and AI feedback."
+          : draft
+            ? `Unfinished ${getUCATSectionMeta(draft.section).code} section saved. Continue where you left off.`
+          : mockStarted
+            ? `${completedSections.length}/4 sections saved. Continue with ${getUCATSectionMeta(nextSection).code}.`
+            : "Start the standardised paper with VR, then continue through DM, QR and SJT."}
       </p>
       <Link
-        href={withMockQuery("/phloemai/mocks/full/vr", selectedMock.id)}
+        href={actionHref}
         className="mt-5 inline-flex h-10 w-full items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-black text-white shadow-sm transition-colors hover:bg-blue-700"
       >
-        Start {selectedMock.label}
+        {loading ? "Loading..." : actionLabel}
       </Link>
     </div>
   );
@@ -3169,12 +3401,17 @@ function MockScoreGraph({
 
 function FullMockPerformancePanel({
   selectedMock,
+  scoreMatrix,
+  loading,
+  draft,
 }: {
   selectedMock: (typeof MOCK_LIBRARY)[number];
+  scoreMatrix: MockScoreMatrix;
+  loading: boolean;
+  draft?: MockSessionDraft | null;
 }) {
   const [selectedMetric, setSelectedMetric] =
     useState<MockScoreMetric>("overall");
-  const { scoreMatrix, loading } = useFullMockScoreMatrix();
   const metrics: MockScoreMetric[] = ["overall", ...FULL_MOCK_SECTION_ORDER];
 
   return (
@@ -3203,7 +3440,12 @@ function FullMockPerformancePanel({
       </div>
 
       <div className="mt-4 grid gap-3 lg:grid-cols-[220px_1fr]">
-        <MockStartPanel selectedMock={selectedMock} />
+        <MockStartPanel
+          selectedMock={selectedMock}
+          scoreMatrix={scoreMatrix}
+          loading={loading}
+          draft={draft}
+        />
         <MockScoreGraph
           selectedMock={selectedMock}
           metric={selectedMetric}
@@ -3218,20 +3460,33 @@ function FullMockPerformancePanel({
 function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
   const [mockFilter, setMockFilter] = useState<MockFilter>("all");
   const selectedMock = getMockDefinition(mockId);
+  const { scoreMatrix, loading: scoreLoading } = useFullMockScoreMatrix();
+  const drafts = useMockSessionDrafts();
+  const selectedMockDraft = getFullMockDraftForMock(drafts, selectedMock.id);
   const totalTarget = FULL_MOCK_SECTION_ORDER.reduce(
     (total, section) => total + FULL_MOCK_TARGETS[section],
     0
   );
-  const visibleMocks =
-    mockFilter === "continue" || mockFilter === "attempted"
-      ? []
-      : MOCK_LIBRARY;
+  const visibleMocks = MOCK_LIBRARY.filter((mock) => {
+    const completedSections = getCompletedFullMockSections(
+      scoreMatrix,
+      mock.id
+    ).length;
+    const draft = getFullMockDraftForMock(drafts, mock.id);
+    const complete = completedSections === FULL_MOCK_SECTION_ORDER.length;
+    const started = completedSections > 0 || Boolean(draft);
+
+    if (mockFilter === "continue") return started && !complete;
+    if (mockFilter === "attempted") return started;
+    if (mockFilter === "unattempted") return !started;
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-slate-100 px-3 py-4 text-[#111827]">
       <main className="mx-auto max-w-6xl rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
         <Link
-          href={withMockQuery("/phloemai/mocks", selectedMock.id)}
+          href={getMockLibraryHref(selectedMock.id)}
           className="mb-4 inline-flex items-center gap-2 text-xs font-black text-slate-600 transition-colors hover:text-blue-700"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -3245,7 +3500,12 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
           </p>
         </div>
 
-        <FullMockPerformancePanel selectedMock={selectedMock} />
+        <FullMockPerformancePanel
+          selectedMock={selectedMock}
+          scoreMatrix={scoreMatrix}
+          loading={scoreLoading}
+          draft={selectedMockDraft}
+        />
 
         <div className="mt-5">
           <MockStatusTabs value={mockFilter} onChange={setMockFilter} />
@@ -3259,6 +3519,25 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
           ) : visibleMocks.map((mock) => {
             const index = MOCK_LIBRARY.findIndex((item) => item.id === mock.id);
             const active = mock.id === selectedMock.id;
+            const completedSections = getCompletedFullMockSections(
+              scoreMatrix,
+              mock.id
+            );
+            const draft = getFullMockDraftForMock(drafts, mock.id);
+            const mockComplete =
+              completedSections.length === FULL_MOCK_SECTION_ORDER.length;
+            const mockStarted = completedSections.length > 0 || Boolean(draft);
+            const nextSection =
+              draft?.section ?? getNextFullMockSection(scoreMatrix, mock.id);
+            const actionHref = mockComplete
+              ? "/phloemai/report"
+              : withMockQuery(`/phloemai/mocks/full/${nextSection}`, mock.id);
+            const actionLabel = mockComplete
+              ? "Open diagnostic report"
+              : mockStarted || active
+                ? "Continue"
+                : "Start";
+
             return (
               <article
                 key={mock.id}
@@ -3273,7 +3552,13 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
                     Mock {index + 1}
                   </h2>
                   <p className="mt-1.5 text-xs font-semibold leading-5 text-slate-500">
-                    {totalTarget} questions across VR, DM, QR and SJT. Start with any section.
+                    {mockComplete
+                      ? "All four sections saved. Diagnostic report is ready."
+                      : draft
+                        ? `Unfinished ${getUCATSectionMeta(draft.section).code} section saved. Continue where you left off.`
+                      : mockStarted
+                        ? `${completedSections.length}/4 sections saved. Continue with ${getUCATSectionMeta(nextSection).code}.`
+                        : `${totalTarget} questions across VR, DM, QR and SJT. Start with any section.`}
                   </p>
                   <div className="mt-2.5 flex flex-wrap gap-1.5">
                     {FULL_MOCK_SECTION_ORDER.map((section) => {
@@ -3294,10 +3579,10 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
                   </div>
                 </div>
                 <Link
-                  href={withMockQuery("/phloemai/mocks/full/vr", mock.id)}
+                  href={actionHref}
                   className="inline-flex h-9 items-center justify-center rounded-md border border-blue-500 px-5 text-xs font-black text-blue-700 transition-colors hover:bg-blue-600 hover:text-white"
                 >
-                  {active ? "Continue" : "Start"}
+                  {scoreLoading ? "Loading..." : actionLabel}
                 </Link>
               </article>
             );
@@ -3323,16 +3608,50 @@ function SubtestMockOverview({
   const { scoreMatrix, loading: scoreLoading } = useMockScoreMatrix(
     isSprintMode ? "sprint" : "subtest"
   );
-  const visibleMocks =
-    mockFilter === "continue" || mockFilter === "attempted"
-      ? []
-      : MOCK_LIBRARY;
+  const drafts = useMockSessionDrafts();
+  const sectionDraftScope = isSprintMode ? "sprint" : "subtest";
+  const activeSectionDraft = getSectionMockDraftForMock({
+    drafts,
+    mockId: selectedMock.id,
+    section: activeSection,
+    scope: sectionDraftScope,
+  });
+  const activeSectionScore = scoreMatrix[selectedMock.id]?.[activeSection] ?? null;
+  const activeSectionComplete = Boolean(activeSectionScore);
+  const activeSectionHref = activeSectionComplete
+    ? "/phloemai/report"
+    : withSectionMockTimingQuery(
+        `/phloemai/mocks/subtest/${activeSection}`,
+        selectedMock.id,
+        timingMode
+      );
+  const activeSectionActionLabel = activeSectionComplete
+    ? "Open diagnostic report"
+    : activeSectionDraft
+      ? `Continue ${activeMeta.code}`
+    : isSprintMode
+      ? `Start 15-minute ${activeMeta.code}`
+      : `Start ${activeMeta.code}`;
+  const visibleMocks = MOCK_LIBRARY.filter((mock) => {
+    const completed = Boolean(scoreMatrix[mock.id]?.[activeSection]);
+    const draft = getSectionMockDraftForMock({
+      drafts,
+      mockId: mock.id,
+      section: activeSection,
+      scope: sectionDraftScope,
+    });
+
+    if (mockFilter === "continue") return Boolean(draft) && !completed;
+    if (mockFilter === "attempted") return completed;
+    if (mockFilter === "unattempted") return !completed && !draft;
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-slate-100 px-3 py-4 text-[#111827]">
       <main className="mx-auto max-w-6xl rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
         <Link
-          href={withMockQuery("/phloemai/mocks", selectedMock.id)}
+          href={getMockLibraryHref(selectedMock.id)}
           className="mb-4 inline-flex items-center gap-2 text-xs font-black text-slate-600 transition-colors hover:text-blue-700"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -3389,16 +3708,10 @@ function SubtestMockOverview({
                 {activeMeta.title}
               </h2>
               <Link
-                href={withSectionMockTimingQuery(
-                  `/phloemai/mocks/subtest/${activeSection}`,
-                  selectedMock.id,
-                  timingMode
-                )}
+                href={activeSectionHref}
                 className="inline-flex h-9 w-fit items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700"
               >
-                {isSprintMode
-                  ? `Start 15-minute ${activeMeta.code}`
-                  : `Start ${activeMeta.code}`}
+                {scoreLoading ? "Loading..." : activeSectionActionLabel}
               </Link>
             </div>
 
@@ -3431,6 +3744,28 @@ function SubtestMockOverview({
               ) : visibleMocks.map((mock) => {
                 const index = MOCK_LIBRARY.findIndex((item) => item.id === mock.id);
                 const active = mock.id === selectedMock.id;
+                const completed = Boolean(scoreMatrix[mock.id]?.[activeSection]);
+                const draft = getSectionMockDraftForMock({
+                  drafts,
+                  mockId: mock.id,
+                  section: activeSection,
+                  scope: sectionDraftScope,
+                });
+                const actionHref = completed
+                  ? "/phloemai/report"
+                  : withSectionMockTimingQuery(
+                      `/phloemai/mocks/subtest/${activeSection}`,
+                      mock.id,
+                      timingMode
+                    );
+                const actionLabel = completed
+                  ? "Open diagnostic report"
+                  : draft
+                    ? "Continue"
+                  : active
+                    ? "Continue"
+                    : "Start";
+
                 return (
                   <article
                     key={mock.id}
@@ -3445,20 +3780,20 @@ function SubtestMockOverview({
                         Mock {index + 1}
                       </h3>
                       <p className="mt-1.5 text-xs font-semibold leading-5 text-slate-500">
-                        {isSprintMode
-                          ? `15-minute ${activeMeta.code} sprint for ${activeMeta.title}.`
-                          : `${activeMeta.code} timed set for ${activeMeta.title}.`}
+                        {completed
+                          ? `${activeMeta.code} diagnostic report is ready.`
+                          : draft
+                            ? `Unfinished ${activeMeta.code} attempt saved. Continue where you left off.`
+                          : isSprintMode
+                            ? `15-minute ${activeMeta.code} sprint for ${activeMeta.title}.`
+                            : `${activeMeta.code} timed set for ${activeMeta.title}.`}
                       </p>
                     </div>
                     <Link
-                      href={withSectionMockTimingQuery(
-                        `/phloemai/mocks/subtest/${activeSection}`,
-                        mock.id,
-                        timingMode
-                      )}
+                      href={actionHref}
                       className="inline-flex h-9 items-center justify-center rounded-md border border-blue-500 px-5 text-xs font-black text-blue-700 transition-colors hover:bg-blue-600 hover:text-white"
                     >
-                      {active ? "Continue" : "Start"}
+                      {scoreLoading ? "Loading..." : actionLabel}
                     </Link>
                   </article>
                 );
@@ -3748,6 +4083,9 @@ function FixedDiagnosticStartScreen({
   mock,
   scope = "diagnostic",
   startLabel = "Start diagnostic",
+  savedDraft,
+  onContinueDraft,
+  onDiscardDraft,
   onStart,
 }: {
   title: string;
@@ -3771,6 +4109,9 @@ function FixedDiagnosticStartScreen({
   mock?: (typeof MOCK_LIBRARY)[number];
   scope?: MockStartScope;
   startLabel?: string;
+  savedDraft?: MockSessionDraft | null;
+  onContinueDraft?: (draft: MockSessionDraft) => void;
+  onDiscardDraft?: () => void;
   onStart: () => void;
 }) {
   const meta = getUCATSectionMeta(section);
@@ -3884,6 +4225,41 @@ function FixedDiagnosticStartScreen({
           </div>
 
           <div className="px-7 pb-7">
+
+          {savedDraft && onContinueDraft && (
+            <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-black text-amber-950">
+                    Unfinished mock saved
+                  </p>
+                  <p className="mt-1 text-xs font-semibold leading-5 text-amber-900">
+                    Q{savedDraft.questionIndex + 1} of{" "}
+                    {savedDraft.questionIds.length} saved{" "}
+                    {formatDuration(savedDraft.timeRemaining)} remaining.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onContinueDraft(savedDraft)}
+                    className="inline-flex h-10 items-center justify-center rounded-lg bg-amber-600 px-4 text-xs font-black text-white hover:bg-amber-700"
+                  >
+                    Continue unfinished mock
+                  </button>
+                  {onDiscardDraft && (
+                    <button
+                      type="button"
+                      onClick={onDiscardDraft}
+                      className="inline-flex h-10 items-center justify-center rounded-lg border border-amber-300 bg-white px-4 text-xs font-black text-amber-800 hover:bg-amber-100"
+                    >
+                      Discard
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {showTimingOptions && (
             <div className="mt-6">
@@ -6044,6 +6420,9 @@ function UCATQuestionBankSection({
     status: "idle",
     message: "Not saved yet",
   });
+  const [mockSessionDraft, setMockSessionDraft] =
+    useState<MockSessionDraft | null>(null);
+  const [pendingExitHref, setPendingExitHref] = useState<string | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [freeDiagnosticLoading, setFreeDiagnosticLoading] = useState(
     diagnosticMode === "free-qr"
@@ -6468,8 +6847,86 @@ function UCATQuestionBankSection({
   const questions = started
     ? sessionQuestions
     : fixedDiagnosticQuestions ?? availableQuestions;
+  const canUseMockSessionDraft = Boolean(diagnosticMode && fixedDiagnosticQuestions);
+  const mockSessionDraftKey = getMockSessionDraftKey({
+    section: validSection,
+    diagnosticMode,
+    mockId,
+    mockScope: fixedDiagnosticScope,
+    sectionMockTiming:
+      diagnosticMode === "full-section" ? effectiveSectionMockTiming : null,
+  });
 
   const currentQuestionForTracking = questions[questionIndex];
+
+  const getRestoredDraftQuestions = (draft: MockSessionDraft) => {
+    const restoredQuestions = draft.questionIds
+      .map((questionId) =>
+        sectionQuestions.find((question) => question.id === questionId)
+      )
+      .filter((question): question is UCATQuestion => Boolean(question));
+
+    return restoredQuestions.length === draft.questionIds.length
+      ? restoredQuestions
+      : [];
+  };
+
+  const buildCurrentMockSessionDraft = (): MockSessionDraft | null => {
+    if (!canUseMockSessionDraft || !started || phase !== "practice") return null;
+    if (questions.length === 0) return null;
+
+    const timings: Record<string, QuestionTiming> = {
+      ...questionTimingRef.current,
+    };
+    const activeQuestion = questions[questionIndex];
+    if (activeQuestion) {
+      const existing = timings[activeQuestion.id] ?? {
+        questionId: activeQuestion.id,
+        visits: 0,
+        totalMs: 0,
+      };
+      timings[activeQuestion.id] = {
+        ...existing,
+        totalMs:
+          existing.totalMs +
+          Math.max(0, nowMs() - questionStartedAtRef.current),
+      };
+    }
+
+    return {
+      version: MOCK_SESSION_DRAFT_VERSION,
+      section: validSection,
+      diagnosticMode,
+      mockId,
+      mockScope: fixedDiagnosticScope,
+      sectionMockTiming:
+        diagnosticMode === "full-section" ? effectiveSectionMockTiming : null,
+      questionIds: questions.map((item) => item.id),
+      questionIndex,
+      answers: answers as Record<string, PracticeAnswer>,
+      flags: flags as Record<string, boolean>,
+      timings,
+      events: trackingEventsRef.current,
+      sessionTimed,
+      sessionDurationSeconds,
+      timeRemaining,
+      startedAt: sessionStartedAtRef.current || sessionStartedAt || nowMs(),
+      trackingMode: attentionTracker.trackingMode,
+      savedAt: new Date().toISOString(),
+    };
+  };
+
+  const writeCurrentMockSessionDraft = () => {
+    const draft = buildCurrentMockSessionDraft();
+    if (!draft) return;
+    saveMockSessionDraft(mockSessionDraftKey, draft);
+    setMockSessionDraft(draft);
+  };
+
+  const clearMockSessionDraft = () => {
+    removeMockSessionDraft(mockSessionDraftKey);
+    setMockSessionDraft(null);
+  };
 
   useEffect(() => {
     if (diagnosticMode !== "free-qr") return;
@@ -6629,6 +7086,72 @@ function UCATQuestionBankSection({
     setTrackingEventCount(trackingEventsRef.current.length);
     setTrackingEventsSnapshot([...trackingEventsRef.current]);
   };
+
+  useEffect(() => {
+    if (!canUseMockSessionDraft || started) {
+      if (!canUseMockSessionDraft) setMockSessionDraft(null);
+      return;
+    }
+
+    const draft = readMockSessionDraft(mockSessionDraftKey);
+    setMockSessionDraft(draft);
+  }, [canUseMockSessionDraft, mockSessionDraftKey, sectionQuestions, started]);
+
+  useEffect(() => {
+    if (!canUseMockSessionDraft || !started || phase !== "practice") return;
+
+    const timeoutId = window.setTimeout(() => {
+      writeCurrentMockSessionDraft();
+    }, 250);
+
+    return () => window.clearTimeout(timeoutId);
+    // The draft writer intentionally captures the latest render state above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    answers,
+    canUseMockSessionDraft,
+    flags,
+    phase,
+    questionIndex,
+    sessionDurationSeconds,
+    sessionStartedAt,
+    sessionTimed,
+    started,
+    timeRemaining,
+    timingSnapshot,
+    trackingEventCount,
+  ]);
+
+  useEffect(() => {
+    if (!canUseMockSessionDraft || !started || phase !== "practice") return;
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      writeCurrentMockSessionDraft();
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+    // The unload handler intentionally captures the latest render state above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    answers,
+    canUseMockSessionDraft,
+    flags,
+    phase,
+    questionIndex,
+    sessionDurationSeconds,
+    sessionStartedAt,
+    sessionTimed,
+    started,
+    timeRemaining,
+    timingSnapshot,
+    trackingEventCount,
+  ]);
 
   const liveSummary = useMemo(() => {
     if (!started || questions.length === 0) return null;
@@ -7289,6 +7812,10 @@ function UCATQuestionBankSection({
   const startPractice = () => {
     if (questionProgressLoading || setupQuestionCount === 0) return;
 
+    if (canUseMockSessionDraft) {
+      clearMockSessionDraft();
+    }
+
     if (trackingModeChoice === "eye") {
       void attentionTracker.startEyeTracking(() => beginPracticeSession("eye"));
       return;
@@ -7303,6 +7830,81 @@ function UCATQuestionBankSection({
     attentionTracker.startPracticeOnly();
     beginPracticeSession("none");
   };
+
+  function continueMockSessionDraft(draft: MockSessionDraft) {
+    const restoredQuestions = getRestoredDraftQuestions(draft);
+    if (restoredQuestions.length === 0) {
+      clearMockSessionDraft();
+      return;
+    }
+
+    const restoredAnswers = toNumberKeyedAnswers(draft.answers ?? {});
+    const restoredFlags = toNumberKeyedFlags(draft.flags ?? {});
+    const startIndex = Math.max(
+      0,
+      Math.min(draft.questionIndex ?? 0, restoredQuestions.length - 1)
+    );
+    const startedAt =
+      typeof draft.startedAt === "number" && draft.startedAt > 0
+        ? draft.startedAt
+        : nowMs();
+    const restoredTrackingMode =
+      draft.trackingMode === "none" ? "none" : "mouse";
+
+    scrollToQuestionTop();
+    attentionTracker.resetTracker();
+    if (restoredTrackingMode === "mouse") {
+      attentionTracker.startMouseTracking();
+    } else {
+      attentionTracker.startPracticeOnly();
+    }
+    setTrackingModeChoice(restoredTrackingMode);
+    setNavigatorOpen(false);
+    setSessionQuestions(restoredQuestions);
+    setAnswers(restoredAnswers);
+    setFlags(restoredFlags);
+    setQuestionIndex(startIndex);
+    setSelected(
+      typeof restoredAnswers[startIndex] === "string"
+        ? (restoredAnswers[startIndex] as UCATOptionKey)
+        : null
+    );
+    setDragOrder(
+      getDragOrder(restoredQuestions[startIndex], restoredAnswers[startIndex])
+    );
+    setRevealed(false);
+    setPhase("practice");
+    phaseRef.current = "practice";
+    setSessionTimed(Boolean(draft.sessionTimed));
+    setSessionDurationSeconds(draft.sessionDurationSeconds || setupTimeSeconds);
+    setTimeRemaining(
+      Math.max(0, draft.timeRemaining || draft.sessionDurationSeconds || setupTimeSeconds)
+    );
+    setMarkedSummary(null);
+    markedSummaryRef.current = null;
+    markedInsightsHistoryActiveRef.current = false;
+    resumedPracticeSessionIdRef.current = null;
+    setSaveState({ status: "idle", message: "Continuing saved mock" });
+    trackingEventsRef.current = Array.isArray(draft.events) ? draft.events : [];
+    setTrackingEventsSnapshot([...trackingEventsRef.current]);
+    questionTimingRef.current =
+      draft.timings && typeof draft.timings === "object" ? draft.timings : {};
+    sessionStartedAtRef.current = startedAt;
+    setSessionStartedAt(startedAt);
+    setTimingSnapshot({ ...questionTimingRef.current });
+    setTrackingEventCount(trackingEventsRef.current.length);
+    setStarted(true);
+    beginQuestionTiming(restoredQuestions[startIndex]);
+    attentionTracker.resetAttempt(nowMs());
+    recordEvent("continue_mock_draft", {
+      section: validSection,
+      diagnosticMode,
+      mockId,
+      mockScope: fixedDiagnosticScope,
+      startQuestion: startIndex + 1,
+      total: restoredQuestions.length,
+    });
+  }
 
   useEffect(() => {
     if (
@@ -7467,6 +8069,9 @@ function UCATQuestionBankSection({
               ? "Start section"
               : "Start diagnostic"
         }
+        savedDraft={mockSessionDraft}
+        onContinueDraft={continueMockSessionDraft}
+        onDiscardDraft={clearMockSessionDraft}
         onStart={startPractice}
       />
     );
@@ -7965,6 +8570,9 @@ function UCATQuestionBankSection({
     setRevealed(true);
     markedSummaryRef.current = summary;
     setMarkedSummary(summary);
+    if (canUseMockSessionDraft) {
+      clearMockSessionDraft();
+    }
     if (!diagnosticMode) {
       setCompletedQuestionIds((current) => {
         const next = new Set(current);
@@ -7996,7 +8604,19 @@ function UCATQuestionBankSection({
     }
     beginQuestionTiming(questions[0]);
     resumedPracticeSessionIdRef.current = null;
-    void persistPracticeSummary(summary, finalEvents, resumedSessionId);
+    const saveSummary = persistPracticeSummary(
+      summary,
+      finalEvents,
+      resumedSessionId
+    );
+
+    if (diagnosticMode && diagnosticMode !== "free-qr") {
+      void saveSummary.then(() => {
+        showMarkedInsights();
+      });
+    } else {
+      void saveSummary;
+    }
   };
 
   const dragItemLookup = isDragQuestion
@@ -8306,6 +8926,13 @@ function UCATQuestionBankSection({
     );
   }
 
+  const attemptBackHref = diagnosticMode
+    ? backHref ?? "/phloemai/diagnostic"
+    : "/phloemai/practice";
+  const attemptBackLabel = diagnosticMode
+    ? backLabel ?? "Back to diagnostics"
+    : "Back to practice";
+
   return (
     <div
       ref={appRootRef}
@@ -8329,8 +8956,19 @@ function UCATQuestionBankSection({
       <header className="flex min-h-14 items-center justify-between bg-[#0078a8] px-3 py-2 text-white">
         <div className="flex items-center gap-3">
           <Link
-            href={diagnosticMode ? backHref ?? "/phloemai/diagnostic" : "/phloemai/practice"}
-            aria-label={diagnosticMode ? backLabel ?? "Back to diagnostics" : "Back to practice"}
+            href={attemptBackHref}
+            aria-label={attemptBackLabel}
+            onClick={(event) => {
+              if (
+                canUseMockSessionDraft &&
+                started &&
+                phase === "practice"
+              ) {
+                event.preventDefault();
+                writeCurrentMockSessionDraft();
+                setPendingExitHref(attemptBackHref);
+              }
+            }}
             className="rounded-sm p-1 hover:bg-white/15"
           >
             <ArrowLeft className="h-5 w-5" aria-hidden="true" />
@@ -8371,6 +9009,37 @@ function UCATQuestionBankSection({
           </div>
         </div>
       </header>
+
+      {pendingExitHref && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4">
+          <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-5 text-slate-950 shadow-2xl">
+            <h2 className="text-lg font-black">Exit this mock?</h2>
+            <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
+              Your unfinished mock has been saved on this browser. You can
+              continue it from the mock library or this section page.
+            </p>
+            <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setPendingExitHref(null)}
+                className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-slate-700 hover:bg-slate-50"
+              >
+                Keep working
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  writeCurrentMockSessionDraft();
+                  window.location.assign(pendingExitHref);
+                }}
+                className="inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
+              >
+                Save and exit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex min-h-9 items-center justify-between gap-3 border-b border-slate-400 bg-[#477dbc] px-2 text-white">
         <div className="flex items-center gap-4">
