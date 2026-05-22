@@ -8,7 +8,7 @@ const siteUrl =
       : "https://www.medwithrish.com";
 
 const baseUrl = siteUrl.replace(/\/$/, "");
-const lastModified = new Date("2026-05-14T00:00:00.000Z");
+const lastModified = new Date("2026-05-22T00:00:00.000Z");
 
 const publicRoutes: Array<{
   path: string;
