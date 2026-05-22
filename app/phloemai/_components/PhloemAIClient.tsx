@@ -7068,18 +7068,23 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               Go Premium for full mocks, sprints, deeper analytics and a daily
               AI diagnostic credit.
             </p>
-            <button
-              type="button"
-              onClick={handleSubscriptionAction}
-              disabled={checkoutLoading}
-              className="mt-5 h-10 w-full rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
-            >
-              {checkoutLoading
-                ? "Opening..."
-                : plan === "Premium"
-                  ? "Manage Billing"
-                  : "Upgrade Now"}
-            </button>
+            {plan === "Premium" ? (
+              <button
+                type="button"
+                onClick={handleSubscriptionAction}
+                disabled={checkoutLoading}
+                className="mt-5 h-10 w-full rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
+              >
+                {checkoutLoading ? "Opening..." : "Manage Billing"}
+              </button>
+            ) : (
+              <Link
+                href="/phloemai#pricing"
+                className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
+              >
+                View Plans
+              </Link>
+            )}
             {checkoutError && (
               <p className="mt-3 text-xs font-bold leading-5 text-red-600">
                 {checkoutError}
@@ -7091,13 +7096,22 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
             <p className="text-sm font-medium text-slate-500">Current plan</p>
             <div className="mt-2 flex items-center justify-between">
               <span className="text-sm font-black">{plan}</span>
-              <button
-                type="button"
-                onClick={handleSubscriptionAction}
-                className="text-sm font-black text-blue-600 hover:text-blue-700"
-              >
-                {plan === "Premium" ? "Manage" : "View plans"}
-              </button>
+              {plan === "Premium" ? (
+                <button
+                  type="button"
+                  onClick={handleSubscriptionAction}
+                  className="text-sm font-black text-blue-600 hover:text-blue-700"
+                >
+                  Manage
+                </button>
+              ) : (
+                <Link
+                  href="/phloemai#pricing"
+                  className="text-sm font-black text-blue-600 hover:text-blue-700"
+                >
+                  View plans
+                </Link>
+              )}
             </div>
           </div>
 
@@ -7195,18 +7209,26 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                     >
                       Account settings
                     </Link>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAccountMenuOpen(false);
-                        void handleSubscriptionAction();
-                      }}
-                      className="w-full rounded-lg px-3 py-2 text-left text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
-                    >
-                      {plan === "Premium"
-                        ? "Manage subscription"
-                        : "Upgrade subscription"}
-                    </button>
+                    {plan === "Premium" ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAccountMenuOpen(false);
+                          void handleSubscriptionAction();
+                        }}
+                        className="w-full rounded-lg px-3 py-2 text-left text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                      >
+                        Manage subscription
+                      </button>
+                    ) : (
+                      <Link
+                        href="/phloemai#pricing"
+                        onClick={() => setAccountMenuOpen(false)}
+                        className="block rounded-lg px-3 py-2 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                      >
+                        View plans
+                      </Link>
+                    )}
                     <Link
                       href="/phloemai/question-bank"
                       onClick={() => setAccountMenuOpen(false)}
@@ -7655,7 +7677,7 @@ function RedesignedTutorHero() {
       status: "Available Now",
       text: "Full-length practice, AI diagnosis, attention tracking, and personalised coaching.",
       icon: Brain,
-      action: "Launch UCAT Tutor",
+      action: "Launch UCAT Platform",
       href: "/phloemai/dashboard",
       active: true,
     },
@@ -7772,7 +7794,7 @@ function RedesignedTutorHero() {
                   href="/phloemai/dashboard"
                   className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
                 >
-                  Launch UCAT Tutor
+                  Launch UCAT Platform
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <Link
@@ -8017,7 +8039,7 @@ function RedesignedTutorHero() {
           </div>
         </div>
 
-        <div className="mt-7 text-center">
+        <div id="pricing" className="mt-7 scroll-mt-24 text-center">
           <h2 className="text-2xl font-black text-slate-950">
             Start with a free diagnostic.
           </h2>
@@ -8027,7 +8049,7 @@ function RedesignedTutorHero() {
         </div>
 
         <div className="mx-auto mt-5 grid max-w-4xl gap-5 lg:grid-cols-2">
-          <div className="rounded-2xl border border-blue-500 bg-white p-5 shadow-sm">
+          <div className="flex flex-col rounded-2xl border border-blue-500 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between gap-4">
               <h3 className="text-base font-black text-slate-950">Free Diagnostic</h3>
               <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">
@@ -8038,7 +8060,7 @@ function RedesignedTutorHero() {
             <p className="mt-1 text-xs font-semibold text-slate-500">
               No card needed.
             </p>
-            <ul className="mt-4 space-y-2 text-sm text-slate-700">
+            <ul className="mt-4 flex-1 space-y-2 pb-5 text-sm text-slate-700">
               {freeFeatures.map((item) => (
                 <li key={item} className="flex gap-2">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
@@ -8048,14 +8070,14 @@ function RedesignedTutorHero() {
             </ul>
             <Link
               href={hasLandingDiagnosticReport ? "/phloemai/report" : "/phloemai/dashboard"}
-              className="mt-5 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white transition-colors hover:bg-blue-700"
+              className="mt-auto inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white transition-colors hover:bg-blue-700"
             >
               {hasLandingDiagnosticReport ? "View Report" : "Start Free Diagnostic"}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
 
-          <div className="rounded-2xl border border-violet-300 bg-white p-5 shadow-sm">
+          <div className="flex flex-col rounded-2xl border border-violet-300 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between gap-4">
               <h3 className="text-base font-black text-slate-950">PhloemAI Premium</h3>
               <span className="rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
@@ -8069,7 +8091,7 @@ function RedesignedTutorHero() {
             <p className="mt-2 w-fit rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
               Best for full UCAT prep
             </p>
-            <ul className="mt-4 space-y-2 text-sm text-slate-700">
+            <ul className="mt-4 flex-1 space-y-2 pb-5 text-sm text-slate-700">
               {premiumFeatures.map((item) => (
                 <li key={item} className="flex gap-2">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-violet-600" aria-hidden="true" />
@@ -8081,7 +8103,7 @@ function RedesignedTutorHero() {
               type="button"
               onClick={() => void handlePremiumCheckout()}
               disabled={premiumCheckoutLoading}
-              className="mt-5 h-10 w-full rounded-lg bg-violet-600 text-sm font-bold text-white transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-300"
+              className="mt-auto h-10 w-full rounded-lg bg-violet-600 text-sm font-bold text-white transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-300"
             >
               {premiumCheckoutLoading ? "Opening checkout..." : "Upgrade to Premium"}
             </button>
@@ -8286,7 +8308,7 @@ function TutorHero() {
               href="/phloemai/dashboard"
               className="block w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-xs hover:border-slate-400 hover:text-slate-900 transition-colors cursor-pointer text-center"
             >
-              Launch UCAT Tutor
+              Launch UCAT Platform
             </Link>
           </div>
         </div>
