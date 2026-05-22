@@ -6167,10 +6167,12 @@ function DashboardFeedbackPanel({
   latestDiagnostic,
   practiceStats,
   isPremium,
+  className = "",
 }: {
   latestDiagnostic: DashboardDiagnostic | null;
   practiceStats: PracticeStats;
   isPremium: boolean;
+  className?: string;
 }) {
   const hasDiagnostic = Boolean(latestDiagnostic);
   const aiText = latestDiagnostic?.aiFeedbackText ?? null;
@@ -6203,7 +6205,7 @@ function DashboardFeedbackPanel({
   const fixes = latestDiagnostic?.studyPlanTasks ?? [];
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <section className={`rounded-xl border border-slate-200 bg-white p-6 shadow-sm ${className}`}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-black uppercase tracking-wider text-blue-600">
@@ -6994,6 +6996,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   const dashboardStudyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
   const dashboardDiagnosticFeaturesUnlocked =
     plan === "Premium" || isFreeQrDiagnostic(latestDiagnostic);
+  const dashboardFeedbackExpanded = Boolean(latestDiagnostic?.aiFeedbackText);
   const visibleDashboardStudyPlanTasks = dashboardStudyPlanTasks.filter(
     (task) => !removedDashboardTaskIds.has(task.id)
   );
@@ -7314,6 +7317,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               latestDiagnostic={latestDiagnostic}
               practiceStats={practiceStats}
               isPremium={dashboardDiagnosticFeaturesUnlocked}
+              className={dashboardFeedbackExpanded ? "lg:col-span-2" : ""}
             />
 
             <ClientPremiumGate
@@ -7323,9 +7327,9 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               title="Unlock your personalised study plan"
               description="Premium turns saved diagnostic fixes into tasks on your dashboard."
               featureLabel="Premium study plan"
-              className="self-start"
+              className={dashboardFeedbackExpanded ? "lg:col-span-2" : "self-start"}
             >
-            <section className="self-start rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <section className={`self-start rounded-xl border border-slate-200 bg-white p-5 shadow-sm ${dashboardFeedbackExpanded ? "lg:col-span-2" : ""}`}>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <h2 className="text-sm font-black uppercase tracking-wide">
