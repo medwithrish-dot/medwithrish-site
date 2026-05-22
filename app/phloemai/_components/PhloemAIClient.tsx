@@ -1171,6 +1171,8 @@ type DashboardDiagnosticTask = {
 type DashboardDiagnostic = {
   id: string;
   section: UCATSectionCode;
+  source: string | null;
+  diagnosticMode: string | null;
   accuracy: number;
   issues: DashboardDiagnosticIssue[];
   strengths: string[];
@@ -1236,10 +1238,14 @@ function normaliseDashboardDiagnostic(
       : typeof metadata.aiFeedbackStatus === "string"
         ? metadata.aiFeedbackStatus
         : null;
+  const diagnosticMode =
+    typeof metadata.diagnosticMode === "string" ? metadata.diagnosticMode : null;
 
   return {
     id: row.id ?? row.completed_at ?? `diagnostic-${index}`,
     section,
+    source: typeof row.source === "string" ? row.source : null,
+    diagnosticMode,
     accuracy: typeof row.accuracy === "number" ? row.accuracy : 0,
     issues,
     strengths,
@@ -1248,6 +1254,15 @@ function normaliseDashboardDiagnostic(
     aiFeedbackStatus,
     completedAt: typeof row.completed_at === "string" ? row.completed_at : null,
   };
+}
+
+const FREE_QR_DIAGNOSTIC_SOURCE = "free_qr_diagnostic";
+
+function isFreeQrDiagnostic(diagnostic: DashboardDiagnostic | null | undefined) {
+  return (
+    diagnostic?.source === FREE_QR_DIAGNOSTIC_SOURCE ||
+    diagnostic?.diagnosticMode === "free-qr"
+  );
 }
 
 const dashboardPageMeta: Record<
@@ -2549,6 +2564,8 @@ function DiagnosticContent({
 }) {
   const [creditNow, setCreditNow] = useState(() => Date.now());
   const hasDiagnostic = Boolean(latestDiagnostic);
+  const diagnosticFeaturesUnlocked =
+    isPremium || isFreeQrDiagnostic(latestDiagnostic);
   const creditDisplay = getAiDiagnosticCreditDisplay({
     plan,
     diagnosticCredits,
@@ -2636,7 +2653,7 @@ function DiagnosticContent({
                   {(hasDiagnostic
                     ? [
                         `${latestDiagnostic?.section ?? "QR"} diagnostic saved`,
-                        isPremium
+                        diagnosticFeaturesUnlocked
                           ? "Report and study tasks ready"
                           : "Report ready; study plan locked",
                         latestDiagnostic?.aiFeedbackText
@@ -5215,6 +5232,8 @@ function ReportContent({
     Boolean(selectedDiagnostic?.id && latestDiagnostic?.id) &&
     selectedDiagnostic?.id === latestDiagnostic?.id;
   const hasDiagnostic = Boolean(selectedDiagnostic);
+  const reportFeaturesUnlocked =
+    isPremium || isFreeQrDiagnostic(selectedDiagnostic);
   const filterMatches =
     reportFilter === "All" || selectedDiagnostic?.section === reportFilter;
   const diagnosticIssueCards =
@@ -5299,10 +5318,10 @@ function ReportContent({
       : "Showing the issue labels, causes, supporting evidence and study tasks saved from the selected previous diagnostic."
     : "Complete a diagnostic to replace generic guidance with your saved issue scan.";
 
-  const recommendedTaskHref = isPremium
+  const recommendedTaskHref = reportFeaturesUnlocked
     ? recommendedTask?.href ?? "/phloemai/practice"
     : "/phloemai/account";
-  const recommendedTaskText = !isPremium
+  const recommendedTaskText = !reportFeaturesUnlocked
     ? "Premium unlocks the personalised study plan tasks."
     : recommendedTask
       ? recommendedTask.fix
@@ -5460,7 +5479,7 @@ function ReportContent({
             <ReportIssueSignalCard
               key={issue.id}
               issue={issue}
-              isPremium={isPremium}
+              isPremium={reportFeaturesUnlocked}
               hasSignals
               checkoutLoading={checkoutLoading}
               onUpgrade={onUpgrade}
@@ -5471,7 +5490,7 @@ function ReportContent({
 
       <div className="grid gap-5 lg:grid-cols-[0.8fr_1fr]">
         <ClientPremiumGate
-          isPremium={isPremium}
+          isPremium={reportFeaturesUnlocked}
           checkoutLoading={checkoutLoading}
           onUpgrade={onUpgrade}
           title="Unlock personalised study plan"
@@ -5615,7 +5634,7 @@ function ReportContent({
           href={recommendedTaskHref}
           className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white hover:bg-blue-700"
         >
-          {!isPremium
+          {!reportFeaturesUnlocked
             ? "Upgrade"
             : recommendedTask
               ? "Start recommended task"
@@ -5801,6 +5820,10 @@ function DashboardSubpageContent({
   onUpgrade: () => void;
   onLogout: () => void;
 }) {
+  const freeDiagnosticFeaturesUnlocked = isFreeQrDiagnostic(latestDiagnostic);
+  const diagnosticStudyPlanUnlocked =
+    isPremium || freeDiagnosticFeaturesUnlocked;
+
   if (view === "diagnostic") {
     return (
       <DiagnosticContent
@@ -5824,7 +5847,7 @@ function DashboardSubpageContent({
         completedDashboardTaskIds={completedDashboardTaskIds}
         removedDashboardTaskIds={removedDashboardTaskIds}
         recentPracticeSets={recentPracticeSets}
-        isPremium={isPremium}
+        isPremium={diagnosticStudyPlanUnlocked}
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
       />
@@ -5836,7 +5859,7 @@ function DashboardSubpageContent({
   if (view === "progress") {
     return (
       <ProgressContent
-        isPremium={isPremium}
+        isPremium={diagnosticStudyPlanUnlocked}
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
         practiceStats={practiceStats}
@@ -6921,6 +6944,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       ? dashboardSectionAccuracyScores
       : dashboardSectionProgressScores;
   const dashboardStudyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
+  const dashboardDiagnosticFeaturesUnlocked =
+    plan === "Premium" || isFreeQrDiagnostic(latestDiagnostic);
   const visibleDashboardStudyPlanTasks = dashboardStudyPlanTasks.filter(
     (task) => !removedDashboardTaskIds.has(task.id)
   );
@@ -7218,11 +7243,11 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
             <DashboardFeedbackPanel
               latestDiagnostic={latestDiagnostic}
               practiceStats={practiceStats}
-              isPremium={plan === "Premium"}
+              isPremium={dashboardDiagnosticFeaturesUnlocked}
             />
 
             <ClientPremiumGate
-              isPremium={plan === "Premium"}
+              isPremium={dashboardDiagnosticFeaturesUnlocked}
               checkoutLoading={checkoutLoading}
               onUpgrade={handleSubscriptionAction}
               title="Unlock your personalised study plan"
@@ -7611,8 +7636,8 @@ function RedesignedTutorHero() {
     "Question bank practice",
     "Skills trainers",
     "Free QR diagnostic",
+    "Full free diagnostic report",
     "1 lifetime AI diagnostic credit",
-    "Basic score and issue labels",
   ];
 
   const premiumFeatures = [

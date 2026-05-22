@@ -6170,7 +6170,7 @@ function MarkedReviewScreen({
   const insights = buildMarkedSessionInsights(summary);
   const diagnosticScore = getDiagnosticSectionScore(summary);
   const isDiagnostic = Boolean(diagnosticMode);
-  const analysisUnlocked = isPremium;
+  const analysisUnlocked = isPremium || diagnosticMode === "free-qr";
   const [creditNow, setCreditNow] = useState(() => Date.now());
   const aiCreditDisplay = getAiCreditDisplay(aiFeedbackState, creditNow);
   const aiCreditLabel =
