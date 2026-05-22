@@ -2553,11 +2553,13 @@ function ReportIssueSignalCard({
 function DiagnosticContent({
   isPremium,
   latestDiagnostic,
+  diagnosticHistory,
   plan,
   diagnosticCredits,
   aiDiagnosticLastUsedAt,
 }: PremiumGateProps & {
   latestDiagnostic: DashboardDiagnostic | null;
+  diagnosticHistory: DashboardDiagnostic[];
   plan: string;
   diagnosticCredits: number;
   aiDiagnosticLastUsedAt?: string | null;
@@ -2598,14 +2600,10 @@ function DiagnosticContent({
       : isPremium
         ? "Refresh pending"
         : "Upgrade for a daily refresh";
-  const diagnosticHistory: Array<{
-    code: string;
-    date: string;
-    issue: string;
-    section: string;
-    score: string;
-    scoreClass: string;
-  }> = [];
+  const latestReportHref = latestDiagnostic
+    ? `/phloemai/report?attempt=${encodeURIComponent(latestDiagnostic.id)}`
+    : "/phloemai/report";
+  const recentDiagnostics = diagnosticHistory.slice(0, 6);
 
   const timingPrompts = [
     [
@@ -2699,7 +2697,7 @@ function DiagnosticContent({
                   ))}
                 </ul>
                 <Link
-                  href={hasDiagnostic ? "/phloemai/report" : "/phloemai/question-bank/qr?diagnostic=free-qr"}
+                  href={hasDiagnostic ? latestReportHref : "/phloemai/question-bank/qr?diagnostic=free-qr"}
                   className="relative mt-auto flex h-11 items-center justify-center gap-3 rounded-lg bg-white px-5 text-sm font-black text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50"
                 >
                   {hasDiagnostic ? "View report" : "Start free diagnostic"}
@@ -2746,24 +2744,63 @@ function DiagnosticContent({
               <h2 className="text-xs font-black uppercase tracking-wide">
                 Latest diagnostic
               </h2>
-              <span className="text-xs font-black text-slate-500">Empty</span>
+              <span className={`text-xs font-black ${hasDiagnostic ? "text-emerald-600" : "text-slate-500"}`}>
+                {hasDiagnostic ? "Saved" : "Empty"}
+              </span>
             </div>
-            <div className="mt-7 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4">
-              <h3 className="max-w-sm text-xl font-black leading-tight">
-                No diagnostic completed yet
-              </h3>
-              <p className="mt-3 max-w-sm text-sm font-semibold leading-6 text-slate-600">
-                Mark a practice set or run a diagnostic to populate this panel with real data.
-              </p>
-            </div>
+            {hasDiagnostic ? (
+              <div className="mt-7 rounded-xl border border-emerald-100 bg-emerald-50/60 p-4">
+                <h3 className="max-w-sm text-xl font-black leading-tight">
+                  {latestDiagnostic?.section ?? "UCAT"} diagnostic report ready
+                </h3>
+                <p className="mt-3 max-w-sm text-sm font-semibold leading-6 text-emerald-900">
+                  Open the saved report to review issues, study tasks and AI
+                  feedback status.
+                </p>
+              </div>
+            ) : (
+              <div className="mt-7 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4">
+                <h3 className="max-w-sm text-xl font-black leading-tight">
+                  No diagnostic completed yet
+                </h3>
+                <p className="mt-3 max-w-sm text-sm font-semibold leading-6 text-slate-600">
+                  Mark a practice set or run a diagnostic to populate this panel with real data.
+                </p>
+              </div>
+            )}
             <p className="mt-4 max-w-sm text-sm font-semibold leading-6 text-slate-600">
-              AI feedback will stay empty until there is saved practice or diagnostic data.
+              {hasDiagnostic
+                ? latestDiagnostic?.aiFeedbackText
+                  ? "AI feedback is saved with this diagnostic."
+                  : "Open the report to generate AI feedback for this diagnostic."
+                : "AI feedback will stay empty until there is saved practice or diagnostic data."}
             </p>
             <div className="mt-6 grid gap-2 sm:grid-cols-3 xl:grid-cols-3">
               {([
-                ["Status", "No data", Activity, "text-slate-500"],
-                ["Last updated", "Never", Clock3, "text-slate-500"],
-                ["Overall rank", "-", BarChart3, "text-slate-500"],
+                [
+                  "Status",
+                  hasDiagnostic
+                    ? latestDiagnostic?.aiFeedbackText
+                      ? "AI ready"
+                      : "Report ready"
+                    : "No data",
+                  Activity,
+                  hasDiagnostic ? "text-emerald-600" : "text-slate-500",
+                ],
+                [
+                  "Last updated",
+                  hasDiagnostic
+                    ? formatDiagnosticReportDate(latestDiagnostic?.completedAt ?? null)
+                    : "Never",
+                  Clock3,
+                  hasDiagnostic ? "text-blue-600" : "text-slate-500",
+                ],
+                [
+                  "Accuracy",
+                  hasDiagnostic ? `${latestDiagnostic?.accuracy ?? 0}%` : "-",
+                  BarChart3,
+                  hasDiagnostic ? "text-violet-600" : "text-slate-500",
+                ],
               ] as const).map(([label, value, Icon, colorClass]) => (
                 <div
                   key={label}
@@ -2787,10 +2824,10 @@ function DiagnosticContent({
               ))}
             </div>
             <Link
-              href="/phloemai/report"
+              href={latestReportHref}
               className="mt-6 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
             >
-              View full report
+              {hasDiagnostic ? "Open latest report" : "View full report"}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </aside>
@@ -2917,7 +2954,7 @@ function DiagnosticContent({
             </Link>
           </div>
           <div className="mt-4 overflow-hidden rounded-xl border border-slate-100">
-            {diagnosticHistory.length === 0 ? (
+            {recentDiagnostics.length === 0 ? (
               <div className="px-4 py-8 text-center">
                 <p className="text-sm font-black text-slate-700">
                   No diagnostics recorded yet.
@@ -2927,36 +2964,49 @@ function DiagnosticContent({
                 </p>
               </div>
             ) : (
-            diagnosticHistory.map((item) => {
-              const style = sectionStyle(item.code);
+            recentDiagnostics.map((item, index) => {
+              const style = sectionStyle(item.section);
+              const reportHref = `/phloemai/report?attempt=${encodeURIComponent(item.id)}`;
+              const aiReady = Boolean(item.aiFeedbackText);
               return (
                 <div
-                  key={item.date}
-                  className="grid gap-4 border-b border-slate-100 px-3 py-3 last:border-b-0 sm:grid-cols-[1fr_auto_auto] sm:items-center"
+                  key={item.id}
+                  className="grid gap-4 border-b border-slate-100 px-3 py-3 last:border-b-0 sm:grid-cols-[1fr_auto_auto_auto] sm:items-center"
                 >
                   <div className="flex items-center gap-3">
                     <span
                       className={`rounded-full px-2.5 py-2 text-xs font-black ${style.badgeClass}`}
                     >
-                      {item.code}
+                      {item.section}
                     </span>
                     <div>
-                      <p className="text-sm font-black">{item.issue}</p>
+                      <p className="text-sm font-black">
+                        {index === 0 ? "Latest diagnostic" : `Previous diagnostic ${index}`}
+                      </p>
                       <p className="mt-1 text-xs font-bold text-slate-500">
-                        {item.date} - {item.section}
+                        {formatDiagnosticReportDate(item.completedAt)}
                       </p>
                     </div>
                   </div>
                   <span
-                    className={`w-fit rounded-full px-3 py-1 text-xs font-black ${item.scoreClass}`}
+                    className={`w-fit rounded-full px-3 py-1 text-xs font-black ${
+                      aiReady
+                        ? "bg-emerald-50 text-emerald-700"
+                        : item.aiFeedbackStatus === "queued_no_api_key"
+                          ? "bg-amber-50 text-amber-700"
+                          : "bg-violet-50 text-violet-700"
+                    }`}
                   >
-                    {item.score}
+                    {aiReady ? "AI ready" : item.aiFeedbackStatus === "queued_no_api_key" ? "Queued" : "AI needed"}
+                  </span>
+                  <span className="w-fit rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-600">
+                    {item.accuracy}%
                   </span>
                   <Link
-                    href="/phloemai/report"
+                    href={reportHref}
                     className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
                   >
-                    View report
+                    Open report
                   </Link>
                 </div>
               );
@@ -5266,16 +5316,36 @@ function ReportContent({
   removedDashboardTaskIds: Set<string>;
 }) {
   const [reportFilter, setReportFilter] = useState<ReportSectionFilter>("All");
-  const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
-  const reportHistory =
-    diagnosticHistory.length > 0
-      ? diagnosticHistory
-      : latestDiagnostic
-        ? [latestDiagnostic]
-        : [];
+  const [selectedReportId, setSelectedReportId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    const params = new URLSearchParams(window.location.search);
+    return params.get("attempt") ?? params.get("report");
+  });
+  const [generatedFeedbackById, setGeneratedFeedbackById] = useState<
+    Record<string, string>
+  >({});
+  const [aiRequestingReportId, setAiRequestingReportId] = useState<string | null>(
+    null
+  );
+  const [aiFeedbackNotice, setAiFeedbackNotice] = useState<string | null>(null);
+  const [aiFeedbackError, setAiFeedbackError] = useState<string | null>(null);
+  const reportHistory = useMemo(
+    () =>
+      diagnosticHistory.length > 0
+        ? diagnosticHistory
+        : latestDiagnostic
+          ? [latestDiagnostic]
+          : [],
+    [diagnosticHistory, latestDiagnostic]
+  );
   const selectedDiagnostic =
     reportHistory.find((report) => report.id === selectedReportId) ??
     latestDiagnostic;
+  const selectedAiFeedbackText =
+    selectedDiagnostic
+      ? generatedFeedbackById[selectedDiagnostic.id] ??
+        selectedDiagnostic.aiFeedbackText
+      : null;
   const selectedReportIsLatest =
     Boolean(selectedDiagnostic?.id && latestDiagnostic?.id) &&
     selectedDiagnostic?.id === latestDiagnostic?.id;
@@ -5298,7 +5368,7 @@ function ReportContent({
   const recommendedTask = studyPlanTasks[0];
   const completedCurrentPlan = allStudyPlanTasks.length > 0 && !recommendedTask;
   const feedbackStatus =
-    selectedDiagnostic?.aiFeedbackText
+    selectedAiFeedbackText
       ? "Ready"
       : selectedDiagnostic?.aiFeedbackStatus === "queued_no_api_key"
         ? "Queued"
@@ -5307,7 +5377,7 @@ function ReportContent({
           : "Waiting";
 
   const feedbackHelper =
-    selectedDiagnostic?.aiFeedbackText
+    selectedAiFeedbackText
       ? selectedReportIsLatest
         ? "Generated from your latest diagnostic."
         : "Generated from the selected previous diagnostic."
@@ -5355,10 +5425,11 @@ function ReportContent({
     : "/phloemai/diagnostic";
   const emptyIssueActionLabel = hasDiagnostic ? "Open practice" : "Run diagnostic";
 
-  const noFeedbackActionHref = hasDiagnostic
-    ? "/phloemai/diagnostic"
-    : "/phloemai/diagnostic";
-  const noFeedbackActionLabel = hasDiagnostic ? "Open diagnostic" : "Run diagnostic";
+  const noFeedbackActionLabel = hasDiagnostic
+    ? aiRequestingReportId === selectedDiagnostic?.id
+      ? "Generating..."
+      : "Generate AI feedback"
+    : "Run diagnostic";
 
   const reportIssueIntro = hasDiagnostic
     ? selectedReportIsLatest
@@ -5382,13 +5453,68 @@ function ReportContent({
       ? "all sections"
       : `${reportFilter} only`;
 
-  const hasAiFeedback = Boolean(selectedDiagnostic?.aiFeedbackText);
+  const hasAiFeedback = Boolean(selectedAiFeedbackText);
 
   const feedbackBadgeClass = hasAiFeedback
     ? "bg-emerald-50 text-emerald-700"
     : "bg-violet-50 text-violet-700";
 
   const issueCardsToRender = diagnosticIssueCards;
+
+  const selectReport = (reportId: string) => {
+    setSelectedReportId(reportId);
+    setAiFeedbackNotice(null);
+    setAiFeedbackError(null);
+    window.history.replaceState(
+      null,
+      "",
+      `/phloemai/report?attempt=${encodeURIComponent(reportId)}`
+    );
+  };
+
+  const requestSelectedReportAiFeedback = async () => {
+    if (!selectedDiagnostic?.id) return;
+
+    setAiRequestingReportId(selectedDiagnostic.id);
+    setAiFeedbackNotice(null);
+    setAiFeedbackError(null);
+
+    try {
+      const response = await fetch("/api/ai/diagnostic-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          attemptId: selectedDiagnostic.id,
+          section: selectedDiagnostic.section,
+          accuracy: selectedDiagnostic.accuracy,
+          issues: selectedDiagnostic.issues,
+          strengths: selectedDiagnostic.strengths,
+        }),
+      });
+      const payload = (await response.json()) as {
+        feedback?: string;
+        error?: string;
+      };
+
+      if (!response.ok || !payload.feedback) {
+        throw new Error(payload.error ?? "AI feedback could not be generated.");
+      }
+
+      setGeneratedFeedbackById((current) => ({
+        ...current,
+        [selectedDiagnostic.id]: payload.feedback ?? "",
+      }));
+      setAiFeedbackNotice("AI feedback generated and saved to this report.");
+    } catch (error) {
+      setAiFeedbackError(
+        error instanceof Error
+          ? error.message
+          : "AI feedback could not be generated."
+      );
+    } finally {
+      setAiRequestingReportId(null);
+    }
+  };
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
@@ -5456,9 +5582,9 @@ function ReportContent({
             {feedbackStatus}
           </span>
         </div>
-        {selectedDiagnostic?.aiFeedbackText ? (
+        {selectedAiFeedbackText ? (
           <ExpandableAiFeedback
-            text={selectedDiagnostic.aiFeedbackText}
+            text={selectedAiFeedbackText}
             className="mt-4 text-sm font-semibold leading-7 text-slate-700"
             paragraphClassName="whitespace-pre-wrap"
             buttonClassName="mt-4 text-sm font-black text-blue-600 hover:text-blue-700"
@@ -5466,16 +5592,40 @@ function ReportContent({
         ) : (
           <div className="mt-4 flex flex-col gap-3 rounded-xl border border-dashed border-violet-100 bg-violet-50/50 p-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm font-semibold leading-6 text-slate-600">
-              The generated feedback will appear here above the issue scan.
+              {hasDiagnostic
+                ? "Generate AI feedback for this saved diagnostic. If feedback already exists, it will reload here."
+                : "The generated feedback will appear here above the issue scan."}
             </p>
-            <Link
-              href={noFeedbackActionHref}
-              className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
-            >
-              {noFeedbackActionLabel}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+            {hasDiagnostic ? (
+              <button
+                type="button"
+                onClick={() => void requestSelectedReportAiFeedback()}
+                disabled={aiRequestingReportId === selectedDiagnostic?.id}
+                className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+              >
+                {noFeedbackActionLabel}
+                <Sparkles className="h-4 w-4" aria-hidden="true" />
+              </button>
+            ) : (
+              <Link
+                href="/phloemai/diagnostic"
+                className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
+              >
+                {noFeedbackActionLabel}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            )}
           </div>
+        )}
+        {aiFeedbackNotice && (
+          <p className="mt-3 rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700">
+            {aiFeedbackNotice}
+          </p>
+        )}
+        {aiFeedbackError && (
+          <p className="mt-3 rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-xs font-black text-red-700">
+            {aiFeedbackError}
+          </p>
         )}
       </section>
 
@@ -5636,11 +5786,14 @@ function ReportContent({
             ) : (
               reportHistory.map((report, index) => {
                 const active = report.id === selectedDiagnostic?.id;
+                const reportAiReady = Boolean(
+                  generatedFeedbackById[report.id] ?? report.aiFeedbackText
+                );
                 return (
                   <button
                     key={report.id}
                     type="button"
-                    onClick={() => setSelectedReportId(report.id)}
+                    onClick={() => selectReport(report.id)}
                     aria-pressed={active}
                     className={`grid w-full gap-3 border-b border-slate-100 px-4 py-3 text-left transition-colors last:border-b-0 sm:grid-cols-[1fr_90px_86px] sm:items-center ${
                       active
@@ -5657,7 +5810,9 @@ function ReportContent({
                       </p>
                     </div>
                     <span className="text-xs font-black">{report.section}</span>
-                    <span className="text-xs font-black">{report.accuracy}%</span>
+                    <span className="text-xs font-black">
+                      {reportAiReady ? "AI ready" : `${report.accuracy}%`}
+                    </span>
                   </button>
                 );
               })
@@ -5879,6 +6034,7 @@ function DashboardSubpageContent({
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
         latestDiagnostic={latestDiagnostic}
+        diagnosticHistory={diagnosticHistory}
         plan={plan}
         diagnosticCredits={diagnosticCredits}
         aiDiagnosticLastUsedAt={aiDiagnosticLastUsedAt}
