@@ -2572,6 +2572,32 @@ function DiagnosticContent({
     lastUsedAt: aiDiagnosticLastUsedAt,
     now: creditNow,
   });
+  const creditIsCoolingDown = creditDisplay.status.startsWith("Available in");
+  const creditIsAvailable = creditDisplay.status === "Available";
+  const creditCtaHref =
+    !isPremium && diagnosticCredits <= 0
+      ? "/phloemai#pricing"
+      : hasDiagnostic
+        ? "/phloemai/report"
+        : "/phloemai/question-bank/qr?diagnostic=free-qr";
+  const creditCtaLabel =
+    !isPremium && diagnosticCredits <= 0
+      ? "Upgrade for daily credits"
+      : hasDiagnostic
+        ? "Open AI report"
+        : "Start diagnostic";
+  const creditStatusClass = creditIsAvailable
+    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+    : creditIsCoolingDown
+      ? "border-amber-200 bg-amber-50 text-amber-700"
+      : "border-slate-200 bg-slate-100 text-slate-600";
+  const creditTimerText = creditIsCoolingDown
+    ? creditDisplay.status
+    : creditIsAvailable
+      ? "Available"
+      : isPremium
+        ? "Refresh pending"
+        : "Upgrade for a daily refresh";
   const diagnosticHistory: Array<{
     code: string;
     date: string;
@@ -2803,55 +2829,77 @@ function DiagnosticContent({
           );
         })}
 
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="grid gap-4 sm:grid-cols-[1fr_190px] sm:items-center">
+        <section className="overflow-hidden rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-blue-50 shadow-sm">
+          <div className="grid h-full gap-4 p-4 sm:grid-cols-[1fr_190px] sm:items-center">
             <div className="flex gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
                 <BadgeCheck className="h-6 w-6" aria-hidden="true" />
               </div>
               <div>
-                <h2 className="text-sm font-black">Your credits</h2>
-                <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
-                  Use credits to run free diagnostics and daily check-ins.
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-sm font-black">AI diagnostic credit</h2>
+                  <span className={`rounded-full border px-2.5 py-1 text-[11px] font-black ${creditStatusClass}`}>
+                    {creditIsAvailable ? "Ready now" : creditDisplay.status}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs font-bold leading-5 text-slate-600">
+                  Turn a saved diagnostic into a written AI report with specific
+                  fixes, issue causes and next tasks.
                 </p>
-                <Link
-                  href="/phloemai/account"
-                  className="mt-4 inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Link
+                    href={creditCtaHref}
+                    className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700"
+                  >
+                    {creditCtaLabel}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                  <Link
+                    href="/phloemai/account"
+                    className="inline-flex h-9 items-center justify-center rounded-lg border border-blue-100 bg-white px-4 text-xs font-black text-blue-600 transition-colors hover:bg-blue-50"
+                  >
+                    Credit settings
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-xl border border-white bg-white/85 p-3 shadow-sm">
+              <div className="grid grid-cols-[1fr_auto] items-start gap-3">
+                <div>
+                  <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
+                    Daily AI report
+                  </p>
+                  <p className="mt-1 text-3xl font-black leading-none text-blue-600">
+                    {creditDisplay.value}
+                  </p>
+                </div>
+                <span
+                  className={`rounded-full px-2 py-1 text-[10px] font-black ${
+                    isPremium
+                      ? "bg-violet-50 text-violet-700"
+                      : "bg-slate-100 text-slate-600"
+                  }`}
                 >
-                  Learn more about credits
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
+                  {isPremium ? "Premium" : "Free"}
+                </span>
               </div>
+              <div className="mt-3 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <Timer className="h-4 w-4 text-blue-600" aria-hidden="true" />
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-wide text-slate-500">
+                      Server-timed refresh
+                    </p>
+                    <p className="mt-0.5 font-mono text-sm font-black text-slate-900">
+                      {creditTimerText}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p className="mt-3 text-[11px] font-bold leading-4 text-slate-500">
+                {creditDisplay.helper}
+              </p>
             </div>
-            <div className="grid grid-cols-2 overflow-hidden rounded-lg border border-slate-100 bg-slate-50">
-              <div
-                className="border-r border-slate-200 px-4 py-3 text-center"
-              >
-                <p className="text-[11px] font-black text-slate-600">
-                  AI credit
-                </p>
-                <p className="mt-2 text-3xl font-black text-blue-600">
-                  {creditDisplay.value}
-                </p>
-                <p className="mt-1 text-[11px] font-black text-blue-600">
-                  {creditDisplay.status}
-                </p>
-              </div>
-              <div className="px-4 py-3 text-center">
-                <p className="text-[11px] font-black text-slate-600">
-                  Premium diagnostics
-                </p>
-                <p className="mt-1 text-3xl font-black leading-none text-blue-600">
-                  {isPremium ? "On" : "Locked"}
-                </p>
-                <p className="mt-1 text-[11px] font-black text-blue-600">
-                  {isPremium ? "Premium" : "Upgrade"}
-                </p>
-              </div>
-            </div>
-            <p className="text-[11px] font-bold leading-4 text-slate-500 sm:col-start-2">
-              {creditDisplay.helper}
-            </p>
           </div>
         </section>
       </div>
