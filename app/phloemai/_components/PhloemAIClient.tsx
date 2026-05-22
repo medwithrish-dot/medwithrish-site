@@ -56,6 +56,7 @@ import {
   Info,
   LockKeyhole,
   LogOut,
+  Mail,
   MessageSquare,
   ShieldCheck,
   Sparkles,
@@ -2254,14 +2255,18 @@ function buildReportIssueCard(issue: DashboardDiagnosticIssue, index: number) {
   } satisfies ReportIssueDefinition;
 }
 
-function getFirstName(user: User | null, profile: PhloemProfile | null) {
+function getDisplayName(user: User | null, profile: PhloemProfile | null) {
   const profileName = profile?.full_name?.trim();
   const metadataName =
     typeof user?.user_metadata?.full_name === "string"
       ? user.user_metadata.full_name.trim()
       : "";
   const fallback = user?.email?.split("@")[0] ?? "Rish";
-  return (profileName || metadataName || fallback).split(" ")[0];
+  return profileName || metadataName || fallback;
+}
+
+function getFirstName(user: User | null, profile: PhloemProfile | null) {
+  return getDisplayName(user, profile).split(" ")[0];
 }
 
 function getGreeting() {
@@ -5850,31 +5855,85 @@ function ReportContent({
 }
 
 function AccountContent({
-  firstName,
+  displayName,
   plan,
   email,
   diagnosticCredits,
   aiDiagnosticLastUsedAt,
   checkoutLoading,
+  practiceStats,
+  recentPracticeSets,
+  diagnosticHistory,
   onUpgrade,
   onLogout,
+  onSaveDisplayName,
 }: {
-  firstName: string;
+  displayName: string;
   plan: string;
   email: string;
   diagnosticCredits: number;
   aiDiagnosticLastUsedAt?: string | null;
   checkoutLoading: boolean;
+  practiceStats: PracticeStats;
+  recentPracticeSets: RecentPracticeSet[];
+  diagnosticHistory: DashboardDiagnostic[];
   onUpgrade: () => void;
   onLogout: () => void;
+  onSaveDisplayName: (name: string) => Promise<void>;
 }) {
   const [creditNow, setCreditNow] = useState(() => Date.now());
+  const [nameDraft, setNameDraft] = useState(displayName);
+  const [profileSaveState, setProfileSaveState] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+  const [profileSaveMessage, setProfileSaveMessage] = useState<string | null>(
+    null
+  );
   const creditDisplay = getAiDiagnosticCreditDisplay({
     plan,
     diagnosticCredits,
     lastUsedAt: aiDiagnosticLastUsedAt,
     now: creditNow,
   });
+  const trimmedNameDraft = nameDraft.trim();
+  const nameChanged = trimmedNameDraft.length > 0 && trimmedNameDraft !== displayName;
+  const supportHref = `mailto:medwithrish@gmail.com?subject=${encodeURIComponent(
+    "PhloemAI account support"
+  )}`;
+  const dataRequestHref = `mailto:medwithrish@gmail.com?subject=${encodeURIComponent(
+    "PhloemAI account or data request"
+  )}`;
+  const creditIsCoolingDown = creditDisplay.status.startsWith("Available in");
+  const creditStatusClass =
+    creditDisplay.status === "Available"
+      ? "bg-emerald-50 text-emerald-700"
+      : creditIsCoolingDown
+        ? "bg-amber-50 text-amber-700"
+        : "bg-slate-100 text-slate-600";
+  const savedDiagnosticsCount = diagnosticHistory.length;
+  const completedSetsCount = recentPracticeSets.filter(
+    (set) => !set.isIncomplete
+  ).length;
+
+  const handleProfileSave = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!nameChanged) return;
+
+    setProfileSaveState("saving");
+    setProfileSaveMessage(null);
+
+    try {
+      await onSaveDisplayName(trimmedNameDraft);
+      setProfileSaveState("saved");
+      setProfileSaveMessage("Display name saved.");
+      setNameDraft(trimmedNameDraft);
+    } catch (error) {
+      setProfileSaveState("error");
+      setProfileSaveMessage(
+        error instanceof Error ? error.message : "Could not save display name."
+      );
+    }
+  };
 
   useEffect(() => {
     const nextAvailableAt = getNextAiDiagnosticCreditAt(aiDiagnosticLastUsedAt);
@@ -5886,66 +5945,111 @@ function AccountContent({
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-black uppercase tracking-wide text-blue-600">
-              Account settings
-            </p>
-            <h2 className="mt-2 text-2xl font-black">{firstName}</h2>
-            <p className="mt-1 text-sm font-semibold text-slate-500">{email}</p>
+      <section className="overflow-hidden rounded-xl border border-blue-100 bg-gradient-to-br from-blue-600 via-blue-700 to-slate-950 text-white shadow-sm">
+        <div className="grid gap-5 p-6 lg:grid-cols-[1fr_360px] lg:items-center">
+          <div className="flex gap-4">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-2xl font-black ring-1 ring-white/20">
+              {displayName.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-wide text-blue-100">
+                Account settings
+              </p>
+              <h2 className="mt-2 text-3xl font-black">{displayName}</h2>
+              <p className="mt-1 text-sm font-semibold text-blue-100">{email}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-black ring-1 ring-white/20">
+                  {plan} plan
+                </span>
+                <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-black ring-1 ring-white/20">
+                  {savedDiagnosticsCount} diagnostic{savedDiagnosticsCount === 1 ? "" : "s"}
+                </span>
+              </div>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={onLogout}
-            className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 px-5 text-sm font-black text-slate-700 hover:bg-slate-50"
-          >
-            Log out
-          </button>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+            <a
+              href={supportHref}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-black text-blue-700 transition-colors hover:bg-blue-50"
+            >
+              <Mail className="h-4 w-4" aria-hidden="true" />
+              Contact support
+            </a>
+            <button
+              type="button"
+              onClick={onLogout}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/25 px-4 text-sm font-black text-white transition-colors hover:bg-white/10"
+            >
+              <LogOut className="h-4 w-4" aria-hidden="true" />
+              Log out
+            </button>
+          </div>
         </div>
       </section>
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-sm font-black uppercase tracking-wide">
-            Subscription
-          </h2>
-          <div className="mt-5 rounded-xl bg-indigo-50 p-5">
-            <p className="text-sm font-semibold text-slate-500">Current plan</p>
-            <p className="mt-2 text-3xl font-black">{plan}</p>
-            <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-              Premium unlocks mock diagnostics, full mocks, subtest mocks,
-              15-minute sprints, deeper issue analysis and personalised study
-              plan tasks.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onUpgrade}
-            disabled={checkoutLoading}
-            className="mt-5 h-11 rounded-lg bg-blue-600 px-6 text-sm font-black text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+      <div className="grid gap-4 md:grid-cols-4">
+        {[
+          ["Current plan", plan, plan === "Premium" ? "Full access" : "Starter access"],
+          [
+            "AI credit",
+            creditDisplay.value,
+            creditDisplay.status,
+          ],
+          [
+            "Saved diagnostics",
+            String(savedDiagnosticsCount),
+            latestDiagnosticLabel(diagnosticHistory[0]),
+          ],
+          [
+            "Practice sets",
+            String(completedSetsCount),
+            `${practiceStats.totalCompleted} questions saved`,
+          ],
+        ].map(([label, value, helper]) => (
+          <section
+            key={label}
+            className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
           >
-            {plan === "Premium"
-              ? "Manage subscription"
-              : checkoutLoading
-                ? "Opening..."
-                : "Upgrade to Premium"}
-          </button>
-        </section>
+            <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+              {label}
+            </p>
+            <p className="mt-2 text-2xl font-black">{value}</p>
+            <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+              {helper}
+            </p>
+          </section>
+        ))}
+      </div>
 
+      <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-sm font-black uppercase tracking-wide">
-            Profile
-          </h2>
-          <div className="mt-5 space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-black uppercase tracking-wide">
+                Profile
+              </h2>
+              <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
+                Keep your display name tidy. Your email is your login and is not
+                edited here.
+              </p>
+            </div>
+            <UserRound className="h-5 w-5 text-blue-600" aria-hidden="true" />
+          </div>
+
+          <form onSubmit={handleProfileSave} className="mt-5 space-y-4">
             <label className="block">
               <span className="text-xs font-black uppercase tracking-wide text-slate-500">
                 Display name
               </span>
               <input
-                value={firstName}
-                readOnly
-                className="mt-1 h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-bold text-slate-700"
+                value={nameDraft}
+                onChange={(event) => {
+                  setNameDraft(event.target.value);
+                  setProfileSaveState("idle");
+                  setProfileSaveMessage(null);
+                }}
+                maxLength={80}
+                className="mt-1 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-800 outline-none transition-colors focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
               />
             </label>
             <label className="block">
@@ -5955,16 +6059,126 @@ function AccountContent({
               <input
                 value={email}
                 readOnly
-                className="mt-1 h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-bold text-slate-700"
+                className="mt-1 h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-bold text-slate-600"
               />
             </label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="submit"
+                disabled={!nameChanged || profileSaveState === "saving"}
+                className="inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+              >
+                {profileSaveState === "saving" ? "Saving..." : "Save details"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setNameDraft(displayName);
+                  setProfileSaveState("idle");
+                  setProfileSaveMessage(null);
+                }}
+                className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-200 px-5 text-sm font-black text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                Reset
+              </button>
+            </div>
+            {profileSaveMessage && (
+              <p
+                className={`rounded-lg px-3 py-2 text-xs font-black ${
+                  profileSaveState === "error"
+                    ? "border border-red-100 bg-red-50 text-red-700"
+                    : "border border-emerald-100 bg-emerald-50 text-emerald-700"
+                }`}
+              >
+                {profileSaveMessage}
+              </p>
+            )}
+          </form>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-black uppercase tracking-wide">
+                Subscription
+              </h2>
+              <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
+                Manage billing, compare plans or upgrade before checkout.
+              </p>
+            </div>
+            <span
+              className={`rounded-full px-3 py-1 text-xs font-black ${
+                plan === "Premium"
+                  ? "bg-violet-50 text-violet-700"
+                  : "bg-blue-50 text-blue-700"
+              }`}
+            >
+              {plan}
+            </span>
+          </div>
+          <div className="mt-5 rounded-xl bg-indigo-50 p-5">
+            <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+              Current plan
+            </p>
+            <p className="mt-2 text-4xl font-black">{plan}</p>
+            <ul className="mt-4 space-y-2 text-sm font-semibold leading-6 text-slate-700">
+              {(plan === "Premium"
+                ? [
+                    "Full mocks, subtest mocks and 15-minute sprints",
+                    "Daily AI diagnostic credit",
+                    "Deeper issue analysis and study-plan tasks",
+                  ]
+                : [
+                    "Question bank and skills trainers",
+                    "Free QR diagnostic with full report",
+                    "1 lifetime AI diagnostic credit",
+                  ]
+              ).map((item) => (
+                <li key={item} className="flex gap-2">
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={onUpgrade}
+              disabled={checkoutLoading}
+              className="inline-flex h-11 items-center justify-center rounded-lg bg-blue-600 px-6 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+            >
+              {plan === "Premium"
+                ? checkoutLoading
+                  ? "Opening..."
+                  : "Manage subscription"
+                : checkoutLoading
+                  ? "Opening..."
+                  : "Upgrade to Premium"}
+            </button>
+            <Link
+              href="/phloemai/pricing"
+              className="inline-flex h-11 items-center justify-center rounded-lg border border-blue-100 px-6 text-sm font-black text-blue-600 transition-colors hover:bg-blue-50"
+            >
+              Compare plans
+            </Link>
           </div>
         </section>
 
-        <section className="rounded-xl border border-violet-100 bg-white p-6 shadow-sm lg:col-span-2">
-          <h2 className="text-sm font-black uppercase tracking-wide">
-            Diagnostic AI credit
-          </h2>
+        <section className="rounded-xl border border-violet-100 bg-white p-6 shadow-sm">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-black uppercase tracking-wide">
+                Diagnostic AI credit
+              </h2>
+              <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
+                Server-timed so device clock changes cannot reset it.
+              </p>
+            </div>
+            <span className={`rounded-full px-3 py-1 text-xs font-black ${creditStatusClass}`}>
+              {creditDisplay.status}
+            </span>
+          </div>
           <div className="mt-5 grid gap-4 sm:grid-cols-[180px_1fr] sm:items-center">
             <div className="rounded-xl bg-violet-50 p-5 text-center">
               <p className="text-xs font-black uppercase tracking-wide text-violet-700">
@@ -5973,24 +6187,97 @@ function AccountContent({
               <p className="mt-2 text-4xl font-black text-violet-700">
                 {creditDisplay.value}
               </p>
-              <p className="mt-2 text-xs font-black text-violet-700">
+              <p className="mt-2 font-mono text-xs font-black text-violet-700">
                 {creditDisplay.status}
               </p>
             </div>
-            <p className="text-sm font-semibold leading-6 text-slate-600">
-              {creditDisplay.helper} AI feedback can only be generated from a
-              saved diagnostic attempt owned by your logged-in account.
-            </p>
+            <div>
+              <p className="text-sm font-semibold leading-6 text-slate-600">
+                {creditDisplay.helper} AI feedback can only be generated from a
+                saved diagnostic attempt owned by your logged-in account.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Link
+                  href="/phloemai/diagnostic"
+                  className="inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700"
+                >
+                  Open diagnostics
+                </Link>
+                <Link
+                  href="/phloemai/report"
+                  className="inline-flex h-10 items-center justify-center rounded-lg border border-blue-100 px-4 text-xs font-black text-blue-600 transition-colors hover:bg-blue-50"
+                >
+                  View reports
+                </Link>
+              </div>
+            </div>
           </div>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-sm font-black uppercase tracking-wide">
+            Help and account actions
+          </h2>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <a
+              href={supportHref}
+              className="rounded-xl border border-blue-100 bg-blue-50/60 p-4 transition-colors hover:bg-blue-50"
+            >
+              <Mail className="h-5 w-5 text-blue-600" aria-hidden="true" />
+              <h3 className="mt-3 text-sm font-black">Contact support</h3>
+              <p className="mt-1 text-xs font-semibold leading-5 text-slate-600">
+                Email medwithrish@gmail.com for billing, access or technical help.
+              </p>
+            </a>
+            <a
+              href={dataRequestHref}
+              className="rounded-xl border border-slate-200 bg-slate-50 p-4 transition-colors hover:bg-blue-50"
+            >
+              <ShieldCheck className="h-5 w-5 text-slate-600" aria-hidden="true" />
+              <h3 className="mt-3 text-sm font-black">Data request</h3>
+              <p className="mt-1 text-xs font-semibold leading-5 text-slate-600">
+                Ask for account deletion, practice data help or privacy support.
+              </p>
+            </a>
+          </div>
+          <div className="mt-4 grid gap-2 sm:grid-cols-3">
+            {[
+              ["Terms", "/terms-and-conditions"],
+              ["Privacy", "/privacy-policy"],
+              ["AI/Data", "/phloemai-disclaimer"],
+            ].map(([label, href]) => (
+              <Link
+                key={label}
+                href={href}
+                className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-200 text-xs font-black text-slate-700 transition-colors hover:bg-slate-50 hover:text-blue-600"
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-red-100 px-5 text-sm font-black text-red-600 transition-colors hover:bg-red-50"
+          >
+            <LogOut className="h-4 w-4" aria-hidden="true" />
+            Log out
+          </button>
         </section>
       </div>
     </div>
   );
 }
 
+function latestDiagnosticLabel(diagnostic: DashboardDiagnostic | undefined) {
+  if (!diagnostic) return "No reports yet";
+
+  return `${diagnostic.section} ${diagnostic.accuracy}%`;
+}
+
 function DashboardSubpageContent({
   view,
-  firstName,
+  displayName,
   plan,
   email,
   isPremium,
@@ -6005,9 +6292,10 @@ function DashboardSubpageContent({
   aiDiagnosticLastUsedAt,
   onUpgrade,
   onLogout,
+  onSaveDisplayName,
 }: {
   view: Exclude<DashboardView, "dashboard">;
-  firstName: string;
+  displayName: string;
   plan: string;
   email: string;
   isPremium: boolean;
@@ -6022,6 +6310,7 @@ function DashboardSubpageContent({
   aiDiagnosticLastUsedAt?: string | null;
   onUpgrade: () => void;
   onLogout: () => void;
+  onSaveDisplayName: (name: string) => Promise<void>;
 }) {
   const freeDiagnosticFeaturesUnlocked = isFreeQrDiagnostic(latestDiagnostic);
   const diagnosticStudyPlanUnlocked =
@@ -6077,14 +6366,18 @@ function DashboardSubpageContent({
   if (view === "account") {
     return (
       <AccountContent
-        firstName={firstName}
+        displayName={displayName}
         plan={plan}
         email={email}
         diagnosticCredits={diagnosticCredits}
         aiDiagnosticLastUsedAt={aiDiagnosticLastUsedAt}
         checkoutLoading={checkoutLoading}
+        practiceStats={practiceStats}
+        recentPracticeSets={recentPracticeSets}
+        diagnosticHistory={diagnosticHistory}
         onUpgrade={onUpgrade}
         onLogout={onLogout}
+        onSaveDisplayName={onSaveDisplayName}
       />
     );
   }
@@ -7099,6 +7392,41 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     }
   };
 
+  const handleProfileUpdate = async (nextDisplayName: string) => {
+    if (!supabase || !user) {
+      throw new Error("Sign in again before updating your profile.");
+    }
+
+    const trimmedName = nextDisplayName.trim();
+    if (!trimmedName) {
+      throw new Error("Add a display name before saving.");
+    }
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ full_name: trimmedName })
+      .eq("id", user.id)
+      .select("full_name,current_plan,diagnostic_credits,ai_diagnostic_last_used_at")
+      .maybeSingle();
+
+    if (error) throw error;
+
+    const updatedProfile = data as PhloemProfile | null;
+    setProfile((current) => ({
+      full_name: updatedProfile?.full_name ?? trimmedName,
+      current_plan:
+        updatedProfile?.current_plan ?? current?.current_plan ?? "free",
+      diagnostic_credits:
+        updatedProfile?.diagnostic_credits ??
+        current?.diagnostic_credits ??
+        1,
+      ai_diagnostic_last_used_at:
+        updatedProfile?.ai_diagnostic_last_used_at ??
+        current?.ai_diagnostic_last_used_at ??
+        null,
+    }));
+  };
+
   if (!supabaseReady) {
     return <MissingSupabaseConfig />;
   }
@@ -7132,6 +7460,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     );
   }
 
+  const displayName = getDisplayName(user, profile);
   const firstName = getFirstName(user, profile);
   const plan = profile?.current_plan === "premium" ? "Premium" : "Free";
   const userEmail = user.email ?? "";
@@ -7176,6 +7505,10 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     view === "dashboard" ? "/phloemai" : "/phloemai/dashboard";
   const headerBackLabel =
     view === "dashboard" ? "Back to PhloemAI" : "Back to dashboard";
+  const accountInitial = displayName.charAt(0).toUpperCase();
+  const accountSupportHref = `mailto:medwithrish@gmail.com?subject=${encodeURIComponent(
+    "PhloemAI account support"
+  )}`;
 
   return (
     <div className="phloem-dashboard-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
@@ -7390,69 +7723,109 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                 <button
                   type="button"
                   onClick={() => setAccountMenuOpen((current) => !current)}
-                  className="flex items-center gap-3 rounded-xl px-2 py-1 transition-colors hover:bg-slate-50"
+                  className="flex items-center gap-3 rounded-xl border border-transparent px-2 py-1 transition-colors hover:border-blue-100 hover:bg-blue-50"
                   aria-expanded={accountMenuOpen}
                 >
                   <div className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-100 text-sm font-black text-blue-600">
-                    {firstName.charAt(0).toUpperCase()}
+                    {accountInitial}
                   </div>
-                  <span className="hidden text-sm font-black sm:inline">
-                    {firstName}
+                  <span className="hidden text-left sm:block">
+                    <span className="block text-sm font-black leading-4">
+                      {firstName}
+                    </span>
+                    <span className="mt-1 block text-[11px] font-black uppercase tracking-wide text-slate-400">
+                      {plan} plan
+                    </span>
                   </span>
                   <ChevronDown className="h-4 w-4 text-slate-500" aria-hidden="true" />
                 </button>
                 {accountMenuOpen && (
-                  <div className="absolute right-0 z-20 mt-2 w-64 rounded-xl border border-slate-200 bg-white p-2 shadow-xl">
-                    <div className="px-3 py-2">
-                      <p className="text-sm font-black">{firstName}</p>
-                      <p className="mt-1 truncate text-xs font-semibold text-slate-500">
-                        {userEmail}
-                      </p>
+                  <div className="absolute right-0 z-20 mt-3 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl">
+                    <div className="bg-gradient-to-br from-blue-600 to-slate-950 p-4 text-white">
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/15 text-lg font-black ring-1 ring-white/20">
+                          {accountInitial}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-base font-black">
+                            {displayName}
+                          </p>
+                          <p className="mt-1 truncate text-xs font-semibold text-blue-100">
+                            {userEmail}
+                          </p>
+                          <span className="mt-3 inline-flex rounded-full bg-white/15 px-3 py-1 text-[11px] font-black uppercase tracking-wide ring-1 ring-white/20">
+                            {plan} plan
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <Link
-                      href="/phloemai/account"
-                      onClick={() => setAccountMenuOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
-                    >
-                      Account settings
-                    </Link>
-                    {plan === "Premium" ? (
+                    <div className="p-2">
+                      <Link
+                        href="/phloemai/account"
+                        onClick={() => setAccountMenuOpen(false)}
+                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                      >
+                        <UserRound className="h-4 w-4" aria-hidden="true" />
+                        Account settings
+                      </Link>
+                      {plan === "Premium" ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAccountMenuOpen(false);
+                            void handleSubscriptionAction();
+                          }}
+                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                        >
+                          <Sparkles className="h-4 w-4" aria-hidden="true" />
+                          Manage subscription
+                        </button>
+                      ) : (
+                        <Link
+                          href="/phloemai/pricing"
+                          onClick={() => setAccountMenuOpen(false)}
+                          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                        >
+                          <Sparkles className="h-4 w-4" aria-hidden="true" />
+                          View pricing
+                        </Link>
+                      )}
+                      <Link
+                        href="/phloemai/report"
+                        onClick={() => setAccountMenuOpen(false)}
+                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                      >
+                        <Bookmark className="h-4 w-4" aria-hidden="true" />
+                        Open reports
+                      </Link>
+                      <Link
+                        href="/phloemai/question-bank"
+                        onClick={() => setAccountMenuOpen(false)}
+                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                      >
+                        <Target className="h-4 w-4" aria-hidden="true" />
+                        Open question bank
+                      </Link>
+                      <a
+                        href={accountSupportHref}
+                        onClick={() => setAccountMenuOpen(false)}
+                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                      >
+                        <Mail className="h-4 w-4" aria-hidden="true" />
+                        Contact support
+                      </a>
                       <button
                         type="button"
                         onClick={() => {
                           setAccountMenuOpen(false);
-                          void handleSubscriptionAction();
+                          void handleLogout();
                         }}
-                        className="w-full rounded-lg px-3 py-2 text-left text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                        className="mt-1 flex w-full items-center gap-3 rounded-lg border-t border-slate-100 px-3 py-2.5 text-left text-sm font-black text-red-600 hover:bg-red-50"
                       >
-                        Manage subscription
+                        <LogOut className="h-4 w-4" aria-hidden="true" />
+                        Log out
                       </button>
-                    ) : (
-                      <Link
-                        href="/phloemai/pricing"
-                        onClick={() => setAccountMenuOpen(false)}
-                        className="block rounded-lg px-3 py-2 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
-                      >
-                        View plans
-                      </Link>
-                    )}
-                    <Link
-                      href="/phloemai/question-bank"
-                      onClick={() => setAccountMenuOpen(false)}
-                      className="block rounded-lg px-3 py-2 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
-                    >
-                      Open question bank
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAccountMenuOpen(false);
-                        void handleLogout();
-                      }}
-                      className="mt-1 w-full rounded-lg px-3 py-2 text-left text-sm font-black text-red-600 hover:bg-red-50"
-                    >
-                      Log out
-                    </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -7759,7 +8132,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
           ) : (
             <DashboardSubpageContent
               view={view}
-              firstName={firstName}
+              displayName={displayName}
               plan={plan}
               email={userEmail}
               isPremium={plan === "Premium"}
@@ -7773,6 +8146,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               aiDiagnosticLastUsedAt={aiDiagnosticLastUsedAt}
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}
+              onSaveDisplayName={handleProfileUpdate}
               recentPracticeSets={recentPracticeSets}
             />
           )}
