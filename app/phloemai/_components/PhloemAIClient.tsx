@@ -8371,11 +8371,12 @@ function RedesignedTutorHero() {
               </div>
 
               <h1 className="mt-4 max-w-2xl text-4xl font-black leading-[0.95] text-white sm:text-5xl">
-                Meet <span className="text-blue-500">Phloem</span>
+                Meet <span className="text-blue-500">PhloemAI</span>
               </h1>
 
               <p className="mt-3 max-w-lg text-lg font-bold leading-tight text-white sm:text-xl">
-                The AI tutor that shows why you lose marks.
+                The free UCAT question bank and AI tutor that shows why you
+                lose marks.
               </p>
 
               <p className="mt-3 max-w-lg text-xs leading-5 text-slate-200">
