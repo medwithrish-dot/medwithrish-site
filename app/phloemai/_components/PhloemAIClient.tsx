@@ -2576,7 +2576,7 @@ function DiagnosticContent({
   const creditIsAvailable = creditDisplay.status === "Available";
   const creditCtaHref =
     !isPremium && diagnosticCredits <= 0
-      ? "/phloemai#pricing"
+      ? "/phloemai/pricing"
       : hasDiagnostic
         ? "/phloemai/report"
         : "/phloemai/question-bank/qr?diagnostic=free-qr";
@@ -7127,7 +7127,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
               </button>
             ) : (
               <Link
-                href="/phloemai#pricing"
+                href="/phloemai/pricing"
                 className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
               >
                 View Plans
@@ -7154,7 +7154,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                 </button>
               ) : (
                 <Link
-                  href="/phloemai#pricing"
+                  href="/phloemai/pricing"
                   className="text-sm font-black text-blue-600 hover:text-blue-700"
                 >
                   View plans
@@ -7270,7 +7270,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
                       </button>
                     ) : (
                       <Link
-                        href="/phloemai#pricing"
+                        href="/phloemai/pricing"
                         onClick={() => setAccountMenuOpen(false)}
                         className="block rounded-lg px-3 py-2 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
                       >
@@ -7668,6 +7668,36 @@ function HowItWorksPanel({
   );
 }
 
+const PHLOEMAI_FREE_FEATURES = [
+  "Question bank practice",
+  "Skills trainers",
+  "Free QR diagnostic",
+  "Full free diagnostic report",
+  "1 lifetime AI diagnostic credit",
+];
+
+const PHLOEMAI_PREMIUM_FEATURES = [
+  "Full mocks, subtest mocks and 15-minute sprints",
+  "Advanced weakness + strengths diagnosis",
+  "Deeper issue causes, evidence and specific fixes",
+  "Personalised study plan and drills",
+  "1 AI diagnostic credit every 24 hours",
+  "Progress tracking over time",
+];
+
+const PHLOEMAI_PRICING_ROWS = [
+  ["Question bank practice", "Included", "Included"],
+  ["Skills trainers", "Included", "Included"],
+  ["Free QR diagnostic", "Full report included", "Full report included"],
+  ["AI diagnostic credit", "1 lifetime credit", "1 credit every 24 hours"],
+  ["Full mocks", "Premium", "Included"],
+  ["Subtest mocks and 15-minute sprints", "Premium", "Included"],
+  ["Mock diagnostic reports", "Premium", "Included"],
+  ["Deeper issue causes and fixes", "Free diagnostic only", "All diagnostics"],
+  ["Personalised study plan", "Free diagnostic only", "All diagnostics"],
+  ["Progress and improvement history", "Basic progress", "Full tracking"],
+] as const;
+
 // ── Landing Hero ──────────────────────────────────────────────────────────────
 
 function RedesignedTutorHero() {
@@ -7700,23 +7730,6 @@ function RedesignedTutorHero() {
       icon: Target,
       iconWrap: "bg-orange-50 text-orange-600",
     },
-  ];
-
-  const freeFeatures = [
-    "Question bank practice",
-    "Skills trainers",
-    "Free QR diagnostic",
-    "Full free diagnostic report",
-    "1 lifetime AI diagnostic credit",
-  ];
-
-  const premiumFeatures = [
-    "Full mocks, subtest mocks and 15-minute sprints",
-    "Advanced weakness + strengths diagnosis",
-    "Deeper issue causes, evidence and specific fixes",
-    "Personalised study plan and drills",
-    "1 AI diagnostic credit every 24 hours",
-    "Progress tracking over time",
   ];
 
   const productCards = [
@@ -8109,7 +8122,7 @@ function RedesignedTutorHero() {
               No card needed.
             </p>
             <ul className="mt-4 flex-1 space-y-2 pb-5 text-sm text-slate-700">
-              {freeFeatures.map((item) => (
+              {PHLOEMAI_FREE_FEATURES.map((item) => (
                 <li key={item} className="flex gap-2">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
                   <span>{item}</span>
@@ -8140,7 +8153,7 @@ function RedesignedTutorHero() {
               Best for full UCAT prep
             </p>
             <ul className="mt-4 flex-1 space-y-2 pb-5 text-sm text-slate-700">
-              {premiumFeatures.map((item) => (
+              {PHLOEMAI_PREMIUM_FEATURES.map((item) => (
                 <li key={item} className="flex gap-2">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-violet-600" aria-hidden="true" />
                   <span>{item}</span>
@@ -8470,6 +8483,203 @@ export function PhloemAIPageShell({ children }: { children: React.ReactNode }) {
       <Navbar />
       {children}
     </div>
+  );
+}
+
+export function PhloemAIPricingPage() {
+  const [premiumCheckoutLoading, setPremiumCheckoutLoading] = useState(false);
+  const [premiumCheckoutError, setPremiumCheckoutError] = useState<string | null>(null);
+
+  const handlePremiumCheckout = async () => {
+    setPremiumCheckoutLoading(true);
+    setPremiumCheckoutError(null);
+
+    try {
+      const response = await fetch("/api/stripe/create-checkout-session", {
+        method: "POST",
+      });
+      const data = (await response.json()) as {
+        url?: string;
+        error?: string;
+      };
+
+      if (response.status === 401) {
+        window.location.assign("/phloemai/dashboard");
+        return;
+      }
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Could not start checkout.");
+      }
+
+      window.location.assign(data.url);
+      window.setTimeout(() => setPremiumCheckoutLoading(false), 8000);
+    } catch (error) {
+      setPremiumCheckoutError(
+        error instanceof Error ? error.message : "Could not start checkout."
+      );
+      setPremiumCheckoutLoading(false);
+    }
+  };
+
+  return (
+    <PhloemAIPageShell>
+      <main className="bg-white text-[#0b1143]">
+        <section className="bg-[#050b1f] px-5 py-10 text-white lg:px-6">
+          <div className="mx-auto max-w-5xl">
+            <Link
+              href="/phloemai"
+              className="inline-flex items-center gap-2 text-sm font-black text-blue-100 transition-colors hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Back to PhloemAI
+            </Link>
+            <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px] lg:items-end">
+              <div>
+                <p className="text-xs font-black uppercase tracking-wide text-cyan-200">
+                  PhloemAI pricing
+                </p>
+                <h1 className="mt-3 max-w-2xl text-4xl font-black leading-tight sm:text-5xl">
+                  See exactly what you get before you upgrade.
+                </h1>
+                <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-slate-200">
+                  Start with the free QR diagnostic and question bank. Upgrade
+                  when you want full mocks, mock diagnostics, deeper reports and
+                  a daily AI diagnostic credit.
+                </p>
+              </div>
+              <div className="rounded-xl border border-blue-400/30 bg-white/8 p-4">
+                <p className="text-xs font-black uppercase tracking-wide text-blue-100">
+                  Premium
+                </p>
+                <div className="mt-2 flex items-end gap-2">
+                  <span className="text-4xl font-black">GBP 14.99</span>
+                  <span className="pb-1 text-sm font-bold text-slate-300">
+                    / month
+                  </span>
+                </div>
+                <p className="mt-3 text-sm font-semibold leading-6 text-slate-300">
+                  Cancel through billing management. No card is needed for the
+                  free diagnostic.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-5 py-8 lg:px-6">
+          <div className="grid gap-5 lg:grid-cols-2">
+            <div className="flex flex-col rounded-xl border border-blue-500 bg-white p-6 shadow-sm">
+              <div className="flex items-center justify-between gap-4">
+                <h2 className="text-xl font-black">Free Diagnostic</h2>
+                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-700">
+                  Start here
+                </span>
+              </div>
+              <div className="mt-4 text-5xl font-black">GBP 0</div>
+              <p className="mt-2 text-sm font-bold text-slate-500">
+                No card needed.
+              </p>
+              <ul className="mt-6 flex-1 space-y-3 pb-6 text-sm font-semibold text-slate-700">
+                {PHLOEMAI_FREE_FEATURES.map((feature) => (
+                  <li key={feature} className="flex gap-3">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/phloemai/dashboard"
+                className="mt-auto inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
+              >
+                Start free diagnostic
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+
+            <div className="flex flex-col rounded-xl border border-violet-300 bg-gradient-to-br from-white via-violet-50/40 to-blue-50 p-6 shadow-sm">
+              <div className="flex items-center justify-between gap-4">
+                <h2 className="text-xl font-black">PhloemAI Premium</h2>
+                <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-black text-violet-700">
+                  Full UCAT prep
+                </span>
+              </div>
+              <div className="mt-4 flex flex-wrap items-end gap-x-3 gap-y-1">
+                <span className="text-5xl font-black">GBP 14.99</span>
+                <span className="pb-2 text-base font-black text-slate-500">
+                  / month
+                </span>
+              </div>
+              <p className="mt-2 text-sm font-bold text-violet-700">
+                Best for full mocks, repeated diagnostics and daily AI feedback.
+              </p>
+              <ul className="mt-6 flex-1 space-y-3 pb-6 text-sm font-semibold text-slate-700">
+                {PHLOEMAI_PREMIUM_FEATURES.map((feature) => (
+                  <li key={feature} className="flex gap-3">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-violet-600" aria-hidden="true" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onClick={() => void handlePremiumCheckout()}
+                disabled={premiumCheckoutLoading}
+                className="mt-auto h-12 rounded-lg bg-violet-600 px-5 text-sm font-black text-white transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-violet-300"
+              >
+                {premiumCheckoutLoading ? "Opening checkout..." : "Upgrade to Premium"}
+              </button>
+              {premiumCheckoutError && (
+                <p className="mt-3 text-xs font-bold leading-5 text-red-600">
+                  {premiumCheckoutError}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <section className="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-4">
+              <h2 className="text-lg font-black">Plan comparison</h2>
+              <p className="mt-1 text-sm font-semibold text-slate-500">
+                The free diagnostic is fully unlocked. Premium expands those
+                features across mocks and ongoing prep.
+              </p>
+            </div>
+            <div className="divide-y divide-slate-100">
+              {PHLOEMAI_PRICING_ROWS.map(([feature, freeValue, premiumValue]) => (
+                <div
+                  key={feature}
+                  className="grid gap-3 px-5 py-4 text-sm sm:grid-cols-[1.2fr_1fr_1fr] sm:items-center"
+                >
+                  <p className="font-black text-slate-950">{feature}</p>
+                  <p className="font-semibold text-slate-600">{freeValue}</p>
+                  <p className="font-black text-blue-700">{premiumValue}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-900">
+            PhloemAI is an independent educational tool. AI feedback, progress
+            estimates and attention tracking are not guarantees of UCAT,
+            admissions or interview outcomes. Practice telemetry is used to
+            provide feedback and progress tracking. Read the{" "}
+            <Link href="/privacy-policy" className="font-black underline">
+              Privacy Policy
+            </Link>
+            ,{" "}
+            <Link href="/terms-and-conditions" className="font-black underline">
+              Terms
+            </Link>{" "}
+            and{" "}
+            <Link href="/phloemai-disclaimer" className="font-black underline">
+              AI/Data Disclaimer
+            </Link>
+            .
+          </div>
+        </section>
+      </main>
+    </PhloemAIPageShell>
   );
 }
 

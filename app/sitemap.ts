@@ -17,6 +17,7 @@ const publicRoutes: Array<{
 }> = [
   { path: "/", changeFrequency: "monthly", priority: 1 },
   { path: "/phloemai", changeFrequency: "weekly", priority: 1 },
+  { path: "/phloemai/pricing", changeFrequency: "weekly", priority: 0.9 },
   { path: "/ucat-tutoring", changeFrequency: "monthly", priority: 0.9 },
   { path: "/ucat-score-tracker", changeFrequency: "monthly", priority: 0.85 },
   { path: "/ucat-timeline", changeFrequency: "monthly", priority: 0.85 },
