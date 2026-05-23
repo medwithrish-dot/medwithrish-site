@@ -1099,6 +1099,9 @@ type PhloemProfile = {
   current_plan: string | null;
   diagnostic_credits?: number | null;
   ai_diagnostic_last_used_at?: string | null;
+  stripe_customer_id?: string | null;
+  stripe_subscription_id?: string | null;
+  subscription_status?: string | null;
 };
 
 type AuthMode = "signup" | "login";
@@ -3383,9 +3386,14 @@ function RecentPracticeSetsPanel({
 
   const renderSet = (set: RecentPracticeSet) => {
     const style = sectionStyle(set.sectionCode);
-    const answeredLabel = `${set.answeredQuestions}/${set.totalQuestions} answered`;
-    const scoreLabel =
-      set.answeredQuestions > 0
+    const answeredLabel = set.isIncomplete
+      ? "In progress"
+      : `${set.answeredQuestions}/${set.totalQuestions} answered`;
+    const scoreLabel = set.isIncomplete
+      ? `${set.answeredQuestions}/${set.totalQuestions} question${
+          set.totalQuestions === 1 ? "" : "s"
+        } complete`
+      : set.answeredQuestions > 0
         ? `${set.correctQuestions}/${set.answeredQuestions} correct - ${set.accuracy}%`
         : "No answers yet";
 
@@ -6202,6 +6210,7 @@ function AccountContent({
   email,
   diagnosticCredits,
   aiDiagnosticLastUsedAt,
+  hasStripeCustomer,
   checkoutLoading,
   practiceStats,
   recentPracticeSets,
@@ -6215,6 +6224,7 @@ function AccountContent({
   email: string;
   diagnosticCredits: number;
   aiDiagnosticLastUsedAt?: string | null;
+  hasStripeCustomer: boolean;
   checkoutLoading: boolean;
   practiceStats: PracticeStats;
   recentPracticeSets: RecentPracticeSet[];
@@ -6487,13 +6497,15 @@ function AccountContent({
             <button
               type="button"
               onClick={onUpgrade}
-              disabled={checkoutLoading}
+              disabled={checkoutLoading || (plan === "Premium" && !hasStripeCustomer)}
               className="inline-flex h-11 items-center justify-center rounded-lg bg-blue-600 px-6 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
             >
               {plan === "Premium"
-                ? checkoutLoading
-                  ? "Opening..."
-                  : "Manage subscription"
+                ? hasStripeCustomer
+                  ? checkoutLoading
+                    ? "Opening..."
+                    : "Manage subscription"
+                  : "Premium active"
                 : checkoutLoading
                   ? "Opening plans..."
                   : "View Premium plans"}
@@ -6505,6 +6517,12 @@ function AccountContent({
               Compare plans
             </Link>
           </div>
+          {plan === "Premium" && !hasStripeCustomer && (
+            <p className="mt-3 text-xs font-bold leading-5 text-slate-500">
+              This account has manual Premium access, so there is no Stripe
+              billing portal to manage.
+            </p>
+          )}
         </section>
 
         <section className="rounded-xl border border-violet-100 bg-white p-6 shadow-sm">
@@ -6634,6 +6652,7 @@ function DashboardSubpageContent({
   removedDashboardTaskIds,
   diagnosticCredits,
   aiDiagnosticLastUsedAt,
+  hasStripeCustomer,
   onUpgrade,
   onLogout,
   onSaveDisplayName,
@@ -6654,6 +6673,7 @@ function DashboardSubpageContent({
   removedDashboardTaskIds: Set<string>;
   diagnosticCredits: number;
   aiDiagnosticLastUsedAt?: string | null;
+  hasStripeCustomer: boolean;
   onUpgrade: () => void;
   onLogout: () => void;
   onSaveDisplayName: (name: string) => Promise<void>;
@@ -6717,6 +6737,7 @@ function DashboardSubpageContent({
         email={email}
         diagnosticCredits={diagnosticCredits}
         aiDiagnosticLastUsedAt={aiDiagnosticLastUsedAt}
+        hasStripeCustomer={hasStripeCustomer}
         checkoutLoading={checkoutLoading}
         practiceStats={practiceStats}
         recentPracticeSets={recentPracticeSets}
@@ -7448,7 +7469,7 @@ function UCATDashboard({
     async function loadProfile(nextUser: User) {
       const { data } = await supabaseClient
         .from("profiles")
-        .select("full_name,current_plan,diagnostic_credits,ai_diagnostic_last_used_at")
+        .select("full_name,current_plan,diagnostic_credits,ai_diagnostic_last_used_at,stripe_customer_id,stripe_subscription_id,subscription_status")
         .eq("id", nextUser.id)
         .maybeSingle();
 
@@ -7744,6 +7765,13 @@ function UCATDashboard({
       return;
     }
 
+    if (!hasStripeCustomer) {
+      setCheckoutError(
+        "This account has manual Premium access, so there is no Stripe billing portal to manage."
+      );
+      return;
+    }
+
     setCheckoutLoading(true);
     setCheckoutError(null);
 
@@ -7786,7 +7814,7 @@ function UCATDashboard({
       .from("profiles")
       .update({ full_name: trimmedName })
       .eq("id", user.id)
-      .select("full_name,current_plan,diagnostic_credits,ai_diagnostic_last_used_at")
+      .select("full_name,current_plan,diagnostic_credits,ai_diagnostic_last_used_at,stripe_customer_id,stripe_subscription_id,subscription_status")
       .maybeSingle();
 
     if (error) throw error;
@@ -7803,6 +7831,16 @@ function UCATDashboard({
       ai_diagnostic_last_used_at:
         updatedProfile?.ai_diagnostic_last_used_at ??
         current?.ai_diagnostic_last_used_at ??
+        null,
+      stripe_customer_id:
+        updatedProfile?.stripe_customer_id ?? current?.stripe_customer_id ?? null,
+      stripe_subscription_id:
+        updatedProfile?.stripe_subscription_id ??
+        current?.stripe_subscription_id ??
+        null,
+      subscription_status:
+        updatedProfile?.subscription_status ??
+        current?.subscription_status ??
         null,
     }));
   };
@@ -7843,6 +7881,12 @@ function UCATDashboard({
   const displayName = getDisplayName(user, profile);
   const firstName = getFirstName(user, profile);
   const plan = profile?.current_plan === "premium" ? "Premium" : "Free";
+  const hasStripeCustomer =
+    typeof profile?.stripe_customer_id === "string" &&
+    profile.stripe_customer_id.trim().length > 0 &&
+    typeof profile?.stripe_subscription_id === "string" &&
+    profile.stripe_subscription_id.trim().length > 0 &&
+    profile.subscription_status !== "manual";
   const userEmail = user.email ?? "";
   const diagnosticCredits =
     typeof profile?.diagnostic_credits === "number"
@@ -7996,10 +8040,14 @@ function UCATDashboard({
               <button
                 type="button"
                 onClick={handleSubscriptionAction}
-                disabled={checkoutLoading}
+                disabled={checkoutLoading || !hasStripeCustomer}
                 className="mt-5 h-10 w-full rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
               >
-                {checkoutLoading ? "Opening..." : "Manage Billing"}
+                {hasStripeCustomer
+                  ? checkoutLoading
+                    ? "Opening..."
+                    : "Manage Billing"
+                  : "Premium active"}
               </button>
             ) : (
               <Link
@@ -8024,9 +8072,10 @@ function UCATDashboard({
                 <button
                   type="button"
                   onClick={handleSubscriptionAction}
-                  className="text-sm font-black text-blue-600 hover:text-blue-700"
+                  disabled={!hasStripeCustomer}
+                  className="text-sm font-black text-blue-600 hover:text-blue-700 disabled:cursor-not-allowed disabled:text-slate-400"
                 >
-                  Manage
+                  {hasStripeCustomer ? "Manage" : "Manual access"}
                 </button>
               ) : (
                 <Link
@@ -8153,17 +8202,28 @@ function UCATDashboard({
                         Account settings
                       </Link>
                       {plan === "Premium" ? (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setAccountMenuOpen(false);
-                            void handleSubscriptionAction();
-                          }}
-                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
-                        >
-                          <Sparkles className="h-4 w-4" aria-hidden="true" />
-                          Manage subscription
-                        </button>
+                        hasStripeCustomer ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAccountMenuOpen(false);
+                              void handleSubscriptionAction();
+                            }}
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                          >
+                            <Sparkles className="h-4 w-4" aria-hidden="true" />
+                            Manage subscription
+                          </button>
+                        ) : (
+                          <Link
+                            href="/phloemai/account"
+                            onClick={() => setAccountMenuOpen(false)}
+                            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-black text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                          >
+                            <Sparkles className="h-4 w-4" aria-hidden="true" />
+                            Manual Premium access
+                          </Link>
+                        )
                       ) : (
                         <Link
                           href="/phloemai/pricing"
@@ -8530,6 +8590,7 @@ function UCATDashboard({
               removedDashboardTaskIds={removedDashboardTaskIds}
               diagnosticCredits={diagnosticCredits}
               aiDiagnosticLastUsedAt={aiDiagnosticLastUsedAt}
+              hasStripeCustomer={hasStripeCustomer}
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}
               onSaveDisplayName={handleProfileUpdate}

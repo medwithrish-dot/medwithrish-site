@@ -6661,6 +6661,8 @@ function UCATQuestionBankSection({
   const answersRegionRef = useRef<HTMLDivElement>(null);
   const maxQuestionVisibleBottomRef = useRef(0);
   const questionScrollSeenRef = useRef(false);
+  const seenQuestionContentIdsRef = useRef<Set<string>>(new Set());
+  const currentQuestionIdForScrollRef = useRef<string | null>(null);
   const zoneElements = useMemo(
     () => ({
       stimulus: stimulusRegionRef,
@@ -6725,6 +6727,8 @@ function UCATQuestionBankSection({
       maxQuestionVisibleBottomRef.current >= contentBottom - 96;
 
     if (seen) {
+      const questionId = currentQuestionIdForScrollRef.current;
+      if (questionId) seenQuestionContentIdsRef.current.add(questionId);
       questionScrollSeenRef.current = true;
       setQuestionScrollSeen(true);
     }
@@ -6751,11 +6755,19 @@ function UCATQuestionBankSection({
 
     let frameId = 0;
 
-    questionScrollSeenRef.current = false;
+    const currentQuestionId = currentQuestionIdForScrollRef.current;
+    const seenCurrentQuestion = Boolean(
+      currentQuestionId &&
+        seenQuestionContentIdsRef.current.has(currentQuestionId)
+    );
+
+    questionScrollSeenRef.current = seenCurrentQuestion;
     maxQuestionVisibleBottomRef.current = 0;
-    setQuestionScrollSeen(false);
+    setQuestionScrollSeen(seenCurrentQuestion);
     setUnseenContentOpen(false);
-    frameId = window.requestAnimationFrame(evaluateQuestionScrollSeen);
+    if (!seenCurrentQuestion) {
+      frameId = window.requestAnimationFrame(evaluateQuestionScrollSeen);
+    }
     window.addEventListener("scroll", evaluateQuestionScrollSeen, {
       passive: true,
     });
@@ -7104,6 +7116,7 @@ function UCATQuestionBankSection({
   });
 
   const currentQuestionForTracking = questions[questionIndex];
+  currentQuestionIdForScrollRef.current = currentQuestionForTracking?.id ?? null;
 
   const getRestoredDraftQuestions = (draft: MockSessionDraft) => {
     const restoredQuestions = draft.questionIds
@@ -7491,37 +7504,20 @@ function UCATQuestionBankSection({
         started_at: summary.startedAt,
         completed_at: summary.completedAt,
       };
-      let sessionId = existingSessionId ?? null;
+      const previousSessionId = existingSessionId && !diagnosticMode
+        ? existingSessionId
+        : null;
+      let sessionId: string | null = null;
 
-      if (sessionId && !diagnosticMode) {
-        const { error: sessionError } = await supabase
-          .from("practice_sessions")
-          .update(sessionPayload)
-          .eq("id", sessionId)
-          .eq("user_id", user.id);
+      const { data: sessionRow, error: sessionError } = await supabase
+        .from("practice_sessions")
+        .insert(sessionPayload)
+        .select("id")
+        .single();
 
-        if (sessionError) throw sessionError;
+      if (sessionError) throw sessionError;
 
-        const { error: deleteError } = await supabase
-          .from("practice_question_attempts")
-          .delete()
-          .eq("session_id", sessionId)
-          .eq("user_id", user.id);
-
-        if (deleteError) throw deleteError;
-      } else {
-        const { data: sessionRow, error: sessionError } = await supabase
-          .from("practice_sessions")
-          .insert(sessionPayload)
-          .select("id")
-          .single();
-
-        if (sessionError) throw sessionError;
-
-        sessionId = typeof sessionRow?.id === "string" ? sessionRow.id : null;
-        if (!sessionId) throw new Error("Supabase did not return a session id.");
-      }
-
+      sessionId = typeof sessionRow?.id === "string" ? sessionRow.id : null;
       if (!sessionId) throw new Error("Practice session id is missing.");
 
       const questionRows = summary.questions.map((item) => ({
@@ -7573,6 +7569,22 @@ function UCATQuestionBankSection({
         .insert(questionRows);
 
       if (questionError) throw questionError;
+
+      if (previousSessionId) {
+        const { error: deletePreviousError } = await supabase
+          .from("practice_sessions")
+          .delete()
+          .eq("id", previousSessionId)
+          .eq("user_id", user.id);
+
+        if (deletePreviousError) {
+          setSaveState({
+            status: "saved",
+            message: "Saved. Old draft could not be removed.",
+          });
+          return;
+        }
+      }
 
       if (diagnosticMode) {
         const scoreSummary = getDiagnosticSectionScore(summary);
@@ -7955,6 +7967,7 @@ function UCATQuestionBankSection({
     const isFixedDiagnostic = Boolean(fixedDiagnosticQuestions);
     const nextTimed = isFixedDiagnostic || lengthMode === "minutes" || timed;
 
+    seenQuestionContentIdsRef.current = new Set();
     scrollToQuestionTop();
     setNavigatorOpen(false);
     setQuestionIndex(0);
@@ -8045,6 +8058,7 @@ function UCATQuestionBankSection({
     const restoredTrackingMode =
       draft.trackingMode === "none" ? "none" : "mouse";
 
+    seenQuestionContentIdsRef.current = new Set();
     scrollToQuestionTop();
     attentionTracker.resetTracker();
     if (restoredTrackingMode === "mouse") {
@@ -8503,6 +8517,11 @@ function UCATQuestionBankSection({
     return false;
   };
 
+  const closeUnseenContentPrompt = () => {
+    setUnseenContentOpen(false);
+    window.setTimeout(() => appRootRef.current?.focus(), 0);
+  };
+
   const goToQuestion = (index: number) => {
     scrollToQuestionTop();
     commitQuestionTiming();
@@ -8677,6 +8696,7 @@ function UCATQuestionBankSection({
     const restoredTrackingMode =
       set.summary.trackingMode === "none" ? "none" : "mouse";
 
+    seenQuestionContentIdsRef.current = new Set();
     commitQuestionTiming();
     attentionTracker.resetTracker();
     if (restoredTrackingMode === "mouse") {
@@ -9817,7 +9837,7 @@ function UCATQuestionBankSection({
             <div className="pb-5 text-center">
               <button
                 type="button"
-                onClick={() => setUnseenContentOpen(false)}
+                onClick={closeUnseenContentPrompt}
                 className="border border-white px-5 py-1 text-2xl leading-8 hover:bg-white/10"
               >
                 OK

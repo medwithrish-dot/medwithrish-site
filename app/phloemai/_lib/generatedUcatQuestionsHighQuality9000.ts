@@ -31,7 +31,7 @@ const APPROPRIATENESS_OPTIONS = [
 ];
 
 export const HIGH_QUALITY_9000_TOTAL_BATCHES = 20;
-export const HIGH_QUALITY_9000_COMPLETED_BATCHES = 19;
+export const HIGH_QUALITY_9000_COMPLETED_BATCHES = 20;
 export const HIGH_QUALITY_9000_BATCH_TARGETS: Record<UCATSection, number> = {
   vr: 220,
   dm: 175,
@@ -679,7 +679,7 @@ function makeDmSyllogism(index: number): UCATQuestion {
   const [baseA, baseB, baseC, baseD, baseE] = pick(DM_NOUN_GROUPS, index);
   const context = pick(DM_SYLLOGISM_CONTEXTS, index * 5);
   const qualifier = pick(DM_SYLLOGISM_QUALIFIERS, index * 7);
-  const a = `${qualifier} ${baseA}`;
+  const a = baseA.toLowerCase().startsWith(`${qualifier} `) ? baseA : `${qualifier} ${baseA}`;
   const b = baseB;
   const c = baseC;
   const d = baseD;
@@ -1846,13 +1846,14 @@ function makeQrTimetableSet(setIndex: number): UCATQuestion[] {
 }
 
 function makeQrDosageSet(setIndex: number): UCATQuestion[] {
-  const medicine = pick(["Avenol", "Brixam", "Caldrin", "Dovamil", "Elistat", "Fendrox"], setIndex);
-  const dosePerKg = 6 + (setIndex % 5);
-  const concentration = 20 + (setIndex % 6) * 5;
-  const bottleVolume = 100 + (setIndex % 4) * 25;
+  const longCycle = Math.floor(setIndex / 780);
+  const medicine = pick(["Avenol", "Brixam", "Caldrin", "Dovamil", "Elistat", "Fendrox"], setIndex + longCycle);
+  const dosePerKg = 6 + ((setIndex + longCycle) % 5);
+  const concentration = 20 + ((setIndex + longCycle) % 6) * 5;
+  const bottleVolume = 100 + ((setIndex + longCycle) % 4) * 25;
   const rows = ["J", "K", "L", "M"].map((patient, index) => ({
     patient,
-    weight: 38 + ((setIndex * 7 + index * 11) % 48),
+    weight: 38 + ((setIndex * 7 + index * 11 + longCycle * 5) % 48),
     doses: index % 2 === 0 ? 2 : 3,
   }));
   const selected = rows[setIndex % rows.length];
@@ -2327,12 +2328,13 @@ function makeQrStockSet(setIndex: number): UCATQuestion[] {
 }
 
 function makeQrMapScaleSet(setIndex: number): UCATQuestion[] {
-  const routeContext = pick(["park trail", "hospital walkway", "campus route", "museum tour", "market path", "sports complex"], setIndex);
-  const scale = 0.4 + (setIndex % 5) * 0.15;
-  const walkingSpeed = 4.2 + (setIndex % 4) * 0.4;
+  const longCycle = Math.floor(setIndex / 780);
+  const routeContext = pick(["park trail", "hospital walkway", "campus route", "museum tour", "market path", "sports complex"], setIndex + longCycle);
+  const scale = 0.4 + ((setIndex + longCycle) % 5) * 0.15;
+  const walkingSpeed = 4.2 + ((setIndex + longCycle) % 4) * 0.4;
   const rows = ["North", "East", "South", "West"].map((label, index) => {
-    const mapLength = 5 + ((setIndex * 2 + index * 3) % 13);
-    const delay = 2 + ((setIndex + index * 4) % 10);
+    const mapLength = 5 + ((setIndex * 2 + index * 3 + longCycle * 4) % 13);
+    const delay = 2 + ((setIndex + index * 4 + longCycle * 3) % 10);
     return { label: `${label} route`, mapLength, delay };
   });
   const selected = rows[setIndex % rows.length];

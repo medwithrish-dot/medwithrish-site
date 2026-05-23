@@ -99,13 +99,13 @@ function getLargestTemplateCount(counts) {
 
 function collectQuestionText(question) {
   const optionText = Array.isArray(question.options)
-    ? question.options.map((option) => option.text).join(" ")
+    ? question.options.map((option) => option.text).join(" | ")
     : "";
   const categoryText = Array.isArray(question.categoryItems)
-    ? question.categoryItems.map((item) => item.text).join(" ")
+    ? question.categoryItems.map((item) => item.text).join(" | ")
     : "";
   const yesNoText = Array.isArray(question.yesNoStatements)
-    ? question.yesNoStatements.map((item) => item.text).join(" ")
+    ? question.yesNoStatements.map((item) => item.text).join(" | ")
     : "";
 
   return [
@@ -115,7 +115,7 @@ function collectQuestionText(question) {
     optionText,
     categoryText,
     yesNoText,
-  ].join(" ");
+  ].join(" | ");
 }
 
 if (ids.size !== allQuestions.length) {
@@ -248,6 +248,10 @@ const bannedHighQualityPatterns = [
   {
     pattern: /\bextra-[a-z]/i,
     reason: "awkward hyphenated extra-charge wording",
+  },
+  {
+    pattern: /\b([a-z]{3,})\s+\1\b/i,
+    reason: "repeated adjacent word",
   },
 ];
 const bannedMatches = [];

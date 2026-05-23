@@ -1,6 +1,7 @@
 import { createStripeClient } from "@/utils/stripe";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
+import { getRequiredSiteUrl } from "@/utils/site-url";
 
 export const runtime = "nodejs";
 
@@ -25,10 +26,12 @@ async function createCustomer({
     },
   });
 
-  await admin
+  const { error } = await admin
     .from("profiles")
     .update({ stripe_customer_id: customer.id })
     .eq("id", userId);
+
+  if (error) throw error;
 
   return customer.id;
 }
@@ -68,11 +71,80 @@ export async function POST(request: Request) {
 
     const admin = createAdminClient();
     const stripe = createStripeClient();
-    const { data: profile } = await admin
+    const profileSelect = "current_plan,stripe_customer_id,full_name";
+    const { data: existingProfile, error: profileError } = await admin
       .from("profiles")
-      .select("stripe_customer_id,full_name")
+      .select(profileSelect)
       .eq("id", user.id)
       .maybeSingle();
+
+    if (profileError) {
+      return Response.json({ error: profileError.message }, { status: 500 });
+    }
+
+    let profile = existingProfile;
+
+    if (!profile) {
+      const { data: createdProfile, error: createProfileError } = await admin
+        .from("profiles")
+        .upsert(
+          {
+            id: user.id,
+            email: user.email ?? null,
+            full_name:
+              typeof user.user_metadata?.full_name === "string"
+                ? user.user_metadata.full_name
+                : "",
+          },
+          { onConflict: "id" }
+        )
+        .select(profileSelect)
+        .single();
+
+      if (createProfileError) {
+        return Response.json(
+          { error: createProfileError.message },
+          { status: 500 }
+        );
+      }
+
+      profile = createdProfile;
+    }
+
+    if (profile?.current_plan === "premium") {
+      return Response.json(
+        {
+          error:
+            "This account already has Premium. Manage billing from account settings.",
+        },
+        { status: 409 }
+      );
+    }
+
+    const { data: activeSubscription, error: subscriptionError } = await admin
+      .from("subscriptions")
+      .select("id")
+      .eq("user_id", user.id)
+      .in("status", ["active", "trialing"])
+      .limit(1)
+      .maybeSingle();
+
+    if (subscriptionError) {
+      return Response.json(
+        { error: subscriptionError.message },
+        { status: 500 }
+      );
+    }
+
+    if (activeSubscription) {
+      return Response.json(
+        {
+          error:
+            "This account already has an active Premium subscription. Manage billing from account settings.",
+        },
+        { status: 409 }
+      );
+    }
 
     let customerId =
       typeof profile?.stripe_customer_id === "string"
@@ -94,10 +166,7 @@ export async function POST(request: Request) {
       });
     }
 
-    const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ??
-      request.headers.get("origin") ??
-      "http://localhost:3000";
+    const siteUrl = getRequiredSiteUrl(request);
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",

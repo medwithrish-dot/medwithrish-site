@@ -1,6 +1,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 
+export const runtime = "nodejs";
+
 // Shown when ANTHROPIC_API_KEY is absent or the API call fails
 const FALLBACK = {
   sectionA:
@@ -20,9 +22,69 @@ const FALLBACK = {
     "B follows because staff linked longer doctor consultations to a higher proportion of complex cases. A, C, and D overstate outcomes the passage does not establish.",
 };
 
-export async function GET() {
-  if (!process.env.ANTHROPIC_API_KEY) {
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
+const RATE_LIMIT_MAX = 5;
+const requestCounts = new Map<string, { count: number; resetAt: number }>();
+
+function getClientKey(request: Request) {
+  return (
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip")?.trim() ||
+    "unknown"
+  );
+}
+
+function rateLimitExceeded(request: Request) {
+  const now = Date.now();
+  const key = getClientKey(request);
+  const current = requestCounts.get(key);
+
+  if (!current || current.resetAt <= now) {
+    requestCounts.set(key, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return false;
+  }
+
+  current.count += 1;
+  return current.count > RATE_LIMIT_MAX;
+}
+
+function isGeneratedQuestion(value: unknown): value is typeof FALLBACK {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+
+  const record = value as Record<string, unknown>;
+  const options = record.options;
+  if (!options || typeof options !== "object" || Array.isArray(options)) {
+    return false;
+  }
+
+  const optionRecord = options as Record<string, unknown>;
+
+  return (
+    typeof record.sectionA === "string" &&
+    typeof record.sectionB === "string" &&
+    typeof record.question === "string" &&
+    ["A", "B", "C", "D"].includes(String(record.correct)) &&
+    typeof record.explanation === "string" &&
+    ["A", "B", "C", "D"].every((key) => typeof optionRecord[key] === "string")
+  );
+}
+
+export async function GET(request: Request) {
+  const aiDemoEnabled = process.env.RISHBOT_AI_DEMO_ENABLED === "1";
+
+  if (!aiDemoEnabled || !process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json(FALLBACK);
+  }
+
+  if (rateLimitExceeded(request)) {
+    return NextResponse.json(FALLBACK, {
+      headers: {
+        "Cache-Control": "private, max-age=60",
+      },
+    });
   }
 
   try {
@@ -61,7 +123,11 @@ Requirements: all four options must be plausible. Only one can be correct based 
       .replace(/\s*```$/i, "")
       .trim();
 
-    const data = JSON.parse(cleaned);
+    const data = JSON.parse(cleaned) as unknown;
+    if (!isGeneratedQuestion(data)) {
+      throw new Error("AI returned an invalid question shape.");
+    }
+
     return NextResponse.json(data);
   } catch {
     return NextResponse.json(FALLBACK);

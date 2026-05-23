@@ -42,13 +42,13 @@ function normaliseTemplate(value) {
 
 function collectQuestionText(question) {
   const options = Array.isArray(question.options)
-    ? question.options.map((option) => option.text).join(" ")
+    ? question.options.map((option) => option.text).join(" | ")
     : "";
   const categories = Array.isArray(question.categoryItems)
-    ? question.categoryItems.map((item) => item.text).join(" ")
+    ? question.categoryItems.map((item) => item.text).join(" | ")
     : "";
   const yesNo = Array.isArray(question.yesNoStatements)
-    ? question.yesNoStatements.map((item) => item.text).join(" ")
+    ? question.yesNoStatements.map((item) => item.text).join(" | ")
     : "";
 
   return [
@@ -58,7 +58,7 @@ function collectQuestionText(question) {
     options,
     categories,
     yesNo,
-  ].join(" ");
+  ].join(" | ");
 }
 
 function countTemplates(questions, readText) {
@@ -87,6 +87,7 @@ function findBannedWording(questions) {
     [/\ba event\b/i, "incorrect article before event"],
     [/\breview area \d+\b/i, "artificial repeated review-area wording"],
     [/\bextra-[a-z]/i, "awkward hyphenated extra-charge wording"],
+    [/\b([a-z]{3,})\s+\1\b/i, "repeated adjacent word"],
     [/\bNaN|Infinity\b/i, "non-finite numeric output"],
     [/GBP -/i, "negative money value"],
   ];

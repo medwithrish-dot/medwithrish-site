@@ -1,6 +1,7 @@
 import { createStripeClient } from "@/utils/stripe";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
+import { getRequiredSiteUrl } from "@/utils/site-url";
 
 export const runtime = "nodejs";
 
@@ -17,11 +18,15 @@ export async function POST(request: Request) {
     }
 
     const admin = createAdminClient();
-    const { data: profile } = await admin
+    const { data: profile, error: profileError } = await admin
       .from("profiles")
-      .select("stripe_customer_id")
+      .select("stripe_customer_id,stripe_subscription_id,subscription_status")
       .eq("id", user.id)
       .maybeSingle();
+
+    if (profileError) {
+      return Response.json({ error: profileError.message }, { status: 500 });
+    }
 
     if (!profile?.stripe_customer_id) {
       return Response.json(
@@ -30,10 +35,41 @@ export async function POST(request: Request) {
       );
     }
 
-    const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ??
-      request.headers.get("origin") ??
-      "http://localhost:3000";
+    if (!profile.stripe_subscription_id || profile.subscription_status === "manual") {
+      return Response.json(
+        {
+          error:
+            "This account has manual Premium access, so there is no Stripe billing portal to manage.",
+        },
+        { status: 409 }
+      );
+    }
+
+    const { data: activeSubscription, error: subscriptionError } = await admin
+      .from("subscriptions")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("stripe_customer_id", profile.stripe_customer_id)
+      .eq("stripe_subscription_id", profile.stripe_subscription_id)
+      .in("status", ["active", "trialing"])
+      .limit(1)
+      .maybeSingle();
+
+    if (subscriptionError) {
+      return Response.json(
+        { error: subscriptionError.message },
+        { status: 500 }
+      );
+    }
+
+    if (!activeSubscription) {
+      return Response.json(
+        { error: "No active Stripe subscription found for this account." },
+        { status: 409 }
+      );
+    }
+
+    const siteUrl = getRequiredSiteUrl(request);
 
     const stripe = createStripeClient();
     try {

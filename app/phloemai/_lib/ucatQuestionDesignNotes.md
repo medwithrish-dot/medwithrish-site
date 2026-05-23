@@ -22,9 +22,9 @@ These notes are for future AI-assisted question-bank work. Read this file before
 
 Generate large expansions in 10 reviewed batches, not one bulk pass.
 
-Current generated-batch progress: 19/20.
+Current generated-batch progress: 20/20.
 
-Second-wave generated-batch progress: 9/10.
+Second-wave generated-batch progress: 10/10.
 
 Recommended batch size: 900 questions per queued batch.
 
