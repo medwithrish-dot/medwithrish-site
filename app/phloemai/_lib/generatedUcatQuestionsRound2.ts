@@ -1020,7 +1020,7 @@ const SJT_RATING_SETS: SjtRatingSet[] = [
   {
     setId: "sjt-round2-disrespectful-joke",
     mode: "appropriateness",
-    subtype: "sjt-communication",
+    subtype: "sjt-appropriateness",
     stimulus: [
       "During a ward break, a student hears another student make a mocking joke about a patient who was anxious during a procedure.",
       "How appropriate are the following responses?",
@@ -1035,7 +1035,7 @@ const SJT_RATING_SETS: SjtRatingSet[] = [
   {
     setId: "sjt-round2-missed-teaching",
     mode: "importance",
-    subtype: "sjt-integrity",
+    subtype: "sjt-importance",
     stimulus: [
       "A student forgets to attend compulsory teaching and a friend offers to sign the attendance sheet for them.",
       "How important are the following considerations?",
@@ -1110,7 +1110,7 @@ const ROUND_TWO_SJT_ORDERING: UCATQuestion[] = [
 ].map(([id, stimulus, items, order]) => ({
   id: id as string,
   section: "sjt" as const,
-  subtype: "sjt-ordering" as const,
+  subtype: "sjt-drag-drop" as const,
   questionType: "drag-order" as const,
   tags: ["text-stem", "set-based", "multi-step"] as UCATQuestionTag[],
   issueTags: ["patient-safety", "communication", "escalation"] as UCATSjtIssueTag[],

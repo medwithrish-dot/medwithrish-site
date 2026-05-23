@@ -588,7 +588,7 @@ function makeSjtOrder(index: number): UCATQuestion {
   return {
     id: setId,
     section: "sjt",
-    subtype: "sjt-ordering",
+    subtype: "sjt-drag-drop",
     questionType: "drag-order",
     tags: ["text-stem", "set-based", "multi-step"],
     issueTags: [...issueTags],

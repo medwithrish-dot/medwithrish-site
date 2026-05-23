@@ -2386,7 +2386,7 @@ const sjtSingleSets: SjtSingleSet[] = [
   {
     setId: "sjt-generated-peer-feedback",
     mode: "appropriateness" as const,
-    subtype: "sjt-communication" as const,
+    subtype: "sjt-appropriateness" as const,
     stimulus: [
       "Ari is paired with a student who gives rushed explanations to patients during a teaching clinic. A patient looks confused but says nothing. Ari is worried about damaging the working relationship.",
       "How appropriate are the following responses by Ari?",
@@ -2416,7 +2416,7 @@ const sjtSingleSets: SjtSingleSet[] = [
   {
     setId: "sjt-generated-invented-reflection",
     mode: "importance" as const,
-    subtype: "sjt-integrity" as const,
+    subtype: "sjt-importance" as const,
     stimulus: [
       "Sam is writing a placement reflection. A friend suggests inventing a patient conversation because Sam did not see enough cases that week. The reflection will be used to sign off a required competency.",
       "How important are the following considerations for Sam?",
@@ -2723,7 +2723,7 @@ const GENERATED_SJT_ORDERING: UCATQuestion[] = [
 ].map((item) => ({
   id: item.id,
   section: "sjt" as const,
-  subtype: "sjt-ordering" as const,
+  subtype: "sjt-drag-drop" as const,
   questionType: "drag-order" as const,
   tags: ["text-stem", "set-based", "multi-step"] as UCATQuestionTag[],
   issueTags: ["patient-safety", "communication", "escalation"] as UCATSjtIssueTag[],

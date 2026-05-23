@@ -196,7 +196,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeImportance({
     id: "sjt-importance-respect-001",
-    subtype: "sjt-communication",
+    subtype: "sjt-importance",
     setId: "sjt-derogatory-comments",
     stimulus: derogatoryCommentsStimulus,
     question: "That the remarks undermine the patient's dignity",
@@ -207,7 +207,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeImportance({
     id: "sjt-importance-respect-002",
-    subtype: "sjt-communication",
+    subtype: "sjt-importance",
     setId: "sjt-derogatory-comments",
     stimulus: derogatoryCommentsStimulus,
     question: "That other staff members laugh at the remarks",
@@ -218,7 +218,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeImportance({
     id: "sjt-importance-respect-003",
-    subtype: "sjt-communication",
+    subtype: "sjt-importance",
     setId: "sjt-derogatory-comments",
     stimulus: derogatoryCommentsStimulus,
     question: "That Sana feels uneasy about what was said",
@@ -229,7 +229,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeImportance({
     id: "sjt-importance-respect-004",
-    subtype: "sjt-communication",
+    subtype: "sjt-importance",
     setId: "sjt-derogatory-comments",
     stimulus: derogatoryCommentsStimulus,
     question: "That similar attitudes could affect how staff treat the patient",
@@ -240,7 +240,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeImportance({
     id: "sjt-importance-integrity-001",
-    subtype: "sjt-integrity",
+    subtype: "sjt-importance",
     setId: "sjt-invented-data",
     stimulus: copiedWorkStimulus,
     question: "That submitting invented data would be academically dishonest",
@@ -251,7 +251,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeImportance({
     id: "sjt-importance-integrity-002",
-    subtype: "sjt-integrity",
+    subtype: "sjt-importance",
     setId: "sjt-invented-data",
     stimulus: copiedWorkStimulus,
     question: "That the deadline is the following morning",
@@ -262,7 +262,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeImportance({
     id: "sjt-importance-integrity-003",
-    subtype: "sjt-integrity",
+    subtype: "sjt-importance",
     setId: "sjt-invented-data",
     stimulus: copiedWorkStimulus,
     question: "That the group believes no one will ask to see the raw forms",
@@ -273,7 +273,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeImportance({
     id: "sjt-importance-integrity-004",
-    subtype: "sjt-integrity",
+    subtype: "sjt-importance",
     setId: "sjt-invented-data",
     stimulus: copiedWorkStimulus,
     question: "That Harriet coordinated the audit and should protect the accuracy of the submission",
@@ -416,7 +416,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeAppropriateness({
     id: "sjt-appropriateness-rough-care-001",
-    subtype: "sjt-communication",
+    subtype: "sjt-appropriateness",
     setId: "sjt-rough-care",
     stimulus: roughCareStimulus,
     question: "Speak to Jaya privately and encourage her to reflect on the complaint with a supervisor",
@@ -427,7 +427,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeAppropriateness({
     id: "sjt-appropriateness-rough-care-002",
-    subtype: "sjt-communication",
+    subtype: "sjt-appropriateness",
     setId: "sjt-rough-care",
     stimulus: roughCareStimulus,
     question: "Tell the relative who complained that Jaya is not suited to patient contact",
@@ -438,7 +438,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeAppropriateness({
     id: "sjt-appropriateness-rough-care-003",
-    subtype: "sjt-communication",
+    subtype: "sjt-appropriateness",
     setId: "sjt-rough-care",
     stimulus: roughCareStimulus,
     question: "Ask the nurse whether the concern has been documented or escalated",
@@ -449,7 +449,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeAppropriateness({
     id: "sjt-appropriateness-rough-care-004",
-    subtype: "sjt-communication",
+    subtype: "sjt-appropriateness",
     setId: "sjt-rough-care",
     stimulus: roughCareStimulus,
     question: "Do nothing because only one patient has complained directly",
@@ -504,7 +504,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeAppropriateness({
     id: "sjt-appropriateness-social-media-001",
-    subtype: "sjt-integrity",
+    subtype: "sjt-appropriateness",
     setId: "sjt-social-media-board",
     stimulus: socialMediaStimulus,
     question: "Ask the student not to share the image and explain that patient information may be visible",
@@ -515,7 +515,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeAppropriateness({
     id: "sjt-appropriateness-social-media-002",
-    subtype: "sjt-integrity",
+    subtype: "sjt-appropriateness",
     setId: "sjt-social-media-board",
     stimulus: socialMediaStimulus,
     question: "Escalate to a supervisor if the image has already been shared or the student refuses to delete it",
@@ -526,7 +526,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeAppropriateness({
     id: "sjt-appropriateness-social-media-003",
-    subtype: "sjt-integrity",
+    subtype: "sjt-appropriateness",
     setId: "sjt-social-media-board",
     stimulus: socialMediaStimulus,
     question: "Like the photo in the group chat because it is only shared privately",
@@ -537,7 +537,7 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
   }),
   makeAppropriateness({
     id: "sjt-appropriateness-social-media-004",
-    subtype: "sjt-integrity",
+    subtype: "sjt-appropriateness",
     setId: "sjt-social-media-board",
     stimulus: socialMediaStimulus,
     question: "Move the board out of shot and take another ward selfie together",
@@ -705,86 +705,5 @@ export const SJT_QUESTIONS: UCATQuestion[] = [
     ],
     explanation:
       "Patient autonomy and consent come before learning opportunities. The student can later discuss how to manage similar situations.",
-  },
-  {
-    id: "sjt-ordering-dizzy-patient-001",
-    section: "sjt",
-    subtype: "sjt-ordering",
-    setId: "sjt-dizzy-patient-order",
-    questionType: "drag-order",
-    tags: ["text-stem", "set-based", "multi-step"],
-    issueTags: ["patient-safety", "escalation", "communication"],
-    title: "Situational Judgement Practice",
-    leftTitle: "Scenario",
-    stimulus: [
-      "During a GP placement, you are helping at reception when an elderly patient says they feel faint. Another patient is annoyed about waiting and asks you to check their appointment time.",
-    ],
-    question:
-      "Drag the actions into the most appropriate order, from first to last.",
-    instruction:
-      "Prioritise immediate safety before administrative concerns.",
-    dragItems: [
-      { id: "seat", text: "Make sure the dizzy patient is safely seated" },
-      { id: "alert", text: "Alert reception or a clinician immediately" },
-      { id: "reassure", text: "Acknowledge the waiting patient's concern calmly" },
-      { id: "check", text: "Check or ask reception to check the appointment time" },
-    ],
-    answerOrder: ["seat", "alert", "reassure", "check"],
-    explanation:
-      "Immediate patient safety comes first, then escalation. The waiting patient's concern should be acknowledged, but checking times comes after the urgent risk is managed.",
-  },
-  {
-    id: "sjt-ordering-comments-001",
-    section: "sjt",
-    subtype: "sjt-ordering",
-    setId: "sjt-comments-order",
-    questionType: "drag-order",
-    tags: ["text-stem", "set-based", "multi-step"],
-    issueTags: ["respect-dignity", "communication", "escalation"],
-    title: "Situational Judgement Practice",
-    leftTitle: "Scenario",
-    stimulus: [
-      "A colleague repeatedly makes disrespectful comments about patients during placement. You have tried changing the subject once, but the behaviour continues.",
-    ],
-    question:
-      "Drag the responses into the most appropriate order, from first to last.",
-    instruction:
-      "Respond respectfully while making sure the behaviour is addressed.",
-    dragItems: [
-      { id: "private", text: "Speak to the colleague privately and explain the concern" },
-      { id: "specific", text: "Give a specific example of why the comments are inappropriate" },
-      { id: "document", text: "Make a brief note of what happened if the behaviour continues" },
-      { id: "escalate", text: "Seek advice from a supervisor if it does not improve" },
-    ],
-    answerOrder: ["private", "specific", "document", "escalate"],
-    explanation:
-      "A private and specific conversation is usually the first step. If the behaviour continues, documenting and escalating protects patients and professionalism.",
-  },
-  {
-    id: "sjt-ordering-medication-error-001",
-    section: "sjt",
-    subtype: "sjt-ordering",
-    setId: "sjt-error-order",
-    questionType: "drag-order",
-    tags: ["text-stem", "set-based", "multi-step"],
-    issueTags: ["candour", "patient-safety", "escalation"],
-    title: "Situational Judgement Practice",
-    leftTitle: "Scenario",
-    stimulus: [
-      "You notice that a patient may have received the wrong dose of a medication. You are not involved in prescribing, but you can see the drug chart and the patient is still on the ward.",
-    ],
-    question:
-      "Drag the actions into the most appropriate order, from first to last.",
-    instruction:
-      "Prioritise patient safety, then openness and documentation through the proper team.",
-    dragItems: [
-      { id: "alert", text: "Immediately alert the nurse or doctor responsible for the patient" },
-      { id: "facts", text: "Share the specific chart information that made you concerned" },
-      { id: "follow", text: "Ask what follow-up or documentation is needed within local policy" },
-      { id: "reflect", text: "Reflect on the event with your supervisor afterwards" },
-    ],
-    answerOrder: ["alert", "facts", "follow", "reflect"],
-    explanation:
-      "Potential medication harm should be escalated immediately with clear facts. Follow-up and reflection matter, but they come after urgent safety action.",
   },
 ];

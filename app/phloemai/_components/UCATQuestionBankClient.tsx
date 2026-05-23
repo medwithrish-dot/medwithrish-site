@@ -3303,7 +3303,7 @@ function MockStartPanel({
   const nextSection =
     draft?.section ?? getNextFullMockSection(scoreMatrix, selectedMock.id);
   const actionHref = mockComplete
-    ? "/phloemai/report"
+    ? `/phloemai/report?mock=${selectedMock.id}`
     : withMockQuery(`/phloemai/mocks/full/${nextSection}`, selectedMock.id);
   const actionLabel = mockComplete
     ? "Open diagnostic report"
@@ -3645,7 +3645,7 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
             const nextSection =
               draft?.section ?? getNextFullMockSection(scoreMatrix, mock.id);
             const actionHref = mockComplete
-              ? "/phloemai/report"
+              ? `/phloemai/report?mock=${mock.id}`
               : withMockQuery(`/phloemai/mocks/full/${nextSection}`, mock.id);
             const actionLabel = mockComplete
               ? "Open diagnostic report"
@@ -5732,6 +5732,7 @@ function MarkedSessionInsightsPanel({
   onUpgrade,
   sourceSection,
   isDiagnosticSession,
+  reportHref,
 }: {
   insights: MarkedSessionInsights;
   isPremium: boolean;
@@ -5740,6 +5741,7 @@ function MarkedSessionInsightsPanel({
   onUpgrade: () => void | Promise<void>;
   sourceSection: UCATSection;
   isDiagnosticSession: boolean;
+  reportHref: string;
 }) {
   const locked = !isPremium;
   const [issuesExpanded, setIssuesExpanded] = useState(false);
@@ -5785,7 +5787,7 @@ function MarkedSessionInsightsPanel({
         </div>
         {!locked && (
           <Link
-            href="/phloemai/report"
+            href={reportHref}
             className="inline-flex h-10 items-center justify-center rounded-md bg-emerald-400 px-4 text-xs font-black text-emerald-950 hover:bg-emerald-300"
           >
             Detailed analysis unlocked
@@ -5949,7 +5951,7 @@ function MarkedSessionInsightsPanel({
               disabled={checkoutLoading}
               className="mt-4 inline-flex h-10 w-full items-center justify-center rounded-md bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
             >
-              {checkoutLoading ? "Opening..." : "Upgrade to unlock and find out more"}
+              {checkoutLoading ? "Opening..." : "View plans to unlock"}
             </button>
           )}
         </div>
@@ -6135,6 +6137,7 @@ function ReviewScreen({
 function MarkedReviewScreen({
   sectionTitle,
   summary,
+  attemptId,
   saveState,
   isPremium,
   diagnosticMode,
@@ -6148,6 +6151,7 @@ function MarkedReviewScreen({
 }: {
   sectionTitle: string;
   summary: PracticeSessionSummary;
+  attemptId?: string | null;
   saveState: SaveState;
   isPremium: boolean;
   diagnosticMode?: DiagnosticMode | null;
@@ -6171,6 +6175,9 @@ function MarkedReviewScreen({
   const diagnosticScore = getDiagnosticSectionScore(summary);
   const isDiagnostic = Boolean(diagnosticMode);
   const analysisUnlocked = isPremium || diagnosticMode === "free-qr";
+  const diagnosticReportHref = attemptId
+    ? `/phloemai/report?attempt=${encodeURIComponent(attemptId)}`
+    : "/phloemai/report";
   const [creditNow, setCreditNow] = useState(() => Date.now());
   const aiCreditDisplay = getAiCreditDisplay(aiFeedbackState, creditNow);
   const aiCreditLabel =
@@ -6328,6 +6335,7 @@ function MarkedReviewScreen({
           onUpgrade={onUpgrade}
           sourceSection={summary.section as UCATSection}
           isDiagnosticSession={isDiagnostic}
+          reportHref={diagnosticReportHref}
         />
 
         <section className="rounded-md border border-slate-400 bg-white p-5 shadow-lg">
@@ -6580,7 +6588,7 @@ function UCATQuestionBankSection({
     useState<SavedDiagnosticAttempt | null>(null);
   const [aiFeedbackState, setAiFeedbackState] =
     useState<DiagnosticAiFeedbackState | null>(null);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const checkoutLoading = false;
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [completedQuestionIds, setCompletedQuestionIds] = useState<Set<string>>(
     () => new Set()
@@ -7578,7 +7586,10 @@ function UCATQuestionBankSection({
             attempt_id: attemptId,
             user_id: user.id,
             section: summary.section.toUpperCase(),
-            score: summary.accuracy,
+            score:
+              summary.section === "sjt"
+                ? scoreSummary.metadata.sjtBand
+                : scoreSummary.metadata.scaledScore,
             accuracy: summary.accuracy,
             avg_seconds_per_question: summary.avgSecondsPerQuestion,
             notes: `${scoreSummary.label}: ${scoreSummary.value}`,
@@ -7619,37 +7630,8 @@ function UCATQuestionBankSection({
   };
 
   const handleUpgrade = async () => {
-    if (!hasSupabaseConfig()) {
-      window.location.assign("/phloemai/dashboard");
-      return;
-    }
-
-    setCheckoutLoading(true);
     setCheckoutError(null);
-
-    try {
-      const response = await fetch("/api/stripe/create-checkout-session", {
-        method: "POST",
-      });
-      const data = (await response.json()) as { url?: string; error?: string };
-
-      if (response.status === 401) {
-        window.location.assign("/phloemai/dashboard");
-        return;
-      }
-
-      if (!response.ok || !data.url) {
-        throw new Error(data.error ?? "Could not start checkout.");
-      }
-
-      window.location.assign(data.url);
-      window.setTimeout(() => setCheckoutLoading(false), 8000);
-    } catch (error) {
-      setCheckoutError(
-        error instanceof Error ? error.message : "Could not start checkout."
-      );
-      setCheckoutLoading(false);
-    }
+    window.location.assign("/phloemai/pricing");
   };
 
   const requestDiagnosticAiFeedback = async () => {
@@ -8116,6 +8098,7 @@ function UCATQuestionBankSection({
       <MarkedReviewScreen
         sectionTitle="Free QR diagnostic"
         summary={savedDiagnosticAttempt.summary}
+        attemptId={savedDiagnosticAttempt.attemptId}
         saveState={{ status: "saved", message: "Saved diagnostic report" }}
         isPremium={isPremium}
         diagnosticMode={diagnosticMode}
@@ -9082,6 +9065,7 @@ function UCATQuestionBankSection({
             : meta.bankTitle
         }
         summary={markedSummary}
+        attemptId={savedDiagnosticAttempt?.attemptId ?? null}
         saveState={saveState}
         isPremium={isPremium}
         diagnosticMode={diagnosticMode}

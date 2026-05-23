@@ -13,9 +13,16 @@ import {
 import {
   ROUND_FOUR_SJT_QUESTIONS,
 } from "./generatedUcatQuestionsRound4";
+import {
+  QUALITY_9200_DM_QUESTIONS,
+  QUALITY_9200_QR_QUESTIONS,
+  QUALITY_9200_SJT_QUESTIONS,
+  QUALITY_9200_VR_QUESTIONS,
+} from "./generatedUcatQuestionsQuality9200";
 import { SJT_QUESTIONS } from "./ucatSjtQuestions";
 import { HIGH_QUALITY_VR_QUESTIONS } from "./ucatVrQuestions";
 import { EXTRA_HIGH_QUALITY_VR_QUESTIONS } from "./ucatVrQuestionExtras";
+import { reviewUCATQuestionBank } from "./ucatQuestionQualityGate";
 
 // Future generated-bank work should first read ./ucatQuestionDesignNotes.md.
 export type UCATSection = "vr" | "dm" | "qr" | "sjt";
@@ -44,10 +51,7 @@ export type UCATSubtypeId =
   | "qr-calculator-strategy"
   | "sjt-appropriateness"
   | "sjt-importance"
-  | "sjt-drag-drop"
-  | "sjt-communication"
-  | "sjt-integrity"
-  | "sjt-ordering";
+  | "sjt-drag-drop";
 
 export type UCATSetShape =
   | "circle"
@@ -384,17 +388,7 @@ export const UCAT_SUBTYPES: Record<
     {
       id: "sjt-drag-drop",
       label: "Drag and drop",
-      description: "Sort actions or considerations into the correct side.",
-    },
-    {
-      id: "sjt-communication",
-      label: "Communication and teamwork",
-      description: "Respond respectfully to patients, peers and colleagues.",
-    },
-    {
-      id: "sjt-integrity",
-      label: "Integrity and confidentiality",
-      description: "Protect trust, fairness and sensitive information.",
+      description: "Sort actions into appropriate or inappropriate.",
     },
   ],
 };
@@ -843,7 +837,28 @@ export const LEGACY_VR_QUESTIONS: UCATQuestion[] = [
   },
 ];
 
-export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
+function isAppropriateInappropriateDragQuestion(question: UCATQuestion) {
+  if (question.section !== "sjt" || question.questionType !== "drag-category") {
+    return false;
+  }
+
+  const categoryIds = new Set(question.categories.map((category) => category.id));
+  return categoryIds.has("appropriate") && categoryIds.has("inappropriate");
+}
+
+function isSupportedSjtQuestion(question: UCATQuestion) {
+  if (question.section !== "sjt") return true;
+
+  return (
+    ((!question.questionType || question.questionType === "single") &&
+      (question.subtype === "sjt-appropriateness" ||
+        question.subtype === "sjt-importance")) ||
+    (question.subtype === "sjt-drag-drop" &&
+      isAppropriateInappropriateDragQuestion(question))
+  );
+}
+
+export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: [
     ...HIGH_QUALITY_VR_QUESTIONS,
     ...EXTRA_HIGH_QUALITY_VR_QUESTIONS,
@@ -2183,8 +2198,23 @@ export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     ...ROUND_TWO_SJT_QUESTIONS,
     ...ROUND_THREE_SJT_QUESTIONS,
     ...ROUND_FOUR_SJT_QUESTIONS,
-  ].filter((question) => question.questionType !== "drag-order"),
+  ].filter(isSupportedSjtQuestion),
 };
+
+const DRAFT_9200_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
+  vr: QUALITY_9200_VR_QUESTIONS,
+  dm: QUALITY_9200_DM_QUESTIONS,
+  qr: QUALITY_9200_QR_QUESTIONS,
+  sjt: QUALITY_9200_SJT_QUESTIONS,
+};
+
+export const UCAT_QUESTION_QUALITY_REVIEW = reviewUCATQuestionBank({
+  auditedBank: LEGACY_UCAT_QUESTION_BANK,
+  draftBank: DRAFT_9200_UCAT_QUESTION_BANK,
+});
+
+export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> =
+  UCAT_QUESTION_QUALITY_REVIEW.bank;
 
 export function isUCATSection(value: string): value is UCATSection {
   return UCAT_SECTIONS.some((section) => section.slug === value);

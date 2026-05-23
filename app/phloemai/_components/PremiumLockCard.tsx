@@ -15,9 +15,9 @@ type PremiumLockCardProps = {
 
 export function PremiumLockCard({
   title = "Unlock this premium section",
-  description = "Upgrade to Premium to see the full insight, recommendations and question-level analysis.",
+  description = "Premium unlocks the full insight, recommendations and question-level analysis. View the plan before checkout.",
   featureLabel = "Premium",
-  buttonLabel = "Upgrade to Premium",
+  buttonLabel = "View plans",
   className = "",
   checkoutLoading = false,
   onUpgrade,
@@ -29,30 +29,21 @@ export function PremiumLockCard({
   const handleUpgrade = async () => {
     setError(null);
 
-    if (onUpgrade) {
-      await onUpgrade();
+    if (!onUpgrade) {
+      window.location.assign("/phloemai/pricing");
       return;
     }
 
     setOpeningCheckout(true);
 
     try {
-      const response = await fetch("/api/stripe/create-checkout-session", {
-        method: "POST",
-      });
-      const data = (await response.json()) as { url?: string; error?: string };
-
-      if (!response.ok || !data.url) {
-        throw new Error(data.error ?? "Could not start checkout.");
-      }
-
-      window.location.assign(data.url);
-      window.setTimeout(() => setOpeningCheckout(false), 8000);
+      await onUpgrade();
+      setOpeningCheckout(false);
     } catch (nextError) {
       setError(
         nextError instanceof Error
           ? nextError.message
-          : "Could not start checkout."
+          : "Could not open pricing."
       );
       setOpeningCheckout(false);
     }
@@ -60,11 +51,11 @@ export function PremiumLockCard({
 
   return (
     <section
-      className={`relative overflow-hidden rounded-xl border border-amber-200 bg-white shadow-sm ${className}`}
+      className={`relative min-h-[360px] overflow-hidden rounded-xl border border-amber-200 bg-white shadow-sm sm:min-h-[320px] ${className}`}
     >
       <div
         aria-hidden="true"
-        className="select-none space-y-4 p-5 opacity-70 blur-[3px]"
+        className="min-h-[360px] select-none space-y-4 p-5 opacity-70 blur-[3px] sm:min-h-[320px]"
       >
         <div className="flex items-center justify-between gap-4">
           <div className="h-4 w-40 rounded-full bg-slate-300" />
@@ -82,7 +73,7 @@ export function PremiumLockCard({
         </div>
       </div>
 
-      <div className="absolute inset-0 flex items-center justify-center bg-white/78 px-4 backdrop-blur-[2px]">
+      <div className="absolute inset-0 flex items-center justify-center overflow-y-auto bg-white/78 px-4 py-6 backdrop-blur-[2px]">
         <div className="max-w-md rounded-xl border border-amber-200 bg-white/95 p-5 text-center shadow-lg shadow-amber-100">
           <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-amber-50 text-amber-600">
             <LockKeyhole className="h-5 w-5" aria-hidden="true" />
@@ -98,7 +89,7 @@ export function PremiumLockCard({
             type="button"
             onClick={() => void handleUpgrade()}
             disabled={loading}
-            className="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+            className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-2 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           >
             <Sparkles className="h-4 w-4" aria-hidden="true" />
             {loading ? "Opening..." : buttonLabel}

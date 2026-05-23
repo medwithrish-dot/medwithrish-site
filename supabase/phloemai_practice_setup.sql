@@ -12,6 +12,13 @@ alter table public.diagnostic_attempts
   add column if not exists ai_feedback_requested_at timestamptz,
   add column if not exists ai_feedback_status text not null default 'not_requested';
 
+alter table public.diagnostic_sections
+  drop constraint if exists diagnostic_sections_score_check;
+
+alter table public.diagnostic_sections
+  add constraint diagnostic_sections_score_check
+    check (score >= 0 and score <= 900);
+
 update public.profiles
 set diagnostic_credits = 1
 where current_plan = 'free';

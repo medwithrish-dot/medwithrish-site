@@ -990,7 +990,7 @@ const SJT_RATING_SETS: SjtRatingSet[] = [
   {
     setId: "sjt-round3-inaccurate-advice",
     mode: "appropriateness",
-    subtype: "sjt-communication",
+    subtype: "sjt-appropriateness",
     stimulus: [
       "At a health fair, a student hears another volunteer give inaccurate advice about antibiotics to a visitor.",
       "How appropriate are the following responses?",
@@ -1020,7 +1020,7 @@ const SJT_RATING_SETS: SjtRatingSet[] = [
   {
     setId: "sjt-round3-repeated-lateness",
     mode: "appropriateness",
-    subtype: "sjt-integrity",
+    subtype: "sjt-appropriateness",
     stimulus: [
       "A student has been late to placement twice because of transport disruption and realises it may happen again next week.",
       "How appropriate are the following responses?",
@@ -1110,7 +1110,7 @@ const ROUND_THREE_SJT_ORDERING: UCATQuestion[] = [
 ].map(([id, stimulus, items, order]) => ({
   id: id as string,
   section: "sjt" as const,
-  subtype: "sjt-ordering" as const,
+  subtype: "sjt-drag-drop" as const,
   questionType: "drag-order" as const,
   tags: ["text-stem", "set-based", "multi-step"] as UCATQuestionTag[],
   issueTags: ["patient-safety", "communication", "escalation"] as UCATSjtIssueTag[],

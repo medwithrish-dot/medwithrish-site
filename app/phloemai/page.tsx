@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { PhloemAILandingPage } from "./_components/PhloemAIClient";
 
+const phloemAiTitle = "PhloemAI - Free UCAT Question Bank & AI Tutor";
+
 export const metadata: Metadata = {
-  title: "PhloemAI - Free UCAT Question Bank & AI Tutor",
+  title: {
+    absolute: phloemAiTitle,
+  },
   description:
     "Practise UCAT questions, start a free diagnostic and use PhloemAI to find the habits costing you marks.",
   applicationName: "PhloemAI",
@@ -22,16 +26,16 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: "PhloemAI - Free UCAT Question Bank & AI Tutor",
+    title: phloemAiTitle,
     description:
-      "Free UCAT question bank practice, diagnostics and AI-powered feedback from MedWithRish.",
+      "Free UCAT question bank practice, diagnostics and AI-powered feedback.",
     url: "/phloemai",
-    siteName: "MedWithRish",
+    siteName: "PhloemAI",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "PhloemAI - Free UCAT Question Bank & AI Tutor",
+    title: phloemAiTitle,
     description:
       "Practise UCAT questions and get AI diagnostics that show why marks are slipping.",
   },

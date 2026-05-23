@@ -1,0 +1,1279 @@
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/phloemai/_lib/ucatQuestionBank.ts:16:1
+Module not found: Can't resolve './generatedUcatQuestionsQuality1000'
+  [90m14 |[0m   [33mROUND_FOUR_SJT_QUESTIONS[0m,
+  [90m15 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsRound4"[0m;
+[31m[1m>[0m [90m16 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m17 |[0m   [33mQUALITY_9200_DM_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m18 |[0m   [33mQUALITY_9200_QR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m19 |[0m   [33mQUALITY_9200_SJT_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m20 |[0m   [33mQUALITY_9200_VR_QUESTIONS[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m21 |[0m } [36mfrom[0m [32m"./generatedUcatQuestionsQuality1000"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m22 |[0m [36mimport[0m { [33mSJT_QUESTIONS[0m } [36mfrom[0m [32m"./ucatSjtQuestions"[0m;
+  [90m23 |[0m [36mimport[0m { [33mHIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestions"[0m;
+  [90m24 |[0m [36mimport[0m { [33mEXTRA_HIGH_QUALITY_VR_QUESTIONS[0m } [36mfrom[0m [32m"./ucatVrQuestionExtras"[0m;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component Browser]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/phloemai/_lib/ucatQuestionBank.ts [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Client Component SSR]
+    ./app/phloemai/_components/PhloemAIClient.tsx [Server Component]
+    ./app/phloemai/pricing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/ucat-mock-difficulty/page.tsx:3:1
+Module not found: Can't resolve './MedifyMockDifficultyClient'
+  [90m 1 |[0m [36mimport[0m [36mtype[0m { [33mMetadata[0m } [36mfrom[0m [32m"next"[0m;
+  [90m 2 |[0m [36mimport[0m [33mNavbar[0m [36mfrom[0m [32m"@/components/Navbar"[0m;
+[31m[1m>[0m [90m 3 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m 4 |[0m   [33mMedifyMockDifficultyClient[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 5 |[0m   [36mtype[0m [33mDifficulty[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 6 |[0m   [36mtype[0m [33mMockDifficultyRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 7 |[0m } [36mfrom[0m [32m"./MedifyMockDifficultyClient"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 8 |[0m
+  [90m 9 |[0m [36mconst[0m [33mSHEET_URL[0m =
+  [90m10 |[0m   [32m"https://docs.google.com/spreadsheets/d/1_MhhGQyXX3o_qbL6-QFc1KZAj3XFXn2d-oiBvIuSFM4/edi...[0m
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/ucat-mock-difficulty/page.tsx:3:1
+Module not found: Can't resolve './MedifyMockDifficultyClient'
+  [90m 1 |[0m [36mimport[0m [36mtype[0m { [33mMetadata[0m } [36mfrom[0m [32m"next"[0m;
+  [90m 2 |[0m [36mimport[0m [33mNavbar[0m [36mfrom[0m [32m"@/components/Navbar"[0m;
+[31m[1m>[0m [90m 3 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m 4 |[0m   [33mMedifyMockDifficultyClient[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 5 |[0m   [36mtype[0m [33mDifficulty[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 6 |[0m   [36mtype[0m [33mMockDifficultyRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 7 |[0m } [36mfrom[0m [32m"./MedifyMockDifficultyClient"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 8 |[0m
+  [90m 9 |[0m [36mconst[0m [33mSHEET_URL[0m =
+  [90m10 |[0m   [32m"https://docs.google.com/spreadsheets/d/1_MhhGQyXX3o_qbL6-QFc1KZAj3XFXn2d-oiBvIuSFM4/edi...[0m
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/ucat-mock-difficulty/page.tsx:3:1
+Module not found: Can't resolve './MedifyMockDifficultyClient'
+  [90m 1 |[0m [36mimport[0m [36mtype[0m { [33mMetadata[0m } [36mfrom[0m [32m"next"[0m;
+  [90m 2 |[0m [36mimport[0m [33mNavbar[0m [36mfrom[0m [32m"@/components/Navbar"[0m;
+[31m[1m>[0m [90m 3 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m 4 |[0m   [33mMedifyMockDifficultyClient[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 5 |[0m   [36mtype[0m [33mDifficulty[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 6 |[0m   [36mtype[0m [33mMockDifficultyRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 7 |[0m } [36mfrom[0m [32m"./MedifyMockDifficultyClient"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 8 |[0m
+  [90m 9 |[0m [36mconst[0m [33mSHEET_URL[0m =
+  [90m10 |[0m   [32m"https://docs.google.com/spreadsheets/d/1_MhhGQyXX3o_qbL6-QFc1KZAj3XFXn2d-oiBvIuSFM4/edi...[0m
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/ucat-mock-difficulty/page.tsx:3:1
+Module not found: Can't resolve './MedifyMockDifficultyClient'
+  [90m 1 |[0m [36mimport[0m [36mtype[0m { [33mMetadata[0m } [36mfrom[0m [32m"next"[0m;
+  [90m 2 |[0m [36mimport[0m [33mNavbar[0m [36mfrom[0m [32m"@/components/Navbar"[0m;
+[31m[1m>[0m [90m 3 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m 4 |[0m   [33mMedifyMockDifficultyClient[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 5 |[0m   [36mtype[0m [33mDifficulty[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 6 |[0m   [36mtype[0m [33mMockDifficultyRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 7 |[0m } [36mfrom[0m [32m"./MedifyMockDifficultyClient"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 8 |[0m
+  [90m 9 |[0m [36mconst[0m [33mSHEET_URL[0m =
+  [90m10 |[0m   [32m"https://docs.google.com/spreadsheets/d/1_MhhGQyXX3o_qbL6-QFc1KZAj3XFXn2d-oiBvIuSFM4/edi...[0m
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/ucat-mock-difficulty/page.tsx:3:1
+Module not found: Can't resolve './MedifyMockDifficultyClient'
+  [90m 1 |[0m [36mimport[0m [36mtype[0m { [33mMetadata[0m } [36mfrom[0m [32m"next"[0m;
+  [90m 2 |[0m [36mimport[0m [33mNavbar[0m [36mfrom[0m [32m"@/components/Navbar"[0m;
+[31m[1m>[0m [90m 3 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m 4 |[0m   [33mMedifyMockDifficultyClient[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 5 |[0m   [36mtype[0m [33mDifficulty[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 6 |[0m   [36mtype[0m [33mMockDifficultyRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 7 |[0m } [36mfrom[0m [32m"./MedifyMockDifficultyClient"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 8 |[0m
+  [90m 9 |[0m [36mconst[0m [33mSHEET_URL[0m =
+  [90m10 |[0m   [32m"https://docs.google.com/spreadsheets/d/1_MhhGQyXX3o_qbL6-QFc1KZAj3XFXn2d-oiBvIuSFM4/edi...[0m
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./app/ucat-mock-difficulty/page.tsx:3:1
+Module not found: Can't resolve './MedifyMockDifficultyClient'
+  [90m 1 |[0m [36mimport[0m [36mtype[0m { [33mMetadata[0m } [36mfrom[0m [32m"next"[0m;
+  [90m 2 |[0m [36mimport[0m [33mNavbar[0m [36mfrom[0m [32m"@/components/Navbar"[0m;
+[31m[1m>[0m [90m 3 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m 4 |[0m   [33mMedifyMockDifficultyClient[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 5 |[0m   [36mtype[0m [33mDifficulty[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 6 |[0m   [36mtype[0m [33mMockDifficultyRow[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m 7 |[0m } [36mfrom[0m [32m"./MedifyMockDifficultyClient"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 8 |[0m
+  [90m 9 |[0m [36mconst[0m [33mSHEET_URL[0m =
+  [90m10 |[0m   [32m"https://docs.google.com/spreadsheets/d/1_MhhGQyXX3o_qbL6-QFc1KZAj3XFXn2d-oiBvIuSFM4/edi...[0m
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior

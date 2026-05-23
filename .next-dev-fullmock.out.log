@@ -1,0 +1,71 @@
+
+> medwithrish-site@0.1.0 dev
+> next dev -p 3000
+
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.28:3000
+- Environments: .env.local
+✓ Ready in 1611ms
+Creating turbopack project {
+  dir: 'C:\\Users\\usedf\\OneDrive\\Desktop\\MEDWITHRISH\\medwithrish-site',
+  testMode: true
+}
+
+ GET /phloemai 200 in 3.0s (next.js: 444ms, proxy.ts: 968ms, application-code: 1545ms)
+✓ Compiled in 378ms
+✓ Compiled in 344ms
+✓ Compiled in 273ms
+ GET /phloemai 200 in 1844ms (next.js: 534ms, proxy.ts: 158ms, application-code: 1153ms)
+ GET /phloemai/dashboard 200 in 1815ms (next.js: 913ms, proxy.ts: 641ms, application-code: 261ms)
+ GET /phloemai/pricing 200 in 2.9s (next.js: 2.6s, proxy.ts: 28ms, application-code: 283ms)
+✓ Compiled in 54ms
+ GET /phloemai/question-bank 200 in 2.2s (next.js: 346ms, proxy.ts: 159ms, application-code: 1740ms)
+ GET /ucat-mock-difficulty 200 in 3.5s (next.js: 2.1s, proxy.ts: 158ms, application-code: 1215ms)
+ GET /ucat-mock-difficulty 200 in 126ms (next.js: 3ms, proxy.ts: 5ms, application-code: 118ms)
+ GET /ucat-mock-difficulty 200 in 826ms (next.js: 4ms, proxy.ts: 666ms, application-code: 156ms)
+✓ Compiled in 360ms
+ GET /ucat-mock-difficulty 200 in 747ms (next.js: 126ms, proxy.ts: 421ms, application-code: 200ms)
+ GET /ucat-mock-difficulty 200 in 189ms (next.js: 11ms, proxy.ts: 21ms, application-code: 157ms)
+ GET /ucat-mock-difficulty 200 in 92ms (next.js: 9ms, proxy.ts: 22ms, application-code: 61ms)
+ GET /ucat-mock-difficulty 200 in 296ms (next.js: 4ms, proxy.ts: 7ms, application-code: 285ms)
+ GET /ucat-mock-difficulty 200 in 211ms (next.js: 26ms, proxy.ts: 30ms, application-code: 155ms)
+ GET /ucat-mock-difficulty 200 in 971ms (next.js: 8ms, proxy.ts: 16ms, application-code: 947ms)
+ GET /ucat-mock-difficulty 200 in 1090ms (next.js: 22ms, proxy.ts: 48ms, application-code: 1020ms)
+✓ Compiled in 679ms
+ GET /ucat-mock-difficulty 404 in 2.4s (next.js: 1769ms, proxy.ts: 463ms, application-code: 176ms)
+ GET /ucat-mock-difficulty 404 in 589ms (next.js: 62ms, proxy.ts: 37ms, application-code: 489ms)
+ GET /ucat-mock-difficulty 404 in 710ms (next.js: 141ms, proxy.ts: 37ms, application-code: 533ms)
+○ Compiling /ucat-mock-difficulty ...
+ GET /ucat-mock-difficulty 200 in 6.5s (next.js: 5.7s, proxy.ts: 455ms, application-code: 392ms)
+ GET /ucat-mock-difficulty 200 in 719ms (next.js: 6ms, proxy.ts: 463ms, application-code: 251ms)
+ GET /ucat-mock-difficulty 200 in 1095ms (next.js: 692ms, proxy.ts: 107ms, application-code: 297ms)
+ GET /ucat-mock-difficulty 200 in 1119ms (next.js: 165ms, proxy.ts: 108ms, application-code: 846ms)
+ GET /ucat-mock-difficulty 200 in 1074ms (next.js: 757ms, proxy.ts: 89ms, application-code: 229ms)
+ GET /ucat-mock-difficulty 200 in 1119ms (next.js: 275ms, proxy.ts: 111ms, application-code: 733ms)
+ GET /ucat-mock-difficulty 200 in 1403ms (next.js: 14ms, proxy.ts: 25ms, application-code: 1365ms)
+ GET /ucat-mock-difficulty 200 in 1556ms (next.js: 96ms, proxy.ts: 109ms, application-code: 1351ms)
+ GET /ucat-mock-difficulty 200 in 163ms (next.js: 7ms, proxy.ts: 13ms, application-code: 143ms)
+ GET /ucat-mock-difficulty 200 in 179ms (next.js: 9ms, proxy.ts: 38ms, application-code: 131ms)
+ GET /ucat-mock-difficulty 200 in 300ms (next.js: 6ms, proxy.ts: 21ms, application-code: 273ms)
+ GET /resources 200 in 2.3s (next.js: 1730ms, proxy.ts: 20ms, application-code: 502ms)
+✓ Compiled in 373ms
+ GET /resources 200 in 1318ms (next.js: 397ms, proxy.ts: 569ms, application-code: 352ms)
+ GET /resources 200 in 488ms (next.js: 9ms, proxy.ts: 23ms, application-code: 456ms)
+ GET /resources 200 in 383ms (next.js: 28ms, proxy.ts: 54ms, application-code: 301ms)
+ GET /resources 200 in 382ms (next.js: 128ms, proxy.ts: 54ms, application-code: 200ms)
+ GET /resources 200 in 379ms (next.js: 208ms, proxy.ts: 50ms, application-code: 121ms)
+ GET /resources 200 in 2.4s (next.js: 617ms, proxy.ts: 1492ms, application-code: 281ms)
+ GET /resources 200 in 880ms (next.js: 151ms, proxy.ts: 626ms, application-code: 103ms)
+✓ Compiled in 4.6s
+✓ Compiled in 413ms
+ GET /phloemai/diagnostics/mock-diagnostic 200 in 944ms (next.js: 354ms, proxy.ts: 7ms, application-code: 582ms)
+ GET /phloemai/pricing 200 in 2.5s (next.js: 317ms, proxy.ts: 326ms, application-code: 1851ms)
+ GET /phloemai/diagnostic 200 in 2.2s (next.js: 2.0s, proxy.ts: 46ms, application-code: 162ms)
+ GET /phloemai/pricing 200 in 2.1s (next.js: 325ms, proxy.ts: 139ms, application-code: 1674ms)
+ GET /phloemai/diagnostic 200 in 5.2s (next.js: 311ms, proxy.ts: 1974ms, application-code: 2.9s)
+ GET /phloemai 200 in 5.2s (next.js: 757ms, proxy.ts: 1967ms, application-code: 2.5s)
+ GET /phloemai/diagnostics/mock-diagnostic 200 in 5.2s (next.js: 2.8s, proxy.ts: 1975ms, application-code: 429ms)
+ GET /phloemai 200 in 4.0s (next.js: 337ms, proxy.ts: 118ms, application-code: 3.6s)
+ GET /phloemai/pricing 200 in 4.4s (next.js: 2.3s, proxy.ts: 130ms, application-code: 1940ms)
+ GET /phloemai/diagnostic 200 in 5.8s (next.js: 2.2s, proxy.ts: 2.0s, application-code: 1572ms)

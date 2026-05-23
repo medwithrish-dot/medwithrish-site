@@ -27,10 +27,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  icons: {
-    icon: [{ url: "/favicon.ico?v=2", sizes: "any" }],
-    shortcut: ["/favicon.ico?v=2"],
-  },
 };
 
 export default function RootLayout({

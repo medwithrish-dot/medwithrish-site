@@ -91,6 +91,16 @@ function PhloemAILogo({ compact = false }: { compact?: boolean } = {}) {
   );
 }
 
+function PhloemAIFaviconMark({ className = "" }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`block shrink-0 bg-cover bg-center bg-no-repeat ${className}`}
+      style={{ backgroundImage: "url('/favicon.ico')" }}
+    />
+  );
+}
+
 // ── Eye Tracking Demo ─────────────────────────────────────────────────────────
 
 // All class strings are explicit so Tailwind can extract them at build time.
@@ -1174,11 +1184,20 @@ type DashboardDiagnostic = {
   section: UCATSectionCode;
   source: string | null;
   diagnosticMode: string | null;
+  mockId: string | null;
+  mockScope: string | null;
+  mockLabel: string | null;
   accuracy: number;
+  scorePoints: number | null;
+  maxScore: number | null;
+  answeredQuestions: number | null;
+  totalQuestions: number | null;
+  avgSecondsPerQuestion: number | null;
   issues: DashboardDiagnosticIssue[];
   strengths: string[];
   studyPlanTasks: DashboardDiagnosticTask[];
   aiFeedbackText: string | null;
+  aiFeedbackScope: string | null;
   aiFeedbackStatus: string | null;
   completedAt: string | null;
 };
@@ -1241,29 +1260,165 @@ function normaliseDashboardDiagnostic(
         : null;
   const diagnosticMode =
     typeof metadata.diagnosticMode === "string" ? metadata.diagnosticMode : null;
+  const mockId = typeof metadata.mockId === "string" ? metadata.mockId : null;
+  const mockScope =
+    typeof metadata.mockScope === "string" ? metadata.mockScope : null;
+  const mockLabel =
+    typeof metadata.mockLabel === "string" ? metadata.mockLabel : null;
+  const aiFeedbackScope =
+    typeof metadata.aiFeedbackScope === "string"
+      ? metadata.aiFeedbackScope
+      : null;
+  const scorePoints =
+    typeof summary?.scorePoints === "number" ? summary.scorePoints : null;
+  const maxScore = typeof summary?.maxScore === "number" ? summary.maxScore : null;
+  const answeredQuestions =
+    typeof summary?.answeredQuestions === "number"
+      ? summary.answeredQuestions
+      : null;
+  const totalQuestions =
+    typeof summary?.totalQuestions === "number" ? summary.totalQuestions : null;
+  const avgSecondsPerQuestion =
+    typeof summary?.avgSecondsPerQuestion === "number"
+      ? summary.avgSecondsPerQuestion
+      : null;
 
   return {
     id: row.id ?? row.completed_at ?? `diagnostic-${index}`,
     section,
     source: typeof row.source === "string" ? row.source : null,
     diagnosticMode,
+    mockId,
+    mockScope,
+    mockLabel,
     accuracy: typeof row.accuracy === "number" ? row.accuracy : 0,
+    scorePoints,
+    maxScore,
+    answeredQuestions,
+    totalQuestions,
+    avgSecondsPerQuestion,
     issues,
     strengths,
     studyPlanTasks,
     aiFeedbackText,
+    aiFeedbackScope,
     aiFeedbackStatus,
     completedAt: typeof row.completed_at === "string" ? row.completed_at : null,
   };
 }
 
 const FREE_QR_DIAGNOSTIC_SOURCE = "free_qr_diagnostic";
+const FULL_MOCK_SECTION_SOURCE = "full_mock_section_diagnostic";
+const FULL_MOCK_REPORT_SECTION_ORDER: UCATSectionCode[] = [
+  "VR",
+  "DM",
+  "QR",
+  "SJT",
+];
 
 function isFreeQrDiagnostic(diagnostic: DashboardDiagnostic | null | undefined) {
   return (
     diagnostic?.source === FREE_QR_DIAGNOSTIC_SOURCE ||
     diagnostic?.diagnosticMode === "free-qr"
   );
+}
+
+function isFullMockSectionDiagnostic(
+  diagnostic: DashboardDiagnostic | null | undefined
+) {
+  return (
+    diagnostic?.source === FULL_MOCK_SECTION_SOURCE &&
+    diagnostic?.mockScope === "full-mock" &&
+    Boolean(diagnostic.mockId)
+  );
+}
+
+function getFullMockReportDiagnostics(
+  selectedDiagnostic: DashboardDiagnostic | null,
+  diagnosticHistory: DashboardDiagnostic[]
+) {
+  if (!selectedDiagnostic) return [];
+  if (!isFullMockSectionDiagnostic(selectedDiagnostic)) {
+    return [selectedDiagnostic];
+  }
+
+  const diagnostics = diagnosticHistory.filter(
+    (diagnostic) =>
+      isFullMockSectionDiagnostic(diagnostic) &&
+      diagnostic.mockId === selectedDiagnostic.mockId
+  );
+
+  const withSelected = diagnostics.some(
+    (diagnostic) => diagnostic.id === selectedDiagnostic.id
+  )
+    ? diagnostics
+    : [selectedDiagnostic, ...diagnostics];
+
+  const bySection = new Map<UCATSectionCode, DashboardDiagnostic>();
+
+  withSelected.forEach((diagnostic) => {
+    const current = bySection.get(diagnostic.section);
+    const currentTime = current?.completedAt
+      ? new Date(current.completedAt).getTime()
+      : 0;
+    const nextTime = diagnostic.completedAt
+      ? new Date(diagnostic.completedAt).getTime()
+      : 0;
+
+    if (!current || nextTime >= currentTime) {
+      bySection.set(diagnostic.section, diagnostic);
+    }
+  });
+
+  return FULL_MOCK_REPORT_SECTION_ORDER.flatMap((section) => {
+    const diagnostic = bySection.get(section);
+    return diagnostic ? [diagnostic] : [];
+  });
+}
+
+function getCombinedDiagnosticAccuracy(diagnostics: DashboardDiagnostic[]) {
+  const scorePoints = diagnostics.reduce(
+    (sum, diagnostic) => sum + (diagnostic.scorePoints ?? 0),
+    0
+  );
+  const maxScore = diagnostics.reduce(
+    (sum, diagnostic) => sum + (diagnostic.maxScore ?? 0),
+    0
+  );
+
+  if (maxScore > 0) return Math.round((scorePoints / maxScore) * 100);
+
+  const accuracyTotal = diagnostics.reduce(
+    (sum, diagnostic) => sum + diagnostic.accuracy,
+    0
+  );
+
+  return diagnostics.length > 0
+    ? Math.round(accuracyTotal / diagnostics.length)
+    : 0;
+}
+
+function getCombinedDiagnosticAvgSeconds(diagnostics: DashboardDiagnostic[]) {
+  const weightedSeconds = diagnostics.reduce(
+    (sum, diagnostic) =>
+      sum +
+      (diagnostic.avgSecondsPerQuestion ?? 0) *
+        (diagnostic.totalQuestions ?? 0),
+    0
+  );
+  const totalQuestions = diagnostics.reduce(
+    (sum, diagnostic) => sum + (diagnostic.totalQuestions ?? 0),
+    0
+  );
+
+  if (totalQuestions > 0) return Math.round(weightedSeconds / totalQuestions);
+
+  const avgTotal = diagnostics.reduce(
+    (sum, diagnostic) => sum + (diagnostic.avgSecondsPerQuestion ?? 0),
+    0
+  );
+
+  return diagnostics.length > 0 ? Math.round(avgTotal / diagnostics.length) : 0;
 }
 
 const dashboardPageMeta: Record<
@@ -2138,6 +2293,46 @@ function getActiveDiagnosticStudyPlanTasks(
   );
 }
 
+function getDiagnosticReportStudyPlanTasks(
+  diagnostics: DashboardDiagnostic[]
+): StudyPlanDisplayTask[] {
+  if (diagnostics.length <= 1) {
+    return getDiagnosticStudyPlanTasks(diagnostics[0] ?? null);
+  }
+
+  const seen = new Set<string>();
+
+  return diagnostics.flatMap((diagnostic) =>
+    getDiagnosticStudyPlanTasks(diagnostic).flatMap((task) => {
+      const key = normaliseIssueText(`${diagnostic.section} ${task.fix}`);
+      if (seen.has(key)) return [];
+      seen.add(key);
+
+      return [
+        {
+          ...task,
+          id: `${diagnostic.id}-${task.id}`,
+          label: task.label
+            ? `${diagnostic.section} - ${task.label}`
+            : diagnostic.section,
+        },
+      ];
+    })
+  );
+}
+
+function getActiveDiagnosticReportStudyPlanTasks(
+  diagnostics: DashboardDiagnostic[],
+  completedTaskIds: Set<string>,
+  removedTaskIds: Set<string>
+) {
+  const hiddenTaskIds = new Set([...completedTaskIds, ...removedTaskIds]);
+
+  return getDiagnosticReportStudyPlanTasks(diagnostics).filter(
+    (task) => !hiddenTaskIds.has(task.id)
+  );
+}
+
 function formatDiagnosticReportDate(value: string | null) {
   if (!value) return "Date not saved";
 
@@ -2548,7 +2743,7 @@ function ReportIssueSignalCard({
           disabled={checkoutLoading}
           className="mt-5 inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-4 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
         >
-          {checkoutLoading ? "Opening..." : "Upgrade to unlock and find out more"}
+          {checkoutLoading ? "Opening..." : "View plans to unlock"}
         </button>
       )}
     </section>
@@ -2581,15 +2776,18 @@ function DiagnosticContent({
   });
   const creditIsCoolingDown = creditDisplay.status.startsWith("Available in");
   const creditIsAvailable = creditDisplay.status === "Available";
+  const latestReportHref = latestDiagnostic
+    ? `/phloemai/report?attempt=${encodeURIComponent(latestDiagnostic.id)}`
+    : "/phloemai/report";
   const creditCtaHref =
     !isPremium && diagnosticCredits <= 0
       ? "/phloemai/pricing"
       : hasDiagnostic
-        ? "/phloemai/report"
+        ? latestReportHref
         : "/phloemai/question-bank/qr?diagnostic=free-qr";
   const creditCtaLabel =
     !isPremium && diagnosticCredits <= 0
-      ? "Upgrade for daily credits"
+      ? "View plans"
       : hasDiagnostic
         ? "Open AI report"
         : "Start diagnostic";
@@ -2605,9 +2803,6 @@ function DiagnosticContent({
       : isPremium
         ? "Refresh pending"
         : "Upgrade for a daily refresh";
-  const latestReportHref = latestDiagnostic
-    ? `/phloemai/report?attempt=${encodeURIComponent(latestDiagnostic.id)}`
-    : "/phloemai/report";
   const recentDiagnostics = diagnosticHistory.slice(0, 6);
 
   const timingPrompts = [
@@ -2872,12 +3067,12 @@ function DiagnosticContent({
         })}
 
         <section className="overflow-hidden rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-blue-50 shadow-sm">
-          <div className="grid h-full gap-4 p-4 sm:grid-cols-[1fr_190px] sm:items-center">
+          <div className="flex h-full flex-col gap-4 p-4">
             <div className="flex gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
                 <BadgeCheck className="h-6 w-6" aria-hidden="true" />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <h2 className="text-sm font-black">AI diagnostic credit</h2>
                   <span className={`rounded-full border px-2.5 py-1 text-[11px] font-black ${creditStatusClass}`}>
@@ -2891,41 +3086,46 @@ function DiagnosticContent({
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Link
                     href={creditCtaHref}
-                    className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700"
+                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-xs font-black text-white transition-colors hover:bg-blue-700"
                   >
                     {creditCtaLabel}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                   <Link
                     href="/phloemai/account"
-                    className="inline-flex h-9 items-center justify-center rounded-lg border border-blue-100 bg-white px-4 text-xs font-black text-blue-600 transition-colors hover:bg-blue-50"
+                    className="inline-flex min-h-10 items-center justify-center rounded-lg border border-blue-100 bg-white px-5 py-2 text-xs font-black text-blue-600 transition-colors hover:bg-blue-50"
                   >
                     Credit settings
                   </Link>
                 </div>
               </div>
             </div>
-            <div className="rounded-xl border border-white bg-white/85 p-3 shadow-sm">
-              <div className="grid grid-cols-[1fr_auto] items-start gap-3">
-                <div>
-                  <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
-                    Daily AI report
-                  </p>
-                  <p className="mt-1 text-3xl font-black leading-none text-blue-600">
-                    {creditDisplay.value}
-                  </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-xl border border-white bg-white/85 p-3 shadow-sm">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
+                      Daily AI report
+                    </p>
+                    <p className="mt-1 text-3xl font-black leading-none text-blue-600">
+                      {creditDisplay.value}
+                    </p>
+                  </div>
+                  <span
+                    className={`rounded-full px-2 py-1 text-[10px] font-black ${
+                      isPremium
+                        ? "bg-violet-50 text-violet-700"
+                        : "bg-slate-100 text-slate-600"
+                    }`}
+                  >
+                    {isPremium ? "Premium" : "Free"}
+                  </span>
                 </div>
-                <span
-                  className={`rounded-full px-2 py-1 text-[10px] font-black ${
-                    isPremium
-                      ? "bg-violet-50 text-violet-700"
-                      : "bg-slate-100 text-slate-600"
-                  }`}
-                >
-                  {isPremium ? "Premium" : "Free"}
-                </span>
+                <p className="mt-3 text-[11px] font-bold leading-4 text-slate-500">
+                  {creditDisplay.helper}
+                </p>
               </div>
-              <div className="mt-3 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+              <div className="rounded-xl border border-white bg-white/85 p-3 shadow-sm">
                 <div className="flex items-center gap-2">
                   <Timer className="h-4 w-4 text-blue-600" aria-hidden="true" />
                   <div>
@@ -2938,9 +3138,6 @@ function DiagnosticContent({
                   </div>
                 </div>
               </div>
-              <p className="mt-3 text-[11px] font-bold leading-4 text-slate-500">
-                {creditDisplay.helper}
-              </p>
             </div>
           </div>
         </section>
@@ -3011,7 +3208,7 @@ function DiagnosticContent({
                     href={reportHref}
                     className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-blue-600 hover:bg-blue-50"
                   >
-                    Open report
+                    Open full report
                   </Link>
                 </div>
               );
@@ -3157,8 +3354,16 @@ function RecentPracticeSetsPanel({
   emptyTitle?: string;
   emptyText?: string;
 }) {
-  const incompleteSets = sets.filter((set) => set.isIncomplete);
-  const completedSets = sets.filter((set) => !set.isIncomplete);
+  const visibleBatchSize = 4;
+  const [visibleCount, setVisibleCount] = useState(visibleBatchSize);
+  const orderedSets = [
+    ...sets.filter((set) => set.isIncomplete),
+    ...sets.filter((set) => !set.isIncomplete),
+  ];
+  const visibleSets = orderedSets.slice(0, visibleCount);
+  const incompleteSets = visibleSets.filter((set) => set.isIncomplete);
+  const completedSets = visibleSets.filter((set) => !set.isIncomplete);
+  const remainingCount = Math.max(0, orderedSets.length - visibleSets.length);
 
   if (sets.length === 0) {
     return (
@@ -3232,6 +3437,21 @@ function RecentPracticeSetsPanel({
             Marked sets
           </div>
           {completedSets.map(renderSet)}
+        </div>
+      )}
+      {remainingCount > 0 && (
+        <div className="border-t border-slate-100 bg-slate-50 px-3 py-3 text-center">
+          <button
+            type="button"
+            onClick={() =>
+              setVisibleCount((current) =>
+                Math.min(current + visibleBatchSize, orderedSets.length)
+              )
+            }
+            className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-xs font-black text-blue-600 transition-colors hover:border-blue-200 hover:bg-blue-50"
+          >
+            Click for more ({remainingCount} left)
+          </button>
         </div>
       )}
     </div>
@@ -3555,7 +3775,7 @@ function PracticeContent({
             Recent practice
           </h2>
           <div className="mt-4">
-            <RecentPracticeSetsPanel sets={recentPracticeSets.slice(0, 6)} />
+            <RecentPracticeSetsPanel sets={recentPracticeSets} />
           </div>
           <Link
             href="/phloemai/question-bank"
@@ -5088,7 +5308,7 @@ function ProgressContent({
 
           <div className="mt-5">
             <RecentPracticeSetsPanel
-              sets={recentPracticeSets.slice(0, 8)}
+              sets={recentPracticeSets}
               emptyTitle="No practice sets saved yet."
               emptyText="Start a question-bank set and mark it when you are ready."
             />
@@ -5311,21 +5531,22 @@ function ReportContent({
   practiceStats,
   latestDiagnostic,
   diagnosticHistory,
+  initialReportId,
+  initialMockId,
   completedDashboardTaskIds,
   removedDashboardTaskIds,
 }: PremiumGateProps & {
   practiceStats: PracticeStats;
   latestDiagnostic: DashboardDiagnostic | null;
   diagnosticHistory: DashboardDiagnostic[];
+  initialReportId?: string | null;
+  initialMockId?: string | null;
   completedDashboardTaskIds: Set<string>;
   removedDashboardTaskIds: Set<string>;
 }) {
   const [reportFilter, setReportFilter] = useState<ReportSectionFilter>("All");
-  const [selectedReportId, setSelectedReportId] = useState<string | null>(() => {
-    if (typeof window === "undefined") return null;
-    const params = new URLSearchParams(window.location.search);
-    return params.get("attempt") ?? params.get("report");
-  });
+  const selectedReportId = initialReportId ?? null;
+  const selectedMockId = initialMockId ?? null;
   const [generatedFeedbackById, setGeneratedFeedbackById] = useState<
     Record<string, string>
   >({});
@@ -5334,6 +5555,7 @@ function ReportContent({
   );
   const [aiFeedbackNotice, setAiFeedbackNotice] = useState<string | null>(null);
   const [aiFeedbackError, setAiFeedbackError] = useState<string | null>(null);
+
   const reportHistory = useMemo(
     () =>
       diagnosticHistory.length > 0
@@ -5343,30 +5565,67 @@ function ReportContent({
           : [],
     [diagnosticHistory, latestDiagnostic]
   );
+  const selectedReportFromHistory = selectedReportId
+    ? reportHistory.find((report) => report.id === selectedReportId) ?? null
+    : selectedMockId
+      ? reportHistory.find(
+          (report) =>
+            isFullMockSectionDiagnostic(report) && report.mockId === selectedMockId
+        ) ?? null
+    : null;
   const selectedDiagnostic =
-    reportHistory.find((report) => report.id === selectedReportId) ??
-    latestDiagnostic;
+    selectedReportId !== null || selectedMockId !== null
+      ? selectedReportFromHistory
+      : latestDiagnostic;
+  const selectedReportMissing =
+    Boolean(selectedReportId || selectedMockId) &&
+    reportHistory.length > 0 &&
+    !selectedReportFromHistory;
+  const reportDiagnostics = getFullMockReportDiagnostics(
+    selectedDiagnostic,
+    reportHistory
+  );
+  const isFullMockReport =
+    isFullMockSectionDiagnostic(selectedDiagnostic) && reportDiagnostics.length > 1;
+  const filteredReportDiagnostics =
+    reportFilter === "All"
+      ? reportDiagnostics
+      : reportDiagnostics.filter((diagnostic) => diagnostic.section === reportFilter);
   const selectedAiFeedbackText =
-    selectedDiagnostic
-      ? generatedFeedbackById[selectedDiagnostic.id] ??
-        selectedDiagnostic.aiFeedbackText
-      : null;
+    reportDiagnostics
+      .map((diagnostic) =>
+        isFullMockReport && diagnostic.aiFeedbackScope !== "full_mock"
+          ? generatedFeedbackById[diagnostic.id]
+          : generatedFeedbackById[diagnostic.id] ?? diagnostic.aiFeedbackText
+      )
+      .find((feedback): feedback is string => Boolean(feedback)) ?? null;
   const selectedReportIsLatest =
     Boolean(selectedDiagnostic?.id && latestDiagnostic?.id) &&
     selectedDiagnostic?.id === latestDiagnostic?.id;
   const hasDiagnostic = Boolean(selectedDiagnostic);
   const reportFeaturesUnlocked =
     isPremium || isFreeQrDiagnostic(selectedDiagnostic);
-  const filterMatches =
-    reportFilter === "All" || selectedDiagnostic?.section === reportFilter;
-  const diagnosticIssueCards =
-    selectedDiagnostic && filterMatches
-      ? selectedDiagnostic.issues.map(buildReportIssueCard)
-      : [];
+  const filterMatches = filteredReportDiagnostics.length > 0;
+  const diagnosticIssueCards = filteredReportDiagnostics.flatMap(
+    (diagnostic) =>
+      diagnostic.issues.map((issue, index) => {
+        const issueCard = buildReportIssueCard(issue, index);
+
+        if (!isFullMockReport) return issueCard;
+
+        return {
+          ...issueCard,
+          id: `${diagnostic.id}-${issueCard.id}`,
+          title: `${diagnostic.section} - ${issueCard.title}`,
+          freeLabel: `${diagnostic.section} - ${issueCard.freeLabel}`,
+          evidence: [`${diagnostic.section} section`, ...issueCard.evidence],
+        };
+      })
+  );
   const hasSignals = diagnosticIssueCards.length > 0;
-  const allStudyPlanTasks = getDiagnosticStudyPlanTasks(selectedDiagnostic);
-  const studyPlanTasks = getActiveDiagnosticStudyPlanTasks(
-    selectedDiagnostic,
+  const allStudyPlanTasks = getDiagnosticReportStudyPlanTasks(reportDiagnostics);
+  const studyPlanTasks = getActiveDiagnosticReportStudyPlanTasks(
+    reportDiagnostics,
     completedDashboardTaskIds,
     removedDashboardTaskIds
   );
@@ -5383,37 +5642,57 @@ function ReportContent({
 
   const feedbackHelper =
     selectedAiFeedbackText
-      ? selectedReportIsLatest
+      ? isFullMockReport
+        ? "Generated once from all saved sections in this full mock."
+        : selectedReportIsLatest
         ? "Generated from your latest diagnostic."
         : "Generated from the selected previous diagnostic."
-      : selectedDiagnostic
-        ? "AI feedback has not been generated for this diagnostic yet."
-        : "Complete and mark a diagnostic to generate personalised written feedback.";
+      : selectedReportMissing
+        ? "This report link does not match a saved diagnostic on this account."
+        : selectedDiagnostic
+          ? isFullMockReport
+            ? "Use 1 AI diagnostic credit to generate feedback across all saved sections in this full mock."
+            : "AI feedback has not been generated for this diagnostic yet."
+          : "Complete and mark a diagnostic to generate personalised written feedback.";
 
   const reportFilters: ReportSectionFilter[] = ["All", "QR", "VR", "DM", "SJT"];
 
   const latestDiagnosticSummary = hasDiagnostic
-    ? selectedDiagnostic?.section
+    ? isFullMockReport
+      ? `${selectedDiagnostic?.mockLabel ?? "Full mock"} diagnostic - ${reportDiagnostics.length}/4 sections saved`
+      : selectedDiagnostic?.section
       ? `${selectedReportIsLatest ? "Latest" : "Selected"} ${selectedDiagnostic.section} diagnostic`
       : selectedReportIsLatest
         ? "Latest diagnostic"
         : "Selected diagnostic"
-    : "No diagnostic or marked practice report saved yet";
+    : selectedReportMissing
+      ? "That saved diagnostic report was not found"
+      : "No diagnostic or marked practice report saved yet";
 
   const metricAccuracy = hasDiagnostic
-    ? `${selectedDiagnostic?.accuracy ?? 0}%`
-    : practiceStats.hasCompletedQuestions
-      ? `${practiceStats.accuracy}%`
-      : "-";
-  const metricAvgTime = practiceStats.hasCompletedQuestions
-    ? `${practiceStats.avgSeconds}s`
-    : "-";
+    ? isFullMockReport
+      ? `${getCombinedDiagnosticAccuracy(reportDiagnostics)}%`
+      : `${selectedDiagnostic?.accuracy ?? 0}%`
+    : selectedReportMissing
+      ? "-"
+      : practiceStats.hasCompletedQuestions
+        ? `${practiceStats.accuracy}%`
+        : "-";
+  const metricAvgTime = isFullMockReport
+    ? `${getCombinedDiagnosticAvgSeconds(reportDiagnostics)}s`
+    : hasDiagnostic
+      ? `${selectedDiagnostic?.avgSecondsPerQuestion ?? practiceStats.avgSeconds}s`
+      : practiceStats.hasCompletedQuestions
+        ? `${practiceStats.avgSeconds}s`
+        : "-";
 
   const signalBadgeText = hasSignals
     ? "Saved issue data found"
-    : selectedDiagnostic
-      ? "No issues for this filter"
-      : "Waiting for diagnostic";
+    : selectedReportMissing
+      ? "Report not found"
+      : selectedDiagnostic
+        ? "No issues for this filter"
+        : "Waiting for diagnostic";
 
   const signalBadgeClass = hasSignals
     ? "bg-emerald-50 text-emerald-700"
@@ -5421,26 +5700,44 @@ function ReportContent({
 
   const emptyIssueMessage =
     hasDiagnostic && !filterMatches
-      ? `No ${reportFilter} issues in the selected ${selectedDiagnostic?.section} diagnostic.`
+      ? isFullMockReport
+        ? `No ${reportFilter} section data in this full mock report.`
+        : `No ${reportFilter} issues in the selected ${selectedDiagnostic?.section} diagnostic.`
       : hasDiagnostic
         ? "No issue labels were saved for this diagnostic."
-        : "Complete and mark a diagnostic to start detecting issues from your own telemetry.";
+        : selectedReportMissing
+          ? "That specific diagnostic report could not be found. Choose another saved report from your history."
+          : "Complete and mark a diagnostic to start detecting issues from your own telemetry.";
   const emptyIssueActionHref = hasDiagnostic
     ? "/phloemai/practice"
-    : "/phloemai/diagnostic";
-  const emptyIssueActionLabel = hasDiagnostic ? "Open practice" : "Run diagnostic";
+    : selectedReportMissing
+      ? "/phloemai/report"
+      : "/phloemai/diagnostic";
+  const emptyIssueActionLabel = hasDiagnostic
+    ? "Open practice"
+    : selectedReportMissing
+      ? "View reports"
+      : "Run diagnostic";
 
   const noFeedbackActionLabel = hasDiagnostic
     ? aiRequestingReportId === selectedDiagnostic?.id
       ? "Generating..."
-      : "Generate AI feedback"
-    : "Run diagnostic";
+      : isFullMockReport
+        ? "Generate full mock AI feedback"
+        : "Generate AI feedback"
+    : selectedReportMissing
+      ? "View reports"
+      : "Run diagnostic";
 
   const reportIssueIntro = hasDiagnostic
-    ? selectedReportIsLatest
+    ? isFullMockReport
+      ? "Showing issue labels, causes, supporting evidence and study tasks across all saved sections in this full mock."
+      : selectedReportIsLatest
       ? "Showing the issue labels, causes, supporting evidence and study tasks saved from your latest diagnostic."
       : "Showing the issue labels, causes, supporting evidence and study tasks saved from the selected previous diagnostic."
-    : "Complete a diagnostic to replace generic guidance with your saved issue scan.";
+    : selectedReportMissing
+      ? "The requested report link did not match any saved diagnostic available to this account."
+      : "Complete a diagnostic to replace generic guidance with your saved issue scan.";
 
   const recommendedTaskHref = reportFeaturesUnlocked
     ? recommendedTask?.href ?? "/phloemai/practice"
@@ -5466,15 +5763,9 @@ function ReportContent({
 
   const issueCardsToRender = diagnosticIssueCards;
 
-  const selectReport = (reportId: string) => {
-    setSelectedReportId(reportId);
+  const selectReport = () => {
     setAiFeedbackNotice(null);
     setAiFeedbackError(null);
-    window.history.replaceState(
-      null,
-      "",
-      `/phloemai/report?attempt=${encodeURIComponent(reportId)}`
-    );
   };
 
   const requestSelectedReportAiFeedback = async () => {
@@ -5490,6 +5781,7 @@ function ReportContent({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           attemptId: selectedDiagnostic.id,
+          attemptIds: reportDiagnostics.map((diagnostic) => diagnostic.id),
           section: selectedDiagnostic.section,
           accuracy: selectedDiagnostic.accuracy,
           issues: selectedDiagnostic.issues,
@@ -5499,17 +5791,31 @@ function ReportContent({
       const payload = (await response.json()) as {
         feedback?: string;
         error?: string;
+        attemptIds?: string[];
       };
 
       if (!response.ok || !payload.feedback) {
         throw new Error(payload.error ?? "AI feedback could not be generated.");
       }
 
+      const feedbackAttemptIds = payload.attemptIds?.length
+        ? payload.attemptIds
+        : reportDiagnostics.map((diagnostic) => diagnostic.id);
+
       setGeneratedFeedbackById((current) => ({
         ...current,
-        [selectedDiagnostic.id]: payload.feedback ?? "",
+        ...Object.fromEntries(
+          feedbackAttemptIds.map((attemptId) => [
+            attemptId,
+            payload.feedback ?? "",
+          ])
+        ),
       }));
-      setAiFeedbackNotice("AI feedback generated and saved to this report.");
+      setAiFeedbackNotice(
+        isFullMockReport
+          ? "Full mock AI feedback generated and saved to each section report."
+          : "AI feedback generated and saved to this report."
+      );
     } catch (error) {
       setAiFeedbackError(
         error instanceof Error
@@ -5531,7 +5837,11 @@ function ReportContent({
             </div>
             <div>
               <h2 className="text-sm font-black">
-                {selectedReportIsLatest ? "Latest diagnostic" : "Selected diagnostic"}
+                {isFullMockReport
+                  ? "Full mock diagnostic"
+                  : selectedReportIsLatest
+                    ? "Latest diagnostic"
+                    : "Selected diagnostic"}
               </h2>
               <p className="mt-1 text-xs font-bold text-slate-500">
                 {latestDiagnosticSummary}
@@ -5791,15 +6101,16 @@ function ReportContent({
             ) : (
               reportHistory.map((report, index) => {
                 const active = report.id === selectedDiagnostic?.id;
+                const reportHref = `/phloemai/report?attempt=${encodeURIComponent(report.id)}`;
                 const reportAiReady = Boolean(
                   generatedFeedbackById[report.id] ?? report.aiFeedbackText
                 );
                 return (
-                  <button
+                  <Link
                     key={report.id}
-                    type="button"
-                    onClick={() => selectReport(report.id)}
-                    aria-pressed={active}
+                    href={reportHref}
+                    onClick={selectReport}
+                    aria-current={active ? "page" : undefined}
                     className={`grid w-full gap-3 border-b border-slate-100 px-4 py-3 text-left transition-colors last:border-b-0 sm:grid-cols-[1fr_90px_86px] sm:items-center ${
                       active
                         ? "bg-blue-50 text-blue-800"
@@ -5818,7 +6129,7 @@ function ReportContent({
                     <span className="text-xs font-black">
                       {reportAiReady ? "AI ready" : `${report.accuracy}%`}
                     </span>
-                  </button>
+                  </Link>
                 );
               })
             )}
@@ -6153,8 +6464,8 @@ function AccountContent({
                   ? "Opening..."
                   : "Manage subscription"
                 : checkoutLoading
-                  ? "Opening..."
-                  : "Upgrade to Premium"}
+                  ? "Opening plans..."
+                  : "View Premium plans"}
             </button>
             <Link
               href="/phloemai/pricing"
@@ -6277,6 +6588,8 @@ function latestDiagnosticLabel(diagnostic: DashboardDiagnostic | undefined) {
 
 function DashboardSubpageContent({
   view,
+  initialReportId,
+  initialMockId,
   displayName,
   plan,
   email,
@@ -6295,6 +6608,8 @@ function DashboardSubpageContent({
   onSaveDisplayName,
 }: {
   view: Exclude<DashboardView, "dashboard">;
+  initialReportId?: string | null;
+  initialMockId?: string | null;
   displayName: string;
   plan: string;
   email: string;
@@ -6389,6 +6704,8 @@ function DashboardSubpageContent({
       practiceStats={practiceStats}
       latestDiagnostic={latestDiagnostic}
       diagnosticHistory={diagnosticHistory}
+      initialReportId={initialReportId}
+      initialMockId={initialMockId}
       completedDashboardTaskIds={completedDashboardTaskIds}
       removedDashboardTaskIds={removedDashboardTaskIds}
     />
@@ -6439,9 +6756,7 @@ function AuthPanel({
           </Link>
 
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
-              <Brain className="h-7 w-7" aria-hidden="true" />
-            </div>
+            <PhloemAIFaviconMark className="h-12 w-12 rounded-xl" />
             <div>
               <p className="text-2xl font-black">
                 Phloem<span className="text-blue-600">AI</span>
@@ -6652,6 +6967,9 @@ function DashboardFeedbackPanel({
   const issues = latestDiagnostic?.issues ?? [];
   const strengths = latestDiagnostic?.strengths ?? [];
   const fixes = latestDiagnostic?.studyPlanTasks ?? [];
+  const feedbackReportHref = latestDiagnostic
+    ? `/phloemai/report?attempt=${encodeURIComponent(latestDiagnostic.id)}`
+    : "/phloemai/report";
 
   return (
     <section className={`rounded-xl border border-slate-200 bg-white p-6 shadow-sm ${className}`}>
@@ -6673,10 +6991,10 @@ function DashboardFeedbackPanel({
         </div>
         {hasDiagnostic ? (
           <Link
-            href="/phloemai/report"
+            href={feedbackReportHref}
             className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
           >
-            Open report
+            Open full report
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         ) : (
@@ -6784,6 +7102,16 @@ function DashboardFeedbackPanel({
                       ))}
                     </ul>
                   )}
+                  <p className="mt-4 border-t border-red-100 pt-3 text-[11px] font-semibold leading-4 text-slate-500">
+                    For the exact specifics behind each issue, use{" "}
+                    <Link
+                      href={feedbackReportHref}
+                      className="font-black text-red-600 hover:text-red-700"
+                    >
+                      Open full report
+                    </Link>
+                    .
+                  </p>
                 </div>
                 <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4">
                   <h3 className="text-xs font-black uppercase tracking-wide text-emerald-700">
@@ -6865,7 +7193,7 @@ function DashboardFeedbackPanel({
               href="/phloemai/report"
               className="inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
             >
-              Open report
+              Open full report
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
@@ -6905,7 +7233,15 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...`}
   );
 }
 
-function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
+function UCATDashboard({
+  view = "dashboard",
+  initialReportId = null,
+  initialMockId = null,
+}: {
+  view?: DashboardView;
+  initialReportId?: string | null;
+  initialMockId?: string | null;
+}) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<PhloemProfile | null>(null);
@@ -7144,14 +7480,15 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     }
 
     async function loadDiagnosticHistory(nextUser: User) {
+      const requestedReportId = view === "report" ? initialReportId : null;
+      const diagnosticSelect =
+        "id,accuracy,completed_at,ai_feedback,ai_feedback_status,metadata,source";
       const { data, error } = await supabaseClient
         .from("diagnostic_attempts")
-        .select(
-          "id,accuracy,completed_at,ai_feedback,ai_feedback_status,metadata,source"
-        )
+        .select(diagnosticSelect)
         .eq("user_id", nextUser.id)
         .order("completed_at", { ascending: false })
-        .limit(12);
+        .limit(100);
 
       if (!mounted) return;
       if (error || !data) {
@@ -7160,9 +7497,43 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
         return;
       }
 
-      const history = (data as DiagnosticAttemptRow[]).map((row, index) =>
-        normaliseDashboardDiagnostic(row, index)
-      );
+      let diagnosticRows = data as DiagnosticAttemptRow[];
+
+      if (
+        requestedReportId &&
+        !diagnosticRows.some((row) => row.id === requestedReportId)
+      ) {
+        const { data: requestedReport, error: requestedReportError } =
+          await supabaseClient
+            .from("diagnostic_attempts")
+            .select(diagnosticSelect)
+            .eq("user_id", nextUser.id)
+            .eq("id", requestedReportId)
+            .maybeSingle();
+
+        if (!mounted) return;
+
+        if (!requestedReportError && requestedReport) {
+          diagnosticRows = [
+            requestedReport as DiagnosticAttemptRow,
+            ...diagnosticRows,
+          ];
+        }
+      }
+
+      const seenReportIds = new Set<string>();
+      const history = diagnosticRows
+        .map((row, index) => normaliseDashboardDiagnostic(row, index))
+        .filter((report) => {
+          if (seenReportIds.has(report.id)) return false;
+          seenReportIds.add(report.id);
+          return true;
+        })
+        .sort(
+          (first, second) =>
+            new Date(second.completedAt ?? 0).getTime() -
+            new Date(first.completedAt ?? 0).getTime()
+        );
 
       setDiagnosticHistory(history);
       setLatestDiagnostic(history[0] ?? null);
@@ -7253,7 +7624,7 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, [initialReportId, supabase, view]);
 
   const handleAuthSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -7332,30 +7703,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
   };
 
   const handleUpgrade = async () => {
-    setCheckoutLoading(true);
     setCheckoutError(null);
-
-    try {
-      const response = await fetch("/api/stripe/create-checkout-session", {
-        method: "POST",
-      });
-      const data = (await response.json()) as {
-        url?: string;
-        error?: string;
-      };
-
-      if (!response.ok || !data.url) {
-        throw new Error(data.error ?? "Could not start checkout.");
-      }
-
-      window.location.assign(data.url);
-      window.setTimeout(() => setCheckoutLoading(false), 8000);
-    } catch (error) {
-      setCheckoutError(
-        error instanceof Error ? error.message : "Could not start checkout."
-      );
-      setCheckoutLoading(false);
-    }
+    window.location.assign("/phloemai/pricing");
   };
 
   const handleSubscriptionAction = async () => {
@@ -7514,17 +7863,21 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
     <div className="phloem-dashboard-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
       <div className="grid min-h-screen lg:grid-cols-[190px_1fr]">
         <aside className="border-r border-slate-200 bg-white px-3 py-5">
-          <div className="flex items-center gap-3 px-1">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
-              <Brain className="h-7 w-7" aria-hidden="true" />
-            </div>
-            <div>
-              <p className="text-xl font-black">
+          <Link
+            href="/phloemai"
+            aria-label="Open PhloemAI landing page"
+            className="-mx-1 flex items-center gap-3 rounded-xl px-1 py-1 transition-colors hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          >
+            <PhloemAIFaviconMark className="h-11 w-11 rounded-xl" />
+            <span>
+              <span className="block text-xl font-black">
                 Phloem<span className="text-blue-600">AI</span>
-              </p>
-              <p className="text-sm font-bold text-slate-500">UCAT Tutor</p>
-            </div>
-          </div>
+              </span>
+              <span className="block text-sm font-bold text-slate-500">
+                UCAT Tutor
+              </span>
+            </span>
+          </Link>
 
           <nav className="mt-10 space-y-3">
             {[
@@ -8132,6 +8485,8 @@ function UCATDashboard({ view = "dashboard" }: { view?: DashboardView }) {
           ) : (
             <DashboardSubpageContent
               view={view}
+              initialReportId={initialReportId}
+              initialMockId={initialMockId}
               displayName={displayName}
               plan={plan}
               email={userEmail}
@@ -9304,8 +9659,20 @@ export function UCATSkillsTrainersPage() {
   return <UCATDashboard view="skills-trainers" />;
 }
 
-export function UCATReportPage() {
-  return <UCATDashboard view="report" />;
+export function UCATReportPage({
+  initialReportId = null,
+  initialMockId = null,
+}: {
+  initialReportId?: string | null;
+  initialMockId?: string | null;
+}) {
+  return (
+    <UCATDashboard
+      view="report"
+      initialReportId={initialReportId}
+      initialMockId={initialMockId}
+    />
+  );
 }
 
 export function UCATAccountPage() {

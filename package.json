@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "audit:ucat-questions": "node scripts/auditUcatQuestionBank.cjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",

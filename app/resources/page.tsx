@@ -12,6 +12,11 @@ const popularResources = [
     description: "A structured plan for when to start and how to prepare effectively.",
   },
   {
+    title: "Medify Mock Difficulty Spreadsheet",
+    href: "/ucat-mock-difficulty",
+    description: "Compare mock difficulty, average section scores, totals, and SJT bands.",
+  },
+  {
     title: "Interview Tutoring",
     href: "/interview-tutoring",
     description: "MMI and panel interview preparation with feedback and structure.",
@@ -50,6 +55,7 @@ const stages = [
     resources: [
       { title: "UCAT Prep Timeline", href: "/ucat-timeline" },
       { title: "UCAT Tutoring", href: "/ucat-tutoring" },
+      { title: "Medify Mock Difficulty Spreadsheet", href: "/ucat-mock-difficulty" },
       { title: "UCAT Notes", href: "https://payhip.com/Medwithrish", external: true },
     ],
   },
@@ -118,7 +124,7 @@ export default function ResourcesPage() {
             </div>
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {popularResources.map((item) => (
               <Link
                 key={item.title}

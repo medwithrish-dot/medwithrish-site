@@ -30,7 +30,7 @@ export function PremiumDiagnosticLock({
             title={title}
             description={description}
             featureLabel="Premium diagnostic"
-            buttonLabel="Upgrade to Premium"
+            buttonLabel="View plans"
           />
         </div>
       </div>

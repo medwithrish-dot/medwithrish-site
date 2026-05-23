@@ -21,7 +21,11 @@ const navItems: {
       {
   label: "Free UCAT Score Tracker",
   href:"/ucat-score-tracker"
-}
+      },
+      {
+        label: "Medify Mock Difficulty Spreadsheet",
+        href: "/ucat-mock-difficulty",
+      },
     ],
   },
 

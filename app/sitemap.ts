@@ -6,7 +6,7 @@ const siteUrl =
     : "https://www.medwithrish.com";
 
 const baseUrl = siteUrl.replace(/\/$/, "");
-const lastModified = new Date("2026-05-22T00:00:00.000Z");
+const lastModified = new Date("2026-05-23T00:00:00.000Z");
 
 const publicRoutes: Array<{
   path: string;
@@ -17,6 +17,7 @@ const publicRoutes: Array<{
   { path: "/phloemai", changeFrequency: "weekly", priority: 1 },
   { path: "/phloemai/pricing", changeFrequency: "weekly", priority: 0.9 },
   { path: "/ucat-tutoring", changeFrequency: "monthly", priority: 0.9 },
+  { path: "/ucat-mock-difficulty", changeFrequency: "weekly", priority: 0.85 },
   { path: "/ucat-score-tracker", changeFrequency: "monthly", priority: 0.85 },
   { path: "/ucat-timeline", changeFrequency: "monthly", priority: 0.85 },
   { path: "/resources", changeFrequency: "monthly", priority: 0.8 },

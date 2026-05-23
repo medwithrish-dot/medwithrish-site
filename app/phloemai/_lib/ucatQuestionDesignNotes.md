@@ -6,11 +6,17 @@ These notes are for future AI-assisted question-bank work. Read this file before
 
 - Do not copy, closely paraphrase, or structurally clone official UCAT, third-party practice, exam-board, textbook, article, or user-provided example questions.
 - Use examples only for order, question-type mix, difficulty feel, and interface style. The actual names, numbers, diagrams, domains, and wording must be original.
+- Before generating any more questions, run a quality-check pass on the existing generated bank and this file's rules. Do not call a generated batch "high quality" unless it has been sampled for originality, repeated templates, answer correctness, ratio fit, and realistic UCAT difficulty.
+- Large generated batches must be treated as drafts until checked. Prefer smaller audited batches over fast bulk expansion.
+- The 9,200-question scaffold must not be exported directly. It is routed through `ucatQuestionQualityGate.ts`, which rejects duplicate IDs/content, bad answer structures, weak explanations, repeated generated templates, and draft-heavy sections. Run `npm run audit:ucat-questions` after any question-bank edit.
+- Same-format questions are allowed only as a controlled minority. Generated draft questions must never outnumber audited source questions in a live section, and repeated generated templates should be capped tightly rather than padded for headline volume.
 - Screenshots or competitor-bank examples may be used only to calibrate broad interface patterns such as option scales, drag target layout, number of linked items, timing pressure and question ordering. Never reuse distinctive occupations, names, clinical conflicts, disease facts, numbers, locations, action wording, or conclusion wording from those sources.
 - Keep questions UCAT-style: short stems, clear answer options, no trick wording beyond the intended reasoning skill, and explanations that show the minimum decisive logic.
 - Use tags consistently. Difficulty tags should reflect the target student's experience, not an expert tutor's experience.
 - Prefer clean arithmetic and exact answers. Avoid accidental ties, ambiguous "could" wording, or claims that rely on outside knowledge.
 - For Yes/No items, use only information in the stem. A statement should be marked "Yes" only if it follows from the given information, not because it is plausible in real life.
+- The live generated layer targets 9,200 questions, matching 50 full UCAT-style sets: 2,200 VR, 1,750 DM, 1,800 QR and 3,450 SJT.
+- Within each 1,750-question DM layer, keep Venn/set questions ahead of logical puzzles: 400 Venn/set questions and 300 logical puzzles.
 
 ## Verbal Reasoning Batch Style
 
@@ -120,10 +126,10 @@ For a 100-question QR batch, the current UCAT-style mix is:
 
 ## Situational Judgement Design Notes
 
-- Use any third-party SJT examples only to learn the interface pattern: one shared scenario followed by several importance, appropriateness, grouping, or ordering tasks. Do not reuse their names, occupations, clinical settings, action wording, or distinctive conflicts.
+- Use official/current SJT examples only to learn the interface pattern: one shared scenario followed by importance ratings, appropriateness ratings, or drag/drop classification tasks. Do not reuse their names, occupations, clinical settings, action wording, or distinctive conflicts.
 - Tag every SJT question with `issueTags` such as `confidentiality`, `patient-safety`, `autonomy`, `capacity-consent`, `integrity`, `teamwork`, `communication`, `scope-of-practice`, `respect-dignity`, `beneficence`, `non-maleficence`, `justice`, `candour`, `escalation`, or `professional-boundaries`.
 - Importance and appropriateness single-select SJT items award full marks for the exact answer and half marks for the adjacent answer on the same side of the scale: A/B or C/D.
-- Drag-category SJT items can award partial credit by item. Drag-order SJT items are exact order only.
+- Drag-category SJT items can award partial credit by item.
 - SJT appropriateness-rating items must use this four-option scale:
   - A: A very appropriate thing to do
   - B: Appropriate, but not ideal
@@ -135,23 +141,18 @@ For a 100-question QR batch, the current UCAT-style mix is:
   - C: Of minor importance
   - D: Not important at all
 - Do not generate appropriateness-rating or importance-rating questions as drag/drop. They are single-select A-D rating items using the exact scales above.
-- Separate SJT drag/drop items can exist, but they should be explicitly authored as drag tasks rather than rating items. For the current bank, prefer drag-order tasks that ask candidates to order 4 actions from most appropriate to least appropriate, or from first to last when sequencing is the tested skill.
-- SJT drag-order items should reward professional prioritisation: immediate safety/confidentiality/consent first, then communication/escalation, then documentation/reflection where relevant.
-- SJT most/least items should present 4 plausible actions and require one most appropriate and one least appropriate selection. Avoid making every non-best option absurd; include at least one partially reasonable distractor.
+- Separate SJT drag/drop items can exist, but they should be explicitly authored as appropriate/inappropriate classification tasks rather than rating items or action-ordering items.
 
 ## Situational Judgement Batch Style
 
 SJT should be scenario-based. A scenario often has 3-5 linked items. For a 44-question generated SJT batch, the current bank mix is:
 
 - 24 importance or appropriateness rating items
-- 8 drag-category items
-- 6 drag-order items
-- 6 most / least appropriate action items
+- 20 appropriate/inappropriate drag-category items
 
 ## Situational Judgement Tags
 
 - Tags are only for internal filtering by professional domain and interaction style.
 - Use `sjt-importance` for four-option importance ratings and `sjt-appropriateness` for four-option appropriateness ratings.
-- Use `sjt-drag-drop` for appropriate/inappropriate, important/unimportant or best/worst category sorting.
-- Use `sjt-ordering` for ranking actions into the best order.
-- Use communication, integrity and ordering subtypes when they are the clearer learner-facing weakness label than the raw interface pattern.
+- Use `sjt-drag-drop` for appropriate/inappropriate category sorting.
+- Keep learner-facing weakness themes in `issueTags`; SJT subtypes should describe the interface pattern only.

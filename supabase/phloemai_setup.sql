@@ -37,7 +37,7 @@ create table if not exists public.diagnostic_sections (
   attempt_id uuid not null references public.diagnostic_attempts(id) on delete cascade,
   user_id uuid not null references auth.users(id) on delete cascade,
   section text not null check (section in ('VR', 'DM', 'QR', 'AR', 'SJT')),
-  score integer check (score >= 0 and score <= 100),
+  score integer check (score >= 0 and score <= 900),
   accuracy numeric(5,2) check (accuracy >= 0 and accuracy <= 100),
   avg_seconds_per_question integer check (avg_seconds_per_question >= 0),
   notes text,
