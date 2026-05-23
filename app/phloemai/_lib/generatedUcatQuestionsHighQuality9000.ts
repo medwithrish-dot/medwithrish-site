@@ -30,8 +30,8 @@ const APPROPRIATENESS_OPTIONS = [
   { key: "D" as const, text: "A very inappropriate thing to do" },
 ];
 
-export const HIGH_QUALITY_9000_TOTAL_BATCHES = 10;
-export const HIGH_QUALITY_9000_COMPLETED_BATCHES = 10;
+export const HIGH_QUALITY_9000_TOTAL_BATCHES = 20;
+export const HIGH_QUALITY_9000_COMPLETED_BATCHES = 19;
 export const HIGH_QUALITY_9000_BATCH_TARGETS: Record<UCATSection, number> = {
   vr: 220,
   dm: 175,
@@ -642,7 +642,7 @@ const DM_SYLLOGISM_QUALIFIERS = [
   "evening",
   "reserve",
   "marked",
-  "checked",
+  "flagged",
   "winter",
   "local",
   "verified",

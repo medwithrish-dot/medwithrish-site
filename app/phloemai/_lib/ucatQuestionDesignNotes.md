@@ -22,7 +22,9 @@ These notes are for future AI-assisted question-bank work. Read this file before
 
 Generate large expansions in 10 reviewed batches, not one bulk pass.
 
-Current generated-batch progress: 10/10.
+Current generated-batch progress: 19/20.
+
+Second-wave generated-batch progress: 9/10.
 
 Recommended batch size: 900 questions per queued batch.
 
@@ -33,13 +35,15 @@ Each 900-question batch should contain:
 - 180 QR questions: 45 original data sets x 4 questions.
 - 325 SJT questions: 65 original scenarios x 5 questions.
 
-This gives 10 batches total for a 9,000-question layer:
+The first wave gave 10 batches total for a 9,000-question layer:
 
 - VR: 2,200 questions.
 - DM: 1,750 questions.
 - QR: 1,800 questions.
 - SJT: 3,250 questions.
 - Total: 9,000 questions.
+
+The second wave repeats the same per-batch shape for another 10 reviewed batches, exposed cumulatively as batches 11-20 in `generatedUcatQuestionsHighQuality9000.ts`.
 
 For every queued batch, follow this order:
 
