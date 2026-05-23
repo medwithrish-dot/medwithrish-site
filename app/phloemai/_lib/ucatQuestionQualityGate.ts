@@ -250,7 +250,7 @@ function draftTemplateLimit(question: UCATQuestion) {
   if (question.id.startsWith("quality-dm-syllogism-")) return 48;
   if (question.id.startsWith("quality-dm-yes-no-")) return 48;
   if (question.id.startsWith("quality-dm-probability-")) return 18;
-  if (question.id.startsWith("quality-qr-")) return 4;
+  if (question.id.startsWith("quality-qr-")) return 1;
   if (question.id.startsWith("quality-sjt-")) return 2;
   return DEFAULT_DRAFT_TEMPLATE_LIMIT;
 }

@@ -360,6 +360,7 @@ const FREE_QR_DIAGNOSTIC_SOURCE = "free_qr_diagnostic";
 const FULL_SECTION_DIAGNOSTIC_SOURCE = "full_mock_section_diagnostic";
 const SUBSET_DIAGNOSTIC_SOURCE = "subset_mock_diagnostic";
 const AI_DIAGNOSTIC_CREDIT_INTERVAL_MS = 24 * 60 * 60 * 1000;
+const UCAT_CALCULATOR_MAX_DIGITS = 10;
 const FULL_MOCK_TARGETS: Record<UCATSection, number> = {
   vr: 44,
   dm: 35,
@@ -480,6 +481,46 @@ function nowMs() {
   }
 
   return Date.now();
+}
+
+function countCalculatorDigits(display: string) {
+  return display.replace(/\D/g, "").length;
+}
+
+function canAppendCalculatorDigit(display: string) {
+  return countCalculatorDigits(display) < UCAT_CALCULATOR_MAX_DIGITS;
+}
+
+function formatCalculatorDisplayValue(value: number) {
+  if (!Number.isFinite(value)) return "Error";
+  if (value === 0) return "0";
+
+  const sign = value < 0 ? "-" : "";
+  const absolute = Math.abs(value);
+  const integerDigits = Math.floor(absolute).toString().length;
+
+  if (integerDigits > UCAT_CALCULATOR_MAX_DIGITS) return "Error";
+
+  const decimalPlaces = Math.max(0, UCAT_CALCULATOR_MAX_DIGITS - integerDigits);
+  const rounded = Number(absolute.toFixed(decimalPlaces));
+  const roundedIntegerDigits = Math.floor(rounded).toString().length;
+
+  if (roundedIntegerDigits > UCAT_CALCULATOR_MAX_DIGITS) return "Error";
+
+  return `${sign}${String(
+    Number(rounded.toFixed(Math.max(0, UCAT_CALCULATOR_MAX_DIGITS - roundedIntegerDigits)))
+  )}`;
+}
+
+function appendCalculatorDigit(display: string, digit: string, waiting: boolean) {
+  if (waiting || display === "0" || display === "Error") return digit;
+  if (!canAppendCalculatorDigit(display)) return display;
+  return `${display}${digit}`;
+}
+
+function appendCalculatorDecimal(display: string, waiting: boolean) {
+  if (waiting || display === "Error") return "0.";
+  return display.includes(".") ? display : `${display}.`;
 }
 
 function scrollToQuestionTop() {
@@ -1044,13 +1085,21 @@ function normaliseSavedPracticeSet(
   }
 
   const summary = row.summary as PracticeSessionSummary;
-  if (summary.section !== section || !Array.isArray(summary.questions)) {
+  const summarySection =
+    typeof summary.section === "string"
+      ? summary.section.toLowerCase()
+      : "";
+  if (
+    !isUCATSection(summarySection) ||
+    summarySection !== section ||
+    !Array.isArray(summary.questions)
+  ) {
     return null;
   }
 
   return {
     id: row.id,
-    summary,
+    summary: { ...summary, section },
     completedAt: row.completed_at ?? row.created_at ?? summary.completedAt,
     source: row.source,
   };
@@ -2600,7 +2649,7 @@ function SectionSetup({
 
           <div className="mt-7">
             <h2 className="text-sm font-black uppercase tracking-wide text-slate-900">
-              Question types
+              Skills
             </h2>
             <div className="mt-3 grid gap-3 md:grid-cols-2">
               <button
@@ -2620,7 +2669,7 @@ function SectionSetup({
                   </span>
                 </div>
                 <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
-                  Use every question type in this section.
+                  Mix all skills in this section.
                 </p>
               </button>
 
@@ -6097,10 +6146,7 @@ function ReviewScreen({
               >
                 <span className="text-sm font-bold">Q{index + 1}</span>
                 <span>
-                  <span className="block text-sm font-bold">
-                    {getUCATSubtypeMeta(question.subtype).label}
-                  </span>
-                  <span className="mt-1 block truncate text-xs font-semibold text-slate-500">
+                  <span className="block truncate text-sm font-semibold text-slate-600">
                     {getAnswerText(question, answers[index])}
                   </span>
                 </span>
@@ -6349,7 +6395,7 @@ function MarkedReviewScreen({
                 <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                   <div>
                     <p className="text-xs font-black uppercase tracking-wide text-slate-500">
-                      Q{item.questionIndex + 1} - {item.subtypeLabel}
+                      Q{item.questionIndex + 1}
                     </p>
                     <h3 className="mt-1 text-base font-black text-slate-950">
                       {item.questionText}
@@ -6413,10 +6459,10 @@ function MarkedReviewScreen({
         <SessionDataCollectedPanel summary={summary} />
 
         <section className="rounded-md border border-slate-400 bg-white p-5 shadow-md">
-          <h2 className="text-lg font-black">Question-type timing</h2>
+          <h2 className="text-lg font-black">Skill timing</h2>
           <div className="mt-5 overflow-hidden rounded-md border border-slate-300">
             <div className="grid grid-cols-[1fr_70px_80px_80px_80px] bg-slate-200 px-3 py-2 text-xs font-black uppercase tracking-wide text-slate-700">
-              <span>Question type</span>
+              <span>Skill</span>
               <span>Qs</span>
               <span>Avg</span>
               <span>Flags</span>
@@ -8628,9 +8674,17 @@ function UCATQuestionBankSection({
       set.summary.timed && set.summary.secondsRemaining > 0
         ? set.summary.secondsRemaining
         : set.summary.setSeconds;
+    const restoredTrackingMode =
+      set.summary.trackingMode === "none" ? "none" : "mouse";
 
     commitQuestionTiming();
     attentionTracker.resetTracker();
+    if (restoredTrackingMode === "mouse") {
+      attentionTracker.startMouseTracking();
+    } else {
+      attentionTracker.startPracticeOnly();
+    }
+    setTrackingModeChoice(restoredTrackingMode);
     markedInsightsHistoryActiveRef.current = false;
     markedSummaryRef.current = null;
     resumedPracticeSessionIdRef.current = set.id.startsWith("local-")
@@ -8801,7 +8855,7 @@ function UCATQuestionBankSection({
   const reviewingMarkedAnswers = phase === "marked-review";
   const answerRevealed = revealed || reviewingMarkedAnswers;
   const supportsCalculator = true;
-  const calcValue = Number(calcDisplay) || 0;
+  const calcValue = calcDisplay === "Error" ? 0 : Number(calcDisplay) || 0;
 
   const recordCalculator = (
     action: string,
@@ -8836,8 +8890,9 @@ function UCATQuestionBankSection({
       setCalcStored(current);
     } else {
       const result = calculate(calcStored, current, calcOperator);
-      setCalcDisplay(String(Number(result.toFixed(8))));
-      setCalcStored(result);
+      const nextDisplay = formatCalculatorDisplayValue(result);
+      setCalcDisplay(nextDisplay);
+      setCalcStored(nextDisplay === "Error" ? null : Number(nextDisplay));
     }
     setCalcOperator(nextOperator ?? null);
     setCalcWaiting(true);
@@ -8848,17 +8903,13 @@ function UCATQuestionBankSection({
     digit: string,
     source: "button" | "keyboard" = "button"
   ) => {
-    setCalcDisplay((current) =>
-      calcWaiting || current === "0" ? digit : `${current}${digit}`
-    );
+    setCalcDisplay((current) => appendCalculatorDigit(current, digit, calcWaiting));
     setCalcWaiting(false);
     recordCalculator("digit", digit, source);
   };
 
   const inputCalcDecimal = (source: "button" | "keyboard" = "button") => {
-    setCalcDisplay((current) =>
-      calcWaiting ? "0." : current.includes(".") ? current : `${current}.`
-    );
+    setCalcDisplay((current) => appendCalculatorDecimal(current, calcWaiting));
     setCalcWaiting(false);
     recordCalculator("decimal", undefined, source);
   };
@@ -8873,7 +8924,7 @@ function UCATQuestionBankSection({
       return;
     }
 
-    setCalcDisplay(String(calcMemory));
+    setCalcDisplay(formatCalculatorDisplayValue(calcMemory));
     setCalcWaiting(true);
     setLastMrcAt(now);
     recordCalculator("memory_recall", undefined, source);

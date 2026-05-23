@@ -18,6 +18,54 @@ These notes are for future AI-assisted question-bank work. Read this file before
 - The live generated layer targets 9,200 questions, matching 50 full UCAT-style sets: 2,200 VR, 1,750 DM, 1,800 QR and 3,450 SJT.
 - Within each 1,750-question DM layer, keep Venn/set questions ahead of logical puzzles: 400 Venn/set questions and 300 logical puzzles.
 
+## Batch Workflow For Future Queued Generation
+
+Generate large expansions in 10 reviewed batches, not one bulk pass.
+
+Current generated-batch progress: 10/10.
+
+Recommended batch size: 900 questions per queued batch.
+
+Each 900-question batch should contain:
+
+- 220 VR questions: 55 original passage sets x 4 questions.
+- 175 DM questions: 30 syllogisms, 30 logic puzzles, 25 strongest-argument questions, 25 Yes/No conclusion questions, 40 Venn/set questions, 25 probability questions.
+- 180 QR questions: 45 original data sets x 4 questions.
+- 325 SJT questions: 65 original scenarios x 5 questions.
+
+This gives 10 batches total for a 9,000-question layer:
+
+- VR: 2,200 questions.
+- DM: 1,750 questions.
+- QR: 1,800 questions.
+- SJT: 3,250 questions.
+- Total: 9,000 questions.
+
+For every queued batch, follow this order:
+
+1. Generate only the requested batch.
+2. Add it behind the quality gate, not directly into the live accepted bank unless the audit passes.
+3. Run `npm run review:ucat-generated` to inspect repetition, stimulus templates and obvious content warnings.
+4. Run `npm run audit:ucat-questions`.
+5. Run `npm run lint -- app/phloemai/_lib/generatedUcatQuestionsHighQuality9000.ts scripts/auditUcatQuestionBank.cjs`.
+6. Run `npx tsc --noEmit --pretty false`.
+7. Review a sample manually before claiming the batch is accepted.
+
+Do not move on to the next batch if any of the following appear:
+
+- QR sets are just the same table with new labels or numbers.
+- Any copied or closely paraphrased external/user-provided example appears.
+- A repeated normalised question template dominates the batch.
+- A repeated normalised stimulus template dominates the batch.
+- QR has negative stock, impossible remaining-work answers, accidental ties, non-finite numbers, or ambiguous "more than" wording.
+- DM conclusions rely on real-world meaning instead of must-follow logic.
+- SJT actions are generic, unrealistic, outside the student's role, or use awkward clinical phrasing.
+- VR passages rotate surface nouns but keep the same argument structure too often.
+
+Use `scripts/auditUcatQuestionBank.cjs` as the hard gate. It now checks generated-layer size, accepted count, template diversity, max repeated-template share, banned wording and QR numeric sanity.
+
+To start the next queued batch, increment `HIGH_QUALITY_9000_COMPLETED_BATCHES` in `generatedUcatQuestionsHighQuality9000.ts` by 1, then review and fix the newly exposed questions before accepting the batch.
+
 ## Verbal Reasoning Batch Style
 
 VR should be passage-based. A stimulus normally has 4 questions. True / False / Can't tell items use exactly 3 options:

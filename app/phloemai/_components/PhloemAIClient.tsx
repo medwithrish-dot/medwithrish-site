@@ -3689,7 +3689,7 @@ function PracticeContent({
         </div>
       </section>
 
-      <div className="grid gap-5 lg:grid-cols-[1fr_1.05fr]">
+      <div className="grid items-start gap-5 lg:grid-cols-[1fr_1.05fr]">
         <ClientPremiumGate
           isPremium={isPremium}
           checkoutLoading={checkoutLoading}
@@ -3698,7 +3698,7 @@ function PracticeContent({
           description="Premium keeps the diagnostic study plan visible as exact tasks you can start from practice."
           featureLabel="Premium study plan"
         >
-          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <section className="self-start rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <h2 className="text-sm font-black uppercase tracking-wide">
               Targeted skill queue
             </h2>
@@ -3709,7 +3709,7 @@ function PracticeContent({
               {studyPlanTasks.length === 0 ? (
                 <Link
                   href={emptySkillQueueHref}
-                  className="block rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center transition-colors hover:border-blue-200 hover:bg-blue-50/70"
+                  className="block rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-center transition-colors hover:border-blue-200 hover:bg-blue-50/70"
                 >
                   <p className="text-sm font-black text-slate-700">
                     {completedCurrentPlan
@@ -3937,6 +3937,7 @@ const calculatorButtonRows = [
   ["1", "2", "3", "-"],
   ["0", ".", "=", "+"],
 ] as const;
+const UCAT_CALCULATOR_MAX_DIGITS = 10;
 
 function formatTrainerClock(seconds: number) {
   const wholeSeconds = Math.max(0, Math.floor(seconds));
@@ -3954,6 +3955,42 @@ function calculateTrainerValue(stored: number, current: number, operator: string
   if (operator === "*") return stored * current;
   if (operator === "/") return current === 0 ? 0 : stored / current;
   return current;
+}
+
+function countCalculatorDigits(display: string) {
+  return display.replace(/\D/g, "").length;
+}
+
+function formatCalculatorDisplayValue(value: number) {
+  if (!Number.isFinite(value)) return "Error";
+  if (value === 0) return "0";
+
+  const sign = value < 0 ? "-" : "";
+  const absolute = Math.abs(value);
+  const integerDigits = Math.floor(absolute).toString().length;
+
+  if (integerDigits > UCAT_CALCULATOR_MAX_DIGITS) return "Error";
+
+  const decimalPlaces = Math.max(0, UCAT_CALCULATOR_MAX_DIGITS - integerDigits);
+  const rounded = Number(absolute.toFixed(decimalPlaces));
+  const roundedIntegerDigits = Math.floor(rounded).toString().length;
+
+  if (roundedIntegerDigits > UCAT_CALCULATOR_MAX_DIGITS) return "Error";
+
+  return `${sign}${String(
+    Number(rounded.toFixed(Math.max(0, UCAT_CALCULATOR_MAX_DIGITS - roundedIntegerDigits)))
+  )}`;
+}
+
+function appendCalculatorDigit(display: string, digit: string, waiting: boolean) {
+  if (waiting || display === "0" || display === "Error") return digit;
+  if (countCalculatorDigits(display) >= UCAT_CALCULATOR_MAX_DIGITS) return display;
+  return `${display}${digit}`;
+}
+
+function appendCalculatorDecimal(display: string, waiting: boolean) {
+  if (waiting || display === "Error") return "0.";
+  return display.includes(".") ? display : `${display}.`;
 }
 
 function getTrainerNowMs() {
@@ -4152,7 +4189,7 @@ function SkillsTrainersContent({
     () => getCalculatorPromptNumbers(calculatorProblem.prompt),
     [calculatorProblem.prompt]
   );
-  const calcValue = Number(calcDisplay) || 0;
+  const calcValue = calcDisplay === "Error" ? 0 : Number(calcDisplay) || 0;
 
   const setCalculatorPromptNumberStatus = useCallback(
     (index: number, status: CalculatorPromptNumberStatus) => {
@@ -4283,8 +4320,7 @@ function SkillsTrainersContent({
 
       if (/^[0-9]$/.test(event.key)) {
         event.preventDefault();
-        const nextDisplay =
-          calcWaiting || calcDisplay === "0" ? event.key : `${calcDisplay}${event.key}`;
+        const nextDisplay = appendCalculatorDigit(calcDisplay, event.key, calcWaiting);
         setCalcDisplay(nextDisplay);
         setCalcWaiting(false);
         updateCalculatorPromptProgress(nextDisplay);
@@ -4292,11 +4328,7 @@ function SkillsTrainersContent({
       }
       if (event.key === ".") {
         event.preventDefault();
-        const nextDisplay = calcWaiting
-          ? "0."
-          : calcDisplay.includes(".")
-            ? calcDisplay
-            : `${calcDisplay}.`;
+        const nextDisplay = appendCalculatorDecimal(calcDisplay, calcWaiting);
         setCalcDisplay(nextDisplay);
         setCalcWaiting(false);
         updateCalculatorPromptProgress(nextDisplay);
@@ -4312,8 +4344,9 @@ function SkillsTrainersContent({
           setCalcStored(current);
         } else {
           const result = calculateTrainerValue(calcStored, current, calcOperator);
-          setCalcDisplay(String(Number(result.toFixed(8))));
-          setCalcStored(result);
+          const nextDisplay = formatCalculatorDisplayValue(result);
+          setCalcDisplay(nextDisplay);
+          setCalcStored(nextDisplay === "Error" ? null : Number(nextDisplay));
         }
         setCalcOperator(event.key);
         setCalcWaiting(true);
@@ -4333,8 +4366,9 @@ function SkillsTrainersContent({
           setCalcStored(current);
         } else {
           const result = calculateTrainerValue(calcStored, current, calcOperator);
-          setCalcDisplay(String(Number(result.toFixed(8))));
-          setCalcStored(result);
+          const nextDisplay = formatCalculatorDisplayValue(result);
+          setCalcDisplay(nextDisplay);
+          setCalcStored(nextDisplay === "Error" ? null : Number(nextDisplay));
         }
         setCalcOperator(null);
         setCalcWaiting(true);
@@ -4368,8 +4402,9 @@ function SkillsTrainersContent({
           setLastMrcAt(0);
           return;
         }
-        setCalcDisplay(String(calcMemory));
-        updateCalculatorPromptProgress(String(calcMemory));
+        const nextDisplay = formatCalculatorDisplayValue(calcMemory);
+        setCalcDisplay(nextDisplay);
+        updateCalculatorPromptProgress(nextDisplay);
         setCalcWaiting(true);
         setLastMrcAt(now);
       }
@@ -4429,27 +4464,23 @@ function SkillsTrainersContent({
       setCalcStored(current);
     } else {
       const result = calculateTrainerValue(calcStored, current, calcOperator);
-      setCalcDisplay(String(Number(result.toFixed(8))));
-      setCalcStored(result);
+      const nextDisplay = formatCalculatorDisplayValue(result);
+      setCalcDisplay(nextDisplay);
+      setCalcStored(nextDisplay === "Error" ? null : Number(nextDisplay));
     }
     setCalcOperator(nextOperator ?? null);
     setCalcWaiting(true);
   };
 
   const inputTrainerCalcDigit = (digit: string) => {
-    const nextDisplay =
-      calcWaiting || calcDisplay === "0" ? digit : `${calcDisplay}${digit}`;
+    const nextDisplay = appendCalculatorDigit(calcDisplay, digit, calcWaiting);
     setCalcDisplay(nextDisplay);
     setCalcWaiting(false);
     updateCalculatorPromptProgress(nextDisplay);
   };
 
   const inputTrainerCalcDecimal = () => {
-    const nextDisplay = calcWaiting
-      ? "0."
-      : calcDisplay.includes(".")
-        ? calcDisplay
-        : `${calcDisplay}.`;
+    const nextDisplay = appendCalculatorDecimal(calcDisplay, calcWaiting);
     setCalcDisplay(nextDisplay);
     setCalcWaiting(false);
     updateCalculatorPromptProgress(nextDisplay);
@@ -4464,7 +4495,7 @@ function SkillsTrainersContent({
       return;
     }
 
-    const nextDisplay = String(calcMemory);
+    const nextDisplay = formatCalculatorDisplayValue(calcMemory);
     setCalcDisplay(nextDisplay);
     setCalcWaiting(true);
     updateCalculatorPromptProgress(nextDisplay);
@@ -8561,13 +8592,14 @@ const PHLOEMAI_FREE_FEATURES = [
   "Question bank practice",
   "Skills trainers",
   "Free QR diagnostic",
-  "Full free diagnostic report",
+  "Limited weakness diagnosis",
+  "Strength diagnosis",
   "1 lifetime AI diagnostic credit",
 ];
 
 const PHLOEMAI_PREMIUM_FEATURES = [
   "Full mocks, subtest mocks and 15-minute sprints",
-  "Advanced weakness + strengths diagnosis",
+  "Advanced weakness + strength diagnosis",
   "Deeper issue causes, evidence and specific fixes",
   "Personalised study plan and drills",
   "1 AI diagnostic credit every 24 hours",
@@ -8577,7 +8609,9 @@ const PHLOEMAI_PREMIUM_FEATURES = [
 const PHLOEMAI_PRICING_ROWS = [
   ["Question bank practice", "Included", "Included"],
   ["Skills trainers", "Included", "Included"],
-  ["Free QR diagnostic", "Full report included", "Full report included"],
+  ["Free QR diagnostic", "Included", "Included"],
+  ["Weakness diagnosis", "Limited", "Advanced"],
+  ["Strength diagnosis", "Included", "Included"],
   ["AI diagnostic credit", "1 lifetime credit", "1 credit every 24 hours"],
   ["Full mocks", "Premium", "Included"],
   ["Subtest mocks and 15-minute sprints", "Premium", "Included"],
@@ -9531,8 +9565,9 @@ export function PhloemAIPricingPage() {
             <div className="border-b border-slate-200 bg-slate-50 px-5 py-4">
               <h2 className="text-lg font-black">Plan comparison</h2>
               <p className="mt-1 text-sm font-semibold text-slate-500">
-                The free diagnostic is fully unlocked. Premium expands those
-                features across mocks and ongoing prep.
+                The free plan includes limited weakness diagnosis and strength
+                diagnosis. Premium expands those features across mocks and
+                ongoing prep.
               </p>
             </div>
             <div className="divide-y divide-slate-100">

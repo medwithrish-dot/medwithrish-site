@@ -19,6 +19,12 @@ import {
   QUALITY_9200_SJT_QUESTIONS,
   QUALITY_9200_VR_QUESTIONS,
 } from "./generatedUcatQuestionsQuality9200";
+import {
+  HIGH_QUALITY_9000_DM_QUESTIONS,
+  HIGH_QUALITY_9000_QR_QUESTIONS,
+  HIGH_QUALITY_9000_SJT_QUESTIONS,
+  HIGH_QUALITY_9000_VR_QUESTIONS,
+} from "./generatedUcatQuestionsHighQuality9000";
 import { SJT_QUESTIONS } from "./ucatSjtQuestions";
 import { HIGH_QUALITY_VR_QUESTIONS } from "./ucatVrQuestions";
 import { EXTRA_HIGH_QUALITY_VR_QUESTIONS } from "./ucatVrQuestionExtras";
@@ -862,10 +868,12 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: [
     ...HIGH_QUALITY_VR_QUESTIONS,
     ...EXTRA_HIGH_QUALITY_VR_QUESTIONS,
+    ...HIGH_QUALITY_9000_VR_QUESTIONS,
   ],
   dm: [
     ...ORIGINAL_DM_QUESTIONS,
     ...GENERATED_DM_QUESTIONS,
+    ...HIGH_QUALITY_9000_DM_QUESTIONS,
     {
       id: "dm-syllogisms-001",
       section: "dm",
@@ -2112,22 +2120,40 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       section: "qr",
       subtype: "qr-calculator-strategy",
       setId: "qr-efficient-working",
-      tags: ["text-stem", "set-based", "easy", "quick"],
+      tags: ["data-display", "set-based", "hard", "multi-step", "calculator-heavy"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Stem",
+      leftTitle: "Data",
       stimulus: [
-        "A calculation requires finding 37.5% of 864 and then adding 12.5% of 864.",
+        "The table shows the prices and places sold for weekday and weekend study workshops at four centres.",
       ],
-      question: "Which single calculation gives the same result most efficiently?",
+      visual: {
+        type: "table",
+        title: "Study workshop sales",
+        headers: [
+          "Centre",
+          "Weekday price",
+          "Weekday places",
+          "Weekend price",
+          "Weekend places",
+        ],
+        rows: [
+          ["Riverside", "GBP 6.40", "28,450", "GBP 9.75", "41,220"],
+          ["Meadow", "GBP 5.85", "116,300", "GBP 8.40", "148,750"],
+          ["Hillview", "GBP 7.20", "33,180", "GBP 9.10", "38,600"],
+          ["Brook", "GBP 6.95", "52,040", "GBP 8.75", "47,900"],
+        ],
+      },
+      question:
+        "At Riverside and Meadow combined, how much more revenue was made from weekend places than weekday places?",
       options: [
-        { key: "A", text: "0.25 x 864" },
-        { key: "B", text: "0.5 x 864" },
-        { key: "C", text: "0.625 x 864" },
-        { key: "D", text: "1.5 x 864" },
+        { key: "A", text: "GBP 569,145.00" },
+        { key: "B", text: "GBP 788,960.00" },
+        { key: "C", text: "GBP 970,040.00" },
+        { key: "D", text: "GBP 1,651,395.00" },
       ],
       answer: "B",
       explanation:
-        "37.5% + 12.5% = 50%, so the quickest equivalent calculation is 0.5 x 864.",
+        "Weekend revenue at Riverside and Meadow is GBP 1,651,395.00. Weekday revenue is GBP 862,435.00. The difference is GBP 788,960.00.",
     },
     {
       id: "qr-calculator-strategy-002",
@@ -2191,6 +2217,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       explanation:
         "The combined multiplier is 1.20 x 0.85 x 1.10 = 1.122.",
     },
+    ...HIGH_QUALITY_9000_QR_QUESTIONS,
   ],
   sjt: [
     ...SJT_QUESTIONS,
@@ -2198,6 +2225,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     ...ROUND_TWO_SJT_QUESTIONS,
     ...ROUND_THREE_SJT_QUESTIONS,
     ...ROUND_FOUR_SJT_QUESTIONS,
+    ...HIGH_QUALITY_9000_SJT_QUESTIONS,
   ].filter(isSupportedSjtQuestion),
 };
 

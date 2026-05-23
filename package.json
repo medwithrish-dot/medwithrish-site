@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "audit:ucat-questions": "node scripts/auditUcatQuestionBank.cjs"
+    "audit:ucat-questions": "node scripts/auditUcatQuestionBank.cjs",
+    "review:ucat-generated": "node scripts/reviewGeneratedUcatQuestions.cjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",
