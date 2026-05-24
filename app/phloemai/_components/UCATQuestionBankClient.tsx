@@ -2155,6 +2155,11 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     );
   }
 
+  const getSeriesFill = (index: number) => {
+    const fills = ["#52525b", "#c4c4c4", "#71717a", "#e4e4e7"];
+    return fills[index % fills.length];
+  };
+
   const width = 560;
   const height = 330;
   const left = 66;
@@ -2171,18 +2176,6 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     (_, index) => (visual.max / tickCount) * index
   );
   const majorTicks = ticks.filter((_, index) => index % 2 === 0);
-  const entries: Array<{ label: string; value: number }> =
-    visual.type === "bar"
-      ? visual.categories
-      : visual.type === "line"
-        ? visual.points
-        : visual.groups.flatMap((group) =>
-            group.values.map((value, index) => ({
-              label: `${group.label} - ${visual.seriesLabels[index]}`,
-              value,
-            }))
-          );
-
   const linePoints =
     visual.type === "line"
       ? visual.points.map((point, index) => {
@@ -2194,6 +2187,34 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
           return { ...point, x, y: valueToY(point.value) };
         })
       : [];
+  const chartKeyItems =
+    visual.type === "grouped-bar"
+      ? visual.seriesLabels.map((label, index) => ({
+          label,
+          fill: getSeriesFill(index),
+          kind: "bar" as const,
+        }))
+      : visual.type === "line"
+        ? [
+            {
+              label: visual.yLabel,
+              fill: "#3f3f46",
+              kind: "line" as const,
+            },
+          ]
+        : [
+            {
+              label: visual.yLabel,
+              fill: "#8a8a8a",
+              kind: "bar" as const,
+            },
+          ];
+  const horizontalAxisText =
+    visual.type === "grouped-bar"
+      ? "Groups shown below the bars"
+      : visual.type === "line"
+        ? "Points shown from left to right"
+        : "Categories shown below the bars";
 
   return (
     <div className="mt-6 rounded-sm border border-slate-300 bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
@@ -2352,7 +2373,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                         y={y}
                         width={barWidth}
                         height={barHeight}
-                        fill={valueIndex % 2 === 0 ? "#8a8a8a" : "#c4c4c4"}
+                        fill={getSeriesFill(valueIndex)}
                         stroke="#1f2937"
                         strokeWidth="1.2"
                       />
@@ -2421,16 +2442,54 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
       {visual.note && (
         <p className="mt-2 text-xs font-semibold text-slate-600">{visual.note}</p>
       )}
-      <div className="mt-3 grid gap-2 text-xs font-semibold text-slate-700 sm:grid-cols-2">
-        {entries.map((entry) => (
-          <div
-            key={entry.label}
-            className="flex items-center justify-between border-b border-slate-200 px-1 py-1"
-          >
-            <span>{entry.label}</span>
-            <span>{entry.value}</span>
+      <div className="mt-3 rounded-sm border border-slate-200 bg-slate-50 p-3 text-xs font-semibold text-slate-700">
+        <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
+          Chart key
+        </p>
+        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+          <div className="rounded-sm border border-slate-200 bg-white px-3 py-2">
+            <span className="block text-[11px] font-black uppercase tracking-wide text-slate-500">
+              Vertical axis
+            </span>
+            <span className="mt-0.5 block text-slate-900">{visual.yLabel}</span>
           </div>
-        ))}
+          <div className="rounded-sm border border-slate-200 bg-white px-3 py-2">
+            <span className="block text-[11px] font-black uppercase tracking-wide text-slate-500">
+              Horizontal axis
+            </span>
+            <span className="mt-0.5 block text-slate-900">
+              {horizontalAxisText}
+            </span>
+          </div>
+        </div>
+        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+          {chartKeyItems.map((item) => (
+            <div
+              key={item.label}
+              className="flex min-h-9 items-center gap-2 rounded-sm border border-slate-200 bg-white px-3 py-2"
+            >
+              {item.kind === "line" ? (
+                <span className="relative inline-flex h-4 w-8 shrink-0 items-center">
+                  <span
+                    className="h-0.5 w-8"
+                    style={{ backgroundColor: item.fill }}
+                  />
+                  <span
+                    className="absolute left-1/2 h-2.5 w-2.5 -translate-x-1/2 rounded-full border border-slate-900 bg-white"
+                    aria-hidden="true"
+                  />
+                </span>
+              ) : (
+                <span
+                  className="h-4 w-6 shrink-0 rounded-[2px] border border-slate-700"
+                  style={{ backgroundColor: item.fill }}
+                  aria-hidden="true"
+                />
+              )}
+              <span>{item.label}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -9639,10 +9698,6 @@ function UCATQuestionBankSection({
               +
             </button>
           </div>
-          <p className="mt-2 text-[11px] font-semibold leading-4 text-slate-600">
-            Shortcuts: Alt+C opens, / divides, * multiplies, M = M-, P = M+,
-            C recalls MRC, double C clears memory, Backspace clears entry.
-          </p>
         </div>
       )}
 

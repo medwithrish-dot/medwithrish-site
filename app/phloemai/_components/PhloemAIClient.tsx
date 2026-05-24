@@ -4883,11 +4883,6 @@ function SkillsTrainersContent({
                         </button>
                       ))}
                     </div>
-                    <p className="mt-2 text-[11px] font-semibold leading-4 text-slate-600">
-                      Shortcuts: Alt+C closes, / divides, * multiplies, M = M-,
-                      P = M+, C recalls MRC, double C clears memory, Backspace clears entry,
-                      Enter submits.
-                    </p>
                   </div>
                   <button
                     type="button"
@@ -5294,9 +5289,9 @@ function ProgressContent({
     studyPlanTasks.length > 0
       ? Math.round((tickedStudyPlanTasks.length / studyPlanTasks.length) * 100)
       : 0;
-  const activePracticeDays = practiceStats.questionCalendarDays.filter(
-    (day) => day.questions > 0
-  );
+  const completedQuestionSetCount = recentPracticeSets.filter(
+    (set) => !set.isIncomplete
+  ).length;
   const sectionImprovementItems = sectionCodes.flatMap((code) => {
     const answered = practiceStats.sectionAnswered[code];
     if (answered === 0) return [];
@@ -5374,12 +5369,9 @@ function ProgressContent({
                 <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
               </div>
               <p className="mt-1 text-xs font-bold text-slate-500">
-                {bankCompleted} completed questions across {activePracticeDays.length} active day{activePracticeDays.length === 1 ? "" : "s"} in {practiceStats.monthLabel}.
+                {completedQuestionSetCount} completed question set{completedQuestionSetCount === 1 ? "" : "s"}
               </p>
             </div>
-            <span className="w-fit rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-600">
-              {practiceStats.monthLabel}
-            </span>
           </div>
 
           <div className="mt-5">
