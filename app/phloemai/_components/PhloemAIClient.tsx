@@ -8997,7 +8997,7 @@ function RedesignedTutorHero() {
       status: "Available Now",
       text: "Full-length practice, AI diagnosis, attention tracking, and personalised coaching.",
       icon: Brain,
-      action: "Launch UCAT Platform",
+      action: "Log in / Launch UCAT Platform",
       href: "/phloemai/dashboard",
       active: true,
     },
@@ -9115,7 +9115,7 @@ function RedesignedTutorHero() {
                   href="/phloemai/dashboard"
                   className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
                 >
-                  Launch UCAT Platform
+                  Log in / Launch UCAT Platform
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <Link
@@ -9629,7 +9629,7 @@ function TutorHero() {
               href="/phloemai/dashboard"
               className="block w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-xs hover:border-slate-400 hover:text-slate-900 transition-colors cursor-pointer text-center"
             >
-              Launch UCAT Platform
+              Log in / Launch UCAT Platform
             </Link>
           </div>
         </div>
