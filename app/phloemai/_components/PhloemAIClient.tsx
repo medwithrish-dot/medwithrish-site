@@ -57,6 +57,7 @@ import {
   LockKeyhole,
   LogOut,
   Mail,
+  Menu,
   MessageSquare,
   ShieldCheck,
   Sparkles,
@@ -64,6 +65,7 @@ import {
   Timer,
   UserRound,
   Wrench,
+  X,
   Zap,
 } from "lucide-react";
 
@@ -1462,6 +1464,39 @@ const dashboardPageMeta: Record<
     subtitle: "Manage your profile, plan and subscription.",
   },
 };
+
+const dashboardNavItems = [
+  {
+    label: "Dashboard",
+    icon: Home,
+    href: "/phloemai/dashboard",
+    view: "dashboard",
+  },
+  {
+    label: "Diagnostic",
+    icon: Activity,
+    href: "/phloemai/diagnostic",
+    view: "diagnostic",
+  },
+  {
+    label: "Practice",
+    icon: Target,
+    href: "/phloemai/practice",
+    view: "practice",
+  },
+  {
+    label: "Progress",
+    icon: BarChart3,
+    href: "/phloemai/progress",
+    view: "progress",
+  },
+  {
+    label: "Report",
+    icon: Bookmark,
+    href: "/phloemai/report",
+    view: "report",
+  },
+] as const;
 
 const sectionScores = [
   {
@@ -7309,6 +7344,7 @@ function UCATDashboard({
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [progressSnapshotView, setProgressSnapshotView] =
     useState<DashboardProgressSnapshotView>("accuracy");
   const [completedDashboardTaskIds, setCompletedDashboardTaskIds] = useState<
@@ -7937,7 +7973,7 @@ function UCATDashboard({
   return (
     <div className="phloem-dashboard-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
       <div className="grid min-h-screen lg:grid-cols-[190px_1fr]">
-        <aside className="border-r border-slate-200 bg-white px-3 py-5">
+        <aside className="hidden border-r border-slate-200 bg-white px-3 py-5 lg:block">
           <Link
             href="/phloemai"
             aria-label="Open PhloemAI landing page"
@@ -7955,38 +7991,7 @@ function UCATDashboard({
           </Link>
 
           <nav className="mt-10 space-y-3">
-            {[
-              {
-                label: "Dashboard",
-                icon: Home,
-                href: "/phloemai/dashboard",
-                view: "dashboard",
-              },
-              {
-                label: "Diagnostic",
-                icon: Activity,
-                href: "/phloemai/diagnostic",
-                view: "diagnostic",
-              },
-              {
-                label: "Practice",
-                icon: Target,
-                href: "/phloemai/practice",
-                view: "practice",
-              },
-              {
-                label: "Progress",
-                icon: BarChart3,
-                href: "/phloemai/progress",
-                view: "progress",
-              },
-              {
-                label: "Report",
-                icon: Bookmark,
-                href: "/phloemai/report",
-                view: "report",
-              },
-            ].map((item) => {
+            {dashboardNavItems.map((item) => {
               const Icon = item.icon;
               const isActive =
                 item.view === view ||
@@ -8116,8 +8121,26 @@ function UCATDashboard({
         </aside>
 
         <main className="min-w-0">
-          <header className="flex flex-col gap-4 border-b border-slate-200 bg-white px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
-            <div className="flex items-center gap-4">
+          <header className="border-b border-slate-200 bg-white px-6 py-6 lg:px-8">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen((current) => !current);
+                  setAccountMenuOpen(false);
+                }}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 lg:hidden"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="phloem-mobile-menu"
+              >
+                {mobileMenuOpen ? (
+                  <X className="h-5 w-5" aria-hidden="true" />
+                ) : (
+                  <Menu className="h-5 w-5" aria-hidden="true" />
+                )}
+              </button>
               <Link
                 href={headerBackHref}
                 aria-label={headerBackLabel}
@@ -8143,7 +8166,7 @@ function UCATDashboard({
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-5">
               <button
                 type="button"
                 aria-label="Notifications"
@@ -8155,7 +8178,10 @@ function UCATDashboard({
               <div className="relative">
                 <button
                   type="button"
-                  onClick={() => setAccountMenuOpen((current) => !current)}
+                  onClick={() => {
+                    setAccountMenuOpen((current) => !current);
+                    setMobileMenuOpen(false);
+                  }}
                   className="flex items-center gap-3 rounded-xl border border-transparent px-2 py-1 transition-colors hover:border-blue-100 hover:bg-blue-50"
                   aria-expanded={accountMenuOpen}
                 >
@@ -8281,7 +8307,110 @@ function UCATDashboard({
               >
                 <LogOut className="h-5 w-5" aria-hidden="true" />
               </button>
+              </div>
             </div>
+
+            {mobileMenuOpen && (
+              <div
+                id="phloem-mobile-menu"
+                className="mt-4 w-full rounded-xl border border-slate-200 bg-white p-3 shadow-sm lg:hidden"
+              >
+                <nav className="grid gap-2" aria-label="Mobile PhloemAI menu">
+                  {dashboardNavItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive =
+                      item.view === view ||
+                      (item.view === "diagnostic" && view === "mock-diagnostic");
+
+                    return (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`flex h-11 items-center gap-3 rounded-lg px-3 text-sm font-black transition-colors ${
+                          isActive
+                            ? "bg-indigo-50 text-blue-600"
+                            : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                        }`}
+                      >
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                  <Link
+                    href="/phloemai/skills-trainers"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex h-11 items-center gap-3 rounded-lg px-3 text-sm font-black transition-colors ${
+                      view === "skills-trainers"
+                        ? "bg-indigo-50 text-blue-600"
+                        : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                    }`}
+                  >
+                    <Zap className="h-5 w-5" aria-hidden="true" />
+                    Calculator + Flags
+                  </Link>
+                </nav>
+
+                <div className="mt-3 border-t border-slate-100 pt-3">
+                  <div className="flex items-center justify-between gap-3 px-1">
+                    <span className="text-xs font-black uppercase tracking-wide text-slate-400">
+                      Current plan
+                    </span>
+                    <span className="text-sm font-black">{plan}</span>
+                  </div>
+                  {plan === "Premium" ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        void handleSubscriptionAction();
+                      }}
+                      disabled={checkoutLoading || !hasStripeCustomer}
+                      className="mt-3 flex h-10 w-full items-center justify-center rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                    >
+                      {hasStripeCustomer
+                        ? checkoutLoading
+                          ? "Opening..."
+                          : "Manage Billing"
+                        : "Premium active"}
+                    </button>
+                  ) : (
+                    <Link
+                      href="/phloemai/pricing"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="mt-3 flex h-10 w-full items-center justify-center rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
+                    >
+                      View Plans
+                    </Link>
+                  )}
+                </div>
+
+                <div className="mt-3 grid gap-2 border-t border-slate-100 pt-3 text-xs font-bold">
+                  <Link
+                    href="/terms-and-conditions"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600"
+                  >
+                    Terms and Conditions
+                  </Link>
+                  <Link
+                    href="/privacy-policy"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600"
+                  >
+                    Privacy Policy
+                  </Link>
+                  <Link
+                    href="/phloemai-disclaimer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-blue-600"
+                  >
+                    AI/Data Disclaimer
+                  </Link>
+                </div>
+              </div>
+            )}
           </header>
 
           {view === "dashboard" ? (
