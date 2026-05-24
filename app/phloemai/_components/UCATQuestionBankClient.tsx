@@ -1157,6 +1157,11 @@ function normaliseMinuteTarget(value: number | string) {
   return Number.isFinite(minutes) ? Math.max(1, minutes) : 1;
 }
 
+function normaliseQuestionTarget(value: number | string) {
+  const questions = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(questions) ? Math.max(1, Math.round(questions)) : 1;
+}
+
 function minutesToSeconds(minutes: number) {
   return Math.max(60, Math.round(minutes * 60));
 }
@@ -2622,6 +2627,7 @@ function SectionSetup({
   progressLoading,
   lengthMode,
   questionTarget,
+  customQuestionCount,
   minuteTarget,
   customMinutes,
   timed,
@@ -2629,6 +2635,7 @@ function SectionSetup({
   onToggleSubtype,
   onLengthModeChange,
   onQuestionTargetChange,
+  onCustomQuestionCountChange,
   onMinuteTargetChange,
   onCustomMinutesChange,
   onTimedChange,
@@ -2655,6 +2662,7 @@ function SectionSetup({
   progressLoading: boolean;
   lengthMode: SessionLengthMode;
   questionTarget: number;
+  customQuestionCount: string;
   minuteTarget: number | "custom";
   customMinutes: string;
   timed: boolean;
@@ -2662,6 +2670,7 @@ function SectionSetup({
   onToggleSubtype: (subtype: UCATSubtypeId) => void;
   onLengthModeChange: (mode: SessionLengthMode) => void;
   onQuestionTargetChange: (count: number) => void;
+  onCustomQuestionCountChange: (count: string) => void;
   onMinuteTargetChange: (minutes: number | "custom") => void;
   onCustomMinutesChange: (minutes: string) => void;
   onTimedChange: (timed: boolean) => void;
@@ -2690,6 +2699,9 @@ function SectionSetup({
     lengthMode === "minutes"
       ? minutesToSeconds(selectedMinutes)
       : questionCount * meta.secondsPerQuestion;
+  const customQuestionSelected =
+    lengthMode === "questions" &&
+    !QUESTION_TARGETS.some((count) => count === questionTarget);
 
   return (
     <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
@@ -2836,7 +2848,38 @@ function SectionSetup({
                       {count}
                     </button>
                   ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onLengthModeChange("questions");
+                      onCustomQuestionCountChange(customQuestionCount);
+                    }}
+                    className={`h-10 rounded-lg border px-4 text-sm font-black ${
+                      customQuestionSelected
+                        ? "border-blue-500 bg-blue-50 text-blue-700"
+                        : "border-slate-200 text-slate-700 hover:border-blue-300"
+                    }`}
+                  >
+                    Custom
+                  </button>
                 </div>
+                {customQuestionSelected && (
+                  <label className="mt-3 block">
+                    <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                      Questions
+                    </span>
+                    <input
+                      type="number"
+                      min="1"
+                      max={Math.max(1, availableCount)}
+                      value={customQuestionCount}
+                      onChange={(event) =>
+                        onCustomQuestionCountChange(event.target.value)
+                      }
+                      className="mt-1 h-10 w-32 rounded-lg border border-slate-200 px-3 text-sm font-bold outline-none focus:border-blue-500"
+                    />
+                  </label>
+                )}
                 <p className="mt-3 text-xs font-bold leading-5 text-slate-500">
                   If fewer questions are available for your selected types, the
                   closest available set is used.
@@ -6680,6 +6723,7 @@ function UCATQuestionBankSection({
   );
   const [lengthMode, setLengthMode] = useState<SessionLengthMode>("questions");
   const [questionTarget, setQuestionTarget] = useState<number>(5);
+  const [customQuestionCount, setCustomQuestionCount] = useState("20");
   const [minuteTarget, setMinuteTarget] = useState<number | "custom">(5);
   const [customMinutes, setCustomMinutes] = useState("8");
   const [sectionMockTiming, setSectionMockTiming] =
@@ -8515,6 +8559,7 @@ function UCATQuestionBankSection({
         progressLoading={questionProgressLoading}
         lengthMode={lengthMode}
         questionTarget={questionTarget}
+        customQuestionCount={customQuestionCount}
         minuteTarget={minuteTarget}
         customMinutes={customMinutes}
         timed={lengthMode === "minutes" ? true : timed}
@@ -8531,6 +8576,15 @@ function UCATQuestionBankSection({
         onQuestionTargetChange={(count) => {
           setQuestionTarget(count);
           recordEvent("setup_question_target", { count });
+        }}
+        onCustomQuestionCountChange={(count) => {
+          const normalisedCount = normaliseQuestionTarget(count);
+          setCustomQuestionCount(count);
+          setLengthMode("questions");
+          setQuestionTarget(normalisedCount);
+          recordEvent("setup_custom_question_count", {
+            count: normalisedCount,
+          });
         }}
         onMinuteTargetChange={(minutes) => {
           setMinuteTarget(minutes);
