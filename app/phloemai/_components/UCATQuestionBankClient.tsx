@@ -2044,8 +2044,8 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
   }
 
   if (visual.type === "set-diagram") {
-    const width = 620;
-    const height = 420;
+    const width = 496;
+    const height = 336;
     const shapePoints = (shape: (typeof visual.shapes)[number]) => {
       const { x, y, width: shapeWidth, height: shapeHeight } = shape;
 
@@ -2070,7 +2070,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
         <div className="mt-2 overflow-x-auto">
           <svg
             viewBox={`0 0 ${width} ${height}`}
-            className="min-w-[520px] text-slate-800"
+            className="min-w-[416px] text-slate-800"
             role="img"
             aria-label={visual.title}
           >
@@ -2131,7 +2131,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                 y={label.y}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fontSize="17"
+                fontSize="14"
                 fontWeight="700"
                 fill="#111827"
               >
@@ -2165,12 +2165,12 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     return fills[index % fills.length];
   };
 
-  const width = 560;
-  const height = 330;
-  const left = 66;
-  const right = 36;
-  const top = 42;
-  const bottom = 66;
+  const width = 448;
+  const height = 264;
+  const left = 53;
+  const right = 29;
+  const top = 34;
+  const bottom = 53;
   const chartWidth = width - left - right;
   const chartHeight = height - top - bottom;
   const valueToY = (value: number) =>
@@ -2227,7 +2227,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
       <div className="mt-2 overflow-x-auto">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="min-w-[460px] text-slate-800"
+          className="min-w-[368px] text-slate-800"
           role="img"
           aria-label={visual.title}
         >
@@ -2258,7 +2258,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     x={left - 12}
                     y={y + 4}
                     textAnchor="end"
-                    fontSize="13"
+                    fontSize="11"
                     fill="#27272a"
                   >
                     {Math.round(tick)}
@@ -2298,11 +2298,11 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             strokeWidth="1.8"
           />
           <text
-            x={22}
+            x={18}
             y={top + chartHeight / 2}
-            transform={`rotate(-90 22 ${top + chartHeight / 2})`}
+            transform={`rotate(-90 18 ${top + chartHeight / 2})`}
             textAnchor="middle"
-            fontSize="14"
+            fontSize="12"
             fontWeight="700"
             fill="#27272a"
           >
@@ -2311,7 +2311,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
 
           {visual.type === "bar" &&
             visual.categories.map((category, index) => {
-              const gap = 22;
+              const gap = 18;
               const barWidth =
                 (chartWidth - gap * (visual.categories.length + 1)) /
                 visual.categories.length;
@@ -2331,9 +2331,9 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   />
                   <text
                     x={x + barWidth / 2}
-                    y={y - 7}
+                    y={y - 6}
                     textAnchor="middle"
-                    fontSize="13"
+                    fontSize="11"
                     fontWeight="700"
                     fill="#111827"
                   >
@@ -2341,9 +2341,9 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   </text>
                   <text
                     x={x + barWidth / 2}
-                    y={top + chartHeight + 22}
+                    y={top + chartHeight + 18}
                     textAnchor="middle"
-                    fontSize="13"
+                    fontSize="11"
                     fontWeight="700"
                     fill="#27272a"
                   >
@@ -2355,12 +2355,12 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
 
           {visual.type === "grouped-bar" &&
             visual.groups.map((group, groupIndex) => {
-              const groupGap = 24;
+              const groupGap = 19;
               const seriesCount = Math.max(1, visual.seriesLabels.length);
               const groupWidth =
                 (chartWidth - groupGap * (visual.groups.length + 1)) /
                 visual.groups.length;
-              const barGap = 4;
+              const barGap = 3;
               const barWidth =
                 (groupWidth - barGap * (seriesCount - 1)) / seriesCount;
               const x = left + groupGap + groupIndex * (groupWidth + groupGap);
@@ -2386,9 +2386,9 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   })}
                   <text
                     x={x + groupWidth / 2}
-                    y={top + chartHeight + 22}
+                    y={top + chartHeight + 18}
                     textAnchor="middle"
-                    fontSize="13"
+                    fontSize="11"
                     fontWeight="700"
                     fill="#27272a"
                   >
@@ -2420,9 +2420,9 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   />
                   <text
                     x={point.x}
-                    y={point.y - 10}
+                    y={point.y - 8}
                     textAnchor="middle"
-                    fontSize="13"
+                    fontSize="11"
                     fontWeight="700"
                     fill="#111827"
                   >
@@ -2430,9 +2430,9 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   </text>
                   <text
                     x={point.x}
-                    y={top + chartHeight + 22}
+                    y={top + chartHeight + 18}
                     textAnchor="middle"
-                    fontSize="13"
+                    fontSize="11"
                     fontWeight="700"
                     fill="#27272a"
                   >
@@ -9454,7 +9454,6 @@ function UCATQuestionBankSection({
   const attemptBackLabel = diagnosticMode
     ? backLabel ?? "Back to diagnostics"
     : "Back to practice";
-  const questionAttemptZoom = 0.8;
   const hasActiveIncompleteAttempt =
     started && phase === "practice" && !markedSummary && questions.length > 0;
   const exitPromptKind: PendingExitPrompt["kind"] = diagnosticMode
@@ -9757,11 +9756,6 @@ function UCATQuestionBankSection({
       )}
 
       <main
-        style={{
-          minHeight: "calc((100vh - 132px) * 1.25)",
-          width: "125%",
-          zoom: questionAttemptZoom,
-        }}
         className={
           usesClassicDropLayout
             ? "min-h-[calc(100vh-132px)] pb-16"
@@ -9772,16 +9766,16 @@ function UCATQuestionBankSection({
           ref={stimulusRegionRef}
           className={
             usesClassicDropLayout
-              ? "px-5 pt-5"
-              : "border-b-[8px] border-[#0078a8] px-7 py-7 md:min-h-[calc(100vh-132px)] md:border-b-0 md:border-r-[10px]"
+              ? "px-4 pt-4"
+              : "border-b-[8px] border-[#0078a8] px-5 py-5 md:min-h-[calc(100vh-132px)] md:border-b-0 md:border-r-[8px]"
           }
         >
           <h2 className="sr-only">{question.leftTitle ?? "Information"}</h2>
           <div
             className={
               usesClassicDropLayout
-                ? "max-w-[920px] space-y-3 text-[18px] leading-[25px] text-black"
-                : "max-w-none space-y-5 text-[20px] leading-[26px] text-black"
+                ? "max-w-[920px] space-y-2.5 text-[15px] leading-[20px] text-black"
+                : "max-w-none space-y-4 text-base leading-[21px] text-black"
             }
           >
             {question.stimulus.map((paragraph) => (
@@ -9791,13 +9785,13 @@ function UCATQuestionBankSection({
           </div>
         </section>
 
-        <section className={usesClassicDropLayout ? "px-5 py-3" : "px-7 py-7"}>
+        <section className={usesClassicDropLayout ? "px-4 py-2.5" : "px-5 py-5"}>
           <div ref={questionRegionRef}>
             <p
               className={
                 usesClassicDropLayout
-                  ? "max-w-[820px] text-[18px] leading-[25px] text-black"
-                  : "text-[20px] leading-[25px] text-black"
+                  ? "max-w-[820px] text-[15px] leading-[20px] text-black"
+                  : "text-base leading-[21px] text-black"
               }
             >
               {question.question}
@@ -9806,7 +9800,7 @@ function UCATQuestionBankSection({
 
           {isDragQuestion ? (
             <div ref={answersRegionRef} className="mt-6">
-              <p className="rounded-sm border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold leading-6 text-slate-700">
+              <p className="rounded-sm border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-semibold leading-5 text-slate-700">
                 {question.instruction}
               </p>
               <div className="mt-4 space-y-3">
@@ -9831,7 +9825,7 @@ function UCATQuestionBankSection({
                         );
                         setDraggedItemId(null);
                       }}
-                      className={`grid cursor-grab grid-cols-[34px_32px_1fr] items-center gap-3 rounded-sm border px-3 py-3 text-sm leading-6 active:cursor-grabbing sm:text-base ${
+                      className={`grid cursor-grab grid-cols-[28px_26px_1fr] items-center gap-2.5 rounded-sm border px-3 py-2.5 text-sm leading-5 active:cursor-grabbing ${
                         correctSlot
                           ? "border-emerald-500 bg-emerald-50"
                           : wrongSlot
@@ -9839,10 +9833,10 @@ function UCATQuestionBankSection({
                             : "border-slate-300 bg-white hover:border-slate-500"
                       }`}
                     >
-                      <span className="flex h-7 w-7 items-center justify-center rounded-sm border border-slate-300 bg-slate-100 text-sm font-bold">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-sm border border-slate-300 bg-slate-100 text-xs font-bold">
                         {index + 1}
                       </span>
-                      <GripVertical className="h-5 w-5 text-slate-500" aria-hidden="true" />
+                      <GripVertical className="h-4 w-4 text-slate-500" aria-hidden="true" />
                       <span>{itemText}</span>
                     </div>
                   );
@@ -10069,7 +10063,7 @@ function UCATQuestionBankSection({
               </div>
             </div>
           ) : isSingleQuestion ? (
-            <div ref={answersRegionRef} className="mt-7 space-y-6">
+            <div ref={answersRegionRef} className="mt-6 space-y-5">
               {question.options.map((option) => {
                 const checked = selectedAnswer === option.key;
                 const correct = answerRevealed && option.key === question.answer;
@@ -10082,7 +10076,7 @@ function UCATQuestionBankSection({
                 return (
                   <label
                     key={option.key}
-                    className={`grid cursor-pointer grid-cols-[22px_42px_minmax(0,1fr)] items-start gap-2 text-[20px] leading-[25px] text-black transition-colors ${
+                    className={`grid cursor-pointer grid-cols-[18px_34px_minmax(0,1fr)] items-start gap-2 text-base leading-[21px] text-black transition-colors ${
                       correct
                         ? "text-emerald-700"
                         : partial
