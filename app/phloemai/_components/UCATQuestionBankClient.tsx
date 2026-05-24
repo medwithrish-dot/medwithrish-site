@@ -272,6 +272,8 @@ type PracticeSessionSummary = {
   mockLabel?: string | null;
   startedAt: string;
   completedAt: string;
+  currentQuestionIndex?: number;
+  finished?: boolean;
   totalQuestions: number;
   answeredQuestions: number;
   correctQuestions: number;
@@ -350,6 +352,11 @@ type MockSessionDraft = {
   startedAt: number;
   trackingMode: TrackingMode;
   savedAt: string;
+};
+type PendingExitPrompt = {
+  href: string;
+  kind: "question-set" | "mock";
+  saving: boolean;
 };
 
 const QUESTION_TARGETS = [5, 10, 15] as const;
@@ -532,6 +539,12 @@ function scrollToQuestionTop() {
 function clampQuestionCount(value: number, available: number) {
   if (available <= 0) return 0;
   return Math.max(1, Math.min(available, value));
+}
+
+function clampQuestionIndex(index: number, questionCount: number) {
+  if (questionCount <= 0) return 0;
+  if (!Number.isFinite(index)) return 0;
+  return Math.max(0, Math.min(questionCount - 1, Math.floor(index)));
 }
 
 function formatDuration(totalSeconds: number) {
@@ -1106,7 +1119,19 @@ function normaliseSavedPracticeSet(
 }
 
 function isIncompleteSavedPracticeSet(set: SavedPracticeSet) {
-  return set.summary.answeredQuestions < set.summary.totalQuestions;
+  return (
+    set.summary.finished === false ||
+    set.summary.answeredQuestions < set.summary.totalQuestions
+  );
+}
+
+function isPracticeSessionId(value: string | null | undefined) {
+  return Boolean(
+    value &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+        value
+      )
+  );
 }
 
 function getDiagnosticTitle(diagnosticMode: DiagnosticMode | null) {
@@ -1831,6 +1856,8 @@ function buildPracticeSessionSummary({
   events,
   startedAt,
   completedAt,
+  currentQuestionIndex = 0,
+  finished = true,
   timed,
   setSeconds,
   secondsRemaining,
@@ -1848,6 +1875,8 @@ function buildPracticeSessionSummary({
   events: TrackingEvent[];
   startedAt: number;
   completedAt: number;
+  currentQuestionIndex?: number;
+  finished?: boolean;
   timed: boolean;
   setSeconds: number;
   secondsRemaining: number;
@@ -1935,6 +1964,11 @@ function buildPracticeSessionSummary({
     mockLabel,
     startedAt: new Date(startedAt).toISOString(),
     completedAt: new Date(completedAt).toISOString(),
+    currentQuestionIndex: clampQuestionIndex(
+      currentQuestionIndex,
+      questions.length
+    ),
+    finished,
     totalQuestions: questions.length,
     answeredQuestions,
     correctQuestions,
@@ -6625,7 +6659,7 @@ function UCATQuestionBankSection({
   });
   const [mockSessionDraft, setMockSessionDraft] =
     useState<MockSessionDraft | null>(null);
-  const [pendingExitHref, setPendingExitHref] = useState<string | null>(null);
+  const [pendingExit, setPendingExit] = useState<PendingExitPrompt | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [freeDiagnosticLoading, setFreeDiagnosticLoading] = useState(
     diagnosticMode === "free-qr"
@@ -6938,7 +6972,7 @@ function UCATQuestionBankSection({
 
         if (questionError) throw questionError;
 
-        const { data: sessionRows, error: sessionError } = await supabase
+        const { data: recentSessionRows, error: sessionError } = await supabase
           .from("practice_sessions")
           .select("id,summary,completed_at,created_at,source")
           .eq("user_id", user.id)
@@ -6949,6 +6983,29 @@ function UCATQuestionBankSection({
 
         if (sessionError) throw sessionError;
 
+        let sessionRows = (recentSessionRows ?? []) as SavedPracticeSessionRow[];
+        if (
+          isPracticeSessionId(practiceSetId) &&
+          !sessionRows.some((row) => row.id === practiceSetId)
+        ) {
+          const { data: requestedSessionRow, error: requestedSessionError } =
+            await supabase
+              .from("practice_sessions")
+              .select("id,summary,completed_at,created_at,source")
+              .eq("user_id", user.id)
+              .eq("id", practiceSetId)
+              .eq("source", "question_bank")
+              .maybeSingle();
+
+          if (requestedSessionError) throw requestedSessionError;
+          if (requestedSessionRow) {
+            sessionRows = [
+              requestedSessionRow as SavedPracticeSessionRow,
+              ...sessionRows,
+            ];
+          }
+        }
+
         if (!mounted) return;
 
         const completedIds = new Set(
@@ -6957,7 +7014,7 @@ function UCATQuestionBankSection({
             .map((row) => row.question_id)
             .filter((questionId): questionId is string => Boolean(questionId))
         );
-        const savedSets = ((sessionRows ?? []) as SavedPracticeSessionRow[])
+        const savedSets = sessionRows
           .map((row) => normaliseSavedPracticeSet(row, validSection))
           .filter((set): set is SavedPracticeSet => Boolean(set));
 
@@ -6979,7 +7036,7 @@ function UCATQuestionBankSection({
     return () => {
       mounted = false;
     };
-  }, [diagnosticMode, validSection]);
+  }, [diagnosticMode, practiceSetId, validSection]);
 
   const baseSectionQuestions = useMemo(
     () => UCAT_QUESTION_BANK[validSection],
@@ -7130,6 +7187,17 @@ function UCATQuestionBankSection({
       : [];
   };
 
+  const getCurrentSessionSecondsRemaining = () => {
+    if (sessionTimed && sessionDeadlineMsRef.current !== null) {
+      return Math.max(
+        0,
+        Math.ceil((sessionDeadlineMsRef.current - monotonicMs()) / 1000)
+      );
+    }
+
+    return timeRemaining;
+  };
+
   const buildCurrentMockSessionDraft = (): MockSessionDraft | null => {
     if (!canUseMockSessionDraft || !started || phase !== "practice") return null;
     if (questions.length === 0) return null;
@@ -7151,6 +7219,7 @@ function UCATQuestionBankSection({
           Math.max(0, nowMs() - questionStartedAtRef.current),
       };
     }
+    const currentTimeRemaining = getCurrentSessionSecondsRemaining();
 
     return {
       version: MOCK_SESSION_DRAFT_VERSION,
@@ -7168,7 +7237,7 @@ function UCATQuestionBankSection({
       events: trackingEventsRef.current,
       sessionTimed,
       sessionDurationSeconds,
-      timeRemaining,
+      timeRemaining: currentTimeRemaining,
       startedAt: sessionStartedAtRef.current || sessionStartedAt || nowMs(),
       trackingMode: attentionTracker.trackingMode,
       savedAt: new Date().toISOString(),
@@ -7433,6 +7502,8 @@ function UCATQuestionBankSection({
       events: trackingEventsSnapshot,
       startedAt: sessionStartedAt || completedAt,
       completedAt,
+      currentQuestionIndex: questionIndex,
+      finished: false,
       timed: sessionTimed,
       setSeconds: sessionDurationSeconds,
       secondsRemaining: timeRemaining,
@@ -7446,6 +7517,7 @@ function UCATQuestionBankSection({
     diagnosticMode,
     fixedDiagnosticScope,
     mockId,
+    questionIndex,
     questions,
     selectedMock.label,
     sessionDurationSeconds,
@@ -7468,7 +7540,7 @@ function UCATQuestionBankSection({
         status: "skipped",
         message: "Supabase not configured",
       });
-      return;
+      return false;
     }
 
     setSaveState({ status: "saving", message: "Saving session..." });
@@ -7484,7 +7556,7 @@ function UCATQuestionBankSection({
           status: "skipped",
           message: "Sign in to save this session",
         });
-        return;
+        return false;
       }
 
       const source = getPracticeSource(diagnosticMode);
@@ -7582,7 +7654,7 @@ function UCATQuestionBankSection({
             status: "saved",
             message: "Saved. Old draft could not be removed.",
           });
-          return;
+          return true;
         }
       }
 
@@ -7676,6 +7748,7 @@ function UCATQuestionBankSection({
       }
 
       setSaveState({ status: "saved", message: "Saved to Supabase" });
+      return true;
     } catch (error) {
       setSaveState({
         status: "error",
@@ -7684,7 +7757,78 @@ function UCATQuestionBankSection({
             ? error.message
             : "Could not save this session",
       });
+      return false;
     }
+  };
+
+  const buildCurrentPracticeSummary = (
+    completedAt: number,
+    finalEvents: TrackingEvent[],
+    finalTimings: Record<string, QuestionTiming>
+  ) =>
+    buildPracticeSessionSummary({
+      section: validSection,
+      sectionTitle: meta.bankTitle,
+      mockId: diagnosticMode ? mockId : null,
+      mockScope: diagnosticMode ? fixedDiagnosticScope : null,
+      mockLabel: diagnosticMode ? selectedMock.label : null,
+      questions,
+      answers,
+      flags,
+      timings: finalTimings,
+      events: finalEvents,
+      startedAt: sessionStartedAtRef.current || completedAt,
+      completedAt,
+      currentQuestionIndex: questionIndex,
+      finished: false,
+      timed: sessionTimed,
+      setSeconds: sessionDurationSeconds,
+      secondsRemaining: getCurrentSessionSecondsRemaining(),
+      trackingMode: attentionTracker.trackingMode,
+    });
+
+  const saveCurrentQuestionSetProgress = async () => {
+    const completedAt = nowMs();
+
+    commitQuestionTiming();
+    commitAttentionSnapshot("exit_save");
+    recordEvent("exit_save", {
+      kind: "question_set",
+      question: questionIndex + 1,
+      total: questions.length,
+    });
+
+    const finalEvents = [...trackingEventsRef.current];
+    const finalTimings = { ...questionTimingRef.current };
+    const resumedSessionId = resumedPracticeSessionIdRef.current;
+    const summary = buildCurrentPracticeSummary(
+      completedAt,
+      finalEvents,
+      finalTimings
+    );
+    const saved = await persistPracticeSummary(
+      summary,
+      finalEvents,
+      resumedSessionId
+    );
+
+    if (saved) {
+      setSavedPracticeSets((current) => {
+        const updatedSet = {
+          id: resumedSessionId ?? `local-${summary.completedAt}`,
+          summary,
+          completedAt: summary.completedAt,
+          source: "question_bank",
+        };
+
+        return [
+          updatedSet,
+          ...current.filter((set) => set.id !== updatedSet.id),
+        ];
+      });
+    }
+
+    return saved;
   };
 
   const handleUpgrade = async () => {
@@ -8630,6 +8774,7 @@ function UCATQuestionBankSection({
     const restoredQuestions: UCATQuestion[] = [];
     const restoredAnswers: Record<number, PracticeAnswer> = {};
     const restoredFlags: Record<number, boolean> = {};
+    const restoredTimings: Record<string, QuestionTiming> = {};
 
     set.summary.questions.forEach((item) => {
       const restoredQuestion = sectionQuestions.find(
@@ -8643,9 +8788,20 @@ function UCATQuestionBankSection({
         restoredAnswers[nextIndex] = item.selectedAnswer;
       }
       if (item.flagged) restoredFlags[nextIndex] = true;
+      restoredTimings[restoredQuestion.id] = {
+        questionId: restoredQuestion.id,
+        visits: item.visits,
+        totalMs: item.totalSeconds * 1000,
+        answeredAtMs: item.answeredAtMs ?? undefined,
+      };
     });
 
-    return { restoredQuestions, restoredAnswers, restoredFlags };
+    return {
+      restoredQuestions,
+      restoredAnswers,
+      restoredFlags,
+      restoredTimings,
+    };
   }
 
   function reviewSavedPracticeSet(set: SavedPracticeSet) {
@@ -8679,7 +8835,12 @@ function UCATQuestionBankSection({
   }
 
   function continueSavedPracticeSet(set: SavedPracticeSet) {
-    const { restoredQuestions, restoredAnswers, restoredFlags } =
+    const {
+      restoredQuestions,
+      restoredAnswers,
+      restoredFlags,
+      restoredTimings,
+    } =
       getSavedPracticeSetSnapshot(set);
 
     if (restoredQuestions.length === 0) return;
@@ -8687,11 +8848,20 @@ function UCATQuestionBankSection({
     const firstIncompleteIndex = restoredQuestions.findIndex(
       (item, index) => !isAnswered(item, restoredAnswers[index])
     );
-    const startIndex = firstIncompleteIndex >= 0 ? firstIncompleteIndex : 0;
+    const savedQuestionIndex =
+      typeof set.summary.currentQuestionIndex === "number"
+        ? set.summary.currentQuestionIndex
+        : null;
+    const startIndex =
+      savedQuestionIndex !== null
+        ? clampQuestionIndex(savedQuestionIndex, restoredQuestions.length)
+        : firstIncompleteIndex >= 0
+          ? firstIncompleteIndex
+          : 0;
     const startedAt = nowMs();
     const remainingSeconds =
-      set.summary.timed && set.summary.secondsRemaining > 0
-        ? set.summary.secondsRemaining
+      set.summary.timed && Number.isFinite(set.summary.secondsRemaining)
+        ? Math.max(0, set.summary.secondsRemaining)
         : set.summary.setSeconds;
     const restoredTrackingMode =
       set.summary.trackingMode === "none" ? "none" : "mouse";
@@ -8737,10 +8907,10 @@ function UCATQuestionBankSection({
     setSaveState({ status: "idle", message: "Continuing saved set" });
     trackingEventsRef.current = [];
     setTrackingEventsSnapshot([]);
-    questionTimingRef.current = {};
+    questionTimingRef.current = restoredTimings;
     sessionStartedAtRef.current = startedAt;
     setSessionStartedAt(startedAt);
-    setTimingSnapshot({});
+    setTimingSnapshot({ ...restoredTimings });
     setTrackingEventCount(0);
     setStarted(true);
     beginQuestionTiming(restoredQuestions[startIndex]);
@@ -8798,6 +8968,7 @@ function UCATQuestionBankSection({
       events: finalEvents,
       startedAt: sessionStartedAtRef.current || completedAt,
       completedAt,
+      currentQuestionIndex: questionIndex,
       timed: sessionTimed,
       setSeconds: sessionDurationSeconds,
       secondsRemaining: timeRemaining,
@@ -9170,6 +9341,77 @@ function UCATQuestionBankSection({
   const attemptBackLabel = diagnosticMode
     ? backLabel ?? "Back to diagnostics"
     : "Back to practice";
+  const hasActiveIncompleteAttempt =
+    started && phase === "practice" && !markedSummary && questions.length > 0;
+  const exitPromptKind: PendingExitPrompt["kind"] = diagnosticMode
+    ? "mock"
+    : "question-set";
+  const exitPromptCopy = pendingExit
+    ? pendingExit.kind === "mock"
+      ? {
+          title: "Exit mock?",
+          body: "You haven't completed this UCAT mock yet. If you exit now, your progress will be saved, but unanswered questions won't count toward your score until you finish.",
+          continueLabel: "Continue mock",
+        }
+      : {
+          title: "Exit question set?",
+          body: "You haven't completed this UCAT set yet. If you exit now, your progress will be saved, but unanswered questions won't count toward your score until you finish.",
+          continueLabel: "Continue set",
+        }
+    : null;
+
+  const requestExit = (href: string) => {
+    if (!hasActiveIncompleteAttempt) {
+      window.location.assign(href);
+      return;
+    }
+
+    if (canUseMockSessionDraft) {
+      writeCurrentMockSessionDraft();
+    }
+
+    recordEvent("exit_prompt_open", {
+      kind: exitPromptKind === "mock" ? "mock" : "question_set",
+      question: questionIndex + 1,
+      total: questions.length,
+    });
+    setPendingExit({ href, kind: exitPromptKind, saving: false });
+  };
+
+  const continueAfterExitPrompt = () => {
+    setPendingExit(null);
+    window.setTimeout(() => appRootRef.current?.focus(), 0);
+  };
+
+  const confirmExitAndSave = async () => {
+    const exit = pendingExit;
+    if (!exit || exit.saving) return;
+
+    setPendingExit({ ...exit, saving: true });
+
+    if (exit.kind === "mock") {
+      commitQuestionTiming();
+      commitAttentionSnapshot("exit_save");
+      recordEvent("exit_save", {
+        kind: "mock",
+        question: questionIndex + 1,
+        total: questions.length,
+      });
+      writeCurrentMockSessionDraft();
+      attentionTracker.resetTracker();
+      window.location.assign(exit.href);
+      return;
+    }
+
+    const saved = await saveCurrentQuestionSetProgress();
+    if (!saved) {
+      setPendingExit({ ...exit, saving: false });
+      return;
+    }
+
+    attentionTracker.resetTracker();
+    window.location.assign(exit.href);
+  };
 
   return (
     <div
@@ -9197,14 +9439,9 @@ function UCATQuestionBankSection({
             href={attemptBackHref}
             aria-label={attemptBackLabel}
             onClick={(event) => {
-              if (
-                canUseMockSessionDraft &&
-                started &&
-                phase === "practice"
-              ) {
+              if (hasActiveIncompleteAttempt) {
                 event.preventDefault();
-                writeCurrentMockSessionDraft();
-                setPendingExitHref(attemptBackHref);
+                requestExit(attemptBackHref);
               }
             }}
             className="rounded-sm p-1 hover:bg-white/15"
@@ -9248,31 +9485,40 @@ function UCATQuestionBankSection({
         </div>
       </header>
 
-      {pendingExitHref && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4">
+      {pendingExit && exitPromptCopy && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="exit-prompt-title"
+          aria-describedby="exit-prompt-body"
+        >
           <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-5 text-slate-950 shadow-2xl">
-            <h2 className="text-lg font-black">Exit this mock?</h2>
-            <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
-              Your unfinished mock has been saved on this browser. You can
-              continue it from the mock library or this section page.
+            <h2 id="exit-prompt-title" className="text-lg font-black">
+              {exitPromptCopy.title}
+            </h2>
+            <p
+              id="exit-prompt-body"
+              className="mt-2 text-sm font-semibold leading-6 text-slate-600"
+            >
+              {exitPromptCopy.body}
             </p>
-            <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-end">
               <button
                 type="button"
-                onClick={() => setPendingExitHref(null)}
+                onClick={confirmExitAndSave}
+                disabled={pendingExit.saving}
                 className="inline-flex h-10 items-center justify-center rounded-lg border border-slate-200 px-4 text-xs font-black text-slate-700 hover:bg-slate-50"
               >
-                Keep working
+                {pendingExit.saving ? "Saving..." : "Exit and save"}
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  writeCurrentMockSessionDraft();
-                  window.location.assign(pendingExitHref);
-                }}
-                className="inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700"
+                onClick={continueAfterExitPrompt}
+                disabled={pendingExit.saving}
+                className="inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-4 text-xs font-black text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Save and exit
+                {exitPromptCopy.continueLabel}
               </button>
             </div>
           </div>
@@ -9878,17 +10124,7 @@ function UCATQuestionBankSection({
       <footer className="fixed inset-x-0 bottom-0 flex h-10 items-center justify-between border-t-2 border-white bg-[#0078a8] text-white">
         <button
           type="button"
-          onClick={() => {
-            commitQuestionTiming();
-            commitAttentionSnapshot("end_bank");
-            recordEvent("end_bank");
-            attentionTracker.resetTracker();
-            markedSummaryRef.current = null;
-            markedInsightsHistoryActiveRef.current = false;
-            setMarkedSummary(null);
-            setPhase("practice");
-            setStarted(false);
-          }}
+          onClick={() => requestExit(attemptBackHref)}
           className="flex h-full items-center border-r-2 border-white px-3 text-lg font-semibold hover:bg-[#00618a]"
         >
           End Bank

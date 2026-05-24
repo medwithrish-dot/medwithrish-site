@@ -1676,6 +1676,7 @@ function normaliseRecentPracticeSet(
     row.completed_at ??
     row.created_at;
   const sectionSlug = section.toLowerCase();
+  const finished = summary.finished !== false;
 
   return {
     id: row.id,
@@ -1690,7 +1691,8 @@ function normaliseRecentPracticeSet(
     totalQuestions,
     correctQuestions,
     accuracy,
-    isIncomplete: totalQuestions > 0 && answeredQuestions < totalQuestions,
+    isIncomplete:
+      !finished || (totalQuestions > 0 && answeredQuestions < totalQuestions),
     href: `/phloemai/question-bank/${sectionSlug}?set=${encodeURIComponent(
       row.id
     )}`,
@@ -3168,7 +3170,7 @@ function DiagnosticContent({
                   <Timer className="h-4 w-4 text-blue-600" aria-hidden="true" />
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-wide text-slate-500">
-                      Server-timed refresh
+                      Refresh
                     </p>
                     <p className="mt-0.5 font-mono text-sm font-black text-slate-900">
                       {creditTimerText}
@@ -9003,7 +9005,7 @@ function RedesignedTutorHero() {
       status: "Available Now",
       text: "Full-length practice, AI diagnosis, attention tracking, and personalised coaching.",
       icon: Brain,
-      action: "Log in / Launch UCAT Platform",
+      action: "Launch UCAT Platform",
       href: "/phloemai/dashboard",
       active: true,
     },
@@ -9121,7 +9123,7 @@ function RedesignedTutorHero() {
                   href="/phloemai/dashboard"
                   className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
                 >
-                  Log in / Launch UCAT Platform
+                  Launch UCAT Platform
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <Link
@@ -9635,7 +9637,7 @@ function TutorHero() {
               href="/phloemai/dashboard"
               className="block w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-xs hover:border-slate-400 hover:text-slate-900 transition-colors cursor-pointer text-center"
             >
-              Log in / Launch UCAT Platform
+              Launch UCAT Platform
             </Link>
           </div>
         </div>
@@ -9837,7 +9839,7 @@ export function PhloemAIPricingPage() {
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="flex flex-col rounded-xl border border-blue-200 bg-white p-5 shadow-sm">
               <div className="flex items-center justify-between gap-4">
-                <h2 className="text-lg font-black">Free Diagnostic</h2>
+                <h2 className="text-lg font-black">Free Plan</h2>
                 <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-700">
                   Start here
                 </span>
@@ -9858,8 +9860,7 @@ export function PhloemAIPricingPage() {
                 href="/phloemai/dashboard"
                 className="mt-auto inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
               >
-                Start free diagnostic
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                Launch UCAT Platform
               </Link>
             </div>
 
@@ -9909,7 +9910,7 @@ export function PhloemAIPricingPage() {
           <section className="mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
             <div className="grid gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 text-sm font-black text-slate-500 sm:grid-cols-[1.2fr_1fr_1fr]">
               <span>Plan comparison</span>
-              <span>Free</span>
+              <span>Free Plan</span>
               <span className="text-blue-700">Premium</span>
             </div>
             <div className="border-b border-slate-100 px-4 py-3">
