@@ -20,11 +20,13 @@ These notes are for future AI-assisted question-bank work. Read this file before
 
 ## Batch Workflow For Future Queued Generation
 
-Generate large expansions in 10 reviewed batches, not one bulk pass.
+Generate large expansions in reviewed batches, not one bulk pass.
 
-Current generated-batch progress: 20/20.
+Current live high-quality generated-batch progress: 20/20.
 
 Second-wave generated-batch progress: 10/10.
+
+Next high-quality expansion progress: 20/20.
 
 Recommended batch size: 900 questions per queued batch.
 
@@ -44,6 +46,8 @@ The first wave gave 10 batches total for a 9,000-question layer:
 - Total: 9,000 questions.
 
 The second wave repeats the same per-batch shape for another 10 reviewed batches, exposed cumulatively as batches 11-20 in `generatedUcatQuestionsHighQuality9000.ts`.
+
+The next expansion queues 20 more reviewed batches on top of the locked 20-batch layer. Keep `HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES` at 0 until the next batch has been reviewed.
 
 For every queued batch, follow this order:
 
@@ -68,7 +72,7 @@ Do not move on to the next batch if any of the following appear:
 
 Use `scripts/auditUcatQuestionBank.cjs` as the hard gate. It now checks generated-layer size, accepted count, template diversity, max repeated-template share, banned wording and QR numeric sanity.
 
-To start the next queued batch, increment `HIGH_QUALITY_9000_COMPLETED_BATCHES` in `generatedUcatQuestionsHighQuality9000.ts` by 1, then review and fix the newly exposed questions before accepting the batch.
+To start the next queued batch, increment `HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES` in `generatedUcatQuestionsHighQuality9000.ts` by 1, then review and fix the newly exposed questions before accepting the batch.
 
 ## Verbal Reasoning Batch Style
 

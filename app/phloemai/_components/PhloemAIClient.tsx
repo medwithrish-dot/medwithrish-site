@@ -8987,7 +8987,7 @@ function RedesignedTutorHero() {
                   Try the 60-second attention analysis demo.
                 </h2>
                 <p className="mt-0.5 text-[11px] text-slate-300">
-                  See which parts of a question you focus on live, with revolutionary{" "}
+                  On desktop, see which parts of a question you focus on live, with revolutionary{" "}
                   <span className="font-bold text-cyan-200">
                     optional eye tracking or mouse tracking.
                   </span>
@@ -9711,8 +9711,8 @@ export function UCATDemoPage() {
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-slate-700">
               Start with mouse tracking for the most precise desktop signal, or
-              choose the optional webcam eye-tracking experiment. Only one mode
-              runs at a time.
+              choose the optional webcam eye-tracking experiment. The demo runs
+              in desktop browsers, one mode at a time.
             </p>
             <p className="mt-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold leading-relaxed text-amber-800">
               Eye tracking is best when at arm&apos;s length away from the

@@ -1,9 +1,13 @@
+import type Stripe from "stripe";
 import { createStripeClient } from "@/utils/stripe";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
 import { getRequiredSiteUrl } from "@/utils/site-url";
 
 export const runtime = "nodejs";
+
+const DEFAULT_PREMIUM_PRODUCT_ID = "prod_UZj0w1QDWccrjH";
+const DEFAULT_PREMIUM_PRICE_ID = "price_1TaZYoBe7e6nC6NcyRv0zT7D";
 
 async function createCustomer({
   admin,
@@ -48,17 +52,34 @@ async function customerExists(
   }
 }
 
+function getPriceProductId(price: Stripe.Price) {
+  return typeof price.product === "string" ? price.product : price.product.id;
+}
+
+function priceIsUsableForSubscription(
+  price: Stripe.Price,
+  productId: string
+) {
+  return price.active && Boolean(price.recurring) && getPriceProductId(price) === productId;
+}
+
+async function resolvePremiumPriceId(
+  stripe: ReturnType<typeof createStripeClient>
+) {
+  const productId = DEFAULT_PREMIUM_PRODUCT_ID;
+  const price = await stripe.prices.retrieve(DEFAULT_PREMIUM_PRICE_ID);
+
+  if (!priceIsUsableForSubscription(price, productId)) {
+    throw new Error(
+      `Stripe price ${DEFAULT_PREMIUM_PRICE_ID} must be active, recurring and attached to product ${productId}.`
+    );
+  }
+
+  return price.id;
+}
+
 export async function POST(request: Request) {
   try {
-    const priceId = process.env.STRIPE_PREMIUM_PRICE_ID;
-
-    if (!priceId) {
-      return Response.json(
-        { error: "Missing STRIPE_PREMIUM_PRICE_ID." },
-        { status: 500 }
-      );
-    }
-
     const supabase = await createServerSupabaseClient();
     const {
       data: { user },
@@ -71,6 +92,7 @@ export async function POST(request: Request) {
 
     const admin = createAdminClient();
     const stripe = createStripeClient();
+    const priceId = await resolvePremiumPriceId(stripe);
     const profileSelect = "current_plan,stripe_customer_id,full_name";
     const { data: existingProfile, error: profileError } = await admin
       .from("profiles")

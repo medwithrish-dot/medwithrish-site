@@ -30,14 +30,31 @@ const APPROPRIATENESS_OPTIONS = [
   { key: "D" as const, text: "A very inappropriate thing to do" },
 ];
 
-export const HIGH_QUALITY_9000_TOTAL_BATCHES = 20;
-export const HIGH_QUALITY_9000_COMPLETED_BATCHES = 20;
+export const HIGH_QUALITY_9000_LOCKED_BATCHES = 20;
+export const HIGH_QUALITY_9000_NEXT_WAVE_TOTAL_BATCHES = 20;
+export const HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES = 20;
+export const HIGH_QUALITY_9000_TOTAL_BATCHES =
+  HIGH_QUALITY_9000_LOCKED_BATCHES + HIGH_QUALITY_9000_NEXT_WAVE_TOTAL_BATCHES;
+export const HIGH_QUALITY_9000_COMPLETED_BATCHES =
+  HIGH_QUALITY_9000_LOCKED_BATCHES +
+  HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES;
 export const HIGH_QUALITY_9000_BATCH_TARGETS: Record<UCATSection, number> = {
   vr: 220,
   dm: 175,
   qr: 180,
   sjt: 325,
 };
+export const HIGH_QUALITY_9000_FILTERED_TARGETS: Record<UCATSection, number> = {
+  vr: 4000,
+  dm: 3899,
+  qr: 3624,
+  sjt: 8000,
+};
+export const HIGH_QUALITY_9000_FILTERED_TOTAL_TARGET =
+  HIGH_QUALITY_9000_FILTERED_TARGETS.vr +
+  HIGH_QUALITY_9000_FILTERED_TARGETS.dm +
+  HIGH_QUALITY_9000_FILTERED_TARGETS.qr +
+  HIGH_QUALITY_9000_FILTERED_TARGETS.sjt;
 
 const VR_SETS_PER_BATCH = 55;
 const QR_SETS_PER_BATCH = 45;
@@ -233,6 +250,340 @@ function dragCategoryQuestion(input: {
   return { ...input, questionType: "drag-category" };
 }
 
+function normaliseForQuality(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/\b\d+(?:[,.]\d+)*(?:\.\d+)?%?\b/g, "<n>")
+    .replace(/gbp\s*<n>(?:\.\d+)?/g, "gbp <n>")
+    .replace(/[^\w\s%/.-]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normaliseForExactMatch(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^\w\s%/.,-]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function optionText(question: UCATQuestion) {
+  if ((!question.questionType || question.questionType === "single") && "options" in question) {
+    return question.options.map((option) => option.text).join(" | ");
+  }
+
+  if (question.questionType === "yes-no") {
+    return question.yesNoStatements.map((statement) => statement.text).join(" | ");
+  }
+
+  if (question.questionType === "drag-category") {
+    return question.categoryItems.map((item) => item.text).join(" | ");
+  }
+
+  if (question.questionType === "drag-order") {
+    return question.dragItems.map((item) => item.text).join(" | ");
+  }
+
+  if (question.questionType === "most-least") {
+    return question.actionItems.map((item) => item.text).join(" | ");
+  }
+
+  return "";
+}
+
+function questionFingerprint(question: UCATQuestion) {
+  return `${question.section}:${question.subtype}:${normaliseForExactMatch(
+    [
+      question.stimulus.join(" "),
+      question.visual ? JSON.stringify(question.visual) : "",
+      question.question,
+      optionText(question),
+    ].join(" | ")
+  )}`;
+}
+
+function questionTemplate(question: UCATQuestion) {
+  return `${question.section}:${question.subtype}:${normaliseForQuality(question.question)}`;
+}
+
+function stimulusTemplate(question: UCATQuestion) {
+  return normaliseForQuality(
+    `${question.stimulus.join(" ")} ${question.visual ? JSON.stringify(question.visual) : ""}`
+  );
+}
+
+function hasValidQuestionShape(question: UCATQuestion) {
+  if (
+    question.section !== "vr" &&
+    question.section !== "dm" &&
+    question.section !== "qr" &&
+    question.section !== "sjt"
+  ) {
+    return false;
+  }
+
+  if (
+    !question.id.trim() ||
+    !question.title.trim() ||
+    !question.question.trim() ||
+    !question.explanation.trim() ||
+    question.explanation.trim().length < 24 ||
+    question.stimulus.length === 0 ||
+    question.stimulus.some((part) => !part.trim())
+  ) {
+    return false;
+  }
+
+  if (!question.questionType || question.questionType === "single") {
+    if (!("options" in question)) return false;
+
+    const keys = question.options.map((option) => option.key);
+    const texts = question.options.map((option) =>
+      normaliseForExactMatch(option.text)
+    );
+
+    if (
+      question.options.length < 3 ||
+      question.options.length > 5 ||
+      !keys.includes(question.answer) ||
+      new Set(keys).size !== keys.length ||
+      new Set(texts).size !== texts.length
+    ) {
+      return false;
+    }
+
+    if (
+      question.subtype === "vr-tfc" &&
+      (question.options.length !== TFC_OPTIONS.length ||
+        question.options.some((option, index) => option.text !== TFC_OPTIONS[index].text))
+    ) {
+      return false;
+    }
+
+    if (
+      question.subtype === "sjt-appropriateness" &&
+      question.options.some(
+        (option, index) => option.text !== APPROPRIATENESS_OPTIONS[index].text
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      question.subtype === "sjt-importance" &&
+      question.options.some(
+        (option, index) => option.text !== IMPORTANCE_OPTIONS[index].text
+      )
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  if (question.questionType === "yes-no") {
+    const ids = question.yesNoStatements.map((statement) => statement.id);
+    const texts = question.yesNoStatements.map((statement) =>
+      normaliseForExactMatch(statement.text)
+    );
+
+    return (
+      question.yesNoStatements.length >= 4 &&
+      new Set(ids).size === ids.length &&
+      new Set(texts).size === texts.length &&
+      question.yesNoStatements.every(
+        (statement) => statement.answer === "Yes" || statement.answer === "No"
+      )
+    );
+  }
+
+  if (question.questionType === "drag-category") {
+    const categoryIds = question.categories.map((category) => category.id);
+    const itemIds = question.categoryItems.map((item) => item.id);
+    const itemTexts = question.categoryItems.map((item) =>
+      normaliseForExactMatch(item.text)
+    );
+    const categorySet = new Set(categoryIds);
+
+    return (
+      question.categories.length >= 2 &&
+      question.categoryItems.length >= 3 &&
+      new Set(categoryIds).size === categoryIds.length &&
+      new Set(itemIds).size === itemIds.length &&
+      new Set(itemTexts).size === itemTexts.length &&
+      question.categoryItems.every((item) => categorySet.has(item.answerCategory))
+    );
+  }
+
+  return false;
+}
+
+function spreadItems<T>(items: T[], targetCount: number) {
+  const selected: T[] = [];
+  const used = new Set<number>();
+
+  for (let index = 0; index < targetCount && index < items.length; index += 1) {
+    const sourceIndex = Math.floor((index * items.length) / targetCount);
+    if (!used.has(sourceIndex)) {
+      selected.push(items[sourceIndex]);
+      used.add(sourceIndex);
+    }
+  }
+
+  for (let index = 0; selected.length < targetCount && index < items.length; index += 1) {
+    if (!used.has(index)) {
+      selected.push(items[index]);
+      used.add(index);
+    }
+  }
+
+  return selected;
+}
+
+function groupedBySet(questions: UCATQuestion[]) {
+  const groups = new Map<string, UCATQuestion[]>();
+
+  for (const question of questions) {
+    const key = question.setId ?? question.id;
+    const group = groups.get(key) ?? [];
+    group.push(question);
+    groups.set(key, group);
+  }
+
+  return [...groups.values()];
+}
+
+function selectQuestionGroups({
+  questions,
+  targetQuestions,
+  expectedGroupSize,
+  stimulusCap,
+  questionTemplateCap,
+}: {
+  questions: UCATQuestion[];
+  targetQuestions: number;
+  expectedGroupSize: number;
+  stimulusCap: number;
+  questionTemplateCap?: number;
+}) {
+  const allGroups = groupedBySet(questions);
+  const groups = spreadItems(allGroups, allGroups.length);
+  const selected: UCATQuestion[] = [];
+  const fingerprints = new Set<string>();
+  const stimulusCounts = new Map<string, number>();
+  const questionTemplateCounts = new Map<string, number>();
+
+  for (const group of groups) {
+    if (selected.length >= targetQuestions) break;
+    if (group.length !== expectedGroupSize) continue;
+    if (!group.every(hasValidQuestionShape)) continue;
+
+    const groupFingerprints = group.map(questionFingerprint);
+    if (new Set(groupFingerprints).size !== groupFingerprints.length) continue;
+    if (groupFingerprints.some((fingerprint) => fingerprints.has(fingerprint))) continue;
+
+    const nextStimulusCounts = new Map(stimulusCounts);
+    const nextQuestionTemplateCounts = new Map(questionTemplateCounts);
+    let accepted = true;
+
+    for (const question of group) {
+      const stimulusKey = stimulusTemplate(question);
+      const nextStimulusCount = (nextStimulusCounts.get(stimulusKey) ?? 0) + 1;
+      nextStimulusCounts.set(stimulusKey, nextStimulusCount);
+
+      if (nextStimulusCount > stimulusCap) {
+        accepted = false;
+        break;
+      }
+
+      if (questionTemplateCap) {
+        const questionKey = questionTemplate(question);
+        const nextQuestionCount =
+          (nextQuestionTemplateCounts.get(questionKey) ?? 0) + 1;
+        nextQuestionTemplateCounts.set(questionKey, nextQuestionCount);
+
+        if (nextQuestionCount > questionTemplateCap) {
+          accepted = false;
+          break;
+        }
+      }
+    }
+
+    if (!accepted) continue;
+
+    groupFingerprints.forEach((fingerprint) => fingerprints.add(fingerprint));
+    nextStimulusCounts.forEach((count, key) => stimulusCounts.set(key, count));
+    nextQuestionTemplateCounts.forEach((count, key) =>
+      questionTemplateCounts.set(key, count)
+    );
+    selected.push(...group);
+  }
+
+  if (selected.length !== targetQuestions) {
+    throw new Error(
+      `Could not select ${targetQuestions} high-quality questions; selected ${selected.length}.`
+    );
+  }
+
+  return selected;
+}
+
+function selectQuestionsBySubtype({
+  questions,
+  targets,
+  templateCap,
+}: {
+  questions: UCATQuestion[];
+  targets: Partial<Record<UCATSubtypeId, number>>;
+  templateCap: Partial<Record<UCATSubtypeId, number>>;
+}) {
+  const selected: UCATQuestion[] = [];
+  const fingerprints = new Set<string>();
+  const templateCounts = new Map<string, number>();
+
+  for (const subtype of Object.keys(targets) as UCATSubtypeId[]) {
+    const target = targets[subtype] ?? 0;
+    const subtypeQuestions = spreadItems(
+      questions.filter((question) => question.subtype === subtype),
+      target * 2
+    );
+    const subtypeSelected: UCATQuestion[] = [];
+
+    for (const question of subtypeQuestions) {
+      if (subtypeSelected.length >= target) break;
+      if (!hasValidQuestionShape(question)) continue;
+
+      const fingerprint = questionFingerprint(question);
+      if (fingerprints.has(fingerprint)) continue;
+
+      const templateKey =
+        subtype === "dm-syllogisms" ||
+        subtype === "dm-logic" ||
+        subtype === "dm-arguments" ||
+        subtype === "dm-yes-no"
+          ? `${subtype}:${stimulusTemplate(question)}`
+          : questionTemplate(question);
+      const count = (templateCounts.get(templateKey) ?? 0) + 1;
+      if (count > (templateCap[subtype] ?? 80)) continue;
+
+      fingerprints.add(fingerprint);
+      templateCounts.set(templateKey, count);
+      subtypeSelected.push(question);
+    }
+
+    if (subtypeSelected.length !== target) {
+      throw new Error(
+        `Could not select ${target} ${subtype} questions; selected ${subtypeSelected.length}.`
+      );
+    }
+
+    selected.push(...subtypeSelected);
+  }
+
+  return selected;
+}
+
 const ORGANISATIONS = [
   "Aberford College",
   "Bexley Arts Centre",
@@ -354,6 +705,16 @@ const LIMITATIONS = [
   "some users still needed face-to-face support",
 ] as const;
 
+const FOLLOW_UP_NOTES = [
+  "A later note said reviewers also checked staff workload, but it did not change the cautious recommendation.",
+  "A follow-up discussion asked whether the same approach would work with fewer reminders, but no firm conclusion was recorded.",
+  "Reviewers later added that the figures should be read alongside staff feedback, which was mixed but generally useful.",
+  "A short update said the project team would monitor whether demand stayed steady after the initial publicity faded.",
+  "The review group later asked for clearer cost records before any wider decision was made.",
+  "A later meeting agreed that the trial had identified useful questions as well as possible benefits.",
+  "The project team later noted that user confidence, not only raw demand, should be checked in any extension.",
+] as const;
+
 const FUNDERS = [
   "the access budget",
   "a small innovation fund",
@@ -421,6 +782,7 @@ const VR_NEGATIVE_QUESTIONS = [
 ] as const;
 
 function makeVrSet(setIndex: number): UCATQuestion[] {
+  const cycle = Math.floor(setIndex / 1800);
   const setting = pick(ORGANISATIONS, setIndex);
   const project = pick(PROJECTS, setIndex * 3);
   const group = pick(GROUPS, setIndex * 5);
@@ -447,9 +809,11 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
     metricVerb === "rose"
       ? firstMetric + 9 + (setIndex % 8)
       : Math.max(4, firstMetric - 8 - (setIndex % 7));
+  const followUpNote =
+    cycle > 0 ? ` ${pick(FOLLOW_UP_NOTES, setIndex + cycle * 7)}` : "";
   const passage = [
     `${setting} tested ${project} for ${group} after ${problem}. The aim was to ${aim}, not to ${oldRoutine}. The project was funded by ${funder}. During the six-week trial, ${metric} ${metricVerb} from ${firstMetric} to ${secondMetric}.`,
-    `The review said the figures were encouraging but should be treated carefully because ${caveat}. It also noted that ${limitation}. The recommendation was to keep the project for one more term and compare demand with a similar site before wider rollout.`,
+    `The review said the figures were encouraging but should be treated carefully because ${caveat}. It also noted that ${limitation}. The recommendation was to keep the project for one more term and compare demand with a similar site before wider rollout.${followUpNote}`,
   ];
   const setId = `hq-vr-${pad(setIndex)}`;
   const tfcKind = setIndex % 4;
@@ -598,9 +962,17 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
   return questions;
 }
 
-export const HIGH_QUALITY_9000_VR_QUESTIONS: UCATQuestion[] = range(
+export const HIGH_QUALITY_9000_RAW_VR_QUESTIONS: UCATQuestion[] = range(
   HIGH_QUALITY_9000_COMPLETED_BATCHES * VR_SETS_PER_BATCH
 ).flatMap(makeVrSet);
+
+export const HIGH_QUALITY_9000_VR_QUESTIONS: UCATQuestion[] = selectQuestionGroups({
+  questions: HIGH_QUALITY_9000_RAW_VR_QUESTIONS,
+  targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.vr,
+  expectedGroupSize: 4,
+  stimulusCap: 8,
+  questionTemplateCap: 160,
+});
 
 const DM_NOUN_GROUPS = [
   ["amber permits", "checked records", "urgent referrals", "archived files", "digital logs"],
@@ -1151,7 +1523,7 @@ function makeDmProbability(index: number): UCATQuestion {
   });
 }
 
-export const HIGH_QUALITY_9000_DM_QUESTIONS: UCATQuestion[] = [
+export const HIGH_QUALITY_9000_RAW_DM_QUESTIONS: UCATQuestion[] = [
   ...range(HIGH_QUALITY_9000_COMPLETED_BATCHES * DM_SYLLOGISMS_PER_BATCH).map(makeDmSyllogism),
   ...range(HIGH_QUALITY_9000_COMPLETED_BATCHES * DM_LOGIC_PER_BATCH).map(makeDmLogic),
   ...range(HIGH_QUALITY_9000_COMPLETED_BATCHES * DM_ARGUMENTS_PER_BATCH).map(makeDmArgument),
@@ -1159,6 +1531,26 @@ export const HIGH_QUALITY_9000_DM_QUESTIONS: UCATQuestion[] = [
   ...range(HIGH_QUALITY_9000_COMPLETED_BATCHES * DM_VENN_PER_BATCH).map(makeDmVenn),
   ...range(HIGH_QUALITY_9000_COMPLETED_BATCHES * DM_PROBABILITY_PER_BATCH).map(makeDmProbability),
 ];
+
+export const HIGH_QUALITY_9000_DM_QUESTIONS: UCATQuestion[] = selectQuestionsBySubtype({
+  questions: HIGH_QUALITY_9000_RAW_DM_QUESTIONS,
+  targets: {
+    "dm-syllogisms": 669,
+    "dm-logic": 669,
+    "dm-arguments": 557,
+    "dm-yes-no": 557,
+    "dm-venn-sets": 891,
+    "dm-probability-data": 556,
+  },
+  templateCap: {
+    "dm-syllogisms": 40,
+    "dm-logic": 40,
+    "dm-arguments": 40,
+    "dm-yes-no": 80,
+    "dm-venn-sets": 160,
+    "dm-probability-data": 96,
+  },
+});
 
 const QR_DOMAINS = [
   ["meal", "meals", "Vegetarian", "Non-vegetarian"],
@@ -2449,9 +2841,17 @@ function makeQrSet(setIndex: number): UCATQuestion[] {
   }
 }
 
-export const HIGH_QUALITY_9000_QR_QUESTIONS: UCATQuestion[] = range(
+export const HIGH_QUALITY_9000_RAW_QR_QUESTIONS: UCATQuestion[] = range(
   HIGH_QUALITY_9000_COMPLETED_BATCHES * QR_SETS_PER_BATCH
 ).flatMap(makeQrSet);
+
+export const HIGH_QUALITY_9000_QR_QUESTIONS: UCATQuestion[] = selectQuestionGroups({
+  questions: HIGH_QUALITY_9000_RAW_QR_QUESTIONS,
+  targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.qr,
+  expectedGroupSize: 4,
+  stimulusCap: 80,
+  questionTemplateCap: 96,
+});
 
 const SJT_PEOPLE = [
   "Amira",
@@ -2820,9 +3220,16 @@ function makeSjtSet(setIndex: number): UCATQuestion[] {
   ];
 }
 
-export const HIGH_QUALITY_9000_SJT_QUESTIONS: UCATQuestion[] = range(
+export const HIGH_QUALITY_9000_RAW_SJT_QUESTIONS: UCATQuestion[] = range(
   HIGH_QUALITY_9000_COMPLETED_BATCHES * SJT_SETS_PER_BATCH
 ).flatMap(makeSjtSet);
+
+export const HIGH_QUALITY_9000_SJT_QUESTIONS: UCATQuestion[] = selectQuestionGroups({
+  questions: HIGH_QUALITY_9000_RAW_SJT_QUESTIONS,
+  targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.sjt,
+  expectedGroupSize: 5,
+  stimulusCap: 20,
+});
 
 export const HIGH_QUALITY_9000_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: HIGH_QUALITY_9000_VR_QUESTIONS,

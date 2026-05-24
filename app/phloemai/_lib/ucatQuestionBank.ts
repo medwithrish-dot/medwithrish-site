@@ -14,12 +14,6 @@ import {
   ROUND_FOUR_SJT_QUESTIONS,
 } from "./generatedUcatQuestionsRound4";
 import {
-  QUALITY_9200_DM_QUESTIONS,
-  QUALITY_9200_QR_QUESTIONS,
-  QUALITY_9200_SJT_QUESTIONS,
-  QUALITY_9200_VR_QUESTIONS,
-} from "./generatedUcatQuestionsQuality9200";
-import {
   HIGH_QUALITY_9000_DM_QUESTIONS,
   HIGH_QUALITY_9000_QR_QUESTIONS,
   HIGH_QUALITY_9000_SJT_QUESTIONS,
@@ -2230,10 +2224,10 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
 };
 
 const DRAFT_9200_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
-  vr: QUALITY_9200_VR_QUESTIONS,
-  dm: QUALITY_9200_DM_QUESTIONS,
-  qr: QUALITY_9200_QR_QUESTIONS,
-  sjt: QUALITY_9200_SJT_QUESTIONS,
+  vr: [],
+  dm: [],
+  qr: [],
+  sjt: [],
 };
 
 export const UCAT_QUESTION_QUALITY_REVIEW = reviewUCATQuestionBank({

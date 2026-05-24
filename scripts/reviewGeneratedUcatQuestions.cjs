@@ -21,6 +21,9 @@ require.extensions[".ts"] = function loadTypeScript(module, filename) {
 const projectRoot = path.resolve(__dirname, "..");
 const {
   HIGH_QUALITY_9000_COMPLETED_BATCHES,
+  HIGH_QUALITY_9000_LOCKED_BATCHES,
+  HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES,
+  HIGH_QUALITY_9000_NEXT_WAVE_TOTAL_BATCHES,
   HIGH_QUALITY_9000_TOTAL_BATCHES,
   HIGH_QUALITY_9000_UCAT_QUESTION_BANK,
   HIGH_QUALITY_9000_TOTAL,
@@ -173,7 +176,13 @@ function findSjtMarkSchemeIssues(questions) {
 }
 
 console.log(
-  `Generated UCAT batch progress: ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}`
+  `Previously reviewed generated UCAT waves: ${HIGH_QUALITY_9000_LOCKED_BATCHES}/${HIGH_QUALITY_9000_LOCKED_BATCHES}`
+);
+console.log(
+  `Next generated UCAT wave progress: ${HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_NEXT_WAVE_TOTAL_BATCHES}`
+);
+console.log(
+  `Combined generated UCAT batch progress: ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}`
 );
 console.log(`Generated UCAT layer total: ${HIGH_QUALITY_9000_TOTAL}`);
 

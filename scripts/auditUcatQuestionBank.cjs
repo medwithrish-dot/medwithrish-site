@@ -24,8 +24,12 @@ const {
   UCAT_QUESTION_QUALITY_REVIEW,
 } = require(path.join(projectRoot, "app/phloemai/_lib/ucatQuestionBank.ts"));
 const {
-  HIGH_QUALITY_9000_BATCH_TARGETS,
+  HIGH_QUALITY_9000_FILTERED_TARGETS,
+  HIGH_QUALITY_9000_FILTERED_TOTAL_TARGET,
+  HIGH_QUALITY_9000_LOCKED_BATCHES,
   HIGH_QUALITY_9000_COMPLETED_BATCHES,
+  HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES,
+  HIGH_QUALITY_9000_NEXT_WAVE_TOTAL_BATCHES,
   HIGH_QUALITY_9000_TOTAL_BATCHES,
   HIGH_QUALITY_9000_UCAT_QUESTION_BANK,
   HIGH_QUALITY_9000_TOTAL,
@@ -38,10 +42,7 @@ const sections = ["vr", "dm", "qr", "sjt"];
 const allQuestions = sections.flatMap((section) => UCAT_QUESTION_BANK[section]);
 const ids = new Set(allQuestions.map((question) => question.id));
 const highQualityTargets = Object.fromEntries(
-  sections.map((section) => [
-    section,
-    HIGH_QUALITY_9000_BATCH_TARGETS[section] * HIGH_QUALITY_9000_COMPLETED_BATCHES,
-  ])
+  sections.map((section) => [section, HIGH_QUALITY_9000_FILTERED_TARGETS[section]])
 );
 const highQualityDiversityTargetsPerBatch = {
   vr: { questionTemplates: 65, stimulusTemplates: 50 },
@@ -133,6 +134,10 @@ const expectedHighQualityTotal = sections.reduce(
   0
 );
 
+if (expectedHighQualityTotal !== HIGH_QUALITY_9000_FILTERED_TOTAL_TARGET) {
+  throw new Error("High-quality filtered target total is inconsistent.");
+}
+
 if (HIGH_QUALITY_9000_COMPLETED_BATCHES < 1) {
   throw new Error("At least one generated UCAT batch should be completed.");
 }
@@ -213,7 +218,7 @@ const highQualityQrSets = new Set(
     .map((question) => question.setId)
     .filter(Boolean)
 );
-const expectedHighQualityQrSets = HIGH_QUALITY_9000_COMPLETED_BATCHES * 45;
+const expectedHighQualityQrSets = HIGH_QUALITY_9000_FILTERED_TARGETS.qr / 4;
 if (highQualityQrSets.size !== expectedHighQualityQrSets) {
   throw new Error(
     `High-quality QR should contain ${expectedHighQualityQrSets} four-question sets for batch ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}, found ${highQualityQrSets.size}.`
@@ -393,6 +398,12 @@ for (const section of sections) {
 
 console.log(`\nTotal accepted UCAT questions: ${allQuestions.length}`);
 console.log(
-  `High-quality generated batch progress: ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}`
+  `Previously reviewed high-quality waves: ${HIGH_QUALITY_9000_LOCKED_BATCHES}/${HIGH_QUALITY_9000_LOCKED_BATCHES}`
+);
+console.log(
+  `Next high-quality wave progress: ${HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_NEXT_WAVE_TOTAL_BATCHES}`
+);
+console.log(
+  `Combined high-quality generated batch progress: ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}`
 );
 console.log(`High-quality generated questions accepted: ${HIGH_QUALITY_9000_TOTAL}`);
