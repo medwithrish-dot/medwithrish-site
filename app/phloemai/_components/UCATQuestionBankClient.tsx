@@ -9400,6 +9400,7 @@ function UCATQuestionBankSection({
   const attemptBackLabel = diagnosticMode
     ? backLabel ?? "Back to diagnostics"
     : "Back to practice";
+  const questionAttemptZoom = 0.8;
   const hasActiveIncompleteAttempt =
     started && phase === "practice" && !markedSummary && questions.length > 0;
   const exitPromptKind: PendingExitPrompt["kind"] = diagnosticMode
@@ -9702,6 +9703,11 @@ function UCATQuestionBankSection({
       )}
 
       <main
+        style={{
+          minHeight: "calc((100vh - 132px) * 1.25)",
+          width: "125%",
+          zoom: questionAttemptZoom,
+        }}
         className={
           usesClassicDropLayout
             ? "min-h-[calc(100vh-132px)] pb-16"
