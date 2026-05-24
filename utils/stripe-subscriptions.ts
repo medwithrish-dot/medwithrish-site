@@ -3,6 +3,14 @@ import { createAdminClient } from "@/utils/supabase/admin";
 
 const paidStatuses = new Set(["active", "trialing"]);
 const paidStatusList = Array.from(paidStatuses);
+export const billingActionStatuses = [
+  "active",
+  "trialing",
+  "past_due",
+  "unpaid",
+  "incomplete",
+  "paused",
+] as const;
 
 function getSubscriptionPeriodEnd(subscription: Stripe.Subscription) {
   const value = (subscription as { current_period_end?: number })

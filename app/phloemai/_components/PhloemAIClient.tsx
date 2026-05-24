@@ -6814,6 +6814,7 @@ function AuthPanel({
   message,
   error,
   onSubmit,
+  presentation = "page",
 }: {
   mode: AuthMode;
   setMode: (mode: AuthMode) => void;
@@ -6829,7 +6830,172 @@ function AuthPanel({
   message: string | null;
   error: string | null;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  presentation?: "page" | "overlay";
 }) {
+  const authCard = (
+    <div
+      className={`rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 ${
+        presentation === "overlay" ? "shadow-2xl shadow-slate-950/20" : ""
+      }`}
+    >
+      <div className="grid grid-cols-2 rounded-xl bg-slate-100 p-1">
+        {(["signup", "login"] as const).map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            onClick={() => setMode(tab)}
+            className={`h-10 rounded-lg text-sm font-black transition-colors ${
+              mode === tab
+                ? "bg-white text-blue-600 shadow-sm"
+                : "text-slate-500 hover:text-slate-900"
+            }`}
+          >
+            {tab === "signup" ? "Create Account" : "Log In"}
+          </button>
+        ))}
+      </div>
+
+      <form onSubmit={onSubmit} className="mt-6 space-y-4">
+        {mode === "signup" && (
+          <label className="block">
+            <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+              Full name
+            </span>
+            <input
+              value={fullName}
+              onChange={(event) => setFullName(event.target.value)}
+              className="mt-1 h-11 w-full rounded-xl border border-slate-200 px-3 text-sm font-medium text-slate-900 outline-none transition-colors focus:border-blue-500"
+              placeholder="Rish"
+              autoFocus={presentation === "overlay" && mode === "signup"}
+              required
+            />
+          </label>
+        )}
+
+        <label className="block">
+          <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+            Email
+          </span>
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            className="mt-1 h-11 w-full rounded-xl border border-slate-200 px-3 text-sm font-medium text-slate-900 outline-none transition-colors focus:border-blue-500"
+            placeholder="you@example.com"
+            autoFocus={presentation === "overlay" && mode === "login"}
+            required
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+            Password
+          </span>
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            className="mt-1 h-11 w-full rounded-xl border border-slate-200 px-3 text-sm font-medium text-slate-900 outline-none transition-colors focus:border-blue-500"
+            placeholder="At least 8 characters"
+            minLength={8}
+            required
+          />
+        </label>
+
+        {mode === "signup" && (
+          <div className="space-y-3 rounded-xl border border-blue-100 bg-blue-50/70 p-4">
+            <label className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                checked={legalAccepted}
+                onChange={(event) => setLegalAccepted(event.target.checked)}
+                required
+                className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300"
+              />
+              <span className="text-xs font-bold leading-5 text-slate-700">
+                I agree to the{" "}
+                <Link
+                  href="/terms-and-conditions"
+                  className="text-blue-700 underline"
+                >
+                  Terms and Conditions
+                </Link>{" "}
+                and confirm I have read the{" "}
+                <Link href="/privacy-policy" className="text-blue-700 underline">
+                  Privacy Policy
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/phloemai-disclaimer"
+                  className="text-blue-700 underline"
+                >
+                  AI/Data Disclaimer
+                </Link>
+                .
+              </span>
+            </label>
+            <p className="text-xs font-semibold leading-5 text-slate-600">
+              PhloemAI collects practice telemetry such as answers, timing,
+              calculator use and optional attention tracking to provide
+              feedback. Do not enter sensitive medical or third-party personal
+              data.
+            </p>
+          </div>
+        )}
+
+        {error && (
+          <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">
+            {error}
+          </p>
+        )}
+        {message && (
+          <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700">
+            {message}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+        >
+          {submitting
+            ? "Working..."
+            : mode === "signup"
+              ? "Create Account"
+              : "Log In"}
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </button>
+      </form>
+    </div>
+  );
+
+  if (presentation === "overlay") {
+    return (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 py-4 text-[#0b1143] backdrop-blur-[2px]"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="phloem-auth-gate-title"
+      >
+        <div className="max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-xl focus:outline-none">
+          <div className="mb-3 flex items-center gap-3 rounded-xl border border-white/40 bg-white/95 p-4 shadow-xl shadow-slate-950/10">
+            <PhloemAIFaviconMark className="h-10 w-10 rounded-xl" />
+            <div>
+              <h2 id="phloem-auth-gate-title" className="text-lg font-black">
+                Sign in to PhloemAI
+              </h2>
+              <p className="text-xs font-bold text-slate-500">
+                Create an account or log in to continue.
+              </p>
+            </div>
+          </div>
+          {authCard}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#f8fbff] px-5 py-10 text-[#0b1143]">
       <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[0.9fr_1fr] lg:items-center">
@@ -6857,8 +7023,7 @@ function AuthPanel({
           </h1>
           <p className="mt-4 max-w-xl text-base font-medium leading-7 text-slate-600">
             Your account stores diagnostics, AI feedback, personalised study
-            plan tasks and progress
-            snapshots securely in Supabase.
+            plan tasks and progress snapshots securely in Supabase.
           </p>
 
           <div className="mt-8 grid gap-3 sm:grid-cols-3">
@@ -6880,135 +7045,7 @@ function AuthPanel({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <div className="grid grid-cols-2 rounded-xl bg-slate-100 p-1">
-            {(["signup", "login"] as const).map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setMode(tab)}
-                className={`h-10 rounded-lg text-sm font-black transition-colors ${
-                  mode === tab
-                    ? "bg-white text-blue-600 shadow-sm"
-                    : "text-slate-500 hover:text-slate-900"
-                }`}
-              >
-                {tab === "signup" ? "Create Account" : "Log In"}
-              </button>
-            ))}
-          </div>
-
-          <form onSubmit={onSubmit} className="mt-6 space-y-4">
-            {mode === "signup" && (
-              <label className="block">
-                <span className="text-xs font-black uppercase tracking-wide text-slate-500">
-                  Full name
-                </span>
-                <input
-                  value={fullName}
-                  onChange={(event) => setFullName(event.target.value)}
-                  className="mt-1 h-11 w-full rounded-xl border border-slate-200 px-3 text-sm font-medium text-slate-900 outline-none transition-colors focus:border-blue-500"
-                  placeholder="Rish"
-                  required
-                />
-              </label>
-            )}
-
-            <label className="block">
-              <span className="text-xs font-black uppercase tracking-wide text-slate-500">
-                Email
-              </span>
-              <input
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                className="mt-1 h-11 w-full rounded-xl border border-slate-200 px-3 text-sm font-medium text-slate-900 outline-none transition-colors focus:border-blue-500"
-                placeholder="you@example.com"
-                required
-              />
-            </label>
-
-            <label className="block">
-              <span className="text-xs font-black uppercase tracking-wide text-slate-500">
-                Password
-              </span>
-              <input
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                className="mt-1 h-11 w-full rounded-xl border border-slate-200 px-3 text-sm font-medium text-slate-900 outline-none transition-colors focus:border-blue-500"
-                placeholder="At least 8 characters"
-                minLength={8}
-                required
-              />
-            </label>
-
-            {mode === "signup" && (
-              <div className="space-y-3 rounded-xl border border-blue-100 bg-blue-50/70 p-4">
-                <label className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    checked={legalAccepted}
-                    onChange={(event) => setLegalAccepted(event.target.checked)}
-                    required
-                    className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300"
-                  />
-                  <span className="text-xs font-bold leading-5 text-slate-700">
-                    I agree to the{" "}
-                    <Link
-                      href="/terms-and-conditions"
-                      className="text-blue-700 underline"
-                    >
-                      Terms and Conditions
-                    </Link>{" "}
-                    and confirm I have read the{" "}
-                    <Link href="/privacy-policy" className="text-blue-700 underline">
-                      Privacy Policy
-                    </Link>{" "}
-                    and{" "}
-                    <Link
-                      href="/phloemai-disclaimer"
-                      className="text-blue-700 underline"
-                    >
-                      AI/Data Disclaimer
-                    </Link>
-                    .
-                  </span>
-                </label>
-                <p className="text-xs font-semibold leading-5 text-slate-600">
-                  PhloemAI collects practice telemetry such as answers, timing,
-                  calculator use and optional attention tracking to provide
-                  feedback. Do not enter sensitive medical or third-party
-                  personal data.
-                </p>
-              </div>
-            )}
-
-            {error && (
-              <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700">
-                {error}
-              </p>
-            )}
-            {message && (
-              <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700">
-                {message}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={submitting}
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
-            >
-              {submitting
-                ? "Working..."
-                : mode === "signup"
-                  ? "Create Account"
-                  : "Log In"}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </button>
-          </form>
-        </div>
+        {authCard}
       </div>
     </div>
   );
@@ -7369,11 +7406,23 @@ function UCATDashboard({
     () => (supabaseReady ? createSupabaseClient() : null),
     [supabaseReady]
   );
+  const authGateActive = !loading && supabaseReady && (!session || !user);
   const pageMeta = dashboardPageMeta[view];
   const dashboardTaskStorageKey = latestDiagnostic?.completedAt
     ? `phloemai-dashboard-tasks:${latestDiagnostic.completedAt}`
     : "phloemai-dashboard-tasks:empty";
   const dashboardRemovedTaskStorageKey = `${dashboardTaskStorageKey}:removed`;
+
+  useEffect(() => {
+    if (!authGateActive) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [authGateActive]);
 
   useEffect(() => {
     const loadTaskState = window.setTimeout(() => {
@@ -7658,7 +7707,39 @@ function UCATDashboard({
       }
     }
 
+    async function exchangeEmailConfirmationCode() {
+      const params = new URLSearchParams(window.location.search);
+      const authCode = params.get("code");
+
+      if (!authCode) return;
+
+      const { error } =
+        await supabaseClient.auth.exchangeCodeForSession(authCode);
+
+      if (!mounted) return;
+
+      if (error) {
+        setAuthError(
+          "That confirmation link could not be used. Please log in with your email and password."
+        );
+        return;
+      }
+
+      params.delete("code");
+      const nextQuery = params.toString();
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}${
+          window.location.hash
+        }`
+      );
+      setAuthMessage("Email confirmed. Opening your dashboard...");
+    }
+
     async function loadSession() {
+      await exchangeEmailConfirmationCode();
+
       const {
         data: { session: currentSession },
       } = await supabaseClient.auth.getSession();
@@ -7699,6 +7780,7 @@ function UCATDashboard({
         void loadPracticeStats(nextSession.user);
         void loadRecentPracticeSets(nextSession.user);
         void loadDiagnosticHistory(nextSession.user);
+        void syncCheckoutIfNeeded(nextSession.user);
       } else {
         setProfile(null);
         setPracticeStats(createEmptyPracticeStats());
@@ -7723,6 +7805,13 @@ function UCATDashboard({
     setAuthMessage(null);
 
     try {
+      const trimmedEmail = email.trim().toLowerCase();
+
+      if (!trimmedEmail) {
+        setAuthError("Add your email address before continuing.");
+        return;
+      }
+
       if (authMode === "signup") {
         if (!legalAccepted) {
           setAuthError(
@@ -7732,9 +7821,14 @@ function UCATDashboard({
         }
 
         const trimmedName = fullName.trim();
+        if (!trimmedName) {
+          setAuthError("Add your full name before creating an account.");
+          return;
+        }
+
         const acceptedAt = new Date().toISOString();
         const { data, error } = await supabase.auth.signUp({
-          email,
+          email: trimmedEmail,
           password,
           options: {
             data: {
@@ -7755,11 +7849,13 @@ function UCATDashboard({
           setUser(data.user);
           setAuthMessage("Account created. Opening your dashboard...");
         } else {
-          setAuthMessage("Check your email to confirm your account, then log in.");
+          setAuthMessage(
+            "Check your email to confirm your account. The dashboard opens automatically after confirmation."
+          );
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email,
+          email: trimmedEmail,
           password,
         });
 
@@ -7893,37 +7989,18 @@ function UCATDashboard({
     );
   }
 
-  if (!session || !user) {
-    return (
-      <AuthPanel
-        mode={authMode}
-        setMode={setAuthMode}
-        fullName={fullName}
-        setFullName={setFullName}
-        email={email}
-        setEmail={setEmail}
-        password={password}
-        setPassword={setPassword}
-        legalAccepted={legalAccepted}
-        setLegalAccepted={setLegalAccepted}
-        submitting={submitting}
-        message={authMessage}
-        error={authError}
-        onSubmit={handleAuthSubmit}
-      />
-    );
-  }
-
-  const displayName = getDisplayName(user, profile);
-  const firstName = getFirstName(user, profile);
-  const plan = profile?.current_plan === "premium" ? "Premium" : "Free";
+  const isAuthenticated = Boolean(session && user);
+  const displayName = isAuthenticated ? getDisplayName(user, profile) : "Guest";
+  const firstName = isAuthenticated ? getFirstName(user, profile) : "Guest";
+  const plan =
+    isAuthenticated && profile?.current_plan === "premium" ? "Premium" : "Free";
   const hasStripeCustomer =
     typeof profile?.stripe_customer_id === "string" &&
     profile.stripe_customer_id.trim().length > 0 &&
     typeof profile?.stripe_subscription_id === "string" &&
     profile.stripe_subscription_id.trim().length > 0 &&
     profile.subscription_status !== "manual";
-  const userEmail = user.email ?? "";
+  const userEmail = user?.email ?? "";
   const diagnosticCredits =
     typeof profile?.diagnostic_credits === "number"
       ? profile.diagnostic_credits
@@ -7972,7 +8049,11 @@ function UCATDashboard({
 
   return (
     <div className="phloem-dashboard-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
-      <div className="grid min-h-screen lg:grid-cols-[190px_1fr]">
+      <div
+        className="grid min-h-screen lg:grid-cols-[190px_1fr]"
+        aria-hidden={authGateActive}
+        inert={authGateActive ? true : undefined}
+      >
         <aside className="hidden border-r border-slate-200 bg-white px-3 py-5 lg:block">
           <Link
             href="/phloemai"
@@ -8728,6 +8809,25 @@ function UCATDashboard({
           )}
         </main>
       </div>
+      {authGateActive && (
+        <AuthPanel
+          mode={authMode}
+          setMode={setAuthMode}
+          fullName={fullName}
+          setFullName={setFullName}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          legalAccepted={legalAccepted}
+          setLegalAccepted={setLegalAccepted}
+          submitting={submitting}
+          message={authMessage}
+          error={authError}
+          onSubmit={handleAuthSubmit}
+          presentation="overlay"
+        />
+      )}
     </div>
   );
 }
@@ -8903,7 +9003,7 @@ function RedesignedTutorHero() {
       status: "Available Now",
       text: "Full-length practice, AI diagnosis, attention tracking, and personalised coaching.",
       icon: Brain,
-      action: "Launch UCAT Platform",
+      action: "Log in / Launch UCAT Platform",
       href: "/phloemai/dashboard",
       active: true,
     },
@@ -9006,7 +9106,7 @@ function RedesignedTutorHero() {
               </h1>
 
               <p className="mt-3 max-w-lg text-lg font-bold leading-tight text-white sm:text-xl">
-                The free UCAT question bank and AI tutor that shows why you
+                The <em className="italic">free</em> UCAT question bank and AI tutor that shows why you
                 lose marks.
               </p>
 
@@ -9021,7 +9121,7 @@ function RedesignedTutorHero() {
                   href="/phloemai/dashboard"
                   className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
                 >
-                  Launch UCAT Platform
+                  Log in / Launch UCAT Platform
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <Link
@@ -9535,7 +9635,7 @@ function TutorHero() {
               href="/phloemai/dashboard"
               className="block w-full py-2 rounded-xl border border-slate-200 text-slate-700 text-xs hover:border-slate-400 hover:text-slate-900 transition-colors cursor-pointer text-center"
             >
-              Launch UCAT Platform
+              Log in / Launch UCAT Platform
             </Link>
           </div>
         </div>

@@ -14,6 +14,8 @@ SUPABASE_SERVICE_ROLE_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
 
 STRIPE_SECRET_KEY=sk_live_or_test_...
 STRIPE_PREMIUM_PRICE_ID=price_...
+# Optional safety check if you want checkout to verify the product too:
+STRIPE_PREMIUM_PRODUCT_ID=prod_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
@@ -27,6 +29,7 @@ Run these in the Supabase SQL Editor, in this order:
 1. `supabase/phloemai_setup.sql`
 2. `supabase/phloemai_stripe_setup.sql`
 3. `supabase/phloemai_practice_setup.sql`
+4. `supabase/phloemai_security_patch.sql`
 
 ## Auth Settings
 

@@ -3,11 +3,11 @@ import { createStripeClient } from "@/utils/stripe";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
 import { getRequiredSiteUrl } from "@/utils/site-url";
+import { billingActionStatuses } from "@/utils/stripe-subscriptions";
 
 export const runtime = "nodejs";
 
-const DEFAULT_PREMIUM_PRODUCT_ID = "prod_UZj0w1QDWccrjH";
-const DEFAULT_PREMIUM_PRICE_ID = "price_1TaZYoBe7e6nC6NcyRv0zT7D";
+const paidSubscriptionStatuses = ["active", "trialing"] as const;
 
 async function createCustomer({
   admin,
@@ -66,12 +66,24 @@ function priceIsUsableForSubscription(
 async function resolvePremiumPriceId(
   stripe: ReturnType<typeof createStripeClient>
 ) {
-  const productId = DEFAULT_PREMIUM_PRODUCT_ID;
-  const price = await stripe.prices.retrieve(DEFAULT_PREMIUM_PRICE_ID);
+  const priceId = process.env.STRIPE_PREMIUM_PRICE_ID?.trim();
+  const productId = process.env.STRIPE_PREMIUM_PRODUCT_ID?.trim();
 
-  if (!priceIsUsableForSubscription(price, productId)) {
+  if (!priceId) {
+    throw new Error("Missing STRIPE_PREMIUM_PRICE_ID.");
+  }
+
+  const price = await stripe.prices.retrieve(priceId);
+
+  if (!price.active || !price.recurring) {
     throw new Error(
-      `Stripe price ${DEFAULT_PREMIUM_PRICE_ID} must be active, recurring and attached to product ${productId}.`
+      `Stripe price ${priceId} must be active and recurring.`
+    );
+  }
+
+  if (productId && !priceIsUsableForSubscription(price, productId)) {
+    throw new Error(
+      `Stripe price ${priceId} must be attached to product ${productId}.`
     );
   }
 
@@ -92,7 +104,6 @@ export async function POST(request: Request) {
 
     const admin = createAdminClient();
     const stripe = createStripeClient();
-    const priceId = await resolvePremiumPriceId(stripe);
     const profileSelect = "current_plan,stripe_customer_id,full_name";
     const { data: existingProfile, error: profileError } = await admin
       .from("profiles")
@@ -133,21 +144,13 @@ export async function POST(request: Request) {
       profile = createdProfile;
     }
 
-    if (profile?.current_plan === "premium") {
-      return Response.json(
-        {
-          error:
-            "This account already has Premium. Manage billing from account settings.",
-        },
-        { status: 409 }
-      );
-    }
+    const siteUrl = getRequiredSiteUrl(request);
 
-    const { data: activeSubscription, error: subscriptionError } = await admin
+    const { data: existingSubscription, error: subscriptionError } = await admin
       .from("subscriptions")
-      .select("id")
+      .select("id,status,stripe_customer_id")
       .eq("user_id", user.id)
-      .in("status", ["active", "trialing"])
+      .in("status", billingActionStatuses)
       .limit(1)
       .maybeSingle();
 
@@ -158,11 +161,50 @@ export async function POST(request: Request) {
       );
     }
 
-    if (activeSubscription) {
+    if (profile?.current_plan === "premium") {
+      if (profile.stripe_customer_id) {
+        const portalSession = await stripe.billingPortal.sessions.create({
+          customer: profile.stripe_customer_id,
+          return_url: `${siteUrl}/phloemai/account`,
+        });
+
+        return Response.json({ url: portalSession.url });
+      }
+
       return Response.json(
         {
           error:
-            "This account already has an active Premium subscription. Manage billing from account settings.",
+            "This account already has Premium. Manual Premium accounts do not have Stripe billing to manage.",
+        },
+        { status: 409 }
+      );
+    }
+
+    if (existingSubscription) {
+      const customerIdForPortal =
+        typeof existingSubscription.stripe_customer_id === "string"
+          ? existingSubscription.stripe_customer_id
+          : profile?.stripe_customer_id;
+
+      if (customerIdForPortal) {
+        const portalSession = await stripe.billingPortal.sessions.create({
+          customer: customerIdForPortal,
+          return_url: `${siteUrl}/phloemai/account`,
+        });
+
+        return Response.json({ url: portalSession.url });
+      }
+
+      const status = existingSubscription.status;
+      const activeText = paidSubscriptionStatuses.includes(
+        status as (typeof paidSubscriptionStatuses)[number]
+      )
+        ? "active Premium subscription"
+        : "subscription that needs billing action";
+
+      return Response.json(
+        {
+          error: `This account already has an ${activeText}. Manage billing from account settings.`,
         },
         { status: 409 }
       );
@@ -188,7 +230,7 @@ export async function POST(request: Request) {
       });
     }
 
-    const siteUrl = getRequiredSiteUrl(request);
+    const priceId = await resolvePremiumPriceId(stripe);
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",

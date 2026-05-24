@@ -2,6 +2,7 @@ import { createStripeClient } from "@/utils/stripe";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
 import { getRequiredSiteUrl } from "@/utils/site-url";
+import { billingActionStatuses } from "@/utils/stripe-subscriptions";
 
 export const runtime = "nodejs";
 
@@ -45,13 +46,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const { data: activeSubscription, error: subscriptionError } = await admin
+    const { data: manageableSubscription, error: subscriptionError } = await admin
       .from("subscriptions")
       .select("id")
       .eq("user_id", user.id)
       .eq("stripe_customer_id", profile.stripe_customer_id)
       .eq("stripe_subscription_id", profile.stripe_subscription_id)
-      .in("status", ["active", "trialing"])
+      .in("status", billingActionStatuses)
       .limit(1)
       .maybeSingle();
 
@@ -62,9 +63,9 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!activeSubscription) {
+    if (!manageableSubscription) {
       return Response.json(
-        { error: "No active Stripe subscription found for this account." },
+        { error: "No manageable Stripe subscription found for this account." },
         { status: 409 }
       );
     }

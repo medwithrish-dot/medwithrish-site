@@ -49,7 +49,10 @@ using (user_id = auth.uid());
 
 grant select on public.subscriptions to authenticated;
 
--- Keep subscription fields server-controlled. Stripe webhooks use the
--- SUPABASE_SERVICE_ROLE_KEY, which bypasses RLS and can still update these.
-revoke update on public.profiles from authenticated;
+-- Keep profile billing fields server-controlled. Stripe webhooks and API
+-- routes use the SUPABASE_SERVICE_ROLE_KEY, which bypasses RLS and can still
+-- write current_plan, Stripe ids and subscription status.
+drop policy if exists "Profiles can be inserted by owner" on public.profiles;
+revoke insert, update, delete on public.profiles from authenticated;
+grant select on public.profiles to authenticated;
 grant update(full_name) on public.profiles to authenticated;
