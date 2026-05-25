@@ -63,6 +63,7 @@ import {
   Sparkles,
   Target,
   Timer,
+  Trash2,
   UserRound,
   Wrench,
   X,
@@ -3389,10 +3390,16 @@ function RecentPracticeSetsPanel({
   sets,
   emptyTitle = "No practice sets saved yet.",
   emptyText = "Mark a question-bank set to add the first row.",
+  onRemoveCompletedSet,
+  removingSetId = null,
+  removeError = null,
 }: {
   sets: RecentPracticeSet[];
   emptyTitle?: string;
   emptyText?: string;
+  onRemoveCompletedSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  removingSetId?: string | null;
+  removeError?: string | null;
 }) {
   const visibleBatchSize = 4;
   const [visibleCount, setVisibleCount] = useState(visibleBatchSize);
@@ -3423,6 +3430,7 @@ function RecentPracticeSetsPanel({
 
   const renderSet = (set: RecentPracticeSet) => {
     const style = sectionStyle(set.sectionCode);
+    const isRemoving = removingSetId === set.id;
     const answeredLabel = set.isIncomplete
       ? "In progress"
       : `${set.answeredQuestions}/${set.totalQuestions} answered`;
@@ -3435,34 +3443,55 @@ function RecentPracticeSetsPanel({
         : "No answers yet";
 
     return (
-      <Link
+      <div
         key={set.id}
-        href={set.href}
-        className="grid gap-3 border-t border-slate-100 px-3 py-3 transition-colors first:border-t-0 hover:bg-blue-50/70 sm:grid-cols-[1fr_120px_96px] sm:items-center"
+        className="grid gap-3 border-t border-slate-100 px-3 py-3 transition-colors first:border-t-0 hover:bg-blue-50/70 sm:grid-cols-[minmax(0,1fr)_132px] sm:items-center"
       >
-        <div className="flex min-w-0 items-center gap-3">
-          <span
-            className={`rounded-lg px-3 py-2 text-xs font-black ${style.badgeClass}`}
-          >
-            {set.sectionCode}
-          </span>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-black">{set.title}</p>
-            <p className="mt-1 text-xs font-bold text-slate-500">
-              {answeredLabel}
+        <Link
+          href={set.href}
+          className="grid min-w-0 gap-3 sm:grid-cols-[minmax(0,1fr)_120px] sm:items-center"
+        >
+          <div className="flex min-w-0 items-center gap-3">
+            <span
+              className={`rounded-lg px-3 py-2 text-xs font-black ${style.badgeClass}`}
+            >
+              {set.sectionCode}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-black">{set.title}</p>
+              <p className="mt-1 text-xs font-bold text-slate-500">
+                {answeredLabel}
+              </p>
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-black">{scoreLabel}</p>
+            <p className="text-xs font-bold text-slate-400">
+              {formatDiagnosticReportDate(set.completedAt)}
             </p>
           </div>
+        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href={set.href}
+            className="inline-flex h-9 flex-1 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-xs font-black text-blue-600"
+          >
+            {set.isIncomplete ? "Continue" : "Review"}
+          </Link>
+          {!set.isIncomplete && onRemoveCompletedSet && (
+            <button
+              type="button"
+              title="Remove completed set"
+              aria-label={`Remove completed ${set.title} set`}
+              disabled={isRemoving}
+              onClick={() => void onRemoveCompletedSet(set)}
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-red-100 bg-white text-red-500 transition-colors hover:border-red-200 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"
+            >
+              <Trash2 className="h-4 w-4" aria-hidden="true" />
+            </button>
+          )}
         </div>
-        <div>
-          <p className="text-sm font-black">{scoreLabel}</p>
-          <p className="text-xs font-bold text-slate-400">
-            {formatDiagnosticReportDate(set.completedAt)}
-          </p>
-        </div>
-        <span className="inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-xs font-black text-blue-600">
-          {set.isIncomplete ? "Continue" : "Review"}
-        </span>
-      </Link>
+      </div>
     );
   };
 
@@ -3499,6 +3528,11 @@ function RecentPracticeSetsPanel({
           </button>
         </div>
       )}
+      {removeError && (
+        <div className="border-t border-red-100 bg-red-50 px-3 py-2 text-xs font-bold text-red-600">
+          {removeError}
+        </div>
+      )}
     </div>
   );
 }
@@ -3511,6 +3545,9 @@ function PracticeContent({
   isPremium,
   checkoutLoading,
   onUpgrade,
+  onRemoveCompletedSet,
+  removingPracticeSetId,
+  practiceSetRemoveError,
 }: {
   latestDiagnostic: DashboardDiagnostic | null;
   completedDashboardTaskIds: Set<string>;
@@ -3519,6 +3556,9 @@ function PracticeContent({
   isPremium: boolean;
   checkoutLoading: boolean;
   onUpgrade: () => void;
+  onRemoveCompletedSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  removingPracticeSetId?: string | null;
+  practiceSetRemoveError?: string | null;
 }) {
   const allStudyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
   const studyPlanTasks = getActiveDiagnosticStudyPlanTasks(
@@ -3820,7 +3860,12 @@ function PracticeContent({
             Recent practice
           </h2>
           <div className="mt-4">
-            <RecentPracticeSetsPanel sets={recentPracticeSets} />
+            <RecentPracticeSetsPanel
+              sets={recentPracticeSets}
+              onRemoveCompletedSet={onRemoveCompletedSet}
+              removingSetId={removingPracticeSetId}
+              removeError={practiceSetRemoveError}
+            />
           </div>
           <Link
             href="/phloemai/question-bank"
@@ -5263,12 +5308,18 @@ function ProgressContent({
   latestDiagnostic,
   completedDashboardTaskIds,
   removedDashboardTaskIds,
+  onRemoveCompletedSet,
+  removingPracticeSetId,
+  practiceSetRemoveError,
 }: PremiumGateProps & {
   practiceStats: PracticeStats;
   recentPracticeSets: RecentPracticeSet[];
   latestDiagnostic: DashboardDiagnostic | null;
   completedDashboardTaskIds: Set<string>;
   removedDashboardTaskIds: Set<string>;
+  onRemoveCompletedSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  removingPracticeSetId?: string | null;
+  practiceSetRemoveError?: string | null;
 }) {
   const progressItems = getQuestionBankProgress(practiceStats);
   const bankCompleted = progressItems.reduce(
@@ -5379,6 +5430,9 @@ function ProgressContent({
               sets={recentPracticeSets}
               emptyTitle="No practice sets saved yet."
               emptyText="Start a question-bank set and mark it when you are ready."
+              onRemoveCompletedSet={onRemoveCompletedSet}
+              removingSetId={removingPracticeSetId}
+              removeError={practiceSetRemoveError}
             />
           </div>
         </section>
@@ -6685,6 +6739,9 @@ function DashboardSubpageContent({
   onUpgrade,
   onLogout,
   onSaveDisplayName,
+  onRemoveCompletedSet,
+  removingPracticeSetId,
+  practiceSetRemoveError,
 }: {
   view: Exclude<DashboardView, "dashboard">;
   initialReportId?: string | null;
@@ -6706,6 +6763,9 @@ function DashboardSubpageContent({
   onUpgrade: () => void;
   onLogout: () => void;
   onSaveDisplayName: (name: string) => Promise<void>;
+  onRemoveCompletedSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  removingPracticeSetId?: string | null;
+  practiceSetRemoveError?: string | null;
 }) {
   const freeDiagnosticFeaturesUnlocked = isFreeQrDiagnostic(latestDiagnostic);
   const diagnosticStudyPlanUnlocked =
@@ -6738,6 +6798,9 @@ function DashboardSubpageContent({
         isPremium={diagnosticStudyPlanUnlocked}
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
+        onRemoveCompletedSet={onRemoveCompletedSet}
+        removingPracticeSetId={removingPracticeSetId}
+        practiceSetRemoveError={practiceSetRemoveError}
       />
     );
   }
@@ -6755,6 +6818,9 @@ function DashboardSubpageContent({
         latestDiagnostic={latestDiagnostic}
         completedDashboardTaskIds={completedDashboardTaskIds}
         removedDashboardTaskIds={removedDashboardTaskIds}
+        onRemoveCompletedSet={onRemoveCompletedSet}
+        removingPracticeSetId={removingPracticeSetId}
+        practiceSetRemoveError={practiceSetRemoveError}
       />
     );
   }
@@ -7390,6 +7456,12 @@ function UCATDashboard({
   const [recentPracticeSets, setRecentPracticeSets] = useState<
     RecentPracticeSet[]
   >([]);
+  const [removingPracticeSetId, setRemovingPracticeSetId] = useState<string | null>(
+    null
+  );
+  const [practiceSetRemoveError, setPracticeSetRemoveError] = useState<
+    string | null
+  >(null);
   const [latestDiagnostic, setLatestDiagnostic] =
     useState<DashboardDiagnostic | null>(null);
   const [diagnosticHistory, setDiagnosticHistory] = useState<
@@ -7512,6 +7584,63 @@ function UCATDashboard({
       });
     },
     [dashboardRemovedTaskStorageKey, dashboardTaskStorageKey]
+  );
+
+  const removeCompletedPracticeSet = useCallback(
+    async (set: RecentPracticeSet) => {
+      if (set.isIncomplete) return;
+
+      if (!supabase || !user) {
+        setPracticeSetRemoveError("Sign in again before removing saved sets.");
+        return;
+      }
+
+      const confirmed = window.confirm(
+        "Remove this completed practice set? This deletes it from your recent practice and saved progress."
+      );
+
+      if (!confirmed) return;
+
+      setRemovingPracticeSetId(set.id);
+      setPracticeSetRemoveError(null);
+
+      const { error } = await supabase
+        .from("practice_sessions")
+        .delete()
+        .eq("id", set.id)
+        .eq("user_id", user.id)
+        .eq("source", "question_bank");
+
+      if (error) {
+        setPracticeSetRemoveError(
+          "Could not remove that set. Please try again in a moment."
+        );
+        setRemovingPracticeSetId(null);
+        return;
+      }
+
+      setRecentPracticeSets((current) =>
+        current.filter((practiceSet) => practiceSet.id !== set.id)
+      );
+
+      const { data, error: statsError } = await supabase
+        .from("practice_question_attempts")
+        .select("question_id,section,answered,correct,total_seconds,created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1500);
+
+      if (statsError) {
+        setPracticeSetRemoveError(
+          "Removed the set. Progress totals will refresh after reload."
+        );
+      } else {
+        setPracticeStats(buildPracticeStats((data ?? []) as PracticeAttemptRow[]));
+      }
+
+      setRemovingPracticeSetId(null);
+    },
+    [supabase, user]
   );
 
   useEffect(() => {
@@ -8798,6 +8927,9 @@ function UCATDashboard({
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}
               onSaveDisplayName={handleProfileUpdate}
+              onRemoveCompletedSet={removeCompletedPracticeSet}
+              removingPracticeSetId={removingPracticeSetId}
+              practiceSetRemoveError={practiceSetRemoveError}
               recentPracticeSets={recentPracticeSets}
             />
           )}
