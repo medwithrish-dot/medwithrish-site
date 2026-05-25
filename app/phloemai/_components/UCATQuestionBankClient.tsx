@@ -1552,6 +1552,14 @@ function formatDisplayText(value: string) {
   );
 }
 
+function formatQuestionTextForSubtype(value: string, subtype: UCATSubtypeId) {
+  const text = formatDisplayText(value);
+  if (subtype !== "vr-author") return text;
+  if (/^author'?s?\s+(opinion|view|attitude)\s*:/i.test(text)) return text;
+
+  return `Author's opinion: ${text}`;
+}
+
 function humaniseExplanationText(value: string) {
   return formatDisplayText(value)
     .replace(/\s+/g, " ")
@@ -6886,7 +6894,10 @@ function MarkedReviewScreen({
                       Q{item.questionIndex + 1}
                     </p>
                     <h3 className="mt-1 text-base font-black text-slate-950">
-                      {formatDisplayText(item.questionText)}
+                      {formatQuestionTextForSubtype(
+                        item.questionText,
+                        item.subtype
+                      )}
                     </h3>
                     <p className="mt-2 text-sm font-semibold text-slate-600">
                       Your answer: {formatDisplayText(item.selectedAnswerText)}
@@ -10159,7 +10170,7 @@ function UCATQuestionBankSection({
                   : "text-base leading-[21px] text-black"
               }
             >
-              {formatDisplayText(question.question)}
+              {formatQuestionTextForSubtype(question.question, question.subtype)}
             </p>
           </div>
 
