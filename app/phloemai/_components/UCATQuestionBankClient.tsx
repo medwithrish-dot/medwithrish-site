@@ -2219,26 +2219,40 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
           <SetDiagramShapeElement key={shape.id} shape={shape} strokeWidth={1.7} />
         ))}
         {visual.regionLabels.map((label) => (
-          <text
-            key={label.id}
-            x={label.x}
-            y={label.y}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontSize="13"
-            fontWeight="700"
-            fill="#111827"
-          >
-            {label.text}
-          </text>
+          <g key={label.id}>
+            <rect
+              x={label.x - 12}
+              y={label.y - 10}
+              width="24"
+              height="20"
+              rx="10"
+              fill="rgba(255,255,255,0.84)"
+            />
+            <text
+              x={label.x}
+              y={label.y}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize="13"
+              fontWeight="700"
+              fill="#111827"
+            >
+              {label.text}
+            </text>
+          </g>
         ))}
       </svg>
       {visual.legend && (
-        <div className="mt-1 grid grid-cols-1 gap-0.5 text-[9px] font-semibold leading-3 text-slate-600 sm:grid-cols-3">
-          {visual.legend.map((item) => (
-            <span key={`${item.shape}-${item.label}`}>{item.label}</span>
-          ))}
-        </div>
+        <p className="mt-1 text-center text-[9px] font-semibold leading-3 text-slate-600">
+          {visual.legend
+            .map(
+              (item) =>
+                `${item.shape.charAt(0).toUpperCase()}${item.shape.slice(1)} = ${
+                  item.label
+                }`
+            )
+            .join(" | ")}
+        </p>
       )}
     </div>
   );
@@ -2296,44 +2310,6 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     );
     const width = Math.ceil(rightEdge + diagramPadding);
     const height = Math.ceil(bottomEdge + diagramPadding);
-    const shapeLabelById = new Map(
-      visual.shapes.map((shape) => [shape.id.toLowerCase(), shape.label])
-    );
-    const resolveRegionToken = (token: string) => {
-      const normalized = token.toLowerCase();
-      const direct = shapeLabelById.get(normalized);
-      if (direct) return direct;
-
-      const matchingShapes = visual.shapes.filter((shape) => {
-        const shapeId = shape.id.toLowerCase();
-        const shapeLabel = shape.label.toLowerCase();
-        return (
-          shapeId.startsWith(normalized) ||
-          shapeId.endsWith(normalized) ||
-          shapeId.includes(normalized) ||
-          shapeLabel.startsWith(normalized)
-        );
-      });
-
-      if (matchingShapes.length === 1) return matchingShapes[0].label;
-
-      return token
-        .split("-")
-        .filter(Boolean)
-        .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
-        .join(" ");
-    };
-    const formatRegionName = (id: string) => {
-      if (id === "all" || id.startsWith("all-")) return "All groups";
-
-      const withoutOnly = id.endsWith("-only")
-        ? id.slice(0, -"only".length - 1)
-        : id;
-      const tokens = withoutOnly.split("-").filter(Boolean);
-      const regionName = tokens.map(resolveRegionToken).join(" + ");
-
-      return id.endsWith("-only") ? `${regionName} only` : regionName;
-    };
     const shapePoints = (shape: (typeof visual.shapes)[number]) => {
       const { x, y, width: shapeWidth, height: shapeHeight } = shape;
 
@@ -2413,64 +2389,44 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
               );
             })}
             {visual.regionLabels.map((label) => (
-              <text
-                key={label.id}
-                x={label.x}
-                y={label.y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="14"
-                fontWeight="700"
-                fill="#111827"
-              >
-                {label.text}
-              </text>
+              <g key={label.id}>
+                <rect
+                  x={label.x - 13}
+                  y={label.y - 11}
+                  width="26"
+                  height="22"
+                  rx="11"
+                  fill="rgba(255,255,255,0.86)"
+                />
+                <text
+                  x={label.x}
+                  y={label.y}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="14"
+                  fontWeight="700"
+                  fill="#111827"
+                >
+                  {label.text}
+                </text>
+              </g>
             ))}
           </svg>
         </div>
-        {visual.regionLabels.length > 0 && (
-          <div className="mt-3 overflow-hidden rounded-sm border border-slate-200 bg-slate-50">
-            <table className="w-full border-collapse text-left text-xs">
-              <thead className="bg-slate-100 text-slate-700">
-                <tr>
-                  <th className="border-b border-slate-200 px-3 py-2 font-bold">
-                    Exact region
-                  </th>
-                  <th className="w-20 border-b border-slate-200 px-3 py-2 text-right font-bold">
-                    Number
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white">
-                {visual.regionLabels.map((label) => (
-                  <tr key={`region-row-${label.id}`}>
-                    <td className="border-b border-slate-100 px-3 py-2 font-semibold text-slate-700">
-                      {formatRegionName(label.id)}
-                    </td>
-                    <td className="border-b border-slate-100 px-3 py-2 text-right font-bold text-slate-900">
-                      {label.text}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
         {visual.note && (
           <p className="mt-2 text-xs font-semibold text-slate-600">{visual.note}</p>
         )}
         {visual.legend && (
-          <div className="mt-3 grid gap-2 text-xs font-semibold text-slate-700 sm:grid-cols-2">
-            {visual.legend.map((item) => (
-              <div
-                key={`${item.shape}-${item.label}`}
-                className="flex items-center justify-between border-b border-slate-200 px-1 py-1"
-              >
-                <span>{item.label}</span>
-                <span className="capitalize">{item.shape}</span>
-              </div>
-            ))}
-          </div>
+          <p className="mt-2 text-center text-xs font-semibold text-slate-700">
+            {visual.legend
+              .map(
+                (item) =>
+                  `${item.shape.charAt(0).toUpperCase()}${item.shape.slice(1)} = ${
+                    item.label
+                  }`
+              )
+              .join(" | ")}
+          </p>
         )}
       </div>
     );
