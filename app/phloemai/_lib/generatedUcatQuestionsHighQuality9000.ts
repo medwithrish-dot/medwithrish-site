@@ -9,7 +9,7 @@ import type {
 } from "./ucatQuestionBank";
 
 const OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D"];
-const QR_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D", "E"];
+const QR_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D"];
 
 const TFC_OPTIONS = [
   { key: "A" as const, text: "True" },
@@ -394,7 +394,7 @@ function hasValidQuestionShape(question: UCATQuestion) {
 
     if (
       question.options.length < 3 ||
-      question.options.length > 5 ||
+      question.options.length > 4 ||
       !keys.includes(question.answer) ||
       new Set(keys).size !== keys.length ||
       new Set(texts).size !== texts.length

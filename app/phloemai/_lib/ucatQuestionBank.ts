@@ -26,7 +26,7 @@ import { reviewUCATQuestionBank } from "./ucatQuestionQualityGate";
 
 // Future generated-bank work should first read ./ucatQuestionDesignNotes.md.
 export type UCATSection = "vr" | "dm" | "qr" | "sjt";
-export type UCATOptionKey = "A" | "B" | "C" | "D" | "E";
+export type UCATOptionKey = "A" | "B" | "C" | "D";
 export type UCATYesNoValue = "Yes" | "No";
 
 export type UCATSubtypeId =
@@ -858,7 +858,7 @@ function isSupportedSjtQuestion(question: UCATQuestion) {
   );
 }
 
-const QR_SINGLE_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D", "E"];
+const QR_SINGLE_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D"];
 
 function isSingleSelectQuestion(question: UCATQuestion): question is UCATSingleQuestion {
   return !question.questionType || question.questionType === "single";
@@ -919,7 +919,7 @@ function makeQrFallbackOptionText(question: UCATSingleQuestion, attempt: number)
   ][attempt - 1] ?? `Alternative ${attempt}`;
 }
 
-function ensureQrFiveOptions(question: UCATQuestion): UCATQuestion {
+function ensureQrFourOptions(question: UCATQuestion): UCATQuestion {
   if (
     question.section !== "qr" ||
     !isSingleSelectQuestion(question) ||
@@ -2301,7 +2301,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "The combined multiplier is 1.20 x 0.85 x 1.10 = 1.122.",
     },
     ...HIGH_QUALITY_9000_QR_QUESTIONS,
-  ] as UCATQuestion[]).map(ensureQrFiveOptions),
+  ] as UCATQuestion[]).map(ensureQrFourOptions),
   sjt: [
     ...SJT_QUESTIONS,
     ...GENERATED_SJT_QUESTIONS,

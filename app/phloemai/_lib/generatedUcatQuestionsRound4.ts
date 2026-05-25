@@ -721,14 +721,12 @@ function makeSjtRating(index: number): UCATQuestion {
     B: "ask for advice from the supervisor before taking further action",
     C: "leave the issue until the end of the day unless someone else mentions it",
     D: "share the details informally with friends because it seems interesting",
-    E: "do nothing",
   };
   const importanceByAnswer: Record<UCATOptionKey, string> = {
     A: "whether patient safety, consent or confidentiality could be affected",
     B: "whether the supervising team needs accurate information to respond well",
     C: "whether the student feels slightly embarrassed about asking for help",
     D: "whether acting professionally might take a few extra minutes",
-    E: "whether the corridor is painted a neutral colour",
   };
   const question = appropriateness
     ? `How appropriate is it to ${actionByAnswer[answer]}?`

@@ -1487,6 +1487,112 @@ function getCorrectAnswerText(question: UCATQuestion) {
   return getAnswerText(question, question.answer);
 }
 
+function humaniseExplanationText(value: string) {
+  return value
+    .replace(/\s+/g, " ")
+    .replace(/\s+x\s+/gi, " × ")
+    .replace(/\bGBP\s*(\d)/g, "£$1")
+    .replace(/, and (?=[a-z][a-z -]*-only\s*=)/g, ". ")
+    .replace(/, (?=[a-z][a-z -]*-only\s*=)/g, ". ")
+    .replace(/,\s+so\s+/gi, ". So ")
+    .trim();
+}
+
+function splitExplanationSteps(explanation: string) {
+  const decimalPlaceholder = "__DECIMAL_POINT__";
+  const prepared = humaniseExplanationText(explanation).replace(
+    /(\d)\.(\d)/g,
+    `$1${decimalPlaceholder}$2`
+  );
+
+  return prepared
+    .split(/(?<=[.!?])\s+(?=[A-Z£0-9])/)
+    .map((step) => step.split(decimalPlaceholder).join(".").trim())
+    .filter(Boolean);
+}
+
+function getExplanationStarter(explanation: string) {
+  const text = humaniseExplanationText(explanation).toLowerCase();
+
+  if (/\b[a-z][a-z -]*-only\s*=/.test(text)) {
+    return "For an 'only' region, start with that group's total, then subtract every overlap that includes that group.";
+  }
+
+  if (/\b(can't tell|does not say|not stated|not given|not enough information)\b/.test(text)) {
+    return "Use only what is written in the passage or data. If the missing detail is not stated, the answer cannot be assumed.";
+  }
+
+  if (/\b(strongest argument|directly addresses|relevant|irrelevant)\b/.test(text)) {
+    return "The strongest option answers the exact decision in the question. Ignore choices that are emotional, vague or off-topic.";
+  }
+
+  if (/\b(appropriate|inappropriate|important|professional|patient safety|confidentiality|consent)\b/.test(text)) {
+    return "Judge the action by patient safety, honesty, confidentiality and whether the person stays within their role.";
+  }
+
+  if (/[=×+\-/]/.test(text)) {
+    return "Break the working into small steps, then compare the final result with the answer choices.";
+  }
+
+  return null;
+}
+
+function HumanReadableExplanation({
+  explanation,
+  correctAnswerText,
+  selectedAnswerText,
+  resultStatus,
+}: {
+  explanation: string;
+  correctAnswerText?: string;
+  selectedAnswerText?: string;
+  resultStatus?: PracticeAnswerStatus;
+}) {
+  const steps = splitExplanationSteps(explanation);
+  const starter = getExplanationStarter(explanation);
+  const hasSelectedAnswer =
+    selectedAnswerText &&
+    selectedAnswerText !== "No answer" &&
+    selectedAnswerText !== correctAnswerText;
+  const answerLabel =
+    resultStatus === "correct"
+      ? "Answer confirmed"
+      : resultStatus === "partial"
+        ? "Best answer"
+        : "Correct answer";
+
+  return (
+    <div className="mt-2 space-y-3 text-sm leading-6 text-slate-700">
+      {correctAnswerText && (
+        <p className="font-semibold">
+          <span className="font-black text-slate-900">{answerLabel}: </span>
+          {correctAnswerText}
+        </p>
+      )}
+      {hasSelectedAnswer && (
+        <p className="font-semibold">
+          <span className="font-black text-slate-900">Your answer: </span>
+          {selectedAnswerText}
+        </p>
+      )}
+      {starter && (
+        <p className="border-l-4 border-slate-300 pl-3 font-semibold text-slate-700">
+          {starter}
+        </p>
+      )}
+      {steps.length > 1 ? (
+        <ol className="list-decimal space-y-1 pl-5 font-semibold">
+          {steps.map((step) => (
+            <li key={step}>{step}</li>
+          ))}
+        </ol>
+      ) : (
+        <p className="font-semibold">{steps[0] ?? explanation}</p>
+      )}
+    </div>
+  );
+}
+
 function payloadNumber(event: TrackingEvent, key: string) {
   const value = event.payload?.[key];
   return typeof value === "number" ? value : 0;
@@ -2099,8 +2205,8 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
   const height = Math.ceil(bottomEdge + padding);
 
   return (
-    <div className="mt-2 w-full max-w-[380px] rounded-sm border border-slate-300 bg-white p-2">
-      <p className="text-center text-[12px] font-bold leading-4 text-slate-900">
+    <div className="mt-2 w-full max-w-[300px] rounded-sm border border-slate-300 bg-white p-1.5">
+      <p className="text-center text-[11px] font-bold leading-4 text-slate-900">
         {visual.title}
       </p>
       <svg
@@ -2110,7 +2216,7 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
         aria-label={visual.title}
       >
         {visual.shapes.map((shape) => (
-          <SetDiagramShapeElement key={shape.id} shape={shape} strokeWidth={2} />
+          <SetDiagramShapeElement key={shape.id} shape={shape} strokeWidth={1.7} />
         ))}
         {visual.regionLabels.map((label) => (
           <text
@@ -2119,7 +2225,7 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
             y={label.y}
             textAnchor="middle"
             dominantBaseline="middle"
-            fontSize="15"
+            fontSize="13"
             fontWeight="700"
             fill="#111827"
           >
@@ -2128,7 +2234,7 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
         ))}
       </svg>
       {visual.legend && (
-        <div className="mt-1 grid grid-cols-1 gap-0.5 text-[10px] font-semibold leading-3 text-slate-600 sm:grid-cols-3">
+        <div className="mt-1 grid grid-cols-1 gap-0.5 text-[9px] font-semibold leading-3 text-slate-600 sm:grid-cols-3">
           {visual.legend.map((item) => (
             <span key={`${item.shape}-${item.label}`}>{item.label}</span>
           ))}
@@ -2141,7 +2247,7 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
 function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
   if (visual.type === "table") {
     return (
-      <div className="mt-6 overflow-hidden rounded-sm border border-slate-300 bg-white">
+      <div className="mx-auto mt-5 w-full max-w-[640px] overflow-hidden rounded-sm border border-slate-300 bg-white">
         <div className="border-b border-slate-300 bg-slate-100 px-3 py-2 text-sm font-bold">
           {visual.title}
         </div>
@@ -2247,12 +2353,12 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     };
 
     return (
-      <div className="mt-6 rounded-sm border border-slate-300 bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
+      <div className="mx-auto mt-5 w-full max-w-[560px] rounded-sm border border-slate-300 bg-white p-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
         <h3 className="text-center text-sm font-bold">{visual.title}</h3>
         <div className="mt-2 overflow-x-auto">
           <svg
             viewBox={`0 0 ${width} ${height}`}
-            className="h-auto w-full min-w-[416px] max-w-full text-slate-800"
+            className="h-auto w-full min-w-[320px] max-w-full text-slate-800"
             role="img"
             aria-label={visual.title}
           >
@@ -2375,12 +2481,12 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     return fills[index % fills.length];
   };
 
-  const width = 448;
-  const height = 264;
-  const left = 53;
-  const right = 29;
-  const top = 34;
-  const bottom = 53;
+  const width = 360;
+  const height = 220;
+  const left = 48;
+  const right = 22;
+  const top = 30;
+  const bottom = 48;
   const chartWidth = width - left - right;
   const chartHeight = height - top - bottom;
   const valueToY = (value: number) =>
@@ -2432,12 +2538,12 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
         : "Categories shown below the bars";
 
   return (
-    <div className="mt-6 rounded-sm border border-slate-300 bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
+    <div className="mx-auto mt-5 w-full max-w-[560px] rounded-sm border border-slate-300 bg-white p-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
       <h3 className="text-center text-sm font-bold">{visual.title}</h3>
       <div className="mt-2 overflow-x-auto">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="min-w-[368px] text-slate-800"
+          className="h-auto w-full min-w-[320px] text-slate-800"
           role="img"
           aria-label={visual.title}
         >
@@ -6601,8 +6707,14 @@ function MarkedReviewScreen({
               onClick={onReviewAnswers}
               className="inline-flex h-10 items-center justify-center rounded-sm bg-white px-4 text-sm font-black text-[#0078a8] hover:bg-blue-50"
             >
-              Review answers
+              Review answers and explanations
             </button>
+            <Link
+              href="/phloemai/question-bank"
+              className="inline-flex h-10 items-center justify-center rounded-sm border border-white/50 px-4 text-sm font-black text-white hover:bg-white/10"
+            >
+              Question bank
+            </Link>
             <button
               type="button"
               onClick={onNewSet}
@@ -6791,9 +6903,12 @@ function MarkedReviewScreen({
                   <p className="text-sm font-black text-slate-900">
                     Explanation
                   </p>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-slate-700">
-                    {item.explanation}
-                  </p>
+                  <HumanReadableExplanation
+                    explanation={item.explanation}
+                    correctAnswerText={item.correctAnswerText}
+                    selectedAnswerText={item.selectedAnswerText}
+                    resultStatus={item.resultStatus}
+                  />
                 </div>
                 <QuestionDataCollectedPanel item={item} />
               </article>
@@ -9363,15 +9478,16 @@ function UCATQuestionBankSection({
   const dragItemLookup = isDragQuestion
     ? new Map(question.dragItems.map((item) => [item.id, item.text]))
     : new Map<string, string>();
-  const correctOrderText = isDragQuestion
-    ? question.answerOrder
-        .map((itemId, index) => `${index + 1}. ${dragItemLookup.get(itemId)}`)
-        .join(" ")
-    : "";
   const currentQuestionSummary =
     markedSummary?.questions[questionIndex] ??
     liveSummary?.questions[questionIndex] ??
     null;
+  const currentAnswerText = isAnswered(question, currentAnswerForScore)
+    ? getAnswerText(question, currentAnswerForScore)
+    : "No answer";
+  const correctAnswerText = isSingleQuestion
+    ? `${question.answer}. ${getCorrectAnswerText(question)}`
+    : getCorrectAnswerText(question);
 
   const reviewingMarkedAnswers = phase === "marked-review";
   const answerRevealed = revealed || reviewingMarkedAnswers;
@@ -9543,7 +9659,7 @@ function UCATQuestionBankSection({
       }
     }
 
-    if (isSingleQuestion && ["a", "b", "c", "d", "e"].includes(key)) {
+    if (isSingleQuestion && ["a", "b", "c", "d"].includes(key)) {
       const optionKey = key.toUpperCase() as UCATOptionKey;
       if (question.options.some((option) => option.key === optionKey)) {
         event.preventDefault();
@@ -9733,10 +9849,10 @@ function UCATQuestionBankSection({
       return;
     }
 
-    const saved = await saveCurrentQuestionSetProgress();
-    if (!saved) {
-      setPendingExit({ ...exit, saving: false });
-      return;
+    try {
+      await saveCurrentQuestionSetProgress();
+    } catch (error) {
+      console.error("Failed to save question set before exit", error);
     }
 
     attentionTracker.resetTracker();
@@ -10354,29 +10470,12 @@ function UCATQuestionBankSection({
                   currentAnswerScore.maxPoints
                 )}
               </p>
-              {isDragQuestion && (
-                <p className="mt-3 text-sm font-semibold leading-6 text-slate-800">
-                  Correct order: {correctOrderText}
-                </p>
-              )}
-              {isDragCategoryQuestion && (
-                <p className="mt-3 text-sm font-semibold leading-6 text-slate-800">
-                  Correct categories: {getCorrectAnswerText(question)}
-                </p>
-              )}
-              {isYesNoQuestion && (
-                <p className="mt-3 text-sm font-semibold leading-6 text-slate-800">
-                  Correct Yes/No answers: {getCorrectAnswerText(question)}
-                </p>
-              )}
-              {isSingleQuestion && (
-                <p className="mt-3 text-sm font-semibold leading-6 text-slate-800">
-                  Correct answer: {question.answer}
-                </p>
-              )}
-              <p className="mt-3 text-sm leading-6 text-slate-800">
-                {question.explanation}
-              </p>
+              <HumanReadableExplanation
+                explanation={question.explanation}
+                correctAnswerText={correctAnswerText}
+                selectedAnswerText={currentAnswerText}
+                resultStatus={currentAnswerScore.status}
+              />
               {currentQuestionSummary && (
                 <QuestionDataCollectedPanel
                   item={currentQuestionSummary}
@@ -10395,25 +10494,25 @@ function UCATQuestionBankSection({
           aria-modal="true"
           aria-labelledby="unseen-content-title"
         >
-          <div className="w-[min(860px,calc(100vw-2rem))] bg-[#0078a8] text-white shadow-2xl">
+          <div className="w-[min(700px,calc(100vw-2rem))] bg-[#0078a8] text-white shadow-2xl">
             <div
               id="unseen-content-title"
-              className="border-b border-white/80 px-4 py-3 text-2xl leading-8"
+              className="border-b border-white/80 px-4 py-2.5 text-xl leading-7"
             >
               Unseen Content
             </div>
-            <div className="flex items-start gap-5 px-10 py-7 text-2xl leading-8">
-              <Info className="mt-1 h-11 w-11 shrink-0" aria-hidden="true" />
+            <div className="flex items-start gap-4 px-8 py-5 text-xl leading-7">
+              <Info className="mt-1 h-9 w-9 shrink-0" aria-hidden="true" />
               <p>
                 You have not viewed the full question yet. Scroll through all
                 visible content before moving on.
               </p>
             </div>
-            <div className="pb-5 text-center">
+            <div className="pb-4 text-center">
               <button
                 type="button"
                 onClick={closeUnseenContentPrompt}
-                className="border border-white px-5 py-1 text-2xl leading-8 hover:bg-white/10"
+                className="border border-white px-4 py-0.5 text-xl leading-7 hover:bg-white/10"
               >
                 OK
               </button>
