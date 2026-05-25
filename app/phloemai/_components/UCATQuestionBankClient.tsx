@@ -1487,8 +1487,21 @@ function getCorrectAnswerText(question: UCATQuestion) {
   return getAnswerText(question, question.answer);
 }
 
+const SUPERSCRIPT_DIGITS: Record<"2" | "3", string> = {
+  "2": "²",
+  "3": "³",
+};
+
+function formatDisplayText(value: string) {
+  return value.replace(
+    /\b(mm|cm|km|m|in|ft|yd|mi)\^?([23])\b/g,
+    (_match, unit: string, power: string) =>
+      `${unit}${SUPERSCRIPT_DIGITS[power as "2" | "3"]}`
+  );
+}
+
 function humaniseExplanationText(value: string) {
-  return value
+  return formatDisplayText(value)
     .replace(/\s+/g, " ")
     .replace(/\s+x\s+/gi, " × ")
     .replace(/\bGBP\s*(\d)/g, "£$1")
@@ -1566,13 +1579,13 @@ function HumanReadableExplanation({
       {correctAnswerText && (
         <p className="font-semibold">
           <span className="font-black text-slate-900">{answerLabel}: </span>
-          {correctAnswerText}
+          {formatDisplayText(correctAnswerText)}
         </p>
       )}
       {hasSelectedAnswer && (
         <p className="font-semibold">
           <span className="font-black text-slate-900">Your answer: </span>
-          {selectedAnswerText}
+          {formatDisplayText(selectedAnswerText)}
         </p>
       )}
       {starter && (
@@ -2207,13 +2220,13 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
   return (
     <div className="mt-2 w-full max-w-[300px] rounded-sm border border-slate-300 bg-white p-1.5">
       <p className="text-center text-[11px] font-bold leading-4 text-slate-900">
-        {visual.title}
+        {formatDisplayText(visual.title)}
       </p>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="mt-1 h-auto w-full text-slate-800"
         role="img"
-        aria-label={visual.title}
+        aria-label={formatDisplayText(visual.title)}
       >
         {visual.shapes.map((shape) => (
           <SetDiagramShapeElement key={shape.id} shape={shape} strokeWidth={1.7} />
@@ -2248,7 +2261,7 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
             .map(
               (item) =>
                 `${item.shape.charAt(0).toUpperCase()}${item.shape.slice(1)} = ${
-                  item.label
+                  formatDisplayText(item.label)
                 }`
             )
             .join(" | ")}
@@ -2261,16 +2274,16 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
 function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
   if (visual.type === "table") {
     return (
-      <div className="mx-auto mt-5 w-full max-w-[640px] overflow-hidden rounded-sm border border-slate-300 bg-white">
+      <div className="mx-auto mb-8 mt-5 w-full max-w-[640px] overflow-hidden rounded-sm border border-slate-300 bg-white">
         <div className="border-b border-slate-300 bg-slate-100 px-3 py-2 text-sm font-bold">
-          {visual.title}
+          {formatDisplayText(visual.title)}
         </div>
         <table className="w-full border-collapse text-left text-sm">
           <thead className="bg-slate-50">
             <tr>
               {visual.headers.map((header) => (
                 <th key={header} className="border-b border-slate-200 px-3 py-2 font-bold">
-                  {header}
+                  {formatDisplayText(header)}
                 </th>
               ))}
             </tr>
@@ -2280,7 +2293,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
               <tr key={row.join("-")}>
                 {row.map((cell) => (
                   <td key={cell} className="border-b border-slate-100 px-3 py-2">
-                    {cell}
+                    {formatDisplayText(cell)}
                   </td>
                 ))}
               </tr>
@@ -2289,7 +2302,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
         </table>
         {visual.note && (
           <p className="px-3 py-2 text-xs font-semibold text-slate-600">
-            {visual.note}
+            {formatDisplayText(visual.note)}
           </p>
         )}
       </div>
@@ -2329,14 +2342,14 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     };
 
     return (
-      <div className="mx-auto mt-5 w-full max-w-[560px] rounded-sm border border-slate-300 bg-white p-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
-        <h3 className="text-center text-sm font-bold">{visual.title}</h3>
+      <div className="mx-auto mb-8 mt-5 w-full max-w-[560px] rounded-sm border border-slate-300 bg-white p-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
+        <h3 className="text-center text-sm font-bold">{formatDisplayText(visual.title)}</h3>
         <div className="mt-2 overflow-x-auto">
           <svg
             viewBox={`0 0 ${width} ${height}`}
             className="h-auto w-full min-w-[320px] max-w-full text-slate-800"
             role="img"
-            aria-label={visual.title}
+            aria-label={formatDisplayText(visual.title)}
           >
             {visual.shapes.map((shape) => {
               const centerX = shape.x + shape.width / 2;
@@ -2414,7 +2427,9 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
           </svg>
         </div>
         {visual.note && (
-          <p className="mt-2 text-xs font-semibold text-slate-600">{visual.note}</p>
+          <p className="mt-2 text-xs font-semibold text-slate-600">
+            {formatDisplayText(visual.note)}
+          </p>
         )}
         {visual.legend && (
           <p className="mt-2 text-center text-xs font-semibold text-slate-700">
@@ -2422,7 +2437,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
               .map(
                 (item) =>
                   `${item.shape.charAt(0).toUpperCase()}${item.shape.slice(1)} = ${
-                    item.label
+                    formatDisplayText(item.label)
                   }`
               )
               .join(" | ")}
@@ -2437,12 +2452,12 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     return fills[index % fills.length];
   };
 
-  const width = 360;
-  const height = 220;
-  const left = 48;
-  const right = 22;
+  const width = 400;
+  const height = 224;
+  const left = 70;
+  const right = 24;
   const top = 30;
-  const bottom = 48;
+  const bottom = 52;
   const chartWidth = width - left - right;
   const chartHeight = height - top - bottom;
   const valueToY = (value: number) =>
@@ -2494,14 +2509,16 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
         : "Categories shown below the bars";
 
   return (
-    <div className="mx-auto mt-5 w-full max-w-[560px] rounded-sm border border-slate-300 bg-white p-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
-      <h3 className="text-center text-sm font-bold">{visual.title}</h3>
+    <div className="mx-auto mb-8 mt-5 w-full max-w-[560px] rounded-sm border border-slate-300 bg-white p-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
+      <h3 className="text-center text-sm font-bold">
+        {formatDisplayText(visual.title)}
+      </h3>
       <div className="mt-2 overflow-x-auto">
         <svg
           viewBox={`0 0 ${width} ${height}`}
           className="h-auto w-full min-w-[320px] text-slate-800"
           role="img"
-          aria-label={visual.title}
+          aria-label={formatDisplayText(visual.title)}
         >
           <rect
             x={left}
@@ -2570,15 +2587,15 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             strokeWidth="1.8"
           />
           <text
-            x={18}
+            x={20}
             y={top + chartHeight / 2}
-            transform={`rotate(-90 18 ${top + chartHeight / 2})`}
+            transform={`rotate(-90 20 ${top + chartHeight / 2})`}
             textAnchor="middle"
             fontSize="12"
             fontWeight="700"
             fill="#27272a"
           >
-            {visual.yLabel}
+            {formatDisplayText(visual.yLabel)}
           </text>
 
           {visual.type === "bar" &&
@@ -2619,7 +2636,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     fontWeight="700"
                     fill="#27272a"
                   >
-                    {category.label}
+                    {formatDisplayText(category.label)}
                   </text>
                 </g>
               );
@@ -2664,7 +2681,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     fontWeight="700"
                     fill="#27272a"
                   >
-                    {group.label}
+                    {formatDisplayText(group.label)}
                   </text>
                 </g>
               );
@@ -2708,7 +2725,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     fontWeight="700"
                     fill="#27272a"
                   >
-                    {point.label}
+                    {formatDisplayText(point.label)}
                   </text>
                 </g>
               ))}
@@ -2717,9 +2734,11 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
         </svg>
       </div>
       {visual.note && (
-        <p className="mt-2 text-xs font-semibold text-slate-600">{visual.note}</p>
+        <p className="mt-2 text-xs font-semibold text-slate-600">
+          {formatDisplayText(visual.note)}
+        </p>
       )}
-      <div className="mt-3 rounded-sm border border-slate-200 bg-slate-50 p-3 text-xs font-semibold text-slate-700">
+      <div className="mb-2 mt-4 rounded-sm border border-slate-200 bg-slate-50 p-2.5 text-xs font-semibold text-slate-700">
         <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
           Chart key
         </p>
@@ -2728,7 +2747,9 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             <span className="block text-[11px] font-black uppercase tracking-wide text-slate-500">
               Vertical axis
             </span>
-            <span className="mt-0.5 block text-slate-900">{visual.yLabel}</span>
+            <span className="mt-0.5 block text-slate-900">
+              {formatDisplayText(visual.yLabel)}
+            </span>
           </div>
           <div className="rounded-sm border border-slate-200 bg-white px-3 py-2">
             <span className="block text-[11px] font-black uppercase tracking-wide text-slate-500">
@@ -2763,7 +2784,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   aria-hidden="true"
                 />
               )}
-              <span>{item.label}</span>
+              <span>{formatDisplayText(item.label)}</span>
             </div>
           ))}
         </div>
@@ -5042,7 +5063,9 @@ function DataPoint({ label, value }: { label: string; value: string }) {
       <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
         {label}
       </p>
-      <p className="mt-1 text-sm font-black text-slate-900">{value}</p>
+      <p className="mt-1 text-sm font-black text-slate-900">
+        {formatDisplayText(value)}
+      </p>
     </div>
   );
 }
@@ -6811,13 +6834,13 @@ function MarkedReviewScreen({
                       Q{item.questionIndex + 1}
                     </p>
                     <h3 className="mt-1 text-base font-black text-slate-950">
-                      {item.questionText}
+                      {formatDisplayText(item.questionText)}
                     </h3>
                     <p className="mt-2 text-sm font-semibold text-slate-600">
-                      Your answer: {item.selectedAnswerText}
+                      Your answer: {formatDisplayText(item.selectedAnswerText)}
                     </p>
                     <p className="mt-1 text-sm font-semibold text-slate-600">
-                      Correct: {item.correctAnswerText}
+                      Correct: {formatDisplayText(item.correctAnswerText)}
                     </p>
                     <p className="mt-1 text-sm font-black text-slate-700">
                       Score: {formatMarkScore(item.scorePoints, item.maxScore)}
@@ -10068,7 +10091,7 @@ function UCATQuestionBankSection({
             }
           >
             {question.stimulus.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
+              <p key={paragraph}>{formatDisplayText(paragraph)}</p>
             ))}
             {question.visual && <QuestionVisual visual={question.visual} />}
           </div>
@@ -10083,14 +10106,14 @@ function UCATQuestionBankSection({
                   : "text-base leading-[21px] text-black"
               }
             >
-              {question.question}
+              {formatDisplayText(question.question)}
             </p>
           </div>
 
           {isDragQuestion ? (
             <div ref={answersRegionRef} className="mt-6">
               <p className="rounded-sm border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-semibold leading-5 text-slate-700">
-                {question.instruction}
+                {formatDisplayText(question.instruction)}
               </p>
               <div className="mt-4 space-y-3">
                 {dragOrder.map((itemId, index) => {
@@ -10126,7 +10149,7 @@ function UCATQuestionBankSection({
                         {index + 1}
                       </span>
                       <GripVertical className="h-4 w-4 text-slate-500" aria-hidden="true" />
-                      <span>{itemText}</span>
+                      <span>{formatDisplayText(itemText)}</span>
                     </div>
                   );
                 })}
@@ -10188,7 +10211,7 @@ function UCATQuestionBankSection({
                                 : "border-black bg-white"
                           }`}
                         >
-                          {item.text}
+                          {formatDisplayText(item.text)}
                         </div>
                         <button
                           type="button"
@@ -10224,7 +10247,7 @@ function UCATQuestionBankSection({
                           } disabled:cursor-not-allowed`}
                         >
                           {selectedCategoryLabel ? (
-                            selectedCategoryLabel
+                            formatDisplayText(selectedCategoryLabel)
                           ) : (
                             <span className="sr-only">Drop answer here</span>
                           )}
@@ -10256,7 +10279,7 @@ function UCATQuestionBankSection({
                             : "min-h-[56px] text-[15px] leading-[18px]"
                         }`}
                       >
-                        {category.label}
+                        {formatDisplayText(category.label)}
                       </button>
                     ))}
                   </div>
@@ -10293,7 +10316,7 @@ function UCATQuestionBankSection({
                                 : "border-black bg-white"
                           }`}
                         >
-                          {statement.text}
+                          {formatDisplayText(statement.text)}
                         </div>
                         <button
                           type="button"
@@ -10385,7 +10408,7 @@ function UCATQuestionBankSection({
                     />
                     <span className="font-normal">{option.key}.</span>
                     <span className="min-w-0">
-                      <span className="block">{option.text}</span>
+                      <span className="block">{formatDisplayText(option.text)}</span>
                       {option.visual && <OptionVisual visual={option.visual} />}
                     </span>
                   </label>
