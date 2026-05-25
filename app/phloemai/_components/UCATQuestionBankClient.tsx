@@ -1487,6 +1487,58 @@ function getCorrectAnswerText(question: UCATQuestion) {
   return getAnswerText(question, question.answer);
 }
 
+function shuffleList<T>(items: T[]) {
+  const shuffled = [...items];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [
+      shuffled[swapIndex],
+      shuffled[index],
+    ];
+  }
+
+  return shuffled;
+}
+
+function buildRandomPracticeQuestionSet(
+  questions: UCATQuestion[],
+  questionCount: number
+) {
+  const targetCount = Math.max(0, Math.min(questionCount, questions.length));
+  if (targetCount === 0) return [];
+
+  const bucketsBySubtype = new Map<UCATSubtypeId, UCATQuestion[]>();
+  questions.forEach((question) => {
+    bucketsBySubtype.set(question.subtype, [
+      ...(bucketsBySubtype.get(question.subtype) ?? []),
+      question,
+    ]);
+  });
+
+  const buckets = shuffleList(
+    Array.from(bucketsBySubtype.values()).map((bucket) =>
+      shuffleList(bucket)
+    )
+  );
+  const selectedQuestions: UCATQuestion[] = [];
+
+  while (
+    selectedQuestions.length < targetCount &&
+    buckets.some((bucket) => bucket.length > 0)
+  ) {
+    shuffleList(buckets)
+      .filter((bucket) => bucket.length > 0)
+      .forEach((bucket) => {
+        if (selectedQuestions.length >= targetCount) return;
+        const nextQuestion = bucket.shift();
+        if (nextQuestion) selectedQuestions.push(nextQuestion);
+      });
+  }
+
+  return selectedQuestions;
+}
+
 const SUPERSCRIPT_DIGITS: Record<"2" | "3", string> = {
   "2": "²",
   "3": "³",
@@ -8514,7 +8566,8 @@ function UCATQuestionBankSection({
 
   const beginPracticeSession = (activeTrackingMode: TrackingMode) => {
     const nextQuestions =
-      fixedDiagnosticQuestions ?? availableQuestions.slice(0, setupQuestionCount);
+      fixedDiagnosticQuestions ??
+      buildRandomPracticeQuestionSet(availableQuestions, setupQuestionCount);
     if (nextQuestions.length === 0) return;
     const isFixedDiagnostic = Boolean(fixedDiagnosticQuestions);
     const nextTimed = isFixedDiagnostic || lengthMode === "minutes" || timed;
