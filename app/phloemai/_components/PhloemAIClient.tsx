@@ -3390,14 +3390,14 @@ function RecentPracticeSetsPanel({
   sets,
   emptyTitle = "No practice sets saved yet.",
   emptyText = "Mark a question-bank set to add the first row.",
-  onRemoveCompletedSet,
+  onRemoveSet,
   removingSetId = null,
   removeError = null,
 }: {
   sets: RecentPracticeSet[];
   emptyTitle?: string;
   emptyText?: string;
-  onRemoveCompletedSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  onRemoveSet?: (set: RecentPracticeSet) => void | Promise<void>;
   removingSetId?: string | null;
   removeError?: string | null;
 }) {
@@ -3445,7 +3445,7 @@ function RecentPracticeSetsPanel({
     return (
       <div
         key={set.id}
-        className="grid gap-3 border-t border-slate-100 px-3 py-3 transition-colors first:border-t-0 hover:bg-blue-50/70 sm:grid-cols-[minmax(0,1fr)_132px] sm:items-center"
+        className="grid gap-3 border-t border-slate-100 px-3 py-3 transition-colors first:border-t-0 hover:bg-blue-50/70 sm:grid-cols-[minmax(0,1fr)_210px] sm:items-center"
       >
         <Link
           href={set.href}
@@ -3478,16 +3478,17 @@ function RecentPracticeSetsPanel({
           >
             {set.isIncomplete ? "Continue" : "Review"}
           </Link>
-          {!set.isIncomplete && onRemoveCompletedSet && (
+          {onRemoveSet && (
             <button
               type="button"
-              title="Remove completed set"
-              aria-label={`Remove completed ${set.title} set`}
+              title="Remove saved set"
+              aria-label={`Remove saved ${set.title} set`}
               disabled={isRemoving}
-              onClick={() => void onRemoveCompletedSet(set)}
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-red-100 bg-white text-red-500 transition-colors hover:border-red-200 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"
+              onClick={() => void onRemoveSet(set)}
+              className="inline-flex h-9 shrink-0 items-center justify-center gap-1 rounded-lg border border-red-100 bg-white px-2.5 text-xs font-black text-red-600 transition-colors hover:border-red-200 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"
             >
               <Trash2 className="h-4 w-4" aria-hidden="true" />
+              Remove
             </button>
           )}
         </div>
@@ -3545,7 +3546,7 @@ function PracticeContent({
   isPremium,
   checkoutLoading,
   onUpgrade,
-  onRemoveCompletedSet,
+  onRemoveSet,
   removingPracticeSetId,
   practiceSetRemoveError,
 }: {
@@ -3556,7 +3557,7 @@ function PracticeContent({
   isPremium: boolean;
   checkoutLoading: boolean;
   onUpgrade: () => void;
-  onRemoveCompletedSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  onRemoveSet?: (set: RecentPracticeSet) => void | Promise<void>;
   removingPracticeSetId?: string | null;
   practiceSetRemoveError?: string | null;
 }) {
@@ -3862,7 +3863,7 @@ function PracticeContent({
           <div className="mt-4">
             <RecentPracticeSetsPanel
               sets={recentPracticeSets}
-              onRemoveCompletedSet={onRemoveCompletedSet}
+              onRemoveSet={onRemoveSet}
               removingSetId={removingPracticeSetId}
               removeError={practiceSetRemoveError}
             />
@@ -5308,7 +5309,7 @@ function ProgressContent({
   latestDiagnostic,
   completedDashboardTaskIds,
   removedDashboardTaskIds,
-  onRemoveCompletedSet,
+  onRemoveSet,
   removingPracticeSetId,
   practiceSetRemoveError,
 }: PremiumGateProps & {
@@ -5317,7 +5318,7 @@ function ProgressContent({
   latestDiagnostic: DashboardDiagnostic | null;
   completedDashboardTaskIds: Set<string>;
   removedDashboardTaskIds: Set<string>;
-  onRemoveCompletedSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  onRemoveSet?: (set: RecentPracticeSet) => void | Promise<void>;
   removingPracticeSetId?: string | null;
   practiceSetRemoveError?: string | null;
 }) {
@@ -5430,7 +5431,7 @@ function ProgressContent({
               sets={recentPracticeSets}
               emptyTitle="No practice sets saved yet."
               emptyText="Start a question-bank set and mark it when you are ready."
-              onRemoveCompletedSet={onRemoveCompletedSet}
+              onRemoveSet={onRemoveSet}
               removingSetId={removingPracticeSetId}
               removeError={practiceSetRemoveError}
             />
@@ -6739,7 +6740,7 @@ function DashboardSubpageContent({
   onUpgrade,
   onLogout,
   onSaveDisplayName,
-  onRemoveCompletedSet,
+  onRemoveSet,
   removingPracticeSetId,
   practiceSetRemoveError,
 }: {
@@ -6763,7 +6764,7 @@ function DashboardSubpageContent({
   onUpgrade: () => void;
   onLogout: () => void;
   onSaveDisplayName: (name: string) => Promise<void>;
-  onRemoveCompletedSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  onRemoveSet?: (set: RecentPracticeSet) => void | Promise<void>;
   removingPracticeSetId?: string | null;
   practiceSetRemoveError?: string | null;
 }) {
@@ -6798,7 +6799,7 @@ function DashboardSubpageContent({
         isPremium={diagnosticStudyPlanUnlocked}
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
-        onRemoveCompletedSet={onRemoveCompletedSet}
+        onRemoveSet={onRemoveSet}
         removingPracticeSetId={removingPracticeSetId}
         practiceSetRemoveError={practiceSetRemoveError}
       />
@@ -6818,7 +6819,7 @@ function DashboardSubpageContent({
         latestDiagnostic={latestDiagnostic}
         completedDashboardTaskIds={completedDashboardTaskIds}
         removedDashboardTaskIds={removedDashboardTaskIds}
-        onRemoveCompletedSet={onRemoveCompletedSet}
+        onRemoveSet={onRemoveSet}
         removingPracticeSetId={removingPracticeSetId}
         practiceSetRemoveError={practiceSetRemoveError}
       />
@@ -7586,17 +7587,17 @@ function UCATDashboard({
     [dashboardRemovedTaskStorageKey, dashboardTaskStorageKey]
   );
 
-  const removeCompletedPracticeSet = useCallback(
+  const removePracticeSet = useCallback(
     async (set: RecentPracticeSet) => {
-      if (set.isIncomplete) return;
-
       if (!supabase || !user) {
         setPracticeSetRemoveError("Sign in again before removing saved sets.");
         return;
       }
 
       const confirmed = window.confirm(
-        "Remove this completed practice set? This deletes it from your recent practice and saved progress."
+        set.isIncomplete
+          ? "Remove this saved incomplete set? You will not be able to continue it."
+          : "Remove this marked practice set? This deletes it from your recent practice and saved progress."
       );
 
       if (!confirmed) return;
@@ -8927,7 +8928,7 @@ function UCATDashboard({
               onUpgrade={handleSubscriptionAction}
               onLogout={handleLogout}
               onSaveDisplayName={handleProfileUpdate}
-              onRemoveCompletedSet={removeCompletedPracticeSet}
+              onRemoveSet={removePracticeSet}
               removingPracticeSetId={removingPracticeSetId}
               practiceSetRemoveError={practiceSetRemoveError}
               recentPracticeSets={recentPracticeSets}
