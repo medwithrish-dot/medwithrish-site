@@ -75,6 +75,20 @@ function pick<T>(items: readonly T[], index: number) {
   return items[index % items.length];
 }
 
+function variantIndex(length: number, index: number, salt: number) {
+  let mixed = Math.imul(index + 0x9e3779b9, salt + 0x85ebca6b);
+  mixed ^= mixed >>> 16;
+  mixed = Math.imul(mixed, 0x7feb352d);
+  mixed ^= mixed >>> 15;
+  mixed = Math.imul(mixed, 0x846ca68b);
+  mixed ^= mixed >>> 16;
+  return (mixed >>> 0) % length;
+}
+
+function pickVariant<T>(items: readonly T[], index: number, salt: number) {
+  return items[variantIndex(items.length, index, salt)];
+}
+
 function pickPair<T>(items: readonly [T, T][], index: number) {
   return items[index % items.length];
 }
@@ -782,6 +796,47 @@ const WRONG_FUNDERS = [
   "a private sponsorship deal",
 ] as const;
 
+const VR_METHOD_DETAILS = [
+  "Staff used booking records and short exit notes rather than relying on one kind of evidence.",
+  "The review separated routine demand from comments made during the busiest sessions.",
+  "Managers checked whether the change altered behaviour, not just whether users liked the idea.",
+  "The notes distinguished between first-time users and people who already knew the service.",
+  "The review treated staff workload as supporting evidence, not as the main outcome.",
+  "The project team kept the original route open so that the trial did not remove existing access.",
+  "The figures were compared with the previous half-term, but reviewers avoided treating that as a control group.",
+  "The review file included comments from staff who had not designed the project.",
+  "Managers recorded why some eligible users chose not to take part.",
+  "The team checked whether the change shifted demand between days rather than creating new demand.",
+  "The review noted when extra help was offered, so that the figures were not read in isolation.",
+  "Staff logged practical problems separately from comments about the idea itself.",
+] as const;
+
+const VR_LOCAL_DETAILS = [
+  "One busy session was excluded from the informal comments because a fire alarm shortened it.",
+  "The smallest site contributed few responses, but its staff reported the clearest change in routine.",
+  "A mid-trial timetable change made the last two weeks easier to manage than the first two.",
+  "The project team noticed that people who arrived in groups often used the service differently from individuals.",
+  "Several comments concerned the wording of reminders rather than the project itself.",
+  "Staff said the change was easiest to manage when the entrance desk was already staffed.",
+  "A small number of users joined late after hearing about the trial from others.",
+  "The review separated missed bookings from cancellations made with notice.",
+  "The project worked less smoothly on days when equipment had to be shared with another activity.",
+  "Some users said the trial changed when they attended, rather than whether they attended.",
+  "The strongest comments came from people who had used the old routine at least once.",
+  "The review did not include people who heard about the project but decided not to try it.",
+] as const;
+
+const VR_SCOPE_DETAILS = [
+  "No permanent budget was agreed at this stage.",
+  "The review was written for a local planning meeting rather than for a national evaluation.",
+  "The project team described the result as a signal to investigate further, not as proof.",
+  "The report avoided comparing sites that served very different groups.",
+  "Reviewers said the figures should be read alongside the practical limits of the setting.",
+  "The recommendation deliberately left open the possibility that the effect might fade.",
+  "The group did not claim that the same approach would suit every user.",
+  "The report separated the question of usefulness from the question of affordability.",
+] as const;
+
 const VR_INFERENCE_QUESTIONS = [
   "Which statement is best supported by the passage?",
   "Which conclusion can most safely be drawn from the passage?",
@@ -898,23 +953,20 @@ const VR_OBSERVATION_DETAILS = [
 ] as const;
 
 function makeVrObservation(setIndex: number) {
-  const group = pick(VR_OBSERVATION_GROUPS, setIndex * 31);
-  const detail = pick(VR_OBSERVATION_DETAILS, setIndex * 37);
+  const group = pickVariant(VR_OBSERVATION_GROUPS, setIndex, 41);
+  const detail = pickVariant(VR_OBSERVATION_DETAILS, setIndex, 43);
+  const observationFrames = [
+    `A separate qualitative note recorded that ${group} ${detail}.`,
+    `The review also included this comment from ${group}: they ${detail}.`,
+    `Alongside the figures, reviewers noted that ${group} ${detail}.`,
+    `One short comment came from ${group}, who ${detail}.`,
+    `The staff log added that ${group} ${detail}.`,
+    `A later feedback sheet said ${group} ${detail}.`,
+    `Reviewers treated a comment from ${group} as useful context: they ${detail}.`,
+    `The local notes also mentioned that ${group} ${detail}.`,
+  ];
 
-  switch (setIndex % 6) {
-    case 0:
-      return `Staff also logged comments from ${group}, who ${detail}.`;
-    case 1:
-      return `A separate note recorded this from ${group}: they ${detail}.`;
-    case 2:
-      return `Informal feedback from ${group} added another point: they ${detail}.`;
-    case 3:
-      return `The review included a short comment from ${group}, who ${detail}.`;
-    case 4:
-      return `Alongside the figures, feedback from ${group} recorded that they ${detail}.`;
-    default:
-      return `The team also recorded a point from ${group}: they ${detail}.`;
-  }
+  return pickVariant(observationFrames, setIndex, 47);
 }
 
 function makeVrPassage(input: {
@@ -934,105 +986,149 @@ function makeVrPassage(input: {
   limitation: string;
   followUpNote: string;
 }) {
-  const metricSentence = `During the six-week trial, ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`;
+  const methodDetail = pickVariant(VR_METHOD_DETAILS, input.setIndex, 53);
+  const localDetail = pickVariant(VR_LOCAL_DETAILS, input.setIndex, 59);
+  const scopeDetail = pickVariant(VR_SCOPE_DETAILS, input.setIndex, 61);
   const followUp = input.followUpNote.trim();
   const followUpSentence = followUp ? ` ${followUp}` : "";
-  const recommendation =
-    `The recommendation was to keep the project for one more term and compare demand with a similar site before wider rollout.${followUpSentence}`;
-  const caution =
-    `The review said the figures were encouraging but should be treated carefully because ${input.caveat}. It also noted that ${input.limitation}.`;
   const observation = makeVrObservation(input.setIndex);
+  const openers = [
+    `${input.setting} reviewed a six-week test of ${input.project} after ${input.problem}. The work focused on ${input.group} and was paid for by ${input.funder}.`,
+    `In a six-week trial funded by ${input.funder}, ${input.setting} gave ${input.group} access to ${input.project}. The trial responded to reports that ${input.problem}.`,
+    `A review note from ${input.setting} described a six-week trial of ${input.project}. It was aimed at ${input.group}, following concern that ${input.problem}, and used funding from ${input.funder}.`,
+    `${input.setting} did not commission a full redesign; it ran a six-week test of ${input.project} for ${input.group}. The reason given was that ${input.problem}, and the funding came from ${input.funder}.`,
+    `After ${input.problem}, ${input.setting} set up a six-week trial of ${input.project}. The intended users were ${input.group}; the costs were covered by ${input.funder}.`,
+    `${input.funder} paid for ${input.setting}'s six-week trial of ${input.project}. The project was offered to ${input.group} because ${input.problem}.`,
+    `A six-week review at ${input.setting} considered whether ${input.project} should continue for ${input.group}. The idea had been introduced after ${input.problem}, using ${input.funder}.`,
+    `${input.setting} selected ${input.project} for a six-week trial rather than changing the whole service at once. It targeted ${input.group} after staff found that ${input.problem}, and it was funded by ${input.funder}.`,
+  ];
+  const purposeFrames = [
+    `The stated purpose was to ${input.aim}; managers said it was not a plan to ${input.oldRoutine}.`,
+    `Staff framed the project as a way to ${input.aim}, while keeping it separate from any decision to ${input.oldRoutine}.`,
+    `The review said the project was intended to ${input.aim}, not to ${input.oldRoutine}.`,
+    `Its purpose was deliberately narrow: to ${input.aim}, without using the trial to ${input.oldRoutine}.`,
+    `Managers described the aim as trying to ${input.aim}. They also said the trial should not be read as approval to ${input.oldRoutine}.`,
+    `The project was presented as support to ${input.aim}, rather than as a route to ${input.oldRoutine}.`,
+  ];
+  const evidenceFrames = [
+    `During the trial, ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+    `${sentenceCase(input.metric)} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric} across the six-week period.`,
+    `The main recorded measure was ${input.metric}, which ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+    `By the end of the trial, the record showed that ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+    `The most quoted figure was that ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+    `Staff counted ${input.metric} as the main outcome; it ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+  ];
+  const cautionFrames = [
+    `The review called the movement encouraging, but said it should be treated carefully because ${input.caveat}. It also noted that ${input.limitation}.`,
+    `Reviewers were cautious: ${input.caveat}, and ${input.limitation}.`,
+    `The report did not treat the result as conclusive, partly because ${input.caveat}. A further limitation was that ${input.limitation}.`,
+    `The figures were promising rather than decisive. The review highlighted that ${input.caveat} and that ${input.limitation}.`,
+    `Two points limited the conclusion: ${input.caveat}, and ${input.limitation}.`,
+    `The review group supported continuing the test, but qualified its judgement because ${input.caveat}; it also recorded that ${input.limitation}.`,
+  ];
+  const recommendationFrames = [
+    `The recommendation was to keep the project for one more term and compare demand with a similar site before wider rollout.`,
+    `Reviewers recommended one further term, followed by a comparison with demand at a similar site before any wider rollout.`,
+    `The report's final proposal was cautious: continue for one term, then compare demand with a similar site before expanding.`,
+    `No immediate expansion was approved. Instead, the project was to run for one more term while demand was compared with a similar site.`,
+    `The review advised keeping the project temporarily and checking demand against a similar site before deciding on wider rollout.`,
+    `The group recommended another term of use, plus a demand comparison with a similar site before a wider decision.`,
+  ];
+  const opener = pickVariant(openers, input.setIndex, 67);
+  const purpose = pickVariant(purposeFrames, input.setIndex, 71);
+  const evidence = pickVariant(evidenceFrames, input.setIndex, 73);
+  const caution = pickVariant(cautionFrames, input.setIndex, 79);
+  const recommendation =
+    `${pickVariant(recommendationFrames, input.setIndex, 83)}${followUpSentence}`;
 
-  switch (input.setIndex % 12) {
+  switch (input.setIndex % 10) {
     case 0:
       return [
-        `${input.setting} tested ${input.project} for ${input.group} after ${input.problem}. The aim was to ${input.aim}, rather than ${input.oldRoutine}. The project was funded by ${input.funder}.`,
-        `${metricSentence} ${caution} ${observation}`,
-        recommendation,
+        opener,
+        `${purpose} ${methodDetail}`,
+        `${evidence} ${localDetail}`,
+        `${caution} ${observation} ${recommendation}`,
       ];
     case 1:
       return [
-        `${input.problem} led ${input.setting} to try ${input.project} with ${input.group}. Managers described it as a limited service change: it was intended to ${input.aim}, not to ${input.oldRoutine}. Funding came from ${input.funder}.`,
-        `${metricSentence} The improvement looked useful at first, but the review linked its caution to the fact that ${input.caveat}. A second uncertainty was that ${input.limitation}. ${observation}`,
-        recommendation,
+        opener,
+        `${methodDetail} ${purpose}`,
+        `${evidence} ${caution}`,
+        `${observation} ${scopeDetail} ${recommendation}`,
       ];
     case 2:
       return [
-        `At ${input.setting}, ${input.group} were offered ${input.project}. The scheme was introduced because ${input.problem}. It was paid for by ${input.funder} and was framed as a way to ${input.aim}, rather than as a plan to ${input.oldRoutine}.`,
-        `${sentenceCase(input.metric)} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric} over six weeks. Reviewers said this was promising, while warning that ${input.caveat}. They also pointed out that ${input.limitation}. ${observation}`,
-        recommendation,
+        `${opener} ${scopeDetail}`,
+        `${purpose} ${evidence}`,
+        `${methodDetail} ${caution}`,
+        `${localDetail} ${observation} ${recommendation}`,
       ];
     case 3:
       return [
-        `${input.setting} did not begin with a full redesign. Instead, after ${input.problem}, it ran a six-week test of ${input.project} for ${input.group}. The project was funded by ${input.funder}.`,
-        `The stated aim was to ${input.aim}; managers explicitly avoided using it to ${input.oldRoutine}. ${metricSentence}`,
-        `${caution} ${observation} ${recommendation}`,
+        opener,
+        `${purpose} ${scopeDetail}`,
+        `${methodDetail} ${evidence}`,
+        `${caution} ${localDetail} ${recommendation}`,
       ];
     case 4:
       return [
-        `A short review at ${input.setting} considered whether ${input.project} helped ${input.group}. The idea followed reports that ${input.problem}. ${sentenceCase(input.funder)} funded the work.`,
-        `The project was meant to ${input.aim}. It was not presented as a route to ${input.oldRoutine}. Over six weeks, ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
-        `${caution} ${observation} ${recommendation}`,
+        `${opener} ${methodDetail}`,
+        `${purpose} ${localDetail}`,
+        `${evidence} ${caution}`,
+        `${scopeDetail} ${observation} ${recommendation}`,
       ];
     case 5:
       return [
-        `${input.group} at ${input.setting} were invited to use ${input.project} after staff found that ${input.problem}. The funding source was ${input.funder}.`,
-        `Although the project aimed to ${input.aim}, the review stressed that it should not be read as an attempt to ${input.oldRoutine}. ${metricSentence}`,
-        `The figures were not treated as conclusive because ${input.caveat}. The review also recorded that ${input.limitation}. ${observation} ${recommendation}`,
+        opener,
+        `${evidence} ${methodDetail}`,
+        `${purpose} ${caution}`,
+        `${localDetail} ${observation} ${recommendation}`,
       ];
     case 6:
       return [
-        `${input.setting} used ${input.funder} to run a trial of ${input.project}. It targeted ${input.group}, following concern that ${input.problem}.`,
-        `Its purpose was to ${input.aim}, not to ${input.oldRoutine}. ${sentenceCase(input.metric)} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric} during the trial.`,
-        `Reviewers called the change encouraging but qualified that judgement because ${input.caveat}; they also noted that ${input.limitation}. ${observation} ${recommendation}`,
+        `${opener} ${purpose}`,
+        `${methodDetail} ${evidence}`,
+        `${caution} ${scopeDetail}`,
+        `${observation} ${recommendation}`,
       ];
     case 7:
       return [
-        `When ${input.setting} introduced ${input.project}, it described the change as deliberately modest. The problem was that ${input.problem}, and the intended users were ${input.group}.`,
-        `The project, funded by ${input.funder}, aimed to ${input.aim}. It was not supposed to ${input.oldRoutine}. ${metricSentence}`,
-        `${caution} ${observation} ${recommendation}`,
+        opener,
+        `${localDetail} ${purpose}`,
+        `${evidence} ${caution}`,
+        `${methodDetail} ${scopeDetail} ${recommendation}`,
       ];
     case 8:
       return [
-        `A six-week pilot at ${input.setting} offered ${input.project} to ${input.group}. It responded to the finding that ${input.problem}, and used funding from ${input.funder}.`,
-        `Staff wanted to ${input.aim}, while avoiding a wider change that would ${input.oldRoutine}. The recorded outcome was that ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
-        `The review was cautious because ${input.caveat}. It further noted that ${input.limitation}. ${observation} ${recommendation}`,
-      ];
-    case 9:
-      return [
-        `${input.setting} trialled ${input.project} after ${input.problem}. The trial was for ${input.group} and was funded by ${input.funder}.`,
-        `Rather than using the project to ${input.oldRoutine}, staff said they wanted to ${input.aim}. ${metricSentence}`,
-        `The report treated the result as provisional: ${input.caveat}, and ${input.limitation}. ${observation} ${recommendation}`,
-      ];
-    case 10:
-      return [
-        `${input.funder} funded ${input.project} at ${input.setting}. The project focused on ${input.group}, because ${input.problem}.`,
-        `Its aim was to ${input.aim}; it was not a proposal to ${input.oldRoutine}. Six-week data showed that ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
-        `${caution} ${observation} ${recommendation}`,
+        `${opener} ${methodDetail}`,
+        `${evidence} ${localDetail}`,
+        `${purpose} ${caution}`,
+        `${observation} ${scopeDetail} ${recommendation}`,
       ];
     default:
       return [
-        `${input.setting} selected ${input.project} as a temporary response after ${input.problem}. It was aimed at ${input.group} and funded by ${input.funder}.`,
-        `The change was intended to ${input.aim}, not to ${input.oldRoutine}. The main recorded measure was that ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
-        `However, ${input.caveat}, and ${input.limitation}. ${observation} Reviewers therefore avoided a firm conclusion. ${recommendation}`,
+        opener,
+        `${purpose} ${methodDetail} ${scopeDetail}`,
+        `${evidence} ${caution}`,
+        `${localDetail} ${observation} ${recommendation}`,
       ];
   }
 }
 
 function makeVrSet(setIndex: number): UCATQuestion[] {
   const cycle = Math.floor(setIndex / 1800);
-  const setting = pick(ORGANISATIONS, setIndex);
-  const project = pick(PROJECTS, setIndex * 3);
-  const group = pick(GROUPS, setIndex * 5);
-  const problem = pick(PROBLEMS, setIndex * 7);
-  const aim = pick(AIMS, setIndex * 11);
-  const metric = pick(METRICS, setIndex * 13);
+  const setting = pickVariant(ORGANISATIONS, setIndex, 5);
+  const project = pickVariant(PROJECTS, setIndex, 7);
+  const group = pickVariant(GROUPS, setIndex, 11);
+  const problem = pickVariant(PROBLEMS, setIndex, 13);
+  const aim = pickVariant(AIMS, setIndex, 17);
+  const metric = pickVariant(METRICS, setIndex, 19);
   const metricVerb = metric === "same-day cancellations" ? "fell" : "rose";
-  const caveat = pick(CAVEATS, setIndex * 17);
-  const limitation = pick(LIMITATIONS, setIndex * 19);
-  const funder = pick(FUNDERS, setIndex * 23);
-  const wrongFunder = pick(WRONG_FUNDERS, setIndex * 29);
-  const oldRoutine = pick(
+  const caveat = pickVariant(CAVEATS, setIndex, 23);
+  const limitation = pickVariant(LIMITATIONS, setIndex, 29);
+  const funder = pickVariant(FUNDERS, setIndex, 31);
+  const wrongFunder = pickVariant(WRONG_FUNDERS, setIndex, 37);
+  const oldRoutine = pickVariant(
     [
       "replace the existing service entirely",
       "make every user join a formal course",
@@ -1040,7 +1136,8 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
       "charge everyone a higher fee",
       "move all support online",
     ],
-    setIndex
+    setIndex,
+    41
   );
   const firstMetric = 42 + (setIndex % 18) * 3;
   const secondMetric =
@@ -1048,7 +1145,7 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
       ? firstMetric + 9 + (setIndex % 8)
       : Math.max(4, firstMetric - 8 - (setIndex % 7));
   const followUpNote =
-    cycle > 0 ? ` ${pick(FOLLOW_UP_NOTES, setIndex + cycle * 7)}` : "";
+    cycle > 0 ? ` ${pickVariant(FOLLOW_UP_NOTES, setIndex + cycle * 7, 43)}` : "";
   const passage = makeVrPassage({
     setIndex,
     setting,
@@ -3657,7 +3754,7 @@ export const HIGH_QUALITY_9000_VR_QUESTIONS: UCATQuestion[] =
       questions: HIGH_QUALITY_9000_RAW_VR_QUESTIONS,
       targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.vr,
       expectedGroupSize: 4,
-      stimulusCap: 8,
+      stimulusCap: 4,
       questionTemplateCap: 160,
     })
   );
@@ -6089,6 +6186,58 @@ const SJT_BACKGROUND_DETAILS = [
   "The concern could affect another person if ignored.",
 ] as const;
 
+const SJT_SCENE_DETAILS = [
+  "The student is present to observe and help with simple tasks, not to make independent clinical decisions.",
+  "The nearest qualified staff member can be interrupted if the issue needs prompt attention.",
+  "Nobody has yet explained the situation to the person affected.",
+  "The student has enough time to pause before responding, but the issue should not be left unresolved.",
+  "A local procedure exists, although the student has not used it before.",
+  "The concern is visible to others, so an unprofessional response would also affect team trust.",
+  "The person affected appears calm but is waiting for a clear response.",
+  "The student can step away briefly without abandoning their assigned task.",
+  "The issue is not an emergency, but it could become more serious if ignored.",
+  "The student has been reminded that uncertainty should be raised early.",
+  "The team is under time pressure, but no one has asked the student to act beyond their role.",
+  "There is enough privacy to speak quietly, but not to discuss confidential details openly.",
+] as const;
+
+const SJT_ROLE_DETAILS = [
+  "The student has not been given authority to change records or give clinical advice.",
+  "The student is expected to be helpful while staying within their competence.",
+  "The supervisor has previously encouraged students to ask when professional limits are unclear.",
+  "The student knows that documenting or escalating concerns should be done through the normal route.",
+  "The placement guidance says patient-facing concerns should not be hidden to avoid inconvenience.",
+  "The student is unsure of the exact policy but understands the relevant professional principle.",
+  "The student's learning needs do not override the immediate responsibility to keep people safe and respected.",
+  "The issue involves more than politeness; it could affect trust, safety or fairness.",
+] as const;
+
+const SJT_CASE_DETAILS = [
+  "A brief handover is due shortly.",
+  "A second student is unsure whether to step in.",
+  "The usual written guidance is in another room.",
+  "The person affected can hear part of the conversation.",
+  "A member of staff has asked for any unresolved concerns to be flagged before the next task.",
+  "The student has just been shown where to find a qualified member of staff.",
+  "The situation is distracting the team from another routine task.",
+  "There is a quiet space nearby if a private conversation is needed.",
+  "No one has yet checked whether the concern has already been escalated.",
+  "The student is due to leave the area soon.",
+  "The team has been trying to reduce avoidable delays that morning.",
+  "A staff member has reminded the group not to make assumptions about patient preferences.",
+  "The student has access to the placement handbook but not to confidential records.",
+  "Another person nearby appears to be waiting for a decision.",
+  "The issue could be handled discreetly if raised promptly.",
+  "The student is aware that informal shortcuts have caused problems on previous sessions.",
+  "The room is busy enough that a rushed explanation could be misunderstood.",
+  "A qualified staff member is visible but not currently part of the conversation.",
+  "The student has been asked to observe how concerns are escalated locally.",
+  "The situation has not yet affected care, but it could if nobody responds.",
+  "The student can ask for help without interrupting an urgent procedure.",
+  "Several people are moving through the area, making privacy harder to maintain.",
+  "The team is trying to finish on time, but professional standards still apply.",
+] as const;
+
 const SJT_DRAG_QUESTIONS = [
   "Sort the actions according to whether they are appropriate in this situation.",
   "Place each action into the category that best fits this situation.",
@@ -6103,52 +6252,88 @@ function makeSjtStem(input: {
   person: string;
   peer: string;
   scenario: (typeof SJT_SCENARIOS)[number];
+  problemClause: string;
   sessionContext: string;
   peerPressure: string;
   backgroundDetail: string;
+  sceneDetail: string;
+  roleDetail: string;
+  caseDetail: string;
 }) {
-  const problem = sentenceCase(input.scenario.problem);
+  const problem = sentenceCase(input.problemClause);
 
-  switch (input.setIndex % 10) {
+  switch (input.setIndex % 14) {
     case 0:
-      return `${input.person}, a medical student, is working at ${input.scenario.setting} ${input.sessionContext}. ${problem}. ${input.backgroundDetail} ${input.peer}, another student, suggests ${input.peerPressure}.`;
+      return `${input.person}, a medical student, is working at ${input.scenario.setting} ${input.sessionContext}. ${problem}. ${input.backgroundDetail} ${input.sceneDetail} ${input.caseDetail} ${input.peer}, another student, suggests ${input.peerPressure}. ${input.roleDetail}`;
     case 1:
-      return `While placed at ${input.scenario.setting}, ${input.person} sees the following issue ${input.sessionContext}: ${input.scenario.problem}. ${input.backgroundDetail} ${input.peer} suggests ${input.peerPressure}.`;
+      return `While placed at ${input.scenario.setting}, ${input.person} becomes aware that ${input.problemClause}. This happens ${input.sessionContext}. ${input.backgroundDetail} ${input.caseDetail} ${input.roleDetail} ${input.peer} suggests ${input.peerPressure}.`;
     case 2:
-      return `${input.person} is on placement at ${input.scenario.setting}. ${problem}. This happens ${input.sessionContext}. ${input.backgroundDetail} Another student, ${input.peer}, suggests ${input.peerPressure}.`;
+      return `${input.person} is on placement at ${input.scenario.setting}. ${problem}. This happens ${input.sessionContext}. ${input.sceneDetail} ${input.backgroundDetail} ${input.caseDetail} Another student, ${input.peer}, suggests ${input.peerPressure}.`;
     case 3:
-      return `In ${input.scenario.setting}, ${input.person} notices that ${input.scenario.problem}. The situation arises ${input.sessionContext}. ${input.backgroundDetail} ${input.peer}, who is also present, suggests ${input.peerPressure}.`;
+      return `In ${input.scenario.setting}, ${input.person} notices that ${input.problemClause}. The situation arises ${input.sessionContext}. ${input.roleDetail} ${input.caseDetail} ${input.peer}, who is also present, suggests ${input.peerPressure}. ${input.backgroundDetail}`;
     case 4:
-      return `${input.person}, a medical student, has been asked to help at ${input.scenario.setting}. ${problem}. ${input.backgroundDetail} The team is ${input.sessionContext}; ${input.peer} suggests ${input.peerPressure}.`;
+      return `${input.person}, a medical student, has been asked to help at ${input.scenario.setting}. ${problem}. The issue comes up ${input.sessionContext}. ${input.backgroundDetail} ${input.caseDetail} ${input.peer} suggests ${input.peerPressure}. ${input.sceneDetail}`;
     case 5:
-      return `${problem} while ${input.person}, a medical student, is at ${input.scenario.setting}. ${input.backgroundDetail} This is ${input.sessionContext}. ${input.peer}, another student, suggests ${input.peerPressure}.`;
+      return `${problem} while ${input.person}, a medical student, is at ${input.scenario.setting}. ${input.backgroundDetail} This is happening ${input.sessionContext}. ${input.roleDetail} ${input.caseDetail} ${input.peer}, another student, suggests ${input.peerPressure}.`;
     case 6:
-      return `${input.person} is observing at ${input.scenario.setting} ${input.sessionContext}. ${problem}. ${input.backgroundDetail} ${input.peer} says they should consider ${input.peerPressure}.`;
+      return `${input.person} is observing at ${input.scenario.setting} ${input.sessionContext}. ${problem}. ${input.sceneDetail} ${input.caseDetail} ${input.peer} says they should consider ${input.peerPressure}. ${input.backgroundDetail}`;
     case 7:
-      return `During placement, ${input.person} is at ${input.scenario.setting} when ${input.scenario.problem}. ${input.backgroundDetail} The timing is awkward because it is ${input.sessionContext}. ${input.peer} suggests ${input.peerPressure}.`;
+      return `During placement, ${input.person} is at ${input.scenario.setting} when ${input.problemClause}. ${input.backgroundDetail} The timing is awkward because it is ${input.sessionContext}. ${input.caseDetail} ${input.peer} suggests ${input.peerPressure}. ${input.roleDetail}`;
     case 8:
-      return `${input.person}, a medical student at ${input.scenario.setting}, becomes aware that ${input.scenario.problem}. ${input.backgroundDetail} It is ${input.sessionContext}, and ${input.peer} suggests ${input.peerPressure}.`;
+      return `${input.person}, a medical student at ${input.scenario.setting}, becomes aware that ${input.problemClause}. ${input.backgroundDetail} It is ${input.sessionContext}, and ${input.peer} suggests ${input.peerPressure}. ${input.sceneDetail} ${input.caseDetail}`;
+    case 9:
+      return `${input.person} is helping at ${input.scenario.setting}. ${problem}. ${input.backgroundDetail} The issue comes up ${input.sessionContext}. ${input.caseDetail} ${input.peer}, another student nearby, suggests ${input.peerPressure}. ${input.roleDetail}`;
+    case 10:
+      return `At ${input.scenario.setting}, ${input.person} hears that ${input.problemClause}. ${input.sceneDetail} The situation occurs ${input.sessionContext}. ${input.caseDetail} ${input.peer} suggests ${input.peerPressure}. ${input.backgroundDetail}`;
+    case 11:
+      return `${input.person} is at ${input.scenario.setting} ${input.sessionContext} when the following concern arises: ${input.problemClause}. ${input.roleDetail} ${input.backgroundDetail} ${input.caseDetail} ${input.peer} suggests ${input.peerPressure}.`;
+    case 12:
+      return `${problem} at ${input.scenario.setting}, where ${input.person} is attending placement ${input.sessionContext}. ${input.sceneDetail} ${input.caseDetail} ${input.peer} suggests ${input.peerPressure}. ${input.roleDetail}`;
     default:
-      return `${input.person} is helping at ${input.scenario.setting}. ${problem}. ${input.backgroundDetail} The issue comes up ${input.sessionContext}. ${input.peer}, another student nearby, suggests ${input.peerPressure}.`;
+      return `${input.person} notices a professional concern at ${input.scenario.setting}: ${input.problemClause}. It happens ${input.sessionContext}. ${input.backgroundDetail} ${input.sceneDetail} ${input.caseDetail} ${input.peer}, another student, suggests ${input.peerPressure}.`;
   }
 }
 
+function makeSjtProblemClause(
+  scenario: (typeof SJT_SCENARIOS)[number],
+  person: string
+) {
+  if (scenario.issue === "integrity") {
+    return `an attendance entry has been recorded incorrectly in ${person}'s favour`;
+  }
+
+  if (scenario.issue === "candour") {
+    return `a visitor has been given an incorrect visiting time by ${person}`;
+  }
+
+  return scenario.problem;
+}
+
 function makeSjtSet(setIndex: number): UCATQuestion[] {
-  const person = pick(SJT_PEOPLE, setIndex);
-  const peer = pick(SJT_PEOPLE, setIndex + 5);
-  const scenario = pick(SJT_SCENARIOS, setIndex * 5);
+  const person = pickVariant(SJT_PEOPLE, setIndex, 5);
+  const firstPeer = pickVariant(SJT_PEOPLE, setIndex + 5, 7);
+  const peer = firstPeer === person ? pickVariant(SJT_PEOPLE, setIndex + 11, 13) : firstPeer;
+  const scenario = pickVariant(SJT_SCENARIOS, setIndex, 11);
   const setId = `hq-sjt-${pad(setIndex)}`;
-  const sessionContext = pick(SJT_SESSION_CONTEXTS, setIndex * 7);
-  const peerPressure = pick(SJT_PEER_PRESSURES, setIndex * 11);
-  const backgroundDetail = pick(SJT_BACKGROUND_DETAILS, setIndex * 13);
+  const sessionContext = pickVariant(SJT_SESSION_CONTEXTS, setIndex, 17);
+  const peerPressure = pickVariant(SJT_PEER_PRESSURES, setIndex, 19);
+  const backgroundDetail = pickVariant(SJT_BACKGROUND_DETAILS, setIndex, 23);
+  const sceneDetail = pickVariant(SJT_SCENE_DETAILS, setIndex, 29);
+  const roleDetail = pickVariant(SJT_ROLE_DETAILS, setIndex, 31);
+  const caseDetail = pickVariant(SJT_CASE_DETAILS, setIndex, 37);
+  const problemClause = makeSjtProblemClause(scenario, person);
   const stem = makeSjtStem({
     setIndex,
     person,
     peer,
     scenario,
+    problemClause,
     sessionContext,
     peerPressure,
     backgroundDetail,
+    sceneDetail,
+    roleDetail,
+    caseDetail,
   });
   const issueTags = [scenario.issue];
   const appropriatenessQuestion = pick(SJT_APPROPRIATENESS_QUESTIONS, setIndex);
@@ -6269,7 +6454,7 @@ export const HIGH_QUALITY_9000_SJT_QUESTIONS: UCATQuestion[] =
       questions: HIGH_QUALITY_9000_RAW_SJT_QUESTIONS,
       targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.sjt,
       expectedGroupSize: 5,
-      stimulusCap: 20,
+      stimulusCap: 5,
     })
   );
 

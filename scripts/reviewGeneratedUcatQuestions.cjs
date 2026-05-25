@@ -81,6 +81,109 @@ function topTemplates(counts, limit = 5) {
     .slice(0, limit);
 }
 
+function collectSetStimuli(questions) {
+  const setStimuli = new Map();
+
+  for (const question of questions) {
+    const setId = question.setId || question.id;
+    if (!setStimuli.has(setId)) {
+      setStimuli.set(setId, (question.stimulus || []).join(" "));
+    }
+  }
+
+  return [...setStimuli.entries()].map(([setId, stimulus]) => ({
+    setId,
+    stimulus,
+    normalised: normaliseTemplate(stimulus).toLowerCase(),
+  }));
+}
+
+function wordShingles(value, size = 5) {
+  const words = normaliseTemplate(value)
+    .toLowerCase()
+    .replace(/[^\w\s<>-]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+  const shingles = new Set();
+
+  for (let index = 0; index <= words.length - size; index += 1) {
+    shingles.add(words.slice(index, index + size).join(" "));
+  }
+
+  return shingles;
+}
+
+function jaccard(first, second) {
+  let overlap = 0;
+
+  for (const item of first) {
+    if (second.has(item)) overlap += 1;
+  }
+
+  return overlap / Math.max(1, first.size + second.size - overlap);
+}
+
+function findSetStimulusIssues(section, questions) {
+  if (section !== "vr" && section !== "sjt") return [];
+
+  const entries = collectSetStimuli(questions);
+  const byNormalisedStimulus = new Map();
+  const issues = [];
+
+  for (const entry of entries) {
+    const matches = byNormalisedStimulus.get(entry.normalised) || [];
+    matches.push(entry.setId);
+    byNormalisedStimulus.set(entry.normalised, matches);
+  }
+
+  for (const [template, setIds] of byNormalisedStimulus.entries()) {
+    if (setIds.length > 1) {
+      issues.push(
+        `set-level stimulus repeated in ${setIds.length} sets (${setIds
+          .slice(0, 4)
+          .join(", ")}): ${template.slice(0, 120)}`
+      );
+    }
+  }
+
+  const shingleEntries = entries.map((entry) => ({
+    ...entry,
+    shingles: wordShingles(entry.stimulus),
+  }));
+  const nearTemplateThreshold = section === "vr" ? 0.72 : 0.66;
+  let closestPair = null;
+
+  for (let firstIndex = 0; firstIndex < shingleEntries.length; firstIndex += 1) {
+    for (
+      let secondIndex = firstIndex + 1;
+      secondIndex < shingleEntries.length;
+      secondIndex += 1
+    ) {
+      const score = jaccard(
+        shingleEntries[firstIndex].shingles,
+        shingleEntries[secondIndex].shingles
+      );
+      if (!closestPair || score > closestPair.score) {
+        closestPair = {
+          score,
+          first: shingleEntries[firstIndex],
+          second: shingleEntries[secondIndex],
+        };
+      }
+    }
+  }
+
+  if (closestPair && closestPair.score >= nearTemplateThreshold) {
+    issues.push(
+      `near-template stimuli ${closestPair.first.setId}/${closestPair.second.setId} share ${(
+        closestPair.score * 100
+      ).toFixed(1)}% five-word shingles`
+    );
+  }
+
+  return issues;
+}
+
 function findBannedWording(questions) {
   const bannedPatterns = [
     [/not to (replacing|making|closing|charging|moving)\b/i, "gerund after 'not to'"],
@@ -192,7 +295,9 @@ for (const section of sections) {
   const stimulusTemplates = countTemplates(questions, (question) =>
     (question.stimulus || []).join(" ")
   );
+  const setStimuli = collectSetStimuli(questions);
   const bannedWording = findBannedWording(questions);
+  const setStimulusIssues = findSetStimulusIssues(section, questions);
   const qrNumericIssues = section === "qr" ? findQrNumericIssues(questions) : [];
   const sjtMarkSchemeIssues = section === "sjt" ? findSjtMarkSchemeIssues(questions) : [];
 
@@ -200,6 +305,11 @@ for (const section of sections) {
   console.log(`  questions: ${questions.length}`);
   console.log(`  normalised question templates: ${questionTemplates.size}`);
   console.log(`  normalised stimulus templates: ${stimulusTemplates.size}`);
+  if (section === "vr" || section === "sjt") {
+    console.log(
+      `  set-level stimuli: ${new Set(setStimuli.map((entry) => entry.normalised)).size}/${setStimuli.length} unique`
+    );
+  }
   console.log("  most repeated question templates:");
   topTemplates(questionTemplates).forEach(([template, count]) => {
     console.log(`    ${count}x ${template}`);
@@ -209,11 +319,23 @@ for (const section of sections) {
     console.log(`    ${count}x ${template}`);
   });
 
-  if (bannedWording.length > 0 || qrNumericIssues.length > 0 || sjtMarkSchemeIssues.length > 0) {
+  if (
+    bannedWording.length > 0 ||
+    setStimulusIssues.length > 0 ||
+    qrNumericIssues.length > 0 ||
+    sjtMarkSchemeIssues.length > 0
+  ) {
     console.log("  content warnings:");
-    [...bannedWording, ...qrNumericIssues, ...sjtMarkSchemeIssues].slice(0, 12).forEach((warning) => {
-      console.log(`    ${warning}`);
-    });
+    [
+      ...bannedWording,
+      ...setStimulusIssues,
+      ...qrNumericIssues,
+      ...sjtMarkSchemeIssues,
+    ]
+      .slice(0, 12)
+      .forEach((warning) => {
+        console.log(`    ${warning}`);
+      });
   } else {
     console.log("  content warnings: none");
   }
