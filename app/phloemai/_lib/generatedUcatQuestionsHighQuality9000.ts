@@ -9,6 +9,7 @@ import type {
 } from "./ucatQuestionBank";
 
 const OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D"];
+const QR_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D", "E"];
 
 const TFC_OPTIONS = [
   { key: "A" as const, text: "True" },
@@ -142,6 +143,26 @@ function numericDistractors(correct: number, seed: number, decimals = 0) {
 }
 
 function fallbackDistractor(correctText: string, attempt: number) {
+  const clockMatch = correctText.match(/^(\d{1,2}):([0-5]\d)$/);
+  if (clockMatch && Number(clockMatch[1]) <= 23) {
+    const minutes =
+      (Number(clockMatch[1]) * 60 + Number(clockMatch[2]) + attempt * 5) %
+      (24 * 60);
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+  }
+
+  const ratioMatch = correctText.match(/^(\d+):(\d+)$/);
+  if (ratioMatch) {
+    return `${Number(ratioMatch[1]) + attempt}:${ratioMatch[2]}`;
+  }
+
+  const fractionMatch = correctText.match(/^(\d+)\/(\d+)$/);
+  if (fractionMatch) {
+    return `${Number(fractionMatch[1]) + attempt}/${fractionMatch[2]}`;
+  }
+
   const moneyMatch = correctText.match(/^GBP ([\d,]+(?:\.\d+)?)$/);
   if (moneyMatch) {
     const value = Number(moneyMatch[1].replace(/,/g, ""));
@@ -166,29 +187,52 @@ function fallbackDistractor(correctText: string, attempt: number) {
     return formatNumber(numericValue + attempt);
   }
 
-  return `Unsupported alternative ${attempt}`;
+  const letteredLabelMatch = correctText.match(/^(.+\s)([A-E])$/);
+  if (letteredLabelMatch) {
+    const nextLetter = String.fromCharCode(
+      "A".charCodeAt(0) + ((letteredLabelMatch[2].charCodeAt(0) - "A".charCodeAt(0) + attempt) % 5)
+    );
+    return `${letteredLabelMatch[1]}${nextLetter}`;
+  }
+
+  return pick(
+    [
+      "More information required",
+      "Pay-as-you-go option",
+      "Standard option",
+      "Flexible option",
+      "No suitable option",
+    ],
+    attempt - 1
+  );
 }
 
-function buildOptions(correctText: string, distractors: string[], seed: number) {
+function buildOptions(
+  correctText: string,
+  distractors: string[],
+  seed: number,
+  optionKeys = OPTION_KEYS
+) {
+  const wrongTarget = optionKeys.length - 1;
   const wrongs = distractors
     .map((text) => text.trim())
     .filter((text, index, array) => text && text !== correctText && array.indexOf(text) === index)
-    .slice(0, 3);
+    .slice(0, wrongTarget);
 
   let filler = 1;
-  while (wrongs.length < 3) {
+  while (wrongs.length < wrongTarget) {
     const next = fallbackDistractor(correctText, filler);
-    if (!wrongs.includes(next)) wrongs.push(next);
+    if (next !== correctText && !wrongs.includes(next)) wrongs.push(next);
     filler += 1;
   }
 
-  const answerIndex = seed % OPTION_KEYS.length;
+  const answerIndex = seed % optionKeys.length;
   const texts = [...wrongs];
   texts.splice(answerIndex, 0, correctText);
 
   return {
-    options: texts.map((text, index) => ({ key: OPTION_KEYS[index], text })),
-    answer: OPTION_KEYS[answerIndex],
+    options: texts.map((text, index) => ({ key: optionKeys[index], text })),
+    answer: optionKeys[answerIndex],
   };
 }
 
@@ -209,7 +253,12 @@ function singleQuestion(input: {
   explanation: string;
   seed: number;
 }): UCATQuestion {
-  const built = buildOptions(input.correctText, input.distractors, input.seed);
+  const built = buildOptions(
+    input.correctText,
+    input.distractors,
+    input.seed,
+    input.section === "qr" ? QR_OPTION_KEYS : OPTION_KEYS
+  );
   return { ...input, ...built };
 }
 
@@ -771,14 +820,14 @@ const VR_AUTHOR_QUESTIONS = [
 ] as const;
 
 const VR_NEGATIVE_QUESTIONS = [
-  "All of the following are stated in the passage EXCEPT that",
-  "Which of the following is NOT stated in the passage?",
-  "Which statement goes beyond what the passage says?",
-  "Which option is not supported by the passage?",
-  "The passage states all of the following EXCEPT that",
-  "Which claim cannot be verified from the passage?",
-  "Which option would be an overstatement of the passage?",
-  "Which of the following does the passage not establish?",
+  "All of the following are true of the trial except:",
+  "All of the following are named as reasons for caution except:",
+  "All of the following are parts of the recommendation except:",
+  "All of the following are stated facts about the project except:",
+  "All of the following are true according to the passage except:",
+  "All of the following are supported by the review except:",
+  "All of the following are described in the passage except:",
+  "All of the following are accurate statements about the trial except:",
 ] as const;
 
 function makeVrSet(setIndex: number): UCATQuestion[] {
@@ -935,6 +984,56 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
       })
     );
   } else {
+    const negativeKind = setIndex % 4;
+    const negativeQuestion = pick(VR_NEGATIVE_QUESTIONS, setIndex);
+    const negativeInput =
+      negativeKind === 0
+        ? {
+            question: negativeQuestion,
+            correctText: "The project was guaranteed to be used at every similar site.",
+            distractors: [
+              `The project was funded by ${funder}.`,
+              "The trial lasted six weeks.",
+              `${sentenceCase(metric)} ${metricVerb} during the trial.`,
+            ],
+            explanation:
+              "The passage recommends another term and comparison; it does not guarantee full rollout.",
+          }
+        : negativeKind === 1
+          ? {
+              question: negativeQuestion,
+              correctText: `The project was funded by ${funder}.`,
+              distractors: [
+                `The figures should be treated carefully because ${caveat}.`,
+                `The review noted that ${limitation}.`,
+                "Demand still needed comparison with a similar site before wider rollout.",
+              ],
+              explanation:
+                "The funding source is stated, but it is not given as a reason for caution. The caveat, limitation and comparison point are all cautionary.",
+            }
+          : negativeKind === 2
+            ? {
+                question: negativeQuestion,
+                correctText: "Roll the project out immediately to every similar site.",
+                distractors: [
+                  "Keep the project for one more term.",
+                  "Compare demand with a similar site.",
+                  "Wait for further comparison before wider rollout.",
+                ],
+                explanation:
+                  "The recommendation was limited: keep the project for one more term and compare demand before wider rollout.",
+              }
+            : {
+                question: negativeQuestion,
+                correctText: `The project was funded by ${wrongFunder}.`,
+                distractors: [
+                  `The aim was to ${aim}.`,
+                  `The project was funded by ${funder}.`,
+                  `${sentenceCase(metric)} ${metricVerb} during the trial.`,
+                ],
+                explanation: `The passage says the project was funded by ${funder}, not by ${wrongFunder}.`,
+              };
+
     questions.push(
       singleQuestion({
         id: `${setId}-4`,
@@ -945,15 +1044,10 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
         title: "Verbal Reasoning Practice",
         leftTitle: "Passage",
         stimulus: passage,
-        question: pick(VR_NEGATIVE_QUESTIONS, setIndex),
-        correctText: "the project was guaranteed to be used at every similar site.",
-        distractors: [
-          `the project was funded by ${funder}.`,
-          `the trial lasted six weeks.`,
-          `the review noted that ${limitation}.`,
-        ],
-        explanation:
-          "The passage recommends another term and comparison; it does not guarantee full rollout.",
+        question: negativeInput.question,
+        correctText: negativeInput.correctText,
+        distractors: negativeInput.distractors,
+        explanation: negativeInput.explanation,
         seed: setIndex + 3,
       })
     );
@@ -1418,78 +1512,248 @@ function makeDmYesNo(index: number): UCATQuestion {
 }
 
 function makeDmVenn(index: number): UCATQuestion {
-  const leftOnly = 12 + (index % 15);
-  const rightOnly = 10 + ((index * 2) % 14);
-  const both = 8 + ((index * 3) % 11);
-  const neither = 6 + ((index * 5) % 9);
-  const total = leftOnly + rightOnly + both + neither;
-  const left = leftOnly + both;
-  const right = rightOnly + both;
-  const groups = pick(
-    [
-      ["attended a workshop", "submitted a reflection"],
-      ["used the app", "booked a tutor slot"],
-      ["read the guide", "completed a quiz"],
-      ["joined a webinar", "downloaded notes"],
-      ["attended mentoring", "submitted practice answers"],
-      ["used a calculator trainer", "kept an error log"],
-      ["watched a worked solution", "rewrote their explanation"],
-      ["booked a library desk", "joined a study group"],
-      ["joined a clinic tour", "completed a safety checklist"],
-      ["used spaced repetition", "reviewed flagged questions"],
-      ["submitted a mock reflection", "attended a feedback meeting"],
-      ["used a timing tracker", "changed their revision plan"],
-      ["read an ethics case", "answered follow-up questions"],
-      ["joined a peer tutorial", "marked another student's answer"],
-      ["watched an interview demo", "wrote improvement notes"],
-      ["completed a data drill", "checked the worked solution"],
-      ["used a study planner", "logged missed questions"],
-      ["attended a drop-in session", "booked independent practice"],
-      ["read a statistics guide", "completed a probability quiz"],
-      ["joined a mentoring call", "submitted weekly targets"],
-      ["used a whiteboard method", "reviewed calculation errors"],
-      ["completed a mini mock", "analysed timing data"],
-      ["read a passage twice", "highlighted key claims"],
-      ["completed a logic puzzle", "explained the rule set"],
-    ] as const,
-    index
-  );
-  const question = pick(
-    [
-      `How many students ${groups[0]} or ${groups[1]}?`,
-      `How many students did at least one of the two activities?`,
-      `What is the total number who completed one or both activities?`,
-      `How many students are represented outside the Neither row?`,
-      `How many students should be counted in the union of the two activities?`,
-    ] as const,
-    index
-  );
+  const contexts = [
+    {
+      title: "Revision habits",
+      noun: "students",
+      setting: "revision hub",
+      labels: ["Flashcards", "Timed drills", "Error log"],
+    },
+    {
+      title: "Clinic contact routes",
+      noun: "patients",
+      setting: "clinic reception team",
+      labels: ["App", "Phone line", "Email"],
+    },
+    {
+      title: "Library use",
+      noun: "members",
+      setting: "community library",
+      labels: ["Study desk", "Book loan", "Printing"],
+    },
+    {
+      title: "Training formats",
+      noun: "staff",
+      setting: "hospital education team",
+      labels: ["Briefing", "E-learning", "Simulation"],
+    },
+    {
+      title: "Event roles",
+      noun: "volunteers",
+      setting: "fundraising event",
+      labels: ["Welcome desk", "Refreshments", "First aid"],
+    },
+    {
+      title: "Course support",
+      noun: "applicants",
+      setting: "sixth-form advice centre",
+      labels: ["Mentoring", "Mock test", "Feedback session"],
+    },
+    {
+      title: "Sports sessions",
+      noun: "club members",
+      setting: "leisure centre",
+      labels: ["Swimming", "Cycling", "Strength class"],
+    },
+    {
+      title: "Museum activities",
+      noun: "visitors",
+      setting: "city museum",
+      labels: ["Audio guide", "Workshop", "Archive room"],
+    },
+    {
+      title: "Transport passes",
+      noun: "commuters",
+      setting: "travel office",
+      labels: ["Railcard", "Bus pass", "Bike locker"],
+    },
+    {
+      title: "Practice resources",
+      noun: "learners",
+      setting: "online course",
+      labels: ["Video lesson", "Question bank", "Notes pack"],
+    },
+    {
+      title: "Market services",
+      noun: "stallholders",
+      setting: "market office",
+      labels: ["Card reader", "Storage unit", "Delivery bay"],
+    },
+    {
+      title: "Arts centre bookings",
+      noun: "participants",
+      setting: "arts centre",
+      labels: ["Choir", "Drawing", "Drama"],
+    },
+  ] as const;
+  const shapeSets = [
+    ["circle", "rectangle", "triangle"],
+    ["pentagon", "circle", "triangle"],
+    ["circle", "diamond", "triangle"],
+    ["hexagon", "circle", "rectangle"],
+  ] as const;
+  const context = pick(contexts, index + Math.floor(index / contexts.length));
+  const [firstLabel, secondLabel, thirdLabel] = context.labels;
+  const [firstShape, secondShape, thirdShape] = pick(shapeSets, index);
+  const firstOnly = 8 + (index % 13);
+  const secondOnly = 7 + ((index * 2) % 12);
+  const thirdOnly = 6 + ((index * 3) % 11);
+  const firstSecond = 4 + ((index * 5) % 9);
+  const firstThird = 3 + ((index * 7) % 8);
+  const secondThird = 5 + ((index * 4) % 10);
+  const allThree = 2 + ((index * 3) % 7);
+  const neither = 5 + ((index * 5) % 14);
+  const exactlyOne = firstOnly + secondOnly + thirdOnly;
+  const exactlyTwo = firstSecond + firstThird + secondThird;
+  const atLeastTwo = exactlyTwo + allThree;
+  const firstTotal = firstOnly + firstSecond + firstThird + allThree;
+  const secondTotal = secondOnly + firstSecond + secondThird + allThree;
+  const thirdTotal = thirdOnly + firstThird + secondThird + allThree;
+  const union = exactlyOne + exactlyTwo + allThree;
+  const total = union + neither;
+  const questionKind = index % 12;
+  const questionChoices: Array<{
+    question: string;
+    correct: number;
+    explanation: string;
+    difficulty: UCATQuestionTag;
+  }> = [
+      {
+        question: `How many ${context.noun} are in exactly one of the three categories?`,
+        correct: exactlyOne,
+        explanation: `Exactly one category = ${firstOnly} + ${secondOnly} + ${thirdOnly} = ${exactlyOne}.`,
+        difficulty: "easy",
+      },
+      {
+        question: `How many ${context.noun} are in exactly two of the three categories?`,
+        correct: exactlyTwo,
+        explanation: `Exactly two categories = ${firstSecond} + ${firstThird} + ${secondThird} = ${exactlyTwo}.`,
+        difficulty: "medium",
+      },
+      {
+        question: `How many ${context.noun} are in at least two categories?`,
+        correct: atLeastTwo,
+        explanation: `At least two categories includes the three two-way-only regions and the all-three region: ${exactlyTwo} + ${allThree} = ${atLeastTwo}.`,
+        difficulty: "medium",
+      },
+      {
+        question: `How many ${context.noun} are in the ${firstLabel} category?`,
+        correct: firstTotal,
+        explanation: `${firstLabel} includes ${firstOnly}, ${firstSecond}, ${firstThird} and ${allThree}, giving ${firstTotal}.`,
+        difficulty: "medium",
+      },
+      {
+        question: `How many ${context.noun} are in both ${firstLabel} and ${secondLabel}, but not ${thirdLabel}?`,
+        correct: firstSecond,
+        explanation: `The exact overlap of ${firstLabel} and ${secondLabel}, outside ${thirdLabel}, is ${firstSecond}.`,
+        difficulty: "easy",
+      },
+      {
+        question: `How many ${context.noun} are in ${firstLabel} or ${thirdLabel}, but not ${secondLabel}?`,
+        correct: firstOnly + thirdOnly + firstThird,
+        explanation: `Exclude every ${secondLabel} region. The remaining ${firstLabel} or ${thirdLabel} regions are ${firstOnly}, ${thirdOnly} and ${firstThird}, giving ${firstOnly + thirdOnly + firstThird}.`,
+        difficulty: "hard",
+      },
+      {
+        question: `How many ${context.noun} are in ${firstLabel} and exactly one other category?`,
+        correct: firstSecond + firstThird,
+        explanation: `${firstLabel} with exactly one other category means ${firstLabel}+${secondLabel} only and ${firstLabel}+${thirdLabel} only: ${firstSecond} + ${firstThird} = ${firstSecond + firstThird}.`,
+        difficulty: "medium",
+      },
+      {
+        question: `How many ${context.noun} are not in the ${thirdLabel} category?`,
+        correct: firstOnly + secondOnly + firstSecond + neither,
+        explanation: `Not in ${thirdLabel} includes ${firstOnly}, ${secondOnly}, ${firstSecond} and neither: ${firstOnly} + ${secondOnly} + ${firstSecond} + ${neither} = ${firstOnly + secondOnly + firstSecond + neither}.`,
+        difficulty: "hard",
+      },
+      {
+        question: `How many ${context.noun} are in all three categories?`,
+        correct: allThree,
+        explanation: `The centre region shared by all three categories is ${allThree}.`,
+        difficulty: "easy",
+      },
+      {
+        question: `How many ${context.noun} are in none of the three categories?`,
+        correct: neither,
+        explanation: `The number outside all three categories is ${neither}.`,
+        difficulty: "easy",
+      },
+      {
+        question: `How many ${context.noun} are in ${firstLabel} or ${secondLabel}?`,
+        correct: firstOnly + secondOnly + firstSecond + firstThird + secondThird + allThree,
+        explanation: `${firstLabel} or ${secondLabel} includes every region touching either category: ${firstOnly} + ${secondOnly} + ${firstSecond} + ${firstThird} + ${secondThird} + ${allThree} = ${firstOnly + secondOnly + firstSecond + firstThird + secondThird + allThree}.`,
+        difficulty: "hard",
+      },
+      {
+        question: `How many ${context.noun} are only in the ${thirdLabel} category?`,
+        correct: thirdOnly,
+        explanation: `The ${thirdLabel}-only region is ${thirdOnly}.`,
+        difficulty: "easy",
+      },
+  ];
+  const questionData = pick(questionChoices, questionKind);
   const visual: UCATChartVisual = {
-    type: "table",
-    title: `Activity survey ${index + 1}`,
-    headers: ["Region", "Members"],
-    rows: [
-      [`Only ${groups[0]}`, String(leftOnly)],
-      [`Only ${groups[1]}`, String(rightOnly)],
-      ["Both", String(both)],
-      ["Neither", String(neither)],
+    type: "set-diagram",
+    title: context.title,
+    shapes: [
+      { id: "first", label: firstLabel, shape: firstShape, x: 70, y: 95, width: 235, height: 210 },
+      { id: "second", label: secondLabel, shape: secondShape, x: 240, y: 105, width: 250, height: 190 },
+      { id: "third", label: thirdLabel, shape: thirdShape, x: 175, y: 45, width: 285, height: 285 },
+    ],
+    regionLabels: [
+      { id: "first-only", text: String(firstOnly), x: 135, y: 215 },
+      { id: "second-only", text: String(secondOnly), x: 435, y: 215 },
+      { id: "third-only", text: String(thirdOnly), x: 320, y: 95 },
+      { id: "first-second", text: String(firstSecond), x: 270, y: 225 },
+      { id: "first-third", text: String(firstThird), x: 235, y: 160 },
+      { id: "second-third", text: String(secondThird), x: 385, y: 165 },
+      { id: "all-three", text: String(allThree), x: 315, y: 195 },
+      { id: "neither", text: String(neither), x: 535, y: 315 },
+    ],
+    legend: [
+      { label: firstLabel, shape: firstShape },
+      { label: secondLabel, shape: secondShape },
+      { label: thirdLabel, shape: thirdShape },
     ],
   };
+  const distractorNumbers = [
+    union,
+    total,
+    exactlyOne,
+    exactlyTwo,
+    atLeastTwo,
+    firstTotal,
+    secondTotal,
+    thirdTotal,
+    questionData.correct + allThree,
+    Math.max(0, questionData.correct - allThree),
+  ];
+  const distractors: string[] = [];
+
+  for (const candidate of distractorNumbers) {
+    const text = formatNumber(candidate);
+    if (candidate !== questionData.correct && !distractors.includes(text)) {
+      distractors.push(text);
+    }
+    if (distractors.length >= 3) break;
+  }
+
   return singleQuestion({
     id: `hq-dm-venn-${pad(index)}`,
     section: "dm",
     subtype: "dm-venn-sets",
     setId: `hq-dm-venn-${pad(index)}`,
-    tags: ["data-display", "set-based", index % 3 === 0 ? "hard" : "medium"],
+    tags: ["data-display", "set-based", questionData.difficulty],
     title: "Decision Making Practice",
-    leftTitle: "Data",
-    stimulus: [`A group of ${total} students in survey ${index + 1} was surveyed about whether they ${groups[0]} and whether they ${groups[1]}.`],
+    leftTitle: "Diagram",
+    stimulus: [
+      `A ${context.setting} recorded ${total} ${context.noun} across three categories: ${firstLabel}, ${secondLabel} and ${thirdLabel}. Each number in the diagram shows ${context.noun} in that exact region.`,
+    ],
     visual,
-    question,
-    correctText: formatNumber(left + rightOnly),
-    distractors: [formatNumber(left), formatNumber(right), formatNumber(total)],
-    explanation:
-      `Students in at least one activity = only first + only second + both = ${leftOnly} + ${rightOnly} + ${both} = ${left + rightOnly}.`,
+    question: questionData.question,
+    correctText: formatNumber(questionData.correct),
+    distractors,
+    explanation: questionData.explanation,
     seed: index,
   });
 }

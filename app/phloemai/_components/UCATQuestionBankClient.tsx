@@ -72,6 +72,7 @@ type PracticePhase =
   | "diagnostic-complete"
   | "marked"
   | "marked-review";
+type QuestionTargetMode = number | "custom";
 type PracticeAnswerStatus = "correct" | "partial" | "incorrect" | "unanswered";
 type DiagnosticMode =
   | "free-qr"
@@ -2005,6 +2006,138 @@ function buildPracticeSessionSummary({
   };
 }
 
+type SetDiagramVisual = Extract<UCATChartVisual, { type: "set-diagram" }>;
+type SetDiagramShape = SetDiagramVisual["shapes"][number];
+
+function getSetShapePoints(shape: SetDiagramShape) {
+  const { x, y, width: shapeWidth, height: shapeHeight } = shape;
+
+  if (shape.shape === "triangle") {
+    return `${x + shapeWidth / 2},${y} ${x + shapeWidth},${y + shapeHeight} ${x},${y + shapeHeight}`;
+  }
+
+  if (shape.shape === "diamond") {
+    return `${x + shapeWidth / 2},${y} ${x + shapeWidth},${y + shapeHeight / 2} ${x + shapeWidth / 2},${y + shapeHeight} ${x},${y + shapeHeight / 2}`;
+  }
+
+  if (shape.shape === "hexagon") {
+    return `${x + shapeWidth * 0.25},${y} ${x + shapeWidth * 0.75},${y} ${x + shapeWidth},${y + shapeHeight / 2} ${x + shapeWidth * 0.75},${y + shapeHeight} ${x + shapeWidth * 0.25},${y + shapeHeight} ${x},${y + shapeHeight / 2}`;
+  }
+
+  return `${x + shapeWidth / 2},${y} ${x + shapeWidth},${y + shapeHeight * 0.38} ${x + shapeWidth * 0.82},${y + shapeHeight} ${x + shapeWidth * 0.18},${y + shapeHeight} ${x},${y + shapeHeight * 0.38}`;
+}
+
+function SetDiagramShapeElement({
+  shape,
+  strokeWidth,
+}: {
+  shape: SetDiagramShape;
+  strokeWidth: number;
+}) {
+  const centerX = shape.x + shape.width / 2;
+  const centerY = shape.y + shape.height / 2;
+  const transform = shape.rotation
+    ? `rotate(${shape.rotation} ${centerX} ${centerY})`
+    : undefined;
+
+  if (shape.shape === "circle") {
+    return (
+      <ellipse
+        cx={centerX}
+        cy={centerY}
+        rx={shape.width / 2}
+        ry={shape.height / 2}
+        transform={transform}
+        fill="rgba(255,255,255,0.45)"
+        stroke="#111827"
+        strokeWidth={strokeWidth}
+      />
+    );
+  }
+
+  if (shape.shape === "rectangle") {
+    return (
+      <rect
+        x={shape.x}
+        y={shape.y}
+        width={shape.width}
+        height={shape.height}
+        transform={transform}
+        fill="rgba(255,255,255,0.45)"
+        stroke="#111827"
+        strokeWidth={strokeWidth}
+      />
+    );
+  }
+
+  return (
+    <polygon
+      points={getSetShapePoints(shape)}
+      transform={transform}
+      fill="rgba(255,255,255,0.45)"
+      stroke="#111827"
+      strokeWidth={strokeWidth}
+    />
+  );
+}
+
+function OptionVisual({ visual }: { visual: UCATChartVisual }) {
+  if (visual.type !== "set-diagram") return null;
+
+  const padding = 16;
+  const rightEdge = Math.max(
+    320,
+    ...visual.shapes.map((shape) => shape.x + shape.width),
+    ...visual.regionLabels.map((label) => label.x)
+  );
+  const bottomEdge = Math.max(
+    240,
+    ...visual.shapes.map((shape) => shape.y + shape.height),
+    ...visual.regionLabels.map((label) => label.y)
+  );
+  const width = Math.ceil(rightEdge + padding);
+  const height = Math.ceil(bottomEdge + padding);
+
+  return (
+    <div className="mt-2 w-full max-w-[380px] rounded-sm border border-slate-300 bg-white p-2">
+      <p className="text-center text-[12px] font-bold leading-4 text-slate-900">
+        {visual.title}
+      </p>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="mt-1 h-auto w-full text-slate-800"
+        role="img"
+        aria-label={visual.title}
+      >
+        {visual.shapes.map((shape) => (
+          <SetDiagramShapeElement key={shape.id} shape={shape} strokeWidth={2} />
+        ))}
+        {visual.regionLabels.map((label) => (
+          <text
+            key={label.id}
+            x={label.x}
+            y={label.y}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="15"
+            fontWeight="700"
+            fill="#111827"
+          >
+            {label.text}
+          </text>
+        ))}
+      </svg>
+      {visual.legend && (
+        <div className="mt-1 grid grid-cols-1 gap-0.5 text-[10px] font-semibold leading-3 text-slate-600 sm:grid-cols-3">
+          {visual.legend.map((item) => (
+            <span key={`${item.shape}-${item.label}`}>{item.label}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
   if (visual.type === "table") {
     return (
@@ -2044,8 +2177,57 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
   }
 
   if (visual.type === "set-diagram") {
-    const width = 496;
-    const height = 336;
+    const diagramPadding = 24;
+    const rightEdge = Math.max(
+      496,
+      ...visual.shapes.map((shape) => shape.x + shape.width),
+      ...visual.regionLabels.map((label) => label.x)
+    );
+    const bottomEdge = Math.max(
+      336,
+      ...visual.shapes.map((shape) => shape.y + shape.height),
+      ...visual.regionLabels.map((label) => label.y)
+    );
+    const width = Math.ceil(rightEdge + diagramPadding);
+    const height = Math.ceil(bottomEdge + diagramPadding);
+    const shapeLabelById = new Map(
+      visual.shapes.map((shape) => [shape.id.toLowerCase(), shape.label])
+    );
+    const resolveRegionToken = (token: string) => {
+      const normalized = token.toLowerCase();
+      const direct = shapeLabelById.get(normalized);
+      if (direct) return direct;
+
+      const matchingShapes = visual.shapes.filter((shape) => {
+        const shapeId = shape.id.toLowerCase();
+        const shapeLabel = shape.label.toLowerCase();
+        return (
+          shapeId.startsWith(normalized) ||
+          shapeId.endsWith(normalized) ||
+          shapeId.includes(normalized) ||
+          shapeLabel.startsWith(normalized)
+        );
+      });
+
+      if (matchingShapes.length === 1) return matchingShapes[0].label;
+
+      return token
+        .split("-")
+        .filter(Boolean)
+        .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+        .join(" ");
+    };
+    const formatRegionName = (id: string) => {
+      if (id === "all" || id.startsWith("all-")) return "All groups";
+
+      const withoutOnly = id.endsWith("-only")
+        ? id.slice(0, -"only".length - 1)
+        : id;
+      const tokens = withoutOnly.split("-").filter(Boolean);
+      const regionName = tokens.map(resolveRegionToken).join(" + ");
+
+      return id.endsWith("-only") ? `${regionName} only` : regionName;
+    };
     const shapePoints = (shape: (typeof visual.shapes)[number]) => {
       const { x, y, width: shapeWidth, height: shapeHeight } = shape;
 
@@ -2070,7 +2252,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
         <div className="mt-2 overflow-x-auto">
           <svg
             viewBox={`0 0 ${width} ${height}`}
-            className="min-w-[416px] text-slate-800"
+            className="h-auto w-full min-w-[416px] max-w-full text-slate-800"
             role="img"
             aria-label={visual.title}
           >
@@ -2140,6 +2322,34 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             ))}
           </svg>
         </div>
+        {visual.regionLabels.length > 0 && (
+          <div className="mt-3 overflow-hidden rounded-sm border border-slate-200 bg-slate-50">
+            <table className="w-full border-collapse text-left text-xs">
+              <thead className="bg-slate-100 text-slate-700">
+                <tr>
+                  <th className="border-b border-slate-200 px-3 py-2 font-bold">
+                    Exact region
+                  </th>
+                  <th className="w-20 border-b border-slate-200 px-3 py-2 text-right font-bold">
+                    Number
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white">
+                {visual.regionLabels.map((label) => (
+                  <tr key={`region-row-${label.id}`}>
+                    <td className="border-b border-slate-100 px-3 py-2 font-semibold text-slate-700">
+                      {formatRegionName(label.id)}
+                    </td>
+                    <td className="border-b border-slate-100 px-3 py-2 text-right font-bold text-slate-900">
+                      {label.text}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
         {visual.note && (
           <p className="mt-2 text-xs font-semibold text-slate-600">{visual.note}</p>
         )}
@@ -2626,7 +2836,7 @@ function SectionSetup({
   completedQuestionIds,
   progressLoading,
   lengthMode,
-  questionTarget,
+  questionTargetMode,
   customQuestionCount,
   minuteTarget,
   customMinutes,
@@ -2661,7 +2871,7 @@ function SectionSetup({
   completedQuestionIds: Set<string>;
   progressLoading: boolean;
   lengthMode: SessionLengthMode;
-  questionTarget: number;
+  questionTargetMode: QuestionTargetMode;
   customQuestionCount: string;
   minuteTarget: number | "custom";
   customMinutes: string;
@@ -2700,8 +2910,7 @@ function SectionSetup({
       ? minutesToSeconds(selectedMinutes)
       : questionCount * meta.secondsPerQuestion;
   const customQuestionSelected =
-    lengthMode === "questions" &&
-    !QUESTION_TARGETS.some((count) => count === questionTarget);
+    lengthMode === "questions" && questionTargetMode === "custom";
 
   return (
     <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
@@ -2840,7 +3049,7 @@ function SectionSetup({
                         onQuestionTargetChange(count);
                       }}
                       className={`h-10 rounded-lg border px-4 text-sm font-black ${
-                        lengthMode === "questions" && questionTarget === count
+                        lengthMode === "questions" && questionTargetMode === count
                           ? "border-blue-500 bg-blue-50 text-blue-700"
                           : "border-slate-200 text-slate-700 hover:border-blue-300"
                       }`}
@@ -6723,6 +6932,8 @@ function UCATQuestionBankSection({
   );
   const [lengthMode, setLengthMode] = useState<SessionLengthMode>("questions");
   const [questionTarget, setQuestionTarget] = useState<number>(5);
+  const [questionTargetMode, setQuestionTargetMode] =
+    useState<QuestionTargetMode>(5);
   const [customQuestionCount, setCustomQuestionCount] = useState("20");
   const [minuteTarget, setMinuteTarget] = useState<number | "custom">(5);
   const [customMinutes, setCustomMinutes] = useState("8");
@@ -8558,7 +8769,7 @@ function UCATQuestionBankSection({
         completedQuestionIds={completedQuestionIds}
         progressLoading={questionProgressLoading}
         lengthMode={lengthMode}
-        questionTarget={questionTarget}
+        questionTargetMode={questionTargetMode}
         customQuestionCount={customQuestionCount}
         minuteTarget={minuteTarget}
         customMinutes={customMinutes}
@@ -8575,6 +8786,7 @@ function UCATQuestionBankSection({
         }}
         onQuestionTargetChange={(count) => {
           setQuestionTarget(count);
+          setQuestionTargetMode(count);
           recordEvent("setup_question_target", { count });
         }}
         onCustomQuestionCountChange={(count) => {
@@ -8582,6 +8794,7 @@ function UCATQuestionBankSection({
           setCustomQuestionCount(count);
           setLengthMode("questions");
           setQuestionTarget(normalisedCount);
+          setQuestionTargetMode("custom");
           recordEvent("setup_custom_question_count", {
             count: normalisedCount,
           });
@@ -8639,7 +8852,11 @@ function UCATQuestionBankSection({
   const currentAnswerScore = getAnswerScore(question, currentAnswerForScore);
   const isCorrect = currentAnswerScore.status === "correct";
   const isPartial = currentAnswerScore.status === "partial";
-  const usesClassicDropLayout = isDragCategoryQuestion || isYesNoQuestion;
+  const usesClassicDropLayout =
+    isDragCategoryQuestion ||
+    isYesNoQuestion ||
+    question.section === "dm" ||
+    question.section === "qr";
   const isSjtDropLayout =
     isDragCategoryQuestion && question.section === "sjt";
 
@@ -10095,7 +10312,10 @@ function UCATQuestionBankSection({
                       className="mt-1 h-4 w-4 accent-[#0078a8]"
                     />
                     <span className="font-normal">{option.key}.</span>
-                    <span>{option.text}</span>
+                    <span className="min-w-0">
+                      <span className="block">{option.text}</span>
+                      {option.visual && <OptionVisual visual={option.visual} />}
+                    </span>
                   </label>
                 );
               })}

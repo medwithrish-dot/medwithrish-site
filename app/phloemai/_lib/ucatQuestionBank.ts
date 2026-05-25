@@ -185,7 +185,7 @@ type UCATQuestionBase = {
 
 export type UCATSingleQuestion = UCATQuestionBase & {
   questionType?: "single";
-  options: Array<{ key: UCATOptionKey; text: string }>;
+  options: Array<{ key: UCATOptionKey; text: string; visual?: UCATChartVisual }>;
   answer: UCATOptionKey;
 };
 
@@ -858,6 +858,95 @@ function isSupportedSjtQuestion(question: UCATQuestion) {
   );
 }
 
+const QR_SINGLE_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D", "E"];
+
+function isSingleSelectQuestion(question: UCATQuestion): question is UCATSingleQuestion {
+  return !question.questionType || question.questionType === "single";
+}
+
+function normaliseOptionText(value: string) {
+  return value.replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+function formatQrOptionNumber(value: number, decimals: number) {
+  return value.toLocaleString("en-GB", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+}
+
+function makeQrFallbackOptionText(question: UCATSingleQuestion, attempt: number) {
+  const correctText =
+    question.options.find((option) => option.key === question.answer)?.text ??
+    question.options[0]?.text ??
+    "";
+  const ratioMatch = correctText.match(/^(\d+):(\d+)$/);
+
+  if (ratioMatch) {
+    return `${Number(ratioMatch[1]) + attempt}:${ratioMatch[2]}`;
+  }
+
+  const fractionMatch = correctText.match(/^(\d+)\/(\d+)$/);
+
+  if (fractionMatch) {
+    return `${Number(fractionMatch[1]) + attempt}/${fractionMatch[2]}`;
+  }
+
+  const numericMatch = correctText.match(/^(.*?)(-?[\d,]+(?:\.\d+)?)(.*)$/);
+
+  if (numericMatch) {
+    const prefix = numericMatch[1];
+    const rawNumber = numericMatch[2];
+    const suffix = numericMatch[3];
+    const value = Number(rawNumber.replace(/,/g, ""));
+    const decimals = rawNumber.includes(".") ? rawNumber.split(".")[1].length : 0;
+    const step =
+      decimals > 0
+        ? attempt / 10 ** decimals
+        : Math.max(1, Math.round(Math.abs(value) * 0.04)) * attempt;
+    const direction = attempt % 2 === 0 ? -1 : 1;
+    const adjusted = Math.max(0, value + direction * step);
+
+    return `${prefix}${formatQrOptionNumber(adjusted, decimals)}${suffix}`;
+  }
+
+  return [
+    "More information is required",
+    "None of the listed options",
+    "The result cannot be determined from the data",
+    "The values are equal",
+    "No change",
+  ][attempt - 1] ?? `Alternative ${attempt}`;
+}
+
+function ensureQrFiveOptions(question: UCATQuestion): UCATQuestion {
+  if (
+    question.section !== "qr" ||
+    !isSingleSelectQuestion(question) ||
+    question.options.length >= QR_SINGLE_OPTION_KEYS.length
+  ) {
+    return question;
+  }
+
+  const options = [...question.options];
+  const usedTexts = new Set(options.map((option) => normaliseOptionText(option.text)));
+  let attempt = 1;
+
+  while (options.length < QR_SINGLE_OPTION_KEYS.length) {
+    const key = QR_SINGLE_OPTION_KEYS[options.length];
+    const text = makeQrFallbackOptionText(question, attempt);
+    const normalisedText = normaliseOptionText(text);
+    attempt += 1;
+
+    if (!key || usedTexts.has(normalisedText)) continue;
+
+    options.push({ key, text });
+    usedTexts.add(normalisedText);
+  }
+
+  return { ...question, options };
+}
+
 export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: [
     ...HIGH_QUALITY_VR_QUESTIONS,
@@ -1356,7 +1445,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "There are 13 hearts and 4 queens, but the queen of hearts has been counted twice. Favourable cards = 13 + 4 - 1 = 16, and 16/52 = 4/13.",
     },
   ],
-  qr: [
+  qr: ([
     ...ORIGINAL_QR_QUESTIONS,
     {
       id: "qr-graphs-001",
@@ -2212,7 +2301,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "The combined multiplier is 1.20 x 0.85 x 1.10 = 1.122.",
     },
     ...HIGH_QUALITY_9000_QR_QUESTIONS,
-  ],
+  ] as UCATQuestion[]).map(ensureQrFiveOptions),
   sjt: [
     ...SJT_QUESTIONS,
     ...GENERATED_SJT_QUESTIONS,

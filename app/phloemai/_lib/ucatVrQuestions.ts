@@ -240,7 +240,8 @@ export const HIGH_QUALITY_VR_QUESTIONS: UCATQuestion[] = [
       "Digitisation changed the way the archive was used. Historians who once requested whole boxes could now search by vessel name, port and date. This saved staff time, yet it also encouraged more speculative enquiries from people who had never visited the reading room. The archivist welcomed this wider access but warned that searchable images could give a false impression of completeness. Several damaged pages were too fragile to photograph, and spellings of ship names varied between clerks.",
       "A grant panel praised the project for preserving ordinary commercial evidence. It did not fund the archive's request for automatic handwriting recognition, arguing that manual checking was still necessary for records whose value lay in small irregular details.",
     ],
-    question: "Which claim is not supported by the passage?",
+    question:
+      "All of the following are true of the ledger digitisation project except:",
     options: [
       { key: "A", text: "The archive had previously prioritised letters from prominent merchants." },
       { key: "B", text: "Digitisation allowed searching by vessel name, port and date." },
@@ -445,7 +446,7 @@ export const HIGH_QUALITY_VR_QUESTIONS: UCATQuestion[] = [
       "The researchers compared ten family workshops over two seasons. Paste fermented in ceramic jars developed stronger savoury notes, but it also showed greater variation between batches. Steel tanks produced a milder paste with more predictable acidity. Contrary to the producers' expectations, rainfall during the first week of fermentation had little measurable effect once temperature was controlled. The researchers did not claim that one vessel was superior; they argued that each suited a different market.",
       "Some workshop owners were disappointed because they had hoped for a simple recipe that would make exports more consistent without changing equipment. The laboratory instead recommended better temperature records and clearer labelling, so customers would know whether they were buying a traditional, variable product or a milder standardised one.",
     ],
-    question: "Which statement is not supported by the passage?",
+    question: "All of the following are true according to the passage except:",
     options: [
       { key: "A", text: "Steel tanks produced more predictable acidity." },
       { key: "B", text: "The researchers said ceramic jars were superior for every market." },

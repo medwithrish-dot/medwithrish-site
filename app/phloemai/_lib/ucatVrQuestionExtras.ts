@@ -176,7 +176,7 @@ const EXTRA_VR_SETS: ExtraVrSet[] = [
       {
         id: "roof-not-supported",
         subtype: "vr-negative",
-        question: "Which claim is not supported by the passage?",
+        question: "All of the following are true of the roof trial except:",
         optionTexts: [
           "Footfall rose on wet Saturdays.",
           "Amplified music was given a lower volume limit.",
@@ -345,7 +345,8 @@ const EXTRA_VR_SETS: ExtraVrSet[] = [
       {
         id: "capture-not-supported",
         subtype: "vr-negative",
-        question: "Which statement is not supported by the passage?",
+        question:
+          "All of the following are true of the lecture-capture trial except:",
         optionTexts: [
           "Some practical demonstrations were hard to capture accurately.",
           "The college kept the lecture-capture system.",
@@ -781,7 +782,7 @@ const EXTRA_VR_SETS: ExtraVrSet[] = [
       {
         id: "maker-not-supported",
         subtype: "vr-negative",
-        question: "Which claim is not supported by the passage?",
+        question: "All of the following are true of the makerspace except:",
         optionTexts: [
           "The 3D printer attracted attention.",
           "A college donated spare fabric.",
@@ -903,7 +904,8 @@ const EXTRA_VR_SETS: ExtraVrSet[] = [
       {
         id: "lunch-not-supported",
         subtype: "vr-negative",
-        question: "Which statement is not supported by the passage?",
+        question:
+          "All of the following are true of the lunch-token system except:",
         optionTexts: [
           "Staff introduced colour-coded tokens.",
           "Food waste fell after the system began.",
