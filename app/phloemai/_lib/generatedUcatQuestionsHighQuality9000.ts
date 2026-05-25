@@ -830,6 +830,195 @@ const VR_NEGATIVE_QUESTIONS = [
   "All of the following are accurate statements about the trial except:",
 ] as const;
 
+const VR_OBSERVATION_GROUPS = [
+  "front-desk staff",
+  "first-time users",
+  "regular users",
+  "weekend volunteers",
+  "session leaders",
+  "booking staff",
+  "family members",
+  "support workers",
+  "branch managers",
+  "community partners",
+  "student representatives",
+  "accessibility advisers",
+  "maintenance staff",
+  "evening supervisors",
+  "local organisers",
+  "new members",
+  "returning visitors",
+  "helpline staff",
+  "workshop tutors",
+  "reception volunteers",
+  "route marshals",
+  "project mentors",
+  "attendance officers",
+  "outreach workers",
+  "site coordinators",
+  "digital support staff",
+  "event stewards",
+  "parent helpers",
+  "training assistants",
+  "neighbourhood leads",
+] as const;
+
+const VR_OBSERVATION_DETAILS = [
+  "wanted the instructions to be shorter",
+  "said reminders were most useful before busy periods",
+  "asked for clearer information about eligibility",
+  "reported that the first visit still felt confusing",
+  "found the booking step easier than the follow-up step",
+  "thought the change worked best when staff explained it briefly",
+  "said demand was strongest just after opening",
+  "preferred a paper back-up for people without reliable phones",
+  "noticed that some users misunderstood the purpose of the trial",
+  "said the busiest site was not typical of the whole service",
+  "asked whether the change would continue after funding ended",
+  "wanted a clearer route for urgent questions",
+  "said the signs helped only when the entrance was staffed",
+  "reported that several users arrived without reading the reminder",
+  "thought the trial helped confident users more than anxious users",
+  "said the new process was easier to explain than the old one",
+  "noted that quiet periods were still underused",
+  "wanted the comparison site to have similar opening hours",
+  "said some users needed reassurance before trying the change",
+  "reported that the most useful feedback came from repeat users",
+  "thought the change reduced interruptions but not complex queries",
+  "asked for translated instructions before a wider rollout",
+  "said the trial worked less well when equipment was shared",
+  "noticed that weather affected attendance on two days",
+  "thought staff confidence improved as the trial went on",
+  "said several users confused the trial with a permanent policy",
+  "wanted clearer wording about what had not changed",
+  "reported that the trial shifted demand rather than removing it",
+  "said the strongest support came from users with fixed routines",
+  "thought the next review should include unsuccessful users",
+  "asked for better data on people who chose not to take part",
+] as const;
+
+function makeVrObservation(setIndex: number) {
+  const group = pick(VR_OBSERVATION_GROUPS, setIndex * 31);
+  const detail = pick(VR_OBSERVATION_DETAILS, setIndex * 37);
+
+  switch (setIndex % 6) {
+    case 0:
+      return `Staff also logged comments from ${group}, who ${detail}.`;
+    case 1:
+      return `A separate note recorded this from ${group}: they ${detail}.`;
+    case 2:
+      return `Informal feedback from ${group} added another point: they ${detail}.`;
+    case 3:
+      return `The review included a short comment from ${group}, who ${detail}.`;
+    case 4:
+      return `Alongside the figures, feedback from ${group} recorded that they ${detail}.`;
+    default:
+      return `The team also recorded a point from ${group}: they ${detail}.`;
+  }
+}
+
+function makeVrPassage(input: {
+  setIndex: number;
+  setting: string;
+  project: string;
+  group: string;
+  problem: string;
+  aim: string;
+  oldRoutine: string;
+  funder: string;
+  metric: string;
+  metricVerb: string;
+  firstMetric: number;
+  secondMetric: number;
+  caveat: string;
+  limitation: string;
+  followUpNote: string;
+}) {
+  const metricSentence = `During the six-week trial, ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`;
+  const followUp = input.followUpNote.trim();
+  const followUpSentence = followUp ? ` ${followUp}` : "";
+  const recommendation =
+    `The recommendation was to keep the project for one more term and compare demand with a similar site before wider rollout.${followUpSentence}`;
+  const caution =
+    `The review said the figures were encouraging but should be treated carefully because ${input.caveat}. It also noted that ${input.limitation}.`;
+  const observation = makeVrObservation(input.setIndex);
+
+  switch (input.setIndex % 12) {
+    case 0:
+      return [
+        `${input.setting} tested ${input.project} for ${input.group} after ${input.problem}. The aim was to ${input.aim}, rather than ${input.oldRoutine}. The project was funded by ${input.funder}.`,
+        `${metricSentence} ${caution} ${observation}`,
+        recommendation,
+      ];
+    case 1:
+      return [
+        `${input.problem} led ${input.setting} to try ${input.project} with ${input.group}. Managers described it as a limited service change: it was intended to ${input.aim}, not to ${input.oldRoutine}. Funding came from ${input.funder}.`,
+        `${metricSentence} The improvement looked useful at first, but the review linked its caution to the fact that ${input.caveat}. A second uncertainty was that ${input.limitation}. ${observation}`,
+        recommendation,
+      ];
+    case 2:
+      return [
+        `At ${input.setting}, ${input.group} were offered ${input.project}. The scheme was introduced because ${input.problem}. It was paid for by ${input.funder} and was framed as a way to ${input.aim}, rather than as a plan to ${input.oldRoutine}.`,
+        `${sentenceCase(input.metric)} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric} over six weeks. Reviewers said this was promising, while warning that ${input.caveat}. They also pointed out that ${input.limitation}. ${observation}`,
+        recommendation,
+      ];
+    case 3:
+      return [
+        `${input.setting} did not begin with a full redesign. Instead, after ${input.problem}, it ran a six-week test of ${input.project} for ${input.group}. The project was funded by ${input.funder}.`,
+        `The stated aim was to ${input.aim}; managers explicitly avoided using it to ${input.oldRoutine}. ${metricSentence}`,
+        `${caution} ${observation} ${recommendation}`,
+      ];
+    case 4:
+      return [
+        `A short review at ${input.setting} considered whether ${input.project} helped ${input.group}. The idea followed reports that ${input.problem}. ${sentenceCase(input.funder)} funded the work.`,
+        `The project was meant to ${input.aim}. It was not presented as a route to ${input.oldRoutine}. Over six weeks, ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+        `${caution} ${observation} ${recommendation}`,
+      ];
+    case 5:
+      return [
+        `${input.group} at ${input.setting} were invited to use ${input.project} after staff found that ${input.problem}. The funding source was ${input.funder}.`,
+        `Although the project aimed to ${input.aim}, the review stressed that it should not be read as an attempt to ${input.oldRoutine}. ${metricSentence}`,
+        `The figures were not treated as conclusive because ${input.caveat}. The review also recorded that ${input.limitation}. ${observation} ${recommendation}`,
+      ];
+    case 6:
+      return [
+        `${input.setting} used ${input.funder} to run a trial of ${input.project}. It targeted ${input.group}, following concern that ${input.problem}.`,
+        `Its purpose was to ${input.aim}, not to ${input.oldRoutine}. ${sentenceCase(input.metric)} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric} during the trial.`,
+        `Reviewers called the change encouraging but qualified that judgement because ${input.caveat}; they also noted that ${input.limitation}. ${observation} ${recommendation}`,
+      ];
+    case 7:
+      return [
+        `When ${input.setting} introduced ${input.project}, it described the change as deliberately modest. The problem was that ${input.problem}, and the intended users were ${input.group}.`,
+        `The project, funded by ${input.funder}, aimed to ${input.aim}. It was not supposed to ${input.oldRoutine}. ${metricSentence}`,
+        `${caution} ${observation} ${recommendation}`,
+      ];
+    case 8:
+      return [
+        `A six-week pilot at ${input.setting} offered ${input.project} to ${input.group}. It responded to the finding that ${input.problem}, and used funding from ${input.funder}.`,
+        `Staff wanted to ${input.aim}, while avoiding a wider change that would ${input.oldRoutine}. The recorded outcome was that ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+        `The review was cautious because ${input.caveat}. It further noted that ${input.limitation}. ${observation} ${recommendation}`,
+      ];
+    case 9:
+      return [
+        `${input.setting} trialled ${input.project} after ${input.problem}. The trial was for ${input.group} and was funded by ${input.funder}.`,
+        `Rather than using the project to ${input.oldRoutine}, staff said they wanted to ${input.aim}. ${metricSentence}`,
+        `The report treated the result as provisional: ${input.caveat}, and ${input.limitation}. ${observation} ${recommendation}`,
+      ];
+    case 10:
+      return [
+        `${input.funder} funded ${input.project} at ${input.setting}. The project focused on ${input.group}, because ${input.problem}.`,
+        `Its aim was to ${input.aim}; it was not a proposal to ${input.oldRoutine}. Six-week data showed that ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+        `${caution} ${observation} ${recommendation}`,
+      ];
+    default:
+      return [
+        `${input.setting} selected ${input.project} as a temporary response after ${input.problem}. It was aimed at ${input.group} and funded by ${input.funder}.`,
+        `The change was intended to ${input.aim}, not to ${input.oldRoutine}. The main recorded measure was that ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+        `However, ${input.caveat}, and ${input.limitation}. ${observation} Reviewers therefore avoided a firm conclusion. ${recommendation}`,
+      ];
+  }
+}
+
 function makeVrSet(setIndex: number): UCATQuestion[] {
   const cycle = Math.floor(setIndex / 1800);
   const setting = pick(ORGANISATIONS, setIndex);
@@ -860,10 +1049,23 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
       : Math.max(4, firstMetric - 8 - (setIndex % 7));
   const followUpNote =
     cycle > 0 ? ` ${pick(FOLLOW_UP_NOTES, setIndex + cycle * 7)}` : "";
-  const passage = [
-    `${setting} tested ${project} for ${group} after ${problem}. The aim was to ${aim}, not to ${oldRoutine}. The project was funded by ${funder}. During the six-week trial, ${metric} ${metricVerb} from ${firstMetric} to ${secondMetric}.`,
-    `The review said the figures were encouraging but should be treated carefully because ${caveat}. It also noted that ${limitation}. The recommendation was to keep the project for one more term and compare demand with a similar site before wider rollout.${followUpNote}`,
-  ];
+  const passage = makeVrPassage({
+    setIndex,
+    setting,
+    project,
+    group,
+    problem,
+    aim,
+    oldRoutine,
+    funder,
+    metric,
+    metricVerb,
+    firstMetric,
+    secondMetric,
+    caveat,
+    limitation,
+    followUpNote,
+  });
   const setId = `hq-vr-${pad(setIndex)}`;
   const tfcKind = setIndex % 4;
   const tfcStatement =
@@ -1056,17 +1258,2409 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
   return questions;
 }
 
+const HIGH_QUALITY_9000_CURATED_REPLACEMENTS: Record<string, UCATQuestion> = {
+  "hq-vr-0001-1": {
+    id: "hq-vr-0001-1",
+    section: "vr",
+    subtype: "vr-tfc",
+    setId: "hq-vr-0001",
+    tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Belford Hospital introduced volunteer wayfinders at the entrance to a new outpatient wing after patients complained that the route from reception to clinic rooms was confusing. The volunteers wore blue sashes and could guide patients to departments, but they were not permitted to answer clinical questions or view appointment lists.",
+      "During the eight-week trial, late check-ins fell from 14% to 9%. However, a separate text-message reminder pilot began midway through the same period. Managers also noted that volunteers were mainly available in the mornings, while missed appointments had previously been most common in the afternoon.",
+      "The review recommended keeping wayfinders at the entrance for three more months while testing whether clearer signs could achieve a similar result. It warned against treating the fall in late arrivals as proof that the volunteers alone had caused the improvement.",
+    ],
+    question:
+      "The volunteer wayfinders were allowed to view patients' appointment lists. According to the passage, this statement is:",
+    options: TFC_OPTIONS,
+    answer: "B",
+    explanation:
+      "The passage says the volunteers could guide patients to departments, but were not permitted to view appointment lists.",
+  },
+  "hq-vr-0001-2": {
+    id: "hq-vr-0001-2",
+    section: "vr",
+    subtype: "vr-detail",
+    setId: "hq-vr-0001",
+    tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Belford Hospital introduced volunteer wayfinders at the entrance to a new outpatient wing after patients complained that the route from reception to clinic rooms was confusing. The volunteers wore blue sashes and could guide patients to departments, but they were not permitted to answer clinical questions or view appointment lists.",
+      "During the eight-week trial, late check-ins fell from 14% to 9%. However, a separate text-message reminder pilot began midway through the same period. Managers also noted that volunteers were mainly available in the mornings, while missed appointments had previously been most common in the afternoon.",
+      "The review recommended keeping wayfinders at the entrance for three more months while testing whether clearer signs could achieve a similar result. It warned against treating the fall in late arrivals as proof that the volunteers alone had caused the improvement.",
+    ],
+    question: "Which factor limited the interpretation of the late check-in figures?",
+    options: [
+      { key: "A", text: "The volunteers refused to guide patients to clinic rooms." },
+      { key: "B", text: "A text-message reminder pilot overlapped with part of the trial." },
+      { key: "C", text: "Late check-ins increased during the eight-week period." },
+      { key: "D", text: "Managers cancelled the plan to test clearer signs." },
+    ],
+    answer: "B",
+    explanation:
+      "The text-message reminder pilot began midway through the same period, making it harder to attribute the change only to wayfinders.",
+  },
+  "hq-vr-0001-3": {
+    id: "hq-vr-0001-3",
+    section: "vr",
+    subtype: "vr-inference",
+    setId: "hq-vr-0001",
+    tags: ["inference-question", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Belford Hospital introduced volunteer wayfinders at the entrance to a new outpatient wing after patients complained that the route from reception to clinic rooms was confusing. The volunteers wore blue sashes and could guide patients to departments, but they were not permitted to answer clinical questions or view appointment lists.",
+      "During the eight-week trial, late check-ins fell from 14% to 9%. However, a separate text-message reminder pilot began midway through the same period. Managers also noted that volunteers were mainly available in the mornings, while missed appointments had previously been most common in the afternoon.",
+      "The review recommended keeping wayfinders at the entrance for three more months while testing whether clearer signs could achieve a similar result. It warned against treating the fall in late arrivals as proof that the volunteers alone had caused the improvement.",
+    ],
+    question: "Which judgement is best supported by the passage?",
+    options: [
+      { key: "A", text: "The wayfinders may have helped, but the evidence did not isolate their effect." },
+      { key: "B", text: "The wayfinders were introduced mainly to answer patients' clinical questions." },
+      { key: "C", text: "The hospital proved that signs would be less effective than volunteers." },
+      { key: "D", text: "Afternoon appointments were excluded from the trial." },
+    ],
+    answer: "A",
+    explanation:
+      "The passage describes improved late check-ins, but also gives overlapping reminders, uneven volunteer availability and a recommendation for further testing.",
+  },
+  "hq-vr-0001-4": {
+    id: "hq-vr-0001-4",
+    section: "vr",
+    subtype: "vr-summary",
+    setId: "hq-vr-0001",
+    tags: ["summary-structure", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Belford Hospital introduced volunteer wayfinders at the entrance to a new outpatient wing after patients complained that the route from reception to clinic rooms was confusing. The volunteers wore blue sashes and could guide patients to departments, but they were not permitted to answer clinical questions or view appointment lists.",
+      "During the eight-week trial, late check-ins fell from 14% to 9%. However, a separate text-message reminder pilot began midway through the same period. Managers also noted that volunteers were mainly available in the mornings, while missed appointments had previously been most common in the afternoon.",
+      "The review recommended keeping wayfinders at the entrance for three more months while testing whether clearer signs could achieve a similar result. It warned against treating the fall in late arrivals as proof that the volunteers alone had caused the improvement.",
+    ],
+    question: "Which title best captures the passage?",
+    options: [
+      { key: "A", text: "Why volunteers were allowed to replace reception staff" },
+      { key: "B", text: "A navigation trial with encouraging but uncertain results" },
+      { key: "C", text: "How text reminders ended outpatient late arrivals" },
+      { key: "D", text: "A hospital decision to abandon clearer signs" },
+    ],
+    answer: "B",
+    explanation:
+      "The passage focuses on a wayfinding trial, an apparent improvement and the reasons the review treated that improvement cautiously.",
+  },
+  "hq-vr-0002-1": {
+    id: "hq-vr-0002-1",
+    section: "vr",
+    subtype: "vr-tfc",
+    setId: "hq-vr-0002",
+    tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Northmere Archive placed short audio clips from its oral-history collection on a public website. The archivist selected extracts from interviews with former mill workers because the full recordings were difficult for casual visitors to search. Full transcripts remained available in the reading room.",
+      "The website attracted more school users than the archive had expected. Some researchers, however, argued that the clips overemphasised dramatic memories of closures and strikes, while everyday accounts of routine work were less visible. Staff replied that each clip linked to the catalogue record for the complete interview.",
+      "An advisory panel supported keeping the clips online, but asked the archive to add notes explaining how extracts were chosen and why remembered events might differ between interviewees. The panel said the website should be treated as an entry point, not as a replacement for the full collection.",
+    ],
+    question:
+      "The archive withdrew full transcripts once the audio clips were placed online. According to the passage, this statement is:",
+    options: TFC_OPTIONS,
+    answer: "B",
+    explanation:
+      "The passage says full transcripts remained available in the reading room, so the statement is false.",
+  },
+  "hq-vr-0002-2": {
+    id: "hq-vr-0002-2",
+    section: "vr",
+    subtype: "vr-detail",
+    setId: "hq-vr-0002",
+    tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Northmere Archive placed short audio clips from its oral-history collection on a public website. The archivist selected extracts from interviews with former mill workers because the full recordings were difficult for casual visitors to search. Full transcripts remained available in the reading room.",
+      "The website attracted more school users than the archive had expected. Some researchers, however, argued that the clips overemphasised dramatic memories of closures and strikes, while everyday accounts of routine work were less visible. Staff replied that each clip linked to the catalogue record for the complete interview.",
+      "An advisory panel supported keeping the clips online, but asked the archive to add notes explaining how extracts were chosen and why remembered events might differ between interviewees. The panel said the website should be treated as an entry point, not as a replacement for the full collection.",
+    ],
+    question: "Why did the archivist select short extracts for the website?",
+    options: [
+      { key: "A", text: "The complete recordings were difficult for casual visitors to search." },
+      { key: "B", text: "Researchers had asked for dramatic memories to be removed." },
+      { key: "C", text: "The advisory panel wanted to close the reading room." },
+      { key: "D", text: "The full transcripts had been lost." },
+    ],
+    answer: "A",
+    explanation:
+      "The first paragraph states that full recordings were difficult for casual visitors to search, so short extracts were selected.",
+  },
+  "hq-vr-0002-3": {
+    id: "hq-vr-0002-3",
+    section: "vr",
+    subtype: "vr-inference",
+    setId: "hq-vr-0002",
+    tags: ["inference-question", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Northmere Archive placed short audio clips from its oral-history collection on a public website. The archivist selected extracts from interviews with former mill workers because the full recordings were difficult for casual visitors to search. Full transcripts remained available in the reading room.",
+      "The website attracted more school users than the archive had expected. Some researchers, however, argued that the clips overemphasised dramatic memories of closures and strikes, while everyday accounts of routine work were less visible. Staff replied that each clip linked to the catalogue record for the complete interview.",
+      "An advisory panel supported keeping the clips online, but asked the archive to add notes explaining how extracts were chosen and why remembered events might differ between interviewees. The panel said the website should be treated as an entry point, not as a replacement for the full collection.",
+    ],
+    question: "Which inference is best supported by the passage?",
+    options: [
+      { key: "A", text: "The clips broadened access but could distort understanding if used alone." },
+      { key: "B", text: "The archive regarded school users as less important than researchers." },
+      { key: "C", text: "The advisory panel opposed public access to oral-history material." },
+      { key: "D", text: "Every interviewee remembered the same events in the same way." },
+    ],
+    answer: "A",
+    explanation:
+      "The clips attracted school users, but the panel wanted selection notes and warned that the website was only an entry point.",
+  },
+  "hq-vr-0002-4": {
+    id: "hq-vr-0002-4",
+    section: "vr",
+    subtype: "vr-author",
+    setId: "hq-vr-0002",
+    tags: ["author-opinion", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Northmere Archive placed short audio clips from its oral-history collection on a public website. The archivist selected extracts from interviews with former mill workers because the full recordings were difficult for casual visitors to search. Full transcripts remained available in the reading room.",
+      "The website attracted more school users than the archive had expected. Some researchers, however, argued that the clips overemphasised dramatic memories of closures and strikes, while everyday accounts of routine work were less visible. Staff replied that each clip linked to the catalogue record for the complete interview.",
+      "An advisory panel supported keeping the clips online, but asked the archive to add notes explaining how extracts were chosen and why remembered events might differ between interviewees. The panel said the website should be treated as an entry point, not as a replacement for the full collection.",
+    ],
+    question: "The author's attitude towards the website is best described as:",
+    options: [
+      { key: "A", text: "Supportive of access, but alert to the need for context." },
+      { key: "B", text: "Hostile to any use of selected audio extracts." },
+      { key: "C", text: "Certain that short clips are more reliable than transcripts." },
+      { key: "D", text: "Indifferent to how the clips are selected." },
+    ],
+    answer: "A",
+    explanation:
+      "The passage notes access benefits and the panel's support, while also emphasising context, selection notes and limits.",
+  },
+  "hq-vr-0004-1": {
+    id: "hq-vr-0004-1",
+    section: "vr",
+    subtype: "vr-tfc",
+    setId: "hq-vr-0004",
+    tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Greenborough Market asked stallholders to weigh unsold produce before it was donated or sent for composting. The council said the aim was to identify patterns in waste rather than to rank individual traders. Volunteers helped with weighing during the first month because some smaller stalls had limited staff.",
+      "The first set of figures showed a fall in produce sent to compost. Yet the market manager noted that unusually dry weather had reduced damaged stock that month, and a new delivery schedule had also started. The stall with the largest recorded waste sold soft berries, which spoiled more quickly than root vegetables.",
+      "The council kept the weighing scheme but simplified the categories on the recording sheet. It also planned to compare the results with a nearby market where weighing had not been introduced.",
+    ],
+    question:
+      "The stall with the largest recorded waste was necessarily the least efficient stall. According to the passage, this statement is:",
+    options: TFC_OPTIONS,
+    answer: "B",
+    explanation:
+      "The passage says that stall sold soft berries, which spoiled more quickly, so the figure does not necessarily show inefficiency.",
+  },
+  "hq-vr-0004-2": {
+    id: "hq-vr-0004-2",
+    section: "vr",
+    subtype: "vr-detail",
+    setId: "hq-vr-0004",
+    tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Greenborough Market asked stallholders to weigh unsold produce before it was donated or sent for composting. The council said the aim was to identify patterns in waste rather than to rank individual traders. Volunteers helped with weighing during the first month because some smaller stalls had limited staff.",
+      "The first set of figures showed a fall in produce sent to compost. Yet the market manager noted that unusually dry weather had reduced damaged stock that month, and a new delivery schedule had also started. The stall with the largest recorded waste sold soft berries, which spoiled more quickly than root vegetables.",
+      "The council kept the weighing scheme but simplified the categories on the recording sheet. It also planned to compare the results with a nearby market where weighing had not been introduced.",
+    ],
+    question: "Why were volunteers used during the first month?",
+    options: [
+      { key: "A", text: "Some smaller stalls had limited staff available for weighing." },
+      { key: "B", text: "The council wanted volunteers to rank traders publicly." },
+      { key: "C", text: "The delivery schedule had been cancelled." },
+      { key: "D", text: "The nearby market had already introduced weighing." },
+    ],
+    answer: "A",
+    explanation:
+      "The passage states that volunteers helped because some smaller stalls had limited staff.",
+  },
+  "hq-vr-0004-3": {
+    id: "hq-vr-0004-3",
+    section: "vr",
+    subtype: "vr-inference",
+    setId: "hq-vr-0004",
+    tags: ["inference-question", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Greenborough Market asked stallholders to weigh unsold produce before it was donated or sent for composting. The council said the aim was to identify patterns in waste rather than to rank individual traders. Volunteers helped with weighing during the first month because some smaller stalls had limited staff.",
+      "The first set of figures showed a fall in produce sent to compost. Yet the market manager noted that unusually dry weather had reduced damaged stock that month, and a new delivery schedule had also started. The stall with the largest recorded waste sold soft berries, which spoiled more quickly than root vegetables.",
+      "The council kept the weighing scheme but simplified the categories on the recording sheet. It also planned to compare the results with a nearby market where weighing had not been introduced.",
+    ],
+    question: "Which inference is best supported?",
+    options: [
+      { key: "A", text: "The waste data needed context before conclusions were drawn." },
+      { key: "B", text: "The scheme proved that all market waste was caused by poor traders." },
+      { key: "C", text: "Dry weather increased the amount of damaged stock." },
+      { key: "D", text: "The council abandoned weighing after the first month." },
+    ],
+    answer: "A",
+    explanation:
+      "The passage gives several reasons for caution: weather, delivery changes and differences between types of produce.",
+  },
+  "hq-vr-0004-4": {
+    id: "hq-vr-0004-4",
+    section: "vr",
+    subtype: "vr-summary",
+    setId: "hq-vr-0004",
+    tags: ["summary-structure", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Greenborough Market asked stallholders to weigh unsold produce before it was donated or sent for composting. The council said the aim was to identify patterns in waste rather than to rank individual traders. Volunteers helped with weighing during the first month because some smaller stalls had limited staff.",
+      "The first set of figures showed a fall in produce sent to compost. Yet the market manager noted that unusually dry weather had reduced damaged stock that month, and a new delivery schedule had also started. The stall with the largest recorded waste sold soft berries, which spoiled more quickly than root vegetables.",
+      "The council kept the weighing scheme but simplified the categories on the recording sheet. It also planned to compare the results with a nearby market where weighing had not been introduced.",
+    ],
+    question: "Which option best summarises the passage?",
+    options: [
+      { key: "A", text: "A weighing scheme produced useful data, but the results needed careful comparison." },
+      { key: "B", text: "The council used waste figures to punish the least efficient traders." },
+      { key: "C", text: "A nearby market proved weighing was unnecessary." },
+      { key: "D", text: "Volunteers replaced stallholders permanently." },
+    ],
+    answer: "A",
+    explanation:
+      "The passage describes the purpose of weighing, early results, reasons for caution and a plan for comparison.",
+  },
+  "hq-qr-revenue-0001-1": {
+    id: "hq-qr-revenue-0001-1",
+    section: "qr",
+    subtype: "qr-graphs",
+    setId: "hq-qr-revenue-0001",
+    tags: ["data-display", "set-based", "easy", "quick"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Data",
+    stimulus: ["The table shows fees and bookings for community first-aid courses at four centres."],
+    visual: {
+      type: "table",
+      title: "Community first-aid course bookings",
+      headers: ["Centre", "Online fee", "Online bookings", "In-person fee", "In-person bookings"],
+      rows: [
+        ["North", "GBP 18.00", "420", "GBP 24.00", "310"],
+        ["East", "GBP 16.50", "380", "GBP 22.00", "260"],
+        ["South", "GBP 20.00", "295", "GBP 26.00", "335"],
+        ["West", "GBP 17.50", "450", "GBP 23.50", "280"],
+      ],
+    },
+    question: "How many bookings were made at centres where in-person bookings exceeded online bookings?",
+    options: [
+      { key: "A", text: "595" },
+      { key: "B", text: "630" },
+      { key: "C", text: "675" },
+      { key: "D", text: "1,225" },
+    ],
+    answer: "B",
+    explanation:
+      "Only South had more in-person than online bookings. Its total bookings were 295 + 335 = 630.",
+  },
+  "hq-qr-revenue-0001-2": {
+    id: "hq-qr-revenue-0001-2",
+    section: "qr",
+    subtype: "qr-percentages",
+    setId: "hq-qr-revenue-0001",
+    tags: ["data-display", "set-based", "medium", "calculator-heavy"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Data",
+    stimulus: ["The table shows fees and bookings for community first-aid courses at four centres."],
+    visual: {
+      type: "table",
+      title: "Community first-aid course bookings",
+      headers: ["Centre", "Online fee", "Online bookings", "In-person fee", "In-person bookings"],
+      rows: [
+        ["North", "GBP 18.00", "420", "GBP 24.00", "310"],
+        ["East", "GBP 16.50", "380", "GBP 22.00", "260"],
+        ["South", "GBP 20.00", "295", "GBP 26.00", "335"],
+        ["West", "GBP 17.50", "450", "GBP 23.50", "280"],
+      ],
+    },
+    question: "What percentage of all in-person bookings were at North and South combined?",
+    options: [
+      { key: "A", text: "48.9%" },
+      { key: "B", text: "54.4%" },
+      { key: "C", text: "58.8%" },
+      { key: "D", text: "64.5%" },
+    ],
+    answer: "B",
+    explanation:
+      "In-person bookings total 310 + 260 + 335 + 280 = 1,185. North and South together have 310 + 335 = 645. 645 / 1,185 x 100 = 54.4%.",
+  },
+  "hq-qr-revenue-0001-3": {
+    id: "hq-qr-revenue-0001-3",
+    section: "qr",
+    subtype: "qr-rates-ratios",
+    setId: "hq-qr-revenue-0001",
+    tags: ["data-display", "set-based", "medium", "multi-step"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Data",
+    stimulus: ["The table shows fees and bookings for community first-aid courses at four centres."],
+    visual: {
+      type: "table",
+      title: "Community first-aid course bookings",
+      headers: ["Centre", "Online fee", "Online bookings", "In-person fee", "In-person bookings"],
+      rows: [
+        ["North", "GBP 18.00", "420", "GBP 24.00", "310"],
+        ["East", "GBP 16.50", "380", "GBP 22.00", "260"],
+        ["South", "GBP 20.00", "295", "GBP 26.00", "335"],
+        ["West", "GBP 17.50", "450", "GBP 23.50", "280"],
+      ],
+    },
+    question: "For East and West combined, what was the ratio of online bookings to in-person bookings?",
+    options: [
+      { key: "A", text: "83:54" },
+      { key: "B", text: "54:83" },
+      { key: "C", text: "19:13" },
+      { key: "D", text: "830:560" },
+    ],
+    answer: "A",
+    explanation:
+      "East and West online bookings were 380 + 450 = 830. In-person bookings were 260 + 280 = 540. The ratio 830:540 simplifies to 83:54.",
+  },
+  "hq-qr-revenue-0001-4": {
+    id: "hq-qr-revenue-0001-4",
+    section: "qr",
+    subtype: "qr-calculator-strategy",
+    setId: "hq-qr-revenue-0001",
+    tags: ["data-display", "set-based", "hard", "calculator-heavy", "time-consuming"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Data",
+    stimulus: ["The table shows fees and bookings for community first-aid courses at four centres."],
+    visual: {
+      type: "table",
+      title: "Community first-aid course bookings",
+      headers: ["Centre", "Online fee", "Online bookings", "In-person fee", "In-person bookings"],
+      rows: [
+        ["North", "GBP 18.00", "420", "GBP 24.00", "310"],
+        ["East", "GBP 16.50", "380", "GBP 22.00", "260"],
+        ["South", "GBP 20.00", "295", "GBP 26.00", "335"],
+        ["West", "GBP 17.50", "450", "GBP 23.50", "280"],
+      ],
+    },
+    question:
+      "At North and East combined, how much more revenue was made from online bookings than from in-person bookings?",
+    options: [
+      { key: "A", text: "GBP 670.00" },
+      { key: "B", text: "GBP 1,410.00" },
+      { key: "C", text: "GBP 13,160.00" },
+      { key: "D", text: "GBP 26,990.00" },
+    ],
+    answer: "A",
+    explanation:
+      "Online revenue at North and East was 18 x 420 + 16.50 x 380 = GBP 13,830.00. In-person revenue was 24 x 310 + 22 x 260 = GBP 13,160.00. The difference is GBP 670.00.",
+  },
+  "hq-qr-trend-0002-1": {
+    id: "hq-qr-trend-0002-1",
+    section: "qr",
+    subtype: "qr-graphs",
+    setId: "hq-qr-trend-0002",
+    tags: ["data-display", "set-based", "easy", "quick"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Chart",
+    stimulus: ["The line chart shows the average number of patient call-backs waiting at 5 pm each day."],
+    visual: {
+      type: "line",
+      title: "Call-backs waiting at 5 pm",
+      yLabel: "Call-backs",
+      max: 170,
+      points: [
+        { label: "Mon", value: 96 },
+        { label: "Tue", value: 124 },
+        { label: "Wed", value: 118 },
+        { label: "Thu", value: 151 },
+        { label: "Fri", value: 139 },
+      ],
+    },
+    question: "Between which two consecutive days was the increase in waiting call-backs greatest?",
+    options: [
+      { key: "A", text: "Monday to Tuesday" },
+      { key: "B", text: "Tuesday to Wednesday" },
+      { key: "C", text: "Wednesday to Thursday" },
+      { key: "D", text: "Thursday to Friday" },
+    ],
+    answer: "C",
+    explanation:
+      "The increases were 28 from Monday to Tuesday and 33 from Wednesday to Thursday. Other changes were decreases, so the greatest increase was Wednesday to Thursday.",
+  },
+  "hq-qr-trend-0002-2": {
+    id: "hq-qr-trend-0002-2",
+    section: "qr",
+    subtype: "qr-averages",
+    setId: "hq-qr-trend-0002",
+    tags: ["data-display", "set-based", "medium"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Chart",
+    stimulus: ["The line chart shows the average number of patient call-backs waiting at 5 pm each day."],
+    visual: {
+      type: "line",
+      title: "Call-backs waiting at 5 pm",
+      yLabel: "Call-backs",
+      max: 170,
+      points: [
+        { label: "Mon", value: 96 },
+        { label: "Tue", value: 124 },
+        { label: "Wed", value: 118 },
+        { label: "Thu", value: 151 },
+        { label: "Fri", value: 139 },
+      ],
+    },
+    question: "A target says the five-day mean should be at most 122 call-backs. By how many did this week's mean exceed the target?",
+    options: [
+      { key: "A", text: "2.4" },
+      { key: "B", text: "3.6" },
+      { key: "C", text: "4.8" },
+      { key: "D", text: "5.6" },
+    ],
+    answer: "B",
+    explanation:
+      "The total is 96 + 124 + 118 + 151 + 139 = 628. The mean is 628 / 5 = 125.6, which is 3.6 above 122.",
+  },
+  "hq-qr-trend-0002-3": {
+    id: "hq-qr-trend-0002-3",
+    section: "qr",
+    subtype: "qr-estimation",
+    setId: "hq-qr-trend-0002",
+    tags: ["data-display", "set-based", "medium", "multi-step"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Chart",
+    stimulus: ["The line chart shows the average number of patient call-backs waiting at 5 pm each day."],
+    visual: {
+      type: "line",
+      title: "Call-backs waiting at 5 pm",
+      yLabel: "Call-backs",
+      max: 170,
+      points: [
+        { label: "Mon", value: 96 },
+        { label: "Tue", value: 124 },
+        { label: "Wed", value: 118 },
+        { label: "Thu", value: 151 },
+        { label: "Fri", value: 139 },
+      ],
+    },
+    question:
+      "Using quick rounding to the nearest 10, what is the best estimate of the combined Thursday and Friday call-backs?",
+    options: [
+      { key: "A", text: "270" },
+      { key: "B", text: "290" },
+      { key: "C", text: "310" },
+      { key: "D", text: "330" },
+    ],
+    answer: "B",
+    explanation:
+      "Round Thursday's 151 to 150 and Friday's 139 to 140. The estimated total is 290.",
+  },
+  "hq-qr-trend-0002-4": {
+    id: "hq-qr-trend-0002-4",
+    section: "qr",
+    subtype: "qr-percentages",
+    setId: "hq-qr-trend-0002",
+    tags: ["data-display", "set-based", "hard", "calculator-heavy"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Chart",
+    stimulus: ["The line chart shows the average number of patient call-backs waiting at 5 pm each day."],
+    visual: {
+      type: "line",
+      title: "Call-backs waiting at 5 pm",
+      yLabel: "Call-backs",
+      max: 170,
+      points: [
+        { label: "Mon", value: 96 },
+        { label: "Tue", value: 124 },
+        { label: "Wed", value: 118 },
+        { label: "Thu", value: 151 },
+        { label: "Fri", value: 139 },
+      ],
+    },
+    question:
+      "A manager says Friday's figure was at least 10% lower than Thursday's. Which option is correct?",
+    options: [
+      { key: "A", text: "Yes, it was about 12% lower." },
+      { key: "B", text: "No, it was about 8% lower." },
+      { key: "C", text: "No, it was about 3% lower." },
+      { key: "D", text: "Yes, it was about 18% lower." },
+    ],
+    answer: "B",
+    explanation:
+      "The fall was 151 - 139 = 12. As a percentage of Thursday, 12 / 151 x 100 is about 8%, so it was not at least 10% lower.",
+  },
+  "hq-qr-rate-0003-1": {
+    id: "hq-qr-rate-0003-1",
+    section: "qr",
+    subtype: "qr-rates-ratios",
+    setId: "hq-qr-rate-0003",
+    tags: ["text-stem", "set-based", "easy"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Stem",
+    stimulus: [
+      "A mobile clinic leaves its depot, travels 18 km to Village A at 36 km/h and spends 22 minutes there. It then travels 12 km to Village B at 30 km/h and spends 18 minutes there. It returns 24 km to the depot at 48 km/h.",
+    ],
+    question: "How long after leaving the depot does the clinic arrive at Village B?",
+    options: [
+      { key: "A", text: "54 minutes" },
+      { key: "B", text: "72 minutes" },
+      { key: "C", text: "76 minutes" },
+      { key: "D", text: "94 minutes" },
+    ],
+    answer: "C",
+    explanation:
+      "Depot to Village A takes 18 / 36 hours = 30 minutes. Add 22 minutes at Village A and 12 / 30 hours = 24 minutes to Village B. Total = 76 minutes.",
+  },
+  "hq-qr-rate-0003-2": {
+    id: "hq-qr-rate-0003-2",
+    section: "qr",
+    subtype: "qr-averages",
+    setId: "hq-qr-rate-0003",
+    tags: ["text-stem", "set-based", "medium", "multi-step"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Stem",
+    stimulus: [
+      "A mobile clinic leaves its depot, travels 18 km to Village A at 36 km/h and spends 22 minutes there. It then travels 12 km to Village B at 30 km/h and spends 18 minutes there. It returns 24 km to the depot at 48 km/h.",
+    ],
+    question: "Including both stops, what is the total time for the whole trip?",
+    options: [
+      { key: "A", text: "84 minutes" },
+      { key: "B", text: "106 minutes" },
+      { key: "C", text: "124 minutes" },
+      { key: "D", text: "142 minutes" },
+    ],
+    answer: "C",
+    explanation:
+      "Travel times are 30, 24 and 30 minutes. Stops are 22 and 18 minutes. Total = 30 + 22 + 24 + 18 + 30 = 124 minutes.",
+  },
+  "hq-qr-rate-0003-3": {
+    id: "hq-qr-rate-0003-3",
+    section: "qr",
+    subtype: "qr-rates-ratios",
+    setId: "hq-qr-rate-0003",
+    tags: ["text-stem", "set-based", "hard", "multi-step"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Stem",
+    stimulus: [
+      "A mobile clinic leaves its depot, travels 18 km to Village A at 36 km/h and spends 22 minutes there. It then travels 12 km to Village B at 30 km/h and spends 18 minutes there. It returns 24 km to the depot at 48 km/h.",
+    ],
+    question: "What is the average travelling speed, excluding time spent at the stops?",
+    options: [
+      { key: "A", text: "32.1 km/h" },
+      { key: "B", text: "38.6 km/h" },
+      { key: "C", text: "41.0 km/h" },
+      { key: "D", text: "48.0 km/h" },
+    ],
+    answer: "B",
+    explanation:
+      "Total distance is 18 + 12 + 24 = 54 km. Travelling time is 30 + 24 + 30 = 84 minutes = 1.4 hours. Average speed = 54 / 1.4 = 38.6 km/h.",
+  },
+  "hq-qr-rate-0003-4": {
+    id: "hq-qr-rate-0003-4",
+    section: "qr",
+    subtype: "qr-units-geometry",
+    setId: "hq-qr-rate-0003",
+    tags: ["text-stem", "set-based", "medium"],
+    title: "Quantitative Reasoning Practice",
+    leftTitle: "Stem",
+    stimulus: [
+      "A mobile clinic leaves its depot, travels 18 km to Village A at 36 km/h and spends 22 minutes there. It then travels 12 km to Village B at 30 km/h and spends 18 minutes there. It returns 24 km to the depot at 48 km/h.",
+      "On a route map, 1 cm represents 3 km.",
+    ],
+    question: "How long would the whole route be on the map?",
+    options: [
+      { key: "A", text: "12 cm" },
+      { key: "B", text: "16 cm" },
+      { key: "C", text: "18 cm" },
+      { key: "D", text: "21 cm" },
+    ],
+    answer: "C",
+    explanation:
+      "The total route distance is 54 km. At 1 cm for every 3 km, the map length is 54 / 3 = 18 cm.",
+  },
+  "hq-sjt-0001-1": {
+    id: "hq-sjt-0001-1",
+    section: "sjt",
+    subtype: "sjt-appropriateness",
+    setId: "hq-sjt-0001",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["confidentiality"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Nadia, a medical student, is shadowing outpatient reception. A caller says he is collecting a patient after an endoscopy and asks whether the patient has been discharged. He knows the patient's name and date of birth, but he is not listed as a contact. The patient's record says updates should not be given by phone because of a family conflict. The receptionist is on another call and the caller says he only needs to arrange parking.",
+    ],
+    question:
+      "How appropriate is it for Nadia to say she cannot discuss patient details and ask the caller to wait until the receptionist is free, but not take a contact number or mention the transport concern to staff?",
+    options: APPROPRIATENESS_OPTIONS,
+    answer: "B",
+    explanation:
+      "This protects confidentiality, so it is appropriate. It is not ideal because Nadia does not help staff follow up the practical transport concern.",
+  },
+  "hq-sjt-0001-2": {
+    id: "hq-sjt-0001-2",
+    section: "sjt",
+    subtype: "sjt-appropriateness",
+    setId: "hq-sjt-0001",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["confidentiality"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Nadia, a medical student, is shadowing outpatient reception. A caller says he is collecting a patient after an endoscopy and asks whether the patient has been discharged. He knows the patient's name and date of birth, but he is not listed as a contact. The patient's record says updates should not be given by phone because of a family conflict. The receptionist is on another call and the caller says he only needs to arrange parking.",
+    ],
+    question:
+      "How appropriate is it for Nadia to confirm that the patient is still in the department because the caller knows the patient's date of birth?",
+    options: APPROPRIATENESS_OPTIONS,
+    answer: "D",
+    explanation:
+      "This is very inappropriate. Knowing demographic details does not override the recorded confidentiality concern, and confirming attendance could disclose sensitive information.",
+  },
+  "hq-sjt-0001-3": {
+    id: "hq-sjt-0001-3",
+    section: "sjt",
+    subtype: "sjt-importance",
+    setId: "hq-sjt-0001",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["confidentiality"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Nadia, a medical student, is shadowing outpatient reception. A caller says he is collecting a patient after an endoscopy and asks whether the patient has been discharged. He knows the patient's name and date of birth, but he is not listed as a contact. The patient's record says updates should not be given by phone because of a family conflict. The receptionist is on another call and the caller says he only needs to arrange parking.",
+    ],
+    question: "How important is the recorded instruction not to give updates by phone?",
+    options: IMPORTANCE_OPTIONS,
+    answer: "A",
+    explanation:
+      "This is very important because it directly concerns the patient's confidentiality and expressed restrictions on information sharing.",
+  },
+  "hq-sjt-0001-4": {
+    id: "hq-sjt-0001-4",
+    section: "sjt",
+    subtype: "sjt-importance",
+    setId: "hq-sjt-0001",
+    tags: ["text-stem", "set-based", "easy"],
+    issueTags: ["confidentiality"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Nadia, a medical student, is shadowing outpatient reception. A caller says he is collecting a patient after an endoscopy and asks whether the patient has been discharged. He knows the patient's name and date of birth, but he is not listed as a contact. The patient's record says updates should not be given by phone because of a family conflict. The receptionist is on another call and the caller says he only needs to arrange parking.",
+    ],
+    question: "How important is whether the caller sounds polite and under time pressure?",
+    options: IMPORTANCE_OPTIONS,
+    answer: "C",
+    explanation:
+      "This is of minor importance. It may affect how Nadia communicates, but it does not justify disclosing information or ignoring the recorded restriction.",
+  },
+  "hq-sjt-0001-5": dragCategoryQuestion({
+    id: "hq-sjt-0001-5",
+    section: "sjt",
+    subtype: "sjt-drag-drop",
+    setId: "hq-sjt-0001",
+    tags: ["text-stem", "set-based", "hard", "multi-step"],
+    issueTags: ["confidentiality"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Nadia, a medical student, is shadowing outpatient reception. A caller says he is collecting a patient after an endoscopy and asks whether the patient has been discharged. He knows the patient's name and date of birth, but he is not listed as a contact. The patient's record says updates should not be given by phone because of a family conflict. The receptionist is on another call and the caller says he only needs to arrange parking.",
+    ],
+    question: "Sort the actions according to whether they are appropriate in this situation.",
+    instruction: "Place each action into the most suitable category.",
+    categories: [
+      { id: "appropriate", label: "Appropriate" },
+      { id: "inappropriate", label: "Inappropriate" },
+    ],
+    categoryItems: [
+      { id: "take-details", text: "Take the caller's details and ask reception staff to advise.", answerCategory: "appropriate" },
+      { id: "confirm-attendance", text: "Confirm whether the patient is still in the department.", answerCategory: "inappropriate" },
+      { id: "explain-limit", text: "Explain that patient information cannot be discussed by phone without the right authorisation.", answerCategory: "appropriate" },
+      { id: "use-dob", text: "Treat the caller's knowledge of the date of birth as enough proof to share discharge information.", answerCategory: "inappropriate" },
+    ],
+    explanation:
+      "Appropriate actions protect confidentiality while involving reception staff. Inappropriate actions disclose or risk disclosing attendance without authority.",
+  }),
+  "hq-sjt-0002-1": {
+    id: "hq-sjt-0002-1",
+    section: "sjt",
+    subtype: "sjt-appropriateness",
+    setId: "hq-sjt-0002",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["integrity"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Owen, a medical student, is helping a placement group finalise an audit poster. The spreadsheet now includes 18 patient-feedback forms, but Owen can only find 14 paper forms in the approved folder. A teammate says the missing four were probably collected and that removing them will make the chart look too small. The poster deadline is later that day.",
+    ],
+    question:
+      "How suitable would it be for Owen to pause the submission, explain that the numbers must match the source data and contact the supervisor with the discrepancy?",
+    options: APPROPRIATENESS_OPTIONS,
+    answer: "A",
+    explanation:
+      "This is very appropriate because it protects honesty in the audit while using the supervisor to resolve the uncertainty before submission.",
+  },
+  "hq-sjt-0002-2": {
+    id: "hq-sjt-0002-2",
+    section: "sjt",
+    subtype: "sjt-appropriateness",
+    setId: "hq-sjt-0002",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["integrity"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Owen, a medical student, is helping a placement group finalise an audit poster. The spreadsheet now includes 18 patient-feedback forms, but Owen can only find 14 paper forms in the approved folder. A teammate says the missing four were probably collected and that removing them will make the chart look too small. The poster deadline is later that day.",
+    ],
+    question:
+      "How suitable would it be for Owen to remove the four unverified responses and submit the poster using 14 responses, but not tell the supervisor there was a discrepancy?",
+    options: APPROPRIATENESS_OPTIONS,
+    answer: "C",
+    explanation:
+      "This is inappropriate because it hides a data discrepancy from the supervisor. It is not the worst response because Owen would at least avoid submitting unsupported responses.",
+  },
+  "hq-sjt-0002-3": {
+    id: "hq-sjt-0002-3",
+    section: "sjt",
+    subtype: "sjt-importance",
+    setId: "hq-sjt-0002",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["integrity"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Owen, a medical student, is helping a placement group finalise an audit poster. The spreadsheet now includes 18 patient-feedback forms, but Owen can only find 14 paper forms in the approved folder. A teammate says the missing four were probably collected and that removing them will make the chart look too small. The poster deadline is later that day.",
+    ],
+    question: "How much importance should be given to the poster deadline being later that day?",
+    options: IMPORTANCE_OPTIONS,
+    answer: "B",
+    explanation:
+      "The deadline is important because it affects how quickly Owen must act, but it does not outweigh the need for accurate and honest data.",
+  },
+  "hq-sjt-0002-4": {
+    id: "hq-sjt-0002-4",
+    section: "sjt",
+    subtype: "sjt-importance",
+    setId: "hq-sjt-0002",
+    tags: ["text-stem", "set-based", "easy"],
+    issueTags: ["integrity"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Owen, a medical student, is helping a placement group finalise an audit poster. The spreadsheet now includes 18 patient-feedback forms, but Owen can only find 14 paper forms in the approved folder. A teammate says the missing four were probably collected and that removing them will make the chart look too small. The poster deadline is later that day.",
+    ],
+    question: "How much importance should be given to the teammate worrying that the chart will look too small?",
+    options: IMPORTANCE_OPTIONS,
+    answer: "C",
+    explanation:
+      "This is of minor importance. It may explain the teammate's concern, but presentation worries do not justify unsupported data.",
+  },
+  "hq-sjt-0002-5": dragCategoryQuestion({
+    id: "hq-sjt-0002-5",
+    section: "sjt",
+    subtype: "sjt-drag-drop",
+    setId: "hq-sjt-0002",
+    tags: ["text-stem", "set-based", "hard", "multi-step"],
+    issueTags: ["integrity"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Owen, a medical student, is helping a placement group finalise an audit poster. The spreadsheet now includes 18 patient-feedback forms, but Owen can only find 14 paper forms in the approved folder. A teammate says the missing four were probably collected and that removing them will make the chart look too small. The poster deadline is later that day.",
+    ],
+    question: "Place each action into the category that best fits this situation.",
+    instruction: "Place each action into the most suitable category.",
+    categories: [
+      { id: "appropriate", label: "Appropriate" },
+      { id: "inappropriate", label: "Inappropriate" },
+    ],
+    categoryItems: [
+      { id: "raise-discrepancy", text: "Tell the supervisor the source forms and spreadsheet do not match.", answerCategory: "appropriate" },
+      { id: "invent-note", text: "Keep the 18 responses and add a vague limitation so the poster looks complete.", answerCategory: "inappropriate" },
+      { id: "use-confirmed", text: "Use only the 14 forms that can be checked unless the missing forms are verified.", answerCategory: "appropriate" },
+      { id: "avoid-delay", text: "Submit without mentioning the discrepancy because the deadline is close.", answerCategory: "inappropriate" },
+    ],
+    explanation:
+      "Appropriate actions keep the audit honest and verifiable. Inappropriate actions hide uncertainty or knowingly submit unsupported data.",
+  }),
+  "hq-vr-0008-1": {
+    id: "hq-vr-0008-1",
+    section: "vr",
+    subtype: "vr-tfc",
+    setId: "hq-vr-0008",
+    tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Westport School introduced a lunch pre-order app after kitchen staff found that popular meals were selling out early while unpopular meals were thrown away. Pupils had to choose by 9:30 am, but staff could still adjust numbers for pupils who arrived late or forgot to order.",
+      "In the first half-term, recorded food waste fell by 18%. The catering manager said the figure was promising, although a new supplier had also changed portion sizes during the same period. Teachers reported fewer queues, but some pupils without reliable phone access still needed help ordering at registration.",
+      "The governors kept the app for another term and asked for a comparison between year groups before deciding whether to reduce the number of spare meals. They emphasised that the aim was better planning, not a fully automated lunch service.",
+    ],
+    question:
+      "Staff could still make some adjustments for pupils who had not ordered by 9:30 am. According to the passage, this statement is:",
+    options: TFC_OPTIONS,
+    answer: "A",
+    explanation:
+      "The passage states that staff could still adjust numbers for pupils who arrived late or forgot to order.",
+  },
+  "hq-vr-0008-2": {
+    id: "hq-vr-0008-2",
+    section: "vr",
+    subtype: "vr-detail",
+    setId: "hq-vr-0008",
+    tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Westport School introduced a lunch pre-order app after kitchen staff found that popular meals were selling out early while unpopular meals were thrown away. Pupils had to choose by 9:30 am, but staff could still adjust numbers for pupils who arrived late or forgot to order.",
+      "In the first half-term, recorded food waste fell by 18%. The catering manager said the figure was promising, although a new supplier had also changed portion sizes during the same period. Teachers reported fewer queues, but some pupils without reliable phone access still needed help ordering at registration.",
+      "The governors kept the app for another term and asked for a comparison between year groups before deciding whether to reduce the number of spare meals. They emphasised that the aim was better planning, not a fully automated lunch service.",
+    ],
+    question: "Which factor made it harder to judge the app's effect on waste?",
+    options: [
+      { key: "A", text: "The supplier changed portion sizes during the same period." },
+      { key: "B", text: "Teachers reported longer queues after the app was introduced." },
+      { key: "C", text: "The governors immediately removed all spare meals." },
+      { key: "D", text: "Pupils were no longer allowed help at registration." },
+    ],
+    answer: "A",
+    explanation:
+      "The portion-size change happened during the same period, so the waste reduction cannot be attributed solely to the app.",
+  },
+  "hq-vr-0008-3": {
+    id: "hq-vr-0008-3",
+    section: "vr",
+    subtype: "vr-inference",
+    setId: "hq-vr-0008",
+    tags: ["inference-question", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Westport School introduced a lunch pre-order app after kitchen staff found that popular meals were selling out early while unpopular meals were thrown away. Pupils had to choose by 9:30 am, but staff could still adjust numbers for pupils who arrived late or forgot to order.",
+      "In the first half-term, recorded food waste fell by 18%. The catering manager said the figure was promising, although a new supplier had also changed portion sizes during the same period. Teachers reported fewer queues, but some pupils without reliable phone access still needed help ordering at registration.",
+      "The governors kept the app for another term and asked for a comparison between year groups before deciding whether to reduce the number of spare meals. They emphasised that the aim was better planning, not a fully automated lunch service.",
+    ],
+    question: "Which conclusion is best supported by the passage?",
+    options: [
+      { key: "A", text: "The app was useful enough to continue, but its effect still needed checking." },
+      { key: "B", text: "The app removed the need for kitchen staff to make daily decisions." },
+      { key: "C", text: "Phone access problems affected every pupil equally." },
+      { key: "D", text: "The governors decided to end spare meals immediately." },
+    ],
+    answer: "A",
+    explanation:
+      "The governors kept the app but requested comparison data before changing spare-meal provision, showing cautious continuation.",
+  },
+  "hq-vr-0008-4": {
+    id: "hq-vr-0008-4",
+    section: "vr",
+    subtype: "vr-author",
+    setId: "hq-vr-0008",
+    tags: ["author-opinion", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Westport School introduced a lunch pre-order app after kitchen staff found that popular meals were selling out early while unpopular meals were thrown away. Pupils had to choose by 9:30 am, but staff could still adjust numbers for pupils who arrived late or forgot to order.",
+      "In the first half-term, recorded food waste fell by 18%. The catering manager said the figure was promising, although a new supplier had also changed portion sizes during the same period. Teachers reported fewer queues, but some pupils without reliable phone access still needed help ordering at registration.",
+      "The governors kept the app for another term and asked for a comparison between year groups before deciding whether to reduce the number of spare meals. They emphasised that the aim was better planning, not a fully automated lunch service.",
+    ],
+    question: "The passage's overall attitude to the app is best described as:",
+    options: [
+      { key: "A", text: "Opposed, because it created phone access problems." },
+      { key: "B", text: "Uncritically enthusiastic, because waste fell." },
+      { key: "C", text: "Cautiously positive, with attention to practical limits." },
+      { key: "D", text: "Indifferent, because no recommendation was made." },
+    ],
+    answer: "C",
+    explanation:
+      "The passage reports promising waste and queue figures while noting confounding factors, access issues and the need for comparison.",
+  },
+  "hq-vr-0012-1": {
+    id: "hq-vr-0012-1",
+    section: "vr",
+    subtype: "vr-tfc",
+    setId: "hq-vr-0012",
+    tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Marlow Museum trialled quiet-viewing sessions on two weekday mornings after visitors with sensory sensitivities said the main galleries were overwhelming. The museum dimmed some lights, lowered audio exhibits and capped ticket numbers, but it did not remove any objects from display.",
+      "Attendance was lower than at standard morning sessions, yet the feedback forms were unusually detailed. Several visitors said they stayed longer than they usually could. The visitor services manager cautioned that the trial took place outside school holidays, when the museum was quieter anyway.",
+      "Trustees extended the trial but rejected a proposal to reserve every morning for quiet viewing. They asked staff to test one weekend slot and to measure whether ordinary visitors were displaced or simply chose other times.",
+    ],
+    question:
+      "Objects were removed from display during quiet-viewing sessions. According to the passage, this statement is:",
+    options: TFC_OPTIONS,
+    answer: "B",
+    explanation:
+      "The passage says the museum did not remove any objects from display.",
+  },
+  "hq-vr-0012-2": {
+    id: "hq-vr-0012-2",
+    section: "vr",
+    subtype: "vr-detail",
+    setId: "hq-vr-0012",
+    tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Marlow Museum trialled quiet-viewing sessions on two weekday mornings after visitors with sensory sensitivities said the main galleries were overwhelming. The museum dimmed some lights, lowered audio exhibits and capped ticket numbers, but it did not remove any objects from display.",
+      "Attendance was lower than at standard morning sessions, yet the feedback forms were unusually detailed. Several visitors said they stayed longer than they usually could. The visitor services manager cautioned that the trial took place outside school holidays, when the museum was quieter anyway.",
+      "Trustees extended the trial but rejected a proposal to reserve every morning for quiet viewing. They asked staff to test one weekend slot and to measure whether ordinary visitors were displaced or simply chose other times.",
+    ],
+    question: "Why did the visitor services manager urge caution about the attendance figures?",
+    options: [
+      { key: "A", text: "The trial happened outside school holidays, when the museum was already quieter." },
+      { key: "B", text: "The quiet sessions had removed the most popular objects." },
+      { key: "C", text: "Visitors were not allowed to complete feedback forms." },
+      { key: "D", text: "Trustees had already reserved every morning for quiet viewing." },
+    ],
+    answer: "A",
+    explanation:
+      "The manager noted that the trial took place outside school holidays, which could partly explain lower attendance.",
+  },
+  "hq-vr-0012-3": {
+    id: "hq-vr-0012-3",
+    section: "vr",
+    subtype: "vr-inference",
+    setId: "hq-vr-0012",
+    tags: ["inference-question", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Marlow Museum trialled quiet-viewing sessions on two weekday mornings after visitors with sensory sensitivities said the main galleries were overwhelming. The museum dimmed some lights, lowered audio exhibits and capped ticket numbers, but it did not remove any objects from display.",
+      "Attendance was lower than at standard morning sessions, yet the feedback forms were unusually detailed. Several visitors said they stayed longer than they usually could. The visitor services manager cautioned that the trial took place outside school holidays, when the museum was quieter anyway.",
+      "Trustees extended the trial but rejected a proposal to reserve every morning for quiet viewing. They asked staff to test one weekend slot and to measure whether ordinary visitors were displaced or simply chose other times.",
+    ],
+    question: "Which judgement would be most reasonable based on the passage?",
+    options: [
+      { key: "A", text: "The museum saw enough value to extend the trial, but not enough evidence to make it dominant." },
+      { key: "B", text: "The museum concluded that quiet sessions were unsuitable for sensory-sensitive visitors." },
+      { key: "C", text: "The museum proved that ordinary visitors were displaced." },
+      { key: "D", text: "The museum planned to stop all weekend visits." },
+    ],
+    answer: "A",
+    explanation:
+      "Trustees extended the trial but rejected reserving every morning, and asked for further testing and measurement.",
+  },
+  "hq-vr-0012-4": {
+    id: "hq-vr-0012-4",
+    section: "vr",
+    subtype: "vr-negative",
+    setId: "hq-vr-0012",
+    tags: ["negative-except", "text-stem", "set-based", "hard"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Marlow Museum trialled quiet-viewing sessions on two weekday mornings after visitors with sensory sensitivities said the main galleries were overwhelming. The museum dimmed some lights, lowered audio exhibits and capped ticket numbers, but it did not remove any objects from display.",
+      "Attendance was lower than at standard morning sessions, yet the feedback forms were unusually detailed. Several visitors said they stayed longer than they usually could. The visitor services manager cautioned that the trial took place outside school holidays, when the museum was quieter anyway.",
+      "Trustees extended the trial but rejected a proposal to reserve every morning for quiet viewing. They asked staff to test one weekend slot and to measure whether ordinary visitors were displaced or simply chose other times.",
+    ],
+    question: "All of the following are stated facts about the project except:",
+    options: [
+      { key: "A", text: "Some lights were dimmed during the quiet-viewing sessions." },
+      { key: "B", text: "Ticket numbers were capped for the quiet-viewing sessions." },
+      { key: "C", text: "Every weekday morning was reserved for quiet viewing." },
+      { key: "D", text: "Trustees asked staff to test a weekend slot." },
+    ],
+    answer: "C",
+    explanation:
+      "Trustees rejected reserving every morning for quiet viewing, so option C is the exception.",
+  },
+  "hq-vr-0016-1": {
+    id: "hq-vr-0016-1",
+    section: "vr",
+    subtype: "vr-tfc",
+    setId: "hq-vr-0016",
+    tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Fairlake Advice Centre introduced evening video appointments for tenants who could not attend during working hours. Advisers used the same case notes as daytime staff, but complex debt cases were still booked for longer in-person sessions.",
+      "The number of missed appointments fell in the first month. However, the centre had also started sending reminder texts, and one local employer had recently allowed staff to take paid time for advice appointments. Advisers said some clients found video convenient, while others struggled to find a private place to speak.",
+      "The management committee kept one evening video clinic each week and asked for data on whether cases were resolved as quickly as in daytime clinics. It said convenience should not be mistaken for equal access.",
+    ],
+    question:
+      "Complex debt cases were routinely moved to longer in-person sessions. According to the passage, this statement is:",
+    options: TFC_OPTIONS,
+    answer: "A",
+    explanation:
+      "The passage says complex debt cases were still booked for longer in-person sessions.",
+  },
+  "hq-vr-0016-2": {
+    id: "hq-vr-0016-2",
+    section: "vr",
+    subtype: "vr-detail",
+    setId: "hq-vr-0016",
+    tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Fairlake Advice Centre introduced evening video appointments for tenants who could not attend during working hours. Advisers used the same case notes as daytime staff, but complex debt cases were still booked for longer in-person sessions.",
+      "The number of missed appointments fell in the first month. However, the centre had also started sending reminder texts, and one local employer had recently allowed staff to take paid time for advice appointments. Advisers said some clients found video convenient, while others struggled to find a private place to speak.",
+      "The management committee kept one evening video clinic each week and asked for data on whether cases were resolved as quickly as in daytime clinics. It said convenience should not be mistaken for equal access.",
+    ],
+    question: "Which problem with video appointments is mentioned in the passage?",
+    options: [
+      { key: "A", text: "Some clients struggled to find a private place to speak." },
+      { key: "B", text: "Advisers could not access any case notes." },
+      { key: "C", text: "The centre stopped all daytime appointments." },
+      { key: "D", text: "Reminder texts were banned during the trial." },
+    ],
+    answer: "A",
+    explanation:
+      "The second paragraph states that some clients struggled to find a private place to speak.",
+  },
+  "hq-vr-0016-3": {
+    id: "hq-vr-0016-3",
+    section: "vr",
+    subtype: "vr-inference",
+    setId: "hq-vr-0016",
+    tags: ["inference-question", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Fairlake Advice Centre introduced evening video appointments for tenants who could not attend during working hours. Advisers used the same case notes as daytime staff, but complex debt cases were still booked for longer in-person sessions.",
+      "The number of missed appointments fell in the first month. However, the centre had also started sending reminder texts, and one local employer had recently allowed staff to take paid time for advice appointments. Advisers said some clients found video convenient, while others struggled to find a private place to speak.",
+      "The management committee kept one evening video clinic each week and asked for data on whether cases were resolved as quickly as in daytime clinics. It said convenience should not be mistaken for equal access.",
+    ],
+    question: "Which statement is the fairest interpretation of the evidence?",
+    options: [
+      { key: "A", text: "The video clinic may help access, but missed appointments were affected by other changes too." },
+      { key: "B", text: "Video appointments resolved complex debt cases more quickly than all other formats." },
+      { key: "C", text: "Reminder texts had no possible effect on missed appointments." },
+      { key: "D", text: "The committee believed convenience was identical to equal access." },
+    ],
+    answer: "A",
+    explanation:
+      "Missed appointments fell, but reminder texts and employer leave policies also changed, and the committee asked for further outcome data.",
+  },
+  "hq-vr-0016-4": {
+    id: "hq-vr-0016-4",
+    section: "vr",
+    subtype: "vr-summary",
+    setId: "hq-vr-0016",
+    tags: ["summary-structure", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Fairlake Advice Centre introduced evening video appointments for tenants who could not attend during working hours. Advisers used the same case notes as daytime staff, but complex debt cases were still booked for longer in-person sessions.",
+      "The number of missed appointments fell in the first month. However, the centre had also started sending reminder texts, and one local employer had recently allowed staff to take paid time for advice appointments. Advisers said some clients found video convenient, while others struggled to find a private place to speak.",
+      "The management committee kept one evening video clinic each week and asked for data on whether cases were resolved as quickly as in daytime clinics. It said convenience should not be mistaken for equal access.",
+    ],
+    question: "Which summary avoids overstating the findings?",
+    options: [
+      { key: "A", text: "Evening video appointments were continued cautiously while the centre checked outcomes and access." },
+      { key: "B", text: "Video appointments proved that in-person advice was no longer needed." },
+      { key: "C", text: "The centre cancelled reminder texts because they confused clients." },
+      { key: "D", text: "All cases were resolved faster in evening clinics." },
+    ],
+    answer: "A",
+    explanation:
+      "The passage describes cautious continuation, confounding factors and a request for evidence on resolution speed and access.",
+  },
+  "hq-vr-0020-1": {
+    id: "hq-vr-0020-1",
+    section: "vr",
+    subtype: "vr-tfc",
+    setId: "hq-vr-0020",
+    tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Riverton Council placed temporary stewards at a riverside crossing after cyclists and pedestrians reported confusion about a new diversion. The stewards could remind users of the marked route, but they had no power to enforce fines or stop traffic.",
+      "Reported near-misses fell during the three-week trial. The transport officer noted that the trial coincided with dry weather and a school holiday, both of which may have changed traffic patterns. Local shopkeepers said the crossing felt calmer, although some disliked the extra signs outside their premises.",
+      "The council extended the stewards for two further weekends while commissioning clearer painted markings. It said the trial suggested that route information mattered, but it did not prove that paid stewards were the only solution.",
+    ],
+    question:
+      "The stewards had the power to issue fines to cyclists. According to the passage, this statement is:",
+    options: TFC_OPTIONS,
+    answer: "B",
+    explanation:
+      "The passage says the stewards had no power to enforce fines.",
+  },
+  "hq-vr-0020-2": {
+    id: "hq-vr-0020-2",
+    section: "vr",
+    subtype: "vr-detail",
+    setId: "hq-vr-0020",
+    tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Riverton Council placed temporary stewards at a riverside crossing after cyclists and pedestrians reported confusion about a new diversion. The stewards could remind users of the marked route, but they had no power to enforce fines or stop traffic.",
+      "Reported near-misses fell during the three-week trial. The transport officer noted that the trial coincided with dry weather and a school holiday, both of which may have changed traffic patterns. Local shopkeepers said the crossing felt calmer, although some disliked the extra signs outside their premises.",
+      "The council extended the stewards for two further weekends while commissioning clearer painted markings. It said the trial suggested that route information mattered, but it did not prove that paid stewards were the only solution.",
+    ],
+    question: "Which circumstance made the fall in near-misses harder to interpret?",
+    options: [
+      { key: "A", text: "The trial coincided with dry weather and a school holiday." },
+      { key: "B", text: "The stewards stopped all traffic at the crossing." },
+      { key: "C", text: "Shopkeepers unanimously opposed the trial." },
+      { key: "D", text: "The council refused to commission painted markings." },
+    ],
+    answer: "A",
+    explanation:
+      "The transport officer said dry weather and a school holiday may have changed traffic patterns during the trial.",
+  },
+  "hq-vr-0020-3": {
+    id: "hq-vr-0020-3",
+    section: "vr",
+    subtype: "vr-inference",
+    setId: "hq-vr-0020",
+    tags: ["inference-question", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Riverton Council placed temporary stewards at a riverside crossing after cyclists and pedestrians reported confusion about a new diversion. The stewards could remind users of the marked route, but they had no power to enforce fines or stop traffic.",
+      "Reported near-misses fell during the three-week trial. The transport officer noted that the trial coincided with dry weather and a school holiday, both of which may have changed traffic patterns. Local shopkeepers said the crossing felt calmer, although some disliked the extra signs outside their premises.",
+      "The council extended the stewards for two further weekends while commissioning clearer painted markings. It said the trial suggested that route information mattered, but it did not prove that paid stewards were the only solution.",
+    ],
+    question: "Which conclusion is most justified by the trial results?",
+    options: [
+      { key: "A", text: "Clearer route information may reduce confusion, but the best permanent method is not yet established." },
+      { key: "B", text: "The council proved that only paid stewards could reduce near-misses." },
+      { key: "C", text: "The trial showed that fines were necessary." },
+      { key: "D", text: "Weather and holidays had no relevance to traffic patterns." },
+    ],
+    answer: "A",
+    explanation:
+      "The council said route information mattered, but did not treat paid stewards as the only solution and commissioned markings.",
+  },
+  "hq-vr-0020-4": {
+    id: "hq-vr-0020-4",
+    section: "vr",
+    subtype: "vr-author",
+    setId: "hq-vr-0020",
+    tags: ["author-opinion", "text-stem", "set-based", "medium"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus: [
+      "Riverton Council placed temporary stewards at a riverside crossing after cyclists and pedestrians reported confusion about a new diversion. The stewards could remind users of the marked route, but they had no power to enforce fines or stop traffic.",
+      "Reported near-misses fell during the three-week trial. The transport officer noted that the trial coincided with dry weather and a school holiday, both of which may have changed traffic patterns. Local shopkeepers said the crossing felt calmer, although some disliked the extra signs outside their premises.",
+      "The council extended the stewards for two further weekends while commissioning clearer painted markings. It said the trial suggested that route information mattered, but it did not prove that paid stewards were the only solution.",
+    ],
+    question: "Which description best matches the tone of the passage?",
+    options: [
+      { key: "A", text: "Measured and cautious about attributing cause." },
+      { key: "B", text: "Dismissive of any value in route information." },
+      { key: "C", text: "Certain that weather was the only explanation." },
+      { key: "D", text: "Hostile towards shopkeepers' concerns." },
+    ],
+    answer: "A",
+    explanation:
+      "The passage notes positive signs but repeatedly qualifies what can be concluded from the trial.",
+  },
+  "hq-sjt-0003-1": {
+    id: "hq-sjt-0003-1",
+    section: "sjt",
+    subtype: "sjt-appropriateness",
+    setId: "hq-sjt-0003",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["professional-boundaries"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Leah, a medical student, has been helping at a diabetes education group. A participant thanks her afterwards and asks for her personal phone number, saying they sometimes feel embarrassed asking questions in front of the group. The specialist nurse is packing away nearby, and the participant says they do not want to bother staff with small questions.",
+    ],
+    question:
+      "How professional would it be for Leah to politely decline to share her personal number and direct the participant to the nurse or official clinic contact route?",
+    options: APPROPRIATENESS_OPTIONS,
+    answer: "A",
+    explanation:
+      "This is very appropriate because it maintains professional boundaries while helping the participant access legitimate support.",
+  },
+  "hq-sjt-0003-2": {
+    id: "hq-sjt-0003-2",
+    section: "sjt",
+    subtype: "sjt-appropriateness",
+    setId: "hq-sjt-0003",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["professional-boundaries"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Leah, a medical student, has been helping at a diabetes education group. A participant thanks her afterwards and asks for her personal phone number, saying they sometimes feel embarrassed asking questions in front of the group. The specialist nurse is packing away nearby, and the participant says they do not want to bother staff with small questions.",
+    ],
+    question:
+      "How professional would it be for Leah to share her number but say she can only answer simple questions?",
+    options: APPROPRIATENESS_OPTIONS,
+    answer: "D",
+    explanation:
+      "This is very inappropriate. It creates a private route outside supervision and could lead to advice beyond Leah's role.",
+  },
+  "hq-sjt-0003-3": {
+    id: "hq-sjt-0003-3",
+    section: "sjt",
+    subtype: "sjt-importance",
+    setId: "hq-sjt-0003",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["professional-boundaries"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Leah, a medical student, has been helping at a diabetes education group. A participant thanks her afterwards and asks for her personal phone number, saying they sometimes feel embarrassed asking questions in front of the group. The specialist nurse is packing away nearby, and the participant says they do not want to bother staff with small questions.",
+    ],
+    question: "How important would it be to consider that an official clinic contact route may be available?",
+    options: IMPORTANCE_OPTIONS,
+    answer: "B",
+    explanation:
+      "This is important because it helps Leah redirect the participant appropriately, although the central issue is maintaining boundaries.",
+  },
+  "hq-sjt-0003-4": {
+    id: "hq-sjt-0003-4",
+    section: "sjt",
+    subtype: "sjt-importance",
+    setId: "hq-sjt-0003",
+    tags: ["text-stem", "set-based", "easy"],
+    issueTags: ["professional-boundaries"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Leah, a medical student, has been helping at a diabetes education group. A participant thanks her afterwards and asks for her personal phone number, saying they sometimes feel embarrassed asking questions in front of the group. The specialist nurse is packing away nearby, and the participant says they do not want to bother staff with small questions.",
+    ],
+    question: "How important would it be to consider whether Leah's phone contract includes free texts?",
+    options: IMPORTANCE_OPTIONS,
+    answer: "D",
+    explanation:
+      "This is not important. Cost or convenience does not affect the professional boundary or the need for supervised communication.",
+  },
+  "hq-sjt-0003-5": dragCategoryQuestion({
+    id: "hq-sjt-0003-5",
+    section: "sjt",
+    subtype: "sjt-drag-drop",
+    setId: "hq-sjt-0003",
+    tags: ["text-stem", "set-based", "hard", "multi-step"],
+    issueTags: ["professional-boundaries"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Leah, a medical student, has been helping at a diabetes education group. A participant thanks her afterwards and asks for her personal phone number, saying they sometimes feel embarrassed asking questions in front of the group. The specialist nurse is packing away nearby, and the participant says they do not want to bother staff with small questions.",
+    ],
+    question: "Classify the actions as appropriate or inappropriate.",
+    instruction: "Place each action into the most suitable category.",
+    categories: [
+      { id: "appropriate", label: "Appropriate" },
+      { id: "inappropriate", label: "Inappropriate" },
+    ],
+    categoryItems: [
+      { id: "decline-personal", text: "Decline to share personal contact details and explain that questions should go through official routes.", answerCategory: "appropriate" },
+      { id: "share-simple", text: "Share a number but promise only to answer simple questions.", answerCategory: "inappropriate" },
+      { id: "involve-nurse", text: "Ask the specialist nurse how the participant can get follow-up support.", answerCategory: "appropriate" },
+      { id: "private-chat", text: "Suggest discussing the questions privately outside the clinic to avoid embarrassment.", answerCategory: "inappropriate" },
+    ],
+    explanation:
+      "Appropriate actions preserve boundaries and connect the participant with supervised support. Inappropriate actions create private unsupervised contact.",
+  }),
+  "hq-sjt-0004-1": {
+    id: "hq-sjt-0004-1",
+    section: "sjt",
+    subtype: "sjt-appropriateness",
+    setId: "hq-sjt-0004",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["scope-of-practice"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Marcus, a medical student, is observing in a minor injuries unit. A patient who has been waiting for an X-ray result recognises him from a previous placement and asks whether the wrist looks broken on the image that is open on a nearby screen. The supervising clinician has stepped into another cubicle, and the patient says they only want Marcus's honest opinion.",
+    ],
+    question:
+      "How acceptable is it for Marcus to explain that he cannot interpret the X-ray for the patient and to ask the supervising clinician to speak with them?",
+    options: APPROPRIATENESS_OPTIONS,
+    answer: "A",
+    explanation:
+      "This is very appropriate because Marcus stays within competence and ensures the patient receives information from a qualified clinician.",
+  },
+  "hq-sjt-0004-2": {
+    id: "hq-sjt-0004-2",
+    section: "sjt",
+    subtype: "sjt-appropriateness",
+    setId: "hq-sjt-0004",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["scope-of-practice"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Marcus, a medical student, is observing in a minor injuries unit. A patient who has been waiting for an X-ray result recognises him from a previous placement and asks whether the wrist looks broken on the image that is open on a nearby screen. The supervising clinician has stepped into another cubicle, and the patient says they only want Marcus's honest opinion.",
+    ],
+    question:
+      "How acceptable is it for Marcus to give a likely answer but add that the clinician will confirm it later?",
+    options: APPROPRIATENESS_OPTIONS,
+    answer: "D",
+    explanation:
+      "This is very inappropriate because Marcus would be interpreting an investigation and giving clinical information beyond his role.",
+  },
+  "hq-sjt-0004-3": {
+    id: "hq-sjt-0004-3",
+    section: "sjt",
+    subtype: "sjt-importance",
+    setId: "hq-sjt-0004",
+    tags: ["text-stem", "set-based", "medium"],
+    issueTags: ["scope-of-practice"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Marcus, a medical student, is observing in a minor injuries unit. A patient who has been waiting for an X-ray result recognises him from a previous placement and asks whether the wrist looks broken on the image that is open on a nearby screen. The supervising clinician has stepped into another cubicle, and the patient says they only want Marcus's honest opinion.",
+    ],
+    question: "How relevant is staying within competence when discussing investigation results?",
+    options: IMPORTANCE_OPTIONS,
+    answer: "A",
+    explanation:
+      "This is very important. Giving or interpreting clinical results requires appropriate competence and supervision.",
+  },
+  "hq-sjt-0004-4": {
+    id: "hq-sjt-0004-4",
+    section: "sjt",
+    subtype: "sjt-importance",
+    setId: "hq-sjt-0004",
+    tags: ["text-stem", "set-based", "easy"],
+    issueTags: ["scope-of-practice"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Marcus, a medical student, is observing in a minor injuries unit. A patient who has been waiting for an X-ray result recognises him from a previous placement and asks whether the wrist looks broken on the image that is open on a nearby screen. The supervising clinician has stepped into another cubicle, and the patient says they only want Marcus's honest opinion.",
+    ],
+    question: "How relevant is whether Marcus wanted to practise reading X-rays?",
+    options: IMPORTANCE_OPTIONS,
+    answer: "C",
+    explanation:
+      "This is of minor importance. Learning needs may be relevant to supervision later, but they do not justify giving the patient an interpretation.",
+  },
+  "hq-sjt-0004-5": dragCategoryQuestion({
+    id: "hq-sjt-0004-5",
+    section: "sjt",
+    subtype: "sjt-drag-drop",
+    setId: "hq-sjt-0004",
+    tags: ["text-stem", "set-based", "hard", "multi-step"],
+    issueTags: ["scope-of-practice"],
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: [
+      "Marcus, a medical student, is observing in a minor injuries unit. A patient who has been waiting for an X-ray result recognises him from a previous placement and asks whether the wrist looks broken on the image that is open on a nearby screen. The supervising clinician has stepped into another cubicle, and the patient says they only want Marcus's honest opinion.",
+    ],
+    question: "Sort the responses by whether they would be suitable here.",
+    instruction: "Place each action into the most suitable category.",
+    categories: [
+      { id: "appropriate", label: "Appropriate" },
+      { id: "inappropriate", label: "Inappropriate" },
+    ],
+    categoryItems: [
+      { id: "ask-clinician", text: "Tell the patient a clinician will discuss the X-ray and seek the supervisor promptly.", answerCategory: "appropriate" },
+      { id: "likely-answer", text: "Give a likely interpretation because the patient asks for honesty.", answerCategory: "inappropriate" },
+      { id: "stay-kind", text: "Acknowledge the wait and avoid making clinical comments beyond role.", answerCategory: "appropriate" },
+      { id: "screen-teaching", text: "Use the open image to teach the patient what Marcus thinks he can see.", answerCategory: "inappropriate" },
+    ],
+    explanation:
+      "Appropriate actions are honest about limits and involve the clinician. Inappropriate actions interpret results beyond the student's role.",
+  }),
+};
+
+function makeCuratedVrPassageSet(input: {
+  setId: string;
+  stimulus: string[];
+  items: Array<{
+    suffix: number;
+    subtype: UCATSubtypeId;
+    tags: UCATQuestionTag[];
+    question: string;
+    options: Array<{ key: UCATOptionKey; text: string }>;
+    answer: UCATOptionKey;
+    explanation: string;
+  }>;
+}) {
+  return input.items.map(
+    (item): UCATQuestion => ({
+      id: `${input.setId}-${item.suffix}`,
+      section: "vr",
+      subtype: item.subtype,
+      setId: input.setId,
+      tags: item.tags,
+      title: "Verbal Reasoning Practice",
+      leftTitle: "Passage",
+      stimulus: input.stimulus,
+      question: item.question,
+      options: item.options,
+      answer: item.answer,
+      explanation: item.explanation,
+    })
+  );
+}
+
+function makeCuratedQrSet(input: {
+  setId: string;
+  stimulus: string[];
+  visual?: UCATChartVisual;
+  items: Array<{
+    suffix: number;
+    subtype: UCATSubtypeId;
+    tags: UCATQuestionTag[];
+    question: string;
+    options: Array<{ key: UCATOptionKey; text: string }>;
+    answer: UCATOptionKey;
+    explanation: string;
+  }>;
+}) {
+  return input.items.map(
+    (item): UCATQuestion => ({
+      id: `${input.setId}-${item.suffix}`,
+      section: "qr",
+      subtype: item.subtype,
+      setId: input.setId,
+      tags: item.tags,
+      title: "Quantitative Reasoning Practice",
+      leftTitle: input.visual ? "Data" : "Stem",
+      stimulus: input.stimulus,
+      visual: input.visual,
+      question: item.question,
+      options: item.options,
+      answer: item.answer,
+      explanation: item.explanation,
+    })
+  );
+}
+
+type CuratedSjtSingleItem = {
+  suffix: number;
+  subtype: "sjt-appropriateness" | "sjt-importance";
+  tags: UCATQuestionTag[];
+  question: string;
+  options: Array<{ key: UCATOptionKey; text: string }>;
+  answer: UCATOptionKey;
+  explanation: string;
+};
+
+type CuratedSjtDragItem = {
+  suffix: number;
+  subtype: "sjt-drag-drop";
+  tags: UCATQuestionTag[];
+  question: string;
+  categoryItems: Array<{ id: string; text: string; answerCategory: string }>;
+  explanation: string;
+};
+
+function makeCuratedSjtSet(input: {
+  setId: string;
+  issueTags: UCATSjtIssueTag[];
+  stimulus: string[];
+  items: Array<CuratedSjtSingleItem | CuratedSjtDragItem>;
+}) {
+  return input.items.map((item): UCATQuestion => {
+    if (item.subtype === "sjt-drag-drop") {
+      return dragCategoryQuestion({
+        id: `${input.setId}-${item.suffix}`,
+        section: "sjt",
+        subtype: "sjt-drag-drop",
+        setId: input.setId,
+        tags: item.tags,
+        issueTags: input.issueTags,
+        title: "Situational Judgement Practice",
+        leftTitle: "Scenario",
+        stimulus: input.stimulus,
+        question: item.question,
+        instruction: "Place each action into the most suitable category.",
+        categories: [
+          { id: "appropriate", label: "Appropriate" },
+          { id: "inappropriate", label: "Inappropriate" },
+        ],
+        categoryItems: item.categoryItems,
+        explanation: item.explanation,
+      });
+    }
+
+    return {
+      id: `${input.setId}-${item.suffix}`,
+      section: "sjt",
+      subtype: item.subtype,
+      setId: input.setId,
+      tags: item.tags,
+      issueTags: input.issueTags,
+      title: "Situational Judgement Practice",
+      leftTitle: "Scenario",
+      stimulus: input.stimulus,
+      question: item.question,
+      options: item.options,
+      answer: item.answer,
+      explanation: item.explanation,
+    };
+  });
+}
+
+const MORE_CURATED_REPLACEMENTS = Object.fromEntries(
+  [
+    ...makeCuratedVrPassageSet({
+      setId: "hq-vr-0024",
+      stimulus: [
+        "A city pharmacy chain trialled a colour-coded shelf label for medicines that required counselling before sale. The label did not change legal sale restrictions, but it prompted assistants to pause and call the pharmacist when certain products were selected.",
+        "Mystery-shopper checks found that counselling reminders were given more consistently during the trial. However, two of the participating branches had recently hired experienced pharmacy technicians, and the trial covered only weekdays. Some assistants said the labels were helpful for unfamiliar stock, while others worried that too many warnings would make genuine risks easier to miss.",
+        "The superintendent pharmacist extended the trial to weekend shifts and asked for a comparison with branches using a shorter checklist instead. The report concluded that the labels might support safer conversations, but should not be treated as a substitute for training.",
+      ],
+      items: [
+        {
+          suffix: 1,
+          subtype: "vr-tfc",
+          tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+          question:
+            "The shelf label changed the legal restrictions on medicine sales. According to the passage, this statement is:",
+          options: TFC_OPTIONS,
+          answer: "B",
+          explanation:
+            "The passage states that the label did not change legal sale restrictions.",
+        },
+        {
+          suffix: 2,
+          subtype: "vr-detail",
+          tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+          question: "What did assistants do when certain labelled products were selected?",
+          options: [
+            { key: "A", text: "Pause and call the pharmacist." },
+            { key: "B", text: "Remove the product from sale permanently." },
+            { key: "C", text: "Replace counselling with a printed leaflet only." },
+            { key: "D", text: "Ignore weekday sales and record weekend sales only." },
+          ],
+          answer: "A",
+          explanation:
+            "The first paragraph says the label prompted assistants to pause and call the pharmacist.",
+        },
+        {
+          suffix: 3,
+          subtype: "vr-inference",
+          tags: ["inference-question", "text-stem", "set-based", "medium"],
+          question: "Which judgement would be most reasonable based on the passage?",
+          options: [
+            { key: "A", text: "The labels may improve practice, but other staffing and timing factors need checking." },
+            { key: "B", text: "The labels proved training was no longer needed." },
+            { key: "C", text: "The trial showed weekend shifts were safer than weekday shifts." },
+            { key: "D", text: "Experienced technicians made counselling reminders less consistent." },
+          ],
+          answer: "A",
+          explanation:
+            "The trial showed more consistent reminders, but staffing changes and weekday-only data limited the conclusion.",
+        },
+        {
+          suffix: 4,
+          subtype: "vr-negative",
+          tags: ["negative-except", "text-stem", "set-based", "hard"],
+          question: "All of the following are accurate statements about the trial except:",
+          options: [
+            { key: "A", text: "The trial used mystery-shopper checks." },
+            { key: "B", text: "Some staff worried about warning labels becoming too common." },
+            { key: "C", text: "The report recommended replacing pharmacist training with labels." },
+            { key: "D", text: "A comparison with branches using a shorter checklist was requested." },
+          ],
+          answer: "C",
+          explanation:
+            "The report said labels should not be treated as a substitute for training, so option C is the exception.",
+        },
+      ],
+    }),
+    ...makeCuratedVrPassageSet({
+      setId: "hq-vr-0028",
+      stimulus: [
+        "Calder Library installed self-service reservation lockers in its foyer after members complained that collection queues were longest during the first hour after work. Users received a code by email when a reserved book was ready. Staff still handled damaged items, fines and requests for books held off-site.",
+        "Collections from the lockers rose quickly, and the main desk queue shortened on two evenings each week. The library manager warned that the result could not be separated from a new email reminder system introduced at the same time. Older members also reported that the locker screen timed out too quickly.",
+        "The library kept the lockers but delayed removing any desk hours. It planned to test a longer screen timeout and compare branches with and without email reminders.",
+      ],
+      items: [
+        {
+          suffix: 1,
+          subtype: "vr-tfc",
+          tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+          question:
+            "Staff still dealt with some reservation-related problems after the lockers were introduced. According to the passage, this statement is:",
+          options: TFC_OPTIONS,
+          answer: "A",
+          explanation:
+            "The passage says staff still handled damaged items, fines and off-site book requests.",
+        },
+        {
+          suffix: 2,
+          subtype: "vr-detail",
+          tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+          question: "What difficulty was reported by older members?",
+          options: [
+            { key: "A", text: "The locker screen timed out too quickly." },
+            { key: "B", text: "The library stopped sending all emails." },
+            { key: "C", text: "The main desk closed every evening." },
+            { key: "D", text: "Reservations could no longer include off-site books." },
+          ],
+          answer: "A",
+          explanation:
+            "The passage states that older members reported the locker screen timed out too quickly.",
+        },
+        {
+          suffix: 3,
+          subtype: "vr-inference",
+          tags: ["inference-question", "text-stem", "set-based", "medium"],
+          question: "Which statement is the fairest interpretation of the evidence?",
+          options: [
+            { key: "A", text: "The lockers were promising, but the email reminders may also have affected collections." },
+            { key: "B", text: "The lockers made desk staff unnecessary for all reservation issues." },
+            { key: "C", text: "The library proved that older members preferred lockers." },
+            { key: "D", text: "Branches without email reminders had already been compared." },
+          ],
+          answer: "A",
+          explanation:
+            "The manager warned that the queue result could not be separated from the new email reminder system.",
+        },
+        {
+          suffix: 4,
+          subtype: "vr-summary",
+          tags: ["summary-structure", "text-stem", "set-based", "medium"],
+          question: "Which statement best describes the overall message?",
+          options: [
+            { key: "A", text: "Lockers may reduce collection queues, but access issues and other changes need testing." },
+            { key: "B", text: "The library replaced all reservation staff with lockers." },
+            { key: "C", text: "Email reminders failed because collections did not rise." },
+            { key: "D", text: "The lockers were removed because older members disliked them." },
+          ],
+          answer: "A",
+          explanation:
+            "The passage describes early benefits, a confounding reminder system and a planned screen-timeout adjustment.",
+        },
+      ],
+    }),
+    ...makeCuratedVrPassageSet({
+      setId: "hq-vr-0032",
+      stimulus: [
+        "Glenford Transport changed the timetable for a river ferry that linked a park-and-ride site with the town centre. The new timetable added two early sailings but removed one late-morning sailing that had usually carried few passengers.",
+        "Passenger counts rose in the first month, especially among commuters. Yet the change coincided with roadworks on the main bridge, and a local employer had begun subsidising ferry passes. Tour operators complained that the missing late-morning sailing made one walking-tour connection harder.",
+        "Transport officers kept the early sailings for another quarter but reinstated the late-morning sailing on Saturdays. They said the figures supported further testing, not a permanent conclusion about demand.",
+      ],
+      items: [
+        {
+          suffix: 1,
+          subtype: "vr-tfc",
+          tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+          question:
+            "The new timetable removed one late-morning sailing. According to the passage, this statement is:",
+          options: TFC_OPTIONS,
+          answer: "A",
+          explanation:
+            "The first paragraph states that one late-morning sailing was removed.",
+        },
+        {
+          suffix: 2,
+          subtype: "vr-detail",
+          tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+          question: "Which group especially contributed to the rise in passenger counts?",
+          options: [
+            { key: "A", text: "Commuters." },
+            { key: "B", text: "Tour operators." },
+            { key: "C", text: "Bridge repair workers." },
+            { key: "D", text: "Late-morning walkers only." },
+          ],
+          answer: "A",
+          explanation:
+            "The passage says passenger counts rose especially among commuters.",
+        },
+        {
+          suffix: 3,
+          subtype: "vr-inference",
+          tags: ["inference-question", "text-stem", "set-based", "medium"],
+          question: "Which conclusion is most justified by the trial results?",
+          options: [
+            { key: "A", text: "The early sailings may be useful, but other events could have increased ferry use." },
+            { key: "B", text: "The ferry timetable had no effect on commuters." },
+            { key: "C", text: "Roadworks proved that late-morning sailings were unnecessary every day." },
+            { key: "D", text: "Tour operators preferred removing all late-morning sailings." },
+          ],
+          answer: "A",
+          explanation:
+            "Roadworks and subsidised passes coincided with the timetable change, so the rise cannot be attributed only to early sailings.",
+        },
+        {
+          suffix: 4,
+          subtype: "vr-author",
+          tags: ["author-opinion", "text-stem", "set-based", "medium"],
+          question: "What is the passage's overall attitude to the timetable change?",
+          options: [
+            { key: "A", text: "Cautious, because early gains are balanced against confounding factors and connection problems." },
+            { key: "B", text: "Dismissive, because passenger counts fell." },
+            { key: "C", text: "Certain, because demand was permanently proved." },
+            { key: "D", text: "Hostile to commuters using the ferry." },
+          ],
+          answer: "A",
+          explanation:
+            "The passage reports benefits but stresses bridge works, subsidies and a partial reinstatement before permanent conclusions.",
+        },
+      ],
+    }),
+    ...makeCuratedVrPassageSet({
+      setId: "hq-vr-0036",
+      stimulus: [
+        "Kenton Archive ran evening workshops to help residents interpret digitised housing records. Staff chose evening sessions after daytime users said the online catalogue was hard to understand without examples. The workshops used public records only and did not give access to restricted files.",
+        "Bookings filled quickly, but attendance varied. Some residents registered for more than one session because they were researching several addresses. The archivist said this made the booking figures look stronger than the number of individual users. A new local-history exhibition also opened during the same month.",
+        "The archive kept the workshops but changed the booking form so repeat attendance could be counted separately. It also planned a comparison with a written guide for people who could not attend in person.",
+      ],
+      items: [
+        {
+          suffix: 1,
+          subtype: "vr-tfc",
+          tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+          question:
+            "The workshops gave residents access to restricted files. According to the passage, this statement is:",
+          options: TFC_OPTIONS,
+          answer: "B",
+          explanation:
+            "The passage says the workshops used public records only and did not give access to restricted files.",
+        },
+        {
+          suffix: 2,
+          subtype: "vr-detail",
+          tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+          question: "Why could the booking figures overstate the number of individual users?",
+          options: [
+            { key: "A", text: "Some residents registered for more than one session." },
+            { key: "B", text: "The archive counted restricted files as bookings." },
+            { key: "C", text: "The written guide had already replaced workshops." },
+            { key: "D", text: "Daytime users were excluded from all records." },
+          ],
+          answer: "A",
+          explanation:
+            "The archivist said repeat registrations made booking figures look stronger than the number of individual users.",
+        },
+        {
+          suffix: 3,
+          subtype: "vr-inference",
+          tags: ["inference-question", "text-stem", "set-based", "medium"],
+          question: "Which judgement would be most reasonable based on the passage?",
+          options: [
+            { key: "A", text: "Demand appeared encouraging, but the archive needed better counting and comparison." },
+            { key: "B", text: "The workshops proved that written guides would be useless." },
+            { key: "C", text: "The local-history exhibition had no possible effect on interest." },
+            { key: "D", text: "The archive intended to stop all in-person support." },
+          ],
+          answer: "A",
+          explanation:
+            "The archive kept workshops but changed counting and planned a comparison with a written guide.",
+        },
+        {
+          suffix: 4,
+          subtype: "vr-negative",
+          tags: ["negative-except", "text-stem", "set-based", "hard"],
+          question: "All of the following are stated facts about the project except:",
+          options: [
+            { key: "A", text: "The sessions were held in the evening." },
+            { key: "B", text: "A new local-history exhibition opened during the same month." },
+            { key: "C", text: "Repeat attendance would be counted separately in future." },
+            { key: "D", text: "The workshops replaced the public catalogue entirely." },
+          ],
+          answer: "D",
+          explanation:
+            "The passage says the workshops helped people interpret the online catalogue, not that they replaced it.",
+        },
+      ],
+    }),
+    ...makeCuratedVrPassageSet({
+      setId: "hq-vr-0040",
+      stimulus: [
+        "Oakmere Observatory opened a limited number of low-light viewing evenings for families whose children found crowded public nights difficult. Visitors were asked to arrive in small groups, and staff reduced loud announcements, but the telescope programme was otherwise unchanged.",
+        "Feedback was positive, and families stayed for longer than on standard open nights. The education officer noted, however, that the trial nights were all cloudless, whereas several standard nights that month had poor visibility. Volunteers also said the quieter format required more staff time per visitor.",
+        "The observatory added two further low-light evenings but did not replace standard public nights. It planned to compare satisfaction on nights with similar weather before deciding how often to run the format.",
+      ],
+      items: [
+        {
+          suffix: 1,
+          subtype: "vr-tfc",
+          tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+          question:
+            "The telescope programme was changed for the low-light evenings. According to the passage, this statement is:",
+          options: TFC_OPTIONS,
+          answer: "B",
+          explanation:
+            "The passage says the telescope programme was otherwise unchanged.",
+        },
+        {
+          suffix: 2,
+          subtype: "vr-detail",
+          tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+          question: "What made comparison with standard open nights difficult?",
+          options: [
+            { key: "A", text: "The trial nights were cloudless while some standard nights had poor visibility." },
+            { key: "B", text: "The low-light evenings had no visitors." },
+            { key: "C", text: "The observatory cancelled all standard public nights." },
+            { key: "D", text: "Families were not allowed to give feedback." },
+          ],
+          answer: "A",
+          explanation:
+            "Weather conditions differed, so longer stays and satisfaction could not be compared cleanly.",
+        },
+        {
+          suffix: 3,
+          subtype: "vr-inference",
+          tags: ["inference-question", "text-stem", "set-based", "medium"],
+          question: "Which statement is the fairest interpretation of the evidence?",
+          options: [
+            { key: "A", text: "The quieter format was promising but more resource-intensive and not fully comparable yet." },
+            { key: "B", text: "The trial proved weather had no effect on visitor satisfaction." },
+            { key: "C", text: "The observatory decided low-light evenings should replace all other nights." },
+            { key: "D", text: "Volunteers said the format required less staff time per visitor." },
+          ],
+          answer: "A",
+          explanation:
+            "Feedback and stays were positive, but weather and staffing demands limited conclusions.",
+        },
+        {
+          suffix: 4,
+          subtype: "vr-summary",
+          tags: ["summary-structure", "text-stem", "set-based", "medium"],
+          question: "Which summary avoids overstating the findings?",
+          options: [
+            { key: "A", text: "A quieter viewing format was extended cautiously while fairer comparisons were planned." },
+            { key: "B", text: "The observatory abandoned standard nights after one successful month." },
+            { key: "C", text: "Poor visibility caused the trial to fail." },
+            { key: "D", text: "The telescope programme was redesigned for every visitor." },
+          ],
+          answer: "A",
+          explanation:
+            "The observatory added further evenings but planned comparison on similar-weather nights before deciding frequency.",
+        },
+      ],
+    }),
+    ...makeCuratedVrPassageSet({
+      setId: "hq-vr-0044",
+      stimulus: [
+        "Silverton Leisure Centre tested coloured wristbands for lane-swim sessions after swimmers complained that fast and slow lanes were often mixed. The bands showed which lane a swimmer had booked, but lifeguards could still move swimmers if a lane became unsafe or overcrowded.",
+        "Complaints about lane speed fell, although the centre also introduced a new booking limit in the same week. Some swimmers liked the clearer system, while others said the colours made them feel publicly labelled. Staff noticed that beginners were more likely to ask for advice before entering the pool.",
+        "Managers kept the wristbands for peak sessions only and asked for feedback on whether signs alone could achieve the same clarity. They said the system should guide swimmers, not embarrass them.",
+      ],
+      items: [
+        {
+          suffix: 1,
+          subtype: "vr-tfc",
+          tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+          question:
+            "Lifeguards could still move swimmers between lanes for safety or crowding reasons. According to the passage, this statement is:",
+          options: TFC_OPTIONS,
+          answer: "A",
+          explanation:
+            "The passage states that lifeguards could still move swimmers if a lane became unsafe or overcrowded.",
+        },
+        {
+          suffix: 2,
+          subtype: "vr-detail",
+          tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+          question: "What concern did some swimmers have about the wristbands?",
+          options: [
+            { key: "A", text: "The colours made them feel publicly labelled." },
+            { key: "B", text: "The wristbands prevented lifeguards from acting." },
+            { key: "C", text: "The booking limit had been removed." },
+            { key: "D", text: "Beginners were banned from asking for advice." },
+          ],
+          answer: "A",
+          explanation:
+            "The passage says some swimmers felt publicly labelled by the colours.",
+        },
+        {
+          suffix: 3,
+          subtype: "vr-inference",
+          tags: ["inference-question", "text-stem", "set-based", "medium"],
+          question: "Which conclusion is most justified by the trial results?",
+          options: [
+            { key: "A", text: "The bands may have helped lane organisation, but the booking limit and swimmer comfort matter." },
+            { key: "B", text: "The wristbands proved signs could never work." },
+            { key: "C", text: "The centre decided to use bands at all times." },
+            { key: "D", text: "Complaints rose because lifeguards could move swimmers." },
+          ],
+          answer: "A",
+          explanation:
+            "Complaints fell, but a booking limit started at the same time and managers asked whether signs could achieve the same clarity.",
+        },
+        {
+          suffix: 4,
+          subtype: "vr-author",
+          tags: ["author-opinion", "text-stem", "set-based", "medium"],
+          question: "Which description best matches the tone of the passage?",
+          options: [
+            { key: "A", text: "Balanced, recognising operational benefits and possible embarrassment." },
+            { key: "B", text: "Dismissive of swimmers who wanted clearer lanes." },
+            { key: "C", text: "Certain that wristbands were the only possible solution." },
+            { key: "D", text: "Hostile towards lifeguards moving swimmers." },
+          ],
+          answer: "A",
+          explanation:
+            "The passage describes reduced complaints and clearer advice, but also concerns about labelling and the possibility of signs.",
+        },
+      ],
+    }),
+    ...makeCuratedSjtSet({
+      setId: "hq-sjt-0005",
+      issueTags: ["candour"],
+      stimulus: [
+        "Sofia, a medical student, realises she told a visitor that visiting starts at 2 pm, but the ward has temporarily changed visiting to 3 pm because of infection-control cleaning. The visitor has travelled a long way and is already at the hospital entrance. A nurse is available but busy arranging another patient's discharge.",
+      ],
+      items: [
+        {
+          suffix: 1,
+          subtype: "sjt-appropriateness",
+          tags: ["text-stem", "set-based", "medium"],
+          question:
+            "How appropriate is it for Sofia to tell the visitor there may have been a mistake and find the nurse, but not clearly explain that she gave the wrong time?",
+          options: APPROPRIATENESS_OPTIONS,
+          answer: "B",
+          explanation:
+            "This is appropriate because Sofia seeks help and does not ignore the issue. It is not ideal because she is not fully open about her own mistake.",
+        },
+        {
+          suffix: 2,
+          subtype: "sjt-appropriateness",
+          tags: ["text-stem", "set-based", "medium"],
+          question:
+            "How appropriate is it for Sofia to say nothing and hope the entrance staff explain the correct time?",
+          options: APPROPRIATENESS_OPTIONS,
+          answer: "D",
+          explanation:
+            "This is very inappropriate because it avoids correcting misinformation and leaves the visitor to deal with the consequence of Sofia's error.",
+        },
+        {
+          suffix: 3,
+          subtype: "sjt-importance",
+          tags: ["text-stem", "set-based", "medium"],
+          question: "How important is being open about the incorrect information so it can be corrected?",
+          options: IMPORTANCE_OPTIONS,
+          answer: "A",
+          explanation:
+            "This is very important because honesty allows staff to correct the situation and maintain trust.",
+        },
+        {
+          suffix: 4,
+          subtype: "sjt-importance",
+          tags: ["text-stem", "set-based", "easy"],
+          question: "How important is whether the visitor remembers Sofia's name?",
+          options: IMPORTANCE_OPTIONS,
+          answer: "D",
+          explanation:
+            "This is not important to deciding the right action. The priority is correcting the information and being honest.",
+        },
+        {
+          suffix: 5,
+          subtype: "sjt-drag-drop",
+          tags: ["text-stem", "set-based", "hard", "multi-step"],
+          question: "Decide which actions are appropriate and which are inappropriate.",
+          categoryItems: [
+            { id: "tell-nurse", text: "Tell the nurse what Sofia said and ask how best to help the visitor.", answerCategory: "appropriate" },
+            { id: "ignore-error", text: "Avoid mentioning the error because the visitor may not complain.", answerCategory: "inappropriate" },
+            { id: "apologise", text: "Apologise for the incorrect information once the correct arrangements are confirmed.", answerCategory: "appropriate" },
+            { id: "blame-signs", text: "Blame the ward signs without checking the current visiting arrangement.", answerCategory: "inappropriate" },
+          ],
+          explanation:
+            "Appropriate actions correct the misinformation and involve staff. Inappropriate actions avoid honesty or shift blame without checking facts.",
+        },
+      ],
+    }),
+    ...makeCuratedSjtSet({
+      setId: "hq-sjt-0006",
+      issueTags: ["patient-safety"],
+      stimulus: [
+        "Tariq, a medical student, notices that a sharps bin in a treatment room is filled above the marked line and is partly blocking the work surface. A healthcare assistant says the room is needed for the next patient and suggests pushing the lid down to make space. The nurse in charge is checking medication nearby.",
+      ],
+      items: [
+        {
+          suffix: 1,
+          subtype: "sjt-appropriateness",
+          tags: ["text-stem", "set-based", "medium"],
+          question:
+            "How suitable would it be for Tariq to avoid touching the bin and promptly tell the nurse in charge?",
+          options: APPROPRIATENESS_OPTIONS,
+          answer: "A",
+          explanation:
+            "This is very appropriate because it recognises a safety risk and escalates it without handling hazardous equipment beyond role.",
+        },
+        {
+          suffix: 2,
+          subtype: "sjt-appropriateness",
+          tags: ["text-stem", "set-based", "medium"],
+          question:
+            "How suitable would it be for Tariq to keep the next patient away from the work surface but wait until later to mention the overfilled bin?",
+          options: APPROPRIATENESS_OPTIONS,
+          answer: "C",
+          explanation:
+            "This is inappropriate because an overfilled sharps bin should be escalated promptly. It is not the worst response because Tariq is at least trying to reduce immediate exposure.",
+        },
+        {
+          suffix: 3,
+          subtype: "sjt-importance",
+          tags: ["text-stem", "set-based", "medium"],
+          question: "How much importance should be given to preventing avoidable sharps injury?",
+          options: IMPORTANCE_OPTIONS,
+          answer: "A",
+          explanation:
+            "This is very important because an overfilled sharps bin is an immediate safety concern.",
+        },
+        {
+          suffix: 4,
+          subtype: "sjt-importance",
+          tags: ["text-stem", "set-based", "easy"],
+          question: "How much importance should be given to whether the work surface has recently been cleaned?",
+          options: IMPORTANCE_OPTIONS,
+          answer: "D",
+          explanation:
+            "This is not important to the decision about an overfilled sharps bin. The safety risk needs escalation regardless.",
+        },
+        {
+          suffix: 5,
+          subtype: "sjt-drag-drop",
+          tags: ["text-stem", "set-based", "hard", "multi-step"],
+          question: "Group the actions according to their professional suitability.",
+          categoryItems: [
+            { id: "tell-nurse", text: "Tell the nurse in charge that the sharps bin is above the marked fill line.", answerCategory: "appropriate" },
+            { id: "push-lid", text: "Push the contents down to make the room ready faster.", answerCategory: "inappropriate" },
+            { id: "keep-clear", text: "Avoid using the blocked work surface until staff have dealt with the bin.", answerCategory: "appropriate" },
+            { id: "move-alone", text: "Carry the overfilled bin to another room without asking staff.", answerCategory: "inappropriate" },
+          ],
+          explanation:
+            "Appropriate actions avoid handling the hazard and alert qualified staff. Inappropriate actions increase sharps risk or act beyond role.",
+        },
+      ],
+    }),
+    ...makeCuratedQrSet({
+      setId: "hq-qr-geometry-0004",
+      stimulus: [
+        "The table shows dimensions for four clinic rooms. Flooring is priced per square metre. Paint calculations use the four walls only and ignore doors and windows.",
+      ],
+      visual: {
+        type: "table",
+        title: "Clinic room dimensions",
+        headers: ["Room", "Length", "Width", "Height"],
+        rows: [
+          ["A", "6.5 m", "4.0 m", "2.8 m"],
+          ["B", "5.2 m", "5.0 m", "2.8 m"],
+          ["C", "7.0 m", "3.8 m", "2.8 m"],
+          ["D", "4.5 m", "6.2 m", "2.8 m"],
+        ],
+      },
+      items: [
+        {
+          suffix: 1,
+          subtype: "qr-units-geometry",
+          tags: ["data-display", "set-based", "medium"],
+          question: "Which room has the greatest floor area?",
+          options: [
+            { key: "A", text: "Room A" },
+            { key: "B", text: "Room B" },
+            { key: "C", text: "Room C" },
+            { key: "D", text: "Room D" },
+          ],
+          answer: "D",
+          explanation:
+            "Floor areas are A 26.0 m2, B 26.0 m2, C 26.6 m2 and D 27.9 m2. Room D is greatest.",
+        },
+        {
+          suffix: 2,
+          subtype: "qr-units-geometry",
+          tags: ["data-display", "set-based", "hard", "multi-step"],
+          question:
+            "Vinyl flooring costs GBP 18 per m2. If Rooms A and D need 10% extra material for waste, what is the total material cost?",
+          options: [
+            { key: "A", text: "GBP 970.20" },
+            { key: "B", text: "GBP 1,067.22" },
+            { key: "C", text: "GBP 1,164.24" },
+            { key: "D", text: "GBP 1,940.40" },
+          ],
+          answer: "B",
+          explanation:
+            "Rooms A and D have 26.0 + 27.9 = 53.9 m2. Adding 10% gives 59.29 m2. 59.29 x GBP 18 = GBP 1,067.22.",
+        },
+        {
+          suffix: 3,
+          subtype: "qr-rates-ratios",
+          tags: ["data-display", "set-based", "medium"],
+          question: "For Room C, what is the ratio of length to width in simplest whole-number form?",
+          options: [
+            { key: "A", text: "19:35" },
+            { key: "B", text: "35:19" },
+            { key: "C", text: "70:19" },
+            { key: "D", text: "7:38" },
+          ],
+          answer: "B",
+          explanation:
+            "Room C is 7.0 m by 3.8 m. The ratio 7.0:3.8 is 70:38, which simplifies to 35:19.",
+        },
+        {
+          suffix: 4,
+          subtype: "qr-calculator-strategy",
+          tags: ["data-display", "set-based", "hard", "multi-step"],
+          question:
+            "Paint covers 12 m2 per litre. How many whole litres are needed to paint the walls of Rooms B and C once?",
+          options: [
+            { key: "A", text: "8 litres" },
+            { key: "B", text: "9 litres" },
+            { key: "C", text: "10 litres" },
+            { key: "D", text: "12 litres" },
+          ],
+          answer: "C",
+          explanation:
+            "Wall area = 2 x (length + width) x height. Room B is 57.12 m2 and Room C is 60.48 m2, total 117.6 m2. 117.6 / 12 = 9.8, so 10 whole litres are needed.",
+        },
+      ],
+    }),
+    ...makeCuratedQrSet({
+      setId: "hq-qr-finance-0005",
+      stimulus: [
+        "A revision shop records packs sold during a promotion. Returned packs are fully refunded and are not counted as final sales.",
+      ],
+      visual: {
+        type: "table",
+        title: "Revision pack sales",
+        headers: ["Pack", "Selling price", "Packs sold", "Return rate"],
+        rows: [
+          ["Basic", "GBP 12.60", "240", "5%"],
+          ["Plus", "GBP 16.80", "200", "8%"],
+          ["Clinical", "GBP 21.00", "160", "10%"],
+        ],
+      },
+      items: [
+        {
+          suffix: 1,
+          subtype: "qr-percentages",
+          tags: ["data-display", "set-based", "medium", "multi-step"],
+          question: "What percentage of final sales were Plus packs?",
+          options: [
+            { key: "A", text: "30.7%" },
+            { key: "B", text: "33.1%" },
+            { key: "C", text: "36.0%" },
+            { key: "D", text: "40.0%" },
+          ],
+          answer: "B",
+          explanation:
+            "Final sales are Basic 228, Plus 184 and Clinical 144, total 556. Plus share = 184 / 556 x 100 = 33.1%.",
+        },
+        {
+          suffix: 2,
+          subtype: "qr-calculator-strategy",
+          tags: ["data-display", "set-based", "hard", "calculator-heavy"],
+          question: "What was the final revenue from Basic and Plus packs combined?",
+          options: [
+            { key: "A", text: "GBP 5,600.00" },
+            { key: "B", text: "GBP 5,964.00" },
+            { key: "C", text: "GBP 6,384.00" },
+            { key: "D", text: "GBP 7,224.00" },
+          ],
+          answer: "B",
+          explanation:
+            "Basic final revenue is 228 x GBP 12.60 = GBP 2,872.80. Plus final revenue is 184 x GBP 16.80 = GBP 3,091.20. Combined = GBP 5,964.00.",
+        },
+        {
+          suffix: 3,
+          subtype: "qr-rates-ratios",
+          tags: ["data-display", "set-based", "medium", "multi-step"],
+          question: "What is the ratio of final Basic sales to final Clinical sales?",
+          options: [
+            { key: "A", text: "5:3" },
+            { key: "B", text: "12:19" },
+            { key: "C", text: "19:12" },
+            { key: "D", text: "3:2" },
+          ],
+          answer: "C",
+          explanation:
+            "Final Basic sales are 240 x 95% = 228. Final Clinical sales are 160 x 90% = 144. The ratio 228:144 simplifies to 19:12.",
+        },
+        {
+          suffix: 4,
+          subtype: "qr-estimation",
+          tags: ["data-display", "set-based", "medium", "multi-step"],
+          question: "Using quick estimation, which is closest to the final revenue from all three pack types?",
+          options: [
+            { key: "A", text: "GBP 7,000" },
+            { key: "B", text: "GBP 8,000" },
+            { key: "C", text: "GBP 9,000" },
+            { key: "D", text: "GBP 10,500" },
+          ],
+          answer: "C",
+          explanation:
+            "Final revenue is about GBP 2,873 + GBP 3,091 + GBP 3,024 = GBP 8,988, closest to GBP 9,000.",
+        },
+      ],
+    }),
+    ...makeCuratedQrSet({
+      setId: "hq-qr-geometry-0017",
+      stimulus: [
+        "A community centre is choosing flooring and acoustic panels for four rooms. The plan scale for Room A is also being checked.",
+      ],
+      visual: {
+        type: "table",
+        title: "Community centre rooms",
+        headers: ["Room", "Length", "Width", "Height"],
+        rows: [
+          ["A", "8.0 m", "6.0 m", "3.0 m"],
+          ["B", "7.5 m", "5.2 m", "3.0 m"],
+          ["C", "9.0 m", "4.4 m", "3.0 m"],
+          ["D", "6.2 m", "6.1 m", "3.0 m"],
+        ],
+      },
+      items: [
+        {
+          suffix: 1,
+          subtype: "qr-units-geometry",
+          tags: ["data-display", "set-based", "medium"],
+          question: "Which room has a floor area of at least 40 m2 and a perimeter under 29 m?",
+          options: [
+            { key: "A", text: "Room A" },
+            { key: "B", text: "Room B" },
+            { key: "C", text: "Room C" },
+            { key: "D", text: "Room D" },
+          ],
+          answer: "A",
+          explanation:
+            "Room A has area 8 x 6 = 48 m2 and perimeter 2 x (8 + 6) = 28 m. The other rooms either have area below 40 m2 or do not meet both conditions.",
+        },
+        {
+          suffix: 2,
+          subtype: "qr-units-geometry",
+          tags: ["data-display", "set-based", "hard", "multi-step"],
+          question:
+            "Carpet tiles cover 5 m2 per box. Rooms B and D need 5% extra tiles for spare stock. How many boxes are needed?",
+          options: [
+            { key: "A", text: "15 boxes" },
+            { key: "B", text: "16 boxes" },
+            { key: "C", text: "17 boxes" },
+            { key: "D", text: "18 boxes" },
+          ],
+          answer: "C",
+          explanation:
+            "Rooms B and D total 39.0 + 37.82 = 76.82 m2. Adding 5% gives 80.661 m2. 80.661 / 5 = 16.13, so 17 boxes are needed.",
+        },
+        {
+          suffix: 3,
+          subtype: "qr-rates-ratios",
+          tags: ["data-display", "set-based", "medium"],
+          question: "Room A is drawn as 16 cm long on a plan. What scale is being used?",
+          options: [
+            { key: "A", text: "1 cm represents 0.25 m" },
+            { key: "B", text: "1 cm represents 0.5 m" },
+            { key: "C", text: "1 cm represents 1.6 m" },
+            { key: "D", text: "1 cm represents 2 m" },
+          ],
+          answer: "B",
+          explanation:
+            "Room A is 8.0 m long. 8.0 m / 16 cm = 0.5 m per cm.",
+        },
+        {
+          suffix: 4,
+          subtype: "qr-calculator-strategy",
+          tags: ["data-display", "set-based", "hard", "multi-step"],
+          question:
+            "Acoustic panels cover 2.4 m2 each. If panels are fitted to the lower 1.2 m of all walls in Rooms C and D, how many panels are needed?",
+          options: [
+            { key: "A", text: "24 panels" },
+            { key: "B", text: "25 panels" },
+            { key: "C", text: "26 panels" },
+            { key: "D", text: "28 panels" },
+          ],
+          answer: "C",
+          explanation:
+            "Panel area is perimeter x 1.2 m. Room C: 2 x (9.0 + 4.4) x 1.2 = 32.16 m2. Room D: 2 x (6.2 + 6.1) x 1.2 = 29.52 m2. Total 61.68 / 2.4 = 25.7, so 26 panels.",
+        },
+      ],
+    }),
+    ...makeCuratedQrSet({
+      setId: "hq-qr-finance-0018",
+      stimulus: [
+        "A clinic sells monthly wellbeing memberships. Concession members pay a reduced monthly fee.",
+      ],
+      visual: {
+        type: "table",
+        title: "Monthly membership data",
+        headers: ["Plan", "Monthly fee", "Members", "Concession share", "Concession discount"],
+        rows: [
+          ["Bronze", "GBP 18", "320", "30%", "25%"],
+          ["Silver", "GBP 26", "210", "40%", "20%"],
+          ["Gold", "GBP 40", "95", "20%", "15%"],
+        ],
+      },
+      items: [
+        {
+          suffix: 1,
+          subtype: "qr-percentages",
+          tags: ["data-display", "set-based", "medium", "multi-step"],
+          question: "What percentage of all members are concession members on the Bronze or Silver plans?",
+          options: [
+            { key: "A", text: "24.6%" },
+            { key: "B", text: "28.8%" },
+            { key: "C", text: "32.0%" },
+            { key: "D", text: "36.4%" },
+          ],
+          answer: "B",
+          explanation:
+            "Bronze concession members = 30% of 320 = 96. Silver concession members = 40% of 210 = 84. Total = 180 out of 625 members, so 180 / 625 x 100 = 28.8%.",
+        },
+        {
+          suffix: 2,
+          subtype: "qr-calculator-strategy",
+          tags: ["data-display", "set-based", "hard", "calculator-heavy"],
+          question: "What is the monthly revenue from Silver members after concession discounts?",
+          options: [
+            { key: "A", text: "GBP 4,368.00" },
+            { key: "B", text: "GBP 5,023.20" },
+            { key: "C", text: "GBP 5,460.00" },
+            { key: "D", text: "GBP 6,552.00" },
+          ],
+          answer: "B",
+          explanation:
+            "Silver has 126 full-price members and 84 concession members. Revenue = 126 x GBP 26 + 84 x GBP 20.80 = GBP 5,023.20.",
+        },
+        {
+          suffix: 3,
+          subtype: "qr-rates-ratios",
+          tags: ["data-display", "set-based", "medium", "multi-step"],
+          question: "What is the ratio of full-price Bronze members to full-price Gold members?",
+          options: [
+            { key: "A", text: "56:19" },
+            { key: "B", text: "19:56" },
+            { key: "C", text: "16:5" },
+            { key: "D", text: "224:95" },
+          ],
+          answer: "A",
+          explanation:
+            "Full-price Bronze members = 70% of 320 = 224. Full-price Gold members = 80% of 95 = 76. The ratio 224:76 simplifies to 56:19.",
+        },
+        {
+          suffix: 4,
+          subtype: "qr-estimation",
+          tags: ["data-display", "set-based", "medium", "multi-step"],
+          question: "Using quick estimation, which is closest to total monthly revenue from all plans?",
+          options: [
+            { key: "A", text: "GBP 11,500" },
+            { key: "B", text: "GBP 14,000" },
+            { key: "C", text: "GBP 16,500" },
+            { key: "D", text: "GBP 19,000" },
+          ],
+          answer: "B",
+          explanation:
+            "Revenue is about GBP 5,328 from Bronze, GBP 5,023 from Silver and GBP 3,686 from Gold, total about GBP 14,037, closest to GBP 14,000.",
+        },
+      ],
+    }),
+  ].map((question) => [question.id, question])
+) as Record<string, UCATQuestion>;
+
+const ALL_CURATED_REPLACEMENTS: Record<string, UCATQuestion> = {
+  ...HIGH_QUALITY_9000_CURATED_REPLACEMENTS,
+  ...MORE_CURATED_REPLACEMENTS,
+};
+
+function applyCuratedQuestionReplacements(questions: UCATQuestion[]) {
+  return questions.map(
+    (question) => ALL_CURATED_REPLACEMENTS[question.id] ?? question
+  );
+}
+
 export const HIGH_QUALITY_9000_RAW_VR_QUESTIONS: UCATQuestion[] = range(
   HIGH_QUALITY_9000_COMPLETED_BATCHES * VR_SETS_PER_BATCH
 ).flatMap(makeVrSet);
 
-export const HIGH_QUALITY_9000_VR_QUESTIONS: UCATQuestion[] = selectQuestionGroups({
-  questions: HIGH_QUALITY_9000_RAW_VR_QUESTIONS,
-  targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.vr,
-  expectedGroupSize: 4,
-  stimulusCap: 8,
-  questionTemplateCap: 160,
-});
+export const HIGH_QUALITY_9000_VR_QUESTIONS: UCATQuestion[] =
+  applyCuratedQuestionReplacements(
+    selectQuestionGroups({
+      questions: HIGH_QUALITY_9000_RAW_VR_QUESTIONS,
+      targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.vr,
+      expectedGroupSize: 4,
+      stimulusCap: 8,
+      questionTemplateCap: 160,
+    })
+  );
 
 const DM_NOUN_GROUPS = [
   ["amber permits", "checked records", "urgent referrals", "archived files", "digital logs"],
@@ -3105,17 +5699,155 @@ function makeQrSet(setIndex: number): UCATQuestion[] {
   }
 }
 
+const QR_CONTEXT_SOURCES = [
+  "a clinic operations dashboard",
+  "a school resource review",
+  "a community transport log",
+  "a pharmacy stock audit",
+  "a catering order sheet",
+  "a leisure-centre booking report",
+  "a charity delivery record",
+  "a revision-course finance sheet",
+  "a library usage summary",
+  "a mobile health-team rota",
+  "a workshop attendance register",
+  "a local council planning note",
+  "an equipment hire ledger",
+  "a patient-support service review",
+  "a campus facilities spreadsheet",
+  "a visitor-services log",
+] as const;
+
+const QR_CONTEXT_NOTES = [
+  "Values have been rounded only where shown.",
+  "Use the figures shown; no seasonal adjustment has been made.",
+  "Ignore fixed overheads unless they are stated in the question.",
+  "Assume the same conditions apply throughout the period described.",
+  "Treat all percentages as applying to the relevant row only.",
+  "Where a whole item is needed, round up at the final step.",
+  "Times are recorded using the same clock for all entries.",
+  "The comparison is intended to support a quick operational decision.",
+  "All prices include VAT unless a question states otherwise.",
+  "The table excludes cancelled bookings unless stated.",
+  "Distances are one-way unless a return journey is specified.",
+  "Use exact values during working and round only the answer.",
+  "The data were checked once before being entered into the table.",
+  "Assume missing administrative time is negligible.",
+  "The figures refer to completed activity, not planned activity.",
+  "No extra discount applies beyond what is shown.",
+  "Stock figures refer to usable items only.",
+  "The same measurement units are used across the table.",
+  "The manager wants the closest practical answer.",
+  "The calculation should be based only on the listed items.",
+] as const;
+
+function qrSetIndex(question: UCATQuestion) {
+  const value = question.setId ?? question.id;
+  const match = value.match(/-(\d+)$/);
+  return match ? Number(match[1]) - 1 : 0;
+}
+
+function makeQrContextNote(setIndex: number) {
+  const source = pick(QR_CONTEXT_SOURCES, setIndex * 7);
+  const note = pick(QR_CONTEXT_NOTES, setIndex * 11);
+  return `Source note: the data come from ${source}. ${note}`;
+}
+
+function varyQrQuestionText(questionText: string, setIndex: number) {
+  const simpleVariants: Record<string, string[]> = {
+    "Which service arrives latest?": [
+      "Which listed service reaches its destination last?",
+      "Which service has the latest arrival time?",
+      "Which service arrives after all the others?",
+      "Which service would a passenger reach last?",
+    ],
+    "How many full bottles are needed for all four patients for 7 days?": [
+      "How many complete bottles are required to cover all four patients for 7 days?",
+      "What is the minimum number of full bottles needed for the four patients over 7 days?",
+      "For a 7-day supply for all four patients, how many whole bottles are needed?",
+      "How many bottles must be opened to provide all four patients with 7 days of treatment?",
+    ],
+    "What is the annual cost of the Plus plan including its joining fee?": [
+      "Including the joining fee, what is the first-year cost of the Plus plan?",
+      "What would a customer pay for the Plus plan in the first year, including the joining fee?",
+      "What is the total year-one cost for the Plus plan?",
+      "How much does the Plus plan cost over 12 months once the joining fee is included?",
+    ],
+    "How much flour is needed for the scaled recipe?": [
+      "How much flour is required after scaling the recipe?",
+      "What quantity of flour is needed for the adjusted number of portions?",
+      "After scaling, what mass of flour should be used?",
+      "How much flour should be measured for the larger batch?",
+    ],
+    "What is the total revenue before the promotion?": [
+      "What revenue was made before the promotion began?",
+      "Before any promotional discount, what was the sales revenue?",
+      "What was pre-promotion revenue for the units sold?",
+      "How much income was generated before the promotion?",
+    ],
+    "What is the profit before the promotion?": [
+      "What profit was made before the promotion began?",
+      "Before the promotion, what was the total profit?",
+      "What was the pre-promotion profit on the units sold?",
+      "How much profit was generated before any promotional discount?",
+    ],
+  };
+
+  const exact = simpleVariants[questionText];
+  if (exact) return pick(exact, setIndex);
+
+  const workerMatch = questionText.match(
+    /^How many days would Worker D take to complete (\d+)% at the same rate\?$/
+  );
+  if (workerMatch) {
+    const target = workerMatch[1];
+    return pick(
+      [
+        `At the same rate, how many days would Worker D need to complete ${target}% of the project?`,
+        `How long would Worker D take to complete ${target}% if their rate stayed constant?`,
+        `Using Worker D's current rate, how many days are needed for ${target}% completion?`,
+        `How many days of Worker D's work are required to complete ${target}%?`,
+      ],
+      setIndex
+    );
+  }
+
+  return questionText;
+}
+
+function enrichGeneratedQrQuestions(questions: UCATQuestion[]) {
+  return questions.map((question) => {
+    if (question.section !== "qr") return question;
+
+    const setIndex = qrSetIndex(question);
+    const contextNote = makeQrContextNote(setIndex);
+
+    return {
+      ...question,
+      stimulus: question.stimulus.includes(contextNote)
+        ? question.stimulus
+        : [...question.stimulus, contextNote],
+      question: varyQrQuestionText(question.question, setIndex),
+    };
+  });
+}
+
 export const HIGH_QUALITY_9000_RAW_QR_QUESTIONS: UCATQuestion[] = range(
   HIGH_QUALITY_9000_COMPLETED_BATCHES * QR_SETS_PER_BATCH
 ).flatMap(makeQrSet);
 
-export const HIGH_QUALITY_9000_QR_QUESTIONS: UCATQuestion[] = selectQuestionGroups({
-  questions: HIGH_QUALITY_9000_RAW_QR_QUESTIONS,
-  targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.qr,
-  expectedGroupSize: 4,
-  stimulusCap: 80,
-  questionTemplateCap: 96,
-});
+export const HIGH_QUALITY_9000_QR_QUESTIONS: UCATQuestion[] =
+  enrichGeneratedQrQuestions(
+    applyCuratedQuestionReplacements(
+      selectQuestionGroups({
+        questions: HIGH_QUALITY_9000_RAW_QR_QUESTIONS,
+        targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.qr,
+        expectedGroupSize: 4,
+        stimulusCap: 80,
+        questionTemplateCap: 96,
+      })
+    )
+  );
 
 const SJT_PEOPLE = [
   "Amira",
@@ -3366,6 +6098,41 @@ const SJT_DRAG_QUESTIONS = [
   "Group the actions according to their professional suitability.",
 ] as const;
 
+function makeSjtStem(input: {
+  setIndex: number;
+  person: string;
+  peer: string;
+  scenario: (typeof SJT_SCENARIOS)[number];
+  sessionContext: string;
+  peerPressure: string;
+  backgroundDetail: string;
+}) {
+  const problem = sentenceCase(input.scenario.problem);
+
+  switch (input.setIndex % 10) {
+    case 0:
+      return `${input.person}, a medical student, is working at ${input.scenario.setting} ${input.sessionContext}. ${problem}. ${input.backgroundDetail} ${input.peer}, another student, suggests ${input.peerPressure}.`;
+    case 1:
+      return `While placed at ${input.scenario.setting}, ${input.person} sees the following issue ${input.sessionContext}: ${input.scenario.problem}. ${input.backgroundDetail} ${input.peer} suggests ${input.peerPressure}.`;
+    case 2:
+      return `${input.person} is on placement at ${input.scenario.setting}. ${problem}. This happens ${input.sessionContext}. ${input.backgroundDetail} Another student, ${input.peer}, suggests ${input.peerPressure}.`;
+    case 3:
+      return `In ${input.scenario.setting}, ${input.person} notices that ${input.scenario.problem}. The situation arises ${input.sessionContext}. ${input.backgroundDetail} ${input.peer}, who is also present, suggests ${input.peerPressure}.`;
+    case 4:
+      return `${input.person}, a medical student, has been asked to help at ${input.scenario.setting}. ${problem}. ${input.backgroundDetail} The team is ${input.sessionContext}; ${input.peer} suggests ${input.peerPressure}.`;
+    case 5:
+      return `${problem} while ${input.person}, a medical student, is at ${input.scenario.setting}. ${input.backgroundDetail} This is ${input.sessionContext}. ${input.peer}, another student, suggests ${input.peerPressure}.`;
+    case 6:
+      return `${input.person} is observing at ${input.scenario.setting} ${input.sessionContext}. ${problem}. ${input.backgroundDetail} ${input.peer} says they should consider ${input.peerPressure}.`;
+    case 7:
+      return `During placement, ${input.person} is at ${input.scenario.setting} when ${input.scenario.problem}. ${input.backgroundDetail} The timing is awkward because it is ${input.sessionContext}. ${input.peer} suggests ${input.peerPressure}.`;
+    case 8:
+      return `${input.person}, a medical student at ${input.scenario.setting}, becomes aware that ${input.scenario.problem}. ${input.backgroundDetail} It is ${input.sessionContext}, and ${input.peer} suggests ${input.peerPressure}.`;
+    default:
+      return `${input.person} is helping at ${input.scenario.setting}. ${problem}. ${input.backgroundDetail} The issue comes up ${input.sessionContext}. ${input.peer}, another student nearby, suggests ${input.peerPressure}.`;
+  }
+}
+
 function makeSjtSet(setIndex: number): UCATQuestion[] {
   const person = pick(SJT_PEOPLE, setIndex);
   const peer = pick(SJT_PEOPLE, setIndex + 5);
@@ -3374,7 +6141,15 @@ function makeSjtSet(setIndex: number): UCATQuestion[] {
   const sessionContext = pick(SJT_SESSION_CONTEXTS, setIndex * 7);
   const peerPressure = pick(SJT_PEER_PRESSURES, setIndex * 11);
   const backgroundDetail = pick(SJT_BACKGROUND_DETAILS, setIndex * 13);
-  const stem = `During supervised session ${setIndex + 1}, ${person}, a medical student, is assigned to ${scenario.setting} ${sessionContext}. ${sentenceCase(scenario.problem)}. ${backgroundDetail} ${peer}, another student, suggests ${peerPressure}.`;
+  const stem = makeSjtStem({
+    setIndex,
+    person,
+    peer,
+    scenario,
+    sessionContext,
+    peerPressure,
+    backgroundDetail,
+  });
   const issueTags = [scenario.issue];
   const appropriatenessQuestion = pick(SJT_APPROPRIATENESS_QUESTIONS, setIndex);
   const importanceQuestion = pick(SJT_IMPORTANCE_QUESTIONS, setIndex);
@@ -3488,12 +6263,15 @@ export const HIGH_QUALITY_9000_RAW_SJT_QUESTIONS: UCATQuestion[] = range(
   HIGH_QUALITY_9000_COMPLETED_BATCHES * SJT_SETS_PER_BATCH
 ).flatMap(makeSjtSet);
 
-export const HIGH_QUALITY_9000_SJT_QUESTIONS: UCATQuestion[] = selectQuestionGroups({
-  questions: HIGH_QUALITY_9000_RAW_SJT_QUESTIONS,
-  targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.sjt,
-  expectedGroupSize: 5,
-  stimulusCap: 20,
-});
+export const HIGH_QUALITY_9000_SJT_QUESTIONS: UCATQuestion[] =
+  applyCuratedQuestionReplacements(
+    selectQuestionGroups({
+      questions: HIGH_QUALITY_9000_RAW_SJT_QUESTIONS,
+      targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.sjt,
+      expectedGroupSize: 5,
+      stimulusCap: 20,
+    })
+  );
 
 export const HIGH_QUALITY_9000_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: HIGH_QUALITY_9000_VR_QUESTIONS,

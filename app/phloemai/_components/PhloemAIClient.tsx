@@ -3391,18 +3391,23 @@ function RecentPracticeSetsPanel({
   emptyTitle = "No practice sets saved yet.",
   emptyText = "Mark a question-bank set to add the first row.",
   onRemoveSet,
+  onRemoveAllSets,
   removingSetId = null,
+  removingAllSets = false,
   removeError = null,
 }: {
   sets: RecentPracticeSet[];
   emptyTitle?: string;
   emptyText?: string;
   onRemoveSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  onRemoveAllSets?: (sets: RecentPracticeSet[]) => void | Promise<void>;
   removingSetId?: string | null;
+  removingAllSets?: boolean;
   removeError?: string | null;
 }) {
   const visibleBatchSize = 4;
   const [visibleCount, setVisibleCount] = useState(visibleBatchSize);
+  const [removeModeEnabled, setRemoveModeEnabled] = useState(false);
   const orderedSets = [
     ...sets.filter((set) => set.isIncomplete),
     ...sets.filter((set) => !set.isIncomplete),
@@ -3411,6 +3416,7 @@ function RecentPracticeSetsPanel({
   const incompleteSets = visibleSets.filter((set) => set.isIncomplete);
   const completedSets = visibleSets.filter((set) => !set.isIncomplete);
   const remainingCount = Math.max(0, orderedSets.length - visibleSets.length);
+  const canRemoveSets = Boolean(onRemoveSet);
 
   if (sets.length === 0) {
     return (
@@ -3478,17 +3484,16 @@ function RecentPracticeSetsPanel({
           >
             {set.isIncomplete ? "Continue" : "Review"}
           </Link>
-          {onRemoveSet && (
+          {onRemoveSet && removeModeEnabled && (
             <button
               type="button"
               title="Remove saved set"
               aria-label={`Remove saved ${set.title} set`}
-              disabled={isRemoving}
+              disabled={isRemoving || removingAllSets}
               onClick={() => void onRemoveSet(set)}
-              className="inline-flex h-9 shrink-0 items-center justify-center gap-1 rounded-lg border border-red-100 bg-white px-2.5 text-xs font-black text-red-600 transition-colors hover:border-red-200 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-red-100 bg-white text-red-600 transition-colors hover:border-red-200 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"
             >
               <Trash2 className="h-4 w-4" aria-hidden="true" />
-              Remove
             </button>
           )}
         </div>
@@ -3498,6 +3503,40 @@ function RecentPracticeSetsPanel({
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-100 bg-white">
+      {canRemoveSets && (
+        <div className="flex items-center justify-between gap-3 border-b border-slate-100 bg-slate-50 px-3 py-2">
+          <button
+            type="button"
+            aria-pressed={removeModeEnabled}
+            onClick={() => setRemoveModeEnabled((current) => !current)}
+            className="inline-flex h-7 items-center gap-2 rounded-full border border-slate-200 bg-white px-2.5 text-[11px] font-black text-slate-500 transition-colors hover:border-red-200 hover:text-red-600"
+          >
+            <span
+              className={`flex h-3.5 w-6 items-center rounded-full p-0.5 transition-colors ${
+                removeModeEnabled ? "bg-red-500" : "bg-slate-200"
+              }`}
+              aria-hidden="true"
+            >
+              <span
+                className={`h-2.5 w-2.5 rounded-full bg-white transition-transform ${
+                  removeModeEnabled ? "translate-x-2.5" : ""
+                }`}
+              />
+            </span>
+            Remove
+          </button>
+          {removeModeEnabled && onRemoveAllSets && orderedSets.length > 0 && (
+            <button
+              type="button"
+              disabled={removingAllSets}
+              onClick={() => void onRemoveAllSets(orderedSets)}
+              className="inline-flex h-7 items-center justify-center rounded-full border border-red-100 bg-white px-3 text-[11px] font-black text-red-600 transition-colors hover:border-red-200 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"
+            >
+              Remove all
+            </button>
+          )}
+        </div>
+      )}
       {incompleteSets.length > 0 && (
         <div>
           <div className="bg-amber-50 px-3 py-2 text-xs font-black uppercase tracking-wide text-amber-700">
@@ -3547,7 +3586,9 @@ function PracticeContent({
   checkoutLoading,
   onUpgrade,
   onRemoveSet,
+  onRemoveAllSets,
   removingPracticeSetId,
+  removingAllPracticeSets,
   practiceSetRemoveError,
 }: {
   latestDiagnostic: DashboardDiagnostic | null;
@@ -3558,7 +3599,9 @@ function PracticeContent({
   checkoutLoading: boolean;
   onUpgrade: () => void;
   onRemoveSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  onRemoveAllSets?: (sets: RecentPracticeSet[]) => void | Promise<void>;
   removingPracticeSetId?: string | null;
+  removingAllPracticeSets?: boolean;
   practiceSetRemoveError?: string | null;
 }) {
   const allStudyPlanTasks = getDiagnosticStudyPlanTasks(latestDiagnostic);
@@ -3864,7 +3907,9 @@ function PracticeContent({
             <RecentPracticeSetsPanel
               sets={recentPracticeSets}
               onRemoveSet={onRemoveSet}
+              onRemoveAllSets={onRemoveAllSets}
               removingSetId={removingPracticeSetId}
+              removingAllSets={removingAllPracticeSets}
               removeError={practiceSetRemoveError}
             />
           </div>
@@ -5310,7 +5355,9 @@ function ProgressContent({
   completedDashboardTaskIds,
   removedDashboardTaskIds,
   onRemoveSet,
+  onRemoveAllSets,
   removingPracticeSetId,
+  removingAllPracticeSets,
   practiceSetRemoveError,
 }: PremiumGateProps & {
   practiceStats: PracticeStats;
@@ -5319,7 +5366,9 @@ function ProgressContent({
   completedDashboardTaskIds: Set<string>;
   removedDashboardTaskIds: Set<string>;
   onRemoveSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  onRemoveAllSets?: (sets: RecentPracticeSet[]) => void | Promise<void>;
   removingPracticeSetId?: string | null;
+  removingAllPracticeSets?: boolean;
   practiceSetRemoveError?: string | null;
 }) {
   const progressItems = getQuestionBankProgress(practiceStats);
@@ -5432,7 +5481,9 @@ function ProgressContent({
               emptyTitle="No practice sets saved yet."
               emptyText="Start a question-bank set and mark it when you are ready."
               onRemoveSet={onRemoveSet}
+              onRemoveAllSets={onRemoveAllSets}
               removingSetId={removingPracticeSetId}
+              removingAllSets={removingAllPracticeSets}
               removeError={practiceSetRemoveError}
             />
           </div>
@@ -6741,7 +6792,9 @@ function DashboardSubpageContent({
   onLogout,
   onSaveDisplayName,
   onRemoveSet,
+  onRemoveAllSets,
   removingPracticeSetId,
+  removingAllPracticeSets,
   practiceSetRemoveError,
 }: {
   view: Exclude<DashboardView, "dashboard">;
@@ -6765,7 +6818,9 @@ function DashboardSubpageContent({
   onLogout: () => void;
   onSaveDisplayName: (name: string) => Promise<void>;
   onRemoveSet?: (set: RecentPracticeSet) => void | Promise<void>;
+  onRemoveAllSets?: (sets: RecentPracticeSet[]) => void | Promise<void>;
   removingPracticeSetId?: string | null;
+  removingAllPracticeSets?: boolean;
   practiceSetRemoveError?: string | null;
 }) {
   const freeDiagnosticFeaturesUnlocked = isFreeQrDiagnostic(latestDiagnostic);
@@ -6800,7 +6855,9 @@ function DashboardSubpageContent({
         checkoutLoading={checkoutLoading}
         onUpgrade={onUpgrade}
         onRemoveSet={onRemoveSet}
+        onRemoveAllSets={onRemoveAllSets}
         removingPracticeSetId={removingPracticeSetId}
+        removingAllPracticeSets={removingAllPracticeSets}
         practiceSetRemoveError={practiceSetRemoveError}
       />
     );
@@ -6820,7 +6877,9 @@ function DashboardSubpageContent({
         completedDashboardTaskIds={completedDashboardTaskIds}
         removedDashboardTaskIds={removedDashboardTaskIds}
         onRemoveSet={onRemoveSet}
+        onRemoveAllSets={onRemoveAllSets}
         removingPracticeSetId={removingPracticeSetId}
+        removingAllPracticeSets={removingAllPracticeSets}
         practiceSetRemoveError={practiceSetRemoveError}
       />
     );
@@ -7460,6 +7519,7 @@ function UCATDashboard({
   const [removingPracticeSetId, setRemovingPracticeSetId] = useState<string | null>(
     null
   );
+  const [removingAllPracticeSets, setRemovingAllPracticeSets] = useState(false);
   const [practiceSetRemoveError, setPracticeSetRemoveError] = useState<
     string | null
   >(null);
@@ -7640,6 +7700,69 @@ function UCATDashboard({
       }
 
       setRemovingPracticeSetId(null);
+    },
+    [supabase, user]
+  );
+
+  const removeAllPracticeSets = useCallback(
+    async (setsToRemove: RecentPracticeSet[]) => {
+      if (!supabase || !user) {
+        setPracticeSetRemoveError("Sign in again before removing saved sets.");
+        return;
+      }
+
+      const targetIds = Array.from(
+        new Set(setsToRemove.map((set) => set.id).filter(Boolean))
+      );
+      if (targetIds.length === 0) return;
+
+      const confirmed = window.confirm(
+        `Remove all ${targetIds.length} saved practice set${
+          targetIds.length === 1 ? "" : "s"
+        }? This deletes them from your recent practice and saved progress.`
+      );
+
+      if (!confirmed) return;
+
+      setRemovingAllPracticeSets(true);
+      setPracticeSetRemoveError(null);
+
+      const { error } = await supabase
+        .from("practice_sessions")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("source", "question_bank")
+        .in("id", targetIds);
+
+      if (error) {
+        setPracticeSetRemoveError(
+          "Could not remove all sets. Please try again in a moment."
+        );
+        setRemovingAllPracticeSets(false);
+        return;
+      }
+
+      const targetIdSet = new Set(targetIds);
+      setRecentPracticeSets((current) =>
+        current.filter((practiceSet) => !targetIdSet.has(practiceSet.id))
+      );
+
+      const { data, error: statsError } = await supabase
+        .from("practice_question_attempts")
+        .select("question_id,section,answered,correct,total_seconds,created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1500);
+
+      if (statsError) {
+        setPracticeSetRemoveError(
+          "Removed the sets. Progress totals will refresh after reload."
+        );
+      } else {
+        setPracticeStats(buildPracticeStats((data ?? []) as PracticeAttemptRow[]));
+      }
+
+      setRemovingAllPracticeSets(false);
     },
     [supabase, user]
   );
@@ -8929,7 +9052,9 @@ function UCATDashboard({
               onLogout={handleLogout}
               onSaveDisplayName={handleProfileUpdate}
               onRemoveSet={removePracticeSet}
+              onRemoveAllSets={removeAllPracticeSets}
               removingPracticeSetId={removingPracticeSetId}
+              removingAllPracticeSets={removingAllPracticeSets}
               practiceSetRemoveError={practiceSetRemoveError}
               recentPracticeSets={recentPracticeSets}
             />
