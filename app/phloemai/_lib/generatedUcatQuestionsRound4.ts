@@ -881,43 +881,34 @@ function makeSjtDragCategory(index: number): UCATQuestion {
     id: setId,
     section: "sjt",
     subtype: "sjt-drag-drop",
-    questionType: "drag-category",
+    questionType: "most-least",
     tags: ["text-stem", "set-based", "multi-step"],
     issueTags: [...issueTags],
     title: "Situational Judgement Practice",
     leftTitle: "Scenario",
     setId,
     stimulus: makeRoundFourSjtStimulus(scenario, index, "drag"),
-    question: "Drag each response to the side that best describes it.",
-    instruction: "Classify each response as appropriate or inappropriate.",
-    categories: [
-      { id: "appropriate", label: "Appropriate" },
-      { id: "inappropriate", label: "Inappropriate" },
-    ],
-    categoryItems: [
+    question:
+      "Choose both the one most appropriate response and the one least appropriate response in this situation.",
+    instruction:
+      "Drag one option to each slot. Half marks are awarded if exactly one slot is correct.",
+    actionItems: [
       {
         id: "raise",
         text: "Raise the concern with the relevant staff member promptly.",
-        answerCategory: "appropriate",
-      },
-      {
-        id: "guess",
-        text: "Act independently outside your role because it seems quicker.",
-        answerCategory: "inappropriate",
       },
       {
         id: "record",
         text: "Keep factual notes if asked to help with follow-up.",
-        answerCategory: "appropriate",
       },
       {
         id: "share",
         text: "Discuss identifiable details casually with people not involved.",
-        answerCategory: "inappropriate",
       },
     ],
+    answerSlots: { most: "raise", least: "share" },
     explanation:
-      "Appropriate actions protect patients and use the team route. Inappropriate actions breach boundaries, safety or confidentiality.",
+      "The best response raises the concern through the right team route. Casually sharing identifiable details is the least appropriate because it risks confidentiality and professionalism.",
   };
 }
 
@@ -929,24 +920,25 @@ function makeSjtOrdering(index: number): UCATQuestion {
     id: setId,
     section: "sjt",
     subtype: "sjt-drag-drop",
-    questionType: "drag-order",
+    questionType: "most-least",
     tags: ["text-stem", "set-based", "multi-step"],
     issueTags: [...issueTags],
     title: "Situational Judgement Practice",
     leftTitle: "Scenario",
     setId,
     stimulus: makeRoundFourSjtStimulus(scenario, index, "order"),
-    question: "Drag the actions into the most appropriate order.",
-    instruction: "Prioritise immediate risk, then escalation, then later follow-up.",
-    dragItems: [
-      { id: "notice", text: "Recognise the immediate professional or safety concern." },
+    question:
+      "Choose both the one most appropriate response and the one least appropriate response in this situation.",
+    instruction:
+      "Drag one option to each slot. Half marks are awarded if exactly one slot is correct.",
+    actionItems: [
       { id: "escalate", text: "Tell the appropriate member of staff promptly." },
       { id: "support", text: "Support the patient or team while staying within your role." },
-      { id: "reflect", text: "Reflect afterwards on how to prevent a similar issue." },
+      { id: "delay", text: "Carry on without raising the concern because the team is busy." },
     ],
-    answerOrder: ["notice", "escalate", "support", "reflect"],
+    answerSlots: { most: "escalate", least: "delay" },
     explanation:
-      "Immediate recognition and escalation come before support and later reflection.",
+      "Prompt escalation through the team is the safest response. Carrying on without raising the concern is the least appropriate option.",
   };
 }
 
@@ -957,7 +949,7 @@ function makeSjtMostLeast(index: number): UCATQuestion {
   return {
     id: setId,
     section: "sjt",
-    subtype: "sjt-appropriateness",
+    subtype: "sjt-drag-drop",
     questionType: "most-least",
     tags: ["text-stem", "set-based", "multi-step"],
     issueTags: [...issueTags],
@@ -965,11 +957,12 @@ function makeSjtMostLeast(index: number): UCATQuestion {
     leftTitle: "Scenario",
     setId,
     stimulus: makeRoundFourSjtStimulus(scenario, index, "most-least"),
-    question: "Select the most appropriate and least appropriate actions.",
-    instruction: "Choose one action for each slot.",
+    question:
+      "Choose both the one most appropriate response and the one least appropriate response in this situation.",
+    instruction:
+      "Drag one option to each slot. Half marks are awarded if exactly one slot is correct.",
     actionItems: [
       { id: "team", text: "Use the appropriate staff route and explain the concern clearly." },
-      { id: "ignore", text: "Ignore it because someone else will probably deal with it." },
       { id: "listen", text: "Listen respectfully and avoid making promises outside your role." },
       { id: "post", text: "Post the details in a private chat to ask friends what they think." },
     ],

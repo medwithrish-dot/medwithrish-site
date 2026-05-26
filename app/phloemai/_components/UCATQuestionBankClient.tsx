@@ -53,6 +53,7 @@ import {
   type UCATQuestionTag,
   type UCATSection,
   type UCATSingleQuestion,
+  type UCATMostLeastSlot,
   type UCATSjtIssueTag,
   type UCATSubtypeId,
   type UCATYesNoValue,
@@ -474,6 +475,10 @@ const QUESTION_TRACKING_ZONES: QuestionTrackingZone[] = [
   "question",
   "answers",
 ];
+const MOST_LEAST_SLOT_LABELS: Record<UCATMostLeastSlot, string> = {
+  most: "Most Appropriate",
+  least: "Least Appropriate",
+};
 
 function monotonicMs() {
   if (typeof performance !== "undefined" && typeof performance.now === "function") {
@@ -1230,7 +1235,21 @@ function getAnswerText(question: UCATQuestion, answer?: PracticeAnswer) {
   }
 
   if (isUCATMostLeastQuestion(question)) {
-    return isPracticeAnswerMap(answer) ? "Most/least response" : "No answer";
+    if (!isPracticeAnswerMap(answer)) return "No answer";
+
+    const itemLookup = new Map(
+      question.actionItems.map((item) => [item.id, item.text])
+    );
+    const placements = (["most", "least"] as const)
+      .filter((slot) => answer[slot])
+      .map(
+        (slot) =>
+          `${slot === "most" ? "Most appropriate" : "Least appropriate"}: ${
+            itemLookup.get(answer[slot]) ?? answer[slot]
+          }`
+      );
+
+    return placements.length > 0 ? placements.join(" | ") : "No answer";
   }
 
   return isUCATSingleSelectQuestion(question) && typeof answer === "string"
@@ -1269,6 +1288,20 @@ function getYesNoStatementScore(question: UCATQuestion, answer?: PracticeAnswer)
   ).length;
 
   return { answeredCount, correctCount, totalCount };
+}
+
+function getMostLeastSlotScore(question: UCATQuestion, answer?: PracticeAnswer) {
+  if (!isUCATMostLeastQuestion(question) || !isPracticeAnswerMap(answer)) {
+    return { answeredCount: 0, correctCount: 0, totalCount: 0 };
+  }
+
+  const slots = Object.keys(question.answerSlots) as UCATMostLeastSlot[];
+  const answeredCount = slots.filter((slot) => Boolean(answer[slot])).length;
+  const correctCount = slots.filter(
+    (slot) => answer[slot] === question.answerSlots[slot]
+  ).length;
+
+  return { answeredCount, correctCount, totalCount: slots.length };
 }
 
 function makeAnswerScore(
@@ -1374,16 +1407,33 @@ function getAnswerScore(question: UCATQuestion, answer?: PracticeAnswer) {
   }
 
   if (isUCATMostLeastQuestion(question)) {
-    if (!isAnswered(question, answer)) {
+    const { answeredCount, correctCount, totalCount } = getMostLeastSlotScore(
+      question,
+      answer
+    );
+    const wrongCount = totalCount - correctCount;
+
+    if (totalCount === 0 || answeredCount < totalCount) {
       return makeAnswerScore("unanswered", 0, "No complete response selected");
     }
 
-    return isPracticeAnswerMap(answer) &&
-      Object.entries(question.answerSlots).every(
-        ([slot, itemId]) => answer[slot] === itemId
-      )
-      ? makeAnswerScore("correct", 1, "Full mark awarded")
-      : makeAnswerScore("incorrect", 0, "Incorrect most/least response");
+    if (correctCount === totalCount) {
+      return makeAnswerScore("correct", 1, "Full mark awarded");
+    }
+
+    if (wrongCount === 1) {
+      return makeAnswerScore(
+        "partial",
+        0.5,
+        `${correctCount}/${totalCount} positions correct`
+      );
+    }
+
+    return makeAnswerScore(
+      "incorrect",
+      0,
+      `${correctCount}/${totalCount} positions correct`
+    );
   }
 
   if (!isUCATSingleSelectQuestion(question) || typeof answer !== "string") {
@@ -1479,8 +1529,18 @@ function getCorrectAnswerText(question: UCATQuestion) {
   }
 
   if (isUCATMostLeastQuestion(question)) {
-    return Object.entries(question.answerSlots)
-      .map(([slot, itemId]) => `${slot}: ${itemId}`)
+    const itemLookup = new Map(
+      question.actionItems.map((item) => [item.id, item.text])
+    );
+    return (Object.entries(question.answerSlots) as Array<
+      [UCATMostLeastSlot, string]
+    >)
+      .map(
+        ([slot, itemId]) =>
+          `${slot === "most" ? "Most appropriate" : "Least appropriate"}: ${
+            itemLookup.get(itemId) ?? itemId
+          }`
+      )
       .join(" ");
   }
 
@@ -8998,10 +9058,13 @@ function UCATQuestionBankSection({
     selected ?? (typeof savedAnswer === "string" ? savedAnswer : null);
   const isDragQuestion = isUCATDragOrderQuestion(question);
   const isDragCategoryQuestion = isUCATDragCategoryQuestion(question);
+  const isMostLeastQuestion = isUCATMostLeastQuestion(question);
   const isYesNoQuestion = isUCATYesNoQuestion(question);
   const isSingleQuestion = isUCATSingleSelectQuestion(question);
   const dragCategoryAnswer =
     isDragCategoryQuestion && isPracticeAnswerMap(savedAnswer) ? savedAnswer : {};
+  const mostLeastAnswer =
+    isMostLeastQuestion && isPracticeAnswerMap(savedAnswer) ? savedAnswer : {};
   const yesNoAnswer =
     isYesNoQuestion && isPracticeAnswerMap(savedAnswer) ? savedAnswer : {};
   const currentAnswerForScore = isDragQuestion ? dragOrder : savedAnswer;
@@ -9010,6 +9073,7 @@ function UCATQuestionBankSection({
   const isPartial = currentAnswerScore.status === "partial";
   const usesClassicDropLayout =
     isDragCategoryQuestion ||
+    isMostLeastQuestion ||
     isYesNoQuestion ||
     question.section === "dm" ||
     question.section === "qr";
@@ -9104,6 +9168,44 @@ function UCATQuestionBankSection({
     setRevealed(false);
   };
 
+  const chooseMostLeastAnswer = (
+    slot: UCATMostLeastSlot,
+    itemId: string,
+    source: "click" | "drag" = "click"
+  ) => {
+    if (phase !== "practice" || !isMostLeastQuestion) return;
+
+    const previousAnswer = answers[questionIndex];
+    const previousAnswerMap = isPracticeAnswerMap(previousAnswer)
+      ? previousAnswer
+      : {};
+    const otherSlot: UCATMostLeastSlot = slot === "most" ? "least" : "most";
+    const previousSlotAnswer = previousAnswerMap[slot] ?? null;
+    const nextAnswer: PracticeAnswerMap = {
+      ...previousAnswerMap,
+      [slot]: itemId,
+    };
+
+    if (nextAnswer[otherSlot] === itemId) {
+      delete nextAnswer[otherSlot];
+    }
+
+    const questionElapsedMs = markActiveQuestionAnswered();
+    setAnswers((current) => ({ ...current, [questionIndex]: nextAnswer }));
+    recordEvent("answer_select", {
+      answer: itemId,
+      slot,
+      source,
+      previousAnswer: previousSlotAnswer,
+      correct: question.answerSlots[slot] === itemId,
+      previousCorrect: previousSlotAnswer
+        ? previousSlotAnswer === question.answerSlots[slot]
+        : null,
+      questionElapsedMs,
+    });
+    setRevealed(false);
+  };
+
   const chooseNextDragCategoryAnswer = (
     itemId: string,
     selectedCategory?: string
@@ -9117,6 +9219,25 @@ function UCATQuestionBankSection({
       question.categories[(currentIndex + 1) % question.categories.length];
 
     if (nextCategory) chooseDragCategoryAnswer(itemId, nextCategory.id);
+  };
+
+  const chooseNextMostLeastAnswer = (itemId: string) => {
+    if (!isMostLeastQuestion) return;
+
+    if (!mostLeastAnswer.most) {
+      chooseMostLeastAnswer("most", itemId);
+      return;
+    }
+
+    if (!mostLeastAnswer.least && mostLeastAnswer.most !== itemId) {
+      chooseMostLeastAnswer("least", itemId);
+      return;
+    }
+
+    chooseMostLeastAnswer(
+      mostLeastAnswer.most === itemId ? "least" : "most",
+      itemId
+    );
   };
 
   const chooseNextYesNoAnswer = (
@@ -10215,6 +10336,104 @@ function UCATQuestionBankSection({
                     </div>
                   );
                 })}
+              </div>
+            </div>
+          ) : isMostLeastQuestion ? (
+            <div
+              ref={answersRegionRef}
+              className="mt-6 max-w-[900px] text-[15px] leading-[18px] text-black"
+            >
+              <p className="max-w-[820px] text-[15px] leading-[20px] text-black">
+                {formatDisplayText(question.instruction)}
+              </p>
+              <div className="mt-6 max-w-[860px] space-y-4">
+                {(["most", "least"] as const).map((slot) => {
+                  const selectedItemId = mostLeastAnswer[slot];
+                  const selectedItem = question.actionItems.find(
+                    (item) => item.id === selectedItemId
+                  );
+                  const correct =
+                    answerRevealed &&
+                    selectedItemId === question.answerSlots[slot];
+                  const wrong =
+                    answerRevealed &&
+                    Boolean(selectedItemId) &&
+                    selectedItemId !== question.answerSlots[slot];
+                  const missed = answerRevealed && !selectedItemId;
+
+                  return (
+                    <div
+                      key={slot}
+                      className="grid gap-3 sm:grid-cols-[170px_minmax(0,1fr)]"
+                    >
+                      <div className="flex min-h-[58px] items-center justify-center border border-black bg-white px-3 text-center font-normal">
+                        {MOST_LEAST_SLOT_LABELS[slot]}
+                      </div>
+                      <button
+                        type="button"
+                        onDragOver={(event) => event.preventDefault()}
+                        onDrop={() => {
+                          if (draggedItemId) {
+                            chooseMostLeastAnswer(slot, draggedItemId, "drag");
+                          }
+                          setDraggedItemId(null);
+                        }}
+                        disabled={phase !== "practice"}
+                        aria-label={`${MOST_LEAST_SLOT_LABELS[slot]} answer slot`}
+                        className={`flex min-h-[58px] w-full items-center justify-center border px-4 py-2 text-center font-normal ${
+                          correct
+                            ? "border-emerald-700 bg-emerald-50 text-emerald-900"
+                            : wrong || missed
+                              ? "border-red-700 bg-red-50 text-red-900"
+                              : "border-black bg-[#b9b1b1] text-black"
+                        } disabled:cursor-not-allowed`}
+                      >
+                        {selectedItem ? (
+                          formatDisplayText(selectedItem.text)
+                        ) : (
+                          <span className="sr-only">Drop answer here</span>
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-6 w-full max-w-[760px] bg-[#d9d9d9] p-4">
+                <div className="space-y-3">
+                  {question.actionItems.map((item) => {
+                    const selectedSlot = (Object.entries(mostLeastAnswer) as Array<
+                      [UCATMostLeastSlot, string]
+                    >).find(([, selectedItemId]) => selectedItemId === item.id)?.[0];
+                    const correctExtreme =
+                      answerRevealed &&
+                      (question.answerSlots.most === item.id ||
+                        question.answerSlots.least === item.id);
+
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        draggable={phase === "practice"}
+                        onClick={() => chooseNextMostLeastAnswer(item.id)}
+                        onDragStart={() => setDraggedItemId(item.id)}
+                        onDragEnd={() => setDraggedItemId(null)}
+                        disabled={phase !== "practice"}
+                        className={`flex min-h-[58px] w-full cursor-grab items-center justify-center border border-black bg-white px-4 py-2 text-center font-normal text-black active:cursor-grabbing disabled:cursor-not-allowed ${
+                          selectedSlot ? "outline outline-2 outline-[#0078a8]" : ""
+                        } ${correctExtreme ? "ring-2 ring-emerald-500" : ""}`}
+                      >
+                        <span className="min-w-0 flex-1">
+                          {formatDisplayText(item.text)}
+                        </span>
+                        {selectedSlot && (
+                          <span className="ml-3 shrink-0 text-xs font-bold text-[#00618a]">
+                            {selectedSlot === "most" ? "Most" : "Least"}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           ) : isDragCategoryQuestion ? (

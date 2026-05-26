@@ -335,6 +335,25 @@ function dragCategoryQuestion(input: {
   return { ...input, questionType: "drag-category" };
 }
 
+function mostLeastQuestion(input: {
+  id: string;
+  section: UCATSection;
+  subtype: UCATSubtypeId;
+  title: string;
+  leftTitle: string;
+  setId?: string;
+  tags?: UCATQuestionTag[];
+  issueTags?: UCATSjtIssueTag[];
+  stimulus: string[];
+  question: string;
+  instruction: string;
+  actionItems: Array<{ id: string; text: string }>;
+  answerSlots: Record<"most" | "least", string>;
+  explanation: string;
+}): UCATQuestion {
+  return { ...input, questionType: "most-least" };
+}
+
 function normaliseForQuality(value: string) {
   return value
     .toLowerCase()
@@ -498,6 +517,23 @@ function hasValidQuestionShape(question: UCATQuestion) {
       new Set(itemIds).size === itemIds.length &&
       new Set(itemTexts).size === itemTexts.length &&
       question.categoryItems.every((item) => categorySet.has(item.answerCategory))
+    );
+  }
+
+  if (question.questionType === "most-least") {
+    const itemIds = question.actionItems.map((item) => item.id);
+    const itemTexts = question.actionItems.map((item) =>
+      normaliseForExactMatch(item.text)
+    );
+    const itemIdSet = new Set(itemIds);
+
+    return (
+      question.actionItems.length === 3 &&
+      new Set(itemIds).size === itemIds.length &&
+      new Set(itemTexts).size === itemTexts.length &&
+      question.answerSlots.most !== question.answerSlots.least &&
+      itemIdSet.has(question.answerSlots.most) &&
+      itemIdSet.has(question.answerSlots.least)
     );
   }
 
@@ -7954,13 +7990,13 @@ const SJT_ROLE_DESCRIPTIONS = [
   "a student in a supervised clinical area",
 ] as const;
 
-const SJT_DRAG_QUESTIONS = [
-  "Sort the actions according to whether they are appropriate in this situation.",
-  "Place each action into the category that best fits this situation.",
-  "Classify the actions as appropriate or inappropriate.",
-  "Sort the responses by whether they would be suitable here.",
-  "Decide which actions are appropriate and which are inappropriate.",
-  "Group the actions according to their professional suitability.",
+const SJT_MOST_LEAST_QUESTIONS = [
+  "Choose both the one most appropriate response and the one least appropriate response in this situation.",
+  "Select the most appropriate response and the least appropriate response for this situation.",
+  "Which response is most appropriate, and which response is least appropriate here?",
+  "Choose the one response that would be best and the one response that would be worst in this situation.",
+  "Identify the most appropriate response and the least appropriate response.",
+  "Drag the response that is most appropriate and the response that is least appropriate into the correct slots.",
 ] as const;
 
 function makeSjtPressureDetail(input: {
@@ -8255,7 +8291,7 @@ function makeSjtSet(setIndex: number): UCATQuestion[] {
         ? "This is of minor importance. A learning motive may explain why the student was tempted, but it does not outweigh safety, confidentiality, consent, honesty or professional boundaries."
         : "This is not important to the professional decision. It does not address safety, confidentiality, honesty, consent or respect.",
     },
-    dragCategoryQuestion({
+    mostLeastQuestion({
       id: `${setId}-5`,
       section: "sjt",
       subtype: "sjt-drag-drop",
@@ -8265,20 +8301,17 @@ function makeSjtSet(setIndex: number): UCATQuestion[] {
       title: "Situational Judgement Practice",
       leftTitle: "Scenario",
       stimulus: [stem],
-      question: pick(SJT_DRAG_QUESTIONS, setIndex),
-      instruction: "Place each action into the most suitable category.",
-      categories: [
-        { id: "appropriate", label: "Appropriate" },
-        { id: "inappropriate", label: "Inappropriate" },
+      question: pick(SJT_MOST_LEAST_QUESTIONS, setIndex),
+      instruction:
+        "Drag one option to each slot. Half marks are awarded if exactly one slot is correct.",
+      actionItems: [
+        { id: "safe-action", text: `${sentenceCase(scenario.safeAction)}.` },
+        { id: "ask-supervisor", text: "Ask a qualified member of staff for advice if unsure." },
+        { id: "unsafe-action", text: `Decide to ${scenario.unsafeAction}.` },
       ],
-      categoryItems: [
-        { id: "safe-action", text: `${sentenceCase(scenario.safeAction)}.`, answerCategory: "appropriate" },
-        { id: "unsafe-action", text: `Decide to ${scenario.unsafeAction}.`, answerCategory: "inappropriate" },
-        { id: "ask-supervisor", text: "Ask a qualified member of staff for advice if unsure.", answerCategory: "appropriate" },
-        { id: "avoid-record", text: "Avoid documenting or reporting the concern because it may slow the team down.", answerCategory: "inappropriate" },
-      ],
+      answerSlots: { most: "safe-action", least: "unsafe-action" },
       explanation:
-        "Appropriate actions manage the risk, respect professional boundaries and involve qualified support. Inappropriate actions ignore the concern or act beyond the student's role.",
+        "The best response manages the risk, respects professional boundaries and uses qualified support. The least appropriate response ignores the concern or acts beyond the student's role.",
     }),
   ];
 }

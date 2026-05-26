@@ -837,13 +837,294 @@ export const LEGACY_VR_QUESTIONS: UCATQuestion[] = [
   },
 ];
 
-function isAppropriateInappropriateDragQuestion(question: UCATQuestion) {
-  if (question.section !== "sjt" || question.questionType !== "drag-category") {
-    return false;
+const SJT_MOST_LEAST_QUESTIONS = [
+  "Choose both the one most appropriate response and the one least appropriate response in this situation.",
+  "Select the most appropriate response and the least appropriate response for this situation.",
+  "Which response is most appropriate, and which response is least appropriate here?",
+  "Choose the one response that would be best and the one response that would be worst in this situation.",
+  "Identify the most appropriate response and the least appropriate response.",
+  "Drag the response that is most appropriate and the response that is least appropriate into the correct slots.",
+] as const;
+const SJT_MOST_LEAST_INSTRUCTION =
+  "Drag one option to each slot. Half marks are awarded if exactly one slot is correct.";
+
+function textHash(value: string) {
+  let hash = 0;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash * 31 + value.charCodeAt(index)) >>> 0;
   }
 
-  const categoryIds = new Set(question.categories.map((category) => category.id));
-  return categoryIds.has("appropriate") && categoryIds.has("inappropriate");
+  return hash;
+}
+
+function normaliseCategoryId(value: string) {
+  return value.toLowerCase().replace(/[^a-z]/g, "");
+}
+
+function isPositiveSjtCategory(id: string) {
+  const normalised = normaliseCategoryId(id);
+  return (
+    normalised.includes("appropriate") ||
+    normalised.includes("important") ||
+    normalised.includes("suitable") ||
+    normalised.includes("professional") ||
+    normalised === "yes"
+  ) && !normalised.includes("inappropriate") &&
+    !normalised.includes("unimportant") &&
+    !normalised.includes("unsuitable") &&
+    !normalised.includes("unprofessional");
+}
+
+function isNegativeSjtCategory(id: string) {
+  const normalised = normaliseCategoryId(id);
+  return (
+    normalised.includes("inappropriate") ||
+    normalised.includes("unimportant") ||
+    normalised.includes("unsuitable") ||
+    normalised.includes("unprofessional") ||
+    normalised === "no"
+  );
+}
+
+function getSjtSuitabilityScore(item: {
+  text: string;
+  answerCategory?: string;
+}) {
+  const text = item.text.toLowerCase();
+  let score = item.answerCategory
+    ? isPositiveSjtCategory(item.answerCategory)
+      ? 20
+      : isNegativeSjtCategory(item.answerCategory)
+        ? -20
+        : 0
+    : 0;
+
+  if (/\b(promptly|qualified|supervisor|staff|escalat|policy|consent|confidential|document|record|apologis|clarif|respect|safe|handover|verify|approved|immediate|immediately|stop|calm|listen|acknowledge)\b/.test(text)) {
+    score += 3;
+  }
+
+  if (/\b(if unsure|privately|briefly|calmly|local|advice)\b/.test(text)) {
+    score += 1;
+  }
+
+  if (/\b(ignore|avoid|leave|share|post|delete|hide|accept|guess|pretend|independently|casually|friends|rude|outside your role|slow the team)\b/.test(text)) {
+    score -= 5;
+  }
+
+  if (/\b(patient safety|confidentiality|consent|identity|authority)\b/.test(text)) {
+    score += 2;
+  }
+
+  return score;
+}
+
+function selectMiddleMostLeastItem(
+  items: Array<{ id: string; text: string }>,
+  mostId: string,
+  leastId: string
+) {
+  return items.find((item) => item.id !== mostId && item.id !== leastId) ?? null;
+}
+
+function orderSjtMostLeastItems(
+  questionId: string,
+  items: Array<{ id: string; text: string }>
+) {
+  return [...items].sort(
+    (first, second) =>
+      textHash(`${questionId}:${first.id}`) - textHash(`${questionId}:${second.id}`)
+  );
+}
+
+function getSjtMostLeastQuestionPrompt(questionId: string) {
+  return SJT_MOST_LEAST_QUESTIONS[
+    textHash(questionId) % SJT_MOST_LEAST_QUESTIONS.length
+  ];
+}
+
+function getQuestionBase(question: UCATQuestion): UCATQuestionBase {
+  return {
+    id: question.id,
+    section: question.section,
+    subtype: question.subtype,
+    setId: question.setId,
+    tags: question.tags,
+    title: question.title,
+    leftTitle: question.leftTitle,
+    stimulus: question.stimulus,
+    visual: question.visual,
+    issueTags: question.issueTags,
+    question: question.question,
+    explanation: question.explanation,
+  };
+}
+
+function makeNormalisedSjtMostLeastQuestion(
+  question: UCATQuestionBase,
+  items: Array<{ id: string; text: string }>,
+  answerSlots: Record<UCATMostLeastSlot, string>
+): UCATMostLeastQuestion | null {
+  const dedupedItems = items.filter(
+    (item, index, list) =>
+      item.id.trim() &&
+      item.text.trim() &&
+      list.findIndex((candidate) => candidate.id === item.id) === index
+  ).map((item) => ({ id: item.id, text: item.text }));
+  const itemIds = new Set(dedupedItems.map((item) => item.id));
+
+  if (
+    dedupedItems.length !== 3 ||
+    answerSlots.most === answerSlots.least ||
+    !itemIds.has(answerSlots.most) ||
+    !itemIds.has(answerSlots.least)
+  ) {
+    return null;
+  }
+
+  return {
+    ...question,
+    subtype: "sjt-drag-drop",
+    questionType: "most-least",
+    question: getSjtMostLeastQuestionPrompt(question.id),
+    instruction: SJT_MOST_LEAST_INSTRUCTION,
+    actionItems: orderSjtMostLeastItems(question.id, dedupedItems),
+    answerSlots,
+  };
+}
+
+function normaliseExistingMostLeastQuestion(
+  question: UCATMostLeastQuestion
+): UCATMostLeastQuestion | null {
+  const mostItem = question.actionItems.find(
+    (item) => item.id === question.answerSlots.most
+  );
+  const leastItem = question.actionItems.find(
+    (item) => item.id === question.answerSlots.least
+  );
+
+  if (!mostItem || !leastItem) return null;
+
+  const middleItem = selectMiddleMostLeastItem(
+    question.actionItems,
+    mostItem.id,
+    leastItem.id
+  );
+
+  if (!middleItem) return null;
+
+  return makeNormalisedSjtMostLeastQuestion(
+    getQuestionBase(question),
+    [mostItem, middleItem, leastItem],
+    question.answerSlots
+  );
+}
+
+function normaliseDragCategorySjtQuestion(
+  question: UCATDragCategoryQuestion
+): UCATMostLeastQuestion | null {
+  const scoredItems = question.categoryItems
+    .map((item) => ({
+      id: item.id,
+      text: item.text,
+      answerCategory: item.answerCategory,
+      score: getSjtSuitabilityScore(item),
+    }))
+    .sort((first, second) => second.score - first.score);
+  const mostItem = scoredItems[0];
+  const leastItem = scoredItems[scoredItems.length - 1];
+
+  if (!mostItem || !leastItem || mostItem.id === leastItem.id) return null;
+
+  const middleItem =
+    scoredItems
+      .filter((item) => item.id !== mostItem.id && item.id !== leastItem.id)
+      .sort(
+        (first, second) => Math.abs(first.score) - Math.abs(second.score)
+      )[0] ?? null;
+
+  if (!middleItem) return null;
+
+  return makeNormalisedSjtMostLeastQuestion(
+    getQuestionBase(question),
+    [mostItem, middleItem, leastItem],
+    { most: mostItem.id, least: leastItem.id }
+  );
+}
+
+function normaliseDragOrderSjtQuestion(
+  question: UCATDragOrderQuestion
+): UCATMostLeastQuestion | null {
+  const orderRank = new Map(
+    question.answerOrder.map((itemId, index) => [itemId, index])
+  );
+  const scoredItems = question.dragItems
+    .map((item) => ({ ...item, score: getSjtSuitabilityScore(item) }))
+    .sort(
+      (first, second) =>
+        second.score - first.score ||
+        (orderRank.get(first.id) ?? 999) - (orderRank.get(second.id) ?? 999)
+    );
+  const mostItem = scoredItems[0];
+
+  if (!mostItem) return null;
+
+  const middleItem = scoredItems.find((item) => item.id !== mostItem.id) ?? null;
+
+  if (!middleItem) return null;
+
+  const leastItem = {
+    id: question.dragItems.some((item) => item.id === "least-inappropriate")
+      ? "least-inappropriate-response"
+      : "least-inappropriate",
+    text: "Ignore the concern and continue without using the appropriate staff route.",
+  };
+  const baseQuestion = {
+    ...getQuestionBase(question),
+    explanation:
+      "The best response addresses the immediate concern through a safe route. Ignoring the concern and carrying on without involving appropriate staff is the least appropriate option.",
+  };
+
+  return makeNormalisedSjtMostLeastQuestion(
+    baseQuestion,
+    [mostItem, middleItem, leastItem],
+    { most: mostItem.id, least: leastItem.id }
+  );
+}
+
+function normaliseSjtDragDropQuestion(question: UCATQuestion): UCATQuestion | null {
+  if (question.section !== "sjt") return question;
+
+  if (question.questionType === "most-least") {
+    return normaliseExistingMostLeastQuestion(question);
+  }
+
+  if (question.subtype !== "sjt-drag-drop") return question;
+
+  if (question.questionType === "drag-category") {
+    return normaliseDragCategorySjtQuestion(question);
+  }
+
+  if (question.questionType === "drag-order") {
+    return normaliseDragOrderSjtQuestion(question);
+  }
+
+  return question;
+}
+
+function isSupportedSjtMostLeastQuestion(
+  question: UCATQuestion
+): question is UCATMostLeastQuestion {
+  if (question.questionType !== "most-least") return false;
+
+  const itemIds = new Set(question.actionItems.map((item) => item.id));
+  return (
+    question.subtype === "sjt-drag-drop" &&
+    question.actionItems.length === 3 &&
+    question.answerSlots.most !== question.answerSlots.least &&
+    itemIds.has(question.answerSlots.most) &&
+    itemIds.has(question.answerSlots.least)
+  );
 }
 
 function isSupportedSjtQuestion(question: UCATQuestion) {
@@ -854,7 +1135,7 @@ function isSupportedSjtQuestion(question: UCATQuestion) {
       (question.subtype === "sjt-appropriateness" ||
         question.subtype === "sjt-importance")) ||
     (question.subtype === "sjt-drag-drop" &&
-      isAppropriateInappropriateDragQuestion(question))
+      isSupportedSjtMostLeastQuestion(question))
   );
 }
 
@@ -2309,7 +2590,10 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     ...ROUND_THREE_SJT_QUESTIONS,
     ...ROUND_FOUR_SJT_QUESTIONS,
     ...HIGH_QUALITY_9000_SJT_QUESTIONS,
-  ].filter(isSupportedSjtQuestion),
+  ]
+    .map(normaliseSjtDragDropQuestion)
+    .filter((question): question is UCATQuestion => question !== null)
+    .filter(isSupportedSjtQuestion),
 };
 
 const DRAFT_9200_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
