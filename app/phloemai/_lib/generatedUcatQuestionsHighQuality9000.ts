@@ -105,6 +105,28 @@ function indefiniteArticle(text: string) {
   return /^[aeiou]/i.test(text) ? "an" : "a";
 }
 
+function gerundVerbPhrase(text: string) {
+  const replacements: Record<string, string> = {
+    end: "ending",
+    improve: "improving",
+    make: "making",
+    move: "moving",
+    protect: "protecting",
+    reduce: "reducing",
+    remove: "removing",
+    replace: "replacing",
+    spread: "spreading",
+    support: "supporting",
+    treat: "treating",
+    turn: "turning",
+    use: "using",
+    withdraw: "withdrawing",
+  };
+  const [firstWord = ""] = text.split(/\s+/, 1);
+  const replacement = replacements[firstWord.toLowerCase()];
+  return replacement ? `${replacement}${text.slice(firstWord.length)}` : text;
+}
+
 function gcd(a: number, b: number): number {
   return b === 0 ? Math.abs(a) : gcd(b, a % b);
 }
@@ -675,77 +697,6 @@ const ORGANISATIONS = [
   "Zephyr Community Hall",
 ] as const;
 
-const PROJECTS = [
-  "a quiet study booking system",
-  "short object-handling sessions",
-  "colour-coded recycling rooms",
-  "early-morning breakfast desks",
-  "a shared bicycle repair stand",
-  "evening digital-skills clinics",
-  "a low-cost theatre ticket trial",
-  "temporary wildflower strips",
-  "a guided archive-labelling project",
-  "parent drop-in advice hours",
-  "a tablet-lending service",
-  "a volunteer welcome rota",
-  "one-page appointment reminders",
-  "a weekend practice-room scheme",
-  "a neighbourhood tool library",
-  "small-group numeracy workshops",
-  "a safer crossing notice trial",
-  "water-refill points",
-  "a local history recording booth",
-  "a shared revision timetable",
-] as const;
-
-const GROUPS = [
-  "exam-year students",
-  "adult learners",
-  "new visitors",
-  "local volunteers",
-  "shift workers",
-  "parents of younger pupils",
-  "clinic patients",
-  "community sports teams",
-  "library members",
-  "market traders",
-] as const;
-
-const PROBLEMS = [
-  "attendance was uneven at the start of the week",
-  "people said the original process felt too formal",
-  "staff were spending too long correcting avoidable errors",
-  "the busiest period left little time for explanations",
-  "new users often missed important instructions",
-  "several bookings were cancelled at short notice",
-  "equipment was being used inefficiently",
-  "feedback forms showed confusion about where to go next",
-  "small groups were being crowded out by larger bookings",
-  "the existing timetable did not match demand",
-] as const;
-
-const AIMS = [
-  "make the service easier to use",
-  "reduce wasted time before appointments",
-  "support people who could not attend standard sessions",
-  "improve confidence without adding a full new course",
-  "test whether clearer prompts would change behaviour",
-  "spread demand more evenly across the week",
-  "protect staff time while keeping the service open",
-  "make the first visit less intimidating",
-] as const;
-
-const METRICS = [
-  "attendance",
-  "repeat bookings",
-  "on-time arrivals",
-  "completed forms",
-  "volunteer sign-ups",
-  "correctly sorted items",
-  "same-day cancellations",
-  "desk usage",
-] as const;
-
 const CAVEATS = [
   "the trial coincided with a clearer online booking page",
   "staff gave extra reminders during the first fortnight",
@@ -755,6 +706,30 @@ const CAVEATS = [
   "the comparison period was shorter than managers wanted",
   "a local event temporarily increased footfall",
   "the newest signs were installed before the trial began",
+  "one of the quieter sessions was cancelled for maintenance",
+  "the first week attracted extra attention from local publicity",
+  "staff changed the wording of reminders halfway through the review",
+  "a temporary discount was offered during part of the review",
+  "several regular users had already been told about the project in advance",
+  "the busiest day coincided with a separate community event",
+  "the project started just after a timetable update",
+  "some participants received help from staff who knew them well",
+  "the review period began during unusually mild weather",
+  "a new sign-in desk opened at the same time",
+  "the organiser who promoted the project was especially experienced",
+  "the early figures included a launch day with extra staff present",
+  "a parallel reminder campaign made the source of improvement unclear",
+  "the previous comparison period had unusually low attendance",
+  "the review did not separate first-time visitors from returning users at first",
+  "some responses came from people who had already supported the idea",
+  "a temporary transport change made access easier during the review",
+  "the project overlapped with a local awareness week",
+  "the team changed how missed appointments were recorded during the period",
+  "several users joined after hearing informal recommendations",
+  "the first two sessions had more staff cover than usual",
+  "the site manager adjusted opening times shortly before the review",
+  "the project was promoted more heavily than the old routine",
+  "one data source was incomplete for the first few days",
 ] as const;
 
 const LIMITATIONS = [
@@ -766,6 +741,30 @@ const LIMITATIONS = [
   "the sample was smaller than the review group preferred",
   "the costs were not tested during winter",
   "some users still needed face-to-face support",
+  "the review did not include people who gave up before booking",
+  "weekend staffing was too variable for a fair comparison",
+  "the smallest site contributed very few responses",
+  "the records did not show why some users chose the old route",
+  "the busiest session had to be excluded from one table",
+  "the review did not track whether confidence lasted",
+  "the comparison group used a different opening pattern",
+  "the cost estimate excluded staff training time",
+  "the response forms were not translated",
+  "the review did not include a winter or bad-weather period",
+  "some practical problems were recorded only in staff notes",
+  "the figures did not separate urgent and routine users",
+  "the review covered too few late-day sessions",
+  "the team did not record how many people saw the publicity",
+  "the project depended on equipment that was not always available",
+  "the data did not identify repeat users clearly",
+  "the report lacked a separate measure of user confidence",
+  "the busiest users were over-represented in the comments",
+  "the review did not include a low-demand month",
+  "not every site used the same sign-in process",
+  "staff did not record how many users needed extra explanation",
+  "the project was not tested during exam or holiday pressure",
+  "the review did not compare costs with a simpler alternative",
+  "some unsuccessful users were not contacted afterwards",
 ] as const;
 
 const FOLLOW_UP_NOTES = [
@@ -796,6 +795,402 @@ const WRONG_FUNDERS = [
   "a private sponsorship deal",
 ] as const;
 
+type VrMetricSpec = {
+  label: string;
+  verb: "rose" | "fell";
+};
+
+type VrContextProfile = {
+  matches: RegExp;
+  projects: readonly string[];
+  groups: readonly string[];
+  problems: readonly string[];
+  aims: readonly string[];
+  metrics: readonly VrMetricSpec[];
+  oldRoutines: readonly string[];
+};
+
+const VR_CONTEXT_PROFILES: readonly VrContextProfile[] = [
+  {
+    matches: /College|Sixth Form|School|Music School|Workshop/,
+    projects: [
+      "a quiet study booking system",
+      "early-morning breakfast desks",
+      "evening digital-skills clinics",
+      "a weekend practice-room scheme",
+      "small-group numeracy workshops",
+      "a shared revision timetable",
+    ],
+    groups: [
+      "exam-year students",
+      "adult learners",
+      "parents of younger pupils",
+      "student representatives",
+    ],
+    problems: [
+      "students could not find reliable space at the busiest times",
+      "attendance was uneven at the start of the week",
+      "new users often missed important instructions",
+      "the existing timetable did not match demand",
+      "small groups were being crowded out by larger bookings",
+    ],
+    aims: [
+      "spread demand more evenly across the week",
+      "make the first visit less intimidating",
+      "support people who could not attend standard sessions",
+      "improve confidence without adding a full new course",
+      "reduce wasted time before appointments",
+    ],
+    metrics: [
+      { label: "attendance", verb: "rose" },
+      { label: "repeat bookings", verb: "rose" },
+      { label: "on-time arrivals", verb: "rose" },
+      { label: "completed forms", verb: "rose" },
+      { label: "desk usage", verb: "rose" },
+    ],
+    oldRoutines: [
+      "make every user join a formal course",
+      "withdraw supervised study sessions",
+      "make the temporary route compulsory",
+      "end drop-in help without consultation",
+      "move all support online",
+    ],
+  },
+  {
+    matches: /Library|Archive/,
+    projects: [
+      "evening digital-skills clinics",
+      "a guided archive-labelling project",
+      "a tablet-lending service",
+      "one-page appointment reminders",
+      "a local history recording booth",
+      "a quiet study booking system",
+    ],
+    groups: [
+      "library members",
+      "new visitors",
+      "local volunteers",
+      "adult learners",
+    ],
+    problems: [
+      "people said the original process felt too formal",
+      "feedback forms showed confusion about where to go next",
+      "new users often missed important instructions",
+      "staff were spending too long correcting avoidable errors",
+      "several bookings were cancelled at short notice",
+    ],
+    aims: [
+      "make the service easier to use",
+      "use clearer prompts to change behaviour",
+      "protect staff time while keeping the service open",
+      "support people who could not attend standard sessions",
+      "make the first visit less intimidating",
+    ],
+    metrics: [
+      { label: "completed requests", verb: "rose" },
+      { label: "repeat bookings", verb: "rose" },
+      { label: "desk queries needing staff help", verb: "fell" },
+      { label: "successful collection slots", verb: "rose" },
+      { label: "missed bookings", verb: "fell" },
+    ],
+    oldRoutines: [
+      "replace the existing service entirely",
+      "remove staff judgement from the process",
+      "treat the project as permanent immediately",
+      "withdraw the existing low-cost option",
+      "move all support online",
+    ],
+  },
+  {
+    matches: /Arts Centre|Theatre/,
+    projects: [
+      "short object-handling sessions",
+      "a low-cost theatre ticket trial",
+      "a caption-support booking option",
+      "a volunteer welcome rota",
+      "a tablet-lending service",
+      "a local history recording booth",
+    ],
+    groups: [
+      "new visitors",
+      "local volunteers",
+      "returning visitors",
+      "family members",
+    ],
+    problems: [
+      "the busiest period left little time for explanations",
+      "people said the original process felt too formal",
+      "new users often missed important instructions",
+      "small groups were being crowded out by larger bookings",
+      "feedback forms showed confusion about where to go next",
+    ],
+    aims: [
+      "make the service easier to use",
+      "make the first visit less intimidating",
+      "use clearer prompts to change behaviour",
+      "support people who could not attend standard sessions",
+      "protect staff time while keeping the service open",
+    ],
+    metrics: [
+      { label: "repeat bookings", verb: "rose" },
+      { label: "on-time arrivals", verb: "rose" },
+      { label: "visitor queries needing staff help", verb: "fell" },
+      { label: "completed feedback cards", verb: "rose" },
+      { label: "same-day cancellations", verb: "fell" },
+    ],
+    oldRoutines: [
+      "replace the existing service entirely",
+      "charge everyone a higher fee",
+      "turn a temporary option into the only route",
+      "remove staff judgement from the process",
+      "treat the project as permanent immediately",
+    ],
+  },
+  {
+    matches: /Museum|Observatory|Community Hall/,
+    projects: [
+      "short object-handling sessions",
+      "evening visitor welcome sessions",
+      "a local history recording booth",
+      "a volunteer welcome rota",
+      "a tablet-lending service",
+      "family orientation slots",
+      "quiet arrival slots",
+    ],
+    groups: [
+      "new visitors",
+      "local volunteers",
+      "returning visitors",
+      "family members",
+    ],
+    problems: [
+      "the busiest period left little time for explanations",
+      "people said the original process felt too formal",
+      "new users often missed important instructions",
+      "small groups were being crowded out by larger bookings",
+      "feedback forms showed confusion about where to go next",
+    ],
+    aims: [
+      "make the service easier to use",
+      "make the first visit less intimidating",
+      "use clearer prompts to change behaviour",
+      "support people who could not attend standard sessions",
+      "protect staff time while keeping the service open",
+    ],
+    metrics: [
+      { label: "repeat visits", verb: "rose" },
+      { label: "completed feedback cards", verb: "rose" },
+      { label: "arrival queries", verb: "fell" },
+      { label: "volunteer sign-ups", verb: "rose" },
+      { label: "missed bookings", verb: "fell" },
+    ],
+    oldRoutines: [
+      "replace the existing service entirely",
+      "charge everyone a higher fee",
+      "turn a temporary option into the only route",
+      "remove staff judgement from the process",
+      "treat the project as permanent immediately",
+    ],
+  },
+  {
+    matches: /Clinic|Advice Centre|Food Hub/,
+    projects: [
+      "one-page appointment reminders",
+      "a volunteer welcome rota",
+      "a tablet-lending service",
+      "parent drop-in advice hours",
+      "evening digital-skills clinics",
+      "early-morning breakfast desks",
+    ],
+    groups: [
+      "clinic patients",
+      "adult learners",
+      "parents of younger pupils",
+      "shift workers",
+    ],
+    problems: [
+      "staff were spending too long correcting avoidable errors",
+      "several bookings were cancelled at short notice",
+      "the busiest period left little time for explanations",
+      "feedback forms showed confusion about where to go next",
+      "the existing timetable did not match demand",
+    ],
+    aims: [
+      "reduce wasted time before appointments",
+      "make the service easier to use",
+      "protect staff time while keeping the service open",
+      "make the first visit less intimidating",
+      "use clearer prompts to change behaviour",
+    ],
+    metrics: [
+      { label: "on-time arrivals", verb: "rose" },
+      { label: "completed forms", verb: "rose" },
+      { label: "same-day cancellations", verb: "fell" },
+      { label: "repeat bookings", verb: "rose" },
+      { label: "avoidable correction requests", verb: "fell" },
+    ],
+    oldRoutines: [
+      "replace the existing service entirely",
+      "move all support online",
+      "remove staff judgement from the process",
+      "end drop-in help without consultation",
+      "treat the project as permanent immediately",
+    ],
+  },
+  {
+    matches: /Youth Project/,
+    projects: [
+      "parent drop-in advice hours",
+      "a shared revision timetable",
+      "small-group numeracy workshops",
+      "a volunteer welcome rota",
+      "water-refill points",
+      "early-morning breakfast desks",
+    ],
+    groups: [
+      "young participants",
+      "parents of younger pupils",
+      "local volunteers",
+      "new visitors",
+    ],
+    problems: [
+      "attendance was uneven at the start of the week",
+      "new users often missed important instructions",
+      "feedback forms showed confusion about where to go next",
+      "the busiest period left little time for explanations",
+      "small groups were being crowded out by larger bookings",
+    ],
+    aims: [
+      "make the first visit less intimidating",
+      "spread demand more evenly across the week",
+      "support people who could not attend standard sessions",
+      "use clearer prompts to change behaviour",
+      "protect staff time while keeping the service open",
+    ],
+    metrics: [
+      { label: "attendance", verb: "rose" },
+      { label: "repeat bookings", verb: "rose" },
+      { label: "completed forms", verb: "rose" },
+      { label: "same-day cancellations", verb: "fell" },
+      { label: "volunteer sign-ups", verb: "rose" },
+    ],
+    oldRoutines: [
+      "replace the existing service entirely",
+      "make the temporary route compulsory",
+      "move all support online",
+      "end drop-in help without consultation",
+      "treat the project as permanent immediately",
+    ],
+  },
+  {
+    matches: /Sports Trust|Pool/,
+    projects: [
+      "water-refill points",
+      "colour-coded recycling rooms",
+      "a volunteer welcome rota",
+      "quiet arrival slots",
+      "a safer crossing notice trial",
+      "a shared bicycle repair stand",
+    ],
+    groups: [
+      "community sports teams",
+      "new visitors",
+      "local volunteers",
+      "parents of younger pupils",
+      "shift workers",
+    ],
+    problems: [
+      "equipment was being used inefficiently",
+      "the busiest period left little time for explanations",
+      "small groups were being crowded out by larger bookings",
+      "new users often missed important instructions",
+      "attendance was uneven at the start of the week",
+    ],
+    aims: [
+      "make the service easier to use",
+      "spread demand more evenly across the week",
+      "protect staff time while keeping access open",
+      "use clearer prompts to change behaviour",
+      "make the first visit less intimidating",
+    ],
+    metrics: [
+      { label: "on-time arrivals", verb: "rose" },
+      { label: "correctly sorted items", verb: "rose" },
+      { label: "equipment clashes", verb: "fell" },
+      { label: "repeat bookings", verb: "rose" },
+      { label: "avoidable queries", verb: "fell" },
+    ],
+    oldRoutines: [
+      "replace the existing service entirely",
+      "charge everyone a higher fee",
+      "turn a temporary option into the only route",
+      "withdraw the existing low-cost option",
+      "treat the project as permanent immediately",
+    ],
+  },
+  {
+    matches: /Transport|Council|Park Service|Garden|Market/,
+    projects: [
+      "colour-coded recycling rooms",
+      "a shared bicycle repair stand",
+      "temporary wildflower strips",
+      "a neighbourhood tool library",
+      "a safer crossing notice trial",
+      "water-refill points",
+    ],
+    groups: [
+      "community sports teams",
+      "market traders",
+      "shift workers",
+      "local volunteers",
+      "new visitors",
+    ],
+    problems: [
+      "users were unsure which route or process to follow",
+      "attendance was uneven at the start of the week",
+      "the existing timetable did not match demand",
+      "small groups were being crowded out by larger bookings",
+      "the busiest period left little time for explanations",
+    ],
+    aims: [
+      "spread demand more evenly across the week",
+      "make the service easier to use",
+      "protect staff time while keeping access open",
+      "use clearer prompts to change behaviour",
+      "reduce avoidable delays",
+    ],
+    metrics: [
+      { label: "reported delays", verb: "fell" },
+      { label: "completed journeys", verb: "rose" },
+      { label: "correctly sorted items", verb: "rose" },
+      { label: "reported near-misses", verb: "fell" },
+      { label: "avoidable queries", verb: "fell" },
+    ],
+    oldRoutines: [
+      "replace the existing service entirely",
+      "charge everyone a higher fee",
+      "turn a temporary option into the only route",
+      "withdraw the existing low-cost option",
+      "treat the project as permanent immediately",
+    ],
+  },
+];
+
+function makeVrContext(setIndex: number, setting: string) {
+  const profile =
+    VR_CONTEXT_PROFILES.find((candidate) => candidate.matches.test(setting)) ??
+    VR_CONTEXT_PROFILES[0];
+
+  return {
+    project: pickVariant(profile.projects, setIndex, 7),
+    group: pickVariant(profile.groups, setIndex, 11),
+    problem: pickVariant(profile.problems, setIndex, 13),
+    aim: pickVariant(profile.aims, setIndex, 17),
+    metric: pickVariant(profile.metrics, setIndex, 19),
+    oldRoutine: pickVariant(profile.oldRoutines, setIndex, 41),
+  };
+}
+
 const VR_METHOD_DETAILS = [
   "Staff used booking records and short exit notes rather than relying on one kind of evidence.",
   "The review separated routine demand from comments made during the busiest sessions.",
@@ -809,6 +1204,18 @@ const VR_METHOD_DETAILS = [
   "The team checked whether the change shifted demand between days rather than creating new demand.",
   "The review noted when extra help was offered, so that the figures were not read in isolation.",
   "Staff logged practical problems separately from comments about the idea itself.",
+  "The team compared numerical records with comments made after ordinary sessions.",
+  "Reviewers checked whether the easiest-to-measure outcome was also the most meaningful one.",
+  "The notes kept publicity, staffing and user feedback in separate sections.",
+  "Managers asked staff to record exceptions instead of smoothing them into the totals.",
+  "The report distinguished between people helped by the change and people who avoided it.",
+  "Staff recorded whether problems came from the project itself or from the way it was introduced.",
+  "The review included a short check of what happened when staff were less available.",
+  "Managers treated the headline number as only one part of the evidence.",
+  "The team compared planned use with actual use rather than relying on bookings alone.",
+  "Reviewers looked for signs that the project displaced demand rather than only adding it.",
+  "Staff were asked to note confusion separately from dislike of the project.",
+  "The report separated early curiosity from repeated use.",
 ] as const;
 
 const VR_LOCAL_DETAILS = [
@@ -835,6 +1242,18 @@ const VR_SCOPE_DETAILS = [
   "The recommendation deliberately left open the possibility that the effect might fade.",
   "The group did not claim that the same approach would suit every user.",
   "The report separated the question of usefulness from the question of affordability.",
+  "Reviewers said the finding should be treated as local evidence only.",
+  "The report avoided turning a practical experiment into a general policy claim.",
+  "Managers said any permanent change would need a separate equality check.",
+  "The project was not intended to settle every access problem at the site.",
+  "The review described the evidence as enough for discussion, not enough for a full policy change.",
+  "The team said a different setting might produce a different balance of costs and benefits.",
+  "The report kept the existing service in view rather than treating it as obsolete.",
+  "Reviewers warned that a popular trial could still be difficult to maintain.",
+  "The project was judged against its narrow aim, not against every possible improvement.",
+  "Managers said the trial should inform the next decision rather than replace it.",
+  "The review avoided claiming that enthusiasm in one period would continue indefinitely.",
+  "The report left room for the project to be useful in some settings but unsuitable in others.",
 ] as const;
 
 const VR_INFERENCE_QUESTIONS = [
@@ -961,13 +1380,99 @@ function makeVrObservation(setIndex: number) {
     `Alongside the figures, reviewers noted that ${group} ${detail}.`,
     `One short comment came from ${group}, who ${detail}.`,
     `The staff log added that ${group} ${detail}.`,
-    `A later feedback sheet said ${group} ${detail}.`,
+    `A later feedback sheet recorded that ${group} ${detail}.`,
     `Reviewers treated a comment from ${group} as useful context: they ${detail}.`,
     `The local notes also mentioned that ${group} ${detail}.`,
   ];
 
   return pickVariant(observationFrames, setIndex, 47);
 }
+
+function indexedPick<T>(items: readonly T[], index: number, stride = 1) {
+  return items[Math.floor(index / stride) % items.length];
+}
+
+const VR_DURATION_DETAILS = [
+  "eight weeks",
+  "nine weeks",
+  "one college term",
+  "two months",
+  "ten weekday sessions",
+  "a spring half-term",
+  "twelve operating days",
+  "one audit cycle",
+  "five market days",
+  "a summer month",
+  "three fortnightly sessions",
+  "eleven opening days",
+  "two booking cycles",
+  "a winter month",
+  "one booking block",
+  "four weekend sessions",
+  "a pilot fortnight",
+  "a half-term block",
+  "three clinic weeks",
+  "one timetable cycle",
+] as const;
+
+const VR_EVIDENCE_SOURCES = [
+  "booking records",
+  "arrival logs",
+  "exit-note cards",
+  "desk tallies",
+  "staff diaries",
+  "short user interviews",
+  "attendance sheets",
+  "helpdesk records",
+  "equipment sign-out logs",
+  "session registers",
+  "queue observations",
+  "follow-up calls",
+  "volunteer notes",
+  "use-of-space counts",
+  "online request records",
+  "handover comments",
+] as const;
+
+const VR_COMPARISON_TARGETS = [
+  "a branch with matching opening hours",
+  "the previous booking cycle",
+  "a quieter day using the old process",
+  "a neighbouring venue serving the same age group",
+  "weeks with and without extra reminders",
+  "sessions run by different staff teams",
+  "a written-guide option for users who could not attend",
+  "the same service during a holiday period",
+  "a site with comparable travel links",
+  "standard sessions held under similar weather conditions",
+  "a group that had not seen the new prompts",
+  "the old routine after publicity had faded",
+] as const;
+
+const VR_DECISION_ACTIONS = [
+  "keep the project in a narrow form while collecting cleaner comparison data",
+  "repeat the review with a separate record of users who chose not to take part",
+  "keep the project where demand was clearest until affordability had been checked",
+  "alter the support material before deciding whether to make the change permanent",
+  "run a second check with fewer reminders so the effect could be separated",
+  "extend access cautiously while measuring whether the early interest lasted",
+  "test the same idea with a better-matched comparison group",
+  "pause wider rollout until the practical problems had been costed",
+  "keep existing access in place while the new route was reviewed again",
+  "ask for clearer feedback from unsuccessful or anxious users before expanding",
+  "compare the project with a lower-cost alternative before committing funds",
+  "limit the project to settings where staff capacity had been confirmed",
+] as const;
+
+type GeneratedVrPassage = {
+  stimulus: string[];
+  duration: string;
+  durationFact: string;
+  inferenceText: string;
+  summaryText: string;
+  toneText: string;
+  recommendationFact: string;
+};
 
 function makeVrPassage(input: {
   setIndex: number;
@@ -985,54 +1490,129 @@ function makeVrPassage(input: {
   caveat: string;
   limitation: string;
   followUpNote: string;
-}) {
+}): GeneratedVrPassage {
+  const duration = indexedPick(VR_DURATION_DETAILS, input.setIndex);
+  const evidenceSource = indexedPick(
+    VR_EVIDENCE_SOURCES,
+    input.setIndex
+  );
+  const comparisonTarget = indexedPick(
+    VR_COMPARISON_TARGETS,
+    input.setIndex
+  );
+  const decisionAction = indexedPick(VR_DECISION_ACTIONS, input.setIndex);
   const methodDetail = pickVariant(VR_METHOD_DETAILS, input.setIndex, 53);
   const localDetail = pickVariant(VR_LOCAL_DETAILS, input.setIndex, 59);
   const scopeDetail = pickVariant(VR_SCOPE_DETAILS, input.setIndex, 61);
   const followUp = input.followUpNote.trim();
   const followUpSentence = followUp ? ` ${followUp}` : "";
   const observation = makeVrObservation(input.setIndex);
+  const metricSentence = `${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}`;
+  const metricMovement = `${input.metric} ${
+    input.metricVerb === "rose" ? "rising" : "falling"
+  } from ${input.firstMetric} to ${input.secondMetric}`;
+  const aimActivity = gerundVerbPhrase(input.aim);
   const openers = [
-    `${input.setting} reviewed a six-week test of ${input.project} after ${input.problem}. The work focused on ${input.group} and was paid for by ${input.funder}.`,
-    `In a six-week trial funded by ${input.funder}, ${input.setting} gave ${input.group} access to ${input.project}. The trial responded to reports that ${input.problem}.`,
-    `A review note from ${input.setting} described a six-week trial of ${input.project}. It was aimed at ${input.group}, following concern that ${input.problem}, and used funding from ${input.funder}.`,
-    `${input.setting} did not commission a full redesign; it ran a six-week test of ${input.project} for ${input.group}. The reason given was that ${input.problem}, and the funding came from ${input.funder}.`,
-    `After ${input.problem}, ${input.setting} set up a six-week trial of ${input.project}. The intended users were ${input.group}; the costs were covered by ${input.funder}.`,
-    `${input.funder} paid for ${input.setting}'s six-week trial of ${input.project}. The project was offered to ${input.group} because ${input.problem}.`,
-    `A six-week review at ${input.setting} considered whether ${input.project} should continue for ${input.group}. The idea had been introduced after ${input.problem}, using ${input.funder}.`,
-    `${input.setting} selected ${input.project} for a six-week trial rather than changing the whole service at once. It targeted ${input.group} after staff found that ${input.problem}, and it was funded by ${input.funder}.`,
+    `${input.setting} had been under pressure to review ${input.project} after reports that ${input.problem}. The limited review ran for ${duration} and focused on ${input.group}.`,
+    `For ${input.group}, ${input.setting} introduced ${input.project} on a provisional basis. ${sentenceCase(input.problem)}; the review period lasted ${duration}.`,
+    `A planning note at ${input.setting} examined whether ${input.project} would solve a local access problem for ${input.group}. The issue was that ${input.problem}, so staff gathered evidence for ${duration}.`,
+    `${input.setting} used ${duration} to examine ${input.project} instead of changing the whole service at once. The review centred on ${input.group}, who had been affected because ${input.problem}.`,
+    `When ${input.problem}, ${input.setting} tested a narrower response: ${input.project}. The work involved ${input.group} over ${duration}.`,
+    `${input.setting}'s managers wanted evidence before deciding whether ${input.project} should become part of routine provision. They looked at ${input.group} for ${duration}, following concern that ${input.problem}.`,
+    `The review at ${input.setting} began with a practical question: could ${input.project} help ${input.group} when ${input.problem}? Staff observed the change across ${duration}.`,
+    `${input.setting} did not make an immediate permanent change. It used ${duration} to assess ${input.project} for ${input.group} after ${input.problem}.`,
+    `A local report from ${input.setting} described a time-limited look at ${input.project}. The focus was ${input.group}, because staff had found that ${input.problem}; the evidence window was ${duration}.`,
+    `${input.setting} set aside ${duration} for a controlled look at ${input.project}. The change was aimed at ${input.group} after repeated comments that ${input.problem}.`,
+    `The question for ${input.setting} was not whether to redesign everything, but whether ${input.project} would address one pressure point. That pressure was that ${input.problem}, especially for ${input.group}, during a review lasting ${duration}.`,
+    `Before committing to ${input.project}, ${input.setting} ran a short local review with ${input.group}. It lasted ${duration} and responded to evidence that ${input.problem}.`,
   ];
   const purposeFrames = [
-    `The stated purpose was to ${input.aim}; managers said it was not a plan to ${input.oldRoutine}.`,
-    `Staff framed the project as a way to ${input.aim}, while keeping it separate from any decision to ${input.oldRoutine}.`,
-    `The review said the project was intended to ${input.aim}, not to ${input.oldRoutine}.`,
-    `Its purpose was deliberately narrow: to ${input.aim}, without using the trial to ${input.oldRoutine}.`,
-    `Managers described the aim as trying to ${input.aim}. They also said the trial should not be read as approval to ${input.oldRoutine}.`,
-    `The project was presented as support to ${input.aim}, rather than as a route to ${input.oldRoutine}.`,
+    `The stated purpose was to ${input.aim}; managers separated that from any decision to ${input.oldRoutine}.`,
+    `Staff presented the project as a way to ${input.aim}. They kept the existing route open and said the review was not permission to ${input.oldRoutine}.`,
+    `The report described a narrow aim: to ${input.aim}, while leaving any decision to ${input.oldRoutine} for later.`,
+    `Managers said the change should help them ${input.aim}, but it was not designed to ${input.oldRoutine}.`,
+    `The project was framed as support to ${input.aim}. The review explicitly left aside the wider question of whether to ${input.oldRoutine}.`,
+    `The purpose statement focused on trying to ${input.aim}; it warned against treating the review as a shortcut to ${input.oldRoutine}.`,
+    `Staff said success would mean better evidence about how to ${input.aim}, not automatic approval to ${input.oldRoutine}.`,
+    `The aim was practical rather than sweeping: to ${input.aim}. Managers said any proposal to ${input.oldRoutine} would need a separate decision.`,
+    `The note linked the project to a need to ${input.aim}, but it kept that goal separate from wider changes such as deciding to ${input.oldRoutine}.`,
+    `Reviewers treated the project as a way to ${input.aim}, not as a replacement exercise or a route to ${input.oldRoutine}.`,
+    `Managers defined success as learning how to ${input.aim}; they did not treat it as authority to ${input.oldRoutine}.`,
+    `The review focused on whether the project could ${input.aim}. A wider decision to ${input.oldRoutine} was outside its scope.`,
+    `Staff said the project would be judged on whether it helped to ${input.aim}, not on whether it justified a decision to ${input.oldRoutine}.`,
+    `The purpose was deliberately modest: find out whether a small change could ${input.aim}. It was not a mandate to ${input.oldRoutine}.`,
+    `The report linked the project to a practical aim, namely to ${input.aim}, while keeping any plan to ${input.oldRoutine} separate.`,
+    `The project team wanted evidence about how to ${input.aim}. Managers said that evidence would not, by itself, support a decision to ${input.oldRoutine}.`,
+    `The trial brief asked whether the project could ${input.aim}; it did not ask whether managers should ${input.oldRoutine}.`,
+    `The aim was to ${input.aim} without narrowing the choices available to users who preferred the existing route.`,
+    `Staff described the project as an additional route to ${input.aim}, not as a reason to ${input.oldRoutine}.`,
+    `The review treated the aim of ${aimActivity} as the testable objective and kept any decision to ${input.oldRoutine} as a separate policy question.`,
   ];
   const evidenceFrames = [
-    `During the trial, ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
-    `${sentenceCase(input.metric)} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric} across the six-week period.`,
-    `The main recorded measure was ${input.metric}, which ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
-    `By the end of the trial, the record showed that ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
-    `The most quoted figure was that ${input.metric} ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
-    `Staff counted ${input.metric} as the main outcome; it ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+    `Using ${evidenceSource}, staff recorded that ${metricSentence}.`,
+    `The clearest numerical change was in ${input.metric}: this measure ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+    `The measure quoted most often was ${input.metric}, which ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+    `By the final week of recording, ${metricSentence}, according to ${evidenceSource}.`,
+    `The main figure came from ${evidenceSource}; it showed that ${metricSentence}.`,
+    `Staff did not rely only on comments. Their ${evidenceSource} showed that ${metricSentence}.`,
+    `The review file placed most weight on ${evidenceSource}, where ${metricSentence}.`,
+    `The strongest positive sign was numerical: ${metricSentence}.`,
+    `One table in the report showed ${metricSentence}, though reviewers did not treat the table alone as decisive.`,
+    `The project team counted ${input.metric}; this measure ${input.metricVerb} from ${input.firstMetric} to ${input.secondMetric}.`,
+    `The most concrete evidence came from ${evidenceSource}, where ${metricSentence}.`,
+    `The recorded movement was modest but visible: ${metricSentence}.`,
+    `Staff found the same direction of change in the main records, with ${metricMovement}.`,
+    `The review's data section reported that ${metricSentence}.`,
+    `The main quantitative note was simple: ${metricSentence}.`,
+    `The project's strongest figure came from ${evidenceSource} and showed that ${metricSentence}.`,
+    `Across the review window, staff recorded a shift in ${input.metric} from ${input.firstMetric} to ${input.secondMetric}.`,
+    `The evidence table listed ${input.metric} at ${input.firstMetric} before the change and ${input.secondMetric} afterwards.`,
+    `Staff could point to one measurable change, since ${metricSentence}.`,
+    `The report used ${input.metric} as its headline measure; this moved from ${input.firstMetric} to ${input.secondMetric}.`,
   ];
   const cautionFrames = [
-    `The review called the movement encouraging, but said it should be treated carefully because ${input.caveat}. It also noted that ${input.limitation}.`,
-    `Reviewers were cautious: ${input.caveat}, and ${input.limitation}.`,
-    `The report did not treat the result as conclusive, partly because ${input.caveat}. A further limitation was that ${input.limitation}.`,
-    `The figures were promising rather than decisive. The review highlighted that ${input.caveat} and that ${input.limitation}.`,
-    `Two points limited the conclusion: ${input.caveat}, and ${input.limitation}.`,
-    `The review group supported continuing the test, but qualified its judgement because ${input.caveat}; it also recorded that ${input.limitation}.`,
+    `The review called the movement useful but not conclusive because ${input.caveat}. It also noted that ${input.limitation}.`,
+    `Two checks sat beside the positive figure: ${input.caveat}, and ${input.limitation}.`,
+    `Reviewers warned against over-reading the numbers, partly because ${input.caveat}. A separate weakness was that ${input.limitation}.`,
+    `The report treated the figures as provisional. It highlighted that ${input.caveat} and that ${input.limitation}.`,
+    `The evidence was encouraging, but the review group qualified it because ${input.caveat}; it also recorded that ${input.limitation}.`,
+    `The result had to be read with care: ${input.caveat}, while ${input.limitation}.`,
+    `The report's caution came from two sources. First, ${input.caveat}; second, ${input.limitation}.`,
+    `The figures did not settle the question, since ${input.caveat} and ${input.limitation}.`,
+    `Reviewers described the finding as a signal rather than proof because ${input.caveat}. They added that ${input.limitation}.`,
+    `The project looked useful, but the evidence base remained narrow: ${input.caveat}, and ${input.limitation}.`,
+    `The report's caution was specific rather than dismissive: ${input.caveat}, and ${input.limitation}.`,
+    `Managers could not isolate the project's effect cleanly because ${input.caveat}. A further limitation was that ${input.limitation}.`,
+    `Reviewers accepted the improvement but asked for restraint, since ${input.caveat} and ${input.limitation}.`,
+    `The positive figure sat alongside two unresolved questions: ${input.caveat}, and ${input.limitation}.`,
+    `The evidence did not remove every doubt. In particular, ${input.caveat}, and ${input.limitation}.`,
+    `The report treated the result as provisional because ${input.caveat}. It also said that ${input.limitation}.`,
+    `The finding was useful, but reviewers said it should be checked again because ${input.caveat} and ${input.limitation}.`,
+    `Two details kept the conclusion limited: ${input.caveat}; also, ${input.limitation}.`,
+    `The result was not dismissed, but it was qualified by the fact that ${input.caveat}. Another weakness was that ${input.limitation}.`,
+    `Reviewers said the data needed a cautious reading, since ${input.caveat} and ${input.limitation}.`,
   ];
   const recommendationFrames = [
-    `The recommendation was to keep the project for one more term and compare demand with a similar site before wider rollout.`,
-    `Reviewers recommended one further term, followed by a comparison with demand at a similar site before any wider rollout.`,
-    `The report's final proposal was cautious: continue for one term, then compare demand with a similar site before expanding.`,
-    `No immediate expansion was approved. Instead, the project was to run for one more term while demand was compared with a similar site.`,
-    `The review advised keeping the project temporarily and checking demand against a similar site before deciding on wider rollout.`,
-    `The group recommended another term of use, plus a demand comparison with a similar site before a wider decision.`,
+    `The recommendation was to ${decisionAction}, using ${comparisonTarget} as a check before wider rollout.`,
+    `Reviewers advised managers to ${decisionAction}. They also wanted the next data set judged against ${comparisonTarget}.`,
+    `No automatic expansion was approved. Instead, the next step was to ${decisionAction} and compare the results with ${comparisonTarget}.`,
+    `The final proposal was cautious: ${decisionAction}, then decide whether the evidence still held up against ${comparisonTarget}.`,
+    `Managers were told to ${decisionAction}. The report said ${comparisonTarget} would give a fairer benchmark than the early figures alone.`,
+    `The review supported limited continuation, but only if the team could ${decisionAction} and test the result against ${comparisonTarget}.`,
+    `Before any wider decision, the group wanted to ${decisionAction}. It named ${comparisonTarget} as the next comparison point.`,
+    `The report did not recommend immediate rollout. It proposed that managers ${decisionAction}, with ${comparisonTarget} used to challenge the result.`,
+    `The next stage was deliberately modest: ${decisionAction}. Reviewers said ${comparisonTarget} should be used before approving expansion.`,
+    `The report allowed further use only on a limited basis. Managers first had to ${decisionAction}, then look at ${comparisonTarget}.`,
+    `Rather than approve a full scheme, reviewers asked the team to ${decisionAction}. The comparison point would be ${comparisonTarget}.`,
+    `The decision was deferred. A later review would need to ${decisionAction} and set the result beside ${comparisonTarget}.`,
+    `The group supported another look, not a permanent settlement. It asked managers to ${decisionAction}, with ${comparisonTarget} as the benchmark.`,
+    `The recommendation kept the project conditional: ${decisionAction}, then check whether ${comparisonTarget} told the same story.`,
+    `Reviewers wanted the project tested under less favourable assumptions. Their route was to ${decisionAction} and compare it with ${comparisonTarget}.`,
+    `The final paragraph avoided a yes-or-no decision. It told the team to ${decisionAction}; the evidence would then be judged against ${comparisonTarget}.`,
+    `The report's practical advice was to ${decisionAction}. It treated ${comparisonTarget} as the missing comparison.`,
+    `Managers were not given approval for a broad rollout. They were asked to ${decisionAction} and return with evidence from ${comparisonTarget}.`,
+    `The next decision was tied to a further check: ${decisionAction}, then review the result against ${comparisonTarget}.`,
+    `The report recommended a narrower follow-up, asking the team to ${decisionAction} while using ${comparisonTarget} as a reference point.`,
   ];
   const opener = pickVariant(openers, input.setIndex, 67);
   const purpose = pickVariant(purposeFrames, input.setIndex, 71);
@@ -1040,105 +1620,236 @@ function makeVrPassage(input: {
   const caution = pickVariant(cautionFrames, input.setIndex, 79);
   const recommendation =
     `${pickVariant(recommendationFrames, input.setIndex, 83)}${followUpSentence}`;
+  const fundingFrames = [
+    `The cost came from ${input.funder}, which covered the temporary materials but not any future staffing increase.`,
+    `${input.funder} paid for the review period, although managers said continuation would need a separate budget line.`,
+    `Funding came from ${input.funder}; the report did not assume that the same source would pay for permanent use.`,
+    `The finance note named ${input.funder} as the source of funding for the temporary work.`,
+    `The temporary costs were met by ${input.funder}, while long-term costs were left for a later decision.`,
+    `A short budget note said ${input.funder} had paid for the project during the review.`,
+    `${sentenceCase(input.funder)} covered the review, but the report kept future staffing costs separate.`,
+    `The project used money from ${input.funder}; no permanent funding decision was included.`,
+    `Managers recorded ${input.funder} as the funder for the temporary work only.`,
+    `The review period was financed through ${input.funder}, not through a routine operating budget.`,
+    `A finance appendix linked the temporary project to ${input.funder}.`,
+    `The report said ${input.funder} covered setup costs, while ongoing costs still needed approval.`,
+    `The review did not claim that ${input.funder} could support the project indefinitely.`,
+    `Initial funding came from ${input.funder}, so the long-term cost question remained open.`,
+    `${sentenceCase(input.funder)} was used for the short review, with any extension left to a later budget meeting.`,
+    `The budget line for the review was ${input.funder}; it did not cover automatic expansion.`,
+    `An allocation from ${input.funder} paid for the project materials.`,
+    `The report separated the project's evidence from its funding source, which was ${input.funder}.`,
+    `The team could run the review because ${input.funder} covered the initial expense.`,
+    `The funding note was limited: ${input.funder} paid for the review, not for a permanent service.`,
+  ];
+  const funding = pickVariant(fundingFrames, input.setIndex, 89);
+  const recommendationFact =
+    `The recommendation was to ${decisionAction} before any wider rollout.`;
+  const inferenceOptions = [
+    "The project showed useful signs, but the review still needed cleaner comparison before wider rollout.",
+    "The change may have helped, but the evidence was too limited for an unrestricted permanent decision.",
+    "The findings supported cautious continuation rather than immediate expansion.",
+    "The result was promising enough to investigate further, not strong enough to settle the policy.",
+    "The review found a plausible benefit while keeping the final decision conditional.",
+  ] as const;
+  const summaryOptions = [
+    `A limited review of ${input.project} found encouraging movement in ${input.metric}, but comparison and practical limits still mattered.`,
+    `${input.setting} saw useful early evidence for ${input.project}, while treating the result as provisional.`,
+    `The passage describes a targeted service change with positive signs, caveats and a cautious next step.`,
+    `${input.project} appeared helpful for ${input.group}, but the report avoided making a permanent claim from early data.`,
+    `The review balanced a measurable improvement against limits in timing, comparison and practicality.`,
+  ] as const;
+  const toneOptions = [
+    "Positive but qualified",
+    "Guardedly supportive",
+    "Cautious and evidence-led",
+    "Interested but not definitive",
+    "Balanced, with limited confidence",
+  ] as const;
 
-  switch (input.setIndex % 10) {
+  let stimulus: string[];
+  switch (input.setIndex % 18) {
     case 0:
-      return [
+      stimulus = [
         opener,
-        `${purpose} ${methodDetail}`,
-        `${evidence} ${localDetail}`,
-        `${caution} ${observation} ${recommendation}`,
-      ];
-    case 1:
-      return [
-        opener,
-        `${methodDetail} ${purpose}`,
-        `${evidence} ${caution}`,
-        `${observation} ${scopeDetail} ${recommendation}`,
-      ];
-    case 2:
-      return [
-        `${opener} ${scopeDetail}`,
-        `${purpose} ${evidence}`,
-        `${methodDetail} ${caution}`,
-        `${localDetail} ${observation} ${recommendation}`,
-      ];
-    case 3:
-      return [
-        opener,
-        `${purpose} ${scopeDetail}`,
+        `${funding} ${purpose}`,
         `${methodDetail} ${evidence}`,
-        `${caution} ${localDetail} ${recommendation}`,
+        `${localDetail} ${caution}`,
+        `${observation} ${recommendation}`,
       ];
-    case 4:
-      return [
-        `${opener} ${methodDetail}`,
-        `${purpose} ${localDetail}`,
+      break;
+    case 1:
+      stimulus = [
+        `${funding} ${opener}`,
+        `${purpose} ${methodDetail}`,
         `${evidence} ${caution}`,
         `${scopeDetail} ${observation} ${recommendation}`,
       ];
-    case 5:
-      return [
+      break;
+    case 2:
+      stimulus = [
+        opener,
+        `${purpose} ${scopeDetail}`,
+        `${funding} ${evidence}`,
+        `${methodDetail} ${caution}`,
+        `${localDetail} ${recommendation}`,
+      ];
+      break;
+    case 3:
+      stimulus = [
+        `${opener} ${funding}`,
+        `${methodDetail} ${purpose}`,
+        `${localDetail} ${evidence}`,
+        `${caution} ${observation}`,
+        recommendation,
+      ];
+      break;
+    case 4:
+      stimulus = [
         opener,
         `${evidence} ${methodDetail}`,
-        `${purpose} ${caution}`,
-        `${localDetail} ${observation} ${recommendation}`,
-      ];
-    case 6:
-      return [
-        `${opener} ${purpose}`,
-        `${methodDetail} ${evidence}`,
+        `${purpose} ${funding}`,
         `${caution} ${scopeDetail}`,
         `${observation} ${recommendation}`,
       ];
+      break;
+    case 5:
+      stimulus = [
+        `${funding} ${purpose}`,
+        opener,
+        `${evidence} ${localDetail}`,
+        `${caution} ${observation} ${recommendation}`,
+      ];
+      break;
+    case 6:
+      stimulus = [
+        `${opener} ${scopeDetail}`,
+        `${funding} ${methodDetail}`,
+        `${purpose} ${evidence}`,
+        `${caution} ${localDetail}`,
+        `${observation} ${recommendation}`,
+      ];
+      break;
     case 7:
-      return [
+      stimulus = [
         opener,
         `${localDetail} ${purpose}`,
-        `${evidence} ${caution}`,
-        `${methodDetail} ${scopeDetail} ${recommendation}`,
+        `${funding} ${evidence}`,
+        `${methodDetail} ${caution}`,
+        `${scopeDetail} ${recommendation}`,
       ];
+      break;
     case 8:
-      return [
+      stimulus = [
         `${opener} ${methodDetail}`,
-        `${evidence} ${localDetail}`,
-        `${purpose} ${caution}`,
-        `${observation} ${scopeDetail} ${recommendation}`,
+        `${purpose} ${funding}`,
+        `${evidence} ${observation}`,
+        `${caution} ${scopeDetail}`,
+        recommendation,
       ];
-    default:
-      return [
+      break;
+    case 9:
+      stimulus = [
+        `${funding} ${opener}`,
+        `${evidence} ${purpose}`,
+        `${methodDetail} ${localDetail}`,
+        `${caution} ${recommendation}`,
+      ];
+      break;
+    case 10:
+      stimulus = [
         opener,
-        `${purpose} ${methodDetail} ${scopeDetail}`,
+        `${purpose} ${funding}`,
+        `${scopeDetail} ${methodDetail}`,
         `${evidence} ${caution}`,
         `${localDetail} ${observation} ${recommendation}`,
       ];
+      break;
+    case 11:
+      stimulus = [
+        `${opener} ${localDetail}`,
+        `${funding} ${evidence}`,
+        `${purpose} ${methodDetail}`,
+        `${caution} ${observation}`,
+        `${scopeDetail} ${recommendation}`,
+      ];
+      break;
+    case 12:
+      stimulus = [
+        `${purpose} ${opener}`,
+        funding,
+        `${evidence} ${methodDetail}`,
+        `${localDetail} ${caution}`,
+        `${observation} ${recommendation}`,
+      ];
+      break;
+    case 13:
+      stimulus = [
+        opener,
+        `${methodDetail} ${funding}`,
+        `${purpose} ${evidence}`,
+        `${caution} ${scopeDetail}`,
+        `${localDetail} ${recommendation}`,
+      ];
+      break;
+    case 14:
+      stimulus = [
+        `${funding} ${scopeDetail}`,
+        opener,
+        `${purpose} ${localDetail}`,
+        `${evidence} ${caution}`,
+        `${methodDetail} ${observation} ${recommendation}`,
+      ];
+      break;
+    case 15:
+      stimulus = [
+        opener,
+        `${evidence} ${funding}`,
+        `${caution} ${purpose}`,
+        `${observation} ${methodDetail}`,
+        `${localDetail} ${scopeDetail} ${recommendation}`,
+      ];
+      break;
+    case 16:
+      stimulus = [
+        `${opener} ${observation}`,
+        `${funding} ${purpose}`,
+        `${evidence} ${scopeDetail}`,
+        `${methodDetail} ${caution}`,
+        `${localDetail} ${recommendation}`,
+      ];
+      break;
+    default:
+      stimulus = [
+        opener,
+        `${purpose} ${caution}`,
+        `${funding} ${methodDetail}`,
+        `${evidence} ${localDetail}`,
+        `${scopeDetail} ${observation} ${recommendation}`,
+      ];
   }
+
+  return {
+    stimulus,
+    duration,
+    durationFact: `The work ran for ${duration}.`,
+    inferenceText: indexedPick(inferenceOptions, input.setIndex, 5),
+    summaryText: indexedPick(summaryOptions, input.setIndex, 7),
+    toneText: indexedPick(toneOptions, input.setIndex, 9),
+    recommendationFact,
+  };
 }
 
 function makeVrSet(setIndex: number): UCATQuestion[] {
   const cycle = Math.floor(setIndex / 1800);
   const setting = pickVariant(ORGANISATIONS, setIndex, 5);
-  const project = pickVariant(PROJECTS, setIndex, 7);
-  const group = pickVariant(GROUPS, setIndex, 11);
-  const problem = pickVariant(PROBLEMS, setIndex, 13);
-  const aim = pickVariant(AIMS, setIndex, 17);
-  const metric = pickVariant(METRICS, setIndex, 19);
-  const metricVerb = metric === "same-day cancellations" ? "fell" : "rose";
+  const context = makeVrContext(setIndex, setting);
+  const { project, group, problem, aim, metric, oldRoutine } = context;
+  const metricVerb = metric.verb;
   const caveat = pickVariant(CAVEATS, setIndex, 23);
   const limitation = pickVariant(LIMITATIONS, setIndex, 29);
   const funder = pickVariant(FUNDERS, setIndex, 31);
   const wrongFunder = pickVariant(WRONG_FUNDERS, setIndex, 37);
-  const oldRoutine = pickVariant(
-    [
-      "replace the existing service entirely",
-      "make every user join a formal course",
-      "close the standard booking route",
-      "charge everyone a higher fee",
-      "move all support online",
-    ],
-    setIndex,
-    41
-  );
   const firstMetric = 42 + (setIndex % 18) * 3;
   const secondMetric =
     metricVerb === "rose"
@@ -1146,7 +1857,7 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
       : Math.max(4, firstMetric - 8 - (setIndex % 7));
   const followUpNote =
     cycle > 0 ? ` ${pickVariant(FOLLOW_UP_NOTES, setIndex + cycle * 7, 43)}` : "";
-  const passage = makeVrPassage({
+  const passageInfo = makeVrPassage({
     setIndex,
     setting,
     project,
@@ -1155,7 +1866,7 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
     aim,
     oldRoutine,
     funder,
-    metric,
+    metric: metric.label,
     metricVerb,
     firstMetric,
     secondMetric,
@@ -1163,6 +1874,7 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
     limitation,
     followUpNote,
   });
+  const passage = passageInfo.stimulus;
   const setId = `hq-vr-${pad(setIndex)}`;
   const tfcKind = setIndex % 4;
   const tfcStatement =
@@ -1171,8 +1883,8 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
       : tfcKind === 1
         ? `The project was funded by ${wrongFunder}.`
         : tfcKind === 2
-          ? `${setting} will definitely roll out the project to every similar site next year.`
-          : `${sentenceCase(metric)} ${metricVerb} during the trial.`;
+          ? `${setting} will definitely make the project permanent across every comparable venue next year.`
+          : `${sentenceCase(metric.label)} ${metricVerb} during the review.`;
   const tfcAnswer =
     tfcKind === 0 || tfcKind === 3 ? "A" : tfcKind === 1 ? "B" : "C";
   const fourthSubtype = pick(["vr-summary", "vr-author", "vr-negative"] as const, setIndex);
@@ -1206,14 +1918,14 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
       title: "Verbal Reasoning Practice",
       leftTitle: "Passage",
       stimulus: passage,
-      question: `Why did ${setting} test ${project}?`,
+      question: `What reason is given for introducing ${project}?`,
       correctText: `To ${aim}`,
       distractors: [
         `To ${oldRoutine}`,
         `Because ${wrongFunder} had paid for it`,
         `Because ${limitation}`,
       ],
-      explanation: `The first paragraph states that the aim was to ${aim}.`,
+      explanation: `The passage states that the project was meant to ${aim}.`,
       seed: setIndex + 1,
     }),
     singleQuestion({
@@ -1226,15 +1938,14 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
       leftTitle: "Passage",
       stimulus: passage,
       question: pick(VR_INFERENCE_QUESTIONS, setIndex),
-      correctText:
-        "The trial was promising, but the evidence was not strong enough for immediate wider rollout.",
+      correctText: passageInfo.inferenceText,
       distractors: [
-        "The review proved that the project would work equally well everywhere.",
+        "The review proved that the project would work equally well in every setting.",
         "The project failed because the main metric moved in the wrong direction.",
         "The project was mainly introduced to replace all existing support.",
       ],
       explanation:
-        "The review called the figures encouraging but recommended another term and comparison with a similar site before wider rollout.",
+        "The review reports a useful movement in the main measure, but it also gives caveats and keeps wider rollout conditional.",
       seed: setIndex + 2,
     }),
   ];
@@ -1251,15 +1962,14 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
         leftTitle: "Passage",
         stimulus: passage,
         question: pick(VR_SUMMARY_QUESTIONS, setIndex),
-        correctText:
-          "A small trial produced useful signs of improvement but needed more comparison before expansion.",
+        correctText: passageInfo.summaryText,
         distractors: [
-          "A service was closed because a short trial showed no demand.",
-          "A national fund required every site to copy one local project immediately.",
-          "A project was abandoned after staff refused to collect any data.",
+          "A service was closed because a short review showed no demand.",
+          "A national fund required every venue to copy one local project immediately.",
+          "A project was abandoned after staff refused to collect any evidence.",
         ],
         explanation:
-          "The passage describes a limited trial, encouraging results, caveats and a recommendation for further comparison.",
+          "The passage describes a limited review, a positive signal, caveats and a cautious next step.",
         seed: setIndex + 3,
       })
     );
@@ -1275,10 +1985,14 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
         leftTitle: "Passage",
         stimulus: passage,
         question: pick(VR_AUTHOR_QUESTIONS, setIndex),
-        correctText: "Cautiously positive",
-        distractors: ["Completely dismissive", "Certain and unqualified", "Uninterested in the result"],
+        correctText: passageInfo.toneText,
+        distractors: [
+          "Completely dismissive",
+          "Certain and unqualified",
+          "Uninterested in the result",
+        ],
         explanation:
-          "The writer reports encouraging figures but also stresses caveats and further comparison.",
+          "The writer reports a useful result but also stresses caveats, comparison and a conditional next step.",
         seed: setIndex + 3,
       })
     );
@@ -1289,14 +2003,15 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
       negativeKind === 0
         ? {
             question: negativeQuestion,
-            correctText: "The project was guaranteed to be used at every similar site.",
+            correctText:
+                  "The project was guaranteed to become permanent across every comparable venue.",
             distractors: [
               `The project was funded by ${funder}.`,
-              "The trial lasted six weeks.",
-              `${sentenceCase(metric)} ${metricVerb} during the trial.`,
+              passageInfo.durationFact,
+              `${sentenceCase(metric.label)} ${metricVerb} during the review.`,
             ],
             explanation:
-              "The passage recommends another term and comparison; it does not guarantee full rollout.",
+              "The passage keeps the wider decision conditional; it does not guarantee full rollout.",
           }
         : negativeKind === 1
           ? {
@@ -1305,22 +2020,23 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
               distractors: [
                 `The figures should be treated carefully because ${caveat}.`,
                 `The review noted that ${limitation}.`,
-                "Demand still needed comparison with a similar site before wider rollout.",
+                  "The result still needed a cleaner comparison before wider rollout.",
               ],
               explanation:
                 "The funding source is stated, but it is not given as a reason for caution. The caveat, limitation and comparison point are all cautionary.",
             }
           : negativeKind === 2
             ? {
-                question: negativeQuestion,
-                correctText: "Roll the project out immediately to every similar site.",
+              question: negativeQuestion,
+                correctText:
+                  "Roll the project out immediately to every comparable venue.",
                 distractors: [
-                  "Keep the project for one more term.",
-                  "Compare demand with a similar site.",
+                  "Keep the project limited while gathering cleaner evidence.",
+                  "Compare the result with a better-matched benchmark.",
                   "Wait for further comparison before wider rollout.",
                 ],
                 explanation:
-                  "The recommendation was limited: keep the project for one more term and compare demand before wider rollout.",
+                  "The recommendation was limited and conditional rather than an instruction to expand immediately.",
               }
             : {
                 question: negativeQuestion,
@@ -1328,7 +2044,7 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
                 distractors: [
                   `The aim was to ${aim}.`,
                   `The project was funded by ${funder}.`,
-                  `${sentenceCase(metric)} ${metricVerb} during the trial.`,
+                  `${sentenceCase(metric.label)} ${metricVerb} during the review.`,
                 ],
                 explanation: `The passage says the project was funded by ${funder}, not by ${wrongFunder}.`,
               };
@@ -6028,7 +6744,7 @@ const SJT_SCENARIOS: Array<{
   },
   {
     issue: "teamwork",
-    setting: "a busy skills session",
+    setting: "the skills teaching room",
     problem: "a colleague is struggling with a task and becoming flustered",
     safeAction: "offer calm help and suggest involving the supervisor if the task remains unsafe",
     partlyAppropriateAction: "quietly offer help, but wait too long before suggesting supervisor support",
@@ -6041,7 +6757,7 @@ const SJT_SCENARIOS: Array<{
   },
   {
     issue: "integrity",
-    setting: "a placement logbook review",
+    setting: "a portfolio review room",
     problem: "a student notices an attendance entry has been recorded incorrectly in their favour",
     safeAction: "raise the error honestly and ask how to correct the record",
     partlyAppropriateAction: "ask the student to check the entry and offer to help raise it if needed",
@@ -6106,7 +6822,7 @@ const SJT_SCENARIOS: Array<{
   },
   {
     issue: "professional-boundaries",
-    setting: "a student teaching session",
+    setting: "the student teaching room",
     problem: "a patient asks a student to contact them privately on social media",
     safeAction: "politely decline and explain that communication should use appropriate clinical routes",
     partlyAppropriateAction: "decline private contact and say they will check what official contact routes are available later",
@@ -6129,6 +6845,305 @@ const SJT_SCENARIOS: Array<{
     secondaryImportant: "whether the booking process has an approved urgent-priority route",
     learningReason: "whether the student wanted to learn how waiting-list decisions are made",
     minor: "whether the waiting-list spreadsheet uses colour coding",
+  },
+  {
+    issue: "confidentiality",
+    setting: "a ward handover desk",
+    problem: "a relative asks to photograph a patient list so they can remember a bed number",
+    safeAction: "explain that the list contains confidential information and ask staff how to help the relative appropriately",
+    partlyAppropriateAction: "cover the list and look for staff, but not explain why taking a photograph would be a problem",
+    learningButPoorAction: "look at the list first to work out which details are confidential before asking staff",
+    unsafeAction: "allow the photograph because the relative only wants one bed number",
+    important: "preventing identifiable information being copied or shared without authority",
+    secondaryImportant: "whether staff can provide non-confidential directions instead",
+    learningReason: "whether the student wanted to learn how relatives are directed on the ward",
+    minor: "whether the relative's phone camera is good quality",
+  },
+  {
+    issue: "patient-safety",
+    setting: "a treatment room",
+    problem: "a sharps bin is filled above the marked line before the next procedure",
+    safeAction: "avoid handling the sharps bin and tell the nurse in charge promptly",
+    partlyAppropriateAction: "keep people away from the work surface but delay telling the nurse until the room is quieter",
+    learningButPoorAction: "inspect the bin closely to understand the fill line before reporting it",
+    unsafeAction: "push the contents down to make space for the next procedure",
+    important: "reducing the risk of a sharps injury",
+    secondaryImportant: "whether the room can be kept unused until staff respond",
+    learningReason: "whether the student wanted to learn how sharps bins are replaced",
+    minor: "whether the treatment room has recently been redecorated",
+  },
+  {
+    issue: "communication",
+    setting: "a discharge lounge",
+    problem: "a patient says the transport instructions they were given do not match what a porter told them",
+    safeAction: "ask the appropriate staff member to clarify the instructions before the patient leaves",
+    partlyAppropriateAction: "reassure the patient that someone will check, but not make sure the check happens",
+    learningButPoorAction: "guess which instruction is likely to be correct as practice in problem solving",
+    unsafeAction: "tell the patient to follow whichever instruction is more convenient",
+    important: "making sure the patient leaves with clear and accurate information",
+    secondaryImportant: "whether the correct staff member is available nearby",
+    learningReason: "whether the student wanted practice handling practical queries",
+    minor: "whether the transport leaflet uses a large font",
+  },
+  {
+    issue: "scope-of-practice",
+    setting: "a minor injuries waiting area",
+    problem: "a patient asks a student to interpret an X-ray image visible on a nearby screen",
+    safeAction: "explain that a qualified clinician must discuss the image and seek the supervisor",
+    partlyAppropriateAction: "say they cannot interpret the image but leave the patient waiting without telling staff",
+    learningButPoorAction: "describe what they think they can see before checking with a clinician",
+    unsafeAction: "give a likely interpretation because the patient asks for honesty",
+    important: "not giving clinical interpretations beyond competence",
+    secondaryImportant: "whether the supervisor can be found promptly",
+    learningReason: "whether the student wanted to practise reading X-rays",
+    minor: "whether the screen is at a comfortable height",
+  },
+  {
+    issue: "teamwork",
+    setting: "a ward skills bay",
+    problem: "a peer repeatedly forgets a safety step during a supervised practice task",
+    safeAction: "support the peer calmly and involve the supervisor if the safety step is still missed",
+    partlyAppropriateAction: "quietly remind the peer once but avoid involving the supervisor even if it continues",
+    learningButPoorAction: "take over the task so they can practise the step themselves",
+    unsafeAction: "mock the peer in front of the group for forgetting the step",
+    important: "supporting learning while keeping the practice task safe",
+    secondaryImportant: "whether the peer would prefer feedback away from the group",
+    learningReason: "whether the student wanted more practice with the task",
+    minor: "whether the skills bay has spare chairs",
+  },
+  {
+    issue: "integrity",
+    setting: "a placement sign-off desk",
+    problem: "a student is asked to sign that they attended a teaching session they missed",
+    safeAction: "decline to sign inaccurate attendance information and ask how to record the absence honestly",
+    partlyAppropriateAction: "say they are uncomfortable signing but avoid correcting the form immediately",
+    learningButPoorAction: "leave the form unsigned for now to see how other students complete theirs",
+    unsafeAction: "sign the form because the session was not assessed",
+    important: "being honest about attendance records",
+    secondaryImportant: "whether the record could affect placement completion",
+    learningReason: "whether the student wanted to understand how attendance forms are checked",
+    minor: "whether the form is collected in paper or electronic format",
+  },
+  {
+    issue: "respect-dignity",
+    setting: "a rehabilitation gym",
+    problem: "a patient becomes upset after being laughed at for moving slowly during an exercise",
+    safeAction: "respond respectfully to the patient and raise the behaviour with appropriate staff",
+    partlyAppropriateAction: "check the patient is all right but avoid mentioning the laughter to staff",
+    learningButPoorAction: "ask the patient detailed questions about their feelings before seeking support",
+    unsafeAction: "tell the patient not to take the joke seriously",
+    important: "protecting the patient's dignity during care",
+    secondaryImportant: "whether staff can speak to the person who laughed discreetly",
+    learningReason: "whether the student wanted to practise responding to distress",
+    minor: "whether the exercise equipment is new",
+  },
+  {
+    issue: "escalation",
+    setting: "a clinic equipment cupboard",
+    problem: "a student notices that a suction machine has a cracked casing before a teaching clinic",
+    safeAction: "stop the equipment being used and alert the supervisor immediately",
+    partlyAppropriateAction: "move the machine aside but wait until the supervisor returns to mention it",
+    learningButPoorAction: "switch the machine on briefly to see whether it still works before reporting it",
+    unsafeAction: "use the machine because the crack may only be cosmetic",
+    important: "escalating possible equipment faults before use",
+    secondaryImportant: "whether another suitable machine is available",
+    learningReason: "whether the student wanted to learn how equipment faults are assessed",
+    minor: "whether the cupboard labels are neatly printed",
+  },
+  {
+    issue: "candour",
+    setting: "an outpatient reception area",
+    problem: "a student realises they sent a patient to the wrong waiting area",
+    safeAction: "tell reception staff what happened and help correct the mistake",
+    partlyAppropriateAction: "look for the patient but avoid explaining the error to staff clearly",
+    learningButPoorAction: "wait to see whether the patient returns before mentioning the mistake",
+    unsafeAction: "do nothing because the patient may eventually find the right room",
+    important: "being open about a mistake so it can be corrected quickly",
+    secondaryImportant: "whether the delay could cause the patient to miss their appointment",
+    learningReason: "whether the student wanted to learn the clinic layout better",
+    minor: "whether the waiting area chairs are clearly numbered",
+  },
+  {
+    issue: "capacity-consent",
+    setting: "a vaccination clinic",
+    problem: "a patient appears unsure about a vaccine and keeps looking to a family member before answering",
+    safeAction: "ask qualified staff to check the patient's understanding and voluntary decision",
+    partlyAppropriateAction: "pause the conversation but not explain why staff need to check understanding",
+    learningButPoorAction: "ask extra questions to practise assessing understanding before involving staff",
+    unsafeAction: "encourage the patient to agree because the appointment slot is short",
+    important: "checking that consent is informed and voluntary",
+    secondaryImportant: "whether there is time to continue the discussion privately",
+    learningReason: "whether the student wanted to learn how consent is assessed",
+    minor: "whether the vaccine leaflet is printed in colour",
+  },
+  {
+    issue: "professional-boundaries",
+    setting: "a community teaching clinic",
+    problem: "a patient offers a student an expensive gift after a helpful conversation",
+    safeAction: "politely decline the gift and ask staff about the local policy",
+    partlyAppropriateAction: "decline the gift but avoid telling staff that it was offered",
+    learningButPoorAction: "accept the gift temporarily to learn what the policy says later",
+    unsafeAction: "accept the gift because refusing may seem rude",
+    important: "maintaining professional boundaries and avoiding conflicts of interest",
+    secondaryImportant: "whether there is a policy for recording offered gifts",
+    learningReason: "whether the student wanted to learn how patients express thanks",
+    minor: "whether the gift is wrapped neatly",
+  },
+  {
+    issue: "justice",
+    setting: "a clinic booking office",
+    problem: "a student hears someone suggest using a cancelled slot for a staff member's relative instead of the next patient on the list",
+    safeAction: "follow the agreed booking process and ask staff how to handle the cancelled slot fairly",
+    partlyAppropriateAction: "refuse to move the relative but avoid checking who should receive the slot",
+    learningButPoorAction: "look through the booking list to understand the system before raising the concern",
+    unsafeAction: "give the slot to the relative because it would otherwise be wasted",
+    important: "using appointments fairly according to the agreed system",
+    secondaryImportant: "whether there is an urgent-priority route for cancelled slots",
+    learningReason: "whether the student wanted to learn how cancellations are allocated",
+    minor: "whether the booking software has a modern interface",
+  },
+  {
+    issue: "confidentiality",
+    setting: "a teaching seminar room",
+    problem: "a slide from a previous case discussion still shows a hospital number",
+    safeAction: "ask for the slide to be removed or anonymised before teaching continues",
+    partlyAppropriateAction: "point out the slide quietly but not check whether teaching has paused",
+    learningButPoorAction: "copy the number so they can ask later whether it was identifiable",
+    unsafeAction: "ignore it because no patient name is visible",
+    important: "preventing identifiable information being displayed unnecessarily",
+    secondaryImportant: "whether teaching can continue using an anonymised version",
+    learningReason: "whether the student wanted to learn what counts as identifiable data",
+    minor: "whether the projector image is slightly blurred",
+  },
+  {
+    issue: "patient-safety",
+    setting: "a falls-risk bay",
+    problem: "a patient who needs assistance is trying to stand while the call bell is out of reach",
+    safeAction: "get help immediately while staying with the patient if safe",
+    partlyAppropriateAction: "move the call bell closer but delay alerting staff",
+    learningButPoorAction: "try to assess the patient's mobility before calling for help",
+    unsafeAction: "leave the patient to find a nurse because the student is not allocated to them",
+    important: "reducing the immediate risk of a fall",
+    secondaryImportant: "whether the student can remain nearby without blocking staff",
+    learningReason: "whether the student wanted to learn more about mobility assessment",
+    minor: "whether the bay curtains are fully drawn",
+  },
+  {
+    issue: "communication",
+    setting: "a pharmacy counselling area",
+    problem: "a patient says two staff members have given different instructions about when to take a medicine",
+    safeAction: "ask the pharmacist to clarify the advice before the patient leaves",
+    partlyAppropriateAction: "say the pharmacist will explain it but fail to make sure the pharmacist is told",
+    learningButPoorAction: "try to reconcile the two instructions as a learning exercise before seeking help",
+    unsafeAction: "tell the patient to choose whichever timing they prefer",
+    important: "ensuring medication advice is accurate and consistent",
+    secondaryImportant: "whether the discrepancy can be checked quickly",
+    learningReason: "whether the student wanted to practise explaining medicine schedules",
+    minor: "whether the counselling area has a leaflet stand",
+  },
+  {
+    issue: "scope-of-practice",
+    setting: "a telephone triage desk",
+    problem: "a caller asks the student to say whether chest discomfort is probably indigestion",
+    safeAction: "explain that a qualified clinician must assess the symptom and escalate the call",
+    partlyAppropriateAction: "avoid giving a diagnosis but not make clear that staff need to assess the symptom",
+    learningButPoorAction: "ask diagnostic questions to practise triage before escalating",
+    unsafeAction: "reassure the caller that it is probably not serious",
+    important: "recognising symptoms that need qualified assessment",
+    secondaryImportant: "whether a clinician can take over the call promptly",
+    learningReason: "whether the student wanted to practise telephone triage",
+    minor: "whether the caller sounds polite",
+  },
+  {
+    issue: "integrity",
+    setting: "the audit meeting room",
+    problem: "a peer suggests removing two inconvenient responses before the findings are shown",
+    safeAction: "say the data should not be altered dishonestly and seek advice from the supervisor",
+    partlyAppropriateAction: "object to changing the data but agree to discuss it only after the meeting",
+    learningButPoorAction: "ask to see how the chart looks with and without the responses before deciding",
+    unsafeAction: "remove the responses because the sample is small anyway",
+    important: "presenting audit data honestly",
+    secondaryImportant: "whether the supervisor can advise on how to explain limitations",
+    learningReason: "whether the student wanted to learn how audit charts are prepared",
+    minor: "whether the chart colours match the template",
+  },
+  {
+    issue: "respect-dignity",
+    setting: "a busy outpatient corridor",
+    problem: "a patient using a walking aid is told loudly to hurry up",
+    safeAction: "respond respectfully and alert staff if the patient needs support",
+    partlyAppropriateAction: "walk beside the patient but avoid addressing the disrespectful comment",
+    learningButPoorAction: "ask the patient why they are slow before finding staff",
+    unsafeAction: "repeat that the patient needs to hurry because the clinic is delayed",
+    important: "treating the patient with dignity while maintaining safety",
+    secondaryImportant: "whether the corridor can be kept clear without rushing the patient",
+    learningReason: "whether the student wanted to practise supporting mobility needs",
+    minor: "whether the corridor signs use arrows",
+  },
+  {
+    issue: "escalation",
+    setting: "a blood-pressure teaching station",
+    problem: "a cuff appears frayed and gives a reading that seems inconsistent with the patient's appearance",
+    safeAction: "stop relying on the cuff and ask a qualified staff member to check the equipment and patient",
+    partlyAppropriateAction: "repeat the reading once but delay telling staff about the damaged cuff",
+    learningButPoorAction: "keep trying readings to practise technique before escalating",
+    unsafeAction: "record the reading as accurate because the device produced a number",
+    important: "escalating unreliable equipment or potentially inaccurate observations",
+    secondaryImportant: "whether another cuff is available nearby",
+    learningReason: "whether the student wanted more practice taking blood pressure",
+    minor: "whether the cuff storage box is labelled",
+  },
+  {
+    issue: "candour",
+    setting: "a clinic notes room",
+    problem: "a student realises they filed a result in the wrong paper notes",
+    safeAction: "tell the supervising staff member immediately so the result can be moved correctly",
+    partlyAppropriateAction: "try to find the notes first but not tell staff what happened",
+    learningButPoorAction: "wait until the end of the clinic to mention the filing error",
+    unsafeAction: "leave the result where it is because staff may notice later",
+    important: "being open about an error that could affect records",
+    secondaryImportant: "whether the correct notes can be found quickly",
+    learningReason: "whether the student wanted to learn the filing system better",
+    minor: "whether the notes trolley is easy to move",
+  },
+  {
+    issue: "capacity-consent",
+    setting: "a student-observed procedure room",
+    problem: "a patient says they agreed to the procedure but did not realise a student would stay",
+    safeAction: "respect the concern and ask staff to confirm consent for student presence",
+    partlyAppropriateAction: "offer to stand farther away but not check whether the patient consents",
+    learningButPoorAction: "stay briefly to observe while planning to ask about consent afterwards",
+    unsafeAction: "remain in the room because the patient already agreed to the procedure",
+    important: "making sure consent includes student involvement",
+    secondaryImportant: "whether the student can leave without disrupting care",
+    learningReason: "whether the student wanted to observe the procedure for learning",
+    minor: "whether the room has enough hooks for coats",
+  },
+  {
+    issue: "professional-boundaries",
+    setting: "a ward corridor",
+    problem: "a patient asks the student to pass a personal note to a clinician outside the normal communication route",
+    safeAction: "explain that messages should go through appropriate staff and ask how to help safely",
+    partlyAppropriateAction: "decline to carry the note but avoid checking whether the patient has an urgent concern",
+    learningButPoorAction: "read the note to decide whether it is important before telling staff",
+    unsafeAction: "take the note privately because the patient trusts the student",
+    important: "using proper communication routes and maintaining boundaries",
+    secondaryImportant: "whether the patient has an urgent question that staff should hear",
+    learningReason: "whether the student wanted to learn how patient messages are passed on",
+    minor: "whether the note is sealed",
+  },
+  {
+    issue: "justice",
+    setting: "a community screening clinic",
+    problem: "a volunteer suggests letting a neighbour skip the queue because they are in a hurry",
+    safeAction: "follow the queue process and ask staff about any genuine priority need",
+    partlyAppropriateAction: "say queue-jumping is unfair but not check whether there is an urgent reason",
+    learningButPoorAction: "look at the list to see whether queue changes are common before responding",
+    unsafeAction: "let the neighbour skip ahead to avoid an argument",
+    important: "treating people fairly while recognising legitimate urgency",
+    secondaryImportant: "whether there is a formal route for urgent cases",
+    learningReason: "whether the student wanted to learn how queues are managed",
+    minor: "whether the neighbour is friendly to the volunteer",
   },
 ] as const;
 
@@ -6164,6 +7179,24 @@ const SJT_PEER_PRESSURES = [
   "keeping it informal because it seems minor",
   "handling it without asking anyone else",
   "waiting until the end of the session before mentioning it",
+  "making a best guess rather than interrupting the supervisor",
+  "assuming the issue has already been handled",
+  "using the quickest practical workaround",
+  "avoiding a difficult conversation for the moment",
+  "letting the next person in the team deal with it",
+  "checking privately later instead of raising it now",
+  "acting first and explaining the decision afterwards",
+  "treating the concern as too small to document",
+  "asking another student rather than the responsible staff member",
+  "giving a reassuring answer without checking the facts",
+  "leaving the paperwork unchanged until someone asks",
+  "moving on because the area is busy",
+  "sharing only part of the concern to save time",
+  "waiting for the person affected to ask again",
+  "making an informal note instead of escalating it",
+  "trying to solve the problem alone for learning practice",
+  "assuming a senior colleague would correct any mistake",
+  "choosing the option that avoids embarrassment",
 ] as const;
 
 const SJT_BACKGROUND_DETAILS = [
@@ -6199,6 +7232,18 @@ const SJT_SCENE_DETAILS = [
   "The student has been reminded that uncertainty should be raised early.",
   "The team is under time pressure, but no one has asked the student to act beyond their role.",
   "There is enough privacy to speak quietly, but not to discuss confidential details openly.",
+  "The student can ask a short question without leaving the person affected unsupported.",
+  "The issue is visible enough that ignoring it may make the team look dismissive.",
+  "There is no need for the student to solve the problem alone before asking for help.",
+  "A calm response now would be easier than correcting a rushed decision later.",
+  "The student has enough information to recognise a concern, but not enough to make an independent decision.",
+  "The setting is busy, yet the concern can still be raised discreetly.",
+  "The person affected has not received a clear explanation yet.",
+  "A short delay to seek advice would be safer than an unsupported shortcut.",
+  "The student can stay polite without agreeing to an unsafe or unfair request.",
+  "The concern is practical as well as professional, so it should not be treated as merely awkward.",
+  "There is a route for asking staff, even if the student is unsure of the exact wording to use.",
+  "The student can acknowledge the pressure while still following the professional principle.",
 ] as const;
 
 const SJT_ROLE_DETAILS = [
@@ -6210,6 +7255,18 @@ const SJT_ROLE_DETAILS = [
   "The student is unsure of the exact policy but understands the relevant professional principle.",
   "The student's learning needs do not override the immediate responsibility to keep people safe and respected.",
   "The issue involves more than politeness; it could affect trust, safety or fairness.",
+  "The student can contribute by noticing and escalating, even when they cannot personally fix the problem.",
+  "Being junior changes how the student should act, not whether the concern matters.",
+  "The student's role supports the team but does not replace qualified judgement.",
+  "The student should avoid turning uncertainty into an unsupported decision.",
+  "Professional behaviour is still expected even during routine or low-stakes tasks.",
+  "The student can ask for clarification without taking ownership of the decision.",
+  "The student's responsibility is to raise the issue through the right route.",
+  "The student should not let convenience decide whether a concern is shared.",
+  "The student's learning aim is secondary to the immediate professional duty.",
+  "The student can be honest about limits while remaining useful to the team.",
+  "The placement role allows observation, but it does not justify ignoring risk.",
+  "The student should avoid informal workarounds that bypass staff responsibility.",
 ] as const;
 
 const SJT_CASE_DETAILS = [
@@ -6225,7 +7282,7 @@ const SJT_CASE_DETAILS = [
   "The student is due to leave the area soon.",
   "The team has been trying to reduce avoidable delays that morning.",
   "A staff member has reminded the group not to make assumptions about patient preferences.",
-  "The student has access to the placement handbook but not to confidential records.",
+  "The student has access to the placement handbook but not authority to change the process alone.",
   "Another person nearby appears to be waiting for a decision.",
   "The issue could be handled discreetly if raised promptly.",
   "The student is aware that informal shortcuts have caused problems on previous sessions.",
@@ -6238,6 +7295,21 @@ const SJT_CASE_DETAILS = [
   "The team is trying to finish on time, but professional standards still apply.",
 ] as const;
 
+const SJT_ROLE_DESCRIPTIONS = [
+  "a medical student",
+  "a clinical student",
+  "a student attached to the team for the day",
+  "a medical student on placement",
+  "a student observer",
+  "a senior medical student",
+  "a student helping with supervised tasks",
+  "a student attending a teaching placement",
+  "a student volunteer with the service",
+  "a medical student shadowing the team",
+  "a student allocated to the session",
+  "a student in a supervised clinical area",
+] as const;
+
 const SJT_DRAG_QUESTIONS = [
   "Sort the actions according to whether they are appropriate in this situation.",
   "Place each action into the category that best fits this situation.",
@@ -6247,50 +7319,157 @@ const SJT_DRAG_QUESTIONS = [
   "Group the actions according to their professional suitability.",
 ] as const;
 
+function makeSjtPressureDetail(input: {
+  setIndex: number;
+  person: string;
+  peer: string;
+  peerPressure: string;
+}) {
+  const frames = [
+    `${input.peer}, another student, suggests ${input.peerPressure}.`,
+    `The time pressure makes this shortcut tempting: ${input.peerPressure}.`,
+    `${input.peer} says the team may prefer ${input.peerPressure}.`,
+    `The quickest-looking option would be ${input.peerPressure}.`,
+    `A staff member is focused elsewhere, so ${input.person} may feel pressure to consider ${input.peerPressure}.`,
+    `No one has asked ${input.person} to decide alone, but the delay makes the shortcut look convenient: ${input.peerPressure}.`,
+    `The person affected is waiting, and ${input.peer} wonders aloud about ${input.peerPressure}.`,
+    `The local routine is not immediately clear, which makes the shortcut feel quick: ${input.peerPressure}.`,
+    `The queue behind the situation adds pressure for ${input.person} to consider ${input.peerPressure}.`,
+    `There is a chance to pause, but ${input.peer} says ${input.peerPressure} would avoid awkwardness.`,
+    `The supervisor can be contacted, although that is slower than ${input.peerPressure}.`,
+    `The situation is visible to others, so a shortcut such as ${input.peerPressure} could affect trust.`,
+    `${input.person} can see why ${input.peerPressure} might feel easier, but it would change how the concern is handled.`,
+    `The pressure in the room makes the shortcut sound simpler than it is: ${input.peerPressure}.`,
+    `${input.peer} frames ${input.peerPressure} as a harmless shortcut.`,
+    `The immediate inconvenience points toward ${input.peerPressure}, even though staff help is available.`,
+    `${input.person} is aware that ${input.peerPressure} would avoid a conversation for now.`,
+    `The quickest route appears to be ${input.peerPressure}, but the professional issue remains.`,
+    `${input.peer} thinks ${input.peerPressure} would keep the session moving.`,
+    `The delay makes the shortcut seem attractive to the people nearby: ${input.peerPressure}.`,
+    `${input.person} has to decide whether ${input.peerPressure} is a shortcut or a safe response.`,
+    `The situation could be made quieter by ${input.peerPressure}, but that may leave the real concern unresolved.`,
+    `${input.peer} suggests that ${input.peerPressure} would be less disruptive.`,
+    `The practical pressure is towards ${input.peerPressure}, not towards a full discussion.`,
+  ] as const;
+
+  return pickVariant(frames, input.setIndex, 43);
+}
+
+function sjtSettingPhrase(setting: string) {
+  return /\b(?:room|area|clinic|office|bay|lounge|gym|corridor|cupboard)\b/i.test(setting)
+    ? `in ${setting}`
+    : `at ${setting}`;
+}
+
 function makeSjtStem(input: {
   setIndex: number;
   person: string;
   peer: string;
+  roleDescription: string;
   scenario: (typeof SJT_SCENARIOS)[number];
   problemClause: string;
   sessionContext: string;
-  peerPressure: string;
+  pressureDetail: string;
   backgroundDetail: string;
   sceneDetail: string;
   roleDetail: string;
   caseDetail: string;
 }) {
   const problem = sentenceCase(input.problemClause);
+  const settingPhrase = sjtSettingPhrase(input.scenario.setting);
+  const settingSentencePhrase = sentenceCase(settingPhrase);
+  const openers = [
+    `${input.person}, ${input.roleDescription}, is working ${settingPhrase} ${input.sessionContext}.`,
+    `While placed ${settingPhrase}, ${input.person}, ${input.roleDescription}, notices a concern ${input.sessionContext}.`,
+    `${input.person} is ${input.roleDescription} ${settingPhrase}.`,
+    `${settingSentencePhrase}, ${input.person} is present as ${input.roleDescription}.`,
+    `${input.person} has been asked to help ${settingPhrase} ${input.sessionContext}.`,
+    `During placement, ${input.person} is ${settingPhrase} as ${input.roleDescription}.`,
+    `${input.person} is observing ${settingPhrase} ${input.sessionContext}.`,
+    `${settingSentencePhrase}, ${input.person}, ${input.roleDescription}, becomes aware of a professional concern.`,
+    `${input.person} is helping with supervised tasks ${settingPhrase}.`,
+    `A session ${settingPhrase} is under way when ${input.person}, ${input.roleDescription}, becomes involved.`,
+    `${input.person}'s placement session is taking place ${settingPhrase}.`,
+    `${input.person} is assigned to ${input.scenario.setting} for a supervised session.`,
+  ] as const;
+  const concernFrames = [
+    `${problem}.`,
+    `The concern is that ${input.problemClause}.`,
+    `The immediate issue is that ${input.problemClause}.`,
+    `The situation centres on this: ${input.problemClause}.`,
+    `It becomes clear that ${input.problemClause}.`,
+    `What worries ${input.person} is that ${input.problemClause}.`,
+    `The problem emerges when ${input.problemClause}.`,
+    `A professional issue arises because ${input.problemClause}.`,
+    `What has to be managed is that ${input.problemClause}.`,
+    `The situation becomes difficult because ${input.problemClause}.`,
+    `${input.person}'s concern is that ${input.problemClause}.`,
+    `The central problem is that ${input.problemClause}.`,
+    `The professional judgement point is that ${input.problemClause}.`,
+    `The difficulty starts when ${input.problemClause}.`,
+    `${input.person} is unsure how to respond because ${input.problemClause}.`,
+    `The immediate professional question arises because ${input.problemClause}.`,
+    `The situation would be easy to mishandle because ${input.problemClause}.`,
+    `The issue comes into focus when ${input.problemClause}.`,
+    `The reason this matters is that ${input.problemClause}.`,
+    `The practical and professional concern is that ${input.problemClause}.`,
+    `${input.person} needs to respond to the fact that ${input.problemClause}.`,
+    `The decision is complicated by the fact that ${input.problemClause}.`,
+    `The concern cannot simply be ignored because ${input.problemClause}.`,
+    `The relevant issue is that ${input.problemClause}.`,
+  ] as const;
+  const opener = pickVariant(openers, input.setIndex, 47);
+  const concern = pickVariant(concernFrames, input.setIndex, 53);
 
-  switch (input.setIndex % 14) {
+  switch (input.setIndex % 24) {
     case 0:
-      return `${input.person}, a medical student, is working at ${input.scenario.setting} ${input.sessionContext}. ${problem}. ${input.backgroundDetail} ${input.sceneDetail} ${input.caseDetail} ${input.peer}, another student, suggests ${input.peerPressure}. ${input.roleDetail}`;
+      return `${opener} ${concern} ${input.backgroundDetail} ${input.sceneDetail} ${input.caseDetail} ${input.pressureDetail} ${input.roleDetail}`;
     case 1:
-      return `While placed at ${input.scenario.setting}, ${input.person} becomes aware that ${input.problemClause}. This happens ${input.sessionContext}. ${input.backgroundDetail} ${input.caseDetail} ${input.roleDetail} ${input.peer} suggests ${input.peerPressure}.`;
+      return `${opener} ${input.backgroundDetail} ${concern} ${input.caseDetail} ${input.roleDetail} ${input.pressureDetail}`;
     case 2:
-      return `${input.person} is on placement at ${input.scenario.setting}. ${problem}. This happens ${input.sessionContext}. ${input.sceneDetail} ${input.backgroundDetail} ${input.caseDetail} Another student, ${input.peer}, suggests ${input.peerPressure}.`;
+      return `${opener} ${concern} ${input.sceneDetail} ${input.backgroundDetail} ${input.pressureDetail} ${input.caseDetail}`;
     case 3:
-      return `In ${input.scenario.setting}, ${input.person} notices that ${input.problemClause}. The situation arises ${input.sessionContext}. ${input.roleDetail} ${input.caseDetail} ${input.peer}, who is also present, suggests ${input.peerPressure}. ${input.backgroundDetail}`;
+      return `${opener} ${input.roleDetail} ${concern} ${input.caseDetail} ${input.pressureDetail} ${input.backgroundDetail}`;
     case 4:
-      return `${input.person}, a medical student, has been asked to help at ${input.scenario.setting}. ${problem}. The issue comes up ${input.sessionContext}. ${input.backgroundDetail} ${input.caseDetail} ${input.peer} suggests ${input.peerPressure}. ${input.sceneDetail}`;
+      return `${opener} ${input.backgroundDetail} ${input.caseDetail} ${concern} ${input.pressureDetail} ${input.sceneDetail}`;
     case 5:
-      return `${problem} while ${input.person}, a medical student, is at ${input.scenario.setting}. ${input.backgroundDetail} This is happening ${input.sessionContext}. ${input.roleDetail} ${input.caseDetail} ${input.peer}, another student, suggests ${input.peerPressure}.`;
+      return `${concern} ${opener} ${input.backgroundDetail} ${input.roleDetail} ${input.caseDetail} ${input.pressureDetail}`;
     case 6:
-      return `${input.person} is observing at ${input.scenario.setting} ${input.sessionContext}. ${problem}. ${input.sceneDetail} ${input.caseDetail} ${input.peer} says they should consider ${input.peerPressure}. ${input.backgroundDetail}`;
+      return `${opener} ${input.sceneDetail} ${concern} ${input.caseDetail} ${input.pressureDetail} ${input.backgroundDetail}`;
     case 7:
-      return `During placement, ${input.person} is at ${input.scenario.setting} when ${input.problemClause}. ${input.backgroundDetail} The timing is awkward because it is ${input.sessionContext}. ${input.caseDetail} ${input.peer} suggests ${input.peerPressure}. ${input.roleDetail}`;
+      return `${opener} ${input.backgroundDetail} The timing makes the decision feel awkward. ${concern} ${input.caseDetail} ${input.pressureDetail} ${input.roleDetail}`;
     case 8:
-      return `${input.person}, a medical student at ${input.scenario.setting}, becomes aware that ${input.problemClause}. ${input.backgroundDetail} It is ${input.sessionContext}, and ${input.peer} suggests ${input.peerPressure}. ${input.sceneDetail} ${input.caseDetail}`;
+      return `${opener} ${input.backgroundDetail} ${input.pressureDetail} ${input.sceneDetail} ${concern} ${input.caseDetail}`;
     case 9:
-      return `${input.person} is helping at ${input.scenario.setting}. ${problem}. ${input.backgroundDetail} The issue comes up ${input.sessionContext}. ${input.caseDetail} ${input.peer}, another student nearby, suggests ${input.peerPressure}. ${input.roleDetail}`;
+      return `${opener} ${input.backgroundDetail} The issue comes up before anyone has clearly taken responsibility. ${input.caseDetail} ${concern} ${input.pressureDetail} ${input.roleDetail}`;
     case 10:
-      return `At ${input.scenario.setting}, ${input.person} hears that ${input.problemClause}. ${input.sceneDetail} The situation occurs ${input.sessionContext}. ${input.caseDetail} ${input.peer} suggests ${input.peerPressure}. ${input.backgroundDetail}`;
+      return `${opener} ${input.sceneDetail} ${concern} The situation needs a response before it drifts. ${input.caseDetail} ${input.pressureDetail} ${input.backgroundDetail}`;
     case 11:
-      return `${input.person} is at ${input.scenario.setting} ${input.sessionContext} when the following concern arises: ${input.problemClause}. ${input.roleDetail} ${input.backgroundDetail} ${input.caseDetail} ${input.peer} suggests ${input.peerPressure}.`;
+      return `${opener} The following concern arises: ${input.problemClause}. ${input.roleDetail} ${input.backgroundDetail} ${input.caseDetail} ${input.pressureDetail}`;
     case 12:
-      return `${problem} at ${input.scenario.setting}, where ${input.person} is attending placement ${input.sessionContext}. ${input.sceneDetail} ${input.caseDetail} ${input.peer} suggests ${input.peerPressure}. ${input.roleDetail}`;
+      return `${concern} ${opener} ${input.sceneDetail} ${input.caseDetail} ${input.pressureDetail} ${input.roleDetail}`;
+    case 13:
+      return `${opener} ${input.backgroundDetail} ${input.roleDetail} ${concern} ${input.sceneDetail} ${input.pressureDetail} ${input.caseDetail}`;
+    case 14:
+      return `${opener} ${input.caseDetail} ${concern} ${input.backgroundDetail} ${input.pressureDetail} ${input.sceneDetail}`;
+    case 15:
+      return `${opener} ${input.pressureDetail} ${concern} ${input.roleDetail} ${input.backgroundDetail} ${input.caseDetail}`;
+    case 16:
+      return `${opener} ${input.sceneDetail} ${input.backgroundDetail} ${input.roleDetail} ${concern} ${input.pressureDetail}`;
+    case 17:
+      return `${opener} ${concern} ${input.caseDetail} ${input.roleDetail} ${input.pressureDetail} ${input.backgroundDetail}`;
+    case 18:
+      return `${opener} ${input.backgroundDetail} ${input.sceneDetail} ${input.pressureDetail} ${concern} ${input.caseDetail}`;
+    case 19:
+      return `${opener} ${input.roleDetail} ${input.pressureDetail} ${input.backgroundDetail} ${concern} ${input.caseDetail}`;
+    case 20:
+      return `${opener} ${input.caseDetail} ${input.sceneDetail} ${concern} ${input.backgroundDetail} ${input.pressureDetail}`;
+    case 21:
+      return `${opener} ${input.pressureDetail} ${input.caseDetail} ${concern} ${input.sceneDetail} ${input.roleDetail}`;
+    case 22:
+      return `${concern} ${input.backgroundDetail} ${opener} ${input.caseDetail} ${input.pressureDetail} ${input.roleDetail}`;
     default:
-      return `${input.person} notices a professional concern at ${input.scenario.setting}: ${input.problemClause}. It happens ${input.sessionContext}. ${input.backgroundDetail} ${input.sceneDetail} ${input.caseDetail} ${input.peer}, another student, suggests ${input.peerPressure}.`;
+      return `${opener} ${input.sceneDetail} ${input.caseDetail} ${input.backgroundDetail} ${concern} ${input.pressureDetail} ${input.roleDetail}`;
   }
 }
 
@@ -6298,11 +7477,19 @@ function makeSjtProblemClause(
   scenario: (typeof SJT_SCENARIOS)[number],
   person: string
 ) {
-  if (scenario.issue === "integrity") {
+  if (scenario.problem.startsWith("a student notices that ")) {
+    return `${person} sees that ${scenario.problem.slice("a student notices that ".length)}`;
+  }
+
+  if (scenario.problem.startsWith("a student notices ")) {
+    return `${person} sees ${scenario.problem.slice("a student notices ".length)}`;
+  }
+
+  if (scenario.issue === "integrity" && scenario.problem.includes("their favour")) {
     return `an attendance entry has been recorded incorrectly in ${person}'s favour`;
   }
 
-  if (scenario.issue === "candour") {
+  if (scenario.issue === "candour" && scenario.problem.includes("incorrect visiting time")) {
     return `a visitor has been given an incorrect visiting time by ${person}`;
   }
 
@@ -6317,6 +7504,13 @@ function makeSjtSet(setIndex: number): UCATQuestion[] {
   const setId = `hq-sjt-${pad(setIndex)}`;
   const sessionContext = pickVariant(SJT_SESSION_CONTEXTS, setIndex, 17);
   const peerPressure = pickVariant(SJT_PEER_PRESSURES, setIndex, 19);
+  const roleDescription = pickVariant(SJT_ROLE_DESCRIPTIONS, setIndex, 41);
+  const pressureDetail = makeSjtPressureDetail({
+    setIndex,
+    person,
+    peer,
+    peerPressure,
+  });
   const backgroundDetail = pickVariant(SJT_BACKGROUND_DETAILS, setIndex, 23);
   const sceneDetail = pickVariant(SJT_SCENE_DETAILS, setIndex, 29);
   const roleDetail = pickVariant(SJT_ROLE_DETAILS, setIndex, 31);
@@ -6326,10 +7520,11 @@ function makeSjtSet(setIndex: number): UCATQuestion[] {
     setIndex,
     person,
     peer,
+    roleDescription,
     scenario,
     problemClause,
     sessionContext,
-    peerPressure,
+    pressureDetail,
     backgroundDetail,
     sceneDetail,
     roleDetail,
@@ -6341,7 +7536,7 @@ function makeSjtSet(setIndex: number): UCATQuestion[] {
   const positiveActionIsPartial = setIndex % 4 === 0;
   const negativeActionIsPartial = setIndex % 4 === 1;
   const importantFactorIsSecondary = setIndex % 4 === 2;
-  const minorFactorIsLearning = setIndex % 4 === 3;
+  const minorFactorIsLearning = setIndex % 4 === 3 || setIndex % 10 === 2;
   const positiveAction = positiveActionIsPartial ? scenario.partlyAppropriateAction : scenario.safeAction;
   const negativeAction = negativeActionIsPartial ? scenario.learningButPoorAction : scenario.unsafeAction;
   const importantFactor = importantFactorIsSecondary ? scenario.secondaryImportant : scenario.important;

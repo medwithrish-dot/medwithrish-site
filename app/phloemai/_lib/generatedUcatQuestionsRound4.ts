@@ -710,7 +710,130 @@ const SJT_SCENARIOS = [
   ["A peer seems unwell before seeing the next patient and says they cannot concentrate.", ["teamwork", "patient-safety"]],
   ["A patient thanks a student and asks to connect on a personal social media account.", ["professional-boundaries", "communication"]],
   ["A student realises they gave a patient unclear directions to the imaging department.", ["candour", "communication"]],
+  ["A student finds a printed clinic letter left beside a public photocopier.", ["confidentiality", "professional-boundaries"]],
+  ["A patient with a falls-risk wristband is trying to reach a bag on the floor.", ["patient-safety", "beneficence"]],
+  ["A student hears a volunteer give a visitor inaccurate advice about antibiotics.", ["communication", "patient-safety"]],
+  ["A relative insists on answering consent questions while the patient stays silent.", ["autonomy", "capacity-consent"]],
+  ["A student is asked to sign a skills log for a procedure they only watched.", ["integrity", "scope-of-practice"]],
+  ["A peer makes a mocking comment about a patient who was distressed.", ["respect-dignity", "integrity"]],
+  ["A student notices latex equipment on a trolley for a patient with a latex allergy.", ["patient-safety", "escalation"]],
+  ["A patient asks a student to explain a scan result before the clinician arrives.", ["scope-of-practice", "communication"]],
+  ["A patient offers a student an expensive thank-you gift after directions to a clinic.", ["professional-boundaries", "integrity"]],
+  ["A student realises they gave a visitor the wrong ward visiting time.", ["candour", "communication"]],
+  ["A booking clerk hints that a friend's appointment could be moved ahead of others.", ["justice", "integrity"]],
+  ["A student sees an overfilled sharps bin partly blocking a treatment surface.", ["patient-safety", "escalation"]],
+  ["A patient says they do not understand discharge transport instructions.", ["communication", "beneficence"]],
+  ["A student receives identifiable patient details in a personal group chat.", ["confidentiality", "professional-boundaries"]],
+  ["A colleague is rushing a confused patient through a form they have not understood.", ["capacity-consent", "respect-dignity"]],
+  ["A student notices a medicine dose on a discharge summary does not match the chart.", ["patient-safety", "escalation"]],
+  ["A patient asks the student to pass a private note to a doctor after the consultation.", ["professional-boundaries", "communication"]],
+  ["A student has missed compulsory teaching and a friend offers to mark them present.", ["integrity", "professional-boundaries"]],
+  ["A patient becomes upset after being spoken over during a clinic discussion.", ["respect-dignity", "communication"]],
+  ["A student sees a damaged oxygen cylinder being prepared for a teaching session.", ["escalation", "patient-safety"]],
 ] as const satisfies ReadonlyArray<readonly [string, readonly UCATSjtIssueTag[]]>;
+
+const ROUND_FOUR_SJT_CONTEXT_NOTES = [
+  "The supervisor is nearby but dealing with another task.",
+  "The team is short of time, but there is no immediate emergency.",
+  "The issue has not yet been recorded in the local notes.",
+  "The patient-facing area is busy enough that a rushed response could be overheard.",
+  "A staff member has previously asked students to raise uncertainty early.",
+  "The student is due to leave the area soon but can still ask for help.",
+  "Another learner is watching how the situation is handled.",
+  "A quiet space is available if the concern needs a private conversation.",
+  "The student has not been asked to act outside their role.",
+  "A written policy exists, but the student has not used it before.",
+  "The person affected is waiting for a clear response.",
+  "The placement tutor will review professionalism notes later that week.",
+  "The usual staff contact is visible at the far end of the room.",
+  "The conversation is happening where other people could misunderstand it.",
+  "The student has time to pause before responding.",
+  "The concern could affect trust if it is ignored.",
+  "The student can contact a qualified staff member without leaving anyone unsupported.",
+  "No one has yet clarified who is responsible for the next step.",
+  "A brief delay to check the right route would not put anyone at immediate risk.",
+  "The student has been reminded not to guess when a concern involves safety or consent.",
+  "The setting is busy, but the concern can still be raised discreetly.",
+  "The person most affected has not yet been given a clear explanation.",
+  "The local process is available, although it may take a few minutes to follow.",
+  "A senior colleague is occupied, but not unavailable.",
+  "The student has enough information to recognise a problem, not to make an independent decision.",
+  "A rushed response would be convenient but could make the situation harder to correct.",
+  "The concern is practical as well as professional.",
+  "The student can stay polite without agreeing to an unsafe shortcut.",
+] as const;
+
+function sentenceWithoutFinalStop(text: string) {
+  return text.replace(/\.$/, "");
+}
+
+function lowerFirst(text: string) {
+  return `${text.charAt(0).toLowerCase()}${text.slice(1)}`;
+}
+
+function seededIndex(index: number, salt: number, length: number) {
+  return Math.abs(index * 37 + salt * 17) % length;
+}
+
+function makeRoundFourSjtStimulus(
+  scenario: string,
+  index: number,
+  mode: "rating" | "drag" | "order" | "most-least"
+) {
+  const modeOffset = {
+    rating: 0,
+    drag: 7,
+    order: 13,
+    "most-least": 19,
+  }[mode];
+  const contextSeed = index + modeOffset * 11;
+  const note =
+    ROUND_FOUR_SJT_CONTEXT_NOTES[
+      seededIndex(contextSeed, 3, ROUND_FOUR_SJT_CONTEXT_NOTES.length)
+    ];
+  const observerCount = 2 + seededIndex(contextSeed, 5, 7);
+  const audienceContext = [
+    `${observerCount} students are close enough to notice what happens next.`,
+    `The exchange is visible to ${observerCount} other learners.`,
+    `${observerCount} people nearby could misunderstand a rushed response.`,
+    `There are ${observerCount} minutes before the next scheduled task.`,
+    `${observerCount} members of the team are moving through the area.`,
+    `The student has already been waiting for about ${observerCount} minutes.`,
+    `${observerCount} separate tasks are competing for attention.`,
+    `The placement group is due to discuss professionalism in ${observerCount} days.`,
+    `A small queue is forming while the student decides what to do.`,
+    `The next appointment is close enough that delay feels awkward.`,
+    `The student can step aside briefly to ask for advice.`,
+    `Other people nearby may copy how the situation is handled.`,
+    `The person affected appears calm but is waiting for a response.`,
+    `The student has not seen this exact situation before.`,
+    `The area is active, but the issue is not an emergency.`,
+    `The placement group has been asked to flag unresolved concerns.`,
+    `The team is trying to keep the session moving without missing important details.`,
+  ][seededIndex(contextSeed, 7, 17)];
+  const scenarioCore = sentenceWithoutFinalStop(scenario);
+  const noteCore = sentenceWithoutFinalStop(note);
+  const audienceCore = sentenceWithoutFinalStop(audienceContext);
+  const lowerScenario = lowerFirst(scenarioCore);
+  const lowerNote = lowerFirst(noteCore);
+  const lowerAudience = lowerFirst(audienceCore);
+  const frames = [
+    `${scenario} ${note} ${audienceContext}`,
+    `${note} ${scenario} ${audienceContext}`,
+    `${scenario} ${audienceContext} ${note}`,
+    `During the placement, ${lowerScenario}. ${note} ${audienceContext}`,
+    `A professional issue arises when ${lowerScenario}. ${note} ${audienceContext}`,
+    `${scenario} Before anyone responds, ${lowerNote}. ${audienceContext}`,
+    `${note} The immediate concern is that ${lowerScenario}. ${audienceContext}`,
+    `${audienceContext} The concern is that ${lowerScenario}. ${note}`,
+    `The situation starts with this concern: ${lowerScenario}. ${note} ${audienceContext}`,
+    `${scenario} The context is that ${lowerNote}, and ${lowerAudience}.`,
+    `The student has to respond after this happens: ${lowerScenario}. ${note} ${audienceContext}`,
+    `${note} While this is happening, ${lowerScenario}. ${audienceContext}`,
+  ];
+
+  return [frames[seededIndex(contextSeed, 11, frames.length)]];
+}
 
 function makeSjtRating(index: number): UCATQuestion {
   const [scenario, issueTags] = SJT_SCENARIOS[index % SJT_SCENARIOS.length];
@@ -741,7 +864,7 @@ function makeSjtRating(index: number): UCATQuestion {
     title: "Situational Judgement Practice",
     leftTitle: "Scenario",
     setId: `sjt-round4-rating-set-${Math.floor(index / 4) + 1}`,
-    stimulus: [scenario],
+    stimulus: makeRoundFourSjtStimulus(scenario, index, "rating"),
     question,
     options: appropriateness ? APPROPRIATENESS_OPTIONS : IMPORTANCE_OPTIONS,
     answer,
@@ -764,7 +887,7 @@ function makeSjtDragCategory(index: number): UCATQuestion {
     title: "Situational Judgement Practice",
     leftTitle: "Scenario",
     setId,
-    stimulus: [scenario],
+    stimulus: makeRoundFourSjtStimulus(scenario, index, "drag"),
     question: "Drag each response to the side that best describes it.",
     instruction: "Classify each response as appropriate or inappropriate.",
     categories: [
@@ -812,7 +935,7 @@ function makeSjtOrdering(index: number): UCATQuestion {
     title: "Situational Judgement Practice",
     leftTitle: "Scenario",
     setId,
-    stimulus: [scenario],
+    stimulus: makeRoundFourSjtStimulus(scenario, index, "order"),
     question: "Drag the actions into the most appropriate order.",
     instruction: "Prioritise immediate risk, then escalation, then later follow-up.",
     dragItems: [
@@ -841,7 +964,7 @@ function makeSjtMostLeast(index: number): UCATQuestion {
     title: "Situational Judgement Practice",
     leftTitle: "Scenario",
     setId,
-    stimulus: [scenario],
+    stimulus: makeRoundFourSjtStimulus(scenario, index, "most-least"),
     question: "Select the most appropriate and least appropriate actions.",
     instruction: "Choose one action for each slot.",
     actionItems: [

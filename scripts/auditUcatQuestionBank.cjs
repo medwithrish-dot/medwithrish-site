@@ -119,6 +119,179 @@ function collectQuestionText(question) {
   ].join(" | ");
 }
 
+function normaliseStimulusText(value) {
+  return String(value || "").replace(/\s+/g, " ").trim();
+}
+
+function collectStimulusUnits(questions) {
+  const units = new Map();
+
+  for (const question of questions) {
+    const text = normaliseStimulusText((question.stimulus || []).join(" "));
+    const setId = question.setId || question.id;
+    const key = `${setId}::${text}`;
+
+    if (!units.has(key)) {
+      units.set(key, {
+        ids: [],
+        setId,
+        text,
+      });
+    }
+
+    units.get(key).ids.push(question.id);
+  }
+
+  return [...units.values()];
+}
+
+function stimulusSentences(text) {
+  return normaliseStimulusText(text)
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+}
+
+function categoriseStimulusSentence(section, sentence) {
+  const text = sentence.toLowerCase();
+  const categories = [];
+
+  if (section === "vr") {
+    if (/\b(?:week|month|term|session|cycle|fortnight|days|half-term)\b/.test(text)) {
+      categories.push("duration");
+    }
+    if (/\b(?:fund|funding|budget|paid|cost|grant|reserve|partnership)\b/.test(text)) {
+      categories.push("funding");
+    }
+    if (/\b(?:aim|purpose|meant|intended|designed|goal|trying to|success would mean)\b/.test(text)) {
+      categories.push("purpose");
+    }
+    if (/\b(?:not|separate|left aside|avoiding|rather than|without)\b/.test(text)) {
+      categories.push("boundary");
+    }
+    if (/\b(?:rose|fell|from \d|to \d|measure|recorded|figure|table|counted)\b/.test(text)) {
+      categories.push("metric");
+    }
+    if (/\b(?:caution|care|conclusive|provisional|limited|weakness|qualified|narrow|proof|decisive)\b/.test(text)) {
+      categories.push("caution");
+    }
+    if (/\b(?:compare|comparison|benchmark|matched|previous|with and without)\b/.test(text)) {
+      categories.push("comparison");
+    }
+    if (/\b(?:recommend|proposal|next step|rollout|wider|continue|expansion|decision|approved)\b/.test(text)) {
+      categories.push("decision");
+    }
+    if (/\b(?:comment|feedback|reported|said|asked|noted|wanted|thought)\b/.test(text)) {
+      categories.push("feedback");
+    }
+  } else if (section === "sjt") {
+    if (/\b(?:student|placement|observing|supervised|assigned|attached)\b/.test(text)) {
+      categories.push("role");
+    }
+    if (/\b(?:patient|visitor|relative|person affected)\b/.test(text)) {
+      categories.push("person");
+    }
+    if (/\b(?:confidential|medicine|diagnose|consent|record|social media|waiting list|equipment|error|trolley|form|symptom)\b/.test(text)) {
+      categories.push("issue");
+    }
+    if (/\b(?:busy|handover|queue|time pressure|shortly|closing|break|appointments|session)\b/.test(text)) {
+      categories.push("pressure");
+    }
+    if (/\b(?:suggest|tempt|shortcut|quick|prefer|convenient|slower|awkwardness)\b/.test(text)) {
+      categories.push("shortcut");
+    }
+    if (/\b(?:supervisor|staff|qualified|clinician|receptionist|nurse)\b/.test(text)) {
+      categories.push("staff");
+    }
+    if (/\b(?:role|authority|competence|policy|guidance|handbook|document|escalat)\b/.test(text)) {
+      categories.push("limits");
+    }
+  }
+
+  return categories.length > 0 ? categories.join("+") : "other";
+}
+
+function stimulusSkeleton(section, text) {
+  return stimulusSentences(text)
+    .map((sentence) => categoriseStimulusSentence(section, sentence))
+    .join("|");
+}
+
+function assertStimulusDiversity(section, questions) {
+  const units = collectStimulusUnits(questions);
+  const exactStimuli = new Map();
+
+  for (const unit of units) {
+    const key = unit.text.toLowerCase();
+    const matches = exactStimuli.get(key) || [];
+    matches.push(unit);
+    exactStimuli.set(key, matches);
+  }
+
+  const repeatedStimuli = [...exactStimuli.values()].filter(
+    (matches) => new Set(matches.map((match) => match.setId)).size > 1
+  );
+
+  if (repeatedStimuli.length > 0) {
+    throw new Error(
+      `${section.toUpperCase()} stimulus text repeats across sets:\n${repeatedStimuli
+        .slice(0, 8)
+        .map((matches) => matches.map((match) => match.setId).join(", "))
+        .join("\n")}`
+    );
+  }
+
+  const phraseLimits =
+    section === "vr"
+      ? [
+          { phrase: "six-week", limit: 8 },
+          { phrase: "six week", limit: 8 },
+          { phrase: "one more term", limit: 4 },
+          { phrase: "similar site", limit: 4 },
+          { phrase: "standard booking route", limit: 4 },
+          { phrase: "full redesign", limit: 4 },
+        ]
+      : [
+          { phrase: "another student", limit: 220 },
+          { phrase: "suggests", limit: 260 },
+        ];
+
+  const phraseBreaches = phraseLimits
+    .map(({ phrase, limit }) => ({
+      phrase,
+      limit,
+      count: units.filter((unit) => unit.text.toLowerCase().includes(phrase)).length,
+    }))
+    .filter(({ count, limit }) => count > limit);
+
+  if (phraseBreaches.length > 0) {
+    throw new Error(
+      `${section.toUpperCase()} stimulus wording is over-reused:\n${phraseBreaches
+        .map(({ phrase, count, limit }) => `${phrase}: ${count} > ${limit}`)
+        .join("\n")}`
+    );
+  }
+
+  const skeletonCounts = new Map();
+  for (const unit of units) {
+    const skeleton = stimulusSkeleton(section, unit.text);
+    skeletonCounts.set(skeleton, (skeletonCounts.get(skeleton) || 0) + 1);
+  }
+
+  const largestSkeletonCount = Math.max(0, ...skeletonCounts.values());
+  const skeletonLimit = section === "vr" ? 40 : 60;
+
+  if (largestSkeletonCount > skeletonLimit) {
+    const repeatedSkeleton = [...skeletonCounts.entries()].sort(
+      ([, firstCount], [, secondCount]) => secondCount - firstCount
+    )[0];
+
+    throw new Error(
+      `${section.toUpperCase()} stimulus skeleton repeats ${largestSkeletonCount} times; limit is ${skeletonLimit}.\n${repeatedSkeleton[0]}`
+    );
+  }
+}
+
 if (ids.size !== allQuestions.length) {
   throw new Error("Accepted UCAT bank contains duplicate question IDs.");
 }
@@ -361,6 +534,9 @@ if (learningReasonImportanceQuestions < minimumMiddleSjtAnswers) {
     `High-quality SJT should mark learning-motive factors as minor importance often enough; found ${learningReasonImportanceQuestions}.`
   );
 }
+
+assertStimulusDiversity("vr", UCAT_QUESTION_BANK.vr);
+assertStimulusDiversity("sjt", UCAT_QUESTION_BANK.sjt);
 
 const dmSubtypes = UCAT_QUESTION_QUALITY_REVIEW.summary.dm.subtypeCounts;
 if ((dmSubtypes["dm-venn-sets"] ?? 0) < (dmSubtypes["dm-logic"] ?? 0)) {
