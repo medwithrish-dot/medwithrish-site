@@ -1283,14 +1283,14 @@ const VR_SUMMARY_QUESTIONS = [
 ] as const;
 
 const VR_AUTHOR_QUESTIONS = [
-  "What is the writer's attitude towards the trial?",
-  "Which phrase best describes the writer's view of the project?",
-  "How does the writer present the trial?",
-  "Which description best matches the tone of the passage?",
-  "What attitude is implied by the way the review is described?",
-  "How would the writer most likely characterise the results?",
-  "Which option best describes the writer's stance?",
-  "What is the passage's overall attitude to the trial?",
+  "Which option would the writer most likely agree with?",
+  "Which statement would the author be most likely to support?",
+  "Which judgement best reflects the writer's view?",
+  "Which option is closest to the author's implied position?",
+  "Which conclusion would the writer probably accept?",
+  "Which statement best captures the author's view of the evidence?",
+  "Which option reflects the writer's stance without overstating it?",
+  "Which statement is most consistent with the author's treatment of the subject?",
 ] as const;
 
 const VR_NEGATIVE_QUESTIONS = [
@@ -1302,6 +1302,25 @@ const VR_NEGATIVE_QUESTIONS = [
   "All of the following are supported by the review except:",
   "All of the following are described in the passage except:",
   "All of the following are accurate statements about the trial except:",
+] as const;
+
+const VR_TOPIC_DETAIL_QUESTIONS = [
+  "Which detail is stated in the passage?",
+  "Which point is made in the passage?",
+  "Which detail best matches the information given?",
+  "What does the passage identify as important?",
+  "Which statement is directly supported by the passage?",
+  "Which detail is given as part of the explanation?",
+  "What does the passage say about the evidence?",
+  "Which option accurately reflects the passage?",
+  "What is the passage's stated reason for caution?",
+  "Which detail helps explain the author's interpretation?",
+  "Which option gives a stated feature of the source?",
+  "What does the passage say can be concluded?",
+  "Which piece of information is explicitly mentioned?",
+  "Which detail is used to qualify the main claim?",
+  "Which option matches the passage's account?",
+  "What does the passage present as the key distinction?",
 ] as const;
 
 const VR_OBSERVATION_GROUPS = [
@@ -1390,6 +1409,15 @@ function makeVrObservation(setIndex: number) {
 
 function indexedPick<T>(items: readonly T[], index: number, stride = 1) {
   return items[Math.floor(index / stride) % items.length];
+}
+
+function alphabeticCode(index: number, salt: number) {
+  const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  return [
+    letters[variantIndex(letters.length, index, salt)],
+    letters[variantIndex(letters.length, index + 17, salt + 3)],
+    letters[variantIndex(letters.length, index + 31, salt + 7)],
+  ].join("");
 }
 
 const VR_DURATION_DETAILS = [
@@ -1660,11 +1688,11 @@ function makeVrPassage(input: {
     `The review balanced a measurable improvement against limits in timing, comparison and practicality.`,
   ] as const;
   const toneOptions = [
-    "Positive but qualified",
-    "Guardedly supportive",
-    "Cautious and evidence-led",
-    "Interested but not definitive",
-    "Balanced, with limited confidence",
+    "The evidence is useful, but it should not be treated as enough for immediate expansion.",
+    "A cautious extension would be reasonable only if further comparison is collected.",
+    "The project deserves more investigation, but the present figures do not settle the issue.",
+    "The reported improvement matters, but practical limits still need to shape the next decision.",
+    "The safest conclusion is that the idea has promise rather than proven general value.",
   ] as const;
 
   let stimulus: string[];
@@ -1840,7 +1868,675 @@ function makeVrPassage(input: {
   };
 }
 
+type GeneratedVrTopicPassage = {
+  stimulus: string[];
+  trueStatement: string;
+  falseStatement: string;
+  cantTellStatement: string;
+  trueExplanation: string;
+  falseExplanation: string;
+  cantTellExplanation: string;
+  detailQuestion: string;
+  detailCorrect: string;
+  detailDistractors: string[];
+  detailExplanation: string;
+  inferenceText: string;
+  inferenceDistractors: string[];
+  inferenceExplanation: string;
+  summaryText: string;
+  summaryDistractors: string[];
+  summaryExplanation: string;
+  authorText: string;
+  authorDistractors: string[];
+  authorExplanation: string;
+  negativeQuestion: string;
+  negativeCorrect: string;
+  negativeDistractors: string[];
+  negativeExplanation: string;
+};
+
+function withVrTopicAside(
+  setIndex: number,
+  familyIndex: number,
+  stimulus: string[]
+) {
+  const asides = [
+    "The passage separates the primary source from later interpretation.",
+    "The named date helps place the source in context.",
+    "The author uses the detail as a check on a simpler explanation.",
+    "The wording leaves room for uncertainty rather than closing the question.",
+    "The comparison is included to show how context changes interpretation.",
+    "The source is treated as partial evidence, not as a complete account.",
+    "The example is used to test a claim that would otherwise sound too neat.",
+    "The final judgement depends on the limits of what the record can show.",
+  ] as const;
+  const aside = pickVariant(asides, setIndex, 113 + familyIndex);
+
+  switch (Math.floor(setIndex / 8) % 4) {
+    case 0:
+      return [`${stimulus[0]} ${aside}`, stimulus[1], stimulus[2]];
+    case 1:
+      return [stimulus[0], `${aside} ${stimulus[1]}`, stimulus[2]];
+    case 2:
+      return [stimulus[0], stimulus[1], `${aside} ${stimulus[2]}`];
+    default:
+      return [stimulus[0], `${stimulus[1]} ${aside}`, stimulus[2]];
+  }
+}
+
+function makeVrTopicPassage(setIndex: number): GeneratedVrTopicPassage {
+  const familyIndex = variantIndex(8, setIndex, 127);
+  const yearBases = [1600, 1850, 1650, 1978, 1840, 1780, 1680, 1905] as const;
+  const yearSpans = [260, 170, 260, 42, 170, 170, 260, 75] as const;
+  const year =
+    yearBases[familyIndex] + ((setIndex * 17) % yearSpans[familyIndex]);
+  const laterYear = year + 12 + (setIndex % 38);
+  const countA = 12 + (setIndex % 24);
+  const countB = countA + 4 + (setIndex % 9);
+  const sourceCode = alphabeticCode(setIndex, familyIndex + 5);
+
+  if (familyIndex === 0) {
+    const people = ["Mira Anand", "Jonas Vale", "Eleni Markou", "Tariq Sen", "Beatrice Holm"] as const;
+    const places = ["Lisbon", "York", "Palermo", "Lubeck", "Granada"] as const;
+    const objects = ["harbour ledger", "bell-foundry receipt", "silk-tax register", "mapmaker's invoice", "shipyard notebook"] as const;
+    const sources = ["a margin note", "a customs stamp", "a copied signature", "a repair bill", "a witness list"] as const;
+    const person = pickVariant(people, setIndex, 3);
+    const place = pickVariant(places, setIndex, 5);
+    const object = pickVariant(objects, setIndex, 7);
+    const source = pickVariant(sources, setIndex, 11);
+    const stimulus = withVrTopicAside(setIndex, familyIndex, [
+      `A ${year} ${object} from ${place}, catalogued as folio ${sourceCode}, mentions ${person} beside a payment for materials. Older catalogues treated the entry as evidence that ${person} owned the workshop, because the name appeared at the top of the page.`,
+      `The newer reading is more cautious. ${sentenceCase(source)} on the same page suggests that the payment may have passed through ${person} on behalf of a guild, not that the workshop belonged to them. A second copy made in ${laterYear} preserves the same amount but changes the order of the names.`,
+      `The passage does not settle ${person}'s exact role. It does, however, make the older ownership claim look too strong: the record shows involvement in a transaction, while leaving open whether that involvement was commercial, clerical or temporary.`,
+    ]);
+    return {
+      stimulus,
+      trueStatement: `${source} made the ownership interpretation less certain.`,
+      falseStatement: `The ${laterYear} copy removed ${person}'s name entirely.`,
+      cantTellStatement: `${person} was paid more than the other people named in the record.`,
+      trueExplanation: "The passage says the extra source made the older ownership claim too strong.",
+      falseExplanation: "The later copy kept the same amount and changed the order of names; it did not remove the name entirely.",
+      cantTellExplanation: "The passage discusses one amount but does not compare payments to different people.",
+      detailQuestion: `What did older catalogues infer from the ${object}?`,
+      detailCorrect: `${person} owned the workshop.`,
+      detailDistractors: [
+        `${person} wrote the later copy in ${laterYear}.`,
+        `The guild had no connection with the payment.`,
+        `The page was certainly a forgery.`,
+      ],
+      detailExplanation: "The older catalogues treated the name at the top of the page as evidence of ownership.",
+      inferenceText: "The record supports involvement in the transaction, but not a definite claim of ownership.",
+      inferenceDistractors: [
+        "The newer reading proves that the record has no historical value.",
+        `${person} was certainly only a clerk.`,
+        "The later copy is described as more reliable than the original in every respect.",
+      ],
+      inferenceExplanation: "The author accepts the record as useful but warns against overstating what it proves.",
+      summaryText: "A historical record once used to support a firm ownership claim is presented as useful but ambiguous evidence.",
+      summaryDistractors: [
+        "A historian proves that an entire archive was fabricated.",
+        "A guild record is used to calculate exact wages for every worker.",
+        "A later copy confirms an older ownership claim without qualification.",
+      ],
+      summaryExplanation: "The passage is about a revised interpretation of a named record, not about rejecting it completely.",
+      authorText: "The author would agree that the newer interpretation is more careful, but still depends on limited evidence.",
+      authorDistractors: [
+        "The author would agree that the old catalogue entry should be accepted without question.",
+        "The author would agree that the record proves nothing at all about the transaction.",
+        "The author would agree that the later copy is irrelevant because it is newer.",
+      ],
+      authorExplanation: "The writer favours caution without dismissing the record.",
+      negativeQuestion: "All of the following are supported by the passage except:",
+      negativeCorrect: `${person} definitely owned the workshop in ${place}.`,
+      negativeDistractors: [
+        `${person}'s name appeared in the ${object}.`,
+        `A second copy was made in ${laterYear}.`,
+        "The exact role of the named person remains uncertain.",
+      ],
+      negativeExplanation: "Ownership is the older overstatement that the passage questions.",
+    };
+  }
+
+  if (familyIndex === 1) {
+    const games = ["chess", "go", "shogi", "draughts", "backgammon"] as const;
+    const names = ["Rosa Klein", "Madan Ito", "Felix Noor", "Clara Venn", "Owen Sato"] as const;
+    const moves = ["a quiet rook move", "a delayed capture", "an edge sacrifice", "a patient doubling move", "a defensive retreat"] as const;
+    const game = pickVariant(games, setIndex, 13);
+    const name = pickVariant(names, setIndex, 17);
+    const move = pickVariant(moves, setIndex, 19);
+    const stimulus = withVrTopicAside(setIndex, familyIndex, [
+      `A ${year} column about ${game}, printed with diagram code ${sourceCode}, praised ${name} for choosing ${move} when spectators expected a direct attack. The printed diagram gave ${countA} possible replies, but the notes spent most space on only two of them.`,
+      `Later writers sometimes described the game as a brilliant trap. The column itself is less dramatic: it says the move reduced the opponent's choices and made a draw unlikely, not that victory was forced immediately.`,
+      `The distinction matters because the final position was reached ${countB} moves later after one inaccurate defence. The writer treats the decision as strategically strong, while resisting the idea that a single move solved the whole game.`,
+    ]);
+    return {
+      stimulus,
+      trueStatement: `The final position was reached ${countB} moves after the praised decision.`,
+      falseStatement: `The column said ${move} forced immediate victory.`,
+      cantTellStatement: `${name} won the tournament in which the game was played.`,
+      trueExplanation: "The passage gives the number of later moves before the final position.",
+      falseExplanation: "The column said the move reduced choices and made a draw unlikely, not that it forced immediate victory.",
+      cantTellExplanation: "The passage discusses one game column, not the whole tournament result.",
+      detailQuestion: "Why does the passage say later descriptions were more dramatic than the original column?",
+      detailCorrect: "They treated the move as a brilliant trap rather than a strong strategic decision.",
+      detailDistractors: [
+        "They denied that the move was praised.",
+        "They said the diagram contained no possible replies.",
+        "They focused only on the tournament table.",
+      ],
+      detailExplanation: "The later accounts call it a trap, while the column frames it more cautiously.",
+      inferenceText: "The move was important because it improved the position, not because it guaranteed the result by itself.",
+      inferenceDistractors: [
+        "The diagram was printed after the final position had already been reached.",
+        "Spectators expected a defensive retreat rather than an attack.",
+        "The writer thinks all later analysis of games is unreliable.",
+      ],
+      inferenceExplanation: "The passage separates strategic advantage from an immediate forced win.",
+      summaryText: `A ${game} column is presented as admiring a move while rejecting later exaggerations about its certainty.`,
+      summaryDistractors: [
+        "A game column is shown to have misprinted every legal reply.",
+        "A player is criticised for refusing a direct attack.",
+        "A later writer proves that the original game never happened.",
+      ],
+      summaryExplanation: "The main point is the difference between a strong move and an overdramatised trap.",
+      authorText: "The author would likely agree that strategic strength can be real without making a result inevitable.",
+      authorDistractors: [
+        "The author would likely agree that one good move always decides a game immediately.",
+        "The author would likely agree that spectator expectations are more reliable than analysis.",
+        "The author would likely agree that the move was weak because the game lasted longer.",
+      ],
+      authorExplanation: "The writer values the move but rejects certainty.",
+      negativeQuestion: "All of the following are true according to the passage except:",
+      negativeCorrect: `${move} forced an immediate win for ${name}.`,
+      negativeDistractors: [
+        `The printed diagram gave ${countA} possible replies.`,
+        "Later writers sometimes called the game a trap.",
+        "One inaccurate defence occurred before the final position.",
+      ],
+      negativeExplanation: "The passage explicitly says immediate victory was not claimed.",
+    };
+  }
+
+  if (familyIndex === 2) {
+    const foods = ["sourdough rye", "steamed dumplings", "pressed cheese", "fermented bean paste", "cocoa glaze"] as const;
+    const cooks = ["Inez Park", "Samir Bahl", "Nora Keane", "Lucia Fer", "Theo Marin"] as const;
+    const clues = ["a cooler pantry note", "a crossed-out salt measure", "a sketch of the pot lid", "a note about steam loss", "a comment on overnight bubbles"] as const;
+    const food = pickVariant(foods, setIndex, 23);
+    const cook = pickVariant(cooks, setIndex, 29);
+    const clue = pickVariant(clues, setIndex, 31);
+    const stimulus = withVrTopicAside(setIndex, familyIndex, [
+      `${cook}'s recipe notebook from ${year}, marked page ${sourceCode}, gives two versions of ${food}. The first has a neat ingredient list; the second adds messy timing notes and ${clue}.`,
+      `A modern editor argues that the messy version is not a failed experiment. Its longer resting time and lower heat would have changed texture gradually, which matches a comment that the finished dish was 'slow but even'.`,
+      `The passage is careful about what can be concluded. The notebook explains technique better than taste: it shows how ${cook} adjusted process, but it cannot prove that diners preferred the second version.`,
+    ]);
+    return {
+      stimulus,
+      trueStatement: `The second version of the recipe included ${clue}.`,
+      falseStatement: `The notebook proves that diners preferred the second version of ${food}.`,
+      cantTellStatement: `${cook} served ${food} at a public banquet in ${laterYear}.`,
+      trueExplanation: "The clue is named as part of the messy second version.",
+      falseExplanation: "The passage says the notebook cannot prove diner preference.",
+      cantTellExplanation: "No banquet is mentioned.",
+      detailQuestion: "What does the modern editor argue about the messy recipe version?",
+      detailCorrect: "It may show a deliberate process adjustment rather than a failed experiment.",
+      detailDistractors: [
+        "It was copied by someone who never cooked the dish.",
+        "It removed timing notes from the earlier version.",
+        "It proves the first version was never used.",
+      ],
+      detailExplanation: "The editor links the longer resting time and lower heat to a different texture.",
+      inferenceText: "The notebook is stronger evidence for cooking method than for diners' reactions.",
+      inferenceDistractors: [
+        "The second recipe was certainly written before the first one.",
+        "The lower heat made the dish cook faster.",
+        "The editor rejects all value in the messy notes.",
+      ],
+      inferenceExplanation: "The passage distinguishes technique from taste preference.",
+      summaryText: "A recipe notebook is used to infer a likely cooking method while avoiding claims about popularity.",
+      summaryDistractors: [
+        "A recipe notebook proves a dish was disliked by everyone who ate it.",
+        "A modern editor argues that neat recipes are always less accurate.",
+        "A cook is shown to have abandoned written recipes entirely.",
+      ],
+      summaryExplanation: "The passage focuses on process evidence and its limits.",
+      authorText: "The author would probably agree that messy practical notes can be informative without proving everything about a dish.",
+      authorDistractors: [
+        "The author would probably agree that taste can be reconstructed exactly from timings alone.",
+        "The author would probably agree that messy notes should be ignored.",
+        "The author would probably agree that the first version was definitely never cooked.",
+      ],
+      authorExplanation: "The writer treats the notes as useful but limited.",
+      negativeQuestion: "All of the following are supported by the passage except:",
+      negativeCorrect: "Diners are known to have preferred the second version.",
+      negativeDistractors: [
+        "The notebook contains two versions of the recipe.",
+        "The second version includes timing notes.",
+        "The modern editor links lower heat to texture.",
+      ],
+      negativeExplanation: "The passage explicitly says preference cannot be proved.",
+    };
+  }
+
+  if (familyIndex === 3) {
+    const topics = ["pulse oximeter readings", "vaccine cold-chain checks", "antibiotic administration times", "asthma inhaler technique observations", "hand-hygiene observations"] as const;
+    const settings = ["a children's ward", "a rural clinic", "an outpatient pharmacy", "a mobile screening van", "a teaching hospital store"] as const;
+    const topic = pickVariant(topics, setIndex, 37);
+    const setting = pickVariant(settings, setIndex, 41);
+    const stimulus = withVrTopicAside(setIndex, familyIndex, [
+      `A ${year} training leaflet from ${setting}, labelled staff note ${sourceCode}, explained how staff should record ${topic}. It did not tell patients to change treatment; its purpose was to reduce recording mistakes when several staff members used the same form.`,
+      `The leaflet gave ${countA} examples, but only ${countA - 3} involved urgent escalation. The remaining examples were about checking identity labels, writing times clearly and asking a senior colleague before guessing missing information.`,
+      `The author presents the leaflet as practical rather than revolutionary. It matters because small recording errors can affect later decisions, but the passage does not claim that the leaflet by itself improved patient outcomes.`,
+    ]);
+    return {
+      stimulus,
+      trueStatement: `Only ${countA - 3} of the leaflet's examples involved urgent escalation.`,
+      falseStatement: "The leaflet told patients to change their treatment.",
+      cantTellStatement: `The leaflet was used in every ward at the hospital after ${laterYear}.`,
+      trueExplanation: "The passage gives the total examples and the urgent-escalation subset.",
+      falseExplanation: "The leaflet was for staff recording practice, not patient treatment changes.",
+      cantTellExplanation: "The passage does not say how widely the leaflet was later used.",
+      detailQuestion: "What was the stated purpose of the leaflet?",
+      detailCorrect: "To reduce recording mistakes when staff used the same form.",
+      detailDistractors: [
+        "To advise patients to stop medication.",
+        "To replace senior clinical judgement.",
+        "To prove that outcomes had already improved.",
+      ],
+      detailExplanation: "The passage states the purpose directly in the first paragraph.",
+      inferenceText: "The leaflet was intended to improve reliability of records, not to act as independent clinical advice.",
+      inferenceDistractors: [
+        "The leaflet made escalation unnecessary.",
+        "Every example in the leaflet involved an urgent case.",
+        "The passage proves the leaflet reduced mortality.",
+      ],
+      inferenceExplanation: "The passage repeatedly limits the leaflet to recording and escalation practice.",
+      summaryText: "A medical training leaflet is described as a practical aid for safer recording, with no claim of proven outcome improvement.",
+      summaryDistractors: [
+        "A leaflet is presented as direct treatment guidance for patients.",
+        "A clinic is criticised for refusing to record patient information.",
+        "A hospital proves that forms are more important than clinical staff.",
+      ],
+      summaryExplanation: "The summary needs both the practical value and the limitation.",
+      authorText: "The author would likely agree that careful recording can matter even when its direct effect on outcomes has not been proved.",
+      authorDistractors: [
+        "The author would likely agree that the leaflet replaced clinical judgement.",
+        "The author would likely agree that recording errors are harmless.",
+        "The author would likely agree that patients should follow the leaflet as treatment advice.",
+      ],
+      authorExplanation: "The writer sees practical value but does not overclaim.",
+      negativeQuestion: "All of the following are true of the leaflet except:",
+      negativeCorrect: "It instructed patients to change treatment.",
+      negativeDistractors: [
+        `It discussed ${topic}.`,
+        "It included examples about checking identity labels.",
+        "It advised asking a senior colleague before guessing missing information.",
+      ],
+      negativeExplanation: "The passage states that the leaflet did not tell patients to change treatment.",
+    };
+  }
+
+  if (familyIndex === 4) {
+    const subjects = ["migrating swifts", "lichen on city walls", "tide-pool anemones", "orchard bees", "night-flying moths"] as const;
+    const tools = ["chalk marks", "moonlit counts", "painted stones", "tin rain gauges", "paper wing tags"] as const;
+    const subject = pickVariant(subjects, setIndex, 43);
+    const tool = pickVariant(tools, setIndex, 47);
+    const stimulus = withVrTopicAside(setIndex, familyIndex, [
+      `In ${year}, a school natural-history club began recording ${subject} using ${tool} on route sheet ${sourceCode}. The notes are informal, but they give dates, weather and repeated observations from the same route.`,
+      `The most striking entry counted ${countB} sightings after a warm night, compared with ${countA} after a cold one. The club secretary warned that moonlight and observer enthusiasm might also explain some of the difference.`,
+      `The passage treats the notebook as useful local evidence, not as a full scientific survey. Its value lies in repeated attention to the same place; its weakness is that the observers could not control every condition.`,
+    ]);
+    return {
+      stimulus,
+      trueStatement: `The club recorded weather as well as observations of ${subject}.`,
+      falseStatement: "The notebook is described as a full scientific survey.",
+      cantTellStatement: `The same club continued recording ${subject} for fifty years.`,
+      trueExplanation: "The first paragraph says the notes gave dates, weather and repeated observations.",
+      falseExplanation: "The passage says the notebook is not a full scientific survey.",
+      cantTellExplanation: "The length of later recording is not stated.",
+      detailQuestion: "Why does the passage say the notebook has value?",
+      detailCorrect: "It repeatedly observes the same place.",
+      detailDistractors: [
+        "It controls every condition precisely.",
+        "It was written by professional scientists.",
+        "It ignores weather and dates.",
+      ],
+      detailExplanation: "The passage identifies repeated attention to the same place as its value.",
+      inferenceText: "The observations can suggest a pattern, but other conditions could have influenced the counts.",
+      inferenceDistractors: [
+        "The warm night definitely caused every additional sighting.",
+        "The club secretary rejected the notebook entirely.",
+        "Moonlight was the only condition recorded.",
+      ],
+      inferenceExplanation: "The author presents a possible pattern with caveats.",
+      summaryText: "An informal nature notebook is treated as suggestive local evidence, limited by uncontrolled conditions.",
+      summaryDistractors: [
+        "A school club is shown to have completed a controlled laboratory experiment.",
+        "A notebook proves that weather never affects wildlife observations.",
+        "An observer admits that all entries were invented.",
+      ],
+      summaryExplanation: "The summary must capture both usefulness and limits.",
+      authorText: "The author would probably agree that repeated informal observations can be worth studying, provided their limits are kept visible.",
+      authorDistractors: [
+        "The author would probably agree that informal observations are always useless.",
+        "The author would probably agree that one warm-night count proves a universal rule.",
+        "The author would probably agree that observer enthusiasm cannot affect records.",
+      ],
+      authorExplanation: "The writer values the notebook while naming weaknesses.",
+      negativeQuestion: "All of the following are stated or implied except:",
+      negativeCorrect: "The club controlled every condition affecting the count.",
+      negativeDistractors: [
+        "The observations followed the same route.",
+        "The secretary mentioned possible alternative explanations.",
+        "The notebook included weather information.",
+      ],
+      negativeExplanation: "The passage says the observers could not control every condition.",
+    };
+  }
+
+  if (familyIndex === 5) {
+    const maps = ["a tram timetable", "a harbour chart", "a mountain path map", "a canal distance table", "a railway luggage guide"] as const;
+    const towns = ["Marwick", "Eastmere", "Stonebridge", "Calderport", "Fenwick"] as const;
+    const map = pickVariant(maps, setIndex, 53);
+    const town = pickVariant(towns, setIndex, 59);
+    const stimulus = withVrTopicAside(setIndex, familyIndex, [
+      `In ${year}, ${map} for ${town}, copy mark ${sourceCode}, looks precise because it lists distances to the nearest quarter mile. Yet the small print says the figures were measured from the old post office, not from the later station entrance.`,
+      `This detail changes how the table should be read. A traveller comparing it with a modern route might think the table is inaccurate, when it is often using a different starting point.`,
+      `The author does not present the table as flawless. Several side routes are missing, and the winter service note was added after the first printing. Still, the passage argues that apparent errors sometimes come from changed reference points rather than careless measurement.`,
+    ]);
+    return {
+      stimulus,
+      trueStatement: "The distances were measured from the old post office.",
+      falseStatement: "The table measured distances from the later station entrance.",
+      cantTellStatement: `The winter service note was added by the original printer's son.`,
+      trueExplanation: "The passage names the old post office as the reference point.",
+      falseExplanation: "The later station entrance is the modern comparison point, not the original reference point.",
+      cantTellExplanation: "The person who added the winter note is not identified.",
+      detailQuestion: "Why might a modern traveller think the table is inaccurate?",
+      detailCorrect: "They might compare it with a route measured from a different starting point.",
+      detailDistractors: [
+        "The table lists no distances at all.",
+        "The station entrance existed before the post office.",
+        "The author says every side route is included.",
+      ],
+      detailExplanation: "The passage explains the mismatch between old and modern reference points.",
+      inferenceText: "Some apparent inaccuracies in old transport information may reflect changed assumptions rather than simple mistakes.",
+      inferenceDistractors: [
+        "The table is flawless because it gives quarter-mile distances.",
+        "The modern station entrance is older than the post office.",
+        "The missing side routes prove the whole table should be discarded.",
+      ],
+      inferenceExplanation: "The author balances limitations with an explanation for some discrepancies.",
+      summaryText: "An old travel table is interpreted through its reference point, showing why some apparent errors may be misleading.",
+      summaryDistractors: [
+        "A travel table is used to prove that old maps never contain omissions.",
+        "A town guide is dismissed because it has no small print.",
+        "A railway station is described as the original measuring point.",
+      ],
+      summaryExplanation: "The key issue is the reference point used for measurement.",
+      authorText: "The author would likely agree that old practical documents should be read using their original assumptions before judging them inaccurate.",
+      authorDistractors: [
+        "The author would likely agree that missing side routes make all old tables worthless.",
+        "The author would likely agree that modern reference points should always be imposed on older documents.",
+        "The author would likely agree that the table is perfect in every detail.",
+      ],
+      authorExplanation: "The writer argues for contextual reading, not blind acceptance.",
+      negativeQuestion: "All of the following are true according to the passage except:",
+      negativeCorrect: "The later station entrance was the table's measuring point.",
+      negativeDistractors: [
+        "Distances were listed to the nearest quarter mile.",
+        "Several side routes were missing.",
+        "The winter service note was added after the first printing.",
+      ],
+      negativeExplanation: "The old post office, not the station entrance, was the reference point.",
+    };
+  }
+
+  if (familyIndex === 6) {
+    const texts = ["a folk-song booklet", "a bilingual market glossary", "a theatre prompt book", "a printer's proof sheet", "a school spelling list"] as const;
+    const features = ["pencil accents", "stage-door initials", "crossed-out dialect words", "extra vowel marks", "numbered pauses"] as const;
+    const text = pickVariant(texts, setIndex, 61);
+    const feature = pickVariant(features, setIndex, 67);
+    const stimulus = withVrTopicAside(setIndex, familyIndex, [
+      `${sentenceCase(text)} printed in ${year}, now filed under shelf mark ${sourceCode}, contains ${feature} that were probably added after publication. The marks do not change the main text, but they show how at least one reader used it.`,
+      `One scholar reads the marks as evidence of performance. Another is more cautious, arguing that they could also be teaching notes or a private pronunciation guide.`,
+      `The passage treats the annotations as important because they preserve use, not because they settle intention. It is possible to learn that the booklet was handled actively without knowing exactly why each mark was made.`,
+    ]);
+    return {
+      stimulus,
+      trueStatement: "The marks were probably added after publication.",
+      falseStatement: "The marks changed the main printed text.",
+      cantTellStatement: "The person who added the marks was the original printer.",
+      trueExplanation: "The first sentence says the marks were probably added after publication.",
+      falseExplanation: "The passage says the marks do not change the main text.",
+      cantTellExplanation: "The passage does not identify the annotator.",
+      detailQuestion: "Why does the passage say the annotations are important?",
+      detailCorrect: "They preserve evidence of use.",
+      detailDistractors: [
+        "They prove the printer made an error.",
+        "They replace the main printed text.",
+        "They identify every performer by name.",
+      ],
+      detailExplanation: "The final paragraph says their importance lies in preserving use.",
+      inferenceText: "The annotations show active handling of the text, but their exact purpose remains uncertain.",
+      inferenceDistractors: [
+        "The annotations definitely prove a public performance.",
+        "The annotations are irrelevant because they were added later.",
+        "The passage says no one used the booklet after publication.",
+      ],
+      inferenceExplanation: "The passage weighs performance against other possible explanations.",
+      summaryText: "Later marks in a printed text are treated as evidence of use, while their precise intention remains open.",
+      summaryDistractors: [
+        "A printed text is shown to have no reader marks at all.",
+        "A scholar proves that all annotations are performance notes.",
+        "A printer removes dialect words from every copy.",
+      ],
+      summaryExplanation: "The passage stresses use and uncertainty.",
+      authorText: "The author would probably agree that annotations can reveal how a text was used without proving exactly why they were added.",
+      authorDistractors: [
+        "The author would probably agree that annotations always reveal a single clear intention.",
+        "The author would probably agree that later marks have no historical value.",
+        "The author would probably agree that the main printed text was rewritten.",
+      ],
+      authorExplanation: "The writer values the marks but avoids a firm claim about intention.",
+      negativeQuestion: "All of the following are supported by the passage except:",
+      negativeCorrect: "The annotations identify the original printer.",
+      negativeDistractors: [
+        "The marks may have been performance-related.",
+        "The marks could have been teaching notes.",
+        "The marks were probably added after publication.",
+      ],
+      negativeExplanation: "The annotator is not identified.",
+    };
+  }
+
+  const machines = ["a pocket camera", "an early radio set", "a mechanical calculator", "a weather balloon kit", "a portable typewriter"] as const;
+  const users = ["newspaper clerks", "rural teachers", "dock engineers", "survey students", "travelling nurses"] as const;
+  const machine = pickVariant(machines, setIndex, 71);
+  const usersGroup = pickVariant(users, setIndex, 73);
+  const stimulus = withVrTopicAside(setIndex, familyIndex, [
+    `A ${year} magazine note, indexed as clipping ${sourceCode}, described ${machine} as useful for ${usersGroup}, but it did not claim the device was easy to use. The article praised portability while warning that small parts were easily lost.`,
+    `A later advertisement quoted only the praise and omitted the warning. That selective quotation made the device sound more reliable than the magazine note had suggested.`,
+    `The passage presents the original article as balanced: interested in a new tool, alert to practical limits, and different from the simpler sales message that followed.`,
+  ]);
+  return {
+    stimulus,
+    trueStatement: "The later advertisement omitted the warning about small parts.",
+    falseStatement: "The magazine note claimed the device was easy to use.",
+    cantTellStatement: `The manufacturer sold more than ${countB} devices in ${laterYear}.`,
+    trueExplanation: "The passage states that the advertisement quoted only the praise and omitted the warning.",
+    falseExplanation: "The magazine note praised portability but did not claim easy use.",
+    cantTellExplanation: "Sales figures are not given.",
+    detailQuestion: "What did the later advertisement leave out?",
+    detailCorrect: "The warning that small parts were easily lost.",
+    detailDistractors: [
+      "The claim that the device was portable.",
+      "The identity of the intended users.",
+      "The fact that the note appeared in a magazine.",
+    ],
+    detailExplanation: "The advertisement omitted the warning while quoting the praise.",
+    inferenceText: "The advertisement made the original assessment seem less cautious than it was.",
+    inferenceDistractors: [
+      "The magazine note was written by the manufacturer.",
+      "The article said the device had no practical limits.",
+      "The advertisement added warnings not present in the original.",
+    ],
+    inferenceExplanation: "Selective quotation changed the balance of the original note.",
+    summaryText: "A balanced magazine note about a portable device was later simplified into a more promotional message.",
+    summaryDistractors: [
+      "A magazine note condemned a device as useless for every user.",
+      "An advertisement quoted every warning from the original article.",
+      "A device was praised only because it was difficult to carry.",
+    ],
+    summaryExplanation: "The passage contrasts the balanced original with a selective advertisement.",
+    authorText: "The author would likely agree that quoting praise without warnings can distort a source's original judgement.",
+    authorDistractors: [
+      "The author would likely agree that advertisements always preserve context accurately.",
+      "The author would likely agree that portability proves a device is easy to use.",
+      "The author would likely agree that practical warnings cancel all possible usefulness.",
+    ],
+    authorExplanation: "The writer objects to selective simplification, not to the device itself.",
+    negativeQuestion: "All of the following are true according to the passage except:",
+    negativeCorrect: "The original magazine note said the device was easy to use.",
+    negativeDistractors: [
+      "The magazine note praised portability.",
+      "The later advertisement quoted only the praise.",
+      "The article warned that small parts were easily lost.",
+    ],
+    negativeExplanation: "The passage says the original note did not claim easy use.",
+  };
+}
+
+function makeVrTopicSet(setIndex: number): UCATQuestion[] {
+  const passageInfo = makeVrTopicPassage(setIndex);
+  const passage = passageInfo.stimulus;
+  const setId = `hq-vr-${pad(setIndex)}`;
+  const tfcKind = setIndex % 3;
+  const tfcStatement =
+    tfcKind === 0
+      ? passageInfo.trueStatement
+      : tfcKind === 1
+        ? passageInfo.falseStatement
+        : passageInfo.cantTellStatement;
+  const tfcAnswer = tfcKind === 0 ? "A" : tfcKind === 1 ? "B" : "C";
+  const tfcExplanation =
+    tfcKind === 0
+      ? passageInfo.trueExplanation
+      : tfcKind === 1
+        ? passageInfo.falseExplanation
+        : passageInfo.cantTellExplanation;
+  const fourthSubtype = pick(["vr-summary", "vr-author", "vr-negative"] as const, setIndex);
+
+  const questions: UCATQuestion[] = [
+    {
+      id: `${setId}-1`,
+      section: "vr",
+      subtype: "vr-tfc",
+      setId,
+      tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+      title: "Verbal Reasoning Practice",
+      leftTitle: "Passage",
+      stimulus: passage,
+      question: tfcStatement,
+      options: TFC_OPTIONS,
+      answer: tfcAnswer,
+      explanation: tfcExplanation,
+    },
+    singleQuestion({
+      id: `${setId}-2`,
+      section: "vr",
+      subtype: "vr-detail",
+      setId,
+      tags: ["detail-retrieval", "text-stem", "set-based", "easy", "quick"],
+      title: "Verbal Reasoning Practice",
+      leftTitle: "Passage",
+      stimulus: passage,
+      question: pickVariant(VR_TOPIC_DETAIL_QUESTIONS, setIndex, 101),
+      correctText: passageInfo.detailCorrect,
+      distractors: passageInfo.detailDistractors,
+      explanation: passageInfo.detailExplanation,
+      seed: setIndex + 1,
+    }),
+    singleQuestion({
+      id: `${setId}-3`,
+      section: "vr",
+      subtype: "vr-inference",
+      setId,
+      tags: ["inference-question", "text-stem", "set-based", "medium"],
+      title: "Verbal Reasoning Practice",
+      leftTitle: "Passage",
+      stimulus: passage,
+      question: pick(VR_INFERENCE_QUESTIONS, setIndex),
+      correctText: passageInfo.inferenceText,
+      distractors: passageInfo.inferenceDistractors,
+      explanation: passageInfo.inferenceExplanation,
+      seed: setIndex + 2,
+    }),
+  ];
+
+  if (fourthSubtype === "vr-summary") {
+    questions.push(
+      singleQuestion({
+        id: `${setId}-4`,
+        section: "vr",
+        subtype: "vr-summary",
+        setId,
+        tags: ["summary-structure", "text-stem", "set-based", "medium"],
+        title: "Verbal Reasoning Practice",
+        leftTitle: "Passage",
+        stimulus: passage,
+        question: pick(VR_SUMMARY_QUESTIONS, setIndex),
+        correctText: passageInfo.summaryText,
+        distractors: passageInfo.summaryDistractors,
+        explanation: passageInfo.summaryExplanation,
+        seed: setIndex + 3,
+      })
+    );
+  } else if (fourthSubtype === "vr-author") {
+    questions.push(
+      singleQuestion({
+        id: `${setId}-4`,
+        section: "vr",
+        subtype: "vr-author",
+        setId,
+        tags: ["author-opinion", "text-stem", "set-based", "medium"],
+        title: "Verbal Reasoning Practice",
+        leftTitle: "Passage",
+        stimulus: passage,
+        question: pick(VR_AUTHOR_QUESTIONS, setIndex),
+        correctText: passageInfo.authorText,
+        distractors: passageInfo.authorDistractors,
+        explanation: passageInfo.authorExplanation,
+        seed: setIndex + 3,
+      })
+    );
+  } else {
+    questions.push(
+      singleQuestion({
+        id: `${setId}-4`,
+        section: "vr",
+        subtype: "vr-negative",
+        setId,
+        tags: ["negative-except", "text-stem", "set-based", "hard"],
+        title: "Verbal Reasoning Practice",
+        leftTitle: "Passage",
+        stimulus: passage,
+        question: passageInfo.negativeQuestion,
+        correctText: passageInfo.negativeCorrect,
+        distractors: passageInfo.negativeDistractors,
+        explanation: passageInfo.negativeExplanation,
+        seed: setIndex + 3,
+      })
+    );
+  }
+
+  return questions;
+}
+
 function makeVrSet(setIndex: number): UCATQuestion[] {
+  if (setIndex % 4 !== 0) {
+    return makeVrTopicSet(setIndex);
+  }
+
   const cycle = Math.floor(setIndex / 1800);
   const setting = pickVariant(ORGANISATIONS, setIndex, 5);
   const context = makeVrContext(setIndex, setting);
@@ -1987,9 +2683,9 @@ function makeVrSet(setIndex: number): UCATQuestion[] {
         question: pick(VR_AUTHOR_QUESTIONS, setIndex),
         correctText: passageInfo.toneText,
         distractors: [
-          "Completely dismissive",
-          "Certain and unqualified",
-          "Uninterested in the result",
+          "The result proves the project should be adopted everywhere immediately.",
+          "The result is worthless because one limitation was identified.",
+          "The funding source matters more than whether the project helped users.",
         ],
         explanation:
           "The writer reports a useful result but also stresses caveats, comparison and a conditional next step.",

@@ -1555,9 +1555,7 @@ function formatDisplayText(value: string) {
 function formatQuestionTextForSubtype(value: string, subtype: UCATSubtypeId) {
   const text = formatDisplayText(value);
   if (subtype !== "vr-author") return text;
-  if (/^author'?s?\s+(opinion|view|attitude)\s*:/i.test(text)) return text;
-
-  return `Author's opinion: ${text}`;
+  return text.replace(/^author'?s?\s+(opinion|view|attitude)\s*:\s*/i, "");
 }
 
 function humaniseExplanationText(value: string) {

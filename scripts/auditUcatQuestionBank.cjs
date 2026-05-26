@@ -184,6 +184,33 @@ function categoriseStimulusSentence(section, sentence) {
     if (/\b(?:comment|feedback|reported|said|asked|noted|wanted|thought)\b/.test(text)) {
       categories.push("feedback");
     }
+    if (/\b(?:catalogue|catalogued|folio|ledger|guild|workshop|copy made|customs|shipyard)\b/.test(text)) {
+      categories.push("history-source");
+    }
+    if (/\b(?:chess|go|shogi|draughts|backgammon|diagram|move|spectators|position|defence)\b/.test(text)) {
+      categories.push("game");
+    }
+    if (/\b(?:recipe|ingredient|cook|cooking|dish|resting time|lower heat|texture|pantry|salt)\b/.test(text)) {
+      categories.push("food");
+    }
+    if (/\b(?:medical|ward|clinic|leaflet|patient|patients|treatment|escalation|identity labels|outcomes|vaccine|antibiotic|asthma|hygiene|oximeter)\b/.test(text)) {
+      categories.push("medical");
+    }
+    if (/\b(?:natural-history|wildlife|sightings|weather|route sheet|moonlight|observer|observations|club secretary)\b/.test(text)) {
+      categories.push("nature");
+    }
+    if (/\b(?:timetable|harbour chart|path map|distance table|luggage guide|post office|station entrance|quarter mile|side routes|route)\b/.test(text)) {
+      categories.push("map");
+    }
+    if (/\b(?:booklet|glossary|prompt book|proof sheet|spelling list|annotations|marks|printed text|shelf mark|pronunciation)\b/.test(text)) {
+      categories.push("language-source");
+    }
+    if (/\b(?:magazine note|clipping|device|advertisement|portable|portability|small parts|radio|calculator|typewriter|camera|weather balloon)\b/.test(text)) {
+      categories.push("technology");
+    }
+    if (/\b(?:source|evidence|interpretation|interpreted|reading|argues|suggests|presents|treats|claim|judgement|record|document)\b/.test(text)) {
+      categories.push("interpretation");
+    }
   } else if (section === "sjt") {
     if (/\b(?:student|placement|observing|supervised|assigned|attached)\b/.test(text)) {
       categories.push("role");
