@@ -7208,58 +7208,10 @@ function makeQrSet(setIndex: number): UCATQuestion[] {
   }
 }
 
-const QR_CONTEXT_SOURCES = [
-  "a clinic operations dashboard",
-  "a school resource review",
-  "a community transport log",
-  "a pharmacy stock audit",
-  "a catering order sheet",
-  "a leisure-centre booking report",
-  "a charity delivery record",
-  "a revision-course finance sheet",
-  "a library usage summary",
-  "a mobile health-team rota",
-  "a workshop attendance register",
-  "a local council planning note",
-  "an equipment hire ledger",
-  "a patient-support service review",
-  "a campus facilities spreadsheet",
-  "a visitor-services log",
-] as const;
-
-const QR_CONTEXT_NOTES = [
-  "Values have been rounded only where shown.",
-  "Use the figures shown; no seasonal adjustment has been made.",
-  "Ignore fixed overheads unless they are stated in the question.",
-  "Assume the same conditions apply throughout the period described.",
-  "Treat all percentages as applying to the relevant row only.",
-  "Where a whole item is needed, round up at the final step.",
-  "Times are recorded using the same clock for all entries.",
-  "The comparison is intended to support a quick operational decision.",
-  "All prices include VAT unless a question states otherwise.",
-  "The table excludes cancelled bookings unless stated.",
-  "Distances are one-way unless a return journey is specified.",
-  "Use exact values during working and round only the answer.",
-  "The data were checked once before being entered into the table.",
-  "Assume missing administrative time is negligible.",
-  "The figures refer to completed activity, not planned activity.",
-  "No extra discount applies beyond what is shown.",
-  "Stock figures refer to usable items only.",
-  "The same measurement units are used across the table.",
-  "The manager wants the closest practical answer.",
-  "The calculation should be based only on the listed items.",
-] as const;
-
 function qrSetIndex(question: UCATQuestion) {
   const value = question.setId ?? question.id;
   const match = value.match(/-(\d+)$/);
   return match ? Number(match[1]) - 1 : 0;
-}
-
-function makeQrContextNote(setIndex: number) {
-  const source = pick(QR_CONTEXT_SOURCES, setIndex * 7);
-  const note = pick(QR_CONTEXT_NOTES, setIndex * 11);
-  return `Source note: the data come from ${source}. ${note}`;
 }
 
 function varyQrQuestionText(questionText: string, setIndex: number) {
@@ -7329,13 +7281,9 @@ function enrichGeneratedQrQuestions(questions: UCATQuestion[]) {
     if (question.section !== "qr") return question;
 
     const setIndex = qrSetIndex(question);
-    const contextNote = makeQrContextNote(setIndex);
 
     return {
       ...question,
-      stimulus: question.stimulus.includes(contextNote)
-        ? question.stimulus
-        : [...question.stimulus, contextNote],
       question: varyQrQuestionText(question.question, setIndex),
     };
   });
