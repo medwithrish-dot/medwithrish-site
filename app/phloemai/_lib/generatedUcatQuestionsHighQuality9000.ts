@@ -7,6 +7,18 @@ import type {
   UCATSjtIssueTag,
   UCATSubtypeId,
 } from "./ucatQuestionBank";
+import {
+  type DmCuratedInput,
+  USER_CURATED_DM_INPUTS,
+} from "./ucatDmCuratedInputs";
+import {
+  type QrCuratedInput,
+  USER_CURATED_QR_INPUTS,
+} from "./ucatQrCuratedInputs";
+import {
+  type SjtCuratedInput,
+  USER_CURATED_SJT_INPUTS,
+} from "./ucatSjtCuratedInputs";
 
 const OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D"];
 const QR_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D"];
@@ -34295,58 +34307,6 @@ export const HIGH_QUALITY_9000_RAW_DM_QUESTIONS: UCATQuestion[] = [
   ...range(HIGH_QUALITY_9000_COMPLETED_BATCHES * DM_PROBABILITY_PER_BATCH).map(makeDmProbability),
 ];
 
-type DmSingleSubtype =
-  | "dm-logic"
-  | "dm-arguments"
-  | "dm-venn-sets"
-  | "dm-probability-data";
-
-type DmCuratedInput =
-  | {
-      kind: "single";
-      subtype: DmSingleSubtype;
-      leftTitle?: string;
-      tags?: UCATQuestionTag[];
-      stimulus: string[];
-      visual?: UCATChartVisual;
-      question: string;
-      correct: string;
-      distractors: string[];
-      explanation: string;
-    }
-  | {
-      kind: "yes-no";
-      subtype: "dm-yes-no";
-      leftTitle?: string;
-      tags?: UCATQuestionTag[];
-      stimulus: string[];
-      visual?: UCATChartVisual;
-      question: string;
-      instruction: string;
-      yesNoStatements: Array<{
-        id: string;
-        text: string;
-        answer: "Yes" | "No";
-      }>;
-      explanation: string;
-    }
-  | {
-      kind: "drag-category";
-      subtype: "dm-syllogisms";
-      leftTitle?: string;
-      tags?: UCATQuestionTag[];
-      stimulus: string[];
-      question: string;
-      instruction: string;
-      categories: Array<{ id: string; label: string }>;
-      categoryItems: Array<{
-        id: string;
-        text: string;
-        answerCategory: string;
-      }>;
-      explanation: string;
-    };
-
 function makeUserCuratedDmQuestion(input: DmCuratedInput, index: number): UCATQuestion {
   const base = {
     id: `user-curated-dm-${pad(index)}`,
@@ -34386,19 +34346,61 @@ function makeUserCuratedDmQuestion(input: DmCuratedInput, index: number): UCATQu
   });
 }
 
-export const USER_CURATED_DM_INPUTS: DmCuratedInput[] = [
-  // ===== PASTE NEW DM QUESTIONS BELOW THIS LINE =====
-
-  // Paste Gemini DM objects here.
-
-  // ===== PASTE NEW DM QUESTIONS ABOVE THIS LINE =====
-];
-
 export const USER_CURATED_DM_QUESTIONS: UCATQuestion[] =
   USER_CURATED_DM_INPUTS.map(makeUserCuratedDmQuestion);
 
 export const HIGH_QUALITY_9000_DM_QUESTIONS: UCATQuestion[] =
   USER_CURATED_DM_QUESTIONS;
+
+// ─── QR CURATED INFRASTRUCTURE ───────────────────────────────────────────────
+
+function makeUserCuratedQrQuestion(
+  input: QrCuratedInput,
+  inputIndex: number
+): UCATQuestion[] {
+  if (input.kind === "single") {
+    return [
+      singleQuestion({
+        id: `user-curated-qr-${pad(inputIndex)}-1`,
+        section: "qr",
+        subtype: input.subtype,
+        title: "Quantitative Reasoning Practice",
+        leftTitle: input.leftTitle ?? "Data",
+        tags: input.tags ?? ["text-stem", "medium"],
+        stimulus: input.stimulus,
+        visual: input.visual,
+        question: input.question,
+        correctText: input.correct,
+        distractors: input.distractors,
+        explanation: input.explanation,
+        seed: inputIndex,
+      }),
+    ];
+  }
+  return input.questions.map((q, qIndex) =>
+    singleQuestion({
+      id: `user-curated-qr-${pad(inputIndex)}-${qIndex + 1}`,
+      section: "qr",
+      subtype: q.subtype,
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
+      setId: `user-curated-qr-${pad(inputIndex)}`,
+      tags: q.tags ?? ["data-display", "set-based", "medium"],
+      stimulus: input.stimulus,
+      visual: input.visual,
+      question: q.question,
+      correctText: q.correct,
+      distractors: q.distractors,
+      explanation: q.explanation,
+      seed: inputIndex * 10 + qIndex,
+    })
+  );
+}
+
+export const USER_CURATED_QR_QUESTIONS: UCATQuestion[] =
+  USER_CURATED_QR_INPUTS.flatMap(makeUserCuratedQrQuestion);
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 const QR_DOMAINS = [
   ["meal", "meals", "Vegetarian", "Non-vegetarian"],
@@ -35775,17 +35777,7 @@ export const HIGH_QUALITY_9000_RAW_QR_QUESTIONS: UCATQuestion[] = range(
 ).flatMap(makeQrSet);
 
 export const HIGH_QUALITY_9000_QR_QUESTIONS: UCATQuestion[] =
-  enrichGeneratedQrQuestions(
-    applyCuratedQuestionReplacements(
-      selectQuestionGroups({
-        questions: HIGH_QUALITY_9000_RAW_QR_QUESTIONS,
-        targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.qr,
-        expectedGroupSize: 4,
-        stimulusCap: 80,
-        questionTemplateCap: 96,
-      })
-    )
-  );
+  USER_CURATED_QR_QUESTIONS;
 
 const SJT_PEOPLE = [
   "Amira",
@@ -36761,19 +36753,79 @@ function makeSjtSet(setIndex: number): UCATQuestion[] {
   ];
 }
 
+// ─── SJT CURATED INFRASTRUCTURE ──────────────────────────────────────────────
+
+const SJT_CURATED_APPROPRIATENESS_OPTIONS = [
+  { key: "A" as const, text: "A very appropriate thing to do" },
+  { key: "B" as const, text: "Appropriate, but not ideal" },
+  { key: "C" as const, text: "Inappropriate, but not awful" },
+  { key: "D" as const, text: "A very inappropriate thing to do" },
+];
+
+const SJT_CURATED_IMPORTANCE_OPTIONS = [
+  { key: "A" as const, text: "Very important" },
+  { key: "B" as const, text: "Important" },
+  { key: "C" as const, text: "Of minor importance" },
+  { key: "D" as const, text: "Not important at all" },
+];
+
+function makeUserCuratedSjtQuestion(
+  input: SjtCuratedInput,
+  inputIndex: number
+): UCATQuestion[] {
+  const getOptions = (subtype: string) =>
+    subtype === "sjt-appropriateness"
+      ? SJT_CURATED_APPROPRIATENESS_OPTIONS
+      : SJT_CURATED_IMPORTANCE_OPTIONS;
+
+  if (input.kind === "single") {
+    return [
+      {
+        id: `user-curated-sjt-${pad(inputIndex)}-1`,
+        section: "sjt" as const,
+        subtype: input.subtype,
+        tags: input.tags ?? ["text-stem", "medium"],
+        issueTags: input.issueTags,
+        title: "Situational Judgement Practice",
+        leftTitle: "Scenario",
+        stimulus: input.stimulus,
+        question: input.question,
+        options: getOptions(input.subtype),
+        answer: input.answer,
+        explanation: input.explanation,
+      },
+    ];
+  }
+
+  const setId = `user-curated-sjt-${pad(inputIndex)}`;
+  return input.questions.map((q, qIndex) => ({
+    id: `${setId}-${qIndex + 1}`,
+    section: "sjt" as const,
+    subtype: q.subtype,
+    setId,
+    tags: input.tags ?? ["text-stem", "set-based", "medium"],
+    issueTags: input.issueTags,
+    title: "Situational Judgement Practice",
+    leftTitle: "Scenario",
+    stimulus: input.stimulus,
+    question: q.question,
+    options: getOptions(q.subtype),
+    answer: q.answer,
+    explanation: q.explanation,
+  }));
+}
+
+export const USER_CURATED_SJT_QUESTIONS: UCATQuestion[] =
+  USER_CURATED_SJT_INPUTS.flatMap(makeUserCuratedSjtQuestion);
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const HIGH_QUALITY_9000_RAW_SJT_QUESTIONS: UCATQuestion[] = range(
   HIGH_QUALITY_9000_COMPLETED_BATCHES * SJT_SETS_PER_BATCH
 ).flatMap(makeSjtSet);
 
 export const HIGH_QUALITY_9000_SJT_QUESTIONS: UCATQuestion[] =
-  applyCuratedQuestionReplacements(
-    selectQuestionGroups({
-      questions: HIGH_QUALITY_9000_RAW_SJT_QUESTIONS,
-      targetQuestions: HIGH_QUALITY_9000_FILTERED_TARGETS.sjt,
-      expectedGroupSize: 5,
-      stimulusCap: 5,
-    })
-  );
+  USER_CURATED_SJT_QUESTIONS;
 
 export const HIGH_QUALITY_9000_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: HIGH_QUALITY_9000_VR_QUESTIONS,

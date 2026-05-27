@@ -87,12 +87,11 @@ export function PremiumLockCard({
           </p>
           <button
             type="button"
-            onClick={() => void handleUpgrade()}
-            disabled={loading}
-            className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-2 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+            disabled
+            className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-slate-200 px-6 py-2 text-sm font-black text-slate-400 cursor-not-allowed"
           >
             <Sparkles className="h-4 w-4" aria-hidden="true" />
-            {loading ? "Opening..." : buttonLabel}
+            Coming soon
           </button>
           {error && (
             <p className="mt-3 text-xs font-bold leading-5 text-red-600">
