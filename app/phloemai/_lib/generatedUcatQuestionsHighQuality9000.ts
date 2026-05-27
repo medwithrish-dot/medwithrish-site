@@ -34295,25 +34295,110 @@ export const HIGH_QUALITY_9000_RAW_DM_QUESTIONS: UCATQuestion[] = [
   ...range(HIGH_QUALITY_9000_COMPLETED_BATCHES * DM_PROBABILITY_PER_BATCH).map(makeDmProbability),
 ];
 
-export const HIGH_QUALITY_9000_DM_QUESTIONS: UCATQuestion[] = selectQuestionsBySubtype({
-  questions: HIGH_QUALITY_9000_RAW_DM_QUESTIONS,
-  targets: {
-    "dm-syllogisms": 669,
-    "dm-logic": 669,
-    "dm-arguments": 557,
-    "dm-yes-no": 557,
-    "dm-venn-sets": 891,
-    "dm-probability-data": 556,
-  },
-  templateCap: {
-    "dm-syllogisms": 40,
-    "dm-logic": 40,
-    "dm-arguments": 40,
-    "dm-yes-no": 80,
-    "dm-venn-sets": 160,
-    "dm-probability-data": 96,
-  },
-});
+type DmSingleSubtype =
+  | "dm-logic"
+  | "dm-arguments"
+  | "dm-venn-sets"
+  | "dm-probability-data";
+
+type DmCuratedInput =
+  | {
+      kind: "single";
+      subtype: DmSingleSubtype;
+      leftTitle?: string;
+      tags?: UCATQuestionTag[];
+      stimulus: string[];
+      visual?: UCATChartVisual;
+      question: string;
+      correct: string;
+      distractors: string[];
+      explanation: string;
+    }
+  | {
+      kind: "yes-no";
+      subtype: "dm-yes-no";
+      leftTitle?: string;
+      tags?: UCATQuestionTag[];
+      stimulus: string[];
+      visual?: UCATChartVisual;
+      question: string;
+      instruction: string;
+      yesNoStatements: Array<{
+        id: string;
+        text: string;
+        answer: "Yes" | "No";
+      }>;
+      explanation: string;
+    }
+  | {
+      kind: "drag-category";
+      subtype: "dm-syllogisms";
+      leftTitle?: string;
+      tags?: UCATQuestionTag[];
+      stimulus: string[];
+      question: string;
+      instruction: string;
+      categories: Array<{ id: string; label: string }>;
+      categoryItems: Array<{
+        id: string;
+        text: string;
+        answerCategory: string;
+      }>;
+      explanation: string;
+    };
+
+function makeUserCuratedDmQuestion(input: DmCuratedInput, index: number): UCATQuestion {
+  const base = {
+    id: `user-curated-dm-${pad(index)}`,
+    section: "dm" as const,
+    subtype: input.subtype,
+    title: "Decision Making Practice",
+    leftTitle: input.leftTitle ?? "Information",
+    tags: input.tags ?? ["text-stem", "medium"],
+    stimulus: input.stimulus,
+    visual: "visual" in input ? input.visual : undefined,
+    question: input.question,
+    explanation: input.explanation,
+  };
+
+  if (input.kind === "single") {
+    return singleQuestion({
+      ...base,
+      correctText: input.correct,
+      distractors: input.distractors,
+      seed: index,
+    });
+  }
+
+  if (input.kind === "yes-no") {
+    return yesNoQuestion({
+      ...base,
+      instruction: input.instruction,
+      yesNoStatements: input.yesNoStatements,
+    });
+  }
+
+  return dragCategoryQuestion({
+    ...base,
+    instruction: input.instruction,
+    categories: input.categories,
+    categoryItems: input.categoryItems,
+  });
+}
+
+export const USER_CURATED_DM_INPUTS: DmCuratedInput[] = [
+  // ===== PASTE NEW DM QUESTIONS BELOW THIS LINE =====
+
+  // Paste Gemini DM objects here.
+
+  // ===== PASTE NEW DM QUESTIONS ABOVE THIS LINE =====
+];
+
+export const USER_CURATED_DM_QUESTIONS: UCATQuestion[] =
+  USER_CURATED_DM_INPUTS.map(makeUserCuratedDmQuestion);
+
+export const HIGH_QUALITY_9000_DM_QUESTIONS: UCATQuestion[] =
+  USER_CURATED_DM_QUESTIONS;
 
 const QR_DOMAINS = [
   ["meal", "meals", "Vegetarian", "Non-vegetarian"],
