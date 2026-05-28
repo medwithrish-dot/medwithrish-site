@@ -1,27 +1,7 @@
-import { ORIGINAL_DM_QUESTIONS } from "./ucatDmQuestions";
-import { ORIGINAL_QR_QUESTIONS } from "./ucatQrQuestions";
-import {
-  GENERATED_DM_QUESTIONS,
-  GENERATED_SJT_QUESTIONS,
-} from "./generatedUcatQuestions";
-import {
-  ROUND_TWO_SJT_QUESTIONS,
-} from "./generatedUcatQuestionsRound2";
-import {
-  ROUND_THREE_SJT_QUESTIONS,
-} from "./generatedUcatQuestionsRound3";
-import {
-  ROUND_FOUR_SJT_QUESTIONS,
-} from "./generatedUcatQuestionsRound4";
-import {
-  HIGH_QUALITY_9000_DM_QUESTIONS,
-  HIGH_QUALITY_9000_QR_QUESTIONS,
-  HIGH_QUALITY_9000_SJT_QUESTIONS,
-  HIGH_QUALITY_9000_VR_QUESTIONS,
-} from "./generatedUcatQuestionsHighQuality9000";
-import { SJT_QUESTIONS } from "./ucatSjtQuestions";
-import { HIGH_QUALITY_VR_QUESTIONS } from "./ucatVrQuestions";
-import { EXTRA_HIGH_QUALITY_VR_QUESTIONS } from "./ucatVrQuestionExtras";
+import { CURATED_VR_QUESTIONS } from "./ucatVrCuratedInputs";
+import { CURATED_DM_QUESTIONS } from "./ucatDmCuratedInputs";
+import { CURATED_QR_QUESTIONS } from "./ucatQrCuratedInputs";
+import { CURATED_SJT_QUESTIONS } from "./ucatSjtCuratedInputs";
 import { reviewUCATQuestionBank } from "./ucatQuestionQualityGate";
 
 // Future generated-bank work should first read ./ucatQuestionDesignNotes.md.
@@ -1230,14 +1210,11 @@ function ensureQrFourOptions(question: UCATQuestion): UCATQuestion {
 
 export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   vr: [
-    ...HIGH_QUALITY_VR_QUESTIONS,
-    ...EXTRA_HIGH_QUALITY_VR_QUESTIONS,
-    ...HIGH_QUALITY_9000_VR_QUESTIONS,
+    ...LEGACY_VR_QUESTIONS,
+    ...CURATED_VR_QUESTIONS,
   ],
   dm: [
-    ...ORIGINAL_DM_QUESTIONS,
-    ...GENERATED_DM_QUESTIONS,
-    ...HIGH_QUALITY_9000_DM_QUESTIONS,
+    ...CURATED_DM_QUESTIONS,
     {
       id: "dm-syllogisms-001",
       section: "dm",
@@ -1727,7 +1704,6 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
     },
   ],
   qr: ([
-    ...ORIGINAL_QR_QUESTIONS,
     {
       id: "qr-graphs-001",
       section: "qr",
@@ -2581,15 +2557,10 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       explanation:
         "The combined multiplier is 1.20 x 0.85 x 1.10 = 1.122.",
     },
-    ...HIGH_QUALITY_9000_QR_QUESTIONS,
+    ...CURATED_QR_QUESTIONS,
   ] as UCATQuestion[]).map(ensureQrFourOptions),
   sjt: [
-    ...SJT_QUESTIONS,
-    ...GENERATED_SJT_QUESTIONS,
-    ...ROUND_TWO_SJT_QUESTIONS,
-    ...ROUND_THREE_SJT_QUESTIONS,
-    ...ROUND_FOUR_SJT_QUESTIONS,
-    ...HIGH_QUALITY_9000_SJT_QUESTIONS,
+    ...CURATED_SJT_QUESTIONS,
   ]
     .map(normaliseSjtDragDropQuestion)
     .filter((question): question is UCATQuestion => question !== null)

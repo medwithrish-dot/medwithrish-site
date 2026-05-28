@@ -1,5 +1,6 @@
 import type {
   UCATChartVisual,
+  UCATOptionKey,
   UCATQuestion,
   UCATQuestionTag,
   UCATSubtypeId,
@@ -285,4 +286,246 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
   },
 
   // ===== PASTE NEW QR QUESTIONS ABOVE THIS LINE =====
+];
+
+// ─── BUILDER ──────────────────────────────────────────────────────────────────
+
+const QR_OPTION_KEYS = ["A", "B", "C", "D"] as const;
+
+function buildQrOptions(
+  correctText: string,
+  distractors: [string, string, string],
+  seed: number
+) {
+  const answerIndex = seed % QR_OPTION_KEYS.length;
+  const wrongs = distractors.slice(0, 3);
+  const texts = [...wrongs];
+  texts.splice(answerIndex, 0, correctText);
+  return {
+    options: texts.map((text, i) => ({
+      key: QR_OPTION_KEYS[i],
+      text,
+    })),
+    answer: QR_OPTION_KEYS[answerIndex],
+  };
+}
+
+function buildQrQuestion(
+  input: QrCuratedInput,
+  inputIndex: number
+): UCATQuestion[] {
+  if (input.kind === "single") {
+    const built = buildQrOptions(input.correct, input.distractors, inputIndex);
+    return [
+      {
+        id: `user-curated-qr-${String(inputIndex + 1).padStart(4, "0")}-1`,
+        section: "qr" as const,
+        subtype: input.subtype,
+        tags: input.tags ?? ["text-stem", "medium"],
+        title: "Quantitative Reasoning Practice",
+        leftTitle: input.leftTitle ?? "Data",
+        stimulus: input.stimulus,
+        visual: input.visual,
+        question: input.question,
+        ...built,
+        explanation: input.explanation,
+      },
+    ];
+  }
+  const setId = `user-curated-qr-${String(inputIndex + 1).padStart(4, "0")}`;
+  return input.questions.map((q, qIndex) => {
+    const built = buildQrOptions(q.correct, q.distractors, inputIndex * 10 + qIndex);
+    return {
+      id: `${setId}-${qIndex + 1}`,
+      section: "qr" as const,
+      subtype: q.subtype,
+      setId,
+      tags: q.tags ?? ["data-display", "set-based", "medium"],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
+      stimulus: input.stimulus,
+      visual: input.visual,
+      question: q.question,
+      ...built,
+      explanation: q.explanation,
+    };
+  });
+}
+
+const CURATED_QR_QUESTIONS_FROM_CURATED: UCATQuestion[] =
+  USER_CURATED_QR_INPUTS.flatMap(buildQrQuestion);
+
+// ─── RAW CHART INPUTS ─────────────────────────────────────────────────────────
+// Gemini provides: axis labels, data arrays, and questions.
+// Builder calculates max and constructs the full chart visual.
+
+type QrRawQuestion = {
+  subtype:
+    | "qr-graphs"
+    | "qr-percentages"
+    | "qr-rates-ratios"
+    | "qr-averages"
+    | "qr-units-geometry"
+    | "qr-estimation";
+  question: string;
+  correct: string;
+  distractors: [string, string, string];
+  explanation: string;
+};
+
+type QrRawChartBase = {
+  setId: string;
+  title: string;
+  yLabel: string;
+  context: string;
+  questions: QrRawQuestion[];
+};
+
+export type QrBarRawInput = QrRawChartBase & {
+  chartType: "bar";
+  data: Array<{ label: string; value: number }>;
+};
+
+export type QrLineRawInput = QrRawChartBase & {
+  chartType: "line";
+  data: Array<{ label: string; value: number }>;
+};
+
+export type QrGroupedBarRawInput = QrRawChartBase & {
+  chartType: "grouped-bar";
+  seriesLabels: string[];
+  groups: Array<{ label: string; values: number[] }>;
+};
+
+export type QrChartRawInput = QrBarRawInput | QrLineRawInput | QrGroupedBarRawInput;
+
+export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
+  // ===== PASTE NEW QR CHART QUESTIONS BELOW THIS LINE =====
+  //
+  // Bar chart example:
+  // {
+  //   chartType: "bar",
+  //   setId: "hospital-bed-occupancy-monthly",
+  //   title: "Monthly Bed Occupancy Rate",
+  //   yLabel: "Occupancy (%)",
+  //   context: "The bar chart shows monthly bed occupancy rates at a district general hospital.",
+  //   data: [
+  //     { label: "Jan", value: 87 },
+  //     { label: "Feb", value: 82 },
+  //     { label: "Mar", value: 91 },
+  //     { label: "Apr", value: 85 },
+  //   ],
+  //   questions: [
+  //     {
+  //       subtype: "qr-averages",
+  //       question: "What is the mean bed occupancy rate across the four months?",
+  //       correct: "86.25%",
+  //       distractors: ["87%", "82%", "85%"],
+  //       explanation: "Sum = 87+82+91+85 = 345. Mean = 345/4 = 86.25%.",
+  //     },
+  //   ],
+  // },
+  //
+  // Grouped-bar example:
+  // {
+  //   chartType: "grouped-bar",
+  //   setId: "gp-appointments-by-type",
+  //   title: "GP Appointments by Type and Month",
+  //   yLabel: "Appointments",
+  //   context: "The chart shows GP appointment numbers by type for three months.",
+  //   seriesLabels: ["Face-to-face", "Telephone"],
+  //   groups: [
+  //     { label: "Jan", values: [320, 180] },
+  //     { label: "Feb", values: [290, 210] },
+  //     { label: "Mar", values: [340, 160] },
+  //   ],
+  //   questions: [ ... ],
+  // },
+  //
+  // Line chart example:
+  // {
+  //   chartType: "line",
+  //   setId: "ae-wait-times-weekly",
+  //   title: "Weekly A&E Median Wait Times",
+  //   yLabel: "Minutes",
+  //   context: "The line graph shows weekly median A&E wait times over six weeks.",
+  //   data: [
+  //     { label: "Wk 1", value: 45 },
+  //     { label: "Wk 2", value: 52 },
+  //     { label: "Wk 3", value: 61 },
+  //     { label: "Wk 4", value: 58 },
+  //     { label: "Wk 5", value: 49 },
+  //     { label: "Wk 6", value: 43 },
+  //   ],
+  //   questions: [ ... ],
+  // },
+
+  // ===== PASTE NEW QR CHART QUESTIONS ABOVE THIS LINE =====
+];
+
+// ─── RAW CHART BUILDER ────────────────────────────────────────────────────────
+
+function niceQrMax(raw: number): number {
+  return Math.ceil((raw * 1.2) / 10) * 10;
+}
+
+function buildRawQrChartQuestions(
+  raw: QrChartRawInput,
+  rawIndex: number
+): UCATQuestion[] {
+  let visual: UCATChartVisual;
+
+  if (raw.chartType === "grouped-bar") {
+    const allValues = raw.groups.flatMap((g) => g.values);
+    visual = {
+      type: "grouped-bar",
+      title: raw.title,
+      yLabel: raw.yLabel,
+      seriesLabels: raw.seriesLabels,
+      groups: raw.groups,
+      max: niceQrMax(Math.max(...allValues)),
+    };
+  } else if (raw.chartType === "bar") {
+    visual = {
+      type: "bar",
+      title: raw.title,
+      yLabel: raw.yLabel,
+      categories: raw.data,
+      max: niceQrMax(Math.max(...raw.data.map((d) => d.value))),
+    };
+  } else {
+    visual = {
+      type: "line",
+      title: raw.title,
+      yLabel: raw.yLabel,
+      points: raw.data,
+      max: niceQrMax(Math.max(...raw.data.map((d) => d.value))),
+    };
+  }
+
+  const setId = `user-raw-qr-chart-${String(rawIndex + 1).padStart(4, "0")}`;
+  return raw.questions.map((q, qIndex) => {
+    const built = buildQrOptions(q.correct, q.distractors, rawIndex * 10 + qIndex);
+    return {
+      id: `${setId}-${qIndex + 1}`,
+      section: "qr" as const,
+      subtype: q.subtype,
+      setId,
+      tags: ["data-display", "set-based", "medium"] as UCATQuestionTag[],
+      title: "Quantitative Reasoning Practice",
+      leftTitle: "Data",
+      stimulus: [raw.context],
+      visual,
+      question: q.question,
+      ...built,
+      explanation: q.explanation,
+    };
+  });
+}
+
+// ─── COMBINED EXPORT ──────────────────────────────────────────────────────────
+
+export const CURATED_QR_QUESTIONS: UCATQuestion[] = [
+  ...CURATED_QR_QUESTIONS_FROM_CURATED,
+  ...USER_RAW_QR_CHART_INPUTS.flatMap(buildRawQrChartQuestions),
 ];
