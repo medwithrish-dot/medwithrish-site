@@ -22,6 +22,7 @@ export type UCATSubtypeId =
   | "dm-probability-data"
   | "dm-yes-no"
   | "dm-venn-sets"
+  | "dm-venn-select"
   | "qr-graphs"
   | "qr-percentages"
   | "qr-rates-ratios"
@@ -310,6 +311,11 @@ export const UCAT_SUBTYPES: Record<
       id: "dm-venn-sets",
       label: "Venn diagrams",
       description: "Work with overlaps, exclusions and grouped information.",
+    },
+    {
+      id: "dm-venn-select",
+      label: "Diagram selection",
+      description: "Choose the diagram that correctly represents the given statements or data.",
     },
     {
       id: "dm-probability-data",
@@ -1638,6 +1644,2743 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       explanation:
         "The region inside Leadership and Volunteering but outside Research is labelled 14.",
     },
+
+    // ── dm-venn-select: logical-statement diagram selection ──────────────────
+    {
+      id: "dm-venn-select-001",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "No radiographer is a surgeon.",
+        "No surgeon is a radiographer.",
+      ],
+      question: "Which of the following diagrams best represents the information given?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "Radiographers", shape: "circle", x: 10, y: 20, width: 115, height: 110 },
+              { id: "b", label: "Surgeons",       shape: "circle", x: 145, y: 20, width: 115, height: 110 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Radiographers", shape: "circle" }, { label: "Surgeons", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "Radiographers", shape: "circle", x: 10, y: 15, width: 155, height: 140 },
+              { id: "b", label: "Surgeons",       shape: "circle", x: 110, y: 15, width: 155, height: 140 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Radiographers", shape: "circle" }, { label: "Surgeons", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "b", label: "Surgeons",       shape: "circle", x: 10, y: 10, width: 215, height: 185 },
+              { id: "a", label: "Radiographers",  shape: "circle", x: 55, y: 42, width: 120, height: 108 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Radiographers", shape: "circle" }, { label: "Surgeons", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Radiographers",  shape: "circle", x: 10, y: 10, width: 215, height: 185 },
+              { id: "b", label: "Surgeons",        shape: "circle", x: 65, y: 48, width: 100, height: 92 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Radiographers", shape: "circle" }, { label: "Surgeons", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "Both statements confirm no overlap exists between the two groups. Two completely separate circles represent this mutual exclusion. Option B shows overlap, and Options C and D show one set contained within the other — none of which are consistent with 'no radiographer is a surgeon'.",
+    },
+    {
+      id: "dm-venn-select-002",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "All ward nurses are registered nurses.",
+        "Some registered nurses are not ward nurses.",
+      ],
+      question: "Which of the following diagrams best represents the information given?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "Ward Nurses",      shape: "circle", x: 10, y: 15, width: 155, height: 140 },
+              { id: "b", label: "Registered Nurses", shape: "circle", x: 110, y: 15, width: 155, height: 140 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Ward Nurses", shape: "circle" }, { label: "Registered Nurses", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "b", label: "Registered Nurses", shape: "circle", x: 10, y: 10, width: 215, height: 185 },
+              { id: "a", label: "Ward Nurses",        shape: "circle", x: 55, y: 42, width: 120, height: 108 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Ward Nurses", shape: "circle" }, { label: "Registered Nurses", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Ward Nurses",        shape: "circle", x: 10, y: 10, width: 215, height: 185 },
+              { id: "b", label: "Registered Nurses",  shape: "circle", x: 62, y: 45, width: 102, height: 95 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Ward Nurses", shape: "circle" }, { label: "Registered Nurses", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Ward Nurses",        shape: "circle", x: 10, y: 20, width: 115, height: 110 },
+              { id: "b", label: "Registered Nurses",  shape: "circle", x: 145, y: 20, width: 115, height: 110 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Ward Nurses", shape: "circle" }, { label: "Registered Nurses", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "B",
+      explanation:
+        "'All ward nurses are registered nurses' means every ward nurse belongs to the registered nurse group — so the Ward Nurses circle must sit entirely inside the Registered Nurses circle. 'Some registered nurses are not ward nurses' confirms registered nurses is the larger set. Option B shows Ward Nurses (small) inside Registered Nurses (large). Option C reverses the containment, Option A shows overlap only, and Option D shows complete separation.",
+    },
+    {
+      id: "dm-venn-select-003",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "Most cardiologists hold research grants.",
+        "Some cardiologists do not hold research grants.",
+        "Some research grant holders are not cardiologists.",
+      ],
+      question: "Which of the following diagrams best represents the information given?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "b", label: "Grant Holders",  shape: "circle", x: 10, y: 10, width: 215, height: 185 },
+              { id: "a", label: "Cardiologists",  shape: "circle", x: 55, y: 42, width: 120, height: 108 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Cardiologists", shape: "circle" }, { label: "Grant Holders", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "Cardiologists",  shape: "circle", x: 10, y: 10, width: 215, height: 185 },
+              { id: "b", label: "Grant Holders",  shape: "circle", x: 62, y: 45, width: 102, height: 95 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Cardiologists", shape: "circle" }, { label: "Grant Holders", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Cardiologists",  shape: "circle", x: 10, y: 15, width: 155, height: 140 },
+              { id: "b", label: "Grant Holders",  shape: "circle", x: 110, y: 15, width: 155, height: 140 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Cardiologists", shape: "circle" }, { label: "Grant Holders", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Cardiologists",  shape: "circle", x: 10, y: 20, width: 115, height: 110 },
+              { id: "b", label: "Grant Holders",  shape: "circle", x: 145, y: 20, width: 115, height: 110 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Cardiologists", shape: "circle" }, { label: "Grant Holders", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "C",
+      explanation:
+        "'Some cardiologists do not hold grants' rules out containment (not all cardiologists are inside the grant circle). 'Some grant holders are not cardiologists' rules out the reverse containment. Only partial overlap satisfies both conditions. Option C shows two overlapping circles with regions outside each — the correct representation. Options A and B show containment, Option D shows complete separation.",
+    },
+    {
+      id: "dm-venn-select-004",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "All paediatricians are doctors.",
+        "All geriatricians are doctors.",
+        "No paediatrician is a geriatrician.",
+      ],
+      question: "Which of the following diagrams best represents the information given?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "Paediatricians",  shape: "circle", x: 10, y: 15, width: 130, height: 120 },
+              { id: "b", label: "Geriatricians",   shape: "circle", x: 100, y: 15, width: 130, height: 120 },
+              { id: "c", label: "Doctors",         shape: "circle", x: 55, y: 155, width: 130, height: 120 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Paediatricians", shape: "circle" }, { label: "Geriatricians", shape: "circle" }, { label: "Doctors", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "c", label: "Doctors",         shape: "circle", x: 10, y: 10, width: 230, height: 200 },
+              { id: "a", label: "Paediatricians",  shape: "circle", x: 25, y: 38, width: 95, height: 90 },
+              { id: "b", label: "Geriatricians",   shape: "circle", x: 135, y: 38, width: 95, height: 90 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Paediatricians", shape: "circle" }, { label: "Geriatricians", shape: "circle" }, { label: "Doctors", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "c", label: "Doctors",         shape: "circle", x: 10, y: 10, width: 230, height: 200 },
+              { id: "a", label: "Paediatricians",  shape: "circle", x: 25, y: 35, width: 110, height: 100 },
+              { id: "b", label: "Geriatricians",   shape: "circle", x: 110, y: 35, width: 110, height: 100 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Paediatricians", shape: "circle" }, { label: "Geriatricians", shape: "circle" }, { label: "Doctors", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Paediatricians",  shape: "circle", x: 10, y: 20, width: 100, height: 95 },
+              { id: "b", label: "Geriatricians",   shape: "circle", x: 120, y: 20, width: 100, height: 95 },
+              { id: "c", label: "Doctors",         shape: "circle", x: 230, y: 20, width: 100, height: 95 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Paediatricians", shape: "circle" }, { label: "Geriatricians", shape: "circle" }, { label: "Doctors", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "B",
+      explanation:
+        "'All paediatricians are doctors' and 'all geriatricians are doctors' means both specialist circles sit inside the Doctors circle. 'No paediatrician is a geriatrician' means the two specialist circles must not overlap. Option B shows both smaller circles inside Doctors with a clear gap between them. Option C shows them overlapping inside Doctors (violates the third statement). Option A shows all three separate or only partly overlapping. Option D shows three separate circles.",
+    },
+    {
+      id: "dm-venn-select-005",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "All trauma surgeons are surgeons.",
+        "Some surgeons are not trauma surgeons.",
+        "No trauma surgeon is a GP.",
+        "Some surgeons are GPs.",
+      ],
+      question: "Which of the following diagrams best represents the information given?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "b", label: "Surgeons",         shape: "circle", x: 10, y: 10, width: 185, height: 170 },
+              { id: "a", label: "Trauma Surgeons",  shape: "circle", x: 22, y: 28, width: 95, height: 88 },
+              { id: "c", label: "GPs",              shape: "circle", x: 150, y: 55, width: 130, height: 120 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Trauma Surgeons", shape: "circle" }, { label: "Surgeons", shape: "circle" }, { label: "GPs", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "b", label: "Surgeons",         shape: "circle", x: 10, y: 10, width: 230, height: 200 },
+              { id: "a", label: "Trauma Surgeons",  shape: "circle", x: 22, y: 30, width: 100, height: 92 },
+              { id: "c", label: "GPs",              shape: "circle", x: 135, y: 30, width: 100, height: 92 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Trauma Surgeons", shape: "circle" }, { label: "Surgeons", shape: "circle" }, { label: "GPs", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Trauma Surgeons",  shape: "circle", x: 10, y: 15, width: 120, height: 115 },
+              { id: "b", label: "Surgeons",         shape: "circle", x: 100, y: 15, width: 120, height: 115 },
+              { id: "c", label: "GPs",              shape: "circle", x: 190, y: 15, width: 120, height: 115 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Trauma Surgeons", shape: "circle" }, { label: "Surgeons", shape: "circle" }, { label: "GPs", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "b", label: "Surgeons",         shape: "circle", x: 10, y: 10, width: 185, height: 170 },
+              { id: "a", label: "Trauma Surgeons",  shape: "circle", x: 22, y: 28, width: 95, height: 88 },
+              { id: "c", label: "GPs",              shape: "circle", x: 90, y: 28, width: 95, height: 88 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Trauma Surgeons", shape: "circle" }, { label: "Surgeons", shape: "circle" }, { label: "GPs", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "'All trauma surgeons are surgeons' puts the Trauma circle inside Surgeons. 'No trauma surgeon is a GP' means Trauma and GP circles must not touch. 'Some surgeons are GPs' means the GP circle overlaps with Surgeons (but extends outside since not all surgeons are GPs). Option A shows Trauma inside Surgeons with GPs overlapping Surgeons but not touching Trauma. Option B puts both Trauma and GPs inside Surgeons as non-overlapping subsets — wrong because 'some surgeons are GPs' only means partial overlap, not full containment. Option C shows all three separate. Option D shows Trauma and GPs overlapping inside Surgeons, violating 'no trauma surgeon is a GP'.",
+    },
+
+    {
+      id: "dm-venn-select-006",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "All nurses are healthcare workers.",
+        "Some managers are healthcare workers.",
+        "Some managers are not healthcare workers.",
+        "No nurse is a manager.",
+      ],
+      question: "Which of the following diagrams best represents the information given?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "b", label: "Healthcare Workers", shape: "circle", x: 10, y: 10, width: 230, height: 195 },
+              { id: "a", label: "Nurses",             shape: "circle", x: 22, y: 35, width: 95, height: 88 },
+              { id: "c", label: "Managers",           shape: "circle", x: 155, y: 60, width: 130, height: 118 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Nurses", shape: "circle" }, { label: "Healthcare Workers", shape: "circle" }, { label: "Managers", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "b", label: "Healthcare Workers", shape: "circle", x: 10, y: 10, width: 230, height: 195 },
+              { id: "a", label: "Nurses",             shape: "circle", x: 22, y: 35, width: 95, height: 88 },
+              { id: "c", label: "Managers",           shape: "circle", x: 130, y: 35, width: 95, height: 88 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Nurses", shape: "circle" }, { label: "Healthcare Workers", shape: "circle" }, { label: "Managers", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Nurses",             shape: "circle", x: 10, y: 20, width: 100, height: 95 },
+              { id: "b", label: "Healthcare Workers", shape: "circle", x: 120, y: 20, width: 100, height: 95 },
+              { id: "c", label: "Managers",           shape: "circle", x: 230, y: 20, width: 100, height: 95 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Nurses", shape: "circle" }, { label: "Healthcare Workers", shape: "circle" }, { label: "Managers", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "b", label: "Healthcare Workers", shape: "circle", x: 10, y: 10, width: 230, height: 195 },
+              { id: "a", label: "Nurses",             shape: "circle", x: 22, y: 35, width: 95, height: 88 },
+              { id: "c", label: "Managers",           shape: "circle", x: 85, y: 35, width: 130, height: 118 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Nurses", shape: "circle" }, { label: "Healthcare Workers", shape: "circle" }, { label: "Managers", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "'All nurses are healthcare workers' places Nurses entirely inside Healthcare Workers. 'Some managers are healthcare workers' and 'some managers are not' means Managers partially overlaps Healthcare Workers. 'No nurse is a manager' means the Nurses and Managers circles must not touch. Option A correctly shows Nurses (small, inside HCW), Managers (partially overlapping HCW but extending outside), with no contact between Nurses and Managers. Option B puts Managers fully inside HCW, contradicting 'some managers are not HCW'. Option D shows Managers overlapping Nurses, which violates 'no nurse is a manager'. Option C shows all three separate.",
+    },
+    {
+      id: "dm-venn-select-007",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "All GPs are doctors.",
+        "All doctors are healthcare professionals.",
+        "Some GPs are not hospital-based.",
+      ],
+      question: "Which of the following diagrams best represents the information given?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "c", label: "Healthcare Professionals", shape: "circle", x: 10, y: 10, width: 235, height: 210 },
+              { id: "b", label: "Doctors",                  shape: "circle", x: 30, y: 30, width: 170, height: 155 },
+              { id: "a", label: "GPs",                      shape: "circle", x: 58, y: 56, width: 100, height: 95 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "GPs", shape: "circle" }, { label: "Doctors", shape: "circle" }, { label: "Healthcare Professionals", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "GPs",                      shape: "circle", x: 10, y: 10, width: 235, height: 210 },
+              { id: "b", label: "Doctors",                  shape: "circle", x: 30, y: 30, width: 170, height: 155 },
+              { id: "c", label: "Healthcare Professionals", shape: "circle", x: 58, y: 56, width: 100, height: 95 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "GPs", shape: "circle" }, { label: "Doctors", shape: "circle" }, { label: "Healthcare Professionals", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "c", label: "Healthcare Professionals", shape: "circle", x: 10, y: 10, width: 230, height: 195 },
+              { id: "b", label: "Doctors",                  shape: "circle", x: 22, y: 35, width: 95, height: 88 },
+              { id: "a", label: "GPs",                      shape: "circle", x: 130, y: 35, width: 95, height: 88 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "GPs", shape: "circle" }, { label: "Doctors", shape: "circle" }, { label: "Healthcare Professionals", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "GPs",                      shape: "circle", x: 10, y: 20, width: 100, height: 95 },
+              { id: "b", label: "Doctors",                  shape: "circle", x: 120, y: 20, width: 100, height: 95 },
+              { id: "c", label: "Healthcare Professionals", shape: "circle", x: 230, y: 20, width: 100, height: 95 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "GPs", shape: "circle" }, { label: "Doctors", shape: "circle" }, { label: "Healthcare Professionals", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "'All GPs are doctors' means GPs ⊂ Doctors. 'All doctors are healthcare professionals' means Doctors ⊂ Healthcare Professionals. This creates a triple nested chain: GPs inside Doctors inside Healthcare Professionals. The third statement about 'some GPs not hospital-based' does not introduce a new set and does not affect the diagram structure. Option A correctly shows this nested chain. Option B reverses the containment order. Option C places GPs and Doctors as separate subsets inside Healthcare Professionals. Option D shows all three separate.",
+    },
+    {
+      id: "dm-venn-select-008",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "No physiotherapist is a surgeon.",
+        "Some physiotherapists work in hospitals.",
+        "Some surgeons work in hospitals.",
+        "Some hospital workers are neither physiotherapists nor surgeons.",
+      ],
+      question: "Which of the following diagrams best represents the information given?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "Physiotherapists", shape: "circle", x: 10, y: 15, width: 150, height: 140 },
+              { id: "c", label: "Hospital Workers",  shape: "circle", x: 110, y: 15, width: 150, height: 140 },
+              { id: "b", label: "Surgeons",          shape: "circle", x: 210, y: 15, width: 150, height: 140 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Physiotherapists", shape: "circle" }, { label: "Hospital Workers", shape: "circle" }, { label: "Surgeons", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "c", label: "Hospital Workers",  shape: "circle", x: 10, y: 10, width: 230, height: 195 },
+              { id: "a", label: "Physiotherapists", shape: "circle", x: 22, y: 35, width: 95, height: 88 },
+              { id: "b", label: "Surgeons",          shape: "circle", x: 130, y: 35, width: 95, height: 88 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Physiotherapists", shape: "circle" }, { label: "Hospital Workers", shape: "circle" }, { label: "Surgeons", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Physiotherapists", shape: "circle", x: 10, y: 15, width: 135, height: 125 },
+              { id: "b", label: "Surgeons",          shape: "circle", x: 225, y: 15, width: 135, height: 125 },
+              { id: "c", label: "Hospital Workers",  shape: "circle", x: 80, y: 165, width: 210, height: 90 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Physiotherapists", shape: "circle" }, { label: "Hospital Workers", shape: "circle" }, { label: "Surgeons", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Physiotherapists", shape: "circle", x: 10, y: 10, width: 145, height: 135 },
+              { id: "b", label: "Surgeons",          shape: "circle", x: 105, y: 10, width: 145, height: 135 },
+              { id: "c", label: "Hospital Workers",  shape: "circle", x: 65, y: 100, width: 160, height: 110 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Physiotherapists", shape: "circle" }, { label: "Hospital Workers", shape: "circle" }, { label: "Surgeons", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "D",
+      explanation:
+        "'No physiotherapist is a surgeon' requires those two circles to be separate. 'Some physiotherapists work in hospitals' means Physiotherapists and Hospital Workers overlap. 'Some surgeons work in hospitals' means Surgeons and Hospital Workers overlap. 'Some hospital workers are neither' confirms Hospital Workers extends beyond both groups. Option D correctly shows Physiotherapists and Surgeons as separate overlapping circles, with Hospital Workers cutting across both from below. Option A chains the three circles linearly, making physios and surgeons appear to overlap via hospital workers. Option B shows both as non-overlapping subsets fully inside Hospital Workers. Option C positions Hospital Workers below both groups but without the required overlaps.",
+    },
+    {
+      id: "dm-venn-select-009",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "All clinical psychologists are psychologists.",
+        "Some psychologists are not clinical psychologists.",
+        "No clinical psychologist is a psychiatrist.",
+      ],
+      question: "Which of the following diagrams best represents the information given?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "b", label: "Psychologists",           shape: "circle", x: 10, y: 10, width: 215, height: 185 },
+              { id: "a", label: "Clinical Psychologists",  shape: "circle", x: 55, y: 42, width: 120, height: 108 },
+              { id: "c", label: "Psychiatrists",           shape: "circle", x: 245, y: 40, width: 120, height: 108 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Clinical Psychologists", shape: "circle" }, { label: "Psychologists", shape: "circle" }, { label: "Psychiatrists", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "b", label: "Psychologists",           shape: "circle", x: 10, y: 10, width: 215, height: 185 },
+              { id: "a", label: "Clinical Psychologists",  shape: "circle", x: 55, y: 42, width: 120, height: 108 },
+              { id: "c", label: "Psychiatrists",           shape: "circle", x: 155, y: 60, width: 120, height: 108 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Clinical Psychologists", shape: "circle" }, { label: "Psychologists", shape: "circle" }, { label: "Psychiatrists", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Clinical Psychologists",  shape: "circle", x: 10, y: 20, width: 100, height: 95 },
+              { id: "b", label: "Psychologists",           shape: "circle", x: 120, y: 20, width: 100, height: 95 },
+              { id: "c", label: "Psychiatrists",           shape: "circle", x: 230, y: 20, width: 100, height: 95 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Clinical Psychologists", shape: "circle" }, { label: "Psychologists", shape: "circle" }, { label: "Psychiatrists", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "b", label: "Psychologists",           shape: "circle", x: 10, y: 15, width: 155, height: 140 },
+              { id: "c", label: "Psychiatrists",           shape: "circle", x: 110, y: 15, width: 155, height: 140 },
+              { id: "a", label: "Clinical Psychologists",  shape: "circle", x: 62, y: 48, width: 100, height: 92 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "Clinical Psychologists", shape: "circle" }, { label: "Psychologists", shape: "circle" }, { label: "Psychiatrists", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "'All clinical psychologists are psychologists' puts Clinical Psychologists inside Psychologists. 'No clinical psychologist is a psychiatrist' means the Clinical Psychologists and Psychiatrists circles must not touch. The statements say nothing about the relationship between Psychologists and Psychiatrists, so they may or may not overlap. Option A shows Clinical Psychologists inside Psychologists, with Psychiatrists completely separate from both. Option B places Psychiatrists inside Psychologists overlapping with Clinical Psychologists — violating the third statement. Option C shows all three as separate circles. Option D places Clinical Psychologists in the overlap between Psychologists and Psychiatrists, violating the third statement.",
+    },
+    {
+      id: "dm-venn-select-010",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "All ICU nurses work night shifts.",
+        "Some general ward nurses work night shifts.",
+        "Some general ward nurses do not work night shifts.",
+        "No ICU nurse is a general ward nurse.",
+      ],
+      question: "Which of the following diagrams best represents the information given?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "b", label: "Night Shift Workers", shape: "circle", x: 10, y: 10, width: 230, height: 195 },
+              { id: "a", label: "ICU Nurses",          shape: "circle", x: 22, y: 35, width: 95, height: 88 },
+              { id: "c", label: "Ward Nurses",         shape: "circle", x: 130, y: 35, width: 95, height: 88 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "ICU Nurses", shape: "circle" }, { label: "Night Shift Workers", shape: "circle" }, { label: "Ward Nurses", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "b", label: "Night Shift Workers", shape: "circle", x: 10, y: 10, width: 200, height: 180 },
+              { id: "a", label: "ICU Nurses",          shape: "circle", x: 22, y: 35, width: 90, height: 85 },
+              { id: "c", label: "Ward Nurses",         shape: "circle", x: 150, y: 55, width: 120, height: 110 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "ICU Nurses", shape: "circle" }, { label: "Night Shift Workers", shape: "circle" }, { label: "Ward Nurses", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "ICU Nurses",          shape: "circle", x: 10, y: 20, width: 100, height: 95 },
+              { id: "b", label: "Night Shift Workers", shape: "circle", x: 120, y: 20, width: 100, height: 95 },
+              { id: "c", label: "Ward Nurses",         shape: "circle", x: 230, y: 20, width: 100, height: 95 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "ICU Nurses", shape: "circle" }, { label: "Night Shift Workers", shape: "circle" }, { label: "Ward Nurses", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "b", label: "Night Shift Workers", shape: "circle", x: 10, y: 10, width: 200, height: 180 },
+              { id: "a", label: "ICU Nurses",          shape: "circle", x: 22, y: 35, width: 90, height: 85 },
+              { id: "c", label: "Ward Nurses",         shape: "circle", x: 85, y: 55, width: 120, height: 110 },
+            ],
+            regionLabels: [],
+            legend: [{ label: "ICU Nurses", shape: "circle" }, { label: "Night Shift Workers", shape: "circle" }, { label: "Ward Nurses", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "B",
+      explanation:
+        "'All ICU nurses work night shifts' places ICU Nurses entirely inside Night Shift Workers. 'Some ward nurses work night shifts' and 'some do not' means Ward Nurses partially overlaps Night Shift Workers. 'No ICU nurse is a general ward nurse' means ICU Nurses and Ward Nurses circles must not touch. Option B shows ICU Nurses (small, inside Night Shift), with Ward Nurses partially overlapping Night Shift Workers from the other side, keeping clear of ICU Nurses. Option A puts both ICU and Ward Nurses as separate, fully contained subsets of Night Shift Workers — violating 'some ward nurses do not work night shifts'. Option D shows Ward Nurses overlapping both Night Shift Workers and ICU Nurses, violating the fourth statement. Option C shows all three separate.",
+    },
+
+    // ── dm-venn-select: numerical data diagram selection ────────────────────
+    {
+      id: "dm-venn-select-011",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A university surveyed 120 students about module enrolment.",
+        "60 students study Biology, 50 study Chemistry, and 25 study both.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "Biology",   shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Chemistry", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "35", x: 75,  y: 92 },
+              { id: "both",   text: "35", x: 160, y: 92 },
+              { id: "b-only", text: "25", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Biology", shape: "circle" }, { label: "Chemistry", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "Biology",   shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Chemistry", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "60", x: 75,  y: 92 },
+              { id: "both",   text: "25", x: 160, y: 92 },
+              { id: "b-only", text: "50", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Biology", shape: "circle" }, { label: "Chemistry", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Biology",   shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Chemistry", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "35", x: 75,  y: 92 },
+              { id: "both",   text: "25", x: 160, y: 92 },
+              { id: "b-only", text: "50", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Biology", shape: "circle" }, { label: "Chemistry", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Biology",   shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Chemistry", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "25", x: 75,  y: 92 },
+              { id: "both",   text: "35", x: 160, y: 92 },
+              { id: "b-only", text: "25", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Biology", shape: "circle" }, { label: "Chemistry", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "C",
+      explanation:
+        "Biology-only = 60 − 25 = 35. Chemistry-only = 50 − 25 = 25. Both = 25. Option C correctly shows 35 | 25 | 25. Option A uses 35 as the overlap value instead of 25 — a common error of using the Biology-only count in the wrong region. Option B places the raw totals (60 and 50) as region values, forgetting to subtract the overlap. Option D swaps the overlap (25) and the Biology-only (35) values.",
+    },
+    {
+      id: "dm-venn-select-012",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A hospital ward has 90 nurses. 54 are trained in IV cannulation, 42 are trained in venepuncture, and 18 are trained in both.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "IV Cannulation", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Venepuncture",   shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "36", x: 75,  y: 92 },
+              { id: "both",   text: "18", x: 160, y: 92 },
+              { id: "b-only", text: "24", x: 245, y: 92 },
+            ],
+            legend: [{ label: "IV Cannulation", shape: "circle" }, { label: "Venepuncture", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "IV Cannulation", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Venepuncture",   shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "54", x: 75,  y: 92 },
+              { id: "both",   text: "18", x: 160, y: 92 },
+              { id: "b-only", text: "42", x: 245, y: 92 },
+            ],
+            legend: [{ label: "IV Cannulation", shape: "circle" }, { label: "Venepuncture", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "IV Cannulation", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Venepuncture",   shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "36", x: 75,  y: 92 },
+              { id: "both",   text: "18", x: 160, y: 92 },
+              { id: "b-only", text: "36", x: 245, y: 92 },
+            ],
+            legend: [{ label: "IV Cannulation", shape: "circle" }, { label: "Venepuncture", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "IV Cannulation", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Venepuncture",   shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "18", x: 75,  y: 92 },
+              { id: "both",   text: "36", x: 160, y: 92 },
+              { id: "b-only", text: "24", x: 245, y: 92 },
+            ],
+            legend: [{ label: "IV Cannulation", shape: "circle" }, { label: "Venepuncture", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "IV-only = 54 − 18 = 36. Venepuncture-only = 42 − 18 = 24. Both = 18. Option A correctly shows 36 | 18 | 24. Option B places the raw totals (54 and 42) as region values — a common trap of forgetting to subtract the overlap. Option C uses 36 for both 'only' regions (treating the two groups as equal size, which is wrong). Option D swaps the overlap and IV-only values.",
+    },
+    {
+      id: "dm-venn-select-013",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "200 patients were assessed for three conditions.",
+        "72 have Type 2 Diabetes (T2D), 90 have Hypertension (HTN), and 55 have High Cholesterol (HC).",
+        "18 have both T2D and HTN only. 12 have both T2D and HC only. 20 have both HTN and HC only. 8 have all three conditions.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "T2D", shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "HTN", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "HC",  shape: "triangle",  x: 160, y: 80, width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "t2d-only",   text: "34", x: 175, y: 45  },
+              { id: "htn-only",   text: "44", x: 65,  y: 200 },
+              { id: "hc-only",    text: "15", x: 290, y: 215 },
+              { id: "t2d-htn",    text: "18", x: 120, y: 148 },
+              { id: "t2d-hc",     text: "12", x: 230, y: 118 },
+              { id: "htn-hc",     text: "20", x: 185, y: 215 },
+              { id: "all-three",  text: "8",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "T2D", shape: "circle" }, { label: "HTN", shape: "rectangle" }, { label: "HC", shape: "triangle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "T2D", shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "HTN", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "HC",  shape: "triangle",  x: 160, y: 80, width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "t2d-only",   text: "72", x: 175, y: 45  },
+              { id: "htn-only",   text: "90", x: 65,  y: 200 },
+              { id: "hc-only",    text: "55", x: 290, y: 215 },
+              { id: "t2d-htn",    text: "18", x: 120, y: 148 },
+              { id: "t2d-hc",     text: "12", x: 230, y: 118 },
+              { id: "htn-hc",     text: "20", x: 185, y: 215 },
+              { id: "all-three",  text: "8",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "T2D", shape: "circle" }, { label: "HTN", shape: "rectangle" }, { label: "HC", shape: "triangle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "T2D", shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "HTN", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "HC",  shape: "triangle",  x: 160, y: 80, width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "t2d-only",   text: "34", x: 175, y: 45  },
+              { id: "htn-only",   text: "44", x: 65,  y: 200 },
+              { id: "hc-only",    text: "15", x: 290, y: 215 },
+              { id: "t2d-htn",    text: "8",  x: 120, y: 148 },
+              { id: "t2d-hc",     text: "12", x: 230, y: 118 },
+              { id: "htn-hc",     text: "20", x: 185, y: 215 },
+              { id: "all-three",  text: "18", x: 182, y: 165 },
+            ],
+            legend: [{ label: "T2D", shape: "circle" }, { label: "HTN", shape: "rectangle" }, { label: "HC", shape: "triangle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "T2D", shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "HTN", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "HC",  shape: "triangle",  x: 160, y: 80, width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "t2d-only",   text: "34", x: 175, y: 45  },
+              { id: "htn-only",   text: "52", x: 65,  y: 200 },
+              { id: "hc-only",    text: "15", x: 290, y: 215 },
+              { id: "t2d-htn",    text: "18", x: 120, y: 148 },
+              { id: "t2d-hc",     text: "12", x: 230, y: 118 },
+              { id: "htn-hc",     text: "20", x: 185, y: 215 },
+              { id: "all-three",  text: "8",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "T2D", shape: "circle" }, { label: "HTN", shape: "rectangle" }, { label: "HC", shape: "triangle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "T2D-only = 72 − 18 − 12 − 8 = 34. HTN-only = 90 − 18 − 20 − 8 = 44. HC-only = 55 − 12 − 20 − 8 = 15. Option A correctly shows 34 | 44 | 15 for the 'only' regions with the stated overlap values. Option B uses the raw condition totals (72, 90, 55) as the 'only' region values — forgetting to subtract all overlaps. Option C swaps the T2D+HTN-only (18) with the all-three (8) values. Option D uses 52 for HTN-only instead of 44 — an arithmetic error.",
+    },
+    {
+      id: "dm-venn-select-014",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A GP practice has 150 patients. 80 have high blood pressure, 60 have high cholesterol, and 25 have both.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "High Blood Pressure", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "High Cholesterol",    shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "55", x: 75,  y: 92 },
+              { id: "both",   text: "25", x: 160, y: 92 },
+              { id: "b-only", text: "35", x: 245, y: 92 },
+            ],
+            legend: [{ label: "High Blood Pressure", shape: "circle" }, { label: "High Cholesterol", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "High Blood Pressure", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "High Cholesterol",    shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "80", x: 75,  y: 92 },
+              { id: "both",   text: "25", x: 160, y: 92 },
+              { id: "b-only", text: "60", x: 245, y: 92 },
+            ],
+            legend: [{ label: "High Blood Pressure", shape: "circle" }, { label: "High Cholesterol", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "High Blood Pressure", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "High Cholesterol",    shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "55", x: 75,  y: 92 },
+              { id: "both",   text: "35", x: 160, y: 92 },
+              { id: "b-only", text: "25", x: 245, y: 92 },
+            ],
+            legend: [{ label: "High Blood Pressure", shape: "circle" }, { label: "High Cholesterol", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "High Blood Pressure", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "High Cholesterol",    shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "25", x: 75,  y: 92 },
+              { id: "both",   text: "55", x: 160, y: 92 },
+              { id: "b-only", text: "35", x: 245, y: 92 },
+            ],
+            legend: [{ label: "High Blood Pressure", shape: "circle" }, { label: "High Cholesterol", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "HBP-only = 80 − 25 = 55. HC-only = 60 − 25 = 35. Both = 25. Option A correctly shows 55 | 25 | 35. Option B is the classic trap of using raw totals (80 and 60) as the region values. Option C swaps the HC-only (35) and Both (25). Option D swaps the HBP-only and Both values entirely.",
+    },
+    {
+      id: "dm-venn-select-015",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A year group of 180 junior doctors is selecting surgical speciality preferences.",
+        "92 are interested in cardiothoracic surgery, 35 in plastic surgery, and 78 in transplant surgery.",
+        "15 prefer a speciality combining plastic and transplant surgery.",
+        "Half of those interested in cardiothoracic surgery would also combine it with transplant surgery.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "Cardiothoracic", shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "Plastic",        shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Transplant",     shape: "triangle",  x: 160, y: 80, width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "c-only",  text: "46", x: 175, y: 45  },
+              { id: "p-only",  text: "20", x: 65,  y: 200 },
+              { id: "t-only",  text: "17", x: 290, y: 215 },
+              { id: "c-p",     text: "0",  x: 108, y: 148 },
+              { id: "c-t",     text: "46", x: 230, y: 118 },
+              { id: "p-t",     text: "15", x: 185, y: 215 },
+              { id: "all",     text: "0",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Cardiothoracic", shape: "circle" }, { label: "Plastic", shape: "rectangle" }, { label: "Transplant", shape: "triangle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "Cardiothoracic", shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "Plastic",        shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Transplant",     shape: "triangle",  x: 160, y: 80, width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "c-only",  text: "46", x: 175, y: 45  },
+              { id: "p-only",  text: "20", x: 65,  y: 200 },
+              { id: "t-only",  text: "17", x: 290, y: 215 },
+              { id: "c-p",     text: "0",  x: 108, y: 148 },
+              { id: "c-t",     text: "46", x: 230, y: 118 },
+              { id: "p-t",     text: "15", x: 185, y: 215 },
+              { id: "all",     text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Cardiothoracic", shape: "circle" }, { label: "Plastic", shape: "rectangle" }, { label: "Transplant", shape: "triangle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Cardiothoracic", shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "Plastic",        shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Transplant",     shape: "triangle",  x: 160, y: 80, width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "c-only",  text: "46", x: 175, y: 45  },
+              { id: "p-only",  text: "35", x: 65,  y: 200 },
+              { id: "t-only",  text: "17", x: 290, y: 215 },
+              { id: "c-p",     text: "0",  x: 108, y: 148 },
+              { id: "c-t",     text: "46", x: 230, y: 118 },
+              { id: "p-t",     text: "15", x: 185, y: 215 },
+              { id: "all",     text: "0",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Cardiothoracic", shape: "circle" }, { label: "Plastic", shape: "rectangle" }, { label: "Transplant", shape: "triangle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Cardiothoracic", shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "Plastic",        shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Transplant",     shape: "triangle",  x: 160, y: 80, width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "c-only",  text: "46", x: 175, y: 45  },
+              { id: "p-only",  text: "20", x: 65,  y: 200 },
+              { id: "t-only",  text: "32", x: 290, y: 215 },
+              { id: "c-p",     text: "0",  x: 108, y: 148 },
+              { id: "c-t",     text: "46", x: 230, y: 118 },
+              { id: "p-t",     text: "15", x: 185, y: 215 },
+              { id: "all",     text: "0",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Cardiothoracic", shape: "circle" }, { label: "Plastic", shape: "rectangle" }, { label: "Transplant", shape: "triangle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "Half of 92 cardiothoracic = 46 prefer combining with transplant → C∩T only = 46. C-only = 92 − 46 = 46. P∩T only = 15. P-only = 35 − 15 = 20. T-only = 78 − 46 − 15 = 17. No all-three stated, so all-three = 0. Option A shows these values correctly. Option B adds a spurious all-three value of 5, distorting the counts. Option C uses the raw plastic total (35) as Plastic-only rather than subtracting the P∩T overlap (35 − 15 = 20). Option D uses 32 for Transplant-only instead of 17 — failing to subtract both overlaps.",
+    },
+
+    {
+      id: "dm-venn-select-016",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A hospital surveyed 200 staff about optional training programmes.",
+        "120 completed BLS training, 85 completed Infection Control, and 40 completed both.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "BLS",              shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Infection Control", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "80",  x: 75,  y: 92 },
+              { id: "both",   text: "40",  x: 160, y: 92 },
+              { id: "b-only", text: "45",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "BLS", shape: "circle" }, { label: "Infection Control", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "BLS",              shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Infection Control", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "120", x: 75,  y: 92 },
+              { id: "both",   text: "40",  x: 160, y: 92 },
+              { id: "b-only", text: "85",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "BLS", shape: "circle" }, { label: "Infection Control", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "BLS",              shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Infection Control", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "80",  x: 75,  y: 92 },
+              { id: "both",   text: "45",  x: 160, y: 92 },
+              { id: "b-only", text: "40",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "BLS", shape: "circle" }, { label: "Infection Control", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "BLS",              shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Infection Control", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "40",  x: 75,  y: 92 },
+              { id: "both",   text: "80",  x: 160, y: 92 },
+              { id: "b-only", text: "45",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "BLS", shape: "circle" }, { label: "Infection Control", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "BLS-only = 120 − 40 = 80. Infection Control-only = 85 − 40 = 45. Both = 40. Option A correctly shows 80 | 40 | 45. Option B places the raw totals (120 and 85) as region values. Option C swaps the Both (40) and IC-only (45) values. Option D swaps the BLS-only (80) with the overlap (40).",
+    },
+    {
+      id: "dm-venn-select-017",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A clinic reviewed 160 patients referred for metabolic assessment.",
+        "88 had hypertension, 72 had type 2 diabetes, and 30 had both conditions.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "Hypertension",  shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Type 2 Diabetes", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "58", x: 75,  y: 92 },
+              { id: "both",   text: "30", x: 160, y: 92 },
+              { id: "b-only", text: "42", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Hypertension", shape: "circle" }, { label: "Type 2 Diabetes", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "Hypertension",  shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Type 2 Diabetes", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "88", x: 75,  y: 92 },
+              { id: "both",   text: "30", x: 160, y: 92 },
+              { id: "b-only", text: "72", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Hypertension", shape: "circle" }, { label: "Type 2 Diabetes", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Hypertension",  shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Type 2 Diabetes", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "58", x: 75,  y: 92 },
+              { id: "both",   text: "42", x: 160, y: 92 },
+              { id: "b-only", text: "30", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Hypertension", shape: "circle" }, { label: "Type 2 Diabetes", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Hypertension",  shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Type 2 Diabetes", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "30", x: 75,  y: 92 },
+              { id: "both",   text: "58", x: 160, y: 92 },
+              { id: "b-only", text: "42", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Hypertension", shape: "circle" }, { label: "Type 2 Diabetes", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "HTN-only = 88 − 30 = 58. T2D-only = 72 − 30 = 42. Both = 30. Neither = 160 − (58 + 30 + 42) = 160 − 130 = 30. Option A correctly shows 58 | 30 | 42. Option B places the raw totals (88 and 72) as region values — the classic trap of forgetting to subtract the overlap. Option C swaps the T2D-only (42) and Both (30) values. Option D swaps HTN-only (58) with Both (30).",
+    },
+    {
+      id: "dm-venn-select-018",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "240 medical students were surveyed about extracurricular activities.",
+        "96 are members of the Anatomy Society, 80 are in the Global Health Society, and 32 belong to both.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "Anatomy Society",       shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Global Health Society", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "64", x: 75,  y: 92 },
+              { id: "both",   text: "32", x: 160, y: 92 },
+              { id: "b-only", text: "48", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Anatomy Society", shape: "circle" }, { label: "Global Health Society", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "Anatomy Society",       shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Global Health Society", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "96", x: 75,  y: 92 },
+              { id: "both",   text: "32", x: 160, y: 92 },
+              { id: "b-only", text: "80", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Anatomy Society", shape: "circle" }, { label: "Global Health Society", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Anatomy Society",       shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Global Health Society", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "64", x: 75,  y: 92 },
+              { id: "both",   text: "48", x: 160, y: 92 },
+              { id: "b-only", text: "32", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Anatomy Society", shape: "circle" }, { label: "Global Health Society", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Anatomy Society",       shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Global Health Society", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "32", x: 75,  y: 92 },
+              { id: "both",   text: "64", x: 160, y: 92 },
+              { id: "b-only", text: "48", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Anatomy Society", shape: "circle" }, { label: "Global Health Society", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "Anatomy-only = 96 − 32 = 64. GHS-only = 80 − 32 = 48. Both = 32. Option A correctly shows 64 | 32 | 48. Option B places the raw totals (96 and 80) as region values. Option C swaps the GHS-only (48) and Both (32) values. Option D swaps Anatomy-only (64) with Both (32).",
+    },
+    {
+      id: "dm-venn-select-019",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A hospital audited 180 staff across three optional CPD programmes.",
+        "75 completed Leadership, 60 completed Research Methods, and 55 completed Clinical Governance.",
+        "20 completed both Leadership and Research Methods only. 15 completed both Leadership and Clinical Governance only. 12 completed both Research Methods and Clinical Governance only. 5 completed all three.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "Leadership",         shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "Research Methods",   shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Clinical Governance",shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "l-only",   text: "35", x: 175, y: 45  },
+              { id: "r-only",   text: "23", x: 65,  y: 200 },
+              { id: "cg-only",  text: "23", x: 290, y: 215 },
+              { id: "l-r",      text: "20", x: 108, y: 148 },
+              { id: "l-cg",     text: "15", x: 230, y: 118 },
+              { id: "r-cg",     text: "12", x: 185, y: 215 },
+              { id: "all",      text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Leadership", shape: "circle" }, { label: "Research Methods", shape: "rectangle" }, { label: "Clinical Governance", shape: "triangle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "Leadership",         shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "Research Methods",   shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Clinical Governance",shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "l-only",   text: "75", x: 175, y: 45  },
+              { id: "r-only",   text: "60", x: 65,  y: 200 },
+              { id: "cg-only",  text: "55", x: 290, y: 215 },
+              { id: "l-r",      text: "20", x: 108, y: 148 },
+              { id: "l-cg",     text: "15", x: 230, y: 118 },
+              { id: "r-cg",     text: "12", x: 185, y: 215 },
+              { id: "all",      text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Leadership", shape: "circle" }, { label: "Research Methods", shape: "rectangle" }, { label: "Clinical Governance", shape: "triangle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Leadership",         shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "Research Methods",   shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Clinical Governance",shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "l-only",   text: "35", x: 175, y: 45  },
+              { id: "r-only",   text: "23", x: 65,  y: 200 },
+              { id: "cg-only",  text: "23", x: 290, y: 215 },
+              { id: "l-r",      text: "20", x: 108, y: 148 },
+              { id: "l-cg",     text: "15", x: 230, y: 118 },
+              { id: "r-cg",     text: "12", x: 185, y: 215 },
+              { id: "all",      text: "15", x: 182, y: 165 },
+            ],
+            legend: [{ label: "Leadership", shape: "circle" }, { label: "Research Methods", shape: "rectangle" }, { label: "Clinical Governance", shape: "triangle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Leadership",         shape: "circle",    x: 100, y: 10, width: 170, height: 160 },
+              { id: "b", label: "Research Methods",   shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Clinical Governance",shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "l-only",   text: "35", x: 175, y: 45  },
+              { id: "r-only",   text: "28", x: 65,  y: 200 },
+              { id: "cg-only",  text: "23", x: 290, y: 215 },
+              { id: "l-r",      text: "20", x: 108, y: 148 },
+              { id: "l-cg",     text: "15", x: 230, y: 118 },
+              { id: "r-cg",     text: "12", x: 185, y: 215 },
+              { id: "all",      text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Leadership", shape: "circle" }, { label: "Research Methods", shape: "rectangle" }, { label: "Clinical Governance", shape: "triangle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "L-only = 75 − 20 − 15 − 5 = 35. R-only = 60 − 20 − 12 − 5 = 23. CG-only = 55 − 15 − 12 − 5 = 23. All-three = 5. Option A shows these correct values. Option B uses raw programme totals (75, 60, 55) in the 'only' regions. Option C uses 15 for all-three instead of 5 — a confusion with the L∩CG-only value. Option D uses 28 for R-only (60 − 20 − 12 = 28, forgetting to subtract the all-three component of 5).",
+    },
+    {
+      id: "dm-venn-select-020",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A medical school surveyed 200 postgraduate students.",
+        "90 had published a research paper, 105 had presented at a conference, and 45 had done both.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option A",
+            shapes: [
+              { id: "a", label: "Published",   shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Presented",   shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "45",  x: 75,  y: 92 },
+              { id: "both",   text: "45",  x: 160, y: 92 },
+              { id: "b-only", text: "60",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "Published", shape: "circle" }, { label: "Presented", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option B",
+            shapes: [
+              { id: "a", label: "Published",   shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Presented",   shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "90",  x: 75,  y: 92 },
+              { id: "both",   text: "45",  x: 160, y: 92 },
+              { id: "b-only", text: "105", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Published", shape: "circle" }, { label: "Presented", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option C",
+            shapes: [
+              { id: "a", label: "Published",   shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Presented",   shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "45",  x: 75,  y: 92 },
+              { id: "both",   text: "60",  x: 160, y: 92 },
+              { id: "b-only", text: "45",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "Published", shape: "circle" }, { label: "Presented", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram",
+            title: "Option D",
+            shapes: [
+              { id: "a", label: "Published",   shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Presented",   shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "60",  x: 75,  y: 92 },
+              { id: "both",   text: "30",  x: 160, y: 92 },
+              { id: "b-only", text: "60",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "Published", shape: "circle" }, { label: "Presented", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "Published-only = 90 − 45 = 45. Presented-only = 105 − 45 = 60. Both = 45. Option A correctly shows 45 | 45 | 60. Option B uses the raw totals (90 and 105) as region values. Option C uses 60 as the overlap rather than 45, and 45 as Presented-only rather than 60 — swapping the two values. Option D halves the overlap to 30 and uses 60 for both 'only' regions, which is internally inconsistent (60+30+60=150, leaving 50 unaccounted of the 200 total).",
+    },
+
+    {
+      id: "dm-venn-select-021",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A medical school surveyed 300 students about their extracurricular involvement.",
+        "85 students participate in a Research Society, 70 in a Volunteering Scheme, and 60 in a Sports Club.",
+        "22 students participate in both Research and Volunteering only. 15 participate in both Research and Sports only. 18 participate in both Volunteering and Sports only. 8 participate in all three.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option A",
+            shapes: [
+              { id: "a", label: "Research",     shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Volunteering", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Sports",       shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "r-only",  text: "40", x: 175, y: 45  },
+              { id: "v-only",  text: "22", x: 65,  y: 200 },
+              { id: "s-only",  text: "19", x: 290, y: 215 },
+              { id: "r-v",     text: "22", x: 108, y: 148 },
+              { id: "r-s",     text: "15", x: 230, y: 118 },
+              { id: "v-s",     text: "18", x: 185, y: 215 },
+              { id: "all",     text: "8",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Research", shape: "circle" }, { label: "Volunteering", shape: "rectangle" }, { label: "Sports", shape: "triangle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option B",
+            shapes: [
+              { id: "a", label: "Research",     shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Volunteering", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Sports",       shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "r-only",  text: "85", x: 175, y: 45  },
+              { id: "v-only",  text: "70", x: 65,  y: 200 },
+              { id: "s-only",  text: "60", x: 290, y: 215 },
+              { id: "r-v",     text: "22", x: 108, y: 148 },
+              { id: "r-s",     text: "15", x: 230, y: 118 },
+              { id: "v-s",     text: "18", x: 185, y: 215 },
+              { id: "all",     text: "8",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Research", shape: "circle" }, { label: "Volunteering", shape: "rectangle" }, { label: "Sports", shape: "triangle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option C",
+            shapes: [
+              { id: "a", label: "Research",     shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Volunteering", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Sports",       shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "r-only",  text: "48", x: 175, y: 45  },
+              { id: "v-only",  text: "30", x: 65,  y: 200 },
+              { id: "s-only",  text: "27", x: 290, y: 215 },
+              { id: "r-v",     text: "22", x: 108, y: 148 },
+              { id: "r-s",     text: "15", x: 230, y: 118 },
+              { id: "v-s",     text: "18", x: 185, y: 215 },
+              { id: "all",     text: "8",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Research", shape: "circle" }, { label: "Volunteering", shape: "rectangle" }, { label: "Sports", shape: "triangle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option D",
+            shapes: [
+              { id: "a", label: "Research",     shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Volunteering", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Sports",       shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "r-only",  text: "40", x: 175, y: 45  },
+              { id: "v-only",  text: "22", x: 65,  y: 200 },
+              { id: "s-only",  text: "19", x: 290, y: 215 },
+              { id: "r-v",     text: "22", x: 108, y: 148 },
+              { id: "r-s",     text: "15", x: 230, y: 118 },
+              { id: "v-s",     text: "18", x: 185, y: 215 },
+              { id: "all",     text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Research", shape: "circle" }, { label: "Volunteering", shape: "rectangle" }, { label: "Sports", shape: "triangle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "R-only = 85 − 22 − 15 − 8 = 40. V-only = 70 − 22 − 18 − 8 = 22. S-only = 60 − 15 − 18 − 8 = 19. All-three = 8. Option A shows these correct values. Option B puts the raw set totals (85, 70, 60) in the 'only' regions — forgetting to subtract overlaps. Option C subtracts the pairwise overlaps but forgets to subtract the all-three value (e.g. R-only = 85 − 22 − 15 = 48 instead of 40). Option D uses 5 as the all-three value instead of the stated 8.",
+    },
+    {
+      id: "dm-venn-select-022",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "An NHS trust audited 250 clinical staff members about two professional development roles.",
+        "110 staff hold a clinical leadership position, 80 are research-active, and 35 hold both roles.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option A",
+            shapes: [
+              { id: "a", label: "Clinical Leadership", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Research Active",     shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "75", x: 75,  y: 92 },
+              { id: "both",   text: "35", x: 160, y: 92 },
+              { id: "b-only", text: "45", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Clinical Leadership", shape: "circle" }, { label: "Research Active", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option B",
+            shapes: [
+              { id: "a", label: "Clinical Leadership", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Research Active",     shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "110", x: 75,  y: 92 },
+              { id: "both",   text: "35",  x: 160, y: 92 },
+              { id: "b-only", text: "80",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "Clinical Leadership", shape: "circle" }, { label: "Research Active", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option C",
+            shapes: [
+              { id: "a", label: "Clinical Leadership", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Research Active",     shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "35", x: 75,  y: 92 },
+              { id: "both",   text: "75", x: 160, y: 92 },
+              { id: "b-only", text: "45", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Clinical Leadership", shape: "circle" }, { label: "Research Active", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option D",
+            shapes: [
+              { id: "a", label: "Clinical Leadership", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Research Active",     shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "75", x: 75,  y: 92 },
+              { id: "both",   text: "45", x: 160, y: 92 },
+              { id: "b-only", text: "35", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Clinical Leadership", shape: "circle" }, { label: "Research Active", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "CL-only = 110 − 35 = 75. RA-only = 80 − 35 = 45. Both = 35. Option A correctly shows 75 | 35 | 45. Option B places the raw set totals (110 and 80) as the 'only' region values. Option C swaps CL-only (75) and Both (35). Option D swaps the RA-only (45) and Both (35) values — using 45 as the overlap and 35 as the RA-only region.",
+    },
+    {
+      id: "dm-venn-select-023",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A community health screening programme assessed 150 participants for three conditions.",
+        "60 have hypertension, 50 have type 2 diabetes, and 40 have obesity.",
+        "14 have both hypertension and diabetes only. 10 have both hypertension and obesity only. 8 have both diabetes and obesity only. 5 have all three conditions.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option A",
+            shapes: [
+              { id: "a", label: "Hypertension", shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Diabetes",     shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Obesity",      shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "h-only",  text: "31", x: 175, y: 45  },
+              { id: "d-only",  text: "23", x: 65,  y: 200 },
+              { id: "o-only",  text: "17", x: 290, y: 215 },
+              { id: "h-d",     text: "14", x: 108, y: 148 },
+              { id: "h-o",     text: "10", x: 230, y: 118 },
+              { id: "d-o",     text: "8",  x: 185, y: 215 },
+              { id: "all",     text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Hypertension", shape: "circle" }, { label: "Diabetes", shape: "rectangle" }, { label: "Obesity", shape: "triangle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option B",
+            shapes: [
+              { id: "a", label: "Hypertension", shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Diabetes",     shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Obesity",      shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "h-only",  text: "60", x: 175, y: 45  },
+              { id: "d-only",  text: "50", x: 65,  y: 200 },
+              { id: "o-only",  text: "40", x: 290, y: 215 },
+              { id: "h-d",     text: "14", x: 108, y: 148 },
+              { id: "h-o",     text: "10", x: 230, y: 118 },
+              { id: "d-o",     text: "8",  x: 185, y: 215 },
+              { id: "all",     text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Hypertension", shape: "circle" }, { label: "Diabetes", shape: "rectangle" }, { label: "Obesity", shape: "triangle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option C",
+            shapes: [
+              { id: "a", label: "Hypertension", shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Diabetes",     shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Obesity",      shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "h-only",  text: "36", x: 175, y: 45  },
+              { id: "d-only",  text: "28", x: 65,  y: 200 },
+              { id: "o-only",  text: "22", x: 290, y: 215 },
+              { id: "h-d",     text: "14", x: 108, y: 148 },
+              { id: "h-o",     text: "10", x: 230, y: 118 },
+              { id: "d-o",     text: "8",  x: 185, y: 215 },
+              { id: "all",     text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Hypertension", shape: "circle" }, { label: "Diabetes", shape: "rectangle" }, { label: "Obesity", shape: "triangle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option D",
+            shapes: [
+              { id: "a", label: "Hypertension", shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Diabetes",     shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Obesity",      shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "h-only",  text: "31", x: 175, y: 45  },
+              { id: "d-only",  text: "23", x: 65,  y: 200 },
+              { id: "o-only",  text: "17", x: 290, y: 215 },
+              { id: "h-d",     text: "14", x: 108, y: 148 },
+              { id: "h-o",     text: "10", x: 230, y: 118 },
+              { id: "d-o",     text: "8",  x: 185, y: 215 },
+              { id: "all",     text: "8",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Hypertension", shape: "circle" }, { label: "Diabetes", shape: "rectangle" }, { label: "Obesity", shape: "triangle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "H-only = 60 − 14 − 10 − 5 = 31. D-only = 50 − 14 − 8 − 5 = 23. O-only = 40 − 10 − 8 − 5 = 17. All-three = 5. Option A shows the correct values. Option B uses raw condition totals in the 'only' regions. Option C subtracts only pairwise overlaps without the all-three: H-only = 60 − 14 − 10 = 36. Option D replaces all-three (5) with 8 — confusing it with the D∩O-only value.",
+    },
+    {
+      id: "dm-venn-select-024",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "An emergency department audited 180 nursing staff about two advanced life support qualifications.",
+        "96 nurses hold Advanced Life Support (ALS) certification and 72 hold Advanced Trauma Life Support (ATLS) certification.",
+        "30 nurses hold both qualifications.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option A",
+            shapes: [
+              { id: "a", label: "ALS",  shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "ATLS", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "66", x: 75,  y: 92 },
+              { id: "both",   text: "30", x: 160, y: 92 },
+              { id: "b-only", text: "42", x: 245, y: 92 },
+            ],
+            legend: [{ label: "ALS", shape: "circle" }, { label: "ATLS", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option B",
+            shapes: [
+              { id: "a", label: "ALS",  shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "ATLS", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "96", x: 75,  y: 92 },
+              { id: "both",   text: "30", x: 160, y: 92 },
+              { id: "b-only", text: "72", x: 245, y: 92 },
+            ],
+            legend: [{ label: "ALS", shape: "circle" }, { label: "ATLS", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option C",
+            shapes: [
+              { id: "a", label: "ALS",  shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "ATLS", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "42", x: 75,  y: 92 },
+              { id: "both",   text: "30", x: 160, y: 92 },
+              { id: "b-only", text: "66", x: 245, y: 92 },
+            ],
+            legend: [{ label: "ALS", shape: "circle" }, { label: "ATLS", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option D",
+            shapes: [
+              { id: "a", label: "ALS",  shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "ATLS", shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "66", x: 75,  y: 92 },
+              { id: "both",   text: "42", x: 160, y: 92 },
+              { id: "b-only", text: "30", x: 245, y: 92 },
+            ],
+            legend: [{ label: "ALS", shape: "circle" }, { label: "ATLS", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "ALS-only = 96 − 30 = 66. ATLS-only = 72 − 30 = 42. Both = 30. Option A correctly shows 66 | 30 | 42. Option B places raw totals (96 and 72) as region values. Option C swaps the ALS-only and ATLS-only values (66 becomes ATLS-only and 42 becomes ALS-only). Option D moves the ATLS-only value (42) into the overlap region and places 30 as ATLS-only.",
+    },
+    {
+      id: "dm-venn-select-025",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A medical school reviewed 200 applicants shortlisted for interview.",
+        "100 achieved AAA at A-level, 70 had at least 100 hours of healthcare work experience, and 65 scored above the national UCAT average.",
+        "18 met both the AAA and work experience criteria only. 14 met both AAA and UCAT criteria only. 10 met both work experience and UCAT criteria only. 6 met all three criteria.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option A",
+            shapes: [
+              { id: "a", label: "AAA Grades",   shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Work Exp",      shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "High UCAT",     shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "a-only",  text: "62", x: 175, y: 45  },
+              { id: "b-only",  text: "36", x: 65,  y: 200 },
+              { id: "c-only",  text: "35", x: 290, y: 215 },
+              { id: "a-b",     text: "18", x: 108, y: 148 },
+              { id: "a-c",     text: "14", x: 230, y: 118 },
+              { id: "b-c",     text: "10", x: 185, y: 215 },
+              { id: "all",     text: "6",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "AAA Grades", shape: "circle" }, { label: "Work Exp", shape: "rectangle" }, { label: "High UCAT", shape: "triangle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option B",
+            shapes: [
+              { id: "a", label: "AAA Grades",   shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Work Exp",      shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "High UCAT",     shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "a-only",  text: "100", x: 175, y: 45  },
+              { id: "b-only",  text: "70",  x: 65,  y: 200 },
+              { id: "c-only",  text: "65",  x: 290, y: 215 },
+              { id: "a-b",     text: "18",  x: 108, y: 148 },
+              { id: "a-c",     text: "14",  x: 230, y: 118 },
+              { id: "b-c",     text: "10",  x: 185, y: 215 },
+              { id: "all",     text: "6",   x: 182, y: 165 },
+            ],
+            legend: [{ label: "AAA Grades", shape: "circle" }, { label: "Work Exp", shape: "rectangle" }, { label: "High UCAT", shape: "triangle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option C",
+            shapes: [
+              { id: "a", label: "AAA Grades",   shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Work Exp",      shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "High UCAT",     shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "a-only",  text: "68", x: 175, y: 45  },
+              { id: "b-only",  text: "42", x: 65,  y: 200 },
+              { id: "c-only",  text: "41", x: 290, y: 215 },
+              { id: "a-b",     text: "18", x: 108, y: 148 },
+              { id: "a-c",     text: "14", x: 230, y: 118 },
+              { id: "b-c",     text: "10", x: 185, y: 215 },
+              { id: "all",     text: "6",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "AAA Grades", shape: "circle" }, { label: "Work Exp", shape: "rectangle" }, { label: "High UCAT", shape: "triangle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option D",
+            shapes: [
+              { id: "a", label: "AAA Grades",   shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Work Exp",      shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "High UCAT",     shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "a-only",  text: "62", x: 175, y: 45  },
+              { id: "b-only",  text: "36", x: 65,  y: 200 },
+              { id: "c-only",  text: "35", x: 290, y: 215 },
+              { id: "a-b",     text: "18", x: 108, y: 148 },
+              { id: "a-c",     text: "14", x: 230, y: 118 },
+              { id: "b-c",     text: "10", x: 185, y: 215 },
+              { id: "all",     text: "10", x: 182, y: 165 },
+            ],
+            legend: [{ label: "AAA Grades", shape: "circle" }, { label: "Work Exp", shape: "rectangle" }, { label: "High UCAT", shape: "triangle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "AAA-only = 100 − 18 − 14 − 6 = 62. WE-only = 70 − 18 − 10 − 6 = 36. UCAT-only = 65 − 14 − 10 − 6 = 35. All-three = 6. Option A is correct. Option B places raw criterion totals in the 'only' regions. Option C subtracts only the pairwise overlaps without all-three: AAA-only = 100 − 18 − 14 = 68. Option D changes all-three from 6 to 10 — confusing it with the WE∩UCAT-only value.",
+    },
+    {
+      id: "dm-venn-select-026",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A community pharmacy surveyed 300 regular customers about two health services they had used in the past six months.",
+        "140 customers had used the prescription collection service, 100 had attended a health screening clinic, and 45 had used both services.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option A",
+            shapes: [
+              { id: "a", label: "Prescription Service", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Health Screening",     shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "95",  x: 75,  y: 92 },
+              { id: "both",   text: "45",  x: 160, y: 92 },
+              { id: "b-only", text: "55",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "Prescription Service", shape: "circle" }, { label: "Health Screening", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option B",
+            shapes: [
+              { id: "a", label: "Prescription Service", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Health Screening",     shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "140", x: 75,  y: 92 },
+              { id: "both",   text: "45",  x: 160, y: 92 },
+              { id: "b-only", text: "100", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Prescription Service", shape: "circle" }, { label: "Health Screening", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option C",
+            shapes: [
+              { id: "a", label: "Prescription Service", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Health Screening",     shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "55",  x: 75,  y: 92 },
+              { id: "both",   text: "45",  x: 160, y: 92 },
+              { id: "b-only", text: "95",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "Prescription Service", shape: "circle" }, { label: "Health Screening", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option D",
+            shapes: [
+              { id: "a", label: "Prescription Service", shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Health Screening",     shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "95",  x: 75,  y: 92 },
+              { id: "both",   text: "55",  x: 160, y: 92 },
+              { id: "b-only", text: "45",  x: 245, y: 92 },
+            ],
+            legend: [{ label: "Prescription Service", shape: "circle" }, { label: "Health Screening", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "Prescription-only = 140 − 45 = 95. HealthScreening-only = 100 − 45 = 55. Both = 45. Option A shows 95 | 45 | 55 — correct. Option B places the raw service totals as region values. Option C swaps the two 'only' values (putting Prescription-only where HS-only should be and vice versa). Option D swaps the HS-only (55) with the overlap (45).",
+    },
+    {
+      id: "dm-venn-select-027",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A foundation year programme reviewed 120 FY1 doctors who each completed at least one rotation.",
+        "65 completed a cardiology rotation, 55 a respiratory medicine rotation, and 50 a general surgery rotation.",
+        "18 completed both cardiology and respiratory only. 12 completed both cardiology and surgery only. 10 completed both respiratory and surgery only. 6 completed all three rotations.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option A",
+            shapes: [
+              { id: "a", label: "Cardiology",  shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Respiratory", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Gen Surgery", shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "c-only",  text: "29", x: 175, y: 45  },
+              { id: "r-only",  text: "21", x: 65,  y: 200 },
+              { id: "gs-only", text: "22", x: 290, y: 215 },
+              { id: "c-r",     text: "18", x: 108, y: 148 },
+              { id: "c-gs",    text: "12", x: 230, y: 118 },
+              { id: "r-gs",    text: "10", x: 185, y: 215 },
+              { id: "all",     text: "6",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Cardiology", shape: "circle" }, { label: "Respiratory", shape: "rectangle" }, { label: "Gen Surgery", shape: "triangle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option B",
+            shapes: [
+              { id: "a", label: "Cardiology",  shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Respiratory", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Gen Surgery", shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "c-only",  text: "65", x: 175, y: 45  },
+              { id: "r-only",  text: "55", x: 65,  y: 200 },
+              { id: "gs-only", text: "50", x: 290, y: 215 },
+              { id: "c-r",     text: "18", x: 108, y: 148 },
+              { id: "c-gs",    text: "12", x: 230, y: 118 },
+              { id: "r-gs",    text: "10", x: 185, y: 215 },
+              { id: "all",     text: "6",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Cardiology", shape: "circle" }, { label: "Respiratory", shape: "rectangle" }, { label: "Gen Surgery", shape: "triangle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option C",
+            shapes: [
+              { id: "a", label: "Cardiology",  shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Respiratory", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Gen Surgery", shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "c-only",  text: "35", x: 175, y: 45  },
+              { id: "r-only",  text: "27", x: 65,  y: 200 },
+              { id: "gs-only", text: "28", x: 290, y: 215 },
+              { id: "c-r",     text: "18", x: 108, y: 148 },
+              { id: "c-gs",    text: "12", x: 230, y: 118 },
+              { id: "r-gs",    text: "10", x: 185, y: 215 },
+              { id: "all",     text: "6",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Cardiology", shape: "circle" }, { label: "Respiratory", shape: "rectangle" }, { label: "Gen Surgery", shape: "triangle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option D",
+            shapes: [
+              { id: "a", label: "Cardiology",  shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Respiratory", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Gen Surgery", shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "c-only",  text: "29", x: 175, y: 45  },
+              { id: "r-only",  text: "21", x: 65,  y: 200 },
+              { id: "gs-only", text: "22", x: 290, y: 215 },
+              { id: "c-r",     text: "18", x: 108, y: 148 },
+              { id: "c-gs",    text: "12", x: 230, y: 118 },
+              { id: "r-gs",    text: "10", x: 185, y: 215 },
+              { id: "all",     text: "12", x: 182, y: 165 },
+            ],
+            legend: [{ label: "Cardiology", shape: "circle" }, { label: "Respiratory", shape: "rectangle" }, { label: "Gen Surgery", shape: "triangle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "C-only = 65 − 18 − 12 − 6 = 29. R-only = 55 − 18 − 10 − 6 = 21. GS-only = 50 − 12 − 10 − 6 = 22. All-three = 6. Option A is correct. Option B uses raw rotation totals. Option C subtracts only the pairwise overlaps (ignoring all-three): C-only = 65 − 18 − 12 = 35. Option D replaces all-three (6) with 12 — confusing it with the C∩GS-only value.",
+    },
+    {
+      id: "dm-venn-select-028",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "medium"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A public health survey of 500 adults assessed adherence to two healthy lifestyle behaviours.",
+        "280 adults exercise regularly and 220 follow a Mediterranean diet. 120 adults do both.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option A",
+            shapes: [
+              { id: "a", label: "Regular Exercise",    shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Mediterranean Diet",  shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "160", x: 75,  y: 92 },
+              { id: "both",   text: "120", x: 160, y: 92 },
+              { id: "b-only", text: "100", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Regular Exercise", shape: "circle" }, { label: "Mediterranean Diet", shape: "circle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option B",
+            shapes: [
+              { id: "a", label: "Regular Exercise",    shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Mediterranean Diet",  shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "280", x: 75,  y: 92 },
+              { id: "both",   text: "120", x: 160, y: 92 },
+              { id: "b-only", text: "220", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Regular Exercise", shape: "circle" }, { label: "Mediterranean Diet", shape: "circle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option C",
+            shapes: [
+              { id: "a", label: "Regular Exercise",    shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Mediterranean Diet",  shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "120", x: 75,  y: 92 },
+              { id: "both",   text: "160", x: 160, y: 92 },
+              { id: "b-only", text: "100", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Regular Exercise", shape: "circle" }, { label: "Mediterranean Diet", shape: "circle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option D",
+            shapes: [
+              { id: "a", label: "Regular Exercise",    shape: "circle", x: 20, y: 20, width: 160, height: 145 },
+              { id: "b", label: "Mediterranean Diet",  shape: "circle", x: 125, y: 20, width: 160, height: 145 },
+            ],
+            regionLabels: [
+              { id: "a-only", text: "160", x: 75,  y: 92 },
+              { id: "both",   text: "100", x: 160, y: 92 },
+              { id: "b-only", text: "120", x: 245, y: 92 },
+            ],
+            legend: [{ label: "Regular Exercise", shape: "circle" }, { label: "Mediterranean Diet", shape: "circle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "Exercise-only = 280 − 120 = 160. MedDiet-only = 220 − 120 = 100. Both = 120. Option A correctly shows 160 | 120 | 100. Option B uses raw totals (280 and 220). Option C swaps Exercise-only (160) with Both (120). Option D swaps MedDiet-only (100) and Both (120), placing 100 as the overlap and 120 as MedDiet-only.",
+    },
+    {
+      id: "dm-venn-select-029",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A nursing school surveyed 180 students in their final year about clinical placements completed.",
+        "80 students completed an acute care placement, 75 a community placement, and 60 a mental health placement.",
+        "15 completed both acute and community only. 10 completed both acute and mental health only. 12 completed both community and mental health only. 5 completed all three.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option A",
+            shapes: [
+              { id: "a", label: "Acute Care",    shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Community",     shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Mental Health", shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "ac-only", text: "50", x: 175, y: 45  },
+              { id: "cm-only", text: "43", x: 65,  y: 200 },
+              { id: "mh-only", text: "33", x: 290, y: 215 },
+              { id: "ac-cm",   text: "15", x: 108, y: 148 },
+              { id: "ac-mh",   text: "10", x: 230, y: 118 },
+              { id: "cm-mh",   text: "12", x: 185, y: 215 },
+              { id: "all",     text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Acute Care", shape: "circle" }, { label: "Community", shape: "rectangle" }, { label: "Mental Health", shape: "triangle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option B",
+            shapes: [
+              { id: "a", label: "Acute Care",    shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Community",     shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Mental Health", shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "ac-only", text: "80", x: 175, y: 45  },
+              { id: "cm-only", text: "75", x: 65,  y: 200 },
+              { id: "mh-only", text: "60", x: 290, y: 215 },
+              { id: "ac-cm",   text: "15", x: 108, y: 148 },
+              { id: "ac-mh",   text: "10", x: 230, y: 118 },
+              { id: "cm-mh",   text: "12", x: 185, y: 215 },
+              { id: "all",     text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Acute Care", shape: "circle" }, { label: "Community", shape: "rectangle" }, { label: "Mental Health", shape: "triangle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option C",
+            shapes: [
+              { id: "a", label: "Acute Care",    shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Community",     shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Mental Health", shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "ac-only", text: "55", x: 175, y: 45  },
+              { id: "cm-only", text: "48", x: 65,  y: 200 },
+              { id: "mh-only", text: "38", x: 290, y: 215 },
+              { id: "ac-cm",   text: "15", x: 108, y: 148 },
+              { id: "ac-mh",   text: "10", x: 230, y: 118 },
+              { id: "cm-mh",   text: "12", x: 185, y: 215 },
+              { id: "all",     text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "Acute Care", shape: "circle" }, { label: "Community", shape: "rectangle" }, { label: "Mental Health", shape: "triangle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option D",
+            shapes: [
+              { id: "a", label: "Acute Care",    shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Community",     shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Mental Health", shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "ac-only", text: "50", x: 175, y: 45  },
+              { id: "cm-only", text: "43", x: 65,  y: 200 },
+              { id: "mh-only", text: "33", x: 290, y: 215 },
+              { id: "ac-cm",   text: "15", x: 108, y: 148 },
+              { id: "ac-mh",   text: "10", x: 230, y: 118 },
+              { id: "cm-mh",   text: "12", x: 185, y: 215 },
+              { id: "all",     text: "10", x: 182, y: 165 },
+            ],
+            legend: [{ label: "Acute Care", shape: "circle" }, { label: "Community", shape: "rectangle" }, { label: "Mental Health", shape: "triangle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "AC-only = 80 − 15 − 10 − 5 = 50. CM-only = 75 − 15 − 12 − 5 = 43. MH-only = 60 − 10 − 12 − 5 = 33. All-three = 5. Option A is correct. Option B uses the raw placement totals (80, 75, 60). Option C subtracts only the two pairwise overlaps per set without the all-three: AC-only = 80 − 15 − 10 = 55. Option D changes all-three to 10 — confusing it with the AC∩MH-only value.",
+    },
+    {
+      id: "dm-venn-select-030",
+      section: "dm",
+      subtype: "dm-venn-select",
+      tags: ["set-based", "data-display", "hard"],
+      title: "Decision Making Practice",
+      leftTitle: "Diagram",
+      stimulus: [
+        "A hospital trust with 200 staff members reviewed attendance at three mandatory training sessions.",
+        "95 staff attended CPR training, 70 attended a Safeguarding update, and 60 attended a Fire Safety briefing.",
+        "20 attended both CPR and Safeguarding only. 15 attended both CPR and Fire Safety only. 10 attended both Safeguarding and Fire Safety only. 5 attended all three sessions.",
+      ],
+      question: "Which of the following diagrams best represents the data?",
+      options: [
+        {
+          key: "A",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option A",
+            shapes: [
+              { id: "a", label: "CPR",          shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Safeguarding", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Fire Safety",  shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "cpr-only", text: "55", x: 175, y: 45  },
+              { id: "sg-only",  text: "35", x: 65,  y: 200 },
+              { id: "fs-only",  text: "30", x: 290, y: 215 },
+              { id: "cpr-sg",   text: "20", x: 108, y: 148 },
+              { id: "cpr-fs",   text: "15", x: 230, y: 118 },
+              { id: "sg-fs",    text: "10", x: 185, y: 215 },
+              { id: "all",      text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "CPR", shape: "circle" }, { label: "Safeguarding", shape: "rectangle" }, { label: "Fire Safety", shape: "triangle" }],
+          },
+        },
+        {
+          key: "B",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option B",
+            shapes: [
+              { id: "a", label: "CPR",          shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Safeguarding", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Fire Safety",  shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "cpr-only", text: "95", x: 175, y: 45  },
+              { id: "sg-only",  text: "70", x: 65,  y: 200 },
+              { id: "fs-only",  text: "60", x: 290, y: 215 },
+              { id: "cpr-sg",   text: "20", x: 108, y: 148 },
+              { id: "cpr-fs",   text: "15", x: 230, y: 118 },
+              { id: "sg-fs",    text: "10", x: 185, y: 215 },
+              { id: "all",      text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "CPR", shape: "circle" }, { label: "Safeguarding", shape: "rectangle" }, { label: "Fire Safety", shape: "triangle" }],
+          },
+        },
+        {
+          key: "C",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option C",
+            shapes: [
+              { id: "a", label: "CPR",          shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Safeguarding", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Fire Safety",  shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "cpr-only", text: "60", x: 175, y: 45  },
+              { id: "sg-only",  text: "40", x: 65,  y: 200 },
+              { id: "fs-only",  text: "35", x: 290, y: 215 },
+              { id: "cpr-sg",   text: "20", x: 108, y: 148 },
+              { id: "cpr-fs",   text: "15", x: 230, y: 118 },
+              { id: "sg-fs",    text: "10", x: 185, y: 215 },
+              { id: "all",      text: "5",  x: 182, y: 165 },
+            ],
+            legend: [{ label: "CPR", shape: "circle" }, { label: "Safeguarding", shape: "rectangle" }, { label: "Fire Safety", shape: "triangle" }],
+          },
+        },
+        {
+          key: "D",
+          text: "",
+          visual: {
+            type: "set-diagram", title: "Option D",
+            shapes: [
+              { id: "a", label: "CPR",          shape: "circle",    x: 100, y: 10,  width: 170, height: 160 },
+              { id: "b", label: "Safeguarding", shape: "rectangle", x: 30,  y: 100, width: 170, height: 155 },
+              { id: "c", label: "Fire Safety",  shape: "triangle",  x: 160, y: 80,  width: 175, height: 175 },
+            ],
+            regionLabels: [
+              { id: "cpr-only", text: "55", x: 175, y: 45  },
+              { id: "sg-only",  text: "35", x: 65,  y: 200 },
+              { id: "fs-only",  text: "30", x: 290, y: 215 },
+              { id: "cpr-sg",   text: "20", x: 108, y: 148 },
+              { id: "cpr-fs",   text: "15", x: 230, y: 118 },
+              { id: "sg-fs",    text: "10", x: 185, y: 215 },
+              { id: "all",      text: "20", x: 182, y: 165 },
+            ],
+            legend: [{ label: "CPR", shape: "circle" }, { label: "Safeguarding", shape: "rectangle" }, { label: "Fire Safety", shape: "triangle" }],
+          },
+        },
+      ],
+      answer: "A",
+      explanation:
+        "CPR-only = 95 − 20 − 15 − 5 = 55. SG-only = 70 − 20 − 10 − 5 = 35. FS-only = 60 − 15 − 10 − 5 = 30. All-three = 5. Option A is correct. Option B places the raw training totals (95, 70, 60) in the 'only' regions. Option C subtracts only the pairwise overlaps without all-three: CPR-only = 95 − 20 − 15 = 60. Option D replaces all-three (5) with 20 — confusing it with the CPR∩SG-only value.",
+    },
+
     {
       id: "dm-probability-001",
       section: "dm",

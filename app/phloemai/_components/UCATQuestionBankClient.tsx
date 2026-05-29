@@ -2379,12 +2379,12 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
         {visual.regionLabels.map((label) => (
           <g key={label.id}>
             <rect
-              x={label.x - 12}
-              y={label.y - 10}
-              width="24"
-              height="20"
-              rx="10"
-              fill="rgba(255,255,255,0.84)"
+              x={label.x - 14}
+              y={label.y - 11}
+              width="28"
+              height="22"
+              rx="11"
+              fill="white"
             />
             <text
               x={label.x}
@@ -2549,12 +2549,12 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             {visual.regionLabels.map((label) => (
               <g key={label.id}>
                 <rect
-                  x={label.x - 13}
-                  y={label.y - 11}
-                  width="26"
-                  height="22"
-                  rx="11"
-                  fill="rgba(255,255,255,0.86)"
+                  x={label.x - 17}
+                  y={label.y - 13}
+                  width="34"
+                  height="26"
+                  rx="13"
+                  fill="white"
                 />
                 <text
                   x={label.x}
