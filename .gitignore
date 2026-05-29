@@ -47,6 +47,11 @@ next-env.d.ts
 
 # local database/cache files
 *.sqlite
+
+# script backup files
+*.backup
+*.ts.backup
+*.ts.jargon-backup
 *.db
 
 # system junk

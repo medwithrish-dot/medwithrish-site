@@ -1561,12 +1561,39 @@ function shuffleList<T>(items: T[]) {
   return shuffled;
 }
 
+function buildSjtPracticeQuestionSet(
+  questions: UCATQuestion[],
+  targetCount: number
+): UCATQuestion[] {
+  // Group by setId so every scenario's questions stay together
+  const setMap = new Map<string, UCATQuestion[]>();
+  for (const q of questions) {
+    const key = q.setId ?? q.id;
+    const existing = setMap.get(key) ?? [];
+    existing.push(q);
+    setMap.set(key, existing);
+  }
+
+  const sets = shuffleList(Array.from(setMap.values()));
+  const result: UCATQuestion[] = [];
+  for (const set of sets) {
+    if (result.length >= targetCount) break;
+    result.push(...set);
+  }
+  return result;
+}
+
 function buildRandomPracticeQuestionSet(
   questions: UCATQuestion[],
   questionCount: number
 ) {
   const targetCount = Math.max(0, Math.min(questionCount, questions.length));
   if (targetCount === 0) return [];
+
+  // SJT questions must be served as complete scenario sets
+  if (questions[0]?.section === "sjt") {
+    return buildSjtPracticeQuestionSet(questions, targetCount);
+  }
 
   const bucketsBySubtype = new Map<UCATSubtypeId, UCATQuestion[]>();
   questions.forEach((question) => {
@@ -10280,7 +10307,7 @@ function UCATQuestionBankSection({
           </div>
         </section>
 
-        <section className={usesClassicDropLayout ? "px-4 py-2.5" : "px-5 py-5"}>
+        <section className={isDragCategoryQuestion ? "px-4 pb-2.5 pt-6" : usesClassicDropLayout ? "px-4 py-2.5" : "px-5 py-5"}>
           <div ref={questionRegionRef}>
             <p
               className={

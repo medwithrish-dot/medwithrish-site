@@ -641,9 +641,9 @@ explanation: "This is highly appropriate. It stops the immediate risk of an inad
 },
 {
 subtype: "sjt-importance",
-question: "The urgency of completing the conversation before the lunch break concludes.",
+question: "Whether the clinical matter being discussed relates to a patient currently under the active care of both clinicians involved in the conversation.",
 answer: "D",
-explanation: "The timing of a lunch break is not important at all when compared to the absolute professional duty to protect patient confidentiality. Clinical updates can wait a few minutes for a secure location."
+explanation: "A shared clinical purpose does not authorise discussion of patient details in a public space where unauthorised individuals may overhear. The duty of confidentiality is a constraint on where and how clinical information is shared, not merely on whether the conversation has a legitimate clinical reason."
 }
 ]
 },
@@ -737,9 +737,9 @@ explanation: "This is the most appropriate action. It transparently informs the 
 },
 {
 subtype: "sjt-importance",
-question: "The nephew's personal financial difficulties and his relationship with the resident.",
+question: "Whether the nephew's role as the resident's court-appointed financial deputy might provide a legal basis for the transactions described.",
 answer: "D",
-explanation: "The nephew's personal circumstances are not important at all when assessing the duty to report financial abuse. The primary focus must remain solely on the safety and well-being of the vulnerable patient."
+explanation: "A deputyship order authorises management of funds strictly in the best interests of the donor — it does not permit misappropriation for the deputy's personal debts. The described conduct exceeds any legitimate deputyship authority, and the existence of a formal legal role does not reduce the obligation to escalate suspected financial abuse."
 }
 ]
 },
@@ -865,9 +865,9 @@ explanation: "This is highly appropriate. It maintains professional boundaries a
 },
 {
 subtype: "sjt-importance",
-question: "The father's threat to file a formal complaint against you with hospital management.",
+question: "Whether sharing a brief, non-clinical update — such as confirming the patient is currently stable — might de-escalate the father's distress without technically disclosing treatment details.",
 answer: "D",
-explanation: "This factor is not important at all. The threat of a complaint should never influence a doctor to breach professional guidelines, statutory data laws, or a patient's clear and valid refusal of information sharing."
+explanation: "Any disclosure that allows an unauthorised third party to draw inferences about a patient's condition or care violates confidentiality regardless of how it is framed. An adult patient's explicit refusal to involve a family member cannot be circumvented through indirect or 'soft' disclosures aimed at managing the relative's behaviour."
 }
 ]
 },
@@ -897,9 +897,9 @@ explanation: "This is highly appropriate. It directly addresses the safety conce
 },
 {
 subtype: "sjt-importance",
-question: "The need to complete the phone clinic on time to avoid delaying other appointments.",
+question: "Whether the background sounds could plausibly be coming from a television or radio rather than another person.",
 answer: "D",
-explanation: "Time efficiency is not important at all when balanced against an active safety or confidentiality risk during a psychiatric consultation. Patient welfare must always override administrative schedules."
+explanation: "A clinician cannot safely assume a benign explanation for apparent safety signals without checking directly with the patient. Acting on the most reassuring interpretation of ambiguous evidence is a recognised clinical error; the possibility that the noise has an innocent cause does not reduce the duty to address an apparent risk."
 }
 ]
 },
@@ -929,9 +929,9 @@ explanation: "Closing the file is highly appropriate to stop the breach. Reporti
 },
 {
 subtype: "sjt-importance",
-question: "The patient's status as a high-profile public figure or local politician.",
+question: "Whether the patient's public-facing role means their mental health may already be a matter of public record or ongoing media speculation.",
 answer: "D",
-explanation: "This factor is not important at all because the rules governing confidentiality and data privacy apply identically to every single patient, regardless of their public status, wealth, or profession."
+explanation: "Speculation about whether information may already be in the public domain does not create any authorisation for a clinician without a direct care relationship to access confidential medical records. The Data Protection Act and the common law duty of confidentiality apply identically regardless of a patient's public profile."
 }
 ]
 },
@@ -1282,9 +1282,9 @@ explanation: "This is important as a preventative framework to restrict access t
 },
 {
 subtype: "sjt-importance",
-question: "How important is the factor: The waiting times of other customers in the pharmacy queue.",
+question: "How important is the factor: Whether escorting the customer to a private consultation room might visibly single her out and cause her embarrassment in front of others.",
 answer: "D",
-explanation: "The convenience or wait times of other customers are entirely irrelevant when dealing with an acute mental health crisis that presents a potential threat to life."
+explanation: "The possibility of brief social discomfort during a transition to a private space is not a clinically valid reason to delay assessment of an acute mental health crisis. A person's immediate safety takes absolute precedence over concerns about procedural visibility or social stigma."
 }
 ]
 },
@@ -1340,9 +1340,9 @@ explanation: "While physical safety is paramount, severe financial risk and soci
 },
 {
 subtype: "sjt-appropriateness",
-question: "Tell his wife that because Thomas is an adult who refuses help, nothing can be done until he commits a criminal offense or physically harms someone.",
+question: "Advise Thomas's wife that, since he has not yet harmed himself or others, any involuntary assessment at this stage would be premature, and that she should monitor him at home and return if his behaviour escalates overnight.",
 answer: "D",
-explanation: "This is completely incorrect and legally dangerous. The Mental Health Act exists precisely to protect individuals who lack insight during a severe mental illness from harming their health, safety, or others, well before criminal thresholds are met."
+explanation: "The Mental Health Act permits compulsory assessment where mental disorder puts the patient's health or safety at risk, well before any criminal or harm threshold is crossed. Advising the family to monitor active mania with financial recklessness and escalating aggression at home fails to engage available legal mechanisms and exposes Thomas to foreseeable harm."
 },
 {
 subtype: "sjt-importance",
@@ -1366,9 +1366,9 @@ explanation: "Directly questioning vague statements that imply suicide is essent
 },
 {
 subtype: "sjt-importance",
-question: "How important is the factor: The fact that Dr. Kaur's clinic is running 30 minutes behind schedule.",
+question: "How important is the factor: Whether Raymond has made similarly hopeless statements at previous consultations without any subsequent adverse event.",
 answer: "D",
-explanation: "Clinic delays must never compromise patient safety or stop a clinician from fully investigating expressions of suicidal ideation. A potential threat to life takes total precedence over administrative timeliness."
+explanation: "Prior consultations in which comparable language was expressed without incident must not desensitise the clinician to the current presentation. Habituation to a patient's distress expressions is a recognised clinical error; each new instance of potential suicidal ideation requires fresh, independent assessment regardless of past outcomes."
 },
 {
 subtype: "sjt-appropriateness",
@@ -1526,15 +1526,15 @@ explanation: "An explicit 'goodbye' message combined with unresponsiveness const
 },
 {
 subtype: "sjt-importance",
-question: "How important is the factor: The risk of breaching Tom's privacy by involving external authorities.",
+question: "How important is the factor: Whether Tom's post could reflect general emotional venting rather than a specific statement of suicidal intent.",
 answer: "D",
-explanation: "When there is a credible, immediate risk to a person's life, privacy considerations become entirely secondary to preserving life. Worrying about social or privacy boundaries in an acute crisis is inappropriate."
+explanation: "When an explicit farewell message is combined with sustained unresponsiveness over 30 minutes, the duty of care requires treating the situation as a potential emergency. The possibility of a more benign interpretation cannot justify inaction where the cost of being wrong is a person's life."
 },
 {
 subtype: "sjt-appropriateness",
-question: "Wait until the next morning's lectures to see if Tom shows up before taking any further action.",
+question: "Send a second message to Tom saying you are worried about him and will check again in the morning if he has not replied by then.",
 answer: "D",
-explanation: "Waiting several hours when someone has posted a potential suicide note and is unreachable is dangerous and irresponsible. Immediate intervention is required to prevent potential harm."
+explanation: "Deferring action for several hours when someone has posted a farewell message and is unresponsive is clinically unsafe. The combination of explicit language and sustained non-contact means the situation cannot wait; immediate escalation to emergency services is required rather than a further delayed check-in."
 },
 {
 subtype: "sjt-importance",
@@ -1885,9 +1885,9 @@ explanation: "Domestic abuse affects individuals of any gender, and assuming men
 },
 {
 subtype: "sjt-appropriateness",
-question: "Laugh off his anxiety by telling him that all wives are controlling, and focus purely on the burn dressing.",
+question: "Dress the burn without commenting on the scars, reasoning that the patient has not volunteered any information about them and raising the subject unprompted might embarrass him and damage rapport.",
 answer: "D",
-explanation: "This response normalizes abusive behavior, invalidates the patient's visible distress, and reinforces harmful gender stereotypes. It closes down any possibility of disclosure and violates professional standards of care."
+explanation: "Failing to enquire about unexplained physical findings that are inconsistent with the patient's history is a failure of clinical and safeguarding duty. The discomfort of a brief, sensitive inquiry is far outweighed by the risk of missing ongoing inflicted injury. A clinician's reluctance to overstep does not absolve them of the obligation to act on objective clinical findings."
 },
 {
 subtype: "sjt-importance",
@@ -1981,9 +1981,9 @@ explanation: "Her intact cognition means her personal wishes, consent, and voice
 },
 {
 subtype: "sjt-appropriateness",
-question: "Tell the care assistant to ignore the behavior unless the resident explicitly submits a formal written complaint against her husband.",
+question: "Document the care assistant's observations in the notes but defer any referral until a clearer pattern of incidents has been recorded, to ensure any eventual safeguarding case is well evidenced.",
 answer: "D",
-explanation: "Placing the entire burden of reporting on a frail, terrified resident ignores institutional safeguarding duties. Staff have a professional obligation to protect vulnerable adults from witnessed or suspected harm."
+explanation: "Safeguarding duties are triggered by reasonable suspicion, not by a confirmed pattern of harm. Delaying protective action while witnessed abuse continues in order to build a stronger evidence base is unacceptable. The resident's silence is likely explained by fear or dependency rather than absence of concern, and a single direct witness account is sufficient grounds for immediate escalation."
 },
 {
 subtype: "sjt-importance",
@@ -2013,9 +2013,9 @@ explanation: "Understanding the patient's perspective is important because it di
 },
 {
 subtype: "sjt-appropriateness",
-question: "Refuse to give the emergency contraception until she promises to break up with her boyfriend.",
+question: "Provide the emergency contraception but tell Chloe directly that her relationship sounds abusive and she needs to leave it, documenting that safeguarding advice was given.",
 answer: "D",
-explanation: "Conditioning essential medical treatment on a patient's personal relationship choices is highly unethical and coercive. It violates autonomy and guarantees the patient will avoid seeking medical help in the future."
+explanation: "Issuing a directive to leave the relationship is likely to feel coercive and judgmental, and may cause the patient to disengage from healthcare and future disclosures. Effective safeguarding requires non-judgmental framing that respects autonomy while keeping communication open. Documenting that appropriate 'safeguarding advice was given' would also be inaccurate if the advice itself breached professional communication standards."
 },
 {
 subtype: "sjt-importance",
@@ -2033,9 +2033,9 @@ stem: "You are a foundation doctor working closely with a regular staff nurse, S
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Report Sarah to the Nursing and Midwifery Council (NMC) immediately for an unfitness to practise assessment.",
+question: "Raise your concerns with the ward manager, framing Sarah's emotional withdrawal and absences as a performance issue that is affecting team morale and patient care.",
 answer: "D",
-explanation: "Being a victim of domestic abuse does not equate to professional misconduct or impaired fitness to practise. Reporting her to her regulator is punitive, inappropriate, and severely damages a colleague in crisis."
+explanation: "Escalating a colleague's apparent personal distress to line management as a conduct or performance matter risks triggering disciplinary action against a domestic abuse victim rather than providing support. This framing treats vulnerability as misconduct, may cause Sarah to conceal her situation further, and bypasses the appropriate first step of a private, supportive peer conversation."
 },
 {
 subtype: "sjt-importance",

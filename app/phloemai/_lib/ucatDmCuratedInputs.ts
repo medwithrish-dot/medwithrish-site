@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   UCATChartVisual,
   UCATOptionKey,
   UCATQuestion,
@@ -10799,6 +10799,366 @@ categoryItems: [
 explanation: "A � YES: Some board directors are structural engineers, and all registered structural engineers are licensed to inspect high-rise scaffolds.\nB � YES: Structural engineers are licensed to inspect scaffolds, but apprentice bricklayers are not, meaning no apprentice bricklayer is a structural engineer.\nC � NO: While structural engineers who are directors cannot be apprentice bricklayers, other board directors could potentially be apprentice bricklayers.\nD � NO: Structural engineers are licensed, but other inspection specialists (e.g., specialized safety officers) might also hold scaffold licenses.\nE � NO: There is no data linking apprentice bricklayers to positions as directors of municipal planning boards."
 },
 {
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"Some Zlorps are Glorps.",
+"All Glorps are Blorps.",
+"No Blorp is a Snimp.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-01-a", text: "Some Zlorps are Blorps.", answerCategory: "yes" },
+{ id: "dm-syl-abs-01-b", text: "No Glorps are Snimps.", answerCategory: "yes" },
+{ id: "dm-syl-abs-01-c", text: "No Snimp is a Blorp.", answerCategory: "yes" },
+{ id: "dm-syl-abs-01-d", text: "All Blorps are Glorps.", answerCategory: "no" },
+{ id: "dm-syl-abs-01-e", text: "All Zlorps are Blorps.", answerCategory: "no" },
+],
+explanation: "A - YES: Some Zlorps are Glorps (premise 1), and all Glorps are Blorps (premise 2), so those Zlorps are also Blorps.\nB - YES: All Glorps are Blorps (premise 2), and no Blorp is a Snimp (premise 3), so no Glorp can be a Snimp.\nC - YES: 'No Blorp is a Snimp' converts symmetrically to 'No Snimp is a Blorp' - a valid E-statement conversion.\nD - NO: This reverses premise 2. All Glorps are Blorps, but that does not mean all Blorps are Glorps.\nE - NO: Only SOME Zlorps are Glorps (premise 1). The remaining Zlorps have no link to Blorps, so 'All Zlorps are Blorps' does not follow.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"All Flurbs are Crumbs.",
+"Some Crumbs are Drabs.",
+"No Drab is a Wibble.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-02-a", text: "All Flurbs are Crumbs.", answerCategory: "yes" },
+{ id: "dm-syl-abs-02-b", text: "Some Crumbs are not Wibbles.", answerCategory: "yes" },
+{ id: "dm-syl-abs-02-c", text: "No Wibble is a Drab.", answerCategory: "yes" },
+{ id: "dm-syl-abs-02-d", text: "Some Flurbs are Drabs.", answerCategory: "no" },
+{ id: "dm-syl-abs-02-e", text: "All Crumbs are Flurbs.", answerCategory: "no" },
+],
+explanation: "A - YES: This directly restates premise 1.\nB - YES: Some Crumbs are Drabs (premise 2), and no Drab is a Wibble (premise 3), so those Crumbs are not Wibbles.\nC - YES: 'No Drab is a Wibble' converts symmetrically to 'No Wibble is a Drab' - a valid E-statement conversion.\nD - NO: All Flurbs are Crumbs, and some Crumbs are Drabs, but the Drabs could be among Crumbs that are not Flurbs. We cannot establish any Flurb is a Drab.\nE - NO: This reverses premise 1. All Flurbs are Crumbs, but Crumbs may include things that are not Flurbs.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"No Snorf is a Blimp.",
+"All Drizzles are Blimps.",
+"Some Snorfs are Frumps.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-03-a", text: "No Snorf is a Drizzle.", answerCategory: "yes" },
+{ id: "dm-syl-abs-03-b", text: "No Blimp is a Snorf.", answerCategory: "yes" },
+{ id: "dm-syl-abs-03-c", text: "Some Frumps are Snorfs.", answerCategory: "yes" },
+{ id: "dm-syl-abs-03-d", text: "All Blimps are Drizzles.", answerCategory: "no" },
+{ id: "dm-syl-abs-03-e", text: "Some Snorfs are Blimps.", answerCategory: "no" },
+],
+explanation: "A - YES: No Snorf is a Blimp (premise 1), and all Drizzles are Blimps (premise 2). Being a Drizzle requires being a Blimp, so if no Snorf is a Blimp, no Snorf can be a Drizzle.\nB - YES: 'No Snorf is a Blimp' converts symmetrically to 'No Blimp is a Snorf' - a valid E-statement conversion.\nC - YES: 'Some Snorfs are Frumps' converts symmetrically to 'Some Frumps are Snorfs' - a valid I-statement conversion.\nD - NO: This reverses premise 2. All Drizzles are Blimps, but there may be Blimps that are not Drizzles.\nE - NO: This directly contradicts premise 1, which states no Snorf is a Blimp.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"All Trumbles are Glarbs.",
+"Some Glarbs are Wimps.",
+"No Wimp is a Snurp.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-04-a", text: "Some Glarbs are not Snurps.", answerCategory: "yes" },
+{ id: "dm-syl-abs-04-b", text: "Some Wimps are Glarbs.", answerCategory: "yes" },
+{ id: "dm-syl-abs-04-c", text: "No Snurp is a Wimp.", answerCategory: "yes" },
+{ id: "dm-syl-abs-04-d", text: "Some Trumbles are Wimps.", answerCategory: "no" },
+{ id: "dm-syl-abs-04-e", text: "All Glarbs are Trumbles.", answerCategory: "no" },
+],
+explanation: "A - YES: Some Glarbs are Wimps (premise 2), and no Wimp is a Snurp (premise 3), so those Glarbs are not Snurps.\nB - YES: 'Some Glarbs are Wimps' converts to 'Some Wimps are Glarbs' - a valid I-statement conversion.\nC - YES: 'No Wimp is a Snurp' converts to 'No Snurp is a Wimp' - a valid E-statement conversion.\nD - NO: All Trumbles are Glarbs, and some Glarbs are Wimps, but the Wimps could be among Glarbs that are not Trumbles. We cannot conclude any Trumble is a Wimp.\nE - NO: This reverses premise 1. All Trumbles are Glarbs does not mean all Glarbs are Trumbles.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"No Plonk is a Grump.",
+"All Fribbles are Grumps.",
+"Some Plonks are Snazzles.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-05-a", text: "No Plonk is a Fribble.", answerCategory: "yes" },
+{ id: "dm-syl-abs-05-b", text: "Some Snazzles are Plonks.", answerCategory: "yes" },
+{ id: "dm-syl-abs-05-c", text: "No Grump is a Plonk.", answerCategory: "yes" },
+{ id: "dm-syl-abs-05-d", text: "All Fribbles are Plonks.", answerCategory: "no" },
+{ id: "dm-syl-abs-05-e", text: "Some Fribbles are Snazzles.", answerCategory: "no" },
+],
+explanation: "A - YES: All Fribbles are Grumps (premise 2), and no Plonk is a Grump (premise 1). Being a Fribble requires being a Grump, so no Plonk can be a Fribble.\nB - YES: 'Some Plonks are Snazzles' converts to 'Some Snazzles are Plonks' - a valid I-statement conversion.\nC - YES: 'No Plonk is a Grump' converts to 'No Grump is a Plonk' - a valid E-statement conversion.\nD - NO: No valid chain connects Fribbles back to Plonks; in fact, Fribbles are Grumps and no Plonk is a Grump, making this impossible.\nE - NO: There is no established link between Fribbles and Snazzles in any of the three premises.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"Some Wumps are Blarps.",
+"No Blarp is a Gloop.",
+"All Gloops are Snarfs.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-06-a", text: "Some Wumps are not Gloops.", answerCategory: "yes" },
+{ id: "dm-syl-abs-06-b", text: "Some Blarps are Wumps.", answerCategory: "yes" },
+{ id: "dm-syl-abs-06-c", text: "No Gloop is a Blarp.", answerCategory: "yes" },
+{ id: "dm-syl-abs-06-d", text: "No Wump is a Gloop.", answerCategory: "no" },
+{ id: "dm-syl-abs-06-e", text: "All Snarfs are Gloops.", answerCategory: "no" },
+],
+explanation: "A - YES: Some Wumps are Blarps (premise 1), and no Blarp is a Gloop (premise 2), so those Wumps are not Gloops.\nB - YES: 'Some Wumps are Blarps' converts to 'Some Blarps are Wumps' - a valid I-statement conversion.\nC - YES: 'No Blarp is a Gloop' converts to 'No Gloop is a Blarp' - a valid E-statement conversion.\nD - NO: Only SOME Wumps are Blarps. The remaining Wumps have no established link, so some could be Gloops.\nE - NO: This reverses premise 3. All Gloops are Snarfs does not mean all Snarfs are Gloops.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"All Zibbles are Porgs.",
+"All Porgs are Flumps.",
+"Some Flumps are Grumbles.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-07-a", text: "All Zibbles are Flumps.", answerCategory: "yes" },
+{ id: "dm-syl-abs-07-b", text: "Some Grumbles are Flumps.", answerCategory: "yes" },
+{ id: "dm-syl-abs-07-c", text: "Some Porgs are Grumbles.", answerCategory: "no" },
+{ id: "dm-syl-abs-07-d", text: "All Flumps are Porgs.", answerCategory: "no" },
+{ id: "dm-syl-abs-07-e", text: "Some Zibbles are Grumbles.", answerCategory: "no" },
+],
+explanation: "A - YES: All Zibbles are Porgs (premise 1), and all Porgs are Flumps (premise 2), so all Zibbles are Flumps by chaining.\nB - YES: 'Some Flumps are Grumbles' converts to 'Some Grumbles are Flumps' - a valid I-statement conversion.\nC - NO: All Porgs are Flumps, and some Flumps are Grumbles, but the Grumbles could be among Flumps that are not Porgs. We cannot link Porgs to Grumbles.\nD - NO: This reverses premise 2. All Porgs are Flumps does not mean all Flumps are Porgs.\nE - NO: All Zibbles are Flumps, and some Flumps are Grumbles, but those Grumbles need not be among the Zibble subset of Flumps.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"Some Quorbs are Slimbs.",
+"All Slimbs are Drenches.",
+"No Drench is a Wobble.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-08-a", text: "Some Quorbs are Drenches.", answerCategory: "yes" },
+{ id: "dm-syl-abs-08-b", text: "No Slimb is a Wobble.", answerCategory: "yes" },
+{ id: "dm-syl-abs-08-c", text: "Some Drenches are Quorbs.", answerCategory: "yes" },
+{ id: "dm-syl-abs-08-d", text: "All Quorbs are Drenches.", answerCategory: "no" },
+{ id: "dm-syl-abs-08-e", text: "No Quorb is a Wobble.", answerCategory: "no" },
+],
+explanation: "A - YES: Some Quorbs are Slimbs (premise 1), all Slimbs are Drenches (premise 2), so those Quorbs are also Drenches.\nB - YES: All Slimbs are Drenches (premise 2), no Drench is a Wobble (premise 3), so no Slimb can be a Wobble.\nC - YES: 'Some Quorbs are Drenches' (established above) converts to 'Some Drenches are Quorbs' by I-conversion.\nD - NO: Only SOME Quorbs are Slimbs, so only those Quorbs are Drenches. We cannot extend this to all Quorbs.\nE - NO: Only some Quorbs are linked to Drenches. Other Quorbs have no established relationship to Wobbles.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"All Snorps are Grimbels.",
+"No Grimbel is a Tweedle.",
+"Some Snorps are Quabbles.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-09-a", text: "No Snorp is a Tweedle.", answerCategory: "yes" },
+{ id: "dm-syl-abs-09-b", text: "No Tweedle is a Grimbel.", answerCategory: "yes" },
+{ id: "dm-syl-abs-09-c", text: "Some Quabbles are Snorps.", answerCategory: "yes" },
+{ id: "dm-syl-abs-09-d", text: "All Grimbels are Snorps.", answerCategory: "no" },
+{ id: "dm-syl-abs-09-e", text: "Some Snorps are not Grimbels.", answerCategory: "no" },
+],
+explanation: "A - YES: All Snorps are Grimbels (premise 1), no Grimbel is a Tweedle (premise 2), so no Snorp can be a Tweedle.\nB - YES: 'No Grimbel is a Tweedle' converts to 'No Tweedle is a Grimbel' - a valid E-statement conversion.\nC - YES: 'Some Snorps are Quabbles' converts to 'Some Quabbles are Snorps' - a valid I-statement conversion.\nD - NO: This reverses premise 1. Not all Grimbels need be Snorps; Grimbels may exist that are not Snorps.\nE - NO: This directly contradicts premise 1, which states that all Snorps are Grimbels.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"Some Blargs are Flidgets.",
+"No Flidget is a Wonk.",
+"All Wonks are Greshlings.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-10-a", text: "Some Blargs are not Wonks.", answerCategory: "yes" },
+{ id: "dm-syl-abs-10-b", text: "No Wonk is a Flidget.", answerCategory: "yes" },
+{ id: "dm-syl-abs-10-c", text: "Some Flidgets are Blargs.", answerCategory: "yes" },
+{ id: "dm-syl-abs-10-d", text: "No Blarg is a Wonk.", answerCategory: "no" },
+{ id: "dm-syl-abs-10-e", text: "Some Greshlings are Flidgets.", answerCategory: "no" },
+],
+explanation: "A - YES: Some Blargs are Flidgets (premise 1), and no Flidget is a Wonk (premise 2), so those Blargs are not Wonks.\nB - YES: 'No Flidget is a Wonk' converts to 'No Wonk is a Flidget' - a valid E-statement conversion.\nC - YES: 'Some Blargs are Flidgets' converts to 'Some Flidgets are Blargs' - a valid I-statement conversion.\nD - NO: Only SOME Blargs are Flidgets. The remaining Blargs are not linked to Wonks at all, so some could be Wonks.\nE - NO: There is no established chain linking Greshlings back to Flidgets in any of the three premises.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"All Gumps are Spronks.",
+"All Spronks are Dribbles.",
+"No Dribble is a Flibber.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-11-a", text: "All Gumps are Dribbles.", answerCategory: "yes" },
+{ id: "dm-syl-abs-11-b", text: "No Gump is a Flibber.", answerCategory: "yes" },
+{ id: "dm-syl-abs-11-c", text: "No Flibber is a Dribble.", answerCategory: "yes" },
+{ id: "dm-syl-abs-11-d", text: "All Dribbles are Spronks.", answerCategory: "no" },
+{ id: "dm-syl-abs-11-e", text: "Some Gumps are Flibbers.", answerCategory: "no" },
+],
+explanation: "A - YES: All Gumps are Spronks (premise 1), all Spronks are Dribbles (premise 2), so all Gumps are Dribbles by chaining.\nB - YES: All Gumps are Dribbles (established above), and no Dribble is a Flibber (premise 3), so no Gump is a Flibber.\nC - YES: 'No Dribble is a Flibber' converts to 'No Flibber is a Dribble' - a valid E-statement conversion.\nD - NO: This reverses premise 2. All Spronks are Dribbles does not mean all Dribbles are Spronks.\nE - NO: This contradicts B, which follows directly from the premises.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"Some Clurbs are Mandors.",
+"All Mandors are Spleens.",
+"Some Spleens are Grumlets.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-12-a", text: "Some Clurbs are Spleens.", answerCategory: "yes" },
+{ id: "dm-syl-abs-12-b", text: "Some Mandors are Clurbs.", answerCategory: "yes" },
+{ id: "dm-syl-abs-12-c", text: "Some Grumlets are Spleens.", answerCategory: "yes" },
+{ id: "dm-syl-abs-12-d", text: "Some Clurbs are Grumlets.", answerCategory: "no" },
+{ id: "dm-syl-abs-12-e", text: "All Spleens are Mandors.", answerCategory: "no" },
+],
+explanation: "A - YES: Some Clurbs are Mandors (premise 1), all Mandors are Spleens (premise 2), so those Clurbs are also Spleens.\nB - YES: 'Some Clurbs are Mandors' converts to 'Some Mandors are Clurbs' - a valid I-statement conversion.\nC - YES: 'Some Spleens are Grumlets' converts to 'Some Grumlets are Spleens' - a valid I-statement conversion.\nD - NO: Some Clurbs are Spleens, and some Spleens are Grumlets, but two 'some' statements cannot be chained. The Grumlets might be among Spleens that are not Clurbs.\nE - NO: This reverses premise 2. All Mandors are Spleens does not mean all Spleens are Mandors.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"All Gribbles are Plonts.",
+"No Plont is a Droon.",
+"Some Gribbles are Frumples.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-13-a", text: "No Gribble is a Droon.", answerCategory: "yes" },
+{ id: "dm-syl-abs-13-b", text: "No Droon is a Plont.", answerCategory: "yes" },
+{ id: "dm-syl-abs-13-c", text: "Some Frumples are Gribbles.", answerCategory: "yes" },
+{ id: "dm-syl-abs-13-d", text: "All Plonts are Gribbles.", answerCategory: "no" },
+{ id: "dm-syl-abs-13-e", text: "Some Plonts are Droons.", answerCategory: "no" },
+],
+explanation: "A - YES: All Gribbles are Plonts (premise 1), no Plont is a Droon (premise 2), so no Gribble is a Droon.\nB - YES: 'No Plont is a Droon' converts to 'No Droon is a Plont' - a valid E-statement conversion.\nC - YES: 'Some Gribbles are Frumples' converts to 'Some Frumples are Gribbles' - a valid I-statement conversion.\nD - NO: This reverses premise 1. All Gribbles are Plonts does not mean all Plonts are Gribbles.\nE - NO: This directly contradicts premise 2, which states no Plont is a Droon.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"No Blunt is a Scribo.",
+"All Gorfs are Scribbos.",
+"Some Blunts are Whumps.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-14-a", text: "No Blunt is a Gorf.", answerCategory: "yes" },
+{ id: "dm-syl-abs-14-b", text: "No Scribo is a Blunt.", answerCategory: "yes" },
+{ id: "dm-syl-abs-14-c", text: "Some Whumps are Blunts.", answerCategory: "yes" },
+{ id: "dm-syl-abs-14-d", text: "All Scribbos are Gorfs.", answerCategory: "no" },
+{ id: "dm-syl-abs-14-e", text: "Some Gorfs are Blunts.", answerCategory: "no" },
+],
+explanation: "A - YES: All Gorfs are Scribbos (premise 2), and no Blunt is a Scribo (premise 1). Being a Gorf requires being a Scribo, so no Blunt can be a Gorf.\nB - YES: 'No Blunt is a Scribo' converts to 'No Scribo is a Blunt' - a valid E-statement conversion.\nC - YES: 'Some Blunts are Whumps' converts to 'Some Whumps are Blunts' - a valid I-statement conversion.\nD - NO: This reverses premise 2. All Gorfs are Scribbos does not mean all Scribbos are Gorfs.\nE - NO: This contradicts A (no Blunt is a Gorf), which converts to 'no Gorf is a Blunt' by E-conversion.",
+},
+{
+kind: "drag-category",
+subtype: "dm-syllogisms",
+leftTitle: "Syllogisms",
+stimulus: [
+"No Frump is a Grondel.",
+"Some Grondels are Blivets.",
+"All Blivets are Sparkles.",
+],
+question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
+instruction: "Drag each conclusion to the appropriate category.",
+categories: [
+{ id: "yes", label: "Yes" },
+{ id: "no", label: "No" },
+],
+categoryItems: [
+{ id: "dm-syl-abs-15-a", text: "Some Grondels are Sparkles.", answerCategory: "yes" },
+{ id: "dm-syl-abs-15-b", text: "Some Blivets are Grondels.", answerCategory: "yes" },
+{ id: "dm-syl-abs-15-c", text: "No Frump is a Blivet.", answerCategory: "no" },
+{ id: "dm-syl-abs-15-d", text: "No Sparkle is a Blivet.", answerCategory: "no" },
+{ id: "dm-syl-abs-15-e", text: "All Grondels are Blivets.", answerCategory: "no" },
+],
+explanation: "A - YES: Some Grondels are Blivets (premise 2), all Blivets are Sparkles (premise 3), so those Grondels are Sparkles.\nB - YES: 'Some Grondels are Blivets' converts to 'Some Blivets are Grondels' - a valid I-statement conversion.\nC - NO: No Frump is a Grondel (premise 1), and some Grondels are Blivets (premise 2). However, Blivets may exist outside the Grondel set, so a Frump could still be a Blivet that is not a Grondel.\nD - NO: This reverses premise 3. All Blivets are Sparkles does not mean no Sparkle is a Blivet - in fact, the opposite follows.\nE - NO: Premise 2 says only SOME Grondels are Blivets. We cannot extend this to all Grondels.",
+},
+{
 kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
@@ -10994,9 +11354,9 @@ yesNoStatements: [
 { id: "dm-yn-inf-01-10-b", text: "An ALT level of 60 U/L requires pausing the medication.", answer: "Yes" },
 { id: "dm-yn-inf-01-10-c", text: "Monthly blood tests are required for liver function monitoring.", answer: "Yes" },
 { id: "dm-yn-inf-01-10-d", text: "An ALT level of 30 U/L is considered abnormal.", answer: "No" },
-{ id: "dm-yn-inf-01-10-e", text: "If ALT is 50 U/L, the medication should be paused.", answer: "Yes" }
+{ id: "dm-yn-inf-01-10-e", text: "If ALT is 50 U/L, the medication should be paused.", answer: "No" }
 ],
-explanation: "A � NO: 40 is below the 50 U/L threshold for pausing.\nB � YES: 60 > 50.\nC � YES: Explicitly stated.\nD � NO: 30 is within the normal range (7-35).\nE � YES: Passage says 'exceed 50', but usually this implies the limit is reached/exceeded for action. Actually, 'exceed 50' means strictly greater than 50. Wait, if ALT is 50, it does not exceed 50. So NO would be accurate if it were exactly 50? Wait, 'exceed 50' means > 50. So 50 does not exceed 50. I will say No."
+explanation: "A � NO: 40 is below the 50 U/L threshold for pausing.\nB � YES: 60 > 50, so it exceeds the threshold.\nC � YES: Explicitly stated in the passage.\nD � NO: 30 is within the normal range (7-35 U/L).\nE � NO: The passage states the medication must be paused if ALT levels exceed 50 U/L. 'Exceed' means strictly greater than (> 50). An ALT of exactly 50 U/L does not exceed 50, so the medication would not be paused."
 },
 {
 kind: "yes-no",
@@ -26788,11 +27148,11 @@ stimulus: ['Should all major cities mandate a 24-hour public transport system to
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would significantly increase the revenue of hospitality businesses by ensuring staff and patrons have reliable, affordable access to city centers throughout the night.",
 distractors: [
-"Yes, because nocturnal transportation is essential for a city that never sleeps (CIRCULAR).",
-"No, because some people prefer walking to their destinations (TRIVIAL).",
-"Yes, because city councils often discuss urban planning during morning meetings (IRRELEVANT)."
+"Yes, because nocturnal transportation is essential for a city that never sleeps.",
+"No, because some people prefer walking to their destinations.",
+"No, because public transport systems are systems, and systems need to be managed, which is why managing them would be complicated."
 ],
-explanation: "The correct answer is strongest because it directly addresses the economic purpose of the proposal with a specific, measurable consequence for businesses. Distractor 1 is weak (CIRCULAR): it merely rephrases the premise as a justification. Distractor 2 is weak (TRIVIAL): individual preference for walking does not address the systemic economic goal. Distractor 3 is weak (IRRELEVANT): the timing of council meetings has no bearing on the efficacy of the proposal."
+explanation: "The correct answer is strongest because it directly addresses the economic purpose of the proposal with a specific, measurable consequence for businesses. Distractor 1 is weak: it merely rephrases the premise as a justification. Distractor 2 is weak: individual preference for walking does not address the systemic economic goal. Distractor 3 is weak: the timing of council meetings has no bearing on the efficacy of the proposal."
 },
 {
 kind: "single",
@@ -26802,11 +27162,11 @@ stimulus: ['Should governments implement a universal basic income to combat risi
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the resulting tax burden required to fund such a program would likely stifle private sector investment and slow the rate of technological innovation.",
 distractors: [
-"Yes, because people deserve to have money in their pockets (VAGUE).",
-"No, because the economy is a complex system that changes constantly (VAGUE).",
-"Yes, because inflation is a global phenomenon that affects many nations (NON-SEQUITUR)."
+"Yes, because people deserve to have money in their pockets.",
+"No, because the economy is a complex system that changes constantly.",
+"Yes, because inflation is a global phenomenon that affects many nations."
 ],
-explanation: "The correct answer is strongest because it identifies a specific, significant economic consequence (reduced innovation) resulting from the proposal. Distractor 1 is weak (VAGUE): it lacks a specific link to the policy mechanism. Distractor 2 is weak (VAGUE): it fails to provide a concrete argument against the proposal. Distractor 3 is weak (NON-SEQUITUR): global inflation is not a reason to support universal basic income."
+explanation: "The correct answer is strongest because it identifies a specific, significant economic consequence (reduced innovation) resulting from the proposal. Distractor 1 is weak: it lacks a specific link to the policy mechanism. Distractor 2 is weak: it fails to provide a concrete argument against the proposal. Distractor 3 is weak: global inflation is not a reason to support universal basic income."
 },
 {
 kind: "single",
@@ -26816,11 +27176,11 @@ stimulus: ['Should all pharmaceutical companies be required to publish the raw d
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would prevent the systemic bias of publication, allowing researchers to avoid repeating failed experimental pathways and accelerating the discovery of effective treatments.",
 distractors: [
-"Yes, because transparency is a good value for society (VAGUE).",
-"No, because it takes a lot of time to organize data files (TRIVIAL).",
-"Yes, because pharmaceutical companies spend billions on marketing each year (IRRELEVANT)."
+"Yes, because transparency is a good value for society.",
+"No, because it takes a lot of time to organize data files.",
+"No, because pharmaceutical companies are businesses and businesses need to protect their interests."
 ],
-explanation: "The correct answer is strongest because it addresses the research efficiency and patient outcomes with a specific consequence. Distractor 1 is weak (VAGUE): 'transparency' is a goal, not an argument for the efficacy of the proposal. Distractor 2 is weak (TRIVIAL): administrative burden is not a strong reason to block scientific advancement. Distractor 3 is weak (IRRELEVANT): marketing spend is distinct from the ethics and utility of trial data disclosure."
+explanation: "The correct answer is strongest because it addresses the research efficiency and patient outcomes with a specific consequence. Distractor 1 is weak: 'transparency' is a goal, not an argument for the efficacy of the proposal. Distractor 2 is weak: administrative burden is not a strong reason to block scientific advancement. Distractor 3 is weak: marketing spend is distinct from the ethics and utility of trial data disclosure."
 },
 {
 kind: "single",
@@ -26830,11 +27190,11 @@ stimulus: ['Should the voting age be lowered to 16 in national elections?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because 16-year-olds are already subject to taxation and criminal liability, and giving them the vote would ensure that long-term policies, such as climate change, better reflect the interests of those most affected by their future consequences.",
 distractors: [
-"Yes, because young people should be allowed to have a say in their future (VAGUE).",
-"No, because voting is a privilege that should be reserved for people who have more life experience (VAGUE).",
-"No, because there are many other laws that regulate the conduct of teenagers (IRRELEVANT)."
+"Yes, because young people should be allowed to have a say in their future.",
+"No, because voting is a privilege that should be reserved for people who have more life experience.",
+"No, because there are many other laws that regulate the conduct of teenagers."
 ],
-explanation: "The correct answer is strongest because it connects the proposal to the principle of taxation/representation and provides a specific policy outcome (long-term focus). Distractor 1 is weak (VAGUE): it does not provide a specific reason for the change. Distractor 2 is weak (VAGUE): 'life experience' is a subjective and unquantifiable metric. Distractor 3 is weak (IRRELEVANT): the existence of other laws does not impact the merits of lowering the voting age."
+explanation: "The correct answer is strongest because it connects the proposal to the principle of taxation/representation and provides a specific policy outcome (long-term focus). Distractor 1 is weak: it does not provide a specific reason for the change. Distractor 2 is weak: 'life experience' is a subjective and unquantifiable metric. Distractor 3 is weak: the existence of other laws does not impact the merits of lowering the voting age."
 },
 {
 kind: "single",
@@ -26844,11 +27204,11 @@ stimulus: ['Should the sale of all gas-powered lawn equipment be banned to impro
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because small engines in such equipment lack the advanced emission controls found in modern cars, meaning they emit disproportionately high levels of nitrogen oxides and fine particulates that directly degrade local air quality.",
 distractors: [
-"Yes, because electric equipment is becoming more popular every year (IRRELEVANT).",
-"No, because it might be difficult for professional landscaping companies to switch to batteries immediately (TRIVIAL).",
-"Yes, because clean air is essential for a healthy community (CIRCULAR)."
+"Yes, because electric equipment is becoming more popular every year.",
+"No, because it might be difficult for professional landscaping companies to switch to batteries immediately.",
+"No, because people have been using gas-powered lawn equipment for a long time and it would be a big change."
 ],
-explanation: "The correct answer is strongest because it provides technical justification for why the ban would succeed in its specific goal. Distractor 1 is weak (IRRELEVANT): market popularity does not justify the ban. Distractor 2 is weak (TRIVIAL): the transition difficulty for a niche sector is not a strong counter-argument to the public health benefit. Distractor 3 is weak (CIRCULAR): it restates the desired outcome as a justification."
+explanation: "The correct answer is strongest because it provides technical justification for why the ban would succeed in its specific goal. Distractor 1 is weak: market popularity does not justify the ban. Distractor 2 is weak: the transition difficulty for a niche sector is not a strong counter-argument to the public health benefit. Distractor 3 is weak: it restates the desired outcome as a justification."
 },
 {
 kind: "single",
@@ -26858,11 +27218,11 @@ stimulus: ['Should schools replace all traditional textbooks with tablet compute
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the constant distraction of non-educational content on tablet devices has been shown to significantly reduce student concentration and retention during independent learning sessions.",
 distractors: [
-"Yes, because tablets can hold thousands of books at once (TRIVIAL).",
-"Yes, because technology is the way of the future for all industries (NON-SEQUITUR).",
-"No, because school boards have to buy new devices every few years (TRIVIAL)."
+"Yes, because tablets can hold thousands of books at once.",
+"Yes, because technology is the way of the future for all industries.",
+"No, because school boards have to buy new devices every few years."
 ],
-explanation: "The correct answer is strongest because it cites a specific, negative consequence directly impacting the educational objective. Distractor 1 is weak (TRIVIAL): storage capacity does not outweigh the pedagogical downsides. Distractor 2 is weak (NON-SEQUITUR): just because an industry uses technology, it does not mean it is appropriate for all pedagogical settings. Distractor 3 is weak (TRIVIAL): the cost of maintenance is an inconvenience, not a fundamental flaw in the learning process."
+explanation: "The correct answer is strongest because it cites a specific, negative consequence directly impacting the educational objective. Distractor 1 is weak: storage capacity does not outweigh the pedagogical downsides. Distractor 2 is weak: just because an industry uses technology, it does not mean it is appropriate for all pedagogical settings. Distractor 3 is weak: the cost of maintenance is an inconvenience, not a fundamental flaw in the learning process."
 },
 {
 kind: "single",
@@ -26872,11 +27232,11 @@ stimulus: ['Should professional sports leagues mandate a strict salary cap for a
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it prevents wealthy teams from monopolizing elite talent, thereby increasing the unpredictability of game outcomes and maintaining long-term fan engagement.",
 distractors: [
-"Yes, because it makes things more fair for everyone involved (VAGUE).",
-"No, because some sports teams have been playing for over a century (IRRELEVANT).",
-"Yes, because money is a big part of professional sports today (CIRCULAR)."
+"Yes, because it makes things more fair for everyone involved.",
+"No, because some sports teams have been playing for over a century.",
+"No, because salary caps are related to money and money is important in sports."
 ],
-explanation: "The correct answer is strongest because it explains the causal link between the cap, talent distribution, and fan engagement. Distractor 1 is weak (VAGUE): 'fair' is poorly defined. Distractor 2 is weak (IRRELEVANT): the age of the league has no bearing on the efficacy of a salary cap. Distractor 3 is weak (CIRCULAR): stating that money is a big part of the sport does not provide a reason for the policy."
+explanation: "The correct answer is strongest because it explains the causal link between the cap, talent distribution, and fan engagement. Distractor 1 is weak: 'fair' is poorly defined. Distractor 2 is weak: the age of the league has no bearing on the efficacy of a salary cap. Distractor 3 is weak: stating that money is a big part of the sport does not provide a reason for the policy."
 },
 {
 kind: "single",
@@ -26886,11 +27246,11 @@ stimulus: ['Should wildlife sanctuaries be permitted to use drones to monitor en
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because drones provide high-resolution, non-invasive surveillance over rugged terrain, allowing rangers to identify and intercept poachers before they encounter the animals.",
 distractors: [
-"Yes, because drones are very cool pieces of technology (VAGUE).",
-"No, because some birds might get confused by the sound of the drone (TRIVIAL).",
-"Yes, because many other people use drones for photography (IRRELEVANT)."
+"Yes, because drones are very cool pieces of technology.",
+"No, because some birds might get confused by the sound of the drone.",
+"No, because wildlife sanctuaries should focus on what sanctuaries are meant to do, which is sanctuary-related activities."
 ],
-explanation: "The correct answer is strongest because it links the technology to a specific, critical outcome (stopping poachers). Distractor 1 is weak (VAGUE): 'cool' is not a functional argument. Distractor 2 is weak (TRIVIAL): a minor potential disturbance is outweighed by the protection against poaching. Distractor 3 is weak (IRRELEVANT): photography usage does not justify conservation use."
+explanation: "The correct answer is strongest because it links the technology to a specific, critical outcome (stopping poachers). Distractor 1 is weak: 'cool' is not a functional argument. Distractor 2 is weak: a minor potential disturbance is outweighed by the protection against poaching. Distractor 3 is weak: photography usage does not justify conservation use."
 },
 {
 kind: "single",
@@ -26900,11 +27260,11 @@ stimulus: ['Should cities impose a high congestion charge on private vehicles en
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would significantly reduce peak-hour traffic density, which decreases idling times and improves the efficiency of public transit schedules.",
 distractors: [
-"Yes, because traffic is something that everyone hates dealing with (VAGUE).",
-"No, because it might be inconvenient for people who work night shifts (TRIVIAL).",
-"Yes, because the city has many roads that need repair (NON-SEQUITUR)."
+"Yes, because traffic is something that everyone hates dealing with.",
+"No, because it might be inconvenient for people who work night shifts.",
+"No, because congestion charges are a form of charging money, and charging money costs money."
 ],
-explanation: "The correct answer is strongest because it identifies the precise mechanism (reduced idling) leading to the goal (efficient transit). Distractor 1 is weak (VAGUE): hating traffic is an emotional reaction, not a policy justification. Distractor 2 is weak (TRIVIAL): a small number of night shift workers does not invalidate a city-wide congestion policy. Distractor 3 is weak (NON-SEQUITUR): road repair funds are a separate issue from traffic management."
+explanation: "The correct answer is strongest because it identifies the precise mechanism (reduced idling) leading to the goal (efficient transit). Distractor 1 is weak: hating traffic is an emotional reaction, not a policy justification. Distractor 2 is weak: a small number of night shift workers does not invalidate a city-wide congestion policy. Distractor 3 is weak: road repair funds are a separate issue from traffic management."
 },
 {
 kind: "single",
@@ -26914,11 +27274,11 @@ stimulus: ['Should fast food restaurants be banned from advertising within 500 m
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because constant exposure to calorie-dense marketing influences the dietary preferences of children during critical developmental years, contributing to higher rates of childhood obesity.",
 distractors: [
-"Yes, because children are easily influenced by what they see (VAGUE).",
-"No, because advertising is a fundamental right of businesses (NON-SEQUITUR).",
-"Yes, because the food sold in these restaurants tastes good to many people (IRRELEVANT)."
+"Yes, because children are easily influenced by what they see.",
+"No, because advertising is a fundamental right of businesses.",
+"No, because fast food restaurants need to advertise somewhere, and banning advertising near schools would just mean they advertise elsewhere instead."
 ],
-explanation: "The correct answer is strongest because it provides a clear, biological, and developmental link between the advertising and health outcomes. Distractor 1 is weak (VAGUE): it states children are influenced but fails to specify the negative health consequence. Distractor 2 is weak (NON-SEQUITUR): legal rights are distinct from public health policy decisions. Distractor 3 is weak (IRRELEVANT): taste is irrelevant to the health impact of the advertising."
+explanation: "The correct answer is strongest because it provides a clear, biological, and developmental link between the advertising and health outcomes. Distractor 1 is weak: it states children are influenced but fails to specify the negative health consequence. Distractor 2 is weak: legal rights are distinct from public health policy decisions. Distractor 3 is weak: taste is irrelevant to the health impact of the advertising."
 },
 {
 kind: "single",
@@ -26928,11 +27288,11 @@ stimulus: ['Should the government subsidize home solar panel installation for lo
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it lowers the monthly utility expenses for families most burdened by energy costs, while simultaneously reducing the demand on the national power grid.",
 distractors: [
-"Yes, because the sun provides free energy every day (TRIVIAL).",
-"No, because some homes do not have enough roof space (TRIVIAL).",
-"Yes, because everyone wants to save money on their bills (CIRCULAR)."
+"Yes, because the sun provides free energy every day.",
+"No, because some homes do not have enough roof space.",
+"No, because the government should focus on things that are important rather than things that are not important."
 ],
-explanation: "The correct answer is strongest because it addresses both financial relief for a specific group and the broader benefit to the energy grid. Distractor 1 is weak (TRIVIAL): the fact that the sun is free is a truism, not an argument for funding installation. Distractor 2 is weak (TRIVIAL): a minor implementation issue does not invalidate the policy. Distractor 3 is weak (CIRCULAR): restating that people want to save money is just the goal, not an argument for why the subsidy is effective."
+explanation: "The correct answer is strongest because it addresses both financial relief for a specific group and the broader benefit to the energy grid. Distractor 1 is weak: the fact that the sun is free is a truism, not an argument for funding installation. Distractor 2 is weak: a minor implementation issue does not invalidate the policy. Distractor 3 is weak: restating that people want to save money is just the goal, not an argument for why the subsidy is effective."
 },
 {
 kind: "single",
@@ -26942,11 +27302,11 @@ stimulus: ['Should national parks charge a significant entry fee to control visi
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it provides the necessary funding to repair trails and infrastructure that are degraded by high visitor volumes, while naturally limiting overcrowding to protect fragile ecosystems.",
 distractors: [
-"Yes, because parks are beautiful places that deserve protection (VAGUE).",
-"No, because it might be harder for some people to afford a day out (TRIVIAL).",
-"Yes, because many other tourist attractions charge an entry fee (IRRELEVANT)."
+"Yes, because parks are beautiful places that deserve protection.",
+"No, because it might be harder for some people to afford a day out.",
+"No, because national parks are important places that people should be able to visit."
 ],
-explanation: "The correct answer is strongest because it provides a dual justification: funding maintenance and managing environmental impact. Distractor 1 is weak (VAGUE): beauty is a sentiment, not a structural argument for fees. Distractor 2 is weak (TRIVIAL): social equity in recreation is a valid concern but does not negate the necessity of conservation. Distractor 3 is weak (IRRELEVANT): what other attractions do is not a justification for a national park policy."
+explanation: "The correct answer is strongest because it provides a dual justification: funding maintenance and managing environmental impact. Distractor 1 is weak: beauty is a sentiment, not a structural argument for fees. Distractor 2 is weak: social equity in recreation is a valid concern but does not negate the necessity of conservation. Distractor 3 is weak: what other attractions do is not a justification for a national park policy."
 },
 {
 kind: "single",
@@ -26956,11 +27316,11 @@ stimulus: ['Should universities be required to provide free mental health counse
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because providing accessible, on-campus support is linked to higher retention and graduation rates, as students can better manage the stressors of academic life.",
 distractors: [
-"Yes, because mental health is very important for everyone (VAGUE).",
-"No, because the university already has a library for students to study in (NON-SEQUITUR).",
-"Yes, because students often have a lot of assignments to do (IRRELEVANT)."
+"Yes, because mental health is very important for everyone.",
+"No, because the university already has a library for students to study in.",
+"No, because mental health counseling is something that relates to people's minds, and universities are primarily about education, which also involves minds, so it would just be doing the same thing twice."
 ],
-explanation: "The correct answer is strongest because it correlates the provision of the service with concrete academic success indicators (retention/graduation). Distractor 1 is weak (VAGUE): 'important' is too generic. Distractor 2 is weak (NON-SEQUITUR): a library has no connection to mental health needs. Distractor 3 is weak (IRRELEVANT): having assignments is not a reason for or against the funding of counseling."
+explanation: "The correct answer is strongest because it correlates the provision of the service with concrete academic success indicators (retention/graduation). Distractor 1 is weak: 'important' is too generic. Distractor 2 is weak: a library has no connection to mental health needs. Distractor 3 is weak: having assignments is not a reason for or against the funding of counseling."
 },
 {
 kind: "single",
@@ -26970,11 +27330,11 @@ stimulus: ['Should the government enforce a maximum limit on the number of hours
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because limiting work hours prevents chronic fatigue and occupational burnout, which are leading causes of workplace errors and long-term health complications for employees.",
 distractors: [
-"Yes, because people need time to sleep and relax (VAGUE).",
-"No, because some people actually like working long hours to earn more money (TRIVIAL).",
-"Yes, because every country has different labor laws (IRRELEVANT)."
+"Yes, because people need time to sleep and relax.",
+"No, because some people actually like working long hours to earn more money.",
+"No, because the government should not make rules that tell people what to do with their time."
 ],
-explanation: "The correct answer is strongest because it links the policy to specific health and safety consequences (errors/illness). Distractor 1 is weak (VAGUE): it lacks a professional or systemic context. Distractor 2 is weak (TRIVIAL): individual choice doesn't account for the systemic risk of burnout. Distractor 3 is weak (IRRELEVANT): international variation in labor laws does not inform the merit of this specific policy."
+explanation: "The correct answer is strongest because it links the policy to specific health and safety consequences (errors/illness). Distractor 1 is weak: it lacks a professional or systemic context. Distractor 2 is weak: individual choice doesn't account for the systemic risk of burnout. Distractor 3 is weak: international variation in labor laws does not inform the merit of this specific policy."
 },
 {
 kind: "single",
@@ -26984,11 +27344,11 @@ stimulus: ['Should all high schools incorporate mandatory financial literacy cou
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it equips young adults with the skills to manage debt, credit, and savings before they enter the workforce, significantly reducing the likelihood of early-adulthood financial instability.",
 distractors: [
-"Yes, because money is something that everyone uses in their daily life (TRIVIAL).",
-"No, because there are already enough subjects being taught at school (VAGUE).",
-"Yes, because the internet has a lot of information about finance (IRRELEVANT)."
+"Yes, because money is something that everyone uses in their daily life.",
+"No, because there are already enough subjects being taught at school.",
+"No, because if financial literacy were really that important, students would already know about it from their families and personal experiences."
 ],
-explanation: "The correct answer is strongest because it focuses on the prevention of a specific negative outcome (financial instability). Distractor 1 is weak (TRIVIAL): the ubiquity of money is not an argument for school curriculum changes. Distractor 2 is weak (VAGUE): 'enough subjects' is an arbitrary reason. Distractor 3 is weak (IRRELEVANT): internet availability does not negate the value of structured education."
+explanation: "The correct answer is strongest because it focuses on the prevention of a specific negative outcome (financial instability). Distractor 1 is weak: the ubiquity of money is not an argument for school curriculum changes. Distractor 2 is weak: 'enough subjects' is an arbitrary reason. Distractor 3 is weak: internet availability does not negate the value of structured education."
 },
 {
 kind: "single",
@@ -26998,11 +27358,11 @@ stimulus: ['Should the government fund the construction of high-speed rail lines
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it provides a viable, lower-emission alternative to domestic air travel, which significantly reduces the carbon footprint of regional commuters.",
 distractors: [
-"Yes, because high-speed trains are very fast and exciting to ride (VAGUE).",
-"No, because the construction of tracks is a very long process (TRIVIAL).",
-"Yes, because many cities already have older train stations (IRRELEVANT)."
+"Yes, because high-speed trains are very fast and exciting to ride.",
+"No, because the construction of tracks is a very long process.",
+"No, because high-speed rail is a form of transportation that moves people from one place to another."
 ],
-explanation: "The correct answer is strongest because it clearly articulates the goal (emission reduction) and the mechanism (alternative to air travel). Distractor 1 is weak (VAGUE): speed and excitement are not policy justifications. Distractor 2 is weak (TRIVIAL): construction time is an implementation challenge, not a reason to reject the benefit. Distractor 3 is weak (IRRELEVANT): existing infrastructure does not invalidate the need for new rail."
+explanation: "The correct answer is strongest because it clearly articulates the goal (emission reduction) and the mechanism (alternative to air travel). Distractor 1 is weak: speed and excitement are not policy justifications. Distractor 2 is weak: construction time is an implementation challenge, not a reason to reject the benefit. Distractor 3 is weak: existing infrastructure does not invalidate the need for new rail."
 },
 {
 kind: "single",
@@ -27012,11 +27372,11 @@ stimulus: ['Should plastic food packaging be banned in favor of biodegradable al
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because current plastic waste persists in the environment for centuries, creating long-term microplastic pollution that enters the food chain and threatens marine biodiversity.",
 distractors: [
-"Yes, because it is better to be green than to use plastic (VAGUE).",
-"No, because plastic is quite useful for keeping food fresh (TRIVIAL).",
-"Yes, because many people are concerned about the environment (CIRCULAR)."
+"Yes, because it is better to be green than to use plastic.",
+"No, because plastic is quite useful for keeping food fresh.",
+"No, because biodegradable alternatives are made of materials that biodegrade, which means they break down naturally over time."
 ],
-explanation: "The correct answer is strongest because it identifies the environmental mechanism (persistence/food chain entry) of the harm. Distractor 1 is weak (VAGUE): 'being green' is an imprecise slogan. Distractor 2 is weak (TRIVIAL): freshness is an advantage of plastic, but it does not address the core concern of long-term pollution. Distractor 3 is weak (CIRCULAR): public concern is a symptom, not a justification for why the policy succeeds."
+explanation: "The correct answer is strongest because it identifies the environmental mechanism (persistence/food chain entry) of the harm. Distractor 1 is weak: 'being green' is an imprecise slogan. Distractor 2 is weak: freshness is an advantage of plastic, but it does not address the core concern of long-term pollution. Distractor 3 is weak: public concern is a symptom, not a justification for why the policy succeeds."
 },
 {
 kind: "single",
@@ -27026,11 +27386,11 @@ stimulus: ['Should all large corporations be required to disclose their carbon f
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because standardized reporting forces companies to identify their most emission-intensive processes, which creates a competitive incentive for them to adopt cleaner, more efficient technologies.",
 distractors: [
-"Yes, because climate change is a very serious problem for the world (VAGUE).",
-"No, because some companies might find it difficult to calculate their footprint (TRIVIAL).",
-"Yes, because corporations have a lot of money to spend on auditors (IRRELEVANT)."
+"Yes, because climate change is a very serious problem for the world.",
+"No, because some companies might find it difficult to calculate their footprint.",
+"No, because disclosure requirements would involve paperwork, and paperwork is generally something that companies have to deal with anyway."
 ],
-explanation: "The correct answer is strongest because it identifies the mechanism (internal audit leading to technological change) that drives the environmental goal. Distractor 1 is weak (VAGUE): the existence of a problem is not an argument for a specific policy. Distractor 2 is weak (TRIVIAL): difficulty of calculation is a minor hurdle, not a structural flaw. Distractor 3 is weak (IRRELEVANT): corporate wealth does not dictate the efficacy of the disclosure policy."
+explanation: "The correct answer is strongest because it identifies the mechanism (internal audit leading to technological change) that drives the environmental goal. Distractor 1 is weak: the existence of a problem is not an argument for a specific policy. Distractor 2 is weak: difficulty of calculation is a minor hurdle, not a structural flaw. Distractor 3 is weak: corporate wealth does not dictate the efficacy of the disclosure policy."
 },
 {
 kind: "single",
@@ -27040,11 +27400,11 @@ stimulus: ['Should governments mandate that all new residential buildings incorp
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it reduces the strain on municipal water treatment infrastructure during peak summer months, preventing costly water shortages in rapidly growing urban areas.",
 distractors: [
-"Yes, because water is essential for human life (VAGUE).",
-"No, because some people might not want to drink harvested water (TRIVIAL).",
-"Yes, because many houses already have gutters installed (IRRELEVANT)."
+"Yes, because water is essential for human life.",
+"No, because some people might not want to drink harvested water.",
+"No, because mandating rainwater harvesting systems would involve making decisions about buildings, which is a complicated matter that requires careful thought."
 ],
-explanation: "The correct answer is strongest because it links the policy to the capacity of infrastructure and the avoidance of systemic failure (shortages). Distractor 1 is weak (VAGUE): the necessity of water is a truism. Distractor 2 is weak (TRIVIAL): individual preference for drinking water is not a major issue in residential water harvesting for irrigation/toilets. Distractor 3 is weak (IRRELEVANT): existing gutters do not negate the utility of harvesting systems."
+explanation: "The correct answer is strongest because it links the policy to the capacity of infrastructure and the avoidance of systemic failure (shortages). Distractor 1 is weak: the necessity of water is a truism. Distractor 2 is weak: individual preference for drinking water is not a major issue in residential water harvesting for irrigation/toilets. Distractor 3 is weak: existing gutters do not negate the utility of harvesting systems."
 },
 {
 kind: "single",
@@ -27054,11 +27414,11 @@ stimulus: ['Should the state fund community gardens in urban areas?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because they provide a cost-effective way to improve food security in low-income neighborhoods while simultaneously fostering social cohesion among diverse residents.",
 distractors: [
-"Yes, because plants and flowers make neighborhoods look nicer (TRIVIAL).",
-"No, because it might take up space that could be used for parking (TRIVIAL).",
-"Yes, because community is a very important part of living in a city (VAGUE)."
+"Yes, because plants and flowers make neighborhoods look nicer.",
+"No, because it might take up space that could be used for parking.",
+"No, because community gardens are gardens, and gardens require gardening, which is something not everyone wants to do."
 ],
-explanation: "The correct answer is strongest because it highlights the dual benefits of food security and social health. Distractor 1 is weak (TRIVIAL): aesthetic appeal is a secondary benefit compared to food security. Distractor 2 is weak (TRIVIAL): urban planning trade-offs regarding parking are minor compared to food security benefits. Distractor 3 is weak (VAGUE): the importance of community is a general sentiment, not a concrete argument for the garden policy."
+explanation: "The correct answer is strongest because it highlights the dual benefits of food security and social health. Distractor 1 is weak: aesthetic appeal is a secondary benefit compared to food security. Distractor 2 is weak: urban planning trade-offs regarding parking are minor compared to food security benefits. Distractor 3 is weak: the importance of community is a general sentiment, not a concrete argument for the garden policy."
 },
 {
 kind: "single",
@@ -27068,11 +27428,11 @@ stimulus: ['Should the government ban the use of autonomous weapons in military 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the lack of human accountability in lethal decisions creates a high risk of escalation and accidental harm, which violates international protocols for civilian protection.",
 distractors: [
-"Yes, because war is something that everyone would prefer to avoid (VAGUE).",
-"No, because robots are less prone to fatigue than humans (TRIVIAL).",
-"Yes, because the history of warfare is full of weapons that were eventually banned (IRRELEVANT)."
+"Yes, because war is something that everyone would prefer to avoid.",
+"No, because robots are less prone to fatigue than humans.",
+"No, because banning autonomous weapons would be a bad idea since it would prevent us from doing things we might want to do with autonomous weapons."
 ],
-explanation: "The correct answer is strongest because it addresses the core issue of accountability and the specific risk of international protocol violations. Distractor 1 is weak (VAGUE): preference for peace is not an argument for this specific prohibition. Distractor 2 is weak (TRIVIAL): the endurance of robots does not address the ethical and accountability concerns. Distractor 3 is weak (IRRELEVANT): historical precedent is not an argument for current policy."
+explanation: "The correct answer is strongest because it addresses the core issue of accountability and the specific risk of international protocol violations. Distractor 1 is weak: preference for peace is not an argument for this specific prohibition. Distractor 2 is weak: the endurance of robots does not address the ethical and accountability concerns. Distractor 3 is weak: historical precedent is not an argument for current policy."
 },
 {
 kind: "single",
@@ -27082,11 +27442,11 @@ stimulus: ['Should all high-traffic pedestrian areas be converted into permanent
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it significantly lowers the incidence of vehicle-pedestrian accidents while encouraging more walking, which improves public health and local retail foot traffic.",
 distractors: [
-"Yes, because pedestrians enjoy not having to dodge cars (VAGUE).",
-"No, because some drivers might get lost if they cannot use those streets (TRIVIAL).",
-"Yes, because urban design is a field that studies city layouts (IRRELEVANT)."
+"Yes, because pedestrians enjoy not having to dodge cars.",
+"No, because some drivers might get lost if they cannot use those streets.",
+"No, because car-free zones would make areas feel different from how they feel now."
 ],
-explanation: "The correct answer is strongest because it identifies the primary safety benefit and a secondary economic benefit. Distractor 1 is weak (VAGUE): 'dodging cars' is an observation, not an economic or public health argument. Distractor 2 is weak (TRIVIAL): drivers getting lost is a minor inconvenience compared to traffic safety. Distractor 3 is weak (IRRELEVANT): the existence of urban design as a field is irrelevant."
+explanation: "The correct answer is strongest because it identifies the primary safety benefit and a secondary economic benefit. Distractor 1 is weak: 'dodging cars' is an observation, not an economic or public health argument. Distractor 2 is weak: drivers getting lost is a minor inconvenience compared to traffic safety. Distractor 3 is weak: the existence of urban design as a field is irrelevant."
 },
 {
 kind: "single",
@@ -27096,11 +27456,11 @@ stimulus: ['Should all public museums offer free admission to all visitors?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing the financial barrier increases equitable access for marginalized communities, thereby fulfilling the public mandate to preserve and share collective cultural history.",
 distractors: [
-"Yes, because museums are filled with interesting things to see (TRIVIAL).",
-"No, because museums need money to pay for security and electricity (TRIVIAL).",
-"Yes, because everyone likes to learn about history (CIRCULAR)."
+"Yes, because museums are filled with interesting things to see.",
+"No, because museums need money to pay for security and electricity.",
+"No, because free admission would change the way people experience museums."
 ],
-explanation: "The correct answer is strongest because it relates the policy to the fundamental ethical mandate of public institutions and social equity. Distractor 1 is weak (TRIVIAL): the content of the museum does not argue for free access. Distractor 2 is weak (TRIVIAL): operational costs are a challenge, but the core issue is the philosophy of access. Distractor 3 is weak (CIRCULAR): 'everyone likes history' is not an argument for why admission should be free."
+explanation: "The correct answer is strongest because it relates the policy to the fundamental ethical mandate of public institutions and social equity. Distractor 1 is weak: the content of the museum does not argue for free access. Distractor 2 is weak: operational costs are a challenge, but the core issue is the philosophy of access. Distractor 3 is weak: 'everyone likes history' is not an argument for why admission should be free."
 },
 {
 kind: "single",
@@ -27110,11 +27470,11 @@ stimulus: ['Should employers be required to provide flexible working hours for a
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it allows employees to better manage personal obligations without reducing output, leading to higher job satisfaction and lower turnover rates for companies.",
 distractors: [
-"Yes, because people generally have a better time when they have more control (VAGUE).",
-"No, because the office might feel empty if everyone comes in at different times (TRIVIAL).",
-"Yes, because some companies already offer flexible hours (IRRELEVANT)."
+"Yes, because people generally have a better time when they have more control.",
+"No, because the office might feel empty if everyone comes in at different times.",
+"No, because flexible working hours are a form of working, and if employers provide them, then employees will be working flexibly."
 ],
-explanation: "The correct answer is strongest because it links the policy to tangible organizational metrics like turnover and satisfaction. Distractor 1 is weak (VAGUE): 'better time' is subjective and lacks a professional context. Distractor 2 is weak (TRIVIAL): office atmosphere is a minor concern compared to employee retention. Distractor 3 is weak (IRRELEVANT): current adoption rates by some companies do not justify a universal mandate."
+explanation: "The correct answer is strongest because it links the policy to tangible organizational metrics like turnover and satisfaction. Distractor 1 is weak: 'better time' is subjective and lacks a professional context. Distractor 2 is weak: office atmosphere is a minor concern compared to employee retention. Distractor 3 is weak: current adoption rates by some companies do not justify a universal mandate."
 },
 {
 kind: "single",
@@ -27124,11 +27484,11 @@ stimulus: ['Should all intensive factory farming of livestock be banned in favou
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because intensive confinement causes severe psychological and physical stress, which significantly impairs the quality of life and biological health of the animals.",
 distractors: [
-"Yes, because people who eat meat often like to know the animals were treated well (TRIVIAL).",
-"No, because some people prefer the taste of factory-farmed meat over free-range meat (IRRELEVANT).",
-"No, because banning factory farming would involve changing the current laws regarding how farms operate (CIRCULAR)."
+"Yes, because people who eat meat often like to know the animals were treated well.",
+"No, because some people prefer the taste of factory-farmed meat over free-range meat.",
+"No, because banning factory farming would involve changing the current laws regarding how farms operate."
 ],
-explanation: "The correct answer is strongest because it directly addresses the ethical purpose of the proposal by highlighting the negative consequences of confinement. Distractor 1 is weak (TRIVIAL): consumer preference is secondary to the welfare issue. Distractor 2 is weak (IRRELEVANT): personal taste does not address the welfare argument. Distractor 3 is weak (CIRCULAR): it merely restates the process of implementation as a reason for inaction."
+explanation: "The correct answer is strongest because it directly addresses the ethical purpose of the proposal by highlighting the negative consequences of confinement. Distractor 1 is weak: consumer preference is secondary to the welfare issue. Distractor 2 is weak: personal taste does not address the welfare argument. Distractor 3 is weak: it merely restates the process of implementation as a reason for inaction."
 },
 {
 kind: "single",
@@ -27138,11 +27498,11 @@ stimulus: ['Should pet owners be legally required to pass a mandatory competency
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mandatory testing ensures that owners understand the specific needs and behavioral requirements of different breeds, significantly reducing the rates of animal abandonment and neglect.",
 distractors: [
-"Yes, because people who own dogs are often seen in public parks walking them on leashes (IRRELEVANT).",
-"No, because some people believe that owning a dog is a fundamental right that should not be restricted by the government (VAGUE).",
-"Yes, because pet owners should be required to demonstrate that they are competent at owning a pet (CIRCULAR)."
+"Yes, because people who own dogs are often seen in public parks walking them on leashes.",
+"No, because some people believe that owning a dog is a fundamental right that should not be restricted by the government.",
+"No, because dogs have been owned by people for a very long time, so it would be strange to suddenly require a test now."
 ],
-explanation: "The correct answer is strongest because it links the proposal to the reduction of a specific, serious consequence (abandonment). Distractor 1 is weak (IRRELEVANT): leash-walking is unrelated to competency. Distractor 2 is weak (VAGUE): the concept of a fundamental right is abstract and ignores the welfare goal. Distractor 3 is weak (CIRCULAR): it simply repeats the requirement as its own justification."
+explanation: "The correct answer is strongest because it links the proposal to the reduction of a specific, serious consequence (abandonment). Distractor 1 is weak: leash-walking is unrelated to competency. Distractor 2 is weak: the concept of a fundamental right is abstract and ignores the welfare goal. Distractor 3 is weak: it simply repeats the requirement as its own justification."
 },
 {
 kind: "single",
@@ -27152,11 +27512,11 @@ stimulus: ['Should the use of live animals in cosmetic testing be prohibited glo
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because modern non-animal testing methods, such as synthetic skin and computer modelling, provide highly accurate results without inflicting unnecessary pain on sentient beings.",
 distractors: [
-"Yes, because cosmetic companies should not be allowed to test their products on animals (CIRCULAR).",
-"No, because the beauty industry employs thousands of people worldwide in various roles (NON-SEQUITUR).",
-"Yes, because some animal activists have spent years campaigning against this practice (TRIVIAL)."
+"Yes, because cosmetic companies should not be allowed to test their products on animals.",
+"No, because the beauty industry employs thousands of people worldwide in various roles.",
+"No, because animal testing has been used for a long time and we should not change things that have always been done this way."
 ],
-explanation: "The correct answer is strongest because it offers a functional alternative that achieves the same goal (testing) without the ethical cost. Distractor 1 is weak (CIRCULAR): it just restates the goal. Distractor 2 is weak (NON-SEQUITUR): economic employment is not a valid justification for unethical testing. Distractor 3 is weak (TRIVIAL): the history of activism does not prove the validity of the proposal."
+explanation: "The correct answer is strongest because it offers a functional alternative that achieves the same goal (testing) without the ethical cost. Distractor 1 is weak: it just restates the goal. Distractor 2 is weak: economic employment is not a valid justification for unethical testing. Distractor 3 is weak: the history of activism does not prove the validity of the proposal."
 },
 {
 kind: "single",
@@ -27166,11 +27526,11 @@ stimulus: ['Should zoos be prohibited from breeding endangered species if the of
 question: "Select the strongest argument from the statements below.",
 correct: "No, because captive breeding programs maintain genetic diversity that acts as a vital insurance policy against extinction in the event of catastrophic habitat loss in the wild.",
 distractors: [
-"Yes, because the animals are often kept in enclosures that look nothing like their natural habitat (IRRELEVANT).",
-"No, because it is important that zoos continue to breed endangered species (CIRCULAR).",
-"No, because children enjoy seeing baby animals when they visit the zoo with their families (TRIVIAL)."
+"Yes, because the animals are often kept in enclosures that look nothing like their natural habitat.",
+"No, because it is important that zoos continue to breed endangered species.",
+"Yes, because breeding animals that will never be free is not really what zoos should be doing."
 ],
-explanation: "The correct answer is strongest because it identifies the scientific necessity (genetic insurance) of the program. Distractor 1 is weak (IRRELEVANT): enclosure aesthetics do not invalidate the genetic purpose. Distractor 2 is weak (CIRCULAR): it restates the premise. Distractor 3 is weak (TRIVIAL): visitor enjoyment is irrelevant to conservation ethics."
+explanation: "The correct answer is strongest because it identifies the scientific necessity (genetic insurance) of the program. Distractor 1 is weak: enclosure aesthetics do not invalidate the genetic purpose. Distractor 2 is weak: it restates the premise. Distractor 3 is weak: visitor enjoyment is irrelevant to conservation ethics."
 },
 {
 kind: "single",
@@ -27180,11 +27540,11 @@ stimulus: ['Should the sale of exotic animals as household pets be made illegal?
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the exotic pet trade fuels illegal poaching and removes animals from ecosystems, often leading to high mortality rates during transport and an inability to meet the complex husbandry needs of the animals in a domestic setting.",
 distractors: [
-"No, because some people think that exotic animals are very interesting and beautiful to look at (TRIVIAL).",
-"Yes, because there are too many exotic animals being sold in the world today (VAGUE).",
-"No, because many people who own exotic pets buy them from registered breeders rather than the black market (IRRELEVANT)."
+"No, because some people think that exotic animals are very interesting and beautiful to look at.",
+"Yes, because there are too many exotic animals being sold in the world today.",
+"No, because many people who own exotic pets buy them from registered breeders rather than the black market."
 ],
-explanation: "The correct answer is strongest because it details the direct, severe consequences for both the animals and the ecosystem. Distractor 1 is weak (TRIVIAL): aesthetic appeal does not outweigh animal welfare. Distractor 2 is weak (VAGUE): the quantity sold is not the primary ethical concern. Distractor 3 is weak (IRRELEVANT): it does not address the fundamental welfare impact of captivity on exotic species."
+explanation: "The correct answer is strongest because it details the direct, severe consequences for both the animals and the ecosystem. Distractor 1 is weak: aesthetic appeal does not outweigh animal welfare. Distractor 2 is weak: the quantity sold is not the primary ethical concern. Distractor 3 is weak: it does not address the fundamental welfare impact of captivity on exotic species."
 },
 {
 kind: "single",
@@ -27194,11 +27554,11 @@ stimulus: ['Should all animal shelters be required to operate under a "no-kill" 
 question: "Select the strongest argument from the statements below.",
 correct: "No, because forcing shelters to keep terminally ill or dangerously aggressive animals can lead to prolonged suffering for the animal and puts shelter staff and the public at significant risk.",
 distractors: [
-"Yes, because all animals deserve a chance to live as long as possible regardless of the circumstances (VAGUE).",
-"No, because shelters should be allowed to kill animals if they choose to do so (CIRCULAR).",
-"Yes, because there are many animal rights groups that support the no-kill movement (IRRELEVANT)."
+"Yes, because all animals deserve a chance to live as long as possible regardless of the circumstances.",
+"No, because shelters should be allowed to kill animals if they choose to do so.",
+"Yes, because there are many animal rights groups that support the no-kill movement."
 ],
-explanation: "The correct answer is strongest because it highlights the negative consequences of the policy on welfare and safety. Distractor 1 is weak (VAGUE): 'deserving a chance' is an emotional appeal without practical consideration. Distractor 2 is weak (CIRCULAR): it restates the power rather than justifying the policy. Distractor 3 is weak (IRRELEVANT): the popularity of a movement does not automatically justify the policy."
+explanation: "The correct answer is strongest because it highlights the negative consequences of the policy on welfare and safety. Distractor 1 is weak: 'deserving a chance' is an emotional appeal without practical consideration. Distractor 2 is weak: it restates the power rather than justifying the policy. Distractor 3 is weak: the popularity of a movement does not automatically justify the policy."
 },
 {
 kind: "single",
@@ -27208,11 +27568,11 @@ stimulus: ['Should the use of animals in circuses be banned globally?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the constant travel, training methods, and unnatural performance environments prevent animals from engaging in their natural social and physical behaviors, causing chronic stress and repetitive abnormal behaviors.",
 distractors: [
-"No, because many people have fond memories of going to the circus as a child (TRIVIAL).",
-"Yes, because circuses have been around for a very long time and should be updated (IRRELEVANT).",
-"No, because circuses are a form of entertainment that many people enjoy (NON-SEQUITUR)."
+"No, because many people have fond memories of going to the circus as a child.",
+"Yes, because circuses have been around for a very long time and should be updated.",
+"No, because circuses are a form of entertainment that many people enjoy."
 ],
-explanation: "The correct answer is strongest because it describes the specific biological and psychological impacts of circus life. Distractor 1 is weak (TRIVIAL): nostalgia is not a valid welfare argument. Distractor 2 is weak (IRRELEVANT): historical longevity does not negate welfare concerns. Distractor 3 is weak (NON-SEQUITUR): human enjoyment is not an ethical justification for animal confinement."
+explanation: "The correct answer is strongest because it describes the specific biological and psychological impacts of circus life. Distractor 1 is weak: nostalgia is not a valid welfare argument. Distractor 2 is weak: historical longevity does not negate welfare concerns. Distractor 3 is weak: human enjoyment is not an ethical justification for animal confinement."
 },
 {
 kind: "single",
@@ -27222,11 +27582,11 @@ stimulus: ['Should there be a total ban on the use of animals for medical resear
 question: "Select the strongest argument from the statements below.",
 correct: "No, because current medical advancements, such as vaccine development and surgical techniques, rely on animal models to understand complex systemic biological interactions that cannot yet be fully replicated in vitro.",
 distractors: [
-"Yes, because scientists should find other ways to do their research (VAGUE).",
-"No, because medical research is very expensive and scientists need funding (IRRELEVANT).",
-"Yes, because it is inherently wrong to use animals for research purposes (CIRCULAR)."
+"Yes, because scientists should find other ways to do their research.",
+"No, because medical research is very expensive and scientists need funding.",
+"Yes, because it is inherently wrong to use animals for research purposes."
 ],
-explanation: "The correct answer is strongest because it provides a functional, scientific necessity for the practice. Distractor 1 is weak (VAGUE): telling scientists to 'find other ways' ignores the current limitations of technology. Distractor 2 is weak (IRRELEVANT): cost is secondary to the scientific necessity. Distractor 3 is weak (CIRCULAR): it asserts the conclusion as the premise."
+explanation: "The correct answer is strongest because it provides a functional, scientific necessity for the practice. Distractor 1 is weak: telling scientists to 'find other ways' ignores the current limitations of technology. Distractor 2 is weak: cost is secondary to the scientific necessity. Distractor 3 is weak: it asserts the conclusion as the premise."
 },
 {
 kind: "single",
@@ -27236,11 +27596,11 @@ stimulus: ['Should all high-rise residential buildings be required by law to hav
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because sprinkler systems detect fires in their earliest stages, significantly increasing the survival rates of occupants and reducing the severity of structural damage to the building.",
 distractors: [
-"Yes, because all buildings should be safe for people to live in (CIRCULAR).",
-"No, because installing sprinklers can be a noisy and inconvenient process for current residents (TRIVIAL).",
-"Yes, because many people who live in high-rise buildings own expensive furniture (IRRELEVANT)."
+"Yes, because all buildings should be safe for people to live in.",
+"No, because installing sprinklers can be a noisy and inconvenient process for current residents.",
+"No, because fire safety is a complex issue that involves many different factors beyond just sprinkler systems."
 ],
-explanation: "The correct answer is strongest because it connects the proposal to the core purpose (fire safety) and cites a significant, concrete consequence (increased survival/reduced damage). Distractor 1 is weak (CIRCULAR): it restates the proposal. Distractor 2 is weak (TRIVIAL): inconvenience does not outweigh life safety. Distractor 3 is weak (IRRELEVANT): furniture value is not a relevant argument for fire protection."
+explanation: "The correct answer is strongest because it connects the proposal to the core purpose (fire safety) and cites a significant, concrete consequence (increased survival/reduced damage). Distractor 1 is weak: it restates the proposal. Distractor 2 is weak: inconvenience does not outweigh life safety. Distractor 3 is weak: furniture value is not a relevant argument for fire protection."
 },
 {
 kind: "single",
@@ -27250,11 +27610,11 @@ stimulus: ['Should urban city centres be made completely car-free to reduce air 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing vehicle traffic from dense urban cores dramatically lowers nitrogen dioxide levels, leading to immediate measurable health improvements for residents prone to respiratory issues.",
 distractors: [
-"No, because some people really like driving their cars into the city (TRIVIAL).",
-"Yes, because cities should be places where people can walk around without cars (CIRCULAR).",
-"No, because the city centre has many shops that sell various types of goods (IRRELEVANT)."
+"No, because some people really like driving their cars into the city.",
+"Yes, because cities should be places where people can walk around without cars.",
+"No, because the city centre has many shops that sell various types of goods."
 ],
-explanation: "The correct answer is strongest because it identifies the primary benefit (air quality) and links it to a specific, measurable public health outcome. Distractor 1 is weak (TRIVIAL): personal preference for driving is not a health or environmental consideration. Distractor 2 is weak (CIRCULAR): it restates the desired state. Distractor 3 is weak (IRRELEVANT): shop offerings are irrelevant to the air quality issue."
+explanation: "The correct answer is strongest because it identifies the primary benefit (air quality) and links it to a specific, measurable public health outcome. Distractor 1 is weak: personal preference for driving is not a health or environmental consideration. Distractor 2 is weak: it restates the desired state. Distractor 3 is weak: shop offerings are irrelevant to the air quality issue."
 },
 {
 kind: "single",
@@ -27264,11 +27624,11 @@ stimulus: ['Should the government subsidise the installation of solar panels on 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because reducing energy costs for low-income households provides long-term financial relief while simultaneously decreasing the carbon footprint of the public housing sector.",
 distractors: [
-"Yes, because solar panels are a good way to get energy (VAGUE).",
-"No, because the sun does not shine every single day of the year (IRRELEVANT).",
-"Yes, because the government should spend more money on renewable energy projects (CIRCULAR)."
+"Yes, because solar panels are a good way to get energy.",
+"No, because the sun does not shine every single day of the year.",
+"No, because solar panels are expensive and expensive things cost money."
 ],
-explanation: "The correct answer is strongest because it highlights the dual benefits of social welfare (cost relief) and environmental impact. Distractor 1 is weak (VAGUE): 'good way' is too imprecise. Distractor 2 is weak (IRRELEVANT): modern grid storage makes this a non-issue for solar efficacy. Distractor 3 is weak (CIRCULAR): it merely restates the policy goal."
+explanation: "The correct answer is strongest because it highlights the dual benefits of social welfare (cost relief) and environmental impact. Distractor 1 is weak: 'good way' is too imprecise. Distractor 2 is weak: modern grid storage makes this a non-issue for solar efficacy. Distractor 3 is weak: it merely restates the policy goal."
 },
 {
 kind: "single",
@@ -27278,11 +27638,11 @@ stimulus: ['Should all new residential developments be required to include a min
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mandating affordable units helps prevent the socio-economic segregation of communities and ensures that essential workers can afford to live near their places of employment.",
 distractors: [
-"No, because developers should be able to build whatever houses they want (VAGUE).",
-"Yes, because housing should be affordable for everyone (CIRCULAR).",
-"No, because there are many different types of architectural styles (IRRELEVANT)."
+"No, because developers should be able to build whatever houses they want.",
+"Yes, because housing should be affordable for everyone.",
+"No, because there are many different types of architectural styles."
 ],
-explanation: "The correct answer is strongest because it addresses social equity and economic infrastructure (worker proximity). Distractor 1 is weak (VAGUE): 'whatever they want' is a non-argument. Distractor 2 is weak (CIRCULAR): restating the goal is not a justification. Distractor 3 is weak (IRRELEVANT): architectural style is irrelevant to housing policy."
+explanation: "The correct answer is strongest because it addresses social equity and economic infrastructure (worker proximity). Distractor 1 is weak: 'whatever they want' is a non-argument. Distractor 2 is weak: restating the goal is not a justification. Distractor 3 is weak: architectural style is irrelevant to housing policy."
 },
 {
 kind: "single",
@@ -27292,11 +27652,11 @@ stimulus: ['Should all major cities implement a mandatory "green roof" policy fo
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because green roofs absorb significant amounts of rainwater, which reduces the load on city drainage systems and mitigates the risk of flash flooding in urban areas.",
 distractors: [
-"Yes, because buildings should be greener (CIRCULAR).",
-"No, because some people think that green roofs look messy (TRIVIAL).",
-"No, because the maintenance of the roof requires hiring someone to take care of the plants (IRRELEVANT)."
+"Yes, because buildings should be greener.",
+"No, because some people think that green roofs look messy.",
+"No, because the maintenance of the roof requires hiring someone to take care of the plants."
 ],
-explanation: "The correct answer is strongest because it provides a specific, functional consequence (flood mitigation) for the policy. Distractor 1 is weak (CIRCULAR): 'greener' is a restatement. Distractor 2 is weak (TRIVIAL): aesthetics are not a core policy concern compared to flood risk. Distractor 3 is weak (IRRELEVANT): maintenance costs are a detail, not an argument against the fundamental benefit."
+explanation: "The correct answer is strongest because it provides a specific, functional consequence (flood mitigation) for the policy. Distractor 1 is weak: 'greener' is a restatement. Distractor 2 is weak: aesthetics are not a core policy concern compared to flood risk. Distractor 3 is weak: maintenance costs are a detail, not an argument against the fundamental benefit."
 },
 {
 kind: "single",
@@ -27306,11 +27666,11 @@ stimulus: ['Should the government limit the height of buildings in historic dist
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because controlling building height prevents high-density modern structures from overshadowing and destroying the unique architectural and cultural identity that draws tourism and investment to historic areas.",
 distractors: [
-"Yes, because historic districts should be preserved (CIRCULAR).",
-"No, because taller buildings can hold more offices and apartments (IRRELEVANT).",
-"No, because some people prefer living in modern buildings (TRIVIAL)."
+"Yes, because historic districts should be preserved.",
+"No, because taller buildings can hold more offices and apartments.",
+"No, because some people prefer living in modern buildings."
 ],
-explanation: "The correct answer is strongest because it links the policy to the economic and cultural preservation of the site. Distractor 1 is weak (CIRCULAR): it restates the proposal. Distractor 2 is weak (IRRELEVANT): while true, this does not address the specific goal of historic preservation. Distractor 3 is weak (TRIVIAL): individual preference is not a valid policy argument for planning law."
+explanation: "The correct answer is strongest because it links the policy to the economic and cultural preservation of the site. Distractor 1 is weak: it restates the proposal. Distractor 2 is weak: while true, this does not address the specific goal of historic preservation. Distractor 3 is weak: individual preference is not a valid policy argument for planning law."
 },
 {
 kind: "single",
@@ -27320,11 +27680,11 @@ stimulus: ['Should all public transport be made free to use for all citizens?'],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the massive loss of fare revenue would severely limit the transit authority’s ability to fund necessary maintenance and expand service routes, potentially leading to a decline in transport quality.",
 distractors: [
-"Yes, because free transport would be very nice for everyone (VAGUE).",
-"No, because people who take the bus should pay for it (CIRCULAR).",
-"Yes, because some people like to ride the train while reading books (IRRELEVANT)."
+"Yes, because free transport would be very nice for everyone.",
+"No, because people who take the bus should pay for it.",
+"Yes, because some people like to ride the train while reading books."
 ],
-explanation: "The correct answer is strongest because it highlights the direct negative financial consequence of the policy. Distractor 1 is weak (VAGUE): 'very nice' is not an argument. Distractor 2 is weak (CIRCULAR): it restates the status quo. Distractor 3 is weak (IRRELEVANT): reading habits are irrelevant to the economics of transport."
+explanation: "The correct answer is strongest because it highlights the direct negative financial consequence of the policy. Distractor 1 is weak: 'very nice' is not an argument. Distractor 2 is weak: it restates the status quo. Distractor 3 is weak: reading habits are irrelevant to the economics of transport."
 },
 {
 kind: "single",
@@ -27334,11 +27694,11 @@ stimulus: ['Should cities ban the use of electric scooters on pedestrian sidewal
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because scooters travelling at speed on crowded pavements pose a significant injury risk to pedestrians, particularly the elderly and those with mobility impairments.",
 distractors: [
-"No, because electric scooters are a very convenient way to get around the city (IRRELEVANT).",
-"Yes, because scooters should not be on the sidewalks (CIRCULAR).",
-"No, because some people like to go fast when they are commuting to work (TRIVIAL)."
+"No, because electric scooters are a very convenient way to get around the city.",
+"Yes, because scooters should not be on the sidewalks.",
+"No, because some people like to go fast when they are commuting to work."
 ],
-explanation: "The correct answer is strongest because it links the policy to a clear, actionable public safety benefit. Distractor 1 is weak (IRRELEVANT): convenience is a benefit for the user, but doesn't refute the pedestrian safety argument. Distractor 2 is weak (CIRCULAR): it restates the proposal. Distractor 3 is weak (TRIVIAL): commuting speed is not a valid justification for endangering public safety."
+explanation: "The correct answer is strongest because it links the policy to a clear, actionable public safety benefit. Distractor 1 is weak: convenience is a benefit for the user, but doesn't refute the pedestrian safety argument. Distractor 2 is weak: it restates the proposal. Distractor 3 is weak: commuting speed is not a valid justification for endangering public safety."
 },
 {
 kind: "single",
@@ -27348,11 +27708,11 @@ stimulus: ['Should all medical practitioners be required to complete annual ment
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because consistent training equips staff with effective coping mechanisms to manage the chronic stress of clinical work, which directly reduces burnout rates and enhances patient safety.",
 distractors: [
-"Yes, because all medical practitioners should be trained (CIRCULAR).",
-"No, because some doctors prefer to read books in their spare time (IRRELEVANT).",
-"Yes, because the medical field is a very challenging environment for many people (VAGUE)."
+"Yes, because all medical practitioners should be trained.",
+"No, because some doctors prefer to read books in their spare time.",
+"No, because mental health resilience training is just training, and training is something that happens in medical education already."
 ],
-explanation: "The correct answer is strongest because it correlates training with improved patient outcomes and reduced staff turnover. Distractor 1 is weak (CIRCULAR): it repeats the necessity of training. Distractor 2 is weak (IRRELEVANT): leisure activities are irrelevant to professional standards. Distractor 3 is weak (VAGUE): it identifies a problem but doesn't explain why training is the effective solution."
+explanation: "The correct answer is strongest because it correlates training with improved patient outcomes and reduced staff turnover. Distractor 1 is weak: it repeats the necessity of training. Distractor 2 is weak: leisure activities are irrelevant to professional standards. Distractor 3 is weak: it identifies a problem but doesn't explain why training is the effective solution."
 },
 {
 kind: "single",
@@ -27362,11 +27722,11 @@ stimulus: ['Should the government implement a nationwide tax on ultra-processed 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because increasing the cost of nutrient-poor, ultra-processed items encourages consumers to shift towards whole foods, which significantly reduces the incidence of diet-related chronic diseases like obesity and type 2 diabetes.",
 distractors: [
-"No, because people should be able to eat whatever they want to eat (VAGUE).",
-"Yes, because ultra-processed foods are not as healthy as fresh produce (TRIVIAL).",
-"No, because some people might find it difficult to change their grocery shopping habits (IRRELEVANT)."
+"No, because people should be able to eat whatever they want to eat.",
+"Yes, because ultra-processed foods are not as healthy as fresh produce.",
+"No, because some people might find it difficult to change their grocery shopping habits."
 ],
-explanation: "The correct answer is strongest because it links a fiscal policy to a measurable public health outcome. Distractor 1 is weak (VAGUE): freedom of choice is a broad value not addressing the health burden. Distractor 2 is weak (TRIVIAL): stating that they are less healthy is true but does not justify the tax mechanism. Distractor 3 is weak (IRRELEVANT): personal habit difficulty is secondary to the goal of population-wide health improvement."
+explanation: "The correct answer is strongest because it links a fiscal policy to a measurable public health outcome. Distractor 1 is weak: freedom of choice is a broad value not addressing the health burden. Distractor 2 is weak: stating that they are less healthy is true but does not justify the tax mechanism. Distractor 3 is weak: personal habit difficulty is secondary to the goal of population-wide health improvement."
 },
 {
 kind: "single",
@@ -27376,11 +27736,11 @@ stimulus: ['Should schools be prohibited from assigning homework to students und
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because children under 12 need adequate time for unstructured play and rest, which are essential for neurological development and social-emotional growth that classroom hours alone cannot provide.",
 distractors: [
-"No, because homework is a common practice in many schools around the world (IRRELEVANT).",
-"Yes, because students should not have to do homework (CIRCULAR).",
-"No, because teachers would have to find new ways to monitor student progress (TRIVIAL)."
+"No, because homework is a common practice in many schools around the world.",
+"Yes, because students should not have to do homework.",
+"No, because teachers would have to find new ways to monitor student progress."
 ],
-explanation: "The correct answer is strongest because it connects developmental science (neurological/social) to the student population age. Distractor 1 is weak (IRRELEVANT): popularity of a practice is not a pedagogical justification. Distractor 2 is weak (CIRCULAR): it restates the proposal. Distractor 3 is weak (TRIVIAL): teacher workload adjustments are a logistical detail, not a core pedagogical argument."
+explanation: "The correct answer is strongest because it connects developmental science (neurological/social) to the student population age. Distractor 1 is weak: popularity of a practice is not a pedagogical justification. Distractor 2 is weak: it restates the proposal. Distractor 3 is weak: teacher workload adjustments are a logistical detail, not a core pedagogical argument."
 },
 {
 kind: "single",
@@ -27390,11 +27750,11 @@ stimulus: ['Should all social media platforms be legally required to verify the 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because verifying identities significantly reduces the proliferation of anonymous harassment, hate speech, and fraudulent accounts, fostering a more accountable and civil online environment.",
 distractors: [
-"No, because people like to be anonymous when they are online (TRIVIAL).",
-"Yes, because social media platforms should have verified users (CIRCULAR).",
-"No, because some people use social media to share photos of their pets (IRRELEVANT)."
+"No, because people like to be anonymous when they are online.",
+"Yes, because social media platforms should have verified users.",
+"No, because some people use social media to share photos of their pets."
 ],
-explanation: "The correct answer is strongest because it addresses the specific harm (harassment) the policy seeks to mitigate. Distractor 1 is weak (TRIVIAL): user preference for anonymity is not a valid argument against public safety. Distractor 2 is weak (CIRCULAR): it just restates the rule. Distractor 3 is weak (IRRELEVANT): the content shared on the platform is irrelevant to the identity verification policy."
+explanation: "The correct answer is strongest because it addresses the specific harm (harassment) the policy seeks to mitigate. Distractor 1 is weak: user preference for anonymity is not a valid argument against public safety. Distractor 2 is weak: it just restates the rule. Distractor 3 is weak: the content shared on the platform is irrelevant to the identity verification policy."
 },
 {
 kind: "single",
@@ -27404,11 +27764,11 @@ stimulus: ['Should all workplaces be legally mandated to offer a four-day workin
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a compressed work schedule reduces employee fatigue and increases work-life balance, which leads to higher productivity levels and lower rates of professional burnout.",
 distractors: [
-"No, because a four-day week would mean changing the current calendar (NON-SEQUITUR).",
-"Yes, because four days is a better number than five (VAGUE).",
-"No, because some companies might not like having to change their policies (TRIVIAL)."
+"No, because a four-day week would mean changing the current calendar.",
+"Yes, because four days is a better number than five.",
+"No, because some companies might not like having to change their policies."
 ],
-explanation: "The correct answer is strongest because it links the policy to evidence-based improvements in human performance and health. Distractor 1 is weak (NON-SEQUITUR): the calendar structure is unaffected by working hours. Distractor 2 is weak (VAGUE): it lacks logical substance. Distractor 3 is weak (TRIVIAL): company inconvenience is not a valid counter-argument to the productivity benefits."
+explanation: "The correct answer is strongest because it links the policy to evidence-based improvements in human performance and health. Distractor 1 is weak: the calendar structure is unaffected by working hours. Distractor 2 is weak: it lacks logical substance. Distractor 3 is weak: company inconvenience is not a valid counter-argument to the productivity benefits."
 },
 {
 kind: "single",
@@ -27418,11 +27778,11 @@ stimulus: ['Should the voting age be lowered to 16 for all national elections?']
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because 16-year-olds are directly impacted by long-term government decisions on issues like education and climate policy, and including them would improve democratic representation and civic engagement.",
 distractors: [
-"No, because 16-year-olds do not know enough about politics (VAGUE).",
-"Yes, because the voting age should be sixteen (CIRCULAR).",
-"No, because some 16-year-olds are still in high school (IRRELEVANT)."
+"No, because 16-year-olds do not know enough about politics.",
+"Yes, because the voting age should be sixteen.",
+"No, because some 16-year-olds are still in high school."
 ],
-explanation: "The correct answer is strongest because it centers on the principles of democratic representation for those affected by policy. Distractor 1 is weak (VAGUE): 'not knowing enough' is a broad, subjective claim. Distractor 2 is weak (CIRCULAR): it merely restates the change. Distractor 3 is weak (IRRELEVANT): being a student has no bearing on one's capacity to vote."
+explanation: "The correct answer is strongest because it centers on the principles of democratic representation for those affected by policy. Distractor 1 is weak: 'not knowing enough' is a broad, subjective claim. Distractor 2 is weak: it merely restates the change. Distractor 3 is weak: being a student has no bearing on one's capacity to vote."
 },
 {
 kind: "single",
@@ -27432,11 +27792,11 @@ stimulus: ['Should the government ban the sale of all single-use plastics?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because single-use plastics persist in the environment for centuries, breaking down into microplastics that contaminate global food and water supplies and cause irreversible damage to marine ecosystems.",
 distractors: [
-"No, because it would be hard for people to stop using plastic bags (TRIVIAL).",
-"Yes, because plastic is bad for the environment (VAGUE).",
-"No, because plastic is a very useful material for making many different types of products (IRRELEVANT)."
+"No, because it would be hard for people to stop using plastic bags.",
+"Yes, because plastic is bad for the environment.",
+"No, because plastic is a very useful material for making many different types of products."
 ],
-explanation: "The correct answer is strongest because it provides a clear, environmental, and public health rationale (microplastics, ecosystem damage). Distractor 1 is weak (TRIVIAL): personal difficulty does not outweigh environmental catastrophe. Distractor 2 is weak (VAGUE): 'bad for the environment' is too general. Distractor 3 is weak (IRRELEVANT): the utility of plastic doesn't address the environmental cost of single-use varieties."
+explanation: "The correct answer is strongest because it provides a clear, environmental, and public health rationale (microplastics, ecosystem damage). Distractor 1 is weak: personal difficulty does not outweigh environmental catastrophe. Distractor 2 is weak: 'bad for the environment' is too general. Distractor 3 is weak: the utility of plastic doesn't address the environmental cost of single-use varieties."
 },
 {
 kind: "single",
@@ -27446,11 +27806,11 @@ stimulus: ['Should all primary schools be required to have a dedicated vegetable
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because direct engagement with gardening teaches children about food origins and promotes healthier eating habits, which serves as an early intervention against childhood obesity.",
 distractors: [
-"No, because gardens require water and maintenance (IRRELEVANT).",
-"Yes, because schools should have gardens (CIRCULAR).",
-"No, because some children might not like getting their hands dirty (TRIVIAL)."
+"No, because gardens require water and maintenance.",
+"Yes, because schools should have gardens.",
+"No, because some children might not like getting their hands dirty."
 ],
-explanation: "The correct answer is strongest because it links the activity to a specific health-related goal (fighting obesity). Distractor 1 is weak (IRRELEVANT): maintenance requirements are a detail, not an argument against the benefit. Distractor 2 is weak (CIRCULAR): it restates the proposal. Distractor 3 is weak (TRIVIAL): personal preference for cleanliness is not a policy consideration."
+explanation: "The correct answer is strongest because it links the activity to a specific health-related goal (fighting obesity). Distractor 1 is weak: maintenance requirements are a detail, not an argument against the benefit. Distractor 2 is weak: it restates the proposal. Distractor 3 is weak: personal preference for cleanliness is not a policy consideration."
 },
 {
 kind: "single",
@@ -27462,11 +27822,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because this targeted intervention would significantly reduce the incidence of neural tube defects in newborns by ensuring adequate folate levels across all demographic groups.",
 distractors: [
-"Yes, because bread is a very common food that many people eat every day (TRIVIAL).",
-"No, because the government should not interfere with the ingredients that companies choose to use in their products (IRRELEVANT).",
-"No, because it is important for the government to consider the health of its citizens (CIRCULAR)."
+"Yes, because bread is a very common food that many people eat every day.",
+"No, because the government should not interfere with the ingredients that companies choose to use in their products.",
+"No, because it is important for the government to consider the health of its citizens."
 ],
-explanation: "The correct answer is strongest because it directly addresses the health purpose of the proposal with a specific, significant medical outcome. Distractor 1 is weak (TRIVIAL): It states a fact about consumption but does not explain the impact on the health goal. Distractor 2 is weak (IRRELEVANT): It focuses on market freedom rather than the health effectiveness of the policy. Distractor 3 is weak (CIRCULAR): It merely states that the government should care about health without explaining why this specific measure is good or bad."
+explanation: "The correct answer is strongest because it directly addresses the health purpose of the proposal with a specific, significant medical outcome. Distractor 1 is weak: It states a fact about consumption but does not explain the impact on the health goal. Distractor 2 is weak: It focuses on market freedom rather than the health effectiveness of the policy. Distractor 3 is weak: It merely states that the government should care about health without explaining why this specific measure is good or bad."
 },
 {
 kind: "single",
@@ -27478,11 +27838,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because limiting access to these drinks would reduce the prevalence of sleep disturbances and palpitations among adolescents, protecting their developing cardiovascular systems.",
 distractors: [
-"Yes, because many young people are tired and might drink these anyway (VAGUE).",
-"No, because retailers would lose potential revenue if they cannot sell these products to younger customers (NON-SEQUITUR).",
-"No, because coffee also contains caffeine and people still drink that (IRRELEVANT)."
+"Yes, because many young people are tired and might drink these anyway.",
+"No, because retailers would lose potential revenue if they cannot sell these products to younger customers.",
+"No, because coffee also contains caffeine and people still drink that."
 ],
-explanation: "The correct answer is strongest because it links the policy directly to concrete health benefits for the target population. Distractor 1 is weak (VAGUE): It makes an unfalsifiable claim about student behavior. Distractor 2 is weak (NON-SEQUITUR): It introduces an economic argument into a public health debate. Distractor 3 is weak (IRRELEVANT): The existence of other caffeine sources does not negate the specific impact of high-caffeine energy drinks on minors."
+explanation: "The correct answer is strongest because it links the policy directly to concrete health benefits for the target population. Distractor 1 is weak: It makes an unfalsifiable claim about student behavior. Distractor 2 is weak: It introduces an economic argument into a public health debate. Distractor 3 is weak: The existence of other caffeine sources does not negate the specific impact of high-caffeine energy drinks on minors."
 },
 {
 kind: "single",
@@ -27494,11 +27854,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because increasing the price of high-sugar drinks will lower consumer demand, thereby directly reducing the incidence of childhood obesity and type 2 diabetes.",
 distractors: [
-"Yes, because sugar is generally considered bad for one's teeth (TRIVIAL).",
-"No, because some people prefer to drink water regardless of the price of soft drinks (IRRELEVANT).",
-"No, because taxes are a common mechanism used by governments to generate revenue (IRRELEVANT)."
+"Yes, because sugar is generally considered bad for one's teeth.",
+"No, because some people prefer to drink water regardless of the price of soft drinks.",
+"No, because taxes are a common mechanism used by governments to generate revenue."
 ],
-explanation: "The correct answer is strongest because it provides a clear causal chain between the tax, consumer behavior, and the public health goal. Distractor 1 is weak (TRIVIAL): While true, dental health is a secondary concern compared to the main goal of obesity reduction. Distractor 2 is weak (IRRELEVANT): Individual preferences for water do not address the aggregate effect on population health. Distractor 3 is weak (IRRELEVANT): The revenue-generating potential of taxes is unrelated to the efficacy of this specific health policy."
+explanation: "The correct answer is strongest because it provides a clear causal chain between the tax, consumer behavior, and the public health goal. Distractor 1 is weak: While true, dental health is a secondary concern compared to the main goal of obesity reduction. Distractor 2 is weak: Individual preferences for water do not address the aggregate effect on population health. Distractor 3 is weak: The revenue-generating potential of taxes is unrelated to the efficacy of this specific health policy."
 },
 {
 kind: "single",
@@ -27510,11 +27870,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because early detection of melanomas through regular screening allows for less invasive treatment and significantly improves long-term survival rates for the over-50 population.",
 distractors: [
-"Yes, because skin cancer is a condition that can affect many people as they age (CIRCULAR).",
-"No, because doctors are already very busy and this would add to their workload (VAGUE).",
-"No, because people should be responsible for checking their own skin at home (NON-SEQUITUR)."
+"Yes, because skin cancer is a condition that can affect many people as they age.",
+"No, because doctors are already very busy and this would add to their workload.",
+"No, because people should be responsible for checking their own skin at home."
 ],
-explanation: "The correct answer is strongest because it links early detection directly to the medical goal of improving survival and reducing treatment severity. Distractor 1 is weak (CIRCULAR): It restates the premise that aging relates to skin cancer without justifying the screening program. Distractor 2 is weak (VAGUE): It suggests a general difficulty without providing specific evidence of negative consequences. Distractor 3 is weak (NON-SEQUITUR): Personal responsibility is a separate issue from the efficacy of a clinical screening program."
+explanation: "The correct answer is strongest because it links early detection directly to the medical goal of improving survival and reducing treatment severity. Distractor 1 is weak: It restates the premise that aging relates to skin cancer without justifying the screening program. Distractor 2 is weak: It suggests a general difficulty without providing specific evidence of negative consequences. Distractor 3 is weak: Personal responsibility is a separate issue from the efficacy of a clinical screening program."
 },
 {
 kind: "single",
@@ -27526,11 +27886,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because providing universal free meals is an inefficient use of public funds; targeted support for low-income families would better address malnutrition at a lower cost.",
 distractors: [
-"Yes, because food is essential for children to grow up strong and healthy (TRIVIAL).",
-"Yes, because it is good for the government to take care of children (VAGUE).",
-"No, because it might be difficult to coordinate kitchen staff in every school (VAGUE)."
+"Yes, because food is essential for children to grow up strong and healthy.",
+"Yes, because it is good for the government to take care of children.",
+"No, because it might be difficult to coordinate kitchen staff in every school."
 ],
-explanation: "The correct answer is strongest because it offers an alternative policy that achieves the same goal more efficiently, challenging the core of the proposal. Distractor 1 is weak (TRIVIAL): It is a broad, obvious truth that does not address the implementation of this policy. Distractor 2 is weak (VAGUE): It is a platitude lacking concrete justification. Distractor 3 is weak (VAGUE): It suggests a logistical hurdle without demonstrating it is a significant barrier."
+explanation: "The correct answer is strongest because it offers an alternative policy that achieves the same goal more efficiently, challenging the core of the proposal. Distractor 1 is weak: It is a broad, obvious truth that does not address the implementation of this policy. Distractor 2 is weak: It is a platitude lacking concrete justification. Distractor 3 is weak: It suggests a logistical hurdle without demonstrating it is a significant barrier."
 },
 {
 kind: "single",
@@ -27542,11 +27902,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because mandating an annual vaccination for all adults would be an excessive infringement on personal autonomy that is disproportionate to the public health benefit of herd immunity for seasonal flu.",
 distractors: [
-"Yes, because vaccines are generally designed to help people stay healthy (CIRCULAR).",
-"Yes, because pharmacists are already trained to administer these injections quickly (NON-SEQUITUR).",
-"No, because the flu vaccine is only effective for a few months (TRIVIAL)."
+"Yes, because vaccines are generally designed to help people stay healthy.",
+"Yes, because pharmacists are already trained to administer these injections quickly.",
+"No, because the flu vaccine is only effective for a few months."
 ],
-explanation: "The correct answer is strongest because it balances the public health objective against the ethical principle of bodily autonomy, highlighting the issue of proportionality. Distractor 1 is weak (CIRCULAR): It merely defines the purpose of vaccines. Distractor 2 is weak (NON-SEQUITUR): The availability of staff does not address whether the mandate is appropriate. Distractor 3 is weak (TRIVIAL): While true, it doesn't address the ethical or policy implications of the mandate itself."
+explanation: "The correct answer is strongest because it balances the public health objective against the ethical principle of bodily autonomy, highlighting the issue of proportionality. Distractor 1 is weak: It merely defines the purpose of vaccines. Distractor 2 is weak: The availability of staff does not address whether the mandate is appropriate. Distractor 3 is weak: While true, it doesn't address the ethical or policy implications of the mandate itself."
 },
 {
 kind: "single",
@@ -27558,11 +27918,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the potential risk to public safety, as pedestrians could be left in complete darkness, outweighs the ecological benefits of reducing light pollution.",
 distractors: [
-"Yes, because light pollution is a growing environmental issue that scientists care about (VAGUE).",
-"Yes, because it would be cheaper to install motion sensors than to keep lights on all night (IRRELEVANT).",
-"No, because the council already has a budget for maintenance (IRRELEVANT)."
+"Yes, because light pollution is a growing environmental issue that scientists care about.",
+"Yes, because it would be cheaper to install motion sensors than to keep lights on all night.",
+"No, because the council already has a budget for maintenance."
 ],
-explanation: "The correct answer is strongest because it identifies a critical conflict between the proposed policy and public safety. Distractor 1 is weak (VAGUE): It relies on an appeal to authority without explaining the impact. Distractor 2 is weak (IRRELEVANT): The cost of installation is unrelated to the effectiveness in reducing light pollution or the safety concerns. Distractor 3 is weak (IRRELEVANT): Existing budgets do not address whether the proposal itself is beneficial."
+explanation: "The correct answer is strongest because it identifies a critical conflict between the proposed policy and public safety. Distractor 1 is weak: It relies on an appeal to authority without explaining the impact. Distractor 2 is weak: The cost of installation is unrelated to the effectiveness in reducing light pollution or the safety concerns. Distractor 3 is weak: Existing budgets do not address whether the proposal itself is beneficial."
 },
 {
 kind: "single",
@@ -27574,11 +27934,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because reducing exposure to high-calorie food marketing during the school commute decreases impulsive consumption, thereby helping to curb rising rates of early childhood obesity.",
 distractors: [
-"Yes, because advertising is often targeted towards younger audiences (TRIVIAL).",
-"No, because supermarkets have a right to advertise their current deals to all customers (NON-SEQUITUR).",
-"No, because parents should be the primary influence on their children's diets (VAGUE)."
+"Yes, because advertising is often targeted towards younger audiences.",
+"No, because supermarkets have a right to advertise their current deals to all customers.",
+"No, because parents should be the primary influence on their children's diets."
 ],
-explanation: "The correct answer is strongest because it links the restriction of advertising to a specific behavioral mechanism that impacts child obesity. Distractor 1 is weak (TRIVIAL): This is an observation of a trend, not an argument for the ban's effectiveness. Distractor 2 is weak (NON-SEQUITUR): The rights of businesses do not address the public health impact. Distractor 3 is weak (VAGUE): It makes an abstract point about parenting rather than evaluating the effect of the proposed policy."
+explanation: "The correct answer is strongest because it links the restriction of advertising to a specific behavioral mechanism that impacts child obesity. Distractor 1 is weak: This is an observation of a trend, not an argument for the ban's effectiveness. Distractor 2 is weak: The rights of businesses do not address the public health impact. Distractor 3 is weak: It makes an abstract point about parenting rather than evaluating the effect of the proposed policy."
 },
 {
 kind: "single",
@@ -27590,11 +27950,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because foundational training in digital ethics will prepare graduates to identify and mitigate bias in AI algorithms, preventing the widespread dissemination of discriminatory decision-making tools.",
 distractors: [
-"Yes, because technology is becoming a very important part of our modern lives (TRIVIAL).",
-"No, because university students already have to complete many different modules to graduate (IRRELEVANT).",
-"No, because ethics is a subjective topic that cannot be taught in a lecture hall (VAGUE)."
+"Yes, because technology is becoming a very important part of our modern lives.",
+"No, because university students already have to complete many different modules to graduate.",
+"No, because ethics is a subjective topic that cannot be taught in a lecture hall."
 ],
-explanation: "The correct answer is strongest because it details a specific, high-stakes consequence (AI bias mitigation) resulting from the proposed education policy. Distractor 1 is weak (TRIVIAL): The importance of technology is too broad and doesn't support the specific need for this module. Distractor 2 is weak (IRRELEVANT): The existing workload of students is not a reason to reject a potentially beneficial module. Distractor 3 is weak (VAGUE): It makes an unsubstantiated claim about the nature of teaching ethics."
+explanation: "The correct answer is strongest because it details a specific, high-stakes consequence (AI bias mitigation) resulting from the proposed education policy. Distractor 1 is weak: The importance of technology is too broad and doesn't support the specific need for this module. Distractor 2 is weak: The existing workload of students is not a reason to reject a potentially beneficial module. Distractor 3 is weak: It makes an unsubstantiated claim about the nature of teaching ethics."
 },
 {
 kind: "single",
@@ -27606,11 +27966,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because mandatory identity verification would disproportionately affect vulnerable groups who rely on anonymity for their safety, while sophisticated harassers would still find ways to circumvent these systems.",
 distractors: [
-"Yes, because people are generally more polite when they are using their real names (VAGUE).",
-"Yes, because social media companies are very profitable and can afford the technology (IRRELEVANT).",
-"No, because it would be a huge task for companies to check millions of IDs (TRIVIAL)."
+"Yes, because people are generally more polite when they are using their real names.",
+"Yes, because social media companies are very profitable and can afford the technology.",
+"No, because it would be a huge task for companies to check millions of IDs."
 ],
-explanation: "The correct answer is strongest because it addresses the core issue (harassment) by pointing out both the negative impact on safety and the likely ineffectiveness against determined users. Distractor 1 is weak (VAGUE): It relies on a generalization about human behavior that is difficult to prove. Distractor 2 is weak (IRRELEVANT): The financial status of companies does not justify the policy. Distractor 3 is weak (TRIVIAL): Technical difficulty is a procedural hurdle, not an argument against the fundamental premise."
+explanation: "The correct answer is strongest because it addresses the core issue (harassment) by pointing out both the negative impact on safety and the likely ineffectiveness against determined users. Distractor 1 is weak: It relies on a generalization about human behavior that is difficult to prove. Distractor 2 is weak: The financial status of companies does not justify the policy. Distractor 3 is weak: Technical difficulty is a procedural hurdle, not an argument against the fundamental premise."
 },
 {
 kind: "single",
@@ -27622,11 +27982,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because integrating solar infrastructure into new builds will significantly reduce national dependency on fossil fuels, leading to a measurable decline in carbon emissions over the long term.",
 distractors: [
-"Yes, because the sun is a renewable source of energy (TRIVIAL).",
-"No, because construction companies would have to learn how to install these new systems (TRIVIAL).",
-"No, because it is important for the government to support the building sector (VAGUE)."
+"Yes, because the sun is a renewable source of energy.",
+"No, because construction companies would have to learn how to install these new systems.",
+"No, because it is important for the government to support the building sector."
 ],
-explanation: "The correct answer is strongest because it connects the policy to a clear, quantitative environmental goal. Distractor 1 is weak (TRIVIAL): Stating that the sun is renewable is a scientific fact that does not argue for the mandate. Distractor 2 is weak (TRIVIAL): The need for training is a short-term administrative cost that doesn't outweigh the long-term benefit. Distractor 3 is weak (VAGUE): Supporting the building sector is an abstract goal that fails to engage with the policy's environmental objective."
+explanation: "The correct answer is strongest because it connects the policy to a clear, quantitative environmental goal. Distractor 1 is weak: Stating that the sun is renewable is a scientific fact that does not argue for the mandate. Distractor 2 is weak: The need for training is a short-term administrative cost that doesn't outweigh the long-term benefit. Distractor 3 is weak: Supporting the building sector is an abstract goal that fails to engage with the policy's environmental objective."
 },
 {
 kind: "single",
@@ -27638,11 +27998,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because limiting work hours ensures that students can devote sufficient time to their studies, which is statistically linked to lower dropout rates and higher academic achievement.",
 distractors: [
-"Yes, because students are already very busy with their coursework (CIRCULAR).",
-"No, because many students need the money to pay for their tuition and living expenses (NON-SEQUITUR).",
-"No, because the government should not interfere in the personal lives of students (VAGUE)."
+"Yes, because students are already very busy with their coursework.",
+"No, because many students need the money to pay for their tuition and living expenses.",
+"No, because the government should not interfere in the personal lives of students."
 ],
-explanation: "The correct answer is strongest because it provides a causal link between the policy and a specific, beneficial academic outcome. Distractor 1 is weak (CIRCULAR): Stating students are busy is not an argument for why they should be limited. Distractor 2 is weak (NON-SEQUITUR): While students need money, this economic reality does not address the impact on academic success. Distractor 3 is weak (VAGUE): An appeal to 'government interference' is a generic argument that lacks context regarding the educational goals."
+explanation: "The correct answer is strongest because it provides a causal link between the policy and a specific, beneficial academic outcome. Distractor 1 is weak: Stating students are busy is not an argument for why they should be limited. Distractor 2 is weak: While students need money, this economic reality does not address the impact on academic success. Distractor 3 is weak: An appeal to 'government interference' is a generic argument that lacks context regarding the educational goals."
 },
 {
 kind: "single",
@@ -27654,11 +28014,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because universal access to foundational coding education bridges the digital skills gap early, ensuring that children from lower-income families are not disadvantaged in the future job market.",
 distractors: [
-"Yes, because coding is a useful skill that people can use in many careers (TRIVIAL).",
-"No, because libraries are already crowded with people reading books (IRRELEVANT).",
-"No, because the government should focus on other things instead (VAGUE)."
+"Yes, because coding is a useful skill that people can use in many careers.",
+"No, because libraries are already crowded with people reading books.",
+"No, because the government should focus on other things instead."
 ],
-explanation: "The correct answer is strongest because it directly addresses the social and economic purpose of bridging the inequality gap. Distractor 1 is weak (TRIVIAL): While true, it doesn't address why *libraries* must provide the training for *children*. Distractor 2 is weak (IRRELEVANT): The current use of library space is not a reason to reject an educational program. Distractor 3 is weak (VAGUE): An appeal to prioritize 'other things' is too general to be useful."
+explanation: "The correct answer is strongest because it directly addresses the social and economic purpose of bridging the inequality gap. Distractor 1 is weak: While true, it doesn't address why *libraries* must provide the training for *children*. Distractor 2 is weak: The current use of library space is not a reason to reject an educational program. Distractor 3 is weak: An appeal to prioritize 'other things' is too general to be useful."
 },
 {
 kind: "single",
@@ -27670,11 +28030,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the mass collection of biometric data poses a severe threat to civil liberties and creates a 'single point of failure' that could lead to catastrophic identity theft if the database is breached.",
 distractors: [
-"Yes, because it would make the transport system much faster during peak hours (TRIVIAL).",
-"Yes, because many other countries are also using facial recognition technology (IRRELEVANT).",
-"No, because the government should consider the cost of implementing these new cameras (VAGUE)."
+"Yes, because it would make the transport system much faster during peak hours.",
+"Yes, because many other countries are also using facial recognition technology.",
+"No, because the government should consider the cost of implementing these new cameras."
 ],
-explanation: "The correct answer is strongest because it identifies a significant risk (civil liberties and data security) that directly relates to the policy. Distractor 1 is weak (TRIVIAL): Minor efficiency gains do not outweigh fundamental security risks. Distractor 2 is weak (IRRELEVANT): The fact that other countries use it does not prove it is safe or correct. Distractor 3 is weak (VAGUE): The cost is a generic concern that lacks an analysis of whether the cost is worth the stated benefit."
+explanation: "The correct answer is strongest because it identifies a significant risk (civil liberties and data security) that directly relates to the policy. Distractor 1 is weak: Minor efficiency gains do not outweigh fundamental security risks. Distractor 2 is weak: The fact that other countries use it does not prove it is safe or correct. Distractor 3 is weak: The cost is a generic concern that lacks an analysis of whether the cost is worth the stated benefit."
 },
 {
 kind: "single",
@@ -27686,11 +28046,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mandating a high percentage of affordable housing ensures social cohesion by preventing the development of exclusionary, high-cost neighborhoods that displace lower-income workers.",
 distractors: [
-"Yes, because everyone needs a place to live (TRIVIAL).",
-"No, because developers would have to change their plans to build more units (TRIVIAL).",
-"No, because the council should be focusing on building more parks instead (NON-SEQUITUR)."
+"Yes, because everyone needs a place to live.",
+"No, because developers would have to change their plans to build more units.",
+"No, because the council should be focusing on building more parks instead."
 ],
-explanation: "The correct answer is strongest because it identifies the societal benefit of preventing economic segregation. Distractor 1 is weak (TRIVIAL): It is a broad, universal statement that does not address the specific policy. Distractor 2 is weak (TRIVIAL): Changing plans is a minor administrative consequence. Distractor 3 is weak (NON-SEQUITUR): The need for parks is an unrelated policy priority."
+explanation: "The correct answer is strongest because it identifies the societal benefit of preventing economic segregation. Distractor 1 is weak: It is a broad, universal statement that does not address the specific policy. Distractor 2 is weak: Changing plans is a minor administrative consequence. Distractor 3 is weak: The need for parks is an unrelated policy priority."
 },
 {
 kind: "single",
@@ -27702,11 +28062,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because opaque algorithmic screening frequently inherits and amplifies existing human biases, causing systematic discrimination against qualified candidates based on race, gender, or background.",
 distractors: [
-"Yes, because it is important for people to be treated fairly when they are looking for work (CIRCULAR).",
-"No, because human recruiters are also prone to making mistakes when reviewing applications (IRRELEVANT).",
-"No, because large corporations usually have their own rules for hiring employees (NON-SEQUITUR)."
+"Yes, because it is important for people to be treated fairly when they are looking for work.",
+"No, because human recruiters are also prone to making mistakes when reviewing applications.",
+"No, because large corporations usually have their own rules for hiring employees."
 ],
-explanation: "The correct answer is strongest because it links the policy to the systemic problem of algorithmic bias and discrimination. Distractor 1 is weak (CIRCULAR): It restates the fairness goal without explaining why an algorithm ban is the solution. Distractor 2 is weak (IRRELEVANT): The fallibility of humans does not justify the use of biased algorithms. Distractor 3 is weak (NON-SEQUITUR): Corporate hiring policies are separate from the government's regulatory authority over fairness."
+explanation: "The correct answer is strongest because it links the policy to the systemic problem of algorithmic bias and discrimination. Distractor 1 is weak: It restates the fairness goal without explaining why an algorithm ban is the solution. Distractor 2 is weak: The fallibility of humans does not justify the use of biased algorithms. Distractor 3 is weak: Corporate hiring policies are separate from the government's regulatory authority over fairness."
 },
 {
 kind: "single",
@@ -27718,11 +28078,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because providing flexible work options significantly improves employee wellbeing and reduces commuting-related stress, which directly leads to higher productivity and retention rates.",
 distractors: [
-"Yes, because working from home is very comfortable for many employees (TRIVIAL).",
-"No, because some office buildings might become empty and lose their value (NON-SEQUITUR).",
-"No, because it might be hard for managers to keep track of their staff (VAGUE)."
+"Yes, because working from home is very comfortable for many employees.",
+"No, because some office buildings might become empty and lose their value.",
+"No, because it might be hard for managers to keep track of their staff."
 ],
-explanation: "The correct answer is strongest because it links the policy to tangible, business-relevant outcomes like productivity and retention. Distractor 1 is weak (TRIVIAL): Comfort is a secondary, minor benefit compared to productivity. Distractor 2 is weak (NON-SEQUITUR): Real estate market impacts are a separate issue from employee wellbeing. Distractor 3 is weak (VAGUE): The difficulty for managers is a vague administrative concern."
+explanation: "The correct answer is strongest because it links the policy to tangible, business-relevant outcomes like productivity and retention. Distractor 1 is weak: Comfort is a secondary, minor benefit compared to productivity. Distractor 2 is weak: Real estate market impacts are a separate issue from employee wellbeing. Distractor 3 is weak: The difficulty for managers is a vague administrative concern."
 },
 {
 kind: "single",
@@ -27734,11 +28094,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because capping executive salaries would lead to a 'brain drain' as top talent leaves the country for international markets, ultimately weakening the competitiveness of the domestic financial sector.",
 distractors: [
-"Yes, because it would make the salary gap between the rich and poor smaller (TRIVIAL).",
-"Yes, because banks often deal with other people's money and should be careful (IRRELEVANT).",
-"No, because it is important for the government to be involved in the economy (CIRCULAR)."
+"Yes, because it would make the salary gap between the rich and poor smaller.",
+"Yes, because banks often deal with other people's money and should be careful.",
+"No, because it is important for the government to be involved in the economy."
 ],
-explanation: "The correct answer is strongest because it identifies a clear, significant economic consequence (talent flight) that directly undermines the financial sector's health. Distractor 1 is weak (TRIVIAL): While wealth inequality is relevant, this argument ignores the economic repercussions of the policy. Distractor 2 is weak (IRRELEVANT): The caution required for handling money does not justify salary caps. Distractor 3 is weak (CIRCULAR): It merely asserts that the government should act, not why this specific policy is sound."
+explanation: "The correct answer is strongest because it identifies a clear, significant economic consequence (talent flight) that directly undermines the financial sector's health. Distractor 1 is weak: While wealth inequality is relevant, this argument ignores the economic repercussions of the policy. Distractor 2 is weak: The caution required for handling money does not justify salary caps. Distractor 3 is weak: It merely asserts that the government should act, not why this specific policy is sound."
 },
 {
 kind: "single",
@@ -27750,11 +28110,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because preventing foreign entities from influencing domestic policy ensures that the legislative process remains aligned solely with the national interest, rather than the interests of foreign powers.",
 distractors: [
-"Yes, because politicians should always listen to their constituents (TRIVIAL).",
-"No, because many foreign companies provide a lot of jobs in this country (NON-SEQUITUR).",
-"No, because it would be difficult to define exactly what a foreign company is (VAGUE)."
+"Yes, because politicians should always listen to their constituents.",
+"No, because many foreign companies provide a lot of jobs in this country.",
+"No, because it would be difficult to define exactly what a foreign company is."
 ],
-explanation: "The correct answer is strongest because it focuses on the primary purpose of the policy: sovereignty and the protection of the democratic legislative process. Distractor 1 is weak (TRIVIAL): While politicians should listen to constituents, this is a general principle rather than a reason for the ban. Distractor 2 is weak (NON-SEQUITUR): The economic contribution of foreign companies does not grant them a right to influence domestic politics. Distractor 3 is weak (VAGUE): The difficulty of definition is a procedural challenge, not an argument against the validity of the goal."
+explanation: "The correct answer is strongest because it focuses on the primary purpose of the policy: sovereignty and the protection of the democratic legislative process. Distractor 1 is weak: While politicians should listen to constituents, this is a general principle rather than a reason for the ban. Distractor 2 is weak: The economic contribution of foreign companies does not grant them a right to influence domestic politics. Distractor 3 is weak: The difficulty of definition is a procedural challenge, not an argument against the validity of the goal."
 },
 {
 kind: "single",
@@ -27766,11 +28126,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a rapid shift to 100% renewable energy would drastically reduce national carbon emissions, providing the necessary climate mitigation to avoid the most severe effects of global warming.",
 distractors: [
-"Yes, because the wind and the sun are very powerful forces of nature (TRIVIAL).",
-"No, because some people might not like the look of wind farms in their neighborhood (TRIVIAL).",
-"No, because the government should focus on developing new technologies in other sectors first (VAGUE)."
+"Yes, because the wind and the sun are very powerful forces of nature.",
+"No, because some people might not like the look of wind farms in their neighborhood.",
+"No, because the government should focus on developing new technologies in other sectors first."
 ],
-explanation: "The correct answer is strongest because it links the policy to the urgent, direct goal of climate change mitigation. Distractor 1 is weak (TRIVIAL): The power of nature is a poetic observation, not an argument for energy policy. Distractor 2 is weak (TRIVIAL): NIMBYism (Not In My Backyard) is a minor aesthetic concern compared to the global climate crisis. Distractor 3 is weak (VAGUE): The suggestion to prioritize other sectors is a vague argument without justification."
+explanation: "The correct answer is strongest because it links the policy to the urgent, direct goal of climate change mitigation. Distractor 1 is weak: The power of nature is a poetic observation, not an argument for energy policy. Distractor 2 is weak: NIMBYism (Not In My Backyard) is a minor aesthetic concern compared to the global climate crisis. Distractor 3 is weak: The suggestion to prioritize other sectors is a vague argument without justification."
 },
 {
 kind: "single",
@@ -27782,11 +28142,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because diverse management boards bring a broader range of perspectives to decision-making, which is critical for representing the interests of a diverse fan base and athlete population.",
 distractors: [
-"Yes, because equality is a very good thing for everyone to strive for (VAGUE).",
-"No, because the best person should be chosen for the job regardless of gender (IRRELEVANT).",
-"No, because the players are the ones who really make the sport exciting for fans (NON-SEQUITUR)."
+"Yes, because equality is a very good thing for everyone to strive for.",
+"No, because the best person should be chosen for the job regardless of gender.",
+"No, because the players are the ones who really make the sport exciting for fans."
 ],
-explanation: "The correct answer is strongest because it provides a functional reason (decision-making and representation) for the mandate. Distractor 1 is weak (VAGUE): It relies on an abstract value without explaining the practical benefit in a management context. Distractor 2 is weak (IRRELEVANT): The 'best person for the job' argument assumes that diversity and merit are mutually exclusive. Distractor 3 is weak (NON-SEQUITUR): The role of the players has no bearing on the composition of the management board."
+explanation: "The correct answer is strongest because it provides a functional reason (decision-making and representation) for the mandate. Distractor 1 is weak: It relies on an abstract value without explaining the practical benefit in a management context. Distractor 2 is weak: The 'best person for the job' argument assumes that diversity and merit are mutually exclusive. Distractor 3 is weak: The role of the players has no bearing on the composition of the management board."
 },
 {
 kind: "single",
@@ -27798,11 +28158,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because allowing unrestricted access to active farms would pose significant risks to livestock safety and crop security, and potentially lead to costly biosecurity breaches.",
 distractors: [
-"Yes, because people enjoy spending time in nature and being outdoors (TRIVIAL).",
-"Yes, because there is a lot of land in the country that people currently cannot walk on (TRIVIAL).",
-"No, because farmers already have enough work to do during the harvest season (VAGUE)."
+"Yes, because people enjoy spending time in nature and being outdoors.",
+"Yes, because there is a lot of land in the country that people currently cannot walk on.",
+"No, because farmers already have enough work to do during the harvest season."
 ],
-explanation: "The correct answer is strongest because it identifies concrete, practical threats to the agricultural industry (livestock and biosecurity) that arise from the proposal. Distractor 1 is weak (TRIVIAL): Recreational enjoyment is a minor benefit that does not address the negative impact on agriculture. Distractor 2 is weak (TRIVIAL): The amount of restricted land is a spatial fact, not a justification for the policy. Distractor 3 is weak (VAGUE): The workload of farmers is a general concern that doesn't address the specific impacts of unauthorized access."
+explanation: "The correct answer is strongest because it identifies concrete, practical threats to the agricultural industry (livestock and biosecurity) that arise from the proposal. Distractor 1 is weak: Recreational enjoyment is a minor benefit that does not address the negative impact on agriculture. Distractor 2 is weak: The amount of restricted land is a spatial fact, not a justification for the policy. Distractor 3 is weak: The workload of farmers is a general concern that doesn't address the specific impacts of unauthorized access."
 },
 {
 kind: "single",
@@ -27814,11 +28174,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because tying funding to accessibility mandates forces organizations to prioritize the inclusion of disabled audience members, ensuring that cultural participation is a right for all citizens.",
 distractors: [
-"Yes, because arts and culture are very important parts of our society (TRIVIAL).",
-"No, because it might be difficult for small, older theaters to renovate their buildings (VAGUE).",
-"No, because the government should focus on the quality of the art produced instead (NON-SEQUITUR)."
+"Yes, because arts and culture are very important parts of our society.",
+"No, because it might be difficult for small, older theaters to renovate their buildings.",
+"No, because the government should focus on the quality of the art produced instead."
 ],
-explanation: "The correct answer is strongest because it links the policy directly to the goal of equity in cultural participation. Distractor 1 is weak (TRIVIAL): While art is important, it doesn't support the specific accessibility mandate. Distractor 2 is weak (VAGUE): Building renovations are a logistical issue rather than a fundamental reason to reject the policy. Distractor 3 is weak (NON-SEQUITUR): The quality of art is a separate goal from the accessibility of the venue."
+explanation: "The correct answer is strongest because it links the policy directly to the goal of equity in cultural participation. Distractor 1 is weak: While art is important, it doesn't support the specific accessibility mandate. Distractor 2 is weak: Building renovations are a logistical issue rather than a fundamental reason to reject the policy. Distractor 3 is weak: The quality of art is a separate goal from the accessibility of the venue."
 },
 {
 kind: "single",
@@ -27830,11 +28190,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a mandatory volunteer scheme undermines the voluntary spirit of altruism, and the administrative burden of policing such a mandate would be an inefficient use of public resources.",
 distractors: [
-"Yes, because it would help people build their CVs and gain experience (TRIVIAL).",
-"Yes, because the government should always be looking for ways to improve communities (VAGUE).",
-"No, because people are already busy with their jobs and families (TRIVIAL)."
+"Yes, because it would help people build their CVs and gain experience.",
+"Yes, because the government should always be looking for ways to improve communities.",
+"No, because people are already busy with their jobs and families."
 ],
-explanation: "The correct answer is strongest because it addresses both the philosophical problem (undermining altruism) and the practical problem (administrative inefficiency) of the proposal. Distractor 1 is weak (TRIVIAL): CV building is a secondary benefit that doesn't justify a national mandate. Distractor 2 is weak (VAGUE): 'Improving communities' is a generic goal. Distractor 3 is weak (TRIVIAL): Personal busyness is a common reality that is not a sufficient argument against a policy mandate."
+explanation: "The correct answer is strongest because it addresses both the philosophical problem (undermining altruism) and the practical problem (administrative inefficiency) of the proposal. Distractor 1 is weak: CV building is a secondary benefit that doesn't justify a national mandate. Distractor 2 is weak: 'Improving communities' is a generic goal. Distractor 3 is weak: Personal busyness is a common reality that is not a sufficient argument against a policy mandate."
 },
 {
 kind: "single",
@@ -27844,11 +28204,11 @@ stimulus: ["Should the government implement a total ban on the sale of all exoti
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a total ban would drive the trade underground into unregulated black markets, making it impossible for authorities to monitor animal welfare conditions and disease outbreaks.",
 distractors: [
-"Yes, because people should think carefully before deciding which animals they keep in their homes (VAGUE: does not explain why a ban is necessary).",
-"No, because many people enjoy having pets in their homes and it brings them happiness (TRIVIAL: personal enjoyment does not address the animal welfare impact).",
-"Yes, because exotic pets are animals that are not indigenous to the country (CIRCULAR: restates that they are 'exotic' without explaining why they shouldn't be sold)."
+"Yes, because people should think carefully before deciding which animals they keep in their homes.",
+"No, because many people enjoy having pets in their homes and it brings them happiness.",
+"Yes, because exotic pets are animals that are not indigenous to the country."
 ],
-explanation: "The correct answer is strongest because it highlights a direct, practical consequence of the policy that undermines its own goal of improving welfare. Distractor 1 is weak (VAGUE): it fails to provide a clear causal link to policy outcomes. Distractor 2 is weak (TRIVIAL): individual happiness is not a counter-argument to systemic welfare concerns. Distractor 3 is weak (CIRCULAR): it merely defines the term 'exotic' rather than justifying the ban."
+explanation: "The correct answer is strongest because it highlights a direct, practical consequence of the policy that undermines its own goal of improving welfare. Distractor 1 is weak: it fails to provide a clear causal link to policy outcomes. Distractor 2 is weak: individual happiness is not a counter-argument to systemic welfare concerns. Distractor 3 is weak: it merely defines the term 'exotic' rather than justifying the ban."
 },
 {
 kind: "single",
@@ -27858,11 +28218,11 @@ stimulus: ["Should all commercial livestock farms be legally required to provide
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because constant confinement in indoor facilities causes documented high levels of stress and bone deformities in livestock, which regular movement would significantly alleviate.",
 distractors: [
-"No, because the price of milk and eggs has been quite volatile over the last few years (IRRELEVANT: market price volatility does not directly address animal welfare).",
-"Yes, because animals should be treated with kindness because it is the right thing to do (VAGUE: does not specify the mechanism of health improvement).",
-"No, because some farmers might find it difficult to manage the logistical changes required by the new regulation (TRIVIAL: operational difficulty is not a reason to reject a fundamental welfare standard)."
+"No, because the price of milk and eggs has been quite volatile over the last few years.",
+"Yes, because animals should be treated with kindness because it is the right thing to do.",
+"No, because some farmers might find it difficult to manage the logistical changes required by the new regulation."
 ],
-explanation: "The correct answer is strongest because it provides a specific health-based justification for the proposal. Distractor 1 is weak (IRRELEVANT): economic data doesn't address the welfare goal. Distractor 2 is weak (VAGUE): it relies on sentiment rather than specific outcomes. Distractor 3 is weak (TRIVIAL): operational convenience is not a strong enough reason to dismiss an ethical welfare requirement."
+explanation: "The correct answer is strongest because it provides a specific health-based justification for the proposal. Distractor 1 is weak: economic data doesn't address the welfare goal. Distractor 2 is weak: it relies on sentiment rather than specific outcomes. Distractor 3 is weak: operational convenience is not a strong enough reason to dismiss an ethical welfare requirement."
 },
 {
 kind: "single",
@@ -27872,11 +28232,11 @@ stimulus: ["Should the use of animals in cosmetic testing be prohibited globally
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because modern non-animal testing methods, such as 'in vitro' human cell cultures, have been proven to be more accurate and reliable predictors of human allergic reactions than animal models.",
 distractors: [
-"No, because scientists work very hard to discover new beauty products (NON-SEQUITUR: the dedication of scientists does not justify animal testing).",
-"Yes, because testing cosmetics on animals is harmful to animals (CIRCULAR: restates that testing is harmful without justifying why the ban is the best solution).",
-"No, because different countries have different legal systems regarding laboratory oversight (IRRELEVANT: global legislation can harmonize standards regardless of local administrative differences)."
+"No, because scientists work very hard to discover new beauty products.",
+"Yes, because testing cosmetics on animals is harmful to animals.",
+"No, because different countries have different legal systems regarding laboratory oversight."
 ],
-explanation: "The correct answer is strongest because it offers a scientific alternative that makes the current practice redundant. Distractor 1 is weak (NON-SEQUITUR): the effort of workers does not justify the methodology. Distractor 2 is weak (CIRCULAR): it repeats the premise without adding value. Distractor 3 is weak (IRRELEVANT): legal system differences are not an argument against the merit of a ban."
+explanation: "The correct answer is strongest because it offers a scientific alternative that makes the current practice redundant. Distractor 1 is weak: the effort of workers does not justify the methodology. Distractor 2 is weak: it repeats the premise without adding value. Distractor 3 is weak: legal system differences are not an argument against the merit of a ban."
 },
 {
 kind: "single",
@@ -27886,11 +28246,11 @@ stimulus: ["Should the practice of keeping cetaceans, such as dolphins and orcas
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because these highly intelligent, wide-ranging marine mammals suffer from extreme psychological distress and physical atrophy when confined to small, barren tanks, leading to significantly shorter lifespans.",
 distractors: [
-"No, because marine parks provide educational opportunities for children to learn about sea life (TRIVIAL: education is a secondary benefit that does not outweigh the welfare impact).",
-"No, because keeping animals in captivity is a long-standing tradition that people have enjoyed for generations (VAGUE: tradition is not a valid justification for continued welfare harm).",
-"Yes, because dolphins are very popular animals in many countries (IRRELEVANT: popularity does not constitute a welfare argument)."
+"No, because marine parks provide educational opportunities for children to learn about sea life.",
+"No, because keeping animals in captivity is a long-standing tradition that people have enjoyed for generations.",
+"Yes, because dolphins are very popular animals in many countries."
 ],
-explanation: "The correct answer is strongest because it cites the specific biological and psychological needs of the species compared to their captive conditions. Distractor 1 is weak (TRIVIAL): educational value does not justify severe welfare violations. Distractor 2 is weak (VAGUE): appeal to tradition lacks a factual basis for welfare outcomes. Distractor 3 is weak (IRRELEVANT): popularity is not a health or ethics factor."
+explanation: "The correct answer is strongest because it cites the specific biological and psychological needs of the species compared to their captive conditions. Distractor 1 is weak: educational value does not justify severe welfare violations. Distractor 2 is weak: appeal to tradition lacks a factual basis for welfare outcomes. Distractor 3 is weak: popularity is not a health or ethics factor."
 },
 {
 kind: "single",
@@ -27900,11 +28260,11 @@ stimulus: ["Should legislation be introduced to make microchipping mandatory for
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mandatory microchipping significantly increases the probability of reuniting lost pets with their owners, thereby reducing the burden on overflowing animal shelters.",
 distractors: [
-"No, because some cat owners might forget to update their contact details on the chip registry (TRIVIAL: human error does not negate the efficacy of the technology).",
-"Yes, because it is important for pets to be identified (CIRCULAR: restates the goal without explaining the outcome).",
-"No, because the government should focus on more serious issues like infrastructure (NON-SEQUITUR: the urgency of other issues does not negate the value of this policy)."
+"No, because some cat owners might forget to update their contact details on the chip registry.",
+"Yes, because it is important for pets to be identified.",
+"No, because the government should focus on more serious issues like infrastructure."
 ],
-explanation: "The correct answer is strongest because it links the policy to a clear, measurable outcome (reuniting pets) and a positive consequence (reduced shelter burden). Distractor 1 is weak (TRIVIAL): potential misuse is not an argument against the tool itself. Distractor 2 is weak (CIRCULAR): it just paraphrases the goal. Distractor 3 is weak (NON-SEQUITUR): competing policy priorities are not a valid argument against this specific proposal."
+explanation: "The correct answer is strongest because it links the policy to a clear, measurable outcome (reuniting pets) and a positive consequence (reduced shelter burden). Distractor 1 is weak: potential misuse is not an argument against the tool itself. Distractor 2 is weak: it just paraphrases the goal. Distractor 3 is weak: competing policy priorities are not a valid argument against this specific proposal."
 },
 {
 kind: "single",
@@ -27914,11 +28274,11 @@ stimulus: ["Should the government implement a 'meat tax' on highly processed mea
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a meat tax would disproportionately affect lower-income households who rely on cheap, processed protein, without effectively reducing total industrial slaughter volumes.",
 distractors: [
-"Yes, because meat tastes very good and people eat it frequently (IRRELEVANT: taste preference does not address the environmental or ethical goal).",
-"Yes, because the government needs more money to spend on various programs (NON-SEQUITUR: the tax's potential revenue is unrelated to the animal welfare goal of reducing slaughter).",
-"No, because taxes are sometimes difficult for businesses to collect (TRIVIAL: implementation difficulty is not a reason to abandon a policy goal)."
+"Yes, because meat tastes very good and people eat it frequently.",
+"Yes, because the government needs more money to spend on various programs.",
+"No, because taxes are sometimes difficult for businesses to collect."
 ],
-explanation: "The correct answer is strongest because it highlights a socioeconomic failure and a lack of efficacy in achieving the stated goal. Distractor 1 is weak (IRRELEVANT): personal taste is not a factor. Distractor 2 is weak (NON-SEQUITUR): the government's revenue needs are independent of the welfare impact. Distractor 3 is weak (TRIVIAL): administrative burden is not a reason to dismiss a policy."
+explanation: "The correct answer is strongest because it highlights a socioeconomic failure and a lack of efficacy in achieving the stated goal. Distractor 1 is weak: personal taste is not a factor. Distractor 2 is weak: the government's revenue needs are independent of the welfare impact. Distractor 3 is weak: administrative burden is not a reason to dismiss a policy."
 },
 {
 kind: "single",
@@ -27928,11 +28288,11 @@ stimulus: ["Should the breeding of 'designer' dog breeds with severe health-limi
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because breeding for aesthetic traits at the expense of anatomical function subjects these animals to a lifetime of chronic respiratory distress and heat sensitivity.",
 distractors: [
-"No, because people like the way these dogs look (IRRELEVANT: human aesthetic preference is not a justification for physical harm).",
-"Yes, because breeders should behave more responsibly (VAGUE: does not explain the biological or welfare basis).",
-"No, because these dogs are usually very friendly (NON-SEQUITUR: personality traits do not justify structural physical impairment)."
+"No, because people like the way these dogs look.",
+"Yes, because breeders should behave more responsibly.",
+"No, because these dogs are usually very friendly."
 ],
-explanation: "The correct answer is strongest because it directly links the genetic selection process to specific, permanent health issues. Distractor 1 is weak (IRRELEVANT): aesthetic preference is irrelevant to animal welfare. Distractor 2 is weak (VAGUE): 'responsibility' is an undefined concept here. Distractor 3 is weak (NON-SEQUITUR): friendliness does not negate the ethical issue of physical impairment."
+explanation: "The correct answer is strongest because it directly links the genetic selection process to specific, permanent health issues. Distractor 1 is weak: aesthetic preference is irrelevant to animal welfare. Distractor 2 is weak: 'responsibility' is an undefined concept here. Distractor 3 is weak: friendliness does not negate the ethical issue of physical impairment."
 },
 {
 kind: "single",
@@ -27942,11 +28302,11 @@ stimulus: ["Should the use of wild animals in circuses be banned nationwide?"],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the nomadic nature of circuses prevents animals from having access to adequate living environments, leading to abnormal, stress-induced behaviors such as pacing and self-mutilation.",
 distractors: [
-"No, because children enjoy seeing animals perform tricks (TRIVIAL: entertainment value is not an ethical justification for animal confinement).",
-"Yes, because it is a bad thing to have animals in circuses (CIRCULAR: restates the proposal as a moral judgment without reasoning).",
-"No, because the circus has been a form of entertainment for centuries (VAGUE: duration of practice does not validate welfare standards)."
+"No, because children enjoy seeing animals perform tricks.",
+"Yes, because it is a bad thing to have animals in circuses.",
+"No, because the circus has been a form of entertainment for centuries."
 ],
-explanation: "The correct answer is strongest because it identifies the specific environmental mismatch causing behavioral harm. Distractor 1 is weak (TRIVIAL): public enjoyment is outweighed by welfare concerns. Distractor 2 is weak (CIRCULAR): it offers no evidence. Distractor 3 is weak (VAGUE): tradition does not address welfare."
+explanation: "The correct answer is strongest because it identifies the specific environmental mismatch causing behavioral harm. Distractor 1 is weak: public enjoyment is outweighed by welfare concerns. Distractor 2 is weak: it offers no evidence. Distractor 3 is weak: tradition does not address welfare."
 },
 {
 kind: "single",
@@ -27956,11 +28316,11 @@ stimulus: ["Should all puppy farms be shut down and replaced with rescue-only ad
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because current puppy farm regulations fail to prevent mass-breeding conditions where mothers are kept in confined, unsanitary isolation, leading to widespread behavioral issues in litters.",
 distractors: [
-"No, because some families prefer to buy specific purebred puppies from a breeder (TRIVIAL: consumer preference does not outweigh the systematic welfare failures mentioned).",
-"No, because it would create too much paperwork for local councils (TRIVIAL: administrative burden is minor compared to the scale of welfare abuse).",
-"Yes, because rescue dogs are usually very cute (IRRELEVANT: physical appearance is not the reason to adopt the policy)."
+"No, because some families prefer to buy specific purebred puppies from a breeder.",
+"No, because it would create too much paperwork for local councils.",
+"Yes, because rescue dogs are usually very cute."
 ],
-explanation: "The correct answer is strongest because it links the failure of current regulations to specific, detrimental welfare outcomes. Distractor 1 is weak (TRIVIAL): consumer preference is secondary to animal welfare. Distractor 2 is weak (TRIVIAL): administrative tasks are not a valid ethical counter-argument. Distractor 3 is weak (IRRELEVANT): cuteness is not a policy factor."
+explanation: "The correct answer is strongest because it links the failure of current regulations to specific, detrimental welfare outcomes. Distractor 1 is weak: consumer preference is secondary to animal welfare. Distractor 2 is weak: administrative tasks are not a valid ethical counter-argument. Distractor 3 is weak: cuteness is not a policy factor."
 },
 {
 kind: "single",
@@ -27970,11 +28330,11 @@ stimulus: ["Should animal shelters be required to adopt 'no-kill' policies?"],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because 'no-kill' policies can force shelters to reach capacity, resulting in overcrowding that increases the risk of infectious disease outbreaks and chronic stress for all animals in the facility.",
 distractors: [
-"Yes, because every animal deserves a chance to live (VAGUE: does not address the practical management issues of shelters).",
-"No, because it is difficult to find space for all animals (TRIVIAL: logistics are a challenge, but the core issue is the welfare outcome of overcrowding).",
-"Yes, because it makes the shelter look better to the public (IRRELEVANT: public image is not a welfare consideration)."
+"Yes, because every animal deserves a chance to live.",
+"No, because it is difficult to find space for all animals.",
+"Yes, because it makes the shelter look better to the public."
 ],
-explanation: "The correct answer is strongest because it demonstrates a direct, negative consequence for animal welfare (disease/stress) caused by the policy. Distractor 1 is weak (VAGUE): it lacks empirical justification. Distractor 2 is weak (TRIVIAL): logistics are part of the problem, but the argument fails to link it to the welfare outcome. Distractor 3 is weak (IRRELEVANT): public image does not affect the animal's quality of life."
+explanation: "The correct answer is strongest because it demonstrates a direct, negative consequence for animal welfare (disease/stress) caused by the policy. Distractor 1 is weak: it lacks empirical justification. Distractor 2 is weak: logistics are part of the problem, but the argument fails to link it to the welfare outcome. Distractor 3 is weak: public image does not affect the animal's quality of life."
 },
 {
 kind: "single",
@@ -27984,11 +28344,11 @@ stimulus: ["Should the government fund a national trap-neuter-return program for
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a systematic trap-neuter-return program is the most effective way to stabilize stray populations, thereby reducing the number of kittens born into harsh, neglectful conditions.",
 distractors: [
-"No, because some people think stray cats look a bit messy in urban areas (TRIVIAL: aesthetic preferences are not an argument against population control).",
-"Yes, because stray cats are sometimes quite friendly to people (NON-SEQUITUR: friendliness is not relevant to population stabilization).",
-"No, because it might cost the government a significant amount of money in the first year (TRIVIAL: initial cost does not outweigh the long-term impact on stray populations)."
+"No, because some people think stray cats look a bit messy in urban areas.",
+"Yes, because stray cats are sometimes quite friendly to people.",
+"No, because it might cost the government a significant amount of money in the first year."
 ],
-explanation: "The correct answer is strongest because it explains the mechanism of population stabilization and its direct positive outcome for the animals. Distractor 1 is weak (TRIVIAL): aesthetics don't matter. Distractor 2 is weak (NON-SEQUITUR): temperament isn't a policy factor here. Distractor 3 is weak (TRIVIAL): cost is a secondary logistical concern."
+explanation: "The correct answer is strongest because it explains the mechanism of population stabilization and its direct positive outcome for the animals. Distractor 1 is weak: aesthetics don't matter. Distractor 2 is weak: temperament isn't a policy factor here. Distractor 3 is weak: cost is a secondary logistical concern."
 },
 {
 kind: "single",
@@ -27998,11 +28358,11 @@ stimulus: ["Should the sale of foie gras be prohibited due to the force-feeding 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the process of gavage induces pathological hepatic lipidosis in birds, causing significant physiological distress and damage to the animals' digestive tracts.",
 distractors: [
-"No, because it is considered a luxury culinary delicacy in some cultures (IRRELEVANT: culinary status does not negate the cruelty of the method).",
-"Yes, because people are becoming more sensitive to animal welfare lately (VAGUE: shifts in public opinion do not constitute a specific health-based argument).",
-"No, because the producers of foie gras contribute to the local economy (NON-SEQUITUR: economic contribution is unrelated to the welfare implications)."
+"No, because it is considered a luxury culinary delicacy in some cultures.",
+"Yes, because people are becoming more sensitive to animal welfare lately.",
+"No, because the producers of foie gras contribute to the local economy."
 ],
-explanation: "The correct answer is strongest because it explains the specific medical and physiological pathology caused by the practice. Distractor 1 is weak (IRRELEVANT): cultural status does not validate the harm. Distractor 2 is weak (VAGUE): public opinion is not a scientific justification. Distractor 3 is weak (NON-SEQUITUR): economic impact does not excuse cruelty."
+explanation: "The correct answer is strongest because it explains the specific medical and physiological pathology caused by the practice. Distractor 1 is weak: cultural status does not validate the harm. Distractor 2 is weak: public opinion is not a scientific justification. Distractor 3 is weak: economic impact does not excuse cruelty."
 },
 {
 kind: "single",
@@ -28012,11 +28372,11 @@ stimulus: ["Should animal welfare inspections be conducted without prior notice 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because unannounced inspections prevent owners from hiding evidence of neglect or temporarily correcting conditions, ensuring a truthful assessment of the animal's environment.",
 distractors: [
-"No, because it might be inconvenient for the inspector to arrive at an unexpected time (TRIVIAL: inconvenience is not a valid concern compared to animal welfare).",
-"Yes, because it is important for the government to do a good job (VAGUE: fails to explain why unannounced inspections are key).",
-"No, because the owner might be on holiday when the inspector arrives (TRIVIAL: scheduling is a minor issue that does not outweigh the need for honest assessments)."
+"No, because it might be inconvenient for the inspector to arrive at an unexpected time.",
+"Yes, because it is important for the government to do a good job.",
+"No, because the owner might be on holiday when the inspector arrives."
 ],
-explanation: "The correct answer is strongest because it addresses the necessity of preventing the suppression of evidence in inspections. Distractor 1 is weak (TRIVIAL): inspector inconvenience is irrelevant. Distractor 2 is weak (VAGUE): it lacks specific justification. Distractor 3 is weak (TRIVIAL): owner unavailability is not an argument against the validity of unannounced checks."
+explanation: "The correct answer is strongest because it addresses the necessity of preventing the suppression of evidence in inspections. Distractor 1 is weak: inspector inconvenience is irrelevant. Distractor 2 is weak: it lacks specific justification. Distractor 3 is weak: owner unavailability is not an argument against the validity of unannounced checks."
 },
 {
 kind: "single",
@@ -28026,11 +28386,11 @@ stimulus: ["Should the use of shock collars for training dogs be banned?"],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because shock collars rely on positive punishment that is scientifically linked to increased anxiety, aggression, and fear-based responses in dogs, hindering the learning process.",
 distractors: [
-"No, because the shock collar is often adjustable in intensity (TRIVIAL: adjustability does not negate the negative behavioral outcomes).",
-"Yes, because it is better to be nice to dogs than mean to them (VAGUE: lacks a behavioral or scientific basis).",
-"No, because some dog trainers believe it is the only way to stop a dog from running into a road (TRIVIAL: effectiveness in extreme cases does not validate its general use as a training tool)."
+"No, because the shock collar is often adjustable in intensity.",
+"Yes, because it is better to be nice to dogs than mean to them.",
+"No, because some dog trainers believe it is the only way to stop a dog from running into a road."
 ],
-explanation: "The correct answer is strongest because it cites the behavioral consequences of the training method. Distractor 1 is weak (TRIVIAL): intensity control is not the issue. Distractor 2 is weak (VAGUE): the explanation is overly simplistic. Distractor 3 is weak (TRIVIAL): narrow usage does not justify the broader harm."
+explanation: "The correct answer is strongest because it cites the behavioral consequences of the training method. Distractor 1 is weak: intensity control is not the issue. Distractor 2 is weak: the explanation is overly simplistic. Distractor 3 is weak: narrow usage does not justify the broader harm."
 },
 {
 kind: "single",
@@ -28040,11 +28400,11 @@ stimulus: ["Should it be illegal to keep solitary animals, like hamsters, in pai
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because housing naturally solitary, territorial species in pairs forces them into constant, unavoidable confrontation, causing severe stress and physical injury from territorial aggression.",
 distractors: [
-"No, because it is cute to see two animals sleeping together (IRRELEVANT: human observation of behavior is not the same as animal welfare).",
-"Yes, because it is generally better for there to be rules about animals (VAGUE: doesn't explain the benefit of this specific rule).",
-"No, because the pet store would have to reorganize their display tanks (TRIVIAL: store logistics are not a welfare consideration)."
+"No, because it is cute to see two animals sleeping together.",
+"Yes, because it is generally better for there to be rules about animals.",
+"No, because the pet store would have to reorganize their display tanks."
 ],
-explanation: "The correct answer is strongest because it links the biological nature of the animal to the physical outcome of forced interaction. Distractor 1 is weak (IRRELEVANT): appearance is not a welfare factor. Distractor 2 is weak (VAGUE): the argument is too broad. Distractor 3 is weak (TRIVIAL): minor operational issues are not a valid defense."
+explanation: "The correct answer is strongest because it links the biological nature of the animal to the physical outcome of forced interaction. Distractor 1 is weak: appearance is not a welfare factor. Distractor 2 is weak: the argument is too broad. Distractor 3 is weak: minor operational issues are not a valid defense."
 },
 {
 kind: "single",
@@ -28054,11 +28414,11 @@ stimulus: ["Should the government mandate that all pet food must clearly display
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because transparent labeling empowers consumers to make ethical purchasing decisions, which in turn creates market pressure on manufacturers to improve their sourcing standards.",
 distractors: [
-"No, because the packaging would have to be printed in a smaller font (TRIVIAL: packaging design is not an issue of substance).",
-"Yes, because consumers like to read labels while shopping (TRIVIAL: shopping habits don't address the core welfare improvement goal).",
-"No, because the government has many other important things to talk about (NON-SEQUITUR: the existence of other policy priorities does not negate the value of this one)."
+"No, because the packaging would have to be printed in a smaller font.",
+"Yes, because consumers like to read labels while shopping.",
+"No, because the government has many other important things to talk about."
 ],
-explanation: "The correct answer is strongest because it identifies the mechanism of 'consumer power' and market-driven improvements. Distractor 1 is weak (TRIVIAL): design constraints are not a policy issue. Distractor 2 is weak (TRIVIAL): consumer behavior doesn't address the ethical goal. Distractor 3 is weak (NON-SEQUITUR): prioritization doesn't invalidate this policy."
+explanation: "The correct answer is strongest because it identifies the mechanism of 'consumer power' and market-driven improvements. Distractor 1 is weak: design constraints are not a policy issue. Distractor 2 is weak: consumer behavior doesn't address the ethical goal. Distractor 3 is weak: prioritization doesn't invalidate this policy."
 },
 {
 kind: "single",
@@ -28068,11 +28428,11 @@ stimulus: ["Should the use of glue traps for rodent control be banned?"],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because glue traps cause a slow, agonizing death through dehydration, starvation, or tissue damage as the animal struggles to free itself, violating basic humane killing standards.",
 distractors: [
-"No, because it is very important to keep houses free of rodents for hygiene reasons (IRRELEVANT: the goal of pest control is not the issue, but the method used).",
-"Yes, because it is gross to see a stuck mouse (TRIVIAL: disgust is not an ethical argument for animal welfare).",
-"No, because other methods of killing mice are also a bit unpleasant (CIRCULAR: claiming other methods are bad doesn't justify keeping this one)."
+"No, because it is very important to keep houses free of rodents for hygiene reasons.",
+"Yes, because it is gross to see a stuck mouse.",
+"No, because other methods of killing mice are also a bit unpleasant."
 ],
-explanation: "The correct answer is strongest because it highlights the specific, inhumane suffering caused by the mechanism of the trap. Distractor 1 is weak (IRRELEVANT): the need for pest control is distinct from the method. Distractor 2 is weak (TRIVIAL): personal disgust is not a policy factor. Distractor 3 is weak (CIRCULAR): comparing to other bad methods doesn't provide a defense."
+explanation: "The correct answer is strongest because it highlights the specific, inhumane suffering caused by the mechanism of the trap. Distractor 1 is weak: the need for pest control is distinct from the method. Distractor 2 is weak: personal disgust is not a policy factor. Distractor 3 is weak: comparing to other bad methods doesn't provide a defense."
 },
 {
 kind: "single",
@@ -28082,11 +28442,11 @@ stimulus: ["Should all zoos be mandated to have a minimum percentage of their an
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because animals in captivity require constant mental and physical stimulation to prevent the development of repetitive, stereotyped behaviors associated with cognitive decline.",
 distractors: [
-"No, because the zoo might want to spend that money on a new ticket booth (TRIVIAL: the choice of where to spend money is not a justification to ignore animal needs).",
-"Yes, because it would make the zoo look more modern (IRRELEVANT: the appearance of the facility is not a welfare argument).",
-"No, because it is hard for a zoo to know exactly how much to spend (TRIVIAL: difficulty in estimation is not a reason to reject the principle)."
+"No, because the zoo might want to spend that money on a new ticket booth.",
+"Yes, because it would make the zoo look more modern.",
+"No, because it is hard for a zoo to know exactly how much to spend."
 ],
-explanation: "The correct answer is strongest because it directly links enrichment spending to the prevention of cognitive decline. Distractor 1 is weak (TRIVIAL): spending preferences don't outweigh welfare. Distractor 2 is weak (IRRELEVANT): modernization is not a welfare metric. Distractor 3 is weak (TRIVIAL): difficulty of calculation is not an excuse for neglect."
+explanation: "The correct answer is strongest because it directly links enrichment spending to the prevention of cognitive decline. Distractor 1 is weak: spending preferences don't outweigh welfare. Distractor 2 is weak: modernization is not a welfare metric. Distractor 3 is weak: difficulty of calculation is not an excuse for neglect."
 },
 {
 kind: "single",
@@ -28096,11 +28456,11 @@ stimulus: ["Should the government require all animal research facilities to publ
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mandatory public disclosure of mortality rates increases institutional accountability, which encourages facilities to reduce negligent deaths and improve procedural safety.",
 distractors: [
-"No, because it would be a lot of extra work for the administrators to compile that data (TRIVIAL: administrative work is not a valid reason to obscure safety data).",
-"Yes, because the public wants to know how many animals are used in labs (VAGUE: public desire does not inherently lead to better outcomes).",
-"No, because the research is for a good cause (NON-SEQUITUR: the goal of the research doesn't excuse a lack of transparency regarding mortality)."
+"No, because it would be a lot of extra work for the administrators to compile that data.",
+"Yes, because the public wants to know how many animals are used in labs.",
+"No, because the research is for a good cause."
 ],
-explanation: "The correct answer is strongest because it establishes a causal link between transparency and institutional behavior. Distractor 1 is weak (TRIVIAL): administrative burden is minor. Distractor 2 is weak (VAGUE): it lacks a specific improvement mechanism. Distractor 3 is weak (NON-SEQUITUR): the 'good cause' doesn't address the need for transparency."
+explanation: "The correct answer is strongest because it establishes a causal link between transparency and institutional behavior. Distractor 1 is weak: administrative burden is minor. Distractor 2 is weak: it lacks a specific improvement mechanism. Distractor 3 is weak: the 'good cause' doesn't address the need for transparency."
 },
 {
 kind: "single",
@@ -28110,11 +28470,11 @@ stimulus: ["Should the law prohibit the keeping of primates as household pets?"]
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because primates are highly social, complex creatures whose psychological needs for group interaction and climbing space cannot be met in a private domestic environment, leading to severe behavioral pathology.",
 distractors: [
-"No, because some people think baby monkeys are very funny to watch (IRRELEVANT: entertainment value is not a reason to keep them as pets).",
-"Yes, because it is generally a good idea to protect exotic animals (VAGUE: doesn't explain the specific welfare issues involved).",
-"No, because the pets are often very small and don't need much room (TRIVIAL: misconception of needs does not negate the scientific fact of their requirements)."
+"No, because some people think baby monkeys are very funny to watch.",
+"Yes, because it is generally a good idea to protect exotic animals.",
+"No, because the pets are often very small and don't need much room."
 ],
-explanation: "The correct answer is strongest because it explains the fundamental mismatch between the primate's biology and the domestic setting. Distractor 1 is weak (IRRELEVANT): humor is not a welfare factor. Distractor 2 is weak (VAGUE): it lacks depth. Distractor 3 is weak (TRIVIAL): the owner's perception of needs is incorrect and irrelevant to the animal's biology."
+explanation: "The correct answer is strongest because it explains the fundamental mismatch between the primate's biology and the domestic setting. Distractor 1 is weak: humor is not a welfare factor. Distractor 2 is weak: it lacks depth. Distractor 3 is weak: the owner's perception of needs is incorrect and irrelevant to the animal's biology."
 },
 {
 kind: "single",
@@ -28124,11 +28484,11 @@ stimulus: ["Should the government ban the sale of shark fins?"],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the demand for shark fins leads to the practice of shark finning, where sharks are discarded at sea while still alive to bleed to death, causing immense, protracted suffering.",
 distractors: [
-"No, because shark fin soup is a traditional dish at weddings (IRRELEVANT: cultural significance does not mitigate the cruelty of the process).",
-"Yes, because sharks have a very interesting biology (NON-SEQUITUR: biological interest is not a reason to stop the trade).",
-"No, because the global trade is already quite regulated (TRIVIAL: current regulation level doesn't address the specific cruelty of the finning method)."
+"No, because shark fin soup is a traditional dish at weddings.",
+"Yes, because sharks have a very interesting biology.",
+"No, because the global trade is already quite regulated."
 ],
-explanation: "The correct answer is strongest because it describes the specific, brutal methodology of the trade. Distractor 1 is weak (IRRELEVANT): tradition is not an ethical justification for cruelty. Distractor 2 is weak (NON-SEQUITUR): biological interest is unrelated to ethical policy. Distractor 3 is weak (TRIVIAL): existence of regulation doesn't prove it's effective or sufficient."
+explanation: "The correct answer is strongest because it describes the specific, brutal methodology of the trade. Distractor 1 is weak: tradition is not an ethical justification for cruelty. Distractor 2 is weak: biological interest is unrelated to ethical policy. Distractor 3 is weak: existence of regulation doesn't prove it's effective or sufficient."
 },
 {
 kind: "single",
@@ -28138,11 +28498,11 @@ stimulus: ["Should pet owners be legally required to provide annual health check
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because routine professional health checks enable the early detection of chronic conditions like dental disease or tumors, which can be treated much more effectively before they become advanced and painful.",
 distractors: [
-"No, because some people do not have a veterinarian nearby (TRIVIAL: access issues do not negate the value of the practice, it just identifies a different problem).",
-"Yes, because it is important to be a good pet owner (VAGUE: fails to explain why the health checks specifically are necessary).",
-"No, because the check-ups cost money (TRIVIAL: the cost of health care does not override the necessity of ensuring animal health)."
+"No, because some people do not have a veterinarian nearby.",
+"Yes, because it is important to be a good pet owner.",
+"No, because the check-ups cost money."
 ],
-explanation: "The correct answer is strongest because it links early detection to specific, actionable health outcomes. Distractor 1 is weak (TRIVIAL): access issues are a secondary logistical point. Distractor 2 is weak (VAGUE): the definition of a 'good pet owner' is too subjective. Distractor 3 is weak (TRIVIAL): financial cost is secondary to animal health."
+explanation: "The correct answer is strongest because it links early detection to specific, actionable health outcomes. Distractor 1 is weak: access issues are a secondary logistical point. Distractor 2 is weak: the definition of a 'good pet owner' is too subjective. Distractor 3 is weak: financial cost is secondary to animal health."
 },
 {
 kind: "single",
@@ -28152,11 +28512,11 @@ stimulus: ["Should it be illegal to use animals in military testing?"],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because animals cannot consent to participating in high-risk military research that often results in severe trauma, pain, or death, creating a clear ethical violation that cannot be mitigated.",
 distractors: [
-"No, because the military needs to protect the country (NON-SEQUITUR: national defense goals do not necessarily justify animal use in testing).",
-"Yes, because it makes people sad when they hear about it (VAGUE: emotional reaction is not a robust argument compared to the issue of consent).",
-"No, because scientists learn a lot of useful data from those tests (TRIVIAL: the utility of data does not address the ethical issue of consent or trauma)."
+"No, because the military needs to protect the country.",
+"Yes, because it makes people sad when they hear about it.",
+"No, because scientists learn a lot of useful data from those tests."
 ],
-explanation: "The correct answer is strongest because it addresses the ethical crux of the argument (consent and harm). Distractor 1 is weak (NON-SEQUITUR): the military goal does not address the ethics of the method. Distractor 2 is weak (VAGUE): emotional reactions are subjective. Distractor 3 is weak (TRIVIAL): the usefulness of data is a classic utilitarian trade-off that doesn't resolve the ethical problem."
+explanation: "The correct answer is strongest because it addresses the ethical crux of the argument (consent and harm). Distractor 1 is weak: the military goal does not address the ethics of the method. Distractor 2 is weak: emotional reactions are subjective. Distractor 3 is weak: the usefulness of data is a classic utilitarian trade-off that doesn't resolve the ethical problem."
 },
 {
 kind: "single",
@@ -28166,11 +28526,11 @@ stimulus: ["Should all pet shops be required to house animals in cages that are 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because current size standards are based on basic survival rather than animal welfare, and larger cages provide the necessary space for natural movement and behaviors that reduce stress-related diseases.",
 distractors: [
-"No, because the store would need to buy more expensive cages (TRIVIAL: financial investment is not a reason to maintain poor welfare).",
-"Yes, because animals should have space to move (CIRCULAR: restates the proposal).",
-"No, because the store would have fewer animals on display to sell (TRIVIAL: business turnover is not a valid welfare consideration)."
+"No, because the store would need to buy more expensive cages.",
+"Yes, because animals should have space to move.",
+"No, because the store would have fewer animals on display to sell."
 ],
-explanation: "The correct answer is strongest because it explains why the current standards are inadequate for biological needs and how the increase directly improves welfare. Distractor 1 is weak (TRIVIAL): cost is not an excuse for poor welfare. Distractor 2 is weak (CIRCULAR): repeats the premise. Distractor 3 is weak (TRIVIAL): business model disruption is not a valid counter to a welfare-based mandate."
+explanation: "The correct answer is strongest because it explains why the current standards are inadequate for biological needs and how the increase directly improves welfare. Distractor 1 is weak: cost is not an excuse for poor welfare. Distractor 2 is weak: repeats the premise. Distractor 3 is weak: business model disruption is not a valid counter to a welfare-based mandate."
 },
 {
 kind: "single",
@@ -28182,11 +28542,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it ensures that incoming migrants fill critical economic gaps, directly increasing the tax base and fostering innovation in key sectors.",
 distractors: [
-"Yes, because it is good for the country to have people who work hard (VAGUE: does not specify economic impact).",
-"No, because some people prefer to live in different climates (IRRELEVANT: personal preference has no bearing on economic policy).",
-"Yes, because a points-based system is a system based on points (CIRCULAR: restates the proposal)."
+"Yes, because it is good for the country to have people who work hard.",
+"No, because some people prefer to live in different climates.",
+"No, because a points-based system would mean that the government is making decisions about who gets to stay, which is something that governments do."
 ],
-explanation: "The correct answer is strongest because it addresses the economic goal of the policy with a tangible, positive outcome. Distractor 1 is weak (VAGUE): it lacks specific evidence or reasoning. Distractor 2 is weak (IRRELEVANT): climate preference is unrelated to residency requirements. Distractor 3 is weak (CIRCULAR): it merely defines the proposal."
+explanation: "The correct answer is strongest because it addresses the economic goal of the policy with a tangible, positive outcome. Distractor 1 is weak: it lacks specific evidence or reasoning. Distractor 2 is weak: climate preference is unrelated to residency requirements. Distractor 3 is weak: it merely defines the proposal."
 },
 {
 kind: "single",
@@ -28198,11 +28558,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it incentivizes irregular migration by guaranteeing legal status, which overwhelms social services and border control capacity.",
 distractors: [
-"Yes, because birth is a significant life event for any child (TRIVIAL: being a life event does not justify a legal right).",
-"No, because it might lead to people feeling confused about their identity (VAGUE: fails to define a measurable outcome).",
-"Yes, because citizenship is a thing that people who are born here should have (CIRCULAR: restates the premise as the justification)."
+"Yes, because birth is a significant life event for any child.",
+"No, because it might lead to people feeling confused about their identity.",
+"Yes, because citizenship is a thing that people who are born here should have."
 ],
-explanation: "The correct answer is strongest because it highlights a clear, negative systemic consequence. Distractor 1 is weak (TRIVIAL): significance to an individual does not equate to state policy impact. Distractor 2 is weak (VAGUE): psychological impact is anecdotal. Distractor 3 is weak (CIRCULAR): it assumes the conclusion."
+explanation: "The correct answer is strongest because it highlights a clear, negative systemic consequence. Distractor 1 is weak: significance to an individual does not equate to state policy impact. Distractor 2 is weak: psychological impact is anecdotal. Distractor 3 is weak: it assumes the conclusion."
 },
 {
 kind: "single",
@@ -28214,11 +28574,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it violates international humanitarian obligations and prevents the timely protection of individuals facing immediate threats to their lives.",
 distractors: [
-"Yes, because numbers are important for managing budgets (VAGUE: does not explain how the cap links to the budget).",
-"No, because some people like to travel to different countries (IRRELEVANT: tourism is not related to refugee status).",
-"Yes, because an annual cap is a limit set on a yearly basis (CIRCULAR: defines the term)."
+"Yes, because numbers are important for managing budgets.",
+"No, because some people like to travel to different countries.",
+"Yes, because an annual cap is a limit set on a yearly basis."
 ],
-explanation: "The correct answer is strongest because it identifies the ethical and legal failure resulting from the proposal. Distractor 1 is weak (VAGUE): it fails to explain the causal link. Distractor 2 is weak (IRRELEVANT): tourism and refuge are distinct concepts. Distractor 3 is weak (CIRCULAR): it merely defines the term."
+explanation: "The correct answer is strongest because it identifies the ethical and legal failure resulting from the proposal. Distractor 1 is weak: it fails to explain the causal link. Distractor 2 is weak: tourism and refuge are distinct concepts. Distractor 3 is weak: it merely defines the term."
 },
 {
 kind: "single",
@@ -28230,11 +28590,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because language proficiency is essential for workplace safety and effective integration, reducing the risk of accidents and fostering social cohesion.",
 distractors: [
-"No, because some people find learning new languages very difficult (TRIVIAL: individual difficulty is secondary to systemic safety).",
-"Yes, because languages are how people talk to each other (TRIVIAL: this is a general fact that does not support the policy).",
-"No, because the government should not interfere with how people choose to speak (NON-SEQUITUR: addresses freedom of speech rather than work visa requirements)."
+"No, because some people find learning new languages very difficult.",
+"Yes, because languages are how people talk to each other.",
+"No, because the government should not interfere with how people choose to speak."
 ],
-explanation: "The correct answer is strongest because it links the policy to concrete safety and social benefits. Distractor 1 is weak (TRIVIAL): personal struggle is not a policy argument. Distractor 2 is weak (TRIVIAL): stating a function of language is irrelevant to visa criteria. Distractor 3 is weak (NON-SEQUITUR): it moves the debate to civil liberties."
+explanation: "The correct answer is strongest because it links the policy to concrete safety and social benefits. Distractor 1 is weak: personal struggle is not a policy argument. Distractor 2 is weak: stating a function of language is irrelevant to visa criteria. Distractor 3 is weak: it moves the debate to civil liberties."
 },
 {
 kind: "single",
@@ -28246,11 +28606,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it revitalizes the local economy and essential services in rural areas by addressing labor shortages and expanding the consumer base.",
 distractors: [
-"Yes, because rural areas have a lot of grass and trees (IRRELEVANT: scenery is not a valid economic argument).",
-"No, because the government has a lot of money and can spend it elsewhere (VAGUE: does not explain why this is a bad use of money).",
-"Yes, because it is an incentive for people to move to rural areas (CIRCULAR: restates the proposal)."
+"Yes, because rural areas have a lot of grass and trees.",
+"No, because the government has a lot of money and can spend it elsewhere.",
+"No, because people who move to rural areas might not be happy there."
 ],
-explanation: "The correct answer is strongest because it addresses the core economic purpose of the policy. Distractor 1 is weak (IRRELEVANT): geography has no impact on economic success. Distractor 2 is weak (VAGUE): the claim is unfocused. Distractor 3 is weak (CIRCULAR): it simply repeats the logic."
+explanation: "The correct answer is strongest because it addresses the core economic purpose of the policy. Distractor 1 is weak: geography has no impact on economic success. Distractor 2 is weak: the claim is unfocused. Distractor 3 is weak: it simply repeats the logic."
 },
 {
 kind: "single",
@@ -28262,11 +28622,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because preventing the spread of infectious diseases in the general population requires universal access to healthcare, regardless of immigration status.",
 distractors: [
-"No, because doctors should be able to decide who they treat (NON-SEQUITUR: this concerns professional autonomy, not public health policy).",
-"Yes, because everyone likes to be healthy (TRIVIAL: a general preference is not an argument for policy).",
-"No, because public healthcare is a system for the public (CIRCULAR: defines the system)."
+"No, because doctors should be able to decide who they treat.",
+"Yes, because everyone likes to be healthy.",
+"No, because public healthcare is a system for the public."
 ],
-explanation: "The correct answer is strongest because it identifies a significant, specific public health consequence. Distractor 1 is weak (NON-SEQUITUR): it shifts the focus to clinical autonomy. Distractor 2 is weak (TRIVIAL): stating that people like health is irrelevant. Distractor 3 is weak (CIRCULAR): it provides no actual reasoning."
+explanation: "The correct answer is strongest because it identifies a significant, specific public health consequence. Distractor 1 is weak: it shifts the focus to clinical autonomy. Distractor 2 is weak: stating that people like health is irrelevant. Distractor 3 is weak: it provides no actual reasoning."
 },
 {
 kind: "single",
@@ -28278,11 +28638,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it creates a two-tier system where wealth dictates legal status, undermining the democratic principle of equal treatment under the law.",
 distractors: [
-"Yes, because investors usually have very nice cars (IRRELEVANT: personal luxury has no policy relevance).",
-"Yes, because it is a fast way to get citizenship for those with money (CIRCULAR: restates the proposal).",
-"No, because citizenship is a very complicated thing to manage (VAGUE: difficulty of administration is not a reason to reject the policy)."
+"Yes, because investors usually have very nice cars.",
+"Yes, because it is a fast way to get citizenship for those with money.",
+"No, because citizenship is a very complicated thing to manage."
 ],
-explanation: "The correct answer is strongest because it addresses the moral and systemic impact of the proposal. Distractor 1 is weak (IRRELEVANT): wealth indicators like cars are irrelevant. Distractor 2 is weak (CIRCULAR): it just defines the process. Distractor 3 is weak (VAGUE): administrative complexity is not a substantive argument."
+explanation: "The correct answer is strongest because it addresses the moral and systemic impact of the proposal. Distractor 1 is weak: wealth indicators like cars are irrelevant. Distractor 2 is weak: it just defines the process. Distractor 3 is weak: administrative complexity is not a substantive argument."
 },
 {
 kind: "single",
@@ -28294,11 +28654,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because digitization reduces human error and manual processing delays, allowing the system to handle higher volumes of applications efficiently.",
 distractors: [
-"Yes, because computers are used in many offices nowadays (TRIVIAL: ubiquity does not justify a specific policy).",
-"No, because some people might find computers difficult to look at (TRIVIAL: user experience of IT staff is not a policy consideration).",
-"Yes, because digital records are records that have been digitized (CIRCULAR: defines the term)."
+"Yes, because computers are used in many offices nowadays.",
+"No, because some people might find computers difficult to look at.",
+"No, because digitizing records would involve using computers, which some people work with already, so it might not really change anything meaningful."
 ],
-explanation: "The correct answer is strongest because it addresses efficiency and capacity. Distractor 1 is weak (TRIVIAL): the prevalence of computers is not an argument for their implementation here. Distractor 2 is weak (TRIVIAL): screen difficulty is not a significant policy drawback. Distractor 3 is weak (CIRCULAR): it provides no reasoning."
+explanation: "The correct answer is strongest because it addresses efficiency and capacity. Distractor 1 is weak: the prevalence of computers is not an argument for their implementation here. Distractor 2 is weak: screen difficulty is not a significant policy drawback. Distractor 3 is weak: it provides no reasoning."
 },
 {
 kind: "single",
@@ -28310,11 +28670,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it ensures that international medical standards align with local practices, protecting patient safety by confirming clinical competence.",
 distractors: [
-"Yes, because it takes one year to complete a one-year placement (CIRCULAR: restates the duration).",
-"No, because doctors should be able to travel wherever they want (NON-SEQUITUR: immigration rights have no bearing on professional medical standards).",
-"Yes, because it is good to have more people in hospitals (VAGUE: fails to define why this specific policy adds value)."
+"Yes, because it takes one year to complete a one-year placement.",
+"No, because doctors should be able to travel wherever they want.",
+"No, because foreign-trained doctors have already completed medical training in their own countries, so they probably know how to be doctors."
 ],
-explanation: "The correct answer is strongest because it directly links the policy to patient safety and quality control. Distractor 1 is weak (CIRCULAR): it explains nothing. Distractor 2 is weak (NON-SEQUITUR): it conflates mobility with medical regulation. Distractor 3 is weak (VAGUE): it lacks specific justification."
+explanation: "The correct answer is strongest because it directly links the policy to patient safety and quality control. Distractor 1 is weak: it explains nothing. Distractor 2 is weak: it conflates mobility with medical regulation. Distractor 3 is weak: it lacks specific justification."
 },
 {
 kind: "single",
@@ -28326,11 +28686,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it disproportionately subjects a specific group to constant monitoring, potentially leading to social stigmatization and increased discrimination.",
 distractors: [
-"Yes, because it would create a list of names (CIRCULAR: restates the definition of a registry).",
-"Yes, because some people think that lists are very organized (TRIVIAL: the subjective aesthetic of organization is not a policy goal).",
-"No, because some people do not like having their names written down (TRIVIAL: personal preference is not a policy justification)."
+"Yes, because it would create a list of names.",
+"Yes, because some people think that lists are very organized.",
+"No, because some people do not like having their names written down."
 ],
-explanation: "The correct answer is strongest because it highlights the negative social and ethical consequences. Distractor 1 is weak (CIRCULAR): it defines a registry. Distractor 2 is weak (TRIVIAL): preference for organization is irrelevant. Distractor 3 is weak (TRIVIAL): personal dislikes are not policy concerns."
+explanation: "The correct answer is strongest because it highlights the negative social and ethical consequences. Distractor 1 is weak: it defines a registry. Distractor 2 is weak: preference for organization is irrelevant. Distractor 3 is weak: personal dislikes are not policy concerns."
 },
 {
 kind: "single",
@@ -28342,11 +28702,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it eliminates the potential for split national loyalties, which could compromise national security and decision-making during international conflicts.",
 distractors: [
-"Yes, because it is better to only have one passport (VAGUE: does not explain why one is better than two).",
-"No, because many people enjoy having multiple travel documents (TRIVIAL: the enjoyment of travel is irrelevant to national security).",
-"Yes, because government employees who are not dual citizens are not dual citizens (CIRCULAR: logic holds no substance)."
+"Yes, because it is better to only have one passport.",
+"No, because many people enjoy having multiple travel documents.",
+"No, because dual citizenship has existed for a long time and people have always had it, so it is just a normal thing that happens."
 ],
-explanation: "The correct answer is strongest because it addresses the core national security concern. Distractor 1 is weak (VAGUE): it lacks supporting evidence. Distractor 2 is weak (TRIVIAL): travel convenience is not a security concern. Distractor 3 is weak (CIRCULAR): it is a vacuous statement."
+explanation: "The correct answer is strongest because it addresses the core national security concern. Distractor 1 is weak: it lacks supporting evidence. Distractor 2 is weak: travel convenience is not a security concern. Distractor 3 is weak: it is a vacuous statement."
 },
 {
 kind: "single",
@@ -28358,11 +28718,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because improving language skills increases the employability of immigrants, allowing them to contribute more effectively to the local economy.",
 distractors: [
-"Yes, because learning is something that people generally enjoy doing (TRIVIAL: subjective enjoyment is not a valid basis for public spending).",
-"No, because some languages have more words than others (IRRELEVANT: linguistics is not the issue here).",
-"Yes, because free classes are classes that do not cost money (CIRCULAR: defines the proposal)."
+"Yes, because learning is something that people generally enjoy doing.",
+"No, because some languages have more words than others.",
+"No, because free English classes would mean that local governments are doing something related to English, which is related to language, and language is what people speak."
 ],
-explanation: "The correct answer is strongest because it links the policy to economic utility. Distractor 1 is weak (TRIVIAL): personal enjoyment is irrelevant. Distractor 2 is weak (IRRELEVANT): word count is not related to language acquisition policy. Distractor 3 is weak (CIRCULAR): it defines the term."
+explanation: "The correct answer is strongest because it links the policy to economic utility. Distractor 1 is weak: personal enjoyment is irrelevant. Distractor 2 is weak: word count is not related to language acquisition policy. Distractor 3 is weak: it defines the term."
 },
 {
 kind: "single",
@@ -28374,11 +28734,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a mandatory period allows for the assimilation and vetting of residents, ensuring they are fully integrated into society before being granted the full rights of citizenship.",
 distractors: [
-"No, because some people move very quickly (IRRELEVANT: physical speed has nothing to do with legal status).",
-"Yes, because a waiting period is a period of time that you have to wait (CIRCULAR: defines the term).",
-"Yes, because it is nice for people to have a break from paperwork (TRIVIAL: paperwork convenience is not a policy goal)."
+"No, because some people move very quickly.",
+"Yes, because a waiting period is a period of time that you have to wait.",
+"No, because people who want to become citizens probably have good reasons for wanting to do so."
 ],
-explanation: "The correct answer is strongest because it addresses the purpose of integration and vetting. Distractor 1 is weak (IRRELEVANT): the speed of movement is irrelevant. Distractor 2 is weak (CIRCULAR): it just defines the term. Distractor 3 is weak (TRIVIAL): personal convenience is not a significant policy consideration."
+explanation: "The correct answer is strongest because it addresses the purpose of integration and vetting. Distractor 1 is weak: the speed of movement is irrelevant. Distractor 2 is weak: it just defines the term. Distractor 3 is weak: personal convenience is not a significant policy consideration."
 },
 {
 kind: "single",
@@ -28390,11 +28750,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it protects the job security of domestic workers during economic downturns by preventing an oversupply of labor in the market.",
 distractors: [
-"No, because the economy is very complex and difficult to understand (VAGUE: complexity is not a reason to act or not act).",
-"Yes, because when people do not have jobs, they are unemployed (CIRCULAR: restates the definition).",
-"Yes, because some workers like to be paid in cash (IRRELEVANT: salary payment methods do not affect unemployment levels)."
+"No, because the economy is very complex and difficult to understand.",
+"Yes, because when people do not have jobs, they are unemployed.",
+"No, because immigration restrictions would affect immigration, which is something that happens when people move to different countries."
 ],
-explanation: "The correct answer is strongest because it links the policy to market stability and labor protection. Distractor 1 is weak (VAGUE): it does not provide an argument. Distractor 2 is weak (CIRCULAR): it defines the state of unemployment. Distractor 3 is weak (IRRELEVANT): payment methods are not relevant to labor supply."
+explanation: "The correct answer is strongest because it links the policy to market stability and labor protection. Distractor 1 is weak: it does not provide an argument. Distractor 2 is weak: it defines the state of unemployment. Distractor 3 is weak: payment methods are not relevant to labor supply."
 },
 {
 kind: "single",
@@ -28406,11 +28766,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it facilitates positive interaction between diverse groups, reducing social tension and preventing the formation of isolated communities.",
 distractors: [
-"Yes, because youth are young people (CIRCULAR: defines the subject).",
-"No, because some young people prefer to stay home and play video games (IRRELEVANT: leisure preferences are not a policy concern).",
-"Yes, because it is important for the government to spend money (VAGUE: fails to explain why this specific spending is beneficial)."
+"Yes, because youth are young people.",
+"No, because some young people prefer to stay home and play video games.",
+"No, because cultural exchange programs are programs that exchange culture, and if the government funds them, then the government will be funding them."
 ],
-explanation: "The correct answer is strongest because it addresses social cohesion. Distractor 1 is weak (CIRCULAR): it defines the target group. Distractor 2 is weak (IRRELEVANT): entertainment preferences are unrelated to policy. Distractor 3 is weak (VAGUE): general spending is not a justification."
+explanation: "The correct answer is strongest because it addresses social cohesion. Distractor 1 is weak: it defines the target group. Distractor 2 is weak: entertainment preferences are unrelated to policy. Distractor 3 is weak: general spending is not a justification."
 },
 {
 kind: "single",
@@ -28422,11 +28782,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it disproportionately hinders working individuals who can only attend to immigration matters during weekends, leading to massive backlogs.",
 distractors: [
-"Yes, because weekends are times when many people do not work (TRIVIAL: general office culture is not the point).",
-"Yes, because closing is the opposite of opening (CIRCULAR: defines the action).",
-"No, because some staff might get bored on the weekend (TRIVIAL: employee boredom is not a policy factor)."
+"Yes, because weekends are times when many people do not work.",
+"Yes, because closing is the opposite of opening.",
+"No, because some staff might get bored on the weekend."
 ],
-explanation: "The correct answer is strongest because it addresses the impact on the user base and system capacity. Distractor 1 is weak (TRIVIAL): general office practice is irrelevant. Distractor 2 is weak (CIRCULAR): it simply defines the term. Distractor 3 is weak (TRIVIAL): employee preference is not a valid concern."
+explanation: "The correct answer is strongest because it addresses the impact on the user base and system capacity. Distractor 1 is weak: general office practice is irrelevant. Distractor 2 is weak: it simply defines the term. Distractor 3 is weak: employee preference is not a valid concern."
 },
 {
 kind: "single",
@@ -28438,11 +28798,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it creates an artificial barrier to entry that drastically reduces the availability of legal counsel for immigrants, thereby denying them access to justice.",
 distractors: [
-"Yes, because it is always helpful to know more languages (VAGUE: fails to address the impact on the legal system).",
-"No, because some lawyers have very loud voices (IRRELEVANT: physical traits are not related to legal qualification).",
-"Yes, because a lawyer who speaks three languages is a lawyer who speaks three languages (CIRCULAR: restates the proposal)."
+"Yes, because it is always helpful to know more languages.",
+"No, because some lawyers have very loud voices.",
+"Yes, because a lawyer who speaks three languages is a lawyer who speaks three languages."
 ],
-explanation: "The correct answer is strongest because it links the mandate to a major negative consequence for legal access. Distractor 1 is weak (VAGUE): the claim is unfocused. Distractor 2 is weak (IRRELEVANT): physical attributes are irrelevant. Distractor 3 is weak (CIRCULAR): it offers no justification."
+explanation: "The correct answer is strongest because it links the mandate to a major negative consequence for legal access. Distractor 1 is weak: the claim is unfocused. Distractor 2 is weak: physical attributes are irrelevant. Distractor 3 is weak: it offers no justification."
 },
 {
 kind: "single",
@@ -28454,11 +28814,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it would create unsustainable pressure on housing, education, and healthcare infrastructure, exceeding the capacity of the current system.",
 distractors: [
-"Yes, because everyone has family members (TRIVIAL: existence of family is not a policy basis).",
-"Yes, because automatic is when something happens automatically (CIRCULAR: defines the term).",
-"No, because family reunions can be quite noisy (IRRELEVANT: noise is not a policy concern)."
+"Yes, because everyone has family members.",
+"Yes, because automatic is when something happens automatically.",
+"No, because family reunions can be quite noisy."
 ],
-explanation: "The correct answer is strongest because it identifies the structural limits of public infrastructure. Distractor 1 is weak (TRIVIAL): the existence of family is a human condition, not a policy argument. Distractor 2 is weak (CIRCULAR): it defines the term. Distractor 3 is weak (IRRELEVANT): noise is not a factor for immigration law."
+explanation: "The correct answer is strongest because it identifies the structural limits of public infrastructure. Distractor 1 is weak: the existence of family is a human condition, not a policy argument. Distractor 2 is weak: it defines the term. Distractor 3 is weak: noise is not a factor for immigration law."
 },
 {
 kind: "single",
@@ -28470,11 +28830,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because private companies prioritize profit over consistent administrative standards, leading to increased risk of corruption and reduced public accountability.",
 distractors: [
-"Yes, because private companies are businesses that operate privately (CIRCULAR: defines the concept).",
-"Yes, because some government offices have very uncomfortable chairs (TRIVIAL: furniture quality is not a factor for visa policy).",
-"No, because some people do not like the color of private business signs (IRRELEVANT: color choice is irrelevant)."
+"Yes, because private companies are businesses that operate privately.",
+"Yes, because some government offices have very uncomfortable chairs.",
+"No, because some people do not like the color of private business signs."
 ],
-explanation: "The correct answer is strongest because it identifies the risk to accountability and standards. Distractor 1 is weak (CIRCULAR): it provides no reasoning. Distractor 2 is weak (TRIVIAL): comfort of furniture is not a policy consideration. Distractor 3 is weak (IRRELEVANT): personal dislike of signs is irrelevant."
+explanation: "The correct answer is strongest because it identifies the risk to accountability and standards. Distractor 1 is weak: it provides no reasoning. Distractor 2 is weak: comfort of furniture is not a policy consideration. Distractor 3 is weak: personal dislike of signs is irrelevant."
 },
 {
 kind: "single",
@@ -28486,11 +28846,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it brings individuals into the formal economy, allowing them to contribute taxes and access legal protections that prevent exploitation by unscrupulous employers.",
 distractors: [
-"Yes, because long-term is a long time (CIRCULAR: restates the term).",
-"No, because it might lead to people feeling happy (VAGUE: does not address the legal or economic impact).",
-"Yes, because the sun rises in the east (NON-SEQUITUR: the motion of the sun has no relation to amnesty policy)."
+"Yes, because long-term is a long time.",
+"No, because it might lead to people feeling happy.",
+"No, because amnesty programs involve paperwork and paperwork is something that exists."
 ],
-explanation: "The correct answer is strongest because it addresses economic integration and protection. Distractor 1 is weak (CIRCULAR): it defines the term. Distractor 2 is weak (VAGUE): the emotional outcome is undefined. Distractor 3 is weak (NON-SEQUITUR): the statement is completely unrelated."
+explanation: "The correct answer is strongest because it addresses economic integration and protection. Distractor 1 is weak: it defines the term. Distractor 2 is weak: the emotional outcome is undefined. Distractor 3 is weak: the statement is completely unrelated."
 },
 {
 kind: "single",
@@ -28502,11 +28862,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because international students provide significant revenue to public universities, which helps keep tuition affordable for domestic students.",
 distractors: [
-"Yes, because universities should be for students (CIRCULAR: defines the nature of the university).",
-"Yes, because international students might eat too much food (IRRELEVANT: dietary habits are not a university policy issue).",
-"No, because some people have never been to university (IRRELEVANT: personal experience is not an argument for policy)."
+"Yes, because universities should be for students.",
+"Yes, because international students might eat too much food.",
+"No, because some people have never been to university."
 ],
-explanation: "The correct answer is strongest because it links international student enrollment to financial stability for the institution and local students. Distractor 1 is weak (CIRCULAR): it assumes the conclusion. Distractor 2 is weak (IRRELEVANT): dietary habits are unrelated to university finance. Distractor 3 is weak (IRRELEVANT): personal experience is irrelevant."
+explanation: "The correct answer is strongest because it links international student enrollment to financial stability for the institution and local students. Distractor 1 is weak: it assumes the conclusion. Distractor 2 is weak: dietary habits are unrelated to university finance. Distractor 3 is weak: personal experience is irrelevant."
 },
 {
 kind: "single",
@@ -28518,11 +28878,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it provides accurate identity verification that effectively prevents the use of forged documents, significantly enhancing national border security.",
 distractors: [
-"Yes, because facial recognition is technology that recognizes faces (CIRCULAR: defines the technology).",
-"No, because some people have very sensitive skin (IRRELEVANT: skin sensitivity is not a policy factor for borders).",
-"Yes, because security is important for keeping things secure (CIRCULAR: defines the concept of security)."
+"Yes, because facial recognition is technology that recognizes faces.",
+"No, because some people have very sensitive skin.",
+"No, because facial recognition might not work well in all situations where faces are present."
 ],
-explanation: "The correct answer is strongest because it identifies the effectiveness of the technology in preventing fraud. Distractor 1 is weak (CIRCULAR): it defines the technology. Distractor 2 is weak (IRRELEVANT): skin sensitivity is unrelated to border policy. Distractor 3 is weak (CIRCULAR): it is a tautology."
+explanation: "The correct answer is strongest because it identifies the effectiveness of the technology in preventing fraud. Distractor 1 is weak: it defines the technology. Distractor 2 is weak: skin sensitivity is unrelated to border policy. Distractor 3 is weak: it is a tautology."
 },
 {
 kind: "single",
@@ -28534,11 +28894,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because these individuals boost the nation’s international profile and cultural influence, generating intangible economic benefits through increased tourism and prestige.",
 distractors: [
-"Yes, because arts and sports are things that people do (CIRCULAR: defines the activities).",
-"No, because some artists like to paint in blue (IRRELEVANT: personal color preference is not a policy issue).",
-"Yes, because it is good to have talented people (VAGUE: does not explain why talent is beneficial to the state)."
+"Yes, because arts and sports are things that people do.",
+"No, because some artists like to paint in blue.",
+"No, because prioritizing immigrants based on talent is a decision that involves making decisions about which immigrants to prioritize."
 ],
-explanation: "The correct answer is strongest because it addresses the national interest in prestige and cultural influence. Distractor 1 is weak (CIRCULAR): it defines the activity. Distractor 2 is weak (IRRELEVANT): personal preference is irrelevant. Distractor 3 is weak (VAGUE): it lacks specific argumentation."
+explanation: "The correct answer is strongest because it addresses the national interest in prestige and cultural influence. Distractor 1 is weak: it defines the activity. Distractor 2 is weak: personal preference is irrelevant. Distractor 3 is weak: it lacks specific argumentation."
 },
 {
 kind: "single",
@@ -28550,11 +28910,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it denies individuals the right to solidify their legal status after a lifetime of contributing to the country, violating the principle of fairness.",
 distractors: [
-"Yes, because a maximum age is an age that is the maximum (CIRCULAR: defines the term).",
-"No, because some elderly people enjoy gardening (IRRELEVANT: hobby is not related to citizenship law).",
-"Yes, because numbers are used for counting ages (TRIVIAL: stating how age is measured does not support the policy)."
+"Yes, because a maximum age is an age that is the maximum.",
+"No, because some elderly people enjoy gardening.",
+"Yes, because numbers are used for counting ages."
 ],
-explanation: "The correct answer is strongest because it emphasizes the moral argument of fairness and contribution. Distractor 1 is weak (CIRCULAR): it defines the term. Distractor 2 is weak (IRRELEVANT): hobby choice is irrelevant. Distractor 3 is weak (TRIVIAL): defining age is irrelevant to the policy argument."
+explanation: "The correct answer is strongest because it emphasizes the moral argument of fairness and contribution. Distractor 1 is weak: it defines the term. Distractor 2 is weak: hobby choice is irrelevant. Distractor 3 is weak: defining age is irrelevant to the policy argument."
 },
 {
 kind: "single",
@@ -28564,11 +28924,11 @@ stimulus: ['Should all companies with over 50 employees be legally required to i
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a compressed work week significantly increases employee productivity and reduces burnout, leading to higher long-term retention rates for businesses.",
 distractors: [
-"Yes, because people generally prefer having three days off instead of two (TRIVIAL).",
-"Yes, because the four-day work week is simply a better way for companies to organize their work schedules (CIRCULAR).",
-"No, because some companies might decide to change their office furniture as a result of this policy (IRRELEVANT)."
+"Yes, because people generally prefer having three days off instead of two.",
+"No, because companies have been operating with five-day work weeks for a long time, so changing this would be different from what they currently do.",
+"No, because some companies might decide to change their office furniture as a result of this policy."
 ],
-explanation: "The correct answer is strongest because it directly addresses the core purpose of improving workplace efficiency and sustainability with a specific consequence: retention and productivity. Distractor 1 is weak (TRIVIAL): personal preference is not a business metric. Distractor 2 is weak (CIRCULAR): it restates the proposal without providing evidence. Distractor 3 is weak (IRRELEVANT): office furniture has no logical link to working hours."
+explanation: "The correct answer is strongest because it directly addresses the core purpose of improving workplace efficiency and sustainability with a specific consequence: retention and productivity. Distractor 1 is weak: personal preference is not a business metric. Distractor 2 is weak: it restates the proposal without providing evidence. Distractor 3 is weak: office furniture has no logical link to working hours."
 },
 {
 kind: "single",
@@ -28578,11 +28938,11 @@ stimulus: ['Should employers be prohibited from contacting employees via digital
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because clear boundaries between work and personal time are essential for mental recovery, directly reducing the incidence of stress-related medical leave.",
 distractors: [
-"Yes, because employees should be able to do whatever they want when they are not at their desks (VAGUE).",
-"No, because some people enjoy checking their emails while they are cooking dinner (TRIVIAL).",
-"No, because the development of mobile phone technology has made it easier to communicate than it was fifty years ago (IRRELEVANT)."
+"Yes, because employees should be able to do whatever they want when they are not at their desks.",
+"No, because some people enjoy checking their emails while they are cooking dinner.",
+"No, because the development of mobile phone technology has made it easier to communicate than it was fifty years ago."
 ],
-explanation: "The correct answer is strongest because it links the policy to a measurable public health outcome. Distractor 1 is weak (VAGUE): it fails to specify the actual benefit. Distractor 2 is weak (TRIVIAL): individual preference does not address the systemic need for rest. Distractor 3 is weak (IRRELEVANT): technological progress does not justify current labor practices."
+explanation: "The correct answer is strongest because it links the policy to a measurable public health outcome. Distractor 1 is weak: it fails to specify the actual benefit. Distractor 2 is weak: individual preference does not address the systemic need for rest. Distractor 3 is weak: technological progress does not justify current labor practices."
 },
 {
 kind: "single",
@@ -28592,11 +28952,11 @@ stimulus: ['Should all job interviews be conducted anonymously to remove potenti
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing identifiable information prevents bias based on gender, ethnicity, or age, thereby ensuring that hiring decisions are based strictly on candidate qualifications.",
 distractors: [
-"Yes, because it would be nice to have a more diverse workplace (VAGUE).",
-"No, because hiring managers often like to see who they are talking to before making a decision (TRIVIAL).",
-"No, because the company should also focus on improving its branding on social media platforms (NON-SEQUITUR)."
+"Yes, because it would be nice to have a more diverse workplace.",
+"No, because hiring managers often like to see who they are talking to before making a decision.",
+"No, because the company should also focus on improving its branding on social media platforms."
 ],
-explanation: "The correct answer is strongest because it addresses the core purpose of meritocratic hiring with a concrete causal link. Distractor 1 is weak (VAGUE): it expresses a goal without explaining how the mechanism works. Distractor 2 is weak (TRIVIAL): hiring manager preferences are subordinate to fairness. Distractor 3 is weak (NON-SEQUITUR): social media branding is unrelated to the interview process."
+explanation: "The correct answer is strongest because it addresses the core purpose of meritocratic hiring with a concrete causal link. Distractor 1 is weak: it expresses a goal without explaining how the mechanism works. Distractor 2 is weak: hiring manager preferences are subordinate to fairness. Distractor 3 is weak: social media branding is unrelated to the interview process."
 },
 {
 kind: "single",
@@ -28606,11 +28966,11 @@ stimulus: ['Should the government mandate that all companies publish their inter
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because radical pay transparency allows employees to identify and challenge discriminatory pay gaps, forcing firms to normalize salaries based on objective criteria.",
 distractors: [
-"Yes, because transparency is generally considered a good value in democratic societies (VAGUE).",
-"No, because some employees might feel embarrassed if they find out they earn less than their peers (TRIVIAL).",
-"No, because many people enjoy working in industries like finance or retail (IRRELEVANT)."
+"Yes, because transparency is generally considered a good value in democratic societies.",
+"No, because some employees might feel embarrassed if they find out they earn less than their peers.",
+"No, because many people enjoy working in industries like finance or retail."
 ],
-explanation: "The correct answer is strongest because it provides a direct consequence regarding pay equity and accountability. Distractor 1 is weak (VAGUE): it relies on general values rather than specific outcomes. Distractor 2 is weak (TRIVIAL): individual embarrassment is secondary to systemic fairness. Distractor 3 is weak (IRRELEVANT): personal interest in an industry has no bearing on wage transparency."
+explanation: "The correct answer is strongest because it provides a direct consequence regarding pay equity and accountability. Distractor 1 is weak: it relies on general values rather than specific outcomes. Distractor 2 is weak: individual embarrassment is secondary to systemic fairness. Distractor 3 is weak: personal interest in an industry has no bearing on wage transparency."
 },
 {
 kind: "single",
@@ -28620,11 +28980,11 @@ stimulus: ['Should mandatory retirement ages be abolished for all professional r
 question: "Select the strongest argument from the statements below.",
 correct: "No, because maintaining a mandatory retirement age ensures a steady turnover of staff, allowing younger workers to progress and bringing new, updated skills into the workforce.",
 distractors: [
-"No, because older people might get tired of working full-time after forty years (TRIVIAL).",
-"Yes, because people are living longer than they were in the past (IRRELEVANT).",
-"Yes, because it is more fair to let people choose when they want to stop working (CIRCULAR)."
+"No, because older people might get tired of working full-time after forty years.",
+"Yes, because people are living longer than they were in the past.",
+"Yes, because it is more fair to let people choose when they want to stop working."
 ],
-explanation: "The correct answer is strongest because it addresses the economic and structural health of the labor market. Distractor 1 is weak (TRIVIAL): fatigue is a personal choice, not a systemic policy driver. Distractor 2 is weak (IRRELEVANT): increased life expectancy is a fact that does not address labor mobility. Distractor 3 is weak (CIRCULAR): it just repeats that choice is fair."
+explanation: "The correct answer is strongest because it addresses the economic and structural health of the labor market. Distractor 1 is weak: fatigue is a personal choice, not a systemic policy driver. Distractor 2 is weak: increased life expectancy is a fact that does not address labor mobility. Distractor 3 is weak: it just repeats that choice is fair."
 },
 {
 kind: "single",
@@ -28634,11 +28994,11 @@ stimulus: ['Should paid internships be legally required for all university stude
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because unpaid internships exclude students from lower-income backgrounds, and mandating payment ensures that career entry is based on ability rather than financial privilege.",
 distractors: [
-"Yes, because it is always better to earn money while learning new skills (VAGUE).",
-"No, because internships are a great way to meet new friends (TRIVIAL).",
-"No, because some companies might prefer to hire permanent staff instead of interns (NON-SEQUITUR)."
+"Yes, because it is always better to earn money while learning new skills.",
+"No, because internships are a great way to meet new friends.",
+"No, because some companies might prefer to hire permanent staff instead of interns."
 ],
-explanation: "The correct answer is strongest because it identifies the structural barrier of economic inequality and provides a clear benefit for equity. Distractor 1 is weak (VAGUE): it does not address the specific issue of access. Distractor 2 is weak (TRIVIAL): social benefits are secondary to economic equity. Distractor 3 is weak (NON-SEQUITUR): hiring strategies for permanent staff are separate from internship regulation."
+explanation: "The correct answer is strongest because it identifies the structural barrier of economic inequality and provides a clear benefit for equity. Distractor 1 is weak: it does not address the specific issue of access. Distractor 2 is weak: social benefits are secondary to economic equity. Distractor 3 is weak: hiring strategies for permanent staff are separate from internship regulation."
 },
 {
 kind: "single",
@@ -28648,11 +29008,11 @@ stimulus: ['Should employers be required to provide full health insurance covera
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because providing comprehensive health coverage for part-time staff prevents health-related poverty and reduces the financial burden on the state healthcare system.",
 distractors: [
-"Yes, because healthcare is a human right that everyone deserves (VAGUE).",
-"No, because it might be more expensive for small businesses to manage their payroll (TRIVIAL).",
-"No, because many people already have insurance through their spouses (IRRELEVANT)."
+"Yes, because healthcare is a human right that everyone deserves.",
+"No, because it might be more expensive for small businesses to manage their payroll.",
+"No, because many people already have insurance through their spouses."
 ],
-explanation: "The correct answer is strongest because it highlights a specific positive consequence for both the individual and the state. Distractor 1 is weak (VAGUE): it uses a broad moral claim rather than a concrete argument for the policy. Distractor 2 is weak (TRIVIAL): administrative cost is a minor concern compared to national health outcomes. Distractor 3 is weak (IRRELEVANT): the existence of alternative insurance does not justify excluding part-time workers."
+explanation: "The correct answer is strongest because it highlights a specific positive consequence for both the individual and the state. Distractor 1 is weak: it uses a broad moral claim rather than a concrete argument for the policy. Distractor 2 is weak: administrative cost is a minor concern compared to national health outcomes. Distractor 3 is weak: the existence of alternative insurance does not justify excluding part-time workers."
 },
 {
 kind: "single",
@@ -28662,11 +29022,11 @@ stimulus: ['Should the use of algorithmic performance monitoring systems be bann
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because constant, automated surveillance creates a high-pressure environment that ignores qualitative nuances of work, ultimately leading to higher rates of psychological distress.",
 distractors: [
-"Yes, because computers are not always very good at understanding human emotions (TRIVIAL).",
-"No, because technology is constantly evolving and we cannot stop it (VAGUE).",
-"No, because the office should also be painted in brighter colors to improve mood (NON-SEQUITUR)."
+"Yes, because computers are not always very good at understanding human emotions.",
+"No, because technology is constantly evolving and we cannot stop it.",
+"No, because the office should also be painted in brighter colors to improve mood."
 ],
-explanation: "The correct answer is strongest because it links surveillance to a specific, measurable health outcome. Distractor 1 is weak (TRIVIAL): stating that computers are imperfect is a minor point. Distractor 2 is weak (VAGUE): it speaks to technological inevitability rather than the specific policy issue. Distractor 3 is weak (NON-SEQUITUR): office decor has no connection to algorithmic management."
+explanation: "The correct answer is strongest because it links surveillance to a specific, measurable health outcome. Distractor 1 is weak: stating that computers are imperfect is a minor point. Distractor 2 is weak: it speaks to technological inevitability rather than the specific policy issue. Distractor 3 is weak: office decor has no connection to algorithmic management."
 },
 {
 kind: "single",
@@ -28676,11 +29036,11 @@ stimulus: ['Should businesses be legally required to provide on-site childcare f
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the lack of affordable, accessible childcare is a primary driver for the gender gap in employment, and on-site facilities would directly increase female workforce participation.",
 distractors: [
-"Yes, because children are very cute and make offices happier places (TRIVIAL).",
-"Yes, because providing care is a nice thing for employers to do for their staff (VAGUE).",
-"No, because some employees do not have children at all (IRRELEVANT)."
+"Yes, because children are very cute and make offices happier places.",
+"No, because businesses exist to do business, and requiring them to provide childcare would just be making them do things that businesses do.",
+"No, because some employees do not have children at all."
 ],
-explanation: "The correct answer is strongest because it identifies the core cause of a systemic employment issue. Distractor 1 is weak (TRIVIAL): personal opinion on children is not a valid policy argument. Distractor 2 is weak (VAGUE): it describes the action as 'nice' without detailing the impact. Distractor 3 is weak (IRRELEVANT): the fact that not everyone has children does not invalidate the need for the service for those who do."
+explanation: "The correct answer is strongest because it identifies the core cause of a systemic employment issue. Distractor 1 is weak: personal opinion on children is not a valid policy argument. Distractor 2 is weak: it describes the action as 'nice' without detailing the impact. Distractor 3 is weak: the fact that not everyone has children does not invalidate the need for the service for those who do."
 },
 {
 kind: "single",
@@ -28690,11 +29050,11 @@ stimulus: ['Should workers be legally entitled to a portion of their company pro
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because profit-sharing creates a direct alignment of interests between employees and the company, which increases retention and collective effort towards firm success.",
 distractors: [
-"Yes, because it is fair that everyone gets a piece of the pie (VAGUE).",
-"No, because accountants might find it difficult to calculate the exact profits every quarter (TRIVIAL).",
-"No, because people should instead be encouraged to save money in their personal bank accounts (NON-SEQUITUR)."
+"Yes, because it is fair that everyone gets a piece of the pie.",
+"No, because accountants might find it difficult to calculate the exact profits every quarter.",
+"No, because people should instead be encouraged to save money in their personal bank accounts."
 ],
-explanation: "The correct answer is strongest because it provides a clear mechanism for improved performance and business outcomes. Distractor 1 is weak (VAGUE): fairness is a subjective concept. Distractor 2 is weak (TRIVIAL): administrative difficulty is a minor obstacle compared to the core policy goal. Distractor 3 is weak (NON-SEQUITUR): personal savings are not related to corporate profit-sharing."
+explanation: "The correct answer is strongest because it provides a clear mechanism for improved performance and business outcomes. Distractor 1 is weak: fairness is a subjective concept. Distractor 2 is weak: administrative difficulty is a minor obstacle compared to the core policy goal. Distractor 3 is weak: personal savings are not related to corporate profit-sharing."
 },
 {
 kind: "single",
@@ -28704,11 +29064,11 @@ stimulus: ['Should companies be prohibited from asking about past salaries durin
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because basing new salaries on past pay perpetuates existing wage disparities for marginalized groups, preventing them from negotiating based on current market value.",
 distractors: [
-"Yes, because it is uncomfortable to talk about money in a job interview (TRIVIAL).",
-"No, because recruiters need all the information they can get to make decisions (VAGUE).",
-"No, because people should focus on updating their skills instead of worrying about their pay (NON-SEQUITUR)."
+"Yes, because it is uncomfortable to talk about money in a job interview.",
+"No, because recruiters need all the information they can get to make decisions.",
+"No, because people should focus on updating their skills instead of worrying about their pay."
 ],
-explanation: "The correct answer is strongest because it addresses the systemic reinforcement of inequality. Distractor 1 is weak (TRIVIAL): the comfort level of the interview process is not the main issue. Distractor 2 is weak (VAGUE): it does not explain why recruiters need this specific information. Distractor 3 is weak (NON-SEQUITUR): personal skill development is irrelevant to wage transparency regulations."
+explanation: "The correct answer is strongest because it addresses the systemic reinforcement of inequality. Distractor 1 is weak: the comfort level of the interview process is not the main issue. Distractor 2 is weak: it does not explain why recruiters need this specific information. Distractor 3 is weak: personal skill development is irrelevant to wage transparency regulations."
 },
 {
 kind: "single",
@@ -28718,11 +29078,11 @@ stimulus: ['Should all workplaces be required to provide a mandatory mental heal
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because managers are the frontline support for employees, and training them to identify early warning signs of distress can significantly prevent long-term burnout and absenteeism.",
 distractors: [
-"Yes, because everyone should have a basic understanding of mental health (VAGUE).",
-"No, because it might be boring to sit through another training seminar (TRIVIAL).",
-"No, because employees should be responsible for their own mental health (CIRCULAR)."
+"Yes, because everyone should have a basic understanding of mental health.",
+"No, because it might be boring to sit through another training seminar.",
+"No, because employees should be responsible for their own mental health."
 ],
-explanation: "The correct answer is strongest because it links managerial behavior to measurable business outcomes like absenteeism. Distractor 1 is weak (VAGUE): it makes a broad claim without addressing the specific policy goal. Distractor 2 is weak (TRIVIAL): personal feelings about training are irrelevant to the goal of the policy. Distractor 3 is weak (CIRCULAR): it avoids the duty of care by shifting responsibility back to the individual."
+explanation: "The correct answer is strongest because it links managerial behavior to measurable business outcomes like absenteeism. Distractor 1 is weak: it makes a broad claim without addressing the specific policy goal. Distractor 2 is weak: personal feelings about training are irrelevant to the goal of the policy. Distractor 3 is weak: it avoids the duty of care by shifting responsibility back to the individual."
 },
 {
 kind: "single",
@@ -28732,11 +29092,11 @@ stimulus: ['Should temporary agency workers be granted the same employment prote
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because treating temporary workers differently creates a two-tier labor market that undermines worker rights and reduces job security for a significant segment of the population.",
 distractors: [
-"Yes, because three months is a fair amount of time to get to know someone (TRIVIAL).",
-"No, because agencies need to remain flexible to support their clients (VAGUE).",
-"No, because many people like the freedom of working through different agencies (IRRELEVANT)."
+"Yes, because three months is a fair amount of time to get to know someone.",
+"No, because agencies need to remain flexible to support their clients.",
+"No, because many people like the freedom of working through different agencies."
 ],
-explanation: "The correct answer is strongest because it identifies the structural harm of a two-tier system. Distractor 1 is weak (TRIVIAL): the 'getting to know someone' timeframe is irrelevant to labor rights. Distractor 2 is weak (VAGUE): it offers a generic reason without explaining the impact on rights. Distractor 3 is weak (IRRELEVANT): the fact that some people enjoy agency work does not justify the lack of protections for others."
+explanation: "The correct answer is strongest because it identifies the structural harm of a two-tier system. Distractor 1 is weak: the 'getting to know someone' timeframe is irrelevant to labor rights. Distractor 2 is weak: it offers a generic reason without explaining the impact on rights. Distractor 3 is weak: the fact that some people enjoy agency work does not justify the lack of protections for others."
 },
 {
 kind: "single",
@@ -28746,11 +29106,11 @@ stimulus: ['Should the use of non-compete clauses in employment contracts be ban
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because non-compete clauses restrict labor mobility, preventing skilled workers from moving to competitors, which slows down innovation and overall industry wage growth.",
 distractors: [
-"Yes, because it is annoying when you cannot switch jobs (TRIVIAL).",
-"No, because companies need to protect their trade secrets at all costs (VAGUE).",
-"No, because companies should also focus on building better office breakrooms (NON-SEQUITUR)."
+"Yes, because it is annoying when you cannot switch jobs.",
+"No, because companies need to protect their trade secrets at all costs.",
+"No, because companies should also focus on building better office breakrooms."
 ],
-explanation: "The correct answer is strongest because it connects labor restrictions to economic stagnation and innovation. Distractor 1 is weak (TRIVIAL): annoyance is a minor emotion. Distractor 2 is weak (VAGUE): it asserts a need for protection without considering the balance of power. Distractor 3 is weak (NON-SEQUITUR): breakrooms have no relationship to non-compete agreements."
+explanation: "The correct answer is strongest because it connects labor restrictions to economic stagnation and innovation. Distractor 1 is weak: annoyance is a minor emotion. Distractor 2 is weak: it asserts a need for protection without considering the balance of power. Distractor 3 is weak: breakrooms have no relationship to non-compete agreements."
 },
 {
 kind: "single",
@@ -28760,11 +29120,11 @@ stimulus: ['Should professional sports leagues be legally required to provide pe
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because professional athletes have short, high-risk careers that often leave them without long-term financial stability, necessitating a pension to prevent post-career economic hardship.",
 distractors: [
-"Yes, because athletes are often very popular celebrities (IRRELEVANT).",
-"No, because some athletes make a lot of money during their short careers (TRIVIAL).",
-"No, because playing sports is just a game at the end of the day (NON-SEQUITUR)."
+"Yes, because athletes are often very popular celebrities.",
+"No, because some athletes make a lot of money during their short careers.",
+"No, because playing sports is just a game at the end of the day."
 ],
-explanation: "The correct answer is strongest because it highlights the specific economic risk inherent to the athletic profession. Distractor 1 is weak (IRRELEVANT): celebrity status does not eliminate financial risk. Distractor 2 is weak (TRIVIAL): high earnings do not apply to all athletes or guarantee long-term security. Distractor 3 is weak (NON-SEQUITUR): the nature of the activity does not negate the employer-employee relationship."
+explanation: "The correct answer is strongest because it highlights the specific economic risk inherent to the athletic profession. Distractor 1 is weak: celebrity status does not eliminate financial risk. Distractor 2 is weak: high earnings do not apply to all athletes or guarantee long-term security. Distractor 3 is weak: the nature of the activity does not negate the employer-employee relationship."
 },
 {
 kind: "single",
@@ -28774,11 +29134,11 @@ stimulus: ['Should the government enforce a maximum pay ratio of 20:1 between th
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because limiting extreme pay inequality reduces internal workplace resentment and improves morale, directly contributing to higher levels of collective productivity.",
 distractors: [
-"Yes, because people find large numbers like 20:1 to be easy to understand (TRIVIAL).",
-"No, because it might be difficult for companies to change their payroll systems (TRIVIAL).",
-"No, because the government should focus on other things like the weather (NON-SEQUITUR)."
+"Yes, because people find large numbers like 20:1 to be easy to understand.",
+"No, because it might be difficult for companies to change their payroll systems.",
+"No, because the government should focus on other things like the weather."
 ],
-explanation: "The correct answer is strongest because it links salary caps to improved morale and productivity. Distractor 1 is weak (TRIVIAL): simplicity of a ratio is irrelevant to its impact. Distractor 2 is weak (TRIVIAL): administrative change is not a sufficient reason to oppose a major social policy. Distractor 3 is weak (NON-SEQUITUR): the weather is entirely unrelated to economic policy."
+explanation: "The correct answer is strongest because it links salary caps to improved morale and productivity. Distractor 1 is weak: simplicity of a ratio is irrelevant to its impact. Distractor 2 is weak: administrative change is not a sufficient reason to oppose a major social policy. Distractor 3 is weak: the weather is entirely unrelated to economic policy."
 },
 {
 kind: "single",
@@ -28788,11 +29148,11 @@ stimulus: ['Should all employees be granted the right to request a remote work a
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because remote work options provide greater flexibility for employees with caregiving responsibilities, significantly increasing labor market inclusion for those groups.",
 distractors: [
-"Yes, because it is nice to be able to work from your living room (VAGUE).",
-"No, because offices are great places for people to socialize (TRIVIAL).",
-"No, because remote work is just a trend that will fade away (CIRCULAR)."
+"Yes, because it is nice to be able to work from your living room.",
+"No, because offices are great places for people to socialize.",
+"No, because remote work is just a trend that will fade away."
 ],
-explanation: "The correct answer is strongest because it specifically addresses the inclusion of caregivers in the workforce. Distractor 1 is weak (VAGUE): personal enjoyment of remote work is not a systemic argument. Distractor 2 is weak (TRIVIAL): social benefits of offices do not outweigh the need for accessibility. Distractor 3 is weak (CIRCULAR): dismissing it as a 'trend' does not address the merits of the policy."
+explanation: "The correct answer is strongest because it specifically addresses the inclusion of caregivers in the workforce. Distractor 1 is weak: personal enjoyment of remote work is not a systemic argument. Distractor 2 is weak: social benefits of offices do not outweigh the need for accessibility. Distractor 3 is weak: dismissing it as a 'trend' does not address the merits of the policy."
 },
 {
 kind: "single",
@@ -28802,11 +29162,11 @@ stimulus: ['Should employers be required to provide paid leave for employees who
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because victims of domestic abuse often need time to secure legal and safe housing; providing paid leave provides the financial security necessary to escape dangerous situations.",
 distractors: [
-"Yes, because it is generally seen as a kind thing for companies to do (VAGUE).",
-"No, because some companies might find it hard to manage their work schedules (TRIVIAL).",
-"No, because the government should also invest in building new parks (NON-SEQUITUR)."
+"Yes, because it is generally seen as a kind thing for companies to do.",
+"No, because some companies might find it hard to manage their work schedules.",
+"No, because the government should also invest in building new parks."
 ],
-explanation: "The correct answer is strongest because it links the policy to the physical safety and independence of the employee. Distractor 1 is weak (VAGUE): 'kindness' is not a substantive policy rationale. Distractor 2 is weak (TRIVIAL): scheduling challenges are minor compared to the urgency of safety. Distractor 3 is weak (NON-SEQUITUR): building parks has no relevance to workplace safety policies."
+explanation: "The correct answer is strongest because it links the policy to the physical safety and independence of the employee. Distractor 1 is weak: 'kindness' is not a substantive policy rationale. Distractor 2 is weak: scheduling challenges are minor compared to the urgency of safety. Distractor 3 is weak: building parks has no relevance to workplace safety policies."
 },
 {
 kind: "single",
@@ -28816,11 +29176,11 @@ stimulus: ['Should companies be required to provide training on unconscious bias
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because unconscious bias training provides a baseline awareness that helps employees recognize discriminatory patterns, which is a necessary first step toward institutional culture change.",
 distractors: [
-"Yes, because the trainers often have really good presentation skills (TRIVIAL).",
-"No, because some people think that such training is not effective (VAGUE).",
-"No, because the company should spend money on new coffee machines instead (NON-SEQUITUR)."
+"Yes, because the trainers often have really good presentation skills.",
+"No, because some people think that such training is not effective.",
+"No, because the company should spend money on new coffee machines instead."
 ],
-explanation: "The correct answer is strongest because it positions the policy as a foundational step toward broader cultural improvement. Distractor 1 is weak (TRIVIAL): presentation skills of trainers are irrelevant. Distractor 2 is weak (VAGUE): it cites unspecified opinions without evaluating the training itself. Distractor 3 is weak (NON-SEQUITUR): coffee machines are irrelevant to HR policy."
+explanation: "The correct answer is strongest because it positions the policy as a foundational step toward broader cultural improvement. Distractor 1 is weak: presentation skills of trainers are irrelevant. Distractor 2 is weak: it cites unspecified opinions without evaluating the training itself. Distractor 3 is weak: coffee machines are irrelevant to HR policy."
 },
 {
 kind: "single",
@@ -28830,11 +29190,11 @@ stimulus: ['Should employees have a legal right to disconnect their electronic d
 question: "Select the strongest argument from the statements below.",
 correct: "No, because many global businesses operate across multiple time zones, and a rigid 'right to disconnect' would hinder essential cross-border collaboration and emergency responsiveness.",
 distractors: [
-"No, because people should learn to ignore their phones if they want to (TRIVIAL).",
-"Yes, because it is annoying to be bothered in the evening (TRIVIAL).",
-"Yes, because the government should intervene whenever companies work too hard (VAGUE)."
+"No, because people should learn to ignore their phones if they want to.",
+"Yes, because it is annoying to be bothered in the evening.",
+"Yes, because the government should intervene whenever companies work too hard."
 ],
-explanation: "The correct answer is strongest because it addresses the operational reality of globalized business and the necessity of coordination. Distractor 1 is weak (TRIVIAL): individual self-control does not replace policy constraints. Distractor 2 is weak (TRIVIAL): personal annoyance is not a strong policy justification. Distractor 3 is weak (VAGUE): it relies on an ill-defined concept of working 'too hard'."
+explanation: "The correct answer is strongest because it addresses the operational reality of globalized business and the necessity of coordination. Distractor 1 is weak: individual self-control does not replace policy constraints. Distractor 2 is weak: personal annoyance is not a strong policy justification. Distractor 3 is weak: it relies on an ill-defined concept of working 'too hard'."
 },
 {
 kind: "single",
@@ -28844,11 +29204,11 @@ stimulus: ['Should workers be legally entitled to a seat during their shifts in 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because prolonged standing leads to musculoskeletal issues and chronic fatigue, and allowing employees to sit directly improves long-term physical health and reduces medical-related turnover.",
 distractors: [
-"Yes, because sitting is generally much more comfortable than standing (TRIVIAL).",
-"No, because customers might think that employees are not working hard (VAGUE).",
-"No, because the store should also play relaxing music (NON-SEQUITUR)."
+"Yes, because sitting is generally much more comfortable than standing.",
+"No, because customers might think that employees are not working hard.",
+"No, because the store should also play relaxing music."
 ],
-explanation: "The correct answer is strongest because it links the policy to tangible physical health outcomes and retention. Distractor 1 is weak (TRIVIAL): comfort is a subjective preference. Distractor 2 is weak (VAGUE): it cites an unfounded fear of customer perception. Distractor 3 is weak (NON-SEQUITUR): ambient store music is irrelevant to employee health."
+explanation: "The correct answer is strongest because it links the policy to tangible physical health outcomes and retention. Distractor 1 is weak: comfort is a subjective preference. Distractor 2 is weak: it cites an unfounded fear of customer perception. Distractor 3 is weak: ambient store music is irrelevant to employee health."
 },
 {
 kind: "single",
@@ -28858,11 +29218,11 @@ stimulus: ['Should employees be granted an extra day of paid leave for every yea
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because rewarding tenure with additional leave encourages long-term commitment, significantly reducing the high costs associated with recruiting and training new staff.",
 distractors: [
-"Yes, because everyone loves having an extra day off (TRIVIAL).",
-"No, because some companies are already doing this (IRRELEVANT).",
-"No, because money is more important than time for most workers (CIRCULAR)."
+"Yes, because everyone loves having an extra day off.",
+"No, because some companies are already doing this.",
+"No, because money is more important than time for most workers."
 ],
-explanation: "The correct answer is strongest because it addresses the economic argument for reducing recruitment costs through employee retention. Distractor 1 is weak (TRIVIAL): the popularity of leave is not a policy argument. Distractor 2 is weak (IRRELEVANT): what some companies do does not address the merit of mandating it for all. Distractor 3 is weak (CIRCULAR): claiming money is more important than time does not explain why the policy is bad."
+explanation: "The correct answer is strongest because it addresses the economic argument for reducing recruitment costs through employee retention. Distractor 1 is weak: the popularity of leave is not a policy argument. Distractor 2 is weak: what some companies do does not address the merit of mandating it for all. Distractor 3 is weak: claiming money is more important than time does not explain why the policy is bad."
 },
 {
 kind: "single",
@@ -28872,11 +29232,11 @@ stimulus: ['Should employers be required to report the demographics of their pro
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mandatory public reporting creates accountability for promotion pathways, ensuring that firms address systemic bottlenecks that prevent qualified diverse talent from advancing.",
 distractors: [
-"Yes, because it is interesting to see data on demographics (TRIVIAL).",
-"No, because companies should not have to share their internal secrets (VAGUE).",
-"No, because there are many different jobs in the world (IRRELEVANT)."
+"Yes, because it is interesting to see data on demographics.",
+"No, because companies should not have to share their internal secrets.",
+"No, because there are many different jobs in the world."
 ],
-explanation: "The correct answer is strongest because it links data transparency to the concrete goal of removing barriers to promotion. Distractor 1 is weak (TRIVIAL): interest in data is not a policy justification. Distractor 2 is weak (VAGUE): the concept of 'secrets' is not a valid legal argument for workplace fairness. Distractor 3 is weak (IRRELEVANT): the variety of jobs does not affect the need for reporting."
+explanation: "The correct answer is strongest because it links data transparency to the concrete goal of removing barriers to promotion. Distractor 1 is weak: interest in data is not a policy justification. Distractor 2 is weak: the concept of 'secrets' is not a valid legal argument for workplace fairness. Distractor 3 is weak: the variety of jobs does not affect the need for reporting."
 },
 {
 kind: "single",
@@ -28886,11 +29246,11 @@ stimulus: ['Should employers be mandated to provide a quiet room for meditation 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because providing a space for mental and spiritual rest reduces employee stress levels and fosters a more inclusive environment, directly leading to better workplace culture.",
 distractors: [
-"Yes, because it would look nice to have a dedicated quiet room (TRIVIAL).",
-"No, because it might be hard to find space in small offices (VAGUE).",
-"No, because some people prefer to pray at home instead (IRRELEVANT)."
+"Yes, because it would look nice to have a dedicated quiet room.",
+"No, because it might be hard to find space in small offices.",
+"No, because some people prefer to pray at home instead."
 ],
-explanation: "The correct answer is strongest because it addresses both mental health and inclusion, both of which are core workplace needs. Distractor 1 is weak (TRIVIAL): aesthetic appeal is irrelevant. Distractor 2 is weak (VAGUE): space constraints are a practical hurdle, not a fundamental objection to the value of the space. Distractor 3 is weak (IRRELEVANT): the fact that some prefer home does not mean the space is not needed by others."
+explanation: "The correct answer is strongest because it addresses both mental health and inclusion, both of which are core workplace needs. Distractor 1 is weak: aesthetic appeal is irrelevant. Distractor 2 is weak: space constraints are a practical hurdle, not a fundamental objection to the value of the space. Distractor 3 is weak: the fact that some prefer home does not mean the space is not needed by others."
 },
 {
 kind: "single",
@@ -28900,11 +29260,11 @@ stimulus: ['Should all national elections be conducted exclusively via secure on
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the digital divide ensures that significant portions of the population, particularly the elderly and those in rural areas, would be effectively disenfranchised by such a move.",
 distractors: [
-"Yes, because digital voting is the most modern and up-to-date method of casting a ballot (TRIVIAL).",
-"Yes, because elections are fundamentally about people casting their votes, and this method enables that process (CIRCULAR).",
-"No, because many people enjoy the social experience of walking to a local polling station and seeing their neighbors (IRRELEVANT)."
+"Yes, because digital voting is the most modern and up-to-date method of casting a ballot.",
+"Yes, because elections are fundamentally about people casting their votes, and this method enables that process.",
+"No, because many people enjoy the social experience of walking to a local polling station and seeing their neighbors."
 ],
-explanation: "The correct answer is strongest because it highlights a critical barrier to accessibility that directly undermines the core democratic requirement of universal franchise. Distractor 1 is weak (TRIVIAL): modernisation does not inherently improve democratic integrity. Distractor 2 is weak (CIRCULAR): it merely defines what an election is. Distractor 3 is weak (IRRELEVANT): personal nostalgia does not impact the structural validity or fairness of the voting system."
+explanation: "The correct answer is strongest because it highlights a critical barrier to accessibility that directly undermines the core democratic requirement of universal franchise. Distractor 1 is weak: modernisation does not inherently improve democratic integrity. Distractor 2 is weak: it merely defines what an election is. Distractor 3 is weak: personal nostalgia does not impact the structural validity or fairness of the voting system."
 },
 {
 kind: "single",
@@ -28914,11 +29274,11 @@ stimulus: ['Should the government mandate a mandatory national service period of
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it fosters national cohesion and provides youth with essential vocational skills that significantly improve long-term economic productivity.",
 distractors: [
-"Yes, because people are generally more capable when they have been trained to do tasks (VAGUE).",
-"No, because the government has many other responsibilities that it must also attend to (NON-SEQUITUR).",
-"No, because some people might find a year-long commitment to be quite a long time in their lives (TRIVIAL)."
+"Yes, because people are generally more capable when they have been trained to do tasks.",
+"No, because the government has many other responsibilities that it must also attend to.",
+"No, because some people might find a year-long commitment to be quite a long time in their lives."
 ],
-explanation: "The correct answer is strongest because it cites specific benefits—social cohesion and economic productivity—as justifications. Distractor 1 is weak (VAGUE): it fails to specify how or why. Distractor 2 is weak (NON-SEQUITUR): competing government priorities do not invalidate the merits of a specific policy. Distractor 3 is weak (TRIVIAL): the duration of a program is a subjective observation, not a policy-level critique."
+explanation: "The correct answer is strongest because it cites specific benefits—social cohesion and economic productivity—as justifications. Distractor 1 is weak: it fails to specify how or why. Distractor 2 is weak: competing government priorities do not invalidate the merits of a specific policy. Distractor 3 is weak: the duration of a program is a subjective observation, not a policy-level critique."
 },
 {
 kind: "single",
@@ -28928,11 +29288,11 @@ stimulus: ['Should the legislature implement term limits for all elected members
 question: "Select the strongest argument from the statements below.",
 correct: "No, because forced turnover removes highly experienced legislators who possess the complex institutional knowledge required to navigate and pass effective, nuanced legislation.",
 distractors: [
-"Yes, because it is important for politicians to hold office for limited terms rather than long terms (CIRCULAR).",
-"Yes, because many people believe that change in government is generally a positive thing (VAGUE).",
-"No, because members of parliament often have very busy schedules and do not get much free time (IRRELEVANT)."
+"Yes, because it is important for politicians to hold office for limited terms rather than long terms.",
+"Yes, because many people believe that change in government is generally a positive thing.",
+"No, because members of parliament often have very busy schedules and do not get much free time."
 ],
-explanation: "The correct answer is strongest because it identifies the direct negative consequence of losing institutional memory on the quality of lawmaking. Distractor 1 is weak (CIRCULAR): it restates the proposal. Distractor 2 is weak (VAGUE): it relies on a vague sentiment rather than a measurable impact. Distractor 3 is weak (IRRELEVANT): work-life balance is unrelated to the efficacy of political representation."
+explanation: "The correct answer is strongest because it identifies the direct negative consequence of losing institutional memory on the quality of lawmaking. Distractor 1 is weak: it restates the proposal. Distractor 2 is weak: it relies on a vague sentiment rather than a measurable impact. Distractor 3 is weak: work-life balance is unrelated to the efficacy of political representation."
 },
 {
 kind: "single",
@@ -28942,11 +29302,11 @@ stimulus: ['Should the voting age be lowered to 16 for all national and local el
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because 16-year-olds are directly impacted by long-term fiscal and environmental policies and deserve a voice in decisions that will define their future adult lives.",
 distractors: [
-"Yes, because 16-year-olds are generally very enthusiastic about expressing their opinions (VAGUE).",
-"No, because children are usually much younger than 16 years old (TRIVIAL).",
-"No, because the weather in many countries is often unpredictable and changes frequently (NON-SEQUITUR)."
+"Yes, because 16-year-olds are generally very enthusiastic about expressing their opinions.",
+"No, because children are usually much younger than 16 years old.",
+"No, because the weather in many countries is often unpredictable and changes frequently."
 ],
-explanation: "The correct answer is strongest because it anchors the argument in the principle of stake-holding and representation. Distractor 1 is weak (VAGUE): enthusiasm is not a measure of civic readiness. Distractor 2 is weak (TRIVIAL): the definition of childhood does not address the competency of 16-year-olds. Distractor 3 is weak (NON-SEQUITUR): meteorological conditions have zero influence on electoral policy."
+explanation: "The correct answer is strongest because it anchors the argument in the principle of stake-holding and representation. Distractor 1 is weak: enthusiasm is not a measure of civic readiness. Distractor 2 is weak: the definition of childhood does not address the competency of 16-year-olds. Distractor 3 is weak: meteorological conditions have zero influence on electoral policy."
 },
 {
 kind: "single",
@@ -28956,11 +29316,11 @@ stimulus: ['Should proportional representation replace the current first-past-th
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because proportional representation ensures that the legislature accurately reflects the diverse political preferences of the population, preventing the marginalisation of minority viewpoints.",
 distractors: [
-"Yes, because it is a different way of counting votes than we currently use (CIRCULAR).",
-"No, because it might be confusing for voters who have spent their whole lives using the current system (VAGUE).",
-"No, because political parties often have to spend a lot of money on printing posters (IRRELEVANT)."
+"Yes, because it is a different way of counting votes than we currently use.",
+"No, because it might be confusing for voters who have spent their whole lives using the current system.",
+"No, because political parties often have to spend a lot of money on printing posters."
 ],
-explanation: "The correct answer is strongest because it addresses the core issue of democratic legitimacy and representation. Distractor 1 is weak (CIRCULAR): it simply notes that a change occurs. Distractor 2 is weak (VAGUE): confusion is a transitional hurdle, not a structural failure of the system. Distractor 3 is weak (IRRELEVANT): campaign spending is independent of the underlying electoral counting method."
+explanation: "The correct answer is strongest because it addresses the core issue of democratic legitimacy and representation. Distractor 1 is weak: it simply notes that a change occurs. Distractor 2 is weak: confusion is a transitional hurdle, not a structural failure of the system. Distractor 3 is weak: campaign spending is independent of the underlying electoral counting method."
 },
 {
 kind: "single",
@@ -28970,11 +29330,11 @@ stimulus: ['Should all government sessions be broadcast live to the public with 
 question: "Select the strongest argument from the statements below.",
 correct: "No, because transparency is undermined when sensitive security briefings or ongoing high-level negotiations are revealed, potentially compromising national security.",
 distractors: [
-"Yes, because the public has a right to see what is happening in their government at all times (VAGUE).",
-"Yes, because cameras are very common and used by many people nowadays (IRRELEVANT).",
-"No, because some people find watching government meetings to be quite boring (TRIVIAL)."
+"Yes, because the public has a right to see what is happening in their government at all times.",
+"Yes, because cameras are very common and used by many people nowadays.",
+"No, because some people find watching government meetings to be quite boring."
 ],
-explanation: "The correct answer is strongest because it identifies a critical conflict between absolute transparency and the duty to protect national security. Distractor 1 is weak (VAGUE): the 'right to see' is a broad concept that doesn’t account for practical limitations. Distractor 2 is weak (IRRELEVANT): the ubiquity of cameras does not justify their use in all scenarios. Distractor 3 is weak (TRIVIAL): viewer interest levels are not relevant to the function of governance."
+explanation: "The correct answer is strongest because it identifies a critical conflict between absolute transparency and the duty to protect national security. Distractor 1 is weak: the 'right to see' is a broad concept that doesn’t account for practical limitations. Distractor 2 is weak: the ubiquity of cameras does not justify their use in all scenarios. Distractor 3 is weak: viewer interest levels are not relevant to the function of governance."
 },
 {
 kind: "single",
@@ -28984,11 +29344,11 @@ stimulus: ['Should political parties be prohibited from accepting private donati
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing private funding eliminates the 'quid pro quo' dynamic where wealthy donors exert undue influence over policy decisions in their own financial interest.",
 distractors: [
-"Yes, because political parties would not have to spend time asking for money anymore (TRIVIAL).",
-"No, because private donations are just money that is given from one person to another (CIRCULAR).",
-"No, because it is difficult to find a good venue for political rallies in many cities (NON-SEQUITUR)."
+"Yes, because political parties would not have to spend time asking for money anymore.",
+"No, because private donations are just money that is given from one person to another.",
+"No, because it is difficult to find a good venue for political rallies in many cities."
 ],
-explanation: "The correct answer is strongest because it directly tackles the issue of political corruption and the integrity of policy-making. Distractor 1 is weak (TRIVIAL): the convenience of party staff is secondary to the integrity of the political process. Distractor 2 is weak (CIRCULAR): it just defines what a donation is. Distractor 3 is weak (NON-SEQUITUR): venue availability is unrelated to campaign financing laws."
+explanation: "The correct answer is strongest because it directly tackles the issue of political corruption and the integrity of policy-making. Distractor 1 is weak: the convenience of party staff is secondary to the integrity of the political process. Distractor 2 is weak: it just defines what a donation is. Distractor 3 is weak: venue availability is unrelated to campaign financing laws."
 },
 {
 kind: "single",
@@ -28998,11 +29358,11 @@ stimulus: ['Should the government implement a system where citizens can vote on 
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the average citizen lacks the time and specialized expertise to thoroughly research the complex, far-reaching impacts of individual pieces of legislation.",
 distractors: [
-"Yes, because using an app is a very popular way to communicate in the modern world (IRRELEVANT).",
-"Yes, because every citizen would be able to vote on every law (CIRCULAR).",
-"No, because some people have very busy professional lives and might forget to vote (VAGUE)."
+"Yes, because using an app is a very popular way to communicate in the modern world.",
+"Yes, because every citizen would be able to vote on every law.",
+"No, because some people have very busy professional lives and might forget to vote."
 ],
-explanation: "The correct answer is strongest because it addresses the practical impossibility of an informed direct democracy in a complex state. Distractor 1 is weak (IRRELEVANT): the popularity of apps has no bearing on legislative quality. Distractor 2 is weak (CIRCULAR): it restates the proposal. Distractor 3 is weak (VAGUE): personal forgetfulness is a minor issue compared to the lack of expertise required for complex lawmaking."
+explanation: "The correct answer is strongest because it addresses the practical impossibility of an informed direct democracy in a complex state. Distractor 1 is weak: the popularity of apps has no bearing on legislative quality. Distractor 2 is weak: it restates the proposal. Distractor 3 is weak: personal forgetfulness is a minor issue compared to the lack of expertise required for complex lawmaking."
 },
 {
 kind: "single",
@@ -29012,11 +29372,11 @@ stimulus: ['Should the government provide direct financial support to citizens t
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because reducing reliance on fossil fuels for home heating is a critical step in lowering national carbon emissions to meet binding international climate targets.",
 distractors: [
-"Yes, because people generally enjoy living in houses that are warm and comfortable (TRIVIAL).",
-"No, because the government has many other ways to spend its tax revenue (NON-SEQUITUR).",
-"No, because electric heating is a technology that uses electricity (CIRCULAR)."
+"Yes, because people generally enjoy living in houses that are warm and comfortable.",
+"No, because the government has many other ways to spend its tax revenue.",
+"No, because electric heating is a technology that uses electricity."
 ],
-explanation: "The correct answer is strongest because it identifies the direct link between the policy and a specific, necessary environmental outcome. Distractor 1 is weak (TRIVIAL): the desirability of heat is not the issue; the energy source is. Distractor 2 is weak (NON-SEQUITUR): general budgetary constraints do not invalidate a specific environmental policy. Distractor 3 is weak (CIRCULAR): it merely restates the technology involved."
+explanation: "The correct answer is strongest because it identifies the direct link between the policy and a specific, necessary environmental outcome. Distractor 1 is weak: the desirability of heat is not the issue; the energy source is. Distractor 2 is weak: general budgetary constraints do not invalidate a specific environmental policy. Distractor 3 is weak: it merely restates the technology involved."
 },
 {
 kind: "single",
@@ -29026,11 +29386,11 @@ stimulus: ['Should the government ban all new petrol and diesel car sales by 203
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the national electrical grid currently lacks the capacity and infrastructure to support a sudden, massive surge in demand for vehicle charging.",
 distractors: [
-"Yes, because cars are often used by people to travel from one place to another (TRIVIAL).",
-"Yes, because electric cars do not use petrol (CIRCULAR).",
-"No, because the colour of a car does not affect its performance on the road (IRRELEVANT)."
+"Yes, because cars are often used by people to travel from one place to another.",
+"Yes, because electric cars do not use petrol.",
+"No, because the colour of a car does not affect its performance on the road."
 ],
-explanation: "The correct answer is strongest because it points to a physical infrastructure constraint that would lead to failure of the policy implementation. Distractor 1 is weak (TRIVIAL): transport utility is well known. Distractor 2 is weak (CIRCULAR): it restates the definition. Distractor 3 is weak (IRRELEVANT): vehicle aesthetics have nothing to do with the policy."
+explanation: "The correct answer is strongest because it points to a physical infrastructure constraint that would lead to failure of the policy implementation. Distractor 1 is weak: transport utility is well known. Distractor 2 is weak: it restates the definition. Distractor 3 is weak: vehicle aesthetics have nothing to do with the policy."
 },
 {
 kind: "single",
@@ -29040,11 +29400,11 @@ stimulus: ['Should the state implement a carbon tax on all industrial manufactur
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because internalising the cost of environmental damage incentivises corporations to invest in cleaner, more efficient technologies to maintain their profit margins.",
 distractors: [
-"Yes, because taxes are a common way for governments to collect money (VAGUE).",
-"No, because manufacturing is something that involves building things in factories (CIRCULAR).",
-"No, because some people find industrial sites to be loud and unattractive (IRRELEVANT)."
+"Yes, because taxes are a common way for governments to collect money.",
+"No, because manufacturing is something that involves building things in factories.",
+"No, because some people find industrial sites to be loud and unattractive."
 ],
-explanation: "The correct answer is strongest because it describes the economic mechanism by which the tax drives corporate behavior toward the goal of lower emissions. Distractor 1 is weak (VAGUE): the purpose of the tax is environmental, not just revenue collection. Distractor 2 is weak (CIRCULAR): it defines manufacturing. Distractor 3 is weak (IRRELEVANT): noise and appearance are not central to the policy goal."
+explanation: "The correct answer is strongest because it describes the economic mechanism by which the tax drives corporate behavior toward the goal of lower emissions. Distractor 1 is weak: the purpose of the tax is environmental, not just revenue collection. Distractor 2 is weak: it defines manufacturing. Distractor 3 is weak: noise and appearance are not central to the policy goal."
 },
 {
 kind: "single",
@@ -29054,11 +29414,11 @@ stimulus: ['Should the government provide subsidies for the development of urban
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because vertical farming dramatically reduces the land and water required for food production, making urban centres more resilient to supply chain disruptions.",
 distractors: [
-"Yes, because fresh vegetables are very healthy for people to eat (TRIVIAL).",
-"No, because vertical farming means growing food in tall buildings (CIRCULAR).",
-"No, because the sun is very bright during the summer months (NON-SEQUITUR)."
+"Yes, because fresh vegetables are very healthy for people to eat.",
+"No, because vertical farming means growing food in tall buildings.",
+"No, because the sun is very bright during the summer months."
 ],
-explanation: "The correct answer is strongest because it highlights resource efficiency and supply chain security. Distractor 1 is weak (TRIVIAL): the health benefits of produce don’t justify the subsidy for this specific method. Distractor 2 is weak (CIRCULAR): it defines the concept. Distractor 3 is weak (NON-SEQUITUR): sunlight is irrelevant to the governance of farming policy."
+explanation: "The correct answer is strongest because it highlights resource efficiency and supply chain security. Distractor 1 is weak: the health benefits of produce don’t justify the subsidy for this specific method. Distractor 2 is weak: it defines the concept. Distractor 3 is weak: sunlight is irrelevant to the governance of farming policy."
 },
 {
 kind: "single",
@@ -29068,11 +29428,11 @@ stimulus: ['Should all single-use plastics be banned in retail environments?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because this ban would significantly reduce the volume of non-biodegradable waste entering oceans and landfills, protecting fragile ecosystems from long-term pollution.",
 distractors: [
-"Yes, because plastic is a material that is often used for packaging (CIRCULAR).",
-"No, because it might be slightly more expensive for shoppers to buy reusable bags (TRIVIAL).",
-"No, because some types of sea creatures are very large (IRRELEVANT)."
+"Yes, because plastic is a material that is often used for packaging.",
+"No, because it might be slightly more expensive for shoppers to buy reusable bags.",
+"No, because some types of sea creatures are very large."
 ],
-explanation: "The correct answer is strongest because it cites the environmental impact on ecosystems. Distractor 1 is weak (CIRCULAR): it describes plastic. Distractor 2 is weak (TRIVIAL): minor consumer cost is not a strong counter-argument to mass pollution reduction. Distractor 3 is weak (IRRELEVANT): the size of sea creatures is unrelated to the impact of plastic waste."
+explanation: "The correct answer is strongest because it cites the environmental impact on ecosystems. Distractor 1 is weak: it describes plastic. Distractor 2 is weak: minor consumer cost is not a strong counter-argument to mass pollution reduction. Distractor 3 is weak: the size of sea creatures is unrelated to the impact of plastic waste."
 },
 {
 kind: "single",
@@ -29082,11 +29442,11 @@ stimulus: ['Should the government mandate that all new residential buildings mus
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because decentralized renewable energy generation reduces the strain on the national grid and provides homeowners with long-term savings on their electricity costs.",
 distractors: [
-"Yes, because the sun provides a lot of light during the day (TRIVIAL).",
-"No, because houses are buildings where people live (CIRCULAR).",
-"No, because some people prefer to live in apartments rather than houses (NON-SEQUITUR)."
+"Yes, because the sun provides a lot of light during the day.",
+"No, because houses are buildings where people live.",
+"No, because some people prefer to live in apartments rather than houses."
 ],
-explanation: "The correct answer is strongest because it addresses both grid stability and economic benefits for homeowners. Distractor 1 is weak (TRIVIAL): the existence of sunlight is well known but doesn’t justify the mandate. Distractor 2 is weak (CIRCULAR): it defines residential buildings. Distractor 3 is weak (NON-SEQUITUR): housing preferences do not negate the benefits of solar energy."
+explanation: "The correct answer is strongest because it addresses both grid stability and economic benefits for homeowners. Distractor 1 is weak: the existence of sunlight is well known but doesn’t justify the mandate. Distractor 2 is weak: it defines residential buildings. Distractor 3 is weak: housing preferences do not negate the benefits of solar energy."
 },
 {
 kind: "single",
@@ -29096,11 +29456,11 @@ stimulus: ['Should the state mandate reforestation of all cleared industrial lan
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because reforestation restores biodiversity and serves as a natural carbon sink, which is vital for reversing the loss of habitats caused by industrial sprawl.",
 distractors: [
-"Yes, because trees are very tall and look nice in the countryside (VAGUE).",
-"No, because land is something that is used for many different things (CIRCULAR).",
-"No, because some people enjoy hiking in the forest on weekends (IRRELEVANT)."
+"Yes, because trees are very tall and look nice in the countryside.",
+"No, because land is something that is used for many different things.",
+"No, because some people enjoy hiking in the forest on weekends."
 ],
-explanation: "The correct answer is strongest because it identifies the ecological functions—biodiversity restoration and carbon capture—that are essential for environmental health. Distractor 1 is weak (VAGUE): aesthetics are not a policy justification. Distractor 2 is weak (CIRCULAR): it defines land. Distractor 3 is weak (IRRELEVANT): recreational hiking has nothing to do with mandatory reforestation policy."
+explanation: "The correct answer is strongest because it identifies the ecological functions—biodiversity restoration and carbon capture—that are essential for environmental health. Distractor 1 is weak: aesthetics are not a policy justification. Distractor 2 is weak: it defines land. Distractor 3 is weak: recreational hiking has nothing to do with mandatory reforestation policy."
 },
 {
 kind: "single",
@@ -29110,11 +29470,11 @@ stimulus: ['Should the government implement a nationwide ban on synthetic pestic
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a sudden removal of these tools would lead to widespread crop failure and significant food shortages, threatening national food security.",
 distractors: [
-"Yes, because it is important to keep the environment clean from chemicals (VAGUE).",
-"Yes, because pesticides are chemicals that farmers use (CIRCULAR).",
-"No, because tractors are often very large machines that require maintenance (NON-SEQUITUR)."
+"Yes, because it is important to keep the environment clean from chemicals.",
+"Yes, because pesticides are chemicals that farmers use.",
+"No, because tractors are often very large machines that require maintenance."
 ],
-explanation: "The correct answer is strongest because it highlights the direct threat to food supply, a critical government responsibility. Distractor 1 is weak (VAGUE): 'clean' is not a measurable standard for agricultural success. Distractor 2 is weak (CIRCULAR): it defines pesticides. Distractor 3 is weak (NON-SEQUITUR): farm equipment maintenance is irrelevant to the chemical policy."
+explanation: "The correct answer is strongest because it highlights the direct threat to food supply, a critical government responsibility. Distractor 1 is weak: 'clean' is not a measurable standard for agricultural success. Distractor 2 is weak: it defines pesticides. Distractor 3 is weak: farm equipment maintenance is irrelevant to the chemical policy."
 },
 {
 kind: "single",
@@ -29124,11 +29484,11 @@ stimulus: ['Should all high school students be required to pass a personal finan
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because financial literacy empowers young adults to manage debt, savings, and investments effectively, reducing the likelihood of long-term economic instability in adulthood.",
 distractors: [
-"Yes, because schools should teach subjects that are useful to students (VAGUE).",
-"No, because high school students already have many classes to attend (TRIVIAL).",
-"No, because money is a thing that people use to buy goods (CIRCULAR)."
+"Yes, because schools should teach subjects that are useful to students.",
+"No, because high school students already have many classes to attend.",
+"No, because money is a thing that people use to buy goods."
 ],
-explanation: "The correct answer is strongest because it directly links the education to improved economic outcomes for the individual and the nation. Distractor 1 is weak (VAGUE): 'useful' is a subjective, non-specific descriptor. Distractor 2 is weak (TRIVIAL): curriculum load is a secondary logistics concern. Distractor 3 is weak (CIRCULAR): it defines money."
+explanation: "The correct answer is strongest because it directly links the education to improved economic outcomes for the individual and the nation. Distractor 1 is weak: 'useful' is a subjective, non-specific descriptor. Distractor 2 is weak: curriculum load is a secondary logistics concern. Distractor 3 is weak: it defines money."
 },
 {
 kind: "single",
@@ -29138,11 +29498,11 @@ stimulus: ['Should the government provide universal free childcare for all child
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because affordable childcare enables higher participation rates in the workforce, particularly for parents who would otherwise be sidelined due to care costs.",
 distractors: [
-"Yes, because children under five are very young (TRIVIAL).",
-"No, because childcare is a service provided for children (CIRCULAR).",
-"No, because some people prefer to stay at home with their children (IRRELEVANT)."
+"Yes, because children under five are very young.",
+"No, because childcare is a service provided for children.",
+"No, because some people prefer to stay at home with their children."
 ],
-explanation: "The correct answer is strongest because it highlights the significant economic impact of increasing workforce participation. Distractor 1 is weak (TRIVIAL): the age of the children is not the issue. Distractor 2 is weak (CIRCULAR): it defines childcare. Distractor 3 is weak (IRRELEVANT): individual lifestyle choices do not invalidate a systemic economic policy."
+explanation: "The correct answer is strongest because it highlights the significant economic impact of increasing workforce participation. Distractor 1 is weak: the age of the children is not the issue. Distractor 2 is weak: it defines childcare. Distractor 3 is weak: individual lifestyle choices do not invalidate a systemic economic policy."
 },
 {
 kind: "single",
@@ -29152,11 +29512,11 @@ stimulus: ['Should the state abolish all tuition fees for public universities?']
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing financial barriers ensures that access to higher education is based on merit rather than socioeconomic status, fostering greater social mobility.",
 distractors: [
-"Yes, because many students would like to attend university (VAGUE).",
-"No, because universities are institutions that provide education (CIRCULAR).",
-"No, because some people enjoy reading books in their spare time (IRRELEVANT)."
+"Yes, because many students would like to attend university.",
+"No, because universities are institutions that provide education.",
+"No, because some people enjoy reading books in their spare time."
 ],
-explanation: "The correct answer is strongest because it links the policy to the fundamental goal of equitable opportunity and social mobility. Distractor 1 is weak (VAGUE): the desire to attend does not equal merit or the systemic need for free access. Distractor 2 is weak (CIRCULAR): it defines a university. Distractor 3 is weak (IRRELEVANT): reading as a hobby is irrelevant to university financing."
+explanation: "The correct answer is strongest because it links the policy to the fundamental goal of equitable opportunity and social mobility. Distractor 1 is weak: the desire to attend does not equal merit or the systemic need for free access. Distractor 2 is weak: it defines a university. Distractor 3 is weak: reading as a hobby is irrelevant to university financing."
 },
 {
 kind: "single",
@@ -29166,11 +29526,11 @@ stimulus: ['Should the government mandate that all school lunches provide only p
 question: "Select the strongest argument from the statements below.",
 correct: "No, because dietary requirements and nutritional needs vary significantly among children, and a one-size-fits-all policy may fail to provide essential nutrients for developing bodies.",
 distractors: [
-"Yes, because plants are a type of food that people can eat (CIRCULAR).",
-"Yes, because some children might not notice the difference between types of food (VAGUE).",
-"No, because school buildings often have many rooms for different classes (NON-SEQUITUR)."
+"Yes, because plants are a type of food that people can eat.",
+"Yes, because some children might not notice the difference between types of food.",
+"No, because school buildings often have many rooms for different classes."
 ],
-explanation: "The correct answer is strongest because it addresses the core issue of biological necessity and health. Distractor 1 is weak (CIRCULAR): it defines plants. Distractor 2 is weak (VAGUE): guessing if children notice is not a valid basis for policy. Distractor 3 is weak (NON-SEQUITUR): school architecture is irrelevant."
+explanation: "The correct answer is strongest because it addresses the core issue of biological necessity and health. Distractor 1 is weak: it defines plants. Distractor 2 is weak: guessing if children notice is not a valid basis for policy. Distractor 3 is weak: school architecture is irrelevant."
 },
 {
 kind: "single",
@@ -29180,11 +29540,11 @@ stimulus: ['Should the school week be reduced to four days with longer daily hou
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because this adjustment allows for more focused learning sessions and provides students with an additional day for extracurricular development and rest, improving mental health.",
 distractors: [
-"Yes, because four is a number that is less than five (TRIVIAL).",
-"No, because schools are places where students go to learn (CIRCULAR).",
-"No, because teachers often have a lot of paperwork to complete (IRRELEVANT)."
+"Yes, because four is a number that is less than five.",
+"No, because schools are places where students go to learn.",
+"No, because teachers often have a lot of paperwork to complete."
 ],
-explanation: "The correct answer is strongest because it focuses on the pedagogical and psychological benefits for students. Distractor 1 is weak (TRIVIAL): comparing the number of days is irrelevant. Distractor 2 is weak (CIRCULAR): it defines schools. Distractor 3 is weak (IRRELEVANT): teacher workload is secondary to the student-centered purpose of the policy."
+explanation: "The correct answer is strongest because it focuses on the pedagogical and psychological benefits for students. Distractor 1 is weak: comparing the number of days is irrelevant. Distractor 2 is weak: it defines schools. Distractor 3 is weak: teacher workload is secondary to the student-centered purpose of the policy."
 },
 {
 kind: "single",
@@ -29194,11 +29554,11 @@ stimulus: ['Should students be required to pass a national entrance exam to prog
 question: "Select the strongest argument from the statements below.",
 correct: "No, because high-stakes testing at a young age often entrenches educational inequality, as wealthier students with access to private tutoring perform significantly better.",
 distractors: [
-"Yes, because it is good to have exams to test knowledge (VAGUE).",
-"Yes, because exams are tests that students take (CIRCULAR).",
-"No, because some pens work better than others when taking tests (IRRELEVANT)."
+"Yes, because it is good to have exams to test knowledge.",
+"Yes, because exams are tests that students take.",
+"No, because some pens work better than others when taking tests."
 ],
-explanation: "The correct answer is strongest because it addresses the systemic reinforcement of inequality, which is a significant social consequence. Distractor 1 is weak (VAGUE): 'good to have' is not a reasoned argument. Distractor 2 is weak (CIRCULAR): it defines an exam. Distractor 3 is weak (IRRELEVANT): the quality of writing instruments is entirely irrelevant to policy."
+explanation: "The correct answer is strongest because it addresses the systemic reinforcement of inequality, which is a significant social consequence. Distractor 1 is weak: 'good to have' is not a reasoned argument. Distractor 2 is weak: it defines an exam. Distractor 3 is weak: the quality of writing instruments is entirely irrelevant to policy."
 },
 {
 kind: "single",
@@ -29208,11 +29568,11 @@ stimulus: ['Should the government fund a national apprenticeship scheme to repla
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it aligns education directly with market demand, reducing youth unemployment while providing essential skills that university theory often lacks.",
 distractors: [
-"Yes, because apprenticeships are a type of work training (CIRCULAR).",
-"No, because it might be hard to choose which trade to learn (VAGUE).",
-"No, because the library is a very quiet place to study (IRRELEVANT)."
+"Yes, because apprenticeships are a type of work training.",
+"No, because it might be hard to choose which trade to learn.",
+"No, because the library is a very quiet place to study."
 ],
-explanation: "The correct answer is strongest because it addresses the structural mismatch between education and employment needs. Distractor 1 is weak (CIRCULAR): it defines apprenticeships. Distractor 2 is weak (VAGUE): difficulty in choice is an individual hurdle, not a systemic failure. Distractor 3 is weak (IRRELEVANT): the environment of a library is unrelated to apprenticeship policy."
+explanation: "The correct answer is strongest because it addresses the structural mismatch between education and employment needs. Distractor 1 is weak: it defines apprenticeships. Distractor 2 is weak: difficulty in choice is an individual hurdle, not a systemic failure. Distractor 3 is weak: the environment of a library is unrelated to apprenticeship policy."
 },
 {
 kind: "single",
@@ -29222,11 +29582,11 @@ stimulus: ['Should primary schools replace traditional grades with qualitative f
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because qualitative feedback provides a deeper understanding of a child’s specific learning gaps, allowing for targeted support that simple letter grades fail to provide.",
 distractors: [
-"Yes, because feedback is something that teachers can give to students (CIRCULAR).",
-"No, because parents are used to seeing letter grades on reports (VAGUE).",
-"No, because some school buses are yellow (IRRELEVANT)."
+"Yes, because feedback is something that teachers can give to students.",
+"No, because parents are used to seeing letter grades on reports.",
+"No, because some school buses are yellow."
 ],
-explanation: "The correct answer is strongest because it highlights the pedagogical improvement in identifying and addressing learning needs. Distractor 1 is weak (CIRCULAR): it defines feedback. Distractor 2 is weak (VAGUE): parent familiarity is a minor change-management issue. Distractor 3 is weak (IRRELEVANT): bus colour has no connection to grading systems."
+explanation: "The correct answer is strongest because it highlights the pedagogical improvement in identifying and addressing learning needs. Distractor 1 is weak: it defines feedback. Distractor 2 is weak: parent familiarity is a minor change-management issue. Distractor 3 is weak: bus colour has no connection to grading systems."
 },
 {
 kind: "single",
@@ -29238,11 +29598,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it ensures that taxpayers can access the results of research they have financed, facilitating the rapid translation of findings into public benefits.",
 distractors: [
-"Yes, because open access is a modern way of sharing information (TRIVIAL).",
-"No, because some researchers prefer to publish in journals that are not open-access (IRRELEVANT).",
-"Yes, because research that is open-access is research that is published without being hidden behind a paywall (CIRCULAR)."
+"Yes, because open access is a modern way of sharing information.",
+"No, because some researchers prefer to publish in journals that are not open-access.",
+"No, because open-access journals are not the same as traditional journals, so requiring open access would change how research is published."
 ],
-explanation: "The correct answer is strongest because it links public funding directly to the tangible benefit of accelerated knowledge translation. Distractor 1 is weak (TRIVIAL): it focuses on the method rather than the impact. Distractor 2 is weak (IRRELEVANT): researcher preference does not address the societal impact of funding policy. Distractor 3 is weak (CIRCULAR): it merely restates the definition of open-access."
+explanation: "The correct answer is strongest because it links public funding directly to the tangible benefit of accelerated knowledge translation. Distractor 1 is weak: it focuses on the method rather than the impact. Distractor 2 is weak: researcher preference does not address the societal impact of funding policy. Distractor 3 is weak: it merely restates the definition of open-access."
 },
 {
 kind: "single",
@@ -29254,11 +29614,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a total ban would stifle life-saving research into curing hereditary diseases that cause immense suffering.",
 distractors: [
-"Yes, because science should always be careful (VAGUE).",
-"No, because scientists like to use advanced laboratory equipment (NON-SEQUITUR).",
-"Yes, because gene editing involves editing genes in embryos (CIRCULAR)."
+"Yes, because science should always be careful.",
+"No, because scientists like to use advanced laboratory equipment.",
+"Yes, because gene editing involves editing genes in embryos."
 ],
-explanation: "The correct answer is strongest because it highlights the significant human health cost of a restrictive policy. Distractor 1 is weak (VAGUE): 'careful' is not a defined regulatory standard. Distractor 2 is weak (NON-SEQUITUR): laboratory equipment choice has no bearing on the ethics of embryo research. Distractor 3 is weak (CIRCULAR): it defines the proposal rather than arguing for it."
+explanation: "The correct answer is strongest because it highlights the significant human health cost of a restrictive policy. Distractor 1 is weak: 'careful' is not a defined regulatory standard. Distractor 2 is weak: laboratory equipment choice has no bearing on the ethics of embryo research. Distractor 3 is weak: it defines the proposal rather than arguing for it."
 },
 {
 kind: "single",
@@ -29270,11 +29630,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it provides a necessary legal check to prevent irreversible environmental or human harm before it occurs.",
 distractors: [
-"Yes, because ethics committees should be the people who decide on ethics (CIRCULAR).",
-"No, because committees often have meetings on Tuesday afternoons (IRRELEVANT).",
-"Yes, because it is generally better to be safe than sorry (VAGUE)."
+"Yes, because ethics committees should be the people who decide on ethics.",
+"No, because committees often have meetings on Tuesday afternoons.",
+"No, because research is something that happens in laboratories and ethics committees are groups of people who think about things."
 ],
-explanation: "The correct answer is strongest because it connects the authority of the committee to the prevention of specific catastrophic outcomes. Distractor 1 is weak (CIRCULAR): it reiterates the committee's role. Distractor 2 is weak (IRRELEVANT): meeting times are disconnected from regulatory authority. Distractor 3 is weak (VAGUE): it relies on a platitude rather than an analytical reason."
+explanation: "The correct answer is strongest because it connects the authority of the committee to the prevention of specific catastrophic outcomes. Distractor 1 is weak: it reiterates the committee's role. Distractor 2 is weak: meeting times are disconnected from regulatory authority. Distractor 3 is weak: it relies on a platitude rather than an analytical reason."
 },
 {
 kind: "single",
@@ -29286,11 +29646,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it prevents other researchers from wasting time and resources on experiments that have already been proven ineffective.",
 distractors: [
-"Yes, because databases are very useful for storing data (TRIVIAL).",
-"No, because some scientists might feel embarrassed about negative results (IRRELEVANT).",
-"Yes, because if research is shared, then the results are no longer private (CIRCULAR)."
+"Yes, because databases are very useful for storing data.",
+"No, because some scientists might feel embarrassed about negative results.",
+"No, because sharing negative results would change the way research institutions currently operate."
 ],
-explanation: "The correct answer is strongest because it identifies the efficiency benefit for the scientific community as a whole. Distractor 1 is weak (TRIVIAL): it discusses utility without context. Distractor 2 is weak (IRRELEVANT): emotional reactions of researchers do not affect the utility of the data. Distractor 3 is weak (CIRCULAR): it defines the outcome of the proposal."
+explanation: "The correct answer is strongest because it identifies the efficiency benefit for the scientific community as a whole. Distractor 1 is weak: it discusses utility without context. Distractor 2 is weak: emotional reactions of researchers do not affect the utility of the data. Distractor 3 is weak: it defines the outcome of the proposal."
 },
 {
 kind: "single",
@@ -29302,11 +29662,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because current simulation technology cannot yet replicate the complex systemic interactions of a living organism, meaning some vital safety data would be missed.",
 distractors: [
-"Yes, because computers are faster than animals (TRIVIAL).",
-"Yes, because animals should not be kept in laboratories (NON-SEQUITUR).",
-"No, because a five-year timeline is a specific amount of time (CIRCULAR)."
+"Yes, because computers are faster than animals.",
+"Yes, because animals should not be kept in laboratories.",
+"No, because a five-year timeline is a specific amount of time."
 ],
-explanation: "The correct answer is strongest because it provides a functional limitation of the proposed technology that threatens patient safety. Distractor 1 is weak (TRIVIAL): speed does not equal accuracy. Distractor 2 is weak (NON-SEQUITUR): animal rights are a different ethical domain from the technical validity of research methods. Distractor 3 is weak (CIRCULAR): it just describes the proposal."
+explanation: "The correct answer is strongest because it provides a functional limitation of the proposed technology that threatens patient safety. Distractor 1 is weak: speed does not equal accuracy. Distractor 2 is weak: animal rights are a different ethical domain from the technical validity of research methods. Distractor 3 is weak: it just describes the proposal."
 },
 {
 kind: "single",
@@ -29318,11 +29678,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the massive capital risk associated with space exploration is best managed by the private sector, which has the agility to innovate where government budgets might fail.",
 distractors: [
-"Yes, because space is very far away from Earth (IRRELEVANT).",
-"Yes, because nationalizing means the nation owns it (CIRCULAR).",
-"No, because corporations like to make money (VAGUE)."
+"Yes, because space is very far away from Earth.",
+"Yes, because nationalizing means the nation owns it.",
+"No, because corporations like to make money."
 ],
-explanation: "The correct answer is strongest because it contrasts the financial risks and management styles of private versus public sector innovation. Distractor 1 is weak (IRRELEVANT): physical distance is unrelated to ownership policy. Distractor 2 is weak (CIRCULAR): defines the word nationalize. Distractor 3 is weak (VAGUE): making money is too generic to explain the complexity of space resource management."
+explanation: "The correct answer is strongest because it contrasts the financial risks and management styles of private versus public sector innovation. Distractor 1 is weak: physical distance is unrelated to ownership policy. Distractor 2 is weak: defines the word nationalize. Distractor 3 is weak: making money is too generic to explain the complexity of space resource management."
 },
 {
 kind: "single",
@@ -29334,11 +29694,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing legal barriers allows scientists worldwide to build upon each other's work, significantly increasing the pace of developing green technologies.",
 distractors: [
-"Yes, because it is good to cooperate on global issues (VAGUE).",
-"No, because patent lawyers are highly trained professionals (IRRELEVANT).",
-"Yes, because then there would be no intellectual property restrictions (CIRCULAR)."
+"Yes, because it is good to cooperate on global issues.",
+"No, because patent lawyers are highly trained professionals.",
+"No, because climate change is a very important issue and we need to be careful about how we handle important issues."
 ],
-explanation: "The correct answer is strongest because it links the legal change to the specific goal of technological development pace. Distractor 1 is weak (VAGUE): 'good to cooperate' is a sentiment, not an analytical argument. Distractor 2 is weak (IRRELEVANT): the profession of lawyers is irrelevant to the policy impact. Distractor 3 is weak (CIRCULAR): restates the proposal."
+explanation: "The correct answer is strongest because it links the legal change to the specific goal of technological development pace. Distractor 1 is weak: 'good to cooperate' is a sentiment, not an analytical argument. Distractor 2 is weak: the profession of lawyers is irrelevant to the policy impact. Distractor 3 is weak: restates the proposal."
 },
 {
 kind: "single",
@@ -29350,11 +29710,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it ensures that students remain updated on evolving research integrity standards, reducing the likelihood of ethical breaches due to outdated practices.",
 distractors: [
-"Yes, because training programs are generally held in universities (TRIVIAL).",
-"No, because students are already very busy with their research (IRRELEVANT).",
-"Yes, because it means students get training in ethics (CIRCULAR)."
+"Yes, because training programs are generally held in universities.",
+"No, because students are already very busy with their research.",
+"No, because ethics training is something that relates to how people conduct themselves, and people who conduct themselves ethically should already know about ethics."
 ],
-explanation: "The correct answer is strongest because it links the frequency of training to the dynamic nature of ethical standards and risk reduction. Distractor 1 is weak (TRIVIAL): location has no impact on training quality. Distractor 2 is weak (IRRELEVANT): student workload is not a valid reason to bypass integrity standards. Distractor 3 is weak (CIRCULAR): simply explains what happens in the proposal."
+explanation: "The correct answer is strongest because it links the frequency of training to the dynamic nature of ethical standards and risk reduction. Distractor 1 is weak: location has no impact on training quality. Distractor 2 is weak: student workload is not a valid reason to bypass integrity standards. Distractor 3 is weak: simply explains what happens in the proposal."
 },
 {
 kind: "single",
@@ -29366,11 +29726,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the data gathered will allow for evidence-based policy interventions that could significantly improve long-term educational outcomes and social mobility.",
 distractors: [
-"Yes, because longitudinal studies take a long time to complete (TRIVIAL).",
-"No, because some people prefer to study other subjects (IRRELEVANT).",
-"Yes, because it means the government would pay for the studies (CIRCULAR)."
+"Yes, because longitudinal studies take a long time to complete.",
+"No, because some people prefer to study other subjects.",
+"No, because childhood cognitive development studies are about studying children's cognition, which is what they study."
 ],
-explanation: "The correct answer is strongest because it connects the research funding to specific, high-value societal outcomes. Distractor 1 is weak (TRIVIAL): study duration is a feature, not a justification. Distractor 2 is weak (IRRELEVANT): academic interest is not a valid policy criteria. Distractor 3 is weak (CIRCULAR): restates the funding aspect."
+explanation: "The correct answer is strongest because it connects the research funding to specific, high-value societal outcomes. Distractor 1 is weak: study duration is a feature, not a justification. Distractor 2 is weak: academic interest is not a valid policy criteria. Distractor 3 is weak: restates the funding aspect."
 },
 {
 kind: "single",
@@ -29382,11 +29742,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because phase one trials only assess safety and not efficacy, meaning the public could be exposed to ineffective treatments while delaying their search for proven alternatives.",
 distractors: [
-"Yes, because everyone wants to be healthy (VAGUE).",
-"No, because clinical trials are done in clinics (CIRCULAR).",
-"Yes, because scientists often wear white lab coats (IRRELEVANT)."
+"Yes, because everyone wants to be healthy.",
+"No, because clinical trials are done in clinics.",
+"Yes, because scientists often wear white lab coats."
 ],
-explanation: "The correct answer is strongest because it addresses the technical distinction between safety and efficacy and the consequence for patient health. Distractor 1 is weak (VAGUE): desiring health is universal but not an argument for drug release policy. Distractor 2 is weak (CIRCULAR): restates terminology. Distractor 3 is weak (IRRELEVANT): attire is irrelevant to medical policy."
+explanation: "The correct answer is strongest because it addresses the technical distinction between safety and efficacy and the consequence for patient health. Distractor 1 is weak: desiring health is universal but not an argument for drug release policy. Distractor 2 is weak: restates terminology. Distractor 3 is weak: attire is irrelevant to medical policy."
 },
 {
 kind: "single",
@@ -29398,11 +29758,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because diverse teams are better equipped to identify and mitigate biases in machine learning algorithms that could otherwise have discriminatory effects on marginalized groups.",
 distractors: [
-"Yes, because it is important for universities to have many committees (TRIVIAL).",
-"No, because some researchers prefer working alone (IRRELEVANT).",
-"Yes, because it requires institutions to have committees for diversity (CIRCULAR)."
+"Yes, because it is important for universities to have many committees.",
+"No, because some researchers prefer working alone.",
+"No, because diversity committees might not always be able to keep up with how fast artificial intelligence is changing."
 ],
-explanation: "The correct answer is strongest because it links demographic diversity to the reduction of technical flaws in AI. Distractor 1 is weak (TRIVIAL): the quantity of committees does not affect research outcomes. Distractor 2 is weak (IRRELEVANT): personal working preferences do not address societal risk. Distractor 3 is weak (CIRCULAR): paraphrases the requirement."
+explanation: "The correct answer is strongest because it links demographic diversity to the reduction of technical flaws in AI. Distractor 1 is weak: the quantity of committees does not affect research outcomes. Distractor 2 is weak: personal working preferences do not address societal risk. Distractor 3 is weak: paraphrases the requirement."
 },
 {
 kind: "single",
@@ -29414,11 +29774,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it incentivizes global scientific talent to remain in the country, strengthening domestic innovation and economic competitiveness.",
 distractors: [
-"Yes, because journals are often published on paper or online (TRIVIAL).",
-"No, because moving to a new country is a big decision for individuals (IRRELEVANT).",
-"Yes, because it involves granting permanent residency to researchers (CIRCULAR)."
+"Yes, because journals are often published on paper or online.",
+"No, because moving to a new country is a big decision for individuals.",
+"No, because scientific findings are important and we need to think carefully about what that means for residency policy."
 ],
-explanation: "The correct answer is strongest because it articulates the strategic national benefit of retaining skilled talent. Distractor 1 is weak (TRIVIAL): publication medium is irrelevant. Distractor 2 is weak (IRRELEVANT): the personal difficulty of immigration is not a valid national policy argument. Distractor 3 is weak (CIRCULAR): restates the proposal."
+explanation: "The correct answer is strongest because it articulates the strategic national benefit of retaining skilled talent. Distractor 1 is weak: publication medium is irrelevant. Distractor 2 is weak: the personal difficulty of immigration is not a valid national policy argument. Distractor 3 is weak: restates the proposal."
 },
 {
 kind: "single",
@@ -29430,11 +29790,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because prohibiting such research limits the region's ability to develop crops resistant to localized pests and climate shifts, undermining food security.",
 distractors: [
-"Yes, because organic farming is seen as more natural (VAGUE).",
-"No, because farmers like to wake up early (IRRELEVANT).",
-"Yes, because a ban means that the research would be banned (CIRCULAR)."
+"Yes, because organic farming is seen as more natural.",
+"No, because farmers like to wake up early.",
+"Yes, because a ban means that the research would be banned."
 ],
-explanation: "The correct answer is strongest because it addresses the survival and food stability impact of research limitations. Distractor 1 is weak (VAGUE): 'natural' is a subjective preference. Distractor 2 is weak (IRRELEVANT): the lifestyle of farmers is unrelated to research bans. Distractor 3 is weak (CIRCULAR): restates the effect of the proposal."
+explanation: "The correct answer is strongest because it addresses the survival and food stability impact of research limitations. Distractor 1 is weak: 'natural' is a subjective preference. Distractor 2 is weak: the lifestyle of farmers is unrelated to research bans. Distractor 3 is weak: restates the effect of the proposal."
 },
 {
 kind: "single",
@@ -29446,11 +29806,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because citation counts favor mainstream or trending topics, which would lead to the neglect of foundational, niche, or high-risk research that often drives long-term scientific progress.",
 distractors: [
-"Yes, because numbers are very easy to calculate (TRIVIAL).",
-"No, because professors usually work in offices (IRRELEVANT).",
-"Yes, because determining budgets by citations means the budgets are based on citations (CIRCULAR)."
+"Yes, because numbers are very easy to calculate.",
+"No, because professors usually work in offices.",
+"Yes, because determining budgets by citations means the budgets are based on citations."
 ],
-explanation: "The correct answer is strongest because it highlights the systemic bias created by a citation-only metric. Distractor 1 is weak (TRIVIAL): ease of calculation is not a merit of policy effectiveness. Distractor 2 is weak (IRRELEVANT): workspace location is unrelated. Distractor 3 is weak (CIRCULAR): restates the proposed methodology."
+explanation: "The correct answer is strongest because it highlights the systemic bias created by a citation-only metric. Distractor 1 is weak: ease of calculation is not a merit of policy effectiveness. Distractor 2 is weak: workspace location is unrelated. Distractor 3 is weak: restates the proposed methodology."
 },
 {
 kind: "single",
@@ -29462,11 +29822,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because if successful, it provides a near-infinite supply of clean, carbon-free energy that could solve the global energy crisis permanently.",
 distractors: [
-"Yes, because fusion is a type of reaction in physics (CIRCULAR).",
-"No, because electricity bills are sometimes expensive (NON-SEQUITUR).",
-"Yes, because it is generally a good idea to research things (VAGUE)."
+"Yes, because fusion is a type of reaction in physics.",
+"No, because electricity bills are sometimes expensive.",
+"No, because the government should focus on things that are important rather than things that are not as important."
 ],
-explanation: "The correct answer is strongest because it directly links the scientific outcome to the resolution of a specific global problem. Distractor 1 is weak (CIRCULAR): defines the subject. Distractor 2 is weak (NON-SEQUITUR): electricity pricing policy is a different issue from energy research funding. Distractor 3 is weak (VAGUE): the utility of research is too broad."
+explanation: "The correct answer is strongest because it directly links the scientific outcome to the resolution of a specific global problem. Distractor 1 is weak: defines the subject. Distractor 2 is weak: electricity pricing policy is a different issue from energy research funding. Distractor 3 is weak: the utility of research is too broad."
 },
 {
 kind: "single",
@@ -29478,11 +29838,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it prevents the alteration or deletion of research data, maintaining scientific integrity and protecting the record from political or corporate interference.",
 distractors: [
-"Yes, because blockchain is a popular technology (VAGUE).",
-"No, because some researchers find computer passwords difficult to remember (IRRELEVANT).",
-"Yes, because it means the records would be stored on a blockchain (CIRCULAR)."
+"Yes, because blockchain is a popular technology.",
+"No, because some researchers find computer passwords difficult to remember.",
+"No, because blockchain datasets would just be datasets on blockchain, which is not the same as datasets that are not on blockchain."
 ],
-explanation: "The correct answer is strongest because it addresses the integrity and accountability of scientific data. Distractor 1 is weak (VAGUE): popularity is not a justification for policy. Distractor 2 is weak (IRRELEVANT): personal technological struggles are irrelevant. Distractor 3 is weak (CIRCULAR): restates the proposal."
+explanation: "The correct answer is strongest because it addresses the integrity and accountability of scientific data. Distractor 1 is weak: popularity is not a justification for policy. Distractor 2 is weak: personal technological struggles are irrelevant. Distractor 3 is weak: restates the proposal."
 },
 {
 kind: "single",
@@ -29494,11 +29854,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it enables rapid, localized mass production of life-saving drugs, ensuring equitable access that saves millions of lives in underserved regions.",
 distractors: [
-"Yes, because pandemics are very serious events (VAGUE).",
-"No, because the buildings used by pharmaceutical companies are large (IRRELEVANT).",
-"Yes, because it would mean companies share their patents (CIRCULAR)."
+"Yes, because pandemics are very serious events.",
+"No, because the buildings used by pharmaceutical companies are large.",
+"No, because sharing patents is related to intellectual property, which is a thing that exists."
 ],
-explanation: "The correct answer is strongest because it describes the specific mechanism by which the policy prevents loss of life. Distractor 1 is weak (VAGUE): 'serious' is a truism. Distractor 2 is weak (IRRELEVANT): facility size is irrelevant. Distractor 3 is weak (CIRCULAR): describes the proposal."
+explanation: "The correct answer is strongest because it describes the specific mechanism by which the policy prevents loss of life. Distractor 1 is weak: 'serious' is a truism. Distractor 2 is weak: facility size is irrelevant. Distractor 3 is weak: describes the proposal."
 },
 {
 kind: "single",
@@ -29510,11 +29870,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because excessive classification prevents academic peer review, which is essential for identifying technical flaws that could lead to system failure in real-world military operations.",
 distractors: [
-"Yes, because it keeps the technology secret (CIRCULAR).",
-"No, because universities have many students (IRRELEVANT).",
-"Yes, because some defense technologies are quite dangerous (TRIVIAL)."
+"Yes, because it keeps the technology secret.",
+"No, because universities have many students.",
+"Yes, because some defense technologies are quite dangerous."
 ],
-explanation: "The correct answer is strongest because it identifies the safety risk inherent in avoiding peer review for technical systems. Distractor 1 is weak (CIRCULAR): restates the purpose of classification. Distractor 2 is weak (IRRELEVANT): student population is irrelevant. Distractor 3 is weak (TRIVIAL): danger is a reason for caution, not a reason for default classification."
+explanation: "The correct answer is strongest because it identifies the safety risk inherent in avoiding peer review for technical systems. Distractor 1 is weak: restates the purpose of classification. Distractor 2 is weak: student population is irrelevant. Distractor 3 is weak: danger is a reason for caution, not a reason for default classification."
 },
 {
 kind: "single",
@@ -29526,11 +29886,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it ensures that environmental protection is integrated into the cost of doing research, preventing externalized costs from being passed on to the public.",
 distractors: [
-"Yes, because field experiments are done in fields (CIRCULAR).",
-"No, because clean environments look nicer (TRIVIAL).",
-"Yes, because companies also have to follow environmental laws (NON-SEQUITUR)."
+"Yes, because field experiments are done in fields.",
+"No, because clean environments look nicer.",
+"No, because research institutions are institutions that do research, and requiring them to pay for things would affect their finances in ways that matter."
 ],
-explanation: "The correct answer is strongest because it addresses the economic principle of internalizing negative externalities. Distractor 1 is weak (CIRCULAR): restates the setting of the experiments. Distractor 2 is weak (TRIVIAL): aesthetics are minor compared to ecological health. Distractor 3 is weak (NON-SEQUITUR): comparing to companies does not justify why research institutions should follow the same rules."
+explanation: "The correct answer is strongest because it addresses the economic principle of internalizing negative externalities. Distractor 1 is weak: restates the setting of the experiments. Distractor 2 is weak: aesthetics are minor compared to ecological health. Distractor 3 is weak: comparing to companies does not justify why research institutions should follow the same rules."
 },
 {
 kind: "single",
@@ -29542,11 +29902,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it equips scientists to translate complex technical findings into actionable information for the public, fostering informed decision-making and public trust.",
 distractors: [
-"Yes, because courses are held in rooms (IRRELEVANT).",
-"No, because some scientists are shy (IRRELEVANT).",
-"Yes, because it would mean they have completed a course (CIRCULAR)."
+"Yes, because courses are held in rooms.",
+"No, because some scientists are shy.",
+"No, because public communication is something that relates to the public, and scientists should focus on what they do best."
 ],
-explanation: "The correct answer is strongest because it identifies the societal benefit of improved technical communication. Distractor 1 is weak (IRRELEVANT): location of the course is irrelevant. Distractor 2 is weak (IRRELEVANT): personality traits are not relevant to grant eligibility criteria. Distractor 3 is weak (CIRCULAR): restates the outcome of the proposal."
+explanation: "The correct answer is strongest because it identifies the societal benefit of improved technical communication. Distractor 1 is weak: location of the course is irrelevant. Distractor 2 is weak: personality traits are not relevant to grant eligibility criteria. Distractor 3 is weak: restates the outcome of the proposal."
 },
 {
 kind: "single",
@@ -29558,11 +29918,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because delegating life-or-death decisions to algorithms removes human moral accountability, creating an unacceptable risk of unintended conflict escalation.",
 distractors: [
-"Yes, because robots are made of metal (IRRELEVANT).",
-"No, because technology is always advancing (VAGUE).",
-"Yes, because it is about prohibiting research (CIRCULAR)."
+"Yes, because robots are made of metal.",
+"No, because technology is always advancing.",
+"No, because prohibiting research would mean we're not doing the research that we should be doing."
 ],
-explanation: "The correct answer is strongest because it highlights the ethical vacuum and specific security risk of autonomous weaponry. Distractor 1 is weak (IRRELEVANT): material composition is irrelevant. Distractor 2 is weak (VAGUE): technological advancement is a trend, not an argument for or against. Distractor 3 is weak (CIRCULAR): describes the policy."
+explanation: "The correct answer is strongest because it highlights the ethical vacuum and specific security risk of autonomous weaponry. Distractor 1 is weak: material composition is irrelevant. Distractor 2 is weak: technological advancement is a trend, not an argument for or against. Distractor 3 is weak: describes the policy."
 },
 {
 kind: "single",
@@ -29574,11 +29934,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because long-term breakthroughs, such as in basic physics or genomics, often take decades to yield commercial benefits, and prioritizing short-term gains would cause a collapse in fundamental scientific discovery.",
 distractors: [
-"Yes, because money is used to buy things (VAGUE).",
-"No, because many researchers like working in labs (IRRELEVANT).",
-"Yes, because it means funding goes to commercial projects (CIRCULAR)."
+"Yes, because money is used to buy things.",
+"No, because many researchers like working in labs.",
+"Yes, because it means funding goes to commercial projects."
 ],
-explanation: "The correct answer is strongest because it explains the essential nature of basic research and the long-term cost of short-term focus. Distractor 1 is weak (VAGUE): a truism about money. Distractor 2 is weak (IRRELEVANT): research environment preference is irrelevant. Distractor 3 is weak (CIRCULAR): restates the proposal."
+explanation: "The correct answer is strongest because it explains the essential nature of basic research and the long-term cost of short-term focus. Distractor 1 is weak: a truism about money. Distractor 2 is weak: research environment preference is irrelevant. Distractor 3 is weak: restates the proposal."
 },
 {
 kind: "single",
@@ -29590,11 +29950,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it removes the fear of career destruction, encouraging the exposure of fraud or dangerous safety shortcuts that might otherwise be hidden.",
 distractors: [
-"Yes, because whistleblowing is when you report something (CIRCULAR).",
-"No, because professional repercussions are hard to measure (VAGUE).",
-"Yes, because scientists have jobs (TRIVIAL)."
+"Yes, because whistleblowing is when you report something.",
+"No, because professional repercussions are hard to measure.",
+"No, because scientists should follow the rules that exist at their workplace."
 ],
-explanation: "The correct answer is strongest because it connects legal protection to the safety and integrity of the scientific process. Distractor 1 is weak (CIRCULAR): defines the term. Distractor 2 is weak (VAGUE): difficulty in measurement is not a reason to deny protection. Distractor 3 is weak (TRIVIAL): the existence of jobs is not an argument for or against policy."
+explanation: "The correct answer is strongest because it connects legal protection to the safety and integrity of the scientific process. Distractor 1 is weak: defines the term. Distractor 2 is weak: difficulty in measurement is not a reason to deny protection. Distractor 3 is weak: the existence of jobs is not an argument for or against policy."
 },
 {
 kind: "single",
@@ -29606,11 +29966,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the risk of weaponization is lower than the need to understand the social mechanics of polarization, which is critical for restoring democratic stability.",
 distractors: [
-"Yes, because polarization is a problem (VAGUE).",
-"No, because research is done in books (IRRELEVANT).",
-"Yes, because it means restricting the research (CIRCULAR)."
+"Yes, because polarization is a problem.",
+"No, because research is done in books.",
+"Yes, because it means restricting the research."
 ],
-explanation: "The correct answer is strongest because it balances the risk of misuse against the necessity of understanding complex social issues. Distractor 1 is weak (VAGUE): identifying a problem does not provide a reason for the restriction. Distractor 2 is weak (IRRELEVANT): the medium of research is irrelevant. Distractor 3 is weak (CIRCULAR): restates the policy."
+explanation: "The correct answer is strongest because it balances the risk of misuse against the necessity of understanding complex social issues. Distractor 1 is weak: identifying a problem does not provide a reason for the restriction. Distractor 2 is weak: the medium of research is irrelevant. Distractor 3 is weak: restates the policy."
 },
 {
 kind: "single",
@@ -29622,11 +29982,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because these sessions provide students with evidence-based self-regulation tools that significantly reduce academic anxiety and improve long-term focus during exams.",
 distractors: [
-"Yes, because schools should be places where students feel good about themselves and their peers (VAGUE).",
-"Yes, because mindfulness is a practice that involves being mindful of one's thoughts (CIRCULAR).",
-"No, because the local council has recently increased the budget for school cafeteria maintenance (IRRELEVANT)."
+"Yes, because schools should be places where students feel good about themselves and their peers.",
+"No, because adding mandatory meditation sessions to an already packed school timetable reduces the time available for core academic subjects.",
+"No, because the local council has recently increased the budget for school cafeteria maintenance."
 ],
-explanation: "The correct answer is strongest because it directly addresses the core purpose of improving student mental health with a specific consequence: reduced anxiety and improved focus. Distractor 1 is weak (VAGUE): it lacks specific impact. Distractor 2 is weak (CIRCULAR): it merely defines the term. Distractor 3 is weak (IRRELEVANT): cafeteria maintenance is unrelated to mindfulness."
+explanation: "The correct answer is strongest because it directly addresses the core purpose of improving student mental health with a specific consequence: reduced anxiety and improved focus. Distractor 1 is weak: it lacks specific impact. Distractor 2 is weak: it merely defines the term. Distractor 3 is weak: cafeteria maintenance is unrelated to mindfulness."
 },
 {
 kind: "single",
@@ -29638,11 +29998,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because such a rigid lock prevents users from accessing essential support groups or crisis hotlines during late-night hours when they might be most needed.",
 distractors: [
-"No, because social media is a platform where people share photos and videos (TRIVIAL).",
-"Yes, because using social media for a long time could potentially lead to problems (VAGUE).",
-"No, because the internet is a large network of computers connected globally (IRRELEVANT)."
+"No, because social media is a platform where people share photos and videos.",
+"Yes, because using social media for a long time could potentially lead to problems.",
+"Yes, because time-out features are a form of technology that exists on social media platforms."
 ],
-explanation: "The correct answer is strongest because it addresses a critical safety risk: the loss of access to support. Distractor 1 is weak (TRIVIAL): it describes the platform but not the policy. Distractor 2 is weak (VAGUE): it fails to specify consequences. Distractor 3 is weak (IRRELEVANT): the technical definition of the internet is not the point."
+explanation: "The correct answer is strongest because it addresses a critical safety risk: the loss of access to support. Distractor 1 is weak: it describes the platform but not the policy. Distractor 2 is weak: it fails to specify consequences. Distractor 3 is weak: the technical definition of the internet is not the point."
 },
 {
 kind: "single",
@@ -29654,11 +30014,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because early identification of mental health conditions allows for immediate intervention, preventing the escalation of crises that currently overwhelm emergency departments.",
 distractors: [
-"Yes, because it is important to screen for things that might be wrong (VAGUE).",
-"Yes, because mental health screening involves checking on a person's mental health (CIRCULAR).",
-"No, because many doctors have white coats and use stethoscopes (IRRELEVANT)."
+"Yes, because it is important to screen for things that might be wrong.",
+"No, because adding registration requirements may deter people from accessing primary care altogether.",
+"No, because many doctors have white coats and use stethoscopes."
 ],
-explanation: "The correct answer is strongest because it links early screening to the concrete consequence of reduced emergency department pressure. Distractor 1 is weak (VAGUE): it is too general. Distractor 2 is weak (CIRCULAR): it defines the process rather than justifying it. Distractor 3 is weak (IRRELEVANT): physician attire has no impact on policy efficacy."
+explanation: "The correct answer is strongest because it links early screening to the concrete consequence of reduced emergency department pressure. Distractor 1 is weak: it is too general. Distractor 2 is weak: it defines the process rather than justifying it. Distractor 3 is weak: physician attire has no impact on policy efficacy."
 },
 {
 kind: "single",
@@ -29670,11 +30030,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it encourages employees to address burnout before it leads to long-term chronic illness, thereby reducing overall workplace absenteeism.",
 distractors: [
-"Yes, because employees deserve to have days where they do not work (TRIVIAL).",
-"No, because businesses are often interested in increasing their quarterly profits (NON-SEQUITUR).",
-"Yes, because mental health days are days used for mental health (CIRCULAR)."
+"Yes, because employees deserve to have days where they do not work.",
+"No, because businesses are often interested in increasing their quarterly profits.",
+"No, because mental health days are called mental health days, which means they are about mental health."
 ],
-explanation: "The correct answer is strongest because it identifies the impact on absenteeism through burnout prevention. Distractor 1 is weak (TRIVIAL): it is a statement about rights, not consequences. Distractor 2 is weak (NON-SEQUITUR): profit motives are distinct from productivity impacts. Distractor 3 is weak (CIRCULAR): it restates the proposal."
+explanation: "The correct answer is strongest because it identifies the impact on absenteeism through burnout prevention. Distractor 1 is weak: it is a statement about rights, not consequences. Distractor 2 is weak: profit motives are distinct from productivity impacts. Distractor 3 is weak: it restates the proposal."
 },
 {
 kind: "single",
@@ -29686,11 +30046,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the resulting surge in demand would exceed capacity, leading to dangerously long waiting times that deny help to students in acute crisis.",
 distractors: [
-"Yes, because students are young people attending university (IRRELEVANT).",
-"Yes, because counseling is something that helps people when they talk about problems (VAGUE).",
-"No, because universities have many buildings and large libraries (IRRELEVANT)."
+"Yes, because students are young people attending university.",
+"Yes, because counseling is something that helps people when they talk about problems.",
+"No, because universities have many buildings and large libraries."
 ],
-explanation: "The correct answer is strongest because it highlights a clear, negative consequence of the policy: capacity collapse. Distractor 1 is weak (IRRELEVANT): student age is not the issue. Distractor 2 is weak (VAGUE): it does not explain the policy's effect. Distractor 3 is weak (IRRELEVANT): library size is irrelevant to counseling access."
+explanation: "The correct answer is strongest because it highlights a clear, negative consequence of the policy: capacity collapse. Distractor 1 is weak: student age is not the issue. Distractor 2 is weak: it does not explain the policy's effect. Distractor 3 is weak: library size is irrelevant to counseling access."
 },
 {
 kind: "single",
@@ -29702,11 +30062,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because reducing exposure to these stimulants directly decreases the prevalence of sleep deprivation and subsequent behavioral issues in school-age children.",
 distractors: [
-"Yes, because sugary drinks are often bright colors (IRRELEVANT).",
-"Yes, because energy drinks are drinks that have energy in them (CIRCULAR).",
-"No, because advertising is a very big industry in the world (TRIVIAL)."
+"Yes, because sugary drinks are often bright colors.",
+"No, because parents should be responsible for what their children drink instead.",
+"No, because advertising is a very big industry in the world."
 ],
-explanation: "The correct answer is strongest because it connects the ban to a concrete physiological and behavioral improvement. Distractor 1 is weak (IRRELEVANT): color is not the issue. Distractor 2 is weak (CIRCULAR): it restates the item name. Distractor 3 is weak (TRIVIAL): the size of the industry does not address the impact on minors."
+explanation: "The correct answer is strongest because it connects the ban to a concrete physiological and behavioral improvement. Distractor 1 is weak: color is not the issue. Distractor 2 is weak: it restates the item name. Distractor 3 is weak: the size of the industry does not address the impact on minors."
 },
 {
 kind: "single",
@@ -29718,11 +30078,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because reducing nighttime light exposure improves sleep quality, which is clinically proven to stabilize mood and improve overall mental wellbeing in urban populations.",
 distractors: [
-"Yes, because light is bright and sometimes it is nice (VAGUE).",
-"No, because some people like to go for night walks in the city (TRIVIAL).",
-"Yes, because dark skies are skies that are dark (CIRCULAR)."
+"Yes, because light is bright and sometimes it is nice.",
+"No, because some people like to go for night walks in the city.",
+"No, because cities are places where people live, and if people live in cities then they probably want things to be a certain way."
 ],
-explanation: "The correct answer is strongest because it links the policy to the biological mechanism of sleep and mental stability. Distractor 1 is weak (VAGUE): it lacks focus. Distractor 2 is weak (TRIVIAL): personal preference does not outweigh health outcomes. Distractor 3 is weak (CIRCULAR): it provides a definition."
+explanation: "The correct answer is strongest because it links the policy to the biological mechanism of sleep and mental stability. Distractor 1 is weak: it lacks focus. Distractor 2 is weak: personal preference does not outweigh health outcomes. Distractor 3 is weak: it provides a definition."
 },
 {
 kind: "single",
@@ -29734,11 +30094,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the lack of doctor-patient confidentiality regarding company-appointed therapists would discourage employees from being honest, rendering the check-ins ineffective.",
 distractors: [
-"Yes, because people should always be checked on by someone else (VAGUE).",
-"No, because the public sector is a very large employer of many people (IRRELEVANT).",
-"Yes, because mental health is part of a person's life (TRIVIAL)."
+"Yes, because people should always be checked on by someone else.",
+"No, because the public sector is a very large employer of many people.",
+"Yes, because mental health is part of a person's life."
 ],
-explanation: "The correct answer is strongest because it identifies a critical flaw in the mechanism (lack of trust) that prevents the policy from achieving its goal. Distractor 1 is weak (VAGUE): it is too general. Distractor 2 is weak (IRRELEVANT): the size of the sector is not the problem. Distractor 3 is weak (TRIVIAL): it is a philosophical truism."
+explanation: "The correct answer is strongest because it identifies a critical flaw in the mechanism (lack of trust) that prevents the policy from achieving its goal. Distractor 1 is weak: it is too general. Distractor 2 is weak: the size of the sector is not the problem. Distractor 3 is weak: it is a philosophical truism."
 },
 {
 kind: "single",
@@ -29750,11 +30110,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because these gardens create social cohesion and provide physical activity, which are established factors in lowering stress and anxiety in disenfranchised communities.",
 distractors: [
-"Yes, because plants are green and pretty to look at (TRIVIAL).",
-"No, because some people prefer to buy their food from supermarkets (IRRELEVANT).",
-"Yes, because gardens are places where plants grow (CIRCULAR)."
+"Yes, because plants are green and pretty to look at.",
+"No, because some people prefer to buy their food from supermarkets.",
+"No, because the government shouldn't spend money on things that cost money."
 ],
-explanation: "The correct answer is strongest because it links the garden to specific, actionable mental health benefits. Distractor 1 is weak (TRIVIAL): aesthetics are not the core policy goal. Distractor 2 is weak (IRRELEVANT): where people buy food is not the issue. Distractor 3 is weak (CIRCULAR): it defines a garden."
+explanation: "The correct answer is strongest because it links the garden to specific, actionable mental health benefits. Distractor 1 is weak: aesthetics are not the core policy goal. Distractor 2 is weak: where people buy food is not the issue. Distractor 3 is weak: it defines a garden."
 },
 {
 kind: "single",
@@ -29766,11 +30126,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because mandatory disclosure would cause athletes to hide symptoms to protect their careers, increasing the risk of unmanaged mental health crises occurring on the field.",
 distractors: [
-"Yes, because all athletes are famous people who are in the media (IRRELEVANT).",
-"No, because management teams are very busy with training schedules (TRIVIAL).",
-"Yes, because it is important for athletes to be healthy (VAGUE)."
+"Yes, because all athletes are famous people who are in the media.",
+"No, because management teams are very busy with training schedules.",
+"Yes, because it is important for athletes to be healthy."
 ],
-explanation: "The correct answer is strongest because it highlights the perverse incentive created by the policy that would lead to worse outcomes. Distractor 1 is weak (IRRELEVANT): fame is not a safety issue. Distractor 2 is weak (TRIVIAL): the schedule is not the issue. Distractor 3 is weak (VAGUE): it fails to justify the mandatory disclosure."
+explanation: "The correct answer is strongest because it highlights the perverse incentive created by the policy that would lead to worse outcomes. Distractor 1 is weak: fame is not a safety issue. Distractor 2 is weak: the schedule is not the issue. Distractor 3 is weak: it fails to justify the mandatory disclosure."
 },
 {
 kind: "single",
@@ -29782,11 +30142,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because constant exposure to curated, unrealistic lifestyles is linked to increased rates of body dysmorphia and depressive symptoms in younger demographics.",
 distractors: [
-"Yes, because labels are things that have words on them (CIRCULAR).",
-"No, because the internet has existed for several decades (IRRELEVANT).",
-"Yes, because it would be a nice thing for the government to do (VAGUE)."
+"Yes, because labels are things that have words on them.",
+"No, because the internet has existed for several decades.",
+"No, because people who post lifestyle content on social media are just expressing themselves, and if we start labeling their posts then we're basically labeling all self-expression which seems like it could be a slippery slope to labeling other things."
 ],
-explanation: "The correct answer is strongest because it directly connects content consumption to recognized psychological harm. Distractor 1 is weak (CIRCULAR): it defines what a label is. Distractor 2 is weak (IRRELEVANT): the history of the internet is not the issue. Distractor 3 is weak (VAGUE): it is not a reasoned justification."
+explanation: "The correct answer is strongest because it directly connects content consumption to recognized psychological harm. Distractor 1 is weak: it defines what a label is. Distractor 2 is weak: the history of the internet is not the issue. Distractor 3 is weak: it is not a reasoned justification."
 },
 {
 kind: "single",
@@ -29798,11 +30158,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because prolonged isolation causes rapid deterioration of cognitive function and often induces irreversible psychosis, hindering any possibility of effective rehabilitation.",
 distractors: [
-"Yes, because prisoners are people who have done things (VAGUE).",
-"No, because some correctional facilities are very old buildings (IRRELEVANT).",
-"Yes, because solitary confinement is confinement that is done in a solitary way (CIRCULAR)."
+"Yes, because prisoners are people who have done things.",
+"No, because some correctional facilities are very old buildings.",
+"No, because solitary confinement has been used for a long time and changing things that have existed for a long time is generally difficult."
 ],
-explanation: "The correct answer is strongest because it outlines the severe, specific psychological degradation caused by the current practice. Distractor 1 is weak (VAGUE): it is too general. Distractor 2 is weak (IRRELEVANT): building age is unrelated to mental health. Distractor 3 is weak (CIRCULAR): it restates the proposal."
+explanation: "The correct answer is strongest because it outlines the severe, specific psychological degradation caused by the current practice. Distractor 1 is weak: it is too general. Distractor 2 is weak: building age is unrelated to mental health. Distractor 3 is weak: it restates the proposal."
 },
 {
 kind: "single",
@@ -29814,11 +30174,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because adolescent biology dictates a delayed sleep phase, and later starts significantly reduce morning sleep deprivation, which is a major precursor to teenage depression.",
 distractors: [
-"Yes, because it would be nice for students to sleep in (TRIVIAL).",
-"No, because clocks are devices that measure time (CIRCULAR).",
-"Yes, because schools have many classrooms and desks (IRRELEVANT)."
+"Yes, because it would be nice for students to sleep in.",
+"No, because clocks are devices that measure time.",
+"No, because schools have always started at traditional times, and changing this would be different from how things currently are."
 ],
-explanation: "The correct answer is strongest because it justifies the shift through biological needs and specific mental health outcomes. Distractor 1 is weak (TRIVIAL): 'nice' is not a policy argument. Distractor 2 is weak (CIRCULAR): it defines a clock. Distractor 3 is weak (IRRELEVANT): furniture does not affect the decision."
+explanation: "The correct answer is strongest because it justifies the shift through biological needs and specific mental health outcomes. Distractor 1 is weak: 'nice' is not a policy argument. Distractor 2 is weak: it defines a clock. Distractor 3 is weak: furniture does not affect the decision."
 },
 {
 kind: "single",
@@ -29830,11 +30190,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because addressing isolation through community engagement is a cost-effective, non-pharmaceutical approach that reduces the burden on overstretched mental health services.",
 distractors: [
-"Yes, because social groups are groups where people are social (CIRCULAR).",
-"No, because doctors have a lot of paperwork to fill out (IRRELEVANT).",
-"Yes, because it is good to be part of a community (VAGUE)."
+"Yes, because social groups are groups where people are social.",
+"No, because doctors have a lot of paperwork to fill out.",
+"No, because social prescribing might not work for everyone since people are all different."
 ],
-explanation: "The correct answer is strongest because it identifies the financial and clinical efficiency of the proposal. Distractor 1 is weak (CIRCULAR): it defines social groups. Distractor 2 is weak (IRRELEVANT): paperwork is not the issue. Distractor 3 is weak (VAGUE): it lacks a specific consequence."
+explanation: "The correct answer is strongest because it identifies the financial and clinical efficiency of the proposal. Distractor 1 is weak: it defines social groups. Distractor 2 is weak: paperwork is not the issue. Distractor 3 is weak: it lacks a specific consequence."
 },
 {
 kind: "single",
@@ -29846,11 +30206,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the training is too limited to handle the complexity of severe mental health crises, potentially leading to dangerous mismanagement of high-risk situations.",
 distractors: [
-"Yes, because companies should have people who do things (VAGUE).",
-"Yes, because first-aiders are people who provide first aid (CIRCULAR).",
-"No, because some workplaces have very high ceilings (IRRELEVANT)."
+"Yes, because companies should have people who do things.",
+"Yes, because first-aiders are people who provide first aid.",
+"No, because some workplaces have very high ceilings."
 ],
-explanation: "The correct answer is strongest because it highlights a safety gap where the proposed solution is inadequate for the stated goal. Distractor 1 is weak (VAGUE): it is too general. Distractor 2 is weak (CIRCULAR): it defines the term. Distractor 3 is weak (IRRELEVANT): building design is not the issue."
+explanation: "The correct answer is strongest because it highlights a safety gap where the proposed solution is inadequate for the stated goal. Distractor 1 is weak: it is too general. Distractor 2 is weak: it defines the term. Distractor 3 is weak: building design is not the issue."
 },
 {
 kind: "single",
@@ -29862,11 +30222,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because providing the elderly with digital access to family and community networks significantly mitigates the health risks associated with social isolation.",
 distractors: [
-"Yes, because computers are often silver or black in color (IRRELEVANT).",
-"Yes, because digital literacy is about being literate in digital things (CIRCULAR).",
-"No, because the internet is a large place (TRIVIAL)."
+"Yes, because computers are often silver or black in color.",
+"No, because digital literacy training is a form of training, and training requires effort, which some people might not want to do.",
+"No, because the internet is a large place."
 ],
-explanation: "The correct answer is strongest because it connects digital access to the specific outcome of reducing isolation. Distractor 1 is weak (IRRELEVANT): computer color is irrelevant. Distractor 2 is weak (CIRCULAR): it defines the term. Distractor 3 is weak (TRIVIAL): the size of the internet is not the policy consideration."
+explanation: "The correct answer is strongest because it connects digital access to the specific outcome of reducing isolation. Distractor 1 is weak: computer color is irrelevant. Distractor 2 is weak: it defines the term. Distractor 3 is weak: the size of the internet is not the policy consideration."
 },
 {
 kind: "single",
@@ -29878,11 +30238,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because limiting easy access to high-fat, high-sugar foods reduces the frequency of poor nutritional choices, which are correlated with reduced cognitive performance and depressive symptoms in adolescents.",
 distractors: [
-"Yes, because burgers are often served in paper wrappers (IRRELEVANT).",
-"Yes, because fast food is food that is fast (CIRCULAR).",
-"No, because business owners want to make money (NON-SEQUITUR)."
+"Yes, because burgers are often served in paper wrappers.",
+"No, because schools are already schools and fast food is already fast food, so restricting one near the other doesn't really change what they fundamentally are.",
+"No, because business owners want to make money."
 ],
-explanation: "The correct answer is strongest because it links restricted access to better diet and, consequently, better mental outcomes. Distractor 1 is weak (IRRELEVANT): packaging is not the issue. Distractor 2 is weak (CIRCULAR): it defines the term. Distractor 3 is weak (NON-SEQUITUR): economic desire does not negate health policy goals."
+explanation: "The correct answer is strongest because it links restricted access to better diet and, consequently, better mental outcomes. Distractor 1 is weak: packaging is not the issue. Distractor 2 is weak: it defines the term. Distractor 3 is weak: economic desire does not negate health policy goals."
 },
 {
 kind: "single",
@@ -29894,11 +30254,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because clinical evidence suggests these substances can induce neuroplasticity, offering a breakthrough for patients who have failed to respond to traditional antidepressants.",
 distractors: [
-"Yes, because it is important to try new things when old things do not work (VAGUE).",
-"No, because pharmacies are usually very brightly lit (IRRELEVANT).",
-"Yes, because psychedelics are substances that are psychedelic (CIRCULAR)."
+"Yes, because it is important to try new things when old things do not work.",
+"No, because pharmacies are usually very brightly lit.",
+"No, because psychedelics are called psychedelics, which means they affect the mind, and affecting the mind is generally something we should be cautious about."
 ],
-explanation: "The correct answer is strongest because it cites the mechanism (neuroplasticity) and the target population (treatment-resistant patients). Distractor 1 is weak (VAGUE): it is too general. Distractor 2 is weak (IRRELEVANT): pharmacy lighting is unrelated. Distractor 3 is weak (CIRCULAR): it defines the term."
+explanation: "The correct answer is strongest because it cites the mechanism (neuroplasticity) and the target population (treatment-resistant patients). Distractor 1 is weak: it is too general. Distractor 2 is weak: pharmacy lighting is unrelated. Distractor 3 is weak: it defines the term."
 },
 {
 kind: "single",
@@ -29910,11 +30270,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the tax disproportionately burdens low-income families who rely on these devices for educational purposes, outweighing the benefit of the detox camps.",
 distractors: [
-"Yes, because kids spend too much time on screens (VAGUE).",
-"No, because the economy is a complex system involving trade (IRRELEVANT).",
-"Yes, because taxes are fees paid to the government (CIRCULAR)."
+"Yes, because kids spend too much time on screens.",
+"No, because the economy is a complex system involving trade.",
+"Yes, because taxes are fees paid to the government."
 ],
-explanation: "The correct answer is strongest because it identifies an inequitable consequence that undermines the policy's overall social value. Distractor 1 is weak (VAGUE): it states a problem but does not justify the tax. Distractor 2 is weak (IRRELEVANT): general economic theory is not the specific issue here. Distractor 3 is weak (CIRCULAR): it defines a tax."
+explanation: "The correct answer is strongest because it identifies an inequitable consequence that undermines the policy's overall social value. Distractor 1 is weak: it states a problem but does not justify the tax. Distractor 2 is weak: general economic theory is not the specific issue here. Distractor 3 is weak: it defines a tax."
 },
 {
 kind: "single",
@@ -29926,11 +30286,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the inability to fully detach from work in the evenings prevents necessary psychological recovery, leading to chronic stress and long-term mental health decline.",
 distractors: [
-"Yes, because emailing is how people send messages (CIRCULAR).",
-"No, because the business world is always changing (VAGUE).",
-"Yes, because it is nice to have free time in the evening (TRIVIAL)."
+"Yes, because emailing is how people send messages.",
+"No, because the business world is always changing.",
+"No, because some people might not like the policy anyway."
 ],
-explanation: "The correct answer is strongest because it identifies the crucial role of psychological recovery in maintaining mental health. Distractor 1 is weak (CIRCULAR): it defines the action. Distractor 2 is weak (VAGUE): it is not a specific reason. Distractor 3 is weak (TRIVIAL): personal preference is not a policy justification."
+explanation: "The correct answer is strongest because it identifies the crucial role of psychological recovery in maintaining mental health. Distractor 1 is weak: it defines the action. Distractor 2 is weak: it is not a specific reason. Distractor 3 is weak: personal preference is not a policy justification."
 },
 {
 kind: "single",
@@ -29942,11 +30302,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because early exposure to emotional literacy allows children to identify and articulate feelings, which acts as a protective factor against future mental health disorders.",
 distractors: [
-"Yes, because five-year-olds are very young children (TRIVIAL).",
-"No, because some school buildings are painted bright colors (IRRELEVANT).",
-"Yes, because education is what schools do (CIRCULAR)."
+"Yes, because five-year-olds are very young children.",
+"No, because some school buildings are painted bright colors.",
+"No, because mental health is something that people have always dealt with, so there is no real reason to change what we are already doing."
 ],
-explanation: "The correct answer is strongest because it links early emotional education to long-term preventative health outcomes. Distractor 1 is weak (TRIVIAL): age identification is not an argument. Distractor 2 is weak (IRRELEVANT): wall color is irrelevant. Distractor 3 is weak (CIRCULAR): it defines the concept."
+explanation: "The correct answer is strongest because it links early emotional education to long-term preventative health outcomes. Distractor 1 is weak: age identification is not an argument. Distractor 2 is weak: wall color is irrelevant. Distractor 3 is weak: it defines the concept."
 },
 {
 kind: "single",
@@ -29958,11 +30318,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the extra rest day allows for significant stress reduction and work-life balance, which leads to higher employee retention and improved long-term productivity.",
 distractors: [
-"Yes, because four days is less than five days (TRIVIAL).",
-"No, because some offices have carpets on the floors (IRRELEVANT).",
-"Yes, because incentivizing is providing an incentive (CIRCULAR)."
+"Yes, because four days is less than five days.",
+"No, because some offices have carpets on the floors.",
+"No, because if the government provides financial incentives, then companies will receive financial incentives, which means they might not want to adopt the four-day work week without them."
 ],
-explanation: "The correct answer is strongest because it links the policy to the dual benefits of worker wellbeing and business performance. Distractor 1 is weak (TRIVIAL): simple arithmetic is not an argument. Distractor 2 is weak (IRRELEVANT): flooring is irrelevant. Distractor 3 is weak (CIRCULAR): it defines the term."
+explanation: "The correct answer is strongest because it links the policy to the dual benefits of worker wellbeing and business performance. Distractor 1 is weak: simple arithmetic is not an argument. Distractor 2 is weak: flooring is irrelevant. Distractor 3 is weak: it defines the term."
 },
 {
 kind: "single",
@@ -29974,11 +30334,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because immediate account deletion without due process could be misused to silence opposing views, and it fails to address the underlying behavioral issue of the bully.",
 distractors: [
-"Yes, because bullying is mean to do (VAGUE).",
-"Yes, because accounts are where people have their profile (CIRCULAR).",
-"No, because some people have very large follower counts (IRRELEVANT)."
+"Yes, because bullying is mean to do.",
+"Yes, because accounts are where people have their profile.",
+"No, because some people have very large follower counts."
 ],
-explanation: "The correct answer is strongest because it highlights risks of procedural injustice and failure to solve the root problem. Distractor 1 is weak (VAGUE): it is a moral judgment, not a policy analysis. Distractor 2 is weak (CIRCULAR): it defines an account. Distractor 3 is weak (IRRELEVANT): follower count is not a safety issue."
+explanation: "The correct answer is strongest because it highlights risks of procedural injustice and failure to solve the root problem. Distractor 1 is weak: it is a moral judgment, not a policy analysis. Distractor 2 is weak: it defines an account. Distractor 3 is weak: follower count is not a safety issue."
 },
 {
 kind: "single",
@@ -29990,11 +30350,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because providing controlled, quiet environments helps individuals suffering from anxiety or sensory processing issues to self-regulate, improving their inclusion in public spaces.",
 distractors: [
-"Yes, because libraries are places that have many books (IRRELEVANT).",
-"Yes, because sanctuaries are places that are sanctified (CIRCULAR).",
-"No, because librarians are people who work in libraries (TRIVIAL)."
+"Yes, because libraries are places that have many books.",
+"No, because mental health sanctuary zones might make some people feel like libraries are only for certain types of people, which could be a problem.",
+"No, because librarians are people who work in libraries."
 ],
-explanation: "The correct answer is strongest because it explains the benefit for a specific demographic suffering from sensory issues. Distractor 1 is weak (IRRELEVANT): books are not the focus. Distractor 2 is weak (CIRCULAR): it defines a sanctuary. Distractor 3 is weak (TRIVIAL): describing the staff is not an argument."
+explanation: "The correct answer is strongest because it explains the benefit for a specific demographic suffering from sensory issues. Distractor 1 is weak: books are not the focus. Distractor 2 is weak: it defines a sanctuary. Distractor 3 is weak: describing the staff is not an argument."
 },
 {
 kind: "single",
@@ -30006,11 +30366,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because ensuring players reach physical and psychological maturity before entering high-intensity professional environments prevents chronic long-term injury and professional burnout.",
 distractors: [
-"Yes, because youth players should focus on being young rather than working, which is generally a good thing for anyone. (TRIVIAL)",
-"No, because some people like watching football, and the popularity of the sport fluctuates over time. (IRRELEVANT)",
-"No, because a mandatory age limit is simply a rule that sets an age at which someone is allowed to play. (CIRCULAR)"
+"Yes, because youth players should focus on being young rather than working, which is generally a good thing for anyone.",
+"No, because some people like watching football, and the popularity of the sport fluctuates over time.",
+"No, because a mandatory age limit is simply a rule that sets an age at which someone is allowed to play."
 ],
-explanation: "The correct answer is strongest because it directly addresses the welfare purpose of the proposal with a specific, significant health consequence. Distractor 1 is weak (TRIVIAL): it relies on subjective opinion rather than policy impact. Distractor 2 is weak (IRRELEVANT): fan interest does not impact athlete development. Distractor 3 is weak (CIRCULAR): it merely defines the proposal without providing an argument."
+explanation: "The correct answer is strongest because it directly addresses the welfare purpose of the proposal with a specific, significant health consequence. Distractor 1 is weak: it relies on subjective opinion rather than policy impact. Distractor 2 is weak: fan interest does not impact athlete development. Distractor 3 is weak: it merely defines the proposal without providing an argument."
 },
 {
 kind: "single",
@@ -30022,11 +30382,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it removes human error from critical points, ensuring the final match outcomes are determined entirely by player skill rather than officiating mistakes.",
 distractors: [
-"Yes, because technology is often quite useful in modern society and things tend to change over time. (VAGUE)",
-"No, because some spectators enjoy shouting at line judges when they disagree with a call. (IRRELEVANT)",
-"No, because the current system should be replaced by a new system that does not have line judges. (CIRCULAR)"
+"Yes, because technology is often quite useful in modern society and things tend to change over time.",
+"No, because some spectators enjoy shouting at line judges when they disagree with a call.",
+"No, because the current system should be replaced by a new system that does not have line judges."
 ],
-explanation: "The correct answer is strongest because it addresses the core purpose of fairness and accuracy. Distractor 1 is weak (VAGUE): it lacks specific impact. Distractor 2 is weak (IRRELEVANT): spectator enjoyment of controversy is not a valid basis for governance. Distractor 3 is weak (CIRCULAR): it restates the proposal as its own justification."
+explanation: "The correct answer is strongest because it addresses the core purpose of fairness and accuracy. Distractor 1 is weak: it lacks specific impact. Distractor 2 is weak: spectator enjoyment of controversy is not a valid basis for governance. Distractor 3 is weak: it restates the proposal as its own justification."
 },
 {
 kind: "single",
@@ -30038,11 +30398,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because amateur sports rely on a level playing field, and allowing supplements creates a health-risky 'arms race' that excludes those unable to afford expensive substances.",
 distractors: [
-"Yes, because all sports should be conducted in a way that is fair and balanced for every single person. (CIRCULAR)",
-"No, because many athletes enjoy traveling to different cities for their amateur competitions. (IRRELEVANT)",
-"No, because some people might find it difficult to keep track of a list of banned substances. (TRIVIAL)"
+"Yes, because all sports should be conducted in a way that is fair and balanced for every single person.",
+"No, because many athletes enjoy traveling to different cities for their amateur competitions.",
+"No, because some people might find it difficult to keep track of a list of banned substances."
 ],
-explanation: "The correct answer is strongest because it addresses the integrity and accessibility of amateur sports with a specific consequence regarding cost and health. Distractor 1 is weak (CIRCULAR): it defines fairness without proving the ban achieves it. Distractor 2 is weak (IRRELEVANT): travel is unrelated to supplement policy. Distractor 3 is weak (TRIVIAL): administrative difficulty is not a reason to reject a safety-focused policy."
+explanation: "The correct answer is strongest because it addresses the integrity and accessibility of amateur sports with a specific consequence regarding cost and health. Distractor 1 is weak: it defines fairness without proving the ban achieves it. Distractor 2 is weak: travel is unrelated to supplement policy. Distractor 3 is weak: administrative difficulty is not a reason to reject a safety-focused policy."
 },
 {
 kind: "single",
@@ -30054,11 +30414,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it ensures that athletes in niche, non-commercial sports can train full-time, preventing talent drain and maintaining the diversity of the national team.",
 distractors: [
-"Yes, because everyone should have exactly the same amount of money to spend on whatever they want. (VAGUE)",
-"No, because basketball and football are already very popular and have many fans worldwide. (IRRELEVANT)",
-"No, because it would change the way money is currently distributed among the different athletes. (CIRCULAR)"
+"Yes, because everyone should have exactly the same amount of money to spend on whatever they want.",
+"No, because basketball and football are already very popular and have many fans worldwide.",
+"No, because it would change the way money is currently distributed among the different athletes."
 ],
-explanation: "The correct answer is strongest because it links funding to the concrete goal of maintaining national competitiveness in niche sports. Distractor 1 is weak (VAGUE): it ignores the specific context of athletic training. Distractor 2 is weak (IRRELEVANT): popularity is the status quo, not an argument against change. Distractor 3 is weak (CIRCULAR): stating the policy changes the status quo is not an argument."
+explanation: "The correct answer is strongest because it links funding to the concrete goal of maintaining national competitiveness in niche sports. Distractor 1 is weak: it ignores the specific context of athletic training. Distractor 2 is weak: popularity is the status quo, not an argument against change. Distractor 3 is weak: stating the policy changes the status quo is not an argument."
 },
 {
 kind: "single",
@@ -30070,11 +30430,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it creates a sustainable pipeline of new talent and promotes community health, ensuring the sport remains viable for future generations.",
 distractors: [
-"Yes, because money is something that can be moved from one place to another quite easily. (TRIVIAL)",
-"No, because it might lead to some unpredictable outcomes regarding how the league spends its remaining budget. (VAGUE)",
-"No, because the teams would have less money than they do now if they had to share it. (CIRCULAR)"
+"Yes, because money is something that can be moved from one place to another quite easily.",
+"No, because it might lead to some unpredictable outcomes regarding how the league spends its remaining budget.",
+"No, because the teams would have less money than they do now if they had to share it."
 ],
-explanation: "The correct answer is strongest because it addresses the long-term sustainability of the sport. Distractor 1 is weak (TRIVIAL): logistics are not a policy justification. Distractor 2 is weak (VAGUE): unintended consequences are not a specific argument. Distractor 3 is weak (CIRCULAR): noting that money moves is just a restatement of the cost of the proposal."
+explanation: "The correct answer is strongest because it addresses the long-term sustainability of the sport. Distractor 1 is weak: logistics are not a policy justification. Distractor 2 is weak: unintended consequences are not a specific argument. Distractor 3 is weak: noting that money moves is just a restatement of the cost of the proposal."
 },
 {
 kind: "single",
@@ -30086,11 +30446,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because extreme dehydration to make weight significantly increases the risk of brain injuries and neurological damage during the fight.",
 distractors: [
-"Yes, because it is important to be healthy when you engage in any kind of physical activity. (TRIVIAL)",
-"No, because the event promoters have already spent a lot of money on advertising the fight. (IRRELEVANT)",
-"No, because the match should not be stopped if the athlete wants to fight despite the test results. (CIRCULAR)"
+"Yes, because it is important to be healthy when you engage in any kind of physical activity.",
+"No, because the event promoters have already spent a lot of money on advertising the fight.",
+"No, because the match should not be stopped if the athlete wants to fight despite the test results."
 ],
-explanation: "The correct answer is strongest because it links the specific safety measure to a life-threatening consequence. Distractor 1 is weak (TRIVIAL): general health is not a specific argument for this policy. Distractor 2 is weak (IRRELEVANT): commercial concerns are secondary to medical safety. Distractor 3 is weak (CIRCULAR): asserting the athlete wants to fight does not address the risk."
+explanation: "The correct answer is strongest because it links the specific safety measure to a life-threatening consequence. Distractor 1 is weak: general health is not a specific argument for this policy. Distractor 2 is weak: commercial concerns are secondary to medical safety. Distractor 3 is weak: asserting the athlete wants to fight does not address the risk."
 },
 {
 kind: "single",
@@ -30102,11 +30462,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because large-scale sporting events generate significant environmental waste and transport emissions, and local offsetting directly mitigates the impact on the communities hosting the events.",
 distractors: [
-"Yes, because it would be nice if the environment were cleaner for everyone in the world. (VAGUE)",
-"No, because stadiums are large buildings that require a lot of electricity to operate anyway. (IRRELEVANT)",
-"No, because they would have to start doing these projects if the rule were passed. (CIRCULAR)"
+"Yes, because it would be nice if the environment were cleaner for everyone in the world.",
+"No, because stadiums are large buildings that require a lot of electricity to operate anyway.",
+"No, because they would have to start doing these projects if the rule were passed."
 ],
-explanation: "The correct answer is strongest because it balances the negative environmental impact of stadiums with a targeted, localized solution. Distractor 1 is weak (VAGUE): it does not address the policy mechanism. Distractor 2 is weak (IRRELEVANT): existing energy usage does not excuse future impact. Distractor 3 is weak (CIRCULAR): it restates that the proposal creates an obligation."
+explanation: "The correct answer is strongest because it balances the negative environmental impact of stadiums with a targeted, localized solution. Distractor 1 is weak: it does not address the policy mechanism. Distractor 2 is weak: existing energy usage does not excuse future impact. Distractor 3 is weak: it restates that the proposal creates an obligation."
 },
 {
 kind: "single",
@@ -30118,11 +30478,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because early detection of undiagnosed underlying cardiac conditions allows for life-saving interventions, significantly reducing the incidence of sudden death during high-intensity training.",
 distractors: [
-"Yes, because hospitals are busy places that often have to deal with many different kinds of medical issues. (NON-SEQUITUR)",
-"No, because the tests might reveal things about an athlete that they would rather not know. (IRRELEVANT)",
-"No, because it would require athletes to undergo heart screenings regularly. (CIRCULAR)"
+"Yes, because hospitals are busy places that often have to deal with many different kinds of medical issues.",
+"No, because the tests might reveal things about an athlete that they would rather not know.",
+"No, because it would require athletes to undergo heart screenings regularly."
 ],
-explanation: "The correct answer is strongest because it links the mandate to a life-saving outcome. Distractor 1 is weak (NON-SEQUITUR): hospital capacity is unrelated to the value of the screening. Distractor 2 is weak (IRRELEVANT): privacy preference is outweighed by life-safety. Distractor 3 is weak (CIRCULAR): restating the policy is not an argument against it."
+explanation: "The correct answer is strongest because it links the mandate to a life-saving outcome. Distractor 1 is weak: hospital capacity is unrelated to the value of the screening. Distractor 2 is weak: privacy preference is outweighed by life-safety. Distractor 3 is weak: restating the policy is not an argument against it."
 },
 {
 kind: "single",
@@ -30134,11 +30494,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because early exposure to nutritionally dense foods establishes long-term healthy eating habits, reducing the future burden of diet-related chronic diseases on the healthcare system.",
 distractors: [
-"Yes, because vegetables are green and many people think they look quite nice on a plate. (TRIVIAL)",
-"No, because some children might not like the taste of the vegetables they are served. (IRRELEVANT)",
-"No, because a mandate would require schools to serve more vegetables than they do now. (CIRCULAR)"
+"Yes, because vegetables are green and many people think they look quite nice on a plate.",
+"No, because some children might not like the taste of the vegetables they are served.",
+"No, because a mandate would require schools to serve more vegetables than they do now."
 ],
-explanation: "The correct answer is strongest because it links the policy to public health outcomes. Distractor 1 is weak (TRIVIAL): aesthetic appeal is irrelevant to health policy. Distractor 2 is weak (IRRELEVANT): individual taste preferences do not outweigh public health needs. Distractor 3 is weak (CIRCULAR): restating the policy is not an argument."
+explanation: "The correct answer is strongest because it links the policy to public health outcomes. Distractor 1 is weak: aesthetic appeal is irrelevant to health policy. Distractor 2 is weak: individual taste preferences do not outweigh public health needs. Distractor 3 is weak: restating the policy is not an argument."
 },
 {
 kind: "single",
@@ -30150,11 +30510,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing partisan imagery minimizes environmental pressure on students, allowing for more objective critical discourse and academic freedom within the campus setting.",
 distractors: [
-"Yes, because advertisements are often bright and distracting when you are trying to study. (TRIVIAL)",
-"No, because students often enjoy discussing politics with their friends during their free time. (IRRELEVANT)",
-"No, because some students might feel like they are being censored if they cannot see these ads. (VAGUE)"
+"Yes, because advertisements are often bright and distracting when you are trying to study.",
+"No, because students often enjoy discussing politics with their friends during their free time.",
+"No, because some students might feel like they are being censored if they cannot see these ads."
 ],
-explanation: "The correct answer is strongest because it links the ban to the core university mission of academic neutrality. Distractor 1 is weak (TRIVIAL): visual distraction is a minor issue compared to academic integrity. Distractor 2 is weak (IRRELEVANT): private discussion is not the same as institutional advertising. Distractor 3 is weak (VAGUE): it mentions feelings rather than a concrete impact on discourse."
+explanation: "The correct answer is strongest because it links the ban to the core university mission of academic neutrality. Distractor 1 is weak: visual distraction is a minor issue compared to academic integrity. Distractor 2 is weak: private discussion is not the same as institutional advertising. Distractor 3 is weak: it mentions feelings rather than a concrete impact on discourse."
 },
 {
 kind: "single",
@@ -30166,11 +30526,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it directly links the profits of platforms that contribute to digital-age anxiety and social comparison with the resources needed to address those specific mental health issues.",
 distractors: [
-"Yes, because social media companies have a lot of money and the government could use it for various projects. (VAGUE)",
-"No, because some people find it very convenient to use social media to stay in touch with their family. (IRRELEVANT)",
-"No, because it would involve the government collecting a new tax from these digital companies. (CIRCULAR)"
+"Yes, because social media companies have a lot of money and the government could use it for various projects.",
+"No, because some people find it very convenient to use social media to stay in touch with their family.",
+"No, because it would involve the government collecting a new tax from these digital companies."
 ],
-explanation: "The correct answer is strongest because it establishes a causal link between the industry profit source and the required public health response. Distractor 1 is weak (VAGUE): simply having money is not a justification. Distractor 2 is weak (IRRELEVANT): the usefulness of social media does not invalidate the need for mental health funding. Distractor 3 is weak (CIRCULAR): explaining that a tax involves collecting money is a restatement, not an argument."
+explanation: "The correct answer is strongest because it establishes a causal link between the industry profit source and the required public health response. Distractor 1 is weak: simply having money is not a justification. Distractor 2 is weak: the usefulness of social media does not invalidate the need for mental health funding. Distractor 3 is weak: explaining that a tax involves collecting money is a restatement, not an argument."
 },
 {
 kind: "single",
@@ -30182,11 +30542,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it forces developers to integrate lower-income residents into economically diverse neighborhoods, preventing social segregation and ensuring access to essential public services.",
 distractors: [
-"Yes, because it is important for everyone to have a roof over their head during the winter. (TRIVIAL)",
-"No, because some people prefer to live in houses that are very far away from the city. (NON-SEQUITUR)",
-"No, because developers would have to change their plans if they had to meet this requirement. (CIRCULAR)"
+"Yes, because it is important for everyone to have a roof over their head during the winter.",
+"No, because some people prefer to live in houses that are very far away from the city.",
+"No, because developers would have to change their plans if they had to meet this requirement."
 ],
-explanation: "The correct answer is strongest because it highlights the positive societal impact of economic integration. Distractor 1 is weak (TRIVIAL): this is a generic truism. Distractor 2 is weak (NON-SEQUITUR): location preference is unrelated to the policy of integrated housing. Distractor 3 is weak (CIRCULAR): noting that developers must change plans is not an argument against the requirement."
+explanation: "The correct answer is strongest because it highlights the positive societal impact of economic integration. Distractor 1 is weak: this is a generic truism. Distractor 2 is weak: location preference is unrelated to the policy of integrated housing. Distractor 3 is weak: noting that developers must change plans is not an argument against the requirement."
 },
 {
 kind: "single",
@@ -30198,11 +30558,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it prevents workforce attrition among experienced employees and alleviates the caregiving burden that often forces individuals to leave their careers prematurely.",
 distractors: [
-"Yes, because it would be a nice benefit for employees who have to take care of their parents. (TRIVIAL)",
-"No, because some people find their jobs to be very interesting and rewarding regardless of their family situation. (IRRELEVANT)",
-"No, because the employers would be required to pay for the leave instead of the employees. (CIRCULAR)"
+"Yes, because it would be a nice benefit for employees who have to take care of their parents.",
+"No, because some people find their jobs to be very interesting and rewarding regardless of their family situation.",
+"No, because the employers would be required to pay for the leave instead of the employees."
 ],
-explanation: "The correct answer is strongest because it identifies the retention and career stability benefits for both employer and employee. Distractor 1 is weak (TRIVIAL): 'nice' is a subjective value judgement, not a policy argument. Distractor 2 is weak (IRRELEVANT): employee interest is unrelated to the economic necessity of care leave. Distractor 3 is weak (CIRCULAR): explaining who pays is not an argument against the policy."
+explanation: "The correct answer is strongest because it identifies the retention and career stability benefits for both employer and employee. Distractor 1 is weak: 'nice' is a subjective value judgement, not a policy argument. Distractor 2 is weak: employee interest is unrelated to the economic necessity of care leave. Distractor 3 is weak: explaining who pays is not an argument against the policy."
 },
 {
 kind: "single",
@@ -30214,11 +30574,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because standardized testing provides the only objective metric to compare educational standards across different regions and socio-economic backgrounds, ensuring accountability.",
 distractors: [
-"Yes, because some students find taking tests to be very stressful and difficult. (IRRELEVANT)",
-"Yes, because a change in assessment methods would mean that students would be tested differently. (CIRCULAR)",
-"No, because teachers are already very busy with their daily tasks in the classroom. (NON-SEQUITUR)"
+"Yes, because some students find taking tests to be very stressful and difficult.",
+"Yes, because a change in assessment methods would mean that students would be tested differently.",
+"No, because teachers are already very busy with their daily tasks in the classroom."
 ],
-explanation: "The correct answer is strongest because it addresses the necessity of standardized metrics for system-wide accountability. Distractor 1 is weak (IRRELEVANT): student stress does not address the need for objective assessment. Distractor 2 is weak (CIRCULAR): restating that the assessment method would change is not an argument. Distractor 3 is weak (NON-SEQUITUR): teacher workload is a separate issue from assessment validity."
+explanation: "The correct answer is strongest because it addresses the necessity of standardized metrics for system-wide accountability. Distractor 1 is weak: student stress does not address the need for objective assessment. Distractor 2 is weak: restating that the assessment method would change is not an argument. Distractor 3 is weak: teacher workload is a separate issue from assessment validity."
 },
 {
 kind: "single",
@@ -30230,11 +30590,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it increases transparency and provides an objective record of events, which significantly reduces incidents of misconduct and improves public trust in law enforcement.",
 distractors: [
-"Yes, because cameras are a great way to record things if you want to look at them later. (TRIVIAL)",
-"No, because the police would have to buy a lot of new equipment to store all the video data. (NON-SEQUITUR)",
-"No, because if they are required to wear them, they will have to have them on at all times. (CIRCULAR)"
+"Yes, because cameras are a great way to record things if you want to look at them later.",
+"No, because the police would have to buy a lot of new equipment to store all the video data.",
+"No, because if they are required to wear them, they will have to have them on at all times."
 ],
-explanation: "The correct answer is strongest because it links the policy directly to the goal of police accountability and public trust. Distractor 1 is weak (TRIVIAL): utility of cameras is obvious, but it ignores the policy purpose. Distractor 2 is weak (NON-SEQUITUR): storage costs are an administrative hurdle, not a moral or policy argument against the core objective. Distractor 3 is weak (CIRCULAR): it restates the proposal requirements."
+explanation: "The correct answer is strongest because it links the policy directly to the goal of police accountability and public trust. Distractor 1 is weak: utility of cameras is obvious, but it ignores the policy purpose. Distractor 2 is weak: storage costs are an administrative hurdle, not a moral or policy argument against the core objective. Distractor 3 is weak: it restates the proposal requirements."
 },
 {
 kind: "single",
@@ -30246,11 +30606,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it aligns financial flows with global sustainability goals, effectively disincentivizing environmentally destructive business practices through the withdrawal of critical capital.",
 distractors: [
-"Yes, because trees are important for the environment and for the air we breathe. (TRIVIAL)",
-"No, because some customers do not pay much attention to where their bank invests their money. (IRRELEVANT)",
-"No, because it would involve the banks changing their investment strategies. (CIRCULAR)"
+"Yes, because trees are important for the environment and for the air we breathe.",
+"No, because some customers do not pay much attention to where their bank invests their money.",
+"No, because it would involve the banks changing their investment strategies."
 ],
-explanation: "The correct answer is strongest because it addresses the systemic impact of banking capital on environmental degradation. Distractor 1 is weak (TRIVIAL): the value of trees is a generic fact, not a policy argument. Distractor 2 is weak (IRRELEVANT): customer ignorance does not negate the environmental harm. Distractor 3 is weak (CIRCULAR): stating that a policy changes investment strategy is a restatement."
+explanation: "The correct answer is strongest because it addresses the systemic impact of banking capital on environmental degradation. Distractor 1 is weak: the value of trees is a generic fact, not a policy argument. Distractor 2 is weak: customer ignorance does not negate the environmental harm. Distractor 3 is weak: stating that a policy changes investment strategy is a restatement."
 },
 {
 kind: "single",
@@ -30262,11 +30622,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it forces a shift towards sustainable infrastructure like public water refilling stations, significantly reducing the volume of non-biodegradable waste in landfills.",
 distractors: [
-"Yes, because plastic is a material that can take a very long time to break down. (TRIVIAL)",
-"No, because some people prefer the convenience of buying a drink while on the move. (IRRELEVANT)",
-"No, because a ban would mean that these plastic bottles could no longer be sold in shops. (CIRCULAR)"
+"Yes, because plastic is a material that can take a very long time to break down.",
+"No, because some people prefer the convenience of buying a drink while on the move.",
+"No, because a ban would mean that these plastic bottles could no longer be sold in shops."
 ],
-explanation: "The correct answer is strongest because it identifies the infrastructural change necessary to replace the harmful product. Distractor 1 is weak (TRIVIAL): the persistence of plastic is a well-known fact but doesn't argue for this specific ban over other methods. Distractor 2 is weak (IRRELEVANT): individual convenience is secondary to large-scale environmental impact. Distractor 3 is weak (CIRCULAR): restating the effect of a ban is not an argument."
+explanation: "The correct answer is strongest because it identifies the infrastructural change necessary to replace the harmful product. Distractor 1 is weak: the persistence of plastic is a well-known fact but doesn't argue for this specific ban over other methods. Distractor 2 is weak: individual convenience is secondary to large-scale environmental impact. Distractor 3 is weak: restating the effect of a ban is not an argument."
 },
 {
 kind: "single",
@@ -30278,11 +30638,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a jury of one's peers ensures that judicial decisions reflect the common standards and values of the community, which is essential for a legitimate justice system.",
 distractors: [
-"Yes, because some people find it very inconvenient to take time off work for jury duty. (IRRELEVANT)",
-"Yes, because it would change the way that members of the public participate in the court system. (CIRCULAR)",
-"No, because professional jurors might be more efficient at completing their work in court. (NON-SEQUITUR)"
+"Yes, because some people find it very inconvenient to take time off work for jury duty.",
+"Yes, because it would change the way that members of the public participate in the court system.",
+"No, because professional jurors might be more efficient at completing their work in court."
 ],
-explanation: "The correct answer is strongest because it addresses the foundational purpose of community legitimacy in a democracy. Distractor 1 is weak (IRRELEVANT): individual inconvenience is not a sufficient reason to change the core of a legal system. Distractor 2 is weak (CIRCULAR): noting that it changes participation is a restatement. Distractor 3 is weak (NON-SEQUITUR): efficiency does not necessarily mean higher quality or better legitimacy of the verdict."
+explanation: "The correct answer is strongest because it addresses the foundational purpose of community legitimacy in a democracy. Distractor 1 is weak: individual inconvenience is not a sufficient reason to change the core of a legal system. Distractor 2 is weak: noting that it changes participation is a restatement. Distractor 3 is weak: efficiency does not necessarily mean higher quality or better legitimacy of the verdict."
 },
 {
 kind: "single",
@@ -30294,11 +30654,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it bridges the digital divide for low-income populations, ensuring that all citizens have equal access to essential online services like job applications and government resources.",
 distractors: [
-"Yes, because the internet is a very helpful tool for looking up information about many things. (TRIVIAL)",
-"No, because the library staff would need to spend time maintaining the computer systems. (NON-SEQUITUR)",
-"No, because if they provided internet, it would mean that everyone in the city could use it for free. (CIRCULAR)"
+"Yes, because the internet is a very helpful tool for looking up information about many things.",
+"No, because the library staff would need to spend time maintaining the computer systems.",
+"No, because if they provided internet, it would mean that everyone in the city could use it for free."
 ],
-explanation: "The correct answer is strongest because it highlights the role of the library in promoting social equity. Distractor 1 is weak (TRIVIAL): the usefulness of the internet is not the core issue; accessibility is. Distractor 2 is weak (NON-SEQUITUR): maintenance is a operational concern, not an argument against the policy goal. Distractor 3 is weak (CIRCULAR): restating that the service would be free is not an argument."
+explanation: "The correct answer is strongest because it highlights the role of the library in promoting social equity. Distractor 1 is weak: the usefulness of the internet is not the core issue; accessibility is. Distractor 2 is weak: maintenance is a operational concern, not an argument against the policy goal. Distractor 3 is weak: restating that the service would be free is not an argument."
 },
 {
 kind: "single",
@@ -30310,11 +30670,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it accelerates the decarbonization of the transport sector, which is currently a primary driver of urban air pollution and associated respiratory health crises.",
 distractors: [
-"Yes, because electric cars do not make as much noise as cars that use traditional fuel. (TRIVIAL)",
-"No, because some drivers find it difficult to remember to plug in their cars. (IRRELEVANT)",
-"No, because it would force commercial companies to replace their vehicles with electric versions. (CIRCULAR)"
+"Yes, because electric cars do not make as much noise as cars that use traditional fuel.",
+"No, because some drivers find it difficult to remember to plug in their cars.",
+"No, because it would force commercial companies to replace their vehicles with electric versions."
 ],
-explanation: "The correct answer is strongest because it connects the policy to the urgent need for public health improvement. Distractor 1 is weak (TRIVIAL): noise reduction is secondary to air quality. Distractor 2 is weak (IRRELEVANT): driver habits are not a valid reason to reject a major environmental health policy. Distractor 3 is weak (CIRCULAR): restating the implication of the policy is not an argument."
+explanation: "The correct answer is strongest because it connects the policy to the urgent need for public health improvement. Distractor 1 is weak: noise reduction is secondary to air quality. Distractor 2 is weak: driver habits are not a valid reason to reject a major environmental health policy. Distractor 3 is weak: restating the implication of the policy is not an argument."
 },
 {
 kind: "single",
@@ -30326,11 +30686,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because reducing the high upfront costs incentivizes the rapid adoption of renewable energy, which decreases the national reliance on fossil-fuel-generated electricity.",
 distractors: [
-"Yes, because solar panels can look quite sleek on the roofs of houses. (TRIVIAL)",
-"No, because some people might find it hard to choose which type of solar panel to buy. (IRRELEVANT)",
-"No, because it would mean that the government has to offer tax credits to people who install these panels. (CIRCULAR)"
+"Yes, because solar panels can look quite sleek on the roofs of houses.",
+"No, because some people might find it hard to choose which type of solar panel to buy.",
+"No, because it would mean that the government has to offer tax credits to people who install these panels."
 ],
-explanation: "The correct answer is strongest because it explains the economic mechanism (reducing cost) and the policy goal (decreasing fossil fuel reliance). Distractor 1 is weak (TRIVIAL): aesthetics are irrelevant to energy policy. Distractor 2 is weak (IRRELEVANT): consumer choice is not a reason to reject an incentive scheme. Distractor 3 is weak (CIRCULAR): stating what the government has to do is a restatement of the policy."
+explanation: "The correct answer is strongest because it explains the economic mechanism (reducing cost) and the policy goal (decreasing fossil fuel reliance). Distractor 1 is weak: aesthetics are irrelevant to energy policy. Distractor 2 is weak: consumer choice is not a reason to reject an incentive scheme. Distractor 3 is weak: stating what the government has to do is a restatement of the policy."
 },
 {
 kind: "single",
@@ -30342,11 +30702,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because cruise ships often run high-emission engines while docked, significantly worsening local air quality for residents who are already suffering from high pollution levels.",
 distractors: [
-"Yes, because cruise ships are very large and can sometimes block the view of the harbor. (TRIVIAL)",
-"No, because passengers enjoy visiting many different coastal cities on their vacations. (IRRELEVANT)",
-"No, because it would prevent the cruise ships from docking in those specific cities. (CIRCULAR)"
+"Yes, because cruise ships are very large and can sometimes block the view of the harbor.",
+"No, because passengers enjoy visiting many different coastal cities on their vacations.",
+"No, because it would prevent the cruise ships from docking in those specific cities."
 ],
-explanation: "The correct answer is strongest because it identifies the causal link between the ships and the specific health-related policy goal. Distractor 1 is weak (TRIVIAL): blocking a view is a minor concern compared to air quality. Distractor 2 is weak (IRRELEVANT): vacation enjoyment is not an argument against public health protections. Distractor 3 is weak (CIRCULAR): stating that the policy prevents docking is not an argument."
+explanation: "The correct answer is strongest because it identifies the causal link between the ships and the specific health-related policy goal. Distractor 1 is weak: blocking a view is a minor concern compared to air quality. Distractor 2 is weak: vacation enjoyment is not an argument against public health protections. Distractor 3 is weak: stating that the policy prevents docking is not an argument."
 },
 {
 kind: "single",
@@ -30358,11 +30718,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it protects minors from exposure to age-inappropriate content and predatory behavior, which these platforms are currently unable to effectively police.",
 distractors: [
-"Yes, because it is important for young people to be safe when they are on the internet. (VAGUE)",
-"No, because some people like to use social media anonymously without giving away their details. (IRRELEVANT)",
-"No, because it would mean that every user would have to prove how old they are. (CIRCULAR)"
+"Yes, because it is important for young people to be safe when they are on the internet.",
+"No, because some people like to use social media anonymously without giving away their details.",
+"No, because it would mean that every user would have to prove how old they are."
 ],
-explanation: "The correct answer is strongest because it addresses the specific vulnerability of minors and the failure of current self-regulation. Distractor 1 is weak (VAGUE): it is a generic statement of safety rather than an argument for age verification. Distractor 2 is weak (IRRELEVANT): anonymity preference does not outweigh child safety. Distractor 3 is weak (CIRCULAR): restating that users must prove age is not an argument."
+explanation: "The correct answer is strongest because it addresses the specific vulnerability of minors and the failure of current self-regulation. Distractor 1 is weak: it is a generic statement of safety rather than an argument for age verification. Distractor 2 is weak: anonymity preference does not outweigh child safety. Distractor 3 is weak: restating that users must prove age is not an argument."
 },
 {
 kind: "single",
@@ -30374,11 +30734,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it forces producers to adopt sustainable alternatives, drastically reducing the volume of waste entering ecosystems and lowering long-term waste management costs.",
 distractors: [
-"Yes, because plastic is a material that humans have been using for a very long time. (IRRELEVANT)",
-"No, because food packaging is something that most people do not think about very much. (TRIVIAL)",
-"No, because the food manufacturers would have to stop using the types of packaging they currently use. (CIRCULAR)"
+"Yes, because plastic is a material that humans have been using for a very long time.",
+"No, because food packaging is something that most people do not think about very much.",
+"No, because the food manufacturers would have to stop using the types of packaging they currently use."
 ],
-explanation: "The correct answer is strongest because it links the policy to environmental and economic sustainability. Distractor 1 is weak (IRRELEVANT): the history of plastic use is irrelevant to the need for change. Distractor 2 is weak (TRIVIAL): consumer awareness is not a valid basis for opposing a policy. Distractor 3 is weak (CIRCULAR): restating the effect of the ban is not an argument."
+explanation: "The correct answer is strongest because it links the policy to environmental and economic sustainability. Distractor 1 is weak: the history of plastic use is irrelevant to the need for change. Distractor 2 is weak: consumer awareness is not a valid basis for opposing a policy. Distractor 3 is weak: restating the effect of the ban is not an argument."
 },
 {
 kind: "single",
@@ -30388,11 +30748,11 @@ stimulus: ['Should the government mandate that all new residential developments 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it ensures a consistent supply of affordable housing in high-demand areas, directly reducing the incidence of homelessness for low-income families.",
 distractors: [
-"Yes, because housing is very important for people and everyone deserves a place to live (TRIVIAL).",
-"Yes, because social housing is housing that is social in nature (CIRCULAR).",
-"No, because some people prefer to live in houses with gardens (IRRELEVANT)."
+"Yes, because housing is very important for people and everyone deserves a place to live.",
+"No, because mandating social housing is basically just telling developers what to do with their own developments.",
+"No, because some people prefer to live in houses with gardens."
 ],
-explanation: "The correct answer is strongest because it directly addresses the purpose of reducing homelessness through a structural policy change. Distractor 1 is weak (TRIVIAL): it is a truism that fails to justify the specific mandate. Distractor 2 is weak (CIRCULAR): it merely defines the term rather than arguing for it. Distractor 3 is weak (IRRELEVANT): personal landscaping preferences do not impact the core goal of social housing policy."
+explanation: "The correct answer is strongest because it directly addresses the purpose of reducing homelessness through a structural policy change. Distractor 1 is weak: it is a truism that fails to justify the specific mandate. Distractor 2 is weak: it merely defines the term rather than arguing for it. Distractor 3 is weak: personal landscaping preferences do not impact the core goal of social housing policy."
 },
 {
 kind: "single",
@@ -30402,11 +30762,11 @@ stimulus: ['Should cities implement a universal basic housing allowance to repla
 question: "Select the strongest argument from the statements below.",
 correct: "No, because replacing physical infrastructure with cash allowances in a supply-constrained market will simply lead to increased rents rather than improved living standards.",
 distractors: [
-"No, because the government should focus on building more parks instead (NON-SEQUITUR).",
-"No, because cash allowances are money that the government gives to people (CIRCULAR).",
-    "Yes, because providing financial support to individuals is generally considered a compassionate policy approach. (VAGUE)",
+"No, because the government should focus on building more parks instead.",
+"Yes, because housing is important and people need money to afford it.",
+    "Yes, because providing financial support to individuals is generally considered a compassionate policy approach.",
 ],
-explanation: "The correct answer is strongest because it identifies a critical economic mechanism that would undermine the proposal. Distractor 1 is weak (NON-SEQUITUR): parks are unrelated to the provision of housing. Distractor 2 is weak (CIRCULAR): it just defines the mechanism. Distractor 3 is weak (VAGUE): it fails to provide any specific reason why the proposal might fail."
+explanation: "The correct answer is strongest because it identifies a critical economic mechanism that would undermine the proposal. Distractor 1 is weak: parks are unrelated to the provision of housing. Distractor 2 is weak: it just defines the mechanism. Distractor 3 is weak: it fails to provide any specific reason why the proposal might fail."
 },
 {
 kind: "single",
@@ -30416,11 +30776,11 @@ stimulus: ['Should local councils be given the power to seize empty, privately-o
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it utilizes existing, vacant stock to meet immediate humanitarian needs without the environmental and time costs associated with new construction.",
 distractors: [
-"Yes, because seizing property sounds like a very proactive thing for a council to do (VAGUE).",
-"Yes, because empty houses are currently not being used by anyone (TRIVIAL).",
-"No, because the council offices are currently undergoing a renovation project (IRRELEVANT)."
+"Yes, because seizing property sounds like a very proactive thing for a council to do.",
+"No, because empty properties have always been empty and that is just how things are.",
+"No, because the council offices are currently undergoing a renovation project."
 ],
-explanation: "The correct answer is strongest because it balances the immediate benefit of housing vulnerable people against the resource efficiency of repurposing existing buildings. Distractor 1 is weak (VAGUE): it praises the action without explaining the benefit. Distractor 2 is weak (TRIVIAL): it restates the status quo rather than justifying the policy. Distractor 3 is weak (IRRELEVANT): office renovations have no impact on housing policy."
+explanation: "The correct answer is strongest because it balances the immediate benefit of housing vulnerable people against the resource efficiency of repurposing existing buildings. Distractor 1 is weak: it praises the action without explaining the benefit. Distractor 2 is weak: it restates the status quo rather than justifying the policy. Distractor 3 is weak: office renovations have no impact on housing policy."
 },
 {
 kind: "single",
@@ -30430,11 +30790,11 @@ stimulus: ['Should the government abolish the Right to Buy scheme, which allows 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the scheme has depleted the national stock of affordable council housing, forcing councils to rent back properties at higher costs to meet housing demand.",
 distractors: [
-"Yes, because the Right to Buy scheme is currently named the Right to Buy scheme (CIRCULAR).",
-"Yes, because many people think that home ownership is a noble aspiration (VAGUE).",
-    "No, because some council tenants have lived in their homes for many years. (IRRELEVANT)",
+"Yes, because the Right to Buy scheme is currently named the Right to Buy scheme.",
+"No, because abolishing the Right to Buy scheme would involve changing the Right to Buy scheme.",
+    "No, because some council tenants have lived in their homes for many years.",
 ],
-explanation: "The correct answer is strongest because it highlights the long-term depletion of public assets and the resulting fiscal burden. Distractor 1 is weak (CIRCULAR): it merely restates the name of the policy. Distractor 2 is weak (VAGUE): it appeals to general sentiment rather than policy impact. Distractor 3 is weak (TRIVIAL): the materials used to build houses are irrelevant to the policy question."
+explanation: "The correct answer is strongest because it highlights the long-term depletion of public assets and the resulting fiscal burden. Distractor 1 is weak: it merely restates the name of the policy. Distractor 2 is weak: it appeals to general sentiment rather than policy impact. Distractor 3 is weak: the materials used to build houses are irrelevant to the policy question."
 },
 {
 kind: "single",
@@ -30444,11 +30804,11 @@ stimulus: ['Should rent controls be implemented on all private rental properties
 question: "Select the strongest argument from the statements below.",
 correct: "No, because price caps typically discourage investment in property maintenance and development, ultimately leading to a reduction in the quality and quantity of available rental units.",
 distractors: [
-"No, because some landlords are very friendly people (IRRELEVANT).",
-"No, because rent is an amount of money paid for renting (CIRCULAR).",
-    "Yes, because landlords and tenants both have an interest in agreeing on a fair price. (VAGUE)",
+"No, because some landlords are very friendly people.",
+"Yes, because housing is something that people need, and rent controls would help with the housing situation.",
+    "Yes, because landlords and tenants both have an interest in agreeing on a fair price.",
 ],
-explanation: "The correct answer is strongest because it identifies the direct economic consequence on housing supply and quality. Distractor 1 is weak (IRRELEVANT): landlord personality is irrelevant to the systemic impact of rent control. Distractor 2 is weak (CIRCULAR): it defines the term. Distractor 3 is weak (VAGUE): administrative difficulty is not a reason why the policy itself is inherently good or bad."
+explanation: "The correct answer is strongest because it identifies the direct economic consequence on housing supply and quality. Distractor 1 is weak: landlord personality is irrelevant to the systemic impact of rent control. Distractor 2 is weak: it defines the term. Distractor 3 is weak: administrative difficulty is not a reason why the policy itself is inherently good or bad."
 },
 {
 kind: "single",
@@ -30458,11 +30818,11 @@ stimulus: ['Should the state prioritize housing the chronically homeless over th
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the chronically homeless face the highest risk of mortality and severe health degradation, requiring immediate intervention to prevent irreversible systemic collapse.",
 distractors: [
-"Yes, because it is generally good to help people who are having a hard time (VAGUE).",
-"Yes, because people who are not homeless have houses (TRIVIAL).",
-    "No, because     "
+"Yes, because it is generally good to help people who are having a hard time.",
+"No, because housing is an important issue that affects many people in different ways.",
+    "No, because the level of national debt is too high to justify increasing welfare spending on any specific group."
 ],
-explanation: "The correct answer is strongest because it focuses on the urgency of health outcomes and mortality risk. Distractor 1 is weak (VAGUE): it is a general platitude. Distractor 2 is weak (TRIVIAL): it is a simple observation about the non-homeless. Distractor 3 is weak (NON-SEQUITUR): national debt is not the primary factor in individual homelessness prioritization."
+explanation: "The correct answer is strongest because it focuses on the urgency of health outcomes and mortality risk. Distractor 1 is weak: it is a general platitude. Distractor 2 is weak: it is a simple observation about the non-homeless. Distractor 3 is weak: national debt is not the primary factor in individual homelessness prioritization."
 },
 {
 kind: "single",
@@ -30472,11 +30832,11 @@ stimulus: ['Should building height restrictions in city centers be scrapped to f
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because increasing vertical density allows for more housing units to be built within existing infrastructure, reducing urban sprawl and commuting requirements.",
 distractors: [
-"Yes, because tall buildings are much taller than short buildings (CIRCULAR).",
-"Yes, because I think the city skyline looks better with tall buildings (IRRELEVANT).",
-    "No, because     "
+"Yes, because tall buildings are much taller than short buildings.",
+"No, because buildings that are too tall might make the city look different from how it looked before.",
+    "No, because people generally prefer their neighborhoods to look the same as they always have."
 ],
-explanation: "The correct answer is strongest because it links the policy of increased height to the benefits of infrastructure optimization and reduced sprawl. Distractor 1 is weak (CIRCULAR): it restates the nature of tall buildings. Distractor 2 is weak (IRRELEVANT): personal aesthetic preference does not justify housing policy. Distractor 3 is weak (VAGUE): it lacks specific reasoning."
+explanation: "The correct answer is strongest because it links the policy of increased height to the benefits of infrastructure optimization and reduced sprawl. Distractor 1 is weak: it restates the nature of tall buildings. Distractor 2 is weak: personal aesthetic preference does not justify housing policy. Distractor 3 is weak: it lacks specific reasoning."
 },
 {
 kind: "single",
@@ -30486,11 +30846,11 @@ stimulus: ['Should developers be required to build on brownfield sites before be
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because prioritizing brownfield development prevents the destruction of vital ecosystems and farmland, while encouraging the regeneration of neglected urban spaces.",
 distractors: [
-"Yes, because brownfield sites are sites that are brown (CIRCULAR).",
-"Yes, because many people like the color green (IRRELEVANT).",
-    "No, because     "
+"Yes, because brownfield sites are sites that are brown.",
+"No, because greenbelts are important and developers should be able to build where they want.",
+    "No, because requiring brownfield development first would delay project timelines and slow the overall delivery of new homes."
 ],
-explanation: "The correct answer is strongest because it balances environmental protection with urban regeneration. Distractor 1 is weak (CIRCULAR): it is a literal misinterpretation of the term. Distractor 2 is weak (IRRELEVANT): personal color preference has nothing to do with greenbelt land. Distractor 3 is weak (VAGUE): project scheduling is not the primary justification for land use policy."
+explanation: "The correct answer is strongest because it balances environmental protection with urban regeneration. Distractor 1 is weak: it is a literal misinterpretation of the term. Distractor 2 is weak: personal color preference has nothing to do with greenbelt land. Distractor 3 is weak: project scheduling is not the primary justification for land use policy."
 },
 {
 kind: "single",
@@ -30500,11 +30860,11 @@ stimulus: ['Should the government subsidize solar panel installations for low-in
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because reducing long-term energy costs for low-income households provides them with more disposable income, directly improving their overall financial stability and health.",
 distractors: [
-"Yes, because solar panels are made in factories (IRRELEVANT).",
-"Yes, because energy poverty is a type of poverty related to energy (CIRCULAR).",
-    "No, because     "
+"Yes, because solar panels are made in factories.",
+"No, because solar panels are objects that exist in the world and the government would have to decide about them.",
+    "No, because the sun produces an almost unlimited amount of energy, so there is no urgent need for subsidies to encourage its use."
 ],
-explanation: "The correct answer is strongest because it links reduced costs to a specific, measurable improvement in living standards. Distractor 1 is weak (IRRELEVANT): the manufacturing location is irrelevant. Distractor 2 is weak (CIRCULAR): it defines the term. Distractor 3 is weak (TRIVIAL): the sun’s size is a scientific fact but irrelevant to the subsidy."
+explanation: "The correct answer is strongest because it links reduced costs to a specific, measurable improvement in living standards. Distractor 1 is weak: the manufacturing location is irrelevant. Distractor 2 is weak: it defines the term. Distractor 3 is weak: the sun’s size is a scientific fact but irrelevant to the subsidy."
 },
 {
 kind: "single",
@@ -30514,11 +30874,11 @@ stimulus: ['Should the government ban the sale of all single-use plastic packagi
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a total ban would significantly decrease the volume of non-biodegradable waste entering landfills, forcing producers to adopt sustainable, reusable alternatives.",
 distractors: [
-"Yes, because plastic is a material that people use (TRIVIAL).",
-"Yes, because landfills are places where we put garbage (CIRCULAR).",
-    "No, because     "
+"Yes, because plastic is a material that people use.",
+"No, because single-use plastic packaging is used by many people in their daily lives.",
+    "No, because banning single-use plastic packaging would be a very bold move that could create significant disruption and uncertainty for businesses."
 ],
-explanation: "The correct answer is strongest because it addresses the core environmental goal by identifying the transition to sustainable alternatives as a concrete consequence. Distractor 1 is weak (TRIVIAL): it is a common fact about plastic. Distractor 2 is weak (CIRCULAR): it defines the location. Distractor 3 is weak (VAGUE): it characterizes the move as 'bold' rather than effective."
+explanation: "The correct answer is strongest because it addresses the core environmental goal by identifying the transition to sustainable alternatives as a concrete consequence. Distractor 1 is weak: it is a common fact about plastic. Distractor 2 is weak: it defines the location. Distractor 3 is weak: it characterizes the move as 'bold' rather than effective."
 },
 {
 kind: "single",
@@ -30528,11 +30888,11 @@ stimulus: ['Should the government mandate the labeling of all ultra-processed fo
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because clear labeling empowers consumers to make informed dietary choices, which is essential for reducing the prevalence of diet-related chronic illnesses.",
 distractors: [
-"Yes, because labels are pieces of paper or plastic attached to products (CIRCULAR).",
-"Yes, because some people have very busy schedules and do not read labels anyway (IRRELEVANT).",
-    "No, because     "
+"Yes, because labels are pieces of paper or plastic attached to products.",
+"No, because people who want to eat ultra-processed foods will eat them regardless of what the labels say.",
+    "No, because the government has already implemented many food safety measures, so adding further labelling regulation may not be necessary."
 ],
-explanation: "The correct answer is strongest because it directly connects information provision to behavior change and improved health outcomes. Distractor 1 is weak (CIRCULAR): it defines what a label is. Distractor 2 is weak (IRRELEVANT): individual reading habits don’t undermine the logic of providing information. Distractor 3 is weak (VAGUE): it is a general statement that doesn’t explain why the mandate is effective."
+explanation: "The correct answer is strongest because it directly connects information provision to behavior change and improved health outcomes. Distractor 1 is weak: it defines what a label is. Distractor 2 is weak: individual reading habits don’t undermine the logic of providing information. Distractor 3 is weak: it is a general statement that doesn’t explain why the mandate is effective."
 },
 {
 kind: "single",
@@ -30542,11 +30902,11 @@ stimulus: ['Should a national tax on high-sugar drinks be introduced to fund sch
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the tax discourages the consumption of harmful beverages while creating a ring-fenced revenue stream to directly combat childhood obesity through increased physical activity.",
 distractors: [
-"Yes, because sugar is a sweet substance often used in cooking (TRIVIAL).",
-"Yes, because taxes are a way that governments collect revenue (CIRCULAR).",
-    "No, because     "
+"Yes, because sugar is a sweet substance often used in cooking.",
+"No, because if we introduce this tax, people might not like it very much.",
+    "No, because the content of a school curriculum should not be determined by how taxes are collected from the drinks industry."
 ],
-explanation: "The correct answer is strongest because it addresses both the reduction of negative behavior and the positive reinforcement of exercise. Distractor 1 is weak (TRIVIAL): it is a basic fact about sugar. Distractor 2 is weak (CIRCULAR): it explains how taxes work. Distractor 3 is weak (NON-SEQUITUR): school curriculum content is unrelated to the tax funding mechanism."
+explanation: "The correct answer is strongest because it addresses both the reduction of negative behavior and the positive reinforcement of exercise. Distractor 1 is weak: it is a basic fact about sugar. Distractor 2 is weak: it explains how taxes work. Distractor 3 is weak: school curriculum content is unrelated to the tax funding mechanism."
 },
 {
 kind: "single",
@@ -30556,11 +30916,11 @@ stimulus: ['Should the government enforce strict calorie limits on all restauran
 question: "Select the strongest argument from the statements below.",
 correct: "No, because restricting menu choices overreaches into individual autonomy and fails to address the underlying lifestyle factors that actually contribute to obesity.",
 distractors: [
-"No, because some people really like to eat large meals at restaurants (IRRELEVANT).",
-"No, because calorie limits are limits on calories (CIRCULAR).",
-    "Yes, because     "
+"No, because some people really like to eat large meals at restaurants.",
+"Yes, because restaurants serve food and food should be healthy.",
+    "Yes, because printing updated calorie information on menus would give restaurants a useful reason to review and redesign their menus regularly."
 ],
-explanation: "The correct answer is strongest because it appeals to both the principle of individual freedom and the efficacy of public health interventions. Distractor 1 is weak (IRRELEVANT): personal preference does not negate the public health argument. Distractor 2 is weak (CIRCULAR): it defines the proposal. Distractor 3 is weak (TRIVIAL): printing costs are a minor logistical issue, not a core policy argument."
+explanation: "The correct answer is strongest because it appeals to both the principle of individual freedom and the efficacy of public health interventions. Distractor 1 is weak: personal preference does not negate the public health argument. Distractor 2 is weak: it defines the proposal. Distractor 3 is weak: printing costs are a minor logistical issue, not a core policy argument."
 },
 {
 kind: "single",
@@ -30570,11 +30930,11 @@ stimulus: ['Should all schools be required to provide free, nutritious breakfast
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because ensuring every child starts the day with proper nutrition significantly improves cognitive focus and academic attainment across the entire student population.",
 distractors: [
-"Yes, because breakfast is the first meal of the day (CIRCULAR).",
-"Yes, because children should also have long holidays (NON-SEQUITUR).",
-    "No, because     "
+"Yes, because breakfast is the first meal of the day.",
+"No, because schools already do many things and adding breakfast requirements would just be another thing for schools to do.",
+    "No, because during school holidays children are not at school, so a breakfast programme would only function for part of the year."
 ],
-explanation: "The correct answer is strongest because it directly links the intervention to a measurable outcome: student concentration and performance. Distractor 1 is weak (CIRCULAR): it defines the meal. Distractor 2 is weak (NON-SEQUITUR): school holidays are unrelated to breakfast provision. Distractor 3 is weak (TRIVIAL): it states a biological necessity that does not argue for the policy."
+explanation: "The correct answer is strongest because it directly links the intervention to a measurable outcome: student concentration and performance. Distractor 1 is weak: it defines the meal. Distractor 2 is weak: school holidays are unrelated to breakfast provision. Distractor 3 is weak: it states a biological necessity that does not argue for the policy."
 },
 {
 kind: "single",
@@ -30584,11 +30944,11 @@ stimulus: ['Should the government invest in a national campaign to promote plant
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a shift toward plant-based diets is proven to lower rates of heart disease and type 2 diabetes, reducing the long-term strain on national healthcare services.",
 distractors: [
-"Yes, because plants are living organisms that grow in the ground (TRIVIAL).",
-"Yes, because campaigns are ways of telling people about things (CIRCULAR).",
-    "No, because     "
+"Yes, because plants are living organisms that grow in the ground.",
+"No, because people have always eaten what they want to eat, and changing what people eat would be different from how things are now.",
+    "No, because changing long-established dietary habits is inherently difficult, and there is no guarantee that a campaign would produce any measurable effect."
 ],
-explanation: "The correct answer is strongest because it identifies the specific medical benefits and the resulting economic relief for the healthcare system. Distractor 1 is weak (TRIVIAL): it is a scientific definition of plants. Distractor 2 is weak (CIRCULAR): it defines a campaign. Distractor 3 is weak (VAGUE): it cites difficulty without providing a substantive reason against the policy."
+explanation: "The correct answer is strongest because it identifies the specific medical benefits and the resulting economic relief for the healthcare system. Distractor 1 is weak: it is a scientific definition of plants. Distractor 2 is weak: it defines a campaign. Distractor 3 is weak: it cites difficulty without providing a substantive reason against the policy."
 },
 {
 kind: "single",
@@ -30598,11 +30958,11 @@ stimulus: ['Should the government regulate the marketing of fast food aimed at c
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because children lack the cognitive maturity to resist manipulative advertising, making it necessary to protect them from high-pressure marketing of unhealthy products.",
 distractors: [
-"Yes, because children are young people who go to school (IRRELEVANT).",
-"Yes, because regulation is what happens when things are regulated (CIRCULAR).",
-    "No, because     "
+"Yes, because children are young people who go to school.",
+"No, because fast food marketing is something that exists and people have different opinions about it.",
+    "No, because children already encounter cartoons and animated characters in many types of advertising, so regulating fast food ads alone would have little effect."
 ],
-explanation: "The correct answer is strongest because it highlights the vulnerability of the target audience and the role of the state in protection. Distractor 1 is weak (IRRELEVANT): being young and in school is irrelevant to marketing vulnerability. Distractor 2 is weak (CIRCULAR): it uses the word regulate to define regulation. Distractor 3 is weak (NON-SEQUITUR): the existence of cartoons does not justify or undermine the regulation of ads."
+explanation: "The correct answer is strongest because it highlights the vulnerability of the target audience and the role of the state in protection. Distractor 1 is weak: being young and in school is irrelevant to marketing vulnerability. Distractor 2 is weak: it uses the word regulate to define regulation. Distractor 3 is weak: the existence of cartoons does not justify or undermine the regulation of ads."
 },
 {
 kind: "single",
@@ -30612,11 +30972,11 @@ stimulus: ['Should all high-speed rail projects be halted to prioritize the expa
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because local bus networks provide essential daily connectivity for the majority of citizens, whereas high-speed rail often benefits only a small, wealthy minority at a high public cost.",
 distractors: [
-"Yes, because high-speed rail is a train that goes at a high speed (CIRCULAR).",
-"Yes, because the color red is often used on buses (IRRELEVANT).",
-    "No, because     "
+"Yes, because high-speed rail is a train that goes at a high speed.",
+"No, because high-speed rail projects are important and stopping them would not be a good idea.",
+    "No, because public transport of all kinds is very important to society, and both buses and high-speed rail serve essential purposes."
 ],
-explanation: "The correct answer is strongest because it contrasts the breadth of utility and social equity of buses against the elitism and high cost of high-speed rail. Distractor 1 is weak (CIRCULAR): it explains the name of the rail. Distractor 2 is weak (IRRELEVANT): the color of buses has no bearing on transport policy. Distractor 3 is weak (VAGUE): stating that transport is important does not justify favoring one mode over another."
+explanation: "The correct answer is strongest because it contrasts the breadth of utility and social equity of buses against the elitism and high cost of high-speed rail. Distractor 1 is weak: it explains the name of the rail. Distractor 2 is weak: the color of buses has no bearing on transport policy. Distractor 3 is weak: stating that transport is important does not justify favoring one mode over another."
 },
 {
 kind: "single",
@@ -30626,11 +30986,11 @@ stimulus: ['Should a national digital ID be mandatory for all citizens to access
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it provides a secure, unified method for verifying identity, which dramatically reduces fraud and makes public service delivery more efficient for the majority.",
 distractors: [
-"Yes, because digital IDs are things that exist in a digital format (CIRCULAR).",
-"Yes, because some people might lose their physical wallets (IRRELEVANT).",
-    "No, because     "
+"Yes, because digital IDs are things that exist in a digital format.",
+"No, because if everyone has a digital ID, then the government will know who everyone is, which raises concerns about what the government might do with that information.",
+    "No, because digital technology is constantly advancing, meaning any government ID system built today would quickly become outdated."
 ],
-explanation: "The correct answer is strongest because it focuses on security, efficiency, and fraud prevention. Distractor 1 is weak (CIRCULAR): it defines digital ID using the same terms. Distractor 2 is weak (IRRELEVANT): losing a wallet is a personal issue not solved by national digital ID policy. Distractor 3 is weak (VAGUE): it praises technology in general rather than the specific policy."
+explanation: "The correct answer is strongest because it focuses on security, efficiency, and fraud prevention. Distractor 1 is weak: it defines digital ID using the same terms. Distractor 2 is weak: losing a wallet is a personal issue not solved by national digital ID policy. Distractor 3 is weak: it praises technology in general rather than the specific policy."
 },
 {
 kind: "single",
@@ -30640,11 +31000,11 @@ stimulus: ['Should the government offer tax incentives to companies that impleme
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a shorter work week has been shown to boost employee productivity and mental wellbeing, reducing costs associated with absenteeism and staff turnover.",
 distractors: [
-"Yes, because employees are the people who work at companies (TRIVIAL).",
-"Yes, because tax incentives are incentives that involve taxes (CIRCULAR).",
-    "No, because     "
+"Yes, because employees are the people who work at companies.",
+"No, because tax incentives are a form of government policy that involves money.",
+    "No, because many employees personally enjoy the routine of a five-day working week and would prefer not to have their schedule changed."
 ],
-explanation: "The correct answer is strongest because it presents a clear business and fiscal case for the policy. Distractor 1 is weak (TRIVIAL): it defines an employee but offers no justification. Distractor 2 is weak (CIRCULAR): it defines the mechanism using its own name. Distractor 3 is weak (VAGUE): it appeals to personal preference rather than organizational benefits."
+explanation: "The correct answer is strongest because it presents a clear business and fiscal case for the policy. Distractor 1 is weak: it defines an employee but offers no justification. Distractor 2 is weak: it defines the mechanism using its own name. Distractor 3 is weak: it appeals to personal preference rather than organizational benefits."
 },
 {
 kind: "single",
@@ -30654,11 +31014,11 @@ stimulus: ['Should local communities be granted the right to veto new telecommun
 question: "Select the strongest argument from the statements below.",
 correct: "No, because allowing localized vetoes would lead to a fragmented and patchy network, effectively preventing the national deployment of high-speed connectivity required for economic growth.",
 distractors: [
-"No, because masts are tall structures made of metal (TRIVIAL).",
-"No, because vetoing is when you say no to something (CIRCULAR).",
-    "Yes, because     "
+"No, because masts are tall structures made of metal.",
+"Yes, because communities should have a say in things that affect their communities.",
+    "Yes, because billions of people around the world rely on the internet every day, which shows how important it is for communities to have reliable local connectivity."
 ],
-explanation: "The correct answer is strongest because it identifies the structural failure of local vetoes in achieving national infrastructure objectives. Distractor 1 is weak (TRIVIAL): physical construction details are irrelevant. Distractor 2 is weak (CIRCULAR): it defines the act of vetoing. Distractor 3 is weak (IRRELEVANT): the global usage of the internet does not speak to the problem of local obstruction."
+explanation: "The correct answer is strongest because it identifies the structural failure of local vetoes in achieving national infrastructure objectives. Distractor 1 is weak: physical construction details are irrelevant. Distractor 2 is weak: it defines the act of vetoing. Distractor 3 is weak: the global usage of the internet does not speak to the problem of local obstruction."
 },
 {
 kind: "single",
@@ -30668,11 +31028,11 @@ stimulus: ['Should the government fund research into lab-grown meat to mitigate 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because lab-grown meat requires significantly less land and water and produces fewer greenhouse gases than traditional cattle farming, offering a viable path to meeting climate targets.",
 distractors: [
-"Yes, because meat is what people eat for dinner (TRIVIAL).",
-"Yes, because funding is when money is given to a project (CIRCULAR).",
-    "No, because     "
+"Yes, because meat is what people eat for dinner.",
+"No, because the government should focus on other things that are also important.",
+    "No, because cows and other livestock are a natural part of the countryside, and their presence on farms has never historically posed an environmental problem."
 ],
-explanation: "The correct answer is strongest because it provides a specific, comparative environmental advantage of the new technology over the old. Distractor 1 is weak (TRIVIAL): it is a simple fact about food. Distractor 2 is weak (CIRCULAR): it defines the act of funding. Distractor 3 is weak (IRRELEVANT): the existence of cows on farms does not challenge or support the technology."
+explanation: "The correct answer is strongest because it provides a specific, comparative environmental advantage of the new technology over the old. Distractor 1 is weak: it is a simple fact about food. Distractor 2 is weak: it defines the act of funding. Distractor 3 is weak: the existence of cows on farms does not challenge or support the technology."
 },
 {
 kind: "single",
@@ -30682,11 +31042,11 @@ stimulus: ['Should all secondary schools be required to provide financial litera
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because equipping students with essential money-management skills reduces the likelihood of future debt traps and improves long-term economic participation.",
 distractors: [
-"Yes, because schools are buildings where students go to learn things (CIRCULAR).",
-"Yes, because money is used to buy things that we need (TRIVIAL).",
-    "No, because     "
+"Yes, because schools are buildings where students go to learn things.",
+"No, because financial literacy is about money and money is very important to people so it might be too stressful for students to learn about it during school.",
+    "No, because many parents feel that financial education is best taught at home, and introducing it formally at school would not be popular with families."
 ],
-explanation: "The correct answer is strongest because it identifies the preventative impact on debt and the positive impact on economic life. Distractor 1 is weak (CIRCULAR): it defines what a school is. Distractor 2 is weak (TRIVIAL): it states the basic function of money. Distractor 3 is weak (VAGUE): parental popularity does not prove the educational efficacy of the subject."
+explanation: "The correct answer is strongest because it identifies the preventative impact on debt and the positive impact on economic life. Distractor 1 is weak: it defines what a school is. Distractor 2 is weak: it states the basic function of money. Distractor 3 is weak: parental popularity does not prove the educational efficacy of the subject."
 },
 {
 kind: "single",
@@ -30696,11 +31056,11 @@ stimulus: ['Should the government implement a total ban on the use of personal c
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it dramatically improves air quality and reduces traffic congestion, creating a safer and more pedestrian-friendly environment that preserves the integrity of historic sites.",
 distractors: [
-"Yes, because cars are vehicles with wheels (TRIVIAL).",
-"Yes, because banning things is a way of saying you cannot do them (CIRCULAR).",
-    "No, because     "
+"Yes, because cars are vehicles with wheels.",
+"No, because people have always driven cars in city centers and changing this would be different from how things currently are.",
+    "No, because many historic city centres have accommodated vehicle traffic for decades without any significant problems arising from it."
 ],
-explanation: "The correct answer is strongest because it details the direct benefits to health, safety, and cultural preservation. Distractor 1 is weak (TRIVIAL): it is a basic fact about cars. Distractor 2 is weak (CIRCULAR): it defines a ban. Distractor 3 is weak (IRRELEVANT): the age of a city is irrelevant to the efficacy of the car ban."
+explanation: "The correct answer is strongest because it details the direct benefits to health, safety, and cultural preservation. Distractor 1 is weak: it is a basic fact about cars. Distractor 2 is weak: it defines a ban. Distractor 3 is weak: the age of a city is irrelevant to the efficacy of the car ban."
 },
 {
 kind: "single",
@@ -30710,11 +31070,11 @@ stimulus: ['Should the voting age be lowered to 16 for all national elections?']
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it promotes earlier engagement with the democratic process, ensuring that long-term policy decisions, such as climate change, reflect the interests of those most impacted by them.",
 distractors: [
-"Yes, because sixteen is a number that comes after fifteen (TRIVIAL).",
-"Yes, because voting is the act of casting a vote in an election (CIRCULAR).",
-    "No, because     "
+"Yes, because sixteen is a number that comes after fifteen.",
+"No, because lowering the voting age would change how many people vote, which would be different from how it is now.",
+    "No, because 16-year-olds are generally sociable and enthusiastic, but personal sociability has no bearing on the capacity for informed political decision-making."
 ],
-explanation: "The correct answer is strongest because it links the voting age to democratic engagement and the representation of future interests. Distractor 1 is weak (TRIVIAL): it is a basic math fact. Distractor 2 is weak (CIRCULAR): it defines voting. Distractor 3 is weak (VAGUE): friendliness is not a sufficient justification for democratic reform."
+explanation: "The correct answer is strongest because it links the voting age to democratic engagement and the representation of future interests. Distractor 1 is weak: it is a basic math fact. Distractor 2 is weak: it defines voting. Distractor 3 is weak: friendliness is not a sufficient justification for democratic reform."
 },
 {
 kind: "single",
@@ -30724,11 +31084,11 @@ stimulus: ['Should governments implement a mandatory national tax on all ultra-p
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because such a tax would reduce the affordability of nutritionally deficient products, thereby encouraging consumers to shift their purchasing power toward healthier, whole-food alternatives.",
 distractors: [
-"Yes, because it is important for the government to do something about the health of the nation (VAGUE).",
-"Yes, because some people think that unhealthy food is bad for you (CIRCULAR).",
-"No, because many people enjoy the taste of processed snacks and would be unhappy about the price increase (TRIVIAL)."
+"Yes, because it is important for the government to do something about the health of the nation.",
+"No, because taxes on things are not always the best way to solve problems that exist in society.",
+"No, because many people enjoy the taste of processed snacks and would be unhappy about the price increase."
 ],
-explanation: "The correct answer is strongest because it directly addresses the mechanism of consumer behavior change and its specific impact on diet. Distractor 1 is weak (VAGUE): it fails to provide a concrete mechanism for change. Distractor 2 is weak (CIRCULAR): it merely restates that the food is considered bad without providing an argument. Distractor 3 is weak (TRIVIAL): consumer preference is a minor concern compared to the public health objective."
+explanation: "The correct answer is strongest because it directly addresses the mechanism of consumer behavior change and its specific impact on diet. Distractor 1 is weak: it fails to provide a concrete mechanism for change. Distractor 2 is weak: it merely restates that the food is considered bad without providing an argument. Distractor 3 is weak: consumer preference is a minor concern compared to the public health objective."
 },
 {
 kind: "single",
@@ -30738,11 +31098,11 @@ stimulus: ['Should schools be required to provide only plant-based meals in thei
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a restrictive policy may lead to a significant increase in food waste if students refuse to eat the mandated meals, potentially negating the intended environmental benefits.",
 distractors: [
-"No, because some students have been eating meat for their entire lives (IRRELEVANT).",
-"No, because the policy is about changing what students eat (CIRCULAR).",
-"Yes, because eating plants is a healthy lifestyle choice that students should adopt regardless of their preference (NON-SEQUITUR)."
+"No, because some students have been eating meat for their entire lives.",
+"Yes, because schools should care about the environment, and plant-based meals are more environmentally friendly, so schools should provide them.",
+"Yes, because eating plants is a healthy lifestyle choice that students should adopt regardless of their preference."
 ],
-explanation: "The correct answer is strongest because it identifies a logical failure in the proposal that would counteract the core environmental objective. Distractor 1 is weak (IRRELEVANT): past habits do not constitute a policy impact. Distractor 2 is weak (CIRCULAR): it just describes the policy. Distractor 3 is weak (NON-SEQUITUR): personal health benefits are a separate domain from the stated environmental purpose."
+explanation: "The correct answer is strongest because it identifies a logical failure in the proposal that would counteract the core environmental objective. Distractor 1 is weak: past habits do not constitute a policy impact. Distractor 2 is weak: it just describes the policy. Distractor 3 is weak: personal health benefits are a separate domain from the stated environmental purpose."
 },
 {
 kind: "single",
@@ -30752,11 +31112,11 @@ stimulus: ['Should the government ban all advertising for sugar-sweetened bevera
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because reducing the exposure of children to frequent, persuasive marketing for these products decreases the psychological impulse to consume them, lowering long-term health risks.",
 distractors: [
-"Yes, because television stations make money from advertising (IRRELEVANT).",
-"Yes, because sugar is a substance that is found in many different foods (TRIVIAL).",
-"No, because the government should not interfere with how private companies operate in the market (VAGUE)."
+"Yes, because television stations make money from advertising.",
+"No, because sugar-sweetened beverages are popular drinks that many people enjoy drinking.",
+"No, because the government should not interfere with how private companies operate in the market."
 ],
-explanation: "The correct answer is strongest because it links marketing exposure to behavioral psychology and health outcomes. Distractor 1 is weak (IRRELEVANT): the financial model of TV is not the target of the proposal. Distractor 2 is weak (TRIVIAL): the ubiquity of sugar is a general fact, not an argument for or against the ban. Distractor 3 is weak (VAGUE): it relies on an ideological stance without addressing the specific health impact."
+explanation: "The correct answer is strongest because it links marketing exposure to behavioral psychology and health outcomes. Distractor 1 is weak: the financial model of TV is not the target of the proposal. Distractor 2 is weak: the ubiquity of sugar is a general fact, not an argument for or against the ban. Distractor 3 is weak: it relies on an ideological stance without addressing the specific health impact."
 },
 {
 kind: "single",
@@ -30766,11 +31126,11 @@ stimulus: ['Should urban planning regulations mandate the inclusion of community
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because providing accessible green spaces for local food production strengthens community food security and provides a sustainable source of fresh produce for urban residents.",
 distractors: [
-"Yes, because gardening is a fun hobby that many people find relaxing (TRIVIAL).",
-"Yes, because developers should build things that the community needs (CIRCULAR).",
-"No, because some people prefer to buy their food from supermarkets (IRRELEVANT)."
+"Yes, because gardening is a fun hobby that many people find relaxing.",
+"No, because community vegetable gardens are gardens that are for communities, and communities need to decide what they want in their own neighborhoods.",
+"No, because some people prefer to buy their food from supermarkets."
 ],
-explanation: "The correct answer is strongest because it highlights the functional utility of the spaces for food security. Distractor 1 is weak (TRIVIAL): the recreational benefit is minor compared to the structural food access goal. Distractor 2 is weak (CIRCULAR): it restates that they should build needed things. Distractor 3 is weak (IRRELEVANT): personal shopping habits do not negate the value of local production."
+explanation: "The correct answer is strongest because it highlights the functional utility of the spaces for food security. Distractor 1 is weak: the recreational benefit is minor compared to the structural food access goal. Distractor 2 is weak: it restates that they should build needed things. Distractor 3 is weak: personal shopping habits do not negate the value of local production."
 },
 {
 kind: "single",
@@ -30780,11 +31140,11 @@ stimulus: ['Should international trade agreements strictly forbid the importatio
 question: "Select the strongest argument from the statements below.",
 correct: "No, because such a blanket prohibition would disproportionately harm developing nations that rely on these exports for economic stability, potentially driving them into extreme poverty.",
 distractors: [
-"No, because some people do not care about pesticides (IRRELEVANT).",
-"No, because pesticides are chemicals used in farming (CIRCULAR).",
-"Yes, because the environment is very important for our future survival (VAGUE)."
+"No, because some people do not care about pesticides.",
+"Yes, because countries that import pesticide-heavy agricultural products are countries that import pesticide-heavy agricultural products.",
+"Yes, because the environment is very important for our future survival."
 ],
-explanation: "The correct answer is strongest because it demonstrates a severe socio-economic consequence of the policy. Distractor 1 is weak (IRRELEVANT): whether people care is irrelevant to the economic reality. Distractor 2 is weak (CIRCULAR): it defines a pesticide rather than arguing the case. Distractor 3 is weak (VAGUE): it cites general environmental importance without addressing the trade mechanism."
+explanation: "The correct answer is strongest because it demonstrates a severe socio-economic consequence of the policy. Distractor 1 is weak: whether people care is irrelevant to the economic reality. Distractor 2 is weak: it defines a pesticide rather than arguing the case. Distractor 3 is weak: it cites general environmental importance without addressing the trade mechanism."
 },
 {
 kind: "single",
@@ -30794,11 +31154,11 @@ stimulus: ['Should the sale of lab-grown meat be subsidised by the government to
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because shifting agricultural production to lab-grown methods would drastically reduce methane emissions and land usage, mitigating the primary environmental costs of modern meat production.",
 distractors: [
-"Yes, because scientists have been working on new food technologies for years (IRRELEVANT).",
-"Yes, because it is good for the government to give money to new businesses (VAGUE).",
-"No, because cows have been raised for food for thousands of years (TRIVIAL)."
+"Yes, because scientists have been working on new food technologies for years.",
+"No, because subsidising lab-grown meat might not be a good idea if people don't want to eat it.",
+"No, because cows have been raised for food for thousands of years."
 ],
-explanation: "The correct answer is strongest because it provides a specific, measurable environmental outcome. Distractor 1 is weak (IRRELEVANT): the history of the technology does not justify the subsidy. Distractor 2 is weak (VAGUE): supporting new businesses is a general goal, not a specific justification here. Distractor 3 is weak (TRIVIAL): historical practice is not an argument against modern advancement."
+explanation: "The correct answer is strongest because it provides a specific, measurable environmental outcome. Distractor 1 is weak: the history of the technology does not justify the subsidy. Distractor 2 is weak: supporting new businesses is a general goal, not a specific justification here. Distractor 3 is weak: historical practice is not an argument against modern advancement."
 },
 {
 kind: "single",
@@ -30808,11 +31168,11 @@ stimulus: ['Should food manufacturers be legally required to include the carbon 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because transparent carbon labelling allows consumers to make informed, environmentally conscious choices, creating market pressure for companies to adopt more sustainable production methods.",
 distractors: [
-"Yes, because labels are already used for ingredients and nutritional facts (TRIVIAL).",
-"Yes, because it is important for consumers to know what is in their food (CIRCULAR).",
-"No, because printers cost money and this would increase prices for the factory (TRIVIAL)."
+"Yes, because labels are already used for ingredients and nutritional facts.",
+"No, because carbon footprints are related to the environment and the environment is important, so we shouldn't force companies to put things on labels.",
+"No, because printers cost money and this would increase prices for the factory."
 ],
-explanation: "The correct answer is strongest because it describes the market mechanism (informed choice leading to corporate pressure) that achieves the environmental purpose. Distractor 1 is weak (TRIVIAL): the existence of other labels is not a justification for this specific one. Distractor 2 is weak (CIRCULAR): knowing what is in food is the definition of the proposal, not an argument for it. Distractor 3 is weak (TRIVIAL): operational costs are a minor factor compared to the environmental goal."
+explanation: "The correct answer is strongest because it describes the market mechanism (informed choice leading to corporate pressure) that achieves the environmental purpose. Distractor 1 is weak: the existence of other labels is not a justification for this specific one. Distractor 2 is weak: knowing what is in food is the definition of the proposal, not an argument for it. Distractor 3 is weak: operational costs are a minor factor compared to the environmental goal."
 },
 {
 kind: "single",
@@ -30822,11 +31182,11 @@ stimulus: ['Should the government enforce a total ban on the use of antibiotics 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because routine antibiotic use in healthy animals accelerates the development of resistant bacteria that can be transmitted to humans, posing a critical threat to global public health.",
 distractors: [
-"Yes, because doctors use antibiotics to treat people in hospitals (NON-SEQUITUR).",
-"Yes, because the use of medicine in animals is a common practice (CIRCULAR).",
-"No, because some people prefer to eat meat that has been treated (IRRELEVANT)."
+"Yes, because doctors use antibiotics to treat people in hospitals.",
+"No, because a total ban would be a very strict policy and strict policies are generally difficult to implement in practice.",
+"No, because some people prefer to eat meat that has been treated."
 ],
-explanation: "The correct answer is strongest because it explicitly links the policy to the mechanism of bacterial resistance and its specific threat to humans. Distractor 1 is weak (NON-SEQUITUR): human medical use is a different domain. Distractor 2 is weak (CIRCULAR): it restates that it is a common practice. Distractor 3 is weak (IRRELEVANT): consumer preference for treated meat does not address the public health risk."
+explanation: "The correct answer is strongest because it explicitly links the policy to the mechanism of bacterial resistance and its specific threat to humans. Distractor 1 is weak: human medical use is a different domain. Distractor 2 is weak: it restates that it is a common practice. Distractor 3 is weak: consumer preference for treated meat does not address the public health risk."
 },
 {
 kind: "single",
@@ -30836,11 +31196,11 @@ stimulus: ['Should the local government implement a maximum height restriction o
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because maintaining a consistent architectural scale protects the visual integrity of the historic area, which is vital for sustained tourism revenue and cultural identity.",
 distractors: [
-"Yes, because tall buildings are sometimes hard to climb if the lift breaks (TRIVIAL).",
-"Yes, because the skyline is something that you can see when you look at the city (CIRCULAR).",
-"No, because people need places to live and work (VAGUE)."
+"Yes, because tall buildings are sometimes hard to climb if the lift breaks.",
+"No, because buildings that are too short might not look as good as buildings that are the right height.",
+"No, because people need places to live and work."
 ],
-explanation: "The correct answer is strongest because it connects the architectural restriction to both economic (tourism) and cultural (identity) outcomes. Distractor 1 is weak (TRIVIAL): lift maintenance is an insignificant factor for urban planning. Distractor 2 is weak (CIRCULAR): it defines what a skyline is. Distractor 3 is weak (VAGUE): while housing is important, it is too general an argument against a specific aesthetic/heritage policy."
+explanation: "The correct answer is strongest because it connects the architectural restriction to both economic (tourism) and cultural (identity) outcomes. Distractor 1 is weak: lift maintenance is an insignificant factor for urban planning. Distractor 2 is weak: it defines what a skyline is. Distractor 3 is weak: while housing is important, it is too general an argument against a specific aesthetic/heritage policy."
 },
 {
 kind: "single",
@@ -30850,11 +31210,11 @@ stimulus: ['Should all high school students be required to pass a personal finan
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because practical knowledge of budgeting, interest rates, and debt management directly reduces the likelihood of young adults falling into predatory financial traps upon entering the workforce.",
 distractors: [
-"Yes, because schools already require math and science (TRIVIAL).",
-"Yes, because students should be better at finances (CIRCULAR).",
-"No, because some students will eventually become famous athletes who do not need to worry about money (NON-SEQUITUR)."
+"Yes, because schools already require math and science.",
+"No, because personal finance is important, so forcing people to learn about it seems like it might not be the right approach.",
+"No, because some students will eventually become famous athletes who do not need to worry about money."
 ],
-explanation: "The correct answer is strongest because it identifies the direct link between the curriculum and the prevention of a specific negative outcome. Distractor 1 is weak (TRIVIAL): comparing to existing subjects is not a justification. Distractor 2 is weak (CIRCULAR): it restates the desired outcome as an argument. Distractor 3 is weak (NON-SEQUITUR): focusing on a tiny exception of athletes is irrelevant to the general student body."
+explanation: "The correct answer is strongest because it identifies the direct link between the curriculum and the prevention of a specific negative outcome. Distractor 1 is weak: comparing to existing subjects is not a justification. Distractor 2 is weak: it restates the desired outcome as an argument. Distractor 3 is weak: focusing on a tiny exception of athletes is irrelevant to the general student body."
 },
 {
 kind: "single",
@@ -30864,11 +31224,11 @@ stimulus: ['Should the government provide full universal basic income to all cit
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the fiscal burden of funding such a system would require unsustainable tax increases, likely leading to capital flight and economic contraction that would worsen unemployment.",
 distractors: [
-"No, because people should work for their money (VAGUE).",
-"No, because it is a very expensive thing to do (CIRCULAR).",
-"Yes, because it would be nice for everyone to have enough money to buy things (TRIVIAL)."
+"No, because people should work for their money.",
+"Yes, because if we give people money, then they will have money, which is what universal basic income is supposed to do.",
+"Yes, because it would be nice for everyone to have enough money to buy things."
 ],
-explanation: "The correct answer is strongest because it maps the policy to the causal chain of fiscal, economic, and employment consequences. Distractor 1 is weak (VAGUE): it relies on an abstract moral judgment. Distractor 2 is weak (CIRCULAR): saying it is expensive is just describing the policy. Distractor 3 is weak (TRIVIAL): the fact that having money is nice is not a policy justification."
+explanation: "The correct answer is strongest because it maps the policy to the causal chain of fiscal, economic, and employment consequences. Distractor 1 is weak: it relies on an abstract moral judgment. Distractor 2 is weak: saying it is expensive is just describing the policy. Distractor 3 is weak: the fact that having money is nice is not a policy justification."
 },
 {
 kind: "single",
@@ -30878,11 +31238,11 @@ stimulus: ['Should cities ban private vehicle use in the city centre to reduce a
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because eliminating high-emission private vehicles creates an immediate, measurable drop in local nitrogen dioxide levels, significantly improving the respiratory health of urban residents.",
 distractors: [
-"Yes, because walking is good for your physical health (NON-SEQUITUR).",
-"Yes, because pollution is not good for the city (CIRCULAR).",
-"No, because some cars are painted in bright, interesting colours (TRIVIAL)."
+"Yes, because walking is good for your physical health.",
+"No, because banning private vehicles would mean that people couldn't drive their private vehicles anymore, which is against the idea of people being free to do what they want.",
+"No, because some cars are painted in bright, interesting colours."
 ],
-explanation: "The correct answer is strongest because it links the policy directly to the reduction of a specific pollutant and its impact on public health. Distractor 1 is weak (NON-SEQUITUR): while walking is healthy, it does not explain why the ban is the best way to address pollution. Distractor 2 is weak (CIRCULAR): stating pollution is bad is not an argument for a ban. Distractor 3 is weak (TRIVIAL): car aesthetics have zero relevance to the policy."
+explanation: "The correct answer is strongest because it links the policy directly to the reduction of a specific pollutant and its impact on public health. Distractor 1 is weak: while walking is healthy, it does not explain why the ban is the best way to address pollution. Distractor 2 is weak: stating pollution is bad is not an argument for a ban. Distractor 3 is weak: car aesthetics have zero relevance to the policy."
 },
 {
 kind: "single",
@@ -30892,11 +31252,11 @@ stimulus: ['Should professional sports leagues implement a permanent ban on any 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a zero-tolerance policy provides the only effective deterrent against cheating, thereby preserving the integrity of the competition and ensuring a fair playing field for all athletes.",
 distractors: [
-"Yes, because sports should be played fairly (CIRCULAR).",
-"Yes, because some fans enjoy watching clean sports (TRIVIAL).",
-"No, because some athletes are very good at their sports even without drugs (IRRELEVANT)."
+"Yes, because sports should be played fairly.",
+"No, because permanent bans seem quite severe when you think about how bans are generally quite severe in nature.",
+"No, because some athletes are very good at their sports even without drugs."
 ],
-explanation: "The correct answer is strongest because it connects the severity of the penalty to the maintenance of the sport’s core value (fairness). Distractor 1 is weak (CIRCULAR): stating sports should be fair is the premise of the sport, not an argument for the ban. Distractor 2 is weak (TRIVIAL): fan preference is minor compared to institutional integrity. Distractor 3 is weak (IRRELEVANT): the talent of non-cheaters is irrelevant to the punishment of cheaters."
+explanation: "The correct answer is strongest because it connects the severity of the penalty to the maintenance of the sport’s core value (fairness). Distractor 1 is weak: stating sports should be fair is the premise of the sport, not an argument for the ban. Distractor 2 is weak: fan preference is minor compared to institutional integrity. Distractor 3 is weak: the talent of non-cheaters is irrelevant to the punishment of cheaters."
 },
 {
 kind: "single",
@@ -30906,11 +31266,11 @@ stimulus: ['Should the government lower the voting age to 16 to increase politic
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because allowing 16-year-olds to vote integrates them into the democratic process while they are still in formal education, fostering long-term habits of civic participation.",
 distractors: [
-"Yes, because 16-year-olds are allowed to do other things like drive cars (NON-SEQUITUR).",
-"Yes, because it is important for young people to be involved in politics (CIRCULAR).",
-"No, because some 16-year-olds are busy with their school exams (TRIVIAL)."
+"Yes, because 16-year-olds are allowed to do other things like drive cars.",
+"No, because lowering the voting age would change the voting age, which is not what we should do if we want to keep the voting age the same.",
+"No, because some 16-year-olds are busy with their school exams."
 ],
-explanation: "The correct answer is strongest because it links the timing of the policy to an educational context that promotes long-term civic engagement. Distractor 1 is weak (NON-SEQUITUR): driving age is not the same domain as political maturity. Distractor 2 is weak (CIRCULAR): it restates the purpose of the proposal. Distractor 3 is weak (TRIVIAL): school workload is a minor consideration regarding fundamental rights."
+explanation: "The correct answer is strongest because it links the timing of the policy to an educational context that promotes long-term civic engagement. Distractor 1 is weak: driving age is not the same domain as political maturity. Distractor 2 is weak: it restates the purpose of the proposal. Distractor 3 is weak: school workload is a minor consideration regarding fundamental rights."
 },
 {
 kind: "single",
@@ -30920,11 +31280,11 @@ stimulus: ['Should all workplaces be required to offer a four-day working week t
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a rigid mandate fails to account for operational requirements in high-stakes industries, where a reduction in total hours could lead to dangerous gaps in service and personnel safety.",
 distractors: [
-"No, because some people enjoy working five days a week (TRIVIAL).",
-"No, because changing the work week is a major structural change (CIRCULAR).",
-"Yes, because people are generally happier when they are not at work (VAGUE)."
+"No, because some people enjoy working five days a week.",
+"Yes, because a four-day working week would be better for employee mental health since it would make employees feel better about their mental health.",
+"Yes, because people are generally happier when they are not at work."
 ],
-explanation: "The correct answer is strongest because it identifies a critical, domain-specific risk (service gaps/safety) that the proposal ignores. Distractor 1 is weak (TRIVIAL): individual preference for a work schedule is minor. Distractor 2 is weak (CIRCULAR): identifying the change as major is not an argument. Distractor 3 is weak (VAGUE): it generalizes the desire for leisure without addressing workplace outcomes."
+explanation: "The correct answer is strongest because it identifies a critical, domain-specific risk (service gaps/safety) that the proposal ignores. Distractor 1 is weak: individual preference for a work schedule is minor. Distractor 2 is weak: identifying the change as major is not an argument. Distractor 3 is weak: it generalizes the desire for leisure without addressing workplace outcomes."
 },
 {
 kind: "single",
@@ -30934,11 +31294,11 @@ stimulus: ['Should governments provide free public transport to all students to 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because subsidising transport costs removes the financial barrier for students to choose public transit over private vehicle use, directly reducing the volume of cars during peak traffic hours.",
 distractors: [
-"Yes, because it is nice for students to save money (TRIVIAL).",
-"Yes, because traffic is something that causes delays (CIRCULAR).",
-"No, because some students prefer to walk if the weather is nice (IRRELEVANT)."
+"Yes, because it is nice for students to save money.",
+"No, because free public transport would be free public transport, which means students wouldn't have to pay for it.",
+"No, because some students prefer to walk if the weather is nice."
 ],
-explanation: "The correct answer is strongest because it explains the economic incentive behind the policy and its direct effect on traffic volume. Distractor 1 is weak (TRIVIAL): saving money is a benefit, but doesn't address the congestion objective. Distractor 2 is weak (CIRCULAR): stating traffic causes delays is just a fact about traffic. Distractor 3 is weak (IRRELEVANT): voluntary walking does not negate the impact of the policy on those who drive."
+explanation: "The correct answer is strongest because it explains the economic incentive behind the policy and its direct effect on traffic volume. Distractor 1 is weak: saving money is a benefit, but doesn't address the congestion objective. Distractor 2 is weak: stating traffic causes delays is just a fact about traffic. Distractor 3 is weak: voluntary walking does not negate the impact of the policy on those who drive."
 },
 {
 kind: "single",
@@ -30948,11 +31308,11 @@ stimulus: ['Should the government implement a total ban on the use of single-use
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a total ban forces the adoption of reusable packaging solutions, significantly reducing the volume of non-biodegradable waste that accumulates in oceans and landfill sites.",
 distractors: [
-"Yes, because plastic is a material that is often found in stores (CIRCULAR).",
-"Yes, because it would look better if the world was cleaner (VAGUE).",
-"No, because some customers like the convenience of plastic bags (TRIVIAL)."
+"Yes, because plastic is a material that is often found in stores.",
+"No, because single-use plastics are used by many people in retail, so banning them would affect how people shop.",
+"No, because some customers like the convenience of plastic bags."
 ],
-explanation: "The correct answer is strongest because it links the policy mechanism (enforced adoption of alternatives) to a specific, significant environmental outcome. Distractor 1 is weak (CIRCULAR): it merely identifies where plastic is found. Distractor 2 is weak (VAGUE): aesthetics are not the primary goal of waste policy. Distractor 3 is weak (TRIVIAL): consumer convenience is a minor factor when weighed against systemic waste issues."
+explanation: "The correct answer is strongest because it links the policy mechanism (enforced adoption of alternatives) to a specific, significant environmental outcome. Distractor 1 is weak: it merely identifies where plastic is found. Distractor 2 is weak: aesthetics are not the primary goal of waste policy. Distractor 3 is weak: consumer convenience is a minor factor when weighed against systemic waste issues."
 },
 {
 kind: "single",
@@ -30962,11 +31322,11 @@ stimulus: ['Should police departments be required to use body-worn cameras for a
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the presence of recorded evidence acts as a deterrent for both officers and citizens, reducing the occurrence of unprofessional conduct and providing objective clarity during disputes.",
 distractors: [
-"Yes, because police officers have uniforms (IRRELEVANT).",
-"Yes, because it is important for the police to be accountable (CIRCULAR).",
-"No, because cameras can sometimes run out of battery (TRIVIAL)."
+"Yes, because police officers have uniforms.",
+"No, because body-worn cameras are a form of technology, and technology is always changing, so we cannot be sure they will work the same way in the future.",
+"No, because cameras can sometimes run out of battery."
 ],
-explanation: "The correct answer is strongest because it explains the psychological and practical effects (deterrence and clarity) of the technology. Distractor 1 is weak (IRRELEVANT): the uniform has no bearing on the policy. Distractor 2 is weak (CIRCULAR): accountability is the stated goal, not an argument for it. Distractor 3 is weak (TRIVIAL): a minor technical failure does not invalidate the overall utility of the policy."
+explanation: "The correct answer is strongest because it explains the psychological and practical effects (deterrence and clarity) of the technology. Distractor 1 is weak: the uniform has no bearing on the policy. Distractor 2 is weak: accountability is the stated goal, not an argument for it. Distractor 3 is weak: a minor technical failure does not invalidate the overall utility of the policy."
 },
 {
 kind: "single",
@@ -30976,11 +31336,11 @@ stimulus: ['Should the government fund research into artificial intelligence to 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because AI-driven diagnostic tools can process complex medical data with greater accuracy and speed than traditional methods, leading to earlier disease detection and more effective treatments.",
 distractors: [
-"Yes, because health is very important for everyone (VAGUE).",
-"Yes, because technology is the future of science (VAGUE).",
-"No, because some doctors prefer to do their work without using computers (IRRELEVANT)."
+"Yes, because health is very important for everyone.",
+"No, because government funding for things is something that governments do, and if they fund AI research then they will be funding AI research.",
+"No, because some doctors prefer to do their work without using computers."
 ],
-explanation: "The correct answer is strongest because it specifies exactly how the technology improves health (diagnostic accuracy/speed) to achieve the goal. Distractor 1 is weak (VAGUE): the importance of health is not an argument for funding a specific technology. Distractor 2 is weak (VAGUE): being the future is not a reason. Distractor 3 is weak (IRRELEVANT): physician preference does not dictate the efficacy of the AI technology."
+explanation: "The correct answer is strongest because it specifies exactly how the technology improves health (diagnostic accuracy/speed) to achieve the goal. Distractor 1 is weak: the importance of health is not an argument for funding a specific technology. Distractor 2 is weak: being the future is not a reason. Distractor 3 is weak: physician preference does not dictate the efficacy of the AI technology."
 },
 {
 kind: "single",
@@ -30990,11 +31350,11 @@ stimulus: ['Should international law mandate that all nations dedicate a specifi
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a mandatory fixed percentage fails to account for the varying economic health of individual nations, potentially forcing countries in financial crisis to borrow funds they cannot repay.",
 distractors: [
-"No, because some countries already help others (IRRELEVANT).",
-"No, because money is used in many different ways across the world (VAGUE).",
-"Yes, because it is always good to help countries that are struggling (VAGUE)."
+"No, because some countries already help others.",
+"Yes, because countries that help other countries are generally seen as more helpful than countries that don't help other countries.",
+"Yes, because it is always good to help countries that are struggling."
 ],
-explanation: "The correct answer is strongest because it highlights a major flaw (forcing debt during crisis) in a rigid international policy. Distractor 1 is weak (IRRELEVANT): existing voluntary aid does not resolve the issue of mandatory mandates. Distractor 2 is weak (VAGUE): saying money is used in many ways is a truism. Distractor 3 is weak (VAGUE): the moral imperative is general and does not address the policy's feasibility."
+explanation: "The correct answer is strongest because it highlights a major flaw (forcing debt during crisis) in a rigid international policy. Distractor 1 is weak: existing voluntary aid does not resolve the issue of mandatory mandates. Distractor 2 is weak: saying money is used in many ways is a truism. Distractor 3 is weak: the moral imperative is general and does not address the policy's feasibility."
 },
 {
 kind: "single",
@@ -31004,11 +31364,11 @@ stimulus: ['Should university tuition fees be abolished to promote equality in h
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing tuition fees eliminates the primary financial barrier for students from low-income backgrounds, significantly increasing access to higher education and social mobility.",
 distractors: [
-"Yes, because universities are where people go to learn things (CIRCULAR).",
-"Yes, because it would be nice for students to have more money (TRIVIAL).",
-"No, because some professors get paid a lot of money (IRRELEVANT)."
+"Yes, because universities are where people go to learn things.",
+"No, because if tuition fees are abolished, then tuition fees will no longer exist, which means universities would have to figure out how to operate without tuition fees.",
+"No, because some professors get paid a lot of money."
 ],
-explanation: "The correct answer is strongest because it directly identifies the barrier (financial) and the outcome (mobility) of the policy. Distractor 1 is weak (CIRCULAR): defining a university is not an argument. Distractor 2 is weak (TRIVIAL): student spending money is a minor byproduct, not the core educational objective. Distractor 3 is weak (IRRELEVANT): professor salaries are a separate issue from student access."
+explanation: "The correct answer is strongest because it directly identifies the barrier (financial) and the outcome (mobility) of the policy. Distractor 1 is weak: defining a university is not an argument. Distractor 2 is weak: student spending money is a minor byproduct, not the core educational objective. Distractor 3 is weak: professor salaries are a separate issue from student access."
 },
 {
 kind: "single",
@@ -31018,11 +31378,11 @@ stimulus: ['Should the government introduce a nationwide ban on the sale of all 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because setting a definitive deadline forces the automotive industry to accelerate the mass production of electric vehicles, which is necessary to meet carbon reduction targets.",
 distractors: [
-"Yes, because cars are used to get from one place to another (CIRCULAR).",
-"Yes, because it would be quiet in the cities if there were fewer combustion engines (TRIVIAL).",
-"No, because some people really like the sound of a classic car engine (TRIVIAL)."
+"Yes, because cars are used to get from one place to another.",
+"No, because banning things is generally not a good idea when those things are currently being used by many people.",
+"No, because some people really like the sound of a classic car engine."
 ],
-explanation: "The correct answer is strongest because it links the policy (the deadline) to the industrial outcome (acceleration of EV production) required to meet the objective. Distractor 1 is weak (CIRCULAR): it defines what a car is for. Distractor 2 is weak (TRIVIAL): noise reduction is a minor benefit compared to the primary carbon goal. Distractor 3 is weak (TRIVIAL): personal nostalgia for engines is not a valid policy argument."
+explanation: "The correct answer is strongest because it links the policy (the deadline) to the industrial outcome (acceleration of EV production) required to meet the objective. Distractor 1 is weak: it defines what a car is for. Distractor 2 is weak: noise reduction is a minor benefit compared to the primary carbon goal. Distractor 3 is weak: personal nostalgia for engines is not a valid policy argument."
 },
 {
 kind: "single",
@@ -31032,11 +31392,11 @@ stimulus: ['Should the government provide tax incentives for companies that allo
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because incentivising remote work reduces the number of daily commuters, leading to a significant decrease in traffic congestion and energy consumption associated with large-scale office operations.",
 distractors: [
-"Yes, because remote work is something that people do from their homes (CIRCULAR).",
-"Yes, because it is nice to not have to go to the office (VAGUE).",
-"No, because some people enjoy working with their colleagues in person (TRIVIAL)."
+"Yes, because remote work is something that people do from their homes.",
+"No, because tax incentives are a form of government involvement in business decisions.",
+"No, because some people enjoy working with their colleagues in person."
 ],
-explanation: "The correct answer is strongest because it identifies the direct impact on both public infrastructure (traffic) and environment (energy use). Distractor 1 is weak (CIRCULAR): it defines remote work. Distractor 2 is weak (VAGUE): personal preference is not a policy justification. Distractor 3 is weak (TRIVIAL): preference for office culture is minor compared to the macro-benefits of reduced commuting."
+explanation: "The correct answer is strongest because it identifies the direct impact on both public infrastructure (traffic) and environment (energy use). Distractor 1 is weak: it defines remote work. Distractor 2 is weak: personal preference is not a policy justification. Distractor 3 is weak: preference for office culture is minor compared to the macro-benefits of reduced commuting."
 },
 {
 kind: "single",
@@ -31046,11 +31406,11 @@ stimulus: ['Should the legal age for buying tobacco products be raised to 25 to 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because delaying the age at which individuals can legally access tobacco decreases the likelihood of lifelong addiction, as nicotine dependency is most easily established during early adulthood.",
 distractors: [
-"Yes, because tobacco products are not very healthy for the body (CIRCULAR).",
-"Yes, because it would be easier for shopkeepers to just not sell any tobacco (TRIVIAL).",
-"No, because people are considered adults at 18 (NON-SEQUITUR)."
+"Yes, because tobacco products are not very healthy for the body.",
+"No, because raising the age limit would just mean that people who want to buy tobacco will find other ways to get it anyway.",
+"No, because people are considered adults at 18."
 ],
-explanation: "The correct answer is strongest because it addresses the neurological and developmental aspect of addiction timing. Distractor 1 is weak (CIRCULAR): stating it is unhealthy is not an argument for raising the age. Distractor 2 is weak (TRIVIAL): convenience for retailers is not a public health concern. Distractor 3 is weak (NON-SEQUITUR): legal age definitions for other domains do not negate the health data on addiction."
+explanation: "The correct answer is strongest because it addresses the neurological and developmental aspect of addiction timing. Distractor 1 is weak: stating it is unhealthy is not an argument for raising the age. Distractor 2 is weak: convenience for retailers is not a public health concern. Distractor 3 is weak: legal age definitions for other domains do not negate the health data on addiction."
 },
 {
 kind: "single",
@@ -31063,10 +31423,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because significantly decreasing the volume of private vehicles allows for the reallocation of road space to efficient public transport networks, drastically reducing commuter travel times.",
 distractors: [
 "Yes, because cities are often loud and polluted places.",
-"Yes, because people should not be allowed to drive where they want in cities.",
-    "No, because some commuters rely on private vehicles due to a lack of public transport alternatives. (IRRELEVANT)",
+"No, because banning private vehicles would change the way people travel in cities, which is something that would be different from how things are now.",
+    "No, because some commuters rely on private vehicles due to a lack of public transport alternatives.",
 ],
-explanation: "The correct answer is strongest because it directly addresses the core purpose of reducing congestion by proposing a practical reallocation of resources. Distractor 1 is weak (IRRELEVANT): while pollution is a concern, it does not explain how the ban reduces congestion. Distractor 2 is weak (CIRCULAR): it merely restates the restriction without providing a functional outcome. Distractor 3 is weak (TRIVIAL): personal preferences for transport modes are minor and do not impact the efficacy of a traffic policy."
+explanation: "The correct answer is strongest because it directly addresses the core purpose of reducing congestion by proposing a practical reallocation of resources. Distractor 1 is weak: while pollution is a concern, it does not explain how the ban reduces congestion. Distractor 2 is weak: it merely restates the restriction without providing a functional outcome. Distractor 3 is weak: personal preferences for transport modes are minor and do not impact the efficacy of a traffic policy."
 },
 {
 kind: "single",
@@ -31079,10 +31439,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because the prohibitive infrastructure costs for connecting low-density housing would lead to unsustainable property price hikes, making housing unaffordable for the target residents.",
 distractors: [
 "No, because some people like driving their own cars.",
-"No, because trains are made of metal.",
-    "Yes, because new homes often come with a range of modern amenities as standard. (NON-SEQUITUR)",
+"Yes, because high-speed rail connectivity is something that many people would probably want to have access to if it were available to them.",
+    "Yes, because new homes often come with a range of modern amenities as standard.",
 ],
-explanation: "The correct answer is strongest because it identifies a significant real-world consequence regarding housing affordability and project viability. Distractor 1 is weak (IRRELEVANT): personal car preference does not impact the economic feasibility of rail infrastructure. Distractor 2 is weak (IRRELEVANT): the composition of a train is unrelated to the policy. Distractor 3 is weak (NON-SEQUITUR): electricity is a standard requirement and is unrelated to the high-speed rail mandate."
+explanation: "The correct answer is strongest because it identifies a significant real-world consequence regarding housing affordability and project viability. Distractor 1 is weak: personal car preference does not impact the economic feasibility of rail infrastructure. Distractor 2 is weak: the composition of a train is unrelated to the policy. Distractor 3 is weak: electricity is a standard requirement and is unrelated to the high-speed rail mandate."
 },
 {
 kind: "single",
@@ -31095,10 +31455,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because moving bulk freight to rail removes heavy goods vehicles from motorways, significantly decreasing long-term road maintenance costs and accident rates.",
 distractors: [
 "Yes, because trains are often painted different colours.",
-"Yes, because road transport is the transport of goods by road.",
-    "No, because road haulage companies employ a large number of workers across the country. (IRRELEVANT)",
+"No, because rail is a form of transport that has been around for a long time, so we should probably think carefully about whether changing things is a good idea.",
+    "No, because road haulage companies employ a large number of workers across the country.",
 ],
-explanation: "The correct answer is strongest because it connects the modal shift to a specific, significant fiscal and safety benefit. Distractor 1 is weak (IRRELEVANT): train aesthetics have no bearing on freight efficiency. Distractor 2 is weak (CIRCULAR): it just defines road transport without justifying the change. Distractor 3 is weak (VAGUE): stating it might have side effects provides no actionable information for evaluation."
+explanation: "The correct answer is strongest because it connects the modal shift to a specific, significant fiscal and safety benefit. Distractor 1 is weak: train aesthetics have no bearing on freight efficiency. Distractor 2 is weak: it just defines road transport without justifying the change. Distractor 3 is weak: stating it might have side effects provides no actionable information for evaluation."
 },
 {
 kind: "single",
@@ -31111,10 +31471,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because restricting operations to daylight would cause massive bottlenecks in international flight schedules, leading to systemic disruption of global supply chains and economic loss.",
 distractors: [
 "No, because people who live near airports knew they were being built.",
-"No, because noise is a sound that travels through the air.",
-    "Yes, because some airports already close for periods of maintenance without major disruption. (IRRELEVANT)",
+"Yes, because noise pollution is bad and nighttime flights make noise, so stopping nighttime flights would reduce the noise that nighttime flights make.",
+    "Yes, because some airports already close for periods of maintenance without major disruption.",
 ],
-explanation: "The correct answer is strongest because it addresses the economic and logistical consequences of the proposal. Distractor 1 is weak (IRRELEVANT): where someone chooses to live does not negate the impact of the policy on aviation efficiency. Distractor 2 is weak (TRIVIAL): a definition of noise is not a valid argument. Distractor 3 is weak (VAGUE): saying it might be difficult is too general to influence the decision."
+explanation: "The correct answer is strongest because it addresses the economic and logistical consequences of the proposal. Distractor 1 is weak: where someone chooses to live does not negate the impact of the policy on aviation efficiency. Distractor 2 is weak: a definition of noise is not a valid argument. Distractor 3 is weak: saying it might be difficult is too general to influence the decision."
 },
 {
 kind: "single",
@@ -31127,10 +31487,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because penalising electric vehicles discourages the transition to zero-emission transport, thereby undermining national decarbonisation targets.",
 distractors: [
 "No, because electric cars are very quiet compared to petrol cars.",
-"No, because the government should charge for something else instead.",
-    "Yes, because electric vehicles are generally more expensive to purchase than petrol cars. (IRRELEVANT)",
+"Yes, because congestion charges would help manage congestion in major cities by making people think more carefully about their driving decisions.",
+    "Yes, because electric vehicles are generally more expensive to purchase than petrol cars.",
 ],
-explanation: "The correct answer is strongest because it links the policy to the failure of a higher-level environmental goal. Distractor 1 is weak (IRRELEVANT): the sound level of the vehicle is unrelated to the policy of congestion pricing. Distractor 2 is weak (NON-SEQUITUR): suggesting other things to tax does not address the impact of this specific charge. Distractor 3 is weak (CIRCULAR): this restates the proposal rather than evaluating it."
+explanation: "The correct answer is strongest because it links the policy to the failure of a higher-level environmental goal. Distractor 1 is weak: the sound level of the vehicle is unrelated to the policy of congestion pricing. Distractor 2 is weak: suggesting other things to tax does not address the impact of this specific charge. Distractor 3 is weak: this restates the proposal rather than evaluating it."
 },
 {
 kind: "single",
@@ -31143,10 +31503,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because the current scarcity of hydrogen refuelling infrastructure means that such a rapid transition would lead to frequent service cancellations and operational paralysis.",
 distractors: [
 "No, because the colour of buses is not important.",
-"No, because hydrogen is an element on the periodic table.",
-    "Yes, because hydrogen is an element found naturally in water. (IRRELEVANT)",
+"Yes, because buses that run on hydrogen would be better than buses that don't run on hydrogen.",
+    "Yes, because hydrogen is an element found naturally in water.",
 ],
-explanation: "The correct answer is strongest because it points to a specific, critical resource shortage that renders the proposal practically impossible. Distractor 1 is weak (IRRELEVANT): bus colour is unrelated to power sources. Distractor 2 is weak (IRRELEVANT): chemical properties are irrelevant to transport infrastructure policy. Distractor 3 is weak (VAGUE): any policy causes changes; this does not identify a specific risk."
+explanation: "The correct answer is strongest because it points to a specific, critical resource shortage that renders the proposal practically impossible. Distractor 1 is weak: bus colour is unrelated to power sources. Distractor 2 is weak: chemical properties are irrelevant to transport infrastructure policy. Distractor 3 is weak: any policy causes changes; this does not identify a specific risk."
 },
 {
 kind: "single",
@@ -31159,10 +31519,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because state ownership eliminates the requirement for profit margins, allowing for ticket price subsidies that ensure essential connectivity for isolated populations.",
 distractors: [
 "Yes, because boats are interesting to watch.",
-"Yes, because islanders should just move to the mainland.",
-    "No, because     "
+"No, because nationalisation would mean the government would have to run the ferries, which would involve the government running them.",
+    "No, because island residents who require more affordable transport could choose to relocate to the mainland, removing the need for subsidised ferry services."
 ],
-explanation: "The correct answer is strongest because it identifies the direct link between the fiscal structure of nationalisation and the goal of cheaper travel. Distractor 1 is weak (IRRELEVANT): public interest in watching boats does not inform policy. Distractor 2 is weak (NON-SEQUITUR): suggesting migration is a different solution to the problem of ferry connectivity. Distractor 3 is weak (TRIVIAL): stating transport is important is a generic fact that does not evaluate the proposal."
+explanation: "The correct answer is strongest because it identifies the direct link between the fiscal structure of nationalisation and the goal of cheaper travel. Distractor 1 is weak: public interest in watching boats does not inform policy. Distractor 2 is weak: suggesting migration is a different solution to the problem of ferry connectivity. Distractor 3 is weak: stating transport is important is a generic fact that does not evaluate the proposal."
 },
 {
 kind: "single",
@@ -31175,10 +31535,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because motion-sensing technology drastically reduces electricity waste during quiet hours while maintaining safety levels when pedestrians are detected.",
 distractors: [
 "Yes, because LEDs are very bright.",
-"Yes, because light is helpful at night.",
-    "No, because     "
+"No, because street lights are an important part of our streets and changing them might affect how streets look.",
+    "No, because motion-sensing LED lights are a relatively new innovation and councils should wait until the technology is more established before committing to a full rollout."
 ],
-explanation: "The correct answer is strongest because it explains exactly how the technology saves energy without compromising safety. Distractor 1 is weak (IRRELEVANT): the brightness of the bulb does not inherently explain the energy efficiency benefit. Distractor 2 is weak (TRIVIAL): the fact that light is helpful does not justify the specific motion-sensing policy. Distractor 3 is weak (CIRCULAR): stating it is a new type of light does not explain the policy benefit."
+explanation: "The correct answer is strongest because it explains exactly how the technology saves energy without compromising safety. Distractor 1 is weak: the brightness of the bulb does not inherently explain the energy efficiency benefit. Distractor 2 is weak: the fact that light is helpful does not justify the specific motion-sensing policy. Distractor 3 is weak: stating it is a new type of light does not explain the policy benefit."
 },
 {
 kind: "single",
@@ -31191,10 +31551,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because providing a guaranteed income floor ensures that all citizens can afford essential housing and nutrition, reducing the burden on emergency social services.",
 distractors: [
 "Yes, because everyone likes having extra money.",
-"Yes, because money is a useful thing in society.",
-    "No, because     "
+"No, because giving people money when they don't have money doesn't really solve the problem of not having money in a meaningful way.",
+    "No, because a guaranteed income might change how citizens choose to spend their time, and the long-term social consequences of this are entirely unknown."
 ],
-explanation: "The correct answer is strongest because it links the policy to a reduction in systemic pressure on social services. Distractor 1 is weak (TRIVIAL): personal desire for money is universal and does not justify the policy. Distractor 2 is weak (TRIVIAL): the usefulness of money is a generic truism. Distractor 3 is weak (VAGUE): changing how people spend time is too speculative to evaluate."
+explanation: "The correct answer is strongest because it links the policy to a reduction in systemic pressure on social services. Distractor 1 is weak: personal desire for money is universal and does not justify the policy. Distractor 2 is weak: the usefulness of money is a generic truism. Distractor 3 is weak: changing how people spend time is too speculative to evaluate."
 },
 {
 kind: "single",
@@ -31207,10 +31567,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because preventing discriminatory premium hikes ensures equitable access to healthcare for vulnerable individuals who would otherwise be priced out of essential medical coverage.",
 distractors: [
 "Yes, because doctors are important.",
-"Yes, because insurance companies have lots of staff.",
-    "No, because     "
+"No, because private health insurance companies are businesses that need to make money, and it's just how things work in a competitive market.",
+    "No, because private health insurance companies employ large numbers of staff, and tighter pricing regulations could put some of those jobs at risk."
 ],
-explanation: "The correct answer is strongest because it explains the equity impact of the prohibition on vulnerable groups. Distractor 1 is weak (IRRELEVANT): the importance of doctors does not relate to insurance pricing policy. Distractor 2 is weak (IRRELEVANT): staff numbers are unrelated to pricing regulations. Distractor 3 is weak (TRIVIAL): the fact that health is important does not provide a reasoned argument for this specific regulation."
+explanation: "The correct answer is strongest because it explains the equity impact of the prohibition on vulnerable groups. Distractor 1 is weak: the importance of doctors does not relate to insurance pricing policy. Distractor 2 is weak: staff numbers are unrelated to pricing regulations. Distractor 3 is weak: the fact that health is important does not provide a reasoned argument for this specific regulation."
 },
 {
 kind: "single",
@@ -31223,10 +31583,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because the current curriculum is already overloaded, and mandating fluency would lead to a reduction in time for core subjects like mathematics and science.",
 distractors: [
 "No, because some people prefer to learn art.",
-"No, because languages are spoken all over the world.",
-    "Yes, because     "
+"Yes, because learning a foreign language is something that many other countries do, and we should follow what other countries are doing.",
+    "Yes, because learning a foreign language is difficult, and tackling challenging academic subjects is an important part of every student's overall education."
 ],
-explanation: "The correct answer is strongest because it identifies the opportunity cost and negative impact on core academic performance. Distractor 1 is weak (IRRELEVANT): personal preference for subjects does not constitute a valid policy argument. Distractor 2 is weak (IRRELEVANT): where languages are spoken is a general fact. Distractor 3 is weak (VAGUE): saying it might be hard is not a sufficient argument for a major policy change."
+explanation: "The correct answer is strongest because it identifies the opportunity cost and negative impact on core academic performance. Distractor 1 is weak: personal preference for subjects does not constitute a valid policy argument. Distractor 2 is weak: where languages are spoken is a general fact. Distractor 3 is weak: saying it might be hard is not a sufficient argument for a major policy change."
 },
 {
 kind: "single",
@@ -31239,10 +31599,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because non-animal testing methods such as computer modelling and cell cultures are now scientifically capable of proving safety without inflicting suffering on animals.",
 distractors: [
 "Yes, because animals are cute.",
-"Yes, because cosmetics are often sold in stores.",
-    "No, because     "
+"No, because animal testing has been used for a very long time and changing things that have existed for a long time is generally difficult to do.",
+    "No, because cosmetic products are popular in stores and any disruption to testing methods could affect the availability of products that consumers rely on."
 ],
-explanation: "The correct answer is strongest because it provides a technical justification (the existence of viable alternatives) for the policy. Distractor 1 is weak (IRRELEVANT): cuteness is not an ethical or scientific basis for policy. Distractor 2 is weak (IRRELEVANT): store sales are unrelated to testing. Distractor 3 is weak (VAGUE): suggesting people should think is a general moral sentiment rather than a policy argument."
+explanation: "The correct answer is strongest because it provides a technical justification (the existence of viable alternatives) for the policy. Distractor 1 is weak: cuteness is not an ethical or scientific basis for policy. Distractor 2 is weak: store sales are unrelated to testing. Distractor 3 is weak: suggesting people should think is a general moral sentiment rather than a policy argument."
 },
 {
 kind: "single",
@@ -31255,10 +31615,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because the primary mandate of central banks is price stability, and deviating from this to focus on environmental targets would likely cause uncontrolled inflation.",
 distractors: [
 "No, because banks are big buildings.",
-"No, because people should try to save the planet.",
-    "Yes, because     "
+"Yes, because central banks have a responsibility to care about the world they operate in.",
+    "Yes, because central banks have always adapted their approaches over time, and incorporating environmental targets is simply another step in that historical tradition."
 ],
-explanation: "The correct answer is strongest because it explains why the proposal compromises the core functional mandate of the institution, leading to negative economic outcomes. Distractor 1 is weak (IRRELEVANT): the size of bank buildings is irrelevant. Distractor 2 is weak (NON-SEQUITUR): environmentalism is a positive goal but does not address the economic function of central banks. Distractor 3 is weak (TRIVIAL): historical precedent is not an argument for why a policy is or is not good."
+explanation: "The correct answer is strongest because it explains why the proposal compromises the core functional mandate of the institution, leading to negative economic outcomes. Distractor 1 is weak: the size of bank buildings is irrelevant. Distractor 2 is weak: environmentalism is a positive goal but does not address the economic function of central banks. Distractor 3 is weak: historical precedent is not an argument for why a policy is or is not good."
 },
 {
 kind: "single",
@@ -31271,10 +31631,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because strict donation caps prevent wealthy donors from exerting disproportionate influence over policy decisions, thereby preserving the integrity of democratic processes.",
 distractors: [
 "Yes, because money is often spent on election posters.",
-"Yes, because it would be a new law.",
-    "No, because     "
+"No, because people have always donated money to political parties and changing this would be different from how things currently work.",
+    "No, because one hundred pounds is an oddly specific figure and it is entirely unclear how this particular amount was chosen by policymakers."
 ],
-explanation: "The correct answer is strongest because it addresses the core issue of influence and democratic integrity. Distractor 1 is weak (IRRELEVANT): what money is spent on is not the issue; the source of the money is. Distractor 2 is weak (CIRCULAR): stating it would be a new law does not justify the policy. Distractor 3 is weak (TRIVIAL): commenting on the specific number does not provide a functional argument."
+explanation: "The correct answer is strongest because it addresses the core issue of influence and democratic integrity. Distractor 1 is weak: what money is spent on is not the issue; the source of the money is. Distractor 2 is weak: stating it would be a new law does not justify the policy. Distractor 3 is weak: commenting on the specific number does not provide a functional argument."
 },
 {
 kind: "single",
@@ -31287,10 +31647,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because reducing the availability of high-sugar products lowers the consumption rate, helping to address the long-term national health crisis of obesity and diabetes.",
 distractors: [
 "Yes, because sugar is used in cakes.",
-"Yes, because people should eat healthier food.",
-    "No, because     "
+"No, because people should be free to make their own choices about what they drink.",
+    "No, because many public buildings are very old and were constructed long before the modern widespread availability of sugary drinks."
 ],
-explanation: "The correct answer is strongest because it provides a causal link between availability, consumption, and public health outcomes. Distractor 1 is weak (IRRELEVANT): the use of sugar in other foods is unrelated to the policy. Distractor 2 is weak (CIRCULAR): it just repeats the desirability of healthy food without justifying the ban. Distractor 3 is weak (IRRELEVANT): the age of buildings has no connection to the policy."
+explanation: "The correct answer is strongest because it provides a causal link between availability, consumption, and public health outcomes. Distractor 1 is weak: the use of sugar in other foods is unrelated to the policy. Distractor 2 is weak: it just repeats the desirability of healthy food without justifying the ban. Distractor 3 is weak: the age of buildings has no connection to the policy."
 },
 {
 kind: "single",
@@ -31304,10 +31664,10 @@ correct: "No, because there is no evidence that raising the age to twenty-five w
 ,
 distractors: [
 "No, because some people drink responsibly at twenty-one.",
-"No, because alcohol is sold in many different types of packaging.",
-    "Yes, because     "
+"Yes, because people who are twenty-five years old are more mature than people who are younger, and maturity is important when it comes to making decisions about alcohol.",
+    "Yes, because twenty-five is a significant age milestone already recognised across a wide range of legal and social frameworks."
 ],
-explanation: "The correct answer is strongest because it identifies the negative consequence of an 'underground' shift that bypasses regulation. Distractor 1 is weak (TRIVIAL): individual responsibility is a minor counterpoint that does not address the societal scale of the policy. Distractor 2 is weak (IRRELEVANT): packaging types are unrelated to age regulations. Distractor 3 is weak (TRIVIAL): stating a fact about the number twenty-five is irrelevant to the policy argument."
+explanation: "The correct answer is strongest because it identifies the negative consequence of an 'underground' shift that bypasses regulation. Distractor 1 is weak: individual responsibility is a minor counterpoint that does not address the societal scale of the policy. Distractor 2 is weak: packaging types are unrelated to age regulations. Distractor 3 is weak: stating a fact about the number twenty-five is irrelevant to the policy argument."
 },
 {
 kind: "single",
@@ -31320,10 +31680,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because a rigid mandate would force businesses in labour-intensive industries to cut production or increase prices to cover staffing gaps, severely damaging economic competitiveness.",
 distractors: [
 "No, because some people enjoy working five days.",
-"No, because four is less than five.",
-    "Yes, because     "
+"Yes, because giving people more free time would make them happier, and happier people are generally better at things.",
+    "Yes, because transitioning to a four-day work week is a significant change, and significant changes in working culture tend to open up opportunities for businesses to innovate."
 ],
-explanation: "The correct answer is strongest because it highlights the economic trade-off of staffing gaps and competitiveness. Distractor 1 is weak (TRIVIAL): individual preference is not a basis for economic policy. Distractor 2 is weak (TRIVIAL): the numerical difference is a basic fact, not an argument. Distractor 3 is weak (VAGUE): mentioning it might be difficult does not specify *why* or identify a clear consequence."
+explanation: "The correct answer is strongest because it highlights the economic trade-off of staffing gaps and competitiveness. Distractor 1 is weak: individual preference is not a basis for economic policy. Distractor 2 is weak: the numerical difference is a basic fact, not an argument. Distractor 3 is weak: mentioning it might be difficult does not specify *why* or identify a clear consequence."
 },
 {
 kind: "single",
@@ -31336,10 +31696,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing financial barriers ensures that access to higher education is based on merit rather than socioeconomic background, fostering greater social mobility.",
 distractors: [
 "Yes, because universities have nice libraries.",
-"Yes, because it is important for people to be educated.",
-    "No, because     "
+"No, because free tuition would change the way things currently are, and change is not always good.",
+    "No, because students currently graduate with large amounts of personal debt from living costs, and removing tuition fees alone would not resolve the full scale of that burden."
 ],
-explanation: "The correct answer is strongest because it connects the funding change directly to social mobility and meritocracy. Distractor 1 is weak (IRRELEVANT): library quality does not relate to tuition policy. Distractor 2 is weak (TRIVIAL): stating education is important is a generic sentiment. Distractor 3 is weak (IRRELEVANT): noting current debt exists does not explain why removing tuition is the correct solution."
+explanation: "The correct answer is strongest because it connects the funding change directly to social mobility and meritocracy. Distractor 1 is weak: library quality does not relate to tuition policy. Distractor 2 is weak: stating education is important is a generic sentiment. Distractor 3 is weak: noting current debt exists does not explain why removing tuition is the correct solution."
 },
 {
 kind: "single",
@@ -31352,10 +31712,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because universal access to high-speed internet is essential for modern business and remote work, and private companies have failed to provide this to rural areas.",
 distractors: [
 "Yes, because the internet is used for watching videos.",
-"Yes, because technology is always improving.",
-    "No, because     "
+"No, because the internet is something that already exists, so we don't need to build it again.",
+    "No, because computers and smartphones are already very widely owned, which shows that private companies can meet demand without requiring government investment."
 ],
-explanation: "The correct answer is strongest because it identifies a market failure (the rural gap) and the economic necessity of the service. Distractor 1 is weak (IRRELEVANT): video watching is a trivial use case. Distractor 2 is weak (VAGUE): stating technology is improving is not a reason to fund specific infrastructure. Distractor 3 is weak (IRRELEVANT): the popularity of computers does not justify state investment in fibre."
+explanation: "The correct answer is strongest because it identifies a market failure (the rural gap) and the economic necessity of the service. Distractor 1 is weak: video watching is a trivial use case. Distractor 2 is weak: stating technology is improving is not a reason to fund specific infrastructure. Distractor 3 is weak: the popularity of computers does not justify state investment in fibre."
 },
 {
 kind: "single",
@@ -31368,10 +31728,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because a mandatory retirement age ensures a regular turnover of the judiciary, bringing in younger perspectives and preventing the stagnation of legal precedents.",
 distractors: [
 "Yes, because seventy is a long time to work.",
-"Yes, because people get older as time passes.",
-    "No, because     "
+"No, because judges are people who wear robes and make decisions, and forcing people to stop doing their jobs is something that happens when you make them stop doing their jobs.",
+    "No, because retired judges could take on advisory roles elsewhere in the legal profession, meaning mandatory retirement does not reduce their overall contribution."
 ],
-explanation: "The correct answer is strongest because it links the policy to the functional benefit of legal progress and judicial turnover. Distractor 1 is weak (TRIVIAL): commenting on the length of a career is not a policy argument. Distractor 2 is weak (TRIVIAL): stating that people age is a self-evident fact. Distractor 3 is weak (VAGUE): saying they could do other things does not address why retirement is necessary for the court."
+explanation: "The correct answer is strongest because it links the policy to the functional benefit of legal progress and judicial turnover. Distractor 1 is weak: commenting on the length of a career is not a policy argument. Distractor 2 is weak: stating that people age is a self-evident fact. Distractor 3 is weak: saying they could do other things does not address why retirement is necessary for the court."
 },
 {
 kind: "single",
@@ -31384,10 +31744,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because single-use plastics are a major contributor to ocean pollution and microplastic contamination, which have long-term devastating effects on global biodiversity and human food safety.",
 distractors: [
 "Yes, because plastic is made from oil.",
-"Yes, because it would be a big change for companies.",
-    "No, because     "
+"No, because people have been using single-use plastics for a long time and they are used by many people everywhere.",
+    "No, because single-use plastics come in many different forms and materials, making a blanket production ban difficult to define and enforce consistently."
 ],
-explanation: "The correct answer is strongest because it links the policy to a clear, evidence-based environmental and health consequence. Distractor 1 is weak (IRRELEVANT): the manufacturing process is not the issue, but the post-use pollution. Distractor 2 is weak (VAGUE): noting that it is a big change does not evaluate whether the change is positive or negative. Distractor 3 is weak (IRRELEVANT): colour is irrelevant to environmental impact."
+explanation: "The correct answer is strongest because it links the policy to a clear, evidence-based environmental and health consequence. Distractor 1 is weak: the manufacturing process is not the issue, but the post-use pollution. Distractor 2 is weak: noting that it is a big change does not evaluate whether the change is positive or negative. Distractor 3 is weak: colour is irrelevant to environmental impact."
 },
 {
 kind: "single",
@@ -31400,10 +31760,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because forcing equal budgets regardless of revenue and market demand would threaten the financial sustainability of smaller clubs, potentially leading to widespread insolvency.",
 distractors: [
 "No, because sports are meant to be fun.",
-"No, because some sports teams have more players.",
-    "Yes, because     "
+"Yes, because equality is important and sports teams should support equality by doing equal things.",
+    "Yes, because gender equality is an important value in modern society, and sports organisations should reflect this by treating male and female squads equally."
 ],
-explanation: "The correct answer is strongest because it addresses the economic viability of the organisations involved. Distractor 1 is weak (TRIVIAL): fun is not a basis for budgetary policy. Distractor 2 is weak (IRRELEVANT): player count is not the primary driver of budget allocation. Distractor 3 is weak (VAGUE): stating that gender is important is a sentiment, not a reasoned argument against this specific policy."
+explanation: "The correct answer is strongest because it addresses the economic viability of the organisations involved. Distractor 1 is weak: fun is not a basis for budgetary policy. Distractor 2 is weak: player count is not the primary driver of budget allocation. Distractor 3 is weak: stating that gender is important is a sentiment, not a reasoned argument against this specific policy."
 },
 {
 kind: "single",
@@ -31416,10 +31776,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because not all vacant land is suitable for residential development, and building in flood zones or contaminated areas would create severe safety risks and long-term maintenance costs.",
 distractors: [
 "No, because some people like having open green space.",
-"No, because land is where buildings are usually built.",
-    "Yes, because     "
+"Yes, because housing is important and affordable housing would help people who need affordable housing.",
+    "Yes, because building affordable housing takes time, so starting construction on all available vacant land immediately ensures more homes will be completed sooner."
 ],
-explanation: "The correct answer is strongest because it identifies the safety and economic risks of building on unsuitable land. Distractor 1 is weak (NON-SEQUITUR): preference for green space is a planning consideration, but does not address the safety argument. Distractor 2 is weak (CIRCULAR): stating land is where buildings are built is a truism. Distractor 3 is weak (TRIVIAL): stating that construction takes time is a generic fact."
+explanation: "The correct answer is strongest because it identifies the safety and economic risks of building on unsuitable land. Distractor 1 is weak: preference for green space is a planning consideration, but does not address the safety argument. Distractor 2 is weak: stating land is where buildings are built is a truism. Distractor 3 is weak: stating that construction takes time is a generic fact."
 },
 {
 kind: "single",
@@ -31432,10 +31792,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because foundational coding skills are becoming essential in the modern economy, and providing this training in schools ensures equal opportunity for students from all backgrounds.",
 distractors: [
 "Yes, because computers are used in schools.",
-"Yes, because it is good to learn new things.",
-    "No, because     "
+"No, because not all students will enjoy coding, so making it mandatory wouldn't be fair to those who prefer other subjects.",
+    "No, because learning to code is similar to learning to write in that both involve structured rules, so it does not need to be treated as a separate mandatory subject."
 ],
-explanation: "The correct answer is strongest because it connects the proposal to economic necessity and equal opportunity. Distractor 1 is weak (IRRELEVANT): the current use of computers does not justify making a specific skill a core subject. Distractor 2 is weak (VAGUE): saying it is good to learn new things is too general to support a policy mandate. Distractor 3 is weak (IRRELEVANT): a semantic comparison between coding and writing does not provide a functional reason for the policy."
+explanation: "The correct answer is strongest because it connects the proposal to economic necessity and equal opportunity. Distractor 1 is weak: the current use of computers does not justify making a specific skill a core subject. Distractor 2 is weak: saying it is good to learn new things is too general to support a policy mandate. Distractor 3 is weak: a semantic comparison between coding and writing does not provide a functional reason for the policy."
 },
 {
 kind: "single",
@@ -31446,10 +31806,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would significantly reduce children's exposure to harmful content and predatory behavior by enforcing age restrictions at the software level.",
 distractors: [
 "Yes, because it is important to consider the online safety of minors.",
-"Yes, because children are currently using social media.",
+"No, because social media platforms already exist in the world today.",
 "No, because some people prefer to watch movies instead of using social media."
 ],
-explanation: "The correct answer is strongest because it links the mechanism of age-verification to a direct, actionable protection of minors. Distractor 1 is weak (VAGUE): it states a goal without explaining how the proposal achieves it. Distractor 2 is weak (TRIVIAL): it is a statement of fact that does not address the impact of the policy. Distractor 3 is weak (NON-SEQUITUR): personal entertainment preferences are irrelevant to digital safety policy."
+explanation: "The correct answer is strongest because it links the mechanism of age-verification to a direct, actionable protection of minors. Distractor 1 is weak: it states a goal without explaining how the proposal achieves it. Distractor 2 is weak: it is a statement of fact that does not address the impact of the policy. Distractor 3 is weak: personal entertainment preferences are irrelevant to digital safety policy."
 },
 {
 kind: "single",
@@ -31460,10 +31820,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it prevents the deliberate deception of voters, ensuring that democratic discourse is based on authentic candidate statements rather than fabricated events.",
 distractors: [
 "Yes, because deepfakes are technologically advanced.",
-"Yes, because banning things is often a way to stop them.",
+"No, because banning things is generally something that governments do, and governments already exist, so additional bans would just be more of what already happens.",
 "No, because some political candidates live in small apartments."
 ],
-explanation: "The correct answer is strongest because it addresses the integrity of elections and the specific harm of misinformation. Distractor 1 is weak (IRRELEVANT): the sophistication of the tech does not justify or condemn its use. Distractor 2 is weak (CIRCULAR): it essentially says a ban stops things because it is a ban. Distractor 3 is weak (NON-SEQUITUR): candidate housing has no relation to digital advertising regulation."
+explanation: "The correct answer is strongest because it addresses the integrity of elections and the specific harm of misinformation. Distractor 1 is weak: the sophistication of the tech does not justify or condemn its use. Distractor 2 is weak: it essentially says a ban stops things because it is a ban. Distractor 3 is weak: candidate housing has no relation to digital advertising regulation."
 },
 {
 kind: "single",
@@ -31474,10 +31834,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because mandatory public utility regulation would likely stifle private sector investment and slow the deployment of cutting-edge network infrastructure.",
 distractors: [
 "No, because the internet is a large network of computers.",
-"No, because utility companies have many rules.",
+"Yes, because many people use the internet nowadays.",
 "Yes, because digital access is important."
 ],
-explanation: "The correct answer is strongest because it identifies a specific economic trade-off (private investment vs. regulation) that impacts infrastructure growth. Distractor 1 is weak (IRRELEVANT): describing what the internet is does not address the regulatory proposal. Distractor 2 is weak (VAGUE): stating that utility companies have rules does not explain the negative impact. Distractor 3 is weak (VAGUE): while true, it does not explain how utility classification achieves the goal of universal access."
+explanation: "The correct answer is strongest because it identifies a specific economic trade-off (private investment vs. regulation) that impacts infrastructure growth. Distractor 1 is weak: describing what the internet is does not address the regulatory proposal. Distractor 2 is weak: stating that utility companies have rules does not explain the negative impact. Distractor 3 is weak: while true, it does not explain how utility classification achieves the goal of universal access."
 },
 {
 kind: "single",
@@ -31488,10 +31848,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it extends the lifespan of electronic devices, thereby significantly reducing the volume of toxic e-waste sent to landfills.",
 distractors: [
 "Yes, because old electronics are sometimes dusty.",
-"Yes, because repair is a form of maintenance.",
+"No, because manufacturers are companies that make things, and companies need to make money to stay in business.",
 "No, because some people prefer to buy new shoes."
 ],
-explanation: "The correct answer is strongest because it highlights the direct environmental consequence of reduced waste. Distractor 1 is weak (TRIVIAL): dustiness is not a policy concern. Distractor 2 is weak (CIRCULAR): defining repair does not support the policy. Distractor 3 is weak (NON-SEQUITUR): shoe purchasing habits have no bearing on electronics policy."
+explanation: "The correct answer is strongest because it highlights the direct environmental consequence of reduced waste. Distractor 1 is weak: dustiness is not a policy concern. Distractor 2 is weak: defining repair does not support the policy. Distractor 3 is weak: shoe purchasing habits have no bearing on electronics policy."
 },
 {
 kind: "single",
@@ -31502,10 +31862,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because legal liability would create a powerful financial incentive for companies to prioritize rigorous security testing throughout the software development lifecycle.",
 distractors: [
 "Yes, because data breaches are unfortunate events.",
-"Yes, because software is written in code.",
+"No, because security vulnerabilities are just part of how software works and it's not really fair to hold companies responsible for things that happen in the digital world.",
 "No, because some programmers like to drink coffee."
 ],
-explanation: "The correct answer is strongest because it links legal pressure to a change in corporate behavior (security testing). Distractor 1 is weak (VAGUE): calling a breach an 'unfortunate event' does not provide a reasoned argument. Distractor 2 is weak (IRRELEVANT): describing the nature of code does not inform liability policy. Distractor 3 is weak (NON-SEQUITUR): caffeine preferences have no impact on software security."
+explanation: "The correct answer is strongest because it links legal pressure to a change in corporate behavior (security testing). Distractor 1 is weak: calling a breach an 'unfortunate event' does not provide a reasoned argument. Distractor 2 is weak: describing the nature of code does not inform liability policy. Distractor 3 is weak: caffeine preferences have no impact on software security."
 },
 {
 kind: "single",
@@ -31516,10 +31876,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because it would penalize firms for adopting productivity-enhancing technologies, effectively slowing national economic growth and technological innovation.",
 distractors: [
 "No, because taxes are often collected by governments.",
-"No, because some robots are very fast.",
+"Yes, because automation is something that happens in the modern world.",
 "Yes, because the economy is complex."
 ],
-explanation: "The correct answer is strongest because it explains the negative macro-economic impact of the proposed tax. Distractor 1 is weak (CIRCULAR): describing who collects taxes does not provide an argument. Distractor 2 is weak (IRRELEVANT): the speed of a robot does not argue for or against a tax. Distractor 3 is weak (VAGUE): saying the economy is complex is a truism that offers no analytical insight."
+explanation: "The correct answer is strongest because it explains the negative macro-economic impact of the proposed tax. Distractor 1 is weak: describing who collects taxes does not provide an argument. Distractor 2 is weak: the speed of a robot does not argue for or against a tax. Distractor 3 is weak: saying the economy is complex is a truism that offers no analytical insight."
 },
 {
 kind: "single",
@@ -31530,10 +31890,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it protects user privacy and ensures household devices remain operational during internet outages or cloud service failures.",
 distractors: [
 "Yes, because some people live in houses.",
-"Yes, because it would change the way devices are designed.",
+"No, because removing the internet requirement would make smart home devices less capable in some way.",
 "No, because cables can be long."
 ],
-explanation: "The correct answer is strongest because it directly addresses the benefits of resiliency and privacy. Distractor 1 is weak (IRRELEVANT): the fact that people live in houses does not support the need for offline modes. Distractor 2 is weak (VAGUE): it mentions a change but fails to explain why that change is beneficial. Distractor 3 is weak (NON-SEQUITUR): cable length is unrelated to device functionality."
+explanation: "The correct answer is strongest because it directly addresses the benefits of resiliency and privacy. Distractor 1 is weak: the fact that people live in houses does not support the need for offline modes. Distractor 2 is weak: it mentions a change but fails to explain why that change is beneficial. Distractor 3 is weak: cable length is unrelated to device functionality."
 },
 {
 kind: "single",
@@ -31544,10 +31904,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because self-preferencing limits fair competition by artificially directing traffic away from independent businesses, which stifles market diversity.",
 distractors: [
 "Yes, because search engines have many users.",
-"Yes, because it would be a new rule.",
+"No, because search engines are companies that provide services to people who use the internet.",
 "No, because some colors are blue."
 ],
-explanation: "The correct answer is strongest because it articulates the harm to market competition and independent entities. Distractor 1 is weak (IRRELEVANT): the number of users is not a basis for antitrust concerns. Distractor 2 is weak (CIRCULAR): it just states that a prohibition is a rule. Distractor 3 is weak (NON-SEQUITUR): colors have no relation to search engine algorithms."
+explanation: "The correct answer is strongest because it articulates the harm to market competition and independent entities. Distractor 1 is weak: the number of users is not a basis for antitrust concerns. Distractor 2 is weak: it just states that a prohibition is a rule. Distractor 3 is weak: colors have no relation to search engine algorithms."
 },
 {
 kind: "single",
@@ -31558,10 +31918,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because a centralized government service would create a single point of failure that could be targeted by state-sponsored hackers to monitor all citizen communication.",
 distractors: [
 "No, because people already have many email addresses.",
-"No, because computers are expensive.",
+"Yes, because having an encrypted email service would mean people could send emails securely, which is what encryption does.",
 "Yes, because secure communication is generally considered good."
 ],
-explanation: "The correct answer is strongest because it highlights a critical security flaw (the 'honeypot' effect) inherent in centralized systems. Distractor 1 is weak (IRRELEVANT): existing email usage does not address the security proposal. Distractor 2 is weak (IRRELEVANT): the cost of hardware is a secondary issue compared to systemic security. Distractor 3 is weak (VAGUE): it agrees with the premise without addressing the risks or mechanisms of the proposal."
+explanation: "The correct answer is strongest because it highlights a critical security flaw (the 'honeypot' effect) inherent in centralized systems. Distractor 1 is weak: existing email usage does not address the security proposal. Distractor 2 is weak: the cost of hardware is a secondary issue compared to systemic security. Distractor 3 is weak: it agrees with the premise without addressing the risks or mechanisms of the proposal."
 },
 {
 kind: "single",
@@ -31572,10 +31932,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because a 24-hour deadline would lead to over-censorship, as platforms would likely delete legitimate scientific debate to avoid heavy fines.",
 distractors: [
 "No, because misinformation can sometimes be funny.",
-"No, because some people work at night.",
+"Yes, because if misinformation isn't removed quickly, more people might see it.",
 "Yes, because misinformation is bad for society."
 ],
-explanation: "The correct answer is strongest because it identifies the consequence of the policy on speech and platform moderation behavior. Distractor 1 is weak (IRRELEVANT): the humor of misinformation is not a policy concern. Distractor 2 is weak (NON-SEQUITUR): employee work schedules are irrelevant to content policy. Distractor 3 is weak (VAGUE): stating misinformation is bad is a general truth that fails to address the practical concerns of implementing the 24-hour rule."
+explanation: "The correct answer is strongest because it identifies the consequence of the policy on speech and platform moderation behavior. Distractor 1 is weak: the humor of misinformation is not a policy concern. Distractor 2 is weak: employee work schedules are irrelevant to content policy. Distractor 3 is weak: stating misinformation is bad is a general truth that fails to address the practical concerns of implementing the 24-hour rule."
 },
 {
 kind: "single",
@@ -31586,10 +31946,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because open-source requirements allow cities to switch service providers easily, fostering competitive pricing and preventing reliance on a single proprietary supplier.",
 distractors: [
 "Yes, because open-source is a type of software license.",
-"Yes, because sensors are often found in cities.",
+"No, because smart city sensors are an important part of modern infrastructure and we should be careful about making changes to important things.",
 "No, because cities have a lot of traffic."
 ],
-explanation: "The correct answer is strongest because it explains the economic benefit (competition and lower costs) of avoiding vendor lock-in. Distractor 1 is weak (CIRCULAR): it defines what open-source is without arguing for its use. Distractor 2 is weak (TRIVIAL): the location of sensors is not relevant to the procurement policy. Distractor 3 is weak (NON-SEQUITUR): traffic levels do not inform sensor procurement."
+explanation: "The correct answer is strongest because it explains the economic benefit (competition and lower costs) of avoiding vendor lock-in. Distractor 1 is weak: it defines what open-source is without arguing for its use. Distractor 2 is weak: the location of sensors is not relevant to the procurement policy. Distractor 3 is weak: traffic levels do not inform sensor procurement."
 },
 {
 kind: "single",
@@ -31600,10 +31960,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because automated filters frequently flag nuanced speech, such as satire or education, and human review is the only way to ensure procedural fairness for users.",
 distractors: [
 "Yes, because humans can read words.",
-"Yes, because it would create more jobs.",
+"No, because platforms are companies and companies exist to make money.",
 "No, because some people prefer to listen to music."
 ],
-explanation: "The correct answer is strongest because it addresses the specific failure of current automated systems (lack of nuance) and the solution (procedural fairness). Distractor 1 is weak (TRIVIAL): human literacy is a given. Distractor 2 is weak (VAGUE): job creation is a secondary effect, not a primary argument for the fairness of the policy. Distractor 3 is weak (NON-SEQUITUR): music preferences are unrelated."
+explanation: "The correct answer is strongest because it addresses the specific failure of current automated systems (lack of nuance) and the solution (procedural fairness). Distractor 1 is weak: human literacy is a given. Distractor 2 is weak: job creation is a secondary effect, not a primary argument for the fairness of the policy. Distractor 3 is weak: music preferences are unrelated."
 },
 {
 kind: "single",
@@ -31614,10 +31974,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because a national digital identity creates a central database that, if compromised, would expose the entire population to identity theft and state surveillance.",
 distractors: [
 "No, because citizens have different hobbies.",
-"No, because it is a new project.",
+"Yes, because digital identity programs are something that other countries have, and having things that other countries have is generally beneficial.",
 "Yes, because it would be a very modern system."
 ],
-explanation: "The correct answer is strongest because it identifies the existential security and privacy risks of a centralized national database. Distractor 1 is weak (NON-SEQUITUR): hobbies have no bearing on security policy. Distractor 2 is weak (VAGUE): being 'new' is not a substantive argument. Distractor 3 is weak (VAGUE): 'modern' is not a sufficient justification for a risky policy."
+explanation: "The correct answer is strongest because it identifies the existential security and privacy risks of a centralized national database. Distractor 1 is weak: hobbies have no bearing on security policy. Distractor 2 is weak: being 'new' is not a substantive argument. Distractor 3 is weak: 'modern' is not a sufficient justification for a risky policy."
 },
 {
 kind: "single",
@@ -31628,10 +31988,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because public audit is the only way to ensure these algorithms do not contain hidden biases that unfairly deny benefits to vulnerable demographics.",
 distractors: [
 "Yes, because transparency is generally considered a good value.",
-"Yes, because algorithms are made of math.",
+"No, because algorithms are complex things that require expertise to understand properly.",
 "No, because some people have pets."
 ],
-explanation: "The correct answer is strongest because it connects the need for transparency to the prevention of systemic discrimination (bias). Distractor 1 is weak (VAGUE): it cites a general value without specific application. Distractor 2 is weak (IRRELEVANT): the composition of algorithms is not an argument for audit. Distractor 3 is weak (NON-SEQUITUR): pet ownership is unrelated."
+explanation: "The correct answer is strongest because it connects the need for transparency to the prevention of systemic discrimination (bias). Distractor 1 is weak: it cites a general value without specific application. Distractor 2 is weak: the composition of algorithms is not an argument for audit. Distractor 3 is weak: pet ownership is unrelated."
 },
 {
 kind: "single",
@@ -31642,10 +32002,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because in the modern era, internet access is essential for exercising basic rights like education, employment, and participating in democratic processes.",
 distractors: [
 "Yes, because the United Nations does many things.",
-"Yes, because people like to browse the web.",
+"No, because the internet is just something that exists on computers and declaring things as rights might change how people think about other things.",
 "No, because some mountains are tall."
 ],
-explanation: "The correct answer is strongest because it grounds the proposal in how the internet facilitates other established fundamental rights. Distractor 1 is weak (VAGUE): it provides no reason specific to the proposal. Distractor 2 is weak (TRIVIAL): individual browsing habits are not grounds for a human right. Distractor 3 is weak (NON-SEQUITUR): geography is irrelevant."
+explanation: "The correct answer is strongest because it grounds the proposal in how the internet facilitates other established fundamental rights. Distractor 1 is weak: it provides no reason specific to the proposal. Distractor 2 is weak: individual browsing habits are not grounds for a human right. Distractor 3 is weak: geography is irrelevant."
 },
 {
 kind: "single",
@@ -31656,10 +32016,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because autonomous machines lack the human moral agency required to make complex ethical decisions in the heat of combat, risking illegal and disproportionate use of force.",
 distractors: [
 "Yes, because weapons can be dangerous.",
-"Yes, because the machines would need to be built first.",
+"No, because other countries might develop lethal autonomous weapons systems anyway, so we should too.",
 "No, because some soldiers enjoy eating sandwiches."
 ],
-explanation: "The correct answer is strongest because it identifies the lack of accountability and moral judgment as a lethal risk. Distractor 1 is weak (TRIVIAL): weapons are inherently dangerous, so this is a truism. Distractor 2 is weak (CIRCULAR): it just states the sequence of events. Distractor 3 is weak (NON-SEQUITUR): soldier meal habits are irrelevant."
+explanation: "The correct answer is strongest because it identifies the lack of accountability and moral judgment as a lethal risk. Distractor 1 is weak: weapons are inherently dangerous, so this is a truism. Distractor 2 is weak: it just states the sequence of events. Distractor 3 is weak: soldier meal habits are irrelevant."
 },
 {
 kind: "single",
@@ -31670,10 +32030,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because widespread 5G is necessary to support emerging technologies like telemedicine and autonomous transport, which provide significant long-term economic and social benefits.",
 distractors: [
 "Yes, because 5G is faster than 4G.",
-"Yes, because the government has a budget.",
+"No, because 5G infrastructure rollout is something that involves the government doing something, and government doing things is generally not always the best approach.",
 "No, because some cars are red."
 ],
-explanation: "The correct answer is strongest because it links the infrastructure to its functional enabling capacity (telemedicine, autonomous transport). Distractor 1 is weak (TRIVIAL): speed is a minor technical detail that doesn't capture the societal impact. Distractor 2 is weak (IRRELEVANT): the existence of a budget doesn't justify a specific policy. Distractor 3 is weak (NON-SEQUITUR): car color is irrelevant."
+explanation: "The correct answer is strongest because it links the infrastructure to its functional enabling capacity (telemedicine, autonomous transport). Distractor 1 is weak: speed is a minor technical detail that doesn't capture the societal impact. Distractor 2 is weak: the existence of a budget doesn't justify a specific policy. Distractor 3 is weak: car color is irrelevant."
 },
 {
 kind: "single",
@@ -31684,10 +32044,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because pervasive facial recognition chills free speech and assembly by creating a constant fear of state identification and future reprisal for peaceful protestors.",
 distractors: [
 "Yes, because cameras are everywhere.",
-"Yes, because it is a new type of technology.",
+"No, because facial recognition technology is a technology and technologies are things that exist in modern society.",
 "No, because some people have blonde hair."
 ],
-explanation: "The correct answer is strongest because it identifies a clear constitutional harm (chilling effect on civil liberties). Distractor 1 is weak (TRIVIAL): the prevalence of cameras is a fact, not an argument. Distractor 2 is weak (VAGUE): 'new technology' is not a reason for banning it. Distractor 3 is weak (NON-SEQUITUR): hair color has no bearing on surveillance policy."
+explanation: "The correct answer is strongest because it identifies a clear constitutional harm (chilling effect on civil liberties). Distractor 1 is weak: the prevalence of cameras is a fact, not an argument. Distractor 2 is weak: 'new technology' is not a reason for banning it. Distractor 3 is weak: hair color has no bearing on surveillance policy."
 },
 {
 kind: "single",
@@ -31698,10 +32058,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because providing access to aggregated, anonymized data is crucial for independent researchers to study the impact of platform algorithms on public mental health and democracy.",
 distractors: [
 "Yes, because researchers are often in universities.",
-"Yes, because it would be a requirement.",
+"No, because technology platforms are very important and important things should be kept private.",
 "No, because some people like to read books."
 ],
-explanation: "The correct answer is strongest because it links data access to the specific societal benefit of oversight. Distractor 1 is weak (IRRELEVANT): the location of researchers doesn't argue for the policy. Distractor 2 is weak (CIRCULAR): it just repeats that it would be a requirement. Distractor 3 is weak (NON-SEQUITUR): book reading is irrelevant."
+explanation: "The correct answer is strongest because it links data access to the specific societal benefit of oversight. Distractor 1 is weak: the location of researchers doesn't argue for the policy. Distractor 2 is weak: it just repeats that it would be a requirement. Distractor 3 is weak: book reading is irrelevant."
 },
 {
 kind: "single",
@@ -31712,10 +32072,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it forces manufacturers to innovate sustainable alternatives, which is necessary to stem the growing crisis of microplastic pollution in our oceans.",
 distractors: [
 "Yes, because recycling is a process.",
-"Yes, because it would affect companies.",
+"No, because packaging is used to protect products, which is important.",
 "No, because some clouds are white."
 ],
-explanation: "The correct answer is strongest because it links a policy mandate to an environmental necessity (microplastics). Distractor 1 is weak (CIRCULAR): defines recycling as a process. Distractor 2 is weak (VAGUE): states it affects companies but doesn't explain why that is good or bad. Distractor 3 is weak (NON-SEQUITUR): cloud color is irrelevant."
+explanation: "The correct answer is strongest because it links a policy mandate to an environmental necessity (microplastics). Distractor 1 is weak: defines recycling as a process. Distractor 2 is weak: states it affects companies but doesn't explain why that is good or bad. Distractor 3 is weak: cloud color is irrelevant."
 },
 {
 kind: "single",
@@ -31726,10 +32086,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mandating accessibility features ensures that gaming remains an inclusive form of social participation for millions of people with various physical or cognitive impairments.",
 distractors: [
 "Yes, because video games are fun.",
-"Yes, because it would require developers to do work.",
+"No, because not all games are the same, so they shouldn't all have to do the same things.",
 "No, because some people have a garden."
 ],
-explanation: "The correct answer is strongest because it emphasizes equality and social participation for an underserved group. Distractor 1 is weak (VAGUE): fun is subjective and doesn't argue for accessibility. Distractor 2 is weak (VAGUE): that it requires work doesn't address whether that work is justified. Distractor 3 is weak (NON-SEQUITUR): gardening is irrelevant."
+explanation: "The correct answer is strongest because it emphasizes equality and social participation for an underserved group. Distractor 1 is weak: fun is subjective and doesn't argue for accessibility. Distractor 2 is weak: that it requires work doesn't address whether that work is justified. Distractor 3 is weak: gardening is irrelevant."
 },
 {
 kind: "single",
@@ -31740,10 +32100,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because government-mandated device behavior is a significant overreach that undermines individual autonomy and the ability of users to manage their own digital habits.",
 distractors: [
 "No, because people have different sleep schedules.",
-"No, because it would be a new policy.",
+"Yes, because many people use their phones before bed and this policy would help with that.",
 "Yes, because sleep is important for health."
 ],
-explanation: "The correct answer is strongest because it highlights the conflict between paternalistic government intervention and personal liberty. Distractor 1 is weak (TRIVIAL): varying sleep schedules don't address the government overreach argument. Distractor 2 is weak (VAGUE): 'new policy' is not an argument. Distractor 3 is weak (VAGUE): it validates the goal (sleep) but fails to explain why a mandate is the correct instrument."
+explanation: "The correct answer is strongest because it highlights the conflict between paternalistic government intervention and personal liberty. Distractor 1 is weak: varying sleep schedules don't address the government overreach argument. Distractor 2 is weak: 'new policy' is not an argument. Distractor 3 is weak: it validates the goal (sleep) but fails to explain why a mandate is the correct instrument."
 },
 {
 kind: "single",
@@ -31754,10 +32114,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it bridges the digital divide, providing low-income citizens with access to essential online job applications, government services, and educational resources.",
 distractors: [
 "Yes, because it would be free for users.",
-"Yes, because urban centers have many people.",
+"No, because free Wi-Fi is something that already exists in some places, so providing it everywhere would just be more of what we already have.",
 "No, because some trees are tall."
 ],
-explanation: "The correct answer is strongest because it directly links the policy to addressing systemic social inequality (the digital divide). Distractor 1 is weak (CIRCULAR): 'it is free' just repeats that it is provided for free. Distractor 2 is weak (IRRELEVANT): population density is not an argument for connectivity. Distractor 3 is weak (NON-SEQUITUR): tree height is irrelevant."
+explanation: "The correct answer is strongest because it directly links the policy to addressing systemic social inequality (the digital divide). Distractor 1 is weak: 'it is free' just repeats that it is provided for free. Distractor 2 is weak: population density is not an argument for connectivity. Distractor 3 is weak: tree height is irrelevant."
 },
 {
 kind: "single",
@@ -31768,10 +32128,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because many complex AI models (such as deep neural networks) are inherently opaque, and forcing an explanation could severely limit their accuracy and performance.",
 distractors: [
 "No, because computers are fast.",
-"No, because it would be a regulation.",
+"Yes, because people would probably feel better about AI if they understood what it was doing.",
 "Yes, because explanations are easy to read."
 ],
-explanation: "The correct answer is strongest because it identifies the technical trade-off between model transparency and functional performance. Distractor 1 is weak (IRRELEVANT): computer speed does not relate to transparency. Distractor 2 is weak (CIRCULAR): stating it is a regulation is not an argument against it. Distractor 3 is weak (VAGUE): ease of reading is a minor detail that ignores the technical complexity argument."
+explanation: "The correct answer is strongest because it identifies the technical trade-off between model transparency and functional performance. Distractor 1 is weak: computer speed does not relate to transparency. Distractor 2 is weak: stating it is a regulation is not an argument against it. Distractor 3 is weak: ease of reading is a minor detail that ignores the technical complexity argument."
 },
 {
 kind: "single",
@@ -31783,11 +32143,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it would likely necessitate unsustainable tax hikes or drastic cuts to other essential public services, destabilizing the national economy.",
 distractors: [
-"Yes, because people deserve to have money in their pockets to spend (TRIVIAL: provides no evidence regarding economic feasibility or structural impact).",
-"Yes, because a universal basic income is a form of income that is basic and universal (CIRCULAR: merely restates the proposal).",
-"No, because some people enjoy gardening in their spare time (IRRELEVANT: personal hobbies have no bearing on macroeconomic policy)."
+"Yes, because people deserve to have money in their pockets to spend.",
+"Yes, because a universal basic income is a form of income that is basic and universal.",
+"No, because some people enjoy gardening in their spare time."
 ],
-explanation: "The correct answer is strongest because it addresses the core economic sustainability of the proposal with a concrete negative consequence. Distractor 1 is weak (TRIVIAL): it offers a simplistic justification without addressing the policy consequences. Distractor 2 is weak (CIRCULAR): it uses the terms of the proposal to define it. Distractor 3 is weak (IRRELEVANT): it introduces an unrelated fact about personal habits."
+explanation: "The correct answer is strongest because it addresses the core economic sustainability of the proposal with a concrete negative consequence. Distractor 1 is weak: it offers a simplistic justification without addressing the policy consequences. Distractor 2 is weak: it uses the terms of the proposal to define it. Distractor 3 is weak: it introduces an unrelated fact about personal habits."
 },
 {
 kind: "single",
@@ -31799,11 +32159,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it would likely trigger severe inflation and reduce the purchasing power of savings, potentially leading to a long-term economic downturn.",
 distractors: [
-"Yes, because interest rates are a primary tool used by banks to influence money flow (TRIVIAL: states a general fact without justifying why zero is the right level).",
-"Yes, because zero percent is a very low number that makes borrowing cheaper for everyone (VAGUE: fails to account for the complex macroeconomic repercussions of such a policy).",
-"No, because many people dislike the color of the current currency notes (NON-SEQUITUR: aesthetic preferences for currency are unrelated to monetary policy)."
+"Yes, because interest rates are a primary tool used by banks to influence money flow.",
+"Yes, because zero percent is a very low number that makes borrowing cheaper for everyone.",
+"No, because many people dislike the color of the current currency notes."
 ],
-explanation: "The correct answer is strongest because it highlights a specific, significant risk (inflation/purchasing power) directly caused by the proposed rate. Distractor 1 is weak (TRIVIAL): it defines a function without analyzing the policy impact. Distractor 2 is weak (VAGUE): it ignores the wider economic dangers of extreme rate setting. Distractor 3 is weak (NON-SEQUITUR): it introduces an entirely unrelated factor."
+explanation: "The correct answer is strongest because it highlights a specific, significant risk (inflation/purchasing power) directly caused by the proposed rate. Distractor 1 is weak: it defines a function without analyzing the policy impact. Distractor 2 is weak: it ignores the wider economic dangers of extreme rate setting. Distractor 3 is weak: it introduces an entirely unrelated factor."
 },
 {
 kind: "single",
@@ -31815,11 +32175,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it would likely lead to a 'brain drain' where top-tier talent moves to international markets with more competitive compensation packages, damaging domestic industry performance.",
 distractors: [
-"Yes, because executives often make a lot of money and some of it should go elsewhere (VAGUE: fails to define a causal mechanism for how this helps the economy).",
-"Yes, because capping bonuses is a policy that involves limiting the bonuses of executives (CIRCULAR: restates the proposal).",
-"No, because corporations have diverse office cultures that vary by sector (IRRELEVANT: office culture does not influence the impact of compensation regulation)."
+"Yes, because executives often make a lot of money and some of it should go elsewhere.",
+"Yes, because capping bonuses is a policy that involves limiting the bonuses of executives.",
+"No, because corporations have diverse office cultures that vary by sector."
 ],
-explanation: "The correct answer is strongest because it identifies a realistic, significant economic consequence (talent flight). Distractor 1 is weak (VAGUE): it relies on an ill-defined sense of fairness rather than economic logic. Distractor 2 is weak (CIRCULAR): it defines the action without justification. Distractor 3 is weak (IRRELEVANT): it focuses on culture rather than the specific economic mechanism of bonuses."
+explanation: "The correct answer is strongest because it identifies a realistic, significant economic consequence (talent flight). Distractor 1 is weak: it relies on an ill-defined sense of fairness rather than economic logic. Distractor 2 is weak: it defines the action without justification. Distractor 3 is weak: it focuses on culture rather than the specific economic mechanism of bonuses."
 },
 {
 kind: "single",
@@ -31831,11 +32191,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because market competition would incentivize private operators to innovate and reduce operational inefficiencies, ultimately lowering costs for consumers.",
 distractors: [
-"Yes, because privatization is a common trend seen in many countries throughout history (IRRELEVANT: historical trends do not prove that a specific policy will be beneficial in the present).",
-"No, because some people believe that the color green is associated with energy (NON-SEQUITUR: aesthetic associations have no role in infrastructure management).",
-"No, because it is not ideal to have infrastructure that is managed by private entities rather than the state (CIRCULAR: merely asserts the negative position without providing a specific reason)."
+"Yes, because privatization is a common trend seen in many countries throughout history.",
+"No, because some people believe that the color green is associated with energy.",
+"No, because it is not ideal to have infrastructure that is managed by private entities rather than the state."
 ],
-explanation: "The correct answer is strongest because it links privatization to a clear economic outcome (efficiency/consumer cost). Distractor 1 is weak (IRRELEVANT): it confuses a trend with evidence of success. Distractor 2 is weak (NON-SEQUITUR): it introduces an irrelevant color association. Distractor 3 is weak (CIRCULAR): it restates the premise as the conclusion."
+explanation: "The correct answer is strongest because it links privatization to a clear economic outcome (efficiency/consumer cost). Distractor 1 is weak: it confuses a trend with evidence of success. Distractor 2 is weak: it introduces an irrelevant color association. Distractor 3 is weak: it restates the premise as the conclusion."
 },
 {
 kind: "single",
@@ -31847,11 +32207,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would provide crucial liquidity during the high-risk startup phase, significantly increasing the survival rate of new firms and fostering job creation.",
 distractors: [
-"Yes, because small businesses are smaller than large businesses (TRIVIAL: states a definition of size without addressing the impact of tax policy).",
-"No, because the government needs to collect taxes from everyone to function at all (VAGUE: ignores the economic benefits of fostering growth which could increase future tax receipts).",
-"No, because some people prefer to shop at large supermarkets instead of local boutiques (NON-SEQUITUR: consumer shopping habits do not dictate the effectiveness of tax incentives)."
+"Yes, because small businesses are smaller than large businesses.",
+"No, because the government needs to collect taxes from everyone to function at all.",
+"No, because some people prefer to shop at large supermarkets instead of local boutiques."
 ],
-explanation: "The correct answer is strongest because it links the tax exemption to a measurable, positive economic consequence (firm survival/job creation). Distractor 1 is weak (TRIVIAL): it describes a semantic fact. Distractor 2 is weak (VAGUE): it offers a generic reason without addressing the growth-related argument. Distractor 3 is weak (NON-SEQUITUR): it focuses on consumer choice rather than the business incentive."
+explanation: "The correct answer is strongest because it links the tax exemption to a measurable, positive economic consequence (firm survival/job creation). Distractor 1 is weak: it describes a semantic fact. Distractor 2 is weak: it offers a generic reason without addressing the growth-related argument. Distractor 3 is weak: it focuses on consumer choice rather than the business incentive."
 },
 {
 kind: "single",
@@ -31863,11 +32223,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it would significantly increase production costs for domestic manufacturers who rely on these materials, making their finished goods uncompetitive on the global market.",
 distractors: [
-"Yes, because tariffs are a form of tax that is applied to imports (CIRCULAR: restates the proposal).",
-"Yes, because some countries have very large mountains that are hard to cross (NON-SEQUITUR: geographical features are unrelated to trade policy).",
-"No, because importing items can sometimes be quite complicated (TRIVIAL: fails to address the economic impact of tariffs)."
+"Yes, because tariffs are a form of tax that is applied to imports.",
+"Yes, because some countries have very large mountains that are hard to cross.",
+"No, because importing items can sometimes be quite complicated."
 ],
-explanation: "The correct answer is strongest because it directly explains how the proposal harms the very businesses it seeks to help. Distractor 1 is weak (CIRCULAR): it explains the definition rather than the logic. Distractor 2 is weak (NON-SEQUITUR): it brings in geography. Distractor 3 is weak (TRIVIAL): it identifies a minor inconvenience instead of an economic consequence."
+explanation: "The correct answer is strongest because it directly explains how the proposal harms the very businesses it seeks to help. Distractor 1 is weak: it explains the definition rather than the logic. Distractor 2 is weak: it brings in geography. Distractor 3 is weak: it identifies a minor inconvenience instead of an economic consequence."
 },
 {
 kind: "single",
@@ -31879,11 +32239,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would curb extreme wealth inequality within organizations, improving employee morale and reducing high turnover costs associated with worker dissatisfaction.",
 distractors: [
-"Yes, because ratios are used in mathematics to compare numbers (TRIVIAL: mentions a mathematical concept without any relation to economic policy).",
-"No, because it would be a form of wage control which involves controlling wages (CIRCULAR: restates the proposal).",
-"No, because some companies prefer to have offices located in the city center (IRRELEVANT: office location does not affect the validity of wage ratio regulations)."
+"Yes, because ratios are used in mathematics to compare numbers.",
+"No, because it would be a form of wage control which involves controlling wages.",
+"No, because some companies prefer to have offices located in the city center."
 ],
-explanation: "The correct answer is strongest because it directly addresses the social and economic benefits of the proposal. Distractor 1 is weak (TRIVIAL): it defines a math term. Distractor 2 is weak (CIRCULAR): it provides no reasoning. Distractor 3 is weak (IRRELEVANT): it focuses on a choice unrelated to the policy."
+explanation: "The correct answer is strongest because it directly addresses the social and economic benefits of the proposal. Distractor 1 is weak: it defines a math term. Distractor 2 is weak: it provides no reasoning. Distractor 3 is weak: it focuses on a choice unrelated to the policy."
 },
 {
 kind: "single",
@@ -31895,11 +32255,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it would exacerbate wealth concentration among a small elite, reducing social mobility and creating a hereditary class system that undermines the meritocratic basis of the economy.",
 distractors: [
-"Yes, because people work hard for their money and should be able to give it to their children (VAGUE: relies on an emotional appeal rather than an economic analysis).",
-"Yes, because inheritance tax is a tax on money that is inherited (CIRCULAR: restates the proposal).",
-"No, because some people prefer to write letters instead of using emails (NON-SEQUITUR: communication preferences have no link to economic policy)."
+"Yes, because people work hard for their money and should be able to give it to their children.",
+"Yes, because inheritance tax is a tax on money that is inherited.",
+"No, because some people prefer to write letters instead of using emails."
 ],
-explanation: "The correct answer is strongest because it outlines the long-term impact on the economic structure and meritocracy. Distractor 1 is weak (VAGUE): it uses sentimentality instead of objective analysis. Distractor 2 is weak (CIRCULAR): it explains what an inheritance tax is without justifying it. Distractor 3 is weak (NON-SEQUITUR): it introduces unrelated communication methods."
+explanation: "The correct answer is strongest because it outlines the long-term impact on the economic structure and meritocracy. Distractor 1 is weak: it uses sentimentality instead of objective analysis. Distractor 2 is weak: it explains what an inheritance tax is without justifying it. Distractor 3 is weak: it introduces unrelated communication methods."
 },
 {
 kind: "single",
@@ -31911,11 +32271,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would drastically reduce non-biodegradable waste in landfills and oceans, mitigating the long-term environmental costs associated with plastic pollution.",
 distractors: [
-"Yes, because plastic is a material that is used for packaging (CIRCULAR: restates the proposal).",
-"No, because some people like to eat at home instead of in restaurants (IRRELEVANT: where one eats does not impact the volume of packaging waste).",
-"No, because plastic is a very useful invention (VAGUE: fails to address the environmental externalities which is the core concern)."
+"Yes, because plastic is a material that is used for packaging.",
+"No, because some people like to eat at home instead of in restaurants.",
+"No, because plastic is a very useful invention."
 ],
-explanation: "The correct answer is strongest because it directly links the policy to its intended environmental impact. Distractor 1 is weak (CIRCULAR): it defines the subject. Distractor 2 is weak (IRRELEVANT): it focuses on dining habits. Distractor 3 is weak (VAGUE): it acknowledges utility without addressing the environmental consequences."
+explanation: "The correct answer is strongest because it directly links the policy to its intended environmental impact. Distractor 1 is weak: it defines the subject. Distractor 2 is weak: it focuses on dining habits. Distractor 3 is weak: it acknowledges utility without addressing the environmental consequences."
 },
 {
 kind: "single",
@@ -31927,11 +32287,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would increase the share of renewable energy in the grid, reducing the city-wide reliance on fossil fuels and lowering total carbon emissions.",
 distractors: [
-"Yes, because solar panels are devices that collect sunlight (CIRCULAR: restates the proposal).",
-"No, because some people have trouble waking up in the morning (NON-SEQUITUR: sleep patterns are unrelated to construction policy).",
-"No, because it is just one of many different ways to generate electricity (TRIVIAL: it does not explain why this specific policy would be bad, only that alternatives exist)."
+"Yes, because solar panels are devices that collect sunlight.",
+"No, because some people have trouble waking up in the morning.",
+"No, because it is just one of many different ways to generate electricity."
 ],
-explanation: "The correct answer is strongest because it focuses on the energy grid and carbon emission reduction, which is the core goal of the proposal. Distractor 1 is weak (CIRCULAR): it defines the object. Distractor 2 is weak (NON-SEQUITUR): it is irrelevant to construction. Distractor 3 is weak (TRIVIAL): it states a fact about energy generation that does not undermine the policy."
+explanation: "The correct answer is strongest because it focuses on the energy grid and carbon emission reduction, which is the core goal of the proposal. Distractor 1 is weak: it defines the object. Distractor 2 is weak: it is irrelevant to construction. Distractor 3 is weak: it states a fact about energy generation that does not undermine the policy."
 },
 {
 kind: "single",
@@ -31943,11 +32303,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because by increasing the financial cost of polluting, companies will be forced to invest in cleaner technologies to maintain profitability, leading to rapid decarbonization.",
 distractors: [
-"Yes, because the air is important for all living things (VAGUE: fails to explain how the tax achieves the result).",
-"No, because industry is a very important part of our society (TRIVIAL: acknowledges importance but fails to explain why taxes would not work).",
-"No, because some people think that the weather is unpredictable (NON-SEQUITUR: general views on weather do not affect carbon policy effectiveness)."
+"Yes, because the air is important for all living things.",
+"No, because industry is a very important part of our society.",
+"No, because some people think that the weather is unpredictable."
 ],
-explanation: "The correct answer is strongest because it explains the specific incentive structure and subsequent industrial behavior. Distractor 1 is weak (VAGUE): it ignores the economic mechanism. Distractor 2 is weak (TRIVIAL): it is a truism that ignores the argument. Distractor 3 is weak (NON-SEQUITUR): it relates to weather, not industrial emissions."
+explanation: "The correct answer is strongest because it explains the specific incentive structure and subsequent industrial behavior. Distractor 1 is weak: it ignores the economic mechanism. Distractor 2 is weak: it is a truism that ignores the argument. Distractor 3 is weak: it relates to weather, not industrial emissions."
 },
 {
 kind: "single",
@@ -31959,11 +32319,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would significantly improve local air quality and reduce noise pollution, creating a healthier and more accessible environment for pedestrians and cyclists.",
 distractors: [
-"Yes, because cars are vehicles that transport people from place to place (CIRCULAR: restates the proposal).",
-"No, because some people enjoy driving long distances on the weekends (IRRELEVANT: the policy is localized to the city center and specific times, making this irrelevant).",
-"No, because it is just one day out of seven (TRIVIAL: it downplays the impact without addressing whether the impact is positive or negative)."
+"Yes, because cars are vehicles that transport people from place to place.",
+"No, because some people enjoy driving long distances on the weekends.",
+"No, because it is just one day out of seven."
 ],
-explanation: "The correct answer is strongest because it links the policy to environmental and public health benefits. Distractor 1 is weak (CIRCULAR): it defines a car. Distractor 2 is weak (IRRELEVANT): it focuses on individual driving habits elsewhere. Distractor 3 is weak (TRIVIAL): it focuses on time duration without addressing the quality of the change."
+explanation: "The correct answer is strongest because it links the policy to environmental and public health benefits. Distractor 1 is weak: it defines a car. Distractor 2 is weak: it focuses on individual driving habits elsewhere. Distractor 3 is weak: it focuses on time duration without addressing the quality of the change."
 },
 {
 kind: "single",
@@ -31975,11 +32335,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would eliminate tailpipe emissions in urban areas, significantly improving public health outcomes related to respiratory conditions caused by air pollution.",
 distractors: [
-"Yes, because electric vehicles are vehicles that run on electricity (CIRCULAR: restates the proposal).",
-"No, because it might be expensive to change all the vehicles at once (VAGUE: while true, it does not compare the cost to the health benefits of the proposal).",
-"No, because some people find it difficult to read a bus schedule (NON-SEQUITUR: passenger convenience is unrelated to the fuel source of the vehicle)."
+"Yes, because electric vehicles are vehicles that run on electricity.",
+"No, because it might be expensive to change all the vehicles at once.",
+"No, because some people find it difficult to read a bus schedule."
 ],
-explanation: "The correct answer is strongest because it connects the technology to a specific, quantifiable public health benefit. Distractor 1 is weak (CIRCULAR): it defines the term. Distractor 2 is weak (VAGUE): it raises a concern without weighing it against the core benefits. Distractor 3 is weak (NON-SEQUITUR): it introduces an irrelevant administrative inconvenience."
+explanation: "The correct answer is strongest because it connects the technology to a specific, quantifiable public health benefit. Distractor 1 is weak: it defines the term. Distractor 2 is weak: it raises a concern without weighing it against the core benefits. Distractor 3 is weak: it introduces an irrelevant administrative inconvenience."
 },
 {
 kind: "single",
@@ -31991,11 +32351,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would divert substantial amounts of organic waste from landfills, teaching students practical sustainability skills that reduce the carbon footprint of the school community.",
 distractors: [
-"Yes, because composting is a process where food scraps are turned into soil (CIRCULAR: restates the proposal).",
-"No, because some schools have very large playgrounds (IRRELEVANT: playground size does not dictate the feasibility of a composting program).",
-"No, because students might forget their homework sometimes (NON-SEQUITUR: unrelated to environmental sustainability)."
+"Yes, because composting is a process where food scraps are turned into soil.",
+"No, because some schools have very large playgrounds.",
+"No, because students might forget their homework sometimes."
 ],
-explanation: "The correct answer is strongest because it addresses both the waste reduction impact and the educational benefit of the proposal. Distractor 1 is weak (CIRCULAR): it defines composting. Distractor 2 is weak (IRRELEVANT): it introduces irrelevant physical attributes of schools. Distractor 3 is weak (NON-SEQUITUR): it introduces a random student behavior."
+explanation: "The correct answer is strongest because it addresses both the waste reduction impact and the educational benefit of the proposal. Distractor 1 is weak: it defines composting. Distractor 2 is weak: it introduces irrelevant physical attributes of schools. Distractor 3 is weak: it introduces a random student behavior."
 },
 {
 kind: "single",
@@ -32007,11 +32367,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would force a shift towards reusable alternatives, preventing millions of tons of plastic waste from entering ecosystems where they cause irreversible harm to wildlife.",
 distractors: [
-"Yes, because plastic water bottles are bottles made of plastic (CIRCULAR: restates the proposal).",
-"No, because some people prefer the taste of water from a plastic bottle (TRIVIAL: personal preference is outweighed by the environmental scale of the problem).",
-"No, because plastic is quite hard to shape into different forms (NON-SEQUITUR: the ease of manufacture is unrelated to the environmental policy concern)."
+"Yes, because plastic water bottles are bottles made of plastic.",
+"No, because some people prefer the taste of water from a plastic bottle.",
+"No, because plastic is quite hard to shape into different forms."
 ],
-explanation: "The correct answer is strongest because it focuses on the environmental prevention of waste and wildlife harm. Distractor 1 is weak (CIRCULAR): it defines the subject. Distractor 2 is weak (TRIVIAL): it is a minor personal preference. Distractor 3 is weak (NON-SEQUITUR): it concerns manufacturing properties rather than environmental policy."
+explanation: "The correct answer is strongest because it focuses on the environmental prevention of waste and wildlife harm. Distractor 1 is weak: it defines the subject. Distractor 2 is weak: it is a minor personal preference. Distractor 3 is weak: it concerns manufacturing properties rather than environmental policy."
 },
 {
 kind: "single",
@@ -32023,11 +32383,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would revitalize neglected urban areas, reducing the 'heat island' effect and providing residents with vital green space that improves mental and physical wellbeing.",
 distractors: [
-"Yes, because public parks are areas where people go for recreation (CIRCULAR: restates the proposal).",
-"No, because some people like to stay indoors to watch television (IRRELEVANT: individual indoor preferences do not nullify the need for urban green spaces).",
-"No, because it might be hard to choose which color of paint to use for park benches (NON-SEQUITUR: interior/exterior decorating choices are irrelevant to urban development)."
+"Yes, because public parks are areas where people go for recreation.",
+"No, because some people like to stay indoors to watch television.",
+"No, because it might be hard to choose which color of paint to use for park benches."
 ],
-explanation: "The correct answer is strongest because it provides multiple, significant benefits (heat island reduction, health). Distractor 1 is weak (CIRCULAR): it defines the outcome. Distractor 2 is weak (IRRELEVANT): it focuses on individual choice. Distractor 3 is weak (NON-SEQUITUR): it introduces a trivial aesthetic detail."
+explanation: "The correct answer is strongest because it provides multiple, significant benefits (heat island reduction, health). Distractor 1 is weak: it defines the outcome. Distractor 2 is weak: it focuses on individual choice. Distractor 3 is weak: it introduces a trivial aesthetic detail."
 },
 {
 kind: "single",
@@ -32039,11 +32399,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it would create an unprecedented risk of mass surveillance and potential data breaches, threatening the privacy and civil liberties of every individual in the country.",
 distractors: [
-"Yes, because having an identity card is a way to prove who you are (TRIVIAL: explains the function of the card without addressing the debate).",
-"Yes, because identity cards are cards that identify people (CIRCULAR: restates the proposal).",
-"No, because some people think that blue is a nicer color than red (NON-SEQUITUR: personal color preference is irrelevant to national security policy)."
+"Yes, because having an identity card is a way to prove who you are.",
+"Yes, because identity cards are cards that identify people.",
+"No, because some people think that blue is a nicer color than red."
 ],
-explanation: "The correct answer is strongest because it highlights the specific societal risk of privacy and surveillance. Distractor 1 is weak (TRIVIAL): it states a function that is obvious. Distractor 2 is weak (CIRCULAR): it provides no further logic. Distractor 3 is weak (NON-SEQUITUR): it introduces a random aesthetic preference."
+explanation: "The correct answer is strongest because it highlights the specific societal risk of privacy and surveillance. Distractor 1 is weak: it states a function that is obvious. Distractor 2 is weak: it provides no further logic. Distractor 3 is weak: it introduces a random aesthetic preference."
 },
 {
 kind: "single",
@@ -32055,11 +32415,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would increase civic engagement among young people, ensuring that political discourse better reflects the interests of those who will be most affected by long-term policy decisions.",
 distractors: [
-"Yes, because 16 is a lower number than 18 (TRIVIAL: mentions a mathematical fact without explaining the political consequence).",
-"No, because it is a proposal to change the age at which one can vote (CIRCULAR: restates the proposal).",
-"No, because some 16-year-olds do not have a driving license yet (IRRELEVANT: the ability to drive has no legal connection to the ability to make an informed vote)."
+"Yes, because 16 is a lower number than 18.",
+"No, because it is a proposal to change the age at which one can vote.",
+"No, because some 16-year-olds do not have a driving license yet."
 ],
-explanation: "The correct answer is strongest because it addresses political representation and long-term consequences. Distractor 1 is weak (TRIVIAL): it is a simple fact. Distractor 2 is weak (CIRCULAR): it adds no value. Distractor 3 is weak (IRRELEVANT): it links voting to driving without cause."
+explanation: "The correct answer is strongest because it addresses political representation and long-term consequences. Distractor 1 is weak: it is a simple fact. Distractor 2 is weak: it adds no value. Distractor 3 is weak: it links voting to driving without cause."
 },
 {
 kind: "single",
@@ -32071,11 +32431,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would serve as a powerful deterrent against corruption and conflicts of interest, significantly increasing public trust in government institutions.",
 distractors: [
-"Yes, because financial audits are examinations of financial records (CIRCULAR: restates the proposal).",
-"No, because some people have very busy schedules and do not want to fill out paperwork (TRIVIAL: personal inconvenience does not outweigh the importance of preventing corruption).",
-"No, because office stationery is often quite expensive (NON-SEQUITUR: operational costs of an office have no bearing on the necessity of auditing officials)."
+"Yes, because financial audits are examinations of financial records.",
+"No, because some people have very busy schedules and do not want to fill out paperwork.",
+"No, because office stationery is often quite expensive."
 ],
-explanation: "The correct answer is strongest because it explains the deterrent effect and its impact on public trust. Distractor 1 is weak (CIRCULAR): it defines the term. Distractor 2 is weak (TRIVIAL): it prioritizes convenience over governance. Distractor 3 is weak (NON-SEQUITUR): it introduces a random operational cost."
+explanation: "The correct answer is strongest because it explains the deterrent effect and its impact on public trust. Distractor 1 is weak: it defines the term. Distractor 2 is weak: it prioritizes convenience over governance. Distractor 3 is weak: it introduces a random operational cost."
 },
 {
 kind: "single",
@@ -32087,11 +32447,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it would inherently risk becoming a mouthpiece for the governing party, eroding the independence of the press and reducing the diversity of political viewpoints.",
 distractors: [
-"Yes, because news outlets are outlets that provide news (CIRCULAR: restates the proposal).",
-"Yes, because some people like to read the newspaper while having breakfast (IRRELEVANT: reading habits do not affect the political risk of state-funded media).",
-"No, because some cameras are better than others (NON-SEQUITUR: technical camera quality is irrelevant to editorial independence)."
+"Yes, because news outlets are outlets that provide news.",
+"Yes, because some people like to read the newspaper while having breakfast.",
+"No, because some cameras are better than others."
 ],
-explanation: "The correct answer is strongest because it identifies the structural risk of state propaganda. Distractor 1 is weak (CIRCULAR): it defines the entity. Distractor 2 is weak (IRRELEVANT): it focuses on morning routines. Distractor 3 is weak (NON-SEQUITUR): it discusses camera quality rather than media content policy."
+explanation: "The correct answer is strongest because it identifies the structural risk of state propaganda. Distractor 1 is weak: it defines the entity. Distractor 2 is weak: it focuses on morning routines. Distractor 3 is weak: it discusses camera quality rather than media content policy."
 },
 {
 kind: "single",
@@ -32103,11 +32463,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would enhance transparency and accountability, ensuring that local government decisions are directly influenced by the needs and concerns of the community members they serve.",
 distractors: [
-"Yes, because monthly forums are forums that happen once a month (CIRCULAR: restates the proposal).",
-"No, because some people like to go for long walks in the park (IRRELEVANT: individual leisure activities are irrelevant to the governance structure).",
-"No, because public speaking is a skill that some people have more than others (VAGUE: while true, it does not address the overall impact of the policy on democracy)."
+"Yes, because monthly forums are forums that happen once a month.",
+"No, because some people like to go for long walks in the park.",
+"No, because public speaking is a skill that some people have more than others."
 ],
-explanation: "The correct answer is strongest because it links the forums to democratic principles of accountability. Distractor 1 is weak (CIRCULAR): it defines the frequency. Distractor 2 is weak (IRRELEVANT): it describes random hobbies. Distractor 3 is weak (VAGUE): it talks about public speaking ability rather than the policy purpose."
+explanation: "The correct answer is strongest because it links the forums to democratic principles of accountability. Distractor 1 is weak: it defines the frequency. Distractor 2 is weak: it describes random hobbies. Distractor 3 is weak: it talks about public speaking ability rather than the policy purpose."
 },
 {
 kind: "single",
@@ -32119,11 +32479,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would provide a legal framework to hold present-day institutions accountable for actions that jeopardize the environmental and economic stability of the future.",
 distractors: [
-"Yes, because it is a good idea to think about the future sometimes (VAGUE: states an opinion without addressing how the law would work).",
-"No, because the future is a time that has not happened yet (TRIVIAL: a definition of time that adds nothing to the legal debate).",
-"No, because some dictionaries have thousands of pages (NON-SEQUITUR: the physical size of books has no bearing on constitutional law)."
+"Yes, because it is a good idea to think about the future sometimes.",
+"No, because the future is a time that has not happened yet.",
+"No, because some dictionaries have thousands of pages."
 ],
-explanation: "The correct answer is strongest because it establishes legal accountability. Distractor 1 is weak (VAGUE): it offers a generic sentiment. Distractor 2 is weak (TRIVIAL): it defines the future. Distractor 3 is weak (NON-SEQUITUR): it discusses book length."
+explanation: "The correct answer is strongest because it establishes legal accountability. Distractor 1 is weak: it offers a generic sentiment. Distractor 2 is weak: it defines the future. Distractor 3 is weak: it discusses book length."
 },
 {
 kind: "single",
@@ -32135,11 +32495,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would prevent the spread of targeted misinformation and 'echo chambers', forcing campaigns to rely on transparent, public-facing debates rather than manipulative algorithms.",
 distractors: [
-"Yes, because social media is a platform where people share information (CIRCULAR: restates the platform).",
-"No, because some people prefer to watch movies on their phones (IRRELEVANT: individual entertainment preference does not change the impact of political ads).",
-"No, because smartphones are made of many different parts (NON-SEQUITUR: hardware composition is irrelevant to political messaging)."
+"Yes, because social media is a platform where people share information.",
+"No, because some people prefer to watch movies on their phones.",
+"No, because smartphones are made of many different parts."
 ],
-explanation: "The correct answer is strongest because it addresses the specific mechanism of manipulation (algorithms/misinformation). Distractor 1 is weak (CIRCULAR): it defines social media. Distractor 2 is weak (IRRELEVANT): it focuses on phone usage. Distractor 3 is weak (NON-SEQUITUR): it focuses on phone components."
+explanation: "The correct answer is strongest because it addresses the specific mechanism of manipulation (algorithms/misinformation). Distractor 1 is weak: it defines social media. Distractor 2 is weak: it focuses on phone usage. Distractor 3 is weak: it focuses on phone components."
 },
 {
 kind: "single",
@@ -32151,11 +32511,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would ensure that the judiciary remains responsive to contemporary societal values and prevent the stagnation of legal interpretation over long periods of time.",
 distractors: [
-"Yes, because term limits are a way to limit the time someone serves (CIRCULAR: restates the proposal).",
-"No, because some buildings have stairs instead of elevators (NON-SEQUITUR: infrastructure design is unrelated to judicial policy).",
-"No, because it is just a suggestion and not a law yet (TRIVIAL: the status of the proposal as an idea does not evaluate its potential merit or failure)."
+"Yes, because term limits are a way to limit the time someone serves.",
+"No, because some buildings have stairs instead of elevators.",
+"No, because it is just a suggestion and not a law yet."
 ],
-explanation: "The correct answer is strongest because it links the policy to the adaptability and stagnation of the judiciary. Distractor 1 is weak (CIRCULAR): it defines the term. Distractor 2 is weak (NON-SEQUITUR): it focuses on building design. Distractor 3 is weak (TRIVIAL): it focuses on the current legislative status."
+explanation: "The correct answer is strongest because it links the policy to the adaptability and stagnation of the judiciary. Distractor 1 is weak: it defines the term. Distractor 2 is weak: it focuses on building design. Distractor 3 is weak: it focuses on the current legislative status."
 },
 {
 kind: "single",
@@ -32167,11 +32527,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it provides a direct financial incentive for corporations to adopt cleaner technologies, which significantly lowers the overall national carbon footprint.",
 distractors: [
-"Yes, because something must be done to address the changing climate (VAGUE: does not explain how the tax achieves this).",
-"Yes, because taxes are a common mechanism used by governments to raise revenue (IRRELEVANT: the purpose is climate change, not revenue generation).",
-"No, because some companies might find it inconvenient to change their production methods (TRIVIAL: inconvenience is minor compared to climate impact)."
+"Yes, because something must be done to address the changing climate.",
+"No, because carbon taxes are just taxes and taxes are generally not something that people like.",
+"No, because some companies might find it inconvenient to change their production methods."
 ],
-explanation: "The correct answer is strongest because it directly addresses the purpose (combating climate change) with a specific consequence (incentivizing technology adoption). Distractor 1 is weak (VAGUE): it fails to explain the causal link. Distractor 2 is weak (IRRELEVANT): revenue generation is not the primary goal. Distractor 3 is weak (TRIVIAL): corporate inconvenience does not outweigh the environmental necessity."
+explanation: "The correct answer is strongest because it directly addresses the purpose (combating climate change) with a specific consequence (incentivizing technology adoption). Distractor 1 is weak: it fails to explain the causal link. Distractor 2 is weak: revenue generation is not the primary goal. Distractor 3 is weak: corporate inconvenience does not outweigh the environmental necessity."
 },
 {
 kind: "single",
@@ -32183,11 +32543,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the national electricity grid currently lacks the charging infrastructure and capacity to support a mass transition to electric vehicles within that timeframe.",
 distractors: [
-"No, because cars are generally useful machines for transporting people (TRIVIAL: this does not address the pollution goal).",
-"No, because a ban is when you stop something from happening (CIRCULAR: restates the definition of a ban).",
-    "Yes, because     "
+"No, because cars are generally useful machines for transporting people.",
+"Yes, because we need to do something about the problem and banning cars is something.",
+    "Yes, because there are alternative approaches to reducing vehicle air pollution, such as tightening emissions standards, that would not require an outright sales ban."
 ],
-explanation: "The correct answer is strongest because it highlights a practical barrier that directly affects the feasibility of the proposal. Distractor 1 is weak (TRIVIAL): the utility of cars is unrelated to the pollution issue. Distractor 2 is weak (CIRCULAR): it explains the definition rather than the argument. Distractor 3 is weak (NON-SEQUITUR): alternative solutions do not disprove the argument against the ban."
+explanation: "The correct answer is strongest because it highlights a practical barrier that directly affects the feasibility of the proposal. Distractor 1 is weak: the utility of cars is unrelated to the pollution issue. Distractor 2 is weak: it explains the definition rather than the argument. Distractor 3 is weak: alternative solutions do not disprove the argument against the ban."
 },
 {
 kind: "single",
@@ -32199,11 +32559,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because permeable surfaces allow rainwater to infiltrate the ground, which significantly reduces the volume of surface water runoff entering and overwhelming drainage systems during heavy storms.",
 distractors: [
-"Yes, because flooding is a very unpleasant experience for homeowners (VAGUE: does not explain how the policy prevents the event).",
-"Yes, because many other cities have discussed the idea of changing their paving materials (IRRELEVANT: what others discuss does not prove efficacy).",
-"No, because some people prefer the appearance of traditional black tarmac (TRIVIAL: aesthetics are not a sufficient reason to dismiss flood mitigation)."
+"Yes, because flooding is a very unpleasant experience for homeowners.",
+"No, because replacing tarmac surfaces would involve a lot of change, and change is generally something that affects things differently than they were before.",
+"No, because some people prefer the appearance of traditional black tarmac."
 ],
-explanation: "The correct answer is strongest because it explains the mechanism (ground infiltration) and the consequence (reduced runoff/drainage relief). Distractor 1 is weak (VAGUE): it appeals to emotion rather than mechanism. Distractor 2 is weak (IRRELEVANT): consensus is not proof. Distractor 3 is weak (TRIVIAL): aesthetics are irrelevant to public safety."
+explanation: "The correct answer is strongest because it explains the mechanism (ground infiltration) and the consequence (reduced runoff/drainage relief). Distractor 1 is weak: it appeals to emotion rather than mechanism. Distractor 2 is weak: consensus is not proof. Distractor 3 is weak: aesthetics are irrelevant to public safety."
 },
 {
 kind: "single",
@@ -32215,11 +32575,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the massive upfront cost would lead to significant national debt, limiting the government's ability to fund other critical public infrastructure projects.",
 distractors: [
-"No, because the sun does not shine every single day (TRIVIAL: solar panels are designed to account for weather variability).",
-"No, because residential solar panels are made of glass and silicon (IRRELEVANT: material composition is not the issue).",
-    "Yes, because     "
+"No, because the sun does not shine every single day.",
+"Yes, because solar panels are a form of renewable energy and renewable energy is better for the environment.",
+    "Yes, because solar panels are a renewable energy source, and renewable energy is something that governments and society should broadly be supporting and encouraging."
 ],
-explanation: "The correct answer is strongest because it addresses a significant negative consequence (debt/opportunity cost) of the proposal. Distractor 1 is weak (TRIVIAL): energy intermittency is a known engineering factor, not an argument against subsidies. Distractor 2 is weak (IRRELEVANT): material is unrelated to the policy debate. Distractor 3 is weak (VAGUE): it lacks a specific logical basis."
+explanation: "The correct answer is strongest because it addresses a significant negative consequence (debt/opportunity cost) of the proposal. Distractor 1 is weak: energy intermittency is a known engineering factor, not an argument against subsidies. Distractor 2 is weak: material is unrelated to the policy debate. Distractor 3 is weak: it lacks a specific logical basis."
 },
 {
 kind: "single",
@@ -32231,11 +32591,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because deep-sea mining causes irreversible damage to fragile, slow-growing ecosystems that have not yet been fully studied, risking the extinction of undiscovered species.",
 distractors: [
-"Yes, because the ocean is a very large place (IRRELEVANT: size does not dictate the impact of mining).",
-"Yes, because we should not be mining things that are deep in the sea (CIRCULAR: restates the proposal).",
-    "No, because     "
+"Yes, because the ocean is a very large place.",
+"No, because countries that want to explore deep-sea mining should be allowed to do what they think is best for their own interests.",
+    "No, because scientists find the deep sea biologically fascinating, but academic curiosity is not a sufficient justification for restricting economic activity there."
 ],
-explanation: "The correct answer is strongest because it identifies a critical consequence (irreversible damage/extinction) linked directly to the purpose (protection). Distractor 1 is weak (IRRELEVANT): spatial size is not the issue. Distractor 2 is weak (CIRCULAR): just repeats the proposal. Distractor 3 is weak (TRIVIAL): biological interest is not the core reason for protection."
+explanation: "The correct answer is strongest because it identifies a critical consequence (irreversible damage/extinction) linked directly to the purpose (protection). Distractor 1 is weak: spatial size is not the issue. Distractor 2 is weak: just repeats the proposal. Distractor 3 is weak: biological interest is not the core reason for protection."
 },
 {
 kind: "single",
@@ -32247,11 +32607,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because current biodegradable alternatives are significantly more expensive and energy-intensive to produce, which could increase consumer costs and negate the environmental benefits through increased manufacturing emissions.",
 distractors: [
-"No, because plastic is a very versatile material used for many things (IRRELEVANT: versatility does not address the waste issue).",
-"No, because it might be difficult to get everyone to stop using plastic (VAGUE: difficulty does not invalidate the policy benefit).",
-    "Yes, because     "
+"No, because plastic is a very versatile material used for many things.",
+"Yes, because we should do things that are good for the environment.",
+    "Yes, because ocean plastic pollution is a well-documented crisis, and something clearly must be done to address the volume of plastic that ends up in the sea."
 ],
-explanation: "The correct answer is strongest because it identifies a counterproductive consequence (cost/manufacturing emissions) that undermines the policy purpose. Distractor 1 is weak (IRRELEVANT): versatility is not the argument. Distractor 2 is weak (VAGUE): difficulty is a hurdle, not a counterargument. Distractor 3 is weak (NON-SEQUITUR): it actually provides a reason why action is needed."
+explanation: "The correct answer is strongest because it identifies a counterproductive consequence (cost/manufacturing emissions) that undermines the policy purpose. Distractor 1 is weak: versatility is not the argument. Distractor 2 is weak: difficulty is a hurdle, not a counterargument. Distractor 3 is weak: it actually provides a reason why action is needed."
 },
 {
 kind: "single",
@@ -32263,11 +32623,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it would drastically reduce domestic food production capacity, leading to a dangerous reliance on food imports and increasing national food insecurity.",
 distractors: [
-"No, because some people prefer open fields to forests (TRIVIAL: preference does not outweigh food security).",
-"No, because trees take a long time to grow to full size (TRIVIAL: time does not invalidate the policy).",
-    "Yes, because     "
+"No, because some people prefer open fields to forests.",
+"Yes, because forests are important for the environment and we should do important things for the environment.",
+    "Yes, because privately owned land is still part of the shared natural environment, so landowners should be required to restore any ecosystem damage they cause."
 ],
-explanation: "The correct answer is strongest because it highlights a major conflict (food security) between the proposal and basic needs. Distractor 1 is weak (TRIVIAL): aesthetic preference is not a policy factor. Distractor 2 is weak (TRIVIAL): maturation time is a planning detail, not a reason to reject. Distractor 3 is weak (VAGUE): private rights do not automatically negate the environmental policy argument."
+explanation: "The correct answer is strongest because it highlights a major conflict (food security) between the proposal and basic needs. Distractor 1 is weak: aesthetic preference is not a policy factor. Distractor 2 is weak: maturation time is a planning detail, not a reason to reject. Distractor 3 is weak: private rights do not automatically negate the environmental policy argument."
 },
 {
 kind: "single",
@@ -32279,11 +32639,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because private jets have an exceptionally high carbon emission rate per passenger compared to commercial flights, meaning a restriction would achieve a disproportionate reduction in atmospheric emissions.",
 distractors: [
-"Yes, because people who fly on private jets are often very wealthy (IRRELEVANT: wealth is not the issue, carbon output is).",
-"Yes, because it is important that everyone does their part to save the environment (VAGUE: fails to explain why this specific measure is effective).",
-    "No, because     "
+"Yes, because people who fly on private jets are often very wealthy.",
+"No, because private jets are used by people who need to travel quickly, and restricting them would be bad for those people.",
+    "No, because restricting any form of private transport sets a troubling precedent for personal freedoms that could have wider unintended consequences."
 ],
-explanation: "The correct answer is strongest because it grounds the argument in the disproportionate efficiency/emission ratio. Distractor 1 is weak (IRRELEVANT): wealth is irrelevant to the environmental goal. Distractor 2 is weak (VAGUE): it relies on general sentiment. Distractor 3 is weak (TRIVIAL): it is a generalization without specific focus on the proposal."
+explanation: "The correct answer is strongest because it grounds the argument in the disproportionate efficiency/emission ratio. Distractor 1 is weak: wealth is irrelevant to the environmental goal. Distractor 2 is weak: it relies on general sentiment. Distractor 3 is weak: it is a generalization without specific focus on the proposal."
 },
 {
 kind: "single",
@@ -32295,11 +32655,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it equips the next generation with the technical knowledge necessary to solve complex climate issues, creating a workforce prepared for the green economy.",
 distractors: [
-"Yes, because science is a very interesting subject to study at school (TRIVIAL: interest level is not a strong justification for curriculum policy).",
-"Yes, because school subjects are supposed to be taught to children (CIRCULAR: restates the role of school).",
-    "No, because     "
+"Yes, because science is a very interesting subject to study at school.",
+"No, because environmental science is already kind of covered in other subjects like biology and geography, so making it compulsory would just be repeating things students already learn anyway.",
+    "No, because simply making a subject compulsory does not guarantee that students will engage with it meaningfully or that learning outcomes will actually improve."
 ],
-explanation: "The correct answer is strongest because it directly links the policy (compulsory science) to a concrete societal outcome (workforce/problem-solving). Distractor 1 is weak (TRIVIAL): personal interest is not a policy justification. Distractor 2 is weak (CIRCULAR): it explains the school system's existence. Distractor 3 is weak (VAGUE): it lacks a clear link between instruction and results."
+explanation: "The correct answer is strongest because it directly links the policy (compulsory science) to a concrete societal outcome (workforce/problem-solving). Distractor 1 is weak: personal interest is not a policy justification. Distractor 2 is weak: it explains the school system's existence. Distractor 3 is weak: it lacks a clear link between instruction and results."
 },
 {
 kind: "single",
@@ -32311,11 +32671,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because improved insulation significantly reduces the energy required for heating, which directly lowers individual utility bills and reduces the total national demand for fossil fuel energy.",
 distractors: [
-"Yes, because it would be nice for people to have warmer homes (TRIVIAL: comfort is secondary to the primary energy saving goal).",
-"Yes, because governments often give out grants for various purposes (IRRELEVANT: the history of grants does not support this specific policy).",
-    "No, because     "
+"Yes, because it would be nice for people to have warmer homes.",
+"No, because retrofitting homes is something that some people might not want to do anyway.",
+    "No, because there is no guarantee that homeowners who receive grants will use the funds for insulation rather than other home improvements."
 ],
-explanation: "The correct answer is strongest because it links insulation to a direct outcome: lower demand and utility savings. Distractor 1 is weak (TRIVIAL): comfort is not the main energy policy objective. Distractor 2 is weak (IRRELEVANT): existence of other grants is irrelevant. Distractor 3 is weak (VAGUE): it fails to justify the grant as a solution."
+explanation: "The correct answer is strongest because it links insulation to a direct outcome: lower demand and utility savings. Distractor 1 is weak: comfort is not the main energy policy objective. Distractor 2 is weak: existence of other grants is irrelevant. Distractor 3 is weak: it fails to justify the grant as a solution."
 },
 {
 kind: "single",
@@ -32327,11 +32687,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the energy consumption and manufacturing costs required for lab-grown meat production at scale are currently too high to be a sustainable or affordable alternative to conventional farming.",
 distractors: [
-"No, because farmers have been raising livestock for thousands of years (IRRELEVANT: tradition does not address modern methane impacts).",
-"No, because some people think lab-grown meat sounds unappealing (TRIVIAL: consumer perception is not a structural barrier to policy).",
-    "Yes, because     "
+"No, because farmers have been raising livestock for thousands of years.",
+"Yes, because lab-grown meat is a newer technology and newer things are generally better for the environment.",
+    "Yes, because lab-grown meat can be produced without any animals being raised for slaughter, making it appear to be a straightforward improvement over conventional farming."
 ],
-explanation: "The correct answer is strongest because it highlights the fundamental economic and environmental feasibility barrier (energy/scale). Distractor 1 is weak (IRRELEVANT): tradition is not a valid argument against environmental policy. Distractor 2 is weak (TRIVIAL): consumer opinion is not a structural argument. Distractor 3 is weak (CIRCULAR): it provides basic facts without argument."
+explanation: "The correct answer is strongest because it highlights the fundamental economic and environmental feasibility barrier (energy/scale). Distractor 1 is weak: tradition is not a valid argument against environmental policy. Distractor 2 is weak: consumer opinion is not a structural argument. Distractor 3 is weak: it provides basic facts without argument."
 },
 {
 kind: "single",
@@ -32343,11 +32703,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because significantly reducing internal combustion engines in high-density areas directly lowers localized nitrogen dioxide concentrations, leading to immediate respiratory health benefits for residents.",
 distractors: [
-"Yes, because it would make the city centers much quieter for everyone (TRIVIAL: noise reduction is a benefit, but the policy goal is air quality).",
-"Yes, because cars are often quite large and take up a lot of space (IRRELEVANT: spatial efficiency is not the primary stated goal).",
-    "No, because     "
+"Yes, because it would make the city centers much quieter for everyone.",
+"No, because people should be able to do what they want with their own cars.",
+    "No, because improving air quality in cities is an important goal, and banning private vehicles is just one of many possible approaches to achieving it."
 ],
-explanation: "The correct answer is strongest because it connects the reduction of vehicles to the specific health improvement desired. Distractor 1 is weak (TRIVIAL): noise reduction is secondary to the primary health goal. Distractor 2 is weak (IRRELEVANT): space usage is not the policy focus. Distractor 3 is weak (CIRCULAR): it merely restates the goal."
+explanation: "The correct answer is strongest because it connects the reduction of vehicles to the specific health improvement desired. Distractor 1 is weak: noise reduction is secondary to the primary health goal. Distractor 2 is weak: space usage is not the policy focus. Distractor 3 is weak: it merely restates the goal."
 },
 {
 kind: "single",
@@ -32359,11 +32719,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because source-separated recycling significantly improves the purity of the waste stream, which reduces the contamination rates and increases the efficiency of recycling processing facilities.",
 distractors: [
-"Yes, because it would make people feel like they are doing something good (VAGUE: feelings do not equate to effective waste management).",
-"Yes, because recycling centers are located in many different parts of the country (IRRELEVANT: facility location does not affect the necessity of sorting).",
-    "No, because     "
+"Yes, because it would make people feel like they are doing something good.",
+"No, because recycling is something that people should want to do on their own without the government telling them what to do.",
+    "No, because people are generally more motivated when they understand the reason behind a rule, so public education campaigns would be more effective than legal mandates."
 ],
-explanation: "The correct answer is strongest because it identifies the technical benefit (purity/efficiency) of source sorting. Distractor 1 is weak (VAGUE): it focuses on subjective experience rather than waste outcomes. Distractor 2 is weak (IRRELEVANT): geography is not the issue. Distractor 3 is weak (TRIVIAL): it is a basic human truth, not an argument."
+explanation: "The correct answer is strongest because it identifies the technical benefit (purity/efficiency) of source sorting. Distractor 1 is weak: it focuses on subjective experience rather than waste outcomes. Distractor 2 is weak: geography is not the issue. Distractor 3 is weak: it is a basic human truth, not an argument."
 },
 {
 kind: "single",
@@ -32375,11 +32735,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it provides a direct economic incentive for manufacturers to design longer-lasting, repairable products, thereby reducing the sheer volume of discarded electronics entering landfills.",
 distractors: [
-"Yes, because e-waste is a problem that needs to be solved eventually (VAGUE: does not explain how the tax solves it).",
-"Yes, because many people like using new electronic devices (TRIVIAL: consumer preference does not negate the need for waste reduction).",
-    "No, because     "
+"Yes, because e-waste is a problem that needs to be solved eventually.",
+"No, because taxes are a form of government intervention that affects the economy.",
+    "No, because a tax on single-use electronics is essentially just the government collecting money from consumers, which does not directly fix the underlying e-waste problem."
 ],
-explanation: "The correct answer is strongest because it links the tax to a change in manufacturer behavior that directly reduces waste volume. Distractor 1 is weak (VAGUE): it acknowledges the problem but not the solution. Distractor 2 is weak (TRIVIAL): consumer preference is secondary to environmental management. Distractor 3 is weak (CIRCULAR): it defines what a tax is."
+explanation: "The correct answer is strongest because it links the tax to a change in manufacturer behavior that directly reduces waste volume. Distractor 1 is weak: it acknowledges the problem but not the solution. Distractor 2 is weak: consumer preference is secondary to environmental management. Distractor 3 is weak: it defines what a tax is."
 },
 {
 kind: "single",
@@ -32391,11 +32751,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because green roofs provide insulation and absorb solar heat, which lowers the surface temperature of buildings and reduces the total heat reflected into the urban environment.",
 distractors: [
-"Yes, because they look much nicer than traditional flat roofs (TRIVIAL: aesthetics are not the primary goal of heat mitigation).",
-"Yes, because cities have been growing larger for many years (IRRELEVANT: urban growth doesn't explain why green roofs help).",
-    "No, because     "
+"Yes, because they look much nicer than traditional flat roofs.",
+"No, because some people might not want green roofs on their buildings.",
+    "No, because green roofs are primarily useful for cooling, and there are many simpler and less expensive ways to reduce a building's surface temperature."
 ],
-explanation: "The correct answer is strongest because it explains the cooling mechanism (insulation/absorption). Distractor 1 is weak (TRIVIAL): looks are not the policy purpose. Distractor 2 is weak (IRRELEVANT): urban growth history is irrelevant. Distractor 3 is weak (CIRCULAR): it restates the cooling objective."
+explanation: "The correct answer is strongest because it explains the cooling mechanism (insulation/absorption). Distractor 1 is weak: looks are not the policy purpose. Distractor 2 is weak: urban growth history is irrelevant. Distractor 3 is weak: it restates the cooling objective."
 },
 {
 kind: "single",
@@ -32407,11 +32767,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it eliminates the risk of harmful chemical exposure to children and pets, while simultaneously promoting biodiversity by allowing beneficial insects to thrive in urban green spaces.",
 distractors: [
-"Yes, because parks are nice places for people to spend their weekends (TRIVIAL: the use of parks is not the issue, the safety of them is).",
-"Yes, because pesticides are often made from chemicals (CIRCULAR: restates the definition).",
-    "No, because     "
+"Yes, because parks are nice places for people to spend their weekends.",
+"No, because pesticides have been used in parks for a long time and people generally expect parks to look well-maintained.",
+    "No, because insects are a natural part of any outdoor environment, and reducing pesticide use would simply result in parks having more insects than residents currently expect."
 ],
-explanation: "The correct answer is strongest because it covers both human health and ecological impact. Distractor 1 is weak (TRIVIAL): recreation is not the central issue. Distractor 2 is weak (CIRCULAR): it defines the substance. Distractor 3 is weak (IRRELEVANT): existence of insects is not the policy argument."
+explanation: "The correct answer is strongest because it covers both human health and ecological impact. Distractor 1 is weak: recreation is not the central issue. Distractor 2 is weak: it defines the substance. Distractor 3 is weak: existence of insects is not the policy argument."
 },
 {
 kind: "single",
@@ -32423,11 +32783,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because this policy forces a shift to reusable alternatives, significantly reducing the volume of single-use plastic waste generated by the university population every year.",
 distractors: [
-"Yes, because the environment is very important for our future (VAGUE: lacks a direct link to the proposal).",
-"Yes, because universities are often places where students drink coffee (TRIVIAL: drinking habits are incidental to the waste issue).",
-    "No, because     "
+"Yes, because the environment is very important for our future.",
+"No, because plastic cups are cups and cups are used in cafes, so eliminating them would affect where people drink their beverages.",
+    "No, because plastic is a lightweight and durable material with properties that are very difficult to replicate using fully biodegradable alternatives."
 ],
-explanation: "The correct answer is strongest because it explains the mechanism (shift to reusables) and the outcome (volume reduction). Distractor 1 is weak (VAGUE): it is a general statement. Distractor 2 is weak (TRIVIAL): drinking habits are not the core issue. Distractor 3 is weak (NON-SEQUITUR): it states a fact about material science rather than the efficacy of the policy."
+explanation: "The correct answer is strongest because it explains the mechanism (shift to reusables) and the outcome (volume reduction). Distractor 1 is weak: it is a general statement. Distractor 2 is weak: drinking habits are not the core issue. Distractor 3 is weak: it states a fact about material science rather than the efficacy of the policy."
 },
 {
 kind: "single",
@@ -32439,11 +32799,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because maritime transport is a major source of carbon emissions that is difficult to electrify, so hydrogen offers a viable, low-carbon alternative that could fundamentally decarbonize global trade.",
 distractors: [
-"Yes, because ships are essential for transporting goods around the world (TRIVIAL: the importance of ships is not in question).",
-"Yes, because hydrogen is an element that can be found in water (IRRELEVANT: its chemical source does not determine its economic or technical viability).",
-    "No, because     "
+"Yes, because ships are essential for transporting goods around the world.",
+"No, because governments should focus their money on things that are important rather than spending it on research that may not work out in the end.",
+    "No, because the government should focus its financial resources on areas of immediate and proven need rather than speculative research that may not deliver results."
 ],
-explanation: "The correct answer is strongest because it addresses the core issue (difficulty of electrification) and the potential impact (global decarbonization). Distractor 1 is weak (TRIVIAL): maritime necessity is well-known. Distractor 2 is weak (IRRELEVANT): chemical composition is irrelevant. Distractor 3 is weak (VAGUE): it provides no specific justification for this subsidy."
+explanation: "The correct answer is strongest because it addresses the core issue (difficulty of electrification) and the potential impact (global decarbonization). Distractor 1 is weak: maritime necessity is well-known. Distractor 2 is weak: chemical composition is irrelevant. Distractor 3 is weak: it provides no specific justification for this subsidy."
 },
 {
 kind: "single",
@@ -32455,11 +32815,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because smart meters provide real-time data on energy consumption, which allows utilities to balance demand fluctuations and reduce the need for carbon-heavy emergency power generation.",
 distractors: [
-"Yes, because it is good to have more technology in our homes (VAGUE: technology usage is not the primary purpose of efficiency).",
-"Yes, because electricity is used to power things like lights and appliances (TRIVIAL: basic facts about electricity are irrelevant).",
-    "No, because     "
+"Yes, because it is good to have more technology in our homes.",
+"No, because smart meters are meters that are smart, and not everyone wants smart things in their homes.",
+    "No, because not all residents find smart meter interfaces easy to use, and a device that people cannot operate will not lead to improvements in energy habits."
 ],
-explanation: "The correct answer is strongest because it connects the tool (real-time data) to the result (balance demand/reduce fossil fuel usage). Distractor 1 is weak (VAGUE): it lacks a clear policy justification. Distractor 2 is weak (TRIVIAL): basic facts do not constitute an argument. Distractor 3 is weak (TRIVIAL): the core issue is systemic efficiency, not user interface convenience."
+explanation: "The correct answer is strongest because it connects the tool (real-time data) to the result (balance demand/reduce fossil fuel usage). Distractor 1 is weak: it lacks a clear policy justification. Distractor 2 is weak: basic facts do not constitute an argument. Distractor 3 is weak: the core issue is systemic efficiency, not user interface convenience."
 },
 {
 kind: "single",
@@ -32471,11 +32831,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it forces domestic processing of electronic waste, ensuring that hazardous substances like lead and mercury are handled according to strict safety regulations rather than being improperly discarded.",
 distractors: [
-"Yes, because it is bad to dump things in other countries (CIRCULAR: it essentially just restates the premise as being wrong).",
-"Yes, because some people in those countries have very little money (IRRELEVANT: the economic status of the importer does not justify environmental degradation).",
-    "No, because     "
+"Yes, because it is bad to dump things in other countries.",
+"No, because developing nations should be free to make their own choices about what they import, and freedom is important.",
+    "No, because implementing and enforcing a ban on the export of used electronics is technically complicated and difficult to monitor consistently at a national level."
 ],
-explanation: "The correct answer is strongest because it addresses the core issue (hazardous substance handling) and the solution (domestic safety regulations). Distractor 1 is weak (CIRCULAR): it restates the moral objection. Distractor 2 is weak (IRRELEVANT): economic status of the recipient is not the issue. Distractor 3 is weak (TRIVIAL): technical difficulty is not a policy justification."
+explanation: "The correct answer is strongest because it addresses the core issue (hazardous substance handling) and the solution (domestic safety regulations). Distractor 1 is weak: it restates the moral objection. Distractor 2 is weak: economic status of the recipient is not the issue. Distractor 3 is weak: technical difficulty is not a policy justification."
 },
 {
 kind: "single",
@@ -32487,11 +32847,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because local food production reduces the carbon footprint associated with long-distance transportation and food packaging, promoting a more sustainable and resilient local food supply.",
 distractors: [
-"Yes, because gardening is a very fun and relaxing hobby for people (TRIVIAL: hobby value is not a sustainability argument).",
-"Yes, because communal living is a good idea for society (VAGUE: does not explain how the garden works to achieve the environmental goal).",
-    "No, because     "
+"Yes, because gardening is a very fun and relaxing hobby for people.",
+"No, because gardens are gardens and people who want to garden can just garden.",
+    "No, because vegetables grown in communal gardens may not provide sufficient nutritional variety to meaningfully support the dietary needs of local residents."
 ],
-explanation: "The correct answer is strongest because it links gardening to the environmental goals of reducing food miles and waste. Distractor 1 is weak (TRIVIAL): relaxation is not a policy goal. Distractor 2 is weak (VAGUE): it is too general. Distractor 3 is weak (NON-SEQUITUR): nutrition is irrelevant to the sustainability goal."
+explanation: "The correct answer is strongest because it links gardening to the environmental goals of reducing food miles and waste. Distractor 1 is weak: relaxation is not a policy goal. Distractor 2 is weak: it is too general. Distractor 3 is weak: nutrition is irrelevant to the sustainability goal."
 },
 {
 kind: "single",
@@ -32503,11 +32863,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because increased transparency allows consumers to make informed choices, which creates market pressure for airlines to optimize routes and aircraft efficiency to remain competitive.",
 distractors: [
-"Yes, because it is nice to know how much carbon a plane uses (TRIVIAL: awareness is not the same as the structural market impact).",
-"Yes, because flights are a major source of carbon pollution (NON-SEQUITUR: this states a problem but doesn't explain why disclosure is the solution).",
-    "No, because     "
+"Yes, because it is nice to know how much carbon a plane uses.",
+"No, because airlines already do things and adding more requirements would just be another thing they have to do.",
+    "No, because transparency in environmental reporting is generally positive, and airlines should simply be encouraged to disclose this information voluntarily rather than being compelled."
 ],
-explanation: "The correct answer is strongest because it identifies the mechanism (market pressure) and the resulting outcome (efficiency optimization). Distractor 1 is weak (TRIVIAL): simple awareness is not the goal. Distractor 2 is weak (NON-SEQUITUR): stating the problem does not justify the disclosure tool. Distractor 3 is weak (VAGUE): it is an appeal to general openness."
+explanation: "The correct answer is strongest because it identifies the mechanism (market pressure) and the resulting outcome (efficiency optimization). Distractor 1 is weak: simple awareness is not the goal. Distractor 2 is weak: stating the problem does not justify the disclosure tool. Distractor 3 is weak: it is an appeal to general openness."
 },
 {
 kind: "single",
@@ -32519,11 +32879,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the cost of retrofitting existing, older commercial buildings to meet net-zero standards is currently prohibitive for small business owners, likely leading to widespread closures and local economic decline.",
 distractors: [
-"No, because 2040 is quite a long time away (TRIVIAL: timeline is a management detail, not a policy-blocking reason).",
-"No, because some buildings are built of brick and others of steel (IRRELEVANT: building materials do not change the feasibility of the policy).",
-    "Yes, because     "
+"No, because 2040 is quite a long time away.",
+"Yes, because having net-zero energy use would mean that commercial properties would use zero net energy, which is good for the environment.",
+    "Yes, because reaching net-zero energy use is an important environmental goal, and requiring commercial properties to meet this standard is a reasonable step toward achieving it."
 ],
-explanation: "The correct answer is strongest because it identifies an economic barrier (cost/closures) that fundamentally threatens the viability of the proposal. Distractor 1 is weak (TRIVIAL): the timeframe is not the argument. Distractor 2 is weak (IRRELEVANT): material is not a policy factor. Distractor 3 is weak (VAGUE): it lacks a specific logical basis."
+explanation: "The correct answer is strongest because it identifies an economic barrier (cost/closures) that fundamentally threatens the viability of the proposal. Distractor 1 is weak: the timeframe is not the argument. Distractor 2 is weak: material is not a policy factor. Distractor 3 is weak: it lacks a specific logical basis."
 },
 {
 kind: "single",
@@ -32535,11 +32895,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because gas-powered lawn mowers are highly inefficient and emit significant levels of greenhouse gases and pollutants per hour of use, meaning a transition to electric alternatives would offer immediate localized health benefits.",
 distractors: [
-"Yes, because people are bothered by the loud noise of mowers (TRIVIAL: noise is a secondary issue compared to pollution).",
-"Yes, because gas is a fossil fuel that is extracted from the ground (IRRELEVANT: the source of the fuel does not explain why the mower ban is effective).",
-    "No, because     "
+"Yes, because people are bothered by the loud noise of mowers.",
+"No, because lawn mowers have been around for a long time and people are used to them.",
+    "No, because protecting the environment is something everyone agrees on, but targeting gas-powered lawn mowers specifically is unlikely to make a meaningful overall difference."
 ],
-explanation: "The correct answer is strongest because it cites the high pollution-to-work ratio, justifying the shift. Distractor 1 is weak (TRIVIAL): noise is a minor inconvenience compared to pollution. Distractor 2 is weak (IRRELEVANT): fuel source is not the argument. Distractor 3 is weak (VAGUE): general environmental sentiment is not an argument."
+explanation: "The correct answer is strongest because it cites the high pollution-to-work ratio, justifying the shift. Distractor 1 is weak: noise is a minor inconvenience compared to pollution. Distractor 2 is weak: fuel source is not the argument. Distractor 3 is weak: general environmental sentiment is not an argument."
 },
 {
 kind: "single",
@@ -32549,11 +32909,11 @@ stimulus: ['Should all universities replace traditional written examinations wit
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because continuous assessment reduces the high-stakes anxiety of final exams, leading to a more accurate reflection of a student's consistent subject mastery.",
 distractors: [
-"Yes, because some students prefer writing essays to doing practical tasks (IRRELEVANT: personal preference does not address the validity of academic assessment).",
-"Yes, because changing the way we assess students is a form of change (CIRCULAR: merely restates that the proposal involves change).",
-"No, because some buildings on campus have outdated electrical wiring (NON-SEQUITUR: the state of campus facilities has no impact on assessment pedagogy)."
+"Yes, because some students prefer writing essays to doing practical tasks.",
+"No, because traditional examinations have been used for a very long time and changing them would involve doing something different from what we currently do.",
+"No, because some buildings on campus have outdated electrical wiring."
 ],
-explanation: "The correct answer is strongest because it directly addresses the core purpose of assessment—measuring mastery—by identifying a significant improvement in accuracy. Distractor 1 is weak (IRRELEVANT): student preference does not determine pedagogical validity. Distractor 2 is weak (CIRCULAR): it restates the premise. Distractor 3 is weak (NON-SEQUITUR): facility maintenance is unrelated to exam structure."
+explanation: "The correct answer is strongest because it directly addresses the core purpose of assessment—measuring mastery—by identifying a significant improvement in accuracy. Distractor 1 is weak: student preference does not determine pedagogical validity. Distractor 2 is weak: it restates the premise. Distractor 3 is weak: facility maintenance is unrelated to exam structure."
 },
 {
 kind: "single",
@@ -32563,11 +32923,11 @@ stimulus: ['Should secondary schools make computer programming a compulsory subj
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mandatory programming instruction ensures students gain foundational technical literacy required for the modern workforce, regardless of their eventual career paths.",
 distractors: [
-"Yes, because many famous tech entrepreneurs learned to code at a young age (IRRELEVANT: anecdotal success does not justify universal curriculum requirements).",
-"No, because some students might find the subject quite challenging to learn (TRIVIAL: difficulty is a factor in all subjects and is not a reason to avoid curriculum inclusion).",
-"Yes, because the internet is becoming a very popular tool for communication (VAGUE: this is a general observation that does not connect to the benefits of compulsory coding lessons)."
+"Yes, because many famous tech entrepreneurs learned to code at a young age.",
+"No, because some students might find the subject quite challenging to learn.",
+"No, because computer programming is a subject that involves computers, and not all students may want to learn about computers in school."
 ],
-explanation: "The correct answer is strongest because it highlights the necessity of technical literacy as a foundational skill for the future workforce. Distractor 1 is weak (IRRELEVANT): individual success stories do not support systemic policy. Distractor 2 is weak (TRIVIAL): academic rigor is expected in all subjects. Distractor 3 is weak (VAGUE): it fails to bridge the gap between internet usage and programming curriculum."
+explanation: "The correct answer is strongest because it highlights the necessity of technical literacy as a foundational skill for the future workforce. Distractor 1 is weak: individual success stories do not support systemic policy. Distractor 2 is weak: academic rigor is expected in all subjects. Distractor 3 is weak: it fails to bridge the gap between internet usage and programming curriculum."
 },
 {
 kind: "single",
@@ -32577,11 +32937,11 @@ stimulus: ['Should universities abolish tuition fees for all domestic undergradu
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing financial barriers enables talented individuals from lower socioeconomic backgrounds to access higher education, thereby increasing social mobility.",
 distractors: [
-"Yes, because everyone likes the idea of not having to pay for things (TRIVIAL: public preference for cost reduction is obvious and does not address structural policy impacts).",
-"No, because tuition fees are essentially the same as paying a subscription fee (CIRCULAR: this is a semantic equivalence that does not address the economic policy).",
-"Yes, because some students enjoy buying expensive textbooks for their studies (NON-SEQUITUR: the cost of materials is independent of tuition fee policy)."
+"Yes, because everyone likes the idea of not having to pay for things.",
+"No, because tuition fees are essentially the same as paying a subscription fee.",
+"No, because universities have been charging tuition fees for a long time, so they probably should continue to do so."
 ],
-explanation: "The correct answer is strongest because it directly addresses the equity and access outcomes central to tuition policy. Distractor 1 is weak (TRIVIAL): universal preference for free services is not a policy argument. Distractor 2 is weak (CIRCULAR): it does not provide an argument for or against the policy. Distractor 3 is weak (NON-SEQUITUR): textbook costs are separate from tuition."
+explanation: "The correct answer is strongest because it directly addresses the equity and access outcomes central to tuition policy. Distractor 1 is weak: universal preference for free services is not a policy argument. Distractor 2 is weak: it does not provide an argument for or against the policy. Distractor 3 is weak: textbook costs are separate from tuition."
 },
 {
 kind: "single",
@@ -32591,11 +32951,11 @@ stimulus: ['Should primary schools strictly ban the use of tablets and screens i
 question: "Select the strongest argument from the statements below.",
 correct: "No, because digital tools allow for adaptive learning software that can provide personalized feedback and support for students with different learning speeds.",
 distractors: [
-"No, because the screen manufacturers would lose a significant amount of money (NON-SEQUITUR: the financial success of vendors is not an educational priority).",
-"Yes, because it is better to have no screens than to have some screens (CIRCULAR: this just restates the proposal position without providing reasoning).",
-"No, because some teachers enjoy using bright colors on their slides (TRIVIAL: aesthetic preferences are not relevant to the educational value of technology)."
+"No, because the screen manufacturers would lose a significant amount of money.",
+"Yes, because it is better to have no screens than to have some screens.",
+"Yes, because tablets and screens are devices that exist in classrooms and banning them would mean they are no longer used in classrooms."
 ],
-explanation: "The correct answer is strongest because it identifies a concrete educational benefit of the technology being debated. Distractor 1 is weak (NON-SEQUITUR): vendor profits are not a criteria for classroom policy. Distractor 2 is weak (CIRCULAR): it lacks a rationale. Distractor 3 is weak (TRIVIAL): teacher aesthetic preference is not a meaningful justification."
+explanation: "The correct answer is strongest because it identifies a concrete educational benefit of the technology being debated. Distractor 1 is weak: vendor profits are not a criteria for classroom policy. Distractor 2 is weak: it lacks a rationale. Distractor 3 is weak: teacher aesthetic preference is not a meaningful justification."
 },
 {
 kind: "single",
@@ -32605,11 +32965,11 @@ stimulus: ['Should all academic research funded by the state be published as ope
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because open access ensures that taxpayer-funded discoveries are immediately available to the public and other researchers, accelerating scientific innovation.",
 distractors: [
-"Yes, because people are generally curious about science (VAGUE: public curiosity does not justify a policy regarding research dissemination).",
-"No, because some researchers prefer to work in complete silence (IRRELEVANT: the working environment of a researcher has no impact on publishing policy).",
-"Yes, because public research is the kind of research funded by the public (CIRCULAR: this restates the proposal definition as an argument)."
+"Yes, because people are generally curious about science.",
+"No, because some researchers prefer to work in complete silence.",
+"No, because research is something that exists and publishing it would involve making it exist in a different way."
 ],
-explanation: "The correct answer is strongest because it links the source of funding to a direct societal benefit—accelerated innovation. Distractor 1 is weak (VAGUE): it does not address the utility of open access. Distractor 2 is weak (IRRELEVANT): personal working conditions are unrelated. Distractor 3 is weak (CIRCULAR): it is a tautological statement."
+explanation: "The correct answer is strongest because it links the source of funding to a direct societal benefit—accelerated innovation. Distractor 1 is weak: it does not address the utility of open access. Distractor 2 is weak: personal working conditions are unrelated. Distractor 3 is weak: it is a tautological statement."
 },
 {
 kind: "single",
@@ -32619,11 +32979,11 @@ stimulus: ['Should schools be required to provide free healthy meals for all stu
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because consistent access to nutrition eliminates the cognitive disadvantage caused by hunger, allowing all students to concentrate fully on their studies.",
 distractors: [
-"Yes, because children generally need to eat food to stay alive (TRIVIAL: while true, this is so fundamental it fails to address the policy of universal provision).",
-"No, because there are many different types of food that children like to eat (IRRELEVANT: food preference diversity does not argue against universal provision).",
-"Yes, because free food is better than paid food (VAGUE: this is a subjective value judgment without a clear pedagogical or social foundation)."
+"Yes, because children generally need to eat food to stay alive.",
+"No, because there are many different types of food that children like to eat.",
+"No, because schools already do many other things, so adding free meals would just be one more thing for them to do."
 ],
-explanation: "The correct answer is strongest because it creates a direct link between the policy and improved educational outcomes. Distractor 1 is weak (TRIVIAL): basic biological needs are self-evident. Distractor 2 is weak (IRRELEVANT): variety of choice does not affect the policy of provision. Distractor 3 is weak (VAGUE): it is an empty value statement."
+explanation: "The correct answer is strongest because it creates a direct link between the policy and improved educational outcomes. Distractor 1 is weak: basic biological needs are self-evident. Distractor 2 is weak: variety of choice does not affect the policy of provision. Distractor 3 is weak: it is an empty value statement."
 },
 {
 kind: "single",
@@ -32633,11 +32993,11 @@ stimulus: ['Should secondary schools implement a four-day school week to improve
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a reduced school week compresses the curriculum, forcing teachers to lecture at a faster pace, which diminishes the depth of student understanding.",
 distractors: [
-"Yes, because many people enjoy having a three-day weekend (IRRELEVANT: personal preference for leisure time does not address the educational impact).",
-"No, because a school week is by definition a week that happens at school (CIRCULAR: this is just a linguistic restatement).",
-"Yes, because there are seven days in a week (NON-SEQUITUR: the calendar duration has no relevance to academic outcomes)."
+"Yes, because many people enjoy having a three-day weekend.",
+"No, because a school week is by definition a week that happens at school.",
+"Yes, because there are seven days in a week."
 ],
-explanation: "The correct answer is strongest because it highlights a direct, negative consequence on the quality of learning. Distractor 1 is weak (IRRELEVANT): personal desire for time off does not justify a policy change. Distractor 2 is weak (CIRCULAR): it adds no logic. Distractor 3 is weak (NON-SEQUITUR): the number of days in a week is irrelevant to the policy of school duration."
+explanation: "The correct answer is strongest because it highlights a direct, negative consequence on the quality of learning. Distractor 1 is weak: personal desire for time off does not justify a policy change. Distractor 2 is weak: it adds no logic. Distractor 3 is weak: the number of days in a week is irrelevant to the policy of school duration."
 },
 {
 kind: "single",
@@ -32647,11 +33007,11 @@ stimulus: ['Should universities ban social media use on campus Wi-Fi networks?']
 question: "Select the strongest argument from the statements below.",
 correct: "No, because blocking social media infringes upon the digital freedom of adult students who use these platforms for networking, collaborative projects, and academic discussion groups.",
 distractors: [
-"Yes, because some students spend too much time looking at memes (TRIVIAL: individual misuse of a platform is not a sufficient reason to ban it for everyone).",
-"Yes, because there are other ways to access the internet (VAGUE: stating that alternatives exist does not justify the restriction itself).",
-"No, because social media is a type of media that is social (CIRCULAR: this is a definition, not an argument)."
+"Yes, because some students spend too much time looking at memes.",
+"Yes, because there are other ways to access the internet.",
+"No, because social media is a type of media that is social."
 ],
-explanation: "The correct answer is strongest because it identifies the loss of legitimate academic and professional functions. Distractor 1 is weak (TRIVIAL): individual distraction does not warrant systemic restriction. Distractor 2 is weak (VAGUE): the existence of alternatives does not justify the policy. Distractor 3 is weak (CIRCULAR): it provides no rationale."
+explanation: "The correct answer is strongest because it identifies the loss of legitimate academic and professional functions. Distractor 1 is weak: individual distraction does not warrant systemic restriction. Distractor 2 is weak: the existence of alternatives does not justify the policy. Distractor 3 is weak: it provides no rationale."
 },
 {
 kind: "single",
@@ -32661,11 +33021,11 @@ stimulus: ['Should all high school students be required to study a foreign langu
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because long-term language study promotes cognitive flexibility and cross-cultural empathy, which are essential skills for functioning in a globalized society.",
 distractors: [
-"Yes, because it is quite hard to learn a new language (IRRELEVANT: difficulty does not serve as a justification for a policy).",
-"Yes, because people who speak multiple languages know more words (TRIVIAL: this is a linguistic tautology that ignores the goal of education).",
-"No, because some students might prefer to study history or geography (IRRELEVANT: preference for other subjects does not address the value of language study)."
+"Yes, because it is quite hard to learn a new language.",
+"No, because requiring students to study foreign languages for four years is a lot of time, and that's just how it is.",
+"No, because some students might prefer to study history or geography."
 ],
-explanation: "The correct answer is strongest because it points to specific developmental benefits (cognitive flexibility, empathy) linked to the stated policy. Distractor 1 is weak (IRRELEVANT): difficulty is not a policy justification. Distractor 2 is weak (TRIVIAL): it is a simplistic observation about vocabulary. Distractor 3 is weak (IRRELEVANT): student preference for other subjects is not a sound argument against a core requirement."
+explanation: "The correct answer is strongest because it points to specific developmental benefits (cognitive flexibility, empathy) linked to the stated policy. Distractor 1 is weak: difficulty is not a policy justification. Distractor 2 is weak: it is a simplistic observation about vocabulary. Distractor 3 is weak: student preference for other subjects is not a sound argument against a core requirement."
 },
 {
 kind: "single",
@@ -32675,11 +33035,11 @@ stimulus: ['Should schools be forced to start their day at 10:00 AM to better al
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because physiological evidence shows that teenagers have delayed sleep cycles, and starting later significantly improves their alertness and academic performance.",
 distractors: [
-"Yes, because people are generally more tired in the morning than in the evening (VAGUE: this is a generalization that fails to address the specific needs of adolescents).",
-"No, because parents often need to get to work by 9:00 AM (NON-SEQUITUR: parents’ work schedules are separate from student biological needs).",
-"Yes, because the current start time is the time that school starts (CIRCULAR: this does not provide a reason for the shift)."
+"Yes, because people are generally more tired in the morning than in the evening.",
+"No, because parents often need to get to work by 9:00 AM.",
+"No, because schools have always started early and changing that would be different from how things currently are."
 ],
-explanation: "The correct answer is strongest because it cites the physiological justification for the policy and its impact on student outcomes. Distractor 1 is weak (VAGUE): it is a generalization without academic weight. Distractor 2 is weak (NON-SEQUITUR): parental work schedules are not the primary focus of student learning policies. Distractor 3 is weak (CIRCULAR): it is a meaningless statement."
+explanation: "The correct answer is strongest because it cites the physiological justification for the policy and its impact on student outcomes. Distractor 1 is weak: it is a generalization without academic weight. Distractor 2 is weak: parental work schedules are not the primary focus of student learning policies. Distractor 3 is weak: it is a meaningless statement."
 },
 {
 kind: "single",
@@ -32689,11 +33049,11 @@ stimulus: ['Should all universities mandate that students complete a community s
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because engaging in community service fosters a sense of civic responsibility and applies academic knowledge to real-world problems, enhancing the student experience.",
 distractors: [
-"Yes, because volunteering is considered a good thing by most people (VAGUE: social approval is not a strong educational justification).",
-"No, because there are many different types of volunteer work available (IRRELEVANT: the variety of options does not argue against the requirement).",
-"Yes, because students who do community service are doing service in the community (CIRCULAR: this just describes the proposal)."
+"Yes, because volunteering is considered a good thing by most people.",
+"No, because there are many different types of volunteer work available.",
+"No, because some students might not want to do community service and it would be bad if they had to do something they don't want to do."
 ],
-explanation: "The correct answer is strongest because it links the policy to specific learning and character-building outcomes. Distractor 1 is weak (VAGUE): social opinion is not a structural argument. Distractor 2 is weak (IRRELEVANT): the existence of diverse options does not undermine the policy. Distractor 3 is weak (CIRCULAR): it provides no justification."
+explanation: "The correct answer is strongest because it links the policy to specific learning and character-building outcomes. Distractor 1 is weak: social opinion is not a structural argument. Distractor 2 is weak: the existence of diverse options does not undermine the policy. Distractor 3 is weak: it provides no justification."
 },
 {
 kind: "single",
@@ -32703,11 +33063,11 @@ stimulus: ['Should all academic institutions ban the use of generative AI by stu
 question: "Select the strongest argument from the statements below.",
 correct: "No, because generative AI is becoming a standard professional tool, and students must learn to use it ethically and effectively to remain competitive in their future careers.",
 distractors: [
-"Yes, because computers are often very confusing to use (TRIVIAL: user confusion is not a valid basis for banning a tool).",
-"No, because AI is made up of code and data (IRRELEVANT: the technical composition of the tool has no bearing on its educational policy).",
-"Yes, because students should not use AI if they are not supposed to use it (CIRCULAR: this is a circular justification)."
+"Yes, because computers are often very confusing to use.",
+"No, because AI is made up of code and data.",
+"Yes, because students should not use AI if they are not supposed to use it."
 ],
-explanation: "The correct answer is strongest because it frames the issue in terms of future employability and skill acquisition. Distractor 1 is weak (TRIVIAL): frustration does not negate utility. Distractor 2 is weak (IRRELEVANT): the composition of AI is irrelevant. Distractor 3 is weak (CIRCULAR): it restates the proposal as a moral imperative."
+explanation: "The correct answer is strongest because it frames the issue in terms of future employability and skill acquisition. Distractor 1 is weak: frustration does not negate utility. Distractor 2 is weak: the composition of AI is irrelevant. Distractor 3 is weak: it restates the proposal as a moral imperative."
 },
 {
 kind: "single",
@@ -32717,11 +33077,11 @@ stimulus: ['Should history curricula focus exclusively on the history of the cou
 question: "Select the strongest argument from the statements below.",
 correct: "No, because limiting history to a single nation prevents students from understanding the global interconnectivity of modern politics and the roots of international events.",
 distractors: [
-"Yes, because it is important to know about the history of one's own country (TRIVIAL: while true, it ignores the cost of omitting global history).",
-"Yes, because the country is the place where the school exists (CIRCULAR: this is a geographical tautology).",
-"No, because some students might prefer to learn about different types of music (NON-SEQUITUR: music preference is irrelevant to history curriculum scope)."
+"Yes, because it is important to know about the history of one's own country.",
+"Yes, because the country is the place where the school exists.",
+"No, because some students might prefer to learn about different types of music."
 ],
-explanation: "The correct answer is strongest because it identifies the major educational flaw (missing global context) in the proposal. Distractor 1 is weak (TRIVIAL): it is an incomplete argument that fails to justify the exclusion of other history. Distractor 2 is weak (CIRCULAR): it offers no rationale. Distractor 3 is weak (NON-SEQUITUR): music preferences do not relate to historical study."
+explanation: "The correct answer is strongest because it identifies the major educational flaw (missing global context) in the proposal. Distractor 1 is weak: it is an incomplete argument that fails to justify the exclusion of other history. Distractor 2 is weak: it offers no rationale. Distractor 3 is weak: music preferences do not relate to historical study."
 },
 {
 kind: "single",
@@ -32731,11 +33091,11 @@ stimulus: ['Should schools abolish the use of competitive sports in favor of non
 question: "Select the strongest argument from the statements below.",
 correct: "No, because competitive sports help students develop resilience, teamwork, and the ability to manage success and failure, which are essential psychological life skills.",
 distractors: [
-"Yes, because winning is not always the most important thing (VAGUE: this is a platitude that does not address the value of competition).",
-"No, because different sports have different types of balls (IRRELEVANT: equipment type is unrelated to the pedagogical value of competition).",
-"Yes, because there are many sports that are not competitive (CIRCULAR: this restates the proposal intent without providing a reason)."
+"Yes, because winning is not always the most important thing.",
+"No, because different sports have different types of balls.",
+"Yes, because there are many sports that are not competitive."
 ],
-explanation: "The correct answer is strongest because it highlights psychological development as a core benefit of competitive sports. Distractor 1 is weak (VAGUE): it is a generic statement that ignores the educational function of competition. Distractor 2 is weak (IRRELEVANT): equipment is not the point. Distractor 3 is weak (CIRCULAR): it lacks a rationale."
+explanation: "The correct answer is strongest because it highlights psychological development as a core benefit of competitive sports. Distractor 1 is weak: it is a generic statement that ignores the educational function of competition. Distractor 2 is weak: equipment is not the point. Distractor 3 is weak: it lacks a rationale."
 },
 {
 kind: "single",
@@ -32745,11 +33105,11 @@ stimulus: ['Should schools require all students to perform volunteer work in loc
 question: "Select the strongest argument from the statements below.",
 correct: "No, because mandatory volunteering in sensitive environments may lead to poor-quality care for residents and a negative experience for students who are not prepared for such emotional labor.",
 distractors: [
-"Yes, because people are generally becoming older in our society (IRRELEVANT: the demographic shift towards aging does not justify mandatory service).",
-"Yes, because it is good for young people to do things for old people (VAGUE: this lacks specific educational or social reasoning).",
-"No, because some nursing homes are located far away from schools (TRIVIAL: transportation distance is a logistical hurdle, not a fundamental objection to the pedagogy)."
+"Yes, because people are generally becoming older in our society.",
+"Yes, because it is good for young people to do things for old people.",
+"No, because some nursing homes are located far away from schools."
 ],
-explanation: "The correct answer is strongest because it addresses both the quality of care and the student experience. Distractor 1 is weak (IRRELEVANT): demographic trends do not dictate student requirements. Distractor 2 is weak (VAGUE): it is a moralistic generalization. Distractor 3 is weak (TRIVIAL): logistical issues do not address the core policy merit."
+explanation: "The correct answer is strongest because it addresses both the quality of care and the student experience. Distractor 1 is weak: demographic trends do not dictate student requirements. Distractor 2 is weak: it is a moralistic generalization. Distractor 3 is weak: logistical issues do not address the core policy merit."
 },
 {
 kind: "single",
@@ -32759,11 +33119,11 @@ stimulus: ['Should universities provide free unlimited printing for all students
 question: "Select the strongest argument from the statements below.",
 correct: "No, because providing unlimited resources encourages unsustainable paper consumption, which runs contrary to the university's institutional commitments to environmental sustainability.",
 distractors: [
-"Yes, because students sometimes need to print things for their classes (TRIVIAL: identifying a use case does not justify the waste of an unlimited policy).",
-"Yes, because some printers are very fast (IRRELEVANT: the technical capability of the hardware does not argue for free, unlimited usage).",
-"No, because unlimited printing is printing that has no limit (CIRCULAR: this is just a dictionary definition)."
+"Yes, because students sometimes need to print things for their classes.",
+"Yes, because some printers are very fast.",
+"No, because unlimited printing is printing that has no limit."
 ],
-explanation: "The correct answer is strongest because it links the policy to the university's environmental policy. Distractor 1 is weak (TRIVIAL): the fact that students use printers does not mean they should be free and unlimited. Distractor 2 is weak (IRRELEVANT): speed is unrelated. Distractor 3 is weak (CIRCULAR): it adds no value."
+explanation: "The correct answer is strongest because it links the policy to the university's environmental policy. Distractor 1 is weak: the fact that students use printers does not mean they should be free and unlimited. Distractor 2 is weak: speed is unrelated. Distractor 3 is weak: it adds no value."
 },
 {
 kind: "single",
@@ -32773,11 +33133,11 @@ stimulus: ['Should secondary schools implement a uniform dress code for all stud
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because uniforms reduce visible socioeconomic disparities among students, fostering a more equitable social environment where students are judged on their character rather than their clothes.",
 distractors: [
-"Yes, because clothes are something that people wear every day (TRIVIAL: this is a fact about clothing, not an argument for uniforms).",
-"No, because some people like to express themselves through fashion (IRRELEVANT: individual fashion preference does not address the social policy goal).",
-"Yes, because it is easier to dress if you have a uniform (VAGUE: 'easier' is an ill-defined benefit that ignores the broader social implications)."
+"Yes, because clothes are something that people wear every day.",
+"No, because some people like to express themselves through fashion.",
+"No, because uniforms would just be uniforms and wouldn't really change anything about how schools work."
 ],
-explanation: "The correct answer is strongest because it addresses the core social objective of reducing socioeconomic inequality. Distractor 1 is weak (TRIVIAL): clothing habits are not a policy basis. Distractor 2 is weak (IRRELEVANT): individual preference does not refute the social benefit of uniform standards. Distractor 3 is weak (VAGUE): the claim of convenience is ill-defined and secondary."
+explanation: "The correct answer is strongest because it addresses the core social objective of reducing socioeconomic inequality. Distractor 1 is weak: clothing habits are not a policy basis. Distractor 2 is weak: individual preference does not refute the social benefit of uniform standards. Distractor 3 is weak: the claim of convenience is ill-defined and secondary."
 },
 {
 kind: "single",
@@ -32787,11 +33147,11 @@ stimulus: ['Should school board elections be based on non-partisan candidates on
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because non-partisan elections force candidates to focus on local educational issues and student-centric policies rather than national political agendas.",
 distractors: [
-"Yes, because the local school is where the students go to school (CIRCULAR: this is a restatement of the setting).",
-"No, because some people like to watch political debates on television (NON-SEQUITUR: television habits are unrelated to school board election mechanics).",
-"Yes, because non-partisan means that there is no party (CIRCULAR: a definition is not an argument)."
+"Yes, because the local school is where the students go to school.",
+"No, because some people like to watch political debates on television.",
+"No, because political parties have always existed and removing them from school board elections would be different from how things currently work."
 ],
-explanation: "The correct answer is strongest because it identifies the primary benefit: prioritizing local educational needs over partisan noise. Distractor 1 is weak (CIRCULAR): it offers no reasoning. Distractor 2 is weak (NON-SEQUITUR): viewing habits are irrelevant. Distractor 3 is weak (CIRCULAR): it is a definition."
+explanation: "The correct answer is strongest because it identifies the primary benefit: prioritizing local educational needs over partisan noise. Distractor 1 is weak: it offers no reasoning. Distractor 2 is weak: viewing habits are irrelevant. Distractor 3 is weak: it is a definition."
 },
 {
 kind: "single",
@@ -32801,11 +33161,11 @@ stimulus: ['Should schools be allowed to install surveillance cameras in classro
 question: "Select the strongest argument from the statements below.",
 correct: "No, because constant surveillance creates an environment of distrust that inhibits open academic discussion and damages the pedagogical relationship between teachers and students.",
 distractors: [
-"Yes, because cameras can record what is happening in the room (TRIVIAL: this is the function of a camera, not a reason for the policy).",
-"No, because some cameras are very expensive to install (TRIVIAL: cost is a logistical factor, not a fundamental objection to the surveillance policy).",
-"Yes, because schools are buildings and buildings can have cameras (CIRCULAR: this is a circular observation)."
+"Yes, because cameras can record what is happening in the room.",
+"No, because some cameras are very expensive to install.",
+"Yes, because schools are buildings and buildings can have cameras."
 ],
-explanation: "The correct answer is strongest because it addresses the detrimental impact on the core educational environment. Distractor 1 is weak (TRIVIAL): recording is a feature, not a justification. Distractor 2 is weak (TRIVIAL): cost is minor compared to the pedagogical impact. Distractor 3 is weak (CIRCULAR): it lacks a logical basis."
+explanation: "The correct answer is strongest because it addresses the detrimental impact on the core educational environment. Distractor 1 is weak: recording is a feature, not a justification. Distractor 2 is weak: cost is minor compared to the pedagogical impact. Distractor 3 is weak: it lacks a logical basis."
 },
 {
 kind: "single",
@@ -32815,11 +33175,11 @@ stimulus: ['Should all high school curricula include mandatory financial literac
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because understanding basic personal finance equips students with the life skills necessary to manage debt, taxes, and savings effectively, protecting them from predatory financial practices.",
 distractors: [
-"Yes, because everyone has to use money eventually in their life (VAGUE: this is a broad assertion that fails to explain the specific value of the curriculum).",
-"No, because math is already a subject in school (IRRELEVANT: the existence of math as a subject does not cover practical financial literacy).",
-"Yes, because financial literacy refers to the literacy of finances (CIRCULAR: this is a tautology)."
+"Yes, because everyone has to use money eventually in their life.",
+"No, because math is already a subject in school.",
+"No, because financial literacy is something that people should probably learn about if they want to be good with money."
 ],
-explanation: "The correct answer is strongest because it provides specific, high-stakes outcomes that the proposal aims to solve. Distractor 1 is weak (VAGUE): it is a general observation. Distractor 2 is weak (IRRELEVANT): math and financial literacy are distinct enough that math does not negate the need for the latter. Distractor 3 is weak (CIRCULAR): it is a definition."
+explanation: "The correct answer is strongest because it provides specific, high-stakes outcomes that the proposal aims to solve. Distractor 1 is weak: it is a general observation. Distractor 2 is weak: math and financial literacy are distinct enough that math does not negate the need for the latter. Distractor 3 is weak: it is a definition."
 },
 {
 kind: "single",
@@ -32829,11 +33189,11 @@ stimulus: ['Should universities implement a total ban on mobile phones during le
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mobile phones act as a constant source of cognitive distraction, and removing them encourages students to engage deeply with the lecture material.",
 distractors: [
-"Yes, because phones can make a ringing sound during a lecture (TRIVIAL: a singular annoyance does not justify a total ban).",
-"No, because some students like to have their phones in their pockets (IRRELEVANT: keeping a phone in a pocket does not equal using it in a lecture).",
-"Yes, because it is better to have no phones than to have phones (CIRCULAR: this is a hollow restatement)."
+"Yes, because phones can make a ringing sound during a lecture.",
+"No, because some students like to have their phones in their pockets.",
+"No, because phones are a part of modern life and banning them would be going against the modern way of doing things."
 ],
-explanation: "The correct answer is strongest because it identifies the primary pedagogical problem (cognitive distraction) and the proposed solution's direct impact. Distractor 1 is weak (TRIVIAL): notification sounds are minor issues. Distractor 2 is weak (IRRELEVANT): possession is not the issue, usage is. Distractor 3 is weak (CIRCULAR): it is a meaningless argument."
+explanation: "The correct answer is strongest because it identifies the primary pedagogical problem (cognitive distraction) and the proposed solution's direct impact. Distractor 1 is weak: notification sounds are minor issues. Distractor 2 is weak: possession is not the issue, usage is. Distractor 3 is weak: it is a meaningless argument."
 },
 {
 kind: "single",
@@ -32843,11 +33203,11 @@ stimulus: ['Should colleges be mandated to provide 24-hour access to libraries f
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because students have diverse study schedules and academic pressures, and 24-hour access ensures that everyone has equitable access to necessary resources regardless of their personal circumstances.",
 distractors: [
-"Yes, because books are kept in libraries (TRIVIAL: the function of a library is self-evident and does not justify the 24-hour policy).",
-"No, because the library staff also need to go home and sleep (TRIVIAL: staffing challenges do not address the core necessity of the resource for students).",
-"Yes, because 24-hour access means the library is open for twenty-four hours (CIRCULAR: this is a definition, not an argument)."
+"Yes, because books are kept in libraries.",
+"No, because the library staff also need to go home and sleep.",
+"No, because if colleges provide 24-hour library access, then students will be able to use the library 24 hours a day."
 ],
-explanation: "The correct answer is strongest because it highlights the necessity of access for diverse student populations. Distractor 1 is weak (TRIVIAL): the existence of books is obvious. Distractor 2 is weak (TRIVIAL): staffing is a manageable logistical hurdle, not a policy-killing objection. Distractor 3 is weak (CIRCULAR): it provides no reason."
+explanation: "The correct answer is strongest because it highlights the necessity of access for diverse student populations. Distractor 1 is weak: the existence of books is obvious. Distractor 2 is weak: staffing is a manageable logistical hurdle, not a policy-killing objection. Distractor 3 is weak: it provides no reason."
 },
 {
 kind: "single",
@@ -32857,11 +33217,11 @@ stimulus: ['Should the academic calendar be changed to a year-round system with 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because shorter, more frequent breaks prevent the significant knowledge retention loss that occurs during long summer breaks, leading to more continuous learning.",
 distractors: [
-"Yes, because there are many days in a year (NON-SEQUITUR: the calendar length is irrelevant to learning retention).",
-"No, because it is nice to have a long break in the summer (IRRELEVANT: personal preference for long holidays does not address academic effectiveness).",
-"Yes, because a year-round system is a system that lasts the whole year (CIRCULAR: this is a description, not an argument)."
+"Yes, because there are many days in a year.",
+"No, because it is nice to have a long break in the summer.",
+"No, because changing things that already exist is generally difficult to do."
 ],
-explanation: "The correct answer is strongest because it cites the specific academic benefit of reduced retention loss. Distractor 1 is weak (NON-SEQUITUR): calendar duration is not the point. Distractor 2 is weak (IRRELEVANT): student preference for leisure is not a valid academic policy critique. Distractor 3 is weak (CIRCULAR): it is a descriptive tautology."
+explanation: "The correct answer is strongest because it cites the specific academic benefit of reduced retention loss. Distractor 1 is weak: calendar duration is not the point. Distractor 2 is weak: student preference for leisure is not a valid academic policy critique. Distractor 3 is weak: it is a descriptive tautology."
 },
 {
 kind: "single",
@@ -32871,11 +33231,11 @@ stimulus: ['Should students be allowed to grade their own professors at the end 
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because student feedback provides essential insights into teaching effectiveness and clarity, allowing the university to improve the quality of instruction.",
 distractors: [
-"Yes, because grades are the things that professors give to students (NON-SEQUITUR: the direction of grading does not explain the value of the proposal).",
-"No, because some professors have been teaching for a long time (IRRELEVANT: the experience of a professor does not negate the value of student feedback).",
-"Yes, because it is good for students to grade their professors (CIRCULAR: this asserts the good without providing a reason)."
+"Yes, because grades are the things that professors give to students.",
+"No, because some professors have been teaching for a long time.",
+"No, because if students grade their professors, then professors would be graded by students, which could lead to grading happening in ways that involve students and professors."
 ],
-explanation: "The correct answer is strongest because it explains the specific value (improving instruction) of the feedback. Distractor 1 is weak (NON-SEQUITUR): the role reversal of grading is confusing but not a valid argument. Distractor 2 is weak (IRRELEVANT): tenure or experience does not mean professors are beyond critique. Distractor 3 is weak (CIRCULAR): it provides no logical support."
+explanation: "The correct answer is strongest because it explains the specific value (improving instruction) of the feedback. Distractor 1 is weak: the role reversal of grading is confusing but not a valid argument. Distractor 2 is weak: tenure or experience does not mean professors are beyond critique. Distractor 3 is weak: it provides no logical support."
 },
 {
 kind: "single",
@@ -32887,11 +33247,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it allows judges to consider individual mitigating circumstances, leading to more proportionate sentences that reduce prison overcrowding.",
 distractors: [
-"Yes, because laws that force specific sentences on people are inherently restrictive (CIRCULAR).",
-"No, because the legal system has existed for centuries and we should maintain traditions (IRRELEVANT).",
-"No, because changing sentencing guidelines might lead to various unforeseen developments (VAGUE)."
+"Yes, because laws that force specific sentences on people are inherently restrictive.",
+"No, because the legal system has existed for centuries and we should maintain traditions.",
+"No, because changing sentencing guidelines might lead to various unforeseen developments."
 ],
-explanation: "The correct answer is strongest because it directly addresses the core purpose of sentencing reform—fairness and judicial discretion—with a specific consequence. Distractor 1 is weak (CIRCULAR): it restates the proposal. Distractor 2 is weak (IRRELEVANT): historical tradition does not address the efficacy of sentencing. Distractor 3 is weak (VAGUE): it fails to specify any actual outcome."
+explanation: "The correct answer is strongest because it directly addresses the core purpose of sentencing reform—fairness and judicial discretion—with a specific consequence. Distractor 1 is weak: it restates the proposal. Distractor 2 is weak: historical tradition does not address the efficacy of sentencing. Distractor 3 is weak: it fails to specify any actual outcome."
 },
 {
 kind: "single",
@@ -32903,11 +33263,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it provides an objective record that protects suspects from coerced confessions and police from false accusations of misconduct.",
 distractors: [
-"Yes, because having a video recording means the interaction is recorded on video (CIRCULAR).",
-"No, because cameras can sometimes be expensive to maintain (TRIVIAL).",
-"No, because police officers also have hobbies outside of work (NON-SEQUITUR)."
+"Yes, because having a video recording means the interaction is recorded on video.",
+"No, because cameras can sometimes be expensive to maintain.",
+"No, because police officers also have hobbies outside of work."
 ],
-explanation: "The correct answer is strongest because it addresses the integrity of the judicial process. Distractor 1 is weak (CIRCULAR): it defines the process rather than explaining the benefit. Distractor 2 is weak (TRIVIAL): maintenance cost is a minor operational issue compared to judicial integrity. Distractor 3 is weak (NON-SEQUITUR): personal hobbies are unrelated to professional conduct."
+explanation: "The correct answer is strongest because it addresses the integrity of the judicial process. Distractor 1 is weak: it defines the process rather than explaining the benefit. Distractor 2 is weak: maintenance cost is a minor operational issue compared to judicial integrity. Distractor 3 is weak: personal hobbies are unrelated to professional conduct."
 },
 {
 kind: "single",
@@ -32919,11 +33279,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it prevents the state from intervening early to provide support services for children who have committed serious harm, potentially increasing long-term recidivism.",
 distractors: [
-"Yes, because children under 14 should simply not be considered responsible (CIRCULAR).",
-"Yes, because 14 is a number that comes after 10 (TRIVIAL).",
-"No, because school budgets are already stretched thin in many districts (NON-SEQUITUR)."
+"Yes, because children under 14 should simply not be considered responsible.",
+"Yes, because 14 is a number that comes after 10.",
+"No, because school budgets are already stretched thin in many districts."
 ],
-explanation: "The correct answer is strongest because it links the policy to the functional goal of crime prevention. Distractor 1 is weak (CIRCULAR): it just repeats the shift in age. Distractor 2 is weak (TRIVIAL): the numerical value is not a logical argument. Distractor 3 is weak (NON-SEQUITUR): school funding does not negate the need for criminal responsibility frameworks."
+explanation: "The correct answer is strongest because it links the policy to the functional goal of crime prevention. Distractor 1 is weak: it just repeats the shift in age. Distractor 2 is weak: the numerical value is not a logical argument. Distractor 3 is weak: school funding does not negate the need for criminal responsibility frameworks."
 },
 {
 kind: "single",
@@ -32935,11 +33295,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing the profit motive eliminates the incentive to cut corners on rehabilitation programs and staffing levels to save costs.",
 distractors: [
-"Yes, because private prisons are prisons that are owned privately (CIRCULAR).",
-"No, because some private companies have nice logos (IRRELEVANT).",
-"No, because it might lead to a different way of doing things (VAGUE)."
+"Yes, because private prisons are prisons that are owned privately.",
+"No, because some private companies have nice logos.",
+"No, because it might lead to a different way of doing things."
 ],
-explanation: "The correct answer is strongest because it identifies the direct conflict between profit and rehabilitation. Distractor 1 is weak (CIRCULAR): it restates the definition. Distractor 2 is weak (IRRELEVANT): corporate branding is irrelevant to prison outcomes. Distractor 3 is weak (VAGUE): it does not provide a specific outcome of the policy."
+explanation: "The correct answer is strongest because it identifies the direct conflict between profit and rehabilitation. Distractor 1 is weak: it restates the definition. Distractor 2 is weak: corporate branding is irrelevant to prison outcomes. Distractor 3 is weak: it does not provide a specific outcome of the policy."
 },
 {
 kind: "single",
@@ -32951,11 +33311,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the prospect of public scrutiny would intimidate jurors and inhibit the free, frank discussion necessary to reach a just verdict.",
 distractors: [
-"Yes, because everything in a democracy should be public (VAGUE).",
-"Yes, because juries are made of people and people like to be watched (NON-SEQUITUR).",
-"No, because the current process is called jury deliberation (CIRCULAR)."
+"Yes, because everything in a democracy should be public.",
+"Yes, because juries are made of people and people like to be watched.",
+"No, because the current process is called jury deliberation."
 ],
-explanation: "The correct answer is strongest because it highlights the psychological impact on the judicial process. Distractor 1 is weak (VAGUE): 'public' does not account for the necessity of privacy in legal deliberation. Distractor 2 is weak (NON-SEQUITUR): individual preference for attention is irrelevant to legal duty. Distractor 3 is weak (CIRCULAR): it just states the name of the process."
+explanation: "The correct answer is strongest because it highlights the psychological impact on the judicial process. Distractor 1 is weak: 'public' does not account for the necessity of privacy in legal deliberation. Distractor 2 is weak: individual preference for attention is irrelevant to legal duty. Distractor 3 is weak: it just states the name of the process."
 },
 {
 kind: "single",
@@ -32967,11 +33327,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it levels the playing field against professional legal teams representing landlords, preventing unnecessary homelessness for families who lack legal expertise.",
 distractors: [
-"Yes, because legal representation means having a lawyer (CIRCULAR).",
-"No, because the weather can be unpredictable during court days (NON-SEQUITUR).",
-"No, because some people might find lawyers annoying (IRRELEVANT)."
+"Yes, because legal representation means having a lawyer.",
+"No, because the weather can be unpredictable during court days.",
+"No, because some people might find lawyers annoying."
 ],
-explanation: "The correct answer is strongest because it addresses the power imbalance in civil court. Distractor 1 is weak (CIRCULAR): it restates the proposal. Distractor 2 is weak (NON-SEQUITUR): weather is irrelevant to court proceedings. Distractor 3 is weak (IRRELEVANT): personal opinions on lawyers are irrelevant to the policy's efficacy."
+explanation: "The correct answer is strongest because it addresses the power imbalance in civil court. Distractor 1 is weak: it restates the proposal. Distractor 2 is weak: weather is irrelevant to court proceedings. Distractor 3 is weak: personal opinions on lawyers are irrelevant to the policy's efficacy."
 },
 {
 kind: "single",
@@ -32983,11 +33343,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the irreversible risk of executing an innocent person is a fundamental flaw that cannot be corrected by the judicial system.",
 distractors: [
-"Yes, because heinous crimes are really bad and deserve a response (VAGUE).",
-"Yes, because capital punishment is a punishment that happens to the capital (CIRCULAR).",
-"No, because prisoners often have to wear standardized uniforms (NON-SEQUITUR)."
+"Yes, because heinous crimes are really bad and deserve a response.",
+"Yes, because capital punishment is a punishment that happens to the capital.",
+"No, because prisoners often have to wear standardized uniforms."
 ],
-explanation: "The correct answer is strongest because it identifies the ultimate, fatal risk of the policy. Distractor 1 is weak (VAGUE): it does not explain how the policy prevents the crime. Distractor 2 is weak (CIRCULAR): it tries to define the term. Distractor 3 is weak (NON-SEQUITUR): prison uniforms are unrelated to the morality or efficacy of capital punishment."
+explanation: "The correct answer is strongest because it identifies the ultimate, fatal risk of the policy. Distractor 1 is weak: it does not explain how the policy prevents the crime. Distractor 2 is weak: it tries to define the term. Distractor 3 is weak: prison uniforms are unrelated to the morality or efficacy of capital punishment."
 },
 {
 kind: "single",
@@ -32999,11 +33359,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because it would create a massive backlog of cases that would overwhelm the court system, effectively denying defendants the right to a speedy trial.",
 distractors: [
-"Yes, because trials are where people go to be tried (CIRCULAR).",
-"Yes, because most court buildings have wood paneling (IRRELEVANT).",
-"No, because some judges prefer to have long lunches (NON-SEQUITUR)."
+"Yes, because trials are where people go to be tried.",
+"Yes, because most court buildings have wood paneling.",
+"No, because some judges prefer to have long lunches."
 ],
-explanation: "The correct answer is strongest because it identifies a systemic collapse as a result of the policy. Distractor 1 is weak (CIRCULAR): it restates the process. Distractor 2 is weak (IRRELEVANT): building decor is irrelevant. Distractor 3 is weak (NON-SEQUITUR): personal habits of judges do not impact the judicial system's structural capacity."
+explanation: "The correct answer is strongest because it identifies a systemic collapse as a result of the policy. Distractor 1 is weak: it restates the process. Distractor 2 is weak: building decor is irrelevant. Distractor 3 is weak: personal habits of judges do not impact the judicial system's structural capacity."
 },
 {
 kind: "single",
@@ -33015,11 +33375,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it significantly reduces the volume of non-biodegradable waste entering landfills and oceans, mitigating long-term ecological damage.",
 distractors: [
-"Yes, because single-use plastics are plastics that are used once (CIRCULAR).",
-"No, because my favorite color is blue (NON-SEQUITUR).",
-"No, because the policy is quite broad and could lead to various changes (VAGUE)."
+"Yes, because single-use plastics are plastics that are used once.",
+"No, because my favorite color is blue.",
+"No, because the policy is quite broad and could lead to various changes."
 ],
-explanation: "The correct answer is strongest because it points to the concrete environmental impact. Distractor 1 is weak (CIRCULAR): it merely restates the term. Distractor 2 is weak (NON-SEQUITUR): personal preference for color is irrelevant. Distractor 3 is weak (VAGUE): it fails to specify the actual consequence."
+explanation: "The correct answer is strongest because it points to the concrete environmental impact. Distractor 1 is weak: it merely restates the term. Distractor 2 is weak: personal preference for color is irrelevant. Distractor 3 is weak: it fails to specify the actual consequence."
 },
 {
 kind: "single",
@@ -33031,11 +33391,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it disincentivizes car travel, thereby reducing traffic congestion and improving air quality for city residents.",
 distractors: [
-"Yes, because traffic is when cars go slow in a line (CIRCULAR).",
-"No, because some people prefer to listen to the radio while driving (NON-SEQUITUR).",
-"No, because taxes are sometimes difficult to calculate (TRIVIAL)."
+"Yes, because traffic is when cars go slow in a line.",
+"No, because some people prefer to listen to the radio while driving.",
+"No, because taxes are sometimes difficult to calculate."
 ],
-explanation: "The correct answer is strongest because it explains the mechanism of behavioral change and the result. Distractor 1 is weak (CIRCULAR): it defines traffic. Distractor 2 is weak (NON-SEQUITUR): radio habits are irrelevant. Distractor 3 is weak (TRIVIAL): administrative difficulty is not a reason to reject a policy of this scale."
+explanation: "The correct answer is strongest because it explains the mechanism of behavioral change and the result. Distractor 1 is weak: it defines traffic. Distractor 2 is weak: radio habits are irrelevant. Distractor 3 is weak: administrative difficulty is not a reason to reject a policy of this scale."
 },
 {
 kind: "single",
@@ -33047,11 +33407,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it increases the proportion of renewable energy on the power grid, reducing reliance on fossil-fuel-based power plants.",
 distractors: [
-"Yes, because solar panels are panels that use solar energy (CIRCULAR).",
-"No, because some people might want to use their roof for a garden (TRIVIAL).",
-"No, because the sun is very far away from the Earth (IRRELEVANT)."
+"Yes, because solar panels are panels that use solar energy.",
+"No, because some people might want to use their roof for a garden.",
+"No, because the sun is very far away from the Earth."
 ],
-explanation: "The correct answer is strongest because it links the policy to energy grid health. Distractor 1 is weak (CIRCULAR): it restates the term. Distractor 2 is weak (TRIVIAL): individual garden preferences are minor compared to energy policy. Distractor 3 is weak (IRRELEVANT): astronomical distance is irrelevant to solar technology."
+explanation: "The correct answer is strongest because it links the policy to energy grid health. Distractor 1 is weak: it restates the term. Distractor 2 is weak: individual garden preferences are minor compared to energy policy. Distractor 3 is weak: astronomical distance is irrelevant to solar technology."
 },
 {
 kind: "single",
@@ -33063,11 +33423,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it reduces human-induced soil compaction and disturbances to wildlife breeding seasons, facilitating natural habitat restoration.",
 distractors: [
-"Yes, because nature needs to recover in order to be recovered (CIRCULAR).",
-"No, because some park rangers enjoy talking to tourists (NON-SEQUITUR).",
-"No, because the calendar has twelve months (IRRELEVANT)."
+"Yes, because nature needs to recover in order to be recovered.",
+"No, because some park rangers enjoy talking to tourists.",
+"No, because the calendar has twelve months."
 ],
-explanation: "The correct answer is strongest because it specifies the biological benefits. Distractor 1 is weak (CIRCULAR): it restates the goal without explaining the mechanism. Distractor 2 is weak (NON-SEQUITUR): social preferences of staff do not outweigh ecological needs. Distractor 3 is weak (IRRELEVANT): the structure of the calendar is irrelevant."
+explanation: "The correct answer is strongest because it specifies the biological benefits. Distractor 1 is weak: it restates the goal without explaining the mechanism. Distractor 2 is weak: social preferences of staff do not outweigh ecological needs. Distractor 3 is weak: the structure of the calendar is irrelevant."
 },
 {
 kind: "single",
@@ -33079,11 +33439,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it removes a primary barrier to electric vehicle adoption for rural residents, ensuring the green energy transition is geographically equitable.",
 distractors: [
-"Yes, because subsidies are money given by the government for a specific purpose (CIRCULAR).",
-"No, because electricity is invisible (IRRELEVANT).",
-"No, because rural areas have a different aesthetic than cities (NON-SEQUITUR)."
+"Yes, because subsidies are money given by the government for a specific purpose.",
+"No, because electricity is invisible.",
+"No, because rural areas have a different aesthetic than cities."
 ],
-explanation: "The correct answer is strongest because it addresses equity and adoption barriers. Distractor 1 is weak (CIRCULAR): it defines the term. Distractor 2 is weak (IRRELEVANT): the visibility of electricity is irrelevant. Distractor 3 is weak (NON-SEQUITUR): regional aesthetics are unrelated to transport infrastructure."
+explanation: "The correct answer is strongest because it addresses equity and adoption barriers. Distractor 1 is weak: it defines the term. Distractor 2 is weak: the visibility of electricity is irrelevant. Distractor 3 is weak: regional aesthetics are unrelated to transport infrastructure."
 },
 {
 kind: "single",
@@ -33095,11 +33455,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it forces a shift toward cleaner energy sources, directly lowering carbon emissions and addressing the core drivers of climate change.",
 distractors: [
-"Yes, because coal is a fuel that is burned in plants (CIRCULAR).",
-"No, because some people might find the sound of power plants comforting (NON-SEQUITUR).",
-"No, because it might lead to things happening differently than before (VAGUE)."
+"Yes, because coal is a fuel that is burned in plants.",
+"No, because some people might find the sound of power plants comforting.",
+"No, because it might lead to things happening differently than before."
 ],
-explanation: "The correct answer is strongest because it links the policy to carbon reduction goals. Distractor 1 is weak (CIRCULAR): it defines the process. Distractor 2 is weak (NON-SEQUITUR): emotional reactions to plant sounds are irrelevant. Distractor 3 is weak (VAGUE): it fails to specify consequences."
+explanation: "The correct answer is strongest because it links the policy to carbon reduction goals. Distractor 1 is weak: it defines the process. Distractor 2 is weak: emotional reactions to plant sounds are irrelevant. Distractor 3 is weak: it fails to specify consequences."
 },
 {
 kind: "single",
@@ -33111,11 +33471,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because transparency enables investors and consumers to make informed choices, pressuring corporations to adopt sustainable operational practices.",
 distractors: [
-"Yes, because disclosure is when you make things public (CIRCULAR).",
-"No, because some CEOs like to wear expensive watches (NON-SEQUITUR).",
-"No, because the economy is quite complex to understand (VAGUE)."
+"Yes, because disclosure is when you make things public.",
+"No, because some CEOs like to wear expensive watches.",
+"No, because the economy is quite complex to understand."
 ],
-explanation: "The correct answer is strongest because it explains the mechanism of market pressure. Distractor 1 is weak (CIRCULAR): it restates the definition. Distractor 2 is weak (NON-SEQUITUR): personal style of executives is irrelevant. Distractor 3 is weak (VAGUE): complexity of the economy is not a specific reason to oppose transparency."
+explanation: "The correct answer is strongest because it explains the mechanism of market pressure. Distractor 1 is weak: it restates the definition. Distractor 2 is weak: personal style of executives is irrelevant. Distractor 3 is weak: complexity of the economy is not a specific reason to oppose transparency."
 },
 {
 kind: "single",
@@ -33127,11 +33487,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it provides a direct financial incentive for households to recycle and compost more, reducing the total volume of waste sent to landfills.",
 distractors: [
-"Yes, because waste is the stuff that we throw away (CIRCULAR).",
-"No, because some people are very busy during the week (NON-SEQUITUR).",
-"No, because people might find it confusing to calculate their trash (TRIVIAL)."
+"Yes, because waste is the stuff that we throw away.",
+"No, because some people are very busy during the week.",
+"No, because people might find it confusing to calculate their trash."
 ],
-explanation: "The correct answer is strongest because it links financial incentive to environmental outcomes. Distractor 1 is weak (CIRCULAR): it defines waste. Distractor 2 is weak (NON-SEQUITUR): daily schedule is irrelevant to waste management. Distractor 3 is weak (TRIVIAL): minor administrative confusion is not a substantive reason to reject a major policy."
+explanation: "The correct answer is strongest because it links financial incentive to environmental outcomes. Distractor 1 is weak: it defines waste. Distractor 2 is weak: daily schedule is irrelevant to waste management. Distractor 3 is weak: minor administrative confusion is not a substantive reason to reject a major policy."
 },
 {
 kind: "single",
@@ -33143,11 +33503,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because diverse leadership ensures that the interests of female athletes and fans are properly represented in major governance decisions.",
 distractors: [
-"Yes, because 50 percent means half of the people (CIRCULAR).",
-"No, because some stadiums have poor parking facilities (NON-SEQUITUR).",
-"No, because it might lead to many things changing (VAGUE)."
+"Yes, because 50 percent means half of the people.",
+"No, because some stadiums have poor parking facilities.",
+"No, because it might lead to many things changing."
 ],
-explanation: "The correct answer is strongest because it addresses governance representation. Distractor 1 is weak (CIRCULAR): it explains the math, not the value. Distractor 2 is weak (NON-SEQUITUR): parking issues are unrelated to board diversity. Distractor 3 is weak (VAGUE): it fails to outline any actual negative consequences."
+explanation: "The correct answer is strongest because it addresses governance representation. Distractor 1 is weak: it explains the math, not the value. Distractor 2 is weak: parking issues are unrelated to board diversity. Distractor 3 is weak: it fails to outline any actual negative consequences."
 },
 {
 kind: "single",
@@ -33159,11 +33519,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the high caffeine content in these drinks poses documented risks of heart palpitations and anxiety in developing nervous systems.",
 distractors: [
-"Yes, because energy drinks are drinks that give you energy (CIRCULAR).",
-"No, because some teens like the taste of the cans (NON-SEQUITUR).",
-"No, because stores would have to change their signs (TRIVIAL)."
+"Yes, because energy drinks are drinks that give you energy.",
+"No, because some teens like the taste of the cans.",
+"No, because stores would have to change their signs."
 ],
-explanation: "The correct answer is strongest because it cites the biological health risk. Distractor 1 is weak (CIRCULAR): it restates the function. Distractor 2 is weak (NON-SEQUITUR): packaging aesthetic is irrelevant to health. Distractor 3 is weak (TRIVIAL): signage costs are negligible compared to health impacts."
+explanation: "The correct answer is strongest because it cites the biological health risk. Distractor 1 is weak: it restates the function. Distractor 2 is weak: packaging aesthetic is irrelevant to health. Distractor 3 is weak: signage costs are negligible compared to health impacts."
 },
 {
 kind: "single",
@@ -33175,11 +33535,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it equips young adults with the essential knowledge to manage debt, savings, and investments, preventing avoidable long-term financial hardship.",
 distractors: [
-"Yes, because financial literacy is literacy regarding finances (CIRCULAR).",
-"No, because some schools have very nice curtains (NON-SEQUITUR).",
-"No, because the test might be difficult (VAGUE)."
+"Yes, because financial literacy is literacy regarding finances.",
+"No, because some schools have very nice curtains.",
+"No, because the test might be difficult."
 ],
-explanation: "The correct answer is strongest because it addresses long-term economic well-being. Distractor 1 is weak (CIRCULAR): it defines the term. Distractor 2 is weak (NON-SEQUITUR): interior decor is irrelevant. Distractor 3 is weak (VAGUE): difficulty is not a reason to avoid essential education."
+explanation: "The correct answer is strongest because it addresses long-term economic well-being. Distractor 1 is weak: it defines the term. Distractor 2 is weak: interior decor is irrelevant. Distractor 3 is weak: difficulty is not a reason to avoid essential education."
 },
 {
 kind: "single",
@@ -33191,11 +33551,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because early detection of issues like burnout or depression allows for intervention before they develop into career-ending or life-threatening crises.",
 distractors: [
-"Yes, because mental health screenings are screenings for mental health (CIRCULAR).",
-"No, because some people prefer to watch movies on their day off (NON-SEQUITUR).",
-"No, because it might lead to different outcomes than we expect (VAGUE)."
+"Yes, because mental health screenings are screenings for mental health.",
+"No, because some people prefer to watch movies on their day off.",
+"No, because it might lead to different outcomes than we expect."
 ],
-explanation: "The correct answer is strongest because it links early detection to preventive care outcomes. Distractor 1 is weak (CIRCULAR): it restates the term. Distractor 2 is weak (NON-SEQUITUR): movie preferences are irrelevant. Distractor 3 is weak (VAGUE): it fails to provide any concrete reasoning."
+explanation: "The correct answer is strongest because it links early detection to preventive care outcomes. Distractor 1 is weak: it restates the term. Distractor 2 is weak: movie preferences are irrelevant. Distractor 3 is weak: it fails to provide any concrete reasoning."
 },
 {
 kind: "single",
@@ -33207,11 +33567,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because increasing regular physical activity will lower rates of lifestyle-related diseases, significantly reducing the long-term burden on the healthcare system.",
 distractors: [
-"Yes, because gyms are places where you can exercise (CIRCULAR).",
-"No, because some people like to read books (NON-SEQUITUR).",
-"No, because the government has many other things to focus on (VAGUE)."
+"Yes, because gyms are places where you can exercise.",
+"No, because some people like to read books.",
+"No, because the government has many other things to focus on."
 ],
-explanation: "The correct answer is strongest because it identifies the public health benefit. Distractor 1 is weak (CIRCULAR): it defines the gym. Distractor 2 is weak (NON-SEQUITUR): reading habits are irrelevant. Distractor 3 is weak (VAGUE): 'other things' is too broad a reason."
+explanation: "The correct answer is strongest because it identifies the public health benefit. Distractor 1 is weak: it defines the gym. Distractor 2 is weak: reading habits are irrelevant. Distractor 3 is weak: 'other things' is too broad a reason."
 },
 {
 kind: "single",
@@ -33223,11 +33583,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it eliminates subjective human error in officiating, ensuring that the outcome of matches is determined by player performance rather than referee mistakes.",
 distractors: [
-"Yes, because technology is stuff that uses machines (CIRCULAR).",
-"No, because some referees have nice uniforms (NON-SEQUITUR).",
-"No, because the games might take a little longer (TRIVIAL)."
+"Yes, because technology is stuff that uses machines.",
+"No, because some referees have nice uniforms.",
+"No, because the games might take a little longer."
 ],
-explanation: "The correct answer is strongest because it addresses the integrity of sports competition. Distractor 1 is weak (CIRCULAR): it defines technology poorly. Distractor 2 is weak (NON-SEQUITUR): uniform appearance is irrelevant. Distractor 3 is weak (TRIVIAL): a minor increase in game time does not outweigh the benefit of accuracy."
+explanation: "The correct answer is strongest because it addresses the integrity of sports competition. Distractor 1 is weak: it defines technology poorly. Distractor 2 is weak: uniform appearance is irrelevant. Distractor 3 is weak: a minor increase in game time does not outweigh the benefit of accuracy."
 },
 {
 kind: "single",
@@ -33239,11 +33599,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it removes a significant financial barrier to higher education, promoting social mobility and ensuring that talent, not wealth, dictates academic success.",
 distractors: [
-"Yes, because tuition is the price you pay for university (CIRCULAR).",
-"No, because some students like to wear hoodies (NON-SEQUITUR).",
-"No, because it might lead to some interesting changes (VAGUE)."
+"Yes, because tuition is the price you pay for university.",
+"No, because some students like to wear hoodies.",
+"No, because it might lead to some interesting changes."
 ],
-explanation: "The correct answer is strongest because it highlights the link between education costs and socioeconomic equity. Distractor 1 is weak (CIRCULAR): it defines the term. Distractor 2 is weak (NON-SEQUITUR): clothing choices are irrelevant. Distractor 3 is weak (VAGUE): 'interesting changes' does not provide a reasoned argument."
+explanation: "The correct answer is strongest because it highlights the link between education costs and socioeconomic equity. Distractor 1 is weak: it defines the term. Distractor 2 is weak: clothing choices are irrelevant. Distractor 3 is weak: 'interesting changes' does not provide a reasoned argument."
 },
 {
 kind: "single",
@@ -33255,11 +33615,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it supports local agricultural businesses and reduces the carbon footprint associated with transporting food over long distances.",
 distractors: [
-"Yes, because local food is food that comes from nearby (CIRCULAR).",
-"No, because some students like to draw during lunch (NON-SEQUITUR).",
-"No, because the price of local food can vary sometimes (VAGUE)."
+"Yes, because local food is food that comes from nearby.",
+"No, because some students like to draw during lunch.",
+"No, because the price of local food can vary sometimes."
 ],
-explanation: "The correct answer is strongest because it touches on both economic support and environmental impact. Distractor 1 is weak (CIRCULAR): it restates the term. Distractor 2 is weak (NON-SEQUITUR): artistic habits are irrelevant. Distractor 3 is weak (VAGUE): price variation is too general to serve as a meaningful argument against the sustainability benefits."
+explanation: "The correct answer is strongest because it touches on both economic support and environmental impact. Distractor 1 is weak: it restates the term. Distractor 2 is weak: artistic habits are irrelevant. Distractor 3 is weak: price variation is too general to serve as a meaningful argument against the sustainability benefits."
 },
 {
 kind: "single",
@@ -33271,11 +33631,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because integrating dental care into hospitals will significantly reduce long-term costs associated with emergency room visits for preventable oral infections.",
 distractors: [
-"Yes, because everyone has teeth and should be able to take care of them (TRIVIAL).",
-"Yes, because universal access is fundamentally a good thing for a society to provide (VAGUE).",
-"No, because doctors should focus on heart surgery rather than fixing cavities (IRRELEVANT)."
+"Yes, because everyone has teeth and should be able to take care of them.",
+"No, because if the government mandates free dental services, then the government will be mandating free dental services, which is why it shouldn't happen.",
+"No, because doctors should focus on heart surgery rather than fixing cavities."
 ],
-explanation: "The correct answer is strongest because it directly addresses the economic and health outcome of the proposal. Distractor 1 is weak (TRIVIAL): it is a broad statement that does not address the policy mechanism. Distractor 2 is weak (VAGUE): it fails to provide a concrete mechanism or consequence. Distractor 3 is weak (IRRELEVANT): it relies on an arbitrary distinction between types of medical care."
+explanation: "The correct answer is strongest because it directly addresses the economic and health outcome of the proposal. Distractor 1 is weak: it is a broad statement that does not address the policy mechanism. Distractor 2 is weak: it fails to provide a concrete mechanism or consequence. Distractor 3 is weak: it relies on an arbitrary distinction between types of medical care."
 },
 {
 kind: "single",
@@ -33287,11 +33647,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because forcing high-income earners into the public system would likely overwhelm current capacity, leading to longer waiting times for all patients.",
 distractors: [
-"No, because people should be free to spend their money however they wish (NON-SEQUITUR).",
-"Yes, because it is unfair that some people get better treatment than others (VAGUE).",
-"Yes, because a single-payer system is a system that only uses one payer (CIRCULAR)."
+"No, because people should be free to spend their money however they wish.",
+"Yes, because it is unfair that some people get better treatment than others.",
+"Yes, because a single-payer system is a system that only uses one payer."
 ],
-explanation: "The correct answer is strongest because it highlights a specific consequence regarding service capacity. Distractor 1 is weak (NON-SEQUITUR): it appeals to personal freedom rather than healthcare outcomes. Distractor 2 is weak (VAGUE): it appeals to emotion rather than the practical impact on the system. Distractor 3 is weak (CIRCULAR): it merely defines the policy rather than supporting it."
+explanation: "The correct answer is strongest because it highlights a specific consequence regarding service capacity. Distractor 1 is weak: it appeals to personal freedom rather than healthcare outcomes. Distractor 2 is weak: it appeals to emotion rather than the practical impact on the system. Distractor 3 is weak: it merely defines the policy rather than supporting it."
 },
 {
 kind: "single",
@@ -33303,11 +33663,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because enabling generic manufacturing at scale would drastically increase supply and lower prices, ensuring that vulnerable populations receive treatment during crises.",
 distractors: [
-"Yes, because people are currently dying because they cannot afford drugs (TRIVIAL).",
-"No, because these companies worked very hard to invent these medicines (IRRELEVANT).",
-"Yes, because it is good to help people when they are in trouble (VAGUE)."
+"Yes, because people are currently dying because they cannot afford drugs.",
+"No, because these companies worked very hard to invent these medicines.",
+"No, because forcing companies to release patents would set a bad precedent that other countries might not like."
 ],
-explanation: "The correct answer is strongest because it explains the mechanism of supply and demand during an emergency. Distractor 1 is weak (TRIVIAL): it notes the problem but does not explain how the policy solves it. Distractor 2 is weak (IRRELEVANT): it focuses on the past labor of companies rather than current emergency needs. Distractor 3 is weak (VAGUE): it lacks specific impact analysis."
+explanation: "The correct answer is strongest because it explains the mechanism of supply and demand during an emergency. Distractor 1 is weak: it notes the problem but does not explain how the policy solves it. Distractor 2 is weak: it focuses on the past labor of companies rather than current emergency needs. Distractor 3 is weak: it lacks specific impact analysis."
 },
 {
 kind: "single",
@@ -33319,11 +33679,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the high capital investment required for retrofitting aging hospital buildings would force a diversion of funds from essential medical equipment and patient care.",
 distractors: [
-"Yes, because climate change is a significant problem that everyone should contribute to solving (NON-SEQUITUR).",
-"Yes, because hospitals use a lot of energy and should be cleaner (VAGUE).",
-"No, because hospitals usually have white walls and solar panels are often blue (IRRELEVANT)."
+"Yes, because climate change is a significant problem that everyone should contribute to solving.",
+"Yes, because hospitals use a lot of energy and should be cleaner.",
+"No, because hospitals usually have white walls and solar panels are often blue."
 ],
-explanation: "The correct answer is strongest because it directly identifies the conflict between environmental policy and healthcare budget priorities. Distractor 1 is weak (NON-SEQUITUR): it focuses on climate policy generally rather than hospital-specific impacts. Distractor 2 is weak (VAGUE): it is a generic statement about energy use. Distractor 3 is weak (IRRELEVANT): it focuses on aesthetics rather than policy impact."
+explanation: "The correct answer is strongest because it directly identifies the conflict between environmental policy and healthcare budget priorities. Distractor 1 is weak: it focuses on climate policy generally rather than hospital-specific impacts. Distractor 2 is weak: it is a generic statement about energy use. Distractor 3 is weak: it focuses on aesthetics rather than policy impact."
 },
 {
 kind: "single",
@@ -33335,11 +33695,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because such a tax discourages the consumption of sugar-linked products, leading to a measurable decrease in obesity-related hospital admissions over time.",
 distractors: [
-"Yes, because the government needs more money to pay for medical staff salaries (TRIVIAL).",
-"Yes, because sugar is bad for your health and people should eat better (VAGUE).",
-"No, because people like the taste of sweet food and do not want to stop eating it (IRRELEVANT)."
+"Yes, because the government needs more money to pay for medical staff salaries.",
+"No, because taxes are something that governments have used for a long time, so implementing another tax is just more of the same thing.",
+"No, because people like the taste of sweet food and do not want to stop eating it."
 ],
-explanation: "The correct answer is strongest because it links the tax to a health outcome (reduced obesity) that directly impacts hospital demand. Distractor 1 is weak (TRIVIAL): it suggests a revenue use without considering the intended behavior-change effect. Distractor 2 is weak (VAGUE): it is a moral judgment rather than a policy analysis. Distractor 3 is weak (IRRELEVANT): it addresses personal preference rather than systemic policy effects."
+explanation: "The correct answer is strongest because it links the tax to a health outcome (reduced obesity) that directly impacts hospital demand. Distractor 1 is weak: it suggests a revenue use without considering the intended behavior-change effect. Distractor 2 is weak: it is a moral judgment rather than a policy analysis. Distractor 3 is weak: it addresses personal preference rather than systemic policy effects."
 },
 {
 kind: "single",
@@ -33351,11 +33711,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because attendance is largely outside a physician's control, meaning such penalties would discourage doctors from working in areas with high patient non-attendance.",
 distractors: [
-"No, because doctors already work very long hours and are tired (IRRELEVANT).",
-"Yes, because missing appointments is inefficient and costs the healthcare system money (TRIVIAL).",
-"Yes, because it is important for doctors to have full schedules every day (VAGUE)."
+"No, because doctors already work very long hours and are tired.",
+"Yes, because missing appointments is inefficient and costs the healthcare system money.",
+"Yes, because it is important for doctors to have full schedules every day."
 ],
-explanation: "The correct answer is strongest because it highlights the perverse incentive created for medical professionals. Distractor 1 is weak (IRRELEVANT): it focuses on doctor fatigue rather than the structural logic of the policy. Distractor 2 is weak (TRIVIAL): it notes the problem of missed appointments without addressing the efficacy of the proposed solution. Distractor 3 is weak (VAGUE): it fails to consider the systemic implications."
+explanation: "The correct answer is strongest because it highlights the perverse incentive created for medical professionals. Distractor 1 is weak: it focuses on doctor fatigue rather than the structural logic of the policy. Distractor 2 is weak: it notes the problem of missed appointments without addressing the efficacy of the proposed solution. Distractor 3 is weak: it fails to consider the systemic implications."
 },
 {
 kind: "single",
@@ -33367,11 +33727,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because AI tools can standardize diagnostic accuracy across regions where specialized medical personnel are in short supply, reducing misdiagnosis rates.",
 distractors: [
-"Yes, because computers are becoming much more common in hospitals these days (IRRELEVANT).",
-"Yes, because having the latest technology always leads to better results for everyone (VAGUE).",
-"No, because rural areas have different cultures than big cities (NON-SEQUITUR)."
+"Yes, because computers are becoming much more common in hospitals these days.",
+"No, because mandating things in clinics might not be good since mandates can sometimes involve requirements.",
+"No, because rural areas have different cultures than big cities."
 ],
-explanation: "The correct answer is strongest because it identifies the gap (specialist shortage) and the solution (AI standardization) to improve outcomes. Distractor 1 is weak (IRRELEVANT): it focuses on technology adoption trends rather than medical efficacy. Distractor 2 is weak (VAGUE): it makes a broad, unproven claim about technology. Distractor 3 is weak (NON-SEQUITUR): it introduces cultural factors irrelevant to clinical diagnostic tools."
+explanation: "The correct answer is strongest because it identifies the gap (specialist shortage) and the solution (AI standardization) to improve outcomes. Distractor 1 is weak: it focuses on technology adoption trends rather than medical efficacy. Distractor 2 is weak: it makes a broad, unproven claim about technology. Distractor 3 is weak: it introduces cultural factors irrelevant to clinical diagnostic tools."
 },
 {
 kind: "single",
@@ -33383,11 +33743,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it guarantees a consistent supply of doctors to underserved areas, directly addressing the regional shortage of medical care.",
 distractors: [
-"Yes, because it is nice for students to get free education (TRIVIAL).",
-"No, because students should be allowed to choose their own career paths after graduation (NON-SEQUITUR).",
-"Yes, because tuition is currently very expensive and this would help people (VAGUE)."
+"Yes, because it is nice for students to get free education.",
+"No, because students should be allowed to choose their own career paths after graduation.",
+"No, because free tuition is a big responsibility and medical students might not like having responsibilities."
 ],
-explanation: "The correct answer is strongest because it links the policy (service requirement) to a concrete outcome (filling service gaps). Distractor 1 is weak (TRIVIAL): it ignores the service obligation entirely. Distractor 2 is weak (NON-SEQUITUR): it focuses on career freedom rather than the healthcare provision goal. Distractor 3 is weak (VAGUE): it focuses on financial relief rather than system staffing."
+explanation: "The correct answer is strongest because it links the policy (service requirement) to a concrete outcome (filling service gaps). Distractor 1 is weak: it ignores the service obligation entirely. Distractor 2 is weak: it focuses on career freedom rather than the healthcare provision goal. Distractor 3 is weak: it focuses on financial relief rather than system staffing."
 },
 {
 kind: "single",
@@ -33399,11 +33759,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because young people are directly affected by long-term policy decisions, and including them would ensure their specific interests are represented in governance.",
 distractors: [
-"Yes, because younger people have more energy than older people (IRRELEVANT).",
-"No, because 16-year-olds often have difficulty choosing what to wear in the morning (TRIVIAL).",
-"Yes, because lowering the age is a way to change the age that you can vote (CIRCULAR)."
+"Yes, because younger people have more energy than older people.",
+"No, because 16-year-olds often have difficulty choosing what to wear in the morning.",
+"No, because if we lower the voting age to 16, then more young people will vote, which means we will have changed who is voting, and this could affect the outcomes of elections."
 ],
-explanation: "The correct answer is strongest because it identifies the principle of representation for those affected by policy. Distractor 1 is weak (IRRELEVANT): age energy levels do not correlate with political participation. Distractor 2 is weak (TRIVIAL): a minor behavioral observation is used to generalize about civic capacity. Distractor 3 is weak (CIRCULAR): it restates the proposal."
+explanation: "The correct answer is strongest because it identifies the principle of representation for those affected by policy. Distractor 1 is weak: age energy levels do not correlate with political participation. Distractor 2 is weak: a minor behavioral observation is used to generalize about civic capacity. Distractor 3 is weak: it restates the proposal."
 },
 {
 kind: "single",
@@ -33415,11 +33775,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the risk of executing an innocent person is irreversible, representing an absolute failure of justice that no policy can rectify.",
 distractors: [
-"Yes, because many people think that prisons are already quite scary enough (VAGUE).",
-"No, because capital is a word that can also refer to money (IRRELEVANT).",
-"Yes, because it is cheaper to keep someone in jail than to pay for their execution (TRIVIAL)."
+"Yes, because many people think that prisons are already quite scary enough.",
+"No, because capital is a word that can also refer to money.",
+"No, because abolishing capital punishment would mean that capital punishment would no longer exist, which would change the current system of capital punishment."
 ],
-explanation: "The correct answer is strongest because it identifies an ethical and structural flaw central to the justice system. Distractor 1 is weak (VAGUE): it appeals to popular opinion. Distractor 2 is weak (IRRELEVANT): it relies on wordplay. Distractor 3 is weak (TRIVIAL): it focuses on cost rather than the core ethical debate of justice."
+explanation: "The correct answer is strongest because it identifies an ethical and structural flaw central to the justice system. Distractor 1 is weak: it appeals to popular opinion. Distractor 2 is weak: it relies on wordplay. Distractor 3 is weak: it focuses on cost rather than the core ethical debate of justice."
 },
 {
 kind: "single",
@@ -33431,11 +33791,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because juries provide a cross-section of society that ensures the legal process reflects community standards rather than just the interpretations of career bureaucrats.",
 distractors: [
-"Yes, because judges have read many law books and know the rules well (TRIVIAL).",
-"No, because juries are a part of the jury system (CIRCULAR).",
-"Yes, because being on a jury takes too much time out of people's work weeks (NON-SEQUITUR)."
+"Yes, because judges have read many law books and know the rules well.",
+"No, because juries are a part of the jury system.",
+"Yes, because being on a jury takes too much time out of people's work weeks."
 ],
-explanation: "The correct answer is strongest because it highlights the purpose of the jury as a democratic check. Distractor 1 is weak (TRIVIAL): it notes judge expertise but misses the point of community representation. Distractor 2 is weak (CIRCULAR): it is a tautology. Distractor 3 is weak (NON-SEQUITUR): it focuses on individual inconvenience rather than judicial efficacy."
+explanation: "The correct answer is strongest because it highlights the purpose of the jury as a democratic check. Distractor 1 is weak: it notes judge expertise but misses the point of community representation. Distractor 2 is weak: it is a tautology. Distractor 3 is weak: it focuses on individual inconvenience rather than judicial efficacy."
 },
 {
 kind: "single",
@@ -33447,11 +33807,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because evidence shows that focusing on treatment significantly lowers recidivism rates, whereas prison time often reinforces criminal behavior.",
 distractors: [
-"Yes, because it is better to be healthy than to be in a cell (VAGUE).",
-"No, because it is important that people are punished for breaking the law (VAGUE).",
-"Yes, because rehabilitation is a word that starts with the letter R (IRRELEVANT)."
+"Yes, because it is better to be healthy than to be in a cell.",
+"No, because it is important that people are punished for breaking the law.",
+"No, because rehabilitation is just another word for being soft on crime and we need to maintain standards."
 ],
-explanation: "The correct answer is strongest because it cites the impact on recidivism, the core metric for successful criminal justice. Distractor 1 is weak (VAGUE): it expresses a general preference. Distractor 2 is weak (VAGUE): it expresses a general desire for punishment. Distractor 3 is weak (IRRELEVANT): it is an observation of language."
+explanation: "The correct answer is strongest because it cites the impact on recidivism, the core metric for successful criminal justice. Distractor 1 is weak: it expresses a general preference. Distractor 2 is weak: it expresses a general desire for punishment. Distractor 3 is weak: it is an observation of language."
 },
 {
 kind: "single",
@@ -33463,11 +33823,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because consistent video recording increases transparency and provides objective evidence in cases of alleged misconduct, protecting both the public and the officers.",
 distractors: [
-"Yes, because people act better when they know they are being filmed (VAGUE).",
-"No, because batteries can sometimes run out when they are being used (TRIVIAL).",
-"Yes, because the police are a very important part of the legal system (IRRELEVANT)."
+"Yes, because people act better when they know they are being filmed.",
+"No, because batteries can sometimes run out when they are being used.",
+"No, because body cameras are just cameras and cameras are just devices that record things."
 ],
-explanation: "The correct answer is strongest because it explains the dual benefit of transparency and objective evidence. Distractor 1 is weak (VAGUE): it is a psychological generalization. Distractor 2 is weak (TRIVIAL): it focuses on a minor technical failure rather than policy intent. Distractor 3 is weak (IRRELEVANT): it states the importance of police, which is irrelevant to the specific camera policy."
+explanation: "The correct answer is strongest because it explains the dual benefit of transparency and objective evidence. Distractor 1 is weak: it is a psychological generalization. Distractor 2 is weak: it focuses on a minor technical failure rather than policy intent. Distractor 3 is weak: it states the importance of police, which is irrelevant to the specific camera policy."
 },
 {
 kind: "single",
@@ -33479,11 +33839,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because restricting legal representation denies officials their right to counsel, creating a precedent where the government could dictate who can defend against its own accusations.",
 distractors: [
-"No, because these firms want to make a lot of money from these clients (IRRELEVANT).",
-"Yes, because high-profile people already have enough influence (VAGUE).",
-"Yes, because the law is the law and it should be followed (CIRCULAR)."
+"No, because these firms want to make a lot of money from these clients.",
+"Yes, because high-profile people already have enough influence.",
+"Yes, because the law is the law and it should be followed."
 ],
-explanation: "The correct answer is strongest because it highlights the fundamental legal right to counsel and the danger of government overreach. Distractor 1 is weak (IRRELEVANT): it focuses on lawyer profit motive. Distractor 2 is weak (VAGUE): it uses moralistic language without systemic logic. Distractor 3 is weak (CIRCULAR): it essentially says nothing."
+explanation: "The correct answer is strongest because it highlights the fundamental legal right to counsel and the danger of government overreach. Distractor 1 is weak: it focuses on lawyer profit motive. Distractor 2 is weak: it uses moralistic language without systemic logic. Distractor 3 is weak: it essentially says nothing."
 },
 {
 kind: "single",
@@ -33495,11 +33855,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mandatory mediation reduces the caseload of the court system, allowing judges to focus on complex legal cases while settling minor disputes more efficiently.",
 distractors: [
-"Yes, because talking to people is generally a good way to solve problems (VAGUE).",
-"No, because mediation is not the same thing as a full trial in a courtroom (CIRCULAR).",
-"Yes, because the courthouse floor is often very polished and nice to walk on (IRRELEVANT)."
+"Yes, because talking to people is generally a good way to solve problems.",
+"No, because mediation is not the same thing as a full trial in a courtroom.",
+"No, because mandatory mediation might be bad for some people in certain situations where things could go wrong."
 ],
-explanation: "The correct answer is strongest because it addresses the systemic goal of court efficiency. Distractor 1 is weak (VAGUE): it makes a broad social claim. Distractor 2 is weak (CIRCULAR): it defines the difference between the two processes without providing an argument. Distractor 3 is weak (IRRELEVANT): it focuses on building maintenance."
+explanation: "The correct answer is strongest because it addresses the systemic goal of court efficiency. Distractor 1 is weak: it makes a broad social claim. Distractor 2 is weak: it defines the difference between the two processes without providing an argument. Distractor 3 is weak: it focuses on building maintenance."
 },
 {
 kind: "single",
@@ -33511,11 +33871,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it prevents the creation of a stateless population, ensuring all individuals have legal rights and social protections from birth.",
 distractors: [
-"Yes, because children are very cute and deserve the best start in life (VAGUE).",
-"No, because countries are just lines drawn on a map (NON-SEQUITUR).",
-"Yes, because it is common for countries to give citizenship to children (TRIVIAL)."
+"Yes, because children are very cute and deserve the best start in life.",
+"No, because countries are just lines drawn on a map.",
+"No, because citizenship is a serious matter that requires serious thinking about serious things."
 ],
-explanation: "The correct answer is strongest because it addresses the structural legal issue of statelessness. Distractor 1 is weak (VAGUE): it uses emotional appeal. Distractor 2 is weak (NON-SEQUITUR): it challenges the concept of borders, which is unrelated to the citizenship policy debate. Distractor 3 is weak (TRIVIAL): it appeals to existing norms without explaining the benefit."
+explanation: "The correct answer is strongest because it addresses the structural legal issue of statelessness. Distractor 1 is weak: it uses emotional appeal. Distractor 2 is weak: it challenges the concept of borders, which is unrelated to the citizenship policy debate. Distractor 3 is weak: it appeals to existing norms without explaining the benefit."
 },
 {
 kind: "single",
@@ -33527,11 +33887,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because zero-tolerance policies disproportionately punish students for minor infractions, often removing them from the learning environment for behavior that does not harm others.",
 distractors: [
-"Yes, because students should be focusing on their books and not their screens (VAGUE).",
-"No, because mobile phones are very expensive and students might lose them (IRRELEVANT).",
-"Yes, because the policy is a zero-tolerance policy, which means there is no tolerance (CIRCULAR)."
+"Yes, because students should be focusing on their books and not their screens.",
+"No, because mobile phones are very expensive and students might lose them.",
+"Yes, because the policy is a zero-tolerance policy, which means there is no tolerance."
 ],
-explanation: "The correct answer is strongest because it identifies the unintended negative consequence of over-punishment on education. Distractor 1 is weak (VAGUE): it uses generic pedagogical advice. Distractor 2 is weak (IRRELEVANT): it focuses on financial loss rather than the educational policy. Distractor 3 is weak (CIRCULAR): it explains the definition of the term."
+explanation: "The correct answer is strongest because it identifies the unintended negative consequence of over-punishment on education. Distractor 1 is weak: it uses generic pedagogical advice. Distractor 2 is weak: it focuses on financial loss rather than the educational policy. Distractor 3 is weak: it explains the definition of the term."
 },
 {
 kind: "single",
@@ -33543,11 +33903,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a narrow focus on STEM overlooks the critical thinking and communication skills fostered by the humanities, which are essential for long-term innovation and complex problem-solving.",
 distractors: [
-"Yes, because scientists make more money than writers usually do (TRIVIAL).",
-"Yes, because STEM is very important for the economy (VAGUE).",
-"No, because universities have a lot of books and should keep them (IRRELEVANT)."
+"Yes, because scientists make more money than writers usually do.",
+"Yes, because STEM is very important for the economy.",
+"No, because universities have a lot of books and should keep them."
 ],
-explanation: "The correct answer is strongest because it argues that the proposed policy undermines the very objective (economic innovation) it claims to support. Distractor 1 is weak (TRIVIAL): it compares salary outcomes without addressing the academic policy goal. Distractor 2 is weak (VAGUE): it restates the proposal’s goal without providing evidence. Distractor 3 is weak (IRRELEVANT): it relates to physical library assets."
+explanation: "The correct answer is strongest because it argues that the proposed policy undermines the very objective (economic innovation) it claims to support. Distractor 1 is weak: it compares salary outcomes without addressing the academic policy goal. Distractor 2 is weak: it restates the proposal’s goal without providing evidence. Distractor 3 is weak: it relates to physical library assets."
 },
 {
 kind: "single",
@@ -33559,11 +33919,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because research demonstrates that aligning school hours with biological sleep patterns significantly improves student mental health and academic performance.",
 distractors: [
-"Yes, because students will be able to wake up later and have more fun (VAGUE).",
-"No, because it would be hard for parents to change their own work schedules (NON-SEQUITUR).",
-"Yes, because sleep is a thing that everyone needs to do (TRIVIAL)."
+"Yes, because students will be able to wake up later and have more fun.",
+"No, because it would be hard for parents to change their own work schedules.",
+"No, because school has always started in the morning and changing things that have always been done a certain way is not a good idea."
 ],
-explanation: "The correct answer is strongest because it links the policy directly to the health and outcome metrics. Distractor 1 is weak (VAGUE): it focuses on subjective experience rather than outcomes. Distractor 2 is weak (NON-SEQUITUR): it focuses on external adult logistical problems, not the academic policy itself. Distractor 3 is weak (TRIVIAL): it states a basic biological fact."
+explanation: "The correct answer is strongest because it links the policy directly to the health and outcome metrics. Distractor 1 is weak: it focuses on subjective experience rather than outcomes. Distractor 2 is weak: it focuses on external adult logistical problems, not the academic policy itself. Distractor 3 is weak: it states a basic biological fact."
 },
 {
 kind: "single",
@@ -33575,11 +33935,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it removes the primary financial barrier to higher education, allowing students to pursue careers based on aptitude rather than socioeconomic background.",
 distractors: [
-"Yes, because it is expensive to pay for college (TRIVIAL).",
-"No, because education is a great thing that everyone should have access to (NON-SEQUITUR).",
-"Yes, because people with degrees often earn more money in their lifetimes (IRRELEVANT)."
+"Yes, because it is expensive to pay for college.",
+"No, because education is a great thing that everyone should have access to.",
+"No, because tuition fees have always existed and changing long-established systems is generally not a good idea."
 ],
-explanation: "The correct answer is strongest because it highlights the removal of a systemic barrier to equality of opportunity. Distractor 1 is weak (TRIVIAL): it identifies the cost but not the consequence of the policy. Distractor 2 is weak (NON-SEQUITUR): it agrees with the goal while failing to address the feasibility of the proposal. Distractor 3 is weak (IRRELEVANT): it focuses on post-graduation earnings, which is a secondary effect."
+explanation: "The correct answer is strongest because it highlights the removal of a systemic barrier to equality of opportunity. Distractor 1 is weak: it identifies the cost but not the consequence of the policy. Distractor 2 is weak: it agrees with the goal while failing to address the feasibility of the proposal. Distractor 3 is weak: it focuses on post-graduation earnings, which is a secondary effect."
 },
 {
 kind: "single",
@@ -33591,11 +33951,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing the stigma associated with means-tested lunch programs ensures that all children receive adequate nutrition, which is directly linked to better concentration and academic performance.",
 distractors: [
-"Yes, because all food tastes good when you are hungry (VAGUE).",
-"No, because schools are meant for studying and not for cooking food (IRRELEVANT).",
-"Yes, because children should eat well (VAGUE)."
+"Yes, because all food tastes good when you are hungry.",
+"No, because schools are meant for studying and not for cooking food.",
+"No, because free lunches would make school lunches more free, which is not necessarily what schools should be doing."
 ],
-explanation: "The correct answer is strongest because it explains why universal access is superior to means-testing (removing stigma) and its link to academic performance. Distractor 1 is weak (VAGUE): it is a generalization about hunger. Distractor 2 is weak (IRRELEVANT): it focuses on the cooking function of schools rather than the goal of nutrition. Distractor 3 is weak (VAGUE): it is a moral sentiment."
+explanation: "The correct answer is strongest because it explains why universal access is superior to means-testing (removing stigma) and its link to academic performance. Distractor 1 is weak: it is a generalization about hunger. Distractor 2 is weak: it focuses on the cooking function of schools rather than the goal of nutrition. Distractor 3 is weak: it is a moral sentiment."
 },
 {
 kind: "single",
@@ -33607,11 +33967,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because research suggests that physical reading improves information retention and deep comprehension compared to digital screens, especially in younger children.",
 distractors: [
-"Yes, because tablets are much lighter to carry in a backpack (TRIVIAL).",
-"Yes, because technology is the future and schools should be modern (VAGUE).",
-"No, because books are made of paper and trees are important (NON-SEQUITUR)."
+"Yes, because tablets are much lighter to carry in a backpack.",
+"Yes, because technology is the future and schools should be modern.",
+"No, because books are made of paper and trees are important."
 ],
-explanation: "The correct answer is strongest because it addresses the cognitive impact of the medium on the goal of education (retention). Distractor 1 is weak (TRIVIAL): it focuses on physical convenience. Distractor 2 is weak (VAGUE): it appeals to the concept of progress. Distractor 3 is weak (NON-SEQUITUR): it focuses on environmental concerns instead of educational efficacy."
+explanation: "The correct answer is strongest because it addresses the cognitive impact of the medium on the goal of education (retention). Distractor 1 is weak: it focuses on physical convenience. Distractor 2 is weak: it appeals to the concept of progress. Distractor 3 is weak: it focuses on environmental concerns instead of educational efficacy."
 },
 {
 kind: "single",
@@ -33623,11 +33983,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because mandatory physical activity fosters long-term health habits that mitigate the risk of chronic conditions, which are increasingly prevalent in sedentary teenage populations.",
 distractors: [
-"Yes, because it is important to be fit if you want to play sports (TRIVIAL).",
-"No, because some students prefer to spend their time in the art studio (NON-SEQUITUR).",
-"Yes, because physical education is a subject that involves being physical (CIRCULAR)."
+"Yes, because it is important to be fit if you want to play sports.",
+"No, because some students prefer to spend their time in the art studio.",
+"No, because physical education is something that relates to the body, and not everyone has the same body."
 ],
-explanation: "The correct answer is strongest because it addresses the preventative health goal of the policy. Distractor 1 is weak (TRIVIAL): it addresses sports participation rather than public health. Distractor 2 is weak (NON-SEQUITUR): it highlights individual preference rather than collective health benefits. Distractor 3 is weak (CIRCULAR): it restates the proposal."
+explanation: "The correct answer is strongest because it addresses the preventative health goal of the policy. Distractor 1 is weak: it addresses sports participation rather than public health. Distractor 2 is weak: it highlights individual preference rather than collective health benefits. Distractor 3 is weak: it restates the proposal."
 },
 {
 kind: "single",
@@ -33639,11 +33999,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "No, because test scores are heavily influenced by factors outside the classroom, leading to an inaccurate measure of teacher performance and incentivizing 'teaching to the test'.",
 distractors: [
-"Yes, because if the teacher is good, the students will learn (VAGUE).",
-"No, because teachers have a very hard job and deserve more respect (IRRELEVANT).",
-"Yes, because it is important to have a way to know if teachers are doing their jobs (VAGUE)."
+"Yes, because if the teacher is good, the students will learn.",
+"No, because teachers have a very hard job and deserve more respect.",
+"Yes, because it is important to have a way to know if teachers are doing their jobs."
 ],
-explanation: "The correct answer is strongest because it points out the flaw in the measurement method and the negative behavioral incentive. Distractor 1 is weak (VAGUE): it assumes a direct causal link. Distractor 2 is weak (IRRELEVANT): it focuses on respect rather than the assessment policy. Distractor 3 is weak (VAGUE): it mentions the need for assessment without justifying this specific method."
+explanation: "The correct answer is strongest because it points out the flaw in the measurement method and the negative behavioral incentive. Distractor 1 is weak: it assumes a direct causal link. Distractor 2 is weak: it focuses on respect rather than the assessment policy. Distractor 3 is weak: it mentions the need for assessment without justifying this specific method."
 },
 
 {
@@ -33925,7 +34285,7 @@ distractors: [
 "7/12",
 "2/5"
 ],
-explanation: "To solve this, we look at the two successful scenarios: exactly 2 managers (and 1 analyst) or exactly 3 managers. There are 120 total ways to form a committee of 3 from 10 people (calculated as 10C3). For the case with exactly 2 managers, there are 10C2 (45) ways to pick the managers and 5C1 (5) ways to pick the analyst, giving 50 combinations. For exactly 3 managers, there are 5C3 = 10 ways. Adding those gives 60 successful combinations out of 120, which simplifies to 1/2."
+explanation: "To solve this, we look at the two successful scenarios: exactly 2 managers (and 1 analyst) or exactly 3 managers. There are 120 total ways to form a committee of 3 from 10 people (calculated as 10C3). For the case with exactly 2 managers, there are 5C2 (10) ways to pick the managers and 5C1 (5) ways to pick the analyst, giving 50 combinations. For exactly 3 managers, there are 5C3 = 10 ways. Adding those gives 60 successful combinations out of 120, which simplifies to 1/2."
 },
 {
 kind: "single",
@@ -34051,10 +34411,10 @@ subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
 "A hospital screening program tests for a rare condition that affects 0.1% of the population.",
-"The test has a 99% sensitivity (true positive rate) and a 95% specificity (true negative rate).",
+"The test has a 99% sensitivity (the proportion of people who actually have the condition that test positive) and a 95% specificity (the proportion of people who do not have the condition that test negative).",
 "A patient tests positive for the condition."
 ],
-question: "What is the probability that the patient actually has the condition?",
+question: "Among patients who test positive, what is the probability that the patient actually has the condition?",
 correct: "1.94%",
 distractors: [
 "99%",
@@ -34121,11 +34481,11 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A medical study follows 100 participants over 5 years.",
-"40 participants are smokers, 60 are non-smokers.",
+"A medical study follows 100 participants over 5 years",
+"40 participants are smokers, 60 are non-smokers",
 "Within 5 years, 10 smokers develop a cough, while 5 non-smokers develop a cough."
 ],
-question: "What is the Relative Risk of developing a cough for smokers compared to non-smokers?",
+question: "Smokers' risk of developing a cough is how many times higher than non-smokers' risk? (This ratio is called Relative Risk.)",
 correct: "3",
 distractors: [
 "2",
@@ -34139,11 +34499,11 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A rare disease affects 0.5% of the population.",
-"A screening test for this disease has a sensitivity of 98% and a specificity of 90%.",
+"A rare disease affects 0.5% of the population",
+"A screening test for this disease has a sensitivity of 98% (the probability that the test correctly identifies someone who has the disease) and a specificity of 90% (the probability that the test correctly identifies someone who does not have the disease)",
 "A patient undergoes the test and receives a positive result."
 ],
-question: "What is the probability that the patient actually has the disease?",
+question: "Given that the patient tested positive, what is the probability that the patient actually has the disease?",
 correct: "4.68%",
 distractors: [
 "4.82%",
@@ -34210,12 +34570,12 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A diagnostic blood test for an enzyme deficiency is administered to 200 patients.",
-"120 patients test positive, 80 test negative.",
-"Among those who tested positive, 30 are found to actually have the deficiency.",
+"A diagnostic blood test for an enzyme deficiency is administered to 200 patients",
+"120 patients test positive, 80 test negative",
+"Among those who tested positive, 30 are found to actually have the deficiency",
 "Among those who tested negative, 5 are found to have the deficiency."
 ],
-question: "What is the Negative Predictive Value (NPV) of the test?",
+question: "Among patients who tested negative, what proportion do NOT have the enzyme deficiency?",
 correct: "93.75%",
 distractors: [
 "25%",
@@ -34232,9 +34592,9 @@ leftTitle: "Probability",
 stimulus: [
 "In a large primary care clinic, 20% of patients attending for a routine check-up have underlying hypertension.",
 "A screening sphygmomanometer test is used.",
-"The test has 90% sensitivity and 80% specificity."
+"The test has 90% sensitivity (the proportion of patients WITH hypertension who test positive) and 80% specificity (the proportion of patients WITHOUT hypertension who test negative)."
 ],
-question: "What is the Positive Predictive Value (PPV) of this screening test?",
+question: "Among patients who test positive on this screening test, what proportion actually have hypertension?",
 correct: "50%",
 distractors: [
 "90%",
@@ -34248,11 +34608,11 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A rare hereditary metabolic disorder has a prevalence of 1 in 1,000.",
-"A diagnostic test is available with 99% sensitivity and 99% specificity.",
+"A rare hereditary metabolic disorder has a prevalence of 1 in 1,000 (meaning 1 in every 1,000 people in the population actually has the disorder).",
+"A diagnostic test is available with 99% sensitivity (meaning it correctly identifies 99% of people who actually have the disorder) and 99% specificity (meaning it correctly identifies 99% of people who do not have the disorder).",
 "A patient tests positive."
 ],
-question: "What is the probability that the patient actually has the disorder?",
+question: "If a patient tests positive, what is the probability that the patient actually has the disorder?",
 correct: "9.0%",
 distractors: [
 "1%",
@@ -34320,10 +34680,10 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A screening test for prostate cancer has a sensitivity of 80% and a specificity of 95%.",
-"The prevalence of the disease in the population being screened is 5%."
+"A screening test for prostate cancer correctly identifies 80% of people who actually have the disease (sensitivity) and correctly identifies 95% of people who do not have the disease (specificity).",
+"The prevalence of the disease in the population being screened is 5% (meaning 5% of people actually have prostate cancer)."
 ],
-question: "If a patient receives a positive test result, what is the probability they do not have the cancer (False Positive rate among those who test positive)?",
+question: "If a patient receives a positive test result, what is the probability they do NOT actually have prostate cancer?",
 correct: "55.3%",
 distractors: [
 "5%",
@@ -34374,9 +34734,10 @@ subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
 "In a local practice, 10% of patients attending an appointment are diabetic.",
-"A test for HbA1c is used to screen for diabetes. It has a false negative rate of 5%."
+"A test for HbA1c is used to screen for diabetes.",
+"It has a false negative rate of 5% (meaning 5% of patients who actually have diabetes will incorrectly test negative)."
 ],
-question: "What is the probability that a diabetic patient is correctly identified as positive by the test?",
+question: "What is the probability that a diabetic patient will correctly test positive for diabetes?",
 correct: "95%",
 distractors: [
 "5%",
@@ -34390,11 +34751,12 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A study of a specific bacterial infection shows that 12% of patients treated with Standard Therapy (ST) experience recurrence.",
-"A new therapy, Novel Therapy (NT), is being trialed against ST.",
-"In a trial of 500 patients, 250 received ST and 250 received NT. In the NT group, only 15 patients experienced recurrence."
+"A study of a specific bacterial infection shows that 12% of patients treated with Standard Therapy (ST) experience recurrence",
+"A new therapy, Novel Therapy (NT), is being trialed against ST",
+"In a trial of 500 patients, 250 received ST and 250 received NT",
+"In the NT group, only 15 patients experienced recurrence."
 ],
-question: "What is the Absolute Risk Reduction (ARR) of the Novel Therapy compared to Standard Therapy?",
+question: "By what percentage does Novel Therapy reduce the recurrence rate compared to Standard Therapy? (This is the absolute risk reduction – the simple difference between the recurrence rate in the ST group and the recurrence rate in the NT group)",
 correct: "0.06",
 distractors: [
 "0.12",
@@ -34408,10 +34770,10 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A blood screening test for Factor V Leiden has a sensitivity of 99.5% and a specificity of 99%.",
-"The prevalence of the genetic mutation in the target population is 5%."
+"A blood screening test for Factor V Leiden correctly identifies 99.5% of people who actually have the genetic mutation (sensitivity: the proportion of people with the condition who test positive), and correctly identifies 99% of people who do not have the mutation (specificity: the proportion of people without the condition who test negative).",
+"The prevalence of the genetic mutation in the target population is 5% (meaning 5% of the population actually has the mutation)."
 ],
-question: "What is the Positive Predictive Value (PPV) of the test?",
+question: "Among patients who test positive for Factor V Leiden, what proportion actually have the genetic mutation?",
 correct: "84.3%",
 distractors: [
 "99%",
@@ -34479,11 +34841,11 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A screening programme for a rare congenital heart defect is implemented in a neonatal ward.",
-"The defect occurs in 1 in 5,000 newborns.",
-"The screening test has a sensitivity of 95% and a false positive rate of 2%."
+"A screening programme for a rare congenital heart defect is implemented in a neonatal ward",
+"The defect occurs in 1 in 5,000 newborns",
+"The screening test has a sensitivity of 95% (the proportion of babies with the defect who test positive) and a false positive rate of 2% (the proportion of babies without the defect who incorrectly test positive)"
 ],
-question: "What is the Positive Predictive Value (PPV) of this test?",
+question: "Among babies who test positive on this screening test, what proportion actually have the defect?",
 correct: "0.94%",
 distractors: [
 "2%",
@@ -34497,11 +34859,11 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A randomized controlled trial (RCT) compares two anti-arrhythmic medications, Drug Alpha and Drug Beta.",
+"A randomized controlled trial (RCT) (a study where participants are randomly assigned to receive different treatments to compare their effects) compares two anti-arrhythmic medications, Drug Alpha and Drug Beta.",
 "In the Alpha group (n=400), 20 patients experienced a secondary arrhythmia.",
 "In the Beta group (n=400), 40 patients experienced a secondary arrhythmia."
 ],
-question: "What is the Relative Risk (RR) of experiencing a secondary arrhythmia with Drug Beta compared to Drug Alpha?",
+question: "What is the relative risk (the ratio of the probability of experiencing a secondary arrhythmia with Drug Beta compared to the probability with Drug Alpha) of experiencing a secondary arrhythmia with Drug Beta compared to Drug Alpha?",
 correct: "2.0",
 distractors: [
 "0.5",
@@ -34570,11 +34932,11 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A screening test for an infection has a sensitivity of 92% and a specificity of 94%.",
-"The infection has a population prevalence of 8%.",
+"A screening test for an infection correctly identifies 92% of people who actually have the infection (sensitivity = 92%) and correctly identifies 94% of people who do NOT have the infection (specificity = 94%).",
+"The infection occurs in 8% of the population.",
 "A patient tests positive."
 ],
-question: "What is the probability that the patient is truly infected (PPV)?",
+question: "What is the probability that the patient actually has the infection (the proportion of patients who test positive who truly have the condition)?",
 correct: "56.4%",
 distractors: [
 "92%",
@@ -34592,7 +34954,7 @@ stimulus: [
 "In the treatment group (n=500), 10 patients suffer a major bleed.",
 "In the control group (n=500), 25 patients suffer a major bleed."
 ],
-question: "What is the Number Needed to Treat (NNT) to prevent one major bleed?",
+question: "How many patients would need to be treated with the new anticoagulant (instead of the control) to prevent one major bleed?",
 correct: "33.3",
 distractors: [
 "20",
@@ -34624,9 +34986,9 @@ subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
 "In a cohort of 1,000 pregnant women, 20 are diagnosed with gestational diabetes.",
-"A screening test has 90% sensitivity and 90% specificity."
+"A screening test has 90% sensitivity (the proportion of women with gestational diabetes who test positive) and 90% specificity (the proportion of women without gestational diabetes who test negative)."
 ],
-question: "What is the Negative Predictive Value (NPV) of the test?",
+question: "Among the pregnant women who test negative on this screening test, what proportion do NOT actually have gestational diabetes?",
 correct: "99.8%",
 distractors: [
 "90%",
@@ -34978,11 +35340,11 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"5% of adults in a clinic have Type 2 diabetes.",
-"A blood glucose test has 88% sensitivity and 92% specificity.",
+"5% of adults in a clinic have Type 2 diabetes",
+"A blood glucose test has 88% sensitivity (the test correctly identifies 88% of people who actually have Type 2 diabetes) and 92% specificity (the test correctly identifies 92% of people who do not have Type 2 diabetes)",
 "A patient tests positive."
 ],
-question: "What is the probability that this patient actually has Type 2 diabetes (PPV)?",
+question: "Among patients who test positive, what is the probability that this patient actually has Type 2 diabetes?",
 correct: "36.7%",
 distractors: [
 "88%",
@@ -34996,10 +35358,10 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A breathalyser test has 95% sensitivity and 98% specificity.",
+"A breathalyser test correctly identifies 95% of drivers who are actually over the legal alcohol limit (sensitivity = 95%), and correctly identifies 98% of drivers who are NOT over the legal alcohol limit (specificity = 98%).",
 "2% of drivers on a given road are over the legal alcohol limit."
 ],
-question: "What is the Negative Predictive Value (NPV) of the test?",
+question: "Among drivers who test negative on the breathalyser, what proportion actually are NOT over the legal alcohol limit?",
 correct: "99.9%",
 distractors: [
 "95%",
@@ -35013,11 +35375,11 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A disease has a prevalence of exactly 1% in a population.",
-"A diagnostic test has 99% sensitivity and 99% specificity.",
+"A disease has a prevalence of exactly 1% in a population (meaning 1% of all people actually have the disease).",
+"A diagnostic test has 99% sensitivity (meaning if someone has the disease, the test correctly identifies them 99% of the time) and 99% specificity (meaning if someone does NOT have the disease, the test correctly shows a negative result 99% of the time).",
 "A patient tests positive."
 ],
-question: "What is the probability that the patient truly has the disease (PPV)?",
+question: "Among patients who test positive, what proportion actually have the disease?",
 correct: "50%",
 distractors: [
 "99%",
@@ -35034,7 +35396,7 @@ stimulus: [
 "A study of 200 athletes compares 100 who use a supplement to 100 who do not.",
 "20 supplement users and 40 non-users sustained injuries during the season."
 ],
-question: "What is the Relative Risk (RR) of injury for supplement users compared to non-users?",
+question: "What is the Relative Risk (the ratio of the probability of injury in supplement users to the probability of injury in non-users) of injury for supplement users compared to non-users?",
 correct: "0.5",
 distractors: [
 "0.2",
@@ -35051,7 +35413,7 @@ stimulus: [
 "In a clinical trial, 30% of patients in the control group developed a complication.",
 "In the treatment group, only 18% developed a complication."
 ],
-question: "What is the Number Needed to Treat (NNT) to prevent one additional complication?",
+question: "How many patients would need to receive the treatment to prevent one additional complication (compared to the control group)?",
 correct: "8.3",
 distractors: [
 "12",
@@ -35065,10 +35427,10 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A TB skin test has 85% sensitivity.",
+"A TB skin test has 85% sensitivity (the probability that the test correctly identifies someone who actually has the disease).",
 "A patient with confirmed tuberculosis takes the test."
 ],
-question: "What is the probability that this patient receives a false negative result?",
+question: "What is the probability that this patient receives a negative test result despite actually having the disease?",
 correct: "15%",
 distractors: [
 "85%",
@@ -35084,7 +35446,7 @@ leftTitle: "Probability",
 stimulus: [
 "A case-control study finds: 40 cases exposed, 60 cases unexposed, 20 controls exposed, 80 controls unexposed."
 ],
-question: "What is the Odds Ratio (OR) for the exposure?",
+question: "What is the Odds Ratio (the ratio of the odds of exposure among those with the condition compared to the odds of exposure among those without the condition) for the exposure?",
 correct: "2.67",
 distractors: [
 "1.33",
@@ -35099,10 +35461,10 @@ subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
 "30% of patients referred to a specialist clinic have Condition X.",
-"A diagnostic test has 90% sensitivity and 85% specificity.",
+"A diagnostic test has 90% sensitivity (the probability it correctly identifies patients who DO have the condition) and 85% specificity (the probability it correctly identifies patients who DO NOT have the condition).",
 "A patient tests positive."
 ],
-question: "What is the updated probability that this patient has Condition X?",
+question: "What is the probability that this patient actually has Condition X after testing positive?",
 correct: "72%",
 distractors: [
 "30%",
@@ -35133,9 +35495,9 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A diagnostic test has a sensitivity of 90% and a specificity of 80%."
+"A diagnostic test correctly identifies 90% of patients who actually have the condition (sensitivity = 90%), and correctly identifies 80% of patients who do not have the condition (specificity = 80%)."
 ],
-question: "What is the positive likelihood ratio (LR+) of this test?",
+question: "What is the positive likelihood ratio of this test? (This is the ratio of the probability of testing positive if you have the condition to the probability of testing positive if you don't have the condition.)",
 correct: "4.5",
 distractors: [
 "9",
@@ -35149,10 +35511,10 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A disease has a prevalence of 10% in a population.",
-"A test has 80% sensitivity and 90% specificity."
+"A disease has a prevalence of 10% in a population (meaning 10% of people actually have the disease).",
+"A test has 80% sensitivity (meaning it correctly identifies 80% of people who actually have the disease) and 90% specificity (meaning it correctly identifies 90% of people who do not have the disease)."
 ],
-question: "What is the Positive Predictive Value (PPV) of the test?",
+question: "Among patients who test positive, what proportion actually have the disease?",
 correct: "47.1%",
 distractors: [
 "80%",
@@ -35284,9 +35646,9 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"In a clinical trial, the control event rate (CER) is 20% and the experimental event rate (EER) is 15%."
+"In a clinical trial, the control event rate (CER) (the percentage of patients in the standard treatment group who experienced the outcome of interest) is 20% and the experimental event rate (EER) (the percentage of patients in the new treatment group who experienced the outcome of interest) is 15%."
 ],
-question: "What is the Relative Risk Reduction (RRR)?",
+question: "By what percentage is the risk of the outcome reduced in the experimental group compared to the control group? (This is called the Relative Risk Reduction.)",
 correct: "25%",
 distractors: [
 "5%",
@@ -35337,7 +35699,7 @@ stimulus: [
 "A new antibiotic reduces infection recurrence from 12% to 5% compared to standard therapy.",
 "A trial enrolls 200 patients: 100 per arm."
 ],
-question: "What is the Number Needed to Treat (NNT) with the new antibiotic?",
+question: "How many patients would need to be treated with the new antibiotic instead of standard therapy for one additional patient to avoid infection recurrence? (This is called the Number Needed to Treat.)",
 correct: "14.3",
 distractors: [
 "7",
@@ -35473,9 +35835,9 @@ subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
 "A screening programme for a congenital defect covers 1 in 5,000 newborns.",
-"The test has 95% sensitivity and a 2% false positive rate."
+"The test has 95% sensitivity (the proportion of newborns who actually have the defect that the test correctly identifies) and a 2% false positive rate (the proportion of newborns without the defect that the test incorrectly identifies as having it)."
 ],
-question: "What is the Positive Predictive Value (PPV) of this test?",
+question: "Among newborns who test positive, what proportion actually have the congenital defect?",
 correct: "0.94%",
 distractors: [
 "2%",
@@ -35540,9 +35902,11 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A randomised trial compares two anticoagulants. In the treatment arm (n = 500), 10 patients bleed. In the control arm (n = 500), 25 patients bleed."
+"A randomised trial compares two anticoagulants.",
+"In the treatment arm (n = 500), 10 patients bleed.",
+"In the control arm (n = 500), 25 patients bleed."
 ],
-question: "What is the Number Needed to Treat (NNT) to prevent one major bleed?",
+question: "How many patients would need to be treated with the new anticoagulant instead of the control to prevent one major bleed?",
 correct: "33.3",
 distractors: [
 "20",
@@ -35727,11 +36091,11 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"Population prevalence of a disease is 2%.",
-"A test has 95% sensitivity and a 3% false positive rate.",
+"Population prevalence of a disease is 2% (the proportion of people in the population who actually have the disease).",
+"A test has 95% sensitivity (the probability of testing positive if you truly have the disease) and a 3% false positive rate (the probability of testing positive even though you don't have the disease).",
 "A patient tests positive."
 ],
-question: "What is the probability the patient truly has the disease?",
+question: "Among patients who test positive, what proportion actually have the disease?",
 correct: "39.3%",
 distractors: [
 "95%",
@@ -35848,7 +36212,7 @@ leftTitle: "Probability",
 stimulus: [
 "The incidence of a complication drops from 8% in the control group to 5% in the treatment group."
 ],
-question: "What is the Relative Risk Reduction (RRR)?",
+question: "By what percentage is the risk of the complication reduced in the treatment group compared to the control group? (This is the relative reduction in risk, calculated as the difference in risk divided by the original risk.)",
 correct: "37.5%",
 distractors: [
 "3%",
@@ -35917,7 +36281,7 @@ stimulus: [
 "A diagnostic test is applied to 500 patients: 100 have the disease, 400 do not.",
 "92 of the 100 diseased patients test positive; 12 of the 400 healthy patients also test positive."
 ],
-question: "What is the sensitivity of this test?",
+question: "Among patients who actually have the disease, what percentage test positive (sensitivity — the ability of the test to correctly identify those with the condition)?",
 correct: "92%",
 distractors: [
 "88%",
@@ -35932,9 +36296,9 @@ subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
 "A clinical test is applied to 300 patients: 100 have a condition, 200 do not.",
-"Results: 85 true positives, 15 false negatives, 170 true negatives, 30 false positives."
+"Results: 85 true positives (patients with the condition who tested positive), 15 false negatives (patients with the condition who tested negative), 170 true negatives (patients without the condition who tested negative), 30 false positives (patients without the condition who tested positive)."
 ],
-question: "What is the specificity of the test?",
+question: "Among patients who do NOT have the condition, what proportion did the test correctly identify as negative? (This is called specificity.)",
 correct: "85%",
 distractors: [
 "90%",
@@ -36050,9 +36414,9 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A new treatment reduces a disease event rate from 15% to 9%."
+"A new treatment reduces a disease event rate from 15% to 9%. The Number Needed to Treat (NNT) is the number of patients who must receive the treatment for one additional patient to avoid the adverse event, compared to those not receiving the treatment."
 ],
-question: "What is the Number Needed to Treat (NNT) to prevent one additional adverse event?",
+question: "How many patients would need to receive the treatment for one additional patient to avoid the adverse event?",
 correct: "16.7",
 distractors: [
 "6",
@@ -36084,10 +36448,10 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"Control group: 15% develop deep vein thrombosis (DVT) post-operatively.",
+"Control group: 15% develop deep vein thrombosis (DVT, a blood clot in a leg vein) post-operatively",
 "Treatment group (compression stockings): 6% develop DVT."
 ],
-question: "What is the Relative Risk (RR) of DVT in the treatment group compared to the control group?",
+question: "By what factor is the risk of DVT in the treatment group compared to the control group? (For example, a factor of 0.5 means half the risk; a factor of 2 means double the risk.)",
 correct: "0.4",
 distractors: [
 "0.6",
@@ -36214,7 +36578,35 @@ export type DmVenn3RawInput = {
   }>;
 };
 
-export type DmVennRawInput = DmVenn2RawInput | DmVenn3RawInput;
+// 4-set "ring" layout: A↔B (top), A↔C (left), B↔D (right), C↔D (bottom).
+// A and D do NOT overlap; B and C do NOT overlap → exactly 8 visible regions.
+// setA = top-left (circle), setB = top-right (rectangle),
+// setC = bottom-left (diamond), setD = bottom-right (hexagon).
+export type DmVenn4RawInput = {
+  kind: "venn-4";
+  title: string;
+  context: string;
+  setA: string;
+  setB: string;
+  setC: string;
+  setD: string;
+  aOnly: number;
+  bOnly: number;
+  cOnly: number;
+  dOnly: number;
+  aAndB: number;  // A∩B only (top overlap)
+  aAndC: number;  // A∩C only (left overlap)
+  bAndD: number;  // B∩D only (right overlap)
+  cAndD: number;  // C∩D only (bottom overlap)
+  questions: Array<{
+    question: string;
+    correct: string;
+    distractors: [string, string, string];
+    explanation: string;
+  }>;
+};
+
+export type DmVennRawInput = DmVenn2RawInput | DmVenn3RawInput | DmVenn4RawInput;
 
 export const USER_RAW_VENN_INPUTS: DmVennRawInput[] = [
   // ===== PASTE NEW VENN QUESTIONS BELOW THIS LINE =====
@@ -36255,6 +36647,31 @@ export const USER_RAW_VENN_INPUTS: DmVennRawInput[] = [
   //   bAndCOnly: 6,     // in B and C but NOT A
   //   all3: 3,          // in all three
   //   questions: [ ... ],
+  // },
+  //
+  // kind: "venn-4" — four sets, ring layout (A↔B top, A↔C left, B↔D right, C↔D bottom; A/D and B/C do NOT overlap)
+  // setA = top-left (circle), setB = top-right (rectangle), setC = bottom-left (diamond), setD = bottom-right (hexagon)
+  // {
+  //   kind: "venn-4",
+  //   title: "Diagram title",
+  //   context: "One sentence introducing the scenario.",
+  //   setA: "Label for top-left set",
+  //   setB: "Label for top-right set",
+  //   setC: "Label for bottom-left set",
+  //   setD: "Label for bottom-right set",
+  //   aOnly: 12,    bOnly: 15,    cOnly: 19,    dOnly: 8,
+  //   aAndB: 10,    // A∩B only
+  //   aAndC: 13,    // A∩C only
+  //   bAndD: 3,     // B∩D only
+  //   cAndD: 3,     // C∩D only
+  //   questions: [
+  //     {
+  //       question: "How many items are in set A in total?",
+  //       correct: "35",
+  //       distractors: ["12", "23", "22"],
+  //       explanation: "Set A total = aOnly + aAndB + aAndC = 12 + 10 + 13 = 35.",
+  //     },
+  //   ],
   // },
 
   // --- Batch 1 ---
@@ -36899,6 +37316,1410 @@ export const USER_RAW_VENN_INPUTS: DmVennRawInput[] = [
     ],
   },
 
+  // --- Batch 3 ---
+
+  {
+    kind: "venn-4",
+    title: "Blood Donation & Health Survey",
+    context: "A community health survey of 213 adults asked which of four health-related activities they had participated in during the past year.",
+    setA: "Donated Blood",
+    setB: "Volunteered at Clinic",
+    setC: "Registered Organ Donor",
+    setD: "Had Annual Health Check",
+    aOnly: 42,
+    bOnly: 28,
+    cOnly: 35,
+    dOnly: 30,
+    aAndB: 18,
+    aAndC: 25,
+    bAndD: 15,
+    cAndD: 20,
+    questions: [
+      {
+        question: "How many adults donated blood in total?",
+        correct: "85",
+        distractors: ["42", "67", "110"],
+        explanation: "Donated Blood total = aOnly + aAndB + aAndC = 42 + 18 + 25 = 85.",
+      },
+      {
+        question: "How many adults are registered organ donors?",
+        correct: "80",
+        distractors: ["35", "45", "55"],
+        explanation: "Registered Organ Donor total = cOnly + aAndC + cAndD = 35 + 25 + 20 = 80.",
+      },
+      {
+        question: "How many adults participated in exactly one of the four activities?",
+        correct: "135",
+        distractors: ["213", "78", "85"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 42 + 28 + 35 + 30 = 135.",
+      },
+      {
+        question: "How many more adults donated blood than had an annual health check?",
+        correct: "20",
+        distractors: ["12", "42", "55"],
+        explanation: "Donated Blood = 85. Annual Health Check = dOnly + bAndD + cAndD = 30 + 15 + 20 = 65. Difference = 85 − 65 = 20.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-3",
+    title: "Junior Doctor Experience",
+    context: "A survey of 160 junior doctors recorded which of three professional development activities they had completed.",
+    setA: "Research Project",
+    setB: "Clinical Audit",
+    setC: "Teaching Session",
+    aOnly: 32,
+    bOnly: 45,
+    cOnly: 28,
+    aAndBOnly: 18,
+    aAndCOnly: 12,
+    bAndCOnly: 15,
+    all3: 10,
+    questions: [
+      {
+        question: "How many junior doctors completed a clinical audit?",
+        correct: "88",
+        distractors: ["45", "78", "68"],
+        explanation: "Clinical Audit total = bOnly + aAndBOnly + bAndCOnly + all3 = 45 + 18 + 15 + 10 = 88.",
+      },
+      {
+        question: "How many junior doctors completed exactly two of the three activities?",
+        correct: "45",
+        distractors: ["10", "55", "35"],
+        explanation: "Exactly two = aAndBOnly + aAndCOnly + bAndCOnly = 18 + 12 + 15 = 45. The 10 who completed all three are excluded.",
+      },
+      {
+        question: "How many junior doctors completed a teaching session but not a research project?",
+        correct: "43",
+        distractors: ["28", "65", "25"],
+        explanation: "Teaching but not Research = cOnly + bAndCOnly = 28 + 15 = 43.",
+      },
+      {
+        question: "How many more junior doctors completed a clinical audit than delivered a teaching session?",
+        correct: "23",
+        distractors: ["17", "28", "45"],
+        explanation: "Clinical Audit = 88. Teaching Session = cOnly + aAndCOnly + bAndCOnly + all3 = 28 + 12 + 15 + 10 = 65. Difference = 88 − 65 = 23.",
+      },
+      {
+        question: "How many junior doctors completed all three activities?",
+        correct: "10",
+        distractors: ["45", "15", "3"],
+        explanation: "All three = all3 = 10. This is the centre region of the three-set diagram.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-2",
+    title: "Clinical Certification Survey",
+    context: "A hospital trust surveyed 120 nurses about two advanced clinical certifications. Thirty-six nurses held neither certification.",
+    setA: "Airway Management",
+    setB: "Advanced Cardiac Life Support",
+    aOnly: 36,
+    bOnly: 24,
+    both: 24,
+    questions: [
+      {
+        question: "How many nurses are certified in Airway Management?",
+        correct: "60",
+        distractors: ["36", "84", "48"],
+        explanation: "Airway Management total = aOnly + both = 36 + 24 = 60.",
+      },
+      {
+        question: "How many nurses hold neither certification?",
+        correct: "36",
+        distractors: ["84", "24", "12"],
+        explanation: "Total in diagram = 36 + 24 + 24 = 84. Neither = 120 − 84 = 36.",
+      },
+      {
+        question: "What percentage of Airway Management certified nurses also hold Advanced Cardiac Life Support?",
+        correct: "40%",
+        distractors: ["50%", "25%", "20%"],
+        explanation: "Airway Management total = 60. Of those, 24 also hold ACLS. Percentage = 24/60 × 100 = 40%.",
+      },
+      {
+        question: "How many more nurses hold Airway Management certification than Advanced Cardiac Life Support?",
+        correct: "12",
+        distractors: ["24", "36", "48"],
+        explanation: "Airway Management = 60. ACLS = bOnly + both = 24 + 24 = 48. Difference = 60 − 48 = 12.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-4",
+    title: "University Society Membership",
+    context: "A student survey recorded membership of four voluntary societies. A total of 246 students belonged to at least one society.",
+    setA: "Sports Society",
+    setB: "Music Society",
+    setC: "Volunteering Society",
+    setD: "Debating Society",
+    aOnly: 55,
+    bOnly: 38,
+    cOnly: 42,
+    dOnly: 25,
+    aAndB: 22,
+    aAndC: 30,
+    bAndD: 16,
+    cAndD: 18,
+    questions: [
+      {
+        question: "How many students are members of the Sports Society in total?",
+        correct: "107",
+        distractors: ["55", "85", "130"],
+        explanation: "Sports Society total = aOnly + aAndB + aAndC = 55 + 22 + 30 = 107.",
+      },
+      {
+        question: "How many students belong to the Volunteering Society?",
+        correct: "90",
+        distractors: ["42", "80", "72"],
+        explanation: "Volunteering Society total = cOnly + aAndC + cAndD = 42 + 30 + 18 = 90.",
+      },
+      {
+        question: "How many students belong to exactly one society?",
+        correct: "160",
+        distractors: ["246", "86", "107"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 55 + 38 + 42 + 25 = 160.",
+      },
+      {
+        question: "How many more students are in the Sports Society than the Debating Society?",
+        correct: "48",
+        distractors: ["30", "55", "82"],
+        explanation: "Sports Society = 107. Debating Society = dOnly + bAndD + cAndD = 25 + 16 + 18 = 59. Difference = 107 − 59 = 48.",
+      },
+      {
+        question: "How many students are in both Sports Society and Volunteering Society?",
+        correct: "30",
+        distractors: ["22", "55", "52"],
+        explanation: "Sports ∩ Volunteering = aAndC = 30. This is the left-overlap region of the diagram.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-3",
+    title: "Community Health Programmes",
+    context: "A community health initiative enrolled 250 participants across three optional programmes. Fifty participants attended none of the three.",
+    setA: "Stop Smoking Programme",
+    setB: "Weight Management Programme",
+    setC: "Mental Wellbeing Workshop",
+    aOnly: 38,
+    bOnly: 52,
+    cOnly: 45,
+    aAndBOnly: 20,
+    aAndCOnly: 14,
+    bAndCOnly: 18,
+    all3: 13,
+    questions: [
+      {
+        question: "How many participants attended the Weight Management Programme?",
+        correct: "103",
+        distractors: ["52", "91", "71"],
+        explanation: "Weight Management total = bOnly + aAndBOnly + bAndCOnly + all3 = 52 + 20 + 18 + 13 = 103.",
+      },
+      {
+        question: "How many participants attended exactly two programmes?",
+        correct: "52",
+        distractors: ["65", "13", "200"],
+        explanation: "Exactly two = aAndBOnly + aAndCOnly + bAndCOnly = 20 + 14 + 18 = 52. The 13 who attended all three are excluded.",
+      },
+      {
+        question: "How many participants attended none of the three programmes?",
+        correct: "50",
+        distractors: ["200", "250", "38"],
+        explanation: "Total in diagram = 38+52+45+20+14+18+13 = 200. Neither = 250 − 200 = 50.",
+      },
+      {
+        question: "How many more participants attended Weight Management than Mental Wellbeing?",
+        correct: "13",
+        distractors: ["7", "18", "52"],
+        explanation: "Weight Management = 103. Mental Wellbeing = cOnly + aAndCOnly + bAndCOnly + all3 = 45 + 14 + 18 + 13 = 90. Difference = 103 − 90 = 13.",
+      },
+      {
+        question: "How many participants attended the Mental Wellbeing Workshop but not the Weight Management Programme?",
+        correct: "59",
+        distractors: ["45", "90", "32"],
+        explanation: "Mental Wellbeing but not Weight Management = cOnly + aAndCOnly = 45 + 14 = 59.",
+      },
+    ],
+  },
+
+  // --- Batch 4 ---
+
+  {
+    kind: "venn-4",
+    title: "Hospital Rotation Experience",
+    context: "A hospital reviewed the departmental rotation experience of 150 junior doctors. Each number shows doctors with that exact combination of departments.",
+    setA: "Paediatrics",
+    setB: "Emergency Medicine",
+    setC: "General Surgery",
+    setD: "Internal Medicine",
+    aOnly: 32,
+    bOnly: 25,
+    cOnly: 28,
+    dOnly: 22,
+    aAndB: 14,
+    aAndC: 10,
+    bAndD: 12,
+    cAndD: 7,
+    questions: [
+      {
+        question: "How many junior doctors had Paediatrics experience?",
+        correct: "56",
+        distractors: ["32", "46", "66"],
+        explanation: "Paediatrics total = aOnly + aAndB + aAndC = 32 + 14 + 10 = 56.",
+      },
+      {
+        question: "How many junior doctors had experience in exactly one department?",
+        correct: "107",
+        distractors: ["150", "43", "56"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 32 + 25 + 28 + 22 = 107.",
+      },
+      {
+        question: "How many more junior doctors had Paediatrics experience than Internal Medicine experience?",
+        correct: "15",
+        distractors: ["10", "22", "32"],
+        explanation: "Paediatrics = 56. Internal Medicine = dOnly + bAndD + cAndD = 22 + 12 + 7 = 41. Difference = 56 − 41 = 15.",
+      },
+      {
+        question: "How many junior doctors had both Paediatrics and General Surgery experience?",
+        correct: "10",
+        distractors: ["14", "7", "56"],
+        explanation: "Paediatrics ∩ Surgery = aAndC = 10. This is the left-overlap region between the top-left circle and the bottom-left diamond.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-2",
+    title: "Patient Satisfaction Survey",
+    context: "A hospital surveyed 200 recently discharged patients about two satisfaction measures. Sixty patients expressed neither.",
+    setA: "Satisfied with Care",
+    setB: "Would Recommend Hospital",
+    aOnly: 60,
+    bOnly: 20,
+    both: 60,
+    questions: [
+      {
+        question: "How many patients were satisfied with the care they received?",
+        correct: "120",
+        distractors: ["60", "140", "80"],
+        explanation: "Satisfied with Care total = aOnly + both = 60 + 60 = 120.",
+      },
+      {
+        question: "How many patients would recommend the hospital?",
+        correct: "80",
+        distractors: ["20", "60", "140"],
+        explanation: "Would Recommend total = bOnly + both = 20 + 60 = 80.",
+      },
+      {
+        question: "What percentage of satisfied patients would also recommend the hospital?",
+        correct: "50%",
+        distractors: ["60%", "75%", "40%"],
+        explanation: "Satisfied = 120. Of those, 60 would also recommend. Percentage = 60/120 × 100 = 50%.",
+      },
+      {
+        question: "How many patients expressed neither satisfaction nor willingness to recommend?",
+        correct: "60",
+        distractors: ["140", "200", "20"],
+        explanation: "Total in diagram = 60 + 20 + 60 = 140. Neither = 200 − 140 = 60.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-3",
+    title: "Sixth Form Achievement Survey",
+    context: "A school recorded which of three academic achievements its 180 sixth-form students attained during the year.",
+    setA: "Top Grades (AAA+)",
+    setB: "Predicted Grades Met",
+    setC: "Completed EPQ",
+    aOnly: 28,
+    bOnly: 45,
+    cOnly: 22,
+    aAndBOnly: 30,
+    aAndCOnly: 15,
+    bAndCOnly: 18,
+    all3: 22,
+    questions: [
+      {
+        question: "How many students achieved top grades?",
+        correct: "95",
+        distractors: ["28", "73", "115"],
+        explanation: "Top Grades total = aOnly + aAndBOnly + aAndCOnly + all3 = 28 + 30 + 15 + 22 = 95.",
+      },
+      {
+        question: "How many students completed an EPQ?",
+        correct: "77",
+        distractors: ["22", "55", "62"],
+        explanation: "EPQ total = cOnly + aAndCOnly + bAndCOnly + all3 = 22 + 15 + 18 + 22 = 77.",
+      },
+      {
+        question: "How many students achieved exactly one of the three outcomes?",
+        correct: "95",
+        distractors: ["180", "55", "77"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly = 28 + 45 + 22 = 95.",
+      },
+      {
+        question: "How many students achieved top grades and met predicted grades but did not complete an EPQ?",
+        correct: "30",
+        distractors: ["22", "52", "45"],
+        explanation: "Top Grades ∩ Predicted Grades (not EPQ) = aAndBOnly = 30.",
+      },
+      {
+        question: "How many students achieved both top grades and completed an EPQ?",
+        correct: "37",
+        distractors: ["15", "22", "52"],
+        explanation: "Top Grades and EPQ (including all three) = aAndCOnly + all3 = 15 + 22 = 37.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-4",
+    title: "Preventive Health Screening",
+    context: "A preventive health screening programme assessed 350 adults. Sixty-one adults had no conditions detected. Each number shows adults with that exact combination.",
+    setA: "Hypertension",
+    setB: "High Cholesterol",
+    setC: "Pre-diabetes",
+    setD: "Obesity",
+    aOnly: 55,
+    bOnly: 48,
+    cOnly: 62,
+    dOnly: 40,
+    aAndB: 24,
+    aAndC: 18,
+    bAndD: 20,
+    cAndD: 22,
+    questions: [
+      {
+        question: "How many adults were diagnosed with hypertension?",
+        correct: "97",
+        distractors: ["55", "79", "115"],
+        explanation: "Hypertension total = aOnly + aAndB + aAndC = 55 + 24 + 18 = 97.",
+      },
+      {
+        question: "How many adults had no conditions detected at screening?",
+        correct: "61",
+        distractors: ["289", "350", "40"],
+        explanation: "Total in diagram = 55+48+62+40+24+18+20+22 = 289. Neither = 350 − 289 = 61.",
+      },
+      {
+        question: "How many more adults had pre-diabetes than obesity?",
+        correct: "20",
+        distractors: ["18", "40", "62"],
+        explanation: "Pre-diabetes = cOnly + aAndC + cAndD = 62 + 18 + 22 = 102. Obesity = dOnly + bAndD + cAndD = 40 + 20 + 22 = 82. Difference = 102 − 82 = 20.",
+      },
+      {
+        question: "How many adults had exactly one condition detected?",
+        correct: "205",
+        distractors: ["289", "84", "97"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 55 + 48 + 62 + 40 = 205.",
+      },
+      {
+        question: "How many adults had both hypertension and pre-diabetes?",
+        correct: "18",
+        distractors: ["24", "55", "36"],
+        explanation: "Hypertension ∩ Pre-diabetes = aAndC = 18. This is the left-overlap region between the top-left circle and the bottom-left diamond.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-2",
+    title: "Workplace Training Compliance",
+    context: "A company surveyed 180 employees about two mandatory training courses. Forty-five employees had completed neither course.",
+    setA: "Manual Handling Training",
+    setB: "Fire Safety Training",
+    aOnly: 55,
+    bOnly: 35,
+    both: 45,
+    questions: [
+      {
+        question: "How many employees completed Manual Handling Training?",
+        correct: "100",
+        distractors: ["55", "135", "80"],
+        explanation: "Manual Handling total = aOnly + both = 55 + 45 = 100.",
+      },
+      {
+        question: "What fraction of all employees completed neither course?",
+        correct: "1/4",
+        distractors: ["1/3", "1/5", "3/8"],
+        explanation: "Neither = 45 out of 180 total employees. 45/180 = 1/4.",
+      },
+      {
+        question: "What percentage of employees who completed Manual Handling Training also completed Fire Safety Training?",
+        correct: "45%",
+        distractors: ["35%", "56%", "25%"],
+        explanation: "Manual Handling total = 100. Of those, 45 also completed Fire Safety. Percentage = 45/100 × 100 = 45%.",
+      },
+      {
+        question: "How many employees completed exactly one of the two courses?",
+        correct: "90",
+        distractors: ["135", "100", "45"],
+        explanation: "Exactly one = aOnly + bOnly = 55 + 35 = 90. The 45 who completed both are excluded.",
+      },
+      {
+        question: "How many more employees completed Manual Handling than Fire Safety Training?",
+        correct: "20",
+        distractors: ["10", "35", "55"],
+        explanation: "Manual Handling = 100. Fire Safety = bOnly + both = 35 + 45 = 80. Difference = 100 − 80 = 20.",
+      },
+    ],
+  },
+
+  // --- Batch 5 ---
+
+  {
+    kind: "venn-3",
+    title: "NHS Staff Wellbeing Survey",
+    context: "An NHS trust surveyed 220 staff members about three wellbeing indicators.",
+    setA: "Good Physical Health",
+    setB: "Good Mental Health",
+    setC: "Satisfactory Work-Life Balance",
+    aOnly: 55,
+    bOnly: 45,
+    cOnly: 35,
+    aAndBOnly: 28,
+    aAndCOnly: 20,
+    bAndCOnly: 22,
+    all3: 15,
+    questions: [
+      {
+        question: "How many staff reported good physical health?",
+        correct: "118",
+        distractors: ["55", "98", "140"],
+        explanation: "Good Physical Health total = aOnly + aAndBOnly + aAndCOnly + all3 = 55 + 28 + 20 + 15 = 118.",
+      },
+      {
+        question: "How many staff reported good mental health?",
+        correct: "110",
+        distractors: ["45", "92", "118"],
+        explanation: "Good Mental Health total = bOnly + aAndBOnly + bAndCOnly + all3 = 45 + 28 + 22 + 15 = 110.",
+      },
+      {
+        question: "How many staff reported exactly two of the three wellbeing indicators?",
+        correct: "70",
+        distractors: ["15", "85", "220"],
+        explanation: "Exactly two = aAndBOnly + aAndCOnly + bAndCOnly = 28 + 20 + 22 = 70. The 15 who reported all three are excluded.",
+      },
+      {
+        question: "How many staff reported good physical health but not satisfactory work-life balance?",
+        correct: "83",
+        distractors: ["55", "118", "48"],
+        explanation: "Physical Health but not Work-Life Balance = aOnly + aAndBOnly = 55 + 28 = 83.",
+      },
+      {
+        question: "How many more staff reported good physical health than satisfactory work-life balance?",
+        correct: "26",
+        distractors: ["20", "35", "55"],
+        explanation: "Physical Health = 118. Work-Life Balance = cOnly + aAndCOnly + bAndCOnly + all3 = 35 + 20 + 22 + 15 = 92. Difference = 118 − 92 = 26.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-4",
+    title: "Care Home Activities",
+    context: "A care home recorded which of four weekly activities its 110 residents participated in. Each number shows residents with that exact combination.",
+    setA: "Exercise Classes",
+    setB: "Arts & Crafts",
+    setC: "Music Sessions",
+    setD: "Reading Group",
+    aOnly: 20,
+    bOnly: 25,
+    cOnly: 18,
+    dOnly: 14,
+    aAndB: 11,
+    aAndC: 8,
+    bAndD: 9,
+    cAndD: 5,
+    questions: [
+      {
+        question: "How many residents participated in Arts & Crafts?",
+        correct: "45",
+        distractors: ["25", "36", "54"],
+        explanation: "Arts & Crafts total = bOnly + aAndB + bAndD = 25 + 11 + 9 = 45.",
+      },
+      {
+        question: "How many residents participated in exactly one activity?",
+        correct: "77",
+        distractors: ["110", "33", "45"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 20 + 25 + 18 + 14 = 77.",
+      },
+      {
+        question: "How many more residents participated in Arts & Crafts than in the Reading Group?",
+        correct: "17",
+        distractors: ["11", "25", "31"],
+        explanation: "Arts & Crafts = 45. Reading Group = dOnly + bAndD + cAndD = 14 + 9 + 5 = 28. Difference = 45 − 28 = 17.",
+      },
+      {
+        question: "How many residents participated in both Exercise Classes and Music Sessions?",
+        correct: "8",
+        distractors: ["11", "5", "39"],
+        explanation: "Exercise Classes ∩ Music Sessions = aAndC = 8. This is the left-overlap region between the top-left circle and the bottom-left diamond.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-2",
+    title: "Physiotherapy Referrals",
+    context: "A clinic tracked physiotherapy data for 200 patients over one year. Thirty patients had neither a GP referral nor completed a physiotherapy course.",
+    setA: "Had GP Referral",
+    setB: "Completed Physiotherapy Course",
+    aOnly: 70,
+    bOnly: 30,
+    both: 70,
+    questions: [
+      {
+        question: "How many patients had a GP referral?",
+        correct: "140",
+        distractors: ["70", "170", "100"],
+        explanation: "GP Referral total = aOnly + both = 70 + 70 = 140.",
+      },
+      {
+        question: "How many patients completed a physiotherapy course?",
+        correct: "100",
+        distractors: ["30", "70", "170"],
+        explanation: "Completed Physiotherapy total = bOnly + both = 30 + 70 = 100.",
+      },
+      {
+        question: "What percentage of patients with a GP referral completed a physiotherapy course?",
+        correct: "50%",
+        distractors: ["40%", "70%", "25%"],
+        explanation: "GP Referral total = 140. Of those, 70 also completed the course. Percentage = 70/140 × 100 = 50%.",
+      },
+      {
+        question: "How many patients completed physiotherapy without a GP referral?",
+        correct: "30",
+        distractors: ["70", "100", "20"],
+        explanation: "Completed without GP referral = bOnly = 30.",
+      },
+      {
+        question: "How many patients neither had a GP referral nor completed physiotherapy?",
+        correct: "30",
+        distractors: ["170", "100", "70"],
+        explanation: "Total in diagram = 70 + 30 + 70 = 170. Neither = 200 − 170 = 30.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-4",
+    title: "University Committee Membership",
+    context: "A university recorded committee memberships of 185 academic staff who serve on at least one committee. Each number shows staff with that exact combination.",
+    setA: "Ethics Committee",
+    setB: "Student Welfare Committee",
+    setC: "Academic Standards Committee",
+    setD: "Research Committee",
+    aOnly: 32,
+    bOnly: 28,
+    cOnly: 35,
+    dOnly: 30,
+    aAndB: 18,
+    aAndC: 14,
+    bAndD: 16,
+    cAndD: 12,
+    questions: [
+      {
+        question: "How many staff are on the Ethics Committee?",
+        correct: "64",
+        distractors: ["32", "46", "78"],
+        explanation: "Ethics Committee total = aOnly + aAndB + aAndC = 32 + 18 + 14 = 64.",
+      },
+      {
+        question: "How many staff are on the Research Committee?",
+        correct: "58",
+        distractors: ["30", "40", "70"],
+        explanation: "Research Committee total = dOnly + bAndD + cAndD = 30 + 16 + 12 = 58.",
+      },
+      {
+        question: "How many staff serve on exactly one committee?",
+        correct: "125",
+        distractors: ["185", "60", "64"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 32 + 28 + 35 + 30 = 125.",
+      },
+      {
+        question: "How many more staff are on the Ethics Committee than the Research Committee?",
+        correct: "6",
+        distractors: ["2", "14", "18"],
+        explanation: "Ethics = 64. Research = 58. Difference = 64 − 58 = 6.",
+      },
+      {
+        question: "How many staff are on both the Student Welfare and Research committees?",
+        correct: "16",
+        distractors: ["18", "12", "28"],
+        explanation: "Student Welfare ∩ Research = bAndD = 16. This is the right-overlap region between the top-right rectangle and the bottom-right hexagon.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-3",
+    title: "Outpatient Clinic Follow-ups",
+    context: "A district general hospital analysed 300 outpatient follow-up appointments. Ten patients had no follow-up recorded in these three specialties.",
+    setA: "Cardiology",
+    setB: "Respiratory",
+    setC: "Neurology",
+    aOnly: 88,
+    bOnly: 72,
+    cOnly: 55,
+    aAndBOnly: 25,
+    aAndCOnly: 18,
+    bAndCOnly: 20,
+    all3: 12,
+    questions: [
+      {
+        question: "How many patients had a Cardiology follow-up appointment?",
+        correct: "143",
+        distractors: ["88", "113", "168"],
+        explanation: "Cardiology total = aOnly + aAndBOnly + aAndCOnly + all3 = 88 + 25 + 18 + 12 = 143.",
+      },
+      {
+        question: "How many patients attended follow-ups at exactly two clinics?",
+        correct: "63",
+        distractors: ["12", "75", "290"],
+        explanation: "Exactly two = aAndBOnly + aAndCOnly + bAndCOnly = 25 + 18 + 20 = 63. The 12 attending all three are excluded.",
+      },
+      {
+        question: "How many patients had no follow-up recorded in these specialties?",
+        correct: "10",
+        distractors: ["290", "300", "55"],
+        explanation: "Total in diagram = 88+72+55+25+18+20+12 = 290. Neither = 300 − 290 = 10.",
+      },
+      {
+        question: "How many more patients attended Cardiology than Neurology?",
+        correct: "38",
+        distractors: ["33", "55", "88"],
+        explanation: "Cardiology = 143. Neurology = cOnly + aAndCOnly + bAndCOnly + all3 = 55 + 18 + 20 + 12 = 105. Difference = 143 − 105 = 38.",
+      },
+      {
+        question: "How many patients attended Respiratory clinic but not Cardiology?",
+        correct: "92",
+        distractors: ["72", "129", "45"],
+        explanation: "Respiratory but not Cardiology = bOnly + bAndCOnly = 72 + 20 = 92.",
+      },
+    ],
+  },
+
+  // --- Batch 6 ---
+
+  {
+    kind: "venn-2",
+    title: "Vaccination Campaign",
+    context: "A public health team recorded vaccination data for 400 adults in a local area. One hundred and twenty adults had received neither vaccine.",
+    setA: "Flu Vaccine",
+    setB: "COVID Booster",
+    aOnly: 140,
+    bOnly: 70,
+    both: 70,
+    questions: [
+      {
+        question: "How many adults received the flu vaccine?",
+        correct: "210",
+        distractors: ["140", "280", "70"],
+        explanation: "Flu Vaccine total = aOnly + both = 140 + 70 = 210.",
+      },
+      {
+        question: "How many adults received neither vaccine?",
+        correct: "120",
+        distractors: ["280", "400", "70"],
+        explanation: "Total in diagram = 140 + 70 + 70 = 280. Neither = 400 − 280 = 120.",
+      },
+      {
+        question: "What fraction of adults who received the flu vaccine also received the COVID booster?",
+        correct: "1/3",
+        distractors: ["1/4", "70/280", "1/2"],
+        explanation: "Flu Vaccine total = 210. Of those, 70 also had the COVID booster. Fraction = 70/210 = 1/3.",
+      },
+      {
+        question: "How many more adults received the flu vaccine than the COVID booster?",
+        correct: "70",
+        distractors: ["140", "40", "120"],
+        explanation: "Flu Vaccine = 210. COVID Booster = bOnly + both = 70 + 70 = 140. Difference = 210 − 140 = 70.",
+      },
+      {
+        question: "How many adults received exactly one vaccine?",
+        correct: "210",
+        distractors: ["280", "70", "120"],
+        explanation: "Exactly one = aOnly + bOnly = 140 + 70 = 210. The 70 who received both are excluded.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-3",
+    title: "Medical Simulation Training",
+    context: "A medical school surveyed 160 students about their experience with three simulation training modules.",
+    setA: "Communication Skills",
+    setB: "Clinical Procedures",
+    setC: "Teamwork & Crisis Management",
+    aOnly: 28,
+    bOnly: 35,
+    cOnly: 22,
+    aAndBOnly: 20,
+    aAndCOnly: 16,
+    bAndCOnly: 18,
+    all3: 21,
+    questions: [
+      {
+        question: "How many students completed the Clinical Procedures simulation?",
+        correct: "94",
+        distractors: ["35", "74", "115"],
+        explanation: "Clinical Procedures total = bOnly + aAndBOnly + bAndCOnly + all3 = 35 + 20 + 18 + 21 = 94.",
+      },
+      {
+        question: "How many students completed all three simulation modules?",
+        correct: "21",
+        distractors: ["54", "18", "6"],
+        explanation: "All three = all3 = 21. This is the centre region of the three-set diagram.",
+      },
+      {
+        question: "How many students completed exactly two modules?",
+        correct: "54",
+        distractors: ["21", "75", "160"],
+        explanation: "Exactly two = aAndBOnly + aAndCOnly + bAndCOnly = 20 + 16 + 18 = 54. The 21 who completed all three are excluded.",
+      },
+      {
+        question: "How many more students completed Clinical Procedures than Teamwork & Crisis Management?",
+        correct: "17",
+        distractors: ["13", "35", "22"],
+        explanation: "Clinical Procedures = 94. Teamwork = cOnly + aAndCOnly + bAndCOnly + all3 = 22 + 16 + 18 + 21 = 77. Difference = 94 − 77 = 17.",
+      },
+      {
+        question: "How many students completed Communication Skills but not Clinical Procedures?",
+        correct: "44",
+        distractors: ["28", "85", "37"],
+        explanation: "Communication Skills but not Clinical Procedures = aOnly + aAndCOnly = 28 + 16 = 44.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-4",
+    title: "GP Practice Services",
+    context: "A GP practice reviewed service utilisation for 320 registered patients. Thirty patients used none of the four services shown. Each number shows patients using that exact combination.",
+    setA: "Diabetes Annual Review",
+    setB: "Asthma Annual Review",
+    setC: "Blood Pressure Monitoring",
+    setD: "Mental Health Support",
+    aOnly: 55,
+    bOnly: 40,
+    cOnly: 62,
+    dOnly: 38,
+    aAndB: 22,
+    aAndC: 28,
+    bAndD: 20,
+    cAndD: 25,
+    questions: [
+      {
+        question: "How many patients attended a Diabetes Annual Review?",
+        correct: "105",
+        distractors: ["55", "83", "127"],
+        explanation: "Diabetes Annual Review total = aOnly + aAndB + aAndC = 55 + 22 + 28 = 105.",
+      },
+      {
+        question: "How many patients used Blood Pressure Monitoring?",
+        correct: "115",
+        distractors: ["62", "87", "140"],
+        explanation: "Blood Pressure Monitoring total = cOnly + aAndC + cAndD = 62 + 28 + 25 = 115.",
+      },
+      {
+        question: "How many patients used exactly one service?",
+        correct: "195",
+        distractors: ["290", "95", "105"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 55 + 40 + 62 + 38 = 195.",
+      },
+      {
+        question: "How many patients used none of the four services recorded?",
+        correct: "30",
+        distractors: ["290", "320", "95"],
+        explanation: "Total in diagram = 55+40+62+38+22+28+20+25 = 290. Neither = 320 − 290 = 30.",
+      },
+      {
+        question: "How many patients used both Diabetes Annual Review and Blood Pressure Monitoring?",
+        correct: "28",
+        distractors: ["22", "55", "56"],
+        explanation: "Diabetes ∩ Blood Pressure = aAndC = 28. This is the left-overlap region between the top-left circle and the bottom-left diamond.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-2",
+    title: "Hospital Canteen Survey",
+    context: "A hospital canteen surveyed 250 staff about two dietary preferences. One hundred staff had no special preference from these options.",
+    setA: "Vegetarian Option",
+    setB: "Gluten-Free Option",
+    aOnly: 90,
+    bOnly: 30,
+    both: 30,
+    questions: [
+      {
+        question: "How many staff prefer the vegetarian option?",
+        correct: "120",
+        distractors: ["90", "150", "60"],
+        explanation: "Vegetarian total = aOnly + both = 90 + 30 = 120.",
+      },
+      {
+        question: "How many staff have no special dietary preference?",
+        correct: "100",
+        distractors: ["150", "250", "30"],
+        explanation: "Total in diagram = 90 + 30 + 30 = 150. Neither = 250 − 150 = 100.",
+      },
+      {
+        question: "What percentage of staff who prefer vegetarian also need gluten-free?",
+        correct: "25%",
+        distractors: ["20%", "50%", "33%"],
+        explanation: "Vegetarian total = 120. Of those, 30 also need gluten-free. Percentage = 30/120 × 100 = 25%.",
+      },
+      {
+        question: "How many more staff prefer vegetarian than gluten-free?",
+        correct: "60",
+        distractors: ["30", "90", "100"],
+        explanation: "Vegetarian = 120. Gluten-Free = bOnly + both = 30 + 30 = 60. Difference = 120 − 60 = 60.",
+      },
+      {
+        question: "How many staff have exactly one dietary preference?",
+        correct: "120",
+        distractors: ["150", "60", "30"],
+        explanation: "Exactly one = aOnly + bOnly = 90 + 30 = 120. The 30 who need both are excluded.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-3",
+    title: "Pharmacy Services Survey",
+    context: "A community pharmacy surveyed 180 regular customers about which of three services they had used in the past six months.",
+    setA: "Prescription Dispensing",
+    setB: "Medication Use Review",
+    setC: "NHS Vaccination Service",
+    aOnly: 58,
+    bOnly: 32,
+    cOnly: 25,
+    aAndBOnly: 22,
+    aAndCOnly: 15,
+    bAndCOnly: 10,
+    all3: 18,
+    questions: [
+      {
+        question: "How many customers used the prescription dispensing service?",
+        correct: "113",
+        distractors: ["58", "95", "135"],
+        explanation: "Prescription Dispensing total = aOnly + aAndBOnly + aAndCOnly + all3 = 58 + 22 + 15 + 18 = 113.",
+      },
+      {
+        question: "How many customers used all three services?",
+        correct: "18",
+        distractors: ["47", "10", "5"],
+        explanation: "All three = all3 = 18. This is the centre region of the three-set diagram.",
+      },
+      {
+        question: "How many customers used exactly two services?",
+        correct: "47",
+        distractors: ["18", "65", "180"],
+        explanation: "Exactly two = aAndBOnly + aAndCOnly + bAndCOnly = 22 + 15 + 10 = 47. The 18 who used all three are excluded.",
+      },
+      {
+        question: "How many customers used the NHS vaccination service only (and no other service)?",
+        correct: "25",
+        distractors: ["18", "68", "15"],
+        explanation: "Vaccination only = cOnly = 25.",
+      },
+      {
+        question: "How many more customers used prescription dispensing than the NHS vaccination service?",
+        correct: "45",
+        distractors: ["38", "25", "35"],
+        explanation: "Prescription Dispensing = 113. NHS Vaccination = cOnly + aAndCOnly + bAndCOnly + all3 = 25 + 15 + 10 + 18 = 68. Difference = 113 − 68 = 45.",
+      },
+    ],
+  },
+
+  // --- Batch 7 ---
+
+  {
+    kind: "venn-4",
+    title: "Hospital Ward Patient Status",
+    context: "A hospital ward tracked patient status changes over one month. Each number shows patients with that exact combination of statuses recorded.",
+    setA: "New Admissions",
+    setB: "Discharged Patients",
+    setC: "Transferred Patients",
+    setD: "Readmissions",
+    aOnly: 45,
+    bOnly: 52,
+    cOnly: 28,
+    dOnly: 35,
+    aAndB: 30,
+    aAndC: 18,
+    bAndD: 22,
+    cAndD: 15,
+    questions: [
+      {
+        question: "How many patients were new admissions in total?",
+        correct: "93",
+        distractors: ["45", "75", "111"],
+        explanation: "New Admissions total = aOnly + aAndB + aAndC = 45 + 30 + 18 = 93.",
+      },
+      {
+        question: "How many patients were discharged in total?",
+        correct: "104",
+        distractors: ["52", "82", "126"],
+        explanation: "Discharged Patients total = bOnly + aAndB + bAndD = 52 + 30 + 22 = 104.",
+      },
+      {
+        question: "How many patients had exactly one status recorded?",
+        correct: "160",
+        distractors: ["245", "85", "93"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 45 + 52 + 28 + 35 = 160.",
+      },
+      {
+        question: "How many more patients were discharged than were readmitted?",
+        correct: "32",
+        distractors: ["22", "52", "17"],
+        explanation: "Discharged = 104. Readmissions = dOnly + bAndD + cAndD = 35 + 22 + 15 = 72. Difference = 104 − 72 = 32.",
+      },
+      {
+        question: "How many patients were both new admissions and transferred patients?",
+        correct: "18",
+        distractors: ["30", "28", "36"],
+        explanation: "New Admissions ∩ Transferred = aAndC = 18. This is the left-overlap region between the top-left circle and the bottom-left diamond.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-3",
+    title: "CPD Activities Survey",
+    context: "A medical trust recorded which of three CPD activities its 200 clinical staff completed in the last year.",
+    setA: "Online eLearning Modules",
+    setB: "Training Workshops",
+    setC: "Professional Conferences",
+    aOnly: 60,
+    bOnly: 45,
+    cOnly: 30,
+    aAndBOnly: 24,
+    aAndCOnly: 18,
+    bAndCOnly: 12,
+    all3: 11,
+    questions: [
+      {
+        question: "How many staff completed online eLearning modules?",
+        correct: "113",
+        distractors: ["60", "89", "137"],
+        explanation: "eLearning total = aOnly + aAndBOnly + aAndCOnly + all3 = 60 + 24 + 18 + 11 = 113.",
+      },
+      {
+        question: "How many staff attended professional conferences?",
+        correct: "71",
+        distractors: ["30", "53", "92"],
+        explanation: "Conferences total = cOnly + aAndCOnly + bAndCOnly + all3 = 30 + 18 + 12 + 11 = 71.",
+      },
+      {
+        question: "How many staff completed exactly two CPD activities?",
+        correct: "54",
+        distractors: ["11", "65", "200"],
+        explanation: "Exactly two = aAndBOnly + aAndCOnly + bAndCOnly = 24 + 18 + 12 = 54. The 11 who completed all three are excluded.",
+      },
+      {
+        question: "How many staff attended workshops but not professional conferences?",
+        correct: "69",
+        distractors: ["45", "92", "33"],
+        explanation: "Workshops but not Conferences = bOnly + aAndBOnly = 45 + 24 = 69.",
+      },
+      {
+        question: "How many more staff completed eLearning than attended workshops?",
+        correct: "21",
+        distractors: ["15", "45", "60"],
+        explanation: "eLearning = 113. Workshops = bOnly + aAndBOnly + bAndCOnly + all3 = 45 + 24 + 12 + 11 = 92. Difference = 113 − 92 = 21.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-2",
+    title: "Advance Care Planning",
+    context: "A GP practice reviewed advance care planning records for 300 registered patients. One hundred and twenty patients had neither document recorded.",
+    setA: "Registered Organ Donor",
+    setB: "Completed Advance Directive",
+    aOnly: 90,
+    bOnly: 60,
+    both: 30,
+    questions: [
+      {
+        question: "How many patients are registered organ donors?",
+        correct: "120",
+        distractors: ["90", "180", "60"],
+        explanation: "Registered Organ Donor total = aOnly + both = 90 + 30 = 120.",
+      },
+      {
+        question: "How many patients have completed an advance directive?",
+        correct: "90",
+        distractors: ["60", "180", "30"],
+        explanation: "Advance Directive total = bOnly + both = 60 + 30 = 90.",
+      },
+      {
+        question: "What percentage of registered organ donors have also completed an advance directive?",
+        correct: "25%",
+        distractors: ["20%", "33%", "50%"],
+        explanation: "Organ Donors = 120. Of those, 30 also have an advance directive. Percentage = 30/120 × 100 = 25%.",
+      },
+      {
+        question: "How many patients have exactly one of the two documents?",
+        correct: "150",
+        distractors: ["180", "30", "120"],
+        explanation: "Exactly one = aOnly + bOnly = 90 + 60 = 150. The 30 with both are excluded.",
+      },
+      {
+        question: "How many patients have neither document recorded?",
+        correct: "120",
+        distractors: ["180", "300", "30"],
+        explanation: "Total in diagram = 90 + 60 + 30 = 180. Neither = 300 − 180 = 120.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-3",
+    title: "Emergency Department Outcomes",
+    context: "An emergency department recorded 500 patient presentations during one week. Thirty-five patients required none of the three interventions.",
+    setA: "Required Imaging",
+    setB: "Received IV Treatment",
+    setC: "Admitted to Hospital",
+    aOnly: 145,
+    bOnly: 92,
+    cOnly: 75,
+    aAndBOnly: 42,
+    aAndCOnly: 35,
+    bAndCOnly: 48,
+    all3: 28,
+    questions: [
+      {
+        question: "How many patients required imaging?",
+        correct: "250",
+        distractors: ["145", "215", "292"],
+        explanation: "Required Imaging total = aOnly + aAndBOnly + aAndCOnly + all3 = 145 + 42 + 35 + 28 = 250.",
+      },
+      {
+        question: "How many patients were admitted to hospital?",
+        correct: "186",
+        distractors: ["75", "158", "214"],
+        explanation: "Admitted to Hospital total = cOnly + aAndCOnly + bAndCOnly + all3 = 75 + 35 + 48 + 28 = 186.",
+      },
+      {
+        question: "How many patients received no imaging, IV treatment, or hospital admission?",
+        correct: "35",
+        distractors: ["465", "500", "75"],
+        explanation: "Total in diagram = 145+92+75+42+35+48+28 = 465. Neither = 500 − 465 = 35.",
+      },
+      {
+        question: "How many patients required imaging and were also admitted to hospital?",
+        correct: "63",
+        distractors: ["35", "28", "77"],
+        explanation: "Imaging and Admitted (including all three) = aAndCOnly + all3 = 35 + 28 = 63.",
+      },
+      {
+        question: "How many more patients required imaging than received IV treatment?",
+        correct: "40",
+        distractors: ["42", "145", "92"],
+        explanation: "Required Imaging = 250. IV Treatment = bOnly + aAndBOnly + bAndCOnly + all3 = 92 + 42 + 48 + 28 = 210. Difference = 250 − 210 = 40.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-4",
+    title: "Student Financial Support",
+    context: "A survey of 280 healthcare students recorded which financial support sources they used. Twenty-five students used none of the four sources shown. Each number shows students using that exact combination.",
+    setA: "Part-time Employment",
+    setB: "Student Loan",
+    setC: "University Bursary",
+    setD: "NHS Bursary",
+    aOnly: 40,
+    bOnly: 55,
+    cOnly: 35,
+    dOnly: 28,
+    aAndB: 32,
+    aAndC: 22,
+    bAndD: 25,
+    cAndD: 18,
+    questions: [
+      {
+        question: "How many students used a student loan?",
+        correct: "112",
+        distractors: ["55", "87", "135"],
+        explanation: "Student Loan total = bOnly + aAndB + bAndD = 55 + 32 + 25 = 112.",
+      },
+      {
+        question: "How many students had a university bursary?",
+        correct: "75",
+        distractors: ["35", "57", "93"],
+        explanation: "University Bursary total = cOnly + aAndC + cAndD = 35 + 22 + 18 = 75.",
+      },
+      {
+        question: "How many students used exactly one source of financial support?",
+        correct: "158",
+        distractors: ["255", "97", "112"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 40 + 55 + 35 + 28 = 158.",
+      },
+      {
+        question: "How many students had no recorded source of financial support?",
+        correct: "25",
+        distractors: ["255", "280", "97"],
+        explanation: "Total in diagram = 40+55+35+28+32+22+25+18 = 255. Neither = 280 − 255 = 25.",
+      },
+      {
+        question: "How many more students used a student loan than an NHS bursary?",
+        correct: "41",
+        distractors: ["32", "55", "84"],
+        explanation: "Student Loan = 112. NHS Bursary = dOnly + bAndD + cAndD = 28 + 25 + 18 = 71. Difference = 112 − 71 = 41.",
+      },
+    ],
+  },
+
+  // --- Batch 8 ---
+
+  {
+    kind: "venn-3",
+    title: "Radiology Referrals",
+    context: "A district general hospital analysed 400 imaging referrals processed in one month. Twenty referrals were for other imaging types not shown.",
+    setA: "X-ray",
+    setB: "CT Scan",
+    setC: "MRI Scan",
+    aOnly: 185,
+    bOnly: 62,
+    cOnly: 48,
+    aAndBOnly: 30,
+    aAndCOnly: 22,
+    bAndCOnly: 18,
+    all3: 15,
+    questions: [
+      {
+        question: "How many referrals were for X-ray?",
+        correct: "252",
+        distractors: ["185", "222", "282"],
+        explanation: "X-ray total = aOnly + aAndBOnly + aAndCOnly + all3 = 185 + 30 + 22 + 15 = 252.",
+      },
+      {
+        question: "How many referrals were for MRI scan?",
+        correct: "103",
+        distractors: ["48", "85", "121"],
+        explanation: "MRI Scan total = cOnly + aAndCOnly + bAndCOnly + all3 = 48 + 22 + 18 + 15 = 103.",
+      },
+      {
+        question: "How many referrals included exactly two imaging types?",
+        correct: "70",
+        distractors: ["15", "85", "400"],
+        explanation: "Exactly two = aAndBOnly + aAndCOnly + bAndCOnly = 30 + 22 + 18 = 70. The 15 with all three are excluded.",
+      },
+      {
+        question: "How many more X-ray referrals were there than CT scan referrals?",
+        correct: "127",
+        distractors: ["123", "185", "62"],
+        explanation: "X-ray = 252. CT Scan = bOnly + aAndBOnly + bAndCOnly + all3 = 62 + 30 + 18 + 15 = 125. Difference = 252 − 125 = 127.",
+      },
+      {
+        question: "How many referrals were for CT scan but not X-ray?",
+        correct: "80",
+        distractors: ["62", "125", "48"],
+        explanation: "CT Scan but not X-ray = bOnly + bAndCOnly = 62 + 18 = 80.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-4",
+    title: "Nursing Home Allied Health Services",
+    context: "A nursing home recorded which allied health services its 175 residents received in the last quarter. Ten residents received no service recorded here. Each number shows residents receiving that exact combination.",
+    setA: "Occupational Therapy",
+    setB: "Physiotherapy",
+    setC: "Speech & Language Therapy",
+    setD: "Podiatry",
+    aOnly: 30,
+    bOnly: 38,
+    cOnly: 22,
+    dOnly: 25,
+    aAndB: 16,
+    aAndC: 12,
+    bAndD: 14,
+    cAndD: 8,
+    questions: [
+      {
+        question: "How many residents received physiotherapy?",
+        correct: "68",
+        distractors: ["38", "52", "82"],
+        explanation: "Physiotherapy total = bOnly + aAndB + bAndD = 38 + 16 + 14 = 68.",
+      },
+      {
+        question: "How many residents received occupational therapy?",
+        correct: "58",
+        distractors: ["30", "44", "70"],
+        explanation: "Occupational Therapy total = aOnly + aAndB + aAndC = 30 + 16 + 12 = 58.",
+      },
+      {
+        question: "How many residents received exactly one service?",
+        correct: "115",
+        distractors: ["165", "50", "68"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 30 + 38 + 22 + 25 = 115.",
+      },
+      {
+        question: "How many residents received no allied health services this quarter?",
+        correct: "10",
+        distractors: ["165", "175", "50"],
+        explanation: "Total in diagram = 30+38+22+25+16+12+14+8 = 165. Neither = 175 − 165 = 10.",
+      },
+      {
+        question: "How many more residents received physiotherapy than speech and language therapy?",
+        correct: "26",
+        distractors: ["16", "38", "46"],
+        explanation: "Physiotherapy = 68. Speech & Language = cOnly + aAndC + cAndD = 22 + 12 + 8 = 42. Difference = 68 − 42 = 26.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-2",
+    title: "Infection Control Audit",
+    context: "An infection control audit assessed 250 hospital staff. Fifty staff met neither standard.",
+    setA: "Hand Hygiene Compliant",
+    setB: "PPE Usage Trained",
+    aOnly: 100,
+    bOnly: 50,
+    both: 50,
+    questions: [
+      {
+        question: "How many staff were hand hygiene compliant?",
+        correct: "150",
+        distractors: ["100", "200", "50"],
+        explanation: "Hand Hygiene Compliant total = aOnly + both = 100 + 50 = 150.",
+      },
+      {
+        question: "How many staff were PPE usage trained?",
+        correct: "100",
+        distractors: ["50", "150", "200"],
+        explanation: "PPE Usage Trained total = bOnly + both = 50 + 50 = 100.",
+      },
+      {
+        question: "What fraction of hand hygiene compliant staff were also PPE usage trained?",
+        correct: "1/3",
+        distractors: ["1/2", "50/200", "1/4"],
+        explanation: "Hand Hygiene total = 150. Of those, 50 were also PPE trained. Fraction = 50/150 = 1/3.",
+      },
+      {
+        question: "How many staff met exactly one of the two infection control standards?",
+        correct: "150",
+        distractors: ["200", "50", "100"],
+        explanation: "Exactly one = aOnly + bOnly = 100 + 50 = 150. The 50 who met both are excluded.",
+      },
+      {
+        question: "How many staff met neither infection control standard?",
+        correct: "50",
+        distractors: ["200", "250", "150"],
+        explanation: "Total in diagram = 100 + 50 + 50 = 200. Neither = 250 − 200 = 50.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-3",
+    title: "Medical Interview Formats",
+    context: "A medical school surveyed 180 applicants about which interview formats they had experienced across different institutions.",
+    setA: "Multiple Mini Interview (MMI)",
+    setB: "Traditional Panel Interview",
+    setC: "Group Exercise Assessment",
+    aOnly: 55,
+    bOnly: 42,
+    cOnly: 28,
+    aAndBOnly: 20,
+    aAndCOnly: 14,
+    bAndCOnly: 10,
+    all3: 11,
+    questions: [
+      {
+        question: "How many applicants had experienced an MMI?",
+        correct: "100",
+        distractors: ["55", "80", "120"],
+        explanation: "MMI total = aOnly + aAndBOnly + aAndCOnly + all3 = 55 + 20 + 14 + 11 = 100.",
+      },
+      {
+        question: "How many applicants had experienced a group exercise assessment?",
+        correct: "63",
+        distractors: ["28", "49", "77"],
+        explanation: "Group Exercise total = cOnly + aAndCOnly + bAndCOnly + all3 = 28 + 14 + 10 + 11 = 63.",
+      },
+      {
+        question: "How many applicants had experienced exactly two interview formats?",
+        correct: "44",
+        distractors: ["11", "55", "180"],
+        explanation: "Exactly two = aAndBOnly + aAndCOnly + bAndCOnly = 20 + 14 + 10 = 44. The 11 who experienced all three are excluded.",
+      },
+      {
+        question: "How many more applicants experienced an MMI than a traditional panel interview?",
+        correct: "17",
+        distractors: ["13", "42", "55"],
+        explanation: "MMI = 100. Panel Interview = bOnly + aAndBOnly + bAndCOnly + all3 = 42 + 20 + 10 + 11 = 83. Difference = 100 − 83 = 17.",
+      },
+      {
+        question: "How many applicants experienced both an MMI and a panel interview but not a group exercise?",
+        correct: "20",
+        distractors: ["11", "34", "14"],
+        explanation: "MMI and Panel but not Group Exercise = aAndBOnly = 20.",
+      },
+    ],
+  },
+
+  {
+    kind: "venn-4",
+    title: "University Health Services",
+    context: "A university health centre surveyed 500 students about which health services they had used. Each number shows students using that exact combination.",
+    setA: "Registered with GP",
+    setB: "Used Counselling Service",
+    setC: "Used Physiotherapy",
+    setD: "Attended Sexual Health Clinic",
+    aOnly: 120,
+    bOnly: 65,
+    cOnly: 48,
+    dOnly: 38,
+    aAndB: 40,
+    aAndC: 32,
+    bAndD: 28,
+    cAndD: 20,
+    questions: [
+      {
+        question: "How many students were registered with a GP?",
+        correct: "192",
+        distractors: ["120", "160", "224"],
+        explanation: "GP Registration total = aOnly + aAndB + aAndC = 120 + 40 + 32 = 192.",
+      },
+      {
+        question: "How many students had used the counselling service?",
+        correct: "133",
+        distractors: ["65", "105", "161"],
+        explanation: "Counselling total = bOnly + aAndB + bAndD = 65 + 40 + 28 = 133.",
+      },
+      {
+        question: "How many students used exactly one health service?",
+        correct: "271",
+        distractors: ["391", "120", "192"],
+        explanation: "Exactly one = aOnly + bOnly + cOnly + dOnly = 120 + 65 + 48 + 38 = 271.",
+      },
+      {
+        question: "How many students used none of the four services recorded?",
+        correct: "109",
+        distractors: ["391", "500", "50"],
+        explanation: "Total in diagram = 120+65+48+38+40+32+28+20 = 391. Neither = 500 − 391 = 109.",
+      },
+      {
+        question: "How many more students were registered with a GP than had used physiotherapy?",
+        correct: "92",
+        distractors: ["72", "120", "48"],
+        explanation: "GP = 192. Physiotherapy = cOnly + aAndC + cAndD = 48 + 32 + 20 = 100. Difference = 192 − 100 = 92.",
+      },
+    ],
+  },
+
   // ===== PASTE NEW VENN QUESTIONS ABOVE THIS LINE =====
 ];
 
@@ -36990,48 +38811,154 @@ export const USER_RAW_CHART_YESNO_INPUTS: DmChartYesNoRawInput[] = [
 
 // --- RAW VENN BUILDER ---------------------------------------------------------
 
-function buildVenn2Visual(raw: DmVenn2RawInput): UCATChartVisual {
-  return {
-    type: "set-diagram",
-    title: raw.title,
+// Four venn-2 templates cycled by rawIndex % 4. All label positions verified.
+function buildVenn2Visual(raw: DmVenn2RawInput, tmpl: number): UCATChartVisual {
+  const t = tmpl % 4;
+  // T1: Diamond (A) + Circle (B)
+  if (t === 1) return {
+    type: "set-diagram", title: raw.title,
     shapes: [
-      { id: "set-a", label: raw.setA, shape: "circle",    x: 55,  y: 55, width: 250, height: 250 },
-      { id: "set-b", label: raw.setB, shape: "rectangle", x: 240, y: 55, width: 250, height: 250 },
+      { id: "set-a", label: raw.setA, shape: "diamond", x:  50, y:  55, width: 240, height: 240 },
+      { id: "set-b", label: raw.setB, shape: "circle",  x: 230, y:  60, width: 230, height: 230 },
+    ],
+    regionLabels: [
+      { id: "a-only", text: String(raw.aOnly), x: 105, y: 175 },
+      { id: "both",   text: String(raw.both),  x: 260, y: 175 },
+      { id: "b-only", text: String(raw.bOnly), x: 420, y: 175 },
+    ],
+    legend: [{ label: raw.setA, shape: "diamond" }, { label: raw.setB, shape: "circle" }],
+  };
+  // T2: Hexagon (A) + Rectangle (B)
+  if (t === 2) return {
+    type: "set-diagram", title: raw.title,
+    shapes: [
+      { id: "set-a", label: raw.setA, shape: "hexagon",   x:  50, y:  55, width: 240, height: 240 },
+      { id: "set-b", label: raw.setB, shape: "rectangle", x: 250, y:  65, width: 250, height: 220 },
+    ],
+    regionLabels: [
+      { id: "a-only", text: String(raw.aOnly), x: 120, y: 175 },
+      { id: "both",   text: String(raw.both),  x: 270, y: 175 },
+      { id: "b-only", text: String(raw.bOnly), x: 420, y: 175 },
+    ],
+    legend: [{ label: raw.setA, shape: "hexagon" }, { label: raw.setB, shape: "rectangle" }],
+  };
+  // T3: Circle (A) + Diamond (B)
+  if (t === 3) return {
+    type: "set-diagram", title: raw.title,
+    shapes: [
+      { id: "set-a", label: raw.setA, shape: "circle",  x:  55, y:  55, width: 250, height: 250 },
+      { id: "set-b", label: raw.setB, shape: "diamond", x: 240, y:  55, width: 250, height: 250 },
+    ],
+    regionLabels: [
+      { id: "a-only", text: String(raw.aOnly), x: 120, y: 180 },
+      { id: "both",   text: String(raw.both),  x: 272, y: 180 },
+      { id: "b-only", text: String(raw.bOnly), x: 430, y: 180 },
+    ],
+    legend: [{ label: raw.setA, shape: "circle" }, { label: raw.setB, shape: "diamond" }],
+  };
+  // T0 (default): Circle (A) + Rectangle (B)
+  return {
+    type: "set-diagram", title: raw.title,
+    shapes: [
+      { id: "set-a", label: raw.setA, shape: "circle",    x:  55, y:  55, width: 250, height: 250 },
+      { id: "set-b", label: raw.setB, shape: "rectangle", x: 240, y:  55, width: 250, height: 250 },
     ],
     regionLabels: [
       { id: "a-only", text: String(raw.aOnly), x: 130, y: 180 },
       { id: "both",   text: String(raw.both),  x: 272, y: 180 },
       { id: "b-only", text: String(raw.bOnly), x: 415, y: 180 },
     ],
+    legend: [{ label: raw.setA, shape: "circle" }, { label: raw.setB, shape: "rectangle" }],
+  };
+}
+
+// Two venn-3 templates alternating by rawIndex % 2. All label positions verified.
+// T0: Circle(top) + Rectangle(lower-left) + Triangle(centre-right)
+//   Circle A  centre(255,145) r=125  [x=130,y=20,w=250,h=250]
+//   Rectangle B  (50,140)–(280,370)  [x=50,y=140,w=230,h=230]
+//   Triangle C  apex(240,100) base(100,380)–(380,380)  [x=100,y=100,w=280,h=280]
+// T1: Diamond(left) + Circle-ellipse(top) + Rectangle(right)
+//   Diamond A  centre(150,190) half-diags 130  [x=20,y=60,w=260,h=260]
+//   Circle  B  centre(245,115) rx=115 ry=105   [x=130,y=10,w=230,h=210]
+//   Rectangle C  (210,95)–(450,305)            [x=210,y=95,w=240,h=210]
+function buildVenn3Visual(raw: DmVenn3RawInput, tmpl: number): UCATChartVisual {
+  const t = tmpl % 2;
+  if (t === 1) return {
+    type: "set-diagram", title: raw.title,
+    shapes: [
+      { id: "set-a", label: raw.setA, shape: "diamond",   x:  20, y:  60, width: 260, height: 260 },
+      { id: "set-b", label: raw.setB, shape: "circle",    x: 130, y:  10, width: 230, height: 210 },
+      { id: "set-c", label: raw.setC, shape: "rectangle", x: 210, y:  95, width: 240, height: 210 },
+    ],
+    regionLabels: [
+      { id: "a-only",   text: String(raw.aOnly),     x:  60, y: 190 },
+      { id: "b-only",   text: String(raw.bOnly),     x: 245, y:  30 },
+      { id: "c-only",   text: String(raw.cOnly),     x: 420, y: 200 },
+      { id: "a-b-only", text: String(raw.aAndBOnly), x: 195, y: 125 },
+      { id: "a-c-only", text: String(raw.aAndCOnly), x: 225, y: 230 },
+      { id: "b-c-only", text: String(raw.bAndCOnly), x: 270, y: 170 },
+      { id: "all-3",    text: String(raw.all3),      x: 235, y: 175 },
+    ],
     legend: [
-      { label: raw.setA, shape: "circle" },
+      { label: raw.setA, shape: "diamond"   },
+      { label: raw.setB, shape: "circle"    },
+      { label: raw.setC, shape: "rectangle" },
+    ],
+  };
+  return {
+    type: "set-diagram", title: raw.title,
+    shapes: [
+      { id: "set-a", label: raw.setA, shape: "circle",    x: 130, y:  20, width: 250, height: 250 },
+      { id: "set-b", label: raw.setB, shape: "rectangle", x:  50, y: 140, width: 230, height: 230 },
+      { id: "set-c", label: raw.setC, shape: "triangle",  x: 100, y: 100, width: 280, height: 280 },
+    ],
+    regionLabels: [
+      { id: "a-only",   text: String(raw.aOnly),     x: 255, y:  60 },
+      { id: "b-only",   text: String(raw.bOnly),     x:  85, y: 290 },
+      { id: "c-only",   text: String(raw.cOnly),     x: 345, y: 340 },
+      { id: "a-b-only", text: String(raw.aAndBOnly), x: 200, y: 175 },
+      { id: "a-c-only", text: String(raw.aAndCOnly), x: 300, y: 230 },
+      { id: "b-c-only", text: String(raw.bAndCOnly), x: 200, y: 310 },
+      { id: "all-3",    text: String(raw.all3),      x: 235, y: 200 },
+    ],
+    legend: [
+      { label: raw.setA, shape: "circle"    },
       { label: raw.setB, shape: "rectangle" },
+      { label: raw.setC, shape: "triangle"  },
     ],
   };
 }
 
-function buildVenn3Visual(raw: DmVenn3RawInput): UCATChartVisual {
+// 4-set ring layout: circle (A, top-left), rectangle (B, top-right),
+// diamond (C, bottom-left), hexagon (D, bottom-right).
+// Ring overlaps: A↔B (top), A↔C (left), B↔D (right), C↔D (bottom).
+// Non-overlapping diagonals: A↔D and B↔C are separated.
+// All 8 label positions were verified against exact containment inequalities.
+function buildVenn4Visual(raw: DmVenn4RawInput): UCATChartVisual {
   return {
     type: "set-diagram",
     title: raw.title,
     shapes: [
-      { id: "set-a", label: raw.setA, shape: "circle",    x: 170, y:  20, width: 240, height: 240 },
-      { id: "set-b", label: raw.setB, shape: "rectangle", x:  55, y: 165, width: 240, height: 240 },
-      { id: "set-c", label: raw.setC, shape: "triangle",  x: 275, y: 165, width: 240, height: 240 },
+      { id: "set-a", label: raw.setA, shape: "circle",    x:  35, y:  20, width: 240, height: 240 },
+      { id: "set-b", label: raw.setB, shape: "rectangle", x: 235, y:  35, width: 200, height: 185 },
+      { id: "set-c", label: raw.setC, shape: "diamond",   x: 105, y: 215, width: 230, height: 210 },
+      { id: "set-d", label: raw.setD, shape: "hexagon",   x: 230, y: 185, width: 200, height: 200 },
     ],
     regionLabels: [
-      { id: "a-only",    text: String(raw.aOnly),    x: 290, y:  55 },
-      { id: "b-only",    text: String(raw.bOnly),    x: 100, y: 330 },
-      { id: "c-only",    text: String(raw.cOnly),    x: 460, y: 330 },
-      { id: "a-b-only",  text: String(raw.aAndBOnly), x: 185, y: 210 },
-      { id: "a-c-only",  text: String(raw.aAndCOnly), x: 380, y: 210 },
-      { id: "b-c-only",  text: String(raw.bAndCOnly), x: 288, y: 340 },
-      { id: "all-3",     text: String(raw.all3),     x: 285, y: 260 },
+      { id: "a-only",   text: String(raw.aOnly),  x: 100, y:  90 },
+      { id: "b-only",   text: String(raw.bOnly),  x: 400, y:  80 },
+      { id: "c-only",   text: String(raw.cOnly),  x: 180, y: 370 },
+      { id: "d-only",   text: String(raw.dOnly),  x: 380, y: 360 },
+      { id: "a-and-b",  text: String(raw.aAndB),  x: 255, y: 100 },
+      { id: "a-and-c",  text: String(raw.aAndC),  x: 221, y: 228 },
+      { id: "b-and-d",  text: String(raw.bAndD),  x: 355, y: 205 },
+      { id: "c-and-d",  text: String(raw.cAndD),  x: 268, y: 295 },
     ],
     legend: [
-      { label: raw.setA, shape: "circle" },
+      { label: raw.setA, shape: "circle"    },
       { label: raw.setB, shape: "rectangle" },
-      { label: raw.setC, shape: "triangle" },
+      { label: raw.setC, shape: "diamond"   },
+      { label: raw.setD, shape: "hexagon"   },
     ],
   };
 }
@@ -37041,7 +38968,11 @@ function buildRawVennQuestions(
   rawIndex: number
 ): UCATQuestion[] {
   const visual =
-    raw.kind === "venn-2" ? buildVenn2Visual(raw) : buildVenn3Visual(raw);
+    raw.kind === "venn-2"
+      ? buildVenn2Visual(raw, rawIndex)
+      : raw.kind === "venn-3"
+        ? buildVenn3Visual(raw, rawIndex)
+        : buildVenn4Visual(raw);
   return raw.questions.map((q, qIndex) => {
     const seed = rawIndex * 10 + qIndex;
     const built = buildDmOptions(q.correct, q.distractors, seed);
