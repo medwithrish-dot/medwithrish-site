@@ -313,11 +313,6 @@ export const UCAT_SUBTYPES: Record<
       description: "Work with overlaps, exclusions and grouped information.",
     },
     {
-      id: "dm-venn-select",
-      label: "Diagram selection",
-      description: "Choose the diagram that correctly represents the given statements or data.",
-    },
-    {
       id: "dm-probability-data",
       label: "Probability",
       description: "Use chance, combinations and conditional probability.",
