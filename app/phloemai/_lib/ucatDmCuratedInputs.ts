@@ -44714,15 +44714,23 @@ function buildVenn3Visual(raw: DmVenn3RawInput, tmpl: number): UCATChartVisual {
       { id: "set-b", label: raw.setB, shape: "circle",    x: 130, y:  10, width: 230, height: 210 },
       { id: "set-c", label: raw.setC, shape: "rectangle", x: 210, y:  95, width: 240, height: 210 },
     ],
-    regionLabels: [
-      { id: "a-only",   text: String(raw.aOnly),     x:  60, y: 190 },
-      { id: "b-only",   text: String(raw.bOnly),     x: 245, y:  30 },
-      { id: "c-only",   text: String(raw.cOnly),     x: 420, y: 200 },
-      { id: "a-b-only", text: String(raw.aAndBOnly), x: 195, y: 125 },
-      { id: "a-c-only", text: String(raw.aAndCOnly), x: 210, y: 230 },
-      { id: "b-c-only", text: String(raw.bAndCOnly), x: 270, y: 170 },
-      { id: "all-3",    text: String(raw.all3),      x: 235, y: 175 },
-    ],
+   regionLabels: [
+  { id: "a-only",   text: String(raw.aOnly),     x:  60, y: 190 },
+  { id: "b-only",   text: String(raw.bOnly),     x: 245, y:  30 },
+  { id: "c-only",   text: String(raw.cOnly),     x: 420, y: 200 },
+
+  // Biology + Chemistry only
+  { id: "a-b-only", text: String(raw.aAndBOnly), x: 185, y: 125 },
+
+  // Biology + Physics only
+  { id: "a-c-only", text: String(raw.aAndCOnly), x: 220, y: 255 },
+
+  // Chemistry + Physics only
+  { id: "b-c-only", text: String(raw.bAndCOnly), x: 300, y: 170 },
+
+  // All three
+  { id: "all-3",    text: String(raw.all3),      x: 235, y: 175 },
+],
     legend: [
       { label: raw.setA, shape: "diamond"   },
       { label: raw.setB, shape: "circle"    },
