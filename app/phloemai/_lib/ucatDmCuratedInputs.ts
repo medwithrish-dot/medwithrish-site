@@ -36461,6 +36461,298 @@ distractors: [
 explanation: "RR = Risk in treatment / Risk in control = 0.06 / 0.15 = 0.4. An RR of 0.4 means patients wearing compression stockings have 40% of the DVT risk of controls — a 60% relative reduction. Choosing 2.5 inverts the ratio (control divided by treatment)."
 },
 
+  // --- Loop batch 3 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Hospital Staffing",
+    stimulus: [
+      "The table below shows nurse headcounts and bed data for four hospital wards.",
+    ],
+    visual: {
+      type: "table",
+      title: "Ward staffing and bed occupancy",
+      headers: ["Ward", "Day Staff", "Night Staff", "Total Beds", "Occupancy Rate"],
+      rows: [
+        ["Cardiology", "12", "8", "40", "85%"],
+        ["Oncology", "9", "6", "30", "90%"],
+        ["Paediatrics", "15", "10", "50", "72%"],
+        ["Neurology", "7", "5", "25", "96%"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-hosp-03-a",
+        text: "Paediatrics has more occupied beds than Cardiology.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-hosp-03-b",
+        text: "The overall bed occupancy rate across all four wards combined is above 85%.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-hosp-03-c",
+        text: "Neurology has the highest bed occupancy rate of all four wards.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-hosp-03-d",
+        text: "The total number of day staff across all four wards is more than double the total night staff.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-hosp-03-e",
+        text: "During day shifts, Paediatrics has a higher staff-to-occupied-bed ratio than any other ward listed.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "Occupied beds per ward: Cardiology 40 × 0.85 = 34; Oncology 30 × 0.90 = 27; Paediatrics 50 × 0.72 = 36; Neurology 25 × 0.96 = 24.\n" +
+      "A → YES: Paediatrics occupied = 36; Cardiology occupied = 34. 36 > 34.\n" +
+      "B → NO: Total occupied = 34 + 27 + 36 + 24 = 121; Total beds = 40 + 30 + 50 + 25 = 145. Overall rate = 121 ÷ 145 = 83.4%, which is below 85%.\n" +
+      "C → YES: Occupancy rates — Cardiology 85%, Oncology 90%, Paediatrics 72%, Neurology 96%. Neurology's 96% is the highest.\n" +
+      "D → NO: Total day staff = 12 + 9 + 15 + 7 = 43; Total night staff = 8 + 6 + 10 + 5 = 29. Double the night staff = 58. 43 < 58, so day staff are not more than double night staff.\n" +
+      "E → YES: Day staff per occupied bed — Cardiology: 12 ÷ 34 = 0.35; Oncology: 9 ÷ 27 = 0.33; Paediatrics: 15 ÷ 36 = 0.42; Neurology: 7 ÷ 24 = 0.29. Paediatrics (0.42) is the highest.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Bus Passengers",
+    stimulus: [
+      "The chart below shows weekly passenger numbers (thousands) for three bus routes across four months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Weekly bus passengers by route (thousands)",
+      yLabel: "Passengers (000s)",
+      seriesLabels: ["Route A", "Route B", "Route C"],
+      groups: [
+        { label: "Jan", values: [42, 30, 18] },
+        { label: "Feb", values: [38, 32, 20] },
+        { label: "Mar", values: [45, 28, 25] },
+        { label: "Apr", values: [50, 35, 22] },
+      ],
+      max: 60,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-busrt-03-a",
+        text: "In January, Route A carried more passengers than Routes B and C combined.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-busrt-03-b",
+        text: "Over the four months, Route A accounted for more than 40% of all passengers across the three routes.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-busrt-03-c",
+        text: "Route C's passenger numbers increased in every month from January to April.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-busrt-03-d",
+        text: "The difference between Route B's highest and lowest monthly figures is 7,000 passengers.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-busrt-03-e",
+        text: "In March, the combined passengers for Routes B and C exceeded those for Route A.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "Route totals (thousands): A = 42 + 38 + 45 + 50 = 175; B = 30 + 32 + 28 + 35 = 125; C = 18 + 20 + 25 + 22 = 85. Grand total = 385.\n" +
+      "A → NO: Route A January = 42,000. Routes B + C January = 30,000 + 18,000 = 48,000. 42,000 < 48,000, so Route A did not carry more.\n" +
+      "B → YES: Route A share = 175 ÷ 385 = 45.5%, which exceeds 40%.\n" +
+      "C → NO: Route C figures — Jan 18, Feb 20, Mar 25, Apr 22. April (22) is lower than March (25), so the numbers did not increase every month.\n" +
+      "D → YES: Route B highest = 35 (April); lowest = 28 (March). Difference = 35 − 28 = 7 thousand = 7,000 passengers.\n" +
+      "E → YES: March — Routes B + C = 28 + 25 = 53,000. Route A = 45,000. 53,000 > 45,000.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Bird Population",
+    stimulus: [
+      "The chart below shows curlew breeding pairs (hundreds) recorded annually in a national nature reserve from 2018 to 2023.",
+    ],
+    visual: {
+      type: "line",
+      title: "Curlew breeding pairs in national reserve (hundreds)",
+      yLabel: "Breeding pairs (hundreds)",
+      points: [
+        { label: "2018", value: 52 },
+        { label: "2019", value: 48 },
+        { label: "2020", value: 45 },
+        { label: "2021", value: 49 },
+        { label: "2022", value: 54 },
+        { label: "2023", value: 58 },
+      ],
+      max: 65,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-ecol-03-a",
+        text: "The curlew population in the reserve reached its lowest recorded level in 2020.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-ecol-03-b",
+        text: "The 2023 population was more than 10% higher than the 2018 population.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-ecol-03-c",
+        text: "The mean annual population over the six-year period was fewer than 5,000 breeding pairs.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-ecol-03-d",
+        text: "The population declined in every year from 2018 to 2021.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-ecol-03-e",
+        text: "The increase in population from 2020 to 2023 was greater than the decrease from 2018 to 2020.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "Recorded values (hundreds of breeding pairs): 2018 = 52, 2019 = 48, 2020 = 45, 2021 = 49, 2022 = 54, 2023 = 58.\n" +
+      "A → YES: The minimum value across all six years is 45 (2020). No other year is lower.\n" +
+      "B → YES: Percentage change 2018 → 2023 = (58 − 52) ÷ 52 × 100 = 6 ÷ 52 × 100 = 11.5%. 11.5% > 10%.\n" +
+      "C → NO: Total = 52 + 48 + 45 + 49 + 54 + 58 = 306 hundreds. Mean = 306 ÷ 6 = 51 hundreds = 5,100 breeding pairs. 5,100 is not fewer than 5,000.\n" +
+      "D → NO: The population fell from 2018 (52) to 2019 (48) and from 2019 (48) to 2020 (45), but rose from 2020 (45) to 2021 (49). It did not decline every year across this period.\n" +
+      "E → YES: Increase 2020 → 2023 = 58 − 45 = 13 hundreds. Decrease 2018 → 2020 = 52 − 45 = 7 hundreds. 13 > 7.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "School Results",
+    stimulus: [
+      "The table below shows subject pass rates (%) for four schools in a local authority district.",
+    ],
+    visual: {
+      type: "table",
+      title: "Subject pass rates by school (%)",
+      headers: ["School", "Maths", "English", "Science", "Average"],
+      rows: [
+        ["Ashford", "78", "85", "72", "78.3"],
+        ["Brentwood", "65", "70", "80", "71.7"],
+        ["Clearview", "90", "88", "85", "87.7"],
+        ["Dunmore", "55", "60", "68", "61.0"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-schl-03-a",
+        text: "Clearview achieved the highest pass rate in every subject listed.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-schl-03-b",
+        text: "The district-wide average pass rate in Maths was higher than in English.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-schl-03-c",
+        text: "Brentwood achieved a higher pass rate in Science than in Maths.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-schl-03-d",
+        text: "Across all three subjects, Ashford's combined score exceeds Brentwood's combined score by more than 20 percentage points.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-schl-03-e",
+        text: "More than half of the four schools achieved an average pass rate above 75%.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A → YES: Per subject — Maths: Clearview 90 > Ashford 78 > Brentwood 65 > Dunmore 55; English: Clearview 88 > Ashford 85 > Brentwood 70 > Dunmore 60; Science: Clearview 85 > Brentwood 80 > Ashford 72 > Dunmore 68. Clearview leads in all three.\n" +
+      "B → NO: District Maths average = (78 + 65 + 90 + 55) ÷ 4 = 288 ÷ 4 = 72.0%. District English average = (85 + 70 + 88 + 60) ÷ 4 = 303 ÷ 4 = 75.75%. 72.0% < 75.75%, so Maths is not higher.\n" +
+      "C → YES: Brentwood Science = 80%; Brentwood Maths = 65%. 80 > 65.\n" +
+      "D → NO: Ashford combined = 78 + 85 + 72 = 235. Brentwood combined = 65 + 70 + 80 = 215. Difference = 235 − 215 = 20 percentage points exactly. 20 is not more than 20.\n" +
+      "E → NO: Schools with average above 75%: Ashford (78.3%) and Clearview (87.7%) = 2 schools. 2 out of 4 = exactly 50%, which is not more than half.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "City Demographics",
+    stimulus: [
+      "The table below shows the population (thousands) by age group across three cities.",
+    ],
+    visual: {
+      type: "table",
+      title: "Population by age group (thousands)",
+      headers: ["Age Group", "Northgate", "Southfield", "Eastbury"],
+      rows: [
+        ["0–17", "45", "38", "52"],
+        ["18–34", "72", "85", "68"],
+        ["35–54", "80", "90", "75"],
+        ["55–74", "55", "48", "60"],
+        ["75+", "18", "14", "20"],
+        ["Total", "270", "275", "275"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-city-03-a",
+        text: "Eastbury has the largest proportion of residents aged 0–17 of the three cities.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-city-03-b",
+        text: "Southfield's working-age population (aged 18–54) exceeds 60% of its total population.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-city-03-c",
+        text: "The combined population aged 55 and over across the three cities is fewer than 200,000.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-city-03-d",
+        text: "In Northgate, the 18–34 age group is larger than the 35–54 age group.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-city-03-e",
+        text: "Eastbury's total population is greater than Northgate's total population.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A → YES: Proportion aged 0–17 — Northgate: 45 ÷ 270 = 16.7%; Southfield: 38 ÷ 275 = 13.8%; Eastbury: 52 ÷ 275 = 18.9%. Eastbury's 18.9% is the largest.\n" +
+      "B → YES: Southfield working-age (18–54) = 85 + 90 = 175 thousand. Share = 175 ÷ 275 = 63.6%. 63.6% > 60%.\n" +
+      "C → NO: Population aged 55+ — Northgate: 55 + 18 = 73 thousand; Southfield: 48 + 14 = 62 thousand; Eastbury: 60 + 20 = 80 thousand. Combined = 73 + 62 + 80 = 215 thousand = 215,000. 215,000 is not fewer than 200,000.\n" +
+      "D → NO: Northgate 18–34 = 72 thousand; Northgate 35–54 = 80 thousand. 72 < 80, so the 18–34 group is smaller, not larger.\n" +
+      "E → YES: Eastbury total = 275 thousand; Northgate total = 270 thousand. 275 > 270.",
+  },
+
   // ===== PASTE NEW DM QUESTIONS ABOVE THIS LINE =====
 ];
 
