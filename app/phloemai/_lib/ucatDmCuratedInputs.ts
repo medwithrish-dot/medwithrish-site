@@ -44719,9 +44719,9 @@ function buildVenn3Visual(raw: DmVenn3RawInput, tmpl: number): UCATChartVisual {
       { id: "b-only",   text: String(raw.bOnly),     x: 245, y:  30 },
       { id: "c-only",   text: String(raw.cOnly),     x: 420, y: 200 },
       { id: "a-b-only", text: String(raw.aAndBOnly), x: 195, y: 125 },
-      { id: "a-c-only", text: String(raw.aAndCOnly), x: 210, y: 230 },
+      { id: "a-c-only", text: String(raw.aAndCOnly), x: 225, y: 225 },
       { id: "b-c-only", text: String(raw.bAndCOnly), x: 270, y: 170 },
-      { id: "all-3",    text: String(raw.all3),      x: 235, y: 175 },
+      { id: "all-3",    text: String(raw.all3),      x: 235, y: 155 },
     ],
     legend: [
       { label: raw.setA, shape: "diamond"   },
