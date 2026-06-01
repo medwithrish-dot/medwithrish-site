@@ -189,12 +189,12 @@ export const USER_CURATED_DM_INPUTS: DmCuratedInput[] = [
     subtype: "dm-logic",
     leftTitle: "Scheduling",
     stimulus: [
-      "A law firm schedules one client meeting per day across five consecutive days: Monday, Tuesday, Wednesday, Thursday, and Friday. Five clients £ Farida, Grant, Heidi, Ivan, and Jasmine £ are each assigned exactly one day. The following conditions apply:",
-      "£ Farida's meeting is earlier in the week than Grant's.",
-      "£ Heidi's meeting is on Wednesday.",
-      "£ Ivan's meeting is not on Monday or Friday.",
-      "£ Jasmine's meeting is later in the week than Grant's.",
-      "£ Ivan's meeting is not on Wednesday.",
+      "A law firm schedules one client meeting per day across five consecutive days: Monday, Tuesday, Wednesday, Thursday, and Friday. Five clients - Farida, Grant, Heidi, Ivan, and Jasmine - are each assigned exactly one day. The following conditions apply:",
+      "- Farida's meeting is earlier in the week than Grant's.",
+      "- Heidi's meeting is on Wednesday.",
+      "- Ivan's meeting is not on Monday or Friday.",
+      "- Jasmine's meeting is later in the week than Grant's.",
+      "- Ivan's meeting is not on Wednesday.",
     ],
     question: "Which of the following must be true?",
     correct: "Farida's meeting is on Monday.",
@@ -204,13 +204,13 @@ export const USER_CURATED_DM_INPUTS: DmCuratedInput[] = [
       "Ivan's meeting is before Grant's.",
     ],
     explanation:
-      "Heidi = Wednesday (given). Ivan ? Monday, Friday, or Wednesday ? Ivan = Tuesday or Thursday.\n\n" +
+      "Heidi is on Wednesday. Ivan cannot be on Monday, Friday, or Wednesday, so Ivan must be on Tuesday or Thursday.\n\n" +
       "The ordering constraint Farida < Grant < Jasmine, with Wednesday reserved for Heidi, means F, G, and J must occupy three of {Mon, Tue, Thu, Fri}.\n\n" +
       "Testing all valid triples in order:\n" +
-      "£ Mon < Tue < Thu: F=Mon, G=Tue, J=Thu ? Ivan must take Fri £ violates Ivan ? Fri. ?\n" +
-      "£ Mon < Tue < Fri: F=Mon, G=Tue, J=Fri ? Ivan = Thu ? ? Arrangement 1: F=Mon, G=Tue, H=Wed, I=Thu, J=Fri.\n" +
-      "£ Mon < Thu < Fri: F=Mon, G=Thu, J=Fri ? Ivan = Tue ? ? Arrangement 2: F=Mon, I=Tue, H=Wed, G=Thu, J=Fri.\n" +
-      "£ Tue < Thu < Fri: F=Tue, G=Thu, J=Fri ? Ivan = Mon £ violates Ivan ? Mon. ?\n\n" +
+      "- Mon < Tue < Thu: F=Mon, G=Tue, J=Thu would force Ivan to Friday, which is not allowed.\n" +
+      "- Mon < Tue < Fri: F=Mon, G=Tue, J=Fri gives Ivan on Thursday.\n" +
+      "- Mon < Thu < Fri: F=Mon, G=Thu, J=Fri gives Ivan on Tuesday.\n" +
+      "- Tue < Thu < Fri: F=Tue, G=Thu, J=Fri would force Ivan to Monday, which is not allowed.\n\n" +
       "Only two arrangements are valid. In both, Farida is on Monday. Grant is Tuesday in arrangement 1 but Thursday in arrangement 2 (eliminates that distractor). Ivan is Thursday in 1 but Tuesday in 2 (eliminates that distractor). Ivan is after Grant in arrangement 1 (Thu > Tue) but before Grant in arrangement 2 (Tue < Thu), so neither ordering of Ivan vs Grant must be true. Only Farida = Monday holds in every valid scenario.",
   },
 
@@ -11170,13 +11170,13 @@ stimulus: [
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-01-01-a", text: "Patient A can safely take 50mg of Sumatriptan if they do not have coronary artery disease.", answer: "Yes" },
+{ id: "dm-yn-inf-01-01-a", text: "Patient A can safely take 50mg of Sumatriptan if they do not have coronary artery disease.", answer: "No" },
 { id: "dm-yn-inf-01-01-b", text: "Sumatriptan is the only treatment available for acute migraine.", answer: "No" },
 { id: "dm-yn-inf-01-01-c", text: "A patient with coronary artery disease should avoid 50mg of Sumatriptan.", answer: "Yes" },
 { id: "dm-yn-inf-01-01-d", text: "Photophobia is the primary symptom of coronary artery disease.", answer: "No" },
 { id: "dm-yn-inf-01-01-e", text: "Patient A's migraine symptoms include unilateral pain.", answer: "Yes" }
 ],
-explanation: "A £ YES: The passage implies safety if the contraindication is absent.\nB £ NO: The passage only defines standard treatment, not exclusivity.\nC £ YES: Contraindication explicitly applies to CAD patients.\nD £ NO: Photophobia is a symptom of the migraine, not CAD.\nE £ YES: Stated directly in the passage."
+explanation: "A £ NO: The passage states that coronary artery disease is a contraindication, but it does not prove Sumatriptan is safe whenever that one contraindication is absent.\nB £ NO: The passage only defines standard treatment, not exclusivity.\nC £ YES: Contraindication explicitly applies to CAD patients.\nD £ NO: Photophobia is a symptom of the migraine, not CAD.\nE £ YES: Stated directly in the passage."
 },
 {
 kind: "yes-no",
@@ -13009,10 +13009,10 @@ yesNoStatements: [
 { id: "dm-yn-inf-20-22-a", text: "An item bought on sale returned in 5 days is ineligible for a free return.", answer: "Yes" },
 { id: "dm-yn-inf-20-22-b", text: "An item returned after 40 days is eligible for a free return.", answer: "No" },
 { id: "dm-yn-inf-20-22-c", text: "A return request without a receipt will be accepted.", answer: "No" },
-{ id: "dm-yn-inf-20-22-d", text: "All full-price items returned within 10 days are eligible for a free return.", answer: "Yes" },
+{ id: "dm-yn-inf-20-22-d", text: "All full-price items returned within 10 days are eligible for a free return.", answer: "No" },
 { id: "dm-yn-inf-20-22-e", text: "Free returns are only possible if a receipt is provided.", answer: "Yes" }
 ],
-explanation: "A £ YES: Sale items are ineligible. B £ NO: Needs to be within 30 days. C £ NO: Receipt is required for *all* return requests. D £ YES: 10 days is < 30, and it's not a sale item. E £ YES: Receipt required for all."
+explanation: "A £ YES: Sale items are ineligible regardless of return date. B £ NO: Free returns require return within 30 days. C £ NO: Receipt is required for all return requests. D £ NO: Being full-price and within 10 days avoids two exclusions, but the passage does not state this is sufficient for eligibility; a receipt is also required. E £ YES: Receipt is required for all return requests, so a free return cannot occur without one."
 },
 {
 kind: "yes-no",
@@ -13109,10 +13109,10 @@ yesNoStatements: [
 { id: "dm-yn-inf-17-03-a", text: "The seasonal labor workforce has grown at the same rate as the regional population.", answer: "No" },
 { id: "dm-yn-inf-17-03-b", text: "Regional populations in the southern zone have increased over the last five years.", answer: "Yes" },
 { id: "dm-yn-inf-17-03-c", text: "Officials believe that labor stability is an obstacle to adopting automation.", answer: "Yes" },
-{ id: "dm-yn-inf-17-03-d", text: "Seasonal laborers work in the southern zone only during the harvest season.", answer: "Yes" },
+{ id: "dm-yn-inf-17-03-d", text: "Seasonal laborers work in the southern zone only during the harvest season.", answer: "No" },
 { id: "dm-yn-inf-17-03-e", text: "The southern agricultural zone will inevitably transition to automated harvesting.", answer: "No" }
 ],
-explanation: "A £ NO: The passage states the workforce is stable, while populations grew; they did not grow at the same rate.\nB £ YES: The passage implies growth by contrasting it with the stable workforce.\nC £ YES: Officials argue it is preventing the transition.\nD £ YES: The passage states they migrate to match harvest cycles.\nE £ NO: The passage describes current resistance to automation, not an inevitable future outcome."
+explanation: "A £ NO: The passage states the workforce is stable, while populations grew; they did not grow at the same rate.\nB £ YES: The passage implies growth by contrasting it with the stable workforce.\nC £ YES: Officials argue it is preventing the transition.\nD £ NO: The passage says workers migrate to match harvest cycles, but it does not say they work in the zone only during harvest season.\nE £ NO: The passage describes current resistance to automation, not an inevitable future outcome."
 },
 {
 kind: "yes-no",
@@ -13468,11 +13468,11 @@ instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-17-21-a", text: "Language immersion courses increase productivity by 10%.", answer: "No" },
 { id: "dm-yn-inf-17-21-b", text: "Improving language skills enhances safety in the workplace.", answer: "Yes" },
-{ id: "dm-yn-inf-17-21-c", text: "The investment in language courses is net-neutral.", answer: "Yes" },
+{ id: "dm-yn-inf-17-21-c", text: "The investment in language courses is net-neutral.", answer: "No" },
 { id: "dm-yn-inf-17-21-d", text: "Non-native employees are 10% less productive than native employees.", answer: "No" },
 { id: "dm-yn-inf-17-21-e", text: "Every non-native employee experiences a language barrier.", answer: "No" }
 ],
-explanation: "A £ NO: It says it improves cohesion, not necessarily by 10% productivity.\nB £ YES: The passage notes improvement in 'safety compliance.'\nC £ YES: Cost is 'roughly equal' to productivity loss.\nD £ NO: It says it is associated with a 10% decrease, not that it is 10% less *than* native employees specifically, though implied, it's not explicit (what if native also have barriers?). Actually, the statement is: 'associated with a 10% decrease'. It's safer to say No because we don't know the baseline of native productivity.\nE £ NO: The passage does not say every non-native employee has a barrier."
+explanation: "A £ NO: It says the courses improve cohesion and safety compliance, not that they increase productivity by 10%.\nB £ YES: The passage notes improvement in safety compliance.\nC £ NO: The course cost is roughly equal to the productivity loss experienced without them, but the passage does not state the courses fully remove that productivity loss or make the investment net-neutral.\nD £ NO: The passage says language barriers are associated with a 10% decrease for non-native employees, not that all non-native employees are 10% less productive than native employees.\nE £ NO: The passage does not say every non-native employee has a language barrier."
 },
 {
 kind: "yes-no",
@@ -14067,9 +14067,9 @@ yesNoStatements: [
 { id: "dm-yn-inf-16-03-b", text: "If transportation barriers were removed, the re-offending rate would drop by more than 20%.", answer: "No" },
 { id: "dm-yn-inf-16-03-c", text: "Most eligible juveniles do not complete the vocational training programs.", answer: "Yes" },
 { id: "dm-yn-inf-16-03-d", text: "The proposed bus routes aim to address the primary reason for low completion rates.", answer: "Yes" },
-{ id: "dm-yn-inf-16-03-e", text: "The study lasted for exactly five years.", answer: "Yes" }
+{ id: "dm-yn-inf-16-03-e", text: "The study lasted for exactly five years.", answer: "No" }
 ],
-explanation: "A £ NO: The text does not mention other methods. B £ NO: This is speculative; the text does not quantify the potential impact of removing barriers. C £ YES: Only 30% complete them, so 70% do not. D £ YES: Transportation is explicitly identified as the cause of non-completion. E £ YES: It says 'over five years'."
+explanation: "A £ NO: The text does not mention other methods. B £ NO: This is speculative; the text does not quantify the potential impact of removing barriers. C £ YES: Only 30% complete them, so 70% do not. D £ YES: Transportation barriers are given as the main reason for low completion, and the bus routes are proposed to address completion. E £ NO: The passage reports outcomes over five years, but it does not say the study itself lasted exactly five years."
 },
 {
 kind: "yes-no",
@@ -14101,13 +14101,13 @@ stimulus: [
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-16-05-a", text: "All probation officers must conduct drug testing.", answer: "Yes" },
+{ id: "dm-yn-inf-16-05-a", text: "All probation officers must conduct drug testing.", answer: "No" },
 { id: "dm-yn-inf-16-05-b", text: "Some probation officers are failing to follow reporting protocols.", answer: "Yes" },
 { id: "dm-yn-inf-16-05-c", text: "Offenders are exempt from drug testing after six months.", answer: "No" },
-{ id: "dm-yn-inf-16-05-d", text: "All offenders released on probation must be tested.", answer: "Yes" },
+{ id: "dm-yn-inf-16-05-d", text: "All offenders released on probation must be tested.", answer: "No" },
 { id: "dm-yn-inf-16-05-e", text: "Disciplinary review is guaranteed for any officer with missing records.", answer: "Yes" }
 ],
-explanation: "A £ YES: The passage implies it is their duty as probation officers supervising these offenders. B £ YES: 15% fail to record results. C £ NO: It says they are tested for the 'first six months', but does not say they are exempt after (could be different rules). D £ YES: 'All juvenile offenders released on probation' implies this. E £ YES: The text says officers with incomplete records will face review."
+explanation: "A £ NO: The passage says juvenile offenders must undergo testing, not that every probation officer personally conducts tests. B £ YES: 15% consistently fail to record test results. C £ NO: Testing is specified for the first six months, but the passage does not say offenders are exempt afterwards. D £ NO: The rule is about juvenile offenders released on probation, not all offenders. E £ YES: Officers with incomplete records will face disciplinary review."
 },
 {
 kind: "yes-no",
@@ -14254,12 +14254,12 @@ question: "For each of the following statements, select 'Yes' if it follows from
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-16-13-a", text: "Most identity theft victims are eligible for legal aid.", answer: "Yes" },
-{ id: "dm-yn-inf-16-13-b", text: "Victims with losses of exactly $5,000 are not eligible for legal aid.", answer: "No" },
+{ id: "dm-yn-inf-16-13-b", text: "Victims with losses of exactly $5,000 are not eligible for legal aid.", answer: "Yes" },
 { id: "dm-yn-inf-16-13-c", text: "The online portal is only for victims with losses under $5,000.", answer: "No" },
 { id: "dm-yn-inf-16-13-d", text: "40% of victims are not eligible for legal aid based on the loss criteria.", answer: "Yes" },
 { id: "dm-yn-inf-16-13-e", text: "Legal aid is the only form of support available for losses over $5,000.", answer: "No" }
 ],
-explanation: "A £ YES: 60% is most. B £ NO: It says 'exceeds $5,000', but it's ambiguous for 'exactly', though usually 'exceeds' means >5k. Wait, statement B says 'not eligible' for 'exactly'. 'Exceeds' means more than 5000, so exactly 5000 doesn't exceed it. Therefore, not eligible. Yes, this follows. C £ NO: It says victims are 'encouraged' to use it, not that it is 'only' for them. D £ YES: 60% > 5k, 40% <= 5k. E £ NO: Not mentioned."
+explanation: "A £ YES: 60% of cases involve losses greater than $5,000, so most victims meet the legal-aid loss criterion. B £ YES: Eligibility requires losses to exceed $5,000; exactly $5,000 does not exceed the threshold. C £ NO: The passage encourages the portal for losses under $5,000 but does not say it is only for them. D £ YES: If 60% exceed $5,000, the remaining 40% do not exceed it and are not eligible based on the loss criterion. E £ NO: The passage does not say legal aid is the only support for losses over $5,000."
 },
 {
 kind: "yes-no",
@@ -14273,12 +14273,12 @@ question: "For each of the following statements, select 'Yes' if it follows from
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-16-14-a", text: "30% of employees will lose remote access if they do not enable MFA by the end of the month.", answer: "Yes" },
-{ id: "dm-yn-inf-16-14-b", text: "MFA is only required for remote logins, not on-site logins.", answer: "Yes" },
+{ id: "dm-yn-inf-16-14-b", text: "MFA is only required for remote logins, not on-site logins.", answer: "No" },
 { id: "dm-yn-inf-16-14-c", text: "The IT department is responsible for blocking access.", answer: "Yes" },
 { id: "dm-yn-inf-16-14-d", text: "Employees who enable MFA will be able to continue remote access.", answer: "Yes" },
 { id: "dm-yn-inf-16-14-e", text: "All employees have been informed about the requirement.", answer: "No" }
 ],
-explanation: "A £ YES: 100% - 70% = 30%. B £ YES: 'for all... remote logins' implies this scope. C £ YES: 'IT department will block...'. D £ YES: Implied that only those who haven't enabled it will be blocked. E £ NO: Not mentioned."
+explanation: "A £ YES: 100% - 70% = 30%, so 30% have not enabled MFA. B £ NO: The rule is stated for remote logins, but the passage does not say on-site logins are exempt. C £ YES: The IT department will block the access. D £ YES: The blocking rule applies to employees who have not enabled MFA. E £ NO: Not mentioned."
 },
 {
 kind: "yes-no",
@@ -14312,11 +14312,11 @@ instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-16-16-a", text: "High-severity vulnerabilities are now better rewarded than previously.", answer: "Yes" },
 { id: "dm-yn-inf-16-16-b", text: "Low-risk vulnerability rewards have been reduced.", answer: "Yes" },
-{ id: "dm-yn-inf-16-16-c", text: "The agency is trying to encourage the reporting of high-severity vulnerabilities over low-risk ones.", answer: "Yes" },
-{ id: "dm-yn-inf-16-16-d", text: "Rewards are only available for software used by local governments.", answer: "Yes" },
+{ id: "dm-yn-inf-16-16-c", text: "The agency is trying to encourage the reporting of high-severity vulnerabilities over low-risk ones.", answer: "No" },
+{ id: "dm-yn-inf-16-16-d", text: "Rewards are only available for software used by local governments.", answer: "No" },
 { id: "dm-yn-inf-16-16-e", text: "All vulnerabilities now receive the same reward as before.", answer: "No" }
 ],
-explanation: "A £ YES: Payouts for critical (high severity) were increased. B £ YES: 'decreased the payout for low-risk'. C £ YES: By shifting the reward structure, they incentivize higher severity reporting. D £ YES: 'software used by local governments'. E £ NO: They were changed."
+explanation: "A £ YES: Payouts for critical vulnerabilities were increased. B £ YES: The passage states that low-risk payouts were decreased. C £ NO: The stated reason is budget management; an intent to encourage one reporting category over another is not explicitly established. D £ NO: The Agency offers rewards for software used by local governments, but the passage does not say this is the only software category eligible for rewards. E £ NO: Some rewards were changed."
 },
 {
 kind: "yes-no",
@@ -16168,7 +16168,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-13-13-c", text: "The VO2 max requirement is the same for the whole season.", answer: "Yes" },
 { id: "dm-yn-inf-13-13-d", text: "Suspension occurs if a player fails in January.", answer: "Yes" }
 ],
-explanation: "A £ YES: 48 is below 50.\nA2 £ YES: Chronologically, August comes before January.\nB £ NO: Only the January failure is stated to cause suspension.\nC £ YES: The 50ml/kg/min limit is the standard for the first team.\nD £ YES: Stated in the passage."
+explanation: "A £ YES: 48 is below 50.\nB £ YES: Chronologically, August comes before January.\nC £ NO: Only January failure is stated to cause suspension.\nD £ YES: The 50ml/kg/min limit is the stated standard for first-team qualification.\nE £ YES: Stated directly in the passage."
 },
 {
 kind: "yes-no",
@@ -16464,11 +16464,11 @@ instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-11-04-a", text: "A 25-centimeter gap requires a gap filler installation.", answer: "Yes" },
 { id: "dm-yn-inf-11-04-b", text: "The platform remains open if the gap is exactly 20 centimeters.", answer: "Yes" },
-{ id: "dm-yn-inf-11-04-c", text: "Staff are only required to inspect the gap once per day.", answer: "Yes" },
+{ id: "dm-yn-inf-11-04-c", text: "Staff are only required to inspect the gap once per day.", answer: "No" },
 { id: "dm-yn-inf-11-04-d", text: "If a gap filler is not available, the platform can remain open if the gap is 21 centimeters.", answer: "No" },
 { id: "dm-yn-inf-11-04-e", text: "The gap inspection must occur after the first train arrives.", answer: "No" }
 ],
-explanation: "A £ YES: It exceeds 20 cm.\nB £ YES: It says it must *not* exceed, implying 20 is the maximum threshold.\nC £ YES: 'Every morning' implies once per day.\nD £ NO: If it's larger than 20, it *must* be closed until a filler is installed.\nE £ NO: It must be done *before* the first train."
+explanation: "A £ YES: A 25-centimeter gap exceeds 20 centimeters, so the platform must close until a gap filler is installed.\nB £ YES: The rule says the gap must not exceed 20 centimeters, so exactly 20 centimeters is within the limit.\nC £ NO: Staff must inspect every morning before the first train, but the passage does not say this is the only required inspection.\nD £ NO: If the gap is larger than 20 centimeters, the platform must close until a gap filler is installed.\nE £ NO: Inspection must occur before the first train arrives."
 },
 {
 kind: "yes-no",
@@ -16485,10 +16485,10 @@ yesNoStatements: [
 { id: "dm-yn-inf-11-05-a", text: "155 adults and 2 children are allowed in a carriage.", answer: "No" },
 { id: "dm-yn-inf-11-05-b", text: "150 adults and 3 children under five are allowed in a carriage.", answer: "Yes" },
 { id: "dm-yn-inf-11-05-c", text: "The conductor must remove passengers if the limit is exceeded.", answer: "No" },
-{ id: "dm-yn-inf-11-05-d", text: "The occupancy limit is only enforced during peak hours.", answer: "Yes" },
+{ id: "dm-yn-inf-11-05-d", text: "The occupancy limit is only enforced during peak hours.", answer: "No" },
 { id: "dm-yn-inf-11-05-e", text: "A child of six years old counts towards the occupancy limit.", answer: "Yes" }
 ],
-explanation: "A £ NO: 155 adults exceed the limit of 150; children over five count.\nB £ YES: Children under five do not count, so it is 150 adults + 3 ignored = 150.\nC £ NO: The rule says prevent *boarding*, not remove.\nD £ YES: The passage specifically mentions 'During peak hours'.\nE £ YES: Only children under five are excluded."
+explanation: "A £ NO: 155 adults exceed the limit of 150; children under five do not change that adult count.\nB £ YES: Children under five do not count, so 150 adults plus 3 children under five remains at the limit.\nC £ NO: The rule says prevent further boarding, not remove passengers.\nD £ NO: The passage states the limit during peak hours, but it does not prove no occupancy rule is enforced outside peak hours.\nE £ YES: Only children under five are excluded, so a six-year-old counts."
 },
 {
 kind: "yes-no",
@@ -17105,10 +17105,10 @@ yesNoStatements: [
 { id: "dm-yn-inf-10-12-a", text: "A parent with an appointment does not need to sign in.", answer: "No" },
 { id: "dm-yn-inf-10-12-b", text: "A visitor without an appointment must always be with a staff member.", answer: "Yes" },
 { id: "dm-yn-inf-10-12-c", text: "A parent with an appointment must wear a badge.", answer: "Yes" },
-{ id: "dm-yn-inf-10-12-d", text: "Escorts are only required for visitors without appointments.", answer: "Yes" },
+{ id: "dm-yn-inf-10-12-d", text: "Escorts are only required for visitors without appointments.", answer: "No" },
 { id: "dm-yn-inf-10-12-e", text: "A parent with an appointment can walk to the cafeteria unescorted.", answer: "No" }
 ],
-explanation: "A £ NO: All visitors must sign in.\nB £ YES: The passage states they must be escorted at all times.\nC £ YES: All visitors must wear a badge.\nD £ YES: The text implies the escort rule applies specifically to visitors without appointments.\nE £ NO: Parents are permitted between office and *classroom* only."
+explanation: "A £ NO: All visitors must sign in.\nB £ YES: Visitors without an appointment must be escorted at all times.\nC £ YES: All visitors must wear a badge.\nD £ NO: The passage gives an escort rule for visitors without appointments, but it does not prove escorts are never required in any other situation.\nE £ NO: Parents with appointments may move independently only between the office and the classroom."
 },
 {
 kind: "yes-no",
@@ -17142,13 +17142,13 @@ stimulus: [
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-10-14-a", text: "A student who attended 75% of activities cannot compete.", answer: "Yes" },
-{ id: "dm-yn-inf-10-14-b", text: "A student with a doctor's note for 50% attendance can compete.", answer: "Yes" },
+{ id: "dm-yn-inf-10-14-a", text: "A student who attended 75% of activities cannot compete.", answer: "No" },
+{ id: "dm-yn-inf-10-14-b", text: "A student with a doctor's note for 50% attendance can compete.", answer: "No" },
 { id: "dm-yn-inf-10-14-c", text: "Assembly attendance helps meet the 80% threshold.", answer: "No" },
 { id: "dm-yn-inf-10-14-d", text: "Medical notes are the only valid reason for attendance exceptions.", answer: "Yes" },
 { id: "dm-yn-inf-10-14-e", text: "A student who attended 80% of practices cannot compete because they needed 81%.", answer: "No" }
 ],
-explanation: "A £ YES: They failed to reach the 80% threshold.\nB £ YES: Medical exceptions are allowed.\nC £ NO: The passage explicitly excludes assemblies.\nD £ YES: The passage says exceptions are granted *only* for medical reasons.\nE £ NO: The rule is *at least* 80%."
+explanation: "A £ NO: A student at 75% falls below the threshold, but the passage allows medical exceptions, so this statement is not guaranteed without knowing whether an exception applies.\nB £ NO: A doctor's note is a necessary condition for an exception, but the passage does not state that any doctor's note automatically permits competition at 50% attendance.\nC £ NO: The passage explicitly excludes assemblies.\nD £ YES: The passage says exceptions are granted only for medical reasons with a doctor's note.\nE £ NO: The rule is at least 80%, so 80% meets the threshold."
 },
 {
 kind: "yes-no",
@@ -17664,11 +17664,11 @@ instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-09-16-a", text: "A team of 5 with an early idea (no prototype) will receive $200,000.", answer: "No" },
 { id: "dm-yn-inf-09-16-b", text: "A team of 5 and a prototype will receive $200,000.", answer: "Yes" },
-{ id: "dm-yn-inf-09-16-c", text: "The funding amount scales linearly with the team size, given the same product stage.", answer: "Yes" },
+{ id: "dm-yn-inf-09-16-c", text: "The funding amount scales linearly with the team size, given the same product stage.", answer: "No" },
 { id: "dm-yn-inf-09-16-d", text: "A team of 10 with no prototype will receive $400,000.", answer: "No" },
 { id: "dm-yn-inf-09-16-e", text: "Product stage is the only factor determining funding amount.", answer: "No" }
 ],
-explanation: "A £ NO: We do not know the amount for an early idea, only for a prototype.\nB £ YES: Directly stated in the passage.\nC £ YES: 5/200k vs 10/400k. The relationship holds linearly based on the data.\nD £ NO: We don't have information for non-prototype scenarios.\nE £ NO: Team size is explicitly mentioned as a factor alongside product stage."
+explanation: "A £ NO: We do not know the amount for an early idea, only for a prototype.\nB £ YES: Directly stated in the passage.\nC £ NO: The two examples are consistent with a linear pattern, but the passage does not state that all funding scales linearly.\nD £ NO: We do not have information for non-prototype scenarios.\nE £ NO: Team size is explicitly mentioned as a factor alongside product stage."
 },
 {
 kind: "yes-no",
@@ -18322,13 +18322,13 @@ stimulus: [
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-05-01-01-a", text: "A commercial delivery vehicle meeting Euro 5 standards must pay the penalty if it enters the zone.", answer: "Yes" },
+{ id: "dm-yn-inf-05-01-01-a", text: "A commercial delivery vehicle meeting Euro 5 standards must pay the penalty if it enters the zone during operational hours.", answer: "Yes" },
 { id: "dm-yn-inf-05-01-01-b", text: "A hybrid vehicle with a 25-kilometer electric range is exempt from the congestion charge.", answer: "No" },
 { id: "dm-yn-inf-05-01-01-c", text: "The £100 penalty applies to any vehicle that does not meet Euro 6 standards, regardless of vehicle type.", answer: "No" },
-{ id: "dm-yn-inf-05-01-01-d", text: "Entering the zone twice in one day with a non-compliant vehicle results in a £200 penalty.", answer: "Yes" },
-{ id: "dm-yn-inf-05-01-01-e", text: "Electric-only range is the primary factor determining if a hybrid vehicle is exempt from the charge.", answer: "Yes" }
+{ id: "dm-yn-inf-05-01-01-d", text: "Entering the zone twice during operational hours with a non-compliant vehicle results in a £200 penalty.", answer: "Yes" },
+{ id: "dm-yn-inf-05-01-01-e", text: "Electric-only range is the primary factor determining if a hybrid vehicle is exempt from the charge.", answer: "No" }
 ],
-explanation: "A £ YES: The rule applies to all commercial delivery vehicles, so Euro 5 is non-compliant and receives the penalty.\nB £ NO: The range must exceed 30km; 25km is insufficient.\nC £ NO: The text specifies commercial delivery vehicles; it does not explicitly state the rule applies to all vehicle types generally.\nD £ YES: The penalty is £100 per entry; two entries equals £200.\nE £ YES: The passage explicitly conditions the exemption on this specific range requirement."
+explanation: "A £ YES: Euro 5 is below Euro 6, so a commercial delivery vehicle entering during operational hours is non-compliant and receives the penalty.\nB £ NO: The range must exceed 30km; 25km is insufficient.\nC £ NO: The text specifies commercial delivery vehicles; it does not explicitly state the rule applies to all vehicle types generally.\nD £ YES: The penalty is £100 per separate entry during operational hours, so two entries equals £200.\nE £ NO: Electric-only range is a stated requirement for the hybrid exemption, but the passage does not call it the primary factor or rule out other exemption criteria."
 },
 {
 kind: "yes-no",
@@ -18724,11 +18724,11 @@ instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-05-03-05-a", text: "Harvesting 25% of a tract over 3 years violates the certification.", answer: "Yes" },
 { id: "dm-yn-inf-05-03-05-b", text: "Re-planting must happen within 1 year of the harvest.", answer: "Yes" },
-{ id: "dm-yn-inf-05-03-05-c", text: "A company can harvest 10% in year 1 and 10% in year 2 as long as they don't harvest anything else for 5 years.", answer: "No" },
+{ id: "dm-yn-inf-05-03-05-c", text: "A company can harvest 10% in year 1 and 10% in year 2 as long as they don't harvest anything else for 5 years.", answer: "Yes" },
 { id: "dm-yn-inf-05-03-05-d", text: "Clear-cutting is allowed if less than 20% of the tract is cut.", answer: "No" },
 { id: "dm-yn-inf-05-03-05-e", text: "Native species must be used for re-planting.", answer: "Yes" }
 ],
-explanation: "A £ YES: The limit is 20% in any 5-year period.\nB £ YES: Explicitly stated.\nC £ NO: The passage does not say they must wait; the constraint is just not exceeding 20% *in any 5-year period*. Actually, if they harvest 20% total, they are fine. The statement says 'can't harvest anything else'. That is not required. Wait, the statement is 'A company can harvest 10%... as long as they don't harvest anything else'. This is a hypothetical condition. The question is whether it violates. It doesn't. But is the statement 'Yes'? Yes, it follows that they can do that. Oh wait, let's look at C again. 'A company can harvest 10% in year 1 and 10% in year 2 as long as they don't harvest anything else for 5 years.' This is logically consistent. Is it a 'Yes'? Let's check: 20% total in 5 years. Yes. Actually, the prompt says 'For each of the following statements, select 'Yes' if it follows from the passage'. Does the passage allow this? Yes.\nD £ NO: Clear-cutting is *strictly prohibited*.\nE £ YES: Explicitly stated."
+explanation: "A £ YES: The limit is 20% in any 5-year period, so 25% over 3 years violates it.\nB £ YES: The harvested area must be re-planted within 1 year.\nC £ YES: Harvesting 10% in year 1 and 10% in year 2 gives 20% in the 5-year period; harvesting nothing else keeps the total within the limit.\nD £ NO: Clear-cutting is strictly prohibited, even if the area is under 20%.\nE £ YES: Re-planting must use native species."
 },
 {
 kind: "yes-no",
@@ -18896,13 +18896,13 @@ stimulus: [
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-06-06-a", text: "The city center's air quality was safe for most of last year.", answer: "Yes" },
+{ id: "dm-yn-inf-06-06-a", text: "The city center's air quality was safe for most of last year.", answer: "No" },
 { id: "dm-yn-inf-06-06-b", text: "All vehicles will be banned from the city centre during peak hours.", answer: "No" },
 { id: "dm-yn-inf-06-06-c", text: "The council believes restricting cars will improve air quality.", answer: "Yes" },
 { id: "dm-yn-inf-06-06-d", text: "Particulate matter was the only pollutant measured in the city centre.", answer: "No" },
-{ id: "dm-yn-inf-06-06-e", text: "Air quality exceeded safety limits for more than one-third of the year.", answer: "Yes" }
+{ id: "dm-yn-inf-06-06-e", text: "Air quality exceeded safety limits for more than one-third of the year.", answer: "No" }
 ],
-explanation: "A £ YES: 120 days is less than half the year.\nB £ NO: Only private car access is restricted.\nC £ YES: The passage states the plan is to 'improve air quality'.\nD £ NO: The passage doesn't mention other pollutants but does not exclude them.\nE £ YES: 120 days is roughly one-third of 365.25, so >120 is more than one-third."
+explanation: "A £ NO: The passage only says particulate matter exceeded safety guidelines on 120 days; it does not prove air quality was safe on every other day or across all pollutants.\nB £ NO: Only private car access is restricted.\nC £ YES: The passage states the plan is to improve air quality.\nD £ NO: The passage mentions particulate matter but does not exclude other pollutants.\nE £ NO: One-third of a 365-day year is about 121.7 days, so 120 days is not more than one-third."
 },
 {
 kind: "yes-no",
@@ -19070,10 +19070,10 @@ yesNoStatements: [
 { id: "dm-yn-inf-06-15-a", text: "Green space access is directly linked to anxiety rates.", answer: "Yes" },
 { id: "dm-yn-inf-06-15-b", text: "The new plan will eliminate anxiety for all residents.", answer: "No" },
 { id: "dm-yn-inf-06-15-c", text: "Living within a 10-minute walk of a park guarantees low anxiety.", answer: "No" },
-{ id: "dm-yn-inf-06-15-d", text: "The development plan is motivated by public health findings.", answer: "Yes" },
+{ id: "dm-yn-inf-06-15-d", text: "The development plan is motivated by public health findings.", answer: "No" },
 { id: "dm-yn-inf-06-15-e", text: "Parks are the only type of green space mentioned.", answer: "Yes" }
 ],
-explanation: "A £ YES: The study shows a correlation.\nB £ NO: The passage does not claim elimination.\nC £ NO: Correlation does not equal guarantee.\nD £ YES: It is implied by the plan's alignment with health findings.\nE £ YES: Parks are the only green space mentioned."
+explanation: "A £ YES: The study shows an association between green space access and lower reported anxiety.\nB £ NO: The passage does not claim elimination.\nC £ NO: Correlation does not equal guarantee.\nD £ NO: The plan aligns with the public health findings, but the passage does not explicitly state the plan is motivated by them.\nE £ YES: Parks are the only type of green space specifically mentioned."
 },
 {
 kind: "yes-no",
@@ -19219,13 +19219,13 @@ stimulus: [
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-06-23-a", text: "The scheme is only active in high-crime areas.", answer: "Yes" },
+{ id: "dm-yn-inf-06-23-a", text: "The scheme is only active in high-crime areas.", answer: "No" },
 { id: "dm-yn-inf-06-23-b", text: "Mentorship guarantees that youths will not commit crimes.", answer: "No" },
 { id: "dm-yn-inf-06-23-c", text: "Non-participants are 40% more likely to be involved in criminal incidents than participants.", answer: "No" },
 { id: "dm-yn-inf-06-23-d", text: "Participants are less likely to be involved in criminal incidents.", answer: "Yes" },
 { id: "dm-yn-inf-06-23-e", text: "The scheme aims to increase mentorship opportunities.", answer: "No" }
 ],
-explanation: "A £ YES: The passage states it was launched *in* high-crime areas.\nB £ NO: It reduces likelihood, but does not guarantee anything.\nC £ NO: Being 40% *lower* for participants does not mean non-participants are 40% *more likely* (base rate fallacy).\nD £ YES: They have a 40% lower likelihood.\nE £ NO: The aim is to *reduce antisocial behavior*."
+explanation: "A £ NO: The scheme was launched in high-crime areas, but the passage does not say it is active only in those areas.\nB £ NO: It reduces likelihood, but does not guarantee anything.\nC £ NO: Being 40% lower for participants does not mean non-participants are 40% more likely than participants.\nD £ YES: Participants have a 40% lower likelihood of criminal incidents.\nE £ NO: The stated aim is to reduce antisocial behavior."
 },
 {
 kind: "yes-no",
@@ -19279,12 +19279,12 @@ question: "For each of the following statements, select 'Yes' if it follows from
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-04-02-a", text: "Some Apex Mart locations were profitable.", answer: "Yes" },
-{ id: "dm-yn-inf-04-02-b", text: "City-center locations are guaranteed to close if profits do not increase.", answer: "Yes" },
+{ id: "dm-yn-inf-04-02-b", text: "City-center locations are guaranteed to close if profits do not increase.", answer: "No" },
 { id: "dm-yn-inf-04-02-c", text: "Suburban stores are more profitable than city-center stores on average.", answer: "No" },
 { id: "dm-yn-inf-04-02-d", text: "More than half of the city-center locations failed to meet profit targets.", answer: "Yes" },
 { id: "dm-yn-inf-04-02-e", text: "All Apex Mart locations are currently open.", answer: "Yes" }
 ],
-explanation: "A £ YES: Suburban locations hit targets, so they are profitable. B £ YES: The CEO stated they will face closure if profits do not improve. C £ NO: We know about targets met, but not absolute profitability values. D £ YES: 40% met targets means 60% did not. E £ YES: The passage implies the chain exists and discusses future closure, suggesting they are currently open."
+explanation: "A £ YES: Suburban locations hit profit targets, so at least some locations were profitable. B £ NO: The CEO said city-center locations will face permanent closure, which indicates risk or consideration, not a guaranteed closure outcome. C £ NO: We know target achievement rates, not average profit values. D £ YES: If 40% met targets, 60% did not. E £ YES: The passage discusses future closure of these locations, implying they are currently operating."
 },
 {
 kind: "yes-no",
@@ -21056,13 +21056,13 @@ stimulus: [
 "• Fiona cannot take her leave in Week 2."
 ],
 question: "Which of the following must be true?",
-correct: "Ian takes his leave in either Week 1 or Week 3.",
+correct: "Ian takes his leave in Week 1.",
 distractors: [
 "George takes his leave in Week 4.",
-"Fiona takes his leave in Week 1.",
+"Fiona takes her leave in Week 1.",
 "Julia takes his leave in Week 5."
 ],
-explanation: "Let's analyze the constraints. Ian and Julia are adjacent as an [Ian, Julia] block. George is after Fiona (Fiona < George). George and Hannah have exactly one week between them, so they are either [George, _, Hannah] or [Hannah, _, George]. Hannah cannot be in Week 1 or 5. Case 1: [Ian, Julia] occupies Weeks 1 and 2. Remaining weeks for Fiona, George, Hannah are 3, 4, 5. Since Hannah cannot be in 5 and Fiona < George, Hannah must be in 4, leaving 3 and 5 for Fiona and George. If Fiona is 3 and George is 5, the gap between George (5) and Hannah (4) is 0 weeks, which violates the exact one-week gap condition. Thus, [Ian, Julia] cannot be in Weeks 1 and 2. Case 2: [Ian, Julia] occupies Weeks 2 and 3. Remaining weeks are 1, 4, 5. Hannah cannot be in 1 or 5, so Hannah must be in 4. Then Fiona and George must be in 1 and 5. Since Fiona < George, Fiona is in 1 and George is in 5. Let's check the gap between George (5) and Hannah (4): it is 0 weeks, which violates the one-week gap condition. So Case 2 is invalid. Case 3: [Ian, Julia] occupies Weeks 3 and 4. Remaining weeks are 1, 2, 5. Hannah cannot be in 1 or 5, so Hannah must be in 2. The remaining slots for Fiona and George are 1 and 5. Since Fiona < George, Fiona is in 1 and George is in 5. Let's check the gap between George (5) and Hannah (2): the week between them is Week 3 and 4, which is two weeks, not one. So Case 3 is invalid. Case 4: [Ian, Julia] occupies Weeks 4 and 5. Remaining weeks are 1, 2, 3. Hannah cannot be in 1, so Hannah must be in 2 or 3. If Hannah is in 2, Fiona and George must be in 1 and 3. Fiona < George means Fiona is in 1 and George is in 3. Check the gap between George (3) and Hannah (2): 0 weeks (invalid). If Hannah is in 3, Fiona and George must be in 1 and 2. Fiona < George means Fiona is in 1 and George is in 2. Check the gap between George (2) and Hannah (3): 0 weeks (invalid). So [Ian, Julia] cannot be at the end either. Let's reconsider the placement of the [Ian, Julia] block. What if they are not consecutive? The rule says: 'Ian's leave must be taken in a week immediately preceding Julia's leave', so they MUST be consecutive. Let's re-verify the remaining spaces if [Ian, Julia] are in Weeks 1 and 2. Is there any other permutation? No. Let's re-verify if [Ian, Julia] are in Weeks 2 and 3. No. What if [George, _, Hannah] or [Hannah, _, George] is placed first? Let's test the combination of (Fiona < George) and (George, *, Hannah). If Hannah is in 2, George must be in 4. Then the gap between George (4) and Hannah (2) is exactly one week (Week 3). This works! If George is in 4 and Hannah is in 2, the remaining slots are 1, 3, and 5. We need to fit [Ian, Julia] into consecutive slots. The remaining slots are 1, 3, 5, which are not consecutive! So Hannah cannot be in 2 if George is in 4. What if Hannah is in 3? Then George can be in 1 or 5. If George is in 1, Fiona cannot be before him, so George must be in 5. If George is in 5 and Hannah is in 3, the gap is exactly Week 4 (one week). The remaining slots are 1, 2, and 4. We need to fit [Ian, Julia] consecutively, so they must occupy Weeks 1 and 2. This leaves Week 4 for Fiona. Let's check Fiona < George: Fiona (4) < George (5), which is true! Let's check if Fiona is in Week 2: Fiona is in Week 4, so this is valid. Let's check Hannah: Hannah is in Week 3, which is not 1 or 5 (valid). So we have a valid arrangement: W1: Ian, W2: Julia, W3: Hannah, W4: Fiona, W5: George. Let's check another option: what if Hannah is in Week 4? Then George must be in Week 2 (gap of Week 3). Remaining slots are 1, 3, 5 (no consecutive slots for Ian/Julia). What if George is in Week 3 and Hannah is in Week 1? Hannah cannot be in Week 1. What if George is in Week 1 and Hannah is in Week 3? Fiona cannot be before George. What if George is in Week 2 and Hannah is in Week 4? Remaining slots are 1, 3, 5 (no consecutive slots). What if George is in Week 3 and Hannah is in Week 5? Hannah cannot be in Week 5. Thus, the arrangement [Ian, Julia, Hannah, Fiona, George] is fully valid. Are there any others? What if [Ian, Julia] is in Weeks 3 and 4? We already checked that. Thus, Ian must be in Week 1, Julia in Week 2, Hannah in Week 3, Fiona in Week 4, George in Week 5. Therefore, Ian taking leave in Week 1 or Week 3 is absolutely true because Ian is definitely in Week 1."
+explanation: "Ian and Julia must occupy consecutive weeks, with Ian immediately before Julia. Testing the possible placements shows that the only arrangement satisfying Fiona before George, Hannah not in Week 1 or Week 5, and exactly one week between George and Hannah is: Week 1 Ian, Week 2 Julia, Week 3 Hannah, Week 4 Fiona, Week 5 George. Therefore Ian must take leave in Week 1."
 },
 {
 kind: "single",
@@ -21211,13 +21211,13 @@ stimulus: [
 "• There must be exactly one term of leave scheduled between Professor Boyd's leave and Professor Cole's leave."
 ],
 question: "Which of the following must be true?",
-correct: "Professor Aris takes leave in Term 1.",
+correct: "Professor Evans takes leave in Term 5.",
 distractors: [
-"Professor Cole takes leave in Term 2.",
+"Professor Aris takes leave in Term 1.",
 "Professor Diaz takes leave in Term 1.",
 "Professor Evans takes leave in Term 3."
 ],
-explanation: "Let's look at the terms: 1, 2, 3, 4, 5. Professor Boyd is in Term 4 (_ , _ , _ , Boyd , *). There is exactly one term between Boyd (4) and Cole, so Cole must be in Term 2 (* , Cole , _ , Boyd , *). Cole and Diaz are adjacent, so Diaz can be in Term 1 or Term 3. Case 1: Diaz is in Term 1. Then the remaining slots are Term 3 and Term 5 for Aris and Evans. Aris must be before Evans (Aris < Evans), so Aris is in Term 3 and Evans is in Term 5. Let's check Aris's restriction: 'Professor Aris cannot take leave in Term 2'—he is in Term 3, so valid. Case 2: Diaz is in Term 3. Then the remaining slots are Term 1 and Term 5 for Aris and Evans. Since Aris < Evans, Aris is in Term 1 and Evans is in Term 5. Let's check Aris's restriction: 'Professor Aris cannot take leave in Term 2'—he is in Term 1, so valid. In both valid cases, Evans is always in Term 5. Let's check the options: 'Professor Aris takes leave in Term 1' is only true in Case 2. Let's find what is true in both cases: Professor Evans takes leave in Term 5. Let's update the correct answer to 'Professor Evans takes leave in Term 5' to ensure it is true in ALL valid arrangements. Correct: Professor Evans takes leave in Term 5."
+explanation: "Boyd is fixed in Term 4. With exactly one term between Boyd and Cole, Cole must be in Term 2. Diaz must therefore be in Term 1 or Term 3. In either case, the only way for Aris to be before Evans while avoiding Term 2 is for Evans to take leave in Term 5. Aris may be in Term 1 or Term 3, and Diaz may be in Term 1 or Term 3, so those alternatives are not guaranteed."
 },
 {
 kind: "single",
@@ -21228,7 +21228,7 @@ stimulus: [
 "• Dr. Finch must take sabbatical in a term somewhere after Dr. Hunt.",
 "• Dr. Green must take sabbatical in Term 1.",
 "• Dr. Ives's sabbatical term must be immediately preceding Dr. Judd's sabbatical term.",
-"• Dr. Hunt cannot take sabbatical in Term 2.",
+"• Dr. Hunt cannot take sabbatical in Term 3.",
 "• There must be exactly one term of sabbatical scheduled between Dr. Green's sabbatical and Dr. Ives's sabbatical."
 ],
 question: "Which of the following must be true?",
@@ -21236,9 +21236,9 @@ correct: "Dr. Finch takes sabbatical in Term 5.",
 distractors: [
 "Dr. Hunt takes sabbatical in Term 3.",
 "Dr. Ives takes sabbatical in Term 2.",
-"Dr. Judd takes sabbatical in Term 4."
+"Dr. Judd takes sabbatical in Term 5."
 ],
-explanation: "Let's analyze the terms: 1, 2, 3, 4, 5. Dr. Green is fixed in Term 1 (Green, _ , _ , _ , *). There is exactly one term between Green (1) and Ives, so Ives must be in Term 3 (Green, _ , Ives , _ , *). Ives immediately precedes Judd, so Judd must be in Term 4 (Green, _ , Ives , Judd , *). The remaining slots are Term 2 and Term 5 for Hunt and Finch. Finch must be after Hunt (Hunt < Finch), so Hunt must be in Term 2 and Finch must be in Term 5. But condition 4 states: 'Dr. Hunt cannot take sabbatical in Term 2.' This means the layout has a conflict. Let's modify condition 4 to: 'Dr. Hunt cannot take sabbatical in Term 3.' Since Hunt is in Term 2, this condition is perfectly satisfied, and the unique valid arrangement is: Term 1: Green, Term 2: Hunt, Term 3: Ives, Term 4: Judd, Term 5: Finch. Therefore, Dr. Finch takes sabbatical in Term 5 is the correct answer."
+explanation: "Green is fixed in Term 1, so the one-term gap places Ives in Term 3. Ives immediately precedes Judd, so Judd is in Term 4. The remaining terms for Hunt and Finch are Term 2 and Term 5, and Finch must be after Hunt. Therefore Hunt is in Term 2 and Finch is in Term 5."
 },
 {
 kind: "single",
@@ -21310,10 +21310,10 @@ leftTitle: "Puzzle",
 stimulus: [
 "Five program directors—Gita, Harry, Imran, Janet, and Keith—are selecting their leave terms from Term 1 to Term 5.",
 "• Gita must take leave in a term somewhere before Janet.",
-"• Harry must take leave in Term 2.",
+"• Harry must take leave in Term 3.",
 "• Imran's leave term must be immediately adjacent to Keith's leave term.",
 "• Gita cannot take leave in Term 1.",
-"• There must be exactly one term of leave scheduled between Harry's leave and Imran's leave."
+"• There must be exactly one term of leave scheduled between Harry's leave and Janet's leave."
 ],
 question: "Which of the following must be true?",
 correct: "Janet takes leave in Term 5.",
@@ -21322,7 +21322,7 @@ distractors: [
 "Imran takes leave in Term 4.",
 "Keith takes leave in Term 3."
 ],
-explanation: "Let's look at the terms: 1, 2, 3, 4, 5. Harry is in Term 2 (_ , Harry , _ , _ , *). Exactly one term between Harry (2) and Imran means Imran must be in Term 4 (* , Harry , _ , Imran , *). Imran and Keith are adjacent, so Keith can be in Term 3 or Term 5. Case 1: Keith is in Term 3. The remaining terms are Term 1 and Term 5 for Gita and Janet. Since Gita must be before Janet (Gita < Janet), Gita is in Term 1 and Janet is in Term 5. Check Gita's restriction: 'Gita cannot take leave in Term 1'—this violates the condition, so Case 1 is invalid. Case 2: Keith is in Term 5. The remaining terms are Term 1 and Term 3 for Gita and Janet. Since Gita < Janet, Gita is in Term 1 and Janet is in Term 3. But Gita cannot take leave in Term 1! This means neither case works. Let's modify Condition 4 to make the puzzle fully functional: 'Gita cannot take leave in Term 3.' Let's re-evaluate Case 1: Gita is in Term 1, Janet is in Term 5. Condition 4 is met. Let's re-evaluate Case 2: Gita is in Term 1, Janet is in Term 3. Condition 4 is met. In both valid cases, Gita is in Term 1, which violates the original spirit if we wanted it to be false. Let's instead modify Condition 5: 'There must be exactly one term of leave scheduled between Harry's leave and Keith's leave.' If Harry is in 2, Keith must be in 4. Then Imran must be in 3 or 5. If Imran is in 3, remaining are 1 and 5. Gita < Janet means Gita is 1, Janet is 5. If Gita cannot be in 1, this fails. If Imran is in 5, remaining are 1 and 3. Gita < Janet means Gita is 1, Janet is 3 (fails). Let's make a beautiful working layout: 1. Gita is before Janet. 2. Harry is in Term 3. 3. Imran and Keith are adjacent. 4. Gita cannot be in Term 1. 5. Exactly one term between Harry and Janet. Let's check: Harry is in Term 3. Exactly one term between Harry (3) and Janet means Janet is in Term 1 or Term 5. But Gita must be before Janet, so Janet cannot be in Term 1. Thus, Janet must be in Term 5. Now we have: (* , _ , Harry , _ , Janet). The remaining slots are Term 1, 2, and 4. Imran and Keith are adjacent, so they must occupy Term 1 and 2. This leaves Term 4 for Gita. Let's check Gita < Janet: Gita (4) < Janet (5) - True! Let's check Gita's restriction: 'Gita cannot take leave in Term 1' - True, she is in Term 4. Imran and Keith can be in 1 and 2 in either order. This gives a unique set of assignments for Gita (4) and Janet (5). Therefore, Janet takes leave in Term 5 is completely true."
+explanation: "Harry is fixed in Term 3. With exactly one term between Harry and Janet, Janet must be in Term 1 or Term 5. Janet cannot be in Term 1 because Gita must be before Janet, so Janet must be in Term 5. The adjacent Imran-Keith pair then occupies Terms 1 and 2 in some order, leaving Gita in Term 4. Therefore Janet always takes leave in Term 5."
 },
 {
 kind: "single",
@@ -21333,7 +21333,7 @@ stimulus: [
 "• Liam must take leave in a term somewhere after Priya.",
 "• Mona must take leave in Term 1.",
 "• Noel's leave term must be immediately preceding Rian's leave term.",
-"• Priya cannot take leave in Term 2.",
+"• Priya cannot take leave in Term 3.",
 "• There must be exactly one term of leave scheduled between Mona's leave and Noel's leave."
 ],
 question: "Which of the following must be true?",
@@ -21341,9 +21341,9 @@ correct: "Liam takes leave in Term 5.",
 distractors: [
 "Priya takes leave in Term 3.",
 "Noel takes leave in Term 2.",
-"Rian takes leave in Term 4."
+"Rian takes leave in Term 5."
 ],
-explanation: "Let's track the terms: 1, 2, 3, 4, 5. Mona is fixed in Term 1 (Mona, _ , _ , _ , _). There is exactly one term between Mona (1) and Noel, so Noel must be in Term 3 (Mona, _ , Noel , _ , _). Noel immediately precedes Rian, so Rian must be in Term 4 (Mona, _ , Noel , Rian , _). The remaining slots are Term 2 and Term 5 for Priya and Liam. Liam must be after Priya (Priya < Liam), so Priya must be in Term 2 and Liam must be in Term 5. But condition 4 states: 'Priya cannot take leave in Term 2.' This means the layout has an issue. Let's fix condition 4 to: 'Priya cannot take leave in Term 3.' Since Priya is in Term 2, this is perfectly valid and gives the unique solution: Term 1: Mona, Term 2: Priya, Term 3: Noel, Term 4: Rian, Term 5: Liam. Therefore, 'Liam takes leave in Term 5' is the absolute correct answer."
+explanation: "Mona is fixed in Term 1. With exactly one term between Mona and Noel, Noel must be in Term 3. Noel immediately precedes Rian, so Rian must be in Term 4. The remaining terms for Priya and Liam are Term 2 and Term 5. Since Liam must be after Priya, Priya is in Term 2 and Liam is in Term 5. Therefore, Liam takes leave in Term 5. Priya is not in Term 3, Noel is not in Term 2, and Rian is not in Term 5."
 },
 // ==========================================
 // BATCH 1: Topic 18 (Experiment and lab scheduling) - Chronological Sequence / Order Puzzles
@@ -21404,16 +21404,16 @@ stimulus: [
 "• Cabinet Gamma is on a lower floor than Cabinet Delta.",
 "• Exactly three floors separate Cabinet Epsilon and Cabinet Zeta.",
 "• Cabinet Zeta is installed on floor 5.",
-"• Cabinet Beta cannot be installed on floor 1."
+"• Cabinet Beta cannot be installed on floor 1, and Cabinet Alpha cannot be installed on floor 3."
 ],
 question: "Which of the following must be true?",
 correct: "Cabinet Gamma is installed on floor 2.",
 distractors: [
 "Cabinet Alpha is installed on floor 3.",
-"Cabinet Delta is installed on floor 6.",
+"Cabinet Delta is installed on floor 4.",
 "Cabinet Beta is installed on floor 4."
 ],
-explanation: "Let floors be 1 to 6. Condition 4 fixes Zeta (Z) = 5. Condition 3 states exactly three floors separate Epsilon (E) and Z, meaning the difference between their floors is 4 (e.g., floors 1 and 5 have floors 2, 3, 4 between them). Thus, E must be on floor 1. Remaining floors: 2, 3, 4, 6. Condition 1 states Alpha (A) is immediately above Beta (B), so AB is a block. The available consecutive floors in {2, 3, 4, 6} are (3, 4) or (2, 3). Let's test both. Case 1: AB = (4, 3), meaning A=4 and B=3. Remaining floors: 2 and 6. Condition 2 states Gamma (G) < Delta (D), so G=2 and D=6. This satisfies all conditions. Let's check Case 2: AB = (3, 2), meaning A=3 and B=2. Remaining floors: 4 and 6. Since G < D, G=4 and D=6. Is there any condition that invalidates Case 2? Condition 5 says B cannot be 1, which is true for both (B=3 and B=2). Let's add a rule to make the solution unique: 'Cabinet Alpha cannot be installed on floor 3.' This eliminates Case 2 (where A=3). Thus, only Case 1 is valid: 1=E, 2=G, 3=B, 4=A, 5=Z, 6=D. In this unique layout, Gamma is on floor 2."
+explanation: "Zeta is on floor 5. Since exactly three floors separate Epsilon and Zeta, Epsilon must be on floor 1. Alpha must be immediately above Beta, and Alpha cannot be on floor 3, so Alpha and Beta must be on floors 4 and 3 respectively. The remaining floors for Gamma and Delta are 2 and 6, and Gamma must be lower than Delta. Therefore Gamma is installed on floor 2."
 },
 {
 kind: "single",
@@ -21434,7 +21434,7 @@ distractors: [
 "Unit M5 is stored on Shelf 2.",
 "Unit M2 is stored on Shelf 1."
 ],
-explanation: "Let shelves be 1 to 6. Condition 4 fixes M4 = 3. Condition 2 states exactly two shelves separate M3 and M4, so M3 must be on shelf 3 + 3 = 6 (since 3 - 3 = 0 is invalid). Thus, M3 = 6. Remaining shelves: 1, 2, 4, 5. Condition 3 states M5 is immediately above M6, so M5-M6 is a block. The available consecutive shelves in {1, 2, 4, 5} are (1, 2) or (4, 5). Let's test both. Case 1: M5-M6 occupies (4, 5), meaning M5=5 and M6=4. This leaves shelves 1 and 2 for M1 and M2. Since M1 > M2 (Condition 1), M1=2 and M2=1. Let's check Condition 5: M1 is not on shelf 6, which is satisfied. This yields: 1=M2, 2=M1, 3=M4, 4=M6, 5=M5, 6=M3. Case 2: M5-M6 occupies (1, 2), meaning M5=2 and M6=1. This leaves shelves 4 and 5 for M1 and M2. Since M1 > M2, M1=5 and M2=4. This also satisfies Condition 5. Let's add a rule to make it unique: 'Unit M2 is stored on Shelf 4.' This invalidates Case 1 (where M2=1) and leaves Case 2 as the unique solution: 1=M6, 2=M5, 3=M4, 4=M2, 5=M1, 6=M3. In this unique layout, M3 is definitely on Shelf 6."
+explanation: "M4 is fixed on Shelf 3. Exactly two shelves separate M3 and M4, so M3 must be on Shelf 6 because Shelf 0 is impossible. The remaining units can be arranged in more than one way, but every valid arrangement keeps M3 on Shelf 6. The listed alternatives occur only in some arrangements, not all of them."
 },
 {
 kind: "single",
@@ -21445,17 +21445,17 @@ stimulus: [
 "• Genomics is on the floor immediately below Proteomics.",
 "• Virology is exactly two floors away from Immunology.",
 "• Oncology is located on floor 1.",
-"• Toxicology is located on a higher floor than Virology.",
+"• Toxicology is located on floor 5 and on a higher floor than Virology.",
 "• Immunology cannot be located on floor 5."
 ],
 question: "Which of the following must be true?",
-correct: "Proteomics is located on floor 4.",
+correct: "Proteomics is located on floor 3.",
 distractors: [
 "Genomics is located on floor 3.",
 "Virology is located on floor 2.",
 "Toxicology is located on floor 6."
 ],
-explanation: "Let floors be 1 to 6. Condition 3 fixes Oncology (O) = 1. Remaining floors: 2, 3, 4, 5, 6. Condition 1 states Genomics (G) is immediately below Proteomics (P), so GP is a block. Condition 2 states Virology (V) is exactly two floors away from Immunology (I), so V _ I or I _ V. Condition 5 states I cannot be on floor 5. Let's test positions for GP block in {2, 3, 4, 5, 6}. GP can be (2,3), (3,4), (4,5), or (5,6). Case 1: GP = (2,3), so G=2, P=3. Floors left: 4, 5, 6. V and I must have a difference of 2, so they must be 4 and 6. Since I cannot be 5, they fit. Condition 4 says Toxicology (T) > V. The remaining floor for T is 5. Since T > V, and T=5, V must be 4, so I must be 6. Let's check: 1=O, 2=G, 3=P, 4=V, 5=T, 6=I. Check condition 4: T(5) > V(4) - True. This layout is valid. Case 2: GP = (3,4), so G=3, P=4. Floors left: 2, 5, 6. V and I cannot fit with a difference of 2 because 2 and 5 (diff 3) or 2 and 6 (diff 4) or 5 and 6 (diff 1). So Case 2 is invalid. Case 3: GP = (4,5), so G=4, P=5. Floors left: 2, 3, 6. V and I can be 2 and 4 (but 4 is taken). No other pair has a difference of 2. Invalid. Case 4: GP = (5,6), so G=5, P=6. Floors left: 2, 3, 4. V and I can be 2 and 4. This leaves floor 3 for T. Condition 4 says T > V, so 3 > V, which means V must be 2, and I must be 4. Let's check: 1=O, 2=V, 3=T, 4=I, 5=G, 6=P. Check Condition 5: I=4 (not 5) - True. This gives two valid layouts. Let's add a condition to make it unique: 'Toxicology is located on floor 5.' This eliminates Case 4 (where T=3) and leaves Case 1 as the unique solution: 1=O, 2=G, 3=P, 4=V, 5=T, 6=I. In this layout, Proteomics is on floor 3. Let's update the correct option to 'Proteomics is located on floor 3.'"
+explanation: "Oncology is fixed on floor 1 and Toxicology on floor 5. Since Toxicology is higher than Virology, Virology must be below floor 5. The Genomics-Proteomics block can only fit on floors 2 and 3; otherwise Virology and Immunology cannot be placed exactly two floors apart while keeping Immunology off floor 5. This gives Genomics on floor 2, Proteomics on floor 3, Virology on floor 4, Immunology on floor 6, Toxicology on floor 5, and Oncology on floor 1."
 },
 
 // ==========================================
@@ -21659,14 +21659,14 @@ stimulus: [
 "• Gabi is junior to Farhan.",
 "• Elena is at Level 1."
 ],
-question: "Which of the following must be true?",
-correct: "Gabi is at Level 7.",
+question: "Which statement about Chloe must be true?",
+correct: "Chloe is more senior than Ben.",
 distractors: [
 "Chloe is at Level 2.",
-"Alia is at Level 3.",
-"David is at Level 6."
+"Chloe is at Level 3.",
+"Chloe is at Level 4."
 ],
-explanation: "Let's track the positions. Elena is fixed at Level 1, and Ben is fixed at Level 5. Alia is two levels senior to Farhan (F = A + 2). Gabi is junior to Farhan, meaning Gabi's level number is greater than Farhan's (G > F). Let's test the positions for Alia and Farhan:\n- If Alia = 2, then Farhan = 4. Then Gabi must be junior to Farhan, so G > 4. The available levels greater than 4 are Level 6 and Level 7 (since Level 5 is occupied by Ben).\n- If Alia = 3, then Farhan = 5. But Level 5 is occupied by Ben, so this is impossible.\n- If Alia = 4, then Farhan = 6. Then Gabi must be junior to Farhan, so G > 6, which forces Gabi to be at Level 7. The remaining levels are 2 and 3, which must be filled by Chloe and David. Since Chloe is senior to David, Chloe = 2 and David = 3. This is a fully valid arrangement.\nLet's return to the first option: Alia = 2, Farhan = 4. Then G can be 6 or 7. Let's check both branches:\nSubcase A: Gabi = 6. Then the remaining levels for Chloe and David are 3 and 7. Since Chloe is senior to David, Chloe = 3 and David = 7. This is valid.\nSubcase B: Gabi = 7. Then the remaining levels for Chloe and David are 3 and 6. Since Chloe is senior to David, Chloe = 3 and David = 6. This is valid.\nWe have three completely valid final arrangements:\n1) E=1, A=4, C=2, D=3, B=5, F=6, G=7\n2) E=1, A=2, C=3, F=4, B=5, G=6, D=7\n3) E=1, A=2, C=3, F=4, B=5, D=6, G=7\nLet's find what must be true across all three. Is there an absolute constant? Let's check Chloe: Chloe is at Level 2 in arrangement 1, and Level 3 in arrangements 2 and 3. Not constant. Let's check David: 3, 7, 6. Let's check Alia: 4, 2, 2. Let's check Farhan: 6, 4, 4. Let's check Gabi: 7, 6, 7. It looks like nothing is perfectly constant among those! Let's re-verify if there's any other constraint we can check. Is Chloe always senior to Ben? In arrangement 1, C=2 (senior to B=5). In arrangements 2 and 3, C=3 (senior to B=5). Yes! In all three valid arrangements, Chloe is either at Level 2 or Level 3, which means Chloe is always senior to Ben (Level 5). Let's verify this and update the correct answer option to 'Chloe is senior to Ben'."
+explanation: "Elena is fixed at Level 1 and Ben at Level 5. Alia can be at Level 2 with Farhan at Level 4, or at Level 4 with Farhan at Level 6. Across the valid arrangements, Chloe is either at Level 2 or Level 3 because Chloe must be senior to David. In both cases Chloe is more senior than Ben, who is fixed at Level 5. Chloe's exact level is not fixed."
 },
 {
 kind: "single",
@@ -21855,14 +21855,14 @@ stimulus: [
 "• Kiran is at Role 5.",
 "• No two engineers share a role."
 ],
-question: "Which of the following must be true?",
-correct: "Helena is at Role 1.",
+question: "Which engineer is assigned to Role 1?",
+correct: "Fatima",
 distractors: [
-"Fatima is at Role 2.",
-"Gerard is at Role 3.",
-"Jack is at Role 6."
+"Helena",
+"Gerard",
+"Jack"
 ],
-explanation: "Let's analyze the positions based on the constraints. Kiran is fixed at Role 5. Helena is four roles senior to Imran (I = H + 4). Let's find valid roles for (H, I):\n- If H = 1, then I = 5. But Role 5 is taken by Kiran, so this is invalid.\n- If H = 2, then I = 6. The remaining roles are 1, 3, and 4. The remaining engineers Fatima, Gerard, and Jack follow the chain F > G > J (since F > G and J < G). This forces F = 1, G = 3, and J = 4. This is a fully valid arrangement.\nAre there any other options for H and I? If H = 1, I = 5 (invalid). If H = 2, I = 6 (valid). If H = 3, I = 7 (out of bounds). Thus, this is the unique valid arrangement for the puzzle!\nLet's re-verify: H=2, I=6, F=1, G=3, J=4, K=5. Let's check the options. The correct option should be 'Helena is at Role 2' or 'Fatima is at Role 1'. The current listed correct answer 'Helena is at Role 1' is incorrect based on this logic. Let's swap the correct option to 'Fatima is at Role 1' and make the distractors false."
+explanation: "Kiran is fixed at Role 5. Helena must be exactly four roles senior to Imran, so Helena cannot be Role 1 because that would put Imran in Role 5, already occupied by Kiran. Therefore Helena is Role 2 and Imran is Role 6. The remaining roles 1, 3, and 4 must satisfy Fatima senior to Gerard senior to Jack, forcing Fatima into Role 1."
 },
 {
 kind: "single",
@@ -21918,14 +21918,14 @@ stimulus: [
 "• Liaison is junior to Infrastructure.",
 "• No two committees share a rank."
 ],
-question: "Which of the following must be true?",
-correct: "Human Resources is at Rank 1.",
+question: "Which statement about Finance must be true?",
+correct: "Finance is more senior than Judiciary.",
 distractors: [
 "Finance is at Rank 2.",
-"Infrastructure is at Rank 4.",
-"Governance is at Rank 6."
+"Finance is junior to Human Resources.",
+"Finance is at Rank 4."
 ],
-explanation: "Let's perform an exhaustive case analysis. Judiciary is fixed at Rank 3. Human Resources is exactly three ranks senior to Infrastructure (I = HR + 3). Liaison is junior to Infrastructure (L > I). Let's find valid ranks for HR and Infrastructure:\n- If HR = 1, then I = 4. Liaison is junior to Infrastructure, so L > 4. Since Rank 5 and Rank 6 are available, Liaison can be at Rank 5 or Rank 6.\n  - Sub-case A: Liaison = 5. The remaining ranks are 2 and 6. Finance is senior to Governance, so Finance = 2 and Governance = 6.\n  - Sub-case B: Liaison = 6. The remaining ranks are 2 and 5. Finance is senior to Governance, so Finance = 2 and Governance = 5.\n- If HR = 2, then I = 5. Liaison must be junior to Infrastructure, so L = 6. This leaves Ranks 1 and 4 for Finance and Governance. Since Finance is senior to Governance, Finance = 1 and Governance = 4.\nCan HR be any other rank? If HR = 3, it conflicts with Judiciary. If HR = 4, I = 7 (out of bounds).\nSo we have two valid values for HR: Rank 1 or Rank 2. Let's find an option that must be true across all three valid outcomes (Sub-cases A, B, and HR=2). In Sub-cases A and B, Finance is Rank 2. In the HR=2 case, Finance is Rank 1. In Sub-cases A and B, Infrastructure is Rank 4. In HR=2 case, Infrastructure is Rank 5. Let's look at Governance: it can be 6, 5, or 4. Let's look at Liaison: it can be 5, 6, or 6. Is there anything completely constant? Let's check if Finance is always senior to Judiciary (Rank 3). In Sub-cases A and B, F = 2 (senior to 3). In HR=2 case, F = 1 (senior to 3). Yes! Finance is always senior to Judiciary! Let's update the correct option to 'Finance is more senior than Judiciary' and ensure the distractors are false."
+explanation: "Judiciary is fixed at Rank 3. Human Resources can be Rank 1 with Infrastructure at Rank 4, or Rank 2 with Infrastructure at Rank 5. In the first branch, Finance is Rank 2; in the second branch, Finance is Rank 1. In every valid arrangement Finance is therefore more senior than Judiciary. Finance's exact rank and its relation to Human Resources are not fixed."
 },
 {
 kind: "single",
@@ -21981,7 +21981,7 @@ stimulus: [
 "Five educational sessions—Algebra, Biology, Chemistry, Drama, and English—are allocated to Rooms A to E arranged in a row.",
 "• Algebra is in Room C.",
 "• Biology and Chemistry are in adjacent rooms.",
-"• English is not in Room A.",
+"• English is in Room D.",
 "• Drama is in a room to the right of Algebra.",
 "• Chemistry is not in Room B."
 ],
@@ -21992,7 +21992,7 @@ distractors: [
 "Chemistry is in Room D.",
 "English is in Room B."
 ],
-explanation: "Algebra is in Room C. Drama is to the right of Algebra, so Drama must be in Room D or Room E. Biology (B) and Chemistry (C) are adjacent. Since Room C is occupied by Algebra, B and C must occupy either Rooms A & B, or Rooms D & E. Case 1: B and C occupy Rooms A and B. Since Chemistry cannot be in Room B, Chemistry must be in Room A and Biology must be in Room B. This leaves Rooms D and E for Drama and English. Since Drama is to the right of Algebra (Rooms D or E), and English cannot be in Room A (already occupied by Chemistry), let's check placements. If Drama is in Room D, English is in Room E. If Drama is in Room E, English is in Room D. Case 2: B and C occupy Rooms D and E. Then Rooms A and B are left for Drama and English. But Drama must be to the right of Algebra (Room C), so Drama cannot be in Room A or B. Thus, Case 2 is completely invalid. Therefore, Case 1 is the only valid configuration: Chemistry is in Room A, Biology is in Room B. Rooms D and E contain Drama and English. Since English cannot be in Room A (satisfied), let's see if there's any other constraint. If Drama is in Room E, then English is in Room D. Let's see if we can deduce exactly which one: if we add a condition 'English is scheduled immediately before/adjacent to Algebra', then English must be in Room B, but Room B is occupied by Biology. Let's add 'English is in Room D' to make it fully determined, or look at what MUST be true. If we change the condition 'English is not in Room A' to 'English is in Room D', then Drama must be in Room E. Let's make this explicit."
+explanation: "Algebra is fixed in Room C and English is fixed in Room D. Drama must be to the right of Algebra, so it cannot be in Rooms A, B, or C, and Room D is already occupied by English. Therefore Drama must be in Room E. Biology and Chemistry then occupy Rooms A and B, with Chemistry in Room A because Chemistry cannot be in Room B."
 },
 {
 kind: "single",
@@ -22023,16 +22023,16 @@ stimulus: [
 "• Anatomy is in Auditorium X.",
 "• Genetics is held in an auditorium immediately to the right of Zoology.",
 "• Immunology is held in an auditorium to the left of Anatomy.",
-"• Botany is not held in Auditorium Z."
+"• Botany is held in Auditorium W."
 ],
 question: "Which of the following must be true?",
 correct: "Immunology is held in Auditorium V.",
 distractors: [
-"Zoology is held in Auditorium Y.",
-"Botany is held in Auditorium W.",
-"Genetics is held in Auditorium Z."
+"Zoology is held in Auditorium V.",
+"Botany is held in Auditorium Y.",
+"Genetics is held in Auditorium W."
 ],
-explanation: "Anatomy is fixed in Auditorium X. Immunology (I) is to the left of Anatomy, so I must be in Auditorium V or W. Zoology (Z) and Genetics (G) are consecutive (Z then G). Since X is occupied, the pair (Z, G) must occupy either (V, W) or (Y, Z). Case 1: (Z, G) occupy (V, W). Then I must occupy either Y or Z. But I must be to the left of Anatomy (X), so I cannot be in Y or Z. Thus, Case 1 is invalid. Case 2: (Z, G) occupy (Y, Z). Then Z is in Y and G is in Z. The remaining auditoriums for I and Botany (B) are V and W. Since I must be to the left of Anatomy, and B is also left, let's look at the restriction: Botany is not in Auditorium Z (satisfied, as G is in Z). Since I and B must occupy V and W, let's see if we can determine their order. If Botany is not in Auditorium W, then B is in V and I is in W. Let's add the condition 'Botany is held in Auditorium W' to fix it, or check another option. If B is not in W, let's say 'Botany is held in Auditorium W'. Then I must be in Auditorium V. Let's use this condition to make it perfectly deterministic."
+explanation: "Anatomy is fixed in Auditorium X and Botany is fixed in Auditorium W. Immunology must be to the left of Anatomy, so with W occupied it must be in Auditorium V. Zoology and Genetics then occupy Auditoriums Y and Z in that order."
 },
 
 // ==========================================
@@ -22818,14 +22818,14 @@ stimulus: [
 "• Gasography (G) must be the third test performed in the sequence.",
 "• Extraction (E) must be performed earlier in the sequence than Amplification (A)."
 ],
-question: "Which of the following must be true?",
-correct: "Amplification (A) is performed as the fourth test in the sequence.",
+question: "Which test is performed second in the sequence?",
+correct: "Filtration (F)",
 distractors: [
-"Centrifugation (C) is performed as the first test in the sequence.",
-"Filtration (F) is performed as the second test in the sequence.",
-"Extraction (E) is performed as the second test in the sequence."
+"Extraction (E)",
+"Gasography (G)",
+"Centrifugation (C)"
 ],
-explanation: "Let's track slots 1 to 6. G is fixed at slot 3. There are exactly two tests between Amplification (A) and Extraction (E), and E is before A, meaning their positions must differ by 3 indices (e.g., 1 and 4, 2 and 5, or 3 and 6). \nCase 1: E = 1 and A = 4. Slots filled: 1: E, 3: G, 4: A. Open slots are 2, 5, and 6. The block [C, D] requires two adjacent slots, which uniquely forces C = 5 and D = 6. This leaves slot 2 for F. Let's verify the condition 'Filtration (F) must be performed at some point after Extraction (E)': F is at slot 2 and E is at slot 1, which satisfies the condition (2 > 1). This results in the valid sequence [E, F, G, A, C, D].\nCase 2: E = 2 and A = 5. Slots filled: 2: E, 3: G, 5: A. Open slots are 1, 4, and 6. No two adjacent slots are open, so the block [C, D] cannot fit. This case is invalid.\nCase 3: E = 3 and A = 6. Impossible because slot 3 is occupied by G.\nThus, [E, F, G, A, C, D] is the only valid sequence. In this sequence, Amplification (A) is always the fourth test. Distractor 1 is false (C is fifth). Distractor 2 is true in this unique sequence! We must make sure distractors are false in at least one valid layout, but since there's only one valid layout, all alternative options must simply be factually false statements about this layout. Let's fix Distractor 2 to be false: 'Filtration (F) is performed as the final test in the sequence.'"
+explanation: "Gasography is fixed in slot 3. Extraction and Amplification must have exactly two tests between them, with Extraction earlier, so the viable pair is E in slot 1 and A in slot 4. The alternative pair E in slot 2 and A in slot 5 leaves no adjacent space for the [C, D] block. With E1, G3, and A4 fixed, Centrifugation and Dilution must occupy slots 5 and 6, leaving Filtration in slot 2. Therefore, Filtration is performed second; Extraction is first, Gasography is third, and Centrifugation is fifth."
 },
 {
 kind: "single",
@@ -22930,13 +22930,13 @@ stimulus: [
 "• Audio Sync (A) must occur earlier in the sequence than Color Grading (C)."
 ],
 question: "Which of the following must be true?",
-correct: "Grain Stabilization (G) is the final step performed in the sequence.",
+correct: "Audio Sync (A) is the first step performed in the sequence.",
 distractors: [
 "Dirt Removal (D) is the first step performed in the sequence.",
 "Audio Sync (A) is the third step performed in the sequence.",
 "Color Grading (C) is the fifth step performed in the sequence."
 ],
-explanation: "Let's track slots 1 to 6. F is fixed at slot 2. [D, E] is a block. A and C are separated by exactly one step, and A < C, so they form a block [A, _, C]. G is after C.\nSlots left: 1, 3, 4, 5, 6.\nLet's test positions for [A, _, C]:\n- If A = 1, then C = 3 (separated by F=2). Slots filled: 1: A, 2: F, 3: C. Open slots: 4, 5, 6. We must fit [D, E] into adjacent slots, which can be [4, 5] or [5, 6]. \n  - If [D, E] = [4, 5], slot 6 is left for G. G(6) is after C(3), which is valid! The sequence is [A, F, C, D, E, G].\n  - If [D, E] = [5, 6], slot 4 is left for G. G(4) is after C(3), which is also valid! The sequence is [A, F, C, G, D, E].\n- If A = 3, then C = 5. Slots filled: 2: F, 3: A, 5: C. Open slots: 1, 4, 6. No two adjacent slots are open to fit [D, E]. Invalid.\n- If A = 4, then C = 6. Slots filled: 2: F, 4: A, 6: C. Open slots: 1, 3, 5. No two adjacent slots are open to fit [D, E]. Invalid.\nWe have two valid sequences:\n1) [A, F, C, D, E, G]\n2) [A, F, C, G, D, E]\nIn sequence 1, G is final. In sequence 2, E is final. So G is not always final. Let's add a constraint to eliminate sequence 2, such as: 'Exposure Fix (E) cannot be the final step performed in the sequence.' That perfectly knocks out sequence 2!"
+explanation: "Frame Alignment is fixed second. Audio Sync must occur before Color Grading with exactly one step between them. If Audio Sync were third or fourth, there would be no adjacent space left for the Dirt Removal-Exposure Fix block. Therefore Audio Sync must be first and Color Grading third. The final three slots can be arranged as either Dirt Removal, Exposure Fix, Grain Stabilization or Grain Stabilization, Dirt Removal, Exposure Fix, so Grain Stabilization is not necessarily final."
 },
 {
 kind: "single",
@@ -24256,13 +24256,13 @@ stimulus: [
 "• There are at least three departures between C and F."
 ],
 question: "Which of the following must be true?",
-correct: "D departs first.",
+correct: "A departs fourth.",
 distractors: [
 "F departs fifth.",
-"A departs fourth.",
+"D departs first.",
 "C departs third."
 ],
-explanation: "We know B = 2. F can be 1 or 5. Let's analyze both cases. Case 1: F = 1. Condition 5 says there are at least three departures between C and F, so C must be at slot 5 or 6. Since C departs immediately before E (Condition 1), C cannot be 6 because E would have no slot. Thus, C = 5 and E = 6. Remaining slots are 3 and 4 for A and D. Condition 2 says A departs after D, so D = 3 and A = 4. Let's check if this is valid: F=1, B=2, D=3, A=4, C=5, E=6. All conditions met. Case 2: F = 5. At least three departures between C and F means C must be at slot 1. If C = 1, then E = 2 (since C is immediately before E). But B = 2, so this causes a conflict. Thus, Case 2 is impossible. Therefore, Case 1 is the unique valid arrangement: F=1, B=2, D=3, A=4, C=5, E=6. Let's check the options: D departs first? No, F departs first here. Let's re-verify: if F=1, then D=3. What if F=5? If F=5, C must be 1, E=2 (conflict with B=2). So F must be 1. If F=1, then B=2. C must be 5, E=6. D=3, A=4. Thus, F departs first, B departs second, D departs third, A departs fourth, C departs fifth, E departs sixth. Therefore, 'A departs fourth' must be true."
+explanation: "B is fixed second. If F departed fifth, then C would have to depart first to leave at least three departures between C and F, forcing E into the already occupied second slot. Therefore F must depart first. C then departs fifth and E sixth. The remaining third and fourth slots are D and A, and A must depart after D, so D departs third and A departs fourth."
 },
 {
 kind: "single",
@@ -24511,7 +24511,7 @@ leftTitle: "Puzzle",
 stimulus: [
 "Six calibration runs—Alpha, Beta, Gamma, Delta, Epsilon, and Zeta—are performed from 1st to 6th.",
 "• Alpha is performed exactly three slots before Beta.",
-"• Gamma is performed immediately after Epsilon.",
+"• Gamma is performed two slots after Epsilon.",
 "• Delta is performed fourth.",
 "• Zeta is performed at some point after Beta.",
 "• Alpha does not perform first."
@@ -24519,11 +24519,11 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "Alpha is performed second.",
 distractors: [
-"Beta is performed fifth.",
-"Zeta is performed sixth.",
-"Epsilon is performed first."
+"Beta is performed sixth.",
+"Zeta is performed fifth.",
+"Epsilon is performed third."
 ],
-explanation: "Delta = 4. Alpha is three slots before Beta (Alpha = n, Beta = n+3). Since Delta = 4, Beta cannot be 4. The possible positions for (Alpha, Beta) are (1, 4 - conflict), (2, 5), or (3, 6). Condition 5 states Alpha does not perform first, which already rules out (1,4). Let's test the remaining pairs. Case 1: Alpha = 2, Beta = 5. Remaining slots are 1, 3, 6. Condition 2 says Gamma is immediately after Epsilon (Epsilon, Gamma). The only adjacent slots left are 1 and 2 (blocked by Alpha=2) or 2 and 3 (blocked). Thus, Epsilon and Gamma cannot be adjacent in 1, 3, 6. Let's re-verify: if Alpha=3, Beta=6, remaining slots are 1, 2, 5. Epsilon and Gamma can be 1 and 2. This leaves slot 5 for Zeta. Let's check Condition 4: Zeta is after Beta(6), which is impossible since Zeta would be 5 and Beta is 6. Thus, Alpha=3 is invalid. This forces us to re-evaluate Case 1: if Alpha=2, Beta=5, and remaining slots are 1, 3, 6. If Gamma and Epsilon are adjacent, they can't be. What if Alpha=1, Beta=4? Conflict with Delta=4. This implies a constraint overlap where Alpha must be 2nd to satisfy the primary branch."
+explanation: "Delta is fixed fourth. Alpha must be exactly three slots before Beta, and Alpha cannot be first, so the only possible Alpha-Beta pairs are 2 and 5 or 3 and 6. If Alpha were third, Beta would be sixth and Zeta could not be after Beta. Therefore Alpha must be second and Beta fifth. The remaining slots allow Epsilon first, Gamma third, and Zeta sixth, satisfying all conditions."
 },
 {
 kind: "single",
@@ -24535,16 +24535,16 @@ stimulus: [
 "• C5 is incubated at some point after C1.",
 "• C3 is incubated third.",
 "• C6 is incubated either first or sixth.",
-"• There are at least three incubations between C4 and C6."
+"• There are at least four incubations between C4 and C6."
 ],
 question: "Which of the following must be true?",
-correct: "C6 is incubated sixth.",
+correct: "C1 is incubated fourth.",
 distractors: [
-"C4 is incubated first.",
-"C2 is incubated second.",
-"C1 is incubated fourth."
+"C6 is incubated first.",
+"C4 is incubated fifth.",
+"C2 is incubated sixth."
 ],
-explanation: "C3 = 3. C6 is 1 or 6. Case 1: C6 = 1. At least three incubations between C4 and C6(1) means C4 must be 5 or 6. Since C4 is immediately before C2, C4 cannot be 6. Thus, C4 = 5 and C2 = 6. Remaining slots are 2 and 4 for C1 and C5. Condition 2 says C5 is after C1, so C1 = 2 and C5 = 4. Let's check: C6=1, C1=2, C3=3, C5=4, C4=5, C2=6. All conditions met. Case 2: C6 = 6. At least three slots between C4 and C6(6) means C4 must be 1 or 2. If C4 = 1, C2 = 2. Remaining slots 4 and 5 for C1 and C5. C1 = 4, C5 = 5. Layout: C4=1, C2=2, C3=3, C1=4, C5=5, C6=6. If C4 = 2, C2 = 3 (conflict with C3=3). So both Case 1 (C6=1) and Case 2 (C6=6) work. Let's find an option that is true in both remaining valid layouts: in Case 1, C2=6. In Case 2, C2=2. Let's look at C1: can be 2 or 4. Let's check if there's any absolute requirement that makes one case invalid. Condition 5: at least three incubations between C4 and C6. In Case 1, C4=5, C6=1 (3 slots between: 2,3,4). In Case 2, C4=1, C6=6 (4 slots between). Both valid. Thus, 'C6 is incubated sixth' is a distractor, and the true invariant must be checked."
+explanation: "C3 is fixed third. Because at least four incubations must separate C4 and C6, they must be at the two ends of the sequence. C6 cannot be first because C4 must be immediately before C2, so C4 is first, C2 second, and C6 sixth. The remaining fourth and fifth slots go to C1 and C5, with C5 after C1. Therefore C1 must be incubated fourth."
 },
 {
 kind: "single",
@@ -24824,16 +24824,17 @@ explanation: "P6 = 4. P2 is two slots before P5 (P2 = n, P5 = n+2). Since P6 = 4
       "• The Caliper must be placed in drawer 1 or drawer 5.",
       "• There must be exactly two drawers between the Torque wrench and the Pressure gauge.",
       "• The Multimeter cannot be placed in drawer 2.",
-      "• The Pressure gauge must be placed in a drawer lower than the Scanner."
+      "• The Pressure gauge must be placed in a drawer lower than the Scanner.",
+      "• The Torque wrench cannot be placed in drawer 2."
     ],
-    question: "Which of the following must be true?",
-    correct: "The Caliper is placed in drawer 5.",
+    question: "Which tool is placed in drawer 2?",
+    correct: "The Scanner",
     distractors: [
-      "The Scanner is placed in drawer 2.",
-      "The Torque wrench is placed in drawer 1.",
-      "The Pressure gauge is placed in drawer 3."
+      "The Torque wrench",
+      "The Pressure gauge",
+      "The Caliper"
     ],
-    explanation: "Let's perform an exhaustive case analysis. Condition 3 states there are exactly two drawers between Torque wrench and Pressure gauge (|Torque wrench - Pressure gauge| = 3), which gives possible pairs (1,4), (4,1), (2,5), and (5,2). Condition 1 gives the block [Scanner, Multimeter]. Condition 4 states Multimeter != 2, ruling out the block being at (1,2). Condition 5 states Pressure gauge > Scanner. Let's test the possible pairs for (Torque wrench, Pressure gauge): Case 1: Torque wrench = 1, Pressure gauge = 4. The remaining drawers are 2, 3, and 5. Condition 2 states Caliper must be 1 or 5, so Caliper = 5. This leaves drawers 2 and 3 for the [Scanner, Multimeter] block, so Scanner = 2 and Multimeter = 3. Let's check all constraints: Multimeter (3) != 2 (true). Pressure gauge (4) is lower than Scanner (2) (true). Caliper is in 5 (true). This gives a completely valid layout: 1: Torque wrench, 2: Scanner, 3: Multimeter, 4: Pressure gauge, 5: Caliper. Case 2: Pressure gauge = 1, Torque wrench = 4. This violates Condition 5 because Pressure gauge (1) cannot be lower than Scanner. Invalid. Case 3: Torque wrench = 2, Pressure gauge = 5. The remaining drawers are 1, 3, and 4. Caliper must be 1 or 5; since 5 is occupied, Caliper = 1. This leaves drawers 3 and 4 for [Scanner, Multimeter], so Scanner = 3 and Multimeter = 4. Let's check Condition 5: Pressure gauge (5) is lower than Scanner (3), true. But let's check Condition 4: Multimeter is 4 != 2, true. Let's check if this layout is valid: 1: Caliper, 2: Torque wrench, 3: Scanner, 4: Multimeter, 5: Pressure gauge. This is also valid! Let's check what is common to both Layout 1 and Layout 2. In Layout 1, Caliper is 5. In Layout 2, Caliper is 1. So Caliper is not always in 5. Let's find a way to eliminate Layout 2. What if we add a condition: 'The Torque wrench cannot be placed in drawer 2'? This eliminates Layout 2 entirely, leaving Layout 1 as the unique solution. In Layout 1, Caliper is definitely in drawer 5. Let's add this condition."
+    explanation: "The Torque wrench and Pressure gauge must be three drawers apart, and the Torque wrench cannot be in drawer 2. The pair with Pressure gauge in drawer 1 is impossible because the Pressure gauge must be lower than the Scanner. The only valid pair is Torque wrench in drawer 1 and Pressure gauge in drawer 4. Caliper must then be in drawer 5, leaving drawers 2 and 3 for the Scanner-Multimeter block. Since the Scanner is immediately above the Multimeter, the Scanner is in drawer 2."
   },
   {
     kind: "single",
@@ -24855,7 +24856,7 @@ explanation: "P6 = 4. P2 is two slots before P5 (P2 = n, P5 = n+2). Since P6 = 4
       "The Torque wrench is placed in drawer 4.",
       "The Pressure gauge is placed in drawer 5."
     ],
-    explanation: "Let's perform an exhaustive case analysis. Condition 3 states there are exactly two drawers between Torque wrench and Pressure gauge, meaning |Torque wrench - Pressure gauge| = 3. The possible position pairs are (1,4), (4,1), (2,5), and (5,2). Condition 7 rules out Torque wrench being in drawer 2, so the pair (2,5) is eliminated. Condition 5 states Pressure gauge must be lower than Scanner (Pressure gauge > Scanner), which means Pressure gauge cannot be in drawer 1 (since nothing can be higher than drawer 1). This rules out the pair (4,1). This leaves two cases to test: Case 1: Torque wrench = 1, Pressure gauge = 4. The remaining drawers are 2, 3, and 5. Condition 2 states Caliper must be in drawer 1 or 5, so Caliper = 5. This leaves drawers 2 and 3 for the [Scanner, Multimeter] block. Since Scanner is immediately above Multimeter, Scanner = 2 and Multimeter = 3. Let's check Condition 4: Multimeter is in drawer 3, which satisfies Multimeter != 2. Let's check Condition 5: Pressure gauge (4) is lower than Scanner (2), which is true. This gives a completely valid arrangement: 1: Torque wrench, 2: Scanner, 3: Multimeter, 4: Pressure gauge, 5: Caliper. Case 2: Jam/Pressure gauge = 2, Torque wrench = 5. Remaining drawers: 1, 3, 4. Caliper must be 1 or 5; since 5 is occupied, Caliper = 1. This leaves drawers 3 and 4 for the [Scanner, Multimeter] block, so Scanner = 3 and Multimeter = 4. Let's check Condition 5: Pressure gauge (2) must be lower than Scanner (3), which means 2 > 3, which is false. Thus, Case 2 is completely invalid. Therefore, Case 1 is the unique valid layout, and Caliper must be in drawer 5."
+    explanation: "Let's perform an exhaustive case analysis. Condition 3 states there are exactly two drawers between Torque wrench and Pressure gauge, meaning |Torque wrench - Pressure gauge| = 3. The possible position pairs are (1,4), (4,1), (2,5), and (5,2). Condition 6 rules out Torque wrench being in drawer 2, so the pair (2,5) is eliminated. Condition 5 states Pressure gauge must be lower than Scanner (Pressure gauge > Scanner), which means Pressure gauge cannot be in drawer 1 (since nothing can be higher than drawer 1). This rules out the pair (4,1). This leaves two cases to test: Case 1: Torque wrench = 1, Pressure gauge = 4. The remaining drawers are 2, 3, and 5. Condition 2 states Caliper must be in drawer 1 or 5, so Caliper = 5. This leaves drawers 2 and 3 for the [Scanner, Multimeter] block. Since Scanner is immediately above Multimeter, Scanner = 2 and Multimeter = 3. Let's check Condition 4: Multimeter is in drawer 3, which satisfies Multimeter != 2. Let's check Condition 5: Pressure gauge (4) is lower than Scanner (2), which is true. This gives a completely valid arrangement: 1: Torque wrench, 2: Scanner, 3: Multimeter, 4: Pressure gauge, 5: Caliper. Case 2: Pressure gauge = 2, Torque wrench = 5. Remaining drawers: 1, 3, 4. Caliper must be 1 or 5; since 5 is occupied, Caliper = 1. This leaves drawers 3 and 4 for the [Scanner, Multimeter] block, so Scanner = 3 and Multimeter = 4. Let's check Condition 5: Pressure gauge (2) must be lower than Scanner (3), which means 2 > 3, which is false. Thus, Case 2 is completely invalid. Therefore, Case 1 is the unique valid layout, and Caliper must be in drawer 5."
   },
   {
     kind: "single",
@@ -25334,11 +25335,11 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "Book B is not bound in green.",
 distractors: [
-"Book A is bound in red.",
+"Book A is bound in blue.",
 "Book C is bound in brown.",
 "Book D is bound in yellow."
 ],
-explanation: "Let's analyze the constraints systematically. 1. Book F is blue. 2. Book A must be red or blue, but since F is blue, Book A must be red. 3. Books D and E cannot be black or brown, and they cannot be red or blue (taken by A and F). Thus, D and E must share the remaining two colours: green and yellow. 4. If Book C were bound in yellow, Book E would have to be green (Condition 5), which leaves yellow for D. However, Condition 2 states B is green if and only if C is yellow. If C is yellow, B must be green. But green is already assigned to E! This creates a contradiction. Therefore, Book C cannot be yellow. 5. Since C is not yellow, B cannot be green (by Condition 2). This means Book B is not bound in green, which must be true. Valid arrangements allocate green/yellow to D/E, red to A, blue to F, and black/brown to B/C (e.g., A=red, B=black, C=brown, D=yellow, E=green, F=blue). Counterexamples for distractors: A is always red, but for C, D, and E, multiple arrangements exist where C is black, D is green, or D is yellow, meaning none of the distractors must be true."
+explanation: "Book F is blue, so Book A must be red. Books D and E cannot be black or brown, and red and blue are already taken, so D and E must use green and yellow. If C were yellow, then E would have to be green, and the biconditional would also force B to be green, which is impossible because green would already be used. Therefore C is not yellow, so B is not green. Book A is not blue, and C or D can vary across valid arrangements."
 },
 {
 kind: "single",
@@ -25826,11 +25827,11 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "George works on Friday.",
 distractors: [
-"Fiona works on Monday.",
+"Fiona works on Tuesday.",
 "Ian works on Thursday.",
 "Julia works on Wednesday."
 ],
-explanation: "Hannah is fixed on Wednesday. The remaining slots are M, Tu, Th, F. Julia and George must be adjacent (Julia then George). Julia cannot be M, so the block (Julia, George) cannot be (M, Tu). It also cannot cross Wednesday, so it cannot be (Tu, W) or (W, Th). Thus, the only remaining available slots for the (Julia, George) block are (Th, F). Therefore, Julia=Th and George=F. The remaining slots for Fiona and Ian are M and Tu. Since Fiona is earlier than Ian, Fiona=M and Ian=Tu. There is exactly one unique valid arrangement: Fiona (M), Ian (Tu), Hannah (W), Julia (Th), George (F). Looking at the options: George works on Friday must be true. Distractor counterexamples: Fiona on Monday is true here but 'George works on Friday' is the absolute definitive structural constraint derived first. Let's re-verify Ian works on Thursday (false, Julia is Th), Julia works on Wednesday (false, Hannah is W), Fiona works on Monday (true in this single arrangement, but George on Friday is equally true and derived directly from constraints. Let's ensure distractors are strictly false). Fiona works on Monday is true, so let's swap it with a distractor that is false: 'Fiona works on Tuesday' is false."
+explanation: "Hannah is fixed on Wednesday. Julia must work immediately before George, and Julia cannot work Monday, so the only available adjacent pair that does not cross Wednesday is Thursday-Friday. Therefore Julia works Thursday and George works Friday. Fiona and Ian take Monday and Tuesday respectively because Fiona must work earlier than Ian."
 },
 {
 kind: "single",
@@ -26018,13 +26019,13 @@ stimulus: [
 "• Each guard is assigned to a unique zone."
 ],
 question: "Which of the following must be true?",
-correct: "Cian is assigned to Zone 5.",
+correct: "Liam is assigned to Zone 1.",
 distractors: [
-"Liam is assigned to Zone 1.",
 "Alfie is assigned to Zone 3.",
-"Bert is assigned to Zone 4."
+"Cian is assigned to Zone 5.",
+"Bert is assigned to Zone 5."
 ],
-explanation: "Zayn is fixed in Zone 2. Slots left: 1, 3, 4, 5. Alfie and Bert are adjacent, so they must occupy (3, 4) or (4, 5). Since Alfie cannot be in Zone 4, if they occupy (3, 4), Alfie must be 3 and Bert must be 4. If they occupy (4, 5), Alfie must be 5 and Bert must be 4. Case 1: Alfie=3, Bert=4. Slots left: 1, 5. Since $Cian > Liam$, Liam=1 and Cian=5. Let's check: Liam(1), Zayn(2), Alfie(3), Bert(4), Cian(5). This is valid. Case 2: Alfie=5, Bert=4. Slots left: 1, 3. Since $Cian > Liam$, Liam=1 and Cian=3. Let's check: Liam(1), Zayn(2), Cian(3), Bert(4), Alfie(5). This is also valid. In both valid cases, Liam is assigned to Zone 1, and Cian is assigned to 3 or 5. Let's re-verify: 'Liam is assigned to Zone 1' is true in both cases! Let's make 'Liam is assigned to Zone 1' the correct answer and replace the distractors. Distractors: 'Cian is assigned to Zone 2', 'Alfie is assigned to Zone 1', 'Bert is assigned to Zone 5'."
+explanation: "Zayn is fixed in Zone 2. Alfie and Bert must occupy either Zones 3 and 4 or Zones 4 and 5; because Alfie cannot be in Zone 4, Bert is always in Zone 4 and Alfie is either Zone 3 or Zone 5. The remaining zones for Liam and Cian are then either 1 and 5 or 1 and 3. Since Cian must be in a higher-numbered zone than Liam, Liam must be assigned to Zone 1 in both cases."
 },
 {
 kind: "single",
@@ -26061,13 +26062,13 @@ stimulus: [
 "• No two executives generated exactly the same revenue."
 ],
 question: "Which of the following must be true?",
-correct: "Zack is ranked 4th or 6th.",
+correct: "Wade is ranked lower than Xavier.",
 distractors: [
 "Xavier is ranked 1st.",
 "Walter is ranked 2nd.",
 "Yvonne is ranked 5th."
 ],
-explanation: "Xavier's rank must be 1, 2, or 3 because Zack's rank is twice Xavier's (2, 4, or 6). Case 1: Xavier is 1st, Zack is 2nd. Then Vance and Wade must be below Xavier. Walter > Vance, and Walter > Yvonne. If Xavier is 1, Zack is 2, then Walter must be 3rd or 4th. If Walter is 3rd, Yvonne can be 4th, 5th, 6th. Vance and Wade must be placed. Vance > Wade. Since Xavier=1, Zack=2, Walter=3, available are 4, 5, 6. Vance and Wade must fit, and Walter > Vance is satisfied. If Vance is 4, Wade is 5, Yvonne is 6. Let's check: Walter(3) > Vance(4) > Wade(5), Walter(3) > Yvonne(6), Xavier(1) > Vance(4). This is valid. Case 2: Xavier is 2nd, Zack is 4th. Then Walter must be 1st because Walter > Vance, Xavier=2, and Vance < Xavier means Vance is 3, 5, or 6. Since Zack is 4, Vance can be 3rd. If Vance is 3rd, Wade and Yvonne must be 5th and 6th in either order because Walter(1) > Yvonne and Vance(3) > Wade. This yields valid arrangements: [Walter, Xavier, Vance, Zack, Wade, Yvonne] and [Walter, Xavier, Vance, Zack, Yvonne, Wade]. Case 3: Xavier is 3rd, Zack is 6th. Then Walter and Yvonne, Vance and Wade must fit in 1, 2, 4, 5. Since Xavier is 3rd and Vance < Xavier, Vance must be 4th or 5th. If Vance is 4th, Wade must be 5th. Then Walter and Yvonne must be 1st and 2nd. This satisfies Walter > Vance (1 > 4) and Walter > Yvonne (1 > 2). This is valid: [Walter, Yvonne, Xavier, Vance, Wade, Zack]. In all valid cases, Zack is either 2nd, 4th, or 6th. Let's re-verify Case 1: If Xavier=1, Zack=2, Walter=3, Vance=4, Wade=5, Yvonne=6. Is Zack always 4th or 6th? No, Zack can be 2nd. Let's check if Xavier=1, Zack=2 is fully valid. Vance < Xavier (4 < 1 is true in rank value, meaning Vance is lower revenue, so rank number is higher). Yes, 4 > 1. Walter > Vance means Walter's rank number is smaller than Vance's (3 < 4). Walter > Yvonne (3 < 6). Xavier < Zack (1 < 2 in revenue, so rank 1 vs 2). Zack is 2 * Xavier (2 = 2 * 1). This is completely valid. Thus, Zack can be 2nd, 4th, or 6th. Let's find a property that MUST be true. In all cases, Wade is ranked lower than Xavier. Let's check: Case 1: Wade is 5th, Xavier is 1st (True). Case 2: Wade is 5th/6th, Xavier is 2nd (True). Case 3: Wade is 5th, Xavier is 3rd (True). Thus, Wade is always ranked lower than Xavier (higher rank number)."
+explanation: "Xavier's rank can be 1st, 2nd, or 3rd because Zack's rank is twice Xavier's. Vance must be ranked lower than Xavier but higher than Wade, so Wade is necessarily lower than both Vance and Xavier in every valid arrangement. The exact ranks of Xavier, Walter, and Yvonne can vary."
 },
 {
 kind: "single",
@@ -26082,13 +26083,13 @@ stimulus: [
 "• Oliver finished in an odd-numbered position."
 ],
 question: "Which of the following must be true?",
-correct: "Manny finished 6th.",
+correct: "Ned finished 2nd.",
 distractors: [
-"Ned finished 2nd.",
 "Karan finished 3rd.",
-"Oliver finished 1st."
+"Manny finished 6th.",
+"Oliver finished 3rd."
 ],
-explanation: "From the clues, Oliver _ Pete and Manny is behind Pete, so Oliver < Pete < Manny. Oliver is at an odd position, so Oliver can be 1st or 3rd. Case 1: Oliver is 1st. Then Pete is 3rd. Manny can be 4th, 5th, or 6th. We also have Ned < Karan < Leo. Since Ned did not win (Oliver did), Ned, Karan, Leo must occupy three of the remaining positions: 2, 4, 5, 6. If Manny is 6th, then Ned, Karan, Leo must be 2st, 4th, 5th respectively. Let's check constraints: Oliver=1, Ned=2, Pete=3, Karan=4, Leo=5, Manny=6. This satisfies all conditions. If Manny is 5th, remaining for Ned, Karan, Leo are 2, 4, 6, so Ned=2, Karan=4, Leo=6. This is also valid. Case 2: Oliver is 3rd. Then Pete is 5th. Manny must be 6th (since Manny is behind Pete). The remaining positions for Ned, Karan, Leo are 1, 2, 4. But Ned cannot win, so Ned cannot be 1st. This means Ned, Karan, Leo cannot fit into 1, 2, 4 while keeping Ned < Karan < Leo because Ned would have to be 1st. Thus, Case 2 is entirely invalid! We are left with Case 1 where Oliver is 1st and Pete is 3rd. Let's check if Manny can be 4th: if Manny is 4th, remaining for Ned, Karan, Leo are 2, 5, 6. Then Ned=2, Karan=5, Leo=6. This is valid. In all valid configurations (Oliver=1, Pete=3, and either Manny=6/Leo=5, Manny=5/Leo=6, or Manny=4/Leo=6), Ned is always 2nd. Let's double check if Manny=4, Ned=2, Karan=5, Leo=6 works: Ned(2) < Karan(5) < Leo(6) is true. Ned is not 1st. Oliver is 1st (odd). Pete is 3rd. Manny is 4th (behind Pete). This is perfectly valid. Thus, Ned must be 2nd."
+explanation: "Oliver must finish before Pete, and Manny must finish behind Pete, so Oliver < Pete < Manny. Oliver is in an odd position. If Oliver were 3rd, then Pete would have to be 5th and Manny 6th, leaving positions 1, 2, and 4 for Ned, Karan, and Leo; Ned would have to be 1st to keep Ned < Karan < Leo, which is not allowed. Therefore Oliver is 1st and Pete is 3rd. Ned, Karan, and Leo must then occupy the remaining positions after excluding Manny, and the only way to keep Ned < Karan < Leo without Ned winning is for Ned to be 2nd. Manny may be 4th, 5th, or 6th, so Manny finished 6th is not guaranteed; Karan is not 3rd, and Oliver is not 3rd."
 },
 {
 kind: "single",
@@ -26096,20 +26097,20 @@ subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
 "Six custom cars (Red, Blue, Green, Yellow, Clear, Black) are ranked 1st (fastest) to 6th (slowest).",
-"• The Red car is faster than the Blue car.",
+"• The Red car is faster than the Yellow car.",
 "• The Green car is exactly three places slower than the Yellow car.",
 "• The Clear car is slower than the Black car.",
-"• The Blue car is faster than the Yellow car.",
+"• The Yellow car is faster than the Blue car.",
 "• The Black car is ranked 2nd."
 ],
 question: "Which of the following must be true?",
 correct: "The Green car is ranked 6th.",
 distractors: [
-"The Red car is ranked 1st.",
+"The Blue car is ranked 4th.",
 "The Yellow car is ranked 4th.",
 "The Clear car is ranked 5th."
 ],
-explanation: "We know Black = 2. Clear is slower than Black, so Clear is 3, 4, 5, or 6. We also have Red < Blue < Yellow, and Green = Yellow + 3. Let's find possible positions for Yellow and Green: (1,4), (2,5), (3,6). Since Black is 2, Yellow cannot be 2. If Yellow is 1, Green is 4. But Red and Blue must be faster than Yellow, which is impossible if Yellow is 1st. Therefore, Yellow must be 3rd, which means Green is 6th. Now let's place the rest: Yellow = 3, Green = 6, Black = 2. The remaining spots are 1, 4, 5. We know Red < Blue < Yellow, so Red and Blue must be faster than Yellow(3). Since Black is 2nd, Red must be 1st and Blue must be 2nd? But Black is 2nd! This means Blue cannot be faster than Yellow if Red and Blue both need to be ahead of 3rd. Let's fix the rule: 'The Yellow car is faster than the Blue car'. Then the chain is Red < Yellow < Blue, and Green = Yellow + 3. If Yellow is 2nd, Green is 5th (but Black is 2nd, so impossible). If Yellow is 1st, Green is 4th (but Red must be faster than Yellow, impossible). If Yellow is 3rd, Green is 6th. Then Red can be 1st. Then Blue and Clear must be 4th and 5th. Since Black is 2nd, Red=1, Black=2, Yellow=3, Green=6. Blue and Clear fill 4 and 5. Since Clear is slower than Black, both 4 and 5 are slower than Black, so either order works for Blue and Clear. In all valid cases, Red is 1st, Black is 2nd, Yellow is 3rd, and Green is 6th."
+explanation: "Black is ranked 2nd. Green is exactly three places slower than Yellow, so possible Yellow-Green pairs are 1-4, 2-5, or 3-6. Yellow cannot be 2nd because Black is 2nd. Yellow cannot be 1st because Red must be faster than Yellow. Therefore Yellow must be 3rd and Green must be 6th. Red is then 1st, while Blue and Clear occupy 4th and 5th in either order. Therefore Green is definitely ranked 6th. Blue is not necessarily 4th, Yellow is not 4th, and Clear is not necessarily 5th."
 },
 
 // BATCH 2: Topic 04 - Ordering and ranking (Context: Culinary Masterchef Ratings)
@@ -26429,9 +26430,9 @@ correct: "If L1 is selected, P2 must be selected.",
 distractors: [
 "P1 and L2 can never be selected together.",
 "If L3 is selected, P1 must be selected.",
-"L2 and L1 can be selected together."
+"L2 and L1 can never be selected together."
 ],
-explanation: "Let's analyze what happens if L1 is selected. We need 2 philosophers and 2 legal experts.\nRule 5 states that if L1 is selected, P3 must be selected. So we have L1 and P3.\nRule 2 states that if P1 is selected, L1 cannot be selected. Since L1 IS selected, P1 cannot be selected. \nSince P1 cannot be selected and we must choose exactly two philosophers out of {P1, P2, P3}, and P3 is already selected, the second philosopher MUST be P2. \nTherefore, if L1 is selected, P2 must be selected. This is a necessary and unavoidable deduction, making the correct option true in all circumstances. \nLet's double check if this configuration is fully valid: we have {L1, P3, P2}. We need one more legal expert from {L2, L3}. Rule 4 says P3 and L3 cannot both be selected. Since P3 is selected, L3 cannot be selected. Therefore, the remaining legal expert must be L2. Let's check Rule 3: if L2 is selected, P2 must be selected. Since P2 is selected, this is perfectly satisfied! So the unique valid team containing L1 is {L1, L2, P2, P3}. Distractor 4 is false because L2 and L1 can be selected together, but let's look at Distractor 1: P1 and L2 can never be selected together. Let's see if {P1, P2, L2, L3} works: Rule 2: P1 selected -> L1 not selected (true). Rule 3: L2 selected -> P2 selected (true). Rule 4: P3 and L3 not both selected (P3 is not selected, true). Rule 5: L1 selected -> P3 selected (L1 not selected, true). So {P1, P2, L2, L3} is perfectly valid, meaning P1 and L2 CAN be selected together, which makes Distractor 1 false."
+explanation: "If L1 is selected, then P3 must also be selected. Because P1 would exclude L1, P1 cannot be selected. The board still needs exactly two philosophers, so P2 must be the second philosopher. This configuration is valid with L2 as the second legal expert, giving {L1, L2, P2, P3}. P1 and L2 can be selected together in a different valid team, L3 does not force P1, and L1 and L2 can be selected together."
 },
 {
 kind: "single",
@@ -26955,9 +26956,9 @@ leftTitle: "Puzzle",
 stimulus: [
 "Seven judges—Paul, Qasim, Rita, Sam, Tina, Umar, and Val—are seated around a circular panel table with seven seats numbered 1 to 7 clockwise.",
 "• Paul sits in seat 1.",
-"• Qasim sits directly opposite Rita, wait, a 7-seat table doesn't have perfect opposites! Let's say: Qasim sits two seats away from Paul.",
+"• Qasim sits in seat 3.",
 "• Sam sits immediately to the left of Paul.",
-"• Tina sits equidistant between Paul and Rita moving clockwise.",
+"• Tina sits in seat 5.",
 "• Umar sits next to Qasim."
 ],
 question: "Which of the following must be true?",
@@ -26967,7 +26968,7 @@ distractors: [
 "Tina sits in seat 2.",
 "Umar sits in seat 4."
 ],
-explanation: "Let's fix the wording for a 7-seat table. Let's use standard clockwise numbers 1 to 7. Paul is at seat 1. Sam sits immediately to the left of Paul, which corresponds to seat 7. This is a direct deduction and must be true. Let's verify if the rest of the puzzle is consistent to ensure no contradictions. Paul=1, Sam=7. Qasim is two seats away from Paul, so Qasim is at seat 3 or seat 6. Since seat 7 is taken, two seats counterclockwise would be 6, which is open. Two seats clockwise would be 3, which is open. Tina sits equidistant between Paul(1) and Rita moving clockwise. If Rita is at 5, the seats between 1 and 5 clockwise are 2, 3, 4, and the middle is 3. So Tina=3, Rita=5. Let's check if this is consistent. If Sam is at 7, it's independent of the rest of the choices. Therefore, Sam must be in seat 7."
+explanation: "Paul is fixed in seat 1. With seats numbered clockwise, the seat immediately to Paul's left is seat 7, so Sam must sit in seat 7. Qasim is fixed in seat 3, so Rita cannot be in seat 3. Tina is fixed in seat 5, not seat 2. Umar must sit next to Qasim, so Umar could sit in seat 2 or seat 4 and is not guaranteed to sit in seat 4."
 },
 // ==========================================
 // BATCH 3: SEATING ARRANGEMENTS (TWO ROWS / OPPOSING)
@@ -26989,9 +26990,9 @@ correct: "Diana sits in Row 1.",
 distractors: [
 "Betty sits in Row 1.",
 "Charles sits in the middle seat of Row 2.",
-"Fiona sits directly opposite Alan."
+"Edward sits directly opposite Alan."
 ],
-explanation: "Let's label the seats: Row 1 (North-facing): Left (1L), Middle (1M), Right (1R). Row 2 (South-facing): Left (2L), Middle (2M), Right (2R). Alan is at 1M. Fiona sits in Row 2. Edward sits in a corner seat next to Fiona. The corner seats of Row 2 are 2L and 2R. Since Edward is next to Fiona, they must occupy either (2L, 2M) or (2M, 2R). In either case, Edward and Fiona take up two seats in Row 2, one of which is the middle seat (2M). This leaves only one seat open in Row 2, which must be a corner seat (either 2L or 2R). We are told Charles and Diana sit in the same row. Since Row 2 only has one empty seat left, Charles and Diana cannot both fit in Row 2. Therefore, Charles and Diana MUST sit in Row 1. Since Alan is at 1M, Charles and Diana must occupy 1L and 1R. Since Diana is in Row 1, 'Diana sits in Row 1' must be true. Let's check where Betty sits: Betty sits directly opposite Diana. Since Diana is in Row 1 (at 1L or 1R), Betty must be directly opposite her in Row 2 (at 2L or 2R). This means Row 2 is completely filled by Edward, Fiona, and Betty. Thus, the distribution is perfectly determined: Row 1 has Alan, Charles, Diana. Row 2 has Edward, Fiona, Betty. Therefore, Diana sits in Row 1 must hold true. Distractor 1: Betty sits in Row 1 (false, Betty is in Row 2). Distractor 2: Charles sits in the middle seat of Row 2 (false, Charles is in Row 1). Distractor 3: Fiona sits directly opposite Alan (not necessarily true, 2M can be Edward or Fiona)."
+explanation: "Alan is in the middle seat of Row 1. Edward is in a corner seat next to Fiona, and Fiona is in Row 2, so Fiona must occupy the middle seat of Row 2 while Edward occupies one corner. That leaves only one seat in Row 2. Because Charles and Diana sit in the same row, they cannot both fit in Row 2 and therefore must both sit in Row 1. Thus Diana sits in Row 1. Betty sits opposite Diana in Row 2, while Edward is in a corner rather than directly opposite Alan."
 },
 {
 kind: "single",
@@ -27000,10 +27001,10 @@ leftTitle: "Puzzle",
 stimulus: [
 "Eight people—Gary, Helen, Ian, Joan, Kathy, Lou, Max, and Nina—are sitting in two parallel rows of four seats facing each other (Row A and Row B).",
 "• Gary sits in Row A, directly opposite Max.",
-"• Helen sits in a corner seat of Row B.",
+"• Helen sits in seat 1 of Row B.",
 "• Ian and Joan sit next to each other in Row A.",
 "• Kathy sits directly opposite Joan.",
-"• Lou sits somewhere to the right of Max in Row B."
+"• Lou sits in seat 4 of Row B."
 ],
 question: "Which of the following must be true?",
 correct: "Max sits in seat 2 or seat 3 of Row B.",
@@ -27012,7 +27013,7 @@ distractors: [
 "Gary sits in seat 1 of Row A.",
 "Kathy sits in seat 4 of Row B."
 ],
-explanation: "Let's analyze the positions. In Row B, Helen is at 1 and Lou is at 4. This leaves seats 2 and 3 for Max and Kathy. Therefore, Max must occupy either seat 2 or seat 3 of Row B. This directly means 'Max sits in seat 2 or seat 3 of Row B' must be true. Let's check the distractors: 'Kathy sits in seat 4 of Row B' is false because Lou is in seat 4. 'Gary sits in seat 1 of Row A' is false because Max is at 2 or 3, so Gary (opposite Max) must be at 2 or 3."
+explanation: "In Row B, Helen is fixed in seat 1 and Lou is fixed in seat 4. This leaves seats 2 and 3 for Max and Kathy. Therefore Max must sit in seat 2 or seat 3 of Row B. Gary sits directly opposite Max, so Gary cannot be in seat 1 of Row A; Kathy cannot be in seat 4 of Row B because Lou is there."
 },
 {
 kind: "single",
@@ -27022,18 +27023,18 @@ stimulus: [
 "Six performers—Oli, Pia, Qiu, Rya, Sio, and Tye—are standing in two facing lines of three (Line 1 faces East, Line 2 faces West).",
 "• Oli is in the center position of Line 1.",
 "• Pia stands directly opposite Tye.",
-"• Qiu and Rya are in the same line.",
+"• Rya stands in Line 2.",
 "• Sio stands immediately to the left of Tye.",
-"• Tye is in Line 2."
+"• Tye is in the right position of Line 2."
 ],
 question: "Which of the following must be true?",
 correct: "Qiu stands in Line 1.",
 distractors: [
-"Rya stands in Line 2.",
+"Rya stands in Line 1.",
 "Sio stands directly opposite Oli.",
 "Pia stands in the center position."
 ],
-explanation: "Let's analyze the positions in Line 1 and Line 2 (Left, Center, Right). Oli is in Line 1 Center. Tye is in Line 2. Sio stands immediately to the left of Tye, which means Sio and Tye are adjacent in Line 2. Since Line 2 has three positions, Sio and Tye must take up two of them, one of which must be the Center position of Line 2. This leaves exactly one open position in Line 2 (either Left or Right). We are told Qiu and Rya are in the same line. Since Line 2 only has one vacant position left, Qiu and Rya cannot both be in Line 2. Therefore, Qiu and Rya must both be in Line 1. Since Line 1 has Oli in the Center, Qiu and Rya must occupy the Left and Right positions of Line 1. Thus, 'Qiu stands in Line 1' must be true. Let's check the distractors: 'Rya stands in Line 2' is false because Rya is in Line 1. 'Sio stands directly opposite Oli' is not necessarily true because either Sio or Tye could be in the center of Line 2."
+explanation: "Tye is in the right position of Line 2. Sio is immediately to Tye's left, so Sio is in the center position of Line 2. Rya is also in Line 2, so Rya takes the remaining left position. Pia stands directly opposite Tye, placing Pia in Line 1. With Oli fixed in the center of Line 1, the only remaining Line 1 position belongs to Qiu. Therefore Qiu must stand in Line 1."
 },
 {
 kind: "single",
@@ -27306,7 +27307,7 @@ distractors: [
 "No, because it might be harder for some people to afford a day out.",
 "No, because national parks are important places that people should be able to visit."
 ],
-explanation: "The correct answer is strongest because it provides a dual justification: funding maintenance and managing environmental impact. Distractor 1 is weak: beauty is a sentiment, not a structural argument for fees. Distractor 2 is weak: social equity in recreation is a valid concern but does not negate the necessity of conservation. Distractor 3 is weak: what other attractions do is not a justification for a national park policy."
+explanation: "The correct answer is strongest because it provides a dual justification: funding maintenance and managing environmental impact. Distractor 1 is weak: beauty is a sentiment, not a structural argument for fees. Distractor 2 is weak: affordability is a relevant concern, but it does not address whether fees would control visitor numbers or protect infrastructure. Distractor 3 is weak: it asserts access is important without addressing the overcrowding and conservation problem."
 },
 {
 kind: "single",
@@ -31410,7 +31411,7 @@ distractors: [
 "No, because raising the age limit would just mean that people who want to buy tobacco will find other ways to get it anyway.",
 "No, because people are considered adults at 18."
 ],
-explanation: "The correct answer is strongest because it addresses the neurological and developmental aspect of addiction timing. Distractor 1 is weak: stating it is unhealthy is not an argument for raising the age. Distractor 2 is weak: convenience for retailers is not a public health concern. Distractor 3 is weak: legal age definitions for other domains do not negate the health data on addiction."
+explanation: "The correct answer is strongest because it addresses the neurological and developmental aspect of addiction timing. Distractor 1 is weak: stating tobacco is unhealthy is not an argument for raising the age specifically. Distractor 2 is weak: it asserts possible avoidance without showing that the policy would fail overall. Distractor 3 is weak: legal adulthood at 18 in other domains does not negate the health argument about addiction risk."
 },
 {
 kind: "single",
@@ -34595,13 +34596,13 @@ stimulus: [
 "The test has 90% sensitivity (the proportion of patients WITH hypertension who test positive) and 80% specificity (the proportion of patients WITHOUT hypertension who test negative)."
 ],
 question: "Among patients who test positive on this screening test, what proportion actually have hypertension?",
-correct: "50%",
+correct: "52.9%",
 distractors: [
 "90%",
 "80%",
 "20%"
 ],
-explanation: "To calculate PPV, we determine how many positive tests are 'True Positives' vs. 'False Positives.' In 100 patients, 20 have hypertension and 80 do not. Of the 20 with hypertension, 90% test positive (18 true positives). Of the 80 without, 20% test positive (since specificity is 80%, meaning 20% are false positives), resulting in 16 false positives. PPV = 18 / (18 + 16) = 18 / 34 ≈ 52.9%. Adjusting for rounding, 50% is the closest standard figure used in clinical testing questions."
+explanation: "To calculate PPV, compare true positives with all positive tests. In 100 patients, 20 have hypertension and 80 do not. Of the 20 with hypertension, 90% test positive, giving 18 true positives. Of the 80 without hypertension, 20% test positive because specificity is 80%, giving 16 false positives. PPV = 18 / (18 + 16) = 18 / 34 = 52.9%. Distractor 90% uses sensitivity, distractor 80% uses specificity, and distractor 20% uses prevalence."
 },
 {
 kind: "single",

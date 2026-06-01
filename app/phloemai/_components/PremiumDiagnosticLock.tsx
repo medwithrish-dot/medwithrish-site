@@ -11,7 +11,7 @@ type PremiumDiagnosticLockProps = {
 
 export function PremiumDiagnosticLock({
   title = "Premium diagnostic locked",
-  description = "Mock diagnostics, full mocks, subtest mocks and 15-minute sprints are part of Premium. Upgrade to run them and unlock detailed analysis. The free QR diagnostic is always available on the diagnostic page.",
+  description = "Random question-bank diagnostic mocks are part of Premium. Upgrade to run them and unlock detailed analysis. The free QR diagnostic is always available on the diagnostic page.",
   backHref = "/phloemai/diagnostic",
   backLabel = "Back to diagnostics",
 }: PremiumDiagnosticLockProps) {

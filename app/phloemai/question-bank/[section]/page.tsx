@@ -67,7 +67,7 @@ function getBackHref(searchParams: QuestionBankSectionSearchParams) {
   }
 
   if (diagnosticMode === "full-section") {
-    return withMockQuery("/phloemai/mocks/subtest", mockId);
+    return withMockQuery("/phloemai/mocks/full", mockId);
   }
 
   return undefined;
@@ -77,7 +77,7 @@ function getBackLabel(searchParams: QuestionBankSectionSearchParams) {
   const diagnosticMode = getDiagnosticMode(searchParams);
 
   if (diagnosticMode === "subset") return "Back to custom diagnostic";
-  if (diagnosticMode === "full-section") return "Back to subtest mocks";
+  if (diagnosticMode === "full-section") return "Back to diagnostic mock";
 
   return undefined;
 }
@@ -106,7 +106,7 @@ export default async function Page({
         <PremiumDiagnosticLock
           backHref={backHref ?? "/phloemai/diagnostic"}
           backLabel={backLabel ?? "Back to diagnostics"}
-          description="Mock diagnostics, full mocks, subtest mocks and 15-minute sprints are Premium. The free QR diagnostic stays available from the diagnostic page."
+          description="Random question-bank diagnostic mocks are Premium. The free QR diagnostic stays available from the diagnostic page."
         />
       );
     }

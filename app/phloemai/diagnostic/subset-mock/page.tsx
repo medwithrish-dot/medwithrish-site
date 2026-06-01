@@ -18,7 +18,7 @@ export default async function Page({
   const mockId = getMockId(await searchParams);
   redirect(
     mockId
-      ? `/phloemai/mocks/subtest?mock=${encodeURIComponent(mockId)}`
-      : "/phloemai/mocks/subtest"
+      ? `/phloemai/mocks/full?mock=${encodeURIComponent(mockId)}`
+      : "/phloemai/mocks/full"
   );
 }

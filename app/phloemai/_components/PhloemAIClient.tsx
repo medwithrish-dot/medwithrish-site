@@ -1131,6 +1131,7 @@ type PracticeAttemptRow = {
   correct: boolean | null;
   total_seconds: number | null;
   created_at: string | null;
+  metadata?: unknown;
 };
 type PracticeSessionListRow = {
   id: string | null;
@@ -1624,6 +1625,15 @@ function normaliseSectionCode(section: string | null): UCATSectionCode | null {
     : null;
 }
 
+function isCompletedDiagnosticPracticeAttempt(row: PracticeAttemptRow) {
+  const metadata =
+    row.metadata && typeof row.metadata === "object" && !Array.isArray(row.metadata)
+      ? (row.metadata as Record<string, unknown>)
+      : {};
+
+  return metadata.completedInDiagnostic === true;
+}
+
 function getQuestionBankProgressItem(code: UCATSectionCode) {
   return questionBankProgress.find((item) => item.code === code);
 }
@@ -1721,8 +1731,11 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
     const questionId = row.question_id;
     if (!questionId || !questionBankQuestionIds[section].has(questionId)) return;
 
-    if (row.answered) {
+    if (row.answered || isCompletedDiagnosticPracticeAttempt(row)) {
       uniqueCompletedBySection[section].add(questionId);
+    }
+
+    if (row.answered) {
       answeredAttempts += 1;
       sectionAnswered[section] += 1;
       if (row.correct) correctAttempts += 1;
@@ -2954,14 +2967,14 @@ function DiagnosticContent({
                   Mock diagnostic
                 </h2>
                 <p className="relative mt-2 max-w-[21rem] text-sm font-bold leading-6 text-blue-50">
-                  Choose a whole UCAT mock or a single full section with scaled
-                  scoring.
+                  Run a UCAT-style diagnostic sourced from random uncompleted
+                  question-bank items.
                 </p>
                 <ul className="relative mb-8 mt-5 space-y-2 text-sm font-bold text-blue-50">
                   {[
                     "Full mock: VR 44, DM 35, QR 36, SJT 69",
-                    "Subset mock with official timing",
-                    "15-minute subset mock available",
+                    "Random source from each question bank",
+                    "Completed questions are saved to progress",
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3">
                       <CheckCircle className="h-4 w-4" aria-hidden="true" />
@@ -3295,34 +3308,14 @@ function DiagnosticContent({
 function MockDiagnosticContent() {
   const mockOptions = [
     {
-      title: "Full mocks",
-      text: "Run a complete UCAT-style mock under full exam timing.",
-      cta: "Choose full mock",
+      title: "Diagnostic mock",
+      text: "Run a complete UCAT-style diagnostic generated from random uncompleted question-bank items.",
+      cta: "Start mock",
       href: "/phloemai/mocks/full",
       icon: ClipboardList,
       iconClass: "bg-blue-50 text-blue-600",
       borderClass: "border-blue-200",
       buttonClass: "bg-blue-600 text-white hover:bg-blue-700",
-    },
-    {
-      title: "Full subtest mocks",
-      text: "Complete one full section mock: VR, DM, QR or SJT.",
-      cta: "Choose subtest",
-      href: "/phloemai/mocks/subtest",
-      icon: Target,
-      iconClass: "bg-emerald-50 text-emerald-600",
-      borderClass: "border-emerald-200",
-      buttonClass: "bg-emerald-600 text-white hover:bg-emerald-700",
-    },
-    {
-      title: "15-minute sprint",
-      text: "Do a short timed sprint in any section for focused practice.",
-      cta: "Start sprint",
-      href: "/phloemai/mocks/subtest?timing=short",
-      icon: Timer,
-      iconClass: "bg-violet-50 text-violet-600",
-      borderClass: "border-violet-200",
-      buttonClass: "bg-violet-600 text-white hover:bg-violet-700",
     },
   ] as const;
 
@@ -3347,14 +3340,15 @@ function MockDiagnosticContent() {
 
       <div className="mt-14">
         <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
-          Choose your mock diagnostic
+          Start your mock diagnostic
         </h1>
         <p className="mt-3 text-base font-semibold text-slate-500">
-          Pick the format you want to run today.
+          The diagnostic uses a fresh random set from the question bank, then
+          saves completed questions into your progress.
         </p>
       </div>
 
-      <div className="mt-8 grid gap-5 lg:grid-cols-3">
+      <div className="mt-8 grid gap-5 lg:grid-cols-1">
         {mockOptions.map((option) => {
           const Icon = option.icon;
           return (
@@ -3614,24 +3608,24 @@ function PracticeContent({
   const completedCurrentPlan = allStudyPlanTasks.length > 0 && !recommendedTask;
   const mockAndSkillCards = [
     {
-      title: "Full mocks",
-      text: "Run a complete UCAT-style mock when you need a full readiness check.",
+      title: "Diagnostic mock",
+      text: "Run a complete UCAT-style diagnostic from random uncompleted bank questions.",
       icon: Timer,
       iconClass: "bg-blue-100 text-blue-600",
       href: "/phloemai/mocks/full",
       cta: "Start mock",
     },
     {
-      title: "Mini mocks",
-      text: "Short mixed tests for momentum without committing to a full paper.",
+      title: "Question bank",
+      text: "Practise targeted section sets and keep completed questions moving.",
       icon: BarChart3,
       iconClass: "bg-violet-100 text-violet-600",
-      href: "/phloemai/mocks/subtest",
-      cta: "Start mini mock",
+      href: "/phloemai/question-bank",
+      cta: "Start set",
     },
     {
-      title: "Review mocks",
-      text: "Revisit marked and incorrect mock questions with feedback.",
+      title: "Review sets",
+      text: "Revisit marked practice and diagnostic questions with feedback.",
       icon: AlertTriangle,
       iconClass: "bg-red-100 text-red-500",
       href: "/phloemai/question-bank",
@@ -6611,7 +6605,7 @@ function AccountContent({
             <ul className="mt-4 space-y-2 text-sm font-semibold leading-6 text-slate-700">
               {(plan === "Premium"
                 ? [
-                    "Full mocks, subtest mocks and 15-minute sprints",
+                    "Random question-bank diagnostic mocks",
                     "Daily AI diagnostic credit",
                     "Deeper issue analysis and study-plan tasks",
                   ]
@@ -7686,7 +7680,7 @@ function UCATDashboard({
 
       const { data, error: statsError } = await supabase
         .from("practice_question_attempts")
-        .select("question_id,section,answered,correct,total_seconds,created_at")
+        .select("question_id,section,answered,correct,total_seconds,created_at,metadata")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(1500);
@@ -7749,7 +7743,7 @@ function UCATDashboard({
 
       const { data, error: statsError } = await supabase
         .from("practice_question_attempts")
-        .select("question_id,section,answered,correct,total_seconds,created_at")
+        .select("question_id,section,answered,correct,total_seconds,created_at,metadata")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(1500);
@@ -7813,7 +7807,7 @@ function UCATDashboard({
     async function loadPracticeStats(nextUser: User) {
       const { data, error } = await supabaseClient
         .from("practice_question_attempts")
-        .select("question_id,section,answered,correct,total_seconds,created_at")
+        .select("question_id,section,answered,correct,total_seconds,created_at,metadata")
         .eq("user_id", nextUser.id)
         .order("created_at", { ascending: false })
         .limit(1500);
@@ -8366,7 +8360,7 @@ function UCATDashboard({
               Unlock Premium diagnostics
             </h2>
             <p className="mt-3 text-sm font-medium leading-6 text-slate-600">
-              Go Premium for full mocks, sprints, deeper analytics and a daily
+              Go Premium for diagnostic mocks, deeper analytics and a daily
               AI diagnostic credit.
             </p>
             {plan === "Premium" ? (
@@ -9140,7 +9134,7 @@ const PHLOEMAI_FREE_FEATURES = [
 ];
 
 const PHLOEMAI_PREMIUM_FEATURES = [
-  "Full mocks, subtest mocks and 15-minute sprints",
+  "Random question-bank diagnostic mocks",
   "Advanced weakness + strength diagnosis",
   "Deeper issue causes, evidence and specific fixes",
   "Personalised study plan and drills",
@@ -9155,8 +9149,7 @@ const PHLOEMAI_PRICING_ROWS = [
   ["Weakness diagnosis", "Limited", "Advanced"],
   ["Strength diagnosis", "Included", "Included"],
   ["AI diagnostic credit", "1 lifetime credit", "1 credit every 24 hours"],
-  ["Full mocks", "Premium", "Included"],
-  ["Subtest mocks and 15-minute sprints", "Premium", "Included"],
+  ["Random diagnostic mocks", "Premium", "Included"],
   ["Mock diagnostic reports", "Premium", "Included"],
   ["Deeper issue causes and fixes", "Free diagnostic only", "All diagnostics"],
   ["Personalised study plan", "Free diagnostic only", "All diagnostics"],
