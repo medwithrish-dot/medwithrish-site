@@ -26530,6 +26530,12650 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
     ],
   },
 
+  {
+    kind: "set",
+    setId: "dietitian-bariatric-pre-op-assessments",
+    stimulus: [
+      "A dietitian team at a specialist weight management centre recorded the outcomes of pre-operative assessment appointments for patients being considered for bariatric surgery.",
+    ],
+    visual: {
+      type: "table",
+      title: "Pre-operative Bariatric Assessment Outcomes",
+      headers: ["Surgery type", "Approved", "Deferred", "Declined", "Total"],
+      rows: [
+        ["Gastric sleeve", "40", "15", "5", "60"],
+        ["Gastric bypass", "30", "8", "12", "50"],
+        ["Adjustable band", "22", "5", "3", "30"],
+        ["Revisional", "12", "2", "6", "20"],
+        ["Total", "104", "30", "26", "160"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of deferred to declined appointments for gastric bypass patients? Give in its simplest form.",
+        correct: "2:3",
+        distractors: ["3:2", "3:1", "5:3"],
+        explanation:
+          "Gastric bypass deferred = 8 and declined = 12. 8:12 simplifies to 2:3. Distractor 3:2 reverses the deferred and declined values. Distractor 3:1 reads gastric sleeve instead (deferred 15 to declined 5). Distractor 5:3 reads adjustable band instead (deferred 5 to declined 3).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of gastric bypass assessments resulted in approval?",
+        correct: "60%",
+        distractors: ["30%", "18.8%", "66.7%"],
+        explanation:
+          "Gastric bypass approved = 30, gastric bypass total = 50. 30/50 × 100 = 60%. Distractor 30%: divides by all approved (30/100 × 100). Distractor 18.8%: divides by the grand total (30/160 × 100). Distractor 66.7%: reads gastric sleeve instead (40/60 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest whole number, what was the mean number of approved assessments per surgery type?",
+        correct: "26",
+        distractors: ["30", "40", "21"],
+        explanation:
+          "Total approved = 104 across 4 surgery types. 104/4 = 26. Distractor 30: reads the total deferred column. Distractor 40: reads gastric sleeve approved directly. Distractor 21: divides total approved by 5 instead of 4 (104/5 = 20.8 ≈ 21).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "What percentage more total assessments did gastric sleeve have than adjustable band procedures?",
+        correct: "100%",
+        distractors: ["30 assessments", "200%", "50%"],
+        explanation:
+          "Gastric sleeve total = 60, adjustable band total = 30. Percentage more = (60 − 30)/30 × 100 = 100%. Distractor 30 assessments: gives the absolute difference. Distractor 200%: calculates 60/30 × 100 (percentage of, not percentage more than). Distractor 50%: uses gastric sleeve as the denominator (30/60 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "memory-clinic-referral-monthly-trend",
+    stimulus: [
+      "A regional memory clinic recorded the number of new referral appointments received each month over six consecutive months.",
+    ],
+    visual: {
+      type: "line",
+      title: "New Memory Clinic Referrals by Month",
+      yLabel: "Referrals",
+      points: [
+        { label: "Jan", value: 180 },
+        { label: "Feb", value: 210 },
+        { label: "Mar", value: 240 },
+        { label: "Apr", value: 195 },
+        { label: "May", value: 225 },
+        { label: "Jun", value: 270 },
+      ],
+      max: 300,
+    },
+    questions: [
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which month had the closest number of referrals to one sixth of the total across all six months?",
+        correct: "May",
+        distractors: ["Feb", "Mar", "Jun"],
+        explanation:
+          "Total referrals = 1320. One sixth = 220. May had 225 referrals (difference of 5), which is closer to 220 than February (210, difference 10), March (240, difference 20) or June (270, difference 50). Distractor Feb: second closest at 10 away. Distractor Mar: 20 away. Distractor Jun: 50 away.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "By what percentage did referrals increase from January to June?",
+        correct: "50%",
+        distractors: ["90 referrals", "150%", "33.3%"],
+        explanation:
+          "January = 180, June = 270, increase = 90. 90/180 × 100 = 50%. Distractor 90 referrals: gives the absolute increase. Distractor 150%: calculates 270/180 × 100 (percentage of, not percentage increase). Distractor 33.3%: uses June as the denominator (90/270 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of referrals per month across all six months?",
+        correct: "220",
+        distractors: ["210", "240", "264"],
+        explanation:
+          "Total referrals = 1320 across 6 months. 1320/6 = 220. Distractor 210: reads February directly. Distractor 240: reads March directly. Distractor 264: divides total by 5 instead of 6 (1320/5).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of January referrals to June referrals in its simplest form?",
+        correct: "2:3",
+        distractors: ["3:2", "7:9", "180:270"],
+        explanation:
+          "January = 180, June = 270. 180:270 ÷ 90 gives 2:3. Distractor 3:2 reverses the ratio. Distractor 7:9 uses February instead of January (210:270 = 7:9). Distractor 180:270 is the correct pair left unsimplified.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "oral-surgery-extraction-outcomes",
+    stimulus: [
+      "An oral surgery unit at a dental hospital recorded tooth extraction procedure outcomes by tooth type over one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Tooth Extraction Outcomes by Type",
+      headers: ["Tooth type", "Uncomplicated", "Complicated", "Total"],
+      rows: [
+        ["Incisor", "40", "10", "50"],
+        ["Canine", "30", "20", "50"],
+        ["Premolar", "60", "20", "80"],
+        ["Molar", "60", "60", "120"],
+        ["Wisdom", "20", "80", "100"],
+        ["Total", "210", "190", "400"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of uncomplicated to complicated wisdom tooth extractions in its simplest form?",
+        correct: "1:4",
+        distractors: ["4:1", "1:1", "3:2"],
+        explanation:
+          "Wisdom uncomplicated = 20, complicated = 80. 20:80 = 1:4. Distractor 4:1 reverses the ratio. Distractor 1:1 reads the molar row instead (60:60). Distractor 3:2 reads the canine row instead (30:20).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of premolar extractions were uncomplicated?",
+        correct: "75%",
+        distractors: ["25%", "28.6%", "60%"],
+        explanation:
+          "Premolar uncomplicated = 60, premolar total = 80. 60/80 × 100 = 75%. Distractor 25%: uses premolar complicated/total instead (20/80 × 100). Distractor 28.6%: divides by all uncomplicated (60/210 × 100). Distractor 60%: divides by the molar total (60/100 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest whole number, what was the mean number of complicated extractions per tooth type?",
+        correct: "38",
+        distractors: ["32", "42", "48"],
+        explanation:
+          "Total complicated extractions = 190 across 5 tooth types. 190/5 = 38. Distractor 32: divides by 6 instead of 5 (190/6 ≈ 32). Distractor 42: uses uncomplicated total instead (210/5 = 42). Distractor 48: divides by 4 instead of 5 (190/4 = 47.5 ≈ 48).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "A clinical benchmark flags any tooth type whose complication rate exceeds 30%. How many tooth types exceeded this threshold?",
+        correct: "3",
+        distractors: ["1", "2", "4"],
+        explanation:
+          "Incisor: 10/50 = 20%; Canine: 20/50 = 40%; Premolar: 20/80 = 25%; Molar: 60/120 = 50%; Wisdom: 80/100 = 80%. Canine, molar, and wisdom all exceed 30%, giving 3. Distractor 1: counts only wisdom. Distractor 2: counts wisdom and molar but overlooks canine. Distractor 4: incorrectly includes premolar (25% is below 30%).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "sport-science-recovery-heart-rate",
+    stimulus: [
+      "A university sports science department recorded mean post-exercise recovery heart rates in beats per minute for participants following two training protocols over four consecutive weeks.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Mean Recovery Heart Rate by Protocol and Week",
+      yLabel: "Heart rate (bpm)",
+      seriesLabels: ["Protocol A", "Protocol B"],
+      groups: [
+        { label: "Week 1", values: [90, 100] },
+        { label: "Week 2", values: [84, 98] },
+        { label: "Week 3", values: [78, 90] },
+        { label: "Week 4", values: [72, 84] },
+      ],
+      max: 120,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean Protocol A heart rate across all four weeks?",
+        correct: "81 bpm",
+        distractors: ["78 bpm", "84 bpm", "93 bpm"],
+        explanation:
+          "Protocol A values: 90 + 84 + 78 + 72 = 324. 324/4 = 81 bpm. Distractor 78 bpm: reads Week 3 Protocol A directly. Distractor 84 bpm: reads Week 2 Protocol A directly. Distractor 93 bpm: calculates mean Protocol B instead (100 + 98 + 90 + 84 = 372; 372/4 = 93).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "In Week 1, by what percentage did Protocol B heart rate exceed Protocol A? Give your answer to the nearest 0.1%.",
+        correct: "11.1%",
+        distractors: ["10%", "10 bpm", "90%"],
+        explanation:
+          "Week 1 Protocol A = 90, Protocol B = 100. Difference = 10. 10/90 × 100 = 11.1%. Distractor 10%: uses Protocol B as the denominator (10/100 × 100). Distractor 10 bpm: gives the absolute difference. Distractor 90%: calculates Protocol A as a percentage of Protocol B (90/100 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of Week 4 Protocol A to Week 4 Protocol B heart rates in its simplest form?",
+        correct: "6:7",
+        distractors: ["7:6", "72:84", "3:4"],
+        explanation:
+          "Week 4: Protocol A = 72, Protocol B = 84. GCD(72, 84) = 12. 72/12 = 6, 84/12 = 7, giving 6:7. Distractor 7:6 reverses the ratio. Distractor 72:84 is the correct pair left unsimplified. Distractor 3:4 arises from misreading Protocol B as 96 instead of 84 (72:96 = 3:4).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did Protocol A heart rate decrease from Week 1 to Week 4?",
+        correct: "20%",
+        distractors: ["72%", "18 bpm", "25%"],
+        explanation:
+          "Week 1 Protocol A = 90, Week 4 Protocol A = 72. Decrease = 18. 18/90 × 100 = 20%. Distractor 72%: reads the Week 4 Protocol A value directly. Distractor 18 bpm: gives the absolute decrease. Distractor 25%: uses Week 4 as the denominator (18/72 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "health-psychology-referral-outcomes",
+    stimulus: [
+      "A clinical health psychology service recorded the outcomes of new referrals by presenting condition over one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Health Psychology Referral Outcomes",
+      headers: ["Presenting condition", "Accepted", "Signposted", "Declined", "Total"],
+      rows: [
+        ["Chronic pain", "36", "12", "12", "60"],
+        ["Cancer adjustment", "40", "8", "12", "60"],
+        ["Medically unexplained", "24", "16", "8", "48"],
+        ["Long-term condition", "30", "12", "6", "48"],
+        ["Total", "130", "48", "38", "216"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question:
+          "How many long-term condition referrals were signposted rather than accepted or declined?",
+        correct: "12",
+        distractors: ["6", "48", "30"],
+        explanation:
+          "Long-term condition signposted = 12. Distractor 6: reads declined for long-term condition. Distractor 48: reads the long-term condition row total. Distractor 30: reads accepted for long-term condition.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of chronic pain referrals were accepted? Give your answer to the nearest whole number.",
+        correct: "60%",
+        distractors: ["36%", "27.7%", "40%"],
+        explanation:
+          "Chronic pain accepted = 36, chronic pain total = 60. 36/60 × 100 = 60%. Distractor 36%: reads the accepted value as a percentage directly. Distractor 27.7%: divides by all accepted (36/130 × 100). Distractor 40%: reads cancer adjustment accepted/total instead (40/60 × 100 = 66.7%, a further error, or simply reads the cancer accepted cell as the answer).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of referrals declined per presenting condition?",
+        correct: "9.5",
+        distractors: ["9", "12", "12.5"],
+        explanation:
+          "Total declined = 38 across 4 presenting conditions. 38/4 = 9.5. Distractor 9: rounds down incorrectly. Distractor 12: reads chronic pain declined or cancer adjustment declined directly. Distractor 12.5: divides total signposted (48) by 4 instead (48/4 = 12, not 12.5) — or divides total declined by 3 (38/3 ≈ 12.7, rounds to 12.5 with rounding error).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "What is the ratio of accepted to non-accepted (signposted plus declined) referrals across all conditions? Give in its simplest form.",
+        correct: "65:43",
+        distractors: ["43:65", "130:86", "3:2"],
+        explanation:
+          "Total accepted = 130. Total non-accepted = 48 + 38 = 86. 130:86; GCD(130, 86) = 2. 130/2 = 65, 86/2 = 43, giving 65:43. Distractor 43:65 reverses the ratio. Distractor 130:86 is the unsimplified form. Distractor 3:2 approximates but uses 129:86 = 3:2 (rounding accepted down by 1).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "drug-alcohol-service-contacts-monthly",
+    stimulus: [
+      "A community drug and alcohol service recorded client contacts by service type across five months.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Community Drug and Alcohol Service Contacts",
+      yLabel: "Contacts",
+      categories: [
+        { label: "Feb", value: 320 },
+        { label: "Mar", value: 360 },
+        { label: "Apr", value: 400 },
+        { label: "May", value: 380 },
+        { label: "Jun", value: 440 },
+      ],
+      max: 500,
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, by what percentage did contacts increase from February to June?",
+        correct: "37.5%",
+        distractors: ["120 contacts", "137.5%", "27.3%"],
+        explanation:
+          "February = 320, June = 440, increase = 120. 120/320 × 100 = 37.5%. Distractor 120 contacts: gives the absolute increase. Distractor 137.5%: calculates 440/320 × 100 (percentage of, not increase). Distractor 27.3%: uses June as the denominator (120/440 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of contacts per month across all five months?",
+        correct: "380",
+        distractors: ["360", "400", "475"],
+        explanation:
+          "Total contacts = 320 + 360 + 400 + 380 + 440 = 1900. 1900/5 = 380. Distractor 360: reads March directly. Distractor 400: reads April directly. Distractor 475: divides total by 4 instead of 5 (1900/4).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Approximately what fraction of all contacts over the five months occurred in June?",
+        correct: "2/9",
+        distractors: ["1/4", "1/5", "1/3"],
+        explanation:
+          "June = 440, total = 1900. 440/1900 ≈ 0.232. 2/9 ≈ 0.222 is the closest of the four options. Distractor 1/4 (0.25) is above the true proportion. Distractor 1/5 (0.20) would require June ≈ 380, the monthly mean. Distractor 1/3 (0.333) would require June ≈ 633, well above the actual value.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of February contacts to April contacts in its simplest form?",
+        correct: "4:5",
+        distractors: ["5:4", "320:400", "8:9"],
+        explanation:
+          "February = 320, April = 400. GCD(320, 400) = 80. 320/80 = 4, 400/80 = 5, giving 4:5. Distractor 5:4 reverses the ratio. Distractor 320:400 is unsimplified. Distractor 8:9 compares March to April instead (360:400; GCD = 40; 9:10 — actually 360:400 = 9:10, not 8:9; so a student who divides by 45 gets 8:8.9 — alternatively they compare February to March: 320:360 = 8:9). The explanation: 8:9 compares February to March (320:360 = 8:9).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neonatal-unit-staffing-skill-mix",
+    stimulus: [
+      "A neonatal unit recorded nursing staff by grade and shift type during one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Neonatal Unit Nursing Staff by Grade and Shift",
+      headers: ["Grade", "Day shifts", "Night shifts", "Total"],
+      rows: [
+        ["Band 5", "36", "24", "60"],
+        ["Band 6", "30", "20", "50"],
+        ["Band 7", "18", "12", "30"],
+        ["Band 8", "6", "4", "10"],
+        ["Total", "90", "60", "150"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of Band 6 nursing staff worked day shifts?",
+        correct: "60%",
+        distractors: ["40%", "20%", "33.3%"],
+        explanation:
+          "Band 6 day shifts = 30, Band 6 total = 50. 30/50 × 100 = 60%. Distractor 40%: uses Band 6 night shifts instead (20/50 × 100). Distractor 20%: divides by the grand total (30/150 × 100). Distractor 33.3%: divides Band 6 day shifts by all day shifts (30/90 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For Band 7 nurses, what is the ratio of day shifts to night shifts in its simplest form?",
+        correct: "3:2",
+        distractors: ["2:3", "18:12", "9:6"],
+        explanation:
+          "Band 7 day = 18, night = 12. GCD(18, 12) = 6. 18/6 = 3, 12/6 = 2, giving 3:2. Distractor 2:3 reverses the ratio. Distractor 18:12 is unsimplified. Distractor 9:6 is also unsimplified (divides only by 2).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of day shifts per nursing grade?",
+        correct: "22.5",
+        distractors: ["30", "37.5", "18"],
+        explanation:
+          "Total day shifts = 90 across 4 grades. 90/4 = 22.5. Distractor 30: divides by 3 instead of 4 (90/3 = 30). Distractor 37.5: divides total shifts (150) by 4 instead of day shifts (90/4). Actually 150/4 = 37.5 — divides all shifts by 4 instead of just day shifts. Distractor 18: reads Band 7 day shifts directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "Band 5 nurses make up what percentage of all night-shift workers? Give your answer to the nearest whole number.",
+        correct: "40%",
+        distractors: ["16%", "60%", "27%"],
+        explanation:
+          "Band 5 night shifts = 24, total night shifts = 60. 24/60 × 100 = 40%. Distractor 16%: uses 24/150 × 100 (total shifts as denominator). Distractor 60%: reads Band 5 day shifts as a percentage of night total (36/60 × 100). Distractor 27%: uses 24/90 × 100 (day-shift total as denominator).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "museum-gallery-visitor-numbers",
+    stimulus: [
+      "A regional museum recorded visitor numbers by gallery across four months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Museum Gallery Visitor Numbers by Month",
+      yLabel: "Visitors",
+      seriesLabels: ["Gallery A", "Gallery B"],
+      groups: [
+        { label: "Mar", values: [600, 400] },
+        { label: "Apr", values: [750, 500] },
+        { label: "May", values: [900, 600] },
+        { label: "Jun", values: [750, 750] },
+      ],
+      max: 1000,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean monthly visitor count for Gallery B across all four months?",
+        correct: "562.5",
+        distractors: ["500", "600", "675"],
+        explanation:
+          "Gallery B values: 400 + 500 + 600 + 750 = 2250. 2250/4 = 562.5. Distractor 500: reads April Gallery B directly. Distractor 600: reads May Gallery B directly. Distractor 675: divides Gallery B total by 3 instead of 4 (2250/3).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did Gallery A visitor numbers increase from March to May?",
+        correct: "50%",
+        distractors: ["300 visitors", "150%", "33.3%"],
+        explanation:
+          "March Gallery A = 600, May Gallery A = 900, increase = 300. 300/600 × 100 = 50%. Distractor 300 visitors: gives the absolute increase. Distractor 150%: calculates 900/600 × 100 (percentage of, not increase). Distractor 33.3%: uses May as the denominator (300/900 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In March, what is the ratio of Gallery A visitors to Gallery B visitors in its simplest form?",
+        correct: "3:2",
+        distractors: ["2:3", "600:400", "6:5"],
+        explanation:
+          "March Gallery A = 600, Gallery B = 400. GCD(600, 400) = 200. 600/200 = 3, 400/200 = 2, giving 3:2. Distractor 2:3 reverses the ratio. Distractor 600:400 is unsimplified. Distractor 6:5 compares May values instead (900:750; GCD = 150; 6:5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "In April, Gallery A visitors made up what percentage of the combined April total for both galleries?",
+        correct: "60%",
+        distractors: ["40%", "150%", "50%"],
+        explanation:
+          "April Gallery A = 750, Gallery B = 500, combined = 1250. 750/1250 × 100 = 60%. Distractor 40%: uses Gallery B April / combined (500/1250 × 100). Distractor 150%: calculates Gallery A as a percentage of Gallery B only (750/500 × 100). Distractor 50%: assumes both galleries are equal and uses 750/1500 × 100 instead of the correct combined total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "maxillofacial-clinic-appointment-types",
+    stimulus: [
+      "A maxillofacial surgery clinic recorded appointment outcomes by type over one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Maxillofacial Clinic Appointment Outcomes",
+      headers: ["Appointment type", "Completed", "Rescheduled", "DNA", "Total"],
+      rows: [
+        ["Surgical review", "50", "15", "5", "70"],
+        ["Orthodontic joint", "40", "10", "10", "60"],
+        ["Trauma follow-up", "30", "6", "4", "40"],
+        ["Pre-op assessment", "60", "18", "12", "90"],
+        ["Total", "180", "49", "31", "260"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many trauma follow-up appointments were rescheduled?",
+        correct: "6",
+        distractors: ["4", "40", "10"],
+        explanation:
+          "Trauma follow-up rescheduled = 6. Distractor 4: reads trauma DNA instead. Distractor 40: reads the trauma follow-up row total. Distractor 10: reads orthodontic joint rescheduled (wrong row).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of pre-op assessment appointments were DNA?",
+        correct: "13.3%",
+        distractors: ["38.7%", "4.6%", "16.7%"],
+        explanation:
+          "Pre-op assessment DNA = 12, pre-op total = 90. 12/90 × 100 = 13.3%. Distractor 38.7%: uses all DNA as denominator (12/31 × 100). Distractor 4.6%: uses grand total (12/260 × 100). Distractor 16.7%: reads orthodontic joint DNA/total instead (10/60 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of rescheduled appointments per appointment type?",
+        correct: "12.25",
+        distractors: ["6", "16.3", "18"],
+        explanation:
+          "Total rescheduled = 49 across 4 appointment types. 49/4 = 12.25. Distractor 6: reads trauma follow-up rescheduled directly. Distractor 16.3: divides by 3 instead of 4 (49/3 ≈ 16.3). Distractor 18: reads pre-op assessment rescheduled directly.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For surgical review appointments, what is the ratio of completed to DNA outcomes in its simplest form?",
+        correct: "10:1",
+        distractors: ["1:10", "5:1", "10:3"],
+        explanation:
+          "Surgical review completed = 50, DNA = 5. 50:5 = 10:1. Distractor 1:10 reverses the ratio. Distractor 5:1 reads pre-op assessment instead (60:12 = 5:1). Distractor 10:3 compares surgical review completed to rescheduled instead (50:15 = 10:3).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "university-accommodation-room-types",
+    stimulus: [
+      "A university accommodation office recorded room bookings by room type for the academic year.",
+    ],
+    visual: {
+      type: "bar",
+      title: "University Accommodation Room Bookings by Type",
+      yLabel: "Bookings",
+      categories: [
+        { label: "En-suite single", value: 480 },
+        { label: "Standard single", value: 360 },
+        { label: "Twin shared", value: 240 },
+        { label: "Studio flat", value: 120 },
+        { label: "Family room", value: 60 },
+      ],
+      max: 550,
+    },
+    questions: [
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "En-suite single room bookings represent approximately what fraction of all room bookings?",
+        correct: "3/8",
+        distractors: ["2/5", "1/3", "1/4"],
+        explanation:
+          "Total bookings = 1260. En-suite single = 480. 480/1260 ≈ 0.381. 3/8 = 0.375 is the closest option. Distractor 2/5 (0.40) would require 504 bookings. Distractor 1/3 (0.333) would require 420 bookings. Distractor 1/4 (0.25) would require only 315 bookings.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "Standard single room bookings were what percentage more than twin shared room bookings?",
+        correct: "50%",
+        distractors: ["120 bookings", "150%", "33.3%"],
+        explanation:
+          "Standard single = 360, twin shared = 240, difference = 120. 120/240 × 100 = 50%. Distractor 120 bookings: gives the absolute difference. Distractor 150%: calculates 360/240 × 100 (percentage of, not more than). Distractor 33.3%: uses standard single as the denominator (120/360 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of room bookings per room type?",
+        correct: "252",
+        distractors: ["240", "315", "420"],
+        explanation:
+          "Total bookings = 1260 across 5 room types. 1260/5 = 252. Distractor 240: reads twin shared directly. Distractor 315: divides by 4 instead of 5 (1260/4). Distractor 420: divides by 3 instead of 5 (1260/3).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of studio flat bookings to family room bookings in its simplest form?",
+        correct: "2:1",
+        distractors: ["1:2", "4:1", "120:60"],
+        explanation:
+          "Studio flat = 120, family room = 60. GCD(120, 60) = 60. 120/60 = 2, 60/60 = 1, giving 2:1. Distractor 1:2 reverses the ratio. Distractor 4:1 compares en-suite single to studio flat instead (480:120). Distractor 120:60 is the correct pair left unsimplified.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-wellbeing-programme-referrals",
+    stimulus: [
+      "A local authority community wellbeing programme recorded referral source and programme completion status over one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Wellbeing Programme Referral Outcomes",
+      headers: ["Referral source", "Completed", "Withdrew", "Did not attend", "Total"],
+      rows: [
+        ["GP", "48", "12", "12", "72"],
+        ["Self-referral", "36", "18", "6", "60"],
+        ["Social care", "24", "8", "8", "40"],
+        ["Other healthcare", "18", "6", "4", "28"],
+        ["Total", "126", "44", "30", "200"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of GP referrals resulted in programme completion?",
+        correct: "66.7%",
+        distractors: ["33.3%", "38.1%", "24%"],
+        explanation:
+          "GP completed = 48, GP total = 72. 48/72 × 100 = 66.7%. Distractor 33.3%: uses GP non-completions as percentage of GP total (24/72 × 100). Distractor 38.1%: divides by all completed (48/126 × 100). Distractor 24%: divides by grand total (48/200 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For self-referral clients, what is the ratio of completed to withdrew outcomes in its simplest form?",
+        correct: "2:1",
+        distractors: ["1:2", "36:18", "3:1"],
+        explanation:
+          "Self-referral completed = 36, withdrew = 18. GCD(36, 18) = 18. 36/18 = 2, 18/18 = 1, giving 2:1. Distractor 1:2 reverses the ratio. Distractor 36:18 is the correct pair left unsimplified. Distractor 3:1 reads the social care row instead (24:8).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of did-not-attend outcomes per referral source?",
+        correct: "7.5",
+        distractors: ["6", "10", "12"],
+        explanation:
+          "Total did-not-attend = 30 across 4 referral sources. 30/4 = 7.5. Distractor 6: reads self-referral DNA directly. Distractor 10: divides by 3 instead of 4 (30/3). Distractor 12: reads GP DNA directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all participants across all referral sources did not attend their first session?",
+        correct: "15%",
+        distractors: ["30 participants", "22%", "85%"],
+        explanation:
+          "Total did-not-attend = 30, grand total = 200. 30/200 × 100 = 15%. Distractor 30 participants: gives the absolute count. Distractor 22%: reads the withdrew column total instead (44/200 × 100). Distractor 85%: uses completed plus withdrew as percentage (170/200 × 100), confusing non-attendance with the attendance rate.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "food-bank-parcel-distributions",
+    stimulus: [
+      "A local food bank charity recorded the number of emergency food parcels distributed to two client groups across four months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Emergency Food Parcel Distributions by Client Group",
+      yLabel: "Parcels",
+      seriesLabels: ["Families", "Individuals"],
+      groups: [
+        { label: "Jan", values: [300, 200] },
+        { label: "Feb", values: [360, 240] },
+        { label: "Mar", values: [420, 280] },
+        { label: "Apr", values: [480, 320] },
+      ],
+      max: 550,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean monthly Families distribution across all four months?",
+        correct: "390",
+        distractors: ["420", "480", "520"],
+        explanation:
+          "Families totals: 300 + 360 + 420 + 480 = 1560. 1560/4 = 390. Distractor 420: reads March Families directly. Distractor 480: reads April Families directly. Distractor 520: divides total by 3 instead of 4 (1560/3).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "In April, Families distributions were what percentage of the combined April total for both groups?",
+        correct: "60%",
+        distractors: ["40%", "480 parcels", "150%"],
+        explanation:
+          "April Families = 480, April Individuals = 320, combined = 800. 480/800 × 100 = 60%. Distractor 40%: uses Individuals instead (320/800 × 100). Distractor 480 parcels: gives the absolute Families count. Distractor 150%: calculates Families as a percentage of Individuals only (480/320 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In January, what is the ratio of Families to Individuals distributions in its simplest form?",
+        correct: "3:2",
+        distractors: ["2:3", "300:200", "6:4"],
+        explanation:
+          "January Families = 300, Individuals = 200. GCD(300, 200) = 100. 300/100 = 3, 200/100 = 2, giving 3:2. Distractor 2:3 reverses the ratio. Distractor 300:200 is the correct pair left unsimplified. Distractor 6:4 is a partial simplification dividing only by 50 instead of 100.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did Individuals distributions increase from January to March?",
+        correct: "40%",
+        distractors: ["80 parcels", "140%", "28.6%"],
+        explanation:
+          "January Individuals = 200, March Individuals = 280, increase = 80. 80/200 × 100 = 40%. Distractor 80 parcels: gives the absolute increase. Distractor 140%: calculates 280/200 × 100 (percentage of, not increase). Distractor 28.6%: uses March as the denominator (80/280 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cardiothoracic-surgery-procedure-volume",
+    stimulus: [
+      "A cardiothoracic surgical unit recorded procedure volumes by type and urgency classification over one year.",
+    ],
+    visual: {
+      type: "table",
+      title: "Cardiothoracic Procedure Volumes by Type and Urgency",
+      headers: ["Procedure type", "Elective", "Urgent", "Emergency", "Total"],
+      rows: [
+        ["CABG", "80", "40", "8", "128"],
+        ["Valve replacement", "60", "24", "8", "92"],
+        ["Lung resection", "72", "18", "6", "96"],
+        ["Aortic repair", "24", "36", "24", "84"],
+        ["Total", "236", "118", "46", "400"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For lung resection procedures, what is the ratio of elective to emergency cases in its simplest form?",
+        correct: "12:1",
+        distractors: ["1:12", "72:6", "10:1"],
+        explanation:
+          "Lung resection elective = 72, emergency = 6. GCD(72, 6) = 6. 72/6 = 12, 6/6 = 1, giving 12:1. Distractor 1:12 reverses the ratio. Distractor 72:6 is the correct pair left unsimplified. Distractor 10:1 compares CABG elective to CABG emergency instead (80:8).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of CABG procedures were elective?",
+        correct: "62.5%",
+        distractors: ["37.5%", "33.9%", "80"],
+        explanation:
+          "CABG elective = 80, CABG total = 128. 80/128 × 100 = 62.5%. Distractor 37.5%: uses CABG urgent plus emergency (48/128 × 100). Distractor 33.9%: divides by all elective (80/236 × 100). Distractor 80: reads the elective CABG cell directly without dividing.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of emergency procedures per procedure type?",
+        correct: "11.5",
+        distractors: ["8", "15.3", "23"],
+        explanation:
+          "Total emergency = 46 across 4 procedure types. 46/4 = 11.5. Distractor 8: reads CABG or valve replacement emergency directly (both are 8). Distractor 15.3: divides by 3 instead of 4 (46/3 ≈ 15.3). Distractor 23: divides by 2 instead of 4 (46/2).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all procedures were elective?",
+        correct: "59%",
+        distractors: ["29.5%", "41%", "80"],
+        explanation:
+          "Total elective = 236, grand total = 400. 236/400 × 100 = 59%. Distractor 29.5%: uses urgent instead (118/400 × 100). Distractor 41%: uses urgent plus emergency (164/400 × 100). Distractor 80: reads CABG elective directly.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "railway-station-departure-delays",
+    stimulus: [
+      "A mainline railway station recorded the mean departure delay per day in minutes across six consecutive weeks.",
+    ],
+    visual: {
+      type: "line",
+      title: "Mean Daily Departure Delay by Week",
+      yLabel: "Delay (minutes)",
+      points: [
+        { label: "Wk 1", value: 8 },
+        { label: "Wk 2", value: 12 },
+        { label: "Wk 3", value: 15 },
+        { label: "Wk 4", value: 11 },
+        { label: "Wk 5", value: 14 },
+        { label: "Wk 6", value: 16 },
+      ],
+      max: 20,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1 minutes, what was the mean daily departure delay per week across all six weeks?",
+        correct: "12.7 min",
+        distractors: ["12 min", "15 min", "15.2 min"],
+        explanation:
+          "Total across six weeks = 8+12+15+11+14+16 = 76. 76/6 = 12.67 ≈ 12.7 min. Distractor 12 min: reads Week 2 directly. Distractor 15 min: reads Week 3 directly. Distractor 15.2 min: divides by 5 instead of 6 (76/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did the mean delay increase from Week 1 to Week 6?",
+        correct: "100%",
+        distractors: ["8 minutes", "200%", "50%"],
+        explanation:
+          "Week 1 = 8 min, Week 6 = 16 min, increase = 8 min. 8/8 × 100 = 100%. Distractor 8 minutes: gives the absolute increase. Distractor 200%: calculates 16/8 × 100 (percentage of, not increase). Distractor 50%: uses Week 6 as the denominator (8/16 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which week had the closest mean delay to the overall mean across all six weeks?",
+        correct: "Wk 2",
+        distractors: ["Wk 4", "Wk 5", "Wk 3"],
+        explanation:
+          "Overall mean = 76/6 = 12.7 min. Week 2 = 12 (difference 0.7), Week 4 = 11 (difference 1.7), Week 5 = 14 (difference 1.3), Week 3 = 15 (difference 2.3). Week 2 is closest. Distractor Wk 4: second furthest of the options listed. Distractor Wk 5: 1.3 away, further than Week 2. Distractor Wk 3: 2.3 away.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of Week 1 mean delay to Week 6 mean delay in its simplest form?",
+        correct: "1:2",
+        distractors: ["2:1", "8:16", "3:4"],
+        explanation:
+          "Week 1 = 8 min, Week 6 = 16 min. GCD(8, 16) = 8. 8/8 = 1, 16/8 = 2, giving 1:2. Distractor 2:1 reverses the ratio. Distractor 8:16 is the correct pair left unsimplified. Distractor 3:4 compares Week 2 to Week 6 instead (12:16 = 3:4).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cleft-service-multidisciplinary-outcomes",
+    stimulus: [
+      "A cleft lip and palate multidisciplinary team recorded assessment outcomes by specialist at the annual review clinic.",
+    ],
+    visual: {
+      type: "table",
+      title: "Cleft MDT Annual Review Outcomes",
+      headers: ["Specialist", "Review complete", "Follow-up needed", "Discharged", "Total"],
+      rows: [
+        ["Speech therapist", "48", "24", "8", "80"],
+        ["Orthodontist", "40", "30", "10", "80"],
+        ["Surgeon", "56", "12", "12", "80"],
+        ["Psychologist", "60", "16", "4", "80"],
+        ["Total", "204", "82", "34", "320"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of surgeon assessments required follow-up?",
+        correct: "15%",
+        distractors: ["35.3%", "3.75%", "20%"],
+        explanation:
+          "Surgeon follow-up = 12, surgeon total = 80. 12/80 × 100 = 15%. Distractor 35.3%: uses all follow-up as denominator (12/34 × 100). Distractor 3.75%: uses grand total (12/320 × 100). Distractor 20%: reads psychologist follow-up / total instead (16/80 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of discharged patients per specialist?",
+        correct: "8.5",
+        distractors: ["8", "11.3", "10"],
+        explanation:
+          "Total discharged = 34 across 4 specialists. 34/4 = 8.5. Distractor 8: reads speech therapist discharged directly. Distractor 11.3: divides by 3 instead of 4 (34/3 ≈ 11.3). Distractor 10: reads orthodontist discharged directly.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For the psychologist, what is the ratio of review complete to follow-up needed outcomes in its simplest form?",
+        correct: "15:4",
+        distractors: ["4:15", "60:16", "2:1"],
+        explanation:
+          "Psychologist review complete = 60, follow-up = 16. GCD(60, 16) = 4. 60/4 = 15, 16/4 = 4, giving 15:4. Distractor 4:15 reverses the ratio. Distractor 60:16 is the correct pair left unsimplified. Distractor 2:1 reads speech therapist review complete to follow-up instead (48:24).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all patients assessed were discharged?",
+        correct: "10.6%",
+        distractors: ["34 patients", "25.6%", "89.4%"],
+        explanation:
+          "Total discharged = 34, grand total = 320. 34/320 × 100 = 10.625 ≈ 10.6%. Distractor 34 patients: gives the absolute count. Distractor 25.6%: reads follow-up total instead (82/320 × 100). Distractor 89.4%: uses review complete plus follow-up (286/320 × 100), confusing discharged with the non-discharged proportion.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "rehabilitation-gym-session-attendance",
+    stimulus: [
+      "A hospital inpatient rehabilitation unit recorded the number of gym therapy sessions attended by patients over five consecutive weeks.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Rehabilitation Gym Session Attendance by Week",
+      yLabel: "Sessions",
+      categories: [
+        { label: "Week 1", value: 80 },
+        { label: "Week 2", value: 96 },
+        { label: "Week 3", value: 120 },
+        { label: "Week 4", value: 104 },
+        { label: "Week 5", value: 100 },
+      ],
+      max: 140,
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did gym session attendance increase from Week 1 to Week 5?",
+        correct: "25%",
+        distractors: ["20 sessions", "125%", "20%"],
+        explanation:
+          "Week 1 = 80, Week 5 = 100, increase = 20. 20/80 × 100 = 25%. Distractor 20 sessions: gives the absolute increase. Distractor 125%: calculates 100/80 × 100 (percentage of, not increase). Distractor 20%: uses Week 5 as the denominator (20/100 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of gym sessions per week across all five weeks?",
+        correct: "100",
+        distractors: ["96", "120", "125"],
+        explanation:
+          "Total sessions = 80+96+120+104+100 = 500. 500/5 = 100. Distractor 96: reads Week 2 directly. Distractor 120: reads Week 3, the peak week. Distractor 125: divides by 4 instead of 5 (500/4).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of Week 2 sessions to Week 3 sessions in its simplest form?",
+        correct: "4:5",
+        distractors: ["5:4", "96:120", "5:6"],
+        explanation:
+          "Week 2 = 96, Week 3 = 120. GCD(96, 120) = 24. 96/24 = 4, 120/24 = 5, giving 4:5. Distractor 5:4 reverses the ratio. Distractor 96:120 is the correct pair left unsimplified. Distractor 5:6 compares Week 1 to Week 2 instead (80:96 = 5:6).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Week 3 sessions represent approximately what fraction of all sessions across the five weeks?",
+        correct: "1/4",
+        distractors: ["1/5", "1/3", "3/10"],
+        explanation:
+          "Total = 500. Week 3 = 120. 120/500 = 0.24, closest to 1/4 (0.25). Distractor 1/5 (0.20) would require 100 sessions, the mean. Distractor 1/3 (0.333) would require ~167 sessions. Distractor 3/10 (0.30) would require 150 sessions, well above the 120 recorded.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "school-library-book-loans-by-genre",
+    stimulus: [
+      "A secondary school library recorded book loans by genre across three terms of the academic year.",
+    ],
+    visual: {
+      type: "table",
+      title: "School Library Book Loans by Genre and Term",
+      headers: ["Genre", "Autumn", "Spring", "Summer", "Total"],
+      rows: [
+        ["Fiction", "240", "180", "120", "540"],
+        ["Non-fiction", "120", "90", "60", "270"],
+        ["Science", "80", "100", "60", "240"],
+        ["Reference", "60", "30", "60", "150"],
+        ["Total", "500", "400", "300", "1200"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Fiction loans in autumn represented what percentage of all autumn loans?",
+        correct: "48%",
+        distractors: ["20%", "44.4%", "120"],
+        explanation:
+          "Autumn fiction = 240, autumn total = 500. 240/500 × 100 = 48%. Distractor 20%: reads non-fiction autumn / autumn total (120/500 × 100). Distractor 44.4%: divides by fiction full-year total (240/540 × 100). Distractor 120: reads non-fiction autumn directly.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of fiction loans to non-fiction loans across the full year in its simplest form?",
+        correct: "2:1",
+        distractors: ["1:2", "540:270", "3:2"],
+        explanation:
+          "Fiction total = 540, non-fiction total = 270. GCD = 270. 540/270 = 2, 270/270 = 1, giving 2:1. Distractor 1:2 reverses the ratio. Distractor 540:270 is the correct pair left unsimplified. Distractor 3:2 compares fiction spring to fiction summer instead (180:120 = 3:2).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of loans per genre during the spring term?",
+        correct: "100",
+        distractors: ["90", "133.3", "180"],
+        explanation:
+          "Spring total = 400 across 4 genres. 400/4 = 100. Distractor 90: reads non-fiction spring directly. Distractor 133.3: divides by 3 instead of 4 (400/3). Distractor 180: reads fiction spring directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "Summer loans represented what percentage of total loans across the year?",
+        correct: "25%",
+        distractors: ["300 loans", "75%", "33.3%"],
+        explanation:
+          "Summer total = 300, grand total = 1200. 300/1200 × 100 = 25%. Distractor 300 loans: gives the absolute count. Distractor 75%: uses autumn plus spring (900/1200 × 100), the complement. Distractor 33.3%: reads spring term as percentage of total (400/1200 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-pharmacy-dispensing-error-types",
+    stimulus: [
+      "A community pharmacy audit recorded dispensing errors by error category and severity level over six months.",
+    ],
+    visual: {
+      type: "table",
+      title: "Dispensing Error Audit by Category and Severity",
+      headers: ["Error category", "Near miss", "Minor", "Significant", "Total"],
+      rows: [
+        ["Wrong drug", "20", "10", "2", "32"],
+        ["Wrong dose", "30", "15", "3", "48"],
+        ["Wrong patient", "25", "10", "5", "40"],
+        ["Wrong instructions", "15", "5", "0", "20"],
+        ["Total", "90", "40", "10", "140"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For wrong-dose errors, what is the ratio of near misses to significant errors in its simplest form?",
+        correct: "10:1",
+        distractors: ["1:10", "30:3", "5:1"],
+        explanation:
+          "Wrong-dose near miss = 30, significant = 3. GCD(30, 3) = 3. 30/3 = 10, 3/3 = 1, giving 10:1. Distractor 1:10 reverses the ratio. Distractor 30:3 is the correct pair left unsimplified. Distractor 5:1 reads wrong-patient instead (near miss 25 to significant 5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all significant errors involved the wrong patient?",
+        correct: "50%",
+        distractors: ["12.5%", "3.6%", "25 errors"],
+        explanation:
+          "Wrong-patient significant = 5, total significant = 10. 5/10 × 100 = 50%. Distractor 12.5%: uses total minor as denominator (5/40 × 100). Distractor 3.6%: uses grand total (5/140 × 100). Distractor 25 errors: reads wrong-patient near miss directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of near-miss errors per error category?",
+        correct: "22.5",
+        distractors: ["20", "30", "45"],
+        explanation:
+          "Total near miss = 90 across 4 categories. 90/4 = 22.5. Distractor 20: reads wrong-drug near miss directly. Distractor 30: reads wrong-dose near miss directly. Distractor 45: divides by 2 instead of 4 (90/2).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all recorded errors were near misses?",
+        correct: "64.3%",
+        distractors: ["35.7%", "90 errors", "28.6%"],
+        explanation:
+          "Total near miss = 90, grand total = 140. 90/140 × 100 = 64.3%. Distractor 35.7%: uses minor plus significant (50/140 × 100), the complement. Distractor 90 errors: gives the absolute count. Distractor 28.6%: reads total minor as percentage (40/140 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gp-appointment-length-by-reason",
+    stimulus: [
+      "A GP practice recorded mean appointment length in minutes by consultation reason across two consecutive months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Mean GP Appointment Length by Consultation Reason",
+      yLabel: "Duration (minutes)",
+      seriesLabels: ["Month 1", "Month 2"],
+      groups: [
+        { label: "Routine review", values: [10, 12] },
+        { label: "Acute illness", values: [15, 18] },
+        { label: "Mental health", values: [20, 24] },
+        { label: "Complex/multi", values: [35, 42] },
+      ],
+      max: 50,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean appointment length across all four consultation reasons in Month 1?",
+        correct: "20 min",
+        distractors: ["15 min", "18 min", "26.7 min"],
+        explanation:
+          "Month 1 values: 10+15+20+35 = 80. 80/4 = 20 min. Distractor 15 min: reads acute illness Month 1 directly. Distractor 18 min: reads acute illness Month 2. Distractor 26.7 min: divides total by 3 instead of 4 (80/3 ≈ 26.7).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did the complex/multi-morbidity appointment length increase from Month 1 to Month 2?",
+        correct: "20%",
+        distractors: ["7 minutes", "120%", "16.7%"],
+        explanation:
+          "Month 1 complex = 35 min, Month 2 = 42 min, increase = 7 min. 7/35 × 100 = 20%. Distractor 7 minutes: gives the absolute increase. Distractor 120%: calculates 42/35 × 100 (percentage of, not increase). Distractor 16.7%: uses Month 2 as the denominator (7/42 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Month 1, what is the ratio of routine review to mental health appointment length in its simplest form?",
+        correct: "1:2",
+        distractors: ["2:1", "10:20", "2:3"],
+        explanation:
+          "Routine review Month 1 = 10 min, mental health Month 1 = 20 min. GCD(10, 20) = 10. 10/10 = 1, 20/10 = 2, giving 1:2. Distractor 2:1 reverses the ratio. Distractor 10:20 is the correct pair left unsimplified. Distractor 2:3 compares routine review to acute illness instead (10:15 = 2:3).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Mental health appointments represent approximately what fraction of all Month 2 appointments by total duration?",
+        correct: "1/4",
+        distractors: ["1/3", "1/5", "1/6"],
+        explanation:
+          "Month 2 total: 12+18+24+42 = 96 min. Mental health = 24. 24/96 = 1/4 exactly. Distractor 1/3 (0.333) would require 32 min. Distractor 1/5 (0.20) would require ~19 min. Distractor 1/6 (0.167) would require 16 min.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "coastal-water-quality-monitoring",
+    stimulus: [
+      "An environmental agency recorded monthly mean bacteria counts in colony-forming units per 100 mL at a coastal monitoring site.",
+    ],
+    visual: {
+      type: "line",
+      title: "Coastal Bacteria Count by Month",
+      yLabel: "cfu/100 mL",
+      points: [
+        { label: "Apr", value: 120 },
+        { label: "May", value: 90 },
+        { label: "Jun", value: 60 },
+        { label: "Jul", value: 45 },
+        { label: "Aug", value: 75 },
+        { label: "Sep", value: 90 },
+      ],
+      max: 140,
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did the bacteria count decrease from April to July?",
+        correct: "62.5%",
+        distractors: ["75 cfu/100 mL", "37.5%", "166.7%"],
+        explanation:
+          "April = 120, July = 45, decrease = 75. 75/120 × 100 = 62.5%. Distractor 75 cfu/100 mL: gives the absolute decrease. Distractor 37.5%: calculates July as a percentage of April (45/120 × 100), confusing the final value with the decrease. Distractor 166.7%: uses July as the denominator (75/45 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean monthly bacteria count across all six months?",
+        correct: "80 cfu/100 mL",
+        distractors: ["75 cfu/100 mL", "90 cfu/100 mL", "96 cfu/100 mL"],
+        explanation:
+          "Total = 120+90+60+45+75+90 = 480. 480/6 = 80. Distractor 75: reads July directly (the lowest value). Distractor 90: reads May or September directly. Distractor 96: divides total by 5 instead of 6 (480/5).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which month had the closest bacteria count to the overall mean across all six months?",
+        correct: "Aug",
+        distractors: ["May", "Sep", "Jun"],
+        explanation:
+          "Overall mean = 80. August = 75 (difference 5), May = 90 (difference 10), September = 90 (difference 10), June = 60 (difference 20). August is the closest. Distractor May and Sep: both 10 away, further than August. Distractor Jun: 20 away.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of the June count to the September count in its simplest form?",
+        correct: "2:3",
+        distractors: ["3:2", "60:90", "1:2"],
+        explanation:
+          "June = 60, September = 90. GCD(60, 90) = 30. 60/30 = 2, 90/30 = 3, giving 2:3. Distractor 3:2 reverses the ratio. Distractor 60:90 is the correct pair left unsimplified. Distractor 1:2 compares July to September instead (45:90 = 1:2).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "fracture-liaison-fragility-assessments",
+    stimulus: [
+      "A fracture liaison service recorded assessment outcomes for fragility fracture patients by fracture site.",
+    ],
+    visual: {
+      type: "table",
+      title: "Fragility Fracture Assessment Outcomes",
+      headers: ["Fracture site", "Assessed", "Declined", "Not eligible", "Total"],
+      rows: [
+        ["Hip", "48", "8", "4", "60"],
+        ["Wrist", "60", "12", "8", "80"],
+        ["Vertebral", "30", "6", "4", "40"],
+        ["Shoulder", "36", "12", "12", "60"],
+        ["Total", "174", "38", "28", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For shoulder fracture patients, what is the ratio of assessed to not-eligible patients in its simplest form?",
+        correct: "3:1",
+        distractors: ["1:3", "36:12", "2:1"],
+        explanation:
+          "Shoulder assessed = 36, not eligible = 12. GCD(36, 12) = 12. 36/12 = 3, 12/12 = 1, giving 3:1. Distractor 1:3 reverses the ratio. Distractor 36:12 is the correct pair left unsimplified. Distractor 2:1 reads hip declined to hip not-eligible instead (8:4).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of wrist fracture patients were assessed?",
+        correct: "75%",
+        distractors: ["25%", "34.5%", "80"],
+        explanation:
+          "Wrist assessed = 60, wrist total = 80. 60/80 × 100 = 75%. Distractor 25%: uses wrist declined plus not-eligible (20/80 × 100). Distractor 34.5%: divides by all assessed (60/174 × 100). Distractor 80: reads the wrist total directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of not-eligible patients per fracture site?",
+        correct: "7",
+        distractors: ["4", "9.3", "8"],
+        explanation:
+          "Total not eligible = 28 across 4 fracture sites. 28/4 = 7. Distractor 4: reads hip or vertebral not-eligible directly (both are 4). Distractor 9.3: divides by 3 instead of 4 (28/3 ≈ 9.3). Distractor 8: reads wrist not-eligible directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all patients were classified as not eligible?",
+        correct: "11.7%",
+        distractors: ["28 patients", "16.1%", "42.4%"],
+        explanation:
+          "Not eligible = 28, grand total = 240. 28/240 × 100 = 11.7%. Distractor 28 patients: gives the absolute count. Distractor 16.1%: divides by total assessed (28/174 × 100). Distractor 42.4%: divides by total non-assessed (28/66 × 100), where 66 = declined plus not-eligible.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cardiology-holter-monitor-findings",
+    stimulus: [
+      "A cardiology department recorded the number of 24-hour Holter monitor reports by main finding category over one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Holter Monitor Reports by Finding Category",
+      yLabel: "Reports",
+      categories: [
+        { label: "Normal rhythm", value: 120 },
+        { label: "Minor ectopics", value: 90 },
+        { label: "Paroxysmal AF", value: 60 },
+        { label: "Significant arrhythmia", value: 30 },
+      ],
+      max: 140,
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "Normal rhythm reports were what percentage more than paroxysmal AF reports?",
+        correct: "100%",
+        distractors: ["60 reports", "200%", "50%"],
+        explanation:
+          "Normal rhythm = 120, paroxysmal AF = 60, difference = 60. 60/60 × 100 = 100%. Distractor 60 reports: gives the absolute difference. Distractor 200%: calculates 120/60 × 100 (percentage of, not more than). Distractor 50%: uses normal rhythm as the denominator (60/120 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of reports per finding category?",
+        correct: "75",
+        distractors: ["90", "100", "60"],
+        explanation:
+          "Total reports = 120+90+60+30 = 300, across 4 categories. 300/4 = 75. Distractor 90: reads minor ectopics directly. Distractor 100: divides by 3 instead of 4 (300/3). Distractor 60: reads paroxysmal AF directly.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of normal rhythm reports to significant arrhythmia reports in its simplest form?",
+        correct: "4:1",
+        distractors: ["1:4", "120:30", "2:1"],
+        explanation:
+          "Normal rhythm = 120, significant arrhythmia = 30. GCD(120, 30) = 30. 120/30 = 4, 30/30 = 1, giving 4:1. Distractor 1:4 reverses the ratio. Distractor 120:30 is the correct pair left unsimplified. Distractor 2:1 compares paroxysmal AF to significant arrhythmia instead (60:30).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "Minor ectopics reports represented what percentage of all reports?",
+        correct: "30%",
+        distractors: ["70%", "90 reports", "33.3%"],
+        explanation:
+          "Minor ectopics = 90, total = 300. 90/300 × 100 = 30%. Distractor 70%: uses all other categories (210/300 × 100), the complement. Distractor 90 reports: gives the absolute count. Distractor 33.3%: uses 90/270 × 100 (divides by total minus minor ectopics).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "airport-security-queue-times",
+    stimulus: [
+      "An airport recorded mean passenger security queue time in minutes across eight consecutive weeks.",
+    ],
+    visual: {
+      type: "line",
+      title: "Mean Security Queue Time by Week",
+      yLabel: "Queue time (minutes)",
+      points: [
+        { label: "Wk 1", value: 12 },
+        { label: "Wk 2", value: 15 },
+        { label: "Wk 3", value: 20 },
+        { label: "Wk 4", value: 18 },
+        { label: "Wk 5", value: 16 },
+        { label: "Wk 6", value: 22 },
+        { label: "Wk 7", value: 25 },
+        { label: "Wk 8", value: 28 },
+      ],
+      max: 32,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1 minutes, what was the mean queue time per week across all eight weeks?",
+        correct: "19.5 min",
+        distractors: ["18 min", "20 min", "26 min"],
+        explanation:
+          "Total = 12+15+20+18+16+22+25+28 = 156. 156/8 = 19.5 min. Distractor 18 min: reads Week 4 directly. Distractor 20 min: reads Week 3 directly. Distractor 26 min: divides by 6 instead of 8 (156/6).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, by what percentage did queue time increase from Week 1 to Week 8?",
+        correct: "133.3%",
+        distractors: ["16 minutes", "233.3%", "57.1%"],
+        explanation:
+          "Week 1 = 12 min, Week 8 = 28 min, increase = 16 min. 16/12 × 100 = 133.3%. Distractor 16 minutes: gives the absolute increase. Distractor 233.3%: calculates 28/12 × 100 (percentage of, not increase). Distractor 57.1%: uses Week 8 as the denominator (16/28 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which week had the closest mean queue time to the overall mean across all eight weeks?",
+        correct: "Wk 3",
+        distractors: ["Wk 4", "Wk 6", "Wk 2"],
+        explanation:
+          "Overall mean = 19.5 min. Week 3 = 20 (difference 0.5), Week 4 = 18 (difference 1.5), Week 6 = 22 (difference 2.5), Week 2 = 15 (difference 4.5). Week 3 is the closest. Distractor Wk 4: second closest at 1.5 away. Distractor Wk 6: 2.5 away. Distractor Wk 2: 4.5 away.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of Week 3 queue time to Week 6 queue time in its simplest form?",
+        correct: "10:11",
+        distractors: ["11:10", "20:22", "9:11"],
+        explanation:
+          "Week 3 = 20 min, Week 6 = 22 min. GCD(20, 22) = 2. 20/2 = 10, 22/2 = 11, giving 10:11. Distractor 11:10 reverses the ratio. Distractor 20:22 is the correct pair left unsimplified. Distractor 9:11 compares Week 4 to Week 6 instead (18:22 = 9:11).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "school-exam-grade5-passes",
+    stimulus: [
+      "A secondary school recorded the number of students achieving grade 5 or above in four core subjects across two consecutive years.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Grade 5+ Passes by Subject and Year",
+      yLabel: "Students",
+      seriesLabels: ["Year 1", "Year 2"],
+      groups: [
+        { label: "English", values: [100, 120] },
+        { label: "Maths", values: [80, 80] },
+        { label: "Science", values: [60, 80] },
+        { label: "History", values: [40, 40] },
+      ],
+      max: 130,
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did English grade 5+ passes increase from Year 1 to Year 2?",
+        correct: "20%",
+        distractors: ["20 students", "120%", "16.7%"],
+        explanation:
+          "Year 1 English = 100, Year 2 = 120, increase = 20. 20/100 × 100 = 20%. Distractor 20 students: gives the absolute increase. Distractor 120%: calculates 120/100 × 100 (percentage of, not increase). Distractor 16.7%: uses Year 2 as the denominator (20/120 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of grade 5+ passes per subject in Year 1?",
+        correct: "70",
+        distractors: ["80", "60", "93.3"],
+        explanation:
+          "Year 1 total = 100+80+60+40 = 280. 280/4 = 70. Distractor 80: reads Year 1 maths directly. Distractor 60: reads Year 1 science directly. Distractor 93.3: divides by 3 instead of 4 (280/3 ≈ 93.3).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Year 2, what is the ratio of English to History grade 5+ passes in its simplest form?",
+        correct: "3:1",
+        distractors: ["1:3", "120:40", "2:1"],
+        explanation:
+          "Year 2 English = 120, History = 40. GCD(120, 40) = 40. 120/40 = 3, 40/40 = 1, giving 3:1. Distractor 1:3 reverses the ratio. Distractor 120:40 is the correct pair left unsimplified. Distractor 2:1 compares Year 2 Maths to History instead (80:40).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Year 2 Science passes represent approximately what fraction of all Year 2 passes?",
+        correct: "1/4",
+        distractors: ["1/3", "1/5", "3/10"],
+        explanation:
+          "Year 2 total = 120+80+80+40 = 320. Science Year 2 = 80. 80/320 = 1/4 exactly. Distractor 1/3 (0.333) would require ~107 passes. Distractor 1/5 (0.20) would require 64 passes. Distractor 3/10 (0.30) would require 96 passes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-feeding-clinic-outcomes",
+    stimulus: [
+      "A paediatric feeding clinic recorded intervention outcomes by feeding difficulty type over two quarters.",
+    ],
+    visual: {
+      type: "table",
+      title: "Paediatric Feeding Clinic Outcomes",
+      headers: ["Feeding difficulty", "Resolved", "Ongoing support", "Referred on", "Total"],
+      rows: [
+        ["Breast/bottle refusal", "40", "20", "10", "70"],
+        ["Texture aversion", "30", "30", "10", "70"],
+        ["ARFID", "12", "24", "14", "50"],
+        ["Swallowing difficulty", "18", "18", "24", "60"],
+        ["Total", "100", "92", "58", "250"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of ARFID cases were resolved?",
+        correct: "24%",
+        distractors: ["12%", "20.7%", "57.1%"],
+        explanation:
+          "ARFID resolved = 12, ARFID total = 50. 12/50 × 100 = 24%. Distractor 12%: reads the resolved cell value directly without dividing. Distractor 20.7%: uses total referred-on as denominator (12/58 × 100). Distractor 57.1%: reads breast/bottle refusal resolved as a percentage of its own row total (40/70 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of referred-on cases per feeding difficulty type?",
+        correct: "14.5",
+        distractors: ["10", "19.3", "14"],
+        explanation:
+          "Total referred on = 58 across 4 feeding difficulty types. 58/4 = 14.5. Distractor 10: reads breast/bottle refusal or texture aversion referred-on directly (both are 10). Distractor 19.3: divides by 3 instead of 4 (58/3 ≈ 19.3). Distractor 14: reads ARFID referred-on directly.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For swallowing difficulty cases, what is the ratio of resolved to referred-on outcomes in its simplest form?",
+        correct: "3:4",
+        distractors: ["4:3", "18:24", "1:1"],
+        explanation:
+          "Swallowing difficulty resolved = 18, referred on = 24. GCD(18, 24) = 6. 18/6 = 3, 24/6 = 4, giving 3:4. Distractor 4:3 reverses the ratio. Distractor 18:24 is the correct pair left unsimplified. Distractor 1:1 reads swallowing difficulty resolved to ongoing support instead (18:18).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all cases were referred on?",
+        correct: "23.2%",
+        distractors: ["58 cases", "36.8%", "40%"],
+        explanation:
+          "Total referred on = 58, grand total = 250. 58/250 × 100 = 23.2%. Distractor 58 cases: gives the absolute count. Distractor 36.8%: reads ongoing support column (92/250 × 100). Distractor 40%: reads resolved column (100/250 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cycling-club-weekly-ride-distance",
+    stimulus: [
+      "A cycling club recorded the mean weekly ride distance in kilometres per member across six consecutive months.",
+    ],
+    visual: {
+      type: "line",
+      title: "Mean Weekly Ride Distance by Month",
+      yLabel: "Distance (km)",
+      points: [
+        { label: "Mar", value: 45 },
+        { label: "Apr", value: 60 },
+        { label: "May", value: 75 },
+        { label: "Jun", value: 90 },
+        { label: "Jul", value: 84 },
+        { label: "Aug", value: 66 },
+      ],
+      max: 100,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean weekly ride distance per month across all six months?",
+        correct: "70 km",
+        distractors: ["75 km", "84 km", "105 km"],
+        explanation:
+          "Total = 45+60+75+90+84+66 = 420. 420/6 = 70 km. Distractor 75 km: reads May directly. Distractor 84 km: reads July directly. Distractor 105 km: divides by 4 instead of 6 (420/4).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did the mean weekly ride distance increase from March to June?",
+        correct: "100%",
+        distractors: ["45 km", "200%", "50%"],
+        explanation:
+          "March = 45 km, June = 90 km, increase = 45 km. 45/45 × 100 = 100%. Distractor 45 km: gives the absolute increase. Distractor 200%: calculates 90/45 × 100 (percentage of, not increase). Distractor 50%: uses June as the denominator (45/90 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which month had the closest mean distance to the overall mean across all six months?",
+        correct: "Aug",
+        distractors: ["May", "Apr", "Jul"],
+        explanation:
+          "Overall mean = 70 km. August = 66 (difference 4), May = 75 (difference 5), April = 60 (difference 10), July = 84 (difference 14). August is the closest. Distractor May: second closest at 5 away. Distractor Apr: 10 away. Distractor Jul: 14 away.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of March distance to June distance in its simplest form?",
+        correct: "1:2",
+        distractors: ["2:1", "45:90", "2:3"],
+        explanation:
+          "March = 45 km, June = 90 km. GCD(45, 90) = 45. 45/45 = 1, 90/45 = 2, giving 1:2. Distractor 2:1 reverses the ratio. Distractor 45:90 is the correct pair left unsimplified. Distractor 2:3 compares April to June instead (60:90 = 2:3).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-garden-plot-usage",
+    stimulus: [
+      "A community garden committee recorded plot usage status by plot type at the end of the growing season.",
+    ],
+    visual: {
+      type: "table",
+      title: "Community Garden Plot Usage",
+      headers: ["Plot type", "Active", "Dormant", "Surrendered", "Total"],
+      rows: [
+        ["Raised bed", "60", "15", "5", "80"],
+        ["Ground plot", "90", "20", "10", "120"],
+        ["Greenhouse", "20", "4", "6", "30"],
+        ["Container", "50", "10", "10", "70"],
+        ["Total", "220", "49", "31", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For greenhouse plots, what is the ratio of active to surrendered in its simplest form?",
+        correct: "10:3",
+        distractors: ["3:10", "20:6", "5:1"],
+        explanation:
+          "Greenhouse active = 20, surrendered = 6. GCD(20, 6) = 2. 20/2 = 10, 6/2 = 3, giving 10:3. Distractor 3:10 reverses the ratio. Distractor 20:6 is the correct pair left unsimplified. Distractor 5:1 reads container active to surrendered instead (50:10).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of ground plot allocations were active?",
+        correct: "75%",
+        distractors: ["25%", "40.9%", "90"],
+        explanation:
+          "Ground plot active = 90, ground plot total = 120. 90/120 × 100 = 75%. Distractor 25%: uses ground dormant plus surrendered (30/120 × 100). Distractor 40.9%: divides by all active plots (90/220 × 100). Distractor 90: reads the active ground plot cell directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of surrendered plots per plot type?",
+        correct: "7.75",
+        distractors: ["6", "10.3", "10"],
+        explanation:
+          "Total surrendered = 31 across 4 plot types. 31/4 = 7.75. Distractor 6: reads greenhouse surrendered directly. Distractor 10.3: divides by 3 instead of 4 (31/3 ≈ 10.3). Distractor 10: reads ground plot or container surrendered directly (both are 10).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, container plots represented what percentage of all surrendered plots?",
+        correct: "32.3%",
+        distractors: ["10 plots", "70", "14.3%"],
+        explanation:
+          "Container surrendered = 10, total surrendered = 31. 10/31 × 100 = 32.3%. Distractor 10 plots: gives the absolute count. Distractor 70: reads the container total directly. Distractor 14.3%: uses container total as denominator (10/70 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "charity-shop-donation-categories",
+    stimulus: [
+      "A charity chain recorded donated items received by category across two consecutive months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Donated Items by Category and Month",
+      yLabel: "Items",
+      seriesLabels: ["Month A", "Month B"],
+      groups: [
+        { label: "Clothing", values: [480, 540] },
+        { label: "Books", values: [240, 240] },
+        { label: "Furniture", values: [120, 150] },
+        { label: "Electricals", values: [60, 70] },
+      ],
+      max: 600,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of donated items per category in Month A?",
+        correct: "225",
+        distractors: ["240", "300", "180"],
+        explanation:
+          "Month A total = 480+240+120+60 = 900. 900/4 = 225. Distractor 240: reads books Month A directly. Distractor 300: divides by 3 instead of 4 (900/3). Distractor 180: divides by 5 instead of 4 (900/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did clothing donations increase from Month A to Month B?",
+        correct: "12.5%",
+        distractors: ["60 items", "112.5%", "11.1%"],
+        explanation:
+          "Month A clothing = 480, Month B = 540, increase = 60. 60/480 × 100 = 12.5%. Distractor 60 items: gives the absolute increase. Distractor 112.5%: calculates 540/480 × 100 (percentage of, not increase). Distractor 11.1%: uses Month B as the denominator (60/540 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Month A, what is the ratio of clothing to furniture donations in its simplest form?",
+        correct: "4:1",
+        distractors: ["1:4", "480:120", "2:1"],
+        explanation:
+          "Month A clothing = 480, furniture = 120. GCD(480, 120) = 120. 480/120 = 4, 120/120 = 1, giving 4:1. Distractor 1:4 reverses the ratio. Distractor 480:120 is the correct pair left unsimplified. Distractor 2:1 compares books to furniture instead (240:120).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, books represented what percentage of all Month B donations?",
+        correct: "24%",
+        distractors: ["26.7%", "54%", "15%"],
+        explanation:
+          "Month B books = 240, Month B total = 540+240+150+70 = 1000. 240/1000 × 100 = 24%. Distractor 26.7%: uses Month A total as denominator (240/900 × 100). Distractor 54%: reads Month B clothing instead of books (540/1000 × 100). Distractor 15%: reads Month B furniture instead of books (150/1000 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "antenatal-booking-appointment-findings",
+    stimulus: [
+      "An antenatal clinic recorded booking appointment findings by gestational week category.",
+    ],
+    visual: {
+      type: "table",
+      title: "Antenatal Booking Appointment Findings",
+      headers: ["Gestational category", "Normal booking", "Referral needed", "Transfer of care", "Total"],
+      rows: [
+        ["<12 weeks", "120", "20", "10", "150"],
+        ["12–16 weeks", "90", "24", "6", "120"],
+        ["17–20 weeks", "60", "12", "8", "80"],
+        [">20 weeks", "30", "12", "8", "50"],
+        ["Total", "300", "68", "32", "400"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For 12–16 week bookings, what is the ratio of normal bookings to transfers of care in its simplest form?",
+        correct: "15:1",
+        distractors: ["1:15", "90:6", "15:4"],
+        explanation:
+          "12–16 weeks normal = 90, transfer of care = 6. GCD(90, 6) = 6. 90/6 = 15, 6/6 = 1, giving 15:1. Distractor 1:15 reverses the ratio. Distractor 90:6 is the correct pair left unsimplified. Distractor 15:4 reads the >20 weeks row instead (30:8 = 15:4).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of 12–16 week appointments required a referral?",
+        correct: "20%",
+        distractors: ["80%", "35.3%", "24"],
+        explanation:
+          "12–16 weeks referral needed = 24, 12–16 weeks total = 120. 24/120 × 100 = 20%. Distractor 80%: calculates the non-referral percentage (96/120 × 100). Distractor 35.3%: divides by all referrals (24/68 × 100). Distractor 24: reads the referral cell directly without dividing.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of transfers of care per gestational category?",
+        correct: "8",
+        distractors: ["6", "10.7", "10"],
+        explanation:
+          "Total transfers of care = 32 across 4 gestational categories. 32/4 = 8. Distractor 6: reads 12–16 weeks transfer directly. Distractor 10.7: divides by 3 instead of 4 (32/3 ≈ 10.7). Distractor 10: reads <12 weeks transfer directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all booking appointments were classified as normal bookings?",
+        correct: "75%",
+        distractors: ["300 patients", "25%", "81.5%"],
+        explanation:
+          "Normal bookings = 300, grand total = 400. 300/400 × 100 = 75%. Distractor 300 patients: gives the absolute count. Distractor 25%: uses non-normal appointments (100/400 × 100). Distractor 81.5%: divides by normal plus referral only (300/368 × 100), excluding transfers of care from the denominator.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "sports-centre-class-bookings",
+    stimulus: [
+      "A leisure centre recorded fitness class bookings by class type over one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Fitness Class Bookings by Type",
+      yLabel: "Bookings",
+      categories: [
+        { label: "Yoga", value: 180 },
+        { label: "Pilates", value: 120 },
+        { label: "Spin", value: 150 },
+        { label: "HIIT", value: 90 },
+        { label: "Zumba", value: 60 },
+      ],
+      max: 200,
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of yoga to HIIT class bookings in its simplest form?",
+        correct: "2:1",
+        distractors: ["1:2", "180:90", "3:2"],
+        explanation:
+          "Yoga = 180, HIIT = 90. GCD(180, 90) = 90. 180/90 = 2, 90/90 = 1, giving 2:1. Distractor 1:2 reverses the ratio. Distractor 180:90 is the correct pair left unsimplified. Distractor 3:2 compares yoga to pilates instead (180:120).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of bookings per class type?",
+        correct: "120",
+        distractors: ["150", "200", "90"],
+        explanation:
+          "Total bookings = 180+120+150+90+60 = 600. 600/5 = 120. Distractor 150: reads spin directly. Distractor 200: divides by 3 instead of 5 (600/3). Distractor 90: reads HIIT directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, zumba bookings were what percentage less than yoga bookings?",
+        correct: "66.7%",
+        distractors: ["120 bookings", "33.3%", "300%"],
+        explanation:
+          "Yoga = 180, zumba = 60, difference = 120. 120/180 × 100 = 66.7%. Distractor 120 bookings: gives the absolute difference. Distractor 33.3%: calculates zumba as a percentage of yoga (60/180 × 100), confusing 'less than' with the proportion. Distractor 300%: calculates yoga/zumba × 100 (180/60).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "HIIT and Zumba bookings combined represent approximately what fraction of all class bookings?",
+        correct: "1/4",
+        distractors: ["1/3", "1/5", "1/6"],
+        explanation:
+          "HIIT + Zumba = 90+60 = 150. Total = 600. 150/600 = 1/4 exactly. Distractor 1/3 (0.333) would require 200 combined bookings. Distractor 1/5 (0.20) would require 120 combined. Distractor 1/6 (0.167) would require 100 combined.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "veterinary-practice-consultation-outcomes",
+    stimulus: [
+      "A veterinary practice recorded consultation outcomes by animal type over one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Veterinary Consultation Outcomes by Animal Type",
+      headers: ["Animal type", "Treated", "Referred", "Follow-up", "Total"],
+      rows: [
+        ["Dog", "120", "10", "20", "150"],
+        ["Cat", "80", "8", "12", "100"],
+        ["Small animal", "30", "3", "7", "40"],
+        ["Exotic", "18", "6", "6", "30"],
+        ["Total", "248", "27", "45", "320"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of cat consultations required a referral?",
+        correct: "8%",
+        distractors: ["29.6%", "2.5%", "80%"],
+        explanation:
+          "Cat referred = 8, cat total = 100. 8/100 × 100 = 8%. Distractor 29.6%: divides by all referrals (8/27 × 100). Distractor 2.5%: divides by grand total (8/320 × 100). Distractor 80%: reads cat treated as a percentage of cat total (80/100 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of referrals per animal type?",
+        correct: "6.75",
+        distractors: ["6", "9", "10"],
+        explanation:
+          "Total referrals = 27 across 4 animal types. 27/4 = 6.75. Distractor 6: reads exotic referrals directly. Distractor 9: divides by 3 instead of 4 (27/3). Distractor 10: reads dog referrals directly.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For exotic animal consultations, what is the ratio of referred to treated in its simplest form?",
+        correct: "1:3",
+        distractors: ["3:1", "6:18", "1:2"],
+        explanation:
+          "Exotic referred = 6, treated = 18. GCD(6, 18) = 6. 6/6 = 1, 18/6 = 3, giving 1:3. Distractor 3:1 reverses the ratio. Distractor 6:18 is the correct pair left unsimplified. Distractor 1:2 reads dog referrals to dog follow-up instead (10:20).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all consultations resulted in follow-up?",
+        correct: "14.1%",
+        distractors: ["45 consultations", "8.4%", "85.9%"],
+        explanation:
+          "Total follow-up = 45, grand total = 320. 45/320 × 100 = 14.1%. Distractor 45 consultations: gives the absolute count. Distractor 8.4%: reads the referrals column instead (27/320 × 100). Distractor 85.9%: uses treated plus referred (275/320 × 100), confusing follow-up with the non-follow-up proportion.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "hospital-catering-meal-service-data",
+    stimulus: [
+      "A hospital catering department recorded the number of meal portions served by category across two consecutive months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Hospital Meal Portions by Category and Month",
+      yLabel: "Portions",
+      seriesLabels: ["Month 1", "Month 2"],
+      groups: [
+        { label: "Patient hot", values: [1200, 1320] },
+        { label: "Patient cold", values: [600, 660] },
+        { label: "Staff", values: [400, 440] },
+        { label: "Visitor", values: [200, 180] },
+      ],
+      max: 1400,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of portions per meal category in Month 1?",
+        correct: "600",
+        distractors: ["400", "800", "480"],
+        explanation:
+          "Month 1 total = 1200+600+400+200 = 2400. 2400/4 = 600. Distractor 400: reads staff Month 1 directly. Distractor 800: divides by 3 instead of 4 (2400/3). Distractor 480: divides by 5 instead of 4 (2400/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did patient hot meal portions increase from Month 1 to Month 2?",
+        correct: "10%",
+        distractors: ["120 portions", "110%", "9.1%"],
+        explanation:
+          "Month 1 patient hot = 1200, Month 2 = 1320, increase = 120. 120/1200 × 100 = 10%. Distractor 120 portions: gives the absolute increase. Distractor 110%: calculates 1320/1200 × 100 (percentage of, not increase). Distractor 9.1%: uses Month 2 as the denominator (120/1320 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Month 2, what is the ratio of patient hot to patient cold portions in its simplest form?",
+        correct: "2:1",
+        distractors: ["1:2", "1320:660", "3:1"],
+        explanation:
+          "Month 2 patient hot = 1320, patient cold = 660. GCD(1320, 660) = 660. 1320/660 = 2, 660/660 = 1, giving 2:1. Distractor 1:2 reverses the ratio. Distractor 1320:660 is the correct pair left unsimplified. Distractor 3:1 compares patient hot to staff Month 2 instead (1320:440).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, visitor portions in Month 2 represented what percentage of all Month 2 portions?",
+        correct: "6.9%",
+        distractors: ["200 portions", "8.3%", "7.7%"],
+        explanation:
+          "Month 2 visitor = 180, Month 2 total = 1320+660+440+180 = 2600. 180/2600 × 100 = 6.9%. Distractor 200 portions: reads Month 1 visitor count (wrong month). Distractor 8.3%: uses Month 1 visitor with Month 1 total (200/2400 × 100). Distractor 7.7%: uses Month 1 visitor count with Month 2 total (200/2600 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "podiatry-clinic-treatment-outcomes",
+    stimulus: [
+      "A hospital podiatry service recorded treatment outcomes by condition type over one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Podiatry Treatment Outcomes by Condition",
+      headers: ["Condition type", "Resolved", "Ongoing", "Discharged", "Total"],
+      rows: [
+        ["Nail disorders", "45", "15", "10", "70"],
+        ["Diabetic foot", "24", "30", "6", "60"],
+        ["Biomechanical", "36", "12", "12", "60"],
+        ["Wound care", "20", "16", "14", "50"],
+        ["Total", "125", "73", "42", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of wound care patients were discharged?",
+        correct: "28%",
+        distractors: ["40%", "33.3%", "14 patients"],
+        explanation:
+          "Wound care discharged = 14, wound care total = 50. 14/50 × 100 = 28%. Distractor 40%: reads wound care resolved / total instead (20/50 × 100). Distractor 33.3%: divides by all discharged (14/42 × 100). Distractor 14 patients: gives the absolute count.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For nail disorder patients, what is the ratio of resolved to ongoing outcomes in its simplest form?",
+        correct: "3:1",
+        distractors: ["1:3", "45:15", "5:4"],
+        explanation:
+          "Nail disorders resolved = 45, ongoing = 15. GCD(45, 15) = 15. 45/15 = 3, 15/15 = 1, giving 3:1. Distractor 1:3 reverses the ratio. Distractor 45:15 is the correct pair left unsimplified. Distractor 5:4 reads diabetic foot ongoing to resolved instead (30:24).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of discharged patients per condition type?",
+        correct: "10.5",
+        distractors: ["10", "14", "8.4"],
+        explanation:
+          "Total discharged = 42 across 4 condition types. 42/4 = 10.5. Distractor 10: reads nail disorders discharged directly. Distractor 14: reads wound care discharged directly. Distractor 8.4: divides by 5 instead of 4 (42/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all outcomes resulted in discharge?",
+        correct: "17.5%",
+        distractors: ["42 patients", "30.4%", "82.5%"],
+        explanation:
+          "Total discharged = 42, grand total = 240. 42/240 × 100 = 17.5%. Distractor 42 patients: gives the absolute count. Distractor 30.4%: reads the ongoing column instead (73/240 × 100). Distractor 82.5%: uses resolved plus ongoing (198/240 × 100), the non-discharged proportion.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "council-noise-complaint-investigations",
+    stimulus: [
+      "A council environmental health team recorded the number of noise complaint investigations completed each month over six months.",
+    ],
+    visual: {
+      type: "line",
+      title: "Noise Complaint Investigations Completed by Month",
+      yLabel: "Investigations",
+      points: [
+        { label: "Jan", value: 48 },
+        { label: "Feb", value: 63 },
+        { label: "Mar", value: 78 },
+        { label: "Apr", value: 90 },
+        { label: "May", value: 75 },
+        { label: "Jun", value: 66 },
+      ],
+      max: 100,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of investigations completed per month across all six months?",
+        correct: "70",
+        distractors: ["75", "78", "84"],
+        explanation:
+          "Total = 48+63+78+90+75+66 = 420. 420/6 = 70. Distractor 75: reads May directly. Distractor 78: reads March directly. Distractor 84: divides by 5 instead of 6 (420/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, by what percentage did investigations decrease from April to June?",
+        correct: "26.7%",
+        distractors: ["24 investigations", "73.3%", "36.4%"],
+        explanation:
+          "April = 90, June = 66, decrease = 24. 24/90 × 100 = 26.7%. Distractor 24 investigations: gives the absolute decrease. Distractor 73.3%: calculates June as a percentage of April (66/90 × 100), not the percentage decrease. Distractor 36.4%: uses June as the denominator (24/66 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which month had the closest number of investigations to the overall monthly mean?",
+        correct: "Jun",
+        distractors: ["May", "Feb", "Mar"],
+        explanation:
+          "Overall mean = 70. June = 66 (difference 4), May = 75 (difference 5), February = 63 (difference 7), March = 78 (difference 8). June is the closest. Distractor May: second closest at 5 away. Distractor Feb: 7 away. Distractor Mar: 8 away.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of January investigations to April investigations in its simplest form?",
+        correct: "8:15",
+        distractors: ["15:8", "48:90", "7:10"],
+        explanation:
+          "January = 48, April = 90. GCD(48, 90) = 6. 48/6 = 8, 90/6 = 15, giving 8:15. Distractor 15:8 reverses the ratio. Distractor 48:90 is the correct pair left unsimplified. Distractor 7:10 compares February to April instead (63:90; GCD = 9; 7:10).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cinema-ticket-sales-by-genre",
+    stimulus: [
+      "A cinema chain recorded the number of tickets sold by film genre over one week.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Cinema Ticket Sales by Genre",
+      yLabel: "Tickets sold",
+      categories: [
+        { label: "Action", value: 1200 },
+        { label: "Romance", value: 600 },
+        { label: "Comedy", value: 800 },
+        { label: "Horror", value: 400 },
+        { label: "Documentary", value: 200 },
+      ],
+      max: 1400,
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of action to horror ticket sales in its simplest form?",
+        correct: "3:1",
+        distractors: ["1:3", "1200:400", "2:1"],
+        explanation:
+          "Action = 1200, horror = 400. GCD(1200, 400) = 400. 1200/400 = 3, 400/400 = 1, giving 3:1. Distractor 1:3 reverses the ratio. Distractor 1200:400 is the correct pair left unsimplified. Distractor 2:1 compares comedy to horror instead (800:400).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of tickets sold per genre?",
+        correct: "640",
+        distractors: ["600", "800", "1066.7"],
+        explanation:
+          "Total tickets = 1200+600+800+400+200 = 3200. 3200/5 = 640. Distractor 600: reads romance directly. Distractor 800: reads comedy directly. Distractor 1066.7: divides by 3 instead of 5 (3200/3).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "Romance ticket sales were what percentage less than comedy ticket sales?",
+        correct: "25%",
+        distractors: ["200 tickets", "75%", "33.3%"],
+        explanation:
+          "Comedy = 800, romance = 600, difference = 200. 200/800 × 100 = 25%. Distractor 200 tickets: gives the absolute difference. Distractor 75%: calculates romance as a percentage of comedy (600/800 × 100), confusing 'less than' with the proportion. Distractor 33.3%: uses romance as the denominator (200/600 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Romance and documentary ticket sales combined represent approximately what fraction of all ticket sales?",
+        correct: "1/4",
+        distractors: ["1/3", "1/5", "1/6"],
+        explanation:
+          "Romance + documentary = 600+200 = 800. Total = 3200. 800/3200 = 1/4 exactly. Distractor 1/3 (0.333) would require ~1067 combined sales. Distractor 1/5 (0.20) would require 640 combined. Distractor 1/6 (0.167) would require ~533 combined.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "physiotherapy-outpatient-referral-sources",
+    stimulus: [
+      "An outpatient physiotherapy service recorded referral source and episode outcome over one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Physiotherapy Episode Outcomes by Referral Source",
+      headers: ["Referral source", "Discharged", "Review", "DNA/Withdraw", "Total"],
+      rows: [
+        ["GP", "80", "24", "16", "120"],
+        ["Specialist", "60", "18", "12", "90"],
+        ["Self-referral", "40", "12", "8", "60"],
+        ["Orthopaedic", "30", "16", "14", "60"],
+        ["Total", "210", "70", "50", "330"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "For orthopaedic referrals, what is the ratio of discharged to DNA/withdraw outcomes in its simplest form?",
+        correct: "15:7",
+        distractors: ["7:15", "30:14", "5:1"],
+        explanation:
+          "Orthopaedic discharged = 30, DNA/withdraw = 14. GCD(30, 14) = 2. 30/2 = 15, 14/2 = 7, giving 15:7. Distractor 7:15 reverses the ratio. Distractor 30:14 is the correct pair left unsimplified. Distractor 5:1 reads any of the other referral sources (GP, specialist, or self-referral all give discharged:DNA = 5:1).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of specialist referral episodes were discharged?",
+        correct: "66.7%",
+        distractors: ["33.3%", "28.6%", "90"],
+        explanation:
+          "Specialist discharged = 60, specialist total = 90. 60/90 × 100 = 66.7%. Distractor 33.3%: uses specialist review plus DNA/withdraw (30/90 × 100). Distractor 28.6%: divides by all discharged (60/210 × 100). Distractor 90: reads the specialist total directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of DNA/withdraw outcomes per referral source?",
+        correct: "12.5",
+        distractors: ["16", "8", "16.7"],
+        explanation:
+          "Total DNA/withdraw = 50 across 4 referral sources. 50/4 = 12.5. Distractor 16: reads orthopaedic DNA/withdraw directly. Distractor 8: reads self-referral DNA/withdraw directly. Distractor 16.7: divides by 3 instead of 4 (50/3 ≈ 16.7).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all episodes resulted in a review appointment?",
+        correct: "21.2%",
+        distractors: ["70 episodes", "63.6%", "15.2%"],
+        explanation:
+          "Review total = 70, grand total = 330. 70/330 × 100 = 21.2%. Distractor 70 episodes: gives the absolute count. Distractor 63.6%: reads the discharged column (210/330 × 100). Distractor 15.2%: reads the DNA/withdraw column (50/330 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "hospice-inpatient-symptom-review-outcomes",
+    stimulus: [
+      "A hospice inpatient unit recorded symptom review outcomes by symptom category over one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Hospice Symptom Review Outcomes",
+      headers: ["Symptom", "Improved", "Stable", "Escalated", "Total"],
+      rows: [
+        ["Pain", "60", "24", "6", "90"],
+        ["Breathlessness", "30", "24", "6", "60"],
+        ["Nausea/vomiting", "36", "12", "12", "60"],
+        ["Agitation", "18", "18", "24", "60"],
+        ["Total", "144", "78", "48", "270"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For agitation, what is the ratio of improved to escalated outcomes in its simplest form?",
+        correct: "3:4",
+        distractors: ["4:3", "18:24", "1:1"],
+        explanation:
+          "Agitation improved = 18, escalated = 24. GCD(18, 24) = 6. 18/6 = 3, 24/6 = 4, giving 3:4. Distractor 4:3 reverses the ratio. Distractor 18:24 is the correct pair left unsimplified. Distractor 1:1 compares agitation improved to stable instead of improved to escalated (18:18).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of pain reviews resulted in improvement?",
+        correct: "66.7%",
+        distractors: ["33.3%", "41.7%", "60"],
+        explanation:
+          "Pain improved = 60, pain total = 90. 60/90 × 100 = 66.7%. Distractor 33.3%: uses non-improved outcomes (30/90 × 100). Distractor 41.7%: divides by all improved (60/144 × 100). Distractor 60: reads the improved cell directly without dividing.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of escalated reviews per symptom category?",
+        correct: "12",
+        distractors: ["6", "16", "9.6"],
+        explanation:
+          "Total escalated = 48 across 4 symptom categories. 48/4 = 12. Distractor 6: reads pain or breathlessness escalated directly (both are 6). Distractor 16: divides by 3 instead of 4 (48/3). Distractor 9.6: divides by 5 instead of 4 (48/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all symptom reviews resulted in escalation?",
+        correct: "17.8%",
+        distractors: ["48 reviews", "28.9%", "53.3%"],
+        explanation:
+          "Total escalated = 48, grand total = 270. 48/270 × 100 = 17.8%. Distractor 48 reviews: gives the absolute count. Distractor 28.9%: reads the stable column instead (78/270 × 100). Distractor 53.3%: reads the improved column instead (144/270 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "urgent-treatment-centre-age-groups",
+    stimulus: [
+      "An NHS urgent treatment centre recorded patient presentations by age group across two consecutive months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "UTC Presentations by Age Group and Month",
+      yLabel: "Presentations",
+      seriesLabels: ["Month 1", "Month 2"],
+      groups: [
+        { label: "Under 18", values: [120, 140] },
+        { label: "18–39", values: [180, 200] },
+        { label: "40–64", values: [150, 160] },
+        { label: "65+", values: [90, 100] },
+      ],
+      max: 220,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of presentations per age group in Month 2?",
+        correct: "150",
+        distractors: ["160", "200", "120"],
+        explanation:
+          "Month 2 total = 140+200+160+100 = 600. 600/4 = 150. Distractor 160: reads 40–64 Month 2 directly. Distractor 200: reads 18–39 Month 2 directly. Distractor 120: divides by 5 instead of 4 (600/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, by what percentage did under-18 presentations increase from Month 1 to Month 2?",
+        correct: "16.7%",
+        distractors: ["20 presentations", "116.7%", "14.3%"],
+        explanation:
+          "Month 1 under-18 = 120, Month 2 = 140, increase = 20. 20/120 × 100 = 16.7%. Distractor 20 presentations: gives the absolute increase. Distractor 116.7%: calculates 140/120 × 100 (percentage of, not increase). Distractor 14.3%: uses Month 2 as the denominator (20/140 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Month 1, what is the ratio of 18–39 to 65+ presentations in its simplest form?",
+        correct: "2:1",
+        distractors: ["1:2", "180:90", "5:3"],
+        explanation:
+          "Month 1 18–39 = 180, 65+ = 90. GCD(180, 90) = 90. 180/90 = 2, 90/90 = 1, giving 2:1. Distractor 1:2 reverses the ratio. Distractor 180:90 is the correct pair left unsimplified. Distractor 5:3 compares 40–64 to 65+ Month 1 instead (150:90).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, by what percentage were total Month 2 presentations more than Month 1?",
+        correct: "11.1%",
+        distractors: ["60 presentations", "111.1%", "10%"],
+        explanation:
+          "Month 1 total = 540, Month 2 total = 600, difference = 60. 60/540 × 100 = 11.1%. Distractor 60 presentations: gives the absolute difference. Distractor 111.1%: calculates 600/540 × 100 (percentage of, not more than). Distractor 10%: uses Month 2 as the denominator (60/600 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "surgical-unit-cancelled-operations",
+    stimulus: [
+      "A surgical unit recorded cancelled operations by cancellation reason and specialty over one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Cancelled Operations by Reason and Specialty",
+      headers: ["Specialty", "Patient unfit", "Bed unavailable", "List overrun", "Total"],
+      rows: [
+        ["General surgery", "12", "8", "10", "30"],
+        ["Orthopaedics", "15", "6", "9", "30"],
+        ["Urology", "8", "4", "8", "20"],
+        ["Gynaecology", "5", "6", "9", "20"],
+        ["Total", "40", "24", "36", "100"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For gynaecology, what is the ratio of list overrun to bed unavailable cancellations in its simplest form?",
+        correct: "3:2",
+        distractors: ["2:3", "9:6", "5:3"],
+        explanation:
+          "Gynaecology list overrun = 9, bed unavailable = 6. GCD(9, 6) = 3. 9/3 = 3, 6/3 = 2, giving 3:2. Distractor 2:3 reverses the ratio. Distractor 9:6 is the correct pair left unsimplified. Distractor 5:3 compares all patient-unfit to all bed-unavailable cancellations instead (40:24).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all cancelled operations were due to list overrun?",
+        correct: "36%",
+        distractors: ["40%", "64%", "36 operations"],
+        explanation:
+          "List overrun total = 36, grand total = 100. 36/100 × 100 = 36%. Distractor 40%: reads patient unfit total (40/100 × 100). Distractor 64%: uses all non-list-overrun cancellations (64/100 × 100). Distractor 36 operations: gives the absolute count.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of patient-unfit cancellations per specialty?",
+        correct: "10",
+        distractors: ["12", "13.3", "8"],
+        explanation:
+          "Total patient unfit = 40 across 4 specialties. 40/4 = 10. Distractor 12: reads general surgery patient-unfit directly. Distractor 13.3: divides by 3 instead of 4 (40/3 ≈ 13.3). Distractor 8: reads urology patient-unfit directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "General surgery cancellations make up what percentage of all cancelled operations?",
+        correct: "30%",
+        distractors: ["30 operations", "42.9%", "12%"],
+        explanation:
+          "General surgery total = 30, grand total = 100. 30/100 × 100 = 30%. Distractor 30 operations: gives the absolute count. Distractor 42.9%: divides by the combined total of general surgery, urology, and gynaecology (30/70 × 100), excluding orthopaedics. Distractor 12%: reads general surgery patient-unfit as a percentage of all cancellations (12/100 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renewable-energy-output-by-source",
+    stimulus: [
+      "A regional energy authority recorded electricity output in gigawatt-hours by renewable source across two consecutive quarters.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Renewable Energy Output by Source and Quarter",
+      yLabel: "Output (GWh)",
+      seriesLabels: ["Q1", "Q2"],
+      groups: [
+        { label: "Solar", values: [120, 180] },
+        { label: "Wind", values: [200, 240] },
+        { label: "Hydro", values: [80, 80] },
+        { label: "Biomass", values: [40, 120] },
+      ],
+      max: 260,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean energy output per source in Q1?",
+        correct: "110 GWh",
+        distractors: ["120 GWh", "200 GWh", "146.7 GWh"],
+        explanation:
+          "Q1 total = 120+200+80+40 = 440 GWh. 440/4 = 110 GWh. Distractor 120 GWh: reads solar Q1 directly. Distractor 200 GWh: reads wind Q1 directly. Distractor 146.7 GWh: divides by 3 instead of 4 (440/3 ≈ 146.7).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did solar output increase from Q1 to Q2?",
+        correct: "50%",
+        distractors: ["60 GWh", "150%", "33.3%"],
+        explanation:
+          "Solar Q1 = 120 GWh, Q2 = 180 GWh, increase = 60. 60/120 × 100 = 50%. Distractor 60 GWh: gives the absolute increase. Distractor 150%: calculates 180/120 × 100 (percentage of, not increase). Distractor 33.3%: uses Q2 as the denominator (60/180 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Q2, what is the ratio of wind to solar output in its simplest form?",
+        correct: "4:3",
+        distractors: ["3:4", "240:180", "2:3"],
+        explanation:
+          "Q2 wind = 240 GWh, solar = 180 GWh. GCD(240, 180) = 60. 240/60 = 4, 180/60 = 3, giving 4:3. Distractor 3:4 reverses the ratio. Distractor 240:180 is the correct pair left unsimplified. Distractor 2:3 compares hydro to biomass Q2 instead (80:120).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Q2, hydro output represents approximately what fraction of total Q2 output?",
+        correct: "1/8",
+        distractors: ["1/7", "1/6", "1/10"],
+        explanation:
+          "Q2 total = 180+240+80+120 = 620 GWh. Hydro = 80. 80/620 ≈ 0.129. 1/8 (0.125) is the closest option. Distractor 1/7 (0.143) would require ~89 GWh. Distractor 1/6 (0.167) would require ~103 GWh. Distractor 1/10 (0.10) would require 62 GWh.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "nicu-admission-length-of-stay",
+    stimulus: [
+      "A neonatal intensive care unit recorded admissions by birth weight category and length of stay.",
+    ],
+    visual: {
+      type: "table",
+      title: "NICU Admissions by Birth Weight and Length of Stay",
+      headers: ["Birth weight", "<7 days", "7–28 days", ">28 days", "Total"],
+      rows: [
+        ["<1000 g", "8", "16", "16", "40"],
+        ["1000–1499 g", "12", "24", "12", "48"],
+        ["1500–2499 g", "30", "18", "12", "60"],
+        ["≥2500 g", "40", "12", "0", "52"],
+        ["Total", "90", "70", "40", "200"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For <1000 g babies, what is the ratio of those staying <7 days to those staying >28 days in its simplest form?",
+        correct: "1:2",
+        distractors: ["2:1", "8:16", "1:1"],
+        explanation:
+          "<1000 g, <7 days = 8, >28 days = 16. GCD(8, 16) = 8. 8/8 = 1, 16/8 = 2, giving 1:2. Distractor 2:1 reverses the ratio. Distractor 8:16 is the correct pair left unsimplified. Distractor 1:1 reads the 1000–1499 g row instead (<7 days to >28 days: 12:12).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of 1500–2499 g admissions had a 7–28 day length of stay?",
+        correct: "30%",
+        distractors: ["25.7%", "70%", "18"],
+        explanation:
+          "1500–2499 g, 7–28 days = 18, 1500–2499 g total = 60. 18/60 × 100 = 30%. Distractor 25.7%: divides by all 7–28 day stays (18/70 × 100). Distractor 70%: uses non-7-28-day outcomes (42/60 × 100). Distractor 18: reads the cell directly without dividing.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of >28 day stays per birth weight category?",
+        correct: "10",
+        distractors: ["16", "13.3", "0"],
+        explanation:
+          "Total >28 day stays = 40 across 4 birth weight categories. 40/4 = 10. Distractor 16: reads <1000 g >28 days directly. Distractor 13.3: divides by 3 instead of 4 (40/3 ≈ 13.3). Distractor 0: reads ≥2500 g >28 days directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all NICU admissions had a stay of less than 7 days?",
+        correct: "45%",
+        distractors: ["90 admissions", "55%", "35%"],
+        explanation:
+          "Stays <7 days = 90, grand total = 200. 90/200 × 100 = 45%. Distractor 90 admissions: gives the absolute count. Distractor 55%: uses all stays ≥7 days (110/200 × 100). Distractor 35%: reads the 7–28 day column (70/200 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "stroke-unit-barthel-score-outcomes",
+    stimulus: [
+      "A stroke unit recorded Barthel Index score change outcomes by stroke type over one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Barthel Index Outcomes by Stroke Type",
+      headers: ["Stroke type", "Score improved", "Score unchanged", "Score declined", "Total"],
+      rows: [
+        ["Ischaemic", "60", "18", "12", "90"],
+        ["Haemorrhagic", "20", "16", "4", "40"],
+        ["TIA", "36", "12", "12", "60"],
+        ["Undetermined", "24", "6", "0", "30"],
+        ["Total", "140", "52", "28", "220"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question:
+          "How many haemorrhagic stroke patients had an unchanged Barthel Index score?",
+        correct: "16",
+        distractors: ["20", "4", "40"],
+        explanation:
+          "Haemorrhagic stroke, score unchanged = 16. Distractor 20: reads haemorrhagic improved. Distractor 4: reads haemorrhagic declined. Distractor 40: reads the haemorrhagic row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of TIA patients had improved Barthel Index scores?",
+        correct: "60%",
+        distractors: ["40%", "25.7%", "36"],
+        explanation:
+          "TIA improved = 36, TIA total = 60. 36/60 × 100 = 60%. Distractor 40%: uses non-improved outcomes (24/60 × 100). Distractor 25.7%: divides by all improved outcomes (36/140 × 100). Distractor 36: reads the improved cell directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of declined-score outcomes per stroke type?",
+        correct: "7",
+        distractors: ["12", "9.3", "0"],
+        explanation:
+          "Total score declined = 28 across 4 stroke types. 28/4 = 7. Distractor 12: reads ischaemic or TIA declined directly (both are 12). Distractor 9.3: divides by 3 instead of 4 (28/3 ≈ 9.3). Distractor 0: reads undetermined declined directly.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For ischaemic stroke patients, what is the ratio of improved to declined outcomes in its simplest form?",
+        correct: "5:1",
+        distractors: ["1:5", "60:12", "9:2"],
+        explanation:
+          "Ischaemic improved = 60, declined = 12. GCD(60, 12) = 12. 60/12 = 5, 12/12 = 1, giving 5:1. Distractor 1:5 reverses the ratio. Distractor 60:12 is the correct pair left unsimplified. Distractor 9:2 compares ischaemic unchanged to declined instead (18:4).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "investment-portfolio-annual-returns",
+    stimulus: [
+      "A financial adviser recorded the annual total return percentage on a client's investment portfolio over six consecutive years.",
+    ],
+    visual: {
+      type: "line",
+      title: "Annual Portfolio Return by Year",
+      yLabel: "Return (%)",
+      points: [
+        { label: "Yr 1", value: 5 },
+        { label: "Yr 2", value: 11 },
+        { label: "Yr 3", value: 4 },
+        { label: "Yr 4", value: 14 },
+        { label: "Yr 5", value: 8 },
+        { label: "Yr 6", value: 12 },
+      ],
+      max: 16,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean annual portfolio return across all six years?",
+        correct: "9%",
+        distractors: ["8%", "11%", "10.8%"],
+        explanation:
+          "Total = 5+11+4+14+8+12 = 54. 54/6 = 9%. Distractor 8%: reads Year 5 directly. Distractor 11%: reads Year 2 directly. Distractor 10.8%: divides by 5 instead of 6 (54/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, by what percentage did the annual return increase from Year 1 to Year 6?",
+        correct: "140%",
+        distractors: ["7 percentage points", "240%", "58.3%"],
+        explanation:
+          "Year 1 = 5%, Year 6 = 12%, increase = 7 percentage points. 7/5 × 100 = 140%. Distractor 7 percentage points: gives the absolute increase. Distractor 240%: calculates 12/5 × 100 (percentage of, not increase). Distractor 58.3%: uses Year 6 as the denominator (7/12 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which year had the closest annual return to the overall mean?",
+        correct: "Yr 5",
+        distractors: ["Yr 2", "Yr 6", "Yr 1"],
+        explanation:
+          "Overall mean = 9%. Year 5 = 8% (difference 1), Year 2 = 11% (difference 2), Year 6 = 12% (difference 3), Year 1 = 5% (difference 4). Year 5 is the closest. Distractor Yr 2: second closest at 2 away. Distractor Yr 6: 3 away. Distractor Yr 1: 4 away.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of the Year 1 return to the Year 4 return in its simplest form?",
+        correct: "5:14",
+        distractors: ["14:5", "5:12", "4:11"],
+        explanation:
+          "Year 1 = 5%, Year 4 = 14%. GCD(5, 14) = 1, so 5:14 is already fully simplified. Distractor 14:5 reverses the ratio. Distractor 5:12 compares Year 1 to Year 6 instead (5:12). Distractor 4:11 compares Year 3 to Year 2 instead (4:11).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "primary-care-appointment-wait-bands",
+    stimulus: [
+      "A primary care network recorded the number of appointments offered in each waiting-time band over one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Primary Care Appointments by Wait-time Band",
+      yLabel: "Appointments",
+      categories: [
+        { label: "Same day", value: 480 },
+        { label: "1–3 days", value: 360 },
+        { label: "4–7 days", value: 240 },
+        { label: "8–14 days", value: 120 },
+        { label: ">14 days", value: 60 },
+      ],
+      max: 550,
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of same-day to >14 day appointments in its simplest form?",
+        correct: "8:1",
+        distractors: ["1:8", "480:60", "6:1"],
+        explanation:
+          "Same day = 480, >14 days = 60. GCD(480, 60) = 60. 480/60 = 8, 60/60 = 1, giving 8:1. Distractor 1:8 reverses the ratio. Distractor 480:60 is the correct pair left unsimplified. Distractor 6:1 compares 1–3 day to >14 day appointments instead (360:60).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of appointments per wait-time band?",
+        correct: "252",
+        distractors: ["240", "360", "315"],
+        explanation:
+          "Total appointments = 480+360+240+120+60 = 1260. 1260/5 = 252. Distractor 240: reads 4–7 days directly. Distractor 360: reads 1–3 days directly. Distractor 315: divides by 4 instead of 5 (1260/4).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of appointments were in the 8–14 day band?",
+        correct: "9.5%",
+        distractors: ["120 appointments", "14.3%", "33.3%"],
+        explanation:
+          "8–14 day appointments = 120, total = 1260. 120/1260 × 100 = 9.5%. Distractor 120 appointments: gives the absolute count. Distractor 14.3%: divides by same-day plus 1–3 day appointments (120/840 × 100). Distractor 33.3%: divides by 4–14 day appointments only (120/360 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "The three longest wait-time bands (4–7, 8–14, and >14 days) together represent approximately what fraction of all appointments?",
+        correct: "1/3",
+        distractors: ["1/4", "2/5", "1/2"],
+        explanation:
+          "4–7 + 8–14 + >14 days = 240+120+60 = 420. Total = 1260. 420/1260 = 1/3 exactly. Distractor 1/4 (0.25) would require 315 appointments. Distractor 2/5 (0.40) would require 504. Distractor 1/2 (0.50) would require 630.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dermatology-skin-biopsy-results",
+    stimulus: [
+      "A dermatology department recorded skin biopsy results by diagnosis category and referral urgency.",
+    ],
+    visual: {
+      type: "table",
+      title: "Skin Biopsy Results by Diagnosis and Referral Urgency",
+      headers: ["Diagnosis", "Routine", "Two-week wait", "Emergency", "Total"],
+      rows: [
+        ["Benign", "120", "24", "6", "150"],
+        ["Pre-malignant", "30", "30", "0", "60"],
+        ["Malignant", "12", "36", "12", "60"],
+        ["Inconclusive", "24", "6", "0", "30"],
+        ["Total", "186", "96", "18", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For malignant diagnoses, what is the ratio of two-week wait to routine referrals in its simplest form?",
+        correct: "3:1",
+        distractors: ["1:3", "36:12", "5:1"],
+        explanation:
+          "Malignant two-week wait = 36, routine = 12. GCD(36, 12) = 12. 36/12 = 3, 12/12 = 1, giving 3:1. Distractor 1:3 reverses the ratio. Distractor 36:12 is the correct pair left unsimplified. Distractor 5:1 reads benign routine to benign two-week wait instead (120:24).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of two-week wait biopsies resulted in a malignant diagnosis?",
+        correct: "37.5%",
+        distractors: ["60%", "25%", "36 biopsies"],
+        explanation:
+          "Malignant TWW = 36, total TWW = 96. 36/96 × 100 = 37.5%. Distractor 60%: divides by all malignant biopsies (36/60 × 100). Distractor 25%: reads benign TWW as a percentage of total TWW (24/96 × 100). Distractor 36 biopsies: gives the absolute count.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of routine biopsies per diagnosis category?",
+        correct: "46.5",
+        distractors: ["30", "62", "37.2"],
+        explanation:
+          "Total routine = 186 across 4 categories. 186/4 = 46.5. Distractor 30: reads pre-malignant routine directly. Distractor 62: divides by 3 instead of 4 (186/3). Distractor 37.2: divides by 5 instead of 4 (186/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all biopsies were emergency referrals?",
+        correct: "6%",
+        distractors: ["18 biopsies", "32%", "94%"],
+        explanation:
+          "Emergency total = 18, grand total = 300. 18/300 × 100 = 6%. Distractor 18 biopsies: gives the absolute count. Distractor 32%: reads the two-week wait column instead (96/300 × 100). Distractor 94%: uses all non-emergency biopsies (282/300 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "public-library-computer-sessions",
+    stimulus: [
+      "A public library recorded the number of computer sessions booked by session length across one week.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Computer Sessions Booked by Length",
+      yLabel: "Sessions",
+      categories: [
+        { label: "30 min", value: 60 },
+        { label: "1 hour", value: 120 },
+        { label: "2 hours", value: 80 },
+        { label: "3 hours", value: 40 },
+      ],
+      max: 140,
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of 1-hour to 3-hour session bookings in its simplest form?",
+        correct: "3:1",
+        distractors: ["1:3", "120:40", "2:1"],
+        explanation:
+          "1-hour = 120, 3-hour = 40. GCD(120, 40) = 40. 120/40 = 3, 40/40 = 1, giving 3:1. Distractor 1:3 reverses the ratio. Distractor 120:40 is the correct pair left unsimplified. Distractor 2:1 compares 2-hour to 3-hour bookings instead (80:40).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of bookings per session length?",
+        correct: "75",
+        distractors: ["80", "120", "100"],
+        explanation:
+          "Total bookings = 60+120+80+40 = 300. 300/4 = 75. Distractor 80: reads 2-hour sessions directly. Distractor 120: reads 1-hour sessions directly. Distractor 100: divides by 3 instead of 4 (300/3).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all bookings were for 30-minute sessions?",
+        correct: "20%",
+        distractors: ["80%", "60 sessions", "25%"],
+        explanation:
+          "30-minute bookings = 60, total = 300. 60/300 × 100 = 20%. Distractor 80%: uses all non-30-minute sessions (240/300 × 100). Distractor 60 sessions: gives the absolute count. Distractor 25%: divides 30-minute sessions by all other session lengths combined (60/240 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "2-hour and 3-hour bookings combined represent approximately what fraction of all bookings?",
+        correct: "2/5",
+        distractors: ["1/3", "1/4", "1/2"],
+        explanation:
+          "2-hour + 3-hour = 80+40 = 120. Total = 300. 120/300 = 2/5 exactly. Distractor 1/3 (0.333) would require 100 combined bookings. Distractor 1/4 (0.25) would require 75. Distractor 1/2 (0.50) would require 150.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "mental-health-crisis-call-outcomes",
+    stimulus: [
+      "A mental health crisis telephone service recorded call outcomes by presenting issue type over one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Crisis Call Outcomes by Presenting Issue",
+      headers: ["Issue type", "Resolved by phone", "Crisis team sent", "A&E advised", "Total"],
+      rows: [
+        ["Anxiety/panic", "60", "15", "5", "80"],
+        ["Suicidal ideation", "20", "30", "10", "60"],
+        ["Psychosis/mania", "10", "20", "10", "40"],
+        ["Self-harm concerns", "30", "15", "15", "60"],
+        ["Total", "120", "80", "40", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For anxiety/panic calls, what is the ratio of resolved by phone to A&E advised in its simplest form?",
+        correct: "12:1",
+        distractors: ["1:12", "60:5", "2:1"],
+        explanation:
+          "Anxiety/panic resolved = 60, A&E advised = 5. GCD(60, 5) = 5. 60/5 = 12, 5/5 = 1, giving 12:1. Distractor 1:12 reverses the ratio. Distractor 60:5 is the correct pair left unsimplified. Distractor 2:1 compares psychosis/mania crisis sent to A&E advised instead (20:10).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all calls resulted in A&E being advised?",
+        correct: "16.7%",
+        distractors: ["83.3%", "40 calls", "33.3%"],
+        explanation:
+          "A&E advised total = 40, grand total = 240. 40/240 × 100 = 16.7%. Distractor 83.3%: uses all non-A&E outcomes (200/240 × 100). Distractor 40 calls: gives the absolute count. Distractor 33.3%: divides by all resolved-by-phone calls (40/120 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of crisis team deployments per issue type?",
+        correct: "20",
+        distractors: ["30", "26.7", "15"],
+        explanation:
+          "Total crisis team sent = 80 across 4 issue types. 80/4 = 20. Distractor 30: reads suicidal ideation crisis team directly. Distractor 26.7: divides by 3 instead of 4 (80/3 ≈ 26.7). Distractor 15: reads anxiety/panic or self-harm crisis team directly (both are 15).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all calls were resolved by phone?",
+        correct: "50%",
+        distractors: ["33.3%", "120 calls", "75%"],
+        explanation:
+          "Resolved by phone = 120, grand total = 240. 120/240 × 100 = 50%. Distractor 33.3%: reads the crisis team column instead (80/240 × 100). Distractor 120 calls: gives the absolute count. Distractor 75%: divides phone-resolved by phone-resolved plus A&E advised only (120/160 × 100), excluding crisis deployments from the denominator.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "supermarket-product-returns",
+    stimulus: [
+      "A supermarket chain recorded the number of product returns by category across two consecutive months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Product Returns by Category and Month",
+      yLabel: "Returns",
+      seriesLabels: ["Month 1", "Month 2"],
+      groups: [
+        { label: "Food", values: [120, 100] },
+        { label: "Electronics", values: [80, 90] },
+        { label: "Clothing", values: [60, 70] },
+        { label: "Homeware", values: [40, 40] },
+      ],
+      max: 130,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of returns per product category in Month 1?",
+        correct: "75",
+        distractors: ["80", "120", "150"],
+        explanation:
+          "Month 1 total = 120+80+60+40 = 300. 300/4 = 75. Distractor 80: reads electronics Month 1 directly. Distractor 120: reads food Month 1 directly. Distractor 150: divides by 2 instead of 4 (300/2).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, by what percentage did electronics returns increase from Month 1 to Month 2?",
+        correct: "12.5%",
+        distractors: ["10 returns", "112.5%", "11.1%"],
+        explanation:
+          "Month 1 electronics = 80, Month 2 = 90, increase = 10. 10/80 × 100 = 12.5%. Distractor 10 returns: gives the absolute increase. Distractor 112.5%: calculates 90/80 × 100 (percentage of, not increase). Distractor 11.1%: uses Month 2 as the denominator (10/90 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Month 1, what is the ratio of food to homeware returns in its simplest form?",
+        correct: "3:1",
+        distractors: ["1:3", "120:40", "2:1"],
+        explanation:
+          "Month 1 food = 120, homeware = 40. GCD(120, 40) = 40. 120/40 = 3, 40/40 = 1, giving 3:1. Distractor 1:3 reverses the ratio. Distractor 120:40 is the correct pair left unsimplified. Distractor 2:1 compares electronics to homeware Month 1 instead (80:40).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, food returns represented what percentage of all Month 2 returns?",
+        correct: "33.3%",
+        distractors: ["66.7%", "100 returns", "40%"],
+        explanation:
+          "Month 2 food = 100, Month 2 total = 100+90+70+40 = 300. 100/300 × 100 = 33.3%. Distractor 66.7%: uses all non-food returns (200/300 × 100). Distractor 100 returns: gives the absolute count. Distractor 40%: uses Month 1 food with Month 2 total (120/300 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "emergency-department-triage-outcomes",
+    stimulus: [
+      "An emergency department recorded triage outcomes by presenting category over one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "ED Triage Outcomes by Presenting Category",
+      headers: ["Category", "Admitted", "Discharged", "Left before seen", "Total"],
+      rows: [
+        ["Major trauma", "30", "10", "0", "40"],
+        ["Medical emergency", "80", "40", "10", "130"],
+        ["Minor injury", "20", "120", "10", "150"],
+        ["Mental health", "30", "40", "10", "80"],
+        ["Total", "160", "210", "30", "400"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For minor injury presentations, what is the ratio of discharged to admitted patients in its simplest form?",
+        correct: "6:1",
+        distractors: ["1:6", "120:20", "4:1"],
+        explanation:
+          "Minor injury discharged = 120, admitted = 20. GCD(120, 20) = 20. 120/20 = 6, 20/20 = 1, giving 6:1. Distractor 1:6 reverses the ratio. Distractor 120:20 is the correct pair left unsimplified. Distractor 4:1 reads medical emergency discharged to admitted instead (40:10).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of medical emergency patients were admitted?",
+        correct: "61.5%",
+        distractors: ["50%", "38.1%", "80"],
+        explanation:
+          "Medical emergency admitted = 80, medical emergency total = 130. 80/130 × 100 = 61.5%. Distractor 50%: divides by all admitted patients (80/160 × 100). Distractor 38.1%: divides by all discharged patients (80/210 × 100). Distractor 80: reads the admitted cell directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1, what was the mean number of admitted patients per presenting category?",
+        correct: "40",
+        distractors: ["30", "53.3", "80"],
+        explanation:
+          "Total admitted = 160 across 4 categories. 160/4 = 40. Distractor 30: reads major trauma or mental health admitted directly (both are 30). Distractor 53.3: divides by 3 instead of 4 (160/3 ≈ 53.3). Distractor 80: reads medical emergency admitted directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all ED attendances left before being seen?",
+        correct: "7.5%",
+        distractors: ["30 patients", "92.5%", "18.75%"],
+        explanation:
+          "Left before seen = 30, grand total = 400. 30/400 × 100 = 7.5%. Distractor 30 patients: gives the absolute count. Distractor 92.5%: uses all patients who were seen (370/400 × 100). Distractor 18.75%: divides left-before-seen by total admitted (30/160 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "national-park-visitor-activity-types",
+    stimulus: [
+      "A national park recorded visitor activity participation counts by activity type over one season.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Visitor Activity Participation by Type",
+      yLabel: "Visitors",
+      categories: [
+        { label: "Walking trails", value: 3200 },
+        { label: "Cycling", value: 1600 },
+        { label: "Wildlife watching", value: 800 },
+        { label: "Visitor centre", value: 400 },
+      ],
+      max: 3500,
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of walking trail to wildlife watching participants in its simplest form?",
+        correct: "4:1",
+        distractors: ["1:4", "3200:800", "2:1"],
+        explanation:
+          "Walking trails = 3200, wildlife watching = 800. GCD(3200, 800) = 800. 3200/800 = 4, 800/800 = 1, giving 4:1. Distractor 1:4 reverses the ratio. Distractor 3200:800 is the correct pair left unsimplified. Distractor 2:1 compares cycling to wildlife watching instead (1600:800).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of participants per activity type?",
+        correct: "1500",
+        distractors: ["1600", "2000", "1200"],
+        explanation:
+          "Total = 3200+1600+800+400 = 6000. 6000/4 = 1500. Distractor 1600: reads cycling directly. Distractor 2000: divides by 3 instead of 4 (6000/3). Distractor 1200: divides by 5 instead of 4 (6000/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, cycling participants represented what percentage of all activity participation?",
+        correct: "26.7%",
+        distractors: ["73.3%", "1600 visitors", "25%"],
+        explanation:
+          "Cycling = 1600, total = 6000. 1600/6000 × 100 = 26.7%. Distractor 73.3%: uses all non-cycling participation (4400/6000 × 100). Distractor 1600 visitors: gives the absolute count. Distractor 25%: assumes each of the four activity types represents an equal quarter of all participation.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Wildlife watching and visitor centre participants combined represent approximately what fraction of all activity participation?",
+        correct: "1/5",
+        distractors: ["1/4", "1/3", "1/6"],
+        explanation:
+          "Wildlife watching + visitor centre = 800+400 = 1200. Total = 6000. 1200/6000 = 1/5 exactly. Distractor 1/4 (0.25) would require 1500 combined. Distractor 1/3 (0.333) would require 2000. Distractor 1/6 (0.167) would require 1000.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renal-transplant-follow-up-outcomes",
+    stimulus: [
+      "A transplant nephrology clinic recorded follow-up outcomes by years post-transplant.",
+    ],
+    visual: {
+      type: "table",
+      title: "Renal Transplant Follow-up Outcomes by Year",
+      headers: ["Years post-Tx", "Stable", "Borderline", "Action needed", "Total"],
+      rows: [
+        ["1 year", "60", "20", "20", "100"],
+        ["3 years", "60", "24", "16", "100"],
+        ["5 years", "50", "30", "20", "100"],
+        ["10 years", "40", "36", "24", "100"],
+        ["Total", "210", "110", "80", "400"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "At 10 years post-transplant, what is the ratio of stable to action-needed outcomes in its simplest form?",
+        correct: "5:3",
+        distractors: ["3:5", "40:24", "5:2"],
+        explanation:
+          "10-year stable = 40, action needed = 24. GCD(40, 24) = 8. 40/8 = 5, 24/8 = 3, giving 5:3. Distractor 3:5 reverses the ratio. Distractor 40:24 is the correct pair left unsimplified. Distractor 5:2 reads 5-year stable to action needed instead (50:20).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of 3-year follow-ups required action?",
+        correct: "16%",
+        distractors: ["84%", "20%", "16 patients"],
+        explanation:
+          "3-year action needed = 16, 3-year total = 100. 16/100 × 100 = 16%. Distractor 84%: uses stable plus borderline (84/100 × 100). Distractor 20%: reads 1-year action needed as a percentage of 100 instead (20/100 × 100). Distractor 16 patients: gives the absolute count.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of action-needed outcomes per follow-up year?",
+        correct: "20",
+        distractors: ["24", "26.7", "16"],
+        explanation:
+          "Total action needed = 80 across 4 follow-up years. 80/4 = 20. Distractor 24: reads 10-year action needed directly. Distractor 26.7: divides by 3 instead of 4 (80/3 ≈ 26.7). Distractor 16: reads 3-year action needed directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all follow-up appointments resulted in a stable outcome?",
+        correct: "52.5%",
+        distractors: ["47.5%", "210 patients", "60%"],
+        explanation:
+          "Total stable = 210, grand total = 400. 210/400 × 100 = 52.5%. Distractor 47.5%: uses borderline plus action-needed (190/400 × 100). Distractor 210 patients: gives the absolute count. Distractor 60%: reads 1-year stable as a percentage of its row total (60/100 × 100), using only the first year.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "music-streaming-genre-plays",
+    stimulus: [
+      "A music streaming service recorded the number of plays by genre across two consecutive weeks.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Music Plays by Genre and Week",
+      yLabel: "Plays",
+      seriesLabels: ["Week 1", "Week 2"],
+      groups: [
+        { label: "Pop", values: [600, 720] },
+        { label: "Rock", values: [300, 360] },
+        { label: "Classical", values: [150, 180] },
+        { label: "Jazz", values: [100, 90] },
+      ],
+      max: 750,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of Week 1 plays per genre?",
+        correct: "287.5",
+        distractors: ["300", "383.3", "230"],
+        explanation:
+          "Week 1 total = 600+300+150+100 = 1150. 1150/4 = 287.5. Distractor 300: reads rock Week 1 directly. Distractor 383.3: divides by 3 instead of 4 (1150/3 ≈ 383.3). Distractor 230: divides by 5 instead of 4 (1150/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did pop plays increase from Week 1 to Week 2?",
+        correct: "20%",
+        distractors: ["120 plays", "120%", "16.7%"],
+        explanation:
+          "Week 1 pop = 600, Week 2 = 720, increase = 120. 120/600 × 100 = 20%. Distractor 120 plays: gives the absolute increase. Distractor 120%: calculates 720/600 × 100 (percentage of, not increase). Distractor 16.7%: uses Week 2 as the denominator (120/720 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Week 1, what is the ratio of pop to classical plays in its simplest form?",
+        correct: "4:1",
+        distractors: ["1:4", "600:150", "2:1"],
+        explanation:
+          "Week 1 pop = 600, classical = 150. GCD(600, 150) = 150. 600/150 = 4, 150/150 = 1, giving 4:1. Distractor 1:4 reverses the ratio. Distractor 600:150 is the correct pair left unsimplified. Distractor 2:1 compares rock to classical Week 1 instead (300:150).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did jazz plays decrease from Week 1 to Week 2?",
+        correct: "10%",
+        distractors: ["10 plays", "90%", "11.1%"],
+        explanation:
+          "Week 1 jazz = 100, Week 2 = 90, decrease = 10. 10/100 × 100 = 10%. Distractor 10 plays: gives the absolute decrease. Distractor 90%: calculates Week 2 as a percentage of Week 1 (90/100 × 100), reporting the remaining proportion rather than the decrease. Distractor 11.1%: uses Week 2 as the denominator (10/90 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "colorectal-cancer-screening-outcomes",
+    stimulus: [
+      "A colorectal cancer screening programme recorded screening outcomes by participant age group.",
+    ],
+    visual: {
+      type: "table",
+      title: "Colorectal Screening Outcomes by Age Group",
+      headers: ["Age group", "Normal", "Polyp found", "Referred for colonoscopy", "Total"],
+      rows: [
+        ["50–54", "240", "40", "20", "300"],
+        ["55–59", "300", "48", "12", "360"],
+        ["60–64", "200", "40", "20", "260"],
+        ["65–69", "150", "40", "30", "220"],
+        ["Total", "890", "168", "82", "1140"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "In the 65–69 age group, what is the ratio of normal to polyp-found results in its simplest form?",
+        correct: "15:4",
+        distractors: ["4:15", "150:40", "5:1"],
+        explanation:
+          "65–69 normal = 150, polyp found = 40. GCD(150, 40) = 10. 150/10 = 15, 40/10 = 4, giving 15:4. Distractor 4:15 reverses the ratio. Distractor 150:40 is the correct pair left unsimplified. Distractor 5:1 reads the 60–64 age group instead (200:40).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of 55–59 screenings found polyps?",
+        correct: "13.3%",
+        distractors: ["28.6%", "4.2%", "48"],
+        explanation:
+          "55–59 polyp found = 48, 55–59 total = 360. 48/360 × 100 = 13.3%. Distractor 28.6%: divides by all polyp-found results (48/168 × 100). Distractor 4.2%: divides by grand total (48/1140 × 100). Distractor 48: reads the cell directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of colonoscopy referrals per age group?",
+        correct: "20.5",
+        distractors: ["20", "27.3", "30"],
+        explanation:
+          "Total colonoscopy referrals = 82 across 4 age groups. 82/4 = 20.5. Distractor 20: reads 50–54 or 60–64 colonoscopy referrals directly (both are 20). Distractor 27.3: divides by 3 instead of 4 (82/3 ≈ 27.3). Distractor 30: reads 65–69 colonoscopy referrals directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all screenings resulted in colonoscopy referral?",
+        correct: "7.2%",
+        distractors: ["82 patients", "14.7%", "92.8%"],
+        explanation:
+          "Colonoscopy referrals = 82, grand total = 1140. 82/1140 × 100 = 7.2%. Distractor 82 patients: gives the absolute count. Distractor 14.7%: reads the polyp-found column instead (168/1140 × 100). Distractor 92.8%: uses all non-colonoscopy screenings (1058/1140 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-dispensing-volume-by-hour",
+    stimulus: [
+      "A hospital pharmacy recorded the number of prescriptions dispensed per hour across a six-hour morning shift.",
+    ],
+    visual: {
+      type: "line",
+      title: "Prescriptions Dispensed per Hour",
+      yLabel: "Prescriptions",
+      points: [
+        { label: "8am", value: 48 },
+        { label: "9am", value: 84 },
+        { label: "10am", value: 90 },
+        { label: "11am", value: 72 },
+        { label: "12pm", value: 66 },
+        { label: "1pm", value: 60 },
+      ],
+      max: 100,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of prescriptions dispensed per hour across the six-hour shift?",
+        correct: "70",
+        distractors: ["90", "105", "72"],
+        explanation:
+          "Total = 48+84+90+72+66+60 = 420. 420/6 = 70. Distractor 90: reads the peak hour (10am) directly. Distractor 105: divides by 4 instead of 6 (420/4). Distractor 72: reads the 11am value, the hour closest to the mean.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did prescriptions dispensed increase from 8am to 10am?",
+        correct: "87.5%",
+        distractors: ["42 prescriptions", "187.5%", "46.7%"],
+        explanation:
+          "8am = 48, 10am = 90, increase = 42. 42/48 × 100 = 87.5%. Distractor 42 prescriptions: gives the absolute increase. Distractor 187.5%: calculates 90/48 × 100 (percentage of, not increase). Distractor 46.7%: uses 10am as the denominator (42/90 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which hour had the closest number of prescriptions dispensed to the overall hourly mean?",
+        correct: "11am",
+        distractors: ["12pm", "1pm", "9am"],
+        explanation:
+          "Overall mean = 70. 11am = 72 (difference 2), 12pm = 66 (difference 4), 1pm = 60 (difference 10), 9am = 84 (difference 14). 11am is the closest. Distractor 12pm: second closest at 4 away. Distractor 1pm: 10 away. Distractor 9am: 14 away.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of 8am prescriptions to 12pm prescriptions in its simplest form?",
+        correct: "8:11",
+        distractors: ["11:8", "48:66", "4:5"],
+        explanation:
+          "8am = 48, 12pm = 66. GCD(48, 66) = 6. 48/6 = 8, 66/6 = 11, giving 8:11. Distractor 11:8 reverses the ratio. Distractor 48:66 is the correct pair left unsimplified. Distractor 4:5 compares 8am to 1pm instead (48:60; GCD = 12; 4:5).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cardiac-device-implantation-outcomes",
+    stimulus: [
+      "A cardiac device implantation service recorded procedure outcomes by device type over one year.",
+    ],
+    visual: {
+      type: "table",
+      title: "Cardiac Device Implantation Outcomes",
+      headers: ["Device type", "Uneventful", "Minor complication", "Major complication", "Total"],
+      rows: [
+        ["Pacemaker", "120", "20", "4", "144"],
+        ["ICD", "80", "16", "4", "100"],
+        ["CRT-D", "60", "15", "5", "80"],
+        ["Loop recorder", "72", "4", "4", "80"],
+        ["Total", "332", "55", "17", "404"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For pacemaker implants, what is the ratio of uneventful procedures to minor complications in its simplest form?",
+        correct: "6:1",
+        distractors: ["1:6", "120:20", "5:1"],
+        explanation:
+          "Pacemaker uneventful = 120, minor complications = 20. GCD(120, 20) = 20. 120/20 = 6, 20/20 = 1, giving 6:1. Distractor 1:6 reverses the ratio. Distractor 120:20 is the correct pair left unsimplified. Distractor 5:1 reads ICD uneventful to minor complications instead (80:16).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of ICD procedures were uneventful?",
+        correct: "80%",
+        distractors: ["20%", "24.1%", "80 procedures"],
+        explanation:
+          "ICD uneventful = 80, ICD total = 100. 80/100 × 100 = 80%. Distractor 20%: uses minor plus major complications (20/100 × 100). Distractor 24.1%: divides by all uneventful procedures (80/332 × 100). Distractor 80 procedures: gives the absolute count.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of major complications per device type?",
+        correct: "4.25",
+        distractors: ["4", "5.7", "5"],
+        explanation:
+          "Total major complications = 17 across 4 device types. 17/4 = 4.25. Distractor 4: reads pacemaker, ICD, or loop recorder major complications directly (all are 4). Distractor 5.7: divides by 3 instead of 4 (17/3 ≈ 5.7). Distractor 5: reads CRT-D major complications directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all procedures involved any complication?",
+        correct: "17.8%",
+        distractors: ["72 procedures", "82.2%", "13.6%"],
+        explanation:
+          "Total with any complication = 55+17 = 72, grand total = 404. 72/404 × 100 = 17.8%. Distractor 72 procedures: gives the absolute count. Distractor 82.2%: uses all uneventful procedures (332/404 × 100). Distractor 13.6%: counts only minor complications, excluding major (55/404 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "social-media-content-engagement",
+    stimulus: [
+      "A marketing team recorded the total content engagement (likes and shares combined) by post type across two consecutive months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Content Engagement by Post Type and Month",
+      yLabel: "Engagements",
+      seriesLabels: ["Month 1", "Month 2"],
+      groups: [
+        { label: "Video", values: [800, 960] },
+        { label: "Image", values: [400, 480] },
+        { label: "Poll", values: [200, 240] },
+        { label: "Text", values: [100, 80] },
+      ],
+      max: 1000,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of engagements per post type in Month 1?",
+        correct: "375",
+        distractors: ["400", "500", "300"],
+        explanation:
+          "Month 1 total = 800+400+200+100 = 1500. 1500/4 = 375. Distractor 400: reads image Month 1 directly. Distractor 500: divides by 3 instead of 4 (1500/3). Distractor 300: divides by 5 instead of 4 (1500/5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did video engagements increase from Month 1 to Month 2?",
+        correct: "20%",
+        distractors: ["160 engagements", "120%", "16.7%"],
+        explanation:
+          "Month 1 video = 800, Month 2 = 960, increase = 160. 160/800 × 100 = 20%. Distractor 160 engagements: gives the absolute increase. Distractor 120%: calculates 960/800 × 100 (percentage of, not increase). Distractor 16.7%: uses Month 2 as the denominator (160/960 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Month 2, what is the ratio of video to text engagements in its simplest form?",
+        correct: "12:1",
+        distractors: ["1:12", "960:80", "6:1"],
+        explanation:
+          "Month 2 video = 960, text = 80. GCD(960, 80) = 80. 960/80 = 12, 80/80 = 1, giving 12:1. Distractor 1:12 reverses the ratio. Distractor 960:80 is the correct pair left unsimplified. Distractor 6:1 compares Month 2 image to text instead (480:80).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, text engagements in Month 2 represented what percentage of all Month 2 engagements?",
+        correct: "4.5%",
+        distractors: ["80 engagements", "6.7%", "95.5%"],
+        explanation:
+          "Month 2 text = 80, Month 2 total = 960+480+240+80 = 1760. 80/1760 × 100 = 4.5%. Distractor 80 engagements: gives the absolute count. Distractor 6.7%: uses Month 1 text with Month 1 total (100/1500 × 100). Distractor 95.5%: uses all non-text Month 2 engagements (1680/1760 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pressure-ulcer-admission-grades-by-ward",
+    stimulus: [
+      "A tissue viability team recorded pressure ulcer grades found on hospital admission by ward type.",
+    ],
+    visual: {
+      type: "table",
+      title: "Pressure Ulcer Grades on Admission by Ward Type",
+      headers: ["Ward type", "Grade 1–2", "Grade 3–4", "Unstageable", "Total"],
+      rows: [
+        ["Medical", "48", "8", "4", "60"],
+        ["Surgical", "36", "12", "2", "50"],
+        ["Care of elderly", "60", "24", "6", "90"],
+        ["Rehabilitation", "24", "8", "8", "40"],
+        ["Total", "168", "52", "20", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For the care of elderly ward, what is the ratio of grade 1–2 to grade 3–4 ulcers in its simplest form?",
+        correct: "5:2",
+        distractors: ["2:5", "60:24", "3:1"],
+        explanation:
+          "Care of elderly grade 1–2 = 60, grade 3–4 = 24. GCD(60, 24) = 12. 60/12 = 5, 24/12 = 2, giving 5:2. Distractor 2:5 reverses the ratio. Distractor 60:24 is the correct pair left unsimplified. Distractor 3:1 reads the surgical ward instead (36:12).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of rehabilitation ward admissions had unstageable ulcers?",
+        correct: "20%",
+        distractors: ["80%", "40%", "8 patients"],
+        explanation:
+          "Rehabilitation unstageable = 8, rehabilitation total = 40. 8/40 × 100 = 20%. Distractor 80%: uses grade 1–2 plus grade 3–4 (32/40 × 100). Distractor 40%: divides by total unstageable across all wards (8/20 × 100). Distractor 8 patients: gives the absolute count.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of unstageable ulcers per ward type?",
+        correct: "5",
+        distractors: ["6", "6.7", "4"],
+        explanation:
+          "Total unstageable = 20 across 4 ward types. 20/4 = 5. Distractor 6: reads care of elderly unstageable directly. Distractor 6.7: divides by 3 instead of 4 (20/3 ≈ 6.7). Distractor 4: reads medical ward unstageable directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all admissions had grade 3–4 pressure ulcers?",
+        correct: "21.7%",
+        distractors: ["52 patients", "78.3%", "30.9%"],
+        explanation:
+          "Grade 3–4 total = 52, grand total = 240. 52/240 × 100 = 21.7%. Distractor 52 patients: gives the absolute count. Distractor 78.3%: uses all non-grade-3-4 admissions (188/240 × 100). Distractor 30.9%: divides by the grade 1–2 total (52/168 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "hospital-canteen-daily-sales",
+    stimulus: [
+      "A hospital canteen recorded total daily sales in pounds across five consecutive working days.",
+    ],
+    visual: {
+      type: "line",
+      title: "Hospital Canteen Daily Sales",
+      yLabel: "Sales (£)",
+      points: [
+        { label: "Mon", value: 800 },
+        { label: "Tue", value: 960 },
+        { label: "Wed", value: 1000 },
+        { label: "Thu", value: 890 },
+        { label: "Fri", value: 750 },
+      ],
+      max: 1100,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean daily sales figure across the five days?",
+        correct: "£880",
+        distractors: ["£960", "£1000", "£1100"],
+        explanation:
+          "Total = 800+960+1000+890+750 = 4400. 4400/5 = 880. Distractor £960: reads Tuesday directly. Distractor £1000: reads Wednesday directly. Distractor £1100: divides by 4 instead of 5 (4400/4).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did daily sales decrease from Wednesday to Friday?",
+        correct: "25%",
+        distractors: ["£250", "75%", "33.3%"],
+        explanation:
+          "Wednesday = £1000, Friday = £750, decrease = £250. 250/1000 × 100 = 25%. Distractor £250: gives the absolute decrease. Distractor 75%: calculates Friday as a percentage of Wednesday (750/1000 × 100), reporting the remaining proportion rather than the decrease. Distractor 33.3%: uses Friday as the denominator (250/750 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which day had the closest sales figure to the overall daily mean?",
+        correct: "Thu",
+        distractors: ["Mon", "Tue", "Wed"],
+        explanation:
+          "Overall mean = £880. Thursday = £890 (difference £10), Monday = £800 (difference £80), Tuesday = £960 (difference £80), Wednesday = £1000 (difference £120). Thursday is the closest. Distractor Mon: £80 away. Distractor Tue: £80 away. Distractor Wed: £120 away.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of Monday sales to Wednesday sales in its simplest form?",
+        correct: "4:5",
+        distractors: ["5:4", "800:1000", "3:4"],
+        explanation:
+          "Monday = £800, Wednesday = £1000. GCD(800, 1000) = 200. 800/200 = 4, 1000/200 = 5, giving 4:5. Distractor 5:4 reverses the ratio. Distractor 800:1000 is the correct pair left unsimplified. Distractor 3:4 compares Friday to Wednesday instead (750:1000; GCD = 250; 3:4).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "obstetrics-induction-method-outcomes",
+    stimulus: [
+      "An obstetrics unit recorded labour induction outcomes by induction method over one year.",
+    ],
+    visual: {
+      type: "table",
+      title: "Labour Induction Outcomes by Method",
+      headers: ["Method", "Vaginal delivery", "Instrumental", "Caesarean", "Total"],
+      rows: [
+        ["Prostaglandin gel", "60", "15", "25", "100"],
+        ["Mechanical balloon", "48", "12", "20", "80"],
+        ["Oxytocin augmentation", "56", "16", "8", "80"],
+        ["Membrane sweep", "30", "6", "4", "40"],
+        ["Total", "194", "49", "57", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For oxytocin augmentation, what is the ratio of vaginal deliveries to caesarean sections in its simplest form?",
+        correct: "7:1",
+        distractors: ["1:7", "56:8", "2:1"],
+        explanation:
+          "Oxytocin augmentation vaginal = 56, caesarean = 8. GCD(56, 8) = 8. 56/8 = 7, 8/8 = 1, giving 7:1. Distractor 1:7 reverses the ratio. Distractor 56:8 is the correct pair left unsimplified. Distractor 2:1 reads oxytocin augmentation instrumental to caesarean instead (16:8).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of membrane sweep inductions resulted in vaginal delivery?",
+        correct: "75%",
+        distractors: ["25%", "15.5%", "30"],
+        explanation:
+          "Membrane sweep vaginal = 30, membrane sweep total = 40. 30/40 × 100 = 75%. Distractor 25%: uses instrumental plus caesarean (10/40 × 100). Distractor 15.5%: divides by all vaginal deliveries (30/194 × 100). Distractor 30: reads the cell directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of caesarean sections per induction method?",
+        correct: "14.25",
+        distractors: ["20", "19", "25"],
+        explanation:
+          "Total caesarean sections = 57 across 4 induction methods. 57/4 = 14.25. Distractor 20: reads mechanical balloon caesarean directly. Distractor 19: divides by 3 instead of 4 (57/3). Distractor 25: reads prostaglandin gel caesarean directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all induction outcomes were caesarean sections?",
+        correct: "19%",
+        distractors: ["57 sections", "81%", "29.4%"],
+        explanation:
+          "Caesarean total = 57, grand total = 300. 57/300 × 100 = 19%. Distractor 57 sections: gives the absolute count. Distractor 81%: uses all non-caesarean outcomes (243/300 × 100). Distractor 29.4%: divides by all vaginal deliveries (57/194 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "student-examination-performance",
+    stimulus: [
+      "A medical school recorded the number of students achieving each performance band in end-of-year examinations across two cohorts.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Examination Performance Bands by Student Cohort",
+      yLabel: "Students",
+      seriesLabels: ["Cohort A", "Cohort B"],
+      groups: [
+        { label: "Distinction", values: [30, 45] },
+        { label: "Merit", values: [90, 105] },
+        { label: "Pass", values: [60, 75] },
+        { label: "Fail", values: [20, 15] },
+      ],
+      max: 120,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of students per performance band in Cohort A?",
+        correct: "50",
+        distractors: ["60", "66.7", "90"],
+        explanation:
+          "Cohort A total = 30+90+60+20 = 200. 200/4 = 50. Distractor 60: reads Cohort A pass directly. Distractor 66.7: divides by 3 instead of 4 (200/3 ≈ 66.7). Distractor 90: reads Cohort A merit directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did distinction results increase from Cohort A to Cohort B?",
+        correct: "50%",
+        distractors: ["15 students", "150%", "33.3%"],
+        explanation:
+          "Cohort A distinction = 30, Cohort B = 45, increase = 15. 15/30 × 100 = 50%. Distractor 15 students: gives the absolute increase. Distractor 150%: calculates 45/30 × 100 (percentage of, not increase). Distractor 33.3%: uses Cohort B as the denominator (15/45 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Cohort B, what is the ratio of merit to fail students in its simplest form?",
+        correct: "7:1",
+        distractors: ["1:7", "105:15", "5:1"],
+        explanation:
+          "Cohort B merit = 105, fail = 15. GCD(105, 15) = 15. 105/15 = 7, 15/15 = 1, giving 7:1. Distractor 1:7 reverses the ratio. Distractor 105:15 is the correct pair left unsimplified. Distractor 5:1 compares Cohort B pass to fail instead (75:15).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Distinction and merit students in Cohort A combined represent approximately what fraction of all Cohort A students?",
+        correct: "3/5",
+        distractors: ["1/2", "2/3", "3/4"],
+        explanation:
+          "Cohort A distinction + merit = 30+90 = 120. Total Cohort A = 200. 120/200 = 3/5 exactly. Distractor 1/2 (0.50) would require 100 combined. Distractor 2/3 (0.333) would require ~133. Distractor 3/4 (0.75) would require 150.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "genetics-panel-variant-pathogenicity",
+    stimulus: [
+      "A clinical genetics laboratory recorded variant classification outcomes by gene panel type.",
+    ],
+    visual: {
+      type: "table",
+      title: "Variant Classifications by Gene Panel Type",
+      headers: ["Panel type", "Pathogenic", "Likely pathogenic", "VUS", "Total"],
+      rows: [
+        ["Cardiac", "24", "16", "20", "60"],
+        ["Hereditary cancer", "36", "12", "12", "60"],
+        ["Neuromuscular", "12", "12", "16", "40"],
+        ["Metabolic", "18", "12", "10", "40"],
+        ["Total", "90", "52", "58", "200"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For the hereditary cancer panel, what is the ratio of pathogenic to VUS variants in its simplest form?",
+        correct: "3:1",
+        distractors: ["1:3", "36:12", "6:5"],
+        explanation:
+          "Hereditary cancer pathogenic = 36, VUS = 12. GCD(36, 12) = 12. 36/12 = 3, 12/12 = 1, giving 3:1. Distractor 1:3 reverses the ratio. Distractor 36:12 is the correct pair left unsimplified. Distractor 6:5 reads the cardiac panel instead (pathogenic 24 to VUS 20).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of cardiac panel findings were variants of uncertain significance?",
+        correct: "33.3%",
+        distractors: ["66.7%", "34.5%", "20"],
+        explanation:
+          "Cardiac VUS = 20, cardiac total = 60. 20/60 × 100 = 33.3%. Distractor 66.7%: uses pathogenic plus likely pathogenic (40/60 × 100). Distractor 34.5%: divides by all VUS findings across panels (20/58 × 100). Distractor 20: reads the cell directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of pathogenic variants per gene panel type?",
+        correct: "22.5",
+        distractors: ["24", "30", "18"],
+        explanation:
+          "Total pathogenic = 90 across 4 panel types. 90/4 = 22.5. Distractor 24: reads cardiac pathogenic directly. Distractor 30: divides by 3 instead of 4 (90/3). Distractor 18: reads metabolic pathogenic directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of all classified variants were pathogenic?",
+        correct: "45%",
+        distractors: ["90 variants", "55%", "26%"],
+        explanation:
+          "Pathogenic total = 90, grand total = 200. 90/200 × 100 = 45%. Distractor 90 variants: gives the absolute count. Distractor 55%: uses likely pathogenic plus VUS (110/200 × 100). Distractor 26%: reads the likely pathogenic column instead (52/200 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "occupational-health-work-capability",
+    stimulus: [
+      "An occupational health service recorded work capability assessment outcomes over one quarter.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Work Capability Assessment Outcomes",
+      yLabel: "Assessments",
+      categories: [
+        { label: "Fit for work", value: 200 },
+        { label: "Phased return", value: 120 },
+        { label: "Modified duties", value: 80 },
+        { label: "Not fit for work", value: 40 },
+        { label: "Awaiting decision", value: 60 },
+      ],
+      max: 220,
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of fit-for-work to not-fit-for-work outcomes in its simplest form?",
+        correct: "5:1",
+        distractors: ["1:5", "200:40", "3:1"],
+        explanation:
+          "Fit for work = 200, not fit for work = 40. GCD(200, 40) = 40. 200/40 = 5, 40/40 = 1, giving 5:1. Distractor 1:5 reverses the ratio. Distractor 200:40 is the correct pair left unsimplified. Distractor 3:1 compares phased return to not fit for work instead (120:40).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of assessments per outcome category?",
+        correct: "100",
+        distractors: ["120", "166.7", "80"],
+        explanation:
+          "Total assessments = 200+120+80+40+60 = 500. 500/5 = 100. Distractor 120: reads phased return directly. Distractor 166.7: divides by 3 instead of 5 (500/3 ≈ 166.7). Distractor 80: reads modified duties directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "Not-fit-for-work and awaiting-decision outcomes combined represent what percentage of all assessments?",
+        correct: "20%",
+        distractors: ["80%", "100 assessments", "25%"],
+        explanation:
+          "Not fit for work + awaiting decision = 40+60 = 100. Total = 500. 100/500 × 100 = 20%. Distractor 80%: uses all remaining outcomes (400/500 × 100). Distractor 100 assessments: gives the absolute count. Distractor 25%: divides by fit-for-work plus phased return plus modified duties only (100/400 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Phased return and modified duties outcomes combined represent approximately what fraction of all assessments?",
+        correct: "2/5",
+        distractors: ["1/3", "1/2", "3/8"],
+        explanation:
+          "Phased return + modified duties = 120+80 = 200. Total = 500. 200/500 = 2/5 exactly. Distractor 1/3 (0.333) would require ~167 combined. Distractor 1/2 (0.50) would require 250. Distractor 3/8 (0.375) would require 187.5.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "icu-ventilation-duration-by-diagnosis",
+    stimulus: [
+      "An intensive care unit recorded ventilation duration categories by admission diagnosis type.",
+    ],
+    visual: {
+      type: "table",
+      title: "ICU Ventilation Duration by Admission Diagnosis",
+      headers: ["Diagnosis", "<2 days", "2–7 days", ">7 days", "Total"],
+      rows: [
+        ["Respiratory", "20", "30", "10", "60"],
+        ["Cardiac", "30", "20", "10", "60"],
+        ["Post-surgical", "45", "15", "0", "60"],
+        ["Neurological", "10", "20", "30", "60"],
+        ["Total", "105", "85", "50", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For neurological admissions, what is the ratio of <2 day to >7 day ventilation in its simplest form?",
+        correct: "1:3",
+        distractors: ["3:1", "10:30", "1:2"],
+        explanation:
+          "Neurological <2 days = 10, >7 days = 30. GCD(10, 30) = 10. 10/10 = 1, 30/10 = 3, giving 1:3. Distractor 3:1 reverses the ratio. Distractor 10:30 is the correct pair left unsimplified. Distractor 1:2 compares neurological <2 days to 2–7 days instead (10:20).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of post-surgical admissions required ventilation for less than two days?",
+        correct: "75%",
+        distractors: ["25%", "42.9%", "45"],
+        explanation:
+          "Post-surgical <2 days = 45, post-surgical total = 60. 45/60 × 100 = 75%. Distractor 25%: uses 2–7 day plus >7 day for post-surgical (15/60 × 100). Distractor 42.9%: divides by all <2-day ventilation admissions (45/105 × 100). Distractor 45: reads the cell directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of >7 day ventilation admissions per diagnosis type?",
+        correct: "12.5",
+        distractors: ["30", "16.7", "10"],
+        explanation:
+          "Total >7 days = 50 across 4 diagnosis types. 50/4 = 12.5. Distractor 30: reads neurological >7 days directly. Distractor 16.7: divides by 3 instead of 4 (50/3 ≈ 16.7). Distractor 10: reads respiratory or cardiac >7 days directly (both are 10).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all ICU admissions required ventilation for more than seven days?",
+        correct: "20.8%",
+        distractors: ["50 admissions", "79.2%", "47.6%"],
+        explanation:
+          ">7 days total = 50, grand total = 240. 50/240 × 100 = 20.8%. Distractor 50 admissions: gives the absolute count. Distractor 79.2%: uses all admissions not exceeding 7 days (190/240 × 100). Distractor 47.6%: divides by all <2-day admissions (50/105 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "weather-station-monthly-rainfall",
+    stimulus: [
+      "A weather station recorded mean monthly rainfall in millimetres across six consecutive months.",
+    ],
+    visual: {
+      type: "line",
+      title: "Mean Monthly Rainfall",
+      yLabel: "Rainfall (mm)",
+      points: [
+        { label: "Jan", value: 72 },
+        { label: "Feb", value: 60 },
+        { label: "Mar", value: 48 },
+        { label: "Apr", value: 36 },
+        { label: "May", value: 24 },
+        { label: "Jun", value: 60 },
+      ],
+      max: 80,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean monthly rainfall across all six months?",
+        correct: "50 mm",
+        distractors: ["60 mm", "75 mm", "48 mm"],
+        explanation:
+          "Total = 72+60+48+36+24+60 = 300 mm. 300/6 = 50 mm. Distractor 60 mm: reads February or June directly (both are 60 mm). Distractor 75 mm: divides by 4 instead of 6 (300/4). Distractor 48 mm: reads March, the month closest to the mean.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, by what percentage did rainfall decrease from January to May?",
+        correct: "66.7%",
+        distractors: ["48 mm", "33.3%", "200%"],
+        explanation:
+          "January = 72 mm, May = 24 mm, decrease = 48 mm. 48/72 × 100 = 66.7%. Distractor 48 mm: gives the absolute decrease. Distractor 33.3%: calculates May as a percentage of January (24/72 × 100), reporting the remaining proportion rather than the decrease. Distractor 200%: uses May as the denominator (48/24 × 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which month had the closest mean rainfall to the overall monthly mean?",
+        correct: "Mar",
+        distractors: ["Feb", "Apr", "Jan"],
+        explanation:
+          "Overall mean = 50 mm. March = 48 mm (difference 2 mm), February = 60 mm (difference 10 mm), April = 36 mm (difference 14 mm), January = 72 mm (difference 22 mm). March is the closest. Distractor Feb: second closest at 10 mm away. Distractor Apr: 14 mm away. Distractor Jan: 22 mm away.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of January rainfall to June rainfall in its simplest form?",
+        correct: "6:5",
+        distractors: ["5:6", "72:60", "3:2"],
+        explanation:
+          "January = 72 mm, June = 60 mm. GCD(72, 60) = 12. 72/12 = 6, 60/12 = 5, giving 6:5. Distractor 5:6 reverses the ratio. Distractor 72:60 is the correct pair left unsimplified. Distractor 3:2 compares January to March instead (72:48; GCD = 24; 3:2).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "lymphoma-staging-investigation-results",
+    stimulus: [
+      "A haematology lymphoma service recorded staging investigation findings by lymphoma type.",
+    ],
+    visual: {
+      type: "table",
+      title: "Lymphoma Staging Findings by Type",
+      headers: ["Lymphoma type", "Stage I–II", "Stage III", "Stage IV", "Total"],
+      rows: [
+        ["Hodgkin's", "40", "20", "20", "80"],
+        ["DLBCL", "30", "20", "30", "80"],
+        ["Follicular", "24", "16", "40", "80"],
+        ["Marginal zone", "36", "24", "0", "60"],
+        ["Total", "130", "80", "90", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For Hodgkin's lymphoma, what is the ratio of stage I–II to stage IV findings in its simplest form?",
+        correct: "2:1",
+        distractors: ["1:2", "40:20", "3:2"],
+        explanation:
+          "Hodgkin's stage I–II = 40, stage IV = 20. GCD(40, 20) = 20. 40/20 = 2, 20/20 = 1, giving 2:1. Distractor 1:2 reverses the ratio. Distractor 40:20 is the correct pair left unsimplified. Distractor 3:2 reads marginal zone stage I–II to stage III instead (36:24).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of follicular lymphoma patients were classified as stage IV?",
+        correct: "50%",
+        distractors: ["44.4%", "80", "20%"],
+        explanation:
+          "Follicular stage IV = 40, follicular total = 80. 40/80 × 100 = 50%. Distractor 44.4%: divides by all stage IV findings (40/90 × 100). Distractor 80: reads the follicular row total directly. Distractor 20%: reads follicular stage III as a percentage of the follicular total (16/80 × 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of stage IV findings per lymphoma type?",
+        correct: "22.5",
+        distractors: ["30", "40", "45"],
+        explanation:
+          "Total stage IV = 90 across 4 lymphoma types. 90/4 = 22.5. Distractor 30: reads DLBCL stage IV directly. Distractor 40: reads follicular stage IV directly. Distractor 45: divides by 2 instead of 4 (90/2).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all patients were classified as stage I–II?",
+        correct: "43.3%",
+        distractors: ["130 patients", "56.7%", "30%"],
+        explanation:
+          "Stage I–II total = 130, grand total = 300. 130/300 × 100 = 43.3%. Distractor 130 patients: gives the absolute count. Distractor 56.7%: uses stage III plus stage IV (170/300 × 100). Distractor 30%: reads the stage IV column instead (90/300 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pedestrian-crossing-usage",
+    stimulus: [
+      "A local authority recorded pedestrian crossing usage counts by crossing type across two consecutive months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Pedestrian Crossing Usage by Type and Month",
+      yLabel: "Crossings",
+      seriesLabels: ["Month 1", "Month 2"],
+      groups: [
+        { label: "Pelican", values: [1200, 1080] },
+        { label: "Toucan", values: [600, 540] },
+        { label: "Puffin", values: [300, 360] },
+        { label: "Pegasus", values: [100, 120] },
+      ],
+      max: 1400,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of crossings per crossing type in Month 1?",
+        correct: "550",
+        distractors: ["600", "733.3", "300"],
+        explanation:
+          "Month 1 total = 1200+600+300+100 = 2200. 2200/4 = 550. Distractor 600: reads Toucan Month 1 directly. Distractor 733.3: divides by 3 instead of 4 (2200/3 ≈ 733.3). Distractor 300: reads Puffin Month 1 directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did Pelican crossing usage decrease from Month 1 to Month 2?",
+        correct: "10%",
+        distractors: ["120 crossings", "90%", "11.1%"],
+        explanation:
+          "Month 1 Pelican = 1200, Month 2 = 1080, decrease = 120. 120/1200 × 100 = 10%. Distractor 120 crossings: gives the absolute decrease. Distractor 90%: reports Month 2 as a percentage of Month 1 (1080/1200 × 100), the remaining proportion rather than the decrease. Distractor 11.1%: uses Month 2 as the denominator (120/1080 × 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "In Month 1, what is the ratio of Pelican to Puffin crossing usage in its simplest form?",
+        correct: "4:1",
+        distractors: ["1:4", "1200:300", "6:1"],
+        explanation:
+          "Month 1 Pelican = 1200, Puffin = 300. GCD(1200, 300) = 300. 1200/300 = 4, 300/300 = 1, giving 4:1. Distractor 1:4 reverses the ratio. Distractor 1200:300 is the correct pair left unsimplified. Distractor 6:1 compares Toucan to Pegasus Month 1 instead (600:100).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, Toucan crossings in Month 2 represented what percentage of all Month 2 crossings?",
+        correct: "25.7%",
+        distractors: ["540 crossings", "27.3%", "24.5%"],
+        explanation:
+          "Month 2 Toucan = 540, Month 2 total = 1080+540+360+120 = 2100. 540/2100 × 100 = 25.7%. Distractor 540 crossings: gives the absolute count. Distractor 27.3%: uses Month 1 Toucan with Month 1 total (600/2200 × 100). Distractor 24.5%: uses Month 2 Toucan with Month 1 total (540/2200 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "maternity-postnatal-follow-up-outcomes",
+    stimulus: [
+      "A community midwifery team recorded postnatal follow-up outcomes by parity group.",
+    ],
+    visual: {
+      type: "table",
+      title: "Postnatal Follow-up Outcomes by Parity Group",
+      headers: ["Parity", "Uncomplicated", "Concern identified", "Specialist referral", "Total"],
+      rows: [
+        ["Primiparous (0)", "120", "40", "20", "180"],
+        ["Para 1", "90", "24", "6", "120"],
+        ["Para 2", "60", "12", "8", "80"],
+        ["Para 3+", "30", "12", "8", "50"],
+        ["Total", "300", "88", "42", "430"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "For primiparous women, what is the ratio of uncomplicated to specialist referral outcomes in its simplest form?",
+        correct: "6:1",
+        distractors: ["1:6", "120:20", "15:1"],
+        explanation:
+          "Primiparous uncomplicated = 120, specialist referral = 20. GCD(120, 20) = 20. 120/20 = 6, 20/20 = 1, giving 6:1. Distractor 1:6 reverses the ratio. Distractor 120:20 is the correct pair left unsimplified. Distractor 15:1 reads Para 1 instead (90:6).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of Para 2 follow-ups identified a concern?",
+        correct: "15%",
+        distractors: ["85%", "13.6%", "12"],
+        explanation:
+          "Para 2 concern identified = 12, Para 2 total = 80. 12/80 × 100 = 15%. Distractor 85%: uses uncomplicated plus specialist referral (68/80 × 100). Distractor 13.6%: divides by all concerns across parity groups (12/88 × 100). Distractor 12: reads the cell directly.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean number of specialist referrals per parity group?",
+        correct: "10.5",
+        distractors: ["8", "14", "20"],
+        explanation:
+          "Total specialist referrals = 42 across 4 parity groups. 42/4 = 10.5. Distractor 8: reads Para 2 or Para 3+ referrals directly (both are 8). Distractor 14: divides by 3 instead of 4 (42/3). Distractor 20: reads primiparous referrals directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all postnatal follow-ups were uncomplicated?",
+        correct: "69.8%",
+        distractors: ["300 follow-ups", "30.2%", "77.3%"],
+        explanation:
+          "Uncomplicated = 300, grand total = 430. 300/430 × 100 = 69.8%. Distractor 300 follow-ups: gives the absolute count. Distractor 30.2%: uses all concern plus referral outcomes (130/430 × 100). Distractor 77.3%: divides by uncomplicated plus concern only, excluding specialist referrals from the denominator (300/388 × 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "household-energy-consumption-monthly",
+    stimulus: [
+      "A housing association recorded mean household energy consumption in kilowatt-hours per month across six consecutive months.",
+    ],
+    visual: {
+      type: "line",
+      title: "Mean Household Energy Consumption by Month",
+      yLabel: "Consumption (kWh)",
+      points: [
+        { label: "Jan", value: 480 },
+        { label: "Feb", value: 420 },
+        { label: "Mar", value: 360 },
+        { label: "Apr", value: 260 },
+        { label: "May", value: 180 },
+        { label: "Jun", value: 100 },
+      ],
+      max: 520,
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What was the mean monthly energy consumption across all six months?",
+        correct: "300 kWh",
+        distractors: ["360 kWh", "450 kWh", "180 kWh"],
+        explanation:
+          "Total = 480+420+360+260+180+100 = 1800 kWh. 1800/6 = 300 kWh. Distractor 360 kWh: reads March directly. Distractor 450 kWh: divides by 4 instead of 6 (1800/4). Distractor 180 kWh: reads May directly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage did monthly consumption decrease from January to June?",
+        correct: "79.2%",
+        distractors: ["380 kWh", "20.8%", "380%"],
+        explanation:
+          "January consumption = 480 kWh and June consumption = 100 kWh, so the decrease is 380 kWh. 380/480 x 100 = 79.2%. Distractor 380 kWh: gives the absolute decrease. Distractor 20.8%: gives June as a percentage of January (100/480 x 100). Distractor 380%: uses June as the denominator for the decrease (380/100 x 100).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "Which month had consumption closest to the overall monthly mean?",
+        correct: "Apr",
+        distractors: ["Mar", "May", "Feb"],
+        explanation:
+          "Overall mean consumption = 1800/6 = 300 kWh. April is 260 kWh, which is 40 kWh from the mean. Distractor Mar: 360 kWh is 60 kWh from the mean. Distractor May: 180 kWh is 120 kWh from the mean. Distractor Feb: 420 kWh is 120 kWh from the mean.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What is the ratio of January consumption to May consumption in its simplest form?",
+        correct: "8:3",
+        distractors: ["3:8", "480:180", "7:6"],
+        explanation:
+          "January consumption = 480 kWh and May consumption = 180 kWh. 480:180 simplifies to 8:3. Distractor 3:8 reverses the ratio. Distractor 480:180 leaves the correct values unsimplified. Distractor 7:6 compares February with March instead (420:360=7:6).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiology-report-amendment-requests",
+    stimulus: [
+      "A radiology department recorded report amendment requests by imaging modality during one audit month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Radiology Report Amendment Requests",
+      headers: ["Modality", "Typo correction", "Clinical clarification", "Addendum issued", "Total"],
+      rows: [
+        ["CT", "36", "18", "6", "60"],
+        ["MRI", "24", "20", "6", "50"],
+        ["Ultrasound", "30", "12", "8", "50"],
+        ["X-ray", "40", "10", "0", "50"],
+        ["Total", "130", "60", "20", "210"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many MRI report amendment requests were clinical clarifications?",
+        correct: "20",
+        distractors: ["24", "6", "50"],
+        explanation:
+          "MRI, Clinical clarification = 20. Distractor 24: reads MRI Typo correction. Distractor 6: reads MRI Addendum issued. Distractor 50: reads the MRI row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of amendment requests led to an addendum being issued?",
+        correct: "9.5%",
+        distractors: ["28.6%", "61.9%", "33.3%"],
+        explanation:
+          "Addendum issued requests = 20 and total amendment requests = 210. 20/210 x 100 = 9.5%. Distractor 28.6%: uses Clinical clarification requests (60/210 x 100). Distractor 61.9%: uses Typo correction requests (130/210 x 100). Distractor 33.3%: uses Clinical clarification as the denominator (20/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Typo correction requests to Addendum issued requests?",
+        correct: "13:2",
+        distractors: ["2:13", "3:1", "6:1"],
+        explanation:
+          "Typo correction requests = 130 and Addendum issued requests = 20. 130:20 simplifies to 13:2. Distractor 2:13 reverses the ratio. Distractor 3:1 compares Clinical clarification with Addendum issued requests (60:20). Distractor 6:1 uses CT Typo correction:Addendum issued only (36:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of amendment requests per imaging modality?",
+        correct: "52.5",
+        distractors: ["60", "50", "70"],
+        explanation:
+          "Total amendment requests = 210 across 4 imaging modalities. 210/4 = 52.5. Distractor 60: reads the CT total. Distractor 50: reads a row total for MRI, Ultrasound, or X-ray. Distractor 70: divides by the 3 request types instead of 4 modalities.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-midwife-equipment-returns",
+    stimulus: [
+      "A community midwifery team recorded equipment return outcomes by equipment type during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Community Midwife Equipment Return Outcomes",
+      headers: ["Equipment type", "Returned clean", "Returned needing clean", "Missing", "Total"],
+      rows: [
+        ["Blood pressure cuff", "64", "12", "4", "80"],
+        ["Baby scales", "48", "18", "6", "72"],
+        ["Doppler", "42", "12", "6", "60"],
+        ["Birth pool kit", "26", "10", "2", "38"],
+        ["Total", "180", "52", "18", "250"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Returned clean items to Missing items?",
+        correct: "10:1",
+        distractors: ["1:10", "26:9", "16:1"],
+        explanation:
+          "Returned clean items = 180 and Missing items = 18. 180:18 simplifies to 10:1. Distractor 1:10 reverses the ratio. Distractor 26:9 compares Returned needing clean with Missing items (52:18=26:9). Distractor 16:1 uses Blood pressure cuff Returned clean:Missing only (64:4).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of returned equipment needed cleaning?",
+        correct: "20.8%",
+        distractors: ["7.2%", "72.0%", "28.9%"],
+        explanation:
+          "Returned needing clean items = 52 and total equipment items = 250. 52/250 x 100 = 20.8%. Distractor 7.2%: uses Missing items (18/250 x 100). Distractor 72.0%: uses Returned clean items (180/250 x 100). Distractor 28.9%: uses Returned clean as the denominator (52/180 x 100).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Baby scales were missing?",
+        correct: "6",
+        distractors: ["48", "18", "72"],
+        explanation:
+          "Baby scales, Missing = 6. Distractor 48: reads Baby scales Returned clean. Distractor 18: reads Baby scales Returned needing clean. Distractor 72: reads the Baby scales row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If Birth pool kit items returned needing cleaning fell by 20%, how many would remain?",
+        correct: "8",
+        distractors: ["2", "10", "12"],
+        explanation:
+          "Birth pool kit items returned needing cleaning = 10. A 20% fall is 10 x 0.20 = 2, so 10 - 2 = 8 remain. Distractor 2: gives the reduction only. Distractor 10: leaves the value unchanged. Distractor 12: adds the reduction instead of subtracting it.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renal-transplant-medicine-delivery",
+    stimulus: [
+      "A renal transplant pharmacy team recorded medicine delivery outcomes by medicine category during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Renal Transplant Medicine Delivery Outcomes",
+      yLabel: "Deliveries",
+      seriesLabels: ["Delivered on time", "Delayed", "Patient unavailable"],
+      groups: [
+        { label: "Tacrolimus", values: [88, 10, 2] },
+        { label: "Mycophenolate", values: [72, 18, 10] },
+        { label: "Steroid pack", values: [50, 8, 2] },
+        { label: "Prophylaxis", values: [60, 12, 8] },
+      ],
+      max: 100,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Mycophenolate deliveries were delayed?",
+        correct: "18",
+        distractors: ["72", "10", "100"],
+        explanation:
+          "Mycophenolate, Delayed = 18. Distractor 72: reads Mycophenolate Delivered on time. Distractor 10: reads Mycophenolate Patient unavailable. Distractor 100: adds all Mycophenolate deliveries.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of renal transplant medicine deliveries were on time?",
+        correct: "79.4%",
+        distractors: ["14.1%", "6.5%", "84.9%"],
+        explanation:
+          "On-time deliveries = 88+72+50+60 = 270. Total deliveries = 340, so 270/340 x 100 = 79.4%. Distractor 14.1%: uses Delayed deliveries (48/340 x 100). Distractor 6.5%: uses Patient unavailable deliveries (22/340 x 100). Distractor 84.9%: excludes Patient unavailable deliveries from the denominator (270/318 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Delayed deliveries to Patient unavailable deliveries?",
+        correct: "24:11",
+        distractors: ["11:24", "135:11", "9:5"],
+        explanation:
+          "Delayed deliveries = 48 and Patient unavailable deliveries = 22. 48:22 simplifies to 24:11. Distractor 11:24 reverses the ratio. Distractor 135:11 compares On-time deliveries with Patient unavailable deliveries (270:22=135:11). Distractor 9:5 uses Mycophenolate Delayed:Patient unavailable only (18:10=9:5).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question: "Which medicine category was closest to one quarter of all deliveries?",
+        correct: "Prophylaxis",
+        distractors: ["Tacrolimus", "Steroid pack", "Mycophenolate"],
+        explanation:
+          "Total deliveries = 340, so one quarter is 85. Prophylaxis totals 80 deliveries, which is closest. Distractor Tacrolimus: totals 100 deliveries. Distractor Steroid pack: totals 60 deliveries. Distractor Mycophenolate: totals 100 deliveries.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "orthopaedic-implant-tray-counts",
+    stimulus: [
+      "An orthopaedic theatre team recorded implant tray outcomes by tray type during one stock audit.",
+    ],
+    visual: {
+      type: "table",
+      title: "Orthopaedic Implant Tray Outcomes",
+      headers: ["Tray type", "Used", "Opened not used", "Expired", "Total"],
+      rows: [
+        ["Hip", "54", "10", "6", "70"],
+        ["Knee", "48", "12", "0", "60"],
+        ["Trauma", "72", "18", "10", "100"],
+        ["Shoulder", "26", "10", "4", "40"],
+        ["Total", "200", "50", "20", "270"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Trauma implant trays were expired?",
+        correct: "10",
+        distractors: ["72", "18", "100"],
+        explanation:
+          "Trauma, Expired = 10. Distractor 72: reads Trauma Used. Distractor 18: reads Trauma Opened not used. Distractor 100: reads the Trauma row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of implant trays were used?",
+        correct: "74.1%",
+        distractors: ["18.5%", "7.4%", "80.0%"],
+        explanation:
+          "Used trays = 200 and total trays = 270. 200/270 x 100 = 74.1%. Distractor 18.5%: uses Opened not used trays (50/270 x 100). Distractor 7.4%: uses Expired trays (20/270 x 100). Distractor 80.0%: excludes Expired trays from the denominator (200/250 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Opened not used trays to Expired trays?",
+        correct: "5:2",
+        distractors: ["2:5", "10:1", "5:3"],
+        explanation:
+          "Opened not used trays = 50 and Expired trays = 20. 50:20 simplifies to 5:2. Distractor 2:5 reverses the ratio. Distractor 10:1 compares Used trays with Expired trays (200:20). Distractor 5:3 uses Hip Opened not used:Expired only (10:6=5:3).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of trays per tray type?",
+        correct: "67.5",
+        distractors: ["70", "40", "90"],
+        explanation:
+          "Total trays = 270 across 4 tray types. 270/4 = 67.5. Distractor 70: reads the Hip total. Distractor 40: reads the Shoulder total. Distractor 90: divides by the 3 outcome columns instead of 4 tray types.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-ward-observation-frequency",
+    stimulus: [
+      "A paediatric ward recorded patient observation frequencies by ward area at one evening handover.",
+    ],
+    visual: {
+      type: "table",
+      title: "Paediatric Observation Frequencies by Ward Area",
+      headers: ["Observation frequency", "Respiratory", "Surgical", "Medical", "Total"],
+      rows: [
+        ["Hourly", "40", "24", "36", "100"],
+        ["2-hourly", "60", "36", "44", "140"],
+        ["4-hourly", "30", "50", "30", "110"],
+        ["Total", "130", "110", "110", "350"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Respiratory patients to Surgical patients?",
+        correct: "13:11",
+        distractors: ["11:13", "13:11:11", "5:3"],
+        explanation:
+          "Respiratory patients = 130 and Surgical patients = 110. 130:110 simplifies to 13:11. Distractor 11:13 reverses the ratio. Distractor 13:11:11 includes the Medical column as a three-way ratio. Distractor 5:3 uses Hourly Respiratory:Surgical patients (40:24=5:3).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of patients were on 2-hourly observations?",
+        correct: "40%",
+        distractors: ["31.4%", "28.6%", "56%"],
+        explanation:
+          "Patients on 2-hourly observations = 140 and total patients = 350. 140/350 x 100 = 40%. Distractor 31.4%: uses 4-hourly observations (110/350 x 100). Distractor 28.6%: uses Hourly observations (100/350 x 100). Distractor 56%: uses non-2-hourly observations as the denominator (140/250 x 100).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Surgical patients were on 4-hourly observations?",
+        correct: "50",
+        distractors: ["36", "110", "30"],
+        explanation:
+          "Surgical, 4-hourly observations = 50. Distractor 36: reads Surgical 2-hourly observations. Distractor 110: reads the Surgical column total. Distractor 30: reads Medical 4-hourly observations.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1, what was the mean number of patients per observation frequency?",
+        correct: "116.7",
+        distractors: ["140", "110", "87.5"],
+        explanation:
+          "Total patients = 350 across 3 observation frequencies. 350/3 = 116.7 to the nearest 0.1. Distractor 140: reads the 2-hourly total. Distractor 110: reads the 4-hourly total. Distractor 87.5: divides by 4 instead of 3.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "district-nurse-wound-dressing-stock",
+    stimulus: [
+      "A district nursing team recorded wound dressing stock outcomes by dressing type during one stock cycle.",
+    ],
+    visual: {
+      type: "table",
+      title: "Wound Dressing Stock Outcomes by Dressing Type",
+      headers: ["Dressing type", "Used", "Returned unopened", "Wasted", "Total"],
+      rows: [
+        ["Foam", "96", "18", "6", "120"],
+        ["Alginate", "54", "12", "4", "70"],
+        ["Hydrogel", "36", "18", "6", "60"],
+        ["Film", "44", "14", "2", "60"],
+        ["Total", "230", "62", "18", "310"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If each used Foam pack contains 5 dressings, how many Foam dressings were used?",
+        correct: "480 dressings",
+        distractors: ["600 dressings", "310 dressings", "96 dressings"],
+        explanation:
+          "Used Foam packs = 96 and each pack contains 5 dressings. 96 x 5 = 480 dressings. Distractor 600 dressings: applies 5 dressings to all Foam packs (120 x 5). Distractor 310 dressings: reads the grand total of packs. Distractor 96 dressings: gives the pack count without converting to dressings.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of dressing stock was wasted?",
+        correct: "5.8%",
+        distractors: ["20.0%", "74.2%", "7.8%"],
+        explanation:
+          "Wasted stock = 18 packs and total stock = 310 packs. 18/310 x 100 = 5.8%. Distractor 20.0%: uses Returned unopened stock (62/310 x 100). Distractor 74.2%: uses Used stock (230/310 x 100). Distractor 7.8%: uses Used stock as the denominator (18/230 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Used packs to Returned unopened packs?",
+        correct: "115:31",
+        distractors: ["31:115", "115:9", "16:3"],
+        explanation:
+          "Used packs = 230 and Returned unopened packs = 62. 230:62 simplifies to 115:31. Distractor 31:115 reverses the ratio. Distractor 115:9 compares Used packs with Wasted packs (230:18=115:9). Distractor 16:3 uses Foam Used:Returned unopened packs only (96:18=16:3).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Hydrogel packs were returned unopened?",
+        correct: "18",
+        distractors: ["36", "6", "60"],
+        explanation:
+          "Hydrogel, Returned unopened = 18. Distractor 36: reads Hydrogel Used packs. Distractor 6: reads Hydrogel Wasted packs. Distractor 60: reads the Hydrogel row total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "endocrine-insulin-pump-alerts",
+    stimulus: [
+      "An endocrine technology team recorded insulin pump alert calls across one week.",
+    ],
+    visual: {
+      type: "line",
+      title: "Daily Insulin Pump Alert Calls",
+      yLabel: "Alert calls",
+      points: [
+        { label: "Mon", value: 28 },
+        { label: "Tue", value: 34 },
+        { label: "Wed", value: 42 },
+        { label: "Thu", value: 38 },
+        { label: "Fri", value: 46 },
+        { label: "Sat", value: 26 },
+        { label: "Sun", value: 16 },
+      ],
+      max: 50,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many insulin pump alert calls were recorded on Friday?",
+        correct: "46",
+        distractors: ["38", "26", "230"],
+        explanation:
+          "Friday shows 46 insulin pump alert calls. Distractor 38: reads Thursday. Distractor 26: reads Saturday. Distractor 230: adds all calls across the week.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1, what was the mean number of alert calls per day?",
+        correct: "32.9",
+        distractors: ["34", "46", "38.3"],
+        explanation:
+          "Total alert calls = 28+34+42+38+46+26+16 = 230 across 7 days. 230/7 = 32.9 to the nearest 0.1. Distractor 34: reads Tuesday. Distractor 46: reads Friday, the highest value. Distractor 38.3: divides by 6 instead of 7.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of alert calls occurred at the weekend?",
+        correct: "18.3%",
+        distractors: ["11.3%", "7.0%", "22.3%"],
+        explanation:
+          "Weekend alert calls = Saturday 26 + Sunday 16 = 42. Total alert calls = 230, so 42/230 x 100 = 18.3%. Distractor 11.3%: uses Saturday only (26/230 x 100). Distractor 7.0%: uses Sunday only (16/230 x 100). Distractor 22.3%: uses weekday calls as the denominator (42/188 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of weekday alert calls to weekend alert calls?",
+        correct: "94:21",
+        distractors: ["21:94", "13:8", "23:8"],
+        explanation:
+          "Weekday alert calls = 28+34+42+38+46 = 188 and weekend alert calls = 26+16 = 42. 188:42 simplifies to 94:21. Distractor 21:94 reverses the ratio. Distractor 13:8 compares Saturday with Sunday only (26:16=13:8). Distractor 23:8 compares Friday with Sunday only (46:16=23:8).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "therapy-gym-equipment-bookings",
+    stimulus: [
+      "A rehabilitation therapy gym recorded equipment bookings by equipment type during one week.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Therapy Gym Equipment Bookings",
+      yLabel: "Bookings",
+      categories: [
+        { label: "Treadmill", value: 96 },
+        { label: "Bike", value: 78 },
+        { label: "Stepper", value: 66 },
+        { label: "Weights", value: 72 },
+        { label: "Balance", value: 48 },
+      ],
+      max: 110,
+    },
+    questions: [
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question: "Which equipment type was closest to one quarter of all bookings?",
+        correct: "Treadmill",
+        distractors: ["Bike", "Weights", "Stepper"],
+        explanation:
+          "Total bookings = 96+78+66+72+48 = 360, and one quarter is 90. Treadmill has 96 bookings, which is 6 away from 90 and closest. Distractor Bike: 78 bookings is 12 away. Distractor Weights: 72 bookings is 18 away. Distractor Stepper: 66 bookings is 24 away.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of bookings were for the Bike?",
+        correct: "21.7%",
+        distractors: ["26.7%", "20.0%", "25.0%"],
+        explanation:
+          "Bike bookings = 78 and total bookings = 360. 78/360 x 100 = 21.7%. Distractor 26.7%: uses Treadmill bookings (96/360 x 100). Distractor 20.0%: uses Weights bookings (72/360 x 100). Distractor 25.0%: uses non-Balance bookings as the denominator (78/312 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of bookings per equipment type?",
+        correct: "72",
+        distractors: ["96", "60", "90"],
+        explanation:
+          "Total bookings = 360 across 5 equipment types. 360/5 = 72. Distractor 96: reads Treadmill bookings. Distractor 60: reads Stepper bookings. Distractor 90: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of cardio-equipment bookings to non-cardio equipment bookings if Treadmill, Bike and Stepper are cardio equipment?",
+        correct: "2:1",
+        distractors: ["1:2", "10:3", "29:20"],
+        explanation:
+          "Cardio-equipment bookings = Treadmill 96 + Bike 78 + Stepper 66 = 240. Non-cardio bookings = Weights 72 + Balance 48 = 120. 240:120 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 10:3 compares cardio bookings with Weights only (240:72=10:3). Distractor 29:20 omits Stepper from the cardio total (96+78=174, and 174:120=29:20).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "phlebotomy-clinic-wait-bands",
+    stimulus: [
+      "A phlebotomy service recorded clinic attendances by wait-time band during one audit week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Phlebotomy Clinic Attendances by Wait-time Band",
+      headers: ["Clinic stream", "Under 10 min", "10-20 min", "Over 20 min", "Total"],
+      rows: [
+        ["Morning walk-in", "90", "42", "18", "150"],
+        ["Afternoon booked", "80", "30", "10", "120"],
+        ["Anticoagulation clinic", "54", "30", "6", "90"],
+        ["Oncology line sample", "36", "24", "10", "70"],
+        ["Total", "260", "126", "44", "430"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Oncology line sample attendances waited over 20 minutes?",
+        correct: "10",
+        distractors: ["36", "24", "70"],
+        explanation:
+          "Oncology line sample, Over 20 min = 10. Distractor 36: reads Oncology line sample Under 10 min. Distractor 24: reads Oncology line sample 10-20 min. Distractor 70: reads the Oncology line sample row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all attendances waited over 20 minutes?",
+        correct: "10.2%",
+        distractors: ["29.3%", "60.5%", "16.9%"],
+        explanation:
+          "Over 20 min attendances = 44 and total attendances = 430. 44/430 x 100 = 10.2%. Distractor 29.3%: uses 10-20 min attendances (126/430 x 100). Distractor 60.5%: uses Under 10 min attendances (260/430 x 100). Distractor 16.9%: uses Under 10 min attendances as the denominator (44/260 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Under 10 min attendances to 10-20 min attendances?",
+        correct: "130:63",
+        distractors: ["63:130", "65:11", "15:7"],
+        explanation:
+          "Under 10 min attendances = 260 and 10-20 min attendances = 126. 260:126 simplifies to 130:63. Distractor 63:130 reverses the ratio. Distractor 65:11 compares Under 10 min with Over 20 min attendances (260:44=65:11). Distractor 15:7 uses Morning walk-in Under 10 min:10-20 min only (90:42=15:7).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of attendances per clinic stream?",
+        correct: "107.5",
+        distractors: ["150", "90", "143.3"],
+        explanation:
+          "Total attendances = 430 across 4 clinic streams. 430/4 = 107.5. Distractor 150: reads the Morning walk-in total. Distractor 90: reads the Anticoagulation clinic total. Distractor 143.3: divides by the 3 wait-time bands instead of 4 clinic streams.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "occupational-therapy-home-equipment-referrals",
+    stimulus: [
+      "An occupational therapy service recorded home equipment referrals by referral reason during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Home Equipment Referrals by Referral Reason",
+      headers: ["Referral reason", "Rails", "Chair raisers", "Bed levers", "Total"],
+      rows: [
+        ["Falls prevention", "45", "30", "15", "90"],
+        ["Post-op rehab", "36", "42", "12", "90"],
+        ["Neuro rehab", "30", "24", "18", "72"],
+        ["Palliative support", "18", "12", "20", "50"],
+        ["Total", "129", "108", "65", "302"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Palliative support referrals requested bed levers?",
+        correct: "20",
+        distractors: ["18", "12", "50"],
+        explanation:
+          "Palliative support, Bed levers = 20. Distractor 18: reads Palliative support Rails. Distractor 12: reads Palliative support Chair raisers. Distractor 50: reads the Palliative support row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of home equipment referrals requested rails?",
+        correct: "42.7%",
+        distractors: ["35.8%", "21.5%", "74.6%"],
+        explanation:
+          "Rail referrals = 129 and total referrals = 302. 129/302 x 100 = 42.7%. Distractor 35.8%: uses Chair raiser referrals (108/302 x 100). Distractor 21.5%: uses Bed lever referrals (65/302 x 100). Distractor 74.6%: uses non-rail referrals as the denominator (129/173 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Chair raiser referrals to Bed lever referrals?",
+        correct: "108:65",
+        distractors: ["65:108", "129:65", "7:2"],
+        explanation:
+          "Chair raiser referrals = 108 and Bed lever referrals = 65. The ratio is 108:65 in simplest form. Distractor 65:108 reverses the ratio. Distractor 129:65 compares Rail referrals with Bed lever referrals. Distractor 7:2 uses Post-op rehab Chair raisers:Bed levers only (42:12=7:2).",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If each rail kit needs 2 wall brackets, how many wall brackets were needed for the rail referrals?",
+        correct: "258 brackets",
+        distractors: ["216 brackets", "129 brackets", "604 brackets"],
+        explanation:
+          "Rail referrals = 129 and each rail kit needs 2 wall brackets. 129 x 2 = 258 brackets. Distractor 216 brackets: applies 2 brackets to Chair raiser referrals (108 x 2). Distractor 129 brackets: gives the rail kit count without multiplying by 2. Distractor 604 brackets: applies 2 brackets to all referrals (302 x 2).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dietitian-coeliac-review-attendance",
+    stimulus: [
+      "A dietitian-led coeliac clinic recorded review attendance outcomes by patient age group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Coeliac Review Attendance Outcomes",
+      headers: ["Age group", "Attended", "Rescheduled", "DNA", "Total"],
+      rows: [
+        ["Under 18", "36", "10", "4", "50"],
+        ["18-39", "60", "18", "12", "90"],
+        ["40-59", "54", "12", "6", "72"],
+        ["60+", "42", "10", "8", "60"],
+        ["Total", "192", "50", "30", "272"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Attended reviews to DNA reviews?",
+        correct: "32:5",
+        distractors: ["5:32", "5:3", "5:1"],
+        explanation:
+          "Attended reviews = 192 and DNA reviews = 30. 192:30 simplifies to 32:5. Distractor 5:32 reverses the ratio. Distractor 5:3 compares Rescheduled reviews with DNA reviews (50:30=5:3). Distractor 5:1 uses 18-39 Attended:DNA reviews only (60:12=5:1).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of coeliac reviews were DNA reviews?",
+        correct: "11.0%",
+        distractors: ["18.4%", "70.6%", "15.6%"],
+        explanation:
+          "DNA reviews = 30 and total reviews = 272. 30/272 x 100 = 11.0%. Distractor 18.4%: uses Rescheduled reviews (50/272 x 100). Distractor 70.6%: uses Attended reviews (192/272 x 100). Distractor 15.6%: uses Attended reviews as the denominator (30/192 x 100).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many 18-39 patients rescheduled their review?",
+        correct: "18",
+        distractors: ["60", "12", "90"],
+        explanation:
+          "18-39, Rescheduled = 18. Distractor 60: reads 18-39 Attended. Distractor 12: reads 18-39 DNA. Distractor 90: reads the 18-39 row total.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of attended reviews per age group?",
+        correct: "48",
+        distractors: ["60", "42", "64"],
+        explanation:
+          "Attended reviews = 192 across 4 age groups. 192/4 = 48. Distractor 60: reads the 18-39 Attended value. Distractor 42: reads the 60+ Attended value. Distractor 64: divides by the 3 outcome columns instead of 4 age groups.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "plastic-surgery-dressing-clinic-throughput",
+    stimulus: [
+      "A plastic surgery dressing clinic recorded appointment types completed across five weekdays.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Plastic Surgery Dressing Clinic Appointments",
+      yLabel: "Appointments",
+      seriesLabels: ["First dressing", "Review dressing", "Nurse advice"],
+      groups: [
+        { label: "Mon", values: [29, 36, 12] },
+        { label: "Tue", values: [32, 30, 10] },
+        { label: "Wed", values: [24, 42, 14] },
+        { label: "Thu", values: [30, 34, 16] },
+        { label: "Fri", values: [26, 28, 8] },
+      ],
+      max: 45,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Wednesday appointments were review dressings?",
+        correct: "42",
+        distractors: ["24", "14", "80"],
+        explanation:
+          "Wednesday Review dressing appointments = 42. Distractor 24: reads Wednesday First dressing appointments. Distractor 14: reads Wednesday Nurse advice appointments. Distractor 80: adds all Wednesday appointments.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of appointments were nurse advice appointments?",
+        correct: "16.2%",
+        distractors: ["38.0%", "45.8%", "42.6%"],
+        explanation:
+          "Nurse advice appointments = 60 and total appointments = 371. 60/371 x 100 = 16.2%. Distractor 38.0%: uses First dressing appointments (141/371 x 100). Distractor 45.8%: uses Review dressing appointments (170/371 x 100). Distractor 42.6%: uses First dressing appointments as the denominator (60/141 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of First dressing appointments to Nurse advice appointments?",
+        correct: "47:20",
+        distractors: ["20:47", "17:6", "16:5"],
+        explanation:
+          "First dressing appointments = 141 and Nurse advice appointments = 60. 141:60 simplifies to 47:20. Distractor 20:47 reverses the ratio. Distractor 17:6 compares Review dressing with Nurse advice appointments (170:60=17:6). Distractor 16:5 uses Tuesday First dressing:Nurse advice only (32:10=16:5).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question: "Which weekday was closest to one fifth of all appointments?",
+        correct: "Tue",
+        distractors: ["Mon", "Wed", "Fri"],
+        explanation:
+          "Total appointments = 371, so one fifth is 74.2. Tuesday had 72 appointments, closest to 74.2. Distractor Mon: 77 appointments is further away. Distractor Wed: 80 appointments is further away. Distractor Fri: 62 appointments is much lower.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pathology-slide-block-requests",
+    stimulus: [
+      "A pathology archive team recorded slide and block requests by requesting specialty during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Pathology Archive Requests by Specialty",
+      headers: ["Specialty", "Slides only", "Blocks only", "Slides+blocks", "Total"],
+      rows: [
+        ["Dermatology", "64", "18", "12", "94"],
+        ["GI", "48", "24", "18", "90"],
+        ["Breast", "54", "30", "26", "110"],
+        ["Lung", "36", "20", "10", "66"],
+        ["Total", "202", "92", "66", "360"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Breast archive requests asked for slides and blocks?",
+        correct: "26",
+        distractors: ["54", "30", "110"],
+        explanation:
+          "Breast, Slides+blocks = 26. Distractor 54: reads Breast Slides only. Distractor 30: reads Breast Blocks only. Distractor 110: reads the Breast row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of archive requests were for blocks only?",
+        correct: "25.6%",
+        distractors: ["56.1%", "18.3%", "58.2%"],
+        explanation:
+          "Blocks only requests = 92 and total archive requests = 360. 92/360 x 100 = 25.6%. Distractor 56.1%: uses Slides only requests (202/360 x 100). Distractor 18.3%: uses Slides+blocks requests (66/360 x 100). Distractor 58.2%: uses requests that included blocks as the denominator (92/(92+66) x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Slides only requests to Slides+blocks requests?",
+        correct: "101:33",
+        distractors: ["33:101", "46:33", "32:9"],
+        explanation:
+          "Slides only requests = 202 and Slides+blocks requests = 66. 202:66 simplifies to 101:33. Distractor 33:101 reverses the ratio. Distractor 46:33 compares Blocks only with Slides+blocks requests (92:66=46:33). Distractor 32:9 uses Dermatology Slides only:Blocks only requests (64:18=32:9).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of Slides+blocks requests per specialty?",
+        correct: "16.5",
+        distractors: ["18", "26", "22"],
+        explanation:
+          "Slides+blocks requests = 66 across 4 specialties. 66/4 = 16.5. Distractor 18: reads GI Slides+blocks requests. Distractor 26: reads Breast Slides+blocks requests. Distractor 22: divides by the 3 request categories instead of 4 specialties.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "maxillofacial-trauma-follow-up",
+    stimulus: [
+      "A maxillofacial trauma clinic recorded follow-up outcomes by injury type during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Maxillofacial Trauma Follow-up Outcomes",
+      headers: ["Injury type", "Discharged", "Review booked", "Imaging requested", "Total"],
+      rows: [
+        ["Mandible", "24", "36", "20", "80"],
+        ["Zygoma", "30", "24", "18", "72"],
+        ["Dental trauma", "42", "18", "6", "66"],
+        ["Soft tissue", "50", "12", "2", "64"],
+        ["Total", "146", "90", "46", "282"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Mandible follow-ups had imaging requested?",
+        correct: "20",
+        distractors: ["24", "36", "80"],
+        explanation:
+          "Mandible, Imaging requested = 20. Distractor 24: reads Mandible Discharged. Distractor 36: reads Mandible Review booked. Distractor 80: reads the Mandible row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of trauma follow-ups were discharged?",
+        correct: "51.8%",
+        distractors: ["31.9%", "16.3%", "61.9%"],
+        explanation:
+          "Discharged follow-ups = 146 and total follow-ups = 282. 146/282 x 100 = 51.8%. Distractor 31.9%: uses Review booked follow-ups (90/282 x 100). Distractor 16.3%: uses Imaging requested follow-ups (46/282 x 100). Distractor 61.9%: excludes Imaging requested follow-ups from the denominator (146/236 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Review booked follow-ups to Imaging requested follow-ups?",
+        correct: "45:23",
+        distractors: ["23:45", "73:23", "9:5"],
+        explanation:
+          "Review booked follow-ups = 90 and Imaging requested follow-ups = 46. 90:46 simplifies to 45:23. Distractor 23:45 reverses the ratio. Distractor 73:23 compares Discharged with Imaging requested follow-ups (146:46=73:23). Distractor 9:5 uses Mandible Review booked:Imaging requested only (36:20=9:5).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If Dental trauma review booked follow-ups fell by one third, how many would remain?",
+        correct: "12",
+        distractors: ["6", "18", "24"],
+        explanation:
+          "Dental trauma review booked follow-ups = 18. A fall of one third is 18/3 = 6, so 18 - 6 = 12 remain. Distractor 6: gives the reduction only. Distractor 18: leaves the value unchanged. Distractor 24: adds the reduction instead of subtracting it.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "fertility-ultrasound-follicle-tracking",
+    stimulus: [
+      "A fertility ultrasound service recorded follicle-tracking scan numbers across six clinic days.",
+    ],
+    visual: {
+      type: "line",
+      title: "Follicle-tracking Ultrasound Scans",
+      yLabel: "Scans",
+      points: [
+        { label: "Mon", value: 36 },
+        { label: "Tue", value: 44 },
+        { label: "Wed", value: 52 },
+        { label: "Thu", value: 48 },
+        { label: "Fri", value: 60 },
+        { label: "Sat", value: 40 },
+      ],
+      max: 70,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many follicle-tracking scans were completed on Friday?",
+        correct: "60",
+        distractors: ["48", "40", "280"],
+        explanation:
+          "Friday shows 60 follicle-tracking scans. Distractor 48: reads Thursday. Distractor 40: reads Saturday. Distractor 280: adds all six clinic days.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1, what was the mean number of scans per clinic day?",
+        correct: "46.7",
+        distractors: ["52", "56", "44"],
+        explanation:
+          "Total scans = 36+44+52+48+60+40 = 280 across 6 clinic days. 280/6 = 46.7 to the nearest 0.1. Distractor 52: reads Wednesday. Distractor 56: divides by 5 instead of 6. Distractor 44: reads Tuesday.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, by what percentage did scans increase from Monday to Friday?",
+        correct: "66.7%",
+        distractors: ["40.0%", "24 scans", "166.7%"],
+        explanation:
+          "Monday scans = 36 and Friday scans = 60, so the increase is 24 scans. 24/36 x 100 = 66.7%. Distractor 40.0%: uses Friday as the denominator (24/60 x 100). Distractor 24 scans: gives the absolute increase. Distractor 166.7%: gives Friday as a percentage of Monday.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of scans in the last three clinic days to scans in the first three clinic days?",
+        correct: "37:33",
+        distractors: ["33:37", "5:3", "13:12"],
+        explanation:
+          "Last three clinic days = 48+60+40 = 148 and first three clinic days = 36+44+52 = 132. 148:132 simplifies to 37:33. Distractor 33:37 reverses the ratio. Distractor 5:3 compares Friday with Monday only (60:36=5:3). Distractor 13:12 compares Wednesday with Thursday only (52:48=13:12).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "sleep-lab-study-completion",
+    stimulus: [
+      "A sleep laboratory recorded completed sleep study types during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Completed Sleep Study Types",
+      yLabel: "Studies",
+      categories: [
+        { label: "Diagnostic PSG", value: 72 },
+        { label: "CPAP titration", value: 54 },
+        { label: "Home oximetry", value: 90 },
+        { label: "MSLT", value: 18 },
+        { label: "Actigraphy", value: 36 },
+      ],
+      max: 100,
+    },
+    questions: [
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question: "Which study type accounted for exactly one third of all completed studies?",
+        correct: "Home oximetry",
+        distractors: ["Diagnostic PSG", "CPAP titration", "Actigraphy"],
+        explanation:
+          "Total completed studies = 72+54+90+18+36 = 270, and one third of 270 is 90. Home oximetry has 90 completed studies. Distractor Diagnostic PSG: has 72 studies. Distractor CPAP titration: has 54 studies. Distractor Actigraphy: has 36 studies.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of completed studies were CPAP titrations?",
+        correct: "20%",
+        distractors: ["26.7%", "6.7%", "30%"],
+        explanation:
+          "CPAP titration studies = 54 and total completed studies = 270. 54/270 x 100 = 20%. Distractor 26.7%: uses Diagnostic PSG studies (72/270 x 100). Distractor 6.7%: uses MSLT studies (18/270 x 100). Distractor 30%: uses non-home-oximetry studies as the denominator (54/180 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of completed studies per study type?",
+        correct: "54",
+        distractors: ["90", "36", "67.5"],
+        explanation:
+          "Total completed studies = 270 across 5 study types. 270/5 = 54. Distractor 90: reads Home oximetry studies. Distractor 36: reads Actigraphy studies. Distractor 67.5: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of in-lab studies to home-based studies if Diagnostic PSG, CPAP titration and MSLT are in-lab studies?",
+        correct: "8:7",
+        distractors: ["7:8", "4:5", "2:1"],
+        explanation:
+          "In-lab studies = Diagnostic PSG 72 + CPAP titration 54 + MSLT 18 = 144. Home-based studies = Home oximetry 90 + Actigraphy 36 = 126. 144:126 simplifies to 8:7. Distractor 7:8 reverses the ratio. Distractor 4:5 compares Diagnostic PSG with Home oximetry only (72:90=4:5). Distractor 2:1 compares Diagnostic PSG with Actigraphy only (72:36).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "medical-physics-dose-badge-returns",
+    stimulus: [
+      "A medical physics team recorded personal dose badge return outcomes by department during one monitoring cycle.",
+    ],
+    visual: {
+      type: "table",
+      title: "Personal Dose Badge Return Outcomes",
+      headers: ["Department", "Returned on time", "Returned late", "Lost", "Total"],
+      rows: [
+        ["Radiology", "42", "8", "2", "52"],
+        ["Theatres", "36", "12", "4", "52"],
+        ["Nuclear medicine", "28", "14", "2", "44"],
+        ["Dental imaging", "34", "6", "0", "40"],
+        ["Total", "140", "40", "8", "188"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Nuclear medicine dose badges were returned late?",
+        correct: "14",
+        distractors: ["28", "2", "44"],
+        explanation:
+          "Nuclear medicine, Returned late = 14. Distractor 28: reads Nuclear medicine Returned on time. Distractor 2: reads Nuclear medicine Lost badges. Distractor 44: reads the Nuclear medicine row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of dose badges were lost?",
+        correct: "4.3%",
+        distractors: ["21.3%", "74.5%", "16.7%"],
+        explanation:
+          "Lost dose badges = 8 and total dose badges = 188. 8/188 x 100 = 4.3%. Distractor 21.3%: uses Returned late badges (40/188 x 100). Distractor 74.5%: uses Returned on time badges (140/188 x 100). Distractor 16.7%: uses non-on-time badges as the denominator (8/48 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Returned on time badges to Returned late badges?",
+        correct: "7:2",
+        distractors: ["2:7", "35:2", "21:4"],
+        explanation:
+          "Returned on time badges = 140 and Returned late badges = 40. 140:40 simplifies to 7:2. Distractor 2:7 reverses the ratio. Distractor 35:2 compares Returned on time badges with Lost badges (140:8=35:2). Distractor 21:4 uses Radiology Returned on time:Returned late only (42:8=21:4).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of dose badges per department?",
+        correct: "47",
+        distractors: ["52", "44", "62.7"],
+        explanation:
+          "Total dose badges = 188 across 4 departments. 188/4 = 47. Distractor 52: reads the Radiology or Theatres total. Distractor 44: reads the Nuclear medicine total. Distractor 62.7: divides by the 3 return outcomes instead of 4 departments.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "fracture-liaison-dexa-booking-outcomes",
+    stimulus: [
+      "A fracture liaison service recorded DEXA booking outcomes by referral source during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "DEXA Booking Outcomes by Referral Source",
+      headers: ["Referral source", "Booked", "Declined", "Unsuitable", "Total"],
+      rows: [
+        ["Inpatient fracture", "54", "12", "6", "72"],
+        ["ED fracture", "72", "18", "10", "100"],
+        ["GP fragility fracture", "60", "20", "20", "100"],
+        ["Rheumatology", "36", "12", "8", "56"],
+        ["Total", "222", "62", "44", "328"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Rheumatology referrals were unsuitable for DEXA booking?",
+        correct: "8",
+        distractors: ["36", "12", "56"],
+        explanation:
+          "Rheumatology, Unsuitable = 8. Distractor 36: reads Rheumatology Booked. Distractor 12: reads Rheumatology Declined. Distractor 56: reads the Rheumatology row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of DEXA referrals were booked?",
+        correct: "67.7%",
+        distractors: ["18.9%", "13.4%", "78.2%"],
+        explanation:
+          "Booked referrals = 222 and total DEXA referrals = 328. 222/328 x 100 = 67.7%. Distractor 18.9%: uses Declined referrals (62/328 x 100). Distractor 13.4%: uses Unsuitable referrals (44/328 x 100). Distractor 78.2%: excludes Unsuitable referrals from the denominator (222/284 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Booked referrals to Unsuitable referrals?",
+        correct: "111:22",
+        distractors: ["22:111", "31:22", "9:1"],
+        explanation:
+          "Booked referrals = 222 and Unsuitable referrals = 44. 222:44 simplifies to 111:22. Distractor 22:111 reverses the ratio. Distractor 31:22 compares Declined referrals with Unsuitable referrals (62:44=31:22). Distractor 9:1 uses Inpatient fracture Booked:Unsuitable only (54:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of DEXA referrals per referral source?",
+        correct: "82",
+        distractors: ["100", "56", "109.3"],
+        explanation:
+          "Total DEXA referrals = 328 across 4 referral sources. 328/4 = 82. Distractor 100: reads the ED fracture or GP fragility fracture total. Distractor 56: reads the Rheumatology total. Distractor 109.3: divides by the 3 booking outcomes instead of 4 referral sources.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "sexual-health-partner-notification-outcomes",
+    stimulus: [
+      "A sexual health service recorded partner notification outcomes by infection pathway during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Partner Notification Outcomes by Infection Pathway",
+      headers: ["Infection pathway", "Partner notified", "Unable to contact", "Declined notification", "Total"],
+      rows: [
+        ["Chlamydia", "80", "30", "10", "120"],
+        ["Gonorrhoea", "54", "18", "12", "84"],
+        ["Syphilis", "36", "12", "12", "60"],
+        ["HIV", "24", "18", "6", "48"],
+        ["Total", "194", "78", "40", "312"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Partner notified outcomes to Declined notification outcomes?",
+        correct: "97:20",
+        distractors: ["20:97", "39:20", "8:1"],
+        explanation:
+          "Partner notified outcomes = 194 and Declined notification outcomes = 40. 194:40 simplifies to 97:20. Distractor 20:97 reverses the ratio. Distractor 39:20 compares Unable to contact outcomes with Declined notification outcomes (78:40=39:20). Distractor 8:1 uses Chlamydia Partner notified:Declined notification only (80:10).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of partner notification outcomes were Unable to contact?",
+        correct: "25%",
+        distractors: ["12.8%", "62.2%", "40.2%"],
+        explanation:
+          "Unable to contact outcomes = 78 and total outcomes = 312. 78/312 x 100 = 25%. Distractor 12.8%: uses Declined notification outcomes (40/312 x 100). Distractor 62.2%: uses Partner notified outcomes (194/312 x 100). Distractor 40.2%: uses Partner notified outcomes as the denominator (78/194 x 100).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many HIV pathway outcomes were Unable to contact?",
+        correct: "18",
+        distractors: ["24", "6", "48"],
+        explanation:
+          "HIV, Unable to contact = 18. Distractor 24: reads HIV Partner notified. Distractor 6: reads HIV Declined notification. Distractor 48: reads the HIV row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If Gonorrhoea Unable to contact outcomes fell by one third, how many would remain?",
+        correct: "12",
+        distractors: ["6", "18", "24"],
+        explanation:
+          "Gonorrhoea Unable to contact outcomes = 18. A fall of one third is 18/3 = 6, so 18 - 6 = 12 remain. Distractor 6: gives the reduction only. Distractor 18: leaves the value unchanged. Distractor 24: adds the reduction instead of subtracting it.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gastroenterology-manometry-appointment-trend",
+    stimulus: [
+      "A gastroenterology physiology service recorded oesophageal manometry appointments completed across six weeks.",
+    ],
+    visual: {
+      type: "line",
+      title: "Weekly Oesophageal Manometry Appointments",
+      yLabel: "Appointments",
+      points: [
+        { label: "Week 1", value: 22 },
+        { label: "Week 2", value: 28 },
+        { label: "Week 3", value: 34 },
+        { label: "Week 4", value: 30 },
+        { label: "Week 5", value: 38 },
+        { label: "Week 6", value: 40 },
+      ],
+      max: 45,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many oesophageal manometry appointments were completed in Week 4?",
+        correct: "30",
+        distractors: ["34", "38", "192"],
+        explanation:
+          "Week 4 shows 30 oesophageal manometry appointments. Distractor 34: reads Week 3. Distractor 38: reads Week 5. Distractor 192: adds all six weeks.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of appointments completed per week?",
+        correct: "32",
+        distractors: ["34", "38.4", "40"],
+        explanation:
+          "Total appointments = 22+28+34+30+38+40 = 192 across 6 weeks. 192/6 = 32. Distractor 34: reads Week 3. Distractor 38.4: divides by 5 instead of 6. Distractor 40: reads Week 6, the highest value.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, by what percentage did appointments increase from Week 1 to Week 6?",
+        correct: "81.8%",
+        distractors: ["45.0%", "18 appointments", "181.8%"],
+        explanation:
+          "Week 1 appointments = 22 and Week 6 appointments = 40, so the increase is 18 appointments. 18/22 x 100 = 81.8%. Distractor 45.0%: uses Week 6 as the denominator (18/40 x 100). Distractor 18 appointments: gives the absolute increase. Distractor 181.8%: gives Week 6 as a percentage of Week 1.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of appointments in the last three weeks to appointments in the first three weeks?",
+        correct: "9:7",
+        distractors: ["7:9", "20:11", "19:15"],
+        explanation:
+          "Last three weeks = 30+38+40 = 108 and first three weeks = 22+28+34 = 84. 108:84 simplifies to 9:7. Distractor 7:9 reverses the ratio. Distractor 20:11 compares Week 6 with Week 1 only (40:22=20:11). Distractor 19:15 compares Week 5 with Week 4 only (38:30=19:15).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neuro-rehab-robotic-session-use",
+    stimulus: [
+      "A neuro-rehabilitation unit recorded robotic therapy equipment bookings by equipment type during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Robotic Therapy Equipment Bookings",
+      yLabel: "Bookings",
+      categories: [
+        { label: "Upper-limb robot", value: 64 },
+        { label: "Gait trainer", value: 80 },
+        { label: "Balance platform", value: 48 },
+        { label: "Hand exoskeleton", value: 32 },
+        { label: "VR reach", value: 56 },
+      ],
+      max: 90,
+    },
+    questions: [
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question: "Which equipment type accounted for exactly one fifth of all bookings?",
+        correct: "VR reach",
+        distractors: ["Upper-limb robot", "Balance platform", "Hand exoskeleton"],
+        explanation:
+          "Total bookings = 64+80+48+32+56 = 280, and one fifth is 56. VR reach has 56 bookings. Distractor Upper-limb robot: has 64 bookings. Distractor Balance platform: has 48 bookings. Distractor Hand exoskeleton: has 32 bookings.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of bookings were for the Gait trainer?",
+        correct: "28.6%",
+        distractors: ["22.9%", "17.1%", "35.7%"],
+        explanation:
+          "Gait trainer bookings = 80 and total bookings = 280. 80/280 x 100 = 28.6%. Distractor 22.9%: uses Upper-limb robot bookings (64/280 x 100). Distractor 17.1%: uses Balance platform bookings (48/280 x 100). Distractor 35.7%: excludes VR reach bookings from the denominator (80/224 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of bookings per equipment type?",
+        correct: "56",
+        distractors: ["80", "48", "70"],
+        explanation:
+          "Total bookings = 280 across 5 equipment types. 280/5 = 56. Distractor 80: reads Gait trainer bookings. Distractor 48: reads Balance platform bookings. Distractor 70: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of limb-device bookings to gait-and-balance bookings if Upper-limb robot and Hand exoskeleton are limb devices?",
+        correct: "3:4",
+        distractors: ["4:3", "2:1", "5:3"],
+        explanation:
+          "Limb-device bookings = Upper-limb robot 64 + Hand exoskeleton 32 = 96. Gait-and-balance bookings = Gait trainer 80 + Balance platform 48 = 128. 96:128 simplifies to 3:4. Distractor 4:3 reverses the ratio. Distractor 2:1 compares Upper-limb robot with Hand exoskeleton only (64:32). Distractor 5:3 compares Gait trainer with Balance platform only (80:48=5:3).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-orthotics-growth-review-outcomes",
+    stimulus: [
+      "A paediatric orthotics service recorded growth review outcomes by orthotic group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Paediatric Orthotics Growth Review Outcomes",
+      headers: ["Orthotic group", "Fitted", "Adjusted", "Replacement ordered", "Total"],
+      rows: [
+        ["AFO", "50", "20", "10", "80"],
+        ["Spinal brace", "30", "18", "12", "60"],
+        ["Footwear", "42", "24", "8", "74"],
+        ["Night splint", "28", "18", "6", "52"],
+        ["Total", "150", "80", "36", "266"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Footwear reviews resulted in a replacement being ordered?",
+        correct: "8",
+        distractors: ["42", "24", "74"],
+        explanation:
+          "Footwear, Replacement ordered = 8. Distractor 42: reads Footwear Fitted. Distractor 24: reads Footwear Adjusted. Distractor 74: reads the Footwear row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of growth reviews resulted in an adjustment?",
+        correct: "30.1%",
+        distractors: ["56.4%", "13.5%", "53.3%"],
+        explanation:
+          "Adjusted reviews = 80 and total growth reviews = 266. 80/266 x 100 = 30.1%. Distractor 56.4%: uses Fitted reviews (150/266 x 100). Distractor 13.5%: uses Replacement ordered reviews (36/266 x 100). Distractor 53.3%: uses Fitted reviews as the denominator (80/150 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Fitted reviews to Replacement ordered reviews?",
+        correct: "25:6",
+        distractors: ["6:25", "20:9", "5:1"],
+        explanation:
+          "Fitted reviews = 150 and Replacement ordered reviews = 36. 150:36 simplifies to 25:6. Distractor 6:25 reverses the ratio. Distractor 20:9 compares Adjusted reviews with Replacement ordered reviews (80:36=20:9). Distractor 5:1 uses AFO Fitted:Replacement ordered only (50:10).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1, what was the mean number of growth reviews per orthotic group?",
+        correct: "66.5",
+        distractors: ["80", "52", "88.7"],
+        explanation:
+          "Total growth reviews = 266 across 4 orthotic groups. 266/4 = 66.5. Distractor 80: reads the AFO total. Distractor 52: reads the Night splint total. Distractor 88.7: divides by the 3 outcome columns instead of 4 orthotic groups.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "preoperative-assessment-ecg-completion",
+    stimulus: [
+      "A preoperative assessment clinic recorded ECG completion outcomes by surgical pathway during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Preoperative ECG Completion Outcomes",
+      headers: ["Surgical pathway", "Completed", "Repeat required", "Pending", "Total"],
+      rows: [
+        ["Orthopaedics", "96", "18", "6", "120"],
+        ["General surgery", "72", "20", "8", "100"],
+        ["Gynaecology", "54", "18", "8", "80"],
+        ["Urology", "48", "12", "10", "70"],
+        ["Total", "270", "68", "32", "370"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Urology ECGs were pending?",
+        correct: "10",
+        distractors: ["48", "12", "70"],
+        explanation:
+          "Urology, Pending = 10. Distractor 48: reads Urology Completed. Distractor 12: reads Urology Repeat required. Distractor 70: reads the Urology row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of preoperative ECGs were completed?",
+        correct: "73.0%",
+        distractors: ["18.4%", "8.6%", "79.9%"],
+        explanation:
+          "Completed ECGs = 270 and total ECGs = 370. 270/370 x 100 = 73.0%. Distractor 18.4%: uses Repeat required ECGs (68/370 x 100). Distractor 8.6%: uses Pending ECGs (32/370 x 100). Distractor 79.9%: excludes Pending ECGs from the denominator (270/338 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Repeat required ECGs to Pending ECGs?",
+        correct: "17:8",
+        distractors: ["8:17", "135:16", "3:1"],
+        explanation:
+          "Repeat required ECGs = 68 and Pending ECGs = 32. 68:32 simplifies to 17:8. Distractor 8:17 reverses the ratio. Distractor 135:16 compares Completed ECGs with Pending ECGs (270:32=135:16). Distractor 3:1 uses Orthopaedics Repeat required:Pending only (18:6).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If Gynaecology repeat-required ECGs increased by one third, how many would there be?",
+        correct: "24",
+        distractors: ["6", "18", "12"],
+        explanation:
+          "Gynaecology repeat-required ECGs = 18. An increase of one third is 18/3 = 6, so the new value is 18 + 6 = 24. Distractor 6: gives the increase only. Distractor 18: leaves the value unchanged. Distractor 12: subtracts the increase instead of adding it.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinical-engineering-pump-repair-turnaround",
+    stimulus: [
+      "A clinical engineering service recorded pump repair turnaround outcomes by pump type during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Pump Repair Turnaround Outcomes",
+      headers: ["Pump type", "Same day", "2-5 days", "Over 5 days", "Total"],
+      rows: [
+        ["Infusion pump", "70", "20", "10", "100"],
+        ["Syringe driver", "54", "18", "8", "80"],
+        ["Feeding pump", "36", "12", "4", "52"],
+        ["PCA pump", "30", "10", "8", "48"],
+        ["Total", "190", "60", "30", "280"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Syringe driver repairs took over 5 days?",
+        correct: "8",
+        distractors: ["54", "18", "80"],
+        explanation:
+          "Syringe driver, Over 5 days = 8. Distractor 54: reads Syringe driver Same day repairs. Distractor 18: reads Syringe driver 2-5 days repairs. Distractor 80: reads the Syringe driver row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of pump repairs were completed the same day?",
+        correct: "67.9%",
+        distractors: ["21.4%", "10.7%", "76.0%"],
+        explanation:
+          "Same day repairs = 190 and total pump repairs = 280. 190/280 x 100 = 67.9%. Distractor 21.4%: uses 2-5 day repairs (60/280 x 100). Distractor 10.7%: uses Over 5 day repairs (30/280 x 100). Distractor 76.0%: excludes Over 5 day repairs from the denominator (190/250 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of 2-5 day repairs to Over 5 day repairs?",
+        correct: "2:1",
+        distractors: ["1:2", "19:3", "7:2"],
+        explanation:
+          "2-5 day repairs = 60 and Over 5 day repairs = 30. 60:30 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 19:3 compares Same day repairs with Over 5 day repairs (190:30=19:3). Distractor 7:2 uses Infusion pump Same day:2-5 days only (70:20=7:2).",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If each same-day Infusion pump repair needs a 12-minute safety test, how many safety-test minutes were needed?",
+        correct: "840 minutes",
+        distractors: ["1,200 minutes", "2,280 minutes", "70 minutes"],
+        explanation:
+          "Same-day Infusion pump repairs = 70 and each needs a 12-minute safety test. 70 x 12 = 840 minutes. Distractor 1,200 minutes: applies 12 minutes to all Infusion pump repairs (100 x 12). Distractor 2,280 minutes: applies 12 minutes to all same-day repairs (190 x 12). Distractor 70 minutes: gives the repair count without multiplying by 12.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neonatal-respiratory-support-days",
+    stimulus: [
+      "A neonatal unit recorded respiratory support days by support type across three weeks.",
+    ],
+    visual: {
+      type: "table",
+      title: "Neonatal Respiratory Support Days",
+      headers: ["Support type", "Week 1", "Week 2", "Week 3", "Total"],
+      rows: [
+        ["Invasive ventilation", "42", "36", "30", "108"],
+        ["CPAP", "54", "60", "66", "180"],
+        ["High-flow", "48", "42", "54", "144"],
+        ["Low-flow oxygen", "36", "30", "42", "108"],
+        ["Total", "180", "168", "192", "540"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of CPAP support days to Invasive ventilation support days?",
+        correct: "5:3",
+        distractors: ["3:5", "4:3", "5:4"],
+        explanation:
+          "CPAP support days = 180 and Invasive ventilation support days = 108. 180:108 simplifies to 5:3. Distractor 3:5 reverses the ratio. Distractor 4:3 compares High-flow with Invasive ventilation (144:108). Distractor 5:4 compares CPAP with High-flow (180:144).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of respiratory support days were High-flow?",
+        correct: "26.7%",
+        distractors: ["20.0%", "33.3%", "80.0%"],
+        explanation:
+          "High-flow support days = 144 and total respiratory support days = 540. 144/540 x 100 = 26.7%. Distractor 20.0%: uses Invasive ventilation support days (108/540 x 100). Distractor 33.3%: uses CPAP support days (180/540 x 100). Distractor 80.0%: uses CPAP support days as the denominator (144/180 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of respiratory support days per week?",
+        correct: "180",
+        distractors: ["135", "168", "192"],
+        explanation:
+          "Total respiratory support days = 540 across 3 weeks. 540/3 = 180. Distractor 135: divides by the 4 support types instead of 3 weeks. Distractor 168: reads the Week 2 total. Distractor 192: reads the Week 3 total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If Week 3 Low-flow oxygen days fell by 25%, how many days would remain?",
+        correct: "31.5 days",
+        distractors: ["10.5 days", "52.5 days", "42 days"],
+        explanation:
+          "Week 3 Low-flow oxygen days = 42. A 25% fall is 42 x 0.25 = 10.5, so 42 - 10.5 = 31.5 days remain. Distractor 10.5 days: gives the reduction only. Distractor 52.5 days: adds the reduction instead of subtracting it. Distractor 42 days: leaves the value unchanged.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dental-sedation-list-outcomes",
+    stimulus: [
+      "A dental sedation service recorded appointment outcomes by patient age group during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Dental Sedation Appointment Outcomes",
+      headers: ["Age group", "Completed", "Cancelled on day", "Failed to attend", "Total"],
+      rows: [
+        ["Children", "45", "9", "6", "60"],
+        ["Teenagers", "36", "6", "6", "48"],
+        ["Adults", "72", "12", "12", "96"],
+        ["Older adults", "27", "3", "6", "36"],
+        ["Total", "180", "30", "30", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many adult dental sedation appointments were completed?",
+        correct: "72",
+        distractors: ["12", "96", "180"],
+        explanation:
+          "Adults, Completed = 72. Distractor 12: reads adult Cancelled on day or Failed to attend appointments. Distractor 96: reads the adult row total. Distractor 180: reads the Completed column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of dental sedation appointments were cancelled on the day?",
+        correct: "12.5%",
+        distractors: ["75%", "25%", "16.7%"],
+        explanation:
+          "Cancelled on day appointments = 30 and total appointments = 240. 30/240 x 100 = 12.5%. Distractor 75%: uses Completed appointments (180/240 x 100). Distractor 25%: combines Cancelled on day and Failed to attend appointments (60/240 x 100). Distractor 16.7%: uses Completed appointments as the denominator (30/180 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of completed Children appointments to completed Older adults appointments?",
+        correct: "5:3",
+        distractors: ["3:5", "5:4", "8:3"],
+        explanation:
+          "Completed Children appointments = 45 and completed Older adults appointments = 27. 45:27 simplifies to 5:3. Distractor 3:5 reverses the ratio. Distractor 5:4 compares Children total appointments with Teenagers total appointments (60:48). Distractor 8:3 compares completed Adults appointments with completed Older adults appointments (72:27).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of failed-to-attend appointments per age group?",
+        correct: "7.5",
+        distractors: ["10", "6", "30"],
+        explanation:
+          "Failed-to-attend appointments = 30 across 4 age groups. 30/4 = 7.5. Distractor 10: divides by the 3 outcome columns instead of 4 age groups. Distractor 6: reads several individual failed-to-attend cells. Distractor 30: gives the total failed-to-attend appointments.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renal-dialysis-water-sample-results",
+    stimulus: [
+      "A renal dialysis unit recorded water sample results by month after routine safety testing.",
+    ],
+    visual: {
+      type: "table",
+      title: "Renal Dialysis Water Sample Results",
+      headers: ["Month", "Routine pass", "Repeat clear", "Action required", "Total"],
+      rows: [
+        ["Jan", "84", "10", "6", "100"],
+        ["Feb", "90", "12", "8", "110"],
+        ["Mar", "96", "14", "10", "120"],
+        ["Apr", "102", "10", "8", "120"],
+        ["May", "108", "16", "12", "136"],
+        ["Total", "480", "62", "44", "586"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of Action required results per month?",
+        correct: "8.8",
+        distractors: ["12", "14.7", "44"],
+        explanation:
+          "Action required results = 44 across 5 months. 44/5 = 8.8. Distractor 12: reads May Action required results. Distractor 14.7: divides by the 3 result columns instead of 5 months. Distractor 44: gives the total Action required results.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of water samples were Routine pass results?",
+        correct: "81.9%",
+        distractors: ["10.6%", "7.5%", "88.6%"],
+        explanation:
+          "Routine pass results = 480 and total water samples = 586. 480/586 x 100 = 81.9%. Distractor 10.6%: uses Repeat clear results (62/586 x 100). Distractor 7.5%: uses Action required results (44/586 x 100). Distractor 88.6%: excludes Action required results from the denominator (480/542 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Repeat clear results to Action required results?",
+        correct: "31:22",
+        distractors: ["22:31", "240:31", "5:3"],
+        explanation:
+          "Repeat clear results = 62 and Action required results = 44. 62:44 simplifies to 31:22. Distractor 22:31 reverses the ratio. Distractor 240:31 compares Routine pass results with Repeat clear results (480:62). Distractor 5:3 uses January Repeat clear:Action required only (10:6).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If April Repeat clear results doubled, what would the April total become?",
+        correct: "130",
+        distractors: ["20", "120", "240"],
+        explanation:
+          "April Repeat clear results = 10, so doubling them adds another 10 to the April total. 120 + 10 = 130. Distractor 20: gives the doubled Repeat clear value only. Distractor 120: leaves the April total unchanged. Distractor 240: doubles the whole April total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "mental-health-observation-hours-by-ward",
+    stimulus: [
+      "A mental health hospital recorded enhanced and constant observation hours by ward over one week.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Observation Hours by Ward",
+      yLabel: "Hours",
+      seriesLabels: ["Enhanced", "Constant"],
+      groups: [
+        { label: "Acute", values: [120, 60] },
+        { label: "PICU", values: [90, 120] },
+        { label: "Older adult", values: [72, 36] },
+        { label: "Perinatal", values: [48, 24] },
+      ],
+      max: 130,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "Which ward had the highest number of Constant observation hours?",
+        correct: "PICU",
+        distractors: ["Acute", "Older adult", "Perinatal"],
+        explanation:
+          "Constant observation hours were Acute 60, PICU 120, Older adult 36 and Perinatal 24. PICU is highest at 120 hours. Distractor Acute: has 60 Constant hours. Distractor Older adult: has 36 Constant hours. Distractor Perinatal: has 24 Constant hours.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Enhanced observation hours to Constant observation hours across all wards?",
+        correct: "11:8",
+        distractors: ["8:11", "2:1", "3:4"],
+        explanation:
+          "Enhanced hours = 120+90+72+48 = 330 and Constant hours = 60+120+36+24 = 240. 330:240 simplifies to 11:8. Distractor 8:11 reverses the ratio. Distractor 2:1 uses Acute Enhanced:Constant only (120:60). Distractor 3:4 uses PICU Enhanced:Constant only (90:120).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the mean total number of observation hours per ward?",
+        correct: "142.5",
+        distractors: ["190", "210", "120"],
+        explanation:
+          "Total observation hours = 330+240 = 570 across 4 wards. 570/4 = 142.5. Distractor 190: divides by 3 instead of 4 wards. Distractor 210: reads the PICU total. Distractor 120: reads the highest Constant observation value.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all observation hours were in PICU?",
+        correct: "36.8%",
+        distractors: ["21.1%", "15.8%", "57.1%"],
+        explanation:
+          "PICU total observation hours = 90+120 = 210 and all observation hours = 570. 210/570 x 100 = 36.8%. Distractor 21.1%: uses PICU Constant hours only (120/570 x 100). Distractor 15.8%: uses PICU Enhanced hours only (90/570 x 100). Distractor 57.1%: gives PICU Constant hours as a percentage of the PICU total (120/210 x 100).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ambulance-handover-delay-minutes",
+    stimulus: [
+      "An emergency department recorded median ambulance handover delay times for each day of one week.",
+    ],
+    visual: {
+      type: "line",
+      title: "Median Ambulance Handover Delay Times",
+      yLabel: "Minutes",
+      points: [
+        { label: "Mon", value: 35 },
+        { label: "Tue", value: 40 },
+        { label: "Wed", value: 50 },
+        { label: "Thu", value: 45 },
+        { label: "Fri", value: 60 },
+        { label: "Sat", value: 55 },
+        { label: "Sun", value: 30 },
+      ],
+      max: 65,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What was the median ambulance handover delay time on Friday?",
+        correct: "60 minutes",
+        distractors: ["45 minutes", "55 minutes", "315 minutes"],
+        explanation:
+          "Friday shows a median handover delay of 60 minutes. Distractor 45 minutes: reads Thursday. Distractor 55 minutes: reads Saturday. Distractor 315 minutes: adds all seven daily values.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the mean median handover delay time from Monday to Friday?",
+        correct: "46 minutes",
+        distractors: ["45 minutes", "57.5 minutes", "60 minutes"],
+        explanation:
+          "Monday to Friday total = 35+40+50+45+60 = 230 minutes across 5 days. 230/5 = 46 minutes. Distractor 45 minutes: averages all 7 days (315/7). Distractor 57.5 minutes: divides the weekday total by 4 instead of 5. Distractor 60 minutes: reads Friday, the highest value.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, by what percentage did the median delay increase from Monday to Friday?",
+        correct: "71.4%",
+        distractors: ["41.7%", "25 minutes", "171.4%"],
+        explanation:
+          "Monday = 35 minutes and Friday = 60 minutes, so the increase is 25 minutes. 25/35 x 100 = 71.4%. Distractor 41.7%: uses Friday as the denominator (25/60 x 100). Distractor 25 minutes: gives the absolute increase. Distractor 171.4%: gives Friday as a percentage of Monday.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of weekend delay minutes to Monday-plus-Tuesday delay minutes?",
+        correct: "17:15",
+        distractors: ["15:17", "11:6", "8:7"],
+        explanation:
+          "Weekend delay minutes = Saturday 55 + Sunday 30 = 85. Monday-plus-Tuesday delay minutes = 35+40 = 75. 85:75 simplifies to 17:15. Distractor 15:17 reverses the ratio. Distractor 11:6 compares Saturday with Sunday only (55:30). Distractor 8:7 compares Tuesday with Monday only (40:35).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiotherapy-linac-slot-utilisation",
+    stimulus: [
+      "A radiotherapy department recorded linear accelerator slot outcomes by machine during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Radiotherapy Linac Slot Outcomes",
+      headers: ["Machine", "Treated", "Patient cancel", "Machine downtime", "QA held", "Total"],
+      rows: [
+        ["Linac A", "210", "30", "15", "15", "270"],
+        ["Linac B", "180", "35", "25", "10", "250"],
+        ["Linac C", "150", "20", "15", "15", "200"],
+        ["Total", "540", "85", "55", "40", "720"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of radiotherapy linac slots resulted in treatment?",
+        correct: "75%",
+        distractors: ["11.8%", "7.6%", "79.4%"],
+        explanation:
+          "Treated slots = 540 and total slots = 720. 540/720 x 100 = 75%. Distractor 11.8%: uses Patient cancel slots (85/720 x 100). Distractor 7.6%: uses Machine downtime slots (55/720 x 100). Distractor 79.4%: excludes QA held slots from the denominator (540/680 x 100).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Linac B slots were lost to machine downtime?",
+        correct: "25",
+        distractors: ["180", "35", "250"],
+        explanation:
+          "Linac B, Machine downtime = 25. Distractor 180: reads Linac B Treated slots. Distractor 35: reads Linac B Patient cancel slots. Distractor 250: reads the Linac B row total.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Patient cancel slots to Machine downtime slots?",
+        correct: "17:11",
+        distractors: ["11:17", "27:2", "2:1"],
+        explanation:
+          "Patient cancel slots = 85 and Machine downtime slots = 55. 85:55 simplifies to 17:11. Distractor 11:17 reverses the ratio. Distractor 27:2 compares Treated slots with QA held slots (540:40). Distractor 2:1 uses Linac A Patient cancel:Machine downtime only (30:15).",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If each machine downtime slot represented 20 minutes, how many downtime minutes were recorded?",
+        correct: "1,100 minutes",
+        distractors: ["800 minutes", "1,700 minutes", "55 minutes"],
+        explanation:
+          "Machine downtime slots = 55 and each represents 20 minutes. 55 x 20 = 1,100 minutes. Distractor 800 minutes: applies 20 minutes to QA held slots (40 x 20). Distractor 1,700 minutes: applies 20 minutes to Patient cancel slots (85 x 20). Distractor 55 minutes: gives the slot count without multiplying by 20.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "speech-therapy-swallow-screening-times",
+    stimulus: [
+      "A speech and language therapy team recorded swallow screening times by ward during one fortnight.",
+    ],
+    visual: {
+      type: "table",
+      title: "Swallow Screening Times by Ward",
+      headers: ["Ward", "Under 2 h", "2-6 h", "Over 6 h", "Total"],
+      rows: [
+        ["Stroke unit", "64", "16", "4", "84"],
+        ["Acute medicine", "48", "24", "12", "84"],
+        ["Care of elderly", "36", "30", "18", "84"],
+        ["Surgical", "24", "18", "12", "54"],
+        ["Total", "172", "88", "46", "306"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Under 2 h screens to Over 6 h screens?",
+        correct: "86:23",
+        distractors: ["23:86", "44:23", "16:1"],
+        explanation:
+          "Under 2 h screens = 172 and Over 6 h screens = 46. 172:46 simplifies to 86:23. Distractor 23:86 reverses the ratio. Distractor 44:23 compares 2-6 h screens with Over 6 h screens (88:46). Distractor 16:1 uses Stroke unit Under 2 h:Over 6 h only (64:4).",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of Acute medicine screens were Over 6 h?",
+        correct: "14.3%",
+        distractors: ["3.9%", "28.6%", "57.1%"],
+        explanation:
+          "Acute medicine Over 6 h screens = 12 and Acute medicine total screens = 84. 12/84 x 100 = 14.3%. Distractor 3.9%: uses all screens as the denominator (12/306 x 100). Distractor 28.6%: uses Acute medicine 2-6 h screens (24/84 x 100). Distractor 57.1%: uses Acute medicine Under 2 h screens (48/84 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of swallow screens per ward?",
+        correct: "76.5",
+        distractors: ["102", "84", "54"],
+        explanation:
+          "Total swallow screens = 306 across 4 wards. 306/4 = 76.5. Distractor 102: divides by the 3 timing columns instead of 4 wards. Distractor 84: reads one of the equal row totals. Distractor 54: reads the Surgical row total.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If each Surgical 2-6 h screen required a 25-minute follow-up call, how many follow-up minutes were needed?",
+        correct: "450 minutes",
+        distractors: ["600 minutes", "1,350 minutes", "18 minutes"],
+        explanation:
+          "Surgical 2-6 h screens = 18 and each required a 25-minute call. 18 x 25 = 450 minutes. Distractor 600 minutes: applies 25 minutes to Surgical Under 2 h screens (24 x 25). Distractor 1,350 minutes: applies 25 minutes to all Surgical screens (54 x 25). Distractor 18 minutes: gives the screen count without multiplying by 25.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "immunisation-clinic-throughput-by-session",
+    stimulus: [
+      "A community immunisation clinic recorded vaccine doses given by session across one Saturday.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Immunisation Clinic Throughput by Session",
+      yLabel: "Doses given",
+      categories: [
+        { label: "Morning walk-in", value: 42 },
+        { label: "Booked morning", value: 56 },
+        { label: "Lunchtime", value: 63 },
+        { label: "Booked afternoon", value: 49 },
+        { label: "After-school", value: 35 },
+        { label: "Late clinic", value: 70 },
+      ],
+      max: 80,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "Which session gave 70 vaccine doses?",
+        correct: "Late clinic",
+        distractors: ["Lunchtime", "Booked morning", "After-school"],
+        explanation:
+          "Late clinic shows 70 vaccine doses. Distractor Lunchtime: shows 63 doses. Distractor Booked morning: shows 56 doses. Distractor After-school: shows 35 doses.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of vaccine doses given per session?",
+        correct: "52.5",
+        distractors: ["63", "45", "70"],
+        explanation:
+          "Total vaccine doses = 42+56+63+49+35+70 = 315 across 6 sessions. 315/6 = 52.5. Distractor 63: reads the Lunchtime value. Distractor 45: divides by 7 instead of 6 sessions. Distractor 70: reads the highest value.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of vaccine doses were given in the Late clinic?",
+        correct: "22.2%",
+        distractors: ["20.0%", "11.1%", "25.0%"],
+        explanation:
+          "Late clinic doses = 70 and total doses = 315. 70/315 x 100 = 22.2%. Distractor 20.0%: uses Lunchtime doses (63/315 x 100). Distractor 11.1%: uses After-school doses (35/315 x 100). Distractor 25.0%: excludes After-school doses from the denominator (70/280 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of doses in the first three sessions to doses in the last three sessions?",
+        correct: "23:22",
+        distractors: ["22:23", "2:1", "4:3"],
+        explanation:
+          "First three sessions = 42+56+63 = 161 doses and last three sessions = 49+35+70 = 154 doses. 161:154 simplifies to 23:22. Distractor 22:23 reverses the ratio. Distractor 2:1 compares Late clinic with After-school only (70:35). Distractor 4:3 compares Booked morning with Morning walk-in only (56:42).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cytogenetics-karyotype-result-categories",
+    stimulus: [
+      "A regional cytogenetics laboratory recorded karyotype result categories by test pathway during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Karyotype Result Categories by Test Pathway",
+      headers: ["Test pathway", "Normal", "Abnormal", "Failed", "Total"],
+      rows: [
+        ["Prenatal rapid", "60", "20", "0", "80"],
+        ["Postnatal blood", "72", "18", "0", "90"],
+        ["Haematology marrow", "24", "36", "0", "60"],
+        ["Solid tumour", "18", "42", "10", "70"],
+        ["Total", "174", "116", "10", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Solid tumour karyotypes failed?",
+        correct: "10",
+        distractors: ["18", "42", "70"],
+        explanation:
+          "Solid tumour Failed karyotypes = 10. Distractor 18: reads Solid tumour Normal karyotypes. Distractor 42: reads Solid tumour Abnormal karyotypes. Distractor 70: reads the Solid tumour row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all karyotypes were Abnormal?",
+        correct: "38.7%",
+        distractors: ["58.0%", "3.3%", "60.0%"],
+        explanation:
+          "Abnormal karyotypes = 116 and all karyotypes = 300. 116/300 x 100 = 38.7%. Distractor 58.0%: uses Normal karyotypes (174/300 x 100). Distractor 3.3%: uses Failed karyotypes (10/300 x 100). Distractor 60.0%: uses Haematology marrow Abnormal results as a percentage of Haematology marrow total (36/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Normal to Abnormal Postnatal blood karyotypes?",
+        correct: "4:1",
+        distractors: ["1:4", "3:1", "3:2"],
+        explanation:
+          "Postnatal blood Normal karyotypes = 72 and Abnormal karyotypes = 18. 72:18 simplifies to 4:1. Distractor 1:4 reverses the ratio. Distractor 3:1 uses Prenatal rapid Normal to Abnormal karyotypes (60:20). Distractor 3:2 uses all Normal to all Abnormal karyotypes (174:116).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of karyotypes per test pathway?",
+        correct: "75",
+        distractors: ["80", "60", "100"],
+        explanation:
+          "There were 300 karyotypes across 4 test pathways. 300/4 = 75. Distractor 80: reads the Prenatal rapid total. Distractor 60: reads the Haematology marrow total. Distractor 100: divides by the 3 result categories instead of 4 test pathways.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "safeguarding-strategy-meeting-actions",
+    stimulus: [
+      "A safeguarding team recorded multi-agency strategy meeting actions by referral source during one quarter.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Strategy Meeting Actions by Referral Source",
+      yLabel: "Actions",
+      seriesLabels: ["Safety plan", "Social care escalation", "Closed no action"],
+      groups: [
+        { label: "School", values: [28, 14, 8] },
+        { label: "GP", values: [18, 12, 10] },
+        { label: "ED", values: [22, 20, 8] },
+        { label: "Police", values: [12, 24, 14] },
+      ],
+      max: 30,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "Which referral source had 24 Social care escalation actions?",
+        correct: "Police",
+        distractors: ["ED", "School", "GP"],
+        explanation:
+          "Police had 24 Social care escalation actions. Distractor ED: had 20 Social care escalation actions. Distractor School: had 14 Social care escalation actions. Distractor GP: had 12 Social care escalation actions.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all actions were Closed no action?",
+        correct: "21.1%",
+        distractors: ["42.1%", "36.8%", "26.3%"],
+        explanation:
+          "Closed no action = 40 and all actions = 190. 40/190 x 100 = 21.1%. Distractor 42.1%: uses Safety plan actions (80/190 x 100). Distractor 36.8%: uses Social care escalation actions (70/190 x 100). Distractor 26.3%: uses one 50-action referral-source total as the numerator (50/190 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Safety plan actions to Social care escalation actions?",
+        correct: "8:7",
+        distractors: ["7:8", "2:1", "4:1"],
+        explanation:
+          "Safety plan actions = 80 and Social care escalation actions = 70. 80:70 simplifies to 8:7. Distractor 7:8 reverses the ratio. Distractor 2:1 uses School Safety plan to Social care escalation actions (28:14). Distractor 4:1 compares all Safety plan actions with only ED Social care escalation actions (80:20).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of strategy meeting actions per referral source?",
+        correct: "47.5",
+        distractors: ["50", "63.3", "40"],
+        explanation:
+          "There were 190 actions across 4 referral sources. 190/4 = 47.5. Distractor 50: reads the total for School, ED, or Police. Distractor 63.3: divides by the 3 action types instead of 4 referral sources. Distractor 40: reads the total Closed no action count.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pulmonary-function-gas-transfer-trend",
+    stimulus: [
+      "A pulmonary function laboratory recorded the number of gas transfer tests completed each month over a six-month period.",
+    ],
+    visual: {
+      type: "line",
+      title: "Monthly Gas Transfer Tests Completed",
+      yLabel: "Tests completed",
+      points: [
+        { label: "Jan", value: 42 },
+        { label: "Feb", value: 48 },
+        { label: "Mar", value: 54 },
+        { label: "Apr", value: 60 },
+        { label: "May", value: 66 },
+        { label: "Jun", value: 72 },
+      ],
+      max: 80,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many gas transfer tests were completed in April?",
+        correct: "60",
+        distractors: ["54", "66", "342"],
+        explanation:
+          "April tests completed = 60. Distractor 54: reads March. Distractor 66: reads May. Distractor 342: adds all six monthly values.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, by what percentage did completed tests increase from January to June?",
+        correct: "71.4%",
+        distractors: ["41.7%", "30 tests", "171.4%"],
+        explanation:
+          "January = 42 and June = 72, so the increase is 30 tests. 30/42 x 100 = 71.4%. Distractor 41.7%: uses June as the denominator (30/72 x 100). Distractor 30 tests: gives the absolute increase. Distractor 171.4%: gives June as a percentage of January.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of gas transfer tests completed per month?",
+        correct: "57",
+        distractors: ["54", "72", "68.4"],
+        explanation:
+          "Total tests = 42+48+54+60+66+72 = 342 across 6 months. 342/6 = 57. Distractor 54: reads March. Distractor 72: reads June. Distractor 68.4: divides by 5 instead of 6.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of tests completed in the first two months to tests completed in the last two months?",
+        correct: "15:23",
+        distractors: ["23:15", "8:11", "7:12"],
+        explanation:
+          "First two months = 42+48 = 90 and last two months = 66+72 = 138. 90:138 simplifies to 15:23. Distractor 23:15 reverses the ratio. Distractor 8:11 compares February with May (48:66). Distractor 7:12 compares January with June (42:72).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cardiac-catheter-lab-access-sites",
+    stimulus: [
+      "A cardiac catheter laboratory recorded procedural outcomes by vascular access route during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Cath Lab Outcomes by Access Route",
+      headers: ["Access route", "Successful same route", "Converted access", "Procedure abandoned", "Total"],
+      rows: [
+        ["Radial", "150", "15", "5", "170"],
+        ["Femoral", "90", "10", "10", "110"],
+        ["Brachial", "30", "5", "5", "40"],
+        ["Total", "270", "30", "20", "320"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Femoral procedures required converted access?",
+        correct: "10",
+        distractors: ["90", "110", "30"],
+        explanation:
+          "Femoral Converted access procedures = 10. Distractor 90: reads Femoral Successful same route procedures. Distractor 110: reads the Femoral total. Distractor 30: reads the Converted access column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of cath lab procedures were successful through the same route?",
+        correct: "84.4%",
+        distractors: ["9.4%", "6.3%", "90.0%"],
+        explanation:
+          "Successful same route procedures = 270 and all procedures = 320. 270/320 x 100 = 84.4%. Distractor 9.4%: uses Converted access procedures (30/320 x 100). Distractor 6.3%: uses Procedure abandoned cases (20/320 x 100). Distractor 90.0%: excludes Procedure abandoned cases from the denominator (270/300 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Radial total procedures to Femoral total procedures?",
+        correct: "17:11",
+        distractors: ["11:17", "5:3", "3:1"],
+        explanation:
+          "Radial total procedures = 170 and Femoral total procedures = 110. 170:110 simplifies to 17:11. Distractor 11:17 reverses the ratio. Distractor 5:3 compares Radial successful procedures with Femoral successful procedures (150:90). Distractor 3:1 compares Radial converted access cases with Radial abandoned cases (15:5).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1, what was the mean number of abandoned procedures per access route?",
+        correct: "6.7",
+        distractors: ["10.0", "5.0", "20.0"],
+        explanation:
+          "Procedure abandoned cases = 20 across 3 access routes. 20/3 = 6.7. Distractor 10.0: reads Femoral abandoned procedures. Distractor 5.0: reads Radial or Brachial abandoned procedures. Distractor 20.0: gives the total abandoned procedures.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-dentistry-fluoride-varnish-visits",
+    stimulus: [
+      "A community dentistry service recorded fluoride varnish visit outcomes by clinic venue during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Fluoride Varnish Visit Outcomes by Venue",
+      headers: ["Venue", "Varnish applied", "Contraindicated", "Did not attend", "Total"],
+      rows: [
+        ["Schools", "96", "12", "12", "120"],
+        ["Family hubs", "54", "6", "20", "80"],
+        ["Special schools", "42", "8", "10", "60"],
+        ["Outreach van", "48", "4", "8", "60"],
+        ["Total", "240", "30", "50", "320"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Family hubs visits were Did not attend?",
+        correct: "20",
+        distractors: ["54", "6", "80"],
+        explanation:
+          "Family hubs Did not attend visits = 20. Distractor 54: reads Family hubs Varnish applied visits. Distractor 6: reads Family hubs Contraindicated visits. Distractor 80: reads the Family hubs total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all fluoride varnish visits had varnish applied?",
+        correct: "75%",
+        distractors: ["9.4%", "15.6%", "88.9%"],
+        explanation:
+          "Varnish applied visits = 240 and all visits = 320. 240/320 x 100 = 75%. Distractor 9.4%: uses Contraindicated visits (30/320 x 100). Distractor 15.6%: uses Did not attend visits (50/320 x 100). Distractor 88.9%: excludes Did not attend visits from the denominator (240/270 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Contraindicated visits to Did not attend visits?",
+        correct: "3:5",
+        distractors: ["5:3", "24:5", "1:1"],
+        explanation:
+          "Contraindicated visits = 30 and Did not attend visits = 50. 30:50 simplifies to 3:5. Distractor 5:3 reverses the ratio. Distractor 24:5 compares Varnish applied visits with Did not attend visits (240:50). Distractor 1:1 uses Schools Contraindicated to Did not attend visits (12:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median number of Varnish applied visits per venue?",
+        correct: "51",
+        distractors: ["60", "96", "48"],
+        explanation:
+          "Varnish applied values are 96, 54, 42 and 48. Ordered values are 42, 48, 54, 96, so the median is (48+54)/2 = 51. Distractor 60: gives the mean of Varnish applied visits (240/4). Distractor 96: reads the highest value. Distractor 48: uses only the lower middle value.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "haematology-anticoagulant-reversal-doses",
+    stimulus: [
+      "A haematology liaison service recorded anticoagulant reversal treatment choices by drug group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Anticoagulant Reversal Treatments by Drug Group",
+      headers: ["Drug group", "PCC", "Vitamin K only", "Specific antidote", "No reversal", "Total"],
+      rows: [
+        ["Warfarin", "45", "30", "0", "15", "90"],
+        ["Factor Xa inhibitor", "36", "0", "24", "0", "60"],
+        ["Dabigatran", "6", "0", "24", "10", "40"],
+        ["Total", "87", "30", "48", "25", "190"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Dabigatran cases received a Specific antidote?",
+        correct: "24",
+        distractors: ["6", "10", "40"],
+        explanation:
+          "Dabigatran Specific antidote cases = 24. Distractor 6: reads Dabigatran PCC cases. Distractor 10: reads Dabigatran No reversal cases. Distractor 40: reads the Dabigatran total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of Warfarin cases had No reversal?",
+        correct: "16.7%",
+        distractors: ["7.9%", "33.3%", "25.0%"],
+        explanation:
+          "Warfarin No reversal cases = 15 and Warfarin total cases = 90. 15/90 x 100 = 16.7%. Distractor 7.9%: uses all reversal cases as the denominator (15/190 x 100). Distractor 33.3%: uses Warfarin Vitamin K only cases (30/90 x 100). Distractor 25.0%: uses the Factor Xa inhibitor total as the denominator (15/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of PCC cases to Specific antidote cases?",
+        correct: "29:16",
+        distractors: ["16:29", "15:8", "3:2"],
+        explanation:
+          "PCC cases = 87 and Specific antidote cases = 48. 87:48 simplifies to 29:16. Distractor 16:29 reverses the ratio. Distractor 15:8 compares Warfarin total cases with Specific antidote cases (90:48). Distractor 3:2 uses Factor Xa inhibitor PCC to Specific antidote cases (36:24).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1, what was the mean number of cases per drug group?",
+        correct: "63.3",
+        distractors: ["90.0", "40.0", "47.5"],
+        explanation:
+          "There were 190 cases across 3 drug groups. 190/3 = 63.3. Distractor 90.0: reads the Warfarin total. Distractor 40.0: reads the Dabigatran total. Distractor 47.5: divides by the 4 treatment choices instead of 3 drug groups.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neuro-oncology-mdt-imaging-decisions",
+    stimulus: [
+      "A neuro-oncology multidisciplinary team recorded imaging decisions by suspected tumour type during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Neuro-oncology MDT Imaging Decisions",
+      headers: ["Suspected tumour type", "MRI arranged", "CT arranged", "No imaging", "Total"],
+      rows: [
+        ["Glioma", "42", "8", "10", "60"],
+        ["Meningioma", "30", "12", "18", "60"],
+        ["Metastasis", "36", "24", "0", "60"],
+        ["Pituitary", "18", "6", "16", "40"],
+        ["Total", "126", "50", "44", "220"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Pituitary cases had No imaging arranged?",
+        correct: "16",
+        distractors: ["18", "6", "40"],
+        explanation:
+          "Pituitary No imaging cases = 16. Distractor 18: reads Pituitary MRI arranged cases. Distractor 6: reads Pituitary CT arranged cases. Distractor 40: reads the Pituitary total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of MDT imaging decisions were MRI arranged?",
+        correct: "57.3%",
+        distractors: ["22.7%", "20.0%", "60.0%"],
+        explanation:
+          "MRI arranged decisions = 126 and all decisions = 220. 126/220 x 100 = 57.3%. Distractor 22.7%: uses CT arranged decisions (50/220 x 100). Distractor 20.0%: uses No imaging decisions (44/220 x 100). Distractor 60.0%: uses Metastasis MRI arranged as a percentage of Metastasis total (36/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of CT arranged decisions to No imaging decisions?",
+        correct: "25:22",
+        distractors: ["22:25", "63:22", "4:5"],
+        explanation:
+          "CT arranged decisions = 50 and No imaging decisions = 44. 50:44 simplifies to 25:22. Distractor 22:25 reverses the ratio. Distractor 63:22 compares MRI arranged decisions with No imaging decisions (126:44). Distractor 4:5 uses Glioma CT arranged to No imaging decisions (8:10).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of decisions per suspected tumour type?",
+        correct: "60",
+        distractors: ["55", "40", "220"],
+        explanation:
+          "Tumour-type totals are 60, 60, 60 and 40. Ordered totals are 40, 60, 60, 60, so the median is (60+60)/2 = 60. Distractor 55: gives the mean total per tumour type (220/4). Distractor 40: reads the lowest tumour-type total. Distractor 220: gives the grand total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-parenteral-nutrition-bag-prep",
+    stimulus: [
+      "A pharmacy aseptic unit recorded parenteral nutrition bags prepared each day during one working week plus Saturday service.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Parenteral Nutrition Bags Prepared",
+      yLabel: "Bags prepared",
+      categories: [
+        { label: "Mon", value: 36 },
+        { label: "Tue", value: 42 },
+        { label: "Wed", value: 48 },
+        { label: "Thu", value: 45 },
+        { label: "Fri", value: 39 },
+        { label: "Sat", value: 30 },
+      ],
+      max: 55,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many parenteral nutrition bags were prepared on Tuesday?",
+        correct: "42",
+        distractors: ["36", "48", "240"],
+        explanation:
+          "Tuesday bags prepared = 42. Distractor 36: reads Monday. Distractor 48: reads Wednesday. Distractor 240: adds all six daily values.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all bags were prepared on Saturday?",
+        correct: "12.5%",
+        distractors: ["15.0%", "17.5%", "20.0%"],
+        explanation:
+          "Saturday bags = 30 and total bags = 240. 30/240 x 100 = 12.5%. Distractor 15.0%: uses Monday bags (36/240 x 100). Distractor 17.5%: uses Tuesday bags (42/240 x 100). Distractor 20.0%: uses Wednesday bags (48/240 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of bags prepared per weekday from Monday to Friday?",
+        correct: "42",
+        distractors: ["40", "48", "52.5"],
+        explanation:
+          "Monday to Friday total = 36+42+48+45+39 = 210 across 5 weekdays. 210/5 = 42. Distractor 40: averages all six days (240/6). Distractor 48: reads Wednesday, the highest value. Distractor 52.5: divides the weekday total by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of bags prepared on Wednesday and Thursday combined to bags prepared on Saturday?",
+        correct: "31:10",
+        distractors: ["10:31", "8:5", "3:2"],
+        explanation:
+          "Wednesday and Thursday combined = 48+45 = 93, and Saturday = 30. 93:30 simplifies to 31:10. Distractor 10:31 reverses the ratio. Distractor 8:5 compares Wednesday with Saturday only (48:30). Distractor 3:2 compares Thursday with Saturday only (45:30).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-oncology-line-care-events",
+    stimulus: [
+      "A paediatric oncology outreach team recorded central line care events by line type during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Central Line Care Events by Line Type",
+      headers: ["Line type", "Routine care", "Dressing change", "Concern escalated", "Total"],
+      rows: [
+        ["Hickman", "54", "18", "8", "80"],
+        ["Port", "72", "12", "6", "90"],
+        ["PICC", "36", "24", "10", "70"],
+        ["Tunnelled CVC", "48", "16", "16", "80"],
+        ["Total", "210", "70", "40", "320"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many PICC line care events had a concern escalated?",
+        correct: "10",
+        distractors: ["36", "24", "70"],
+        explanation:
+          "PICC Concern escalated events = 10. Distractor 36: reads PICC Routine care events. Distractor 24: reads PICC Dressing change events. Distractor 70: reads the PICC row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all line care events were Routine care?",
+        correct: "65.6%",
+        distractors: ["21.9%", "12.5%", "75.0%"],
+        explanation:
+          "Routine care events = 210 and all line care events = 320. 210/320 x 100 = 65.6%. Distractor 21.9%: uses Dressing change events (70/320 x 100). Distractor 12.5%: uses Concern escalated events (40/320 x 100). Distractor 75.0%: excludes Concern escalated events from the denominator (210/280 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Dressing change events to Concern escalated events?",
+        correct: "7:4",
+        distractors: ["4:7", "21:4", "3:1"],
+        explanation:
+          "Dressing change events = 70 and Concern escalated events = 40. 70:40 simplifies to 7:4. Distractor 4:7 reverses the ratio. Distractor 21:4 compares Routine care with Concern escalated events (210:40). Distractor 3:1 uses Hickman Routine care to Dressing change events (54:18).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of line care events per line type?",
+        correct: "80",
+        distractors: ["90", "70", "106.7"],
+        explanation:
+          "There were 320 line care events across 4 line types. 320/4 = 80. Distractor 90: reads the Port total. Distractor 70: reads the PICC total. Distractor 106.7: divides by the 3 event categories instead of 4 line types.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinical-engineering-infusion-pump-qc",
+    stimulus: [
+      "A clinical engineering team recorded infusion pump quality-control outcomes by service area during one audit week.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Infusion Pump QC Outcomes by Service Area",
+      yLabel: "Pumps checked",
+      seriesLabels: ["Passed", "Minor fault", "Removed from use"],
+      groups: [
+        { label: "Ward", values: [64, 12, 4] },
+        { label: "Theatres", values: [54, 12, 6] },
+        { label: "ICU", values: [48, 18, 6] },
+        { label: "Community loan", values: [34, 14, 8] },
+      ],
+      max: 70,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "Which service area had 18 pumps with a Minor fault?",
+        correct: "ICU",
+        distractors: ["Ward", "Theatres", "Community loan"],
+        explanation:
+          "ICU had 18 pumps with a Minor fault. Distractor Ward: had 12 pumps with a Minor fault. Distractor Theatres: had 12 pumps with a Minor fault. Distractor Community loan: had 14 pumps with a Minor fault.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of checked pumps were Removed from use?",
+        correct: "8.6%",
+        distractors: ["71.4%", "20.0%", "12.5%"],
+        explanation:
+          "Removed from use pumps = 24 and all checked pumps = 280. 24/280 x 100 = 8.6%. Distractor 71.4%: uses Passed pumps (200/280 x 100). Distractor 20.0%: uses Minor fault pumps (56/280 x 100). Distractor 12.5%: uses ICU Removed from use as a percentage of ICU Passed pumps (6/48 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Passed pumps to pumps with any fault or removal?",
+        correct: "5:2",
+        distractors: ["2:5", "25:3", "17:7"],
+        explanation:
+          "Passed pumps = 200. Pumps with any fault or removal = 56+24 = 80. 200:80 simplifies to 5:2. Distractor 2:5 reverses the ratio. Distractor 25:3 compares Passed pumps with Removed from use pumps only (200:24). Distractor 17:7 uses Community loan Passed to Minor fault pumps (34:14).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of pumps checked per service area?",
+        correct: "70",
+        distractors: ["80", "56", "93.3"],
+        explanation:
+          "There were 280 pumps checked across 4 service areas. 280/4 = 70. Distractor 80: reads the Ward total. Distractor 56: reads the Community loan total. Distractor 93.3: divides by the 3 outcome categories instead of 4 service areas.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "vascular-surgery-wound-swab-results",
+    stimulus: [
+      "A vascular surgery clinic recorded wound swab result categories by wound type during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Wound Swab Results by Wound Type",
+      headers: ["Wound type", "No growth", "Single organism", "Mixed growth", "Total"],
+      rows: [
+        ["Diabetic foot", "18", "42", "20", "80"],
+        ["Leg ulcer", "24", "36", "30", "90"],
+        ["Graft wound", "30", "20", "10", "60"],
+        ["Amputation stump", "12", "28", "10", "50"],
+        ["Total", "84", "126", "70", "280"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Graft wound swabs showed Mixed growth?",
+        correct: "10",
+        distractors: ["30", "20", "60"],
+        explanation:
+          "Graft wound Mixed growth swabs = 10. Distractor 30: reads Graft wound No growth swabs. Distractor 20: reads Graft wound Single organism swabs. Distractor 60: reads the Graft wound total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all wound swabs showed a Single organism?",
+        correct: "45%",
+        distractors: ["30%", "25%", "52.5%"],
+        explanation:
+          "Single organism swabs = 126 and all wound swabs = 280. 126/280 x 100 = 45%. Distractor 30%: uses No growth swabs (84/280 x 100). Distractor 25%: uses Mixed growth swabs (70/280 x 100). Distractor 52.5%: uses Diabetic foot Single organism swabs as a percentage of Diabetic foot total (42/80 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of No growth swabs to Mixed growth swabs?",
+        correct: "6:5",
+        distractors: ["5:6", "9:10", "4:5"],
+        explanation:
+          "No growth swabs = 84 and Mixed growth swabs = 70. 84:70 simplifies to 6:5. Distractor 5:6 reverses the ratio. Distractor 9:10 uses Diabetic foot No growth to Mixed growth swabs (18:20). Distractor 4:5 uses Leg ulcer No growth to Mixed growth swabs (24:30).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of Mixed growth swabs per wound type?",
+        correct: "17.5",
+        distractors: ["20", "10", "23.3"],
+        explanation:
+          "Mixed growth swabs = 70 across 4 wound types. 70/4 = 17.5. Distractor 20: reads Diabetic foot Mixed growth swabs. Distractor 10: reads Graft wound or Amputation stump Mixed growth swabs. Distractor 23.3: divides by the 3 result categories instead of 4 wound types.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-ophthalmology-oct-scan-volumes",
+    stimulus: [
+      "A community ophthalmology hub recorded OCT scan volumes for six clinic days.",
+    ],
+    visual: {
+      type: "line",
+      title: "OCT Scan Volumes by Clinic Day",
+      yLabel: "Scans",
+      points: [
+        { label: "Mon", value: 84 },
+        { label: "Tue", value: 96 },
+        { label: "Wed", value: 108 },
+        { label: "Thu", value: 102 },
+        { label: "Fri", value: 90 },
+        { label: "Sat", value: 60 },
+      ],
+      max: 120,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many OCT scans were completed on Wednesday?",
+        correct: "108",
+        distractors: ["96", "102", "540"],
+        explanation:
+          "Wednesday OCT scans = 108. Distractor 96: reads Tuesday. Distractor 102: reads Thursday. Distractor 540: adds all six clinic-day scan volumes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all OCT scans were completed on Saturday?",
+        correct: "11.1%",
+        distractors: ["15.6%", "20.0%", "16.7%"],
+        explanation:
+          "Saturday scans = 60 and total scans = 540. 60/540 x 100 = 11.1%. Distractor 15.6%: uses Monday scans (84/540 x 100). Distractor 20.0%: uses Wednesday scans (108/540 x 100). Distractor 16.7%: uses Friday scans (90/540 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of OCT scans per clinic day?",
+        correct: "90",
+        distractors: ["108", "60", "135"],
+        explanation:
+          "Total OCT scans = 540 across 6 clinic days. 540/6 = 90. Distractor 108: reads Wednesday, the highest day. Distractor 60: reads Saturday, the lowest day. Distractor 135: divides by 4 instead of 6.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of OCT scans in the first three clinic days to scans in the last three clinic days?",
+        correct: "8:7",
+        distractors: ["7:8", "7:5", "6:5"],
+        explanation:
+          "First three clinic days = 84+96+108 = 288 and last three clinic days = 102+90+60 = 252. 288:252 simplifies to 8:7. Distractor 7:8 reverses the ratio. Distractor 7:5 compares Monday with Saturday (84:60). Distractor 6:5 compares Wednesday with Friday (108:90).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "maternity-blood-loss-alerts",
+    stimulus: [
+      "A maternity unit recorded blood-loss alert categories by birth mode during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Blood-loss Alert Categories by Birth Mode",
+      headers: ["Birth mode", "No alert", "Amber alert", "Red alert", "Total"],
+      rows: [
+        ["Vaginal birth", "120", "24", "6", "150"],
+        ["Assisted birth", "50", "20", "10", "80"],
+        ["Elective caesarean", "60", "12", "8", "80"],
+        ["Emergency caesarean", "40", "24", "16", "80"],
+        ["Total", "270", "80", "40", "390"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Emergency caesarean births had a Red alert?",
+        correct: "16",
+        distractors: ["40", "24", "80"],
+        explanation:
+          "Emergency caesarean Red alert births = 16. Distractor 40: reads Emergency caesarean No alert births. Distractor 24: reads Emergency caesarean Amber alert births. Distractor 80: reads the Emergency caesarean total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all births had a Red alert?",
+        correct: "10.3%",
+        distractors: ["69.2%", "20.5%", "20.0%"],
+        explanation:
+          "Red alert births = 40 and all births = 390. 40/390 x 100 = 10.3%. Distractor 69.2%: uses No alert births (270/390 x 100). Distractor 20.5%: uses Amber alert births (80/390 x 100). Distractor 20.0%: uses Emergency caesarean Red alerts as a percentage of Emergency caesarean total (16/80 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Amber alert births to Red alert births?",
+        correct: "2:1",
+        distractors: ["1:2", "27:4", "4:1"],
+        explanation:
+          "Amber alert births = 80 and Red alert births = 40. 80:40 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 27:4 compares No alert births with Red alert births (270:40). Distractor 4:1 uses Vaginal birth Amber alert to Red alert births (24:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the mean number of alert births per birth mode?",
+        correct: "30",
+        distractors: ["40", "80", "120"],
+        explanation:
+          "Alert births = Amber alerts 80 + Red alerts 40 = 120 across 4 birth modes. 120/4 = 30. Distractor 40: reads the Red alert total. Distractor 80: reads the Amber alert total. Distractor 120: gives the total alert births without dividing by 4.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "speech-therapy-voice-clinic-attendance",
+    stimulus: [
+      "A speech and language therapy voice clinic recorded appointment categories during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Voice Clinic Appointment Categories",
+      yLabel: "Appointments",
+      categories: [
+        { label: "Initial assessment", value: 36 },
+        { label: "Therapy review", value: 54 },
+        { label: "Discharge review", value: 30 },
+        { label: "Telehealth follow-up", value: 42 },
+        { label: "Did not attend", value: 18 },
+      ],
+      max: 60,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Therapy review appointments were recorded?",
+        correct: "54",
+        distractors: ["36", "42", "180"],
+        explanation:
+          "Therapy review appointments = 54. Distractor 36: reads Initial assessment appointments. Distractor 42: reads Telehealth follow-up appointments. Distractor 180: adds all appointment categories.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all voice clinic appointments were Did not attend?",
+        correct: "10%",
+        distractors: ["20%", "23.3%", "30%"],
+        explanation:
+          "Did not attend appointments = 18 and all appointments = 180. 18/180 x 100 = 10%. Distractor 20%: uses Initial assessment appointments (36/180 x 100). Distractor 23.3%: uses Telehealth follow-up appointments (42/180 x 100). Distractor 30%: uses Therapy review appointments (54/180 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of appointments per category?",
+        correct: "36",
+        distractors: ["54", "30", "45"],
+        explanation:
+          "Total appointments = 180 across 5 appointment categories. 180/5 = 36. Distractor 54: reads Therapy review appointments. Distractor 30: reads Discharge review appointments. Distractor 45: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Telehealth follow-up plus Discharge review appointments to Initial assessment appointments?",
+        correct: "2:1",
+        distractors: ["1:2", "7:6", "3:2"],
+        explanation:
+          "Telehealth follow-up plus Discharge review appointments = 42+30 = 72 and Initial assessment appointments = 36. 72:36 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 7:6 compares Telehealth follow-up with Initial assessment only (42:36). Distractor 3:2 compares Therapy review with Initial assessment (54:36).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renal-pharmacy-epo-supply-issues",
+    stimulus: [
+      "A renal pharmacy service recorded epoetin supply outcomes by supply route during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Epoetin Supply Outcomes by Route",
+      headers: ["Supply route", "Supplied", "Delayed", "Dose query", "Total"],
+      rows: [
+        ["Home delivery", "72", "18", "10", "100"],
+        ["Dialysis unit", "84", "12", "4", "100"],
+        ["Ward stock", "48", "16", "16", "80"],
+        ["Community prescription", "36", "24", "10", "70"],
+        ["Total", "240", "70", "40", "350"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Ward stock supplies had a Dose query?",
+        correct: "16",
+        distractors: ["48", "80", "40"],
+        explanation:
+          "Ward stock Dose query supplies = 16. Distractor 48: reads Ward stock Supplied cases. Distractor 80: reads the Ward stock total. Distractor 40: reads the Dose query column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of epoetin supply outcomes were Delayed?",
+        correct: "20%",
+        distractors: ["68.6%", "11.4%", "34.3%"],
+        explanation:
+          "Delayed outcomes = 70 and all epoetin supply outcomes = 350. 70/350 x 100 = 20%. Distractor 68.6%: uses Supplied outcomes (240/350 x 100). Distractor 11.4%: uses Dose query outcomes (40/350 x 100). Distractor 34.3%: uses Community prescription Delayed outcomes as a percentage of Community prescription total (24/70 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Supplied outcomes to Delayed outcomes?",
+        correct: "24:7",
+        distractors: ["7:24", "6:1", "3:2"],
+        explanation:
+          "Supplied outcomes = 240 and Delayed outcomes = 70. 240:70 simplifies to 24:7. Distractor 7:24 reverses the ratio. Distractor 6:1 uses Dialysis unit Supplied to Delayed outcomes (84:12). Distractor 3:2 uses Community prescription Supplied to Delayed outcomes (36:24).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of epoetin supply outcomes per route?",
+        correct: "87.5",
+        distractors: ["100", "70", "116.7"],
+        explanation:
+          "There were 350 epoetin supply outcomes across 4 routes. 350/4 = 87.5. Distractor 100: reads the Home delivery or Dialysis unit total. Distractor 70: reads the Community prescription total. Distractor 116.7: divides by the 3 outcome categories instead of 4 routes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "emergency-planning-drill-response-times",
+    stimulus: [
+      "A hospital emergency planning team recorded target and actual response times for stages of a major incident drill.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Major Incident Drill Response Times",
+      yLabel: "Minutes",
+      seriesLabels: ["Target", "Actual"],
+      groups: [
+        { label: "Alert cascade", values: [12, 18] },
+        { label: "Command setup", values: [20, 26] },
+        { label: "Department sweep", values: [32, 40] },
+        { label: "Debrief upload", values: [16, 20] },
+      ],
+      max: 45,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What was the actual response time for the Department sweep stage?",
+        correct: "40 minutes",
+        distractors: ["32 minutes", "26 minutes", "104 minutes"],
+        explanation:
+          "Department sweep Actual response time = 40 minutes. Distractor 32 minutes: reads the Department sweep Target time. Distractor 26 minutes: reads Command setup Actual time. Distractor 104 minutes: adds all four Actual response times.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "By what percentage did total actual response time exceed total target response time?",
+        correct: "30%",
+        distractors: ["23.1%", "24 minutes", "130%"],
+        explanation:
+          "Total target response time = 12+20+32+16 = 80 minutes and total actual response time = 18+26+40+20 = 104 minutes. The excess is 24 minutes, so 24/80 x 100 = 30%. Distractor 23.1%: uses actual response time as the denominator (24/104 x 100). Distractor 24 minutes: gives the absolute difference. Distractor 130%: gives actual response time as a percentage of target response time.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean actual response time per drill stage?",
+        correct: "26 minutes",
+        distractors: ["20 minutes", "40 minutes", "34.7 minutes"],
+        explanation:
+          "Total actual response time = 104 minutes across 4 drill stages. 104/4 = 26 minutes. Distractor 20 minutes: reads Debrief upload Actual time. Distractor 40 minutes: reads Department sweep Actual time. Distractor 34.7 minutes: divides by 3 instead of 4.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Department sweep target time to Department sweep actual time?",
+        correct: "4:5",
+        distractors: ["5:4", "10:13", "1:2"],
+        explanation:
+          "Department sweep Target time = 32 minutes and Actual time = 40 minutes. 32:40 simplifies to 4:5. Distractor 5:4 reverses the ratio. Distractor 10:13 compares total target time with total actual time (80:104). Distractor 1:2 compares Command setup target time with Department sweep actual time (20:40).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-endocrine-growth-monitoring",
+    stimulus: [
+      "A paediatric endocrine clinic recorded growth-monitoring outcomes by referral reason during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Growth-monitoring Outcomes by Referral Reason",
+      headers: ["Referral reason", "Routine follow-up", "Dose adjusted", "Further tests", "Total"],
+      rows: [
+        ["Short stature", "54", "18", "18", "90"],
+        ["Early puberty", "36", "24", "12", "72"],
+        ["Delayed puberty", "30", "12", "18", "60"],
+        ["Thyroid growth concern", "42", "18", "18", "78"],
+        ["Total", "162", "72", "66", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Early puberty patients had a dose adjusted?",
+        correct: "24",
+        distractors: ["36", "12", "72"],
+        explanation:
+          "Early puberty Dose adjusted patients = 24. Distractor 36: reads Early puberty Routine follow-up patients. Distractor 12: reads Early puberty Further tests patients. Distractor 72: reads the Early puberty row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all growth-monitoring outcomes were Routine follow-up?",
+        correct: "54%",
+        distractors: ["24%", "22%", "60%"],
+        explanation:
+          "Routine follow-up outcomes = 162 and all outcomes = 300. 162/300 x 100 = 54%. Distractor 24%: uses Dose adjusted outcomes (72/300 x 100). Distractor 22%: uses Further tests outcomes (66/300 x 100). Distractor 60%: uses Short stature Routine follow-up as a percentage of Short stature total (54/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Dose adjusted outcomes to Further tests outcomes?",
+        correct: "12:11",
+        distractors: ["11:12", "27:11", "2:1"],
+        explanation:
+          "Dose adjusted outcomes = 72 and Further tests outcomes = 66. 72:66 simplifies to 12:11. Distractor 11:12 reverses the ratio. Distractor 27:11 compares Routine follow-up with Further tests outcomes (162:66). Distractor 2:1 uses Early puberty Dose adjusted to Further tests outcomes (24:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of outcomes per referral reason?",
+        correct: "75",
+        distractors: ["90", "60", "100"],
+        explanation:
+          "There were 300 outcomes across 4 referral reasons. 300/4 = 75. Distractor 90: reads the Short stature total. Distractor 60: reads the Delayed puberty total. Distractor 100: divides by the 3 outcome columns instead of 4 referral reasons.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiology-ultrasound-guided-biopsy-yield",
+    stimulus: [
+      "A radiology department recorded ultrasound-guided biopsy sample adequacy by biopsy site during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Ultrasound-guided Biopsy Sample Adequacy",
+      headers: ["Biopsy site", "Adequate", "Limited", "Repeat needed", "Total"],
+      rows: [
+        ["Lymph node", "64", "12", "4", "80"],
+        ["Thyroid", "54", "18", "8", "80"],
+        ["Breast", "72", "12", "6", "90"],
+        ["Soft tissue", "30", "12", "8", "50"],
+        ["Total", "220", "54", "26", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Thyroid biopsies had Limited samples?",
+        correct: "18",
+        distractors: ["54", "8", "80"],
+        explanation:
+          "Thyroid Limited samples = 18. Distractor 54: reads Thyroid Adequate samples. Distractor 8: reads Thyroid Repeat needed samples. Distractor 80: reads the Thyroid row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all biopsies had Repeat needed?",
+        correct: "8.7%",
+        distractors: ["73.3%", "18.0%", "10.0%"],
+        explanation:
+          "Repeat needed biopsies = 26 and all biopsies = 300. 26/300 x 100 = 8.7%. Distractor 73.3%: uses Adequate samples (220/300 x 100). Distractor 18.0%: uses Limited samples (54/300 x 100). Distractor 10.0%: uses Thyroid Repeat needed samples as a percentage of Thyroid total (8/80 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Adequate samples to Limited samples?",
+        correct: "110:27",
+        distractors: ["27:110", "110:13", "6:1"],
+        explanation:
+          "Adequate samples = 220 and Limited samples = 54. 220:54 simplifies to 110:27. Distractor 27:110 reverses the ratio. Distractor 110:13 compares Adequate samples with Repeat needed samples (220:26). Distractor 6:1 uses Breast Adequate to Limited samples (72:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of biopsies per biopsy site?",
+        correct: "80",
+        distractors: ["75", "90", "50"],
+        explanation:
+          "Biopsy-site totals are 80, 80, 90 and 50. Ordered totals are 50, 80, 80, 90, so the median is (80+80)/2 = 80. Distractor 75: gives the mean total per site (300/4). Distractor 90: reads the Breast total. Distractor 50: reads the Soft tissue total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cardiac-rehab-exercise-class-attendance",
+    stimulus: [
+      "A cardiac rehabilitation service recorded weekly exercise class attendance over six weeks.",
+    ],
+    visual: {
+      type: "line",
+      title: "Weekly Cardiac Rehab Exercise Class Attendance",
+      yLabel: "Attendances",
+      points: [
+        { label: "Week 1", value: 48 },
+        { label: "Week 2", value: 54 },
+        { label: "Week 3", value: 60 },
+        { label: "Week 4", value: 57 },
+        { label: "Week 5", value: 63 },
+        { label: "Week 6", value: 78 },
+      ],
+      max: 85,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many attendances were recorded in Week 5?",
+        correct: "63",
+        distractors: ["57", "78", "360"],
+        explanation:
+          "Week 5 attendances = 63. Distractor 57: reads Week 4. Distractor 78: reads Week 6. Distractor 360: adds all six weekly attendances.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "By what percentage did attendance increase from Week 1 to Week 6?",
+        correct: "62.5%",
+        distractors: ["38.5%", "30 attendances", "162.5%"],
+        explanation:
+          "Week 1 attendance = 48 and Week 6 attendance = 78, so the increase is 30. 30/48 x 100 = 62.5%. Distractor 38.5%: uses Week 6 as the denominator (30/78 x 100). Distractor 30 attendances: gives the absolute increase. Distractor 162.5%: gives Week 6 as a percentage of Week 1.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean weekly attendance over the six weeks?",
+        correct: "60",
+        distractors: ["63", "78", "72"],
+        explanation:
+          "Total attendances = 48+54+60+57+63+78 = 360 across 6 weeks. 360/6 = 60. Distractor 63: reads Week 5. Distractor 78: reads Week 6. Distractor 72: divides by 5 instead of 6.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of attendances in Weeks 1-3 to attendances in Weeks 4-6?",
+        correct: "9:11",
+        distractors: ["11:9", "8:13", "16:19"],
+        explanation:
+          "Weeks 1-3 attendances = 48+54+60 = 162 and Weeks 4-6 attendances = 57+63+78 = 198. 162:198 simplifies to 9:11. Distractor 11:9 reverses the ratio. Distractor 8:13 compares Week 1 with Week 6 (48:78). Distractor 16:19 compares Week 1 with Week 4 (48:57).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "infection-control-hand-hygiene-sites",
+    stimulus: [
+      "An infection control team recorded hand hygiene audit observations by clinical site during one week.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Hand Hygiene Audit Observations by Site",
+      yLabel: "Observations",
+      seriesLabels: ["Compliant", "Missed", "Technique issue"],
+      groups: [
+        { label: "Ward A", values: [90, 15, 15] },
+        { label: "Ward B", values: [72, 18, 10] },
+        { label: "ED", values: [84, 28, 8] },
+        { label: "Outpatients", values: [54, 12, 14] },
+      ],
+      max: 100,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "Which site had 28 Missed hand hygiene observations?",
+        correct: "ED",
+        distractors: ["Ward A", "Ward B", "Outpatients"],
+        explanation:
+          "ED had 28 Missed observations. Distractor Ward A: had 15 Missed observations. Distractor Ward B: had 18 Missed observations. Distractor Outpatients: had 12 Missed observations.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all observations were Compliant?",
+        correct: "71.4%",
+        distractors: ["17.4%", "11.2%", "75.0%"],
+        explanation:
+          "Compliant observations = 300 and all observations = 420. 300/420 x 100 = 71.4%. Distractor 17.4%: uses Missed observations (73/420 x 100). Distractor 11.2%: uses Technique issue observations (47/420 x 100). Distractor 75.0%: uses Ward A Compliant observations as a percentage of Ward A total (90/120 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Missed observations to Technique issue observations?",
+        correct: "73:47",
+        distractors: ["47:73", "300:47", "1:1"],
+        explanation:
+          "Missed observations = 73 and Technique issue observations = 47. The ratio is 73:47. Distractor 47:73 reverses the ratio. Distractor 300:47 compares Compliant observations with Technique issue observations. Distractor 1:1 uses Ward A Missed to Technique issue observations (15:15).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of observations per clinical site?",
+        correct: "105",
+        distractors: ["120", "80", "140"],
+        explanation:
+          "There were 420 observations across 4 clinical sites. 420/4 = 105. Distractor 120: reads the Ward A or ED total. Distractor 80: reads the Outpatients total. Distractor 140: divides by the 3 observation categories instead of 4 sites.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "home-enteral-nutrition-delivery-weights",
+    stimulus: [
+      "A home enteral nutrition service recorded monthly formula delivery weight by product type.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Monthly Formula Delivery Weight by Product Type",
+      yLabel: "Kilograms",
+      categories: [
+        { label: "Standard feed", value: 240 },
+        { label: "Fibre feed", value: 180 },
+        { label: "Paediatric feed", value: 90 },
+        { label: "Modular protein", value: 60 },
+        { label: "Thickener", value: 30 },
+      ],
+      max: 260,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many kilograms of Paediatric feed were delivered?",
+        correct: "90 kg",
+        distractors: ["180 kg", "60 kg", "600 kg"],
+        explanation:
+          "Paediatric feed delivery weight = 90 kg. Distractor 180 kg: reads Fibre feed. Distractor 60 kg: reads Modular protein. Distractor 600 kg: adds all product weights.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of the total delivery weight was Standard feed?",
+        correct: "40%",
+        distractors: ["30%", "15%", "10%"],
+        explanation:
+          "Standard feed weight = 240 kg and total delivery weight = 600 kg. 240/600 x 100 = 40%. Distractor 30%: uses Fibre feed (180/600 x 100). Distractor 15%: uses Paediatric feed (90/600 x 100). Distractor 10%: uses Modular protein (60/600 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean delivery weight per product type?",
+        correct: "120 kg",
+        distractors: ["240 kg", "90 kg", "150 kg"],
+        explanation:
+          "Total delivery weight = 600 kg across 5 product types. 600/5 = 120 kg. Distractor 240 kg: reads Standard feed. Distractor 90 kg: reads Paediatric feed. Distractor 150 kg: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Fibre feed plus Standard feed to all other product types combined?",
+        correct: "7:3",
+        distractors: ["3:7", "4:3", "2:1"],
+        explanation:
+          "Fibre feed plus Standard feed = 180+240 = 420 kg. Other product types = 90+60+30 = 180 kg. 420:180 simplifies to 7:3. Distractor 3:7 reverses the ratio. Distractor 4:3 compares Standard feed with Fibre feed only (240:180). Distractor 2:1 compares Standard feed with the mean delivery weight (240:120).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ophthalmology-intravitreal-injection-slots",
+    stimulus: [
+      "An ophthalmology unit recorded intravitreal injection slot outcomes by treatment list during one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Intravitreal Injection Slot Outcomes",
+      headers: ["Treatment list", "Injected", "Deferred clinically", "Patient cancel", "Total"],
+      rows: [
+        ["AMD morning", "72", "8", "10", "90"],
+        ["AMD afternoon", "66", "12", "12", "90"],
+        ["Diabetic macular oedema", "48", "12", "10", "70"],
+        ["Retinal vein occlusion", "42", "8", "10", "60"],
+        ["Total", "228", "40", "42", "310"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Diabetic macular oedema slots were Deferred clinically?",
+        correct: "12",
+        distractors: ["48", "10", "70"],
+        explanation:
+          "Diabetic macular oedema Deferred clinically slots = 12. Distractor 48: reads Injected slots for the same list. Distractor 10: reads Patient cancel slots for the same list. Distractor 70: reads the Diabetic macular oedema total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all injection slots resulted in injection?",
+        correct: "73.5%",
+        distractors: ["12.9%", "13.5%", "80.0%"],
+        explanation:
+          "Injected slots = 228 and all injection slots = 310. 228/310 x 100 = 73.5%. Distractor 12.9%: uses Deferred clinically slots (40/310 x 100). Distractor 13.5%: uses Patient cancel slots (42/310 x 100). Distractor 80.0%: uses AMD morning Injected slots as a percentage of AMD morning total (72/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Deferred clinically slots to Patient cancel slots?",
+        correct: "20:21",
+        distractors: ["21:20", "38:7", "4:5"],
+        explanation:
+          "Deferred clinically slots = 40 and Patient cancel slots = 42. 40:42 simplifies to 20:21. Distractor 21:20 reverses the ratio. Distractor 38:7 compares Injected slots with Patient cancel slots (228:42). Distractor 4:5 uses AMD morning Deferred clinically to Patient cancel slots (8:10).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of slots per treatment list?",
+        correct: "77.5",
+        distractors: ["90", "60", "103.3"],
+        explanation:
+          "There were 310 slots across 4 treatment lists. 310/4 = 77.5. Distractor 90: reads either AMD list total. Distractor 60: reads the Retinal vein occlusion total. Distractor 103.3: divides by the 3 outcome categories instead of 4 treatment lists.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "critical-care-family-meeting-outcomes",
+    stimulus: [
+      "A critical care unit recorded family meeting outcomes by meeting format during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Family Meeting Outcomes by Format",
+      headers: ["Meeting format", "Care plan agreed", "Further meeting booked", "Escalated to ethics", "Total"],
+      rows: [
+        ["In person", "45", "15", "0", "60"],
+        ["Video call", "36", "18", "6", "60"],
+        ["Telephone", "30", "20", "10", "60"],
+        ["Hybrid", "24", "12", "4", "40"],
+        ["Total", "135", "65", "20", "220"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Telephone meetings were escalated to ethics?",
+        correct: "10",
+        distractors: ["30", "20", "60"],
+        explanation:
+          "Telephone Escalated to ethics meetings = 10. Distractor 30: reads Telephone Care plan agreed meetings. Distractor 20: reads Telephone Further meeting booked meetings. Distractor 60: reads the Telephone total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all family meetings had a care plan agreed?",
+        correct: "61.4%",
+        distractors: ["29.5%", "9.1%", "75.0%"],
+        explanation:
+          "Care plan agreed meetings = 135 and all family meetings = 220. 135/220 x 100 = 61.4%. Distractor 29.5%: uses Further meeting booked meetings (65/220 x 100). Distractor 9.1%: uses Escalated to ethics meetings (20/220 x 100). Distractor 75.0%: uses In person Care plan agreed meetings as a percentage of In person total (45/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Further meeting booked outcomes to Escalated to ethics outcomes?",
+        correct: "13:4",
+        distractors: ["4:13", "27:4", "2:1"],
+        explanation:
+          "Further meeting booked outcomes = 65 and Escalated to ethics outcomes = 20. 65:20 simplifies to 13:4. Distractor 4:13 reverses the ratio. Distractor 27:4 compares Care plan agreed with Escalated to ethics outcomes (135:20). Distractor 2:1 uses Telephone Further meeting booked to Escalated to ethics outcomes (20:10).",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "data-display", "set-based"],
+        question: "Which meeting format accounted for approximately one fifth of all family meetings?",
+        correct: "Hybrid",
+        distractors: ["In person", "Video call", "Telephone"],
+        explanation:
+          "One fifth of all family meetings = 220/5 = 44. Hybrid had 40 meetings, which is the closest option. Distractor In person: 60 is closer to 27.3% than 20%. Distractor Video call: 60 is also 27.3%. Distractor Telephone: 60 is also 27.3%.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pathology-blood-film-review-requests",
+    stimulus: [
+      "A pathology laboratory recorded blood film review requests by request source over one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Blood Film Review Requests by Source",
+      headers: ["Request source", "Reviewed same day", "Reviewed next day", "Rejected", "Total"],
+      rows: [
+        ["Haematology ward", "48", "12", "0", "60"],
+        ["Emergency department", "54", "18", "8", "80"],
+        ["GP urgent", "36", "24", "10", "70"],
+        ["Oncology clinic", "42", "18", "10", "70"],
+        ["Total", "180", "72", "28", "280"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many GP urgent requests were reviewed next day?",
+        correct: "24",
+        distractors: ["36", "10", "70"],
+        explanation:
+          "GP urgent Reviewed next day requests = 24. Distractor 36: reads GP urgent Reviewed same day requests. Distractor 10: reads GP urgent Rejected requests. Distractor 70: reads the GP urgent total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What percentage of all blood film review requests were reviewed same day?",
+        correct: "64.3%",
+        distractors: ["25.7%", "10.0%", "80.0%"],
+        explanation:
+          "Reviewed same day requests = 180 and all requests = 280. 180/280 x 100 = 64.3%. Distractor 25.7%: uses Reviewed next day requests (72/280 x 100). Distractor 10.0%: uses Rejected requests (28/280 x 100). Distractor 80.0%: uses Haematology ward Reviewed same day as a percentage of Haematology ward total (48/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Reviewed next day requests to Rejected requests?",
+        correct: "18:7",
+        distractors: ["7:18", "45:7", "12:5"],
+        explanation:
+          "Reviewed next day requests = 72 and Rejected requests = 28. 72:28 simplifies to 18:7. Distractor 7:18 reverses the ratio. Distractor 45:7 compares Reviewed same day with Rejected requests (180:28). Distractor 12:5 uses GP urgent Reviewed next day to Rejected requests (24:10).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of requests per request source?",
+        correct: "70",
+        distractors: ["80", "60", "93.3"],
+        explanation:
+          "There were 280 requests across 4 request sources. 280/4 = 70. Distractor 80: reads the Emergency department total. Distractor 60: reads the Haematology ward total. Distractor 93.3: divides by the 3 review outcome columns instead of 4 sources.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "genomic-medicine-cascade-testing",
+    stimulus: [
+      "A genomic medicine service recorded cascade testing outcomes by referral pathway during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Cascade Testing Outcomes by Referral Pathway",
+      headers: ["Referral pathway", "Test completed", "Appointment booked", "Declined", "Total"],
+      rows: [
+        ["Cancer predisposition", "48", "24", "8", "80"],
+        ["Inherited cardiac", "36", "18", "6", "60"],
+        ["Neurogenetic", "24", "20", "6", "50"],
+        ["Pharmacogenomic", "42", "14", "4", "60"],
+        ["Total", "150", "76", "24", "250"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Neurogenetic referrals had an appointment booked?",
+        correct: "20",
+        distractors: ["24", "6", "50"],
+        explanation:
+          "Neurogenetic Appointment booked referrals = 20. Distractor 24: reads Neurogenetic Test completed referrals. Distractor 6: reads Neurogenetic Declined referrals. Distractor 50: reads the Neurogenetic row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all cascade testing referrals had testing completed?",
+        correct: "60%",
+        distractors: ["30.4%", "9.6%", "75%"],
+        explanation:
+          "Test completed referrals = 150 and all referrals = 250. 150/250 x 100 = 60%. Distractor 30.4%: uses Appointment booked referrals (76/250 x 100). Distractor 9.6%: uses Declined referrals (24/250 x 100). Distractor 75%: uses Cancer predisposition Test completed as a percentage of Cancer predisposition total (48/80 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Appointment booked referrals to Declined referrals?",
+        correct: "19:6",
+        distractors: ["6:19", "25:4", "3:1"],
+        explanation:
+          "Appointment booked referrals = 76 and Declined referrals = 24. 76:24 simplifies to 19:6. Distractor 6:19 reverses the ratio. Distractor 25:4 compares Test completed with Declined referrals (150:24). Distractor 3:1 uses Inherited cardiac Appointment booked to Declined referrals (18:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of referrals per pathway?",
+        correct: "62.5",
+        distractors: ["80", "50", "83.3"],
+        explanation:
+          "There were 250 referrals across 4 pathways. 250/4 = 62.5. Distractor 80: reads the Cancer predisposition total. Distractor 50: reads the Neurogenetic total. Distractor 83.3: divides by the 3 outcome columns instead of 4 pathways.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "liver-transplant-waitlist-assessments",
+    stimulus: [
+      "A liver transplant assessment team recorded waitlist assessment outcomes by assessment stage during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Waitlist Assessment Outcomes by Stage",
+      headers: ["Assessment stage", "Cleared", "Further review", "Not suitable", "Total"],
+      rows: [
+        ["Initial review", "64", "12", "4", "80"],
+        ["Cardiac workup", "42", "18", "10", "70"],
+        ["Imaging review", "54", "12", "4", "70"],
+        ["Psychosocial review", "30", "18", "12", "60"],
+        ["Total", "190", "60", "30", "280"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Psychosocial review assessments were Not suitable?",
+        correct: "12",
+        distractors: ["30", "18", "60"],
+        explanation:
+          "Psychosocial review Not suitable assessments = 12. Distractor 30: reads Psychosocial review Cleared assessments. Distractor 18: reads Psychosocial review Further review assessments. Distractor 60: reads the Psychosocial review row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all assessments were Cleared?",
+        correct: "67.9%",
+        distractors: ["21.4%", "10.7%", "80.0%"],
+        explanation:
+          "Cleared assessments = 190 and all assessments = 280. 190/280 x 100 = 67.9%. Distractor 21.4%: uses Further review assessments (60/280 x 100). Distractor 10.7%: uses Not suitable assessments (30/280 x 100). Distractor 80.0%: uses Initial review Cleared as a percentage of Initial review total (64/80 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Further review assessments to Not suitable assessments?",
+        correct: "2:1",
+        distractors: ["1:2", "19:3", "3:2"],
+        explanation:
+          "Further review assessments = 60 and Not suitable assessments = 30. 60:30 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 19:3 compares Cleared with Not suitable assessments (190:30). Distractor 3:2 uses Psychosocial review Further review to Not suitable assessments only (18:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of assessments per stage?",
+        correct: "70",
+        distractors: ["80", "60", "93.3"],
+        explanation:
+          "Stage totals are 80, 70, 70 and 60. Ordered totals are 60, 70, 70, 80, so the median is (70+70)/2 = 70. Distractor 80: reads the Initial review total. Distractor 60: reads the Psychosocial review total. Distractor 93.3: divides the grand total by 3 outcome columns.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-physio-gait-lab-sessions",
+    stimulus: [
+      "A paediatric physiotherapy gait laboratory recorded completed gait analysis sessions across six months.",
+    ],
+    visual: {
+      type: "line",
+      title: "Completed Gait Analysis Sessions",
+      yLabel: "Sessions",
+      points: [
+        { label: "Jan", value: 24 },
+        { label: "Feb", value: 30 },
+        { label: "Mar", value: 36 },
+        { label: "Apr", value: 42 },
+        { label: "May", value: 39 },
+        { label: "Jun", value: 45 },
+      ],
+      max: 50,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many completed gait analysis sessions were recorded in April?",
+        correct: "42",
+        distractors: ["36", "39", "216"],
+        explanation:
+          "April completed gait analysis sessions = 42. Distractor 36: reads March. Distractor 39: reads May. Distractor 216: adds all six monthly session values.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "By what percentage did completed sessions increase from January to June?",
+        correct: "87.5%",
+        distractors: ["46.7%", "21 sessions", "187.5%"],
+        explanation:
+          "January = 24 and June = 45, so the increase is 21 sessions. 21/24 x 100 = 87.5%. Distractor 46.7%: uses June as the denominator (21/45 x 100). Distractor 21 sessions: gives the absolute increase. Distractor 187.5%: gives June as a percentage of January.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of completed sessions per month?",
+        correct: "36",
+        distractors: ["45", "24", "43.2"],
+        explanation:
+          "Total sessions = 24+30+36+42+39+45 = 216 across 6 months. 216/6 = 36. Distractor 45: reads June, the highest month. Distractor 24: reads January, the lowest month. Distractor 43.2: divides by 5 instead of 6.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of sessions in the first three months to sessions in the last three months?",
+        correct: "5:7",
+        distractors: ["7:5", "8:15", "10:13"],
+        explanation:
+          "First three months = 24+30+36 = 90 and last three months = 42+39+45 = 126. 90:126 simplifies to 5:7. Distractor 7:5 reverses the ratio. Distractor 8:15 compares January with June (24:45). Distractor 10:13 compares February with May (30:39).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "oral-health-school-screening-outcomes",
+    stimulus: [
+      "A community oral health team recorded school screening outcomes by year group during one term.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "School Oral Health Screening Outcomes",
+      yLabel: "Children screened",
+      seriesLabels: ["No treatment need", "Dental referral", "Fluoride advice"],
+      groups: [
+        { label: "Reception", values: [90, 24, 36] },
+        { label: "Year 1", values: [84, 30, 36] },
+        { label: "Year 2", values: [72, 42, 36] },
+        { label: "Year 3", values: [54, 54, 42] },
+      ],
+      max: 100,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Year 3 children had a Dental referral?",
+        correct: "54",
+        distractors: ["42", "90", "150"],
+        explanation:
+          "Year 3 Dental referral children = 54. Distractor 42: reads Year 3 Fluoride advice. Distractor 90: reads Reception No treatment need. Distractor 150: adds all Year 3 outcomes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all screened children had No treatment need?",
+        correct: "50%",
+        distractors: ["25%", "24%", "60%"],
+        explanation:
+          "No treatment need children = 300 and all screened children = 600. 300/600 x 100 = 50%. Distractor 25%: uses Dental referral children (150/600 x 100). Distractor 24%: uses Year 2 No treatment need with the No treatment need column total as denominator (72/300 x 100). Distractor 60%: uses Reception No treatment need as a percentage of Reception total (90/150 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Dental referral children to Fluoride advice children?",
+        correct: "1:1",
+        distractors: ["2:1", "1:2", "5:2"],
+        explanation:
+          "Dental referral children = 150 and Fluoride advice children = 150. 150:150 simplifies to 1:1. Distractor 2:1 uses all No treatment need children compared with Fluoride advice children (300:150). Distractor 1:2 reverses that same wrong comparison. Distractor 5:2 uses Reception No treatment need to Reception Fluoride advice only (90:36).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median number of No treatment need outcomes per year group?",
+        correct: "78",
+        distractors: ["75", "90", "54"],
+        explanation:
+          "No treatment need values are 90, 84, 72 and 54. Ordered values are 54, 72, 84, 90, so the median is (72+84)/2 = 78. Distractor 75: gives the mean (300/4). Distractor 90: reads the highest value. Distractor 54: reads the lowest value.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "sleep-service-home-study-kits",
+    stimulus: [
+      "A sleep service recorded home sleep study kit outcomes by issue route during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Home Sleep Study Kit Outcomes by Issue Route",
+      headers: ["Issue route", "Returned usable", "Late return", "Lost or incomplete", "Total"],
+      rows: [
+        ["Posted", "72", "18", "10", "100"],
+        ["Collected from clinic", "60", "12", "8", "80"],
+        ["Courier", "54", "18", "8", "80"],
+        ["Ward issue", "42", "12", "6", "60"],
+        ["Total", "228", "60", "32", "320"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Courier kits were returned late?",
+        correct: "18",
+        distractors: ["54", "8", "80"],
+        explanation:
+          "Courier Late return kits = 18. Distractor 54: reads Courier Returned usable kits. Distractor 8: reads Courier Lost or incomplete kits. Distractor 80: reads the Courier row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all kits were Returned usable?",
+        correct: "71.3%",
+        distractors: ["18.8%", "10.0%", "75.0%"],
+        explanation:
+          "Returned usable kits = 228 and all kits = 320. 228/320 x 100 = 71.3%. Distractor 18.8%: uses Late return kits (60/320 x 100). Distractor 10.0%: uses Lost or incomplete kits (32/320 x 100). Distractor 75.0%: uses Collected from clinic Returned usable as a percentage of Collected from clinic total (60/80 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Late return kits to Lost or incomplete kits?",
+        correct: "15:8",
+        distractors: ["8:15", "57:8", "9:5"],
+        explanation:
+          "Late return kits = 60 and Lost or incomplete kits = 32. 60:32 simplifies to 15:8. Distractor 8:15 reverses the ratio. Distractor 57:8 compares Returned usable with Lost or incomplete kits (228:32). Distractor 9:5 uses Posted Late return to Lost or incomplete kits (18:10).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of kits per issue route?",
+        correct: "80",
+        distractors: ["100", "60", "106.7"],
+        explanation:
+          "There were 320 kits across 4 issue routes. 320/4 = 80. Distractor 100: reads the Posted total. Distractor 60: reads the Ward issue total. Distractor 106.7: divides by the 3 outcome columns instead of 4 issue routes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "chemotherapy-pump-disconnection-visits",
+    stimulus: [
+      "An oncology outreach service recorded chemotherapy pump disconnection visits by day of week.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Chemotherapy Pump Disconnection Visits",
+      yLabel: "Visits",
+      categories: [
+        { label: "Mon", value: 30 },
+        { label: "Tue", value: 36 },
+        { label: "Wed", value: 42 },
+        { label: "Thu", value: 48 },
+        { label: "Fri", value: 54 },
+        { label: "Sat", value: 30 },
+      ],
+      max: 60,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many pump disconnection visits were recorded on Thursday?",
+        correct: "48",
+        distractors: ["42", "54", "240"],
+        explanation:
+          "Thursday pump disconnection visits = 48. Distractor 42: reads Wednesday. Distractor 54: reads Friday. Distractor 240: adds all six daily visit counts.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all visits took place on Saturday?",
+        correct: "12.5%",
+        distractors: ["15.0%", "17.5%", "22.5%"],
+        explanation:
+          "Saturday visits = 30 and total visits = 240. 30/240 x 100 = 12.5%. Distractor 15.0%: uses Tuesday visits (36/240 x 100). Distractor 17.5%: uses Wednesday visits (42/240 x 100). Distractor 22.5%: uses Friday visits (54/240 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of visits per weekday from Monday to Friday?",
+        correct: "42",
+        distractors: ["40", "54", "52.5"],
+        explanation:
+          "Monday to Friday visits = 30+36+42+48+54 = 210 across 5 weekdays. 210/5 = 42. Distractor 40: averages all six days (240/6). Distractor 54: reads Friday, the highest day. Distractor 52.5: divides the weekday total by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Tuesday plus Wednesday visits to Friday plus Saturday visits?",
+        correct: "13:14",
+        distractors: ["14:13", "7:9", "6:7"],
+        explanation:
+          "Tuesday plus Wednesday visits = 36+42 = 78 and Friday plus Saturday visits = 54+30 = 84. 78:84 simplifies to 13:14. Distractor 14:13 reverses the ratio. Distractor 7:9 compares Wednesday with Friday only (42:54). Distractor 6:7 compares Tuesday with Wednesday only (36:42).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinical-trials-consent-screening",
+    stimulus: [
+      "A clinical trials office recorded consent-screening outcomes by trial specialty during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Consent-screening Outcomes by Trial Specialty",
+      headers: ["Trial specialty", "Consent given", "Deferred decision", "Ineligible", "Total"],
+      rows: [
+        ["Oncology", "45", "15", "15", "75"],
+        ["Cardiology", "36", "18", "6", "60"],
+        ["Respiratory", "30", "12", "18", "60"],
+        ["Neurology", "24", "12", "9", "45"],
+        ["Total", "135", "57", "48", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Neurology patients were Ineligible?",
+        correct: "9",
+        distractors: ["24", "12", "45"],
+        explanation:
+          "Neurology Ineligible patients = 9. Distractor 24: reads Neurology Consent given patients. Distractor 12: reads Neurology Deferred decision patients. Distractor 45: reads the Neurology row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of screened patients gave consent?",
+        correct: "56.3%",
+        distractors: ["23.8%", "20.0%", "60.0%"],
+        explanation:
+          "Consent given patients = 135 and screened patients = 240. 135/240 x 100 = 56.3%. Distractor 23.8%: uses Deferred decision patients (57/240 x 100). Distractor 20.0%: uses Ineligible patients (48/240 x 100). Distractor 60.0%: uses Oncology Consent given as a percentage of Oncology total (45/75 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Deferred decision patients to Ineligible patients?",
+        correct: "19:16",
+        distractors: ["16:19", "45:16", "3:1"],
+        explanation:
+          "Deferred decision patients = 57 and Ineligible patients = 48. 57:48 simplifies to 19:16. Distractor 16:19 reverses the ratio. Distractor 45:16 compares Consent given with Ineligible patients (135:48). Distractor 3:1 uses Cardiology Deferred decision to Ineligible patients (18:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of screened patients per trial specialty?",
+        correct: "60",
+        distractors: ["75", "45", "80"],
+        explanation:
+          "There were 240 screened patients across 4 specialties. 240/4 = 60. Distractor 75: reads the Oncology total. Distractor 45: reads the Neurology total. Distractor 80: divides by the 3 outcome columns instead of 4 specialties.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiology-mri-contrast-screening",
+    stimulus: [
+      "A radiology department recorded MRI contrast safety-screening outcomes by booking source during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "MRI Contrast Safety-screening Outcomes",
+      yLabel: "Screenings",
+      seriesLabels: ["Cleared", "Renal check", "Allergy review"],
+      groups: [
+        { label: "Outpatient", values: [120, 18, 12] },
+        { label: "Inpatient", values: [72, 20, 8] },
+        { label: "ED", values: [54, 24, 12] },
+        { label: "Research", values: [36, 12, 12] },
+      ],
+      max: 130,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many ED bookings required Allergy review?",
+        correct: "12",
+        distractors: ["54", "24", "90"],
+        explanation:
+          "ED Allergy review bookings = 12. Distractor 54: reads ED Cleared bookings. Distractor 24: reads ED Renal check bookings. Distractor 90: adds all ED screening outcomes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What percentage of all MRI contrast screenings were Cleared?",
+        correct: "70.5%",
+        distractors: ["18.5%", "11.0%", "80.0%"],
+        explanation:
+          "Cleared screenings = 282 and all screenings = 400. 282/400 x 100 = 70.5%. Distractor 18.5%: uses Renal check screenings (74/400 x 100). Distractor 11.0%: uses Allergy review screenings (44/400 x 100). Distractor 80.0%: uses Outpatient Cleared as a percentage of Outpatient total (120/150 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Renal check screenings to Allergy review screenings?",
+        correct: "37:22",
+        distractors: ["22:37", "141:22", "2:1"],
+        explanation:
+          "Renal check screenings = 74 and Allergy review screenings = 44. 74:44 simplifies to 37:22. Distractor 22:37 reverses the ratio. Distractor 141:22 compares Cleared screenings with Allergy review screenings (282:44). Distractor 2:1 uses ED Renal check to Allergy review screenings (24:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of screenings per booking source?",
+        correct: "100",
+        distractors: ["150", "60", "133.3"],
+        explanation:
+          "There were 400 screenings across 4 booking sources. 400/4 = 100. Distractor 150: reads the Outpatient total. Distractor 60: reads the Research total. Distractor 133.3: divides by the 3 outcome categories instead of 4 booking sources.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dermatology-isotretinoin-monitoring-results",
+    stimulus: [
+      "A dermatology clinic recorded isotretinoin monitoring outcomes by appointment pathway during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Isotretinoin Monitoring Outcomes by Appointment Pathway",
+      headers: ["Appointment pathway", "Bloods normal", "Repeat bloods", "Dose held", "Total"],
+      rows: [
+        ["Acne follow-up", "72", "12", "6", "90"],
+        ["New starter", "48", "18", "6", "72"],
+        ["Dose change", "36", "18", "6", "60"],
+        ["Shared care", "54", "12", "12", "78"],
+        ["Total", "210", "60", "30", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Shared care appointments had the dose held?",
+        correct: "12",
+        distractors: ["54", "78", "30"],
+        explanation:
+          "Shared care Dose held appointments = 12. Distractor 54: reads Shared care Bloods normal appointments. Distractor 78: reads the Shared care row total. Distractor 30: reads the Dose held column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all monitoring outcomes had Bloods normal?",
+        correct: "70%",
+        distractors: ["20%", "10%", "80%"],
+        explanation:
+          "Bloods normal outcomes = 210 and all monitoring outcomes = 300. 210/300 x 100 = 70%. Distractor 20%: uses Repeat bloods outcomes (60/300 x 100). Distractor 10%: uses Dose held outcomes (30/300 x 100). Distractor 80%: uses Acne follow-up Bloods normal as a percentage of Acne follow-up total (72/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Repeat bloods outcomes to Dose held outcomes?",
+        correct: "2:1",
+        distractors: ["1:2", "7:1", "3:1"],
+        explanation:
+          "Repeat bloods outcomes = 60 and Dose held outcomes = 30. 60:30 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 7:1 compares Bloods normal outcomes with Dose held outcomes (210:30). Distractor 3:1 uses New starter Repeat bloods to Dose held outcomes (18:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of monitoring outcomes per appointment pathway?",
+        correct: "75",
+        distractors: ["90", "60", "100"],
+        explanation:
+          "There were 300 monitoring outcomes across 4 appointment pathways. 300/4 = 75. Distractor 90: reads the Acne follow-up total. Distractor 60: reads the Dose change total. Distractor 100: divides by the 3 outcome columns instead of 4 appointment pathways.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "hospital-at-home-iv-diuretic-visits",
+    stimulus: [
+      "A hospital-at-home team recorded IV diuretic visits completed each day over six consecutive service days.",
+    ],
+    visual: {
+      type: "line",
+      title: "IV Diuretic Visits Completed",
+      yLabel: "Visits",
+      points: [
+        { label: "Mon", value: 28 },
+        { label: "Tue", value: 35 },
+        { label: "Wed", value: 42 },
+        { label: "Thu", value: 49 },
+        { label: "Fri", value: 56 },
+        { label: "Sat", value: 70 },
+      ],
+      max: 80,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many IV diuretic visits were completed on Thursday?",
+        correct: "49",
+        distractors: ["42", "56", "280"],
+        explanation:
+          "Thursday IV diuretic visits = 49. Distractor 42: reads Wednesday. Distractor 56: reads Friday. Distractor 280: adds all six service-day visit counts.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "By what percentage did visits increase from Monday to Saturday?",
+        correct: "150%",
+        distractors: ["60%", "42 visits", "250%"],
+        explanation:
+          "Monday visits = 28 and Saturday visits = 70, so the increase is 42 visits. 42/28 x 100 = 150%. Distractor 60%: uses Saturday as the denominator (42/70 x 100). Distractor 42 visits: gives the absolute increase. Distractor 250%: gives Saturday visits as a percentage of Monday visits.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1, what was the mean number of visits per service day?",
+        correct: "46.7",
+        distractors: ["70.0", "28.0", "56.0"],
+        explanation:
+          "Total visits = 28+35+42+49+56+70 = 280 across 6 service days. 280/6 = 46.7. Distractor 70.0: reads Saturday, the highest day. Distractor 28.0: reads Monday, the lowest day. Distractor 56.0: divides by 5 instead of 6.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of visits in the first three days to visits in the last three days?",
+        correct: "3:5",
+        distractors: ["5:3", "2:5", "5:8"],
+        explanation:
+          "First three days = 28+35+42 = 105 and last three days = 49+56+70 = 175. 105:175 simplifies to 3:5. Distractor 5:3 reverses the ratio. Distractor 2:5 compares Monday with Saturday only (28:70). Distractor 5:8 compares Tuesday with Friday only (35:56).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neonatal-transport-incubator-checks",
+    stimulus: [
+      "A neonatal transport team recorded incubator safety-check outcomes by transport activity during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Incubator Safety-check Outcomes by Transport Activity",
+      yLabel: "Checks",
+      seriesLabels: ["Passed", "Minor issue", "Failed"],
+      groups: [
+        { label: "Referral", values: [40, 8, 2] },
+        { label: "Retrieval", values: [32, 12, 6] },
+        { label: "Return", values: [36, 10, 4] },
+        { label: "Maintenance", values: [24, 8, 8] },
+      ],
+      max: 45,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Retrieval checks had a Minor issue?",
+        correct: "12",
+        distractors: ["32", "6", "50"],
+        explanation:
+          "Retrieval Minor issue checks = 12. Distractor 32: reads Retrieval Passed checks. Distractor 6: reads Retrieval Failed checks. Distractor 50: adds all Retrieval checks.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of incubator checks Failed?",
+        correct: "10.5%",
+        distractors: ["69.5%", "20.0%", "16.0%"],
+        explanation:
+          "Failed checks = 20 and all incubator checks = 190. 20/190 x 100 = 10.5%. Distractor 69.5%: uses Passed checks (132/190 x 100). Distractor 20.0%: uses Minor issue checks (38/190 x 100). Distractor 16.0%: uses Maintenance Failed checks as a percentage of Referral total (8/50 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Passed checks to Minor issue checks?",
+        correct: "66:19",
+        distractors: ["19:66", "33:5", "5:1"],
+        explanation:
+          "Passed checks = 132 and Minor issue checks = 38. 132:38 simplifies to 66:19. Distractor 19:66 reverses the ratio. Distractor 33:5 compares Passed checks with Failed checks (132:20). Distractor 5:1 uses Referral Passed to Minor issue checks (40:8).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of checks per transport activity?",
+        correct: "47.5",
+        distractors: ["50", "40", "63.3"],
+        explanation:
+          "There were 190 checks across 4 transport activities. 190/4 = 47.5. Distractor 50: reads the Referral, Retrieval, or Return total. Distractor 40: reads the Maintenance total. Distractor 63.3: divides by the 3 outcome categories instead of 4 activities.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiotherapy-on-treatment-review-outcomes",
+    stimulus: [
+      "A radiotherapy department recorded on-treatment review outcomes by cancer site during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "On-treatment Review Outcomes by Cancer Site",
+      headers: ["Cancer site", "Routine advice", "Prescription change", "Doctor review", "Total"],
+      rows: [
+        ["Breast", "84", "12", "4", "100"],
+        ["Prostate", "72", "18", "10", "100"],
+        ["Head and neck", "48", "24", "18", "90"],
+        ["Lung", "36", "18", "6", "60"],
+        ["Total", "240", "72", "38", "350"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Head and neck reviews required Doctor review?",
+        correct: "18",
+        distractors: ["48", "24", "90"],
+        explanation:
+          "Head and neck Doctor review outcomes = 18. Distractor 48: reads Head and neck Routine advice outcomes. Distractor 24: reads Head and neck Prescription change outcomes. Distractor 90: reads the Head and neck row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of on-treatment reviews resulted in Routine advice?",
+        correct: "68.6%",
+        distractors: ["20.6%", "10.9%", "84.0%"],
+        explanation:
+          "Routine advice outcomes = 240 and all on-treatment reviews = 350. 240/350 x 100 = 68.6%. Distractor 20.6%: uses Prescription change outcomes (72/350 x 100). Distractor 10.9%: uses Doctor review outcomes (38/350 x 100). Distractor 84.0%: uses Breast Routine advice as a percentage of Breast total (84/100 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Prescription change outcomes to Doctor review outcomes?",
+        correct: "36:19",
+        distractors: ["19:36", "120:19", "4:3"],
+        explanation:
+          "Prescription change outcomes = 72 and Doctor review outcomes = 38. 72:38 simplifies to 36:19. Distractor 19:36 reverses the ratio. Distractor 120:19 compares Routine advice with Doctor review outcomes (240:38). Distractor 4:3 uses Head and neck Prescription change to Doctor review outcomes (24:18).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of reviews per cancer site?",
+        correct: "87.5",
+        distractors: ["100", "60", "116.7"],
+        explanation:
+          "There were 350 reviews across 4 cancer sites. 350/4 = 87.5. Distractor 100: reads the Breast or Prostate total. Distractor 60: reads the Lung total. Distractor 116.7: divides by the 3 outcome columns instead of 4 cancer sites.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "vascular-leg-ulcer-compression-banding",
+    stimulus: [
+      "A vascular wound service recorded compression bandaging plans by review setting during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Compression Bandaging Plans by Review Setting",
+      headers: ["Review setting", "Full compression", "Reduced compression", "No compression", "Total"],
+      rows: [
+        ["Community clinic", "64", "16", "20", "100"],
+        ["Home visit", "48", "24", "18", "90"],
+        ["Nursing home", "36", "12", "12", "60"],
+        ["Doppler review", "42", "18", "10", "70"],
+        ["Total", "190", "70", "60", "320"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Nursing home reviews resulted in No compression?",
+        correct: "12",
+        distractors: ["36", "60", "70"],
+        explanation:
+          "Nursing home No compression reviews = 12. Distractor 36: reads Nursing home Full compression reviews. Distractor 60: reads the Nursing home row total. Distractor 70: reads the Reduced compression column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all reviews resulted in Full compression?",
+        correct: "59.4%",
+        distractors: ["21.9%", "18.8%", "64.0%"],
+        explanation:
+          "Full compression reviews = 190 and all reviews = 320. 190/320 x 100 = 59.4%. Distractor 21.9%: uses Reduced compression reviews (70/320 x 100). Distractor 18.8%: uses No compression reviews (60/320 x 100). Distractor 64.0%: uses Community clinic Full compression as a percentage of Community clinic total (64/100 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Reduced compression reviews to No compression reviews?",
+        correct: "7:6",
+        distractors: ["6:7", "19:6", "4:5"],
+        explanation:
+          "Reduced compression reviews = 70 and No compression reviews = 60. 70:60 simplifies to 7:6. Distractor 6:7 reverses the ratio. Distractor 19:6 compares Full compression with No compression reviews (190:60). Distractor 4:5 uses Community clinic Reduced compression to No compression reviews (16:20).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of reviews per setting?",
+        correct: "80",
+        distractors: ["90", "70", "106.7"],
+        explanation:
+          "Setting totals are 100, 90, 60 and 70. Ordered totals are 60, 70, 90, 100, so the median is (70+90)/2 = 80. Distractor 90: reads the Home visit total. Distractor 70: reads the Doppler review total. Distractor 106.7: divides by the 3 plan columns instead of finding the median.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neurology-ms-relapse-advice-calls",
+    stimulus: [
+      "A neurology advice line recorded multiple sclerosis relapse call outcomes during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "MS Relapse Advice Call Outcomes",
+      yLabel: "Calls",
+      categories: [
+        { label: "Steroid started", value: 66 },
+        { label: "Safety net advice", value: 54 },
+        { label: "MRI requested", value: 36 },
+        { label: "Clinic expedited", value: 24 },
+        { label: "No relapse", value: 30 },
+      ],
+      max: 75,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many calls resulted in MRI requested?",
+        correct: "36",
+        distractors: ["54", "24", "210"],
+        explanation:
+          "MRI requested calls = 36. Distractor 54: reads Safety net advice calls. Distractor 24: reads Clinic expedited calls. Distractor 210: adds all call outcomes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of calls resulted in Steroid started?",
+        correct: "31.4%",
+        distractors: ["25.7%", "17.1%", "57.1%"],
+        explanation:
+          "Steroid started calls = 66 and all calls = 210. 66/210 x 100 = 31.4%. Distractor 25.7%: uses Safety net advice calls (54/210 x 100). Distractor 17.1%: uses MRI requested calls (36/210 x 100). Distractor 57.1%: uses Steroid started calls as a percentage of Steroid started plus Safety net advice calls (66/120 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of calls per outcome category?",
+        correct: "42",
+        distractors: ["66", "30", "52.5"],
+        explanation:
+          "Total calls = 210 across 5 outcome categories. 210/5 = 42. Distractor 66: reads Steroid started calls. Distractor 30: reads No relapse calls. Distractor 52.5: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Steroid started plus Safety net advice calls to all other outcomes combined?",
+        correct: "4:3",
+        distractors: ["3:4", "11:9", "3:2"],
+        explanation:
+          "Steroid started plus Safety net advice calls = 66+54 = 120. All other outcomes = 36+24+30 = 90. 120:90 simplifies to 4:3. Distractor 3:4 reverses the ratio. Distractor 11:9 compares Steroid started with Safety net advice calls (66:54). Distractor 3:2 compares MRI requested with Clinic expedited calls (36:24).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-clozapine-blood-monitoring",
+    stimulus: [
+      "A mental health pharmacy service recorded clozapine blood monitoring outcomes by clinic route during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Clozapine Blood Monitoring Outcomes by Route",
+      headers: ["Clinic route", "Green result", "Amber repeat", "Red alert", "Total"],
+      rows: [
+        ["City clinic", "90", "12", "3", "105"],
+        ["Community depot", "72", "18", "0", "90"],
+        ["Home phlebotomy", "54", "12", "6", "72"],
+        ["Secure unit", "60", "18", "15", "93"],
+        ["Total", "276", "60", "24", "360"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Secure unit results were Red alert?",
+        correct: "15",
+        distractors: ["60", "18", "93"],
+        explanation:
+          "Secure unit Red alert results = 15. Distractor 60: reads Secure unit Green result. Distractor 18: reads Secure unit Amber repeat. Distractor 93: reads the Secure unit total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all blood monitoring outcomes were Green result?",
+        correct: "76.7%",
+        distractors: ["16.7%", "6.7%", "85.7%"],
+        explanation:
+          "Green result outcomes = 276 and all outcomes = 360. 276/360 x 100 = 76.7%. Distractor 16.7%: uses Amber repeat outcomes (60/360 x 100). Distractor 6.7%: uses Red alert outcomes (24/360 x 100). Distractor 85.7%: uses City clinic Green result as a percentage of City clinic total (90/105 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Amber repeat outcomes to Red alert outcomes?",
+        correct: "5:2",
+        distractors: ["2:5", "23:2", "4:1"],
+        explanation:
+          "Amber repeat outcomes = 60 and Red alert outcomes = 24. 60:24 simplifies to 5:2. Distractor 2:5 reverses the ratio. Distractor 23:2 compares Green result outcomes with Red alert outcomes (276:24). Distractor 4:1 uses City clinic Amber repeat to Red alert outcomes (12:3).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of blood monitoring outcomes per clinic route?",
+        correct: "90",
+        distractors: ["105", "72", "120"],
+        explanation:
+          "There were 360 blood monitoring outcomes across 4 clinic routes. 360/4 = 90. Distractor 105: reads the City clinic total. Distractor 72: reads the Home phlebotomy total. Distractor 120: divides by the 3 outcome columns instead of 4 clinic routes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-safeguarding-medical-exam-outcomes",
+    stimulus: [
+      "A paediatric safeguarding team recorded medical examination outcomes by referral source during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Safeguarding Medical Examination Outcomes",
+      headers: ["Referral source", "Completed", "Deferred", "Not indicated", "Total"],
+      rows: [
+        ["Police", "42", "12", "6", "60"],
+        ["Social care", "36", "18", "6", "60"],
+        ["School nurse", "24", "12", "12", "48"],
+        ["ED", "30", "6", "6", "42"],
+        ["Total", "132", "48", "30", "210"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many School nurse referrals were Not indicated?",
+        correct: "12",
+        distractors: ["24", "48", "30"],
+        explanation:
+          "School nurse Not indicated referrals = 12. Distractor 24: reads School nurse Completed referrals. Distractor 48: reads the School nurse row total. Distractor 30: reads the Not indicated column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of referrals had examinations Completed?",
+        correct: "62.9%",
+        distractors: ["22.9%", "14.3%", "70.0%"],
+        explanation:
+          "Completed referrals = 132 and all referrals = 210. 132/210 x 100 = 62.9%. Distractor 22.9%: uses Deferred referrals (48/210 x 100). Distractor 14.3%: uses Not indicated referrals (30/210 x 100). Distractor 70.0%: uses Police Completed referrals as a percentage of Police total (42/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Deferred referrals to Not indicated referrals?",
+        correct: "8:5",
+        distractors: ["5:8", "22:5", "2:1"],
+        explanation:
+          "Deferred referrals = 48 and Not indicated referrals = 30. 48:30 simplifies to 8:5. Distractor 5:8 reverses the ratio. Distractor 22:5 compares Completed referrals with Not indicated referrals (132:30). Distractor 2:1 uses Police Deferred to Not indicated referrals (12:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of referrals per source?",
+        correct: "52.5",
+        distractors: ["60", "42", "70"],
+        explanation:
+          "There were 210 referrals across 4 sources. 210/4 = 52.5. Distractor 60: reads Police or Social care totals. Distractor 42: reads the ED total. Distractor 70: divides by the 3 outcome columns instead of 4 sources.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "audiology-paediatric-earmould-orders",
+    stimulus: [
+      "A paediatric audiology service recorded earmould order outcomes by patient group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Paediatric Earmould Order Outcomes",
+      headers: ["Patient group", "New mould made", "Remake required", "Order cancelled", "Total"],
+      rows: [
+        ["Infant", "44", "12", "4", "60"],
+        ["Primary age", "66", "18", "6", "90"],
+        ["Secondary age", "48", "24", "8", "80"],
+        ["Complex needs", "42", "18", "10", "70"],
+        ["Total", "200", "72", "28", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Complex needs earmould orders were cancelled?",
+        correct: "10",
+        distractors: ["42", "18", "70"],
+        explanation:
+          "Complex needs Order cancelled = 10. Distractor 42: reads Complex needs New mould made. Distractor 18: reads Complex needs Remake required. Distractor 70: reads the Complex needs row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all earmould orders had a new mould made?",
+        correct: "66.7%",
+        distractors: ["24.0%", "9.3%", "73.3%"],
+        explanation:
+          "New mould made orders = 200 and all orders = 300. 200/300 x 100 = 66.7%. Distractor 24.0%: uses Remake required orders (72/300 x 100). Distractor 9.3%: uses Order cancelled orders (28/300 x 100). Distractor 73.3%: uses Infant New mould made as a percentage of Infant total (44/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Remake required orders to Order cancelled orders?",
+        correct: "18:7",
+        distractors: ["7:18", "50:7", "3:1"],
+        explanation:
+          "Remake required orders = 72 and Order cancelled orders = 28. 72:28 simplifies to 18:7. Distractor 7:18 reverses the ratio. Distractor 50:7 compares New mould made with Order cancelled orders (200:28). Distractor 3:1 uses Primary age Remake required to Order cancelled orders (18:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of earmould orders per patient group?",
+        correct: "75",
+        distractors: ["90", "60", "100"],
+        explanation:
+          "There were 300 earmould orders across 4 patient groups. 300/4 = 75. Distractor 90: reads the Primary age total. Distractor 60: reads the Infant total. Distractor 100: divides by the 3 outcome columns instead of 4 patient groups.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renal-anaemia-iron-infusion-attendance",
+    stimulus: [
+      "A renal anaemia service recorded iron infusion appointment outcomes by patient pathway during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Iron Infusion Appointment Outcomes",
+      yLabel: "Appointments",
+      seriesLabels: ["Attended", "Cancelled", "Rescheduled"],
+      groups: [
+        { label: "Haemodialysis", values: [54, 12, 6] },
+        { label: "CKD clinic", values: [42, 18, 12] },
+        { label: "Home therapies", values: [30, 12, 6] },
+        { label: "Transplant", values: [36, 6, 6] },
+      ],
+      max: 60,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many CKD clinic iron infusion appointments were Rescheduled?",
+        correct: "12",
+        distractors: ["42", "18", "72"],
+        explanation:
+          "CKD clinic Rescheduled appointments = 12. Distractor 42: reads CKD clinic Attended appointments. Distractor 18: reads CKD clinic Cancelled appointments. Distractor 72: adds all CKD clinic appointment outcomes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What percentage of all iron infusion appointments were Attended?",
+        correct: "67.5%",
+        distractors: ["20.0%", "12.5%", "75.0%"],
+        explanation:
+          "Attended appointments = 162 and all appointments = 240. 162/240 x 100 = 67.5%. Distractor 20.0%: uses Cancelled appointments (48/240 x 100). Distractor 12.5%: uses Rescheduled appointments (30/240 x 100). Distractor 75.0%: uses Haemodialysis Attended as a percentage of Haemodialysis total (54/72 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Cancelled appointments to Rescheduled appointments?",
+        correct: "8:5",
+        distractors: ["5:8", "27:5", "3:2"],
+        explanation:
+          "Cancelled appointments = 48 and Rescheduled appointments = 30. 48:30 simplifies to 8:5. Distractor 5:8 reverses the ratio. Distractor 27:5 compares Attended with Rescheduled appointments (162:30). Distractor 3:2 uses CKD clinic Cancelled to Rescheduled appointments (18:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of appointment outcomes per patient pathway?",
+        correct: "60",
+        distractors: ["72", "48", "80"],
+        explanation:
+          "There were 240 appointment outcomes across 4 patient pathways. 240/4 = 60. Distractor 72: reads the Haemodialysis or CKD clinic total. Distractor 48: reads the Home therapies or Transplant total. Distractor 80: divides by the 3 outcome columns instead of 4 pathways.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "theatre-robotic-case-turnaround-times",
+    stimulus: [
+      "A theatre team recorded median robotic case turnaround times for six operating days.",
+    ],
+    visual: {
+      type: "line",
+      title: "Median Robotic Case Turnaround Time",
+      yLabel: "Minutes",
+      points: [
+        { label: "Mon", value: 58 },
+        { label: "Tue", value: 52 },
+        { label: "Wed", value: 49 },
+        { label: "Thu", value: 45 },
+        { label: "Fri", value: 42 },
+        { label: "Sat", value: 39 },
+      ],
+      max: 65,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What was the median robotic case turnaround time on Wednesday?",
+        correct: "49 minutes",
+        distractors: ["52 minutes", "45 minutes", "285 minutes"],
+        explanation:
+          "Wednesday turnaround time = 49 minutes. Distractor 52 minutes: reads Tuesday. Distractor 45 minutes: reads Thursday. Distractor 285 minutes: adds all six operating-day values.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, by what percentage did turnaround time decrease from Monday to Saturday?",
+        correct: "32.8%",
+        distractors: ["48.7%", "19 minutes", "67.2%"],
+        explanation:
+          "Monday = 58 minutes and Saturday = 39 minutes, so the decrease is 19 minutes. 19/58 x 100 = 32.8%. Distractor 48.7%: uses Saturday as the denominator (19/39 x 100). Distractor 19 minutes: gives the absolute decrease. Distractor 67.2%: gives Saturday as a percentage of Monday.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean median turnaround time across the six operating days?",
+        correct: "47.5 minutes",
+        distractors: ["58 minutes", "39 minutes", "57 minutes"],
+        explanation:
+          "Total turnaround values = 58+52+49+45+42+39 = 285 minutes across 6 days. 285/6 = 47.5 minutes. Distractor 58 minutes: reads Monday, the highest value. Distractor 39 minutes: reads Saturday, the lowest value. Distractor 57 minutes: divides by 5 instead of 6.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Monday plus Tuesday turnaround minutes to Friday plus Saturday turnaround minutes?",
+        correct: "110:81",
+        distractors: ["81:110", "29:21", "52:39"],
+        explanation:
+          "Monday plus Tuesday = 58+52 = 110 minutes and Friday plus Saturday = 42+39 = 81 minutes. The ratio is 110:81. Distractor 81:110 reverses the ratio. Distractor 29:21 compares Monday with Friday (58:42). Distractor 52:39 compares Tuesday with Saturday only.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "infection-control-cdiff-sample-results",
+    stimulus: [
+      "An infection control team recorded C. difficile sample result categories by clinical area during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "C. difficile Sample Result Categories",
+      headers: ["Clinical area", "Negative", "Positive", "Rejected", "Total"],
+      rows: [
+        ["Medicine", "36", "12", "12", "60"],
+        ["Surgery", "42", "6", "12", "60"],
+        ["Care of elderly", "30", "18", "12", "60"],
+        ["ICU", "18", "12", "10", "40"],
+        ["Total", "126", "48", "46", "220"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many ICU samples were Rejected?",
+        correct: "10",
+        distractors: ["18", "12", "40"],
+        explanation:
+          "ICU Rejected samples = 10. Distractor 18: reads ICU Negative samples. Distractor 12: reads ICU Positive samples. Distractor 40: reads the ICU row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all C. difficile samples were Positive?",
+        correct: "21.8%",
+        distractors: ["57.3%", "20.9%", "30.0%"],
+        explanation:
+          "Positive samples = 48 and all samples = 220. 48/220 x 100 = 21.8%. Distractor 57.3%: uses Negative samples (126/220 x 100). Distractor 20.9%: uses Rejected samples (46/220 x 100). Distractor 30.0%: uses Care of elderly Positive samples as a percentage of Care of elderly total (18/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Negative samples to Positive samples?",
+        correct: "21:8",
+        distractors: ["8:21", "63:23", "3:1"],
+        explanation:
+          "Negative samples = 126 and Positive samples = 48. 126:48 simplifies to 21:8. Distractor 8:21 reverses the ratio. Distractor 63:23 compares Negative samples with Rejected samples (126:46). Distractor 3:1 uses Medicine Negative to Positive samples (36:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of Rejected samples per clinical area?",
+        correct: "11.5",
+        distractors: ["12", "10", "15.3"],
+        explanation:
+          "Rejected samples = 46 across 4 clinical areas. 46/4 = 11.5. Distractor 12: reads one of the Medicine, Surgery, or Care of elderly rejected counts. Distractor 10: reads ICU rejected samples. Distractor 15.3: divides by the 3 result categories instead of 4 clinical areas.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cardiac-imaging-ctca-referral-outcomes",
+    stimulus: [
+      "A cardiac imaging service recorded CT coronary angiography referral outcomes by referral source during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "CTCA Referral Outcomes by Source",
+      headers: ["Referral source", "Accepted", "Renal check", "Alternative test", "Total"],
+      rows: [
+        ["Chest pain clinic", "72", "18", "10", "100"],
+        ["GP direct", "48", "24", "8", "80"],
+        ["ED follow-up", "36", "18", "6", "60"],
+        ["Cardiology ward", "30", "20", "10", "60"],
+        ["Total", "186", "80", "34", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Cardiology ward referrals were sent for an Alternative test?",
+        correct: "10",
+        distractors: ["30", "20", "60"],
+        explanation:
+          "Cardiology ward Alternative test referrals = 10. Distractor 30: reads Cardiology ward Accepted referrals. Distractor 20: reads Cardiology ward Renal check referrals. Distractor 60: reads the Cardiology ward row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all CTCA referrals were Accepted?",
+        correct: "62%",
+        distractors: ["26.7%", "11.3%", "72%"],
+        explanation:
+          "Accepted referrals = 186 and all CTCA referrals = 300. 186/300 x 100 = 62%. Distractor 26.7%: uses Renal check referrals (80/300 x 100). Distractor 11.3%: uses Alternative test referrals (34/300 x 100). Distractor 72%: uses Chest pain clinic Accepted referrals as a percentage of Chest pain clinic total (72/100 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Renal check referrals to Alternative test referrals?",
+        correct: "40:17",
+        distractors: ["17:40", "93:17", "3:1"],
+        explanation:
+          "Renal check referrals = 80 and Alternative test referrals = 34. 80:34 simplifies to 40:17. Distractor 17:40 reverses the ratio. Distractor 93:17 compares Accepted referrals with Alternative test referrals (186:34). Distractor 3:1 uses ED follow-up Renal check to Alternative test referrals (18:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of CTCA referrals per source?",
+        correct: "75",
+        distractors: ["100", "60", "80"],
+        explanation:
+          "There were 300 CTCA referrals across 4 sources. 300/4 = 75. Distractor 100: reads the Chest pain clinic total. Distractor 60: reads the ED follow-up or Cardiology ward total. Distractor 80: reads the GP direct total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-stroke-review-goal-progress",
+    stimulus: [
+      "A community stroke team recorded rehabilitation goal progress by therapy domain during one quarter.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Stroke Rehabilitation Goal Progress",
+      yLabel: "Goals",
+      seriesLabels: ["Achieved", "Partial progress", "Not met"],
+      groups: [
+        { label: "Mobility", values: [44, 20, 8] },
+        { label: "Communication", values: [30, 24, 6] },
+        { label: "Self-care", values: [36, 18, 6] },
+        { label: "Cognition", values: [24, 18, 6] },
+      ],
+      max: 50,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Communication goals showed Partial progress?",
+        correct: "24",
+        distractors: ["30", "6", "60"],
+        explanation:
+          "Communication Partial progress goals = 24. Distractor 30: reads Communication Achieved goals. Distractor 6: reads Communication Not met goals. Distractor 60: adds all Communication goals.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of rehabilitation goals were Achieved?",
+        correct: "55.8%",
+        distractors: ["33.3%", "10.8%", "61.1%"],
+        explanation:
+          "Achieved goals = 134 and all rehabilitation goals = 240. 134/240 x 100 = 55.8%. Distractor 33.3%: uses Partial progress goals (80/240 x 100). Distractor 10.8%: uses Not met goals (26/240 x 100). Distractor 61.1%: uses Mobility Achieved goals as a percentage of Mobility total (44/72 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Partial progress goals to Not met goals?",
+        correct: "40:13",
+        distractors: ["13:40", "67:13", "4:1"],
+        explanation:
+          "Partial progress goals = 80 and Not met goals = 26. 80:26 simplifies to 40:13. Distractor 13:40 reverses the ratio. Distractor 67:13 compares Achieved goals with Not met goals (134:26). Distractor 4:1 uses Communication Partial progress to Not met goals (24:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of rehabilitation goals per therapy domain?",
+        correct: "60",
+        distractors: ["72", "48", "80"],
+        explanation:
+          "There were 240 rehabilitation goals across 4 therapy domains. 240/4 = 60. Distractor 72: reads the Mobility total. Distractor 48: reads the Cognition total. Distractor 80: divides by the 3 progress categories instead of 4 domains.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-medicines-info-enquiries",
+    stimulus: [
+      "A pharmacy medicines information team recorded enquiry categories during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Medicines Information Enquiry Categories",
+      yLabel: "Enquiries",
+      categories: [
+        { label: "Drug interaction", value: 64 },
+        { label: "Renal dosing", value: 48 },
+        { label: "Pregnancy", value: 32 },
+        { label: "Supply issue", value: 56 },
+        { label: "Side effect", value: 40 },
+      ],
+      max: 70,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Pregnancy enquiries were recorded?",
+        correct: "32",
+        distractors: ["48", "56", "240"],
+        explanation:
+          "Pregnancy enquiries = 32. Distractor 48: reads Renal dosing enquiries. Distractor 56: reads Supply issue enquiries. Distractor 240: adds all enquiry categories.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of enquiries were Supply issue enquiries?",
+        correct: "23.3%",
+        distractors: ["26.7%", "20.0%", "13.3%"],
+        explanation:
+          "Supply issue enquiries = 56 and all enquiries = 240. 56/240 x 100 = 23.3%. Distractor 26.7%: uses Drug interaction enquiries (64/240 x 100). Distractor 20.0%: uses Renal dosing enquiries (48/240 x 100). Distractor 13.3%: uses Pregnancy enquiries (32/240 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of enquiries per category?",
+        correct: "48",
+        distractors: ["64", "40", "60"],
+        explanation:
+          "Total enquiries = 240 across 5 categories. 240/5 = 48. Distractor 64: reads Drug interaction enquiries. Distractor 40: reads Side effect enquiries. Distractor 60: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Drug interaction plus Renal dosing enquiries to all other enquiry categories combined?",
+        correct: "7:8",
+        distractors: ["8:7", "4:3", "7:5"],
+        explanation:
+          "Drug interaction plus Renal dosing enquiries = 64+48 = 112. Other categories = 32+56+40 = 128. 112:128 simplifies to 7:8. Distractor 8:7 reverses the ratio. Distractor 4:3 compares Drug interaction with Renal dosing only (64:48). Distractor 7:5 compares Supply issue with Side effect enquiries only (56:40).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "endoscopy-polyp-surveillance-recalls",
+    stimulus: [
+      "An endoscopy service recorded polyp surveillance recall outcomes by risk group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Polyp Surveillance Recall Outcomes by Risk Group",
+      headers: ["Risk group", "Recall scheduled", "Discharged", "Overdue", "Total"],
+      rows: [
+        ["Low risk", "54", "18", "8", "80"],
+        ["Intermediate risk", "60", "20", "10", "90"],
+        ["High risk", "48", "12", "10", "70"],
+        ["IBD surveillance", "36", "18", "6", "60"],
+        ["Total", "198", "68", "34", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many High risk patients were Overdue?",
+        correct: "10",
+        distractors: ["48", "12", "70"],
+        explanation:
+          "High risk Overdue patients = 10. Distractor 48: reads High risk Recall scheduled patients. Distractor 12: reads High risk Discharged patients. Distractor 70: reads the High risk row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all surveillance recall outcomes were Recall scheduled?",
+        correct: "66%",
+        distractors: ["22.7%", "11.3%", "75%"],
+        explanation:
+          "Recall scheduled outcomes = 198 and all outcomes = 300. 198/300 x 100 = 66%. Distractor 22.7%: uses Discharged outcomes (68/300 x 100). Distractor 11.3%: uses Overdue outcomes (34/300 x 100). Distractor 75%: uses Low risk Recall scheduled as a percentage of Low risk minus Overdue outcomes (54/72 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Discharged outcomes to Overdue outcomes?",
+        correct: "2:1",
+        distractors: ["1:2", "99:17", "3:1"],
+        explanation:
+          "Discharged outcomes = 68 and Overdue outcomes = 34. 68:34 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 99:17 compares Recall scheduled with Overdue outcomes (198:34). Distractor 3:1 uses IBD surveillance Discharged to Overdue outcomes (18:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of outcomes per risk group?",
+        correct: "75",
+        distractors: ["90", "60", "100"],
+        explanation:
+          "Risk-group totals are 80, 90, 70 and 60. Ordered totals are 60, 70, 80, 90, so the median is (70+80)/2 = 75. Distractor 90: reads the Intermediate risk total. Distractor 60: reads the IBD surveillance total. Distractor 100: divides the grand total by 3 outcome columns.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "burns-scar-pressure-garment-fitting",
+    stimulus: [
+      "A burns therapy service recorded pressure garment fitting outcomes by treatment area during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Pressure Garment Fitting Outcomes by Treatment Area",
+      headers: ["Treatment area", "Fitted", "Alteration needed", "Awaiting remake", "Total"],
+      rows: [
+        ["Hand or arm", "48", "12", "0", "60"],
+        ["Trunk", "36", "18", "6", "60"],
+        ["Face or neck", "30", "10", "10", "50"],
+        ["Lower limb", "54", "18", "8", "80"],
+        ["Total", "168", "58", "24", "250"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Lower limb pressure garments were awaiting remake?",
+        correct: "8",
+        distractors: ["54", "18", "80"],
+        explanation:
+          "Lower limb Awaiting remake garments = 8. Distractor 54: reads Lower limb Fitted garments. Distractor 18: reads Lower limb Alteration needed garments. Distractor 80: reads the Lower limb row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of pressure garment outcomes were Fitted?",
+        correct: "67.2%",
+        distractors: ["23.2%", "9.6%", "80.0%"],
+        explanation:
+          "Fitted outcomes = 168 and all outcomes = 250. 168/250 x 100 = 67.2%. Distractor 23.2%: uses Alteration needed outcomes (58/250 x 100). Distractor 9.6%: uses Awaiting remake outcomes (24/250 x 100). Distractor 80.0%: uses Hand or arm Fitted as a percentage of Hand or arm total (48/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Alteration needed outcomes to Awaiting remake outcomes?",
+        correct: "29:12",
+        distractors: ["12:29", "7:1", "3:1"],
+        explanation:
+          "Alteration needed outcomes = 58 and Awaiting remake outcomes = 24. 58:24 simplifies to 29:12. Distractor 12:29 reverses the ratio. Distractor 7:1 compares Fitted outcomes with Awaiting remake outcomes (168:24). Distractor 3:1 uses Trunk Alteration needed to Awaiting remake outcomes (18:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of pressure garment outcomes per treatment area?",
+        correct: "62.5",
+        distractors: ["80", "50", "83.3"],
+        explanation:
+          "There were 250 outcomes across 4 treatment areas. 250/4 = 62.5. Distractor 80: reads the Lower limb total. Distractor 50: reads the Face or neck total. Distractor 83.3: divides by the 3 outcome columns instead of 4 treatment areas.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "respiratory-pleural-aspiration-results",
+    stimulus: [
+      "A respiratory pleural service recorded aspiration procedure outcomes by suspected cause during one quarter.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Pleural Aspiration Outcomes by Suspected Cause",
+      yLabel: "Procedures",
+      seriesLabels: ["Successful", "Repeat planned", "Escalated drain"],
+      groups: [
+        { label: "Malignancy", values: [36, 10, 4] },
+        { label: "Infection", values: [24, 18, 8] },
+        { label: "Heart failure", values: [30, 10, 0] },
+        { label: "Other", values: [20, 8, 2] },
+      ],
+      max: 40,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Infection procedures were Escalated drain outcomes?",
+        correct: "8",
+        distractors: ["24", "18", "50"],
+        explanation:
+          "Infection Escalated drain procedures = 8. Distractor 24: reads Infection Successful procedures. Distractor 18: reads Infection Repeat planned procedures. Distractor 50: adds all Infection procedure outcomes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all procedures were Escalated drain outcomes?",
+        correct: "8.2%",
+        distractors: ["64.7%", "27.1%", "16.0%"],
+        explanation:
+          "Escalated drain outcomes = 14 and all procedures = 170. 14/170 x 100 = 8.2%. Distractor 64.7%: uses Successful procedures (110/170 x 100). Distractor 27.1%: uses Repeat planned procedures (46/170 x 100). Distractor 16.0%: uses Infection Escalated drain outcomes as a percentage of Infection total (8/50 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Repeat planned procedures to Escalated drain procedures?",
+        correct: "23:7",
+        distractors: ["7:23", "55:7", "9:4"],
+        explanation:
+          "Repeat planned procedures = 46 and Escalated drain procedures = 14. 46:14 simplifies to 23:7. Distractor 7:23 reverses the ratio. Distractor 55:7 compares Successful procedures with Escalated drain procedures (110:14). Distractor 9:4 uses Infection Repeat planned to Escalated drain procedures (18:8).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of procedures per suspected cause?",
+        correct: "42.5",
+        distractors: ["50", "30", "56.7"],
+        explanation:
+          "There were 170 procedures across 4 suspected causes. 170/4 = 42.5. Distractor 50: reads the Malignancy or Infection total. Distractor 30: reads the Other total. Distractor 56.7: divides by the 3 outcome categories instead of 4 suspected causes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "maternity-infant-feeding-support-calls",
+    stimulus: [
+      "A maternity infant-feeding team recorded support calls completed across six consecutive days.",
+    ],
+    visual: {
+      type: "line",
+      title: "Infant-feeding Support Calls Completed",
+      yLabel: "Calls",
+      points: [
+        { label: "Mon", value: 42 },
+        { label: "Tue", value: 48 },
+        { label: "Wed", value: 54 },
+        { label: "Thu", value: 60 },
+        { label: "Fri", value: 66 },
+        { label: "Sat", value: 90 },
+      ],
+      max: 100,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many support calls were completed on Friday?",
+        correct: "66",
+        distractors: ["60", "90", "360"],
+        explanation:
+          "Friday support calls = 66. Distractor 60: reads Thursday. Distractor 90: reads Saturday. Distractor 360: adds all six daily call counts.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, by what percentage did support calls increase from Monday to Saturday?",
+        correct: "114.3%",
+        distractors: ["53.3%", "48 calls", "214.3%"],
+        explanation:
+          "Monday calls = 42 and Saturday calls = 90, so the increase is 48 calls. 48/42 x 100 = 114.3%. Distractor 53.3%: uses Saturday as the denominator (48/90 x 100). Distractor 48 calls: gives the absolute increase. Distractor 214.3%: gives Saturday calls as a percentage of Monday calls.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of support calls completed per day?",
+        correct: "60",
+        distractors: ["90", "42", "72"],
+        explanation:
+          "Total support calls = 42+48+54+60+66+90 = 360 across 6 days. 360/6 = 60. Distractor 90: reads Saturday, the highest day. Distractor 42: reads Monday, the lowest day. Distractor 72: divides by 5 instead of 6.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of calls in the first three days to calls in the last three days?",
+        correct: "2:3",
+        distractors: ["3:2", "7:15", "8:11"],
+        explanation:
+          "First three days = 42+48+54 = 144 and last three days = 60+66+90 = 216. 144:216 simplifies to 2:3. Distractor 3:2 reverses the ratio. Distractor 7:15 compares Monday with Saturday (42:90). Distractor 8:11 compares Tuesday with Friday (48:66).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "orthopaedic-prehab-class-attendance",
+    stimulus: [
+      "An orthopaedic prehabilitation service recorded class attendances by surgery pathway during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Prehabilitation Class Attendances by Surgery Pathway",
+      yLabel: "Attendances",
+      categories: [
+        { label: "Knee", value: 84 },
+        { label: "Hip", value: 72 },
+        { label: "Shoulder", value: 48 },
+        { label: "Spine", value: 36 },
+        { label: "Ankle", value: 60 },
+      ],
+      max: 90,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Shoulder pathway attendances were recorded?",
+        correct: "48",
+        distractors: ["72", "36", "300"],
+        explanation:
+          "Shoulder pathway attendances = 48. Distractor 72: reads Hip attendances. Distractor 36: reads Spine attendances. Distractor 300: adds all surgery pathway attendances.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all prehabilitation attendances were Hip pathway attendances?",
+        correct: "24%",
+        distractors: ["28%", "20%", "16%"],
+        explanation:
+          "Hip attendances = 72 and all attendances = 300. 72/300 x 100 = 24%. Distractor 28%: uses Knee attendances (84/300 x 100). Distractor 20%: uses Ankle attendances (60/300 x 100). Distractor 16%: uses Shoulder attendances (48/300 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of attendances per surgery pathway?",
+        correct: "60",
+        distractors: ["84", "36", "75"],
+        explanation:
+          "Total attendances = 300 across 5 surgery pathways. 300/5 = 60. Distractor 84: reads Knee attendances. Distractor 36: reads Spine attendances. Distractor 75: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Knee plus Hip attendances to all other pathway attendances combined?",
+        correct: "13:12",
+        distractors: ["12:13", "7:6", "7:5"],
+        explanation:
+          "Knee plus Hip attendances = 84+72 = 156. Other pathways = 48+36+60 = 144. 156:144 simplifies to 13:12. Distractor 12:13 reverses the ratio. Distractor 7:6 compares Knee with Hip only (84:72). Distractor 7:5 compares Shoulder plus Spine with Ankle (84:60).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ophthalmology-glaucoma-drop-adherence",
+    stimulus: [
+      "An ophthalmology glaucoma service recorded eye-drop adherence review outcomes by review route during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Glaucoma Eye-drop Adherence Review Outcomes",
+      headers: ["Review route", "Stable adherence", "Missed doses", "Side effects", "Total"],
+      rows: [
+        ["Clinic review", "72", "18", "10", "100"],
+        ["Phone review", "54", "18", "8", "80"],
+        ["New diagnosis", "36", "24", "10", "70"],
+        ["Shared care", "48", "12", "10", "70"],
+        ["Total", "210", "72", "38", "320"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many New diagnosis reviews recorded Side effects?",
+        correct: "10",
+        distractors: ["36", "24", "70"],
+        explanation:
+          "New diagnosis Side effects reviews = 10. Distractor 36: reads New diagnosis Stable adherence reviews. Distractor 24: reads New diagnosis Missed doses reviews. Distractor 70: reads the New diagnosis row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all reviews recorded Stable adherence?",
+        correct: "65.6%",
+        distractors: ["22.5%", "11.9%", "72.0%"],
+        explanation:
+          "Stable adherence reviews = 210 and all reviews = 320. 210/320 x 100 = 65.6%. Distractor 22.5%: uses Missed doses reviews (72/320 x 100). Distractor 11.9%: uses Side effects reviews (38/320 x 100). Distractor 72.0%: uses Clinic review Stable adherence as a percentage of Clinic review total (72/100 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Missed doses reviews to Side effects reviews?",
+        correct: "36:19",
+        distractors: ["19:36", "105:19", "9:5"],
+        explanation:
+          "Missed doses reviews = 72 and Side effects reviews = 38. 72:38 simplifies to 36:19. Distractor 19:36 reverses the ratio. Distractor 105:19 compares Stable adherence with Side effects reviews (210:38). Distractor 9:5 uses Clinic review Missed doses to Side effects reviews (18:10).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of reviews per route?",
+        correct: "75",
+        distractors: ["80", "70", "106.7"],
+        explanation:
+          "Review-route totals are 100, 80, 70 and 70. Ordered totals are 70, 70, 80, 100, so the median is (70+80)/2 = 75. Distractor 80: reads the Phone review total. Distractor 70: reads New diagnosis or Shared care total. Distractor 106.7: divides by the 3 outcome columns instead of finding the median.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinical-engineering-defibrillator-checks",
+    stimulus: [
+      "A clinical engineering team recorded defibrillator safety-check outcomes by location during one audit week.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Defibrillator Safety-check Outcomes by Location",
+      yLabel: "Checks",
+      seriesLabels: ["Passed", "Battery change", "Removed"],
+      groups: [
+        { label: "ED", values: [32, 6, 2] },
+        { label: "Theatres", values: [28, 10, 2] },
+        { label: "Ward", values: [48, 10, 2] },
+        { label: "Community", values: [30, 6, 4] },
+      ],
+      max: 55,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Community defibrillator checks resulted in Removed?",
+        correct: "4",
+        distractors: ["30", "6", "40"],
+        explanation:
+          "Community Removed checks = 4. Distractor 30: reads Community Passed checks. Distractor 6: reads Community Battery change checks. Distractor 40: adds all Community checks.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of defibrillator checks Passed?",
+        correct: "76.7%",
+        distractors: ["17.8%", "5.6%", "80.0%"],
+        explanation:
+          "Passed checks = 138 and all checks = 180. 138/180 x 100 = 76.7%. Distractor 17.8%: uses Battery change checks (32/180 x 100). Distractor 5.6%: uses Removed checks (10/180 x 100). Distractor 80.0%: uses ED Passed checks as a percentage of ED total (32/40 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Battery change checks to Removed checks?",
+        correct: "16:5",
+        distractors: ["5:16", "69:5", "5:1"],
+        explanation:
+          "Battery change checks = 32 and Removed checks = 10. 32:10 simplifies to 16:5. Distractor 5:16 reverses the ratio. Distractor 69:5 compares Passed checks with Removed checks (138:10). Distractor 5:1 uses Theatres Battery change to Removed checks (10:2).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of defibrillator checks per location?",
+        correct: "45",
+        distractors: ["60", "40", "32"],
+        explanation:
+          "There were 180 defibrillator checks across 4 locations. 180/4 = 45. Distractor 60: reads the Ward total. Distractor 40: reads the ED, Theatres, or Community total. Distractor 32: reads the Battery change total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dietitian-oncology-nutrition-screening",
+    stimulus: [
+      "An oncology dietitian team recorded nutrition screening outcomes by tumour group during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Oncology Nutrition Screening Outcomes",
+      headers: ["Tumour group", "Good intake", "Supplement started", "Urgent dietitian", "Total"],
+      rows: [
+        ["Gastrointestinal", "24", "36", "20", "80"],
+        ["Lung", "30", "24", "6", "60"],
+        ["Head and neck", "18", "30", "12", "60"],
+        ["Haematology", "36", "18", "6", "60"],
+        ["Total", "108", "108", "44", "260"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Gastrointestinal patients needed an Urgent dietitian review?",
+        correct: "20",
+        distractors: ["24", "36", "80"],
+        explanation:
+          "Gastrointestinal Urgent dietitian patients = 20. Distractor 24: reads Gastrointestinal Good intake patients. Distractor 36: reads Gastrointestinal Supplement started patients. Distractor 80: reads the Gastrointestinal row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of screening outcomes were Supplement started?",
+        correct: "41.5%",
+        distractors: ["16.9%", "45.0%", "50.0%"],
+        explanation:
+          "Supplement started outcomes = 108 and all screening outcomes = 260. 108/260 x 100 = 41.5%. Distractor 16.9%: uses Urgent dietitian outcomes (44/260 x 100). Distractor 45.0%: uses Gastrointestinal Supplement started as a percentage of Gastrointestinal total (36/80 x 100). Distractor 50.0%: uses Head and neck Supplement started as a percentage of Head and neck total (30/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Good intake outcomes to Supplement started outcomes?",
+        correct: "1:1",
+        distractors: ["3:4", "5:4", "2:1"],
+        explanation:
+          "Good intake outcomes = 108 and Supplement started outcomes = 108. 108:108 simplifies to 1:1. Distractor 3:4 uses Gastrointestinal Good intake to Supplement started outcomes (24:36). Distractor 5:4 uses Lung Good intake to Supplement started outcomes (30:24). Distractor 2:1 uses Haematology Good intake to Supplement started outcomes (36:18).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of screening outcomes per tumour group?",
+        correct: "65",
+        distractors: ["80", "60", "86.7"],
+        explanation:
+          "There were 260 screening outcomes across 4 tumour groups. 260/4 = 65. Distractor 80: reads the Gastrointestinal total. Distractor 60: reads several tumour-group totals. Distractor 86.7: divides by the 3 outcome columns instead of 4 tumour groups.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "urology-prostate-biopsy-prep-calls",
+    stimulus: [
+      "A urology service recorded prostate biopsy preparation calls completed each weekday.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Prostate Biopsy Preparation Calls by Weekday",
+      yLabel: "Calls",
+      categories: [
+        { label: "Mon", value: 36 },
+        { label: "Tue", value: 45 },
+        { label: "Wed", value: 54 },
+        { label: "Thu", value: 63 },
+        { label: "Fri", value: 72 },
+      ],
+      max: 80,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many prostate biopsy preparation calls were completed on Thursday?",
+        correct: "63",
+        distractors: ["54", "72", "270"],
+        explanation:
+          "Thursday preparation calls = 63. Distractor 54: reads Wednesday. Distractor 72: reads Friday. Distractor 270: adds all weekday calls.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of calls were completed on Friday?",
+        correct: "26.7%",
+        distractors: ["20.0%", "23.3%", "16.7%"],
+        explanation:
+          "Friday calls = 72 and all calls = 270. 72/270 x 100 = 26.7%. Distractor 20.0%: uses Wednesday calls (54/270 x 100). Distractor 23.3%: uses Thursday calls (63/270 x 100). Distractor 16.7%: uses Tuesday calls (45/270 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of calls completed per weekday?",
+        correct: "54",
+        distractors: ["72", "36", "67.5"],
+        explanation:
+          "Total calls = 36+45+54+63+72 = 270 across 5 weekdays. 270/5 = 54. Distractor 72: reads Friday, the highest day. Distractor 36: reads Monday, the lowest day. Distractor 67.5: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Monday plus Tuesday calls to Thursday plus Friday calls?",
+        correct: "3:5",
+        distractors: ["5:3", "1:2", "5:7"],
+        explanation:
+          "Monday plus Tuesday calls = 36+45 = 81 and Thursday plus Friday calls = 63+72 = 135. 81:135 simplifies to 3:5. Distractor 5:3 reverses the ratio. Distractor 1:2 compares Monday with Friday only (36:72). Distractor 5:7 compares Tuesday with Thursday only (45:63).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "allergy-immunotherapy-vial-checks",
+    stimulus: [
+      "An allergy service recorded immunotherapy vial stock-check outcomes by allergen group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Immunotherapy Vial Stock-check Outcomes",
+      headers: ["Allergen group", "In date", "Expired", "Replacement ordered", "Total"],
+      rows: [
+        ["Pollen", "48", "12", "0", "60"],
+        ["Venom", "36", "18", "6", "60"],
+        ["House dust mite", "42", "12", "6", "60"],
+        ["Animal dander", "30", "12", "18", "60"],
+        ["Total", "156", "54", "30", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Animal dander vials had a Replacement ordered?",
+        correct: "18",
+        distractors: ["30", "12", "60"],
+        explanation:
+          "Animal dander Replacement ordered vials = 18. Distractor 30: reads Animal dander In date vials. Distractor 12: reads Animal dander Expired vials. Distractor 60: reads the Animal dander row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all immunotherapy vials were In date?",
+        correct: "65%",
+        distractors: ["22.5%", "12.5%", "80%"],
+        explanation:
+          "In date vials = 156 and all vials = 240. 156/240 x 100 = 65%. Distractor 22.5%: uses Expired vials (54/240 x 100). Distractor 12.5%: uses Replacement ordered vials (30/240 x 100). Distractor 80%: uses Pollen In date as a percentage of Pollen total (48/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Expired vials to Replacement ordered vials?",
+        correct: "9:5",
+        distractors: ["5:9", "26:5", "3:1"],
+        explanation:
+          "Expired vials = 54 and Replacement ordered vials = 30. 54:30 simplifies to 9:5. Distractor 5:9 reverses the ratio. Distractor 26:5 compares In date vials with Replacement ordered vials (156:30). Distractor 3:1 uses Venom Expired to Replacement ordered vials (18:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of vials checked per allergen group?",
+        correct: "60",
+        distractors: ["80", "54", "30"],
+        explanation:
+          "There were 240 vials checked across 4 allergen groups. 240/4 = 60. Distractor 80: divides by the 3 outcome columns instead of 4 allergen groups. Distractor 54: reads the Expired column total. Distractor 30: reads the Replacement ordered column total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "perioperative-diabetes-insulin-plans",
+    stimulus: [
+      "A perioperative diabetes team recorded insulin plan outcomes by procedure pathway during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Perioperative Insulin Plan Outcomes",
+      headers: ["Procedure pathway", "Usual plan", "VRIII plan", "Endocrine review", "Total"],
+      rows: [
+        ["Day surgery", "72", "18", "10", "100"],
+        ["Major elective", "48", "24", "8", "80"],
+        ["Emergency", "36", "18", "6", "60"],
+        ["Endoscopy", "54", "12", "4", "70"],
+        ["Total", "210", "72", "28", "310"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Emergency patients had a VRIII plan?",
+        correct: "18",
+        distractors: ["36", "6", "60"],
+        explanation:
+          "Emergency VRIII plan patients = 18. Distractor 36: reads Emergency Usual plan patients. Distractor 6: reads Emergency Endocrine review patients. Distractor 60: reads the Emergency row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of perioperative diabetes plans were Usual plan?",
+        correct: "67.7%",
+        distractors: ["23.2%", "9.0%", "72.0%"],
+        explanation:
+          "Usual plan outcomes = 210 and all outcomes = 310. 210/310 x 100 = 67.7%. Distractor 23.2%: uses VRIII plan outcomes (72/310 x 100). Distractor 9.0%: uses Endocrine review outcomes (28/310 x 100). Distractor 72.0%: uses Day surgery Usual plan as a percentage of Day surgery total (72/100 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of VRIII plan outcomes to Endocrine review outcomes?",
+        correct: "18:7",
+        distractors: ["7:18", "15:2", "3:1"],
+        explanation:
+          "VRIII plan outcomes = 72 and Endocrine review outcomes = 28. 72:28 simplifies to 18:7. Distractor 7:18 reverses the ratio. Distractor 15:2 compares Usual plan outcomes with Endocrine review outcomes (210:28). Distractor 3:1 uses Emergency VRIII plan to Endocrine review outcomes (18:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of insulin plan outcomes per procedure pathway?",
+        correct: "75",
+        distractors: ["80", "60", "103.3"],
+        explanation:
+          "Pathway totals are 100, 80, 60 and 70. Ordered totals are 60, 70, 80, 100, so the median is (70+80)/2 = 75. Distractor 80: reads the Major elective total. Distractor 60: reads the Emergency total. Distractor 103.3: divides the grand total by the 3 outcome columns.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiology-paediatric-sedation-recovery",
+    stimulus: [
+      "A paediatric radiology unit recorded median sedation recovery times over six scanning days.",
+    ],
+    visual: {
+      type: "line",
+      title: "Median Paediatric Sedation Recovery Time",
+      yLabel: "Minutes",
+      points: [
+        { label: "Mon", value: 18 },
+        { label: "Tue", value: 24 },
+        { label: "Wed", value: 30 },
+        { label: "Thu", value: 36 },
+        { label: "Fri", value: 42 },
+        { label: "Sat", value: 30 },
+      ],
+      max: 50,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What was the median sedation recovery time on Thursday?",
+        correct: "36 minutes",
+        distractors: ["30 minutes", "42 minutes", "180 minutes"],
+        explanation:
+          "Thursday median recovery time = 36 minutes. Distractor 30 minutes: reads Wednesday or Saturday. Distractor 42 minutes: reads Friday. Distractor 180 minutes: adds all six daily recovery times.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of the total recorded recovery-time minutes came from Friday?",
+        correct: "23.3%",
+        distractors: ["20.0%", "16.7%", "13.3%"],
+        explanation:
+          "Friday recovery time = 42 minutes and total recovery-time minutes = 180. 42/180 x 100 = 23.3%. Distractor 20.0%: uses Thursday recovery time (36/180 x 100). Distractor 16.7%: uses Wednesday or Saturday recovery time (30/180 x 100). Distractor 13.3%: uses Tuesday recovery time (24/180 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean median recovery time across the six scanning days?",
+        correct: "30 minutes",
+        distractors: ["42 minutes", "18 minutes", "36 minutes"],
+        explanation:
+          "Total recovery-time minutes = 18+24+30+36+42+30 = 180 across 6 days. 180/6 = 30 minutes. Distractor 42 minutes: reads Friday, the highest value. Distractor 18 minutes: reads Monday, the lowest value. Distractor 36 minutes: divides by 5 instead of 6.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of recovery-time minutes in the first three days to the last three days?",
+        correct: "2:3",
+        distractors: ["3:2", "3:5", "5:7"],
+        explanation:
+          "First three days = 18+24+30 = 72 minutes and last three days = 36+42+30 = 108 minutes. 72:108 simplifies to 2:3. Distractor 3:2 reverses the ratio. Distractor 3:5 compares Monday with Saturday only (18:30). Distractor 5:7 compares Wednesday with Friday only (30:42).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-cardiology-bp-monitor-downloads",
+    stimulus: [
+      "A community cardiology service recorded ambulatory blood pressure monitor download outcomes by return route during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Ambulatory BP Monitor Download Outcomes",
+      yLabel: "Monitors",
+      seriesLabels: ["Complete download", "Repeat needed", "Unusable data"],
+      groups: [
+        { label: "Home loan", values: [64, 12, 4] },
+        { label: "Clinic return", values: [54, 18, 8] },
+        { label: "Postal return", values: [42, 24, 14] },
+        { label: "Care home", values: [30, 16, 14] },
+      ],
+      max: 70,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Postal return monitors needed a repeat?",
+        correct: "24",
+        distractors: ["42", "14", "80"],
+        explanation:
+          "Postal return Repeat needed monitors = 24. Distractor 42: reads Postal return Complete download monitors. Distractor 14: reads Postal return Unusable data monitors. Distractor 80: adds all Postal return outcomes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all monitors had Complete download?",
+        correct: "63.3%",
+        distractors: ["23.3%", "13.3%", "80.0%"],
+        explanation:
+          "Complete download monitors = 190 and all monitors = 300. 190/300 x 100 = 63.3%. Distractor 23.3%: uses Repeat needed monitors (70/300 x 100). Distractor 13.3%: uses Unusable data monitors (40/300 x 100). Distractor 80.0%: uses Home loan Complete download as a percentage of Home loan total (64/80 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Repeat needed monitors to Unusable data monitors?",
+        correct: "7:4",
+        distractors: ["4:7", "19:4", "12:7"],
+        explanation:
+          "Repeat needed monitors = 70 and Unusable data monitors = 40. 70:40 simplifies to 7:4. Distractor 4:7 reverses the ratio. Distractor 19:4 compares Complete download with Unusable data monitors (190:40). Distractor 12:7 uses Postal return Repeat needed to Unusable data monitors (24:14).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of monitor outcomes per return route?",
+        correct: "75",
+        distractors: ["80", "60", "100"],
+        explanation:
+          "There were 300 monitor outcomes across 4 return routes. 300/4 = 75. Distractor 80: reads several return-route totals. Distractor 60: reads the Care home total. Distractor 100: divides by the 3 outcome categories instead of 4 routes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neonatal-bilirubin-followup-checks",
+    stimulus: [
+      "A neonatal jaundice clinic recorded bilirubin follow-up checks completed by postnatal day.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Bilirubin Follow-up Checks by Postnatal Day",
+      yLabel: "Checks",
+      categories: [
+        { label: "Day 1", value: 36 },
+        { label: "Day 2", value: 54 },
+        { label: "Day 3", value: 72 },
+        { label: "Day 4", value: 48 },
+        { label: "Day 5", value: 30 },
+      ],
+      max: 80,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many bilirubin follow-up checks were completed on Day 3?",
+        correct: "72",
+        distractors: ["54", "48", "240"],
+        explanation:
+          "Day 3 bilirubin follow-up checks = 72. Distractor 54: reads Day 2. Distractor 48: reads Day 4. Distractor 240: adds all five postnatal-day values.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all bilirubin checks were completed on Day 2?",
+        correct: "22.5%",
+        distractors: ["30.0%", "20.0%", "12.5%"],
+        explanation:
+          "Day 2 checks = 54 and all checks = 240. 54/240 x 100 = 22.5%. Distractor 30.0%: uses Day 3 checks (72/240 x 100). Distractor 20.0%: uses Day 4 checks (48/240 x 100). Distractor 12.5%: uses Day 5 checks (30/240 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of bilirubin checks per postnatal day?",
+        correct: "48",
+        distractors: ["72", "36", "60"],
+        explanation:
+          "Total bilirubin checks = 240 across 5 postnatal days. 240/5 = 48. Distractor 72: reads Day 3, the highest value. Distractor 36: reads Day 1. Distractor 60: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of checks on Days 1 and 2 combined to checks on Days 4 and 5 combined?",
+        correct: "15:13",
+        distractors: ["13:15", "3:4", "8:5"],
+        explanation:
+          "Days 1 and 2 combined = 36+54 = 90 checks. Days 4 and 5 combined = 48+30 = 78 checks. 90:78 simplifies to 15:13. Distractor 13:15 reverses the ratio. Distractor 3:4 compares Day 1 with Day 4 only (36:48). Distractor 8:5 compares Day 4 with Day 5 only (48:30).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "tissue-viability-negative-pressure-dressings",
+    stimulus: [
+      "A tissue viability service recorded negative pressure dressing review outcomes by wound type during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Negative Pressure Dressing Review Outcomes",
+      headers: ["Wound type", "Seal maintained", "Leak alarm", "Canister issue", "Total"],
+      rows: [
+        ["Surgical wound", "60", "18", "12", "90"],
+        ["Diabetic foot", "42", "24", "14", "80"],
+        ["Trauma", "36", "18", "6", "60"],
+        ["Pressure ulcer", "30", "18", "12", "60"],
+        ["Total", "168", "78", "44", "290"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Diabetic foot reviews recorded a Leak alarm?",
+        correct: "24",
+        distractors: ["42", "14", "80"],
+        explanation:
+          "Diabetic foot Leak alarm reviews = 24. Distractor 42: reads Diabetic foot Seal maintained reviews. Distractor 14: reads Diabetic foot Canister issue reviews. Distractor 80: reads the Diabetic foot row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of dressing reviews had Seal maintained?",
+        correct: "57.9%",
+        distractors: ["26.9%", "15.2%", "66.7%"],
+        explanation:
+          "Seal maintained reviews = 168 and all dressing reviews = 290. 168/290 x 100 = 57.9%. Distractor 26.9%: uses Leak alarm reviews (78/290 x 100). Distractor 15.2%: uses Canister issue reviews (44/290 x 100). Distractor 66.7%: uses Surgical wound Seal maintained as a percentage of Surgical wound total (60/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Leak alarm reviews to Canister issue reviews?",
+        correct: "39:22",
+        distractors: ["22:39", "42:11", "12:7"],
+        explanation:
+          "Leak alarm reviews = 78 and Canister issue reviews = 44. 78:44 simplifies to 39:22. Distractor 22:39 reverses the ratio. Distractor 42:11 compares Seal maintained with Canister issue reviews (168:44). Distractor 12:7 uses Diabetic foot Leak alarm to Canister issue reviews (24:14).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of dressing reviews per wound type?",
+        correct: "72.5",
+        distractors: ["90", "60", "96.7"],
+        explanation:
+          "There were 290 dressing reviews across 4 wound types. 290/4 = 72.5. Distractor 90: reads the Surgical wound total. Distractor 60: reads Trauma or Pressure ulcer totals. Distractor 96.7: divides by the 3 outcome columns instead of 4 wound types.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ambulatory-care-dvt-ultrasound-pathway",
+    stimulus: [
+      "An ambulatory care unit recorded DVT ultrasound pathway outcomes by risk group during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "DVT Ultrasound Pathway Outcomes by Risk Group",
+      headers: ["Risk group", "Negative scan", "Repeat scan", "Positive scan", "Total"],
+      rows: [
+        ["Low risk", "72", "18", "10", "100"],
+        ["Moderate risk", "54", "24", "12", "90"],
+        ["High risk", "36", "18", "6", "60"],
+        ["Pregnancy", "30", "12", "8", "50"],
+        ["Total", "192", "72", "36", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Pregnancy patients had a Positive scan?",
+        correct: "8",
+        distractors: ["30", "12", "50"],
+        explanation:
+          "Pregnancy Positive scan patients = 8. Distractor 30: reads Pregnancy Negative scan patients. Distractor 12: reads Pregnancy Repeat scan patients. Distractor 50: reads the Pregnancy row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all DVT ultrasound pathway outcomes were Negative scan?",
+        correct: "64%",
+        distractors: ["24%", "12%", "72%"],
+        explanation:
+          "Negative scan outcomes = 192 and all outcomes = 300. 192/300 x 100 = 64%. Distractor 24%: uses Repeat scan outcomes (72/300 x 100). Distractor 12%: uses Positive scan outcomes (36/300 x 100). Distractor 72%: uses Low risk Negative scan as a percentage of Low risk total (72/100 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Repeat scan outcomes to Positive scan outcomes?",
+        correct: "2:1",
+        distractors: ["1:2", "16:3", "3:1"],
+        explanation:
+          "Repeat scan outcomes = 72 and Positive scan outcomes = 36. 72:36 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 16:3 compares Negative scan with Positive scan outcomes (192:36). Distractor 3:1 uses High risk Repeat scan to Positive scan outcomes (18:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of pathway outcomes per risk group?",
+        correct: "75",
+        distractors: ["100", "50", "80"],
+        explanation:
+          "Risk-group totals are 100, 90, 60 and 50. Ordered totals are 50, 60, 90, 100, so the median is (60+90)/2 = 75. Distractor 100: reads the Low risk total. Distractor 50: reads the Pregnancy total. Distractor 80: reads the wrong average from excluding Pregnancy (240/3).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "haematology-transfusion-reaction-workup",
+    stimulus: [
+      "A haematology transfusion team recorded reaction workup outcomes by suspected reaction type during one quarter.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Transfusion Reaction Workup Outcomes",
+      yLabel: "Workups",
+      seriesLabels: ["Completed", "Repeat screen", "Referred specialist"],
+      groups: [
+        { label: "Febrile", values: [28, 12, 0] },
+        { label: "Allergic", values: [30, 8, 2] },
+        { label: "Haemolysis query", values: [18, 14, 8] },
+        { label: "TACO query", values: [24, 10, 6] },
+      ],
+      max: 35,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Haemolysis query workups were Referred specialist?",
+        correct: "8",
+        distractors: ["18", "14", "40"],
+        explanation:
+          "Haemolysis query Referred specialist workups = 8. Distractor 18: reads Haemolysis query Completed workups. Distractor 14: reads Haemolysis query Repeat screen workups. Distractor 40: adds all Haemolysis query workups.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all reaction workups were Completed?",
+        correct: "62.5%",
+        distractors: ["27.5%", "10.0%", "75.0%"],
+        explanation:
+          "Completed workups = 100 and all reaction workups = 160. 100/160 x 100 = 62.5%. Distractor 27.5%: uses Repeat screen workups (44/160 x 100). Distractor 10.0%: uses Referred specialist workups (16/160 x 100). Distractor 75.0%: uses Allergic Completed workups as a percentage of Allergic total (30/40 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Repeat screen workups to Referred specialist workups?",
+        correct: "11:4",
+        distractors: ["4:11", "25:4", "7:4"],
+        explanation:
+          "Repeat screen workups = 44 and Referred specialist workups = 16. 44:16 simplifies to 11:4. Distractor 4:11 reverses the ratio. Distractor 25:4 compares Completed workups with Referred specialist workups (100:16). Distractor 7:4 uses Haemolysis query Repeat screen to Referred specialist workups (14:8).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of reaction workups per suspected reaction type?",
+        correct: "40",
+        distractors: ["53.3", "30", "44"],
+        explanation:
+          "There were 160 reaction workups across 4 suspected reaction types. 160/4 = 40. Distractor 53.3: divides by the 3 outcome categories instead of 4 reaction types. Distractor 30: reads the Allergic Completed workups. Distractor 44: reads the Repeat screen total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "orthoptics-squint-clinic-outcomes",
+    stimulus: [
+      "An orthoptics service recorded squint clinic outcomes by referral type during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Squint Clinic Outcomes by Referral Type",
+      headers: ["Referral type", "Discharged", "Glasses adjusted", "Surgery referral", "Total"],
+      rows: [
+        ["Amblyopia", "36", "18", "6", "60"],
+        ["Squint review", "30", "24", "6", "60"],
+        ["Double vision", "24", "18", "18", "60"],
+        ["Post-op", "42", "12", "6", "60"],
+        ["Total", "132", "72", "36", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Double vision patients were referred for surgery?",
+        correct: "18",
+        distractors: ["24", "60", "36"],
+        explanation:
+          "Double vision Surgery referral patients = 18. Distractor 24: reads Double vision Discharged patients. Distractor 60: reads the Double vision row total. Distractor 36: reads the Surgery referral column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all squint clinic outcomes were Discharged?",
+        correct: "55%",
+        distractors: ["30%", "15%", "60%"],
+        explanation:
+          "Discharged outcomes = 132 and all outcomes = 240. 132/240 x 100 = 55%. Distractor 30%: uses Glasses adjusted outcomes (72/240 x 100). Distractor 15%: uses Surgery referral outcomes (36/240 x 100). Distractor 60%: uses Amblyopia Discharged as a percentage of Amblyopia total (36/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Glasses adjusted outcomes to Surgery referral outcomes?",
+        correct: "2:1",
+        distractors: ["1:2", "11:3", "4:1"],
+        explanation:
+          "Glasses adjusted outcomes = 72 and Surgery referral outcomes = 36. 72:36 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 11:3 compares Discharged outcomes with Surgery referral outcomes (132:36). Distractor 4:1 uses Squint review Glasses adjusted to Surgery referral outcomes (24:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of clinic outcomes per referral type?",
+        correct: "60",
+        distractors: ["80", "72", "36"],
+        explanation:
+          "There were 240 clinic outcomes across 4 referral types. 240/4 = 60. Distractor 80: divides by the 3 outcome columns instead of 4 referral types. Distractor 72: reads the Glasses adjusted column total. Distractor 36: reads the Surgery referral column total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renal-vascular-access-surveillance-scans",
+    stimulus: [
+      "A renal vascular access team recorded access surveillance scans completed across six clinic weeks.",
+    ],
+    visual: {
+      type: "line",
+      title: "Access Surveillance Scans Completed",
+      yLabel: "Scans",
+      points: [
+        { label: "Week 1", value: 32 },
+        { label: "Week 2", value: 40 },
+        { label: "Week 3", value: 48 },
+        { label: "Week 4", value: 56 },
+        { label: "Week 5", value: 64 },
+        { label: "Week 6", value: 80 },
+      ],
+      max: 90,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many surveillance scans were completed in Week 5?",
+        correct: "64",
+        distractors: ["56", "80", "320"],
+        explanation:
+          "Week 5 surveillance scans = 64. Distractor 56: reads Week 4. Distractor 80: reads Week 6. Distractor 320: adds all six weekly scan values.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all scans were completed in Week 6?",
+        correct: "25%",
+        distractors: ["10%", "20%", "15%"],
+        explanation:
+          "Week 6 scans = 80 and total scans = 320. 80/320 x 100 = 25%. Distractor 10%: uses Week 1 scans (32/320 x 100). Distractor 20%: uses Week 5 scans (64/320 x 100). Distractor 15%: uses Week 3 scans (48/320 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1, what was the mean number of scans completed per week?",
+        correct: "53.3",
+        distractors: ["64.0", "80.0", "40.0"],
+        explanation:
+          "Total scans = 32+40+48+56+64+80 = 320 across 6 weeks. 320/6 = 53.3. Distractor 64.0: reads Week 5. Distractor 80.0: reads Week 6. Distractor 40.0: reads Week 2.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of scans in Weeks 1-3 to scans in Weeks 4-6?",
+        correct: "3:5",
+        distractors: ["5:3", "2:5", "4:5"],
+        explanation:
+          "Weeks 1-3 scans = 32+40+48 = 120 and Weeks 4-6 scans = 56+64+80 = 200. 120:200 simplifies to 3:5. Distractor 5:3 reverses the ratio. Distractor 2:5 compares Week 1 with Week 6 only (32:80). Distractor 4:5 compares Week 2 with Week 3 only (40:48).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-tpn-additive-checks",
+    stimulus: [
+      "A pharmacy aseptic unit recorded TPN additive check outcomes by additive type during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "TPN Additive Check Outcomes",
+      headers: ["Additive type", "Accepted", "Corrected", "Rejected", "Total"],
+      rows: [
+        ["Electrolyte", "72", "18", "10", "100"],
+        ["Trace element", "54", "18", "8", "80"],
+        ["Vitamin", "42", "12", "6", "60"],
+        ["Insulin", "30", "20", "10", "60"],
+        ["Total", "198", "68", "34", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Insulin additive checks were Corrected?",
+        correct: "20",
+        distractors: ["30", "10", "60"],
+        explanation:
+          "Insulin Corrected checks = 20. Distractor 30: reads Insulin Accepted checks. Distractor 10: reads Insulin Rejected checks. Distractor 60: reads the Insulin row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all TPN additive checks were Accepted?",
+        correct: "66%",
+        distractors: ["22.7%", "11.3%", "72%"],
+        explanation:
+          "Accepted checks = 198 and all checks = 300. 198/300 x 100 = 66%. Distractor 22.7%: uses Corrected checks (68/300 x 100). Distractor 11.3%: uses Rejected checks (34/300 x 100). Distractor 72%: uses Electrolyte Accepted as a percentage of Electrolyte total (72/100 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Corrected checks to Rejected checks?",
+        correct: "2:1",
+        distractors: ["1:2", "99:17", "9:5"],
+        explanation:
+          "Corrected checks = 68 and Rejected checks = 34. 68:34 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 99:17 compares Accepted with Rejected checks (198:34). Distractor 9:5 uses Electrolyte Corrected to Rejected checks (18:10).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of checks per additive type?",
+        correct: "70",
+        distractors: ["75", "100", "60"],
+        explanation:
+          "Additive totals are 100, 80, 60 and 60. Ordered totals are 60, 60, 80, 100, so the median is (60+80)/2 = 70. Distractor 75: gives the mean total per additive type (300/4). Distractor 100: reads the Electrolyte total. Distractor 60: reads the Vitamin or Insulin total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "breast-oncology-lymphoedema-sleeve-reviews",
+    stimulus: [
+      "A breast oncology lymphoedema service recorded compression sleeve review outcomes by review route during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Compression Sleeve Review Outcomes",
+      headers: ["Review route", "Sleeve fits", "Resize ordered", "New prescription", "Total"],
+      rows: [
+        ["Post-surgery", "48", "18", "14", "80"],
+        ["Radiotherapy follow-up", "54", "12", "14", "80"],
+        ["Late effects", "36", "24", "10", "70"],
+        ["Complex lymphoedema", "30", "18", "12", "60"],
+        ["Total", "168", "72", "50", "290"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Late effects reviews led to a New prescription?",
+        correct: "10",
+        distractors: ["36", "24", "70"],
+        explanation:
+          "Late effects New prescription reviews = 10. Distractor 36: reads Late effects Sleeve fits reviews. Distractor 24: reads Late effects Resize ordered reviews. Distractor 70: reads the Late effects row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of sleeve review outcomes were Sleeve fits?",
+        correct: "57.9%",
+        distractors: ["24.8%", "17.2%", "60.0%"],
+        explanation:
+          "Sleeve fits outcomes = 168 and all sleeve review outcomes = 290. 168/290 x 100 = 57.9%. Distractor 24.8%: uses Resize ordered outcomes (72/290 x 100). Distractor 17.2%: uses New prescription outcomes (50/290 x 100). Distractor 60.0%: uses Post-surgery Sleeve fits as a percentage of Post-surgery total (48/80 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Resize ordered outcomes to New prescription outcomes?",
+        correct: "36:25",
+        distractors: ["25:36", "84:25", "12:5"],
+        explanation:
+          "Resize ordered outcomes = 72 and New prescription outcomes = 50. 72:50 simplifies to 36:25. Distractor 25:36 reverses the ratio. Distractor 84:25 compares Sleeve fits with New prescription outcomes (168:50). Distractor 12:5 uses Late effects Resize ordered to New prescription outcomes (24:10).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of sleeve review outcomes per review route?",
+        correct: "72.5",
+        distractors: ["80", "60", "96.7"],
+        explanation:
+          "There were 290 sleeve review outcomes across 4 review routes. 290/4 = 72.5. Distractor 80: reads the Post-surgery or Radiotherapy follow-up total. Distractor 60: reads the Complex lymphoedema total. Distractor 96.7: divides by the 3 outcome columns instead of 4 review routes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ed-point-of-care-test-cartridges",
+    stimulus: [
+      "An emergency department recorded point-of-care test cartridge use by test type during one week.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Point-of-care Test Cartridge Use",
+      yLabel: "Cartridges",
+      categories: [
+        { label: "Troponin", value: 96 },
+        { label: "CRP", value: 72 },
+        { label: "Lactate", value: 48 },
+        { label: "Blood gas", value: 84 },
+        { label: "Ketone", value: 60 },
+      ],
+      max: 110,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Lactate cartridges were used?",
+        correct: "48",
+        distractors: ["72", "84", "360"],
+        explanation:
+          "Lactate cartridges used = 48. Distractor 72: reads CRP cartridges. Distractor 84: reads Blood gas cartridges. Distractor 360: adds all cartridge counts.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of cartridges were Troponin cartridges?",
+        correct: "26.7%",
+        distractors: ["20.0%", "23.3%", "16.7%"],
+        explanation:
+          "Troponin cartridges = 96 and total cartridges = 360. 96/360 x 100 = 26.7%. Distractor 20.0%: uses CRP cartridges (72/360 x 100). Distractor 23.3%: uses Blood gas cartridges (84/360 x 100). Distractor 16.7%: uses Ketone cartridges (60/360 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of cartridges used per test type?",
+        correct: "72",
+        distractors: ["96", "48", "90"],
+        explanation:
+          "Total cartridges = 360 across 5 test types. 360/5 = 72. Distractor 96: reads Troponin cartridges. Distractor 48: reads Lactate cartridges. Distractor 90: divides by 4 instead of 5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Troponin plus Blood gas cartridges to all other cartridges combined?",
+        correct: "1:1",
+        distractors: ["2:1", "1:2", "4:3"],
+        explanation:
+          "Troponin plus Blood gas cartridges = 96+84 = 180. Other cartridges = 72+48+60 = 180. 180:180 simplifies to 1:1. Distractor 2:1 compares Troponin with Lactate cartridges (96:48). Distractor 1:2 reverses that wrong comparison. Distractor 4:3 compares Troponin with CRP cartridges (96:72).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gastroenterology-ibd-infusion-prechecks",
+    stimulus: [
+      "A gastroenterology infusion unit recorded IBD infusion pre-check outcomes by treatment type during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "IBD Infusion Pre-check Outcomes",
+      yLabel: "Pre-checks",
+      seriesLabels: ["Cleared", "Bloods overdue", "Clinician query"],
+      groups: [
+        { label: "Infliximab", values: [60, 18, 12] },
+        { label: "Vedolizumab", values: [48, 24, 8] },
+        { label: "Ustekinumab", values: [36, 12, 12] },
+        { label: "Iron", values: [30, 18, 12] },
+      ],
+      max: 70,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Vedolizumab pre-checks had Bloods overdue?",
+        correct: "24",
+        distractors: ["48", "8", "80"],
+        explanation:
+          "Vedolizumab Bloods overdue pre-checks = 24. Distractor 48: reads Vedolizumab Cleared pre-checks. Distractor 8: reads Vedolizumab Clinician query pre-checks. Distractor 80: adds all Vedolizumab pre-checks.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all IBD infusion pre-checks were Cleared?",
+        correct: "60%",
+        distractors: ["24.8%", "15.2%", "66.7%"],
+        explanation:
+          "Cleared pre-checks = 174 and all pre-checks = 290. 174/290 x 100 = 60%. Distractor 24.8%: uses Bloods overdue pre-checks (72/290 x 100). Distractor 15.2%: uses Clinician query pre-checks (44/290 x 100). Distractor 66.7%: uses Infliximab Cleared as a percentage of Infliximab total (60/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Bloods overdue pre-checks to Clinician query pre-checks?",
+        correct: "18:11",
+        distractors: ["11:18", "87:22", "3:1"],
+        explanation:
+          "Bloods overdue pre-checks = 72 and Clinician query pre-checks = 44. 72:44 simplifies to 18:11. Distractor 11:18 reverses the ratio. Distractor 87:22 compares Cleared with Clinician query pre-checks (174:44). Distractor 3:1 uses Vedolizumab Bloods overdue to Clinician query pre-checks (24:8).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of pre-checks per treatment type?",
+        correct: "70",
+        distractors: ["72.5", "90", "60"],
+        explanation:
+          "Treatment totals are 90, 80, 60 and 60. Ordered totals are 60, 60, 80, 90, so the median is (60+80)/2 = 70. Distractor 72.5: gives the mean total per treatment type (290/4). Distractor 90: reads the Infliximab total. Distractor 60: reads Ustekinumab or Iron totals.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dental-orthodontic-retainer-repairs",
+    stimulus: [
+      "A dental orthodontic service recorded retainer repair outcomes by retainer type during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Orthodontic Retainer Repair Outcomes",
+      headers: ["Retainer type", "Repaired same day", "Lab repair", "Replacement made", "Total"],
+      rows: [
+        ["Essix upper", "48", "12", "0", "60"],
+        ["Essix lower", "42", "12", "6", "60"],
+        ["Hawley", "30", "18", "12", "60"],
+        ["Bonded", "36", "18", "6", "60"],
+        ["Total", "156", "60", "24", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Hawley retainer repairs resulted in Replacement made?",
+        correct: "12",
+        distractors: ["30", "18", "60"],
+        explanation:
+          "Hawley Replacement made repairs = 12. Distractor 30: reads Hawley Repaired same day repairs. Distractor 18: reads Hawley Lab repair outcomes. Distractor 60: reads the Hawley row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all retainer repair outcomes were Repaired same day?",
+        correct: "65%",
+        distractors: ["25%", "10%", "80%"],
+        explanation:
+          "Repaired same day outcomes = 156 and all repair outcomes = 240. 156/240 x 100 = 65%. Distractor 25%: uses Lab repair outcomes (60/240 x 100). Distractor 10%: uses Replacement made outcomes (24/240 x 100). Distractor 80%: uses Essix upper Repaired same day as a percentage of Essix upper total (48/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Lab repair outcomes to Replacement made outcomes?",
+        correct: "5:2",
+        distractors: ["2:5", "13:2", "3:2"],
+        explanation:
+          "Lab repair outcomes = 60 and Replacement made outcomes = 24. 60:24 simplifies to 5:2. Distractor 2:5 reverses the ratio. Distractor 13:2 compares Repaired same day with Replacement made outcomes (156:24). Distractor 3:2 uses Hawley Lab repair to Replacement made outcomes (18:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of retainer repair outcomes per retainer type?",
+        correct: "60",
+        distractors: ["80", "156", "24"],
+        explanation:
+          "There were 240 repair outcomes across 4 retainer types. 240/4 = 60. Distractor 80: divides by the 3 outcome columns instead of 4 retainer types. Distractor 156: reads the Repaired same day total. Distractor 24: reads the Replacement made total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-paediatric-continence-supply-reviews",
+    stimulus: [
+      "A community paediatric continence team recorded supply review outcomes by product type during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Continence Supply Review Outcomes by Product Type",
+      headers: ["Product type", "Continued", "Size changed", "Product changed", "Total"],
+      rows: [
+        ["Daytime pads", "60", "24", "16", "100"],
+        ["Night-time pads", "48", "24", "8", "80"],
+        ["Pull-ups", "42", "12", "6", "60"],
+        ["Bed protection", "30", "18", "12", "60"],
+        ["Total", "180", "78", "42", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Bed protection reviews resulted in Product changed?",
+        correct: "12",
+        distractors: ["30", "18", "60"],
+        explanation:
+          "Bed protection Product changed reviews = 12. Distractor 30: reads Bed protection Continued reviews. Distractor 18: reads Bed protection Size changed reviews. Distractor 60: reads the Bed protection row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all continence supply reviews were Continued?",
+        correct: "60%",
+        distractors: ["26%", "14%", "70%"],
+        explanation:
+          "Continued reviews = 180 and all reviews = 300. 180/300 x 100 = 60%. Distractor 26%: uses Size changed reviews (78/300 x 100). Distractor 14%: uses Product changed reviews (42/300 x 100). Distractor 70%: uses Pull-ups Continued as a percentage of Pull-ups total (42/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Size changed reviews to Product changed reviews?",
+        correct: "13:7",
+        distractors: ["7:13", "30:7", "3:2"],
+        explanation:
+          "Size changed reviews = 78 and Product changed reviews = 42. 78:42 simplifies to 13:7. Distractor 7:13 reverses the ratio. Distractor 30:7 compares Continued reviews with Product changed reviews (180:42). Distractor 3:2 uses Bed protection Size changed to Product changed reviews (18:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of supply review outcomes per product type?",
+        correct: "75",
+        distractors: ["100", "60", "80"],
+        explanation:
+          "There were 300 supply review outcomes across 4 product types. 300/4 = 75. Distractor 100: reads the Daytime pads total. Distractor 60: reads Pull-ups or Bed protection totals. Distractor 80: reads the Night-time pads total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-audiology-hearing-aid-repairs",
+    stimulus: [
+      "A paediatric audiology service recorded hearing aid repair outcomes by device route during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Paediatric Hearing Aid Repair Outcomes",
+      headers: ["Device route", "Same-day fix", "Sent to manufacturer", "Replacement mould", "Total"],
+      rows: [
+        ["Behind-ear aids", "42", "18", "12", "72"],
+        ["Bone conduction aids", "18", "12", "6", "36"],
+        ["Cochlear processors", "24", "30", "6", "60"],
+        ["Spare aid issued", "36", "6", "6", "48"],
+        ["Total", "120", "66", "30", "216"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Cochlear processor repairs were sent to the manufacturer?",
+        correct: "30",
+        distractors: ["24", "6", "60"],
+        explanation:
+          "Cochlear processors sent to manufacturer = 30. Distractor 24: reads Cochlear processor Same-day fix repairs. Distractor 6: reads Cochlear processor Replacement mould repairs. Distractor 60: reads the Cochlear processors row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all repair outcomes were Same-day fix outcomes?",
+        correct: "55.6%",
+        distractors: ["30.6%", "13.9%", "58.3%"],
+        explanation:
+          "Same-day fix outcomes = 120 and all repair outcomes = 216. 120/216 x 100 = 55.6%. Distractor 30.6%: uses Sent to manufacturer outcomes (66/216 x 100). Distractor 13.9%: uses Replacement mould outcomes (30/216 x 100). Distractor 58.3%: uses Behind-ear same-day fixes as a percentage of Behind-ear total (42/72 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Sent to manufacturer outcomes to Replacement mould outcomes?",
+        correct: "11:5",
+        distractors: ["5:11", "4:1", "5:1"],
+        explanation:
+          "Sent to manufacturer outcomes = 66 and Replacement mould outcomes = 30. 66:30 simplifies to 11:5. Distractor 5:11 reverses the ratio. Distractor 4:1 compares Same-day fix with Replacement mould outcomes (120:30). Distractor 5:1 uses Cochlear processor Sent to manufacturer to Replacement mould outcomes (30:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of repair outcomes per device route?",
+        correct: "54",
+        distractors: ["72", "36", "43.2"],
+        explanation:
+          "There were 216 repair outcomes across 4 device routes. 216/4 = 54. Distractor 72: reads the Behind-ear aids total. Distractor 36: reads the Bone conduction aids total. Distractor 43.2: divides by 5 instead of 4.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renal-dialysis-water-safety-location-results",
+    stimulus: [
+      "A renal dialysis service recorded water safety test results by testing location during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Dialysis Water Safety Test Results",
+      yLabel: "Tests",
+      seriesLabels: ["Pass", "Repeat sample", "Action needed"],
+      groups: [
+        { label: "Unit A", values: [72, 12, 6] },
+        { label: "Unit B", values: [60, 18, 12] },
+        { label: "Unit C", values: [54, 24, 12] },
+        { label: "Home training", values: [36, 18, 6] },
+      ],
+      max: 80,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Unit C water tests required a repeat sample?",
+        correct: "24",
+        distractors: ["54", "12", "90"],
+        explanation:
+          "Unit C Repeat sample tests = 24. Distractor 54: reads Unit C Pass tests. Distractor 12: reads Unit C Action needed tests. Distractor 90: adds all Unit C tests.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all water tests had Action needed?",
+        correct: "10.9%",
+        distractors: ["21.8%", "67.3%", "13.3%"],
+        explanation:
+          "Action needed tests = 36 and all water tests = 330. 36/330 x 100 = 10.9%. Distractor 21.8%: uses Repeat sample tests (72/330 x 100). Distractor 67.3%: uses Pass tests (222/330 x 100). Distractor 13.3%: uses Unit B Action needed as a percentage of Unit B total (12/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Pass tests to Repeat sample tests?",
+        correct: "37:12",
+        distractors: ["12:37", "37:6", "9:4"],
+        explanation:
+          "Pass tests = 222 and Repeat sample tests = 72. 222:72 simplifies to 37:12. Distractor 12:37 reverses the ratio. Distractor 37:6 compares Pass tests with Action needed tests (222:36). Distractor 9:4 uses Unit C Pass to Repeat sample tests (54:24).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of water tests per testing location?",
+        correct: "82.5",
+        distractors: ["90", "60", "110"],
+        explanation:
+          "There were 330 water tests across 4 testing locations. 330/4 = 82.5. Distractor 90: reads the Unit A, Unit B, or Unit C total. Distractor 60: reads the Home training total. Distractor 110: divides by the 3 result types instead of 4 testing locations.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "maternity-theatre-category-response-times",
+    stimulus: [
+      "A maternity theatre team recorded emergency caesarean cases that met the recommended response time by urgency category.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Caesarean Cases Meeting Response Time",
+      yLabel: "Cases",
+      categories: [
+        { label: "Category 1", value: 48 },
+        { label: "Category 2", value: 96 },
+        { label: "Category 3", value: 144 },
+        { label: "Category 4", value: 112 },
+      ],
+      max: 160,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Category 3 cases met the recommended response time?",
+        correct: "144",
+        distractors: ["96", "112", "400"],
+        explanation:
+          "Category 3 cases meeting the recommended response time = 144. Distractor 96: reads Category 2 cases. Distractor 112: reads Category 4 cases. Distractor 400: adds all categories.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of cases meeting the response time were Category 1 or Category 2 cases?",
+        correct: "36%",
+        distractors: ["24%", "28%", "48%"],
+        explanation:
+          "Category 1 plus Category 2 cases = 48+96 = 144 and all cases shown = 400. 144/400 x 100 = 36%. Distractor 24%: uses Category 2 only (96/400 x 100). Distractor 28%: uses Category 4 only (112/400 x 100). Distractor 48%: uses Category 1 plus Category 3 cases (48+144 = 192; 192/400 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Category 2 cases to Category 4 cases?",
+        correct: "6:7",
+        distractors: ["7:6", "2:3", "3:7"],
+        explanation:
+          "Category 2 cases to Category 4 cases = 96:112, which simplifies to 6:7. Distractor 7:6 reverses the ratio. Distractor 2:3 compares Category 2 with Category 3 cases (96:144). Distractor 3:7 compares Category 1 with Category 4 cases (48:112).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of cases meeting the response time per urgency category?",
+        correct: "100",
+        distractors: ["80", "144", "96"],
+        explanation:
+          "There were 400 cases meeting the response time across 4 urgency categories. 400/4 = 100. Distractor 80: divides by 5 instead of 4. Distractor 144: reads the Category 3 value. Distractor 96: reads the Category 2 value.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-antimicrobial-review-outcomes",
+    stimulus: [
+      "An antimicrobial pharmacy team recorded review outcomes by ward group during one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Antimicrobial Review Outcomes",
+      headers: ["Ward group", "Continued", "Switched oral", "Stopped", "Escalated", "Total"],
+      rows: [
+        ["Medical wards", "84", "36", "24", "12", "156"],
+        ["Surgical wards", "60", "48", "18", "18", "144"],
+        ["Critical care", "42", "18", "12", "48", "120"],
+        ["Total", "186", "102", "54", "78", "420"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Stopped outcomes to Escalated outcomes?",
+        correct: "9:13",
+        distractors: ["13:9", "31:13", "1:4"],
+        explanation:
+          "Stopped outcomes = 54 and Escalated outcomes = 78. 54:78 simplifies to 9:13. Distractor 13:9 reverses the ratio. Distractor 31:13 compares Continued with Escalated outcomes (186:78). Distractor 1:4 uses Critical care Stopped to Escalated outcomes (12:48).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Surgical ward reviews were Switched oral?",
+        correct: "48",
+        distractors: ["60", "18", "144"],
+        explanation:
+          "Surgical ward Switched oral reviews = 48. Distractor 60: reads Surgical ward Continued reviews. Distractor 18: reads a Surgical ward Stopped or Escalated value. Distractor 144: reads the Surgical wards row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of Critical care reviews were Escalated?",
+        correct: "40%",
+        distractors: ["10%", "11.4%", "30%"],
+        explanation:
+          "Critical care Escalated reviews = 48 and Critical care reviews = 120. 48/120 x 100 = 40%. Distractor 10%: uses Critical care Stopped reviews (12/120 x 100). Distractor 11.4%: uses Critical care Escalated reviews as a percentage of all reviews (48/420 x 100). Distractor 30%: uses Medical ward Switched oral reviews over the Critical care total (36/120 x 100).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of reviews per ward group?",
+        correct: "144",
+        distractors: ["140", "156", "120"],
+        explanation:
+          "Ward group totals are 156, 144, and 120. Ordered totals are 120, 144, 156, so the median is 144. Distractor 140: gives the mean total per ward group (420/3). Distractor 156: reads the highest ward group total. Distractor 120: reads the lowest ward group total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-falls-home-hazard-actions",
+    stimulus: [
+      "A community falls team recorded actions taken for home hazards by room area during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Home Hazard Actions by Room Area",
+      headers: ["Room area", "Removed", "Referred", "Advice only", "Total"],
+      rows: [
+        ["Bathroom", "54", "18", "18", "90"],
+        ["Kitchen", "48", "24", "18", "90"],
+        ["Stairs", "72", "24", "24", "120"],
+        ["Bedroom", "36", "18", "6", "60"],
+        ["Total", "210", "84", "66", "360"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Stairs hazards were removed?",
+        correct: "72",
+        distractors: ["24", "120", "54"],
+        explanation:
+          "Stairs hazards removed = 72. Distractor 24: reads Stairs Referred or Advice only hazards. Distractor 120: reads the Stairs row total. Distractor 54: reads Bathroom hazards removed.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all hazard actions were Advice only?",
+        correct: "18.3%",
+        distractors: ["23.3%", "58.3%", "20.0%"],
+        explanation:
+          "Advice only actions = 66 and all hazard actions = 360. 66/360 x 100 = 18.3%. Distractor 23.3%: uses Referred actions (84/360 x 100). Distractor 58.3%: uses Removed actions (210/360 x 100). Distractor 20.0%: uses Bathroom Advice only as a percentage of Bathroom total (18/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Removed actions to Referred actions?",
+        correct: "5:2",
+        distractors: ["2:5", "35:11", "3:1"],
+        explanation:
+          "Removed actions = 210 and Referred actions = 84. 210:84 simplifies to 5:2. Distractor 2:5 reverses the ratio. Distractor 35:11 compares Removed with Advice only actions (210:66). Distractor 3:1 uses Stairs Removed to Referred actions (72:24).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of hazard actions per room area?",
+        correct: "90",
+        distractors: ["120", "60", "180"],
+        explanation:
+          "There were 360 hazard actions across 4 room areas. 360/4 = 90. Distractor 120: reads the Stairs total. Distractor 60: reads the Bedroom total. Distractor 180: divides by 2 instead of 4.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "respiratory-tobacco-dependence-referrals",
+    stimulus: [
+      "A respiratory tobacco-dependence service recorded referral outcomes by hospital area during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Tobacco-dependence Referral Outcomes",
+      yLabel: "Referrals",
+      seriesLabels: ["Accepted", "Declined", "Already quit"],
+      groups: [
+        { label: "Medical", values: [88, 32, 20] },
+        { label: "Surgical", values: [54, 36, 18] },
+        { label: "Maternity", values: [72, 18, 18] },
+        { label: "Mental health", values: [66, 30, 18] },
+      ],
+      max: 100,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Maternity referrals were Declined?",
+        correct: "18",
+        distractors: ["72", "108", "30"],
+        explanation:
+          "Maternity Declined referrals = 18. Distractor 72: reads Maternity Accepted referrals. Distractor 108: adds all Maternity referrals. Distractor 30: reads Mental health Declined referrals.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of referrals were Accepted?",
+        correct: "59.6%",
+        distractors: ["24.7%", "15.7%", "62.9%"],
+        explanation:
+          "Accepted referrals = 280 and all referrals = 470. 280/470 x 100 = 59.6%. Distractor 24.7%: uses Declined referrals (116/470 x 100). Distractor 15.7%: uses Already quit referrals (74/470 x 100). Distractor 62.9%: uses Medical Accepted as a percentage of Medical total (88/140 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Declined referrals to Already quit referrals?",
+        correct: "58:37",
+        distractors: ["37:58", "140:37", "2:1"],
+        explanation:
+          "Declined referrals = 116 and Already quit referrals = 74. 116:74 simplifies to 58:37. Distractor 37:58 reverses the ratio. Distractor 140:37 compares Accepted with Already quit referrals (280:74). Distractor 2:1 uses Surgical Declined to Already quit referrals (36:18).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the combined total number of referrals from Surgical and Maternity areas?",
+        correct: "216",
+        distractors: ["108", "248", "222"],
+        explanation:
+          "Surgical referrals = 54+36+18 = 108 and Maternity referrals = 72+18+18 = 108. Combined total = 108+108 = 216. Distractor 108: uses only one of the two areas. Distractor 248: adds Medical and Surgical totals (140+108). Distractor 222: adds Surgical and Mental health totals (108+114).",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neurology-epilepsy-monitoring-admissions",
+    stimulus: [
+      "A neurology unit recorded epilepsy monitoring admission outcomes by admission source during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Epilepsy Monitoring Admission Outcomes",
+      headers: ["Admission source", "Full study", "Early discharge", "Rebooked", "Total"],
+      rows: [
+        ["Elective referral", "72", "12", "6", "90"],
+        ["Urgent inpatient", "36", "18", "6", "60"],
+        ["Paediatric referral", "48", "12", "0", "60"],
+        ["Sleep-deprived study", "54", "18", "18", "90"],
+        ["Total", "210", "60", "30", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Paediatric referral admissions were Rebooked?",
+        correct: "0",
+        distractors: ["48", "12", "60"],
+        explanation:
+          "Paediatric referral Rebooked admissions = 0. Distractor 48: reads Paediatric referral Full study admissions. Distractor 12: reads Paediatric referral Early discharge admissions. Distractor 60: reads the Paediatric referral row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all admissions resulted in a Full study?",
+        correct: "70%",
+        distractors: ["20%", "10%", "80%"],
+        explanation:
+          "Full study admissions = 210 and all admissions = 300. 210/300 x 100 = 70%. Distractor 20%: uses Early discharge admissions (60/300 x 100). Distractor 10%: uses Rebooked admissions (30/300 x 100). Distractor 80%: uses Elective referral Full study as a percentage of Elective referral total (72/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Early discharge admissions to Rebooked admissions?",
+        correct: "2:1",
+        distractors: ["1:2", "7:1", "1:1"],
+        explanation:
+          "Early discharge admissions = 60 and Rebooked admissions = 30. 60:30 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 7:1 compares Full study with Rebooked admissions (210:30). Distractor 1:1 uses Sleep-deprived Early discharge to Rebooked admissions (18:18).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of admissions per admission source?",
+        correct: "75",
+        distractors: ["60", "90", "100"],
+        explanation:
+          "Admission source totals are 90, 60, 60, and 90. Ordered totals are 60, 60, 90, 90, so the median is (60+90)/2 = 75. Distractor 60: reads one of the lower source totals. Distractor 90: reads one of the higher source totals. Distractor 100: divides all admissions by the 3 outcome columns instead of 4 sources.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cardiology-device-clinic-battery-status",
+    stimulus: [
+      "A cardiology device clinic recorded pacemaker and defibrillator battery status outcomes during one audit week.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Device Battery Status Outcomes",
+      yLabel: "Devices",
+      categories: [
+        { label: "Normal", value: 168 },
+        { label: "Advisory", value: 72 },
+        { label: "ERI", value: 48 },
+        { label: "End of service", value: 12 },
+      ],
+      max: 180,
+      note: "ERI = elective replacement indicator.",
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many devices had Advisory battery status?",
+        correct: "72",
+        distractors: ["168", "48", "300"],
+        explanation:
+          "Advisory battery status devices = 72. Distractor 168: reads Normal devices. Distractor 48: reads ERI devices. Distractor 300: adds all devices.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of devices needed replacement planning, counting ERI and End of service together?",
+        correct: "20%",
+        distractors: ["16%", "4%", "24%"],
+        explanation:
+          "Replacement planning devices = ERI 48 + End of service 12 = 60. All devices = 300. 60/300 x 100 = 20%. Distractor 16%: uses ERI devices only (48/300 x 100). Distractor 4%: uses End of service devices only (12/300 x 100). Distractor 24%: uses Advisory devices (72/300 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Normal devices to Advisory devices?",
+        correct: "7:3",
+        distractors: ["3:7", "14:1", "3:2"],
+        explanation:
+          "Normal devices to Advisory devices = 168:72, which simplifies to 7:3. Distractor 3:7 reverses the ratio. Distractor 14:1 compares Normal with End of service devices (168:12). Distractor 3:2 compares Advisory with ERI devices (72:48).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of devices per battery status category?",
+        correct: "75",
+        distractors: ["100", "72", "60"],
+        explanation:
+          "There were 300 devices across 4 battery status categories. 300/4 = 75. Distractor 100: divides by 3 instead of 4. Distractor 72: reads the Advisory value. Distractor 60: adds ERI and End of service devices.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "histopathology-frozen-section-turnaround-times",
+    stimulus: [
+      "A histopathology laboratory recorded frozen section turnaround times for intra-operative samples during one quarter.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Frozen Section Turnaround Times",
+      yLabel: "Samples",
+      categories: [
+        { label: "0-15 min", value: 64 },
+        { label: "16-20 min", value: 96 },
+        { label: "21-30 min", value: 48 },
+        { label: ">30 min", value: 32 },
+      ],
+      max: 110,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many frozen section samples had a turnaround time of 16-20 minutes?",
+        correct: "96",
+        distractors: ["64", "48", "240"],
+        explanation:
+          "The 16-20 min bar shows 96 samples. Distractor 64: reads the 0-15 min bar. Distractor 48: reads the 21-30 min bar. Distractor 240: adds all samples.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of samples were reported within 20 minutes?",
+        correct: "66.7%",
+        distractors: ["40.0%", "26.7%", "86.7%"],
+        explanation:
+          "Samples within 20 minutes = 64+96 = 160 and total samples = 240. 160/240 x 100 = 66.7%. Distractor 40.0%: uses only the 16-20 min group (96/240 x 100). Distractor 26.7%: uses only the 0-15 min group (64/240 x 100). Distractor 86.7%: uses samples within 30 minutes (208/240 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of 21-30 minute samples to >30 minute samples?",
+        correct: "3:2",
+        distractors: ["2:3", "2:1", "3:5"],
+        explanation:
+          "21-30 minute samples to >30 minute samples = 48:32, which simplifies to 3:2. Distractor 2:3 reverses the ratio. Distractor 2:1 compares 0-15 min with >30 min samples (64:32). Distractor 3:5 compares 21-30 min samples with samples within 20 minutes (48:160).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of samples per turnaround-time band?",
+        correct: "60",
+        distractors: ["80", "96", "48"],
+        explanation:
+          "There were 240 samples across 4 turnaround-time bands. 240/4 = 60. Distractor 80: divides by 3 instead of 4. Distractor 96: reads the largest bar. Distractor 48: reads the 21-30 min bar.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-ot-equipment-order-status",
+    stimulus: [
+      "A paediatric occupational therapy team recorded equipment order statuses by equipment category during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Paediatric OT Equipment Order Status",
+      headers: ["Equipment category", "Approved", "Awaiting funding", "On hold", "Total"],
+      rows: [
+        ["Seating", "36", "18", "6", "60"],
+        ["Bathing", "30", "12", "18", "60"],
+        ["Mobility", "42", "24", "6", "72"],
+        ["Sensory", "24", "12", "12", "48"],
+        ["Total", "132", "66", "42", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Mobility equipment orders were Awaiting funding?",
+        correct: "24",
+        distractors: ["42", "6", "72"],
+        explanation:
+          "Mobility orders Awaiting funding = 24. Distractor 42: reads Mobility Approved orders. Distractor 6: reads Mobility On hold orders. Distractor 72: reads the Mobility row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all equipment orders were Approved?",
+        correct: "55%",
+        distractors: ["27.5%", "17.5%", "58.3%"],
+        explanation:
+          "Approved orders = 132 and all orders = 240. 132/240 x 100 = 55%. Distractor 27.5%: uses Awaiting funding orders (66/240 x 100). Distractor 17.5%: uses On hold orders (42/240 x 100). Distractor 58.3%: uses Mobility Approved as a percentage of Mobility total (42/72 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Awaiting funding orders to On hold orders?",
+        correct: "11:7",
+        distractors: ["7:11", "22:7", "2:3"],
+        explanation:
+          "Awaiting funding orders = 66 and On hold orders = 42. 66:42 simplifies to 11:7. Distractor 7:11 reverses the ratio. Distractor 22:7 compares Approved with On hold orders (132:42). Distractor 2:3 uses Bathing Awaiting funding to On hold orders (12:18).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of equipment orders per category?",
+        correct: "60",
+        distractors: ["72", "48", "80"],
+        explanation:
+          "Category totals are 60, 60, 72, and 48. Ordered totals are 48, 60, 60, 72, so the median is (60+60)/2 = 60. Distractor 72: reads the highest category total. Distractor 48: reads the lowest category total. Distractor 80: divides all orders by the 3 status columns instead of 4 categories.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "vascular-access-picc-referral-outcomes",
+    stimulus: [
+      "A vascular access team recorded PICC referral outcomes by referring speciality during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "PICC Referral Outcomes by Speciality",
+      yLabel: "Referrals",
+      seriesLabels: ["Inserted", "Deferred", "Not suitable"],
+      groups: [
+        { label: "Oncology", values: [70, 20, 10] },
+        { label: "Haematology", values: [56, 24, 20] },
+        { label: "Antibiotics", values: [64, 16, 20] },
+        { label: "Critical care", values: [40, 20, 20] },
+      ],
+      max: 80,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Haematology PICC referrals were Deferred?",
+        correct: "24",
+        distractors: ["56", "20", "100"],
+        explanation:
+          "Haematology Deferred referrals = 24. Distractor 56: reads Haematology Inserted referrals. Distractor 20: reads Haematology Not suitable referrals. Distractor 100: adds all Haematology referrals.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of PICC referrals resulted in Inserted?",
+        correct: "60.5%",
+        distractors: ["21.1%", "18.4%", "70.0%"],
+        explanation:
+          "Inserted referrals = 230 and all referrals = 380. 230/380 x 100 = 60.5%. Distractor 21.1%: uses Deferred referrals (80/380 x 100). Distractor 18.4%: uses Not suitable referrals (70/380 x 100). Distractor 70.0%: uses Oncology Inserted as a percentage of Oncology total (70/100 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Deferred referrals to Not suitable referrals?",
+        correct: "8:7",
+        distractors: ["7:8", "23:7", "1:1"],
+        explanation:
+          "Deferred referrals = 80 and Not suitable referrals = 70. 80:70 simplifies to 8:7. Distractor 7:8 reverses the ratio. Distractor 23:7 compares Inserted with Not suitable referrals (230:70). Distractor 1:1 uses Critical care Deferred to Not suitable referrals (20:20).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the combined total number of PICC referrals from Oncology and Critical care?",
+        correct: "180",
+        distractors: ["100", "80", "200"],
+        explanation:
+          "Oncology referrals = 70+20+10 = 100 and Critical care referrals = 40+20+20 = 80. Combined total = 180. Distractor 100: uses Oncology only. Distractor 80: uses Critical care only. Distractor 200: adds Oncology and Haematology totals instead.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "mental-health-crisis-cafe-attendance-routes",
+    stimulus: [
+      "A mental health crisis cafe recorded attendance outcomes by referral route during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Crisis Cafe Attendance Outcomes",
+      headers: ["Referral route", "Seen", "Signposted", "Escalated", "Total"],
+      rows: [
+        ["Self referral", "96", "36", "12", "144"],
+        ["NHS 111", "72", "24", "12", "108"],
+        ["Ambulance", "36", "18", "18", "72"],
+        ["Police", "24", "12", "24", "60"],
+        ["Total", "228", "90", "66", "384"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Police-route attendances were Escalated?",
+        correct: "24",
+        distractors: ["12", "60", "66"],
+        explanation:
+          "Police-route Escalated attendances = 24. Distractor 12: reads Police-route Signposted attendances. Distractor 60: reads the Police row total. Distractor 66: reads the Escalated column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all crisis cafe attendances came through Self referral?",
+        correct: "37.5%",
+        distractors: ["25%", "59.4%", "50%"],
+        explanation:
+          "Self referral attendances = 144 and all attendances = 384. 144/384 x 100 = 37.5%. Distractor 25%: uses Self referral Seen attendances as a percentage of all attendances (96/384 x 100). Distractor 59.4%: uses Seen attendances as a percentage of all attendances (228/384 x 100). Distractor 50%: uses Self referral as a percentage of Self referral plus NHS 111 (144/288 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Signposted attendances to Escalated attendances?",
+        correct: "15:11",
+        distractors: ["11:15", "38:11", "1:2"],
+        explanation:
+          "Signposted attendances = 90 and Escalated attendances = 66. 90:66 simplifies to 15:11. Distractor 11:15 reverses the ratio. Distractor 38:11 compares Seen with Escalated attendances (228:66). Distractor 1:2 uses Police Signposted to Escalated attendances (12:24).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of attendances per referral route?",
+        correct: "96",
+        distractors: ["128", "144", "60"],
+        explanation:
+          "There were 384 attendances across 4 referral routes. 384/4 = 96. Distractor 128: divides by the 3 outcome columns instead of 4 routes. Distractor 144: reads the Self referral total. Distractor 60: reads the Police total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "interventional-radiology-drain-followup-actions",
+    stimulus: [
+      "An interventional radiology service recorded drain follow-up actions by drain type during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Drain Follow-up Actions by Drain Type",
+      headers: ["Drain type", "Removed", "Flushed", "Exchanged", "Rebooked", "Total"],
+      rows: [
+        ["Biliary", "18", "24", "30", "12", "84"],
+        ["Abscess", "36", "30", "18", "12", "96"],
+        ["Nephrostomy", "24", "18", "42", "12", "96"],
+        ["Pleural", "30", "24", "18", "12", "84"],
+        ["Total", "108", "96", "108", "48", "360"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Nephrostomy follow-ups led to Exchanged?",
+        correct: "42",
+        distractors: ["24", "18", "96"],
+        explanation:
+          "Nephrostomy Exchanged follow-ups = 42. Distractor 24: reads Nephrostomy Removed follow-ups. Distractor 18: reads Nephrostomy Flushed follow-ups. Distractor 96: reads the Nephrostomy row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all follow-up actions were Rebooked?",
+        correct: "13.3%",
+        distractors: ["30.0%", "26.7%", "14.3%"],
+        explanation:
+          "Rebooked actions = 48 and all follow-up actions = 360. 48/360 x 100 = 13.3%. Distractor 30.0%: uses Removed actions (108/360 x 100). Distractor 26.7%: uses Flushed actions (96/360 x 100). Distractor 14.3%: uses Biliary Rebooked as a percentage of Biliary total (12/84 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Removed actions to Flushed actions?",
+        correct: "9:8",
+        distractors: ["8:9", "9:4", "3:4"],
+        explanation:
+          "Removed actions = 108 and Flushed actions = 96. 108:96 simplifies to 9:8. Distractor 8:9 reverses the ratio. Distractor 9:4 compares Removed with Rebooked actions (108:48). Distractor 3:4 uses Biliary Removed to Flushed actions (18:24).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of follow-up actions per drain type?",
+        correct: "90",
+        distractors: ["84", "96", "120"],
+        explanation:
+          "Drain type totals are 84, 96, 96, and 84. Ordered totals are 84, 84, 96, 96, so the median is (84+96)/2 = 90. Distractor 84: reads one of the lower drain totals. Distractor 96: reads one of the higher drain totals. Distractor 120: divides all actions by the 3 main outcome types instead of 4 drain types.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-homecare-biologic-delivery-status",
+    stimulus: [
+      "A pharmacy homecare team recorded biologic medicine delivery statuses by speciality during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Biologic Homecare Delivery Status",
+      headers: ["Speciality", "Delivered on time", "Delayed patient unavailable", "Delayed supplier", "Total"],
+      rows: [
+        ["Dermatology", "84", "12", "12", "108"],
+        ["Rheumatology", "72", "24", "12", "108"],
+        ["Gastroenterology", "66", "18", "24", "108"],
+        ["Neurology", "48", "18", "18", "84"],
+        ["Total", "270", "72", "66", "408"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Gastroenterology deliveries were Delayed supplier?",
+        correct: "24",
+        distractors: ["66", "18", "108"],
+        explanation:
+          "Gastroenterology Delayed supplier deliveries = 24. Distractor 66: reads Gastroenterology Delivered on time deliveries. Distractor 18: reads Gastroenterology Delayed patient unavailable deliveries. Distractor 108: reads the Gastroenterology row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of biologic deliveries were Delivered on time?",
+        correct: "66.2%",
+        distractors: ["17.6%", "16.2%", "77.8%"],
+        explanation:
+          "Delivered on time deliveries = 270 and all deliveries = 408. 270/408 x 100 = 66.2%. Distractor 17.6%: uses Delayed patient unavailable deliveries (72/408 x 100). Distractor 16.2%: uses Delayed supplier deliveries (66/408 x 100). Distractor 77.8%: uses Dermatology Delivered on time as a percentage of Dermatology total (84/108 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Delayed patient unavailable deliveries to Delayed supplier deliveries?",
+        correct: "12:11",
+        distractors: ["11:12", "45:11", "3:4"],
+        explanation:
+          "Delayed patient unavailable deliveries = 72 and Delayed supplier deliveries = 66. 72:66 simplifies to 12:11. Distractor 11:12 reverses the ratio. Distractor 45:11 compares Delivered on time with Delayed supplier deliveries (270:66). Distractor 3:4 uses Gastroenterology Delayed patient unavailable to Delayed supplier deliveries (18:24).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of deliveries per speciality?",
+        correct: "102",
+        distractors: ["136", "108", "84"],
+        explanation:
+          "There were 408 deliveries across 4 specialities. 408/4 = 102. Distractor 136: divides by the 3 delivery-status columns instead of 4 specialities. Distractor 108: reads several speciality totals. Distractor 84: reads the Neurology total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "orthopaedic-fracture-clinic-virtual-outcomes",
+    stimulus: [
+      "An orthopaedic fracture clinic recorded outcomes for virtual review appointments during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Virtual Fracture Clinic Outcomes",
+      yLabel: "Appointments",
+      categories: [
+        { label: "Discharged", value: 126 },
+        { label: "Face-to-face arranged", value: 84 },
+        { label: "Imaging requested", value: 54 },
+        { label: "Plaster advice", value: 36 },
+      ],
+      max: 140,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many virtual reviews resulted in Imaging requested?",
+        correct: "54",
+        distractors: ["84", "36", "300"],
+        explanation:
+          "Imaging requested reviews = 54. Distractor 84: reads Face-to-face arranged reviews. Distractor 36: reads Plaster advice reviews. Distractor 300: adds all virtual review outcomes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of virtual review outcomes were Discharged?",
+        correct: "42%",
+        distractors: ["28%", "18%", "70%"],
+        explanation:
+          "Discharged outcomes = 126 and all outcomes = 300. 126/300 x 100 = 42%. Distractor 28%: uses Face-to-face arranged outcomes (84/300 x 100). Distractor 18%: uses Imaging requested outcomes (54/300 x 100). Distractor 70%: uses Discharged as a percentage of Discharged plus Imaging requested (126/180 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Face-to-face arranged outcomes to Plaster advice outcomes?",
+        correct: "7:3",
+        distractors: ["3:7", "14:9", "3:2"],
+        explanation:
+          "Face-to-face arranged outcomes to Plaster advice outcomes = 84:36, which simplifies to 7:3. Distractor 3:7 reverses the ratio. Distractor 14:9 compares Face-to-face arranged with Imaging requested outcomes (84:54). Distractor 3:2 compares Imaging requested with Plaster advice outcomes (54:36).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of outcomes per virtual review category?",
+        correct: "75",
+        distractors: ["100", "126", "54"],
+        explanation:
+          "There were 300 outcomes across 4 categories. 300/4 = 75. Distractor 100: divides by 3 instead of 4. Distractor 126: reads the Discharged bar. Distractor 54: reads the Imaging requested bar.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "endocrinology-insulin-pump-training-attendance",
+    stimulus: [
+      "An endocrinology service recorded insulin pump training attendance outcomes by cohort during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Insulin Pump Training Attendance Outcomes",
+      headers: ["Cohort", "Attended", "Cancelled", "Did not attend", "Total"],
+      rows: [
+        ["Type 1 adults", "54", "12", "6", "72"],
+        ["Paediatrics", "36", "12", "12", "60"],
+        ["Pregnancy", "24", "6", "6", "36"],
+        ["Transition", "30", "12", "6", "48"],
+        ["Total", "144", "42", "30", "216"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Pregnancy training places were Cancelled?",
+        correct: "6",
+        distractors: ["24", "36", "30"],
+        explanation:
+          "Pregnancy Cancelled places = 6. Distractor 24: reads Pregnancy Attended places. Distractor 36: reads the Pregnancy row total. Distractor 30: reads the Did not attend column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of training places were Attended?",
+        correct: "66.7%",
+        distractors: ["19.4%", "13.9%", "75.0%"],
+        explanation:
+          "Attended places = 144 and all training places = 216. 144/216 x 100 = 66.7%. Distractor 19.4%: uses Cancelled places (42/216 x 100). Distractor 13.9%: uses Did not attend places (30/216 x 100). Distractor 75.0%: uses Type 1 adults Attended as a percentage of Type 1 adults total (54/72 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Cancelled places to Did not attend places?",
+        correct: "7:5",
+        distractors: ["5:7", "24:5", "1:1"],
+        explanation:
+          "Cancelled places = 42 and Did not attend places = 30. 42:30 simplifies to 7:5. Distractor 5:7 reverses the ratio. Distractor 24:5 compares Attended with Did not attend places (144:30). Distractor 1:1 uses Pregnancy Cancelled to Did not attend places (6:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of training places per cohort?",
+        correct: "54",
+        distractors: ["72", "36", "43.2"],
+        explanation:
+          "There were 216 training places across 4 cohorts. 216/4 = 54. Distractor 72: reads the Type 1 adults total. Distractor 36: reads the Pregnancy total. Distractor 43.2: divides by 5 instead of 4.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "hepatology-fibroscan-clinic-results",
+    stimulus: [
+      "A hepatology clinic recorded FibroScan result categories by referral reason during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "FibroScan Result Categories",
+      headers: ["Referral reason", "Normal", "Moderate fibrosis", "Advanced fibrosis", "Total"],
+      rows: [
+        ["MASLD", "64", "32", "16", "112"],
+        ["Alcohol-related", "36", "24", "24", "84"],
+        ["Viral hepatitis", "48", "18", "6", "72"],
+        ["Other", "24", "12", "6", "42"],
+        ["Total", "172", "86", "52", "310"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Viral hepatitis FibroScan results showed Advanced fibrosis?",
+        correct: "6",
+        distractors: ["48", "18", "72"],
+        explanation:
+          "Viral hepatitis Advanced fibrosis results = 6. Distractor 48: reads Viral hepatitis Normal results. Distractor 18: reads Viral hepatitis Moderate fibrosis results. Distractor 72: reads the Viral hepatitis row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all FibroScan results showed Moderate fibrosis?",
+        correct: "27.7%",
+        distractors: ["55.5%", "16.8%", "28.6%"],
+        explanation:
+          "Moderate fibrosis results = 86 and all FibroScan results = 310. 86/310 x 100 = 27.7%. Distractor 55.5%: uses Normal results (172/310 x 100). Distractor 16.8%: uses Advanced fibrosis results (52/310 x 100). Distractor 28.6%: uses MASLD Moderate fibrosis as a percentage of the MASLD total (32/112 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Normal results to Advanced fibrosis results?",
+        correct: "43:13",
+        distractors: ["13:43", "86:26", "2:1"],
+        explanation:
+          "Normal results = 172 and Advanced fibrosis results = 52. 172:52 simplifies to 43:13. Distractor 13:43 reverses the ratio. Distractor 86:26 halves both values but leaves the ratio not fully simplified. Distractor 2:1 uses MASLD Normal to Moderate fibrosis results (64:32).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of FibroScan results per referral reason?",
+        correct: "78",
+        distractors: ["77.5", "84", "72"],
+        explanation:
+          "Referral-reason totals are 112, 84, 72, and 42. Ordered totals are 42, 72, 84, 112, so the median is (72+84)/2 = 78. Distractor 77.5: gives the mean total per referral reason (310/4). Distractor 84: reads the Alcohol-related total. Distractor 72: reads the Viral hepatitis total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-surgery-daycase-cancellations",
+    stimulus: [
+      "A paediatric surgery unit recorded day-case theatre outcomes by specialty during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Paediatric Day-case Theatre Outcomes",
+      yLabel: "Cases",
+      seriesLabels: ["Completed", "Patient cancelled", "Hospital cancelled"],
+      groups: [
+        { label: "ENT", values: [90, 18, 12] },
+        { label: "Dental", values: [72, 24, 24] },
+        { label: "General surgery", values: [60, 18, 12] },
+        { label: "Urology", values: [48, 12, 10] },
+      ],
+      max: 100,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Dental day-case theatre bookings were Patient cancelled?",
+        correct: "24",
+        distractors: ["72", "120", "18"],
+        explanation:
+          "Dental Patient cancelled bookings = 24. Distractor 72: reads Dental Completed cases. Distractor 120: adds all Dental bookings. Distractor 18: reads ENT or General surgery Patient cancelled bookings.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of day-case theatre bookings were Hospital cancelled?",
+        correct: "14.5%",
+        distractors: ["18.0%", "67.5%", "20.0%"],
+        explanation:
+          "Hospital cancelled bookings = 58 and all bookings = 400. 58/400 x 100 = 14.5%. Distractor 18.0%: uses Patient cancelled bookings (72/400 x 100). Distractor 67.5%: uses Completed cases (270/400 x 100). Distractor 20.0%: uses Dental Hospital cancelled as a percentage of Dental total (24/120 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Patient cancelled bookings to Hospital cancelled bookings?",
+        correct: "36:29",
+        distractors: ["29:36", "135:29", "1:1"],
+        explanation:
+          "Patient cancelled bookings = 72 and Hospital cancelled bookings = 58. 72:58 simplifies to 36:29. Distractor 29:36 reverses the ratio. Distractor 135:29 compares Completed cases with Hospital cancelled bookings (270:58). Distractor 1:1 uses Dental Patient cancelled to Hospital cancelled bookings (24:24).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the combined total number of bookings for ENT and General surgery?",
+        correct: "210",
+        distractors: ["120", "90", "240"],
+        explanation:
+          "ENT bookings = 90+18+12 = 120 and General surgery bookings = 60+18+12 = 90. Combined total = 210. Distractor 120: uses ENT only. Distractor 90: uses General surgery only. Distractor 240: adds ENT and Dental totals instead.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "immunology-vaccine-clinic-stock-use",
+    stimulus: [
+      "An immunology vaccine clinic recorded vaccine stock movements by vaccine group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Vaccine Clinic Stock Movements",
+      headers: ["Vaccine group", "Used", "Expired", "Transferred", "Total"],
+      rows: [
+        ["Influenza", "180", "12", "8", "200"],
+        ["Shingles", "96", "18", "6", "120"],
+        ["Pneumococcal", "72", "12", "6", "90"],
+        ["Travel vaccines", "48", "24", "18", "90"],
+        ["Total", "396", "66", "38", "500"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Shingles vaccine stock movements were Expired?",
+        correct: "18",
+        distractors: ["96", "6", "120"],
+        explanation:
+          "Shingles Expired stock movements = 18. Distractor 96: reads Shingles Used stock movements. Distractor 6: reads Shingles Transferred stock movements. Distractor 120: reads the Shingles row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of vaccine stock movements were Used?",
+        correct: "79.2%",
+        distractors: ["13.2%", "7.6%", "90.0%"],
+        explanation:
+          "Used stock movements = 396 and all stock movements = 500. 396/500 x 100 = 79.2%. Distractor 13.2%: uses Expired stock movements (66/500 x 100). Distractor 7.6%: uses Transferred stock movements (38/500 x 100). Distractor 90.0%: uses Influenza Used as a percentage of Influenza total (180/200 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Expired stock movements to Transferred stock movements?",
+        correct: "33:19",
+        distractors: ["19:33", "198:19", "4:3"],
+        explanation:
+          "Expired stock movements = 66 and Transferred stock movements = 38. 66:38 simplifies to 33:19. Distractor 19:33 reverses the ratio. Distractor 198:19 compares Used with Transferred stock movements (396:38). Distractor 4:3 uses Travel vaccines Expired to Transferred stock movements (24:18).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of stock movements per vaccine group?",
+        correct: "125",
+        distractors: ["166.7", "120", "90"],
+        explanation:
+          "There were 500 stock movements across 4 vaccine groups. 500/4 = 125. Distractor 166.7: divides by the 3 movement columns instead of 4 vaccine groups. Distractor 120: reads the Shingles total. Distractor 90: reads a Pneumococcal or Travel vaccines total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-midwifery-birthplace-bookings",
+    stimulus: [
+      "A community midwifery service recorded planned birthplace bookings by location type during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Planned Birthplace Bookings",
+      yLabel: "Bookings",
+      categories: [
+        { label: "Home birth", value: 54 },
+        { label: "Birth centre", value: 126 },
+        { label: "Labour ward", value: 210 },
+        { label: "Alongside unit", value: 90 },
+      ],
+      max: 230,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many planned birthplace bookings were for the Labour ward?",
+        correct: "210",
+        distractors: ["126", "90", "480"],
+        explanation:
+          "Labour ward bookings = 210. Distractor 126: reads Birth centre bookings. Distractor 90: reads Alongside unit bookings. Distractor 480: adds all planned birthplace bookings.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What percentage of planned bookings were for Home birth or Birth centre combined?",
+        correct: "37.5%",
+        distractors: ["26.3%", "43.8%", "11.3%"],
+        explanation:
+          "Home birth plus Birth centre bookings = 54+126 = 180 and all bookings = 480. 180/480 x 100 = 37.5%. Distractor 26.3%: uses Birth centre only (126/480 x 100). Distractor 43.8%: uses Labour ward only (210/480 x 100). Distractor 11.3%: uses Home birth only (54/480 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Birth centre bookings to Alongside unit bookings?",
+        correct: "7:5",
+        distractors: ["5:7", "7:3", "3:5"],
+        explanation:
+          "Birth centre bookings to Alongside unit bookings = 126:90, which simplifies to 7:5. Distractor 5:7 reverses the ratio. Distractor 7:3 compares Birth centre with Home birth bookings (126:54). Distractor 3:5 compares Home birth with Alongside unit bookings (54:90).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of bookings per location type?",
+        correct: "120",
+        distractors: ["160", "210", "90"],
+        explanation:
+          "There were 480 bookings across 4 location types. 480/4 = 120. Distractor 160: divides by 3 instead of 4. Distractor 210: reads the Labour ward value. Distractor 90: reads the Alongside unit value.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neurophysiology-eeg-request-priority",
+    stimulus: [
+      "A neurophysiology service recorded EEG requests by referral source and test priority during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "EEG Requests by Source and Priority",
+      headers: ["Referral source", "Urgent", "Routine", "Sleep-deprived", "Total"],
+      rows: [
+        ["Neurology", "48", "96", "24", "168"],
+        ["Paediatrics", "36", "72", "36", "144"],
+        ["ICU", "24", "12", "12", "48"],
+        ["Psychiatry", "12", "48", "12", "72"],
+        ["Total", "120", "228", "84", "432"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many ICU EEG requests were Urgent?",
+        correct: "24",
+        distractors: ["12", "48", "120"],
+        explanation:
+          "ICU Urgent EEG requests = 24. Distractor 12: reads an ICU Routine or Sleep-deprived value. Distractor 48: reads the ICU row total. Distractor 120: reads the Urgent column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of EEG requests were Routine?",
+        correct: "52.8%",
+        distractors: ["27.8%", "19.4%", "57.1%"],
+        explanation:
+          "Routine EEG requests = 228 and all EEG requests = 432. 228/432 x 100 = 52.8%. Distractor 27.8%: uses Urgent requests (120/432 x 100). Distractor 19.4%: uses Sleep-deprived requests (84/432 x 100). Distractor 57.1%: uses Neurology Routine as a percentage of the Neurology total (96/168 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Urgent requests to Sleep-deprived requests?",
+        correct: "10:7",
+        distractors: ["7:10", "19:7", "1:1"],
+        explanation:
+          "Urgent requests = 120 and Sleep-deprived requests = 84. 120:84 simplifies to 10:7. Distractor 7:10 reverses the ratio. Distractor 19:7 compares Routine with Sleep-deprived requests (228:84). Distractor 1:1 uses Paediatrics Urgent to Sleep-deprived requests (36:36).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of EEG requests per referral source?",
+        correct: "108",
+        distractors: ["144", "48", "86.4"],
+        explanation:
+          "Referral-source totals are 168, 144, 48, and 72. Ordered totals are 48, 72, 144, 168, so the median is (72+144)/2 = 108. Distractor 144: reads the Paediatrics total. Distractor 48: reads the ICU total. Distractor 86.4: divides all requests by 5 instead of the 4 referral sources.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ophthalmic-imaging-fundus-photo-outcomes",
+    stimulus: [
+      "An ophthalmic imaging service recorded fundus photography outcomes by clinic stream during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Fundus Photography Outcomes",
+      yLabel: "Images",
+      seriesLabels: ["Gradable", "Repeat needed", "Referral flagged"],
+      groups: [
+        { label: "Diabetes routine", values: [150, 30, 20] },
+        { label: "Urgent retina", values: [72, 18, 30] },
+        { label: "Glaucoma", values: [90, 18, 12] },
+        { label: "Paediatrics", values: [36, 12, 12] },
+      ],
+      max: 160,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Urgent retina images were Referral flagged?",
+        correct: "30",
+        distractors: ["72", "18", "120"],
+        explanation:
+          "Urgent retina Referral flagged images = 30. Distractor 72: reads Urgent retina Gradable images. Distractor 18: reads Urgent retina Repeat needed images. Distractor 120: adds all Urgent retina images.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of fundus images were Gradable?",
+        correct: "69.6%",
+        distractors: ["15.6%", "14.8%", "75.0%"],
+        explanation:
+          "Gradable images = 348 and all images = 500. 348/500 x 100 = 69.6%. Distractor 15.6%: uses Repeat needed images (78/500 x 100). Distractor 14.8%: uses Referral flagged images (74/500 x 100). Distractor 75.0%: uses Diabetes routine Gradable as a percentage of Diabetes routine total (150/200 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Repeat needed images to Referral flagged images?",
+        correct: "39:37",
+        distractors: ["37:39", "174:37", "3:5"],
+        explanation:
+          "Repeat needed images = 78 and Referral flagged images = 74. 78:74 simplifies to 39:37. Distractor 37:39 reverses the ratio. Distractor 174:37 compares Gradable with Referral flagged images (348:74). Distractor 3:5 uses Urgent retina Repeat needed to Referral flagged images (18:30).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the combined total number of images from Glaucoma and Paediatrics streams?",
+        correct: "180",
+        distractors: ["120", "60", "320"],
+        explanation:
+          "Glaucoma images = 90+18+12 = 120 and Paediatrics images = 36+12+12 = 60. Combined total = 180. Distractor 120: uses Glaucoma only. Distractor 60: uses Paediatrics only. Distractor 320: adds Diabetes routine and Glaucoma totals instead.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-controlled-drug-destruction-records",
+    stimulus: [
+      "A pharmacy governance team recorded controlled drug destruction entries by drug group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Controlled Drug Destruction Entries",
+      headers: ["Drug group", "Expired stock", "Patient returned", "Damaged stock", "Total"],
+      rows: [
+        ["Opioid tablets", "54", "24", "12", "90"],
+        ["Liquid opioids", "36", "18", "6", "60"],
+        ["Benzodiazepines", "30", "12", "18", "60"],
+        ["Stimulants", "18", "6", "6", "30"],
+        ["Total", "138", "60", "42", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Stimulants destruction entries were Patient returned?",
+        correct: "6",
+        distractors: ["18", "30", "60"],
+        explanation:
+          "Stimulants Patient returned entries = 6. Distractor 18: reads Stimulants Expired stock entries. Distractor 30: reads the Stimulants row total. Distractor 60: reads the Patient returned column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of controlled drug destruction entries were Expired stock?",
+        correct: "57.5%",
+        distractors: ["25%", "17.5%", "60%"],
+        explanation:
+          "Expired stock entries = 138 and all destruction entries = 240. 138/240 x 100 = 57.5%. Distractor 25%: uses Patient returned entries (60/240 x 100). Distractor 17.5%: uses Damaged stock entries (42/240 x 100). Distractor 60%: uses Opioid tablets Expired stock as a percentage of Opioid tablets total (54/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Patient returned entries to Damaged stock entries?",
+        correct: "10:7",
+        distractors: ["7:10", "23:7", "2:3"],
+        explanation:
+          "Patient returned entries = 60 and Damaged stock entries = 42. 60:42 simplifies to 10:7. Distractor 7:10 reverses the ratio. Distractor 23:7 compares Expired stock with Damaged stock entries (138:42). Distractor 2:3 uses Benzodiazepines Patient returned to Damaged stock entries (12:18).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of destruction entries per drug group?",
+        correct: "60",
+        distractors: ["90", "30", "80"],
+        explanation:
+          "Drug group totals are 90, 60, 60, and 30. Ordered totals are 30, 60, 60, 90, so the median is (60+60)/2 = 60. Distractor 90: reads the Opioid tablets total. Distractor 30: reads the Stimulants total. Distractor 80: divides all entries by the 3 destruction reasons instead of 4 drug groups.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiology-fluoroscopy-dose-band-cases",
+    stimulus: [
+      "A radiology department recorded fluoroscopy cases by dose band during one audit month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Fluoroscopy Cases by Dose Band",
+      yLabel: "Cases",
+      categories: [
+        { label: "Low", value: 132 },
+        { label: "Moderate", value: 108 },
+        { label: "High", value: 48 },
+        { label: "Very high", value: 12 },
+      ],
+      max: 150,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many fluoroscopy cases were in the High dose band?",
+        correct: "48",
+        distractors: ["108", "12", "300"],
+        explanation:
+          "High dose band cases = 48. Distractor 108: reads Moderate cases. Distractor 12: reads Very high cases. Distractor 300: adds all dose-band cases.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What percentage of fluoroscopy cases were in the High or Very high dose bands combined?",
+        correct: "20%",
+        distractors: ["16%", "4%", "36%"],
+        explanation:
+          "High plus Very high cases = 48+12 = 60 and all cases = 300. 60/300 x 100 = 20%. Distractor 16%: uses High cases only (48/300 x 100). Distractor 4%: uses Very high cases only (12/300 x 100). Distractor 36%: uses Moderate cases (108/300 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Low dose band cases to Moderate dose band cases?",
+        correct: "11:9",
+        distractors: ["9:11", "11:4", "9:4"],
+        explanation:
+          "Low dose band cases to Moderate dose band cases = 132:108, which simplifies to 11:9. Distractor 9:11 reverses the ratio. Distractor 11:4 compares Low with High cases (132:48). Distractor 9:4 compares Moderate with High cases (108:48).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of cases per dose band?",
+        correct: "75",
+        distractors: ["100", "132", "60"],
+        explanation:
+          "There were 300 cases across 4 dose bands. 300/4 = 75. Distractor 100: divides by 3 instead of 4. Distractor 132: reads the Low dose band value. Distractor 60: adds High and Very high cases.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinical-genetics-variant-reclassification-outcomes",
+    stimulus: [
+      "A clinical genetics service recorded variant reclassification outcomes by referral area during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Variant Reclassification Outcomes",
+      headers: ["Referral area", "Benign or likely benign", "Unchanged VUS", "Upgraded pathogenic", "Total"],
+      rows: [
+        ["Cancer", "24", "54", "12", "90"],
+        ["Cardiac", "18", "36", "6", "60"],
+        ["Neurology", "12", "30", "18", "60"],
+        ["Prenatal", "30", "18", "12", "60"],
+        ["Total", "84", "138", "48", "270"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Neurology variants were Upgraded pathogenic?",
+        correct: "18",
+        distractors: ["12", "30", "60"],
+        explanation:
+          "Neurology Upgraded pathogenic variants = 18. Distractor 12: reads Neurology Benign or likely benign variants. Distractor 30: reads Neurology Unchanged VUS variants. Distractor 60: reads the Neurology row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of variant reclassifications were Unchanged VUS?",
+        correct: "51.1%",
+        distractors: ["31.1%", "17.8%", "60.0%"],
+        explanation:
+          "Unchanged VUS outcomes = 138 and all outcomes = 270. 138/270 x 100 = 51.1%. Distractor 31.1%: uses Benign or likely benign outcomes (84/270 x 100). Distractor 17.8%: uses Upgraded pathogenic outcomes (48/270 x 100). Distractor 60.0%: uses Cancer Unchanged VUS as a percentage of the Cancer total (54/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Benign or likely benign outcomes to Upgraded pathogenic outcomes?",
+        correct: "7:4",
+        distractors: ["4:7", "23:8", "4:9"],
+        explanation:
+          "Benign or likely benign outcomes = 84 and Upgraded pathogenic outcomes = 48. 84:48 simplifies to 7:4. Distractor 4:7 reverses the ratio. Distractor 23:8 compares Unchanged VUS with Upgraded pathogenic outcomes (138:48). Distractor 4:9 uses Cancer Benign or likely benign to Unchanged VUS outcomes (24:54).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of variant reclassification outcomes per referral area?",
+        correct: "67.5",
+        distractors: ["90", "60", "54"],
+        explanation:
+          "There were 270 outcomes across 4 referral areas. 270/4 = 67.5. Distractor 90: reads the Cancer total. Distractor 60: reads one of the smaller referral-area totals. Distractor 54: divides by 5 instead of 4.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "palliative-care-syringe-driver-checks",
+    stimulus: [
+      "A palliative care team recorded syringe driver check outcomes by care setting during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Syringe Driver Check Outcomes",
+      yLabel: "Checks",
+      seriesLabels: ["On schedule", "Battery change", "Medication query"],
+      groups: [
+        { label: "Hospital ward", values: [80, 16, 8] },
+        { label: "Community", values: [64, 24, 16] },
+        { label: "Hospice", values: [48, 12, 12] },
+        { label: "Care home", values: [56, 16, 8] },
+      ],
+      max: 90,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Community syringe driver checks had a Medication query?",
+        correct: "16",
+        distractors: ["64", "24", "104"],
+        explanation:
+          "Community Medication query checks = 16. Distractor 64: reads Community On schedule checks. Distractor 24: reads Community Battery change checks. Distractor 104: adds all Community checks.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of syringe driver checks were On schedule?",
+        correct: "68.9%",
+        distractors: ["18.9%", "12.2%", "76.9%"],
+        explanation:
+          "On schedule checks = 248 and all checks = 360. 248/360 x 100 = 68.9%. Distractor 18.9%: uses Battery change checks (68/360 x 100). Distractor 12.2%: uses Medication query checks (44/360 x 100). Distractor 76.9%: uses Hospital ward On schedule checks as a percentage of the Hospital ward total (80/104 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Battery change checks to Medication query checks?",
+        correct: "17:11",
+        distractors: ["11:17", "62:11", "1:1"],
+        explanation:
+          "Battery change checks = 68 and Medication query checks = 44. 68:44 simplifies to 17:11. Distractor 11:17 reverses the ratio. Distractor 62:11 compares On schedule checks with Medication query checks (248:44). Distractor 1:1 uses Hospice Battery change to Medication query checks (12:12).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the combined total number of checks in Hospice and Care home settings?",
+        correct: "152",
+        distractors: ["72", "80", "208"],
+        explanation:
+          "Hospice checks = 48+12+12 = 72 and Care home checks = 56+16+8 = 80. Combined total = 152. Distractor 72: uses Hospice only. Distractor 80: uses Care home only. Distractor 208: adds the two 104-check settings instead.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "occupational-health-vaccination-clearance-status",
+    stimulus: [
+      "An occupational health service recorded vaccination clearance statuses by staff group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Vaccination Clearance Status",
+      headers: ["Staff group", "Cleared", "Dose booked", "Declined", "Total"],
+      rows: [
+        ["Clinical staff", "144", "36", "20", "200"],
+        ["Students", "90", "45", "15", "150"],
+        ["Estates", "54", "18", "18", "90"],
+        ["Volunteers", "36", "18", "6", "60"],
+        ["Total", "324", "117", "59", "500"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Students had a Dose booked?",
+        correct: "45",
+        distractors: ["90", "15", "150"],
+        explanation:
+          "Students with a Dose booked = 45. Distractor 90: reads Students Cleared. Distractor 15: reads Students Declined. Distractor 150: reads the Students row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of vaccination clearance statuses were Cleared?",
+        correct: "64.8%",
+        distractors: ["23.4%", "11.8%", "72.0%"],
+        explanation:
+          "Cleared statuses = 324 and all statuses = 500. 324/500 x 100 = 64.8%. Distractor 23.4%: uses Dose booked statuses (117/500 x 100). Distractor 11.8%: uses Declined statuses (59/500 x 100). Distractor 72.0%: uses Clinical staff Cleared as a percentage of the Clinical staff total (144/200 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Dose booked statuses to Declined statuses?",
+        correct: "117:59",
+        distractors: ["59:117", "324:59", "1:1"],
+        explanation:
+          "Dose booked statuses = 117 and Declined statuses = 59. 117:59 is already in simplest form. Distractor 59:117 reverses the ratio. Distractor 324:59 compares Cleared with Declined statuses. Distractor 1:1 uses Estates Dose booked to Declined statuses (18:18).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of statuses per staff group?",
+        correct: "120",
+        distractors: ["125", "150", "90"],
+        explanation:
+          "Staff-group totals are 200, 150, 90, and 60. Ordered totals are 60, 90, 150, 200, so the median is (90+150)/2 = 120. Distractor 125: gives the mean total per staff group (500/4). Distractor 150: reads the Students total. Distractor 90: reads the Estates total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiology-dexa-scan-referral-priority",
+    stimulus: [
+      "A radiology department recorded DEXA scan referrals by priority category during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "DEXA Scan Referrals by Priority",
+      yLabel: "Referrals",
+      categories: [
+        { label: "Routine", value: 168 },
+        { label: "Urgent", value: 42 },
+        { label: "Surveillance", value: 90 },
+        { label: "Inpatient", value: 20 },
+      ],
+      max: 180,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many DEXA scan referrals were Urgent?",
+        correct: "42",
+        distractors: ["168", "90", "320"],
+        explanation:
+          "Urgent DEXA referrals = 42. Distractor 168: reads Routine referrals. Distractor 90: reads Surveillance referrals. Distractor 320: adds all DEXA referrals.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of DEXA scan referrals were Routine?",
+        correct: "52.5%",
+        distractors: ["28.1%", "13.1%", "65.6%"],
+        explanation:
+          "Routine referrals = 168 and all referrals = 320. 168/320 x 100 = 52.5%. Distractor 28.1%: uses Surveillance referrals (90/320 x 100). Distractor 13.1%: uses Urgent referrals (42/320 x 100). Distractor 65.6%: uses Routine as a percentage of Routine plus Surveillance referrals (168/258 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Surveillance referrals to Urgent referrals?",
+        correct: "15:7",
+        distractors: ["7:15", "4:1", "9:2"],
+        explanation:
+          "Surveillance referrals to Urgent referrals = 90:42, which simplifies to 15:7. Distractor 7:15 reverses the ratio. Distractor 4:1 compares Routine with Urgent referrals (168:42). Distractor 9:2 compares Surveillance with Inpatient referrals (90:20).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of referrals per priority category?",
+        correct: "80",
+        distractors: ["106.7", "168", "20"],
+        explanation:
+          "There were 320 referrals across 4 priority categories. 320/4 = 80. Distractor 106.7: divides by 3 instead of 4. Distractor 168: reads the Routine bar. Distractor 20: reads the Inpatient bar.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neonatal-hearing-screen-recall-outcomes",
+    stimulus: [
+      "A neonatal hearing screening team recorded screening outcomes by pathway during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Neonatal Hearing Screening Outcomes",
+      headers: ["Pathway", "Initial pass", "Refer", "Missed", "Total"],
+      rows: [
+        ["Postnatal ward", "180", "24", "6", "210"],
+        ["SCBU", "48", "18", "6", "72"],
+        ["Community", "90", "18", "12", "120"],
+        ["Home birth", "36", "6", "6", "48"],
+        ["Total", "354", "66", "30", "450"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many SCBU screening outcomes were Refer?",
+        correct: "18",
+        distractors: ["48", "6", "72"],
+        explanation:
+          "SCBU Refer outcomes = 18. Distractor 48: reads SCBU Initial pass outcomes. Distractor 6: reads SCBU Missed outcomes. Distractor 72: reads the SCBU row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of neonatal hearing screening outcomes were Initial pass?",
+        correct: "78.7%",
+        distractors: ["14.7%", "6.7%", "85.7%"],
+        explanation:
+          "Initial pass outcomes = 354 and all outcomes = 450. 354/450 x 100 = 78.7%. Distractor 14.7%: uses Refer outcomes (66/450 x 100). Distractor 6.7%: uses Missed outcomes (30/450 x 100). Distractor 85.7%: uses Postnatal ward Initial pass as a percentage of the Postnatal ward total (180/210 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Refer outcomes to Missed outcomes?",
+        correct: "11:5",
+        distractors: ["5:11", "59:5", "1:1"],
+        explanation:
+          "Refer outcomes = 66 and Missed outcomes = 30. 66:30 simplifies to 11:5. Distractor 5:11 reverses the ratio. Distractor 59:5 compares Initial pass with Missed outcomes (354:30). Distractor 1:1 uses Home birth Refer to Missed outcomes (6:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of screening outcomes per pathway?",
+        correct: "112.5",
+        distractors: ["150", "120", "90"],
+        explanation:
+          "There were 450 outcomes across 4 pathways. 450/4 = 112.5. Distractor 150: divides by the 3 outcome columns instead of 4 pathways. Distractor 120: reads the Community total. Distractor 90: divides by 5 instead of 4.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "speech-therapy-dysphagia-screening-results",
+    stimulus: [
+      "A speech and language therapy team recorded dysphagia screening results by referral stream during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Dysphagia Screening Results",
+      yLabel: "Screens",
+      seriesLabels: ["Safe oral intake", "Texture modified", "Nil by mouth"],
+      groups: [
+        { label: "Stroke", values: [54, 36, 18] },
+        { label: "Frailty", values: [48, 30, 12] },
+        { label: "Respiratory", values: [36, 18, 6] },
+        { label: "Head and neck", values: [24, 18, 12] },
+      ],
+      max: 60,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Stroke screens resulted in Nil by mouth?",
+        correct: "18",
+        distractors: ["54", "36", "108"],
+        explanation:
+          "Stroke Nil by mouth screens = 18. Distractor 54: reads Stroke Safe oral intake screens. Distractor 36: reads Stroke Texture modified screens. Distractor 108: adds all Stroke screens.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of dysphagia screens resulted in Texture modified?",
+        correct: "32.7%",
+        distractors: ["51.9%", "15.4%", "33.3%"],
+        explanation:
+          "Texture modified screens = 102 and all screens = 312. 102/312 x 100 = 32.7%. Distractor 51.9%: uses Safe oral intake screens (162/312 x 100). Distractor 15.4%: uses Nil by mouth screens (48/312 x 100). Distractor 33.3%: uses Stroke Texture modified as a percentage of Stroke total (36/108 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Safe oral intake screens to Nil by mouth screens?",
+        correct: "27:8",
+        distractors: ["8:27", "17:8", "3:1"],
+        explanation:
+          "Safe oral intake screens = 162 and Nil by mouth screens = 48. 162:48 simplifies to 27:8. Distractor 8:27 reverses the ratio. Distractor 17:8 compares Texture modified with Nil by mouth screens (102:48). Distractor 3:1 uses Stroke Safe oral intake to Nil by mouth screens (54:18).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the combined total number of screens in Frailty and Respiratory streams?",
+        correct: "150",
+        distractors: ["90", "60", "198"],
+        explanation:
+          "Frailty screens = 48+30+12 = 90 and Respiratory screens = 36+18+6 = 60. Combined total = 150. Distractor 90: uses Frailty only. Distractor 60: uses Respiratory only. Distractor 198: adds Stroke and Frailty totals instead.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-renal-dose-adjustment-reviews",
+    stimulus: [
+      "A pharmacy team recorded renal dose adjustment review outcomes by ward group during one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Renal Dose Adjustment Review Outcomes",
+      headers: ["Ward group", "Reviewed no change", "Dose adjusted", "Escalated", "Total"],
+      rows: [
+        ["Medical", "72", "36", "12", "120"],
+        ["Surgical", "48", "24", "8", "80"],
+        ["Oncology", "36", "18", "6", "60"],
+        ["Critical care", "54", "30", "16", "100"],
+        ["Total", "210", "108", "42", "360"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Surgical reviews resulted in Dose adjusted?",
+        correct: "24",
+        distractors: ["48", "8", "80"],
+        explanation:
+          "Surgical Dose adjusted reviews = 24. Distractor 48: reads Surgical Reviewed no change reviews. Distractor 8: reads Surgical Escalated reviews. Distractor 80: reads the Surgical row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of Surgical renal dose reviews resulted in Dose adjusted?",
+        correct: "30%",
+        distractors: ["60%", "10%", "6.7%"],
+        explanation:
+          "Surgical Dose adjusted reviews = 24 and Surgical reviews = 80. 24/80 x 100 = 30%. Distractor 60%: uses Surgical Reviewed no change reviews (48/80 x 100). Distractor 10%: uses Surgical Escalated reviews (8/80 x 100). Distractor 6.7%: uses Surgical Dose adjusted reviews as a percentage of all reviews (24/360 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Reviewed no change reviews to Escalated reviews?",
+        correct: "5:1",
+        distractors: ["1:5", "18:7", "6:1"],
+        explanation:
+          "Reviewed no change reviews = 210 and Escalated reviews = 42. 210:42 simplifies to 5:1. Distractor 1:5 reverses the ratio. Distractor 18:7 compares Dose adjusted with Escalated reviews (108:42). Distractor 6:1 uses Medical Reviewed no change to Escalated reviews (72:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of renal dose reviews per ward group?",
+        correct: "90",
+        distractors: ["120", "60", "80"],
+        explanation:
+          "Ward-group totals are 120, 80, 60, and 100. Ordered totals are 60, 80, 100, 120, so the median is (80+100)/2 = 90. Distractor 120: reads the Medical total. Distractor 60: reads the Oncology total. Distractor 80: reads the Surgical total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cardiology-heart-failure-virtual-ward-observations",
+    stimulus: [
+      "A cardiology virtual ward recorded heart failure observation outcomes during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Heart Failure Virtual Ward Observation Outcomes",
+      yLabel: "Observation episodes",
+      categories: [
+        { label: "Stable", value: 156 },
+        { label: "Medication adjusted", value: 78 },
+        { label: "Urgent review", value: 42 },
+        { label: "Admitted", value: 24 },
+      ],
+      max: 170,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many observation episodes resulted in Admitted?",
+        correct: "24",
+        distractors: ["42", "78", "300"],
+        explanation:
+          "Admitted observation episodes = 24. Distractor 42: reads Urgent review episodes. Distractor 78: reads Medication adjusted episodes. Distractor 300: adds all observation episodes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of observation episodes were Stable?",
+        correct: "52%",
+        distractors: ["26%", "14%", "60%"],
+        explanation:
+          "Stable episodes = 156 and all episodes = 300. 156/300 x 100 = 52%. Distractor 26%: uses Medication adjusted episodes (78/300 x 100). Distractor 14%: uses Urgent review episodes (42/300 x 100). Distractor 60%: uses Stable as a percentage of Stable plus Urgent review episodes (156/260 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Medication adjusted episodes to Urgent review episodes?",
+        correct: "13:7",
+        distractors: ["7:13", "26:7", "7:4"],
+        explanation:
+          "Medication adjusted episodes to Urgent review episodes = 78:42, which simplifies to 13:7. Distractor 7:13 reverses the ratio. Distractor 26:7 compares Stable with Urgent review episodes (156:42). Distractor 7:4 compares Urgent review with Admitted episodes (42:24).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of episodes per observation outcome category?",
+        correct: "75",
+        distractors: ["100", "156", "60"],
+        explanation:
+          "There were 300 episodes across 4 outcome categories. 300/4 = 75. Distractor 100: divides by 3 instead of 4. Distractor 156: reads the Stable value. Distractor 60: adds Urgent review and Admitted episodes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "maxillofacial-trauma-clinic-treatment-plans",
+    stimulus: [
+      "A maxillofacial trauma clinic recorded treatment plans by injury type during one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Maxillofacial Trauma Treatment Plans",
+      headers: ["Injury type", "Conservative", "Minor procedure", "Theatre", "Total"],
+      rows: [
+        ["Mandible", "24", "18", "18", "60"],
+        ["Zygoma", "30", "24", "6", "60"],
+        ["Dental trauma", "36", "18", "6", "60"],
+        ["Soft tissue", "42", "12", "6", "60"],
+        ["Total", "132", "72", "36", "240"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Zygoma injuries were planned for a Minor procedure?",
+        correct: "24",
+        distractors: ["30", "6", "60"],
+        explanation:
+          "Zygoma Minor procedure plans = 24. Distractor 30: reads Zygoma Conservative plans. Distractor 6: reads Zygoma Theatre plans. Distractor 60: reads the Zygoma row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of treatment plans were Theatre plans?",
+        correct: "15%",
+        distractors: ["30%", "55%", "10%"],
+        explanation:
+          "Theatre plans = 36 and all treatment plans = 240. 36/240 x 100 = 15%. Distractor 30%: uses Minor procedure plans (72/240 x 100). Distractor 55%: uses Conservative plans (132/240 x 100). Distractor 10%: uses Zygoma Theatre plans as a percentage of the Zygoma total (6/60 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Conservative plans to Theatre plans?",
+        correct: "11:3",
+        distractors: ["3:11", "2:1", "7:1"],
+        explanation:
+          "Conservative plans = 132 and Theatre plans = 36. 132:36 simplifies to 11:3. Distractor 3:11 reverses the ratio. Distractor 2:1 compares Minor procedure with Theatre plans (72:36). Distractor 7:1 uses Soft tissue Conservative to Theatre plans (42:6).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of treatment plans per injury type?",
+        correct: "60",
+        distractors: ["80", "132", "36"],
+        explanation:
+          "There were 240 treatment plans across 4 injury types. 240/4 = 60. Distractor 80: divides by the 3 plan columns instead of 4 injury types. Distractor 132: reads the Conservative column total. Distractor 36: reads the Theatre column total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "infection-control-needlestick-followup-status",
+    stimulus: [
+      "An infection control team recorded needlestick follow-up actions by staff area during one quarter.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Needlestick Follow-up Actions",
+      yLabel: "Actions",
+      seriesLabels: ["Baseline bloods", "Vaccine booster", "Follow-up call"],
+      groups: [
+        { label: "Medical", values: [54, 18, 18] },
+        { label: "Surgical", values: [42, 24, 18] },
+        { label: "Laboratory", values: [30, 12, 12] },
+        { label: "Estates", values: [24, 18, 6] },
+      ],
+      max: 60,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Laboratory needlestick follow-up actions were Follow-up call?",
+        correct: "12",
+        distractors: ["30", "54", "18"],
+        explanation:
+          "Laboratory Follow-up call actions = 12. Distractor 30: reads Laboratory Baseline bloods actions. Distractor 54: reads the Laboratory row total. Distractor 18: reads a nearby Follow-up call value from Medical or Surgical.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of needlestick follow-up actions were Vaccine booster?",
+        correct: "26.1%",
+        distractors: ["54.3%", "19.6%", "20.0%"],
+        explanation:
+          "Vaccine booster actions = 72 and all actions = 276. 72/276 x 100 = 26.1%. Distractor 54.3%: uses Baseline bloods actions (150/276 x 100). Distractor 19.6%: uses Follow-up call actions (54/276 x 100). Distractor 20.0%: uses Medical Vaccine booster as a percentage of Medical actions (18/90 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Baseline bloods actions to Follow-up call actions?",
+        correct: "25:9",
+        distractors: ["9:25", "4:3", "3:1"],
+        explanation:
+          "Baseline bloods actions = 150 and Follow-up call actions = 54. 150:54 simplifies to 25:9. Distractor 9:25 reverses the ratio. Distractor 4:3 compares Vaccine booster with Follow-up call actions (72:54). Distractor 3:1 uses Medical Baseline bloods to Follow-up call actions (54:18).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the combined total number of actions for Medical and Surgical staff areas?",
+        correct: "174",
+        distractors: ["90", "84", "144"],
+        explanation:
+          "Medical actions = 54+18+18 = 90 and Surgical actions = 42+24+18 = 84. Combined total = 174. Distractor 90: uses Medical only. Distractor 84: uses Surgical only. Distractor 144: adds Medical and Laboratory totals instead.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dietitian-coeliac-diet-review-outcomes",
+    stimulus: [
+      "A dietitian service recorded coeliac diet review outcomes by patient group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Coeliac Diet Review Outcomes",
+      headers: ["Patient group", "Good adherence", "Partial adherence", "Ongoing symptoms", "Total"],
+      rows: [
+        ["Children", "42", "18", "12", "72"],
+        ["Adults", "96", "36", "18", "150"],
+        ["Pregnancy", "24", "12", "6", "42"],
+        ["Older adults", "48", "18", "6", "72"],
+        ["Total", "210", "84", "42", "336"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Pregnancy reviews recorded Partial adherence?",
+        correct: "12",
+        distractors: ["24", "6", "42"],
+        explanation:
+          "Pregnancy Partial adherence reviews = 12. Distractor 24: reads Pregnancy Good adherence reviews. Distractor 6: reads Pregnancy Ongoing symptoms reviews. Distractor 42: reads the Pregnancy row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of coeliac diet reviews recorded Good adherence?",
+        correct: "62.5%",
+        distractors: ["25%", "12.5%", "58.3%"],
+        explanation:
+          "Good adherence reviews = 210 and all reviews = 336. 210/336 x 100 = 62.5%. Distractor 25%: uses Partial adherence reviews (84/336 x 100). Distractor 12.5%: uses Ongoing symptoms reviews (42/336 x 100). Distractor 58.3%: uses Children Good adherence as a percentage of Children reviews (42/72 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Partial adherence reviews to Ongoing symptoms reviews?",
+        correct: "2:1",
+        distractors: ["1:2", "5:1", "3:2"],
+        explanation:
+          "Partial adherence reviews = 84 and Ongoing symptoms reviews = 42. 84:42 simplifies to 2:1. Distractor 1:2 reverses the ratio. Distractor 5:1 compares Good adherence with Ongoing symptoms reviews (210:42). Distractor 3:2 uses Children Partial adherence to Ongoing symptoms reviews (18:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of coeliac diet reviews per patient group?",
+        correct: "72",
+        distractors: ["84", "150", "42"],
+        explanation:
+          "Patient-group totals are 72, 150, 42, and 72. Ordered totals are 42, 72, 72, 150, so the median is (72+72)/2 = 72. Distractor 84: gives the mean total per group (336/4). Distractor 150: reads the Adults total. Distractor 42: reads the Pregnancy total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ambulatory-gynaecology-hysteroscopy-pathway-outcomes",
+    stimulus: [
+      "An ambulatory gynaecology unit recorded hysteroscopy pathway outcomes during one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Ambulatory Hysteroscopy Pathway Outcomes",
+      yLabel: "Patients",
+      categories: [
+        { label: "Completed in clinic", value: 135 },
+        { label: "Biopsy booked", value: 75 },
+        { label: "Theatre referral", value: 45 },
+        { label: "Deferred or declined", value: 45 },
+      ],
+      max: 150,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many patients had a Theatre referral?",
+        correct: "45",
+        distractors: ["75", "135", "300"],
+        explanation:
+          "Theatre referral patients = 45. Distractor 75: reads Biopsy booked patients. Distractor 135: reads Completed in clinic patients. Distractor 300: adds all pathway outcomes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of hysteroscopy pathway outcomes were Completed in clinic?",
+        correct: "45%",
+        distractors: ["25%", "15%", "70%"],
+        explanation:
+          "Completed in clinic outcomes = 135 and all outcomes = 300. 135/300 x 100 = 45%. Distractor 25%: uses Biopsy booked outcomes (75/300 x 100). Distractor 15%: uses Theatre referral outcomes (45/300 x 100). Distractor 70%: uses Completed in clinic plus Biopsy booked outcomes (210/300 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Biopsy booked outcomes to Theatre referral outcomes?",
+        correct: "5:3",
+        distractors: ["3:5", "3:1", "5:9"],
+        explanation:
+          "Biopsy booked outcomes to Theatre referral outcomes = 75:45, which simplifies to 5:3. Distractor 3:5 reverses the ratio. Distractor 3:1 compares Completed in clinic with Theatre referral outcomes (135:45). Distractor 5:9 compares Biopsy booked with Completed in clinic outcomes (75:135).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of patients per pathway outcome?",
+        correct: "75",
+        distractors: ["100", "135", "45"],
+        explanation:
+          "There were 300 patients across 4 pathway outcomes. 300/4 = 75. Distractor 100: divides by 3 instead of 4. Distractor 135: reads the Completed in clinic value. Distractor 45: reads either Theatre referral or Deferred or declined.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "respiratory-oxygen-assessment-flow-rates",
+    stimulus: [
+      "A respiratory oxygen assessment service recorded prescribed oxygen flow bands by assessment group during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Oxygen Assessment Flow Bands",
+      headers: ["Assessment group", "No oxygen", "1-2 L/min", "3-4 L/min", "Total"],
+      rows: [
+        ["COPD", "60", "36", "24", "120"],
+        ["ILD", "36", "24", "30", "90"],
+        ["Post-COVID", "48", "18", "6", "72"],
+        ["Other", "24", "12", "6", "42"],
+        ["Total", "168", "90", "66", "324"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many ILD assessments were prescribed 3-4 L/min?",
+        correct: "30",
+        distractors: ["36", "24", "90"],
+        explanation:
+          "ILD assessments prescribed 3-4 L/min = 30. Distractor 36: reads ILD No oxygen assessments. Distractor 24: reads ILD 1-2 L/min assessments. Distractor 90: reads the ILD row total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of oxygen assessments resulted in No oxygen?",
+        correct: "51.9%",
+        distractors: ["27.8%", "20.4%", "50.0%"],
+        explanation:
+          "No oxygen assessments = 168 and all assessments = 324. 168/324 x 100 = 51.9%. Distractor 27.8%: uses 1-2 L/min assessments (90/324 x 100). Distractor 20.4%: uses 3-4 L/min assessments (66/324 x 100). Distractor 50.0%: uses COPD No oxygen as a percentage of COPD assessments (60/120 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of 1-2 L/min assessments to 3-4 L/min assessments?",
+        correct: "15:11",
+        distractors: ["11:15", "28:11", "4:5"],
+        explanation:
+          "1-2 L/min assessments = 90 and 3-4 L/min assessments = 66. 90:66 simplifies to 15:11. Distractor 11:15 reverses the ratio. Distractor 28:11 compares No oxygen with 3-4 L/min assessments (168:66). Distractor 4:5 uses ILD 1-2 L/min to 3-4 L/min assessments (24:30).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of assessments per assessment group?",
+        correct: "81",
+        distractors: ["108", "120", "72"],
+        explanation:
+          "There were 324 assessments across 4 assessment groups. 324/4 = 81. Distractor 108: divides by the 3 flow-band columns instead of 4 groups. Distractor 120: reads the COPD total. Distractor 72: reads the Post-COVID total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pathology-urine-culture-contamination-rates",
+    stimulus: [
+      "A pathology laboratory recorded urine culture result categories during one audit month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Urine Culture Result Categories",
+      yLabel: "Samples",
+      categories: [
+        { label: "No growth", value: 220 },
+        { label: "Significant growth", value: 160 },
+        { label: "Mixed growth", value: 80 },
+        { label: "Contaminated", value: 40 },
+      ],
+      max: 240,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many urine culture samples had Mixed growth?",
+        correct: "80",
+        distractors: ["160", "40", "500"],
+        explanation:
+          "Mixed growth samples = 80. Distractor 160: reads Significant growth samples. Distractor 40: reads Contaminated samples. Distractor 500: adds all samples.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of urine culture samples were Contaminated?",
+        correct: "8%",
+        distractors: ["16%", "32%", "40%"],
+        explanation:
+          "Contaminated samples = 40 and all samples = 500. 40/500 x 100 = 8%. Distractor 16%: uses Mixed growth samples (80/500 x 100). Distractor 32%: uses Significant growth samples (160/500 x 100). Distractor 40%: uses Contaminated as a percentage of Mixed growth plus Contaminated samples (40/100 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of No growth samples to Significant growth samples?",
+        correct: "11:8",
+        distractors: ["8:11", "11:4", "4:1"],
+        explanation:
+          "No growth samples to Significant growth samples = 220:160, which simplifies to 11:8. Distractor 8:11 reverses the ratio. Distractor 11:4 compares No growth with Mixed growth samples (220:80). Distractor 4:1 compares Significant growth with Contaminated samples (160:40).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of samples per result category?",
+        correct: "125",
+        distractors: ["100", "220", "40"],
+        explanation:
+          "There were 500 samples across 4 result categories. 500/4 = 125. Distractor 100: divides by 5 instead of 4. Distractor 220: reads the No growth value. Distractor 40: reads the Contaminated value.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-nursing-catheter-change-outcomes",
+    stimulus: [
+      "A community nursing team recorded catheter change outcomes by visit setting during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Catheter Change Outcomes by Visit Setting",
+      headers: ["Visit setting", "Successful change", "GP review", "Hospital referral", "Total"],
+      rows: [
+        ["Housebound", "72", "18", "10", "100"],
+        ["Care home", "60", "12", "8", "80"],
+        ["Clinic", "48", "6", "6", "60"],
+        ["Palliative", "36", "12", "12", "60"],
+        ["Total", "216", "48", "36", "300"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Palliative visits led to Hospital referral?",
+        correct: "12",
+        distractors: ["36", "60", "48"],
+        explanation:
+          "Palliative Hospital referral visits = 12. Distractor 36: reads Palliative Successful change visits. Distractor 60: reads the Palliative row total. Distractor 48: reads the GP review column total.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of catheter change outcomes were Successful change?",
+        correct: "72%",
+        distractors: ["16%", "12%", "75%"],
+        explanation:
+          "Successful change outcomes = 216 and all outcomes = 300. 216/300 x 100 = 72%. Distractor 16%: uses GP review outcomes (48/300 x 100). Distractor 12%: uses Hospital referral outcomes (36/300 x 100). Distractor 75%: uses Care home Successful change as a percentage of Care home outcomes (60/80 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of GP review outcomes to Hospital referral outcomes?",
+        correct: "4:3",
+        distractors: ["3:4", "6:1", "1:1"],
+        explanation:
+          "GP review outcomes = 48 and Hospital referral outcomes = 36. 48:36 simplifies to 4:3. Distractor 3:4 reverses the ratio. Distractor 6:1 compares Successful change with Hospital referral outcomes (216:36). Distractor 1:1 uses Palliative GP review to Hospital referral outcomes (12:12).",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the median total number of catheter change outcomes per visit setting?",
+        correct: "70",
+        distractors: ["75", "100", "60"],
+        explanation:
+          "Visit-setting totals are 100, 80, 60, and 60. Ordered totals are 60, 60, 80, 100, so the median is (60+80)/2 = 70. Distractor 75: gives the mean total per setting (300/4). Distractor 100: reads the Housebound total. Distractor 60: reads the Clinic or Palliative total.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "mental-health-liaison-risk-assessment-dispositions",
+    stimulus: [
+      "A mental health liaison team recorded risk assessment dispositions by referral area during one month.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Risk Assessment Dispositions",
+      yLabel: "Assessments",
+      seriesLabels: ["Discharged with plan", "CMHT referral", "Admitted"],
+      groups: [
+        { label: "ED", values: [72, 36, 24] },
+        { label: "Medical ward", values: [48, 30, 18] },
+        { label: "Maternity", values: [24, 12, 6] },
+        { label: "Older adult", values: [36, 24, 30] },
+      ],
+      max: 80,
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Older adult assessments resulted in Admitted?",
+        correct: "30",
+        distractors: ["36", "24", "90"],
+        explanation:
+          "Older adult Admitted assessments = 30. Distractor 36: reads Older adult Discharged with plan assessments. Distractor 24: reads Older adult CMHT referral assessments. Distractor 90: adds all Older adult assessments.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of risk assessments resulted in CMHT referral?",
+        correct: "28.3%",
+        distractors: ["50.0%", "21.7%", "27.3%"],
+        explanation:
+          "CMHT referral assessments = 102 and all assessments = 360. 102/360 x 100 = 28.3%. Distractor 50.0%: uses Discharged with plan assessments (180/360 x 100). Distractor 21.7%: uses Admitted assessments (78/360 x 100). Distractor 27.3%: uses ED CMHT referral as a percentage of ED assessments (36/132 x 100).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Discharged with plan assessments to Admitted assessments?",
+        correct: "30:13",
+        distractors: ["13:30", "17:13", "3:1"],
+        explanation:
+          "Discharged with plan assessments = 180 and Admitted assessments = 78. 180:78 simplifies to 30:13. Distractor 13:30 reverses the ratio. Distractor 17:13 compares CMHT referral with Admitted assessments (102:78). Distractor 3:1 uses ED Discharged with plan to Admitted assessments (72:24).",
+      },
+      {
+        subtype: "qr-graphs",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the combined total number of assessments from ED and Medical ward referral areas?",
+        correct: "228",
+        distractors: ["132", "96", "186"],
+        explanation:
+          "ED assessments = 72+36+24 = 132 and Medical ward assessments = 48+30+18 = 96. Combined total = 228. Distractor 132: uses ED only. Distractor 96: uses Medical ward only. Distractor 186: adds Medical ward and Older adult totals instead.",
+      },
+    ],
+  },
+
   // ===== PASTE NEW QR QUESTIONS ABOVE THIS LINE =====
 ];
 
@@ -26704,6 +39348,2907 @@ export const USER_RAW_QR_CHART_INPUTS: QrChartRawInput[] = [
   //   ],
   //   questions: [ ... ],
   // },
+
+  // ===== CLAUDE-ADDED SETS (separate array — no Codex conflict) =====
+
+  {
+    chartType: "bar",
+    setId: "cardiac-rehab-phase-attendance",
+    title: "Cardiac Rehabilitation Attendances by Phase",
+    yLabel: "Attendances",
+    context:
+      "A cardiac rehabilitation team recorded patient attendances across four programme phases during one quarter.",
+    data: [
+      { label: "Phase 1", value: 280 },
+      { label: "Phase 2", value: 360 },
+      { label: "Phase 3", value: 200 },
+      { label: "Phase 4", value: 160 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many patients attended Phase 2 cardiac rehabilitation?",
+        correct: "360",
+        distractors: ["280", "200", "160"],
+        explanation:
+          "The Phase 2 bar reaches 360. Distractor 280: Phase 1 value. Distractor 200: Phase 3 value. Distractor 160: Phase 4 value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all cardiac rehabilitation attendances were in Phase 1 or Phase 2?",
+        correct: "64%",
+        distractors: ["36%", "28%", "60%"],
+        explanation:
+          "Phase 1 + Phase 2 = 280 + 360 = 640. Total = 280 + 360 + 200 + 160 = 1000. 640 ÷ 1000 × 100 = 64%. Distractor 36%: uses Phase 3 + Phase 4 (200 + 160 = 360, 360 ÷ 1000). Distractor 28%: uses Phase 1 alone (280 ÷ 1000). Distractor 60%: uses incorrect numerator of 600.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of Phase 3 to Phase 4 attendances?",
+        correct: "5:4",
+        distractors: ["4:5", "7:4", "9:4"],
+        explanation:
+          "Phase 3 : Phase 4 = 200 : 160 = 5 : 4 (divide both by 40). Distractor 4:5: ratio reversed. Distractor 7:4: uses Phase 1 : Phase 4 = 280 : 160 = 7 : 4. Distractor 9:4: uses Phase 2 : Phase 4 = 360 : 160 = 9 : 4.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of attendances across the four rehabilitation phases?",
+        correct: "250",
+        distractors: ["360", "160", "200"],
+        explanation:
+          "Total = 1000. Mean = 1000 ÷ 4 = 250. Distractor 360: reads Phase 2 bar. Distractor 160: reads Phase 4 bar. Distractor 200: divides by 5 instead of 4 (1000 ÷ 5 = 200).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "paediatric-ae-monthly-attendances",
+    title: "Monthly Paediatric A&E Attendances",
+    yLabel: "Attendances",
+    context:
+      "A children's hospital recorded paediatric A&E attendances over five consecutive months.",
+    data: [
+      { label: "Jan", value: 400 },
+      { label: "Feb", value: 500 },
+      { label: "Mar", value: 600 },
+      { label: "Apr", value: 500 },
+      { label: "May", value: 400 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many paediatric A&E attendances were recorded in March?",
+        correct: "600",
+        distractors: ["500", "400", "550"],
+        explanation:
+          "The March data point sits at 600. Distractor 500: February and April value. Distractor 400: January and May value. Distractor 550: misread midpoint between Feb and Mar.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of the 5-month total did March account for?",
+        correct: "25%",
+        distractors: ["33%", "30%", "20%"],
+        explanation:
+          "Total = 400 + 500 + 600 + 500 + 400 = 2400. March = 600. 600 ÷ 2400 × 100 = 25%. Distractor 33%: uses 600 ÷ 1800 (omits one month from denominator: 400+500+500+400=1800). Distractor 30%: uses 600 ÷ 2000 (rounds total down). Distractor 20%: uses Jan value (400) ÷ 2000.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What was the mean monthly attendance figure across the five months?",
+        correct: "480",
+        distractors: ["600", "400", "500"],
+        explanation:
+          "Total = 2400. Mean = 2400 ÷ 5 = 480. Distractor 600: reads peak month (March). Distractor 400: divides by 6 instead of 5 (2400 ÷ 6 = 400). Distractor 500: reads Feb/Apr value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "By what percentage did attendances increase from January to March?",
+        correct: "50%",
+        distractors: ["200", "150%", "33%"],
+        explanation:
+          "Increase = 600 − 400 = 200. % increase = 200 ÷ 400 × 100 = 50%. Distractor 200: gives the absolute difference rather than a percentage. Distractor 150%: uses 600 ÷ 400 × 100 = 150% ('percentage of' error). Distractor 33%: uses new value as denominator: 200 ÷ 600 × 100 ≈ 33%.",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "gp-out-of-hours-call-urgency",
+    title: "GP Out-of-Hours Calls by Urgency and Day Type",
+    yLabel: "Calls",
+    context:
+      "A GP out-of-hours service categorised call urgency (immediate ≤1 h, routine 2–6 h) across three day types during one month.",
+    seriesLabels: ["Immediate (≤1 h)", "Routine (2–6 h)"],
+    groups: [
+      { label: "Mon–Fri", values: [180, 420] },
+      { label: "Saturday", values: [120, 180] },
+      { label: "Sunday", values: [150, 150] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many immediate call-outs were recorded on Saturdays?",
+        correct: "120",
+        distractors: ["150", "180", "300"],
+        explanation:
+          "The Immediate bar for Saturday reaches 120. Distractor 150: Sunday immediate value. Distractor 180: Mon–Fri immediate value. Distractor 300: Saturday total (120 + 180).",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all GP out-of-hours calls required an immediate response?",
+        correct: "37.5%",
+        distractors: ["62.5%", "40%", "25%"],
+        explanation:
+          "Total immediate = 180 + 120 + 150 = 450. Grand total = 450 + 750 = 1200. 450 ÷ 1200 × 100 = 37.5%. Distractor 62.5%: routine percentage (750 ÷ 1200). Distractor 40%: uses incorrect immediate total of 480. Distractor 25%: uses 300 ÷ 1200 (one day-type total as numerator).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of immediate to routine calls on Mon–Fri?",
+        correct: "3:7",
+        distractors: ["7:3", "3:5", "2:7"],
+        explanation:
+          "Mon–Fri immediate : routine = 180 : 420 = 3 : 7 (divide by 60). Distractor 7:3: ratio reversed. Distractor 3:5: uses overall ratio (450 : 750 = 3 : 5). Distractor 2:7: uses Sat immediate : Mon–Fri routine = 120 : 420 = 2 : 7.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of Sunday calls required an immediate response?",
+        correct: "50%",
+        distractors: ["37.5%", "40%", "25%"],
+        explanation:
+          "Sunday immediate = 150. Sunday total = 150 + 150 = 300. 150 ÷ 300 × 100 = 50%. Distractor 37.5%: uses overall immediate rate (450 ÷ 1200). Distractor 40%: uses Saturday immediate ÷ Sunday total (120 ÷ 300). Distractor 25%: uses Sunday immediate ÷ Mon–Fri total (150 ÷ 600).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "sleep-clinic-diagnostic-outcomes",
+    title: "Sleep Clinic Diagnostic Outcomes",
+    yLabel: "Patients",
+    context:
+      "A regional sleep clinic recorded the primary diagnostic outcome for all new patients attending during one year.",
+    data: [
+      { label: "OSA", value: 350 },
+      { label: "Insomnia", value: 250 },
+      { label: "Hypersomnia", value: 150 },
+      { label: "No diagnosis", value: 250 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many patients attending the sleep clinic were diagnosed with hypersomnia?",
+        correct: "150",
+        distractors: ["250", "350", "200"],
+        explanation:
+          "The Hypersomnia bar sits at 150. Distractor 250: insomnia or no-diagnosis value. Distractor 350: OSA value. Distractor 200: midpoint misread between hypersomnia and insomnia bars.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of sleep clinic patients received an insomnia diagnosis?",
+        correct: "25%",
+        distractors: ["35%", "15%", "50%"],
+        explanation:
+          "Insomnia = 250. Total = 350 + 250 + 150 + 250 = 1000. 250 ÷ 1000 × 100 = 25%. Distractor 35%: uses OSA count (350 ÷ 1000). Distractor 15%: uses hypersomnia (150 ÷ 1000). Distractor 50%: adds insomnia + no-diagnosis (500 ÷ 1000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of OSA diagnoses to no-diagnosis outcomes?",
+        correct: "7:5",
+        distractors: ["5:7", "7:3", "5:3"],
+        explanation:
+          "OSA : no-diagnosis = 350 : 250 = 7 : 5 (divide by 50). Distractor 5:7: ratio reversed. Distractor 7:3: uses OSA : hypersomnia = 350 : 150 = 7 : 3 (wrong category). Distractor 5:3: uses insomnia : hypersomnia = 250 : 150 = 5 : 3.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of patients per diagnostic category?",
+        correct: "250",
+        distractors: ["350", "150", "300"],
+        explanation:
+          "Total = 1000. Mean = 1000 ÷ 4 = 250. Distractor 350: reads highest bar (OSA). Distractor 150: reads lowest bar (hypersomnia). Distractor 300: uses inflated total 1200 ÷ 4 = 300.",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "icu-weekly-admission-trend",
+    title: "Weekly ICU Admissions",
+    yLabel: "Admissions",
+    context:
+      "An intensive care unit recorded the number of new patient admissions for each of five consecutive weeks.",
+    data: [
+      { label: "Wk 1", value: 45 },
+      { label: "Wk 2", value: 60 },
+      { label: "Wk 3", value: 75 },
+      { label: "Wk 4", value: 60 },
+      { label: "Wk 5", value: 60 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many patients were admitted to the ICU during week 3?",
+        correct: "75",
+        distractors: ["60", "45", "80"],
+        explanation:
+          "The week 3 data point sits at 75. Distractor 60: weeks 2, 4, and 5 value. Distractor 45: week 1 value. Distractor 80: overestimate of the peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of the 5-week total occurred in weeks 1 and 2 combined?",
+        correct: "35%",
+        distractors: ["40%", "25%", "20%"],
+        explanation:
+          "Wk 1 + Wk 2 = 45 + 60 = 105. Total = 45 + 60 + 75 + 60 + 60 = 300. 105 ÷ 300 × 100 = 35%. Distractor 40%: uses Wk 2 + Wk 4 (60 + 60 = 120, 120 ÷ 300). Distractor 25%: uses Wk 3 alone (75 ÷ 300). Distractor 20%: uses only Wk 2 (60 ÷ 300).",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What was the mean weekly ICU admission count over the five weeks?",
+        correct: "60",
+        distractors: ["75", "45", "30"],
+        explanation:
+          "Total = 300. Mean = 300 ÷ 5 = 60. Distractor 75: divides by 4 instead of 5 (300 ÷ 4 = 75). Distractor 45: reads week 1 value as the mean. Distractor 30: halves the correct mean (60 ÷ 2).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of week 1 admissions to week 3 admissions?",
+        correct: "3:5",
+        distractors: ["5:3", "3:4", "4:5"],
+        explanation:
+          "Wk 1 : Wk 3 = 45 : 75 = 3 : 5 (divide by 15). Distractor 5:3: ratio reversed. Distractor 3:4: uses Wk 1 : Wk 2 = 45 : 60 = 3 : 4. Distractor 4:5: uses Wk 2 : Wk 3 = 60 : 75 = 4 : 5.",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "cancer-screening-uptake-age-group",
+    title: "Cancer Screening Uptake by Age Group",
+    yLabel: "Patients",
+    context:
+      "A cancer screening programme recorded attendance and non-attendance for three age groups during one screening round.",
+    seriesLabels: ["Attended", "Did Not Attend"],
+    groups: [
+      { label: "50–59", values: [280, 120] },
+      { label: "60–69", values: [240, 160] },
+      { label: "70–79", values: [120, 80] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many patients aged 70–79 did not attend cancer screening?",
+        correct: "80",
+        distractors: ["120", "160", "200"],
+        explanation:
+          "The Did Not Attend bar for 70–79 reaches 80. Distractor 120: 70–79 attended value. Distractor 160: 60–69 did-not-attend value. Distractor 200: 70–79 total invited (120 + 80).",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all invited patients attended screening?",
+        correct: "64%",
+        distractors: ["36%", "60%", "70%"],
+        explanation:
+          "Total attended = 280 + 240 + 120 = 640. Grand total = 640 + 360 = 1000. 640 ÷ 1000 × 100 = 64%. Distractor 36%: non-attendance rate (360 ÷ 1000). Distractor 60%: uses incorrect attended total of 600. Distractor 70%: applies 50–59 uptake rate (280 ÷ 400) to the whole cohort.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of attendees to non-attendees in the 60–69 age group?",
+        correct: "3:2",
+        distractors: ["2:3", "7:3", "3:5"],
+        explanation:
+          "60–69 attended : did not attend = 240 : 160 = 3 : 2 (divide by 80). Distractor 2:3: ratio reversed. Distractor 7:3: uses 50–59 group (280 : 120 = 7 : 3). Distractor 3:5: uses attended : total invited for 60–69 (240 : 400 = 3 : 5).",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of the 50–59 age group attended screening?",
+        correct: "70%",
+        distractors: ["30%", "64%", "75%"],
+        explanation:
+          "50–59 attended = 280. 50–59 total invited = 280 + 120 = 400. 280 ÷ 400 × 100 = 70%. Distractor 30%: non-attendance for 50–59 (120 ÷ 400). Distractor 64%: uses overall programme attendance rate. Distractor 75%: rounds 280 up to 300 (300 ÷ 400).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "eol-care-plan-completions-by-ward",
+    title: "End-of-Life Care Plan Completions by Ward Type",
+    yLabel: "Completions",
+    context:
+      "A hospital palliative care team audited completed end-of-life care plans across five ward types during one year.",
+    data: [
+      { label: "Medical", value: 160 },
+      { label: "Surgical", value: 80 },
+      { label: "Oncology", value: 200 },
+      { label: "Elderly care", value: 240 },
+      { label: "Other", value: 120 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many end-of-life care plans were completed on surgical wards?",
+        correct: "80",
+        distractors: ["160", "120", "100"],
+        explanation:
+          "The Surgical bar sits at 80. Distractor 160: medical ward value. Distractor 120: Other ward value. Distractor 100: misread midway between Surgical and Other.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all care plan completions were recorded on oncology wards?",
+        correct: "25%",
+        distractors: ["30%", "20%", "33%"],
+        explanation:
+          "Oncology = 200. Total = 160 + 80 + 200 + 240 + 120 = 800. 200 ÷ 800 × 100 = 25%. Distractor 30%: uses elderly care value (240 ÷ 800). Distractor 20%: uses medical value (160 ÷ 800). Distractor 33%: uses 200 ÷ 600 (omits surgical from denominator).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of care plan completions on medical wards to surgical wards?",
+        correct: "2:1",
+        distractors: ["1:2", "4:3", "5:2"],
+        explanation:
+          "Medical : Surgical = 160 : 80 = 2 : 1. Distractor 1:2: ratio reversed. Distractor 4:3: uses Medical : Other = 160 : 120 = 4 : 3. Distractor 5:2: uses Oncology : Surgical = 200 : 80 = 5 : 2.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of care plan completions per ward type?",
+        correct: "160",
+        distractors: ["240", "80", "200"],
+        explanation:
+          "Total = 800. Mean = 800 ÷ 5 = 160. Distractor 240: reads highest bar (Elderly care). Distractor 80: reads lowest bar (Surgical). Distractor 200: divides by 4 instead of 5 (800 ÷ 4 = 200).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "diabetes-foot-screening-risk-categories",
+    title: "Diabetes Foot Screening Results by Risk Category",
+    yLabel: "Patients",
+    context:
+      "A diabetes foot screening service classified all patients screened during one year into four risk categories.",
+    data: [
+      { label: "Active disease", value: 50 },
+      { label: "High risk", value: 150 },
+      { label: "Moderate risk", value: 300 },
+      { label: "Low risk", value: 500 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many patients screened were categorised as moderate risk?",
+        correct: "300",
+        distractors: ["500", "150", "350"],
+        explanation:
+          "The Moderate risk bar sits at 300. Distractor 500: low risk value. Distractor 150: high risk value. Distractor 350: overestimate of the moderate risk bar.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of patients screened were categorised as low risk?",
+        correct: "50%",
+        distractors: ["30%", "15%", "55%"],
+        explanation:
+          "Low risk = 500. Total = 50 + 150 + 300 + 500 = 1000. 500 ÷ 1000 × 100 = 50%. Distractor 30%: uses moderate risk value (300 ÷ 1000). Distractor 15%: uses high risk value (150 ÷ 1000). Distractor 55%: adds low risk + active disease (550 ÷ 1000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of high-risk to active disease patients?",
+        correct: "3:1",
+        distractors: ["1:3", "2:1", "6:1"],
+        explanation:
+          "High risk : Active disease = 150 : 50 = 3 : 1. Distractor 1:3: ratio reversed. Distractor 2:1: uses Moderate : High risk = 300 : 150 = 2 : 1. Distractor 6:1: uses Moderate : Active disease = 300 : 50 = 6 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of patients per risk category?",
+        correct: "250",
+        distractors: ["500", "333", "300"],
+        explanation:
+          "Total = 1000. Mean = 1000 ÷ 4 = 250. Distractor 500: reads the low risk bar as the mean. Distractor 333: divides by 3 instead of 4 (1000 ÷ 3 ≈ 333). Distractor 300: reads the moderate risk bar.",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "mental-health-section-detentions",
+    title: "Mental Health Act Detentions by Section",
+    yLabel: "Detentions",
+    context:
+      "A mental health trust recorded all new Mental Health Act detentions by section type during one quarter.",
+    data: [
+      { label: "Section 2", value: 160 },
+      { label: "Section 3", value: 200 },
+      { label: "Section 4", value: 80 },
+      { label: "Section 136", value: 160 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many detentions were recorded under Section 3 during the quarter?",
+        correct: "200",
+        distractors: ["160", "80", "150"],
+        explanation:
+          "The Section 3 bar reaches 200. Distractor 160: Section 2 or Section 136 value. Distractor 80: Section 4 value. Distractor 150: the mean across all sections, misread as a data point.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all detentions were recorded under Section 3?",
+        correct: "33.3%",
+        distractors: ["26.7%", "13.3%", "25%"],
+        explanation:
+          "Section 3 = 200. Total = 160 + 200 + 80 + 160 = 600. 200 ÷ 600 × 100 = 33.3%. Distractor 26.7%: uses Section 2 or Section 136 count (160 ÷ 600). Distractor 13.3%: uses Section 4 (80 ÷ 600). Distractor 25%: uses the mean value as numerator (150 ÷ 600).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of Section 2 to Section 4 detentions?",
+        correct: "2:1",
+        distractors: ["1:2", "5:4", "5:2"],
+        explanation:
+          "Section 2 : Section 4 = 160 : 80 = 2 : 1. Distractor 1:2: ratio reversed. Distractor 5:4: uses Section 3 : Section 2 = 200 : 160 = 5 : 4 (wrong sections). Distractor 5:2: uses Section 3 : Section 4 = 200 : 80 = 5 : 2.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of detentions per section type?",
+        correct: "150",
+        distractors: ["200", "80", "120"],
+        explanation:
+          "Total = 600. Mean = 600 ÷ 4 = 150. Distractor 200: reads the highest bar (Section 3). Distractor 80: reads the lowest bar (Section 4). Distractor 120: divides by 5 instead of 4 (600 ÷ 5 = 120).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "outpatient-dna-monthly-trend",
+    title: "Monthly Outpatient DNA Appointments",
+    yLabel: "DNAs",
+    context:
+      "An outpatient services manager tracked the number of did-not-attend (DNA) appointments across five consecutive months.",
+    data: [
+      { label: "Jan", value: 100 },
+      { label: "Feb", value: 150 },
+      { label: "Mar", value: 200 },
+      { label: "Apr", value: 100 },
+      { label: "May", value: 50 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many outpatient DNA appointments occurred in March?",
+        correct: "200",
+        distractors: ["150", "100", "250"],
+        explanation:
+          "The March data point sits at 200. Distractor 150: February value. Distractor 100: January and April value. Distractor 250: overestimate of the March peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of the 5-month total did March account for?",
+        correct: "33.3%",
+        distractors: ["25%", "40%", "50%"],
+        explanation:
+          "Total = 100 + 150 + 200 + 100 + 50 = 600. March = 200. 200 ÷ 600 × 100 = 33.3%. Distractor 25%: uses 150 ÷ 600 (February value). Distractor 40%: uses 240 ÷ 600 (inflated numerator). Distractor 50%: uses 300 ÷ 600 (doubles March value).",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What was the mean number of DNA appointments per month over the five months?",
+        correct: "120",
+        distractors: ["200", "50", "100"],
+        explanation:
+          "Total = 600. Mean = 600 ÷ 5 = 120. Distractor 200: reads the peak month (March). Distractor 50: reads the lowest month (May). Distractor 100: divides by 6 instead of 5 (600 ÷ 6 = 100).",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "By what percentage did DNA appointments decrease from March to May?",
+        correct: "75%",
+        distractors: ["150", "300%", "25%"],
+        explanation:
+          "Decrease = 200 − 50 = 150. % decrease = 150 ÷ 200 × 100 = 75%. Distractor 150: gives the absolute decrease rather than a percentage. Distractor 300%: uses May as the denominator (150 ÷ 50 × 100 = 300%). Distractor 25%: divides the decrease by the grand total (150 ÷ 600 × 100 = 25%).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "community-nursing-visit-types",
+    title: "Community Nursing Visits by Type",
+    yLabel: "Visits",
+    context:
+      "A community nursing service recorded all home visits by clinical purpose during one month.",
+    data: [
+      { label: "Wound care", value: 480 },
+      { label: "Medication admin", value: 240 },
+      { label: "Post-operative", value: 160 },
+      { label: "Palliative care", value: 80 },
+      { label: "Assessment", value: 40 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many community nursing visits were for medication administration?",
+        correct: "240",
+        distractors: ["480", "160", "80"],
+        explanation:
+          "The Medication admin bar sits at 240. Distractor 480: wound care value. Distractor 160: post-operative value. Distractor 80: palliative care value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all community nursing visits were wound care visits?",
+        correct: "48%",
+        distractors: ["24%", "52%", "40%"],
+        explanation:
+          "Wound care = 480. Total = 480 + 240 + 160 + 80 + 40 = 1000. 480 ÷ 1000 × 100 = 48%. Distractor 24%: uses medication admin count (240 ÷ 1000). Distractor 52%: inflates wound care to 520. Distractor 40%: rounds wound care down to 400.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of wound care visits to medication administration visits?",
+        correct: "2:1",
+        distractors: ["1:2", "3:1", "6:1"],
+        explanation:
+          "Wound care : Medication admin = 480 : 240 = 2 : 1. Distractor 1:2: ratio reversed. Distractor 3:1: uses wound care : post-operative = 480 : 160 = 3 : 1 (wrong comparison). Distractor 6:1: uses wound care : palliative = 480 : 80 = 6 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of visits per visit type?",
+        correct: "200",
+        distractors: ["480", "40", "250"],
+        explanation:
+          "Total = 1000. Mean = 1000 ÷ 5 = 200. Distractor 480: reads the highest bar (wound care). Distractor 40: reads the lowest bar (assessment). Distractor 250: divides by 4 instead of 5 (1000 ÷ 4 = 250).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "audiology-new-referral-complaints",
+    title: "Audiology New Referrals by Presenting Complaint",
+    yLabel: "Referrals",
+    context:
+      "An audiology department recorded all new referrals by presenting complaint during one year.",
+    data: [
+      { label: "Hearing loss", value: 480 },
+      { label: "Tinnitus", value: 320 },
+      { label: "Balance", value: 160 },
+      { label: "Hyperacusis", value: 40 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many new referrals were for balance problems?",
+        correct: "160",
+        distractors: ["480", "320", "40"],
+        explanation:
+          "The Balance bar sits at 160. Distractor 480: hearing loss value. Distractor 320: tinnitus value. Distractor 40: hyperacusis value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all referrals were for hearing loss or tinnitus?",
+        correct: "80%",
+        distractors: ["48%", "32%", "20%"],
+        explanation:
+          "Hearing loss + tinnitus = 480 + 320 = 800. Total = 480 + 320 + 160 + 40 = 1000. 800 ÷ 1000 × 100 = 80%. Distractor 48%: uses hearing loss alone (480 ÷ 1000). Distractor 32%: uses tinnitus alone (320 ÷ 1000). Distractor 20%: uses balance + hyperacusis (200 ÷ 1000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of hearing loss to tinnitus referrals?",
+        correct: "3:2",
+        distractors: ["2:3", "3:1", "12:1"],
+        explanation:
+          "Hearing loss : Tinnitus = 480 : 320 = 3 : 2 (divide by 160). Distractor 2:3: ratio reversed. Distractor 3:1: uses hearing loss : balance = 480 : 160 = 3 : 1 (wrong category). Distractor 12:1: uses hearing loss : hyperacusis = 480 : 40 = 12 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of referrals per presenting complaint category?",
+        correct: "250",
+        distractors: ["480", "40", "200"],
+        explanation:
+          "Total = 1000. Mean = 1000 ÷ 4 = 250. Distractor 480: reads the highest bar (hearing loss). Distractor 40: reads the lowest bar (hyperacusis). Distractor 200: divides by 5 instead of 4 (1000 ÷ 5 = 200).",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "inpatient-medication-errors-shift",
+    title: "Inpatient Medication Errors by Type and Shift",
+    yLabel: "Errors",
+    context:
+      "A hospital medication safety team audited inpatient medication errors by error type and shift over one quarter.",
+    seriesLabels: ["Day shift", "Night shift"],
+    groups: [
+      { label: "Omission", values: [150, 50] },
+      { label: "Wrong dose", values: [120, 80] },
+      { label: "Wrong drug", values: [60, 40] },
+      { label: "Timing error", values: [90, 10] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many wrong drug errors occurred during the night shift?",
+        correct: "40",
+        distractors: ["60", "100", "10"],
+        explanation:
+          "The Night shift bar for Wrong drug reaches 40. Distractor 60: day shift wrong drug value. Distractor 100: wrong drug category total (60 + 40). Distractor 10: timing error night shift value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all medication errors occurred during the night shift?",
+        correct: "30%",
+        distractors: ["70%", "13%", "25%"],
+        explanation:
+          "Night total = 50 + 80 + 40 + 10 = 180. Grand total = 420 + 180 = 600. 180 ÷ 600 × 100 = 30%. Distractor 70%: day shift proportion (420 ÷ 600). Distractor 13%: uses night wrong-dose ÷ grand total (80 ÷ 600 ≈ 13.3%). Distractor 25%: uses day omission ÷ grand total (150 ÷ 600 = 25%).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of day shift to night shift errors overall?",
+        correct: "7:3",
+        distractors: ["3:7", "3:1", "2:1"],
+        explanation:
+          "Day total : Night total = 420 : 180 = 7 : 3 (divide by 60). Distractor 3:7: ratio reversed. Distractor 3:1: uses omission day : night = 150 : 50 = 3 : 1 (single error type, not overall). Distractor 2:1: uses incorrect day total of 360 (420 − 60 = 360), giving 360 : 180 = 2 : 1.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of wrong dose errors occurred during the night shift?",
+        correct: "40%",
+        distractors: ["60%", "13%", "50%"],
+        explanation:
+          "Night wrong dose = 80. Wrong dose total = 120 + 80 = 200. 80 ÷ 200 × 100 = 40%. Distractor 60%: day wrong dose proportion (120 ÷ 200). Distractor 13%: uses night wrong dose ÷ grand total (80 ÷ 600 ≈ 13.3%). Distractor 50%: assumes equal day/night split.",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "blood-donation-monthly-sessions",
+    title: "Monthly Blood Donation Sessions",
+    yLabel: "Sessions",
+    context:
+      "An NHS blood donation centre recorded the number of donor sessions held each month over six months.",
+    data: [
+      { label: "Jan", value: 60 },
+      { label: "Feb", value: 90 },
+      { label: "Mar", value: 120 },
+      { label: "Apr", value: 90 },
+      { label: "May", value: 90 },
+      { label: "Jun", value: 150 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many blood donation sessions were held in June?",
+        correct: "150",
+        distractors: ["120", "90", "100"],
+        explanation:
+          "The June data point sits at 150. Distractor 120: March value. Distractor 90: February, April, and May value. Distractor 100: the mean, misread as a data point.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of the 6-month total did June account for?",
+        correct: "25%",
+        distractors: ["20%", "15%", "33%"],
+        explanation:
+          "Total = 60 + 90 + 120 + 90 + 90 + 150 = 600. June = 150. 150 ÷ 600 × 100 = 25%. Distractor 20%: uses March value (120 ÷ 600). Distractor 15%: uses Feb/Apr/May value (90 ÷ 600). Distractor 33%: uses 150 ÷ 450 (omits January from denominator).",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What was the mean number of sessions per month over the six months?",
+        correct: "100",
+        distractors: ["150", "60", "120"],
+        explanation:
+          "Total = 600. Mean = 600 ÷ 6 = 100. Distractor 150: reads the peak month (June). Distractor 60: reads the lowest month (January). Distractor 120: divides by 5 instead of 6 (600 ÷ 5 = 120).",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "By what percentage did sessions increase from January to June?",
+        correct: "150%",
+        distractors: ["90", "250%", "60%"],
+        explanation:
+          "Increase = 150 − 60 = 90. % increase = 90 ÷ 60 × 100 = 150%. Distractor 90: gives the absolute increase rather than a percentage. Distractor 250%: uses June ÷ January × 100 = 150 ÷ 60 × 100 = 250% ('percentage of' error). Distractor 60%: uses new value as denominator — 90 ÷ 150 × 100 = 60%.",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "dental-recall-appointment-outcomes",
+    title: "Dental Recall Appointment Outcomes",
+    yLabel: "Appointments",
+    context:
+      "A dental practice recorded the outcome of all recall appointments during one quarter.",
+    data: [
+      { label: "Treatment complete", value: 360 },
+      { label: "Requires follow-up", value: 240 },
+      { label: "Specialist referral", value: 120 },
+      { label: "Recalls due", value: 180 },
+      { label: "DNA", value: 100 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many dental recall appointments required follow-up treatment?",
+        correct: "240",
+        distractors: ["360", "180", "120"],
+        explanation:
+          "The Requires follow-up bar sits at 240. Distractor 360: treatment complete value. Distractor 180: recalls due value. Distractor 120: specialist referral value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all dental recall appointments resulted in treatment complete?",
+        correct: "36%",
+        distractors: ["24%", "18%", "40%"],
+        explanation:
+          "Treatment complete = 360. Total = 360 + 240 + 120 + 180 + 100 = 1000. 360 ÷ 1000 × 100 = 36%. Distractor 24%: uses follow-up count (240 ÷ 1000). Distractor 18%: uses recalls due (180 ÷ 1000). Distractor 40%: rounds 360 up to 400.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of specialist referrals to DNA appointments?",
+        correct: "6:5",
+        distractors: ["5:6", "4:3", "2:1"],
+        explanation:
+          "Specialist referral : DNA = 120 : 100 = 6 : 5 (divide by 20). Distractor 5:6: ratio reversed. Distractor 4:3: uses follow-up : recalls due = 240 : 180 = 4 : 3 (wrong categories). Distractor 2:1: uses follow-up : specialist referral = 240 : 120 = 2 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of appointments per outcome category?",
+        correct: "200",
+        distractors: ["360", "100", "250"],
+        explanation:
+          "Total = 1000. Mean = 1000 ÷ 5 = 200. Distractor 360: reads the highest bar (treatment complete). Distractor 100: reads the lowest bar (DNA). Distractor 250: divides by 4 instead of 5 (1000 ÷ 4 = 250).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "neonatal-gestational-age-admissions",
+    title: "Neonatal Unit Admissions by Gestational Age",
+    yLabel: "Admissions",
+    context:
+      "A neonatal unit recorded all admissions by gestational age group during one year.",
+    data: [
+      { label: "<28 weeks", value: 30 },
+      { label: "28–31 weeks", value: 80 },
+      { label: "32–33 weeks", value: 120 },
+      { label: "34–36 weeks", value: 200 },
+      { label: "37+ weeks", value: 70 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many neonates admitted were at 34–36 weeks gestation?",
+        correct: "200",
+        distractors: ["120", "80", "70"],
+        explanation:
+          "The 34–36 weeks bar reaches 200. Distractor 120: 32–33 weeks value. Distractor 80: 28–31 weeks value. Distractor 70: 37+ weeks value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all neonatal admissions were at less than 32 weeks gestation?",
+        correct: "22%",
+        distractors: ["16%", "6%", "40%"],
+        explanation:
+          "Less than 32 weeks = <28 wk + 28–31 wk = 30 + 80 = 110. Total = 30 + 80 + 120 + 200 + 70 = 500. 110 ÷ 500 × 100 = 22%. Distractor 16%: uses only 28–31 weeks (80 ÷ 500). Distractor 6%: uses only <28 weeks (30 ÷ 500). Distractor 40%: uses 34–36 weeks alone (200 ÷ 500).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of 32–33 week admissions to 37+ week admissions?",
+        correct: "12:7",
+        distractors: ["7:12", "8:3", "20:7"],
+        explanation:
+          "32–33 wk : 37+ wk = 120 : 70 = 12 : 7 (divide by 10). Distractor 7:12: ratio reversed. Distractor 8:3: uses 28–31 wk : <28 wk = 80 : 30 = 8 : 3 (wrong groups). Distractor 20:7: uses 34–36 wk : 37+ wk = 200 : 70 = 20 : 7 (wrong comparison).",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of admissions per gestational age group?",
+        correct: "100",
+        distractors: ["200", "30", "125"],
+        explanation:
+          "Total = 500. Mean = 500 ÷ 5 = 100. Distractor 200: reads the highest bar (34–36 weeks). Distractor 30: reads the lowest bar (<28 weeks). Distractor 125: divides by 4 instead of 5 (500 ÷ 4 = 125).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "ae-triage-category-distribution",
+    title: "A&E Attendances by Triage Category",
+    yLabel: "Attendances",
+    context:
+      "An emergency department recorded all patient attendances by triage category during one month.",
+    data: [
+      { label: "Cat 1", value: 80 },
+      { label: "Cat 2", value: 240 },
+      { label: "Cat 3", value: 360 },
+      { label: "Cat 4", value: 240 },
+      { label: "Cat 5", value: 80 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many patients were triaged to Category 3 during the month?",
+        correct: "360",
+        distractors: ["240", "80", "400"],
+        explanation:
+          "The Cat 3 bar reaches 360. Distractor 240: Category 2 or 4 value. Distractor 80: Category 1 or 5 value. Distractor 400: overestimate of the peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all A&E attendances were triaged to Category 1 or Category 2?",
+        correct: "32%",
+        distractors: ["68%", "8%", "24%"],
+        explanation:
+          "Cat 1 + Cat 2 = 80 + 240 = 320. Total = 80+240+360+240+80 = 1000. 320 ÷ 1000 × 100 = 32%. Distractor 68%: Cat 3+4+5 (680 ÷ 1000). Distractor 8%: Cat 1 alone (80 ÷ 1000). Distractor 24%: Cat 2 alone (240 ÷ 1000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of Category 3 to Category 2 attendances?",
+        correct: "3:2",
+        distractors: ["2:3", "9:2", "4:3"],
+        explanation:
+          "Cat 3 : Cat 2 = 360 : 240 = 3 : 2 (÷120). Distractor 2:3: reversed. Distractor 9:2: uses Cat 3 : Cat 1 = 360 : 80. Distractor 4:3: uses Cat 2+Cat 4 : Cat 3 = 480 : 360.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of attendances per triage category?",
+        correct: "200",
+        distractors: ["360", "80", "250"],
+        explanation:
+          "Total = 1000. Mean = 1000 ÷ 5 = 200. Distractor 360: highest bar (Cat 3). Distractor 80: lowest bar. Distractor 250: divides by 4 (1000 ÷ 4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "maternity-birth-types-by-half-year",
+    title: "Maternity Unit Birth Types by Half Year",
+    yLabel: "Births",
+    context:
+      "A maternity unit recorded birth types for all deliveries across two successive six-month periods.",
+    seriesLabels: ["First half", "Second half"],
+    groups: [
+      { label: "Normal vaginal", values: [240, 260] },
+      { label: "Instrumental", values: [80, 120] },
+      { label: "Emergency CS", values: [60, 40] },
+      { label: "Elective CS", values: [120, 80] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many instrumental births were recorded in the second half of the year?",
+        correct: "120",
+        distractors: ["80", "200", "260"],
+        explanation:
+          "The Second half bar for Instrumental reaches 120. Distractor 80: first half instrumental. Distractor 200: instrumental total (80+120). Distractor 260: second half normal vaginal.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all births were normal vaginal deliveries?",
+        correct: "50%",
+        distractors: ["48%", "52%", "26%"],
+        explanation:
+          "Normal vaginal = 240+260 = 500. Grand total = 500+200+100+200 = 1000. 500 ÷ 1000 × 100 = 50%. Distractor 48%: 240+240=480 (first half doubled). Distractor 52%: 260+260=520. Distractor 26%: second half only (260 ÷ 1000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of elective CS to emergency CS births across the full year?",
+        correct: "2:1",
+        distractors: ["1:2", "3:2", "3:1"],
+        explanation:
+          "Elective CS = 120+80 = 200. Emergency CS = 60+40 = 100. 200:100 = 2:1. Distractor 1:2: reversed. Distractor 3:2: first-half elective : second-half elective = 120:80. Distractor 3:1: first-half elective : second-half emergency = 120:40.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of second-half births were emergency caesarean sections?",
+        correct: "8%",
+        distractors: ["12%", "10%", "4%"],
+        explanation:
+          "Second-half emergency CS = 40. Second-half total = 260+120+40+80 = 500. 40 ÷ 500 × 100 = 8%. Distractor 12%: first-half EC ÷ first-half total (60÷500). Distractor 10%: all-year EC ÷ grand (100÷1000). Distractor 4%: second-half EC ÷ grand (40÷1000).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "renal-dialysis-weekly-sessions",
+    title: "Weekly Renal Dialysis Sessions",
+    yLabel: "Sessions",
+    context:
+      "A renal unit recorded the number of patient dialysis sessions delivered each week over six consecutive weeks.",
+    data: [
+      { label: "Wk 1", value: 180 },
+      { label: "Wk 2", value: 210 },
+      { label: "Wk 3", value: 240 },
+      { label: "Wk 4", value: 210 },
+      { label: "Wk 5", value: 180 },
+      { label: "Wk 6", value: 180 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many dialysis sessions were delivered during week 3?",
+        correct: "240",
+        distractors: ["210", "180", "260"],
+        explanation:
+          "The week 3 data point sits at 240. Distractor 210: weeks 2 and 4. Distractor 180: weeks 1, 5, and 6. Distractor 260: overestimate.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of the 6-week total was delivered in week 3?",
+        correct: "20%",
+        distractors: ["17.5%", "15%", "25%"],
+        explanation:
+          "Total = 180+210+240+210+180+180 = 1200. 240 ÷ 1200 × 100 = 20%. Distractor 17.5%: wk 2 or 4 (210÷1200). Distractor 15%: wk 1/5/6 (180÷1200). Distractor 25%: inflates wk 3 to 300.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What was the mean number of dialysis sessions per week over the six weeks?",
+        correct: "200",
+        distractors: ["240", "180", "210"],
+        explanation:
+          "Total = 1200. Mean = 1200 ÷ 6 = 200. Distractor 240: peak week, or ÷5 error (1200÷5=240). Distractor 180: most frequent value. Distractor 210: wk 2 or 4 value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "By what percentage did dialysis sessions decrease from week 3 to week 6?",
+        correct: "25%",
+        distractors: ["33.3%", "60", "75%"],
+        explanation:
+          "Decrease = 240 − 180 = 60. % decrease = 60 ÷ 240 × 100 = 25%. Distractor 33.3%: uses wk 6 as base (60÷180×100). Distractor 60: absolute decrease, not %. Distractor 75%: proportion remaining (180÷240×100).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "radiology-scan-type-volumes",
+    title: "Radiology Department Scan Volumes by Modality",
+    yLabel: "Scans",
+    context:
+      "A radiology department recorded the total number of scans performed by imaging modality during one year.",
+    data: [
+      { label: "MRI", value: 480 },
+      { label: "CT", value: 360 },
+      { label: "Ultrasound", value: 600 },
+      { label: "X-ray", value: 480 },
+      { label: "Nuclear med.", value: 80 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many nuclear medicine scans were performed during the year?",
+        correct: "80",
+        distractors: ["480", "360", "160"],
+        explanation:
+          "The Nuclear med. bar reaches 80. Distractor 480: MRI or X-ray value. Distractor 360: CT value. Distractor 160: double-counts nuclear medicine.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all scans were ultrasound examinations?",
+        correct: "30%",
+        distractors: ["24%", "18%", "4%"],
+        explanation:
+          "Ultrasound = 600. Total = 480+360+600+480+80 = 2000. 600 ÷ 2000 × 100 = 30%. Distractor 24%: MRI or X-ray (480÷2000). Distractor 18%: CT (360÷2000). Distractor 4%: nuclear medicine (80÷2000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of MRI to CT scans?",
+        correct: "4:3",
+        distractors: ["3:4", "4:5", "5:4"],
+        explanation:
+          "MRI : CT = 480 : 360 = 4 : 3 (÷120). Distractor 3:4: reversed. Distractor 4:5: uses MRI : ultrasound = 480:600. Distractor 5:4: uses ultrasound : MRI = 600:480.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of scans per imaging modality?",
+        correct: "400",
+        distractors: ["600", "80", "500"],
+        explanation:
+          "Total = 2000. Mean = 2000 ÷ 5 = 400. Distractor 600: highest bar (ultrasound). Distractor 80: lowest bar. Distractor 500: divides by 4 (2000÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "oncology-chemo-response-by-cancer",
+    title: "Chemotherapy Response by Cancer Type",
+    yLabel: "Patients",
+    context:
+      "An oncology unit recorded chemotherapy treatment responses across four cancer types over one year.",
+    seriesLabels: ["Complete response", "Partial response"],
+    groups: [
+      { label: "Breast", values: [200, 100] },
+      { label: "Lung", values: [60, 140] },
+      { label: "Colorectal", values: [100, 100] },
+      { label: "Haematological", values: [240, 60] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many lung cancer patients achieved a partial response to chemotherapy?",
+        correct: "140",
+        distractors: ["60", "200", "100"],
+        explanation:
+          "The Partial response bar for Lung = 140. Distractor 60: lung complete. Distractor 200: lung total (60+140). Distractor 100: colorectal partial.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all patients achieved a complete response?",
+        correct: "60%",
+        distractors: ["40%", "20%", "80%"],
+        explanation:
+          "Total complete = 200+60+100+240 = 600. Grand = 1000. 600÷1000×100 = 60%. Distractor 40%: partial rate (400÷1000). Distractor 20%: breast complete alone (200÷1000). Distractor 80%: haematological rate (240÷300), misapplied overall.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of complete to partial responses for breast cancer patients?",
+        correct: "2:1",
+        distractors: ["1:2", "3:2", "4:1"],
+        explanation:
+          "Breast complete : partial = 200:100 = 2:1. Distractor 1:2: reversed. Distractor 3:2: breast total : lung total = 300:200. Distractor 4:1: haematological complete : partial = 240:60.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of haematological cancer patients achieved a complete response?",
+        correct: "80%",
+        distractors: ["20%", "60%", "24%"],
+        explanation:
+          "Haematological complete = 240. Total = 240+60 = 300. 240÷300×100 = 80%. Distractor 20%: partial rate (60÷300). Distractor 60%: overall rate misapplied. Distractor 24%: 240÷1000 (wrong denominator).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "gp-appointment-type-breakdown",
+    title: "GP Appointments by Consultation Type",
+    yLabel: "Appointments",
+    context:
+      "A GP practice recorded all patient appointments by consultation type during one quarter.",
+    data: [
+      { label: "Face-to-face", value: 1500 },
+      { label: "Telephone", value: 750 },
+      { label: "Online", value: 450 },
+      { label: "Home visit", value: 300 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many online GP appointments were recorded?",
+        correct: "450",
+        distractors: ["750", "300", "500"],
+        explanation:
+          "The Online bar sits at 450. Distractor 750: telephone. Distractor 300: home visit. Distractor 500: overestimate.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all GP appointments were telephone consultations?",
+        correct: "25%",
+        distractors: ["50%", "15%", "10%"],
+        explanation:
+          "Telephone = 750. Total = 1500+750+450+300 = 3000. 750÷3000×100 = 25%. Distractor 50%: face-to-face (1500÷3000). Distractor 15%: online (450÷3000). Distractor 10%: home visit (300÷3000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of face-to-face to telephone appointments?",
+        correct: "2:1",
+        distractors: ["1:2", "5:1", "10:3"],
+        explanation:
+          "Face-to-face : Telephone = 1500:750 = 2:1. Distractor 1:2: reversed. Distractor 5:1: face-to-face : home visit = 1500:300. Distractor 10:3: face-to-face : online = 1500:450.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of appointments per consultation type?",
+        correct: "750",
+        distractors: ["1500", "300", "600"],
+        explanation:
+          "Total = 3000. Mean = 3000÷4 = 750. Distractor 1500: highest bar. Distractor 300: lowest bar. Distractor 600: divides by 5 (3000÷5).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "stroke-rehab-monthly-admissions",
+    title: "Stroke Rehabilitation Unit Monthly Admissions",
+    yLabel: "Admissions",
+    context:
+      "A stroke rehabilitation unit recorded the number of new patient admissions over five consecutive months.",
+    data: [
+      { label: "Jan", value: 150 },
+      { label: "Feb", value: 200 },
+      { label: "Mar", value: 300 },
+      { label: "Apr", value: 200 },
+      { label: "May", value: 150 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many patients were newly admitted to the stroke rehabilitation unit in March?",
+        correct: "300",
+        distractors: ["200", "150", "350"],
+        explanation:
+          "The March point sits at 300. Distractor 200: Feb/Apr value. Distractor 150: Jan/May value. Distractor 350: overestimate.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of the 5-month total did March account for?",
+        correct: "30%",
+        distractors: ["20%", "15%", "33%"],
+        explanation:
+          "Total = 150+200+300+200+150 = 1000. 300÷1000×100 = 30%. Distractor 20%: Feb/Apr (200÷1000). Distractor 15%: Jan/May (150÷1000). Distractor 33%: uses 300÷900 (removes March from denominator).",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What was the mean monthly admission figure across the five months?",
+        correct: "200",
+        distractors: ["300", "150", "250"],
+        explanation:
+          "Total = 1000. Mean = 1000÷5 = 200. Distractor 300: peak month. Distractor 150: lowest months. Distractor 250: divides by 4 (1000÷4).",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "By what percentage did admissions increase from January to March?",
+        correct: "100%",
+        distractors: ["150", "200%", "50%"],
+        explanation:
+          "Increase = 300−150 = 150. % increase = 150÷150×100 = 100%. Distractor 150: absolute increase. Distractor 200%: 300÷150×100 = 200% ('% of' error). Distractor 50%: uses new value as base (150÷300×100).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "weight-management-clinic-bmi-outcomes",
+    title: "Children's Weight Management Clinic BMI Outcomes",
+    yLabel: "Patients",
+    context:
+      "A children's weight management clinic recorded the BMI outcome category for all patients completing the programme.",
+    data: [
+      { label: "BMI improved", value: 240 },
+      { label: "BMI stable", value: 160 },
+      { label: "BMI increased", value: 80 },
+      { label: "Lost to follow-up", value: 120 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many patients were lost to follow-up?",
+        correct: "120",
+        distractors: ["240", "80", "160"],
+        explanation:
+          "The Lost to follow-up bar = 120. Distractor 240: BMI improved. Distractor 80: BMI increased. Distractor 160: BMI stable.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of patients achieved an improvement in BMI?",
+        correct: "40%",
+        distractors: ["26.7%", "13.3%", "66.7%"],
+        explanation:
+          "BMI improved = 240. Total = 240+160+80+120 = 600. 240÷600×100 = 40%. Distractor 26.7%: stable (160÷600). Distractor 13.3%: increased (80÷600). Distractor 66.7%: improved+stable (400÷600).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of BMI improved to BMI stable patients?",
+        correct: "3:2",
+        distractors: ["2:3", "3:1", "2:1"],
+        explanation:
+          "240:160 = 3:2 (÷80). Distractor 2:3: reversed. Distractor 3:1: improved:increased = 240:80. Distractor 2:1: stable:increased = 160:80.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of patients per outcome category?",
+        correct: "150",
+        distractors: ["240", "80", "120"],
+        explanation:
+          "Total = 600. Mean = 600÷4 = 150. Distractor 240: highest bar. Distractor 80: lowest bar. Distractor 120: divides by 5 (600÷5).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "ophthalmology-referral-diagnoses",
+    title: "Ophthalmology New Referrals by Diagnosis",
+    yLabel: "Referrals",
+    context:
+      "An ophthalmology department recorded all new referrals by primary diagnosis during one year.",
+    data: [
+      { label: "Glaucoma", value: 240 },
+      { label: "Cataract", value: 360 },
+      { label: "Macular degen.", value: 180 },
+      { label: "Diabetic retinop.", value: 120 },
+      { label: "Other", value: 100 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many referrals were for macular degeneration?",
+        correct: "180",
+        distractors: ["360", "240", "120"],
+        explanation:
+          "The Macular degen. bar sits at 180. Distractor 360: cataract value. Distractor 240: glaucoma value. Distractor 120: diabetic retinopathy value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all ophthalmology referrals were for cataract?",
+        correct: "36%",
+        distractors: ["24%", "18%", "40%"],
+        explanation:
+          "Cataract = 360. Total = 240+360+180+120+100 = 1000. 360÷1000×100 = 36%. Distractor 24%: glaucoma (240÷1000). Distractor 18%: macular degen. (180÷1000). Distractor 40%: rounds 360 up to 400.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of glaucoma to macular degeneration referrals?",
+        correct: "4:3",
+        distractors: ["3:4", "2:1", "3:2"],
+        explanation:
+          "Glaucoma : Macular = 240 : 180 = 4 : 3 (÷60). Distractor 3:4: reversed. Distractor 2:1: uses glaucoma : diabetic retinopathy = 240 : 120 = 2 : 1. Distractor 3:2: uses cataract : glaucoma = 360 : 240 = 3 : 2.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of referrals per diagnostic category?",
+        correct: "200",
+        distractors: ["360", "100", "250"],
+        explanation:
+          "Total = 1000. Mean = 1000÷5 = 200. Distractor 360: highest bar (cataract). Distractor 100: lowest bar (other). Distractor 250: divides by 4 (1000÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "ae-reattendance-monthly",
+    title: "Monthly A&E Reattendance Counts",
+    yLabel: "Reattendances",
+    context:
+      "An emergency department tracked the number of 72-hour reattendances each month over five consecutive months.",
+    data: [
+      { label: "Jan", value: 100 },
+      { label: "Feb", value: 120 },
+      { label: "Mar", value: 150 },
+      { label: "Apr", value: 120 },
+      { label: "May", value: 110 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many 72-hour reattendances were recorded in March?",
+        correct: "150",
+        distractors: ["120", "100", "160"],
+        explanation:
+          "The March data point sits at 150. Distractor 120: February and April value. Distractor 100: January value. Distractor 160: overestimate of the March peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of the 5-month total occurred in March?",
+        correct: "25%",
+        distractors: ["20%", "33%", "30%"],
+        explanation:
+          "Total = 100+120+150+120+110 = 600. March = 150. 150÷600×100 = 25%. Distractor 20%: uses Feb or Apr (120÷600). Distractor 33%: uses 150÷450 (omits January from denominator). Distractor 30%: uses 180÷600 (inflates March).",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What was the mean monthly reattendance count over the five months?",
+        correct: "120",
+        distractors: ["150", "100", "110"],
+        explanation:
+          "Total = 600. Mean = 600÷5 = 120. Distractor 150: reads the peak month (March). Distractor 100: reads January (lowest). Distractor 110: reads the May value as a representative month instead of calculating the mean.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "By what percentage did reattendances increase from January to March?",
+        correct: "50%",
+        distractors: ["50", "150%", "33%"],
+        explanation:
+          "Increase = 150−100 = 50. % increase = 50÷100×100 = 50%. Distractor 50: absolute increase, not a percentage. Distractor 150%: uses March÷January×100 = 150÷100×100 = 150% ('% of' error). Distractor 33%: uses new value as base — 50÷150×100 = 33.3%.",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "vaccination-uptake-by-age-dose",
+    title: "Vaccination Uptake by Age Group and Dose",
+    yLabel: "Patients vaccinated",
+    context:
+      "A vaccination programme recorded first and second dose uptake across three age groups.",
+    seriesLabels: ["First dose", "Second dose"],
+    groups: [
+      { label: "50–64", values: [300, 200] },
+      { label: "65–74", values: [400, 300] },
+      { label: "75+", values: [200, 100] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many patients aged 75 and over received a second dose?",
+        correct: "100",
+        distractors: ["200", "300", "150"],
+        explanation:
+          "The Second dose bar for 75+ reaches 100. Distractor 200: 75+ first dose value. Distractor 300: 75+ total (200+100). Distractor 150: midpoint misread between 100 and 200.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all vaccinations given were first doses?",
+        correct: "60%",
+        distractors: ["40%", "20%", "13%"],
+        explanation:
+          "Total first doses = 300+400+200 = 900. Grand total = 900+600 = 1500. 900÷1500×100 = 60%. Distractor 40%: second dose rate (600÷1500). Distractor 20%: uses 65-74 second dose÷grand (300÷1500). Distractor 13%: uses 50-64 second dose÷grand (200÷1500≈13.3%).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of first to second doses overall?",
+        correct: "3:2",
+        distractors: ["2:3", "3:1", "2:1"],
+        explanation:
+          "First doses : Second doses = 900 : 600 = 3 : 2 (÷300). Distractor 2:3: reversed. Distractor 3:1: uses 50–64 first dose : 75+ second dose = 300:100 = 3:1 (cross-group comparison). Distractor 2:1: uses 65–74 first dose : 75+ first dose = 400:200 = 2:1 (compares within first-dose series only).",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of 75+ patients who received a first dose also received a second dose?",
+        correct: "50%",
+        distractors: ["66.7%", "6.7%", "33%"],
+        explanation:
+          "75+ second dose = 100. 75+ first dose = 200. 100÷200×100 = 50%. Distractor 66.7%: uses 65-74 rate (300÷400×100). Distractor 6.7%: uses 75+ second dose÷grand total (100÷1500×100≈6.7%). Distractor 33%: uses 100÷300 (uses 50-64 first dose as denominator).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "icu-admission-reasons",
+    title: "ICU Admissions by Primary Reason",
+    yLabel: "Admissions",
+    context:
+      "An intensive care unit recorded all admissions by primary clinical reason during one year.",
+    data: [
+      { label: "Respiratory failure", value: 400 },
+      { label: "Post-operative", value: 300 },
+      { label: "Cardiac", value: 200 },
+      { label: "Sepsis", value: 100 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many ICU admissions were for cardiac reasons?",
+        correct: "200",
+        distractors: ["400", "300", "100"],
+        explanation:
+          "The Cardiac bar sits at 200. Distractor 400: respiratory failure value. Distractor 300: post-operative value. Distractor 100: sepsis value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of ICU admissions were for respiratory failure?",
+        correct: "40%",
+        distractors: ["30%", "20%", "10%"],
+        explanation:
+          "Respiratory failure = 400. Total = 400+300+200+100 = 1000. 400÷1000×100 = 40%. Distractor 30%: post-operative (300÷1000). Distractor 20%: cardiac (200÷1000). Distractor 10%: sepsis (100÷1000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of respiratory failure to post-operative admissions?",
+        correct: "4:3",
+        distractors: ["3:4", "4:1", "2:1"],
+        explanation:
+          "Respiratory : Post-op = 400 : 300 = 4 : 3 (÷100). Distractor 3:4: reversed. Distractor 4:1: uses respiratory : sepsis = 400 : 100 = 4 : 1. Distractor 2:1: uses respiratory : cardiac = 400 : 200 = 2 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of admissions per reason category?",
+        correct: "250",
+        distractors: ["400", "100", "333"],
+        explanation:
+          "Total = 1000. Mean = 1000÷4 = 250. Distractor 400: highest bar (respiratory failure). Distractor 100: lowest bar (sepsis). Distractor 333: divides by 3 instead of 4 (1000÷3≈333).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "surgical-theatre-weekly-cases",
+    title: "Weekly Surgical Theatre Cases",
+    yLabel: "Cases",
+    context:
+      "A surgical unit recorded the number of elective theatre cases completed each week over five consecutive weeks.",
+    data: [
+      { label: "Wk 1", value: 40 },
+      { label: "Wk 2", value: 60 },
+      { label: "Wk 3", value: 100 },
+      { label: "Wk 4", value: 60 },
+      { label: "Wk 5", value: 40 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many elective cases were completed in week 3?",
+        correct: "100",
+        distractors: ["60", "40", "120"],
+        explanation:
+          "The week 3 data point sits at 100. Distractor 60: weeks 2 and 4 value. Distractor 40: weeks 1 and 5 value. Distractor 120: overestimate of the peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of the 5-week total was completed in week 3?",
+        correct: "33.3%",
+        distractors: ["20%", "40%", "25%"],
+        explanation:
+          "Total = 40+60+100+60+40 = 300. Week 3 = 100. 100÷300×100 = 33.3%. Distractor 20%: uses wk 2 or 4 (60÷300). Distractor 40%: uses 120÷300 (inflates week 3). Distractor 25%: uses 100÷400 (wrong total).",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What was the mean number of elective cases per week over the five weeks?",
+        correct: "60",
+        distractors: ["100", "40", "75"],
+        explanation:
+          "Total = 300. Mean = 300÷5 = 60. Distractor 100: reads the peak week (wk 3). Distractor 40: reads the lowest weeks. Distractor 75: divides by 4 instead of 5 (300÷4 = 75).",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "By what percentage did theatre cases increase from week 1 to week 3?",
+        correct: "150%",
+        distractors: ["60", "250%", "60%"],
+        explanation:
+          "Increase = 100−40 = 60. % increase = 60÷40×100 = 150%. Distractor 60: absolute increase, not a percentage. Distractor 250%: uses wk 3÷wk 1×100 = 100÷40×100 = 250% ('% of' error). Distractor 60%: uses new value as base — 60÷100×100 = 60%.",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "community-rehab-outcomes-by-service",
+    title: "Community Rehabilitation Outcomes by Service",
+    yLabel: "Patients",
+    context:
+      "A community rehabilitation service recorded patient outcomes across three therapy disciplines.",
+    seriesLabels: ["Improved function", "No change / declined"],
+    groups: [
+      { label: "Physiotherapy", values: [300, 100] },
+      { label: "Occupational therapy", values: [180, 120] },
+      { label: "Speech therapy", values: [120, 80] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many occupational therapy patients showed no change or declined?",
+        correct: "120",
+        distractors: ["180", "80", "300"],
+        explanation:
+          "The No change/declined bar for OT reaches 120. Distractor 180: OT improved value. Distractor 80: speech therapy no-change value. Distractor 300: physiotherapy improved value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all community rehabilitation patients showed improved function?",
+        correct: "66.7%",
+        distractors: ["33.3%", "60%", "50%"],
+        explanation:
+          "Total improved = 300+180+120 = 600. Grand total = 600+300 = 900. 600÷900×100 = 66.7%. Distractor 33.3%: no-change rate (300÷900). Distractor 60%: confuses speech therapy improved rate (120÷200=60%) with overall. Distractor 50%: assumes equal split.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of improved to no-change patients for physiotherapy?",
+        correct: "3:1",
+        distractors: ["1:3", "3:2", "5:3"],
+        explanation:
+          "Physio improved : no change = 300 : 100 = 3 : 1. Distractor 1:3: reversed. Distractor 3:2: uses OT improved : no-change = 180 : 120 = 3 : 2 (wrong service). Distractor 5:3: uses physio improved : OT improved = 300 : 180 = 5 : 3.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of speech therapy patients showed improved function?",
+        correct: "60%",
+        distractors: ["40%", "66.7%", "13.3%"],
+        explanation:
+          "Speech improved = 120. Speech total = 120+80 = 200. 120÷200×100 = 60%. Distractor 40%: speech no-change rate (80÷200). Distractor 66.7%: overall improvement rate misapplied. Distractor 13.3%: uses speech improved÷grand total (120÷900≈13.3%).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "prescription-error-types",
+    title: "Prescription Errors by Error Type",
+    yLabel: "Errors",
+    context:
+      "A hospital pharmacy team recorded all identified prescription errors by error category during one quarter.",
+    data: [
+      { label: "Dose omission", value: 200 },
+      { label: "Wrong drug name", value: 100 },
+      { label: "Wrong dose", value: 300 },
+      { label: "Wrong frequency", value: 150 },
+      { label: "Legibility", value: 250 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many prescription errors were due to wrong dose?",
+        correct: "300",
+        distractors: ["250", "200", "150"],
+        explanation:
+          "The Wrong dose bar sits at 300. Distractor 250: legibility value. Distractor 200: dose omission value. Distractor 150: wrong frequency value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all prescription errors were wrong dose errors?",
+        correct: "30%",
+        distractors: ["20%", "10%", "25%"],
+        explanation:
+          "Wrong dose = 300. Total = 200+100+300+150+250 = 1000. 300÷1000×100 = 30%. Distractor 20%: dose omission (200÷1000). Distractor 10%: wrong drug name (100÷1000). Distractor 25%: legibility (250÷1000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of wrong dose errors to legibility errors?",
+        correct: "6:5",
+        distractors: ["5:6", "3:2", "2:1"],
+        explanation:
+          "Wrong dose : Legibility = 300 : 250 = 6 : 5 (÷50). Distractor 5:6: reversed. Distractor 3:2: uses wrong dose : dose omission = 300 : 200 = 3 : 2. Distractor 2:1: uses wrong dose : wrong frequency = 300 : 150 = 2 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of errors per error category?",
+        correct: "200",
+        distractors: ["300", "100", "250"],
+        explanation:
+          "Total = 1000. Mean = 1000÷5 = 200. Distractor 300: highest bar (wrong dose). Distractor 100: lowest bar (wrong drug name). Distractor 250: divides by 4 (1000÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "outpatient-appointments-by-specialty",
+    title: "Outpatient Appointments by Specialty",
+    yLabel: "Appointments",
+    context:
+      "A hospital outpatient department recorded total appointments across five medical specialties during one year.",
+    data: [
+      { label: "Cardiology", value: 480 },
+      { label: "Respiratory", value: 360 },
+      { label: "Neurology", value: 280 },
+      { label: "Endocrinology", value: 240 },
+      { label: "Dermatology", value: 140 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many outpatient appointments were for neurology?",
+        correct: "280",
+        distractors: ["360", "240", "300"],
+        explanation:
+          "The Neurology bar sits at 280. Distractor 360: respiratory value. Distractor 240: endocrinology value. Distractor 300: common overestimate of the neurology bar.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all outpatient appointments were cardiology?",
+        correct: "32%",
+        distractors: ["24%", "16%", "36%"],
+        explanation:
+          "Cardiology = 480. Total = 480+360+280+240+140 = 1500. 480÷1500×100 = 32%. Distractor 24%: respiratory (360÷1500). Distractor 16%: endocrinology (240÷1500). Distractor 36%: uses 540÷1500 (inflates cardiology).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of cardiology to respiratory appointments?",
+        correct: "4:3",
+        distractors: ["3:4", "3:2", "2:1"],
+        explanation:
+          "Cardiology : Respiratory = 480 : 360 = 4 : 3 (÷120). Distractor 3:4: reversed. Distractor 3:2: uses respiratory : endocrinology = 360 : 240 = 3 : 2 (wrong comparison). Distractor 2:1: uses cardiology : endocrinology = 480 : 240 = 2 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of appointments per specialty?",
+        correct: "300",
+        distractors: ["480", "140", "375"],
+        explanation:
+          "Total = 1500. Mean = 1500÷5 = 300. Distractor 480: highest bar (cardiology). Distractor 140: lowest bar (dermatology). Distractor 375: divides by 4 instead of 5 (1500÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "infectious-disease-notifications",
+    title: "Infectious Disease Notifications by Type",
+    yLabel: "Notifications",
+    context:
+      "A public health team recorded all statutory infectious disease notifications by pathogen type during one year.",
+    data: [
+      { label: "Influenza", value: 400 },
+      { label: "COVID-19", value: 300 },
+      { label: "Norovirus", value: 200 },
+      { label: "Meningitis", value: 200 },
+      { label: "Other", value: 100 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many norovirus notifications were recorded?",
+        correct: "200",
+        distractors: ["300", "400", "100"],
+        explanation:
+          "The Norovirus bar sits at 200. Distractor 300: COVID-19 value. Distractor 400: influenza value. Distractor 100: Other category value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all notifications were for influenza?",
+        correct: "33.3%",
+        distractors: ["25%", "16.7%", "8.3%"],
+        explanation:
+          "Influenza = 400. Total = 400+300+200+200+100 = 1200. 400÷1200×100 = 33.3%. Distractor 25%: uses COVID-19 (300÷1200). Distractor 16.7%: uses norovirus or meningitis (200÷1200). Distractor 8.3%: uses Other (100÷1200).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of influenza to COVID-19 notifications?",
+        correct: "4:3",
+        distractors: ["3:4", "2:1", "4:1"],
+        explanation:
+          "Influenza : COVID-19 = 400 : 300 = 4 : 3 (÷100). Distractor 3:4: reversed. Distractor 2:1: uses influenza : norovirus = 400 : 200 = 2 : 1 (wrong comparison). Distractor 4:1: uses influenza : other = 400 : 100 = 4 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of notifications per pathogen category?",
+        correct: "240",
+        distractors: ["400", "100", "300"],
+        explanation:
+          "Total = 1200. Mean = 1200÷5 = 240. Distractor 400: highest bar (influenza). Distractor 100: lowest bar (other). Distractor 300: divides by 4 instead of 5 (1200÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "orthopaedic-waiting-list-monthly",
+    title: "Monthly Orthopaedic Waiting List Size",
+    yLabel: "Patients",
+    context:
+      "An orthopaedic department tracked the total number of patients on the waiting list at the end of each month over five months.",
+    data: [
+      { label: "Jan", value: 1000 },
+      { label: "Feb", value: 1200 },
+      { label: "Mar", value: 1500 },
+      { label: "Apr", value: 1200 },
+      { label: "May", value: 1100 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many patients were on the orthopaedic waiting list at the end of March?",
+        correct: "1500",
+        distractors: ["1200", "1000", "1600"],
+        explanation:
+          "The March data point sits at 1500. Distractor 1200: February and April value. Distractor 1000: January value. Distractor 1600: overestimate of the March peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of the 5-month total waiting list count occurred in March?",
+        correct: "25%",
+        distractors: ["20%", "18.3%", "30%"],
+        explanation:
+          "Total = 1000+1200+1500+1200+1100 = 6000. March = 1500. 1500÷6000×100 = 25%. Distractor 20%: uses Feb or Apr (1200÷6000). Distractor 18.3%: uses May (1100÷6000≈18.3%). Distractor 30%: uses 1800÷6000 (inflates March).",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What was the mean monthly waiting list size over the five months?",
+        correct: "1200",
+        distractors: ["1500", "1000", "1100"],
+        explanation:
+          "Total = 6000. Mean = 6000÷5 = 1200. Distractor 1500: reads the peak month (March). Distractor 1000: reads the lowest month (January). Distractor 1100: reads the May value as a representative month instead of calculating the mean.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "By what percentage did the waiting list increase from January to March?",
+        correct: "50%",
+        distractors: ["500", "150%", "33%"],
+        explanation:
+          "Increase = 1500−1000 = 500. % increase = 500÷1000×100 = 50%. Distractor 500: absolute increase, not a percentage. Distractor 150%: uses March÷Jan×100 = 1500÷1000×100 = 150% ('% of' error). Distractor 33%: uses new value as base — 500÷1500×100 = 33.3%.",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "staff-sickness-by-dept-and-type",
+    title: "Staff Sickness Absence by Department and Type",
+    yLabel: "Absence episodes",
+    context:
+      "An NHS trust recorded staff sickness absence episodes by department and whether the absence was short-term or long-term.",
+    seriesLabels: ["Short-term", "Long-term"],
+    groups: [
+      { label: "Medical", values: [120, 80] },
+      { label: "Nursing", values: [200, 100] },
+      { label: "AHP", values: [80, 40] },
+      { label: "Admin", values: [100, 80] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many long-term sickness absence episodes were recorded in the AHP department?",
+        correct: "40",
+        distractors: ["80", "120", "100"],
+        explanation:
+          "The Long-term bar for AHP reaches 40. Distractor 80: AHP short-term value. Distractor 120: AHP total (80+40). Distractor 100: Admin short-term or long-term value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all sickness absence episodes were short-term?",
+        correct: "62.5%",
+        distractors: ["37.5%", "25%", "40%"],
+        explanation:
+          "Short-term total = 120+200+80+100 = 500. Grand total = 500+300 = 800. 500÷800×100 = 62.5%. Distractor 37.5%: long-term rate (300÷800). Distractor 25%: uses nursing short-term÷grand (200÷800). Distractor 40%: uses 320÷800 (wrong short-term total).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of short-term to long-term absence episodes overall?",
+        correct: "5:3",
+        distractors: ["3:5", "3:2", "2:1"],
+        explanation:
+          "Short : Long = 500 : 300 = 5 : 3 (÷100). Distractor 3:5: reversed. Distractor 3:2: uses Medical short : long = 120 : 80 = 3 : 2 (single department, not overall). Distractor 2:1: uses Nursing short : long = 200 : 100 = 2 : 1.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of nursing sickness absence episodes were long-term?",
+        correct: "33.3%",
+        distractors: ["66.7%", "12.5%", "50%"],
+        explanation:
+          "Nursing long-term = 100. Nursing total = 200+100 = 300. 100÷300×100 = 33.3%. Distractor 66.7%: nursing short-term rate (200÷300). Distractor 12.5%: nursing long-term÷grand total (100÷800). Distractor 50%: assumes equal short/long split.",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "gastroenterology-endoscopy-procedures",
+    title: "Gastroenterology Endoscopy Procedures by Type",
+    yLabel: "Procedures",
+    context:
+      "A gastroenterology unit recorded all endoscopic procedures performed during one year by procedure type.",
+    data: [
+      { label: "OGD", value: 450 },
+      { label: "Colonoscopy", value: 300 },
+      { label: "Sigmoidoscopy", value: 200 },
+      { label: "ERCP", value: 50 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many ERCP procedures were performed during the year?",
+        correct: "50",
+        distractors: ["200", "300", "100"],
+        explanation:
+          "The ERCP bar sits at 50. Distractor 200: sigmoidoscopy value. Distractor 300: colonoscopy value. Distractor 100: double-counts ERCP.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all endoscopic procedures were OGDs?",
+        correct: "45%",
+        distractors: ["30%", "20%", "50%"],
+        explanation:
+          "OGD = 450. Total = 450+300+200+50 = 1000. 450÷1000×100 = 45%. Distractor 30%: colonoscopy (300÷1000). Distractor 20%: sigmoidoscopy (200÷1000). Distractor 50%: rounds 450 up to 500.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of OGD to colonoscopy procedures?",
+        correct: "3:2",
+        distractors: ["2:3", "9:2", "9:4"],
+        explanation:
+          "OGD : Colonoscopy = 450 : 300 = 3 : 2 (÷150). Distractor 2:3: reversed. Distractor 9:2: misreads sigmoidoscopy as 100 instead of 200, giving 450:100 = 9:2. Distractor 9:4: correct sigmoidoscopy value but wrong comparison — OGD : sigmoidoscopy = 450:200 = 9:4.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of procedures per endoscopy type?",
+        correct: "250",
+        distractors: ["450", "50", "333"],
+        explanation:
+          "Total = 1000. Mean = 1000÷4 = 250. Distractor 450: highest bar (OGD). Distractor 50: lowest bar (ERCP). Distractor 333: divides by 3 instead of 4 (1000÷3≈333).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "community-mental-health-monthly-contacts",
+    title: "Monthly Community Mental Health Contacts",
+    yLabel: "Contacts",
+    context:
+      "A community mental health team recorded the total number of patient contacts each month over five consecutive months.",
+    data: [
+      { label: "Jan", value: 200 },
+      { label: "Feb", value: 300 },
+      { label: "Mar", value: 500 },
+      { label: "Apr", value: 300 },
+      { label: "May", value: 200 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many community mental health contacts were recorded in March?",
+        correct: "500",
+        distractors: ["300", "200", "550"],
+        explanation:
+          "The March data point sits at 500. Distractor 300: February and April value. Distractor 200: January and May value. Distractor 550: overestimate of the March peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of the 5-month total did March account for?",
+        correct: "33.3%",
+        distractors: ["20%", "13.3%", "40%"],
+        explanation:
+          "Total = 200+300+500+300+200 = 1500. March = 500. 500÷1500×100 = 33.3%. Distractor 20%: uses Feb or Apr (300÷1500). Distractor 13.3%: uses Jan or May (200÷1500). Distractor 40%: uses 600÷1500 (inflates March).",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What was the mean monthly contact figure across the five months?",
+        correct: "300",
+        distractors: ["500", "200", "375"],
+        explanation:
+          "Total = 1500. Mean = 1500÷5 = 300. Distractor 500: reads the peak month (March). Distractor 200: reads the lowest months. Distractor 375: divides by 4 instead of 5 (1500÷4).",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "By what percentage did contacts increase from January to March?",
+        correct: "150%",
+        distractors: ["300", "250%", "60%"],
+        explanation:
+          "Increase = 500−200 = 300. % increase = 300÷200×100 = 150%. Distractor 300: absolute increase, not a percentage. Distractor 250%: uses March÷Jan×100 = 500÷200×100 = 250% ('% of' error). Distractor 60%: uses new value as base — 300÷500×100 = 60%.",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "ward-nursing-skill-mix",
+    title: "Ward Nursing Skill Mix by Ward",
+    yLabel: "Staff on duty",
+    context:
+      "A hospital nursing team recorded the number of registered nurses and healthcare assistants on duty across three wards.",
+    seriesLabels: ["Registered nurses", "Healthcare assistants"],
+    groups: [
+      { label: "Ward A", values: [200, 100] },
+      { label: "Ward B", values: [240, 60] },
+      { label: "Ward C", values: [100, 100] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many healthcare assistants were on duty on Ward B?",
+        correct: "60",
+        distractors: ["100", "240", "300"],
+        explanation:
+          "The Healthcare assistants bar for Ward B reaches 60. Distractor 100: Ward A or Ward C HCA value. Distractor 240: Ward B registered nurse value. Distractor 300: Ward B total (240+60).",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all staff on duty were registered nurses?",
+        correct: "67.5%",
+        distractors: ["32.5%", "30%", "25%"],
+        explanation:
+          "Total RNs = 200+240+100 = 540. Grand total = 540+260 = 800. 540÷800×100 = 67.5%. Distractor 32.5%: HCA rate (260÷800). Distractor 30%: uses Ward B RN÷grand (240÷800). Distractor 25%: uses Ward A RN÷grand (200÷800).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of registered nurses to healthcare assistants on Ward B?",
+        correct: "4:1",
+        distractors: ["1:4", "2:1", "1:1"],
+        explanation:
+          "Ward B RN : HCA = 240 : 60 = 4 : 1. Distractor 1:4: reversed. Distractor 2:1: uses Ward A RN : HCA = 200 : 100 = 2 : 1 (wrong ward). Distractor 1:1: uses Ward C RN : HCA = 100 : 100 = 1 : 1.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of Ward C staff on duty were registered nurses?",
+        correct: "50%",
+        distractors: ["67.5%", "12.5%", "33.3%"],
+        explanation:
+          "Ward C RN = 100. Ward C total = 100+100 = 200. 100÷200×100 = 50%. Distractor 67.5%: misapplies the overall RN rate to Ward C. Distractor 12.5%: uses Ward C RN÷grand total (100÷800). Distractor 33.3%: uses Ward C RN÷total RNs (100÷300... total RNs = 540, not 300; but 100÷300 if only Ward A+B count is used as denominator).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "paediatric-admissions-by-age",
+    title: "Paediatric Emergency Admissions by Age Group",
+    yLabel: "Admissions",
+    context:
+      "A paediatric unit recorded all emergency admissions by patient age group during one year.",
+    data: [
+      { label: "<1 year", value: 120 },
+      { label: "1–4 years", value: 200 },
+      { label: "5–10 years", value: 280 },
+      { label: "11–15 years", value: 240 },
+      { label: "16–17 years", value: 160 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many emergency admissions were for children aged 5–10 years?",
+        correct: "280",
+        distractors: ["240", "200", "320"],
+        explanation:
+          "The 5–10 years bar sits at 280. Distractor 240: 11–15 years value. Distractor 200: 1–4 years value. Distractor 320: overestimate.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all paediatric emergency admissions were aged under 5 years?",
+        correct: "32%",
+        distractors: ["12%", "20%", "30%"],
+        explanation:
+          "Under 5 = <1 yr + 1–4 yr = 120+200 = 320. Total = 120+200+280+240+160 = 1000. 320÷1000×100 = 32%. Distractor 12%: <1 year alone (120÷1000). Distractor 20%: 1–4 years alone (200÷1000). Distractor 30%: uses 300÷1000 (wrong sum for under 5).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of 5–10 year admissions to 11–15 year admissions?",
+        correct: "7:6",
+        distractors: ["6:7", "7:4", "7:5"],
+        explanation:
+          "5–10 yr : 11–15 yr = 280 : 240 = 7 : 6 (÷40). Distractor 6:7: reversed. Distractor 7:4: uses 5–10 yr : 16–17 yr = 280 : 160 = 7 : 4. Distractor 7:5: uses 5–10 yr : 1–4 yr = 280 : 200 = 7 : 5.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of admissions per age group?",
+        correct: "200",
+        distractors: ["280", "120", "250"],
+        explanation:
+          "Total = 1000. Mean = 1000÷5 = 200. Distractor 280: highest bar (5–10 years). Distractor 120: lowest bar (<1 year). Distractor 250: divides by 4 (1000÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "dietitian-intervention-outcomes",
+    title: "Dietitian Intervention Outcomes",
+    yLabel: "Patients",
+    context:
+      "A dietitian team recorded the outcome status for all patients completing a structured dietary intervention programme.",
+    data: [
+      { label: "Goal achieved", value: 300 },
+      { label: "Partial progress", value: 240 },
+      { label: "No change", value: 120 },
+      { label: "Discontinued", value: 60 },
+      { label: "Awaiting review", value: 80 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many patients showed partial progress in their dietary intervention?",
+        correct: "240",
+        distractors: ["300", "120", "80"],
+        explanation:
+          "The Partial progress bar sits at 240. Distractor 300: goal achieved value. Distractor 120: no change value. Distractor 80: awaiting review value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all patients achieved their dietary goal?",
+        correct: "37.5%",
+        distractors: ["30%", "15%", "40%"],
+        explanation:
+          "Goal achieved = 300. Total = 300+240+120+60+80 = 800. 300÷800×100 = 37.5%. Distractor 30%: partial progress (240÷800). Distractor 15%: no change (120÷800). Distractor 40%: rounds 300 up to 320 (320÷800).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of goal achieved to no change outcomes?",
+        correct: "5:2",
+        distractors: ["2:5", "5:1", "5:4"],
+        explanation:
+          "Goal achieved : No change = 300 : 120 = 5 : 2 (÷60). Distractor 2:5: reversed. Distractor 5:1: uses goal achieved : discontinued = 300 : 60 = 5 : 1 (wrong comparison). Distractor 5:4: uses goal achieved : partial progress = 300 : 240 = 5 : 4.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of patients per outcome category?",
+        correct: "160",
+        distractors: ["300", "60", "200"],
+        explanation:
+          "Total = 800. Mean = 800÷5 = 160. Distractor 300: highest bar (goal achieved). Distractor 60: lowest bar (discontinued). Distractor 200: divides by 4 instead of 5 (800÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "hospital-acquired-infection-types",
+    title: "Hospital-Acquired Infections by Type",
+    yLabel: "Cases",
+    context:
+      "An infection prevention team recorded all hospital-acquired infection cases by pathogen type during one year.",
+    data: [
+      { label: "MRSA", value: 40 },
+      { label: "C. difficile", value: 120 },
+      { label: "VRE", value: 60 },
+      { label: "HAU-UTI", value: 180 },
+      { label: "SSI", value: 100 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many hospital-acquired urinary tract infection (HAU-UTI) cases were recorded?",
+        correct: "180",
+        distractors: ["120", "100", "60"],
+        explanation:
+          "The HAU-UTI bar sits at 180. Distractor 120: C. difficile value. Distractor 100: SSI value. Distractor 60: VRE value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all hospital-acquired infections were C. difficile?",
+        correct: "24%",
+        distractors: ["8%", "12%", "36%"],
+        explanation:
+          "C. diff = 120. Total = 40+120+60+180+100 = 500. 120÷500×100 = 24%. Distractor 8%: MRSA (40÷500). Distractor 12%: VRE (60÷500). Distractor 36%: HAU-UTI (180÷500).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of HAU-UTI cases to surgical site infection (SSI) cases?",
+        correct: "9:5",
+        distractors: ["5:9", "3:1", "9:2"],
+        explanation:
+          "HAU-UTI : SSI = 180 : 100 = 9 : 5 (÷20). Distractor 5:9: reversed. Distractor 3:1: uses C. diff : MRSA = 120 : 40 = 3 : 1 (wrong comparison). Distractor 9:2: uses HAU-UTI : MRSA = 180 : 40 = 9 : 2.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of cases per infection type?",
+        correct: "100",
+        distractors: ["180", "40", "125"],
+        explanation:
+          "Total = 500. Mean = 500÷5 = 100. Distractor 180: highest bar (HAU-UTI). Distractor 40: lowest bar (MRSA). Distractor 125: divides by 4 instead of 5 (500÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "ae-weekly-attendances-trend",
+    title: "Weekly A&E Attendances",
+    yLabel: "Attendances",
+    context:
+      "An emergency department recorded total patient attendances each week over five consecutive weeks.",
+    data: [
+      { label: "Wk 1", value: 500 },
+      { label: "Wk 2", value: 600 },
+      { label: "Wk 3", value: 750 },
+      { label: "Wk 4", value: 600 },
+      { label: "Wk 5", value: 550 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many patients attended A&E during week 3?",
+        correct: "750",
+        distractors: ["600", "500", "800"],
+        explanation:
+          "The week 3 data point sits at 750. Distractor 600: weeks 2 and 4 value. Distractor 500: week 1 value. Distractor 800: overestimate of the peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of the 5-week total occurred in week 3?",
+        correct: "25%",
+        distractors: ["20%", "18.3%", "30%"],
+        explanation:
+          "Total = 500+600+750+600+550 = 3000. Week 3 = 750. 750÷3000×100 = 25%. Distractor 20%: uses wk 2 or 4 (600÷3000). Distractor 18.3%: uses wk 5 (550÷3000). Distractor 30%: uses 900÷3000 (inflates wk 3).",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What was the mean weekly A&E attendance over the five weeks?",
+        correct: "600",
+        distractors: ["750", "500", "550"],
+        explanation:
+          "Total = 3000. Mean = 3000÷5 = 600. Distractor 750: reads the peak week (Wk 3). Distractor 500: reads the lowest week (Wk 1). Distractor 550: reads week 5 as a representative value instead of calculating the mean.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "By what percentage did A&E attendances increase from week 1 to week 3?",
+        correct: "50%",
+        distractors: ["250", "150%", "33%"],
+        explanation:
+          "Increase = 750−500 = 250. % increase = 250÷500×100 = 50%. Distractor 250: absolute increase, not a percentage. Distractor 150%: uses wk 3÷wk 1×100 = 750÷500×100 = 150% ('% of' error). Distractor 33%: uses new value as base — 250÷750×100 = 33.3%.",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "hospital-meals-eaten-returned",
+    title: "Hospital Meals Served vs. Returned Uneaten",
+    yLabel: "Meal portions",
+    context:
+      "A hospital catering team recorded the number of meal portions eaten and returned uneaten across three daily meal times.",
+    seriesLabels: ["Eaten", "Returned uneaten"],
+    groups: [
+      { label: "Breakfast", values: [360, 240] },
+      { label: "Lunch", values: [450, 150] },
+      { label: "Dinner", values: [540, 60] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many breakfast portions were returned uneaten?",
+        correct: "240",
+        distractors: ["360", "150", "60"],
+        explanation:
+          "The Returned bar for Breakfast reaches 240. Distractor 360: breakfast eaten value. Distractor 150: lunch returned value. Distractor 60: dinner returned value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all meal portions served were eaten?",
+        correct: "75%",
+        distractors: ["25%", "20%", "30%"],
+        explanation:
+          "Total eaten = 360+450+540 = 1350. Grand total = 1350+450 = 1800. 1350÷1800×100 = 75%. Distractor 25%: returned rate (450÷1800). Distractor 20%: breakfast eaten÷grand (360÷1800). Distractor 30%: dinner eaten÷grand (540÷1800).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of eaten to returned portions at lunch?",
+        correct: "3:1",
+        distractors: ["1:3", "9:1", "3:2"],
+        explanation:
+          "Lunch eaten : returned = 450 : 150 = 3 : 1 (÷150). Distractor 1:3: reversed. Distractor 9:1: uses dinner eaten : returned = 540 : 60 = 9 : 1 (wrong meal). Distractor 3:2: uses breakfast eaten : returned = 360 : 240 = 3 : 2.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of breakfast portions were returned uneaten?",
+        correct: "40%",
+        distractors: ["60%", "13.3%", "25%"],
+        explanation:
+          "Breakfast returned = 240. Breakfast total = 360+240 = 600. 240÷600×100 = 40%. Distractor 60%: breakfast eaten rate (360÷600). Distractor 13.3%: breakfast returned÷grand (240÷1800). Distractor 25%: overall returned rate, misapplied to breakfast.",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "dermatology-new-patient-diagnoses",
+    title: "Dermatology New Patient Diagnoses",
+    yLabel: "Patients",
+    context:
+      "A dermatology department recorded the primary diagnosis for all new patients seen during one year.",
+    data: [
+      { label: "Eczema", value: 300 },
+      { label: "Psoriasis", value: 200 },
+      { label: "Skin cancer", value: 150 },
+      { label: "Acne", value: 180 },
+      { label: "Other", value: 170 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many new patients were diagnosed with skin cancer?",
+        correct: "150",
+        distractors: ["180", "200", "170"],
+        explanation:
+          "The Skin cancer bar sits at 150. Distractor 180: acne value. Distractor 200: psoriasis value. Distractor 170: other category value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all new dermatology patients had eczema?",
+        correct: "30%",
+        distractors: ["20%", "15%", "18%"],
+        explanation:
+          "Eczema = 300. Total = 300+200+150+180+170 = 1000. 300÷1000×100 = 30%. Distractor 20%: psoriasis (200÷1000). Distractor 15%: skin cancer (150÷1000). Distractor 18%: acne (180÷1000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of eczema to psoriasis diagnoses?",
+        correct: "3:2",
+        distractors: ["2:3", "2:1", "5:3"],
+        explanation:
+          "Eczema : Psoriasis = 300 : 200 = 3 : 2 (÷100). Distractor 2:3: reversed. Distractor 2:1: uses eczema : skin cancer = 300 : 150 = 2 : 1 (wrong comparison). Distractor 5:3: uses eczema : acne = 300 : 180 = 5 : 3.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of patients per diagnosis category?",
+        correct: "200",
+        distractors: ["300", "150", "250"],
+        explanation:
+          "Total = 1000. Mean = 1000÷5 = 200. Distractor 300: highest bar (eczema). Distractor 150: lowest bar (skin cancer). Distractor 250: divides by 4 (1000÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "delayed-discharge-monthly-trend",
+    title: "Monthly Delayed Discharge Counts",
+    yLabel: "Delayed discharges",
+    context:
+      "A hospital discharge team recorded the number of patients experiencing delayed discharge each month over five consecutive months.",
+    data: [
+      { label: "Jan", value: 60 },
+      { label: "Feb", value: 80 },
+      { label: "Mar", value: 120 },
+      { label: "Apr", value: 80 },
+      { label: "May", value: 60 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many delayed discharges were recorded in March?",
+        correct: "120",
+        distractors: ["80", "60", "140"],
+        explanation:
+          "The March data point sits at 120. Distractor 80: February and April value. Distractor 60: January and May value. Distractor 140: overestimate of the March peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of the 5-month total occurred in March?",
+        correct: "30%",
+        distractors: ["20%", "15%", "40%"],
+        explanation:
+          "Total = 60+80+120+80+60 = 400. March = 120. 120÷400×100 = 30%. Distractor 20%: uses Feb or Apr (80÷400). Distractor 15%: uses Jan or May (60÷400). Distractor 40%: uses 160÷400 (inflates March).",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What was the mean monthly delayed discharge count over the five months?",
+        correct: "80",
+        distractors: ["120", "60", "100"],
+        explanation:
+          "Total = 400. Mean = 400÷5 = 80. Distractor 120: reads the peak month (March). Distractor 60: reads the lowest months. Distractor 100: divides by 4 instead of 5 (400÷4).",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "By what percentage did delayed discharges increase from January to March?",
+        correct: "100%",
+        distractors: ["60", "200%", "50%"],
+        explanation:
+          "Increase = 120−60 = 60. % increase = 60÷60×100 = 100%. Distractor 60: absolute increase, not a percentage. Distractor 200%: uses March÷January×100 = 120÷60×100 = 200% ('% of' error). Distractor 50%: uses new value as base — 60÷120×100 = 50%.",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "clinical-trial-enrolment-by-phase",
+    title: "Clinical Trial Enrolment by Phase",
+    yLabel: "Participants",
+    context:
+      "A research team recorded the number of participants enrolled and withdrawn from a clinical trial across three study phases.",
+    seriesLabels: ["Enrolled", "Withdrew"],
+    groups: [
+      { label: "Phase I", values: [40, 10] },
+      { label: "Phase II", values: [100, 50] },
+      { label: "Phase III", values: [210, 90] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many Phase II participants withdrew from the trial?",
+        correct: "50",
+        distractors: ["10", "100", "90"],
+        explanation:
+          "The Withdrew bar for Phase II reaches 50. Distractor 10: Phase I withdrew value. Distractor 100: Phase II enrolled value. Distractor 90: Phase III withdrew value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all trial participants completed enrolment without withdrawing?",
+        correct: "70%",
+        distractors: ["30%", "20%", "42%"],
+        explanation:
+          "Total enrolled = 40+100+210 = 350. Grand total = 350+150 = 500. 350÷500×100 = 70%. Distractor 30%: withdrawal rate (150÷500). Distractor 20%: Phase II enrolled÷grand (100÷500). Distractor 42%: Phase III enrolled÷grand (210÷500).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of enrolled to withdrawn participants overall?",
+        correct: "7:3",
+        distractors: ["3:7", "4:1", "7:2"],
+        explanation:
+          "Enrolled : Withdrew = 350 : 150 = 7 : 3 (÷50). Distractor 3:7: reversed. Distractor 4:1: uses Phase I enrolled : withdrew = 40 : 10 = 4 : 1 (single phase, not overall). Distractor 7:2: misreads Phase II enrolled (100) as the withdrew total, giving 350 : 100 = 7 : 2.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of Phase III participants withdrew from the trial?",
+        correct: "30%",
+        distractors: ["70%", "18%", "33%"],
+        explanation:
+          "Phase III withdrew = 90. Phase III total = 210+90 = 300. 90÷300×100 = 30%. Distractor 70%: Phase III completion rate (210÷300). Distractor 18%: Phase III withdrew÷grand (90÷500). Distractor 33%: Phase II withdrawal rate misapplied (50÷150≈33.3%).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "pain-clinic-referral-sources",
+    title: "Pain Clinic Referral Sources",
+    yLabel: "Referrals",
+    context:
+      "A pain management clinic recorded all new referrals by source during one year.",
+    data: [
+      { label: "GP", value: 480 },
+      { label: "Hospital specialist", value: 240 },
+      { label: "A&E", value: 120 },
+      { label: "Physiotherapy", value: 100 },
+      { label: "Other hospital", value: 60 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many pain clinic referrals came from A&E?",
+        correct: "120",
+        distractors: ["240", "60", "480"],
+        explanation:
+          "The A&E bar sits at 120. Distractor 240: hospital specialist value. Distractor 60: other hospital value. Distractor 480: GP value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all pain clinic referrals came from GPs?",
+        correct: "48%",
+        distractors: ["24%", "12%", "52%"],
+        explanation:
+          "GP = 480. Total = 480+240+120+100+60 = 1000. 480÷1000×100 = 48%. Distractor 24%: hospital specialist (240÷1000). Distractor 12%: A&E (120÷1000). Distractor 52%: rounds 480 up to 520.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of GP to hospital specialist referrals?",
+        correct: "2:1",
+        distractors: ["1:2", "4:1", "8:1"],
+        explanation:
+          "GP : Hospital specialist = 480 : 240 = 2 : 1. Distractor 1:2: reversed. Distractor 4:1: uses GP : A&E = 480 : 120 = 4 : 1 (wrong comparison). Distractor 8:1: uses GP : other hospital = 480 : 60 = 8 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of referrals per source category?",
+        correct: "200",
+        distractors: ["480", "60", "250"],
+        explanation:
+          "Total = 1000. Mean = 1000÷5 = 200. Distractor 480: highest bar (GP). Distractor 60: lowest bar (other hospital). Distractor 250: divides by 4 (1000÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "physiotherapy-discharge-by-condition",
+    title: "Physiotherapy Discharges by Condition Type",
+    yLabel: "Discharges",
+    context:
+      "A physiotherapy service recorded all patient discharges by primary condition type during one year.",
+    data: [
+      { label: "Musculoskeletal", value: 480 },
+      { label: "Post-operative", value: 320 },
+      { label: "Neurological", value: 160 },
+      { label: "Cardiorespiratory", value: 80 },
+      { label: "Sports injury", value: 160 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many cardiorespiratory physiotherapy patients were discharged?",
+        correct: "80",
+        distractors: ["160", "320", "100"],
+        explanation:
+          "The Cardiorespiratory bar sits at 80. Distractor 160: neurological or sports injury value. Distractor 320: post-operative value. Distractor 100: common overestimate of the cardiorespiratory bar.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all physiotherapy discharges were musculoskeletal?",
+        correct: "40%",
+        distractors: ["26.7%", "13.3%", "44%"],
+        explanation:
+          "Musculoskeletal = 480. Total = 480+320+160+80+160 = 1200. 480÷1200×100 = 40%. Distractor 26.7%: post-operative (320÷1200). Distractor 13.3%: neurological or sports (160÷1200). Distractor 44%: rounds 480 up to 528 (528÷1200).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of musculoskeletal to post-operative discharges?",
+        correct: "3:2",
+        distractors: ["2:3", "3:1", "6:1"],
+        explanation:
+          "Musculoskeletal : Post-op = 480 : 320 = 3 : 2 (÷160). Distractor 2:3: reversed. Distractor 3:1: uses MSK : neurological = 480 : 160 = 3 : 1 (wrong comparison). Distractor 6:1: uses MSK : cardiorespiratory = 480 : 80 = 6 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of discharges per condition type?",
+        correct: "240",
+        distractors: ["480", "80", "300"],
+        explanation:
+          "Total = 1200. Mean = 1200÷5 = 240. Distractor 480: highest bar (musculoskeletal). Distractor 80: lowest bar (cardiorespiratory). Distractor 300: divides by 4 (1200÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "urology-outpatient-referral-reasons",
+    title: "Urology Outpatient Referral Reasons",
+    yLabel: "Referrals",
+    context:
+      "A urology department recorded all new outpatient referrals by presenting reason during one year.",
+    data: [
+      { label: "Kidney stones", value: 240 },
+      { label: "BPH", value: 320 },
+      { label: "UTI", value: 160 },
+      { label: "Haematuria", value: 180 },
+      { label: "Other", value: 100 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many urology referrals were for haematuria?",
+        correct: "180",
+        distractors: ["320", "240", "160"],
+        explanation:
+          "The Haematuria bar sits at 180. Distractor 320: BPH value. Distractor 240: kidney stones value. Distractor 160: UTI value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of all urology referrals were for BPH?",
+        correct: "32%",
+        distractors: ["24%", "16%", "36%"],
+        explanation:
+          "BPH = 320. Total = 240+320+160+180+100 = 1000. 320÷1000×100 = 32%. Distractor 24%: kidney stones (240÷1000). Distractor 16%: UTI (160÷1000). Distractor 36%: rounds 320 up to 360.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of BPH to kidney stone referrals?",
+        correct: "4:3",
+        distractors: ["3:4", "2:1", "3:2"],
+        explanation:
+          "BPH : Kidney stones = 320 : 240 = 4 : 3 (÷80). Distractor 3:4: reversed. Distractor 2:1: uses BPH : UTI = 320 : 160 = 2 : 1 (wrong comparison). Distractor 3:2: uses kidney stones : UTI = 240 : 160 = 3 : 2 (compares two other categories entirely).",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of referrals per reason category?",
+        correct: "200",
+        distractors: ["320", "100", "250"],
+        explanation:
+          "Total = 1000. Mean = 1000÷5 = 200. Distractor 320: highest bar (BPH). Distractor 100: lowest bar (other). Distractor 250: divides by 4 (1000÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "crisis-team-weekly-contacts",
+    title: "Weekly Mental Health Crisis Team Contacts",
+    yLabel: "Contacts",
+    context:
+      "A mental health crisis team recorded the total number of patient contacts each week over six consecutive weeks.",
+    data: [
+      { label: "Wk 1", value: 120 },
+      { label: "Wk 2", value: 150 },
+      { label: "Wk 3", value: 180 },
+      { label: "Wk 4", value: 150 },
+      { label: "Wk 5", value: 150 },
+      { label: "Wk 6", value: 150 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many crisis team contacts were recorded in week 3?",
+        correct: "180",
+        distractors: ["150", "120", "200"],
+        explanation:
+          "The week 3 data point sits at 180. Distractor 150: weeks 2, 4, 5, and 6 value. Distractor 120: week 1 value. Distractor 200: overestimate of the peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of the 6-week total occurred in week 3?",
+        correct: "20%",
+        distractors: ["16.7%", "13.3%", "25%"],
+        explanation:
+          "Total = 120+150+180+150+150+150 = 900. Week 3 = 180. 180÷900×100 = 20%. Distractor 16.7%: uses weeks 2/4/5/6 (150÷900). Distractor 13.3%: uses week 1 (120÷900). Distractor 25%: uses 225÷900 (inflates week 3).",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What was the mean weekly contact count over the six weeks?",
+        correct: "150",
+        distractors: ["180", "120", "225"],
+        explanation:
+          "Total = 900. Mean = 900÷6 = 150. Distractor 180: reads the peak week. Distractor 120: reads the lowest week. Distractor 225: divides by 4 instead of 6 (900÷4).",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "By what percentage did contacts increase from week 1 to week 3?",
+        correct: "50%",
+        distractors: ["60", "150%", "33%"],
+        explanation:
+          "Increase = 180−120 = 60. % increase = 60÷120×100 = 50%. Distractor 60: absolute increase, not a percentage. Distractor 150%: uses wk 3÷wk 1×100 = 180÷120×100 = 150% ('% of' error). Distractor 33%: uses new value as base — 60÷180×100 = 33.3%.",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "breast-cancer-mdt-outcome-by-stage",
+    title: "Breast Cancer MDT Treatment Intent by Stage",
+    yLabel: "Patients",
+    context:
+      "A breast cancer multidisciplinary team recorded the treatment intent (curative or palliative) for all patients by disease stage.",
+    seriesLabels: ["Curative intent", "Palliative intent"],
+    groups: [
+      { label: "Stage I", values: [200, 0] },
+      { label: "Stage II", values: [280, 20] },
+      { label: "Stage III", values: [100, 200] },
+      { label: "Stage IV", values: [20, 180] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many Stage IV patients were treated with palliative intent?",
+        correct: "180",
+        distractors: ["200", "20", "100"],
+        explanation:
+          "The Palliative intent bar for Stage IV reaches 180. Distractor 200: Stage I curative value or Stage III palliative. Distractor 20: Stage IV curative or Stage II palliative value. Distractor 100: Stage III curative value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all patients were treated with curative intent?",
+        correct: "60%",
+        distractors: ["40%", "20%", "28%"],
+        explanation:
+          "Total curative = 200+280+100+20 = 600. Grand = 600+400 = 1000. 600÷1000×100 = 60%. Distractor 40%: palliative rate (400÷1000). Distractor 20%: Stage I alone (200÷1000). Distractor 28%: Stage II curative alone (280÷1000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of curative to palliative intent patients in Stage III?",
+        correct: "1:2",
+        distractors: ["2:1", "1:9", "1:1"],
+        explanation:
+          "Stage III curative : palliative = 100 : 200 = 1 : 2. Distractor 2:1: reversed. Distractor 1:9: uses Stage IV curative : palliative = 20 : 180 = 1 : 9 (wrong stage). Distractor 1:1: assumes equal split in Stage III.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of Stage IV patients were treated with palliative intent?",
+        correct: "90%",
+        distractors: ["10%", "18%", "60%"],
+        explanation:
+          "Stage IV palliative = 180. Stage IV total = 20+180 = 200. 180÷200×100 = 90%. Distractor 10%: curative rate (20÷200). Distractor 18%: Stage IV palliative÷grand (180÷1000). Distractor 60%: misapplies overall curative rate to Stage IV.",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "ward-pharmacy-dispensing-volumes",
+    title: "Pharmacy Dispensing Volumes by Ward Type",
+    yLabel: "Items dispensed",
+    context:
+      "A hospital pharmacy recorded the total number of items dispensed to each ward type during one month.",
+    data: [
+      { label: "Medical", value: 600 },
+      { label: "Surgical", value: 400 },
+      { label: "ITU", value: 300 },
+      { label: "Paediatric", value: 200 },
+      { label: "Maternity", value: 100 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many pharmacy items were dispensed to the paediatric ward?",
+        correct: "200",
+        distractors: ["600", "100", "400"],
+        explanation:
+          "The Paediatric bar sits at 200. Distractor 600: medical ward value. Distractor 100: maternity value. Distractor 400: surgical value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all dispensed items went to the medical ward?",
+        correct: "37.5%",
+        distractors: ["25%", "18.75%", "40%"],
+        explanation:
+          "Medical = 600. Total = 600+400+300+200+100 = 1600. 600÷1600×100 = 37.5%. Distractor 25%: surgical (400÷1600). Distractor 18.75%: ITU (300÷1600). Distractor 40%: rounds 600 up to 640.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of medical to surgical ward dispensing volumes?",
+        correct: "3:2",
+        distractors: ["2:3", "2:1", "6:1"],
+        explanation:
+          "Medical : Surgical = 600 : 400 = 3 : 2 (÷200). Distractor 2:3: reversed. Distractor 2:1: uses medical : ITU = 600 : 300 = 2 : 1 (wrong comparison). Distractor 6:1: uses medical : maternity = 600 : 100 = 6 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What is the mean number of items dispensed per ward type?",
+        correct: "320",
+        distractors: ["600", "100", "400"],
+        explanation:
+          "Total = 1600. Mean = 1600÷5 = 320. Distractor 600: highest bar (medical). Distractor 100: lowest bar (maternity). Distractor 400: divides by 4 (1600÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "line",
+    setId: "cardiology-outpatient-monthly-referrals",
+    title: "Monthly New Cardiology Outpatient Referrals",
+    yLabel: "Referrals",
+    context:
+      "A cardiology department recorded the number of new outpatient referrals received each month over five consecutive months.",
+    data: [
+      { label: "Jan", value: 200 },
+      { label: "Feb", value: 250 },
+      { label: "Mar", value: 300 },
+      { label: "Apr", value: 250 },
+      { label: "May", value: 200 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many new cardiology referrals were received in March?",
+        correct: "300",
+        distractors: ["250", "200", "350"],
+        explanation:
+          "The March data point sits at 300. Distractor 250: February and April value. Distractor 200: January and May value. Distractor 350: overestimate of the March peak.",
+      },
+      {
+        subtype: "qr-percentages",
+        question: "What percentage of the 5-month total occurred in March?",
+        correct: "25%",
+        distractors: ["20.8%", "16.7%", "30%"],
+        explanation:
+          "Total = 200+250+300+250+200 = 1200. March = 300. 300÷1200×100 = 25%. Distractor 20.8%: uses Feb or Apr (250÷1200). Distractor 16.7%: uses Jan or May (200÷1200). Distractor 30%: uses 360÷1200 (inflates March).",
+      },
+      {
+        subtype: "qr-averages",
+        question: "What was the mean monthly referral figure over the five months?",
+        correct: "240",
+        distractors: ["300", "200", "250"],
+        explanation:
+          "Total = 1200. Mean = 1200÷5 = 240. Distractor 300: reads the peak month (March). Distractor 200: reads the lowest months. Distractor 250: midpoint between peak (300) and lowest (200), a common estimation error.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "By what percentage did referrals increase from January to March?",
+        correct: "50%",
+        distractors: ["100", "150%", "33%"],
+        explanation:
+          "Increase = 300−200 = 100. % increase = 100÷200×100 = 50%. Distractor 100: absolute increase, not a percentage. Distractor 150%: uses March÷Jan×100 = 300÷200×100 = 150% ('% of' error). Distractor 33%: uses new value as base — 100÷300×100 = 33.3%.",
+      },
+    ],
+  },
+
+  {
+    chartType: "grouped-bar",
+    setId: "staff-appraisal-completion-by-band",
+    title: "Staff Appraisal Completion by Pay Band",
+    yLabel: "Staff",
+    context:
+      "An NHS trust recorded appraisal completion status across four pay band groupings during one year.",
+    seriesLabels: ["Completed", "Overdue"],
+    groups: [
+      { label: "Band 2–4", values: [200, 100] },
+      { label: "Band 5–6", values: [300, 100] },
+      { label: "Band 7–8", values: [180, 120] },
+      { label: "Senior (8+)", values: [120, 80] },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many Band 7–8 staff had overdue appraisals?",
+        correct: "120",
+        distractors: ["180", "300", "80"],
+        explanation:
+          "The Overdue bar for Band 7–8 reaches 120. Distractor 180: Band 7–8 completed value. Distractor 300: Band 5–6 completed value. Distractor 80: Senior overdue value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all staff had completed their appraisal?",
+        correct: "66.7%",
+        distractors: ["33.3%", "25%", "50%"],
+        explanation:
+          "Total completed = 200+300+180+120 = 800. Grand = 800+400 = 1200. 800÷1200×100 = 66.7%. Distractor 33.3%: overdue rate (400÷1200). Distractor 25%: Band 5–6 completed÷grand (300÷1200). Distractor 50%: assumes equal split.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question:
+          "What is the ratio of completed to overdue appraisals for Band 5–6 staff?",
+        correct: "3:1",
+        distractors: ["1:3", "2:1", "3:2"],
+        explanation:
+          "Band 5–6 completed : overdue = 300 : 100 = 3 : 1. Distractor 1:3: reversed. Distractor 2:1: uses Band 2–4 completed : overdue = 200 : 100 = 2 : 1 (wrong band). Distractor 3:2: uses Band 7–8 completed : overdue = 180 : 120 = 3 : 2.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of senior (Band 8+) staff had overdue appraisals?",
+        correct: "40%",
+        distractors: ["60%", "6.7%", "33.3%"],
+        explanation:
+          "Senior overdue = 80. Senior total = 120+80 = 200. 80÷200×100 = 40%. Distractor 60%: senior completion rate (120÷200). Distractor 6.7%: senior overdue÷grand (80÷1200). Distractor 33.3%: overall overdue rate misapplied (400÷1200).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "paediatric-vaccination-by-type",
+    title: "Paediatric Vaccination Coverage by Vaccine",
+    yLabel: "Children vaccinated",
+    context:
+      "A community health team recorded the number of children who received each recommended vaccine during one year.",
+    data: [
+      { label: "MMR", value: 720 },
+      { label: "DTaP", value: 600 },
+      { label: "MenB", value: 480 },
+      { label: "Flu", value: 360 },
+      { label: "Hepatitis B", value: 240 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question: "How many children received the flu vaccine?",
+        correct: "360",
+        distractors: ["480", "240", "600"],
+        explanation:
+          "The Flu bar sits at 360. Distractor 480: MenB value. Distractor 240: Hepatitis B value. Distractor 600: DTaP value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all vaccine doses recorded were MMR?",
+        correct: "30%",
+        distractors: ["25%", "20%", "15%"],
+        explanation:
+          "MMR = 720. Total = 720+600+480+360+240 = 2400. 720÷2400×100 = 30%. Distractor 25%: DTaP (600÷2400). Distractor 20%: MenB (480÷2400). Distractor 15%: flu (360÷2400).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of MMR to DTaP vaccinations?",
+        correct: "6:5",
+        distractors: ["5:6", "3:2", "2:1"],
+        explanation:
+          "MMR : DTaP = 720 : 600 = 6 : 5 (÷120). Distractor 5:6: reversed. Distractor 3:2: uses MMR : MenB = 720 : 480 = 3 : 2 (wrong comparison). Distractor 2:1: uses MMR : flu = 720 : 360 = 2 : 1.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of children vaccinated per vaccine type?",
+        correct: "480",
+        distractors: ["720", "240", "600"],
+        explanation:
+          "Total = 2400. Mean = 2400÷5 = 480. Distractor 720: highest bar (MMR). Distractor 240: lowest bar (Hepatitis B). Distractor 600: divides by 4 (2400÷4).",
+      },
+    ],
+  },
+
+  {
+    chartType: "bar",
+    setId: "colorectal-cancer-stage-at-diagnosis",
+    title: "Colorectal Cancer Stage at Diagnosis",
+    yLabel: "Patients",
+    context:
+      "A colorectal cancer centre recorded the disease stage at diagnosis for all newly diagnosed patients during one year.",
+    data: [
+      { label: "Stage I", value: 150 },
+      { label: "Stage II", value: 350 },
+      { label: "Stage III", value: 300 },
+      { label: "Stage IV", value: 200 },
+    ],
+    questions: [
+      {
+        subtype: "qr-graphs",
+        question:
+          "How many patients were diagnosed with Stage II colorectal cancer?",
+        correct: "350",
+        distractors: ["300", "200", "150"],
+        explanation:
+          "The Stage II bar sits at 350. Distractor 300: Stage III value. Distractor 200: Stage IV value. Distractor 150: Stage I value.",
+      },
+      {
+        subtype: "qr-percentages",
+        question:
+          "What percentage of all colorectal cancer patients were diagnosed at Stage I?",
+        correct: "15%",
+        distractors: ["35%", "30%", "20%"],
+        explanation:
+          "Stage I = 150. Total = 150+350+300+200 = 1000. 150÷1000×100 = 15%. Distractor 35%: Stage II (350÷1000). Distractor 30%: Stage III (300÷1000). Distractor 20%: Stage IV (200÷1000).",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        question: "What is the ratio of Stage II to Stage I diagnoses?",
+        correct: "7:3",
+        distractors: ["3:7", "7:4", "7:6"],
+        explanation:
+          "Stage II : Stage I = 350 : 150 = 7 : 3 (÷50). Distractor 3:7: reversed. Distractor 7:4: uses Stage II : Stage IV = 350 : 200 = 7 : 4 (wrong stage). Distractor 7:6: uses Stage II : Stage III = 350 : 300 = 7 : 6.",
+      },
+      {
+        subtype: "qr-averages",
+        question:
+          "What is the mean number of patients per disease stage?",
+        correct: "250",
+        distractors: ["350", "150", "333"],
+        explanation:
+          "Total = 1000. Mean = 1000÷4 = 250. Distractor 350: highest bar (Stage II). Distractor 150: lowest bar (Stage I). Distractor 333: divides by 3 instead of 4 (1000÷3≈333).",
+      },
+    ],
+  },
 
   // ===== PASTE NEW QR CHART QUESTIONS ABOVE THIS LINE =====
 ];

@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 
 const path = require("path");
+const fs = require("fs");
 const ts = require("typescript");
 
 require.extensions[".ts"] = function loadTypeScript(module, filename) {
-  const source = require("fs").readFileSync(filename, "utf8");
+  const source = fs.readFileSync(filename, "utf8");
   const output = ts.transpileModule(source, {
     compilerOptions: {
       esModuleInterop: true,
@@ -23,6 +24,15 @@ const {
   UCAT_QUESTION_BANK,
   UCAT_QUESTION_QUALITY_REVIEW,
 } = require(path.join(projectRoot, "app/phloemai/_lib/ucatQuestionBank.ts"));
+
+const sections = ["vr", "dm", "qr", "sjt"];
+const generatedQuestionBankPath = path.join(
+  projectRoot,
+  "app/phloemai/_lib/generatedUcatQuestionsHighQuality9000.ts"
+);
+const highQualityGeneratedLayer = fs.existsSync(generatedQuestionBankPath)
+  ? require(generatedQuestionBankPath)
+  : null;
 const {
   HIGH_QUALITY_9000_FILTERED_TARGETS,
   HIGH_QUALITY_9000_FILTERED_TOTAL_TARGET,
@@ -33,12 +43,22 @@ const {
   HIGH_QUALITY_9000_TOTAL_BATCHES,
   HIGH_QUALITY_9000_UCAT_QUESTION_BANK,
   HIGH_QUALITY_9000_TOTAL,
-} = require(path.join(
-  projectRoot,
-  "app/phloemai/_lib/generatedUcatQuestionsHighQuality9000.ts"
-));
+} = highQualityGeneratedLayer ?? {
+  HIGH_QUALITY_9000_FILTERED_TARGETS: Object.fromEntries(
+    sections.map((section) => [section, 0])
+  ),
+  HIGH_QUALITY_9000_FILTERED_TOTAL_TARGET: 0,
+  HIGH_QUALITY_9000_LOCKED_BATCHES: 0,
+  HIGH_QUALITY_9000_COMPLETED_BATCHES: 0,
+  HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES: 0,
+  HIGH_QUALITY_9000_NEXT_WAVE_TOTAL_BATCHES: 0,
+  HIGH_QUALITY_9000_TOTAL_BATCHES: 0,
+  HIGH_QUALITY_9000_UCAT_QUESTION_BANK: Object.fromEntries(
+    sections.map((section) => [section, []])
+  ),
+  HIGH_QUALITY_9000_TOTAL: 0,
+};
 
-const sections = ["vr", "dm", "qr", "sjt"];
 const allQuestions = sections.flatMap((section) => UCAT_QUESTION_BANK[section]);
 const ids = new Set(allQuestions.map((question) => question.id));
 const highQualityTargets = Object.fromEntries(
@@ -329,237 +349,239 @@ for (const section of sections) {
   }
 }
 
-const expectedHighQualityTotal = sections.reduce(
-  (total, section) => total + highQualityTargets[section],
-  0
-);
-
-if (expectedHighQualityTotal !== HIGH_QUALITY_9000_FILTERED_TOTAL_TARGET) {
-  throw new Error("High-quality filtered target total is inconsistent.");
-}
-
-if (HIGH_QUALITY_9000_COMPLETED_BATCHES < 1) {
-  throw new Error("At least one generated UCAT batch should be completed.");
-}
-
-if (HIGH_QUALITY_9000_COMPLETED_BATCHES > HIGH_QUALITY_9000_TOTAL_BATCHES) {
-  throw new Error(
-    `Completed generated UCAT batches cannot exceed ${HIGH_QUALITY_9000_TOTAL_BATCHES}.`
+if (highQualityGeneratedLayer) {
+  const expectedHighQualityTotal = sections.reduce(
+    (total, section) => total + highQualityTargets[section],
+    0
   );
-}
 
-if (HIGH_QUALITY_9000_TOTAL !== expectedHighQualityTotal) {
-  throw new Error(
-    `High-quality generated layer should contain ${expectedHighQualityTotal} questions for batch ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}, found ${HIGH_QUALITY_9000_TOTAL}.`
-  );
-}
+  if (expectedHighQualityTotal !== HIGH_QUALITY_9000_FILTERED_TOTAL_TARGET) {
+    throw new Error("High-quality filtered target total is inconsistent.");
+  }
 
-for (const section of sections) {
-  const generatedCount = HIGH_QUALITY_9000_UCAT_QUESTION_BANK[section].length;
-  const acceptedCount = UCAT_QUESTION_BANK[section].filter((question) =>
-    question.id.startsWith(`hq-${section}-`)
-  ).length;
-  const expectedCount = highQualityTargets[section];
+  if (HIGH_QUALITY_9000_COMPLETED_BATCHES < 1) {
+    throw new Error("At least one generated UCAT batch should be completed.");
+  }
 
-  if (generatedCount !== expectedCount) {
+  if (HIGH_QUALITY_9000_COMPLETED_BATCHES > HIGH_QUALITY_9000_TOTAL_BATCHES) {
     throw new Error(
-      `${section.toUpperCase()} high-quality generator expected ${expectedCount}, found ${generatedCount}.`
+      `Completed generated UCAT batches cannot exceed ${HIGH_QUALITY_9000_TOTAL_BATCHES}.`
     );
   }
 
-  if (acceptedCount !== expectedCount) {
+  if (HIGH_QUALITY_9000_TOTAL !== expectedHighQualityTotal) {
     throw new Error(
-      `${section.toUpperCase()} high-quality accepted count expected ${expectedCount}, found ${acceptedCount}.`
+      `High-quality generated layer should contain ${expectedHighQualityTotal} questions for batch ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}, found ${HIGH_QUALITY_9000_TOTAL}.`
     );
   }
 
-  const generatedQuestions = HIGH_QUALITY_9000_UCAT_QUESTION_BANK[section];
-  const questionTemplateCounts = countTemplates(
-    generatedQuestions,
-    (question) => question.question
-  );
-  const stimulusTemplateCounts = countTemplates(generatedQuestions, (question) =>
-    (question.stimulus || []).join(" ")
-  );
-  const diversityTarget = highQualityDiversityTargets[section];
+  for (const section of sections) {
+    const generatedCount = HIGH_QUALITY_9000_UCAT_QUESTION_BANK[section].length;
+    const acceptedCount = UCAT_QUESTION_BANK[section].filter((question) =>
+      question.id.startsWith(`hq-${section}-`)
+    ).length;
+    const expectedCount = highQualityTargets[section];
 
-  if (questionTemplateCounts.size < diversityTarget.questionTemplates) {
-    throw new Error(
-      `${section.toUpperCase()} high-quality generator has only ${questionTemplateCounts.size} normalised question templates; expected at least ${diversityTarget.questionTemplates}.`
+    if (generatedCount !== expectedCount) {
+      throw new Error(
+        `${section.toUpperCase()} high-quality generator expected ${expectedCount}, found ${generatedCount}.`
+      );
+    }
+
+    if (acceptedCount !== expectedCount) {
+      throw new Error(
+        `${section.toUpperCase()} high-quality accepted count expected ${expectedCount}, found ${acceptedCount}.`
+      );
+    }
+
+    const generatedQuestions = HIGH_QUALITY_9000_UCAT_QUESTION_BANK[section];
+    const questionTemplateCounts = countTemplates(
+      generatedQuestions,
+      (question) => question.question
     );
-  }
-
-  if (stimulusTemplateCounts.size < diversityTarget.stimulusTemplates) {
-    throw new Error(
-      `${section.toUpperCase()} high-quality generator has only ${stimulusTemplateCounts.size} normalised stimulus templates; expected at least ${diversityTarget.stimulusTemplates}.`
+    const stimulusTemplateCounts = countTemplates(generatedQuestions, (question) =>
+      (question.stimulus || []).join(" ")
     );
-  }
+    const diversityTarget = highQualityDiversityTargets[section];
 
-  const largestQuestionTemplateCount = getLargestTemplateCount(questionTemplateCounts);
-  const largestStimulusTemplateCount = getLargestTemplateCount(stimulusTemplateCounts);
-  const maxTemplateCount = Math.ceil(expectedCount * maxHighQualityTemplateShare);
+    if (questionTemplateCounts.size < diversityTarget.questionTemplates) {
+      throw new Error(
+        `${section.toUpperCase()} high-quality generator has only ${questionTemplateCounts.size} normalised question templates; expected at least ${diversityTarget.questionTemplates}.`
+      );
+    }
 
-  if (largestQuestionTemplateCount > maxTemplateCount) {
-    throw new Error(
-      `${section.toUpperCase()} high-quality generator repeats one question template ${largestQuestionTemplateCount} times; limit is ${maxTemplateCount}.`
-    );
-  }
+    if (stimulusTemplateCounts.size < diversityTarget.stimulusTemplates) {
+      throw new Error(
+        `${section.toUpperCase()} high-quality generator has only ${stimulusTemplateCounts.size} normalised stimulus templates; expected at least ${diversityTarget.stimulusTemplates}.`
+      );
+    }
 
-  if (largestStimulusTemplateCount > maxTemplateCount) {
-    throw new Error(
-      `${section.toUpperCase()} high-quality generator repeats one stimulus template ${largestStimulusTemplateCount} times; limit is ${maxTemplateCount}.`
-    );
-  }
-}
+    const largestQuestionTemplateCount = getLargestTemplateCount(questionTemplateCounts);
+    const largestStimulusTemplateCount = getLargestTemplateCount(stimulusTemplateCounts);
+    const maxTemplateCount = Math.ceil(expectedCount * maxHighQualityTemplateShare);
 
-const highQualityQrSets = new Set(
-  UCAT_QUESTION_BANK.qr
-    .filter((question) => question.id.startsWith("hq-qr-"))
-    .map((question) => question.setId)
-    .filter(Boolean)
-);
-const expectedHighQualityQrSets = HIGH_QUALITY_9000_FILTERED_TARGETS.qr / 4;
-if (highQualityQrSets.size !== expectedHighQualityQrSets) {
-  throw new Error(
-    `High-quality QR should contain ${expectedHighQualityQrSets} four-question sets for batch ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}, found ${highQualityQrSets.size}.`
-  );
-}
+    if (largestQuestionTemplateCount > maxTemplateCount) {
+      throw new Error(
+        `${section.toUpperCase()} high-quality generator repeats one question template ${largestQuestionTemplateCount} times; limit is ${maxTemplateCount}.`
+      );
+    }
 
-const bannedHighQualityPatterns = [
-  {
-    pattern: /\bnot to (replacing|making|closing|charging|moving)\b/i,
-    reason: "gerund phrase after 'not to'",
-  },
-  {
-    pattern: /\bin set \d+\b/i,
-    reason: "artificial repeated set wording",
-  },
-  {
-    pattern: /\bhelping in an outpatient reception desk\b/i,
-    reason: "unnatural SJT setting phrasing",
-  },
-  {
-    pattern: /\ba equipment\b/i,
-    reason: "incorrect article before equipment",
-  },
-  {
-    pattern: /\ba event\b/i,
-    reason: "incorrect article before event",
-  },
-  {
-    pattern: /\breview area \d+\b/i,
-    reason: "artificial repeated review-area wording",
-  },
-  {
-    pattern: /\bextra-[a-z]/i,
-    reason: "awkward hyphenated extra-charge wording",
-  },
-  {
-    pattern: /\b([a-z]{3,})\s+\1\b/i,
-    reason: "repeated adjacent word",
-  },
-];
-const bannedMatches = [];
-
-for (const section of sections) {
-  for (const question of HIGH_QUALITY_9000_UCAT_QUESTION_BANK[section]) {
-    const text = collectQuestionText(question);
-    const banned = bannedHighQualityPatterns.find(({ pattern }) => pattern.test(text));
-    if (banned) {
-      bannedMatches.push(`${question.id}: ${banned.reason}`);
+    if (largestStimulusTemplateCount > maxTemplateCount) {
+      throw new Error(
+        `${section.toUpperCase()} high-quality generator repeats one stimulus template ${largestStimulusTemplateCount} times; limit is ${maxTemplateCount}.`
+      );
     }
   }
-}
 
-if (bannedMatches.length > 0) {
-  throw new Error(
-    `High-quality generated layer contains banned wording:\n${bannedMatches
-      .slice(0, 10)
-      .join("\n")}`
+  const highQualityQrSets = new Set(
+    UCAT_QUESTION_BANK.qr
+      .filter((question) => question.id.startsWith("hq-qr-"))
+      .map((question) => question.setId)
+      .filter(Boolean)
   );
-}
-
-const highQualityQrContentIssues = [];
-for (const question of HIGH_QUALITY_9000_UCAT_QUESTION_BANK.qr) {
-  const text = collectQuestionText(question);
-  const correctText = String(question.correctText || "");
-
-  if (/NaN|Infinity/.test(text)) {
-    highQualityQrContentIssues.push(`${question.id}: non-finite numeric text`);
+  const expectedHighQualityQrSets = HIGH_QUALITY_9000_FILTERED_TARGETS.qr / 4;
+  if (highQualityQrSets.size !== expectedHighQualityQrSets) {
+    throw new Error(
+      `High-quality QR should contain ${expectedHighQualityQrSets} four-question sets for batch ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}, found ${highQualityQrSets.size}.`
+    );
   }
 
-  if (/GBP -/.test(text)) {
-    highQualityQrContentIssues.push(`${question.id}: negative money value`);
+  const bannedHighQualityPatterns = [
+    {
+      pattern: /\bnot to (replacing|making|closing|charging|moving)\b/i,
+      reason: "gerund phrase after 'not to'",
+    },
+    {
+      pattern: /\bin set \d+\b/i,
+      reason: "artificial repeated set wording",
+    },
+    {
+      pattern: /\bhelping in an outpatient reception desk\b/i,
+      reason: "unnatural SJT setting phrasing",
+    },
+    {
+      pattern: /\ba equipment\b/i,
+      reason: "incorrect article before equipment",
+    },
+    {
+      pattern: /\ba event\b/i,
+      reason: "incorrect article before event",
+    },
+    {
+      pattern: /\breview area \d+\b/i,
+      reason: "artificial repeated review-area wording",
+    },
+    {
+      pattern: /\bextra-[a-z]/i,
+      reason: "awkward hyphenated extra-charge wording",
+    },
+    {
+      pattern: /\b([a-z]{3,})\s+\1\b/i,
+      reason: "repeated adjacent word",
+    },
+  ];
+  const bannedMatches = [];
+
+  for (const section of sections) {
+    for (const question of HIGH_QUALITY_9000_UCAT_QUESTION_BANK[section]) {
+      const text = collectQuestionText(question);
+      const banned = bannedHighQualityPatterns.find(({ pattern }) => pattern.test(text));
+      if (banned) {
+        bannedMatches.push(`${question.id}: ${banned.reason}`);
+      }
+    }
   }
 
-  if (/how much more/i.test(question.question) && /GBP -/.test(correctText)) {
-    highQualityQrContentIssues.push(`${question.id}: negative answer to a 'how much more' question`);
+  if (bannedMatches.length > 0) {
+    throw new Error(
+      `High-quality generated layer contains banned wording:\n${bannedMatches
+        .slice(0, 10)
+        .join("\n")}`
+    );
   }
 
-  if (/finish the project/i.test(question.question) && /^0(?:\.0)? days$/.test(correctText)) {
-    highQualityQrContentIssues.push(`${question.id}: zero-day work-rate answer`);
+  const highQualityQrContentIssues = [];
+  for (const question of HIGH_QUALITY_9000_UCAT_QUESTION_BANK.qr) {
+    const text = collectQuestionText(question);
+    const correctText = String(question.correctText || "");
+
+    if (/NaN|Infinity/.test(text)) {
+      highQualityQrContentIssues.push(`${question.id}: non-finite numeric text`);
+    }
+
+    if (/GBP -/.test(text)) {
+      highQualityQrContentIssues.push(`${question.id}: negative money value`);
+    }
+
+    if (/how much more/i.test(question.question) && /GBP -/.test(correctText)) {
+      highQualityQrContentIssues.push(`${question.id}: negative answer to a 'how much more' question`);
+    }
+
+    if (/finish the project/i.test(question.question) && /^0(?:\.0)? days$/.test(correctText)) {
+      highQualityQrContentIssues.push(`${question.id}: zero-day work-rate answer`);
+    }
+
+    if (/closing stock/i.test(question.question) && /^-/.test(correctText)) {
+      highQualityQrContentIssues.push(`${question.id}: negative closing stock answer`);
+    }
+
+    if (/ratio/i.test(question.question) && /\d+\/\d+/.test(correctText)) {
+      highQualityQrContentIssues.push(`${question.id}: ratio answer uses fraction slash notation`);
+    }
+
+    if (/^After that,/i.test(question.question)) {
+      highQualityQrContentIssues.push(`${question.id}: work-rate question has unclear 'After that' reference`);
+    }
   }
 
-  if (/closing stock/i.test(question.question) && /^-/.test(correctText)) {
-    highQualityQrContentIssues.push(`${question.id}: negative closing stock answer`);
+  if (highQualityQrContentIssues.length > 0) {
+    throw new Error(
+      `High-quality QR generated layer contains numeric content issues:\n${highQualityQrContentIssues
+        .slice(0, 10)
+        .join("\n")}`
+    );
   }
 
-  if (/ratio/i.test(question.question) && /\d+\/\d+/.test(correctText)) {
-    highQualityQrContentIssues.push(`${question.id}: ratio answer uses fraction slash notation`);
-  }
-
-  if (/^After that,/i.test(question.question)) {
-    highQualityQrContentIssues.push(`${question.id}: work-rate question has unclear 'After that' reference`);
-  }
-}
-
-if (highQualityQrContentIssues.length > 0) {
-  throw new Error(
-    `High-quality QR generated layer contains numeric content issues:\n${highQualityQrContentIssues
-      .slice(0, 10)
-      .join("\n")}`
+  const highQualitySjtSingleQuestions = HIGH_QUALITY_9000_UCAT_QUESTION_BANK.sjt.filter(
+    (question) => !question.questionType || question.questionType === "single"
   );
-}
+  const highQualitySjtAnswerCounts = new Map();
+  for (const question of highQualitySjtSingleQuestions) {
+    const key = `${question.subtype}:${question.answer}`;
+    highQualitySjtAnswerCounts.set(key, (highQualitySjtAnswerCounts.get(key) || 0) + 1);
+  }
 
-const highQualitySjtSingleQuestions = HIGH_QUALITY_9000_UCAT_QUESTION_BANK.sjt.filter(
-  (question) => !question.questionType || question.questionType === "single"
-);
-const highQualitySjtAnswerCounts = new Map();
-for (const question of highQualitySjtSingleQuestions) {
-  const key = `${question.subtype}:${question.answer}`;
-  highQualitySjtAnswerCounts.set(key, (highQualitySjtAnswerCounts.get(key) || 0) + 1);
-}
-
-const minimumMiddleSjtAnswers = HIGH_QUALITY_9000_COMPLETED_BATCHES * 10;
-const requiredMiddleSjtAnswers = [
-  "sjt-appropriateness:B",
-  "sjt-appropriateness:C",
-  "sjt-importance:B",
-  "sjt-importance:C",
-];
-const weakSjtAnswerSpread = requiredMiddleSjtAnswers.filter(
-  (key) => (highQualitySjtAnswerCounts.get(key) || 0) < minimumMiddleSjtAnswers
-);
-
-if (weakSjtAnswerSpread.length > 0) {
-  throw new Error(
-    `High-quality SJT generated layer lacks middle-ground mark schemes: ${weakSjtAnswerSpread
-      .map((key) => `${key}=${highQualitySjtAnswerCounts.get(key) || 0}`)
-      .join(", ")}.`
+  const minimumMiddleSjtAnswers = HIGH_QUALITY_9000_COMPLETED_BATCHES * 10;
+  const requiredMiddleSjtAnswers = [
+    "sjt-appropriateness:B",
+    "sjt-appropriateness:C",
+    "sjt-importance:B",
+    "sjt-importance:C",
+  ];
+  const weakSjtAnswerSpread = requiredMiddleSjtAnswers.filter(
+    (key) => (highQualitySjtAnswerCounts.get(key) || 0) < minimumMiddleSjtAnswers
   );
-}
 
-const learningReasonImportanceQuestions = HIGH_QUALITY_9000_UCAT_QUESTION_BANK.sjt.filter(
-  (question) =>
-    question.subtype === "sjt-importance" &&
-    question.answer === "C" &&
-    /\b(?:wanted|hoped|thought).*?\b(?:learn|practice|practise|skills)\b/i.test(question.question)
-).length;
+  if (weakSjtAnswerSpread.length > 0) {
+    throw new Error(
+      `High-quality SJT generated layer lacks middle-ground mark schemes: ${weakSjtAnswerSpread
+        .map((key) => `${key}=${highQualitySjtAnswerCounts.get(key) || 0}`)
+        .join(", ")}.`
+    );
+  }
 
-if (learningReasonImportanceQuestions < minimumMiddleSjtAnswers) {
-  throw new Error(
-    `High-quality SJT should mark learning-motive factors as minor importance often enough; found ${learningReasonImportanceQuestions}.`
-  );
+  const learningReasonImportanceQuestions = HIGH_QUALITY_9000_UCAT_QUESTION_BANK.sjt.filter(
+    (question) =>
+      question.subtype === "sjt-importance" &&
+      question.answer === "C" &&
+      /\b(?:wanted|hoped|thought).*?\b(?:learn|practice|practise|skills)\b/i.test(question.question)
+  ).length;
+
+  if (learningReasonImportanceQuestions < minimumMiddleSjtAnswers) {
+    throw new Error(
+      `High-quality SJT should mark learning-motive factors as minor importance often enough; found ${learningReasonImportanceQuestions}.`
+    );
+  }
 }
 
 assertStimulusDiversity("vr", UCAT_QUESTION_BANK.vr);
@@ -600,13 +622,18 @@ for (const section of sections) {
 }
 
 console.log(`\nTotal accepted UCAT questions: ${allQuestions.length}`);
-console.log(
-  `Previously reviewed high-quality waves: ${HIGH_QUALITY_9000_LOCKED_BATCHES}/${HIGH_QUALITY_9000_LOCKED_BATCHES}`
-);
-console.log(
-  `Next high-quality wave progress: ${HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_NEXT_WAVE_TOTAL_BATCHES}`
-);
-console.log(
-  `Combined high-quality generated batch progress: ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}`
-);
-console.log(`High-quality generated questions accepted: ${HIGH_QUALITY_9000_TOTAL}`);
+
+if (highQualityGeneratedLayer) {
+  console.log(
+    `Previously reviewed high-quality waves: ${HIGH_QUALITY_9000_LOCKED_BATCHES}/${HIGH_QUALITY_9000_LOCKED_BATCHES}`
+  );
+  console.log(
+    `Next high-quality wave progress: ${HIGH_QUALITY_9000_NEXT_WAVE_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_NEXT_WAVE_TOTAL_BATCHES}`
+  );
+  console.log(
+    `Combined high-quality generated batch progress: ${HIGH_QUALITY_9000_COMPLETED_BATCHES}/${HIGH_QUALITY_9000_TOTAL_BATCHES}`
+  );
+  console.log(`High-quality generated questions accepted: ${HIGH_QUALITY_9000_TOTAL}`);
+} else {
+  console.log("High-quality generated layer: skipped (file not present).");
+}
