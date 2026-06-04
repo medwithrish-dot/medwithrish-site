@@ -6392,6 +6392,7 @@ function ReviewScreen({
   timings,
   onGoToQuestion,
   onMark,
+  isFullMockSection,
 }: {
   sectionTitle: string;
   questions: UCATQuestion[];
@@ -6401,6 +6402,7 @@ function ReviewScreen({
   timings: Record<string, QuestionTiming>;
   onGoToQuestion: (index: number) => void;
   onMark: () => void;
+  isFullMockSection?: boolean;
 }) {
   const answeredCount = questions.filter((question, index) =>
     isAnswered(question, answers[index])
@@ -6419,7 +6421,7 @@ function ReviewScreen({
           onClick={onMark}
           className="rounded-sm bg-white px-4 py-1.5 text-sm font-bold text-[#0078a8] hover:bg-slate-100"
         >
-          Mark
+          {isFullMockSection ? "End section" : "Mark"}
         </button>
       </header>
 
@@ -6481,7 +6483,7 @@ function ReviewScreen({
           onClick={onMark}
           className="mt-6 inline-flex h-11 items-center justify-center rounded-sm bg-[#0078a8] px-8 text-base font-bold text-white hover:bg-[#00618a]"
         >
-          Mark
+          {isFullMockSection ? "End section" : "Mark"}
         </button>
       </main>
     </div>
@@ -9355,7 +9357,7 @@ function UCATQuestionBankSection({
       resumedSessionId
     );
 
-    if (diagnosticMode && diagnosticMode !== "free-qr") {
+    if (diagnosticMode && diagnosticMode !== "free-qr" && diagnosticMode !== "full-section") {
       void saveSummary.then(() => {
         showMarkedInsights();
       });
@@ -9572,12 +9574,85 @@ function UCATQuestionBankSection({
           goToQuestion(index);
         }}
         onMark={markPractice}
+        isFullMockSection={isFullMockSection}
       />
     );
   }
 
   if (phase === "diagnostic-complete" && markedSummary) {
     const completionScore = getDiagnosticSectionScore(markedSummary);
+    const currentSectionIndex = FULL_MOCK_SECTION_ORDER.indexOf(validSection);
+    const nextMockSection = FULL_MOCK_SECTION_ORDER[currentSectionIndex + 1] ?? null;
+    const nextSectionHref = nextMockSection
+      ? withMockQuery(`/phloemai/mocks/full/${nextMockSection}`, mockId)
+      : withMockQuery("/phloemai/mocks/full", mockId);
+    const nextSectionMeta = nextMockSection ? getUCATSectionMeta(nextMockSection) : null;
+
+    if (isFullMockSection) {
+      return (
+        <div className="min-h-screen bg-gradient-to-b from-[#eef3fb] via-[#f5f8fc] to-white px-4 py-12 text-[#111827]">
+          <div className="mx-auto max-w-2xl">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md">
+              <div className="bg-gradient-to-br from-emerald-500 to-emerald-700 px-7 pb-8 pt-8 text-white">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+                  <CheckCircle className="h-7 w-7" aria-hidden="true" />
+                </div>
+                <h1 className="mt-5 text-3xl font-black tracking-tight sm:text-4xl">
+                  {meta.title} section saved
+                </h1>
+                <p className="mt-2 max-w-md text-sm font-semibold leading-6 text-emerald-50">
+                  {nextMockSection
+                    ? `Section saved. Continue with ${nextSectionMeta!.title} when you are ready.`
+                    : "All four sections complete. Open the full mock report to see your results."}
+                </p>
+              </div>
+              <div className="px-7 py-6">
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {[
+                    ["Score", formatMarkScore(markedSummary.scorePoints, markedSummary.maxScore)],
+                    [completionScore.label, completionScore.value],
+                    ["Accuracy", `${markedSummary.accuracy}%`],
+                  ].map(([label, value]) => (
+                    <div
+                      key={label}
+                      className="rounded-lg border border-slate-200 bg-slate-50 p-3"
+                    >
+                      <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+                        {label}
+                      </p>
+                      <p className="mt-1 text-lg font-black text-slate-900">
+                        {value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                {saveState.status === "saving" ? (
+                  <div className="mt-7 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-blue-400 px-7 text-sm font-black text-white">
+                    Saving…
+                  </div>
+                ) : (
+                  <a
+                    href={nextSectionHref}
+                    className="mt-7 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 text-sm font-black text-white shadow-md shadow-blue-100 transition-colors hover:bg-blue-700"
+                  >
+                    {nextMockSection
+                      ? `Continue to ${nextSectionMeta!.title}`
+                      : "Open full mock report"}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                )}
+                {completionScore.helper && (
+                  <p className="mt-3 text-center text-xs font-semibold text-slate-500">
+                    {completionScore.helper}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#eef3fb] via-[#f5f8fc] to-white px-4 py-12 text-[#111827]">
         <div className="mx-auto max-w-2xl">
