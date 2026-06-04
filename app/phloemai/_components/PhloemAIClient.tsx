@@ -7165,25 +7165,62 @@ function AuthPanel({
   );
 }
 
+function getLatestPerSectionDiagnostics(
+  diagnosticHistory: DashboardDiagnostic[]
+): Map<UCATSectionCode, DashboardDiagnostic> {
+  const bySection = new Map<UCATSectionCode, DashboardDiagnostic>();
+  for (const d of diagnosticHistory) {
+    const current = bySection.get(d.section);
+    const currentTime = current?.completedAt
+      ? new Date(current.completedAt).getTime()
+      : 0;
+    const nextTime = d.completedAt ? new Date(d.completedAt).getTime() : 0;
+    if (!current || nextTime >= currentTime) bySection.set(d.section, d);
+  }
+  return bySection;
+}
+
 function DashboardFeedbackPanel({
   latestDiagnostic,
+  diagnosticHistory = [],
   practiceStats,
   isPremium,
   className = "",
 }: {
   latestDiagnostic: DashboardDiagnostic | null;
+  diagnosticHistory?: DashboardDiagnostic[];
   practiceStats: PracticeStats;
   isPremium: boolean;
   className?: string;
 }) {
+  const perSectionMap = useMemo(
+    () => getLatestPerSectionDiagnostics(diagnosticHistory),
+    [diagnosticHistory]
+  );
+  const [selectedSection, setSelectedSection] = useState<UCATSectionCode | null>(
+    () => latestDiagnostic?.section ?? null
+  );
+
+  // If a new latest diagnostic arrives (e.g. just completed a mock), sync selected section.
+  const prevLatestRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (latestDiagnostic?.id && latestDiagnostic.id !== prevLatestRef.current) {
+      prevLatestRef.current = latestDiagnostic.id;
+      setSelectedSection(latestDiagnostic.section);
+    }
+  }, [latestDiagnostic]);
+
   const hasDiagnostic = Boolean(latestDiagnostic);
-  const aiText = latestDiagnostic?.aiFeedbackText ?? null;
+  const activeDiagnostic = selectedSection
+    ? (perSectionMap.get(selectedSection) ?? null)
+    : latestDiagnostic;
+  const aiText = activeDiagnostic?.aiFeedbackText ?? null;
   const aiStatusValue = aiText
     ? "Ready"
-    : latestDiagnostic
-      ? latestDiagnostic.aiFeedbackStatus === "queued_no_api_key"
+    : activeDiagnostic
+      ? activeDiagnostic.aiFeedbackStatus === "queued_no_api_key"
         ? "Pending"
-        : latestDiagnostic.aiFeedbackStatus === "ready"
+        : activeDiagnostic.aiFeedbackStatus === "ready"
           ? "Ready"
           : "Not requested"
       : "Pending";
@@ -7201,12 +7238,11 @@ function DashboardFeedbackPanel({
     { code: "QR", label: "Quantitative Reasoning" },
     { code: "SJT", label: "Situational Judgement" },
   ];
-  const activeSection = latestDiagnostic?.section;
-  const issues = latestDiagnostic?.issues ?? [];
-  const strengths = latestDiagnostic?.strengths ?? [];
-  const fixes = latestDiagnostic?.studyPlanTasks ?? [];
-  const feedbackReportHref = latestDiagnostic
-    ? `/phloemai/report?attempt=${encodeURIComponent(latestDiagnostic.id)}`
+  const issues = activeDiagnostic?.issues ?? [];
+  const strengths = activeDiagnostic?.strengths ?? [];
+  const fixes = activeDiagnostic?.studyPlanTasks ?? [];
+  const feedbackReportHref = activeDiagnostic
+    ? `/phloemai/report?attempt=${encodeURIComponent(activeDiagnostic.id)}`
     : "/phloemai/report";
 
   return (
@@ -7223,7 +7259,7 @@ function DashboardFeedbackPanel({
           </h2>
           <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-slate-600">
             {hasDiagnostic
-              ? "Based on your free diagnostic. Issues, strengths and fixes per UCAT section."
+              ? "Issues, strengths and fixes per UCAT section. Each tab shows the latest result for that section."
               : "Complete and mark a diagnostic so PhloemAI can turn your timing, accuracy and answer behaviour into AI feedback."}
           </p>
         </div>
@@ -7284,47 +7320,60 @@ function DashboardFeedbackPanel({
 
       {hasDiagnostic ? (
         <>
-          {aiText && (
-            <div className="mt-5 rounded-xl border border-violet-100 bg-violet-50/40 p-4">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-violet-600" aria-hidden="true" />
-                <h3 className="text-xs font-black uppercase tracking-wide text-violet-700">
-                  AI feedback
-                </h3>
-              </div>
-              <ExpandableAiFeedback
-                text={aiText}
-                previewLength={300}
-                className="mt-2 text-xs font-semibold leading-5 text-slate-800"
-                paragraphClassName="whitespace-pre-wrap"
-                buttonClassName="mt-3 text-xs font-black text-violet-700 hover:text-violet-800"
-              />
-            </div>
-          )}
-
+          {/* Clickable section tabs — each reflects its own latest diagnostic */}
           <div className="mt-5 flex flex-wrap gap-1 rounded-md border border-slate-200 bg-slate-50 p-1">
             {sectionTabs.map((tab) => {
-              const active = activeSection === tab.code;
+              const hasSectionData = perSectionMap.has(tab.code);
+              const active = selectedSection === tab.code;
               return (
-                <span
+                <button
                   key={tab.code}
-                  className={`rounded-sm px-3 py-1 text-xs font-black uppercase tracking-wide ${
+                  type="button"
+                  onClick={() => setSelectedSection(tab.code)}
+                  className={`rounded-sm px-3 py-1 text-xs font-black uppercase tracking-wide transition-colors ${
                     active
                       ? "bg-blue-600 text-white"
-                      : "text-slate-500"
+                      : hasSectionData
+                        ? "text-slate-700 hover:bg-slate-200"
+                        : "text-slate-400"
                   }`}
                 >
                   {tab.code}
-                </span>
+                  {hasSectionData && !active && (
+                    <span className="ml-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  )}
+                </button>
               );
             })}
           </div>
 
-          {sectionTabs.map((tab) => {
-            const active = activeSection === tab.code;
-            if (!active) return null;
-            return (
-              <div key={tab.code} className="mt-4 grid gap-3 lg:grid-cols-3">
+          {activeDiagnostic ? (
+            <>
+              {/* Per-section AI feedback — collapsible */}
+              {activeDiagnostic.aiFeedbackText && (
+                <div className="mt-4 rounded-xl border border-violet-100 bg-violet-50/40 p-4">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-violet-600" aria-hidden="true" />
+                    <h3 className="text-xs font-black uppercase tracking-wide text-violet-700">
+                      {selectedSection} AI feedback
+                    </h3>
+                    <span className="ml-auto text-[11px] font-semibold text-slate-400">
+                      {activeDiagnostic.completedAt
+                        ? new Date(activeDiagnostic.completedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
+                        : ""}
+                    </span>
+                  </div>
+                  <ExpandableAiFeedback
+                    text={activeDiagnostic.aiFeedbackText}
+                    previewLength={280}
+                    className="mt-2 text-xs font-semibold leading-5 text-slate-800"
+                    paragraphClassName="whitespace-pre-wrap"
+                    buttonClassName="mt-3 text-xs font-black text-violet-700 hover:text-violet-800"
+                  />
+                </div>
+              )}
+
+              <div className="mt-4 grid gap-3 lg:grid-cols-3">
                 <div className="rounded-xl border border-red-100 bg-red-50/40 p-4">
                   <h3 className="text-xs font-black uppercase tracking-wide text-red-700">
                     Issues
@@ -7393,28 +7442,49 @@ function DashboardFeedbackPanel({
                   )}
                 </div>
               </div>
-            );
-          })}
 
+              {/* Sections not yet diagnosed for this section */}
+              {!activeDiagnostic.aiFeedbackText && (
+                <p className="mt-3 text-xs font-semibold text-slate-500">
+                  <Link
+                    href={feedbackReportHref}
+                    className="font-black text-violet-600 hover:text-violet-700"
+                  >
+                    Generate AI feedback
+                  </Link>{" "}
+                  for a written analysis with specific fixes for {selectedSection}.
+                </p>
+              )}
+            </>
+          ) : (
+            <div className="mt-4 flex items-center justify-between rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-3 text-xs font-bold text-slate-500">
+              <span>{selectedSection} — not yet diagnosed</span>
+              <Link
+                href="/phloemai/mocks/full"
+                className="text-blue-600 hover:text-blue-700"
+              >
+                Start mock
+              </Link>
+            </div>
+          )}
+
+          {/* Remaining undiagnosed sections */}
           {sectionTabs
-            .filter((tab) => tab.code !== activeSection)
+            .filter((tab) => tab.code !== selectedSection && !perSectionMap.has(tab.code))
             .map((tab) => (
               <div
                 key={tab.code}
-                className="mt-3 flex items-center justify-between rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-500"
+                className="mt-2 flex items-center justify-between rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-500"
               >
-                <span>
-                  {tab.code} - {tab.label} not yet diagnosed
-                </span>
+                <span>{tab.code} — {tab.label} not yet diagnosed</span>
                 <Link
-                  href="/phloemai/diagnostic"
+                  href="/phloemai/mocks/full"
                   className="text-blue-600 hover:text-blue-700"
                 >
-                  Run diagnostic
+                  Start mock
                 </Link>
               </div>
             ))}
-
         </>
       ) : (
         <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50/60 p-4">
@@ -8139,9 +8209,7 @@ function UCATDashboard({
     }
 
     if (!hasStripeCustomer) {
-      setCheckoutError(
-        "This account has manual Premium access, so there is no Stripe billing portal to manage."
-      );
+      window.location.assign("/phloemai/pricing");
       return;
     }
 
@@ -8367,8 +8435,8 @@ function UCATDashboard({
               <button
                 type="button"
                 onClick={handleSubscriptionAction}
-                disabled={checkoutLoading || !hasStripeCustomer}
-                className="mt-5 h-10 w-full rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
+                disabled={checkoutLoading}
+                className="mt-5 h-10 w-full rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
               >
                 {hasStripeCustomer
                   ? checkoutLoading
@@ -8399,8 +8467,7 @@ function UCATDashboard({
                 <button
                   type="button"
                   onClick={handleSubscriptionAction}
-                  disabled={!hasStripeCustomer}
-                  className="text-sm font-black text-blue-600 hover:text-blue-700 disabled:cursor-not-allowed disabled:text-slate-400"
+                  className="text-sm font-black text-blue-600 hover:text-blue-700"
                 >
                   {hasStripeCustomer ? "Manage" : "Manual access"}
                 </button>
@@ -8688,8 +8755,8 @@ function UCATDashboard({
                         setMobileMenuOpen(false);
                         void handleSubscriptionAction();
                       }}
-                      disabled={checkoutLoading || !hasStripeCustomer}
-                      className="mt-3 flex h-10 w-full items-center justify-center rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                      disabled={checkoutLoading}
+                      className="mt-3 flex h-10 w-full items-center justify-center rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
                     >
                       {hasStripeCustomer
                         ? checkoutLoading
@@ -8739,6 +8806,7 @@ function UCATDashboard({
           <div className="grid gap-5 px-6 py-5 lg:grid-cols-[1.1fr_1fr] lg:px-8">
             <DashboardFeedbackPanel
               latestDiagnostic={latestDiagnostic}
+              diagnosticHistory={diagnosticHistory}
               practiceStats={practiceStats}
               isPremium={dashboardDiagnosticFeaturesUnlocked}
               className={dashboardFeedbackExpanded ? "lg:col-span-2" : ""}

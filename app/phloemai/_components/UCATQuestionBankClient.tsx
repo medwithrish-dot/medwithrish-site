@@ -25,6 +25,7 @@ import {
   LockKeyhole,
   MousePointer2,
   Play,
+  PlusCircle,
   Sparkles,
   Target,
   Timer,
@@ -81,7 +82,8 @@ type DiagnosticMode =
   | "full-mock"
   | "section-mock"
   | "full-section"
-  | "subset";
+  | "subset"
+  | "sprint";
 type MockId =
   | "mock-a"
   | "mock-b"
@@ -610,7 +612,8 @@ function normaliseDiagnosticMode(value?: string | null): DiagnosticMode | null {
     value === "full-mock" ||
     value === "section-mock" ||
     value === "full-section" ||
-    value === "subset"
+    value === "subset" ||
+    value === "sprint"
   ) {
     return value;
   }
@@ -815,6 +818,7 @@ function getOfficialSectionSeconds(section: UCATSection, questionCount: number) 
 function getPracticeSource(diagnosticMode: DiagnosticMode | null) {
   if (diagnosticMode === "free-qr") return FREE_QR_DIAGNOSTIC_SOURCE;
   if (diagnosticMode === "full-section") return FULL_SECTION_DIAGNOSTIC_SOURCE;
+  if (diagnosticMode === "sprint") return FULL_SECTION_DIAGNOSTIC_SOURCE;
   if (diagnosticMode === "subset") return SUBSET_DIAGNOSTIC_SOURCE;
 
   return "question_bank";
@@ -964,7 +968,8 @@ function isPracticeSessionId(value: string | null | undefined) {
 
 function getDiagnosticTitle(diagnosticMode: DiagnosticMode | null) {
   if (diagnosticMode === "free-qr") return "Free QR diagnostic";
-  if (diagnosticMode === "full-section") return "Mock diagnostic";
+  if (diagnosticMode === "full-section") return "Subtest mock";
+  if (diagnosticMode === "sprint") return "15-min sprint";
   if (diagnosticMode === "subset") return "Custom diagnostic";
 
   return "Practice set";
@@ -1405,6 +1410,42 @@ function buildSjtPracticeQuestionSet(
   return result;
 }
 
+// VR passages must stay together (setId groups of 4 questions in reading order).
+function buildVrPassageQuestionSet(
+  questions: UCATQuestion[],
+  targetCount: number
+): UCATQuestion[] {
+  const setMap = new Map<string, UCATQuestion[]>();
+  for (const q of questions) {
+    const key = q.setId ?? q.id;
+    const arr = setMap.get(key) ?? [];
+    arr.push(q);
+    setMap.set(key, arr);
+  }
+
+  const sorted = (set: UCATQuestion[]) =>
+    [...set].sort((a, b) => {
+      const num = (id: string) => parseInt(id.split("-").pop() ?? "0", 10);
+      return num(a.id) - num(b.id);
+    });
+
+  // Prefer complete 4-question sets; shuffle so randomness is preserved.
+  const complete = shuffleList(
+    Array.from(setMap.values()).filter((s) => s.length >= 4)
+  );
+  const partial = shuffleList(
+    Array.from(setMap.values()).filter((s) => s.length < 4)
+  );
+  const all = [...complete, ...partial];
+
+  const result: UCATQuestion[] = [];
+  for (const set of all) {
+    if (result.length >= targetCount) break;
+    result.push(...sorted(set));
+  }
+  return result;
+}
+
 function buildRandomPracticeQuestionSet(
   questions: UCATQuestion[],
   questionCount: number
@@ -1415,6 +1456,11 @@ function buildRandomPracticeQuestionSet(
   // SJT questions must be served as complete scenario sets
   if (questions[0]?.section === "sjt") {
     return buildSjtPracticeQuestionSet(questions, targetCount);
+  }
+
+  // VR questions must be served as complete passage sets (4 per passage)
+  if (questions[0]?.section === "vr") {
+    return buildVrPassageQuestionSet(questions, targetCount);
   }
 
   const bucketsBySubtype = new Map<UCATSubtypeId, UCATQuestion[]>();
@@ -3983,8 +4029,11 @@ function FullMockPerformancePanel({
   );
 }
 
+type NewMockStep = null | "type" | "subtest-section" | "sprint-section";
+
 function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
   const [mockFilter, setMockFilter] = useState<MockFilter>("all");
+  const [newMockStep, setNewMockStep] = useState<NewMockStep>(null);
   const selectedMock = getMockDefinition(mockId);
   const { scoreMatrix, loading: scoreLoading } = useFullMockScoreMatrix();
   const drafts = useMockSessionDrafts();
@@ -4008,6 +4057,14 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
     return true;
   });
 
+  // Next section for starting/continuing the full mock
+  const nextFullMockSection = selectedMockDraft?.section ?? getNextFullMockSection(scoreMatrix, selectedMock.id);
+
+  const sectionPickerOptions = FULL_MOCK_SECTION_ORDER.map((section) => {
+    const meta = getUCATSectionMeta(section);
+    return { section, code: meta.code, title: meta.title };
+  });
+
   return (
     <div className="min-h-screen bg-slate-100 px-3 py-4 text-[#111827]">
       <main className="mx-auto max-w-6xl rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
@@ -4024,8 +4081,7 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
             Diagnostic Mock
           </h1>
           <p className="mt-1.5 text-xs font-semibold leading-5 text-slate-500">
-            Open each section in order. Questions are randomly pulled from the
-            uncompleted items in that section&apos;s question bank.
+            Questions are randomly pulled from uncompleted items in the question bank.
           </p>
         </div>
 
@@ -4035,6 +4091,131 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
           loading={scoreLoading}
           draft={selectedMockDraft}
         />
+
+        {/* ── New mock picker ─────────────────────────────────────────── */}
+        {newMockStep === null && (
+          <div className="mt-5 flex items-center gap-3 border-t border-slate-100 pt-5">
+            <button
+              type="button"
+              onClick={() => setNewMockStep("type")}
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700"
+            >
+              <PlusCircle className="h-4 w-4" aria-hidden="true" />
+              Start a new mock
+            </button>
+            <p className="text-xs font-semibold text-slate-500">
+              Full mock, subtest mock, or 15-min sprint
+            </p>
+          </div>
+        )}
+
+        {newMockStep === "type" && (
+          <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50/40 p-5">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-sm font-black text-slate-950">Choose mock type</h2>
+              <button
+                type="button"
+                onClick={() => setNewMockStep(null)}
+                className="text-xs font-bold text-slate-500 hover:text-slate-800"
+              >
+                Cancel
+              </button>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              {[
+                {
+                  label: "Full mock",
+                  badge: `${totalTarget} questions`,
+                  desc: "VR → DM → QR → SJT in order. Randomly drawn from uncompleted question-bank items.",
+                  href: withMockQuery(`/phloemai/mocks/full/${nextFullMockSection}`, selectedMock.id),
+                  onClick: undefined as undefined | (() => void),
+                },
+                {
+                  label: "Subtest mock",
+                  badge: "1 section",
+                  desc: "Choose one UCAT section. Full question count, official timing.",
+                  href: null,
+                  onClick: () => setNewMockStep("subtest-section"),
+                },
+                {
+                  label: "15-min sprint",
+                  badge: "~15 min",
+                  desc: "Choose one section. Reduced question set, 15-minute timer.",
+                  href: null,
+                  onClick: () => setNewMockStep("sprint-section"),
+                },
+              ].map((option) =>
+                option.href ? (
+                  <Link
+                    key={option.label}
+                    href={option.href}
+                    className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-colors hover:border-blue-400 hover:bg-blue-50/60"
+                  >
+                    <span className="inline-flex self-start rounded-full bg-blue-600 px-2.5 py-0.5 text-[11px] font-bold text-white">
+                      {option.badge}
+                    </span>
+                    <p className="mt-3 text-sm font-black text-slate-950">{option.label}</p>
+                    <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">{option.desc}</p>
+                  </Link>
+                ) : (
+                  <button
+                    key={option.label}
+                    type="button"
+                    onClick={option.onClick}
+                    className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 text-left shadow-sm transition-colors hover:border-blue-400 hover:bg-blue-50/60"
+                  >
+                    <span className="inline-flex self-start rounded-full bg-slate-700 px-2.5 py-0.5 text-[11px] font-bold text-white">
+                      {option.badge}
+                    </span>
+                    <p className="mt-3 text-sm font-black text-slate-950">{option.label}</p>
+                    <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">{option.desc}</p>
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+        )}
+
+        {(newMockStep === "subtest-section" || newMockStep === "sprint-section") && (
+          <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50/40 p-5">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-sm font-black text-slate-950">
+                Choose section — {newMockStep === "sprint-section" ? "15-min sprint" : "Subtest mock"}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setNewMockStep("type")}
+                className="text-xs font-bold text-slate-500 hover:text-slate-800"
+              >
+                ← Back
+              </button>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {sectionPickerOptions.map(({ section, code, title }) => (
+                <Link
+                  key={section}
+                  href={withMockQuery(
+                    newMockStep === "sprint-section"
+                      ? `/phloemai/mocks/sprint/${section}`
+                      : `/phloemai/mocks/subtest/${section}`,
+                    selectedMock.id
+                  )}
+                  className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-colors hover:border-blue-400 hover:bg-blue-50/60"
+                >
+                  <span className="inline-flex self-start rounded-md bg-blue-600 px-2.5 py-1 text-xs font-black text-white">
+                    {code}
+                  </span>
+                  <p className="mt-3 text-sm font-black text-slate-950">{title}</p>
+                  <p className="mt-1 text-xs font-semibold text-slate-500">
+                    {newMockStep === "sprint-section"
+                      ? `~${Math.round(SECTION_MOCK_SHORT_SECONDS / 60)} min, ~${getSprintQuestionTarget(section)} questions`
+                      : `${FULL_MOCK_TARGETS[section]} questions, official time`}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-5">
           <MockStatusTabs value={mockFilter} onChange={setMockFilter} />
@@ -4064,7 +4245,7 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
               ? "Open diagnostic report"
               : mockStarted || active
                 ? "Continue"
-                : "Start";
+                : "Start full mock";
 
             return (
               <article
@@ -4086,7 +4267,7 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
                         ? `Unfinished ${getUCATSectionMeta(draft.section).code} section saved. Continue where you left off.`
                       : mockStarted
                         ? `${completedSections.length}/4 sections saved. Continue with ${getUCATSectionMeta(nextSection).code}.`
-                        : `Up to ${totalTarget} random uncompleted questions across VR, DM, QR and SJT. Start with any section.`}
+                        : `Up to ${totalTarget} random uncompleted questions across VR, DM, QR and SJT.`}
                   </p>
                   <div className="mt-2.5 flex flex-wrap gap-1.5">
                     {FULL_MOCK_SECTION_ORDER.map((section) => {
@@ -7150,16 +7331,21 @@ function UCATQuestionBankSection({
   );
   const consumesQuestionBankQuestions = shouldUseQuestionBankProgress(diagnosticMode);
   const isFullMockSection = diagnosticMode === "full-section";
-  const effectiveSectionMockTiming: SectionMockTimingMode = isFullMockSection
-    ? "official"
-    : sectionMockTiming;
+  const isSprintSection = diagnosticMode === "sprint";
+  const effectiveSectionMockTiming: SectionMockTimingMode = isSprintSection
+    ? "short"
+    : isFullMockSection
+      ? "official"
+      : sectionMockTiming;
   const sectionMockTimingLocked = true;
   const fixedDiagnosticScope: MockStartScope =
     diagnosticMode === "free-qr"
       ? "free"
-      : isFullMockSection
-        ? "full-mock"
-        : "diagnostic";
+      : isSprintSection
+        ? "sprint"
+        : isFullMockSection
+          ? "full-mock"
+          : "diagnostic";
   const sectionQuestions = baseSectionQuestions;
 
   const uncompletedSectionQuestions = useMemo(() => {
@@ -7186,6 +7372,11 @@ function UCATQuestionBankSection({
       const questionCount =
         Math.min(FULL_MOCK_TARGETS[validSection], availableQuestions.length);
 
+      return buildRandomPracticeQuestionSet(availableQuestions, questionCount);
+    }
+
+    if (diagnosticMode === "sprint") {
+      const questionCount = getSprintQuestionCount(validSection, availableQuestions.length);
       return buildRandomPracticeQuestionSet(availableQuestions, questionCount);
     }
 

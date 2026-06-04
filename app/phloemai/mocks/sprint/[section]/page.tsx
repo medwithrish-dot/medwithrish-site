@@ -3,11 +3,11 @@ import { PremiumDiagnosticLock } from "../../../_components/PremiumDiagnosticLoc
 import { UCATQuestionBankClient } from "../../../_components/UCATQuestionBankClient";
 import { UCAT_SECTIONS } from "../../../_lib/ucatQuestionBank";
 
-type SubtestSearchParams = {
+type SprintSearchParams = {
   mock?: string | string[];
 };
 
-function getMockId(searchParams: SubtestSearchParams) {
+function getMockId(searchParams: SprintSearchParams) {
   return Array.isArray(searchParams.mock)
     ? searchParams.mock[0]
     : searchParams.mock;
@@ -22,7 +22,7 @@ export default async function Page({
   searchParams,
 }: {
   params: Promise<{ section: string }>;
-  searchParams: Promise<SubtestSearchParams>;
+  searchParams: Promise<SprintSearchParams>;
 }) {
   const { section } = await params;
   const mockId = getMockId(await searchParams);
@@ -40,7 +40,7 @@ export default async function Page({
   return (
     <UCATQuestionBankClient
       section={section}
-      diagnosticMode="full-section"
+      diagnosticMode="sprint"
       mockId={mockId}
       backHref="/phloemai/mocks/full"
       backLabel="Back to mocks"
