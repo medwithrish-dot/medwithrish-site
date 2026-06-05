@@ -34,6 +34,7 @@ import {
 import {
   CALIB_PHASES,
   useAttentionTracker,
+  type TrackingProfile,
   type TrackingMode,
 } from "../_lib/useAttentionTracker";
 import {
@@ -414,6 +415,20 @@ const QUESTION_TRACKING_ZONES: QuestionTrackingZone[] = [
   "question",
   "answers",
 ];
+const QUESTION_ATTENTION_PROFILES = {
+  eye: {
+    fuzzyPaddingRatio: 0.1,
+    fuzzyMinPaddingPx: 28,
+    intentScoreThreshold: 0.14,
+    minRegionDwellMs: 350,
+  },
+  mouse: {
+    fuzzyPaddingRatio: 0.025,
+    fuzzyMinPaddingPx: 6,
+    intentScoreThreshold: 0.06,
+    minRegionDwellMs: 60,
+  },
+} satisfies Partial<Record<TrackingMode, Partial<TrackingProfile>>>;
 const MOST_LEAST_SLOT_LABELS: Record<UCATMostLeastSlot, string> = {
   most: "Most Appropriate",
   least: "Least Appropriate",
@@ -6924,6 +6939,8 @@ function UCATQuestionBankSection({
   const [calcOperator, setCalcOperator] = useState<string | null>(null);
   const [calcWaiting, setCalcWaiting] = useState(false);
   const [calcMemory, setCalcMemory] = useState(0);
+  const [calcPos, setCalcPos] = useState({ x: 16, y: 112 });
+  const calcDragRef = useRef({ dragging: false, startX: 0, startY: 0, startLeft: 16, startTop: 112 });
   const [lastMrcAt, setLastMrcAt] = useState(0);
   const [trackingEventCount, setTrackingEventCount] = useState(0);
   const [trackingEventsSnapshot, setTrackingEventsSnapshot] = useState<
@@ -6995,20 +7012,7 @@ function UCATQuestionBankSection({
     zoneIds: QUESTION_TRACKING_ZONES,
     zoneElements,
     isActive: started && phase === "practice",
-    profiles: {
-      eye: {
-        fuzzyPaddingRatio: 0.1,
-        fuzzyMinPaddingPx: 28,
-        intentScoreThreshold: 0.14,
-        minRegionDwellMs: 350,
-      },
-      mouse: {
-        fuzzyPaddingRatio: 0.025,
-        fuzzyMinPaddingPx: 6,
-        intentScoreThreshold: 0.06,
-        minRegionDwellMs: 60,
-      },
-    },
+    profiles: QUESTION_ATTENTION_PROFILES,
   });
   const resetAttentionTracker = attentionTracker.resetTracker;
 
@@ -7058,6 +7062,26 @@ function UCATQuestionBankSection({
 
   useEffect(() => {
     scrollToQuestionTop();
+  }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const drag = calcDragRef.current;
+      if (!drag.dragging) return;
+      setCalcPos({
+        x: drag.startLeft + (e.clientX - drag.startX),
+        y: drag.startTop + (e.clientY - drag.startY),
+      });
+    };
+    const handleMouseUp = () => {
+      calcDragRef.current.dragging = false;
+    };
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
   }, []);
 
   useEffect(() => {
@@ -8117,6 +8141,7 @@ function UCATQuestionBankSection({
     try {
       const summary = savedDiagnosticAttempt.summary;
       const insights = buildMarkedSessionInsights(summary);
+      const studyPlanTasks = buildStudyPlanTasks(insights.issues);
 
       const aiResponse = await fetch("/api/ai/diagnostic-feedback", {
         method: "POST",
@@ -8132,6 +8157,7 @@ function UCATQuestionBankSection({
           avgSecondsPerQuestion: summary.avgSecondsPerQuestion,
           issues: insights.issues,
           strengths: insights.strengths,
+          studyPlanTasks,
           questionTimings: summary.timingBySubtype.map((t) => ({
             label: t.label,
             avgSeconds: t.avgSeconds,
@@ -9985,69 +10011,96 @@ function UCATQuestionBankSection({
       </div>
 
       {calculatorOpen && supportsCalculator && (
-        <div className="fixed left-4 top-28 z-30 w-64 rounded-sm border border-slate-700 bg-[#f3f4f6] p-3 text-black shadow-2xl">
-          <div className="mb-2 flex items-center justify-between">
-            <p className="text-sm font-bold">Calculator</p>
-            <button
-              type="button"
-              onClick={() => toggleCalculator()}
-              className="rounded-sm px-2 text-sm font-bold hover:bg-slate-200"
+        <div
+          className="fixed z-30 select-none"
+          style={{ left: calcPos.x, top: calcPos.y }}
+        >
+          <div
+            className="rounded-2xl overflow-hidden"
+            style={{
+              width: "210px",
+              background: "#0f1f72",
+              padding: "12px",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.1)",
+            }}
+          >
+            {/* Brand bar — drag handle */}
+            <div
+              className="flex items-center justify-between rounded-lg mb-3 px-3 py-1.5 cursor-grab active:cursor-grabbing"
+              style={{ background: "rgba(255,255,255,0.07)" }}
+              onMouseDown={(e) => {
+                const drag = calcDragRef.current;
+                drag.dragging = true;
+                drag.startX = e.clientX;
+                drag.startY = e.clientY;
+                drag.startLeft = calcPos.x;
+                drag.startTop = calcPos.y;
+                e.preventDefault();
+              }}
             >
-              x
-            </button>
-          </div>
-          <div className="mb-2 rounded-sm border border-slate-500 bg-white px-2 py-2 text-right font-mono text-2xl">
-            {calcDisplay}
-          </div>
-          <div className="grid grid-cols-4 gap-1.5 text-sm font-bold">
-            <button type="button" onClick={() => memoryRecallClear()} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              MRC
-            </button>
-            <button type="button" onClick={() => memoryAdd(-1)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              M-
-            </button>
-            <button type="button" onClick={() => memoryAdd(1)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              M+
-            </button>
-            <button type="button" onClick={() => resetCalculator()} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              CE
-            </button>
-            {["7", "8", "9"].map((digit) => (
-              <button key={digit} type="button" onClick={() => inputCalcDigit(digit)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-                {digit}
+              <span style={{ color: "rgba(255,255,255,0.9)", fontSize: "11px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase" }}>
+                phloem
+              </span>
+              <button
+                type="button"
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={() => toggleCalculator()}
+                style={{ color: "rgba(255,255,255,0.5)", fontSize: "16px", lineHeight: 1, background: "none", border: "none", cursor: "pointer", padding: "0 2px" }}
+              >
+                ×
               </button>
-            ))}
-            <button type="button" onClick={() => commitCalcOperation("/")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              /
-            </button>
-            {["4", "5", "6"].map((digit) => (
-              <button key={digit} type="button" onClick={() => inputCalcDigit(digit)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-                {digit}
-              </button>
-            ))}
-            <button type="button" onClick={() => commitCalcOperation("*")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              *
-            </button>
-            {["1", "2", "3"].map((digit) => (
-              <button key={digit} type="button" onClick={() => inputCalcDigit(digit)} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-                {digit}
-              </button>
-            ))}
-            <button type="button" onClick={() => commitCalcOperation("-")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              -
-            </button>
-            <button type="button" onClick={() => inputCalcDigit("0")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              0
-            </button>
-            <button type="button" onClick={() => inputCalcDecimal()} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              .
-            </button>
-            <button type="button" onClick={() => commitCalcOperation()} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              =
-            </button>
-            <button type="button" onClick={() => commitCalcOperation("+")} className="rounded-sm border border-slate-400 bg-white py-2 hover:bg-slate-100">
-              +
-            </button>
+            </div>
+
+            {/* LCD display */}
+            <div
+              className="font-mono text-right text-xl mb-3 px-3 rounded"
+              style={{
+                background: "#9db882",
+                border: "3px solid #2a3a1a",
+                color: "#1a2800",
+                boxShadow: "inset 0 2px 8px rgba(0,0,0,0.4)",
+                letterSpacing: "0.05em",
+                minHeight: "48px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
+              {calcDisplay}
+            </div>
+
+            {/* Button grid */}
+            <div className="grid grid-cols-4 gap-1.5">
+              {/* Memory row */}
+              <button type="button" onClick={() => memoryRecallClear()} className="py-2 rounded text-xs font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>MRC</button>
+              <button type="button" onClick={() => memoryAdd(-1)} className="py-2 rounded text-xs font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>M−</button>
+              <button type="button" onClick={() => memoryAdd(1)} className="py-2 rounded text-xs font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>M+</button>
+              <button type="button" onClick={() => resetCalculator()} className="py-2 rounded text-xs font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>CE</button>
+
+              {/* Row: 7 8 9 ÷ */}
+              {["7", "8", "9"].map((d) => (
+                <button key={d} type="button" onClick={() => inputCalcDigit(d)} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#f5f0e8", color: "#0f1f72", boxShadow: "0 3px 0 #b0a898" }}>{d}</button>
+              ))}
+              <button type="button" onClick={() => commitCalcOperation("/")} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>÷</button>
+
+              {/* Row: 4 5 6 × */}
+              {["4", "5", "6"].map((d) => (
+                <button key={d} type="button" onClick={() => inputCalcDigit(d)} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#f5f0e8", color: "#0f1f72", boxShadow: "0 3px 0 #b0a898" }}>{d}</button>
+              ))}
+              <button type="button" onClick={() => commitCalcOperation("*")} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>×</button>
+
+              {/* Row: 1 2 3 − */}
+              {["1", "2", "3"].map((d) => (
+                <button key={d} type="button" onClick={() => inputCalcDigit(d)} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#f5f0e8", color: "#0f1f72", boxShadow: "0 3px 0 #b0a898" }}>{d}</button>
+              ))}
+              <button type="button" onClick={() => commitCalcOperation("-")} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>−</button>
+
+              {/* Row: 0 . = + */}
+              <button type="button" onClick={() => inputCalcDigit("0")} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#f5f0e8", color: "#0f1f72", boxShadow: "0 3px 0 #b0a898" }}>0</button>
+              <button type="button" onClick={() => inputCalcDecimal()} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#f5f0e8", color: "#0f1f72", boxShadow: "0 3px 0 #b0a898" }}>.</button>
+              <button type="button" onClick={() => commitCalcOperation()} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>=</button>
+              <button type="button" onClick={() => commitCalcOperation("+")} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>+</button>
+            </div>
           </div>
         </div>
       )}

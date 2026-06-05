@@ -178,6 +178,7 @@ export function useAttentionTracker<ZoneId extends string>({
   const regionTransitionsRef = useRef<RegionTransition<ZoneId>[]>([]);
   const regionSwitchCountRef = useRef(0);
   const lastTimeRef = useRef<number>(0);
+  const attemptGenerationRef = useRef(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const faceLandmarkerRef = useRef<FaceLandmarkerInstance | null>(null);
   const animFrameRef = useRef<number | null>(null);
@@ -419,30 +420,42 @@ export function useAttentionTracker<ZoneId extends string>({
 
     let frameId: number | null = null;
     let settleTimer: ReturnType<typeof setTimeout> | null = null;
-    let latestPoint: { x: number; y: number; transit: boolean } | null = null;
+    let latestPoint: {
+      x: number;
+      y: number;
+      transit: boolean;
+      generation: number;
+    } | null = null;
     let previousPoint: { x: number; y: number; at: number } | null = null;
 
     const flushPoint = () => {
       frameId = null;
-      if (!latestPoint) return;
-      if (latestPoint.transit) {
-        recordMouseTransit(latestPoint.x, latestPoint.y);
+      const point = latestPoint;
+      if (!point || point.generation !== attemptGenerationRef.current) return;
+      if (point.transit) {
+        recordMouseTransit(point.x, point.y);
       } else {
-        recordPoint(latestPoint.x, latestPoint.y);
+        recordPoint(point.x, point.y);
       }
     };
 
     const scheduleSettleCheck = (delayMs: number) => {
+      const generation = attemptGenerationRef.current;
       if (settleTimer !== null) clearTimeout(settleTimer);
       settleTimer = setTimeout(() => {
         settleTimer = null;
-        if (!latestPoint) return;
-        recordPoint(latestPoint.x, latestPoint.y);
+        const point = latestPoint;
+        if (!point || point.generation !== generation) return;
+        if (generation !== attemptGenerationRef.current) return;
+        recordPoint(point.x, point.y);
       }, delayMs);
     };
 
+    const isTrackableMousePointer = (event: PointerEvent) =>
+      !event.pointerType || event.pointerType === "mouse";
+
     const handlePointerMove = (event: PointerEvent) => {
-      if (event.pointerType && event.pointerType !== "mouse") return;
+      if (!isTrackableMousePointer(event)) return;
 
       const now = Date.now();
       const x = event.clientX;
@@ -454,7 +467,12 @@ export function useAttentionTracker<ZoneId extends string>({
         trackingProfile.maxDetectSpeedPxPerMs !== null &&
         speed > trackingProfile.maxDetectSpeedPxPerMs;
 
-      latestPoint = { x, y, transit };
+      latestPoint = {
+        x,
+        y,
+        transit,
+        generation: attemptGenerationRef.current,
+      };
       previousPoint = { x, y, at: now };
       if (frameId === null) {
         frameId = requestAnimationFrame(flushPoint);
@@ -467,9 +485,27 @@ export function useAttentionTracker<ZoneId extends string>({
       );
     };
 
+    const handlePointerPress = (event: PointerEvent) => {
+      if (!isTrackableMousePointer(event)) return;
+      const now = Date.now();
+      latestPoint = {
+        x: event.clientX,
+        y: event.clientY,
+        transit: false,
+        generation: attemptGenerationRef.current,
+      };
+      previousPoint = { x: event.clientX, y: event.clientY, at: now };
+      if (frameId === null) {
+        frameId = requestAnimationFrame(flushPoint);
+      }
+      scheduleSettleCheck(trackingProfile.minRegionDwellMs + 15);
+    };
+
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("pointerdown", handlePointerPress, { passive: true });
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerdown", handlePointerPress);
       if (frameId !== null) cancelAnimationFrame(frameId);
       if (settleTimer !== null) clearTimeout(settleTimer);
     };
@@ -664,6 +700,7 @@ export function useAttentionTracker<ZoneId extends string>({
 
   const resetAttempt = useCallback(
     (now = Date.now()) => {
+      attemptGenerationRef.current += 1;
       const emptyTimes = createZoneRecord(zoneIds);
       zoneTimesRef.current = emptyTimes;
       setZoneTimes(emptyTimes);

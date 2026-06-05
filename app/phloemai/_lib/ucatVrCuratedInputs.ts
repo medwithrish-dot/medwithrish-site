@@ -18520,7 +18520,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The rapid expansion of telemedicine has fundamentally altered the patient-provider relationship, offering unprecedented access to healthcare for remote populations.",
 "While digital platforms reduce the need for physical travel, critics argue that the lack of physical examination limits diagnostic accuracy for complex conditions.",
 "Furthermore, the integration of synchronous video consultations requires robust high-speed internet infrastructure, which remains inconsistent in rural areas.",
-"Proponents suggest that the convenience of remote triage outweighs these logistical barriers, leading to increased patient compliance with follow-up appointments."
+"Proponents suggest that the convenience of remote triage outweighs these logistical barriers, leading to increased patient compliance with follow-up appointments.",
+"The passage notes this as a contested development rather than a settled replacement for conventional clinical care."
 ],
 "tfc": {
 "statement": "Telemedicine is universally accepted as being as effective as in-person consultations for all medical conditions.",
@@ -18564,7 +18565,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Telemedicine platforms have introduced AI-driven triage tools to prioritize patients based on symptom reporting.",
 "These algorithms analyze vast datasets to identify patterns that might suggest urgent conditions requiring immediate intervention.",
 "However, there is a legitimate concern regarding the 'black box' nature of these AI systems, where decision-making processes are not transparent to clinicians.",
-"Without clear accountability frameworks, the implementation of these tools in clinical settings remains a subject of ongoing ethical debate."
+"Without clear accountability frameworks, the implementation of these tools in clinical settings remains a subject of ongoing ethical debate.",
+"The passage therefore treats triage automation as a governance problem as well as a technical one."
 ],
 "tfc": {
 "statement": "AI-driven triage tools are currently fully transparent in their decision-making processes to all clinicians.",
@@ -18608,7 +18610,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The legal framework surrounding telemedicine is currently lagging behind technological advancements.",
 "Many jurisdictions lack clear guidelines on licensure requirements for physicians practicing across state or international borders.",
 "As a result, doctors face significant liability risks when providing remote care to patients in different legal regions.",
-"Standardization of telemedicine regulations is now a priority for healthcare policymakers to ensure patient safety and provider protection."
+"Standardization of telemedicine regulations is now a priority for healthcare policymakers to ensure patient safety and provider protection.",
+"This regulatory uncertainty is presented as separate from, though related to, the technical feasibility of remote care."
 ],
 "tfc": {
 "statement": "There is currently a globally unified regulatory framework for telemedicine practice.",
@@ -18652,7 +18655,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Telemedicine has proven especially vital for mental health services, where patient anonymity and comfort are crucial.",
 "By removing the need to enter a physical clinical space, many individuals who suffer from social anxiety are more likely to seek treatment.",
 "Furthermore, virtual therapy sessions allow for greater scheduling flexibility, enabling patients to balance professional and personal commitments.",
-"Studies suggest that treatment retention rates are higher in tele-mental health programs compared to traditional, office-based therapy."
+"Studies suggest that treatment retention rates are higher in tele-mental health programs compared to traditional, office-based therapy.",
+"The passage links these outcomes to access and continuity rather than claiming that virtual therapy suits every patient."
 ],
 "tfc": {
 "statement": "Traditional office-based therapy has higher patient retention rates than tele-mental health programs.",
@@ -18696,7 +18700,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The economic model of telemedicine is shifting from a 'fee-for-service' structure to one centered on value-based care.",
 "In the traditional model, providers were paid per consultation, which often incentivized volume over quality.",
 "Value-based models prioritize positive patient outcomes, rewarding clinicians for the efficacy of the treatment rather than the number of interactions.",
-"While this change aims to improve health results, it requires sophisticated data tracking to accurately measure quality metrics."
+"While this change aims to improve health results, it requires sophisticated data tracking to accurately measure quality metrics.",
+"The passage frames this measurement requirement as a practical barrier to the payment model's success."
 ],
 "tfc": {
 "statement": "The fee-for-service model focuses primarily on the long-term efficacy of medical outcomes.",
@@ -18740,7 +18745,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Telemedicine serves as a critical bridge during public health crises, allowing for continuous care while maintaining social distancing.",
 "During the recent global pandemic, health systems that had already invested in remote infrastructure were better positioned to manage surge volumes.",
 "However, the rapid transition also exposed significant disparities in digital literacy among elderly patients.",
-"Addressing these gaps in access and capability is essential for ensuring that future telemedicine implementations are equitable."
+"Addressing these gaps in access and capability is essential for ensuring that future telemedicine implementations are equitable.",
+"The passage suggests that crisis usefulness does not by itself guarantee fair long-term access."
 ],
 "tfc": {
 "statement": "Digital literacy disparities were effectively resolved for all patient demographics prior to the recent pandemic.",
@@ -18784,7 +18790,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The environmental impact of healthcare is receiving increasing scrutiny, and telemedicine presents a potential solution for reducing carbon footprints.",
 "By eliminating the need for patients to travel to hospitals, telemedicine significantly lowers transportation-related emissions.",
 "However, one must also account for the energy consumption of data centers and the manufacturing of consumer devices used for virtual care.",
-"A comprehensive life-cycle assessment is necessary to determine the true net environmental benefit of transitioning to remote medical services."
+"A comprehensive life-cycle assessment is necessary to determine the true net environmental benefit of transitioning to remote medical services.",
+"The passage therefore avoids treating reduced travel as the only relevant environmental measure."
 ],
 "tfc": {
 "statement": "Telemedicine is definitively proven to have zero environmental impact.",
@@ -18828,7 +18835,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "In rural healthcare, telemedicine is often the only alternative to traveling hundreds of miles for basic medical advice.",
 "The model works best when partnered with local community hubs, such as pharmacies or libraries, which can provide necessary equipment and internet access.",
 "These 'tele-hubs' bridge the digital divide, allowing patients who lack home technology to engage in remote consultations.",
-"This hybrid approach suggests that telemedicine success depends as much on physical community infrastructure as it does on software capabilities."
+"This hybrid approach suggests that telemedicine success depends as much on physical community infrastructure as it does on software capabilities.",
+"The passage presents rural access as a blended service design issue rather than a software-only problem."
 ],
 "tfc": {
 "statement": "Telemedicine is most effective when patients are solely responsible for all necessary equipment and internet connection.",
@@ -18872,7 +18880,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Remote patient monitoring (RPM) is an expanding subset of telemedicine, utilizing wearable sensors to track vitals like blood pressure and heart rate.",
 "Data captured by these devices is transmitted in real-time to health professionals, allowing for proactive disease management.",
 "While early studies indicate that RPM can reduce hospital readmission rates, there are challenges regarding data overload for clinical staff.",
-"If the volume of data is not appropriately filtered, healthcare providers may experience burnout and clinical fatigue."
+"If the volume of data is not appropriately filtered, healthcare providers may experience burnout and clinical fatigue.",
+"The passage treats filtering systems as necessary safeguards rather than optional conveniences."
 ],
 "tfc": {
 "statement": "Remote patient monitoring has been shown to potentially increase hospital readmission rates.",
@@ -18916,7 +18925,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The future of telemedicine likely involves the integration of extended reality (XR) to simulate physical examinations.",
 "Virtual Reality (VR) could enable physicians to perform detailed assessments in a digital space, creating a sense of 'presence' that current video tools lack.",
 "While the technology is still in its infancy, its potential to address the tactile limitations of current telemedicine is significant.",
-"Investment in this area is growing, though widespread clinical adoption will depend on affordability and hardware accessibility."
+"Investment in this area is growing, though widespread clinical adoption will depend on affordability and hardware accessibility.",
+"The passage distinguishes promising prototypes from routine clinical deployment."
 ],
 "tfc": {
 "statement": "Extended reality is already widely adopted as the standard for all telemedicine consultations.",

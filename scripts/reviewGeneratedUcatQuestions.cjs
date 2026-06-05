@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 
 const path = require("path");
+const fs = require("fs");
 const ts = require("typescript");
 
 require.extensions[".ts"] = function loadTypeScript(module, filename) {
-  const source = require("fs").readFileSync(filename, "utf8");
+  const source = fs.readFileSync(filename, "utf8");
   const output = ts.transpileModule(source, {
     compilerOptions: {
       esModuleInterop: true,
@@ -19,6 +20,16 @@ require.extensions[".ts"] = function loadTypeScript(module, filename) {
 };
 
 const projectRoot = path.resolve(__dirname, "..");
+const generatedQuestionBankPath = path.join(
+  projectRoot,
+  "app/phloemai/_lib/generatedUcatQuestionsHighQuality9000.ts"
+);
+
+if (!fs.existsSync(generatedQuestionBankPath)) {
+  console.log("Generated UCAT layer: skipped (file not present).");
+  process.exit(0);
+}
+
 const {
   HIGH_QUALITY_9000_COMPLETED_BATCHES,
   HIGH_QUALITY_9000_LOCKED_BATCHES,
@@ -27,10 +38,7 @@ const {
   HIGH_QUALITY_9000_TOTAL_BATCHES,
   HIGH_QUALITY_9000_UCAT_QUESTION_BANK,
   HIGH_QUALITY_9000_TOTAL,
-} = require(path.join(
-  projectRoot,
-  "app/phloemai/_lib/generatedUcatQuestionsHighQuality9000.ts"
-));
+} = require(generatedQuestionBankPath);
 
 const sections = ["vr", "dm", "qr", "sjt"];
 

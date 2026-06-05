@@ -3,7 +3,6 @@
   UCATOptionKey,
   UCATQuestion,
   UCATQuestionTag,
-  UCATSubtypeId,
   UCATYesNoValue,
 } from "./ucatQuestionBank";
 
@@ -57,6 +56,7 @@ export type DmCuratedInput =
       explanation: string;
     };
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore — array too large for TS inference; runtime type is correct
 export const USER_CURATED_DM_INPUTS: DmCuratedInput[] = [
   // ===== PASTE NEW DM QUESTIONS BELOW THIS LINE =====
@@ -42357,8 +42357,1518 @@ function buildDmQuestion(
   };
 }
 
+type DmSingleQuestionReplacement = {
+  tags?: UCATQuestionTag[];
+  stimulus: string[];
+  question: string;
+  options: Array<{ key: UCATOptionKey; text: string }>;
+  answer: UCATOptionKey;
+  explanation: string;
+};
+
+const DM_PROBABILITY_BATCH_1_REPLACEMENTS: Record<
+  string,
+  DmSingleQuestionReplacement
+> = {
+  "user-curated-dm-1703": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A box contains 5 red counters and 5 blue counters.",
+      "Two counters are chosen at random without replacement.",
+    ],
+    question: "What is the probability that the two counters are different colours?",
+    options: [
+      { key: "A", text: "4/9" },
+      { key: "B", text: "1/2" },
+      { key: "C", text: "5/9" },
+      { key: "D", text: "1/3" },
+    ],
+    answer: "C",
+    explanation:
+      "Different colours means red then blue or blue then red. Red then blue is 5/10 x 5/9 = 25/90, and blue then red is also 25/90. Total = 50/90 = 5/9.",
+  },
+  "user-curated-dm-1704": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A fair six-sided die is rolled twice.",
+      "The rolls are independent.",
+    ],
+    question: "What is the probability of rolling at least one 6?",
+    options: [
+      { key: "A", text: "1/6" },
+      { key: "B", text: "11/36" },
+      { key: "C", text: "1/3" },
+      { key: "D", text: "5/36" },
+    ],
+    answer: "B",
+    explanation:
+      "Use the complement. The chance of no 6 on one roll is 5/6, so the chance of no 6 in two rolls is 5/6 x 5/6 = 25/36. Therefore, at least one 6 is 1 - 25/36 = 11/36.",
+  },
+  "user-curated-dm-1713": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A school raffle has silver and gold tickets.",
+      "40% of tickets are silver and 60% are gold.",
+      "25% of silver tickets win a prize, while 10% of gold tickets win a prize.",
+    ],
+    question: "If a ticket wins a prize, what is the probability that it is silver?",
+    options: [
+      { key: "A", text: "40%" },
+      { key: "B", text: "62.5%" },
+      { key: "C", text: "25%" },
+      { key: "D", text: "37.5%" },
+    ],
+    answer: "B",
+    explanation:
+      "Silver winning tickets account for 0.40 x 0.25 = 0.10 of all tickets. Gold winning tickets account for 0.60 x 0.10 = 0.06. Among all winners, the silver share is 0.10 / (0.10 + 0.06) = 0.625 = 62.5%.",
+  },
+  "user-curated-dm-1714": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A puzzle app has two game modes, X and Y.",
+      "40% of plays are in Mode X and 60% are in Mode Y.",
+      "80% of Mode X plays are completed, while 60% of Mode Y plays are completed.",
+    ],
+    question: "If a play is completed, what is the probability that it was in Mode X?",
+    options: [
+      { key: "A", text: "80%" },
+      { key: "B", text: "47%" },
+      { key: "C", text: "60%" },
+      { key: "D", text: "40%" },
+    ],
+    answer: "B",
+    explanation:
+      "Completed Mode X plays account for 0.40 x 0.80 = 0.32 of all plays. Completed Mode Y plays account for 0.60 x 0.60 = 0.36. Among completed plays, the Mode X share is 0.32 / (0.32 + 0.36) = 0.47 = 47%.",
+  },
+  "user-curated-dm-1717": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "At a fair, 40 players use Stall A and 60 players use Stall B.",
+      "10 Stall A players and 5 Stall B players win a bonus token.",
+    ],
+    question: "The chance of winning at Stall A is how many times the chance of winning at Stall B?",
+    options: [
+      { key: "A", text: "1.5" },
+      { key: "B", text: "2" },
+      { key: "C", text: "3" },
+      { key: "D", text: "4" },
+    ],
+    answer: "C",
+    explanation:
+      "Stall A win rate = 10/40 = 25%. Stall B win rate = 5/60 = 8.33%. 25% / 8.33% = 3, so winning is 3 times as likely at Stall A.",
+  },
+  "user-curated-dm-1718": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "A warehouse stores 10,000 tokens: 50 are red and 9,950 are blue.",
+      "A scanner lights up for 98% of red tokens and also lights up for 10% of blue tokens.",
+    ],
+    question: "If the scanner lights up, what is the probability that the token is red?",
+    options: [
+      { key: "A", text: "0.5%" },
+      { key: "B", text: "4.7%" },
+      { key: "C", text: "50%" },
+      { key: "D", text: "98%" },
+    ],
+    answer: "B",
+    explanation:
+      "The scanner lights up for 50 x 0.98 = 49 red tokens and 9,950 x 0.10 = 995 blue tokens. The probability the lit-up token is red is 49 / (49 + 995) = 49/1,044 = 4.7%.",
+  },
+  "user-curated-dm-1719": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "Two depots, North and South, send parcels for a shop.",
+      "North sends 70% of parcels and has a 5% late-delivery rate.",
+      "South sends 30% of parcels and has a 12% late-delivery rate.",
+    ],
+    question: "If a parcel is delivered late, what is the probability that it came from South depot?",
+    options: [
+      { key: "A", text: "30%" },
+      { key: "B", text: "12%" },
+      { key: "C", text: "50.7%" },
+      { key: "D", text: "49.3%" },
+    ],
+    answer: "C",
+    explanation:
+      "Late North parcels account for 0.70 x 0.05 = 0.035 of all parcels. Late South parcels account for 0.30 x 0.12 = 0.036. Among late parcels, the South share is 0.036 / (0.035 + 0.036) = 0.507 = 50.7%.",
+  },
+  "user-curated-dm-1720": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A drawer contains 4 red buttons, 3 blue buttons, and 5 green buttons.",
+      "Two buttons are chosen at random without replacement.",
+    ],
+    question: "What is the probability that one button is red and the other is green?",
+    options: [
+      { key: "A", text: "5/33" },
+      { key: "B", text: "20/33" },
+      { key: "C", text: "10/33" },
+      { key: "D", text: "3/11" },
+    ],
+    answer: "C",
+    explanation:
+      "There are 12 buttons in total, so there are 12C2 = 66 ways to choose two. A red-green pair can be made in 4 x 5 = 20 ways. The probability is 20/66 = 10/33.",
+  },
+  "user-curated-dm-1721": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A project idea must pass three checks before it is approved.",
+      "80% of ideas pass the first check. Of those, 70% pass the second check. Of those, 60% pass the final check.",
+    ],
+    question: "What is the probability that a project idea passes all three checks?",
+    options: [
+      { key: "A", text: "33.6%" },
+      { key: "B", text: "21%" },
+      { key: "C", text: "42%" },
+      { key: "D", text: "60%" },
+    ],
+    answer: "A",
+    explanation:
+      "The checks are sequential, so multiply the conditional probabilities: 0.80 x 0.70 x 0.60 = 0.336 = 33.6%.",
+  },
+  "user-curated-dm-1722": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A parcel checker rejects 80 parcels and accepts 120 parcels.",
+      "Of the 80 rejected parcels, 5 should actually have been accepted.",
+    ],
+    question: "Among the rejected parcels, what proportion were correctly rejected?",
+    options: [
+      { key: "A", text: "25%" },
+      { key: "B", text: "75%" },
+      { key: "C", text: "87.5%" },
+      { key: "D", text: "93.75%" },
+    ],
+    answer: "D",
+    explanation:
+      "There are 80 rejected parcels. If 5 were wrongly rejected, then 75 were correctly rejected. The required proportion is 75/80 = 93.75%.",
+  },
+  "user-curated-dm-1723": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "20% of applications meet all entry requirements.",
+      "A review system flags 90% of applications that meet the requirements and also flags 20% of applications that do not.",
+    ],
+    question: "If an application is flagged, what is the probability that it meets all entry requirements?",
+    options: [
+      { key: "A", text: "20%" },
+      { key: "B", text: "52.9%" },
+      { key: "C", text: "80%" },
+      { key: "D", text: "90%" },
+    ],
+    answer: "B",
+    explanation:
+      "Out of 100 applications, 20 meet the requirements and 80 do not. Flagged valid applications = 20 x 0.90 = 18. Flagged invalid applications = 80 x 0.20 = 16. Probability valid given flagged = 18 / (18 + 16) = 52.9%.",
+  },
+  "user-curated-dm-1724": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A spinner has 8 equal sectors numbered 1 to 8.",
+      "The spinner is spun twice.",
+    ],
+    question: "What is the probability that the first spin is odd and the second spin is a multiple of 3?",
+    options: [
+      { key: "A", text: "1/4" },
+      { key: "B", text: "1/8" },
+      { key: "C", text: "3/8" },
+      { key: "D", text: "1/16" },
+    ],
+    answer: "B",
+    explanation:
+      "Odd numbers are 1, 3, 5, and 7, so the first spin has probability 4/8 = 1/2. Multiples of 3 are 3 and 6, so the second spin has probability 2/8 = 1/4. The spins are independent, so multiply: 1/2 x 1/4 = 1/8.",
+  },
+  "user-curated-dm-1725": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "60% of students attend a revision workshop.",
+      "Of the students who attend, 80% complete the follow-up quiz.",
+    ],
+    question: "What is the probability that a randomly selected student both attends the workshop and completes the quiz?",
+    options: [
+      { key: "A", text: "0.48" },
+      { key: "B", text: "0.40" },
+      { key: "C", text: "0.70" },
+      { key: "D", text: "0.58" },
+    ],
+    answer: "A",
+    explanation:
+      "Multiply the probability of attending by the probability of completing the quiz after attending: 0.60 x 0.80 = 0.48.",
+  },
+  "user-curated-dm-1726": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A user may receive a reminder by email or by text.",
+      "The probability of reading the email reminder is 0.15, and the probability of reading the text reminder is 0.10.",
+      "The two events are independent.",
+    ],
+    question: "What is the probability that the user reads at least one of the two reminders?",
+    options: [
+      { key: "A", text: "0.25" },
+      { key: "B", text: "0.235" },
+      { key: "C", text: "0.15" },
+      { key: "D", text: "0.015" },
+    ],
+    answer: "B",
+    explanation:
+      "Add the two probabilities and subtract the overlap. Since the events are independent, the overlap is 0.15 x 0.10 = 0.015. So the probability of at least one reminder being read is 0.15 + 0.10 - 0.015 = 0.235.",
+  },
+  "user-curated-dm-1727": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "In an online quiz, each player has a 15% chance of earning a bonus badge.",
+      "Four players attempt the quiz independently.",
+    ],
+    question: "What is the probability that exactly one of the four players earns a bonus badge?",
+    options: [
+      { key: "A", text: "15%" },
+      { key: "B", text: "60%" },
+      { key: "C", text: "36.8%" },
+      { key: "D", text: "23.2%" },
+    ],
+    answer: "C",
+    explanation:
+      "Exactly one badge can be earned by any one of the four players. For a particular player to be the only one, the probability is 0.15 x 0.85 x 0.85 x 0.85. There are 4 possible players, so the total is 4 x 0.15 x 0.85^3 = 0.368 = 36.8%.",
+  },
+  "user-curated-dm-1728": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A bag contains 4 green counters and 6 purple counters.",
+      "Two counters are chosen at random without replacement.",
+    ],
+    question: "What is the probability that at least one of the two counters is green?",
+    options: [
+      { key: "A", text: "2/5" },
+      { key: "B", text: "1/3" },
+      { key: "C", text: "4/9" },
+      { key: "D", text: "2/3" },
+    ],
+    answer: "D",
+    explanation:
+      "Use the complement. The chance of choosing no green counters is choosing two purple counters: 6/10 x 5/9 = 30/90 = 1/3. Therefore, the chance of at least one green counter is 1 - 1/3 = 2/3.",
+  },
+  "user-curated-dm-1729": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "Two independent app notifications can appear on a phone.",
+      "Notification A appears on 20% of days. Notification B appears on 10% of days.",
+    ],
+    question: "What is the probability that at least one of the two notifications appears on a randomly selected day?",
+    options: [
+      { key: "A", text: "28%" },
+      { key: "B", text: "30%" },
+      { key: "C", text: "2%" },
+      { key: "D", text: "18%" },
+    ],
+    answer: "A",
+    explanation:
+      "Add the two probabilities and subtract the overlap. Since the notifications are independent, both appear on 0.20 x 0.10 = 0.02 of days. At least one appears on 0.20 + 0.10 - 0.02 = 0.28 = 28% of days.",
+  },
+  "user-curated-dm-1730": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A board game has three route types: X, Y, and Z.",
+      "Players choose route X 50% of the time, route Y 30% of the time, and route Z 20% of the time.",
+      "The chance of finishing the route is 70% for X, 50% for Y, and 40% for Z.",
+    ],
+    question: "What is the overall probability that a player finishes their route?",
+    options: [
+      { key: "A", text: "42%" },
+      { key: "B", text: "58%" },
+      { key: "C", text: "53%" },
+      { key: "D", text: "65%" },
+    ],
+    answer: "B",
+    explanation:
+      "Use a weighted total: (0.50 x 0.70) + (0.30 x 0.50) + (0.20 x 0.40) = 0.35 + 0.15 + 0.08 = 0.58 = 58%.",
+  },
+  "user-curated-dm-1731": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "10% of bags contain a red token.",
+      "A search process misses 5% of bags that contain a red token.",
+    ],
+    question: "If a bag contains a red token, what is the probability that the search process finds it?",
+    options: [
+      { key: "A", text: "5%" },
+      { key: "B", text: "10%" },
+      { key: "C", text: "90%" },
+      { key: "D", text: "95%" },
+    ],
+    answer: "D",
+    explanation:
+      "If 5% of red-token bags are missed, then the remaining 95% are found. The 10% starting rate is not needed once the question states the bag contains a red token.",
+  },
+  "user-curated-dm-1732": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "With the old delivery system, 12% of parcels arrived late.",
+      "With the new delivery system, 6% of parcels arrived late.",
+    ],
+    question: "By how many percentage points did the late-arrival rate decrease?",
+    options: [
+      { key: "A", text: "6 percentage points" },
+      { key: "B", text: "12 percentage points" },
+      { key: "C", text: "50 percentage points" },
+      { key: "D", text: "4 percentage points" },
+    ],
+    answer: "A",
+    explanation:
+      "The decrease is the direct difference between the two percentages: 12% - 6% = 6 percentage points. A 50% answer would describe the proportional reduction, not the percentage-point decrease.",
+  },
+  "user-curated-dm-1733": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "5% of raffle tickets are gold tickets.",
+      "A scanner identifies 99.5% of gold tickets and mistakenly identifies 1% of other tickets as gold.",
+    ],
+    question: "If a ticket is identified as gold, what is the probability that it really is a gold ticket?",
+    options: [
+      { key: "A", text: "99.5%" },
+      { key: "B", text: "5%" },
+      { key: "C", text: "84.0%" },
+      { key: "D", text: "95.0%" },
+    ],
+    answer: "C",
+    explanation:
+      "Out of 1,000 tickets, 50 are gold and 950 are not. Identified gold tickets = 50 x 0.995 = 49.75. Non-gold tickets mistakenly identified as gold = 950 x 0.01 = 9.5. Probability = 49.75 / (49.75 + 9.5) = 84.0%.",
+  },
+  "user-curated-dm-1734": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "30% of club members are in the chess group.",
+      "5% of chess-group members and 1% of non-chess members enter a weekend tournament.",
+    ],
+    question: "If a member entered the tournament, what is the probability that they are in the chess group?",
+    options: [
+      { key: "A", text: "5%" },
+      { key: "B", text: "30%" },
+      { key: "C", text: "68.2%" },
+      { key: "D", text: "75%" },
+    ],
+    answer: "C",
+    explanation:
+      "Chess-group tournament entries account for 0.30 x 0.05 = 0.015 of all members. Non-chess entries account for 0.70 x 0.01 = 0.007. Among tournament entrants, the chess-group share is 0.015 / (0.015 + 0.007) = 68.2%.",
+  },
+  "user-curated-dm-1735": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A player gets a first attempt at a puzzle.",
+      "The probability that the first attempt succeeds is 0.7.",
+      "If the first attempt fails, the player gets one hint, which then gives a 0.5 chance of success.",
+    ],
+    question: "What is the probability that the player succeeds using either the first attempt or the hint?",
+    options: [
+      { key: "A", text: "0.7" },
+      { key: "B", text: "0.5" },
+      { key: "C", text: "0.85" },
+      { key: "D", text: "0.35" },
+    ],
+    answer: "C",
+    explanation:
+      "The player succeeds if the first attempt works, or if it fails and the hint works. That is 0.70 + (0.30 x 0.50) = 0.70 + 0.15 = 0.85.",
+  },
+  "user-curated-dm-1736": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A feedback form can be about Topic A, Topic B, or Topic C.",
+      "40% of forms are about Topic A, 30% about Topic B, and 30% about Topic C.",
+      "Of the Topic C forms, 40% are marked as urgent.",
+    ],
+    question: "What is the probability that a randomly selected form is both about Topic C and marked as urgent?",
+    options: [
+      { key: "A", text: "0.30" },
+      { key: "B", text: "0.40" },
+      { key: "C", text: "0.22" },
+      { key: "D", text: "0.12" },
+    ],
+    answer: "D",
+    explanation:
+      "For both events to occur, the form must be about Topic C and urgent. Multiply 0.30 by 0.40 to get 0.12.",
+  },
+  "user-curated-dm-1738": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A website tests two button designs.",
+      "Design Alpha receives 20 clicks from 400 views. Design Beta receives 40 clicks from 400 views.",
+    ],
+    question: "The click rate for Design Beta is how many times the click rate for Design Alpha?",
+    options: [
+      { key: "A", text: "0.5" },
+      { key: "B", text: "1.5" },
+      { key: "C", text: "2.0" },
+      { key: "D", text: "2.5" },
+    ],
+    answer: "C",
+    explanation:
+      "Design Alpha click rate = 20/400 = 5%. Design Beta click rate = 40/400 = 10%. 10% / 5% = 2.0, so Beta's click rate is twice Alpha's.",
+  },
+  "user-curated-dm-1739": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "In a library, 40% of members are regular users, 30% are occasional users, and 30% are new users.",
+      "In a given week, 25% of regular users, 15% of occasional users, and 5% of new users borrow a book.",
+    ],
+    question: "If a member borrowed a book this week, what is the probability that they are a regular user?",
+    options: [
+      { key: "A", text: "25%" },
+      { key: "B", text: "40%" },
+      { key: "C", text: "50%" },
+      { key: "D", text: "62.5%" },
+    ],
+    answer: "D",
+    explanation:
+      "Regular borrowers account for 0.40 x 0.25 = 0.10 of all members. Occasional borrowers account for 0.30 x 0.15 = 0.045, and new-user borrowers account for 0.30 x 0.05 = 0.015. Total borrowing rate = 0.16, so the regular-user share is 0.10 / 0.16 = 62.5%.",
+  },
+  "user-curated-dm-1740": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A student submits three online forms.",
+      "Each form has a 10% chance of being rejected on the first attempt.",
+      "The outcomes for the three forms are independent.",
+    ],
+    question: "What is the probability that all three forms are accepted on the first attempt?",
+    options: [
+      { key: "A", text: "30%" },
+      { key: "B", text: "81%" },
+      { key: "C", text: "90%" },
+      { key: "D", text: "72.9%" },
+    ],
+    answer: "D",
+    explanation:
+      "Each form has a 90% chance of being accepted on the first attempt. For all three independent forms to be accepted: 0.90 x 0.90 x 0.90 = 0.729 = 72.9%.",
+  },
+  "user-curated-dm-1741": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "In a game, a player has a 1 in 10 chance of losing a token in each round.",
+      "The player plays 5 independent rounds.",
+    ],
+    question: "What is the probability that the player does not lose a token in any of the 5 rounds?",
+    options: [
+      { key: "A", text: "59%" },
+      { key: "B", text: "50%" },
+      { key: "C", text: "41%" },
+      { key: "D", text: "10%" },
+    ],
+    answer: "A",
+    explanation:
+      "The chance of not losing a token in one round is 9/10 = 0.9. Across 5 independent rounds, the chance is 0.9^5 = 0.59049, which is approximately 59%.",
+  },
+  "user-curated-dm-1742": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "8% of parcels in a warehouse are fragile.",
+      "A label checker marks 92% of fragile parcels and also marks 6% of non-fragile parcels.",
+    ],
+    question: "If a parcel is marked by the checker, what is the probability that it is actually fragile?",
+    options: [
+      { key: "A", text: "8%" },
+      { key: "B", text: "43.6%" },
+      { key: "C", text: "57.1%" },
+      { key: "D", text: "92%" },
+    ],
+    answer: "C",
+    explanation:
+      "In 1,000 parcels, 80 are fragile and 920 are not. Marked fragile parcels = 80 x 0.92 = 73.6. Marked non-fragile parcels = 920 x 0.06 = 55.2. Probability fragile given marked = 73.6 / (73.6 + 55.2) = 57.1%.",
+  },
+  "user-curated-dm-1743": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "Box A contains 500 game cards, of which 10 are bonus cards.",
+      "Box B contains 500 game cards, of which 25 are bonus cards.",
+    ],
+    question: "By how many percentage points is the chance of selecting a bonus card higher from Box B than from Box A?",
+    options: [
+      { key: "A", text: "2 percentage points" },
+      { key: "B", text: "3 percentage points" },
+      { key: "C", text: "5 percentage points" },
+      { key: "D", text: "10 percentage points" },
+    ],
+    answer: "B",
+    explanation:
+      "Box A bonus-card chance = 10/500 = 2%. Box B bonus-card chance = 25/500 = 5%. The difference is 5% - 2% = 3 percentage points.",
+  },
+  "user-curated-dm-1744": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "At a community event, 50 attendees are surveyed.",
+      "20 chose the art activity, 15 chose the music activity, and 15 chose neither.",
+      "No attendee chose both activities.",
+    ],
+    question: "What is the probability that a randomly selected attendee chose either art or music?",
+    options: [
+      { key: "A", text: "0.3" },
+      { key: "B", text: "0.5" },
+      { key: "C", text: "0.8" },
+      { key: "D", text: "0.7" },
+    ],
+    answer: "D",
+    explanation:
+      "The number who chose art or music is 20 + 15 = 35. Out of 50 attendees, the probability is 35/50 = 0.7.",
+  },
+  "user-curated-dm-1745": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "A form checker reviews 1,000 online forms.",
+      "20 forms contain an error and 980 do not.",
+      "The checker catches 90% of error forms and correctly clears 90% of forms without an error.",
+    ],
+    question: "Among forms cleared by the checker, what proportion actually have no error?",
+    options: [
+      { key: "A", text: "90%" },
+      { key: "B", text: "95%" },
+      { key: "C", text: "99%" },
+      { key: "D", text: "99.8%" },
+    ],
+    answer: "D",
+    explanation:
+      "Correctly cleared forms = 980 x 0.90 = 882. Error forms missed by the checker = 20 x 0.10 = 2. Among cleared forms, the no-error proportion is 882 / (882 + 2) = 99.8%.",
+  },
+  "user-curated-dm-1750": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A project team of 3 is selected at random from 4 designers and 6 writers.",
+    ],
+    question: "What is the probability that the team contains at least one designer?",
+    options: [
+      { key: "A", text: "4/5" },
+      { key: "B", text: "5/6" },
+      { key: "C", text: "2/3" },
+      { key: "D", text: "1/6" },
+    ],
+    answer: "B",
+    explanation:
+      "Use the complement. A team with no designers must contain 3 writers. There are 6C3 = 20 all-writer teams and 10C3 = 120 total teams. Probability of no designers = 20/120 = 1/6, so probability of at least one designer = 1 - 1/6 = 5/6.",
+  },
+  "user-curated-dm-1754": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "60% of learners complete an online course.",
+      "Of those who complete the course, 80% also submit the final portfolio.",
+    ],
+    question: "What is the probability that a randomly selected learner both completes the course and submits the portfolio?",
+    options: [
+      { key: "A", text: "0.6" },
+      { key: "B", text: "0.48" },
+      { key: "C", text: "0.8" },
+      { key: "D", text: "0.32" },
+    ],
+    answer: "B",
+    explanation:
+      "Multiply the probability of completing the course by the probability of submitting the portfolio after completing it: 0.60 x 0.80 = 0.48.",
+  },
+  "user-curated-dm-1755": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "30 students joined an after-school club.",
+      "12 students play chess, 9 students play table tennis, and 3 students play both.",
+    ],
+    question: "If a student plays table tennis, what is the probability that they also play chess?",
+    options: [
+      { key: "A", text: "1/3" },
+      { key: "B", text: "2/5" },
+      { key: "C", text: "1/4" },
+      { key: "D", text: "3/10" },
+    ],
+    answer: "A",
+    explanation:
+      "We are told the student plays table tennis, so focus on the 9 table-tennis students. Of these, 3 also play chess. The probability is 3/9 = 1/3.",
+  },
+  "user-curated-dm-1761": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A workshop has 10 volunteers: 3 are on the evening shift and 7 are on the morning shift.",
+      "Two volunteers are randomly selected for a planning group.",
+    ],
+    question: "What is the probability that neither selected volunteer is on the evening shift?",
+    options: [
+      { key: "A", text: "7/15" },
+      { key: "B", text: "49/100" },
+      { key: "C", text: "3/10" },
+      { key: "D", text: "2/5" },
+    ],
+    answer: "A",
+    explanation:
+      "Neither volunteer is on the evening shift means both are from the 7 morning-shift volunteers. The probability is 7/10 x 6/9 = 42/90 = 7/15. The option 49/100 treats the selection as if the first volunteer were replaced.",
+  },
+  "user-curated-dm-1762": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "At a school event, a student can choose a music workshop or an art workshop, but not both.",
+      "30% choose music and 40% choose art.",
+    ],
+    question: "What is the probability that a randomly selected student chooses either music or art?",
+    options: [
+      { key: "A", text: "0.12" },
+      { key: "B", text: "0.58" },
+      { key: "C", text: "0.70" },
+      { key: "D", text: "1.00" },
+    ],
+    answer: "C",
+    explanation:
+      "The two choices cannot overlap, so add the probabilities directly: 0.30 + 0.40 = 0.70.",
+  },
+  "user-curated-dm-1766": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A fair coin is tossed 4 times.",
+      "Each toss is independent.",
+    ],
+    question: "What is the probability of getting exactly 3 heads?",
+    options: [
+      { key: "A", text: "1/16" },
+      { key: "B", text: "1/8" },
+      { key: "C", text: "1/4" },
+      { key: "D", text: "1/2" },
+    ],
+    answer: "C",
+    explanation:
+      "There are 16 equally likely outcomes for 4 coin tosses. Exactly 3 heads can occur in 4 ways: HHHT, HHTH, HTHH, and THHH. The probability is 4/16 = 1/4.",
+  },
+  "user-curated-dm-1767": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A shelf contains 3 fiction books and 5 non-fiction books.",
+      "Two books are chosen at random without replacement.",
+    ],
+    question: "What is the probability that neither chosen book is fiction?",
+    options: [
+      { key: "A", text: "3/8" },
+      { key: "B", text: "5/8" },
+      { key: "C", text: "9/28" },
+      { key: "D", text: "5/14" },
+    ],
+    answer: "D",
+    explanation:
+      "Neither chosen book is fiction means both are non-fiction. The probability is 5/8 x 4/7 = 20/56 = 5/14.",
+  },
+  "user-curated-dm-1768": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A four-digit access code is chosen at random.",
+      "Each digit can be 0 to 9, and repeated digits are allowed.",
+    ],
+    question: "What is the probability that the code starts with 7 or ends with 7?",
+    options: [
+      { key: "A", text: "1/5" },
+      { key: "B", text: "19/100" },
+      { key: "C", text: "1/100" },
+      { key: "D", text: "1/10" },
+    ],
+    answer: "B",
+    explanation:
+      "The chance the first digit is 7 is 1/10, and the chance the last digit is 7 is 1/10. Codes that both start and end with 7 have been counted twice, so subtract 1/100. Total = 1/10 + 1/10 - 1/100 = 19/100.",
+  },
+  "user-curated-dm-1769": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "100 students used a reminder app and 100 students did not.",
+      "20 app users and 40 non-users missed a deadline.",
+    ],
+    question: "The deadline-miss rate for app users is what fraction of the deadline-miss rate for non-users?",
+    options: [
+      { key: "A", text: "0.2" },
+      { key: "B", text: "0.4" },
+      { key: "C", text: "0.5" },
+      { key: "D", text: "2.0" },
+    ],
+    answer: "C",
+    explanation:
+      "App-user miss rate = 20/100 = 20%. Non-user miss rate = 40/100 = 40%. 20% / 40% = 0.5, so the app-user rate is half the non-user rate.",
+  },
+  "user-curated-dm-1770": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "An old sorting method places 30% of items in the wrong tray.",
+      "A new sorting method places 18% of items in the wrong tray.",
+    ],
+    question: "By how many percentage points did the wrong-tray rate decrease?",
+    options: [
+      { key: "A", text: "5.5 percentage points" },
+      { key: "B", text: "8.3 percentage points" },
+      { key: "C", text: "12 percentage points" },
+      { key: "D", text: "18 percentage points" },
+    ],
+    answer: "C",
+    explanation:
+      "The percentage-point decrease is the direct difference: 30% - 18% = 12 percentage points.",
+  },
+  "user-curated-dm-1771": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A pack contains 3 star cards and 5 circle cards.",
+      "A card is drawn, replaced, and then a second card is drawn.",
+    ],
+    question: "What is the probability that exactly one of the two cards is a star card?",
+    options: [
+      { key: "A", text: "15/32" },
+      { key: "B", text: "9/64" },
+      { key: "C", text: "3/8" },
+      { key: "D", text: "5/8" },
+    ],
+    answer: "A",
+    explanation:
+      "Exactly one star can happen as star then circle or circle then star. Since the card is replaced, the probabilities stay the same: (3/8 x 5/8) + (5/8 x 3/8) = 30/64 = 15/32.",
+  },
+  "user-curated-dm-1772": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "At North Campus, 40 students joined the coding club and 60 did not.",
+      "At South Campus, 20 students joined the coding club and 80 did not.",
+    ],
+    question: "If a coding-club member from these two campuses is selected at random, what is the probability they are from North Campus?",
+    options: [
+      { key: "A", text: "1/3" },
+      { key: "B", text: "1/2" },
+      { key: "C", text: "2/3" },
+      { key: "D", text: "4/5" },
+    ],
+    answer: "C",
+    explanation:
+      "There are 40 + 20 = 60 coding-club members across the two campuses. Of these, 40 are from North Campus. The probability is 40/60 = 2/3.",
+  },
+  "user-curated-dm-1773": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "30% of boxes contain a prize.",
+      "A scanner marks 90% of prize boxes and also marks 15% of boxes without a prize.",
+    ],
+    question: "If a box is marked by the scanner, what is the probability that it contains a prize?",
+    options: [
+      { key: "A", text: "30%" },
+      { key: "B", text: "50%" },
+      { key: "C", text: "72%" },
+      { key: "D", text: "90%" },
+    ],
+    answer: "C",
+    explanation:
+      "Prize boxes marked = 0.30 x 0.90 = 0.27. Non-prize boxes marked = 0.70 x 0.15 = 0.105. Probability prize given marked = 0.27 / (0.27 + 0.105) = 0.72 = 72%.",
+  },
+  "user-curated-dm-1774": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "Three delivery companies handle parcels for a shop: Company A handles 50%, Company B handles 30%, and Company C handles 20%.",
+      "The damaged-parcel rates are 2% for A, 5% for B, and 8% for C.",
+    ],
+    question: "If a randomly selected parcel is damaged, what is the probability that Company A handled it?",
+    options: [
+      { key: "A", text: "50%" },
+      { key: "B", text: "24.4%" },
+      { key: "C", text: "33%" },
+      { key: "D", text: "40%" },
+    ],
+    answer: "B",
+    explanation:
+      "Damaged parcels from Company A account for 0.50 x 0.02 = 0.010 of all parcels. The total damaged-parcel rate is (0.50 x 0.02) + (0.30 x 0.05) + (0.20 x 0.08) = 0.041. Therefore, the probability is 0.010 / 0.041 = 24.4%.",
+  },
+  "user-curated-dm-1775": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A puzzle website has an easy mode and a hard mode.",
+      "A player solves 90% of easy puzzles and 20% of hard puzzles.",
+    ],
+    question: "A successful solve is how many times as likely in easy mode as in hard mode?",
+    options: [
+      { key: "A", text: "0.9" },
+      { key: "B", text: "2" },
+      { key: "C", text: "4.5" },
+      { key: "D", text: "9" },
+    ],
+    answer: "C",
+    explanation:
+      "Easy-mode success rate = 90%. Hard-mode success rate = 20%. 90% / 20% = 4.5, so a successful solve is 4.5 times as likely in easy mode.",
+  },
+  "user-curated-dm-1776": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "10% of books in a library are reserved.",
+      "A shelf label appears on 80% of reserved books and mistakenly appears on 10% of unreserved books.",
+    ],
+    question: "If a book has the shelf label, what is the probability that it is reserved?",
+    options: [
+      { key: "A", text: "10%" },
+      { key: "B", text: "47.1%" },
+      { key: "C", text: "55%" },
+      { key: "D", text: "80%" },
+    ],
+    answer: "B",
+    explanation:
+      "In 100 books, 10 are reserved and 90 are not. Labelled reserved books = 10 x 0.80 = 8. Labelled unreserved books = 90 x 0.10 = 9. Probability reserved given labelled = 8 / (8 + 9) = 47.1%.",
+  },
+  "user-curated-dm-1779": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A hint in a puzzle app helps a player solve the puzzle 85% of the time.",
+      "Four players use the hint independently.",
+    ],
+    question: "What is the probability that all four players solve the puzzle after using the hint?",
+    options: [
+      { key: "A", text: "85%" },
+      { key: "B", text: "34%" },
+      { key: "C", text: "52.2%" },
+      { key: "D", text: "66%" },
+    ],
+    answer: "C",
+    explanation:
+      "All four players must solve the puzzle. Since the attempts are independent, multiply the success probability four times: 0.85^4 = 0.5220, or 52.2%.",
+  },
+  "user-curated-dm-1781": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "Three print shops prepare posters for an event.",
+      "Shop 1 handles 45% of orders, Shop 2 handles 35%, and Shop 3 handles 20%.",
+      "The chance of being ready within 24 hours is 80% for Shop 1, 70% for Shop 2, and 60% for Shop 3.",
+    ],
+    question: "What is the overall probability that a randomly selected poster order is ready within 24 hours?",
+    options: [
+      { key: "A", text: "72.5%" },
+      { key: "B", text: "70%" },
+      { key: "C", text: "75%" },
+      { key: "D", text: "80%" },
+    ],
+    answer: "A",
+    explanation:
+      "Use a weighted total: (0.45 x 0.80) + (0.35 x 0.70) + (0.20 x 0.60) = 0.360 + 0.245 + 0.120 = 0.725 = 72.5%.",
+  },
+  "user-curated-dm-1782": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A box contains 8 cards: 3 red cards, 3 blue cards, and 2 green cards.",
+      "Two cards are selected at random without replacement.",
+    ],
+    question: "What is the probability that one selected card is red and the other is blue?",
+    options: [
+      { key: "A", text: "1/4" },
+      { key: "B", text: "9/28" },
+      { key: "C", text: "3/8" },
+      { key: "D", text: "1/3" },
+    ],
+    answer: "B",
+    explanation:
+      "Total ways to choose 2 cards from 8 is 8C2 = 28. A red-blue pair can be chosen in 3 x 3 = 9 ways. The probability is 9/28.",
+  },
+  "user-curated-dm-1784": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "On an old puzzle route, 20% of attempts fail.",
+      "On a new puzzle route, 15% of attempts fail.",
+    ],
+    question: "By what percentage did the failure rate reduce compared with the old route?",
+    options: [
+      { key: "A", text: "5%" },
+      { key: "B", text: "25%" },
+      { key: "C", text: "33%" },
+      { key: "D", text: "50%" },
+    ],
+    answer: "B",
+    explanation:
+      "The failure rate fell by 5 percentage points, from 20% to 15%. Compared with the old rate, that reduction is 5/20 = 25%.",
+  },
+  "user-curated-dm-1786": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "In a game, each player has a 20% chance of finding a hidden key.",
+      "Five players try independently.",
+    ],
+    question: "What is the probability that exactly 3 of the 5 players find a hidden key?",
+    options: [
+      { key: "A", text: "20%" },
+      { key: "B", text: "5.1%" },
+      { key: "C", text: "1.6%" },
+      { key: "D", text: "12.8%" },
+    ],
+    answer: "B",
+    explanation:
+      "Choose which 3 of the 5 players find a key: 5C3 = 10 ways. For any one arrangement, the probability is 0.2^3 x 0.8^2. Total probability = 10 x 0.2^3 x 0.8^2 = 0.0512 = 5.1%.",
+  },
+  "user-curated-dm-1787": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "Before an update, 12% of game attempts ended early.",
+      "After the update, 5% of game attempts ended early.",
+    ],
+    question: "By how many percentage points did the early-ending rate decrease?",
+    options: [
+      { key: "A", text: "5 percentage points" },
+      { key: "B", text: "7 percentage points" },
+      { key: "C", text: "8.3 percentage points" },
+      { key: "D", text: "14.3 percentage points" },
+    ],
+    answer: "B",
+    explanation:
+      "The decrease is 12% - 5% = 7 percentage points. This is a direct difference between two percentages.",
+  },
+  "user-curated-dm-1788": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "Two independent app alerts may be sent to a user.",
+      "Alert A is sent with probability 0.25. Alert B is sent with probability 0.15.",
+    ],
+    question: "What is the probability that both alerts are sent?",
+    options: [
+      { key: "A", text: "0.40" },
+      { key: "B", text: "0.20" },
+      { key: "C", text: "0.10" },
+      { key: "D", text: "0.0375" },
+    ],
+    answer: "D",
+    explanation:
+      "The alerts are independent, so multiply their probabilities: 0.25 x 0.15 = 0.0375. Adding 0.25 and 0.15 would answer a different question.",
+  },
+  "user-curated-dm-1789": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A design idea must pass three approval stages.",
+      "75% pass Stage 1. Of those, 60% pass Stage 2. Of those, 50% pass Stage 3.",
+    ],
+    question: "What is the probability that a design idea passes all three stages?",
+    options: [
+      { key: "A", text: "22.5%" },
+      { key: "B", text: "28%" },
+      { key: "C", text: "62%" },
+      { key: "D", text: "45%" },
+    ],
+    answer: "A",
+    explanation:
+      "The stages are sequential, so multiply the conditional probabilities: 0.75 x 0.60 x 0.50 = 0.225 = 22.5%.",
+  },
+  "user-curated-dm-1791": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A display board needs three independent lights to work.",
+      "Each light has a 10% chance of failing.",
+    ],
+    question: "What is the probability that the display board works correctly?",
+    options: [
+      { key: "A", text: "90%" },
+      { key: "B", text: "81%" },
+      { key: "C", text: "72.9%" },
+      { key: "D", text: "27.1%" },
+    ],
+    answer: "C",
+    explanation:
+      "Each light has a 90% chance of working. The display board works only if all three lights work, so the probability is 0.9 x 0.9 x 0.9 = 0.729 = 72.9%.",
+  },
+  "user-curated-dm-1793": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A player has a 1 in 10 chance of losing a point in each round.",
+      "The player plays 5 independent rounds.",
+    ],
+    question: "What is the probability that the player loses no points across all 5 rounds?",
+    options: [
+      { key: "A", text: "59%" },
+      { key: "B", text: "50%" },
+      { key: "C", text: "90%" },
+      { key: "D", text: "41%" },
+    ],
+    answer: "A",
+    explanation:
+      "The chance of losing no points in one round is 9/10 = 0.9. Across 5 independent rounds, the probability is 0.9^5 = 0.59049, which is approximately 59%.",
+  },
+  "user-curated-dm-1794": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A training website offers Course X to 60% of learners and Course Y to 40%.",
+      "50% of Course X learners pass the final task, while 70% of Course Y learners pass it.",
+    ],
+    question: "If a learner passes the final task, what is the probability that they took Course X?",
+    options: [
+      { key: "A", text: "60%" },
+      { key: "B", text: "51.7%" },
+      { key: "C", text: "50%" },
+      { key: "D", text: "48.3%" },
+    ],
+    answer: "B",
+    explanation:
+      "Course X passes account for 0.60 x 0.50 = 0.30 of all learners. Course Y passes account for 0.40 x 0.70 = 0.28. Among learners who pass, the Course X share is 0.30 / (0.30 + 0.28) = 51.7%.",
+  },
+  "user-curated-dm-1795": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "Ten cards are numbered 1 to 10.",
+      "Three cards are drawn at random without replacement.",
+    ],
+    question: "What is the probability that all three cards have even numbers?",
+    options: [
+      { key: "A", text: "1/12" },
+      { key: "B", text: "1/8" },
+      { key: "C", text: "1/4" },
+      { key: "D", text: "1/2" },
+    ],
+    answer: "A",
+    explanation:
+      "There are 5 even cards: 2, 4, 6, 8, and 10. Total ways to choose 3 cards from 10 is 10C3 = 120. Ways to choose 3 even cards from 5 is 5C3 = 10. Probability = 10/120 = 1/12.",
+  },
+  "user-curated-dm-1796": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "A game room has 50 tokens.",
+      "20 tokens are red, 15 are blue, and 15 are neither red nor blue.",
+      "No token is both red and blue.",
+    ],
+    question: "What is the probability that a randomly selected token is either red or blue?",
+    options: [
+      { key: "A", text: "0.3" },
+      { key: "B", text: "0.5" },
+      { key: "C", text: "0.8" },
+      { key: "D", text: "0.7" },
+    ],
+    answer: "D",
+    explanation:
+      "There are 20 + 15 = 35 red-or-blue tokens out of 50 total tokens. The probability is 35/50 = 0.7.",
+  },
+  "user-curated-dm-1798": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A player has a 25% chance of losing a token in each game.",
+      "The player plays 3 independent games.",
+    ],
+    question: "What is the probability that the player loses no tokens in the 3 games?",
+    options: [
+      { key: "A", text: "0.75" },
+      { key: "B", text: "0.422" },
+      { key: "C", text: "0.25" },
+      { key: "D", text: "0.578" },
+    ],
+    answer: "B",
+    explanation:
+      "The chance of losing no token in one game is 0.75. Across 3 independent games, the probability is 0.75^3 = 0.421875, which rounds to 0.422.",
+  },
+  "user-curated-dm-1737": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "Six runners are randomly assigned to six lanes.",
+      "Runners A and B are two of the runners.",
+    ],
+    question: "What is the probability that runners A and B are assigned to adjacent lanes?",
+    options: [
+      { key: "A", text: "1/3" },
+      { key: "B", text: "1/6" },
+      { key: "C", text: "2/5" },
+      { key: "D", text: "1/2" },
+    ],
+    answer: "A",
+    explanation:
+      "There are 6 x 5 = 30 ordered ways to place runners A and B in two different lanes. Adjacent lanes form 5 neighbouring pairs, and A and B can be ordered two ways in each pair, giving 10 adjacent placements. Probability = 10/30 = 1/3.",
+  },
+  "user-curated-dm-1799": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "Box A contains 500 cards, of which 25 are bonus cards.",
+      "Box B contains 500 cards, of which 10 are bonus cards.",
+    ],
+    question: "By how many percentage points is the chance of selecting a bonus card lower from Box B than from Box A?",
+    options: [
+      { key: "A", text: "2 percentage points" },
+      { key: "B", text: "3 percentage points" },
+      { key: "C", text: "5 percentage points" },
+      { key: "D", text: "15 percentage points" },
+    ],
+    answer: "B",
+    explanation:
+      "Box A bonus-card chance = 25/500 = 5%. Box B bonus-card chance = 10/500 = 2%. The chance is lower by 5% - 2% = 3 percentage points.",
+  },
+  "user-curated-dm-1800": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A player has a 70% chance of solving a puzzle without a hint.",
+      "If they do not solve it, a hint gives them a 50% chance of solving it.",
+    ],
+    question: "What is the probability that the player solves the puzzle using either the first attempt or the hint?",
+    options: [
+      { key: "A", text: "0.7" },
+      { key: "B", text: "0.5" },
+      { key: "C", text: "0.35" },
+      { key: "D", text: "0.85" },
+    ],
+    answer: "D",
+    explanation:
+      "The player solves it if the first attempt works, or if the first attempt fails and the hint works. That is 0.70 + (0.30 x 0.50) = 0.85.",
+  },
+  "user-curated-dm-1801": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "A book club has 100 members: 40 regular members, 30 occasional members, and 30 new members.",
+      "In one month, 25% of regular members, 15% of occasional members, and 5% of new members attend an event.",
+    ],
+    question: "If a member attended the event, what is the probability that they are a regular member?",
+    options: [
+      { key: "A", text: "62.5%" },
+      { key: "B", text: "25%" },
+      { key: "C", text: "40%" },
+      { key: "D", text: "50%" },
+    ],
+    answer: "A",
+    explanation:
+      "Regular attendees account for 0.40 x 0.25 = 0.10 of all members. Occasional attendees account for 0.30 x 0.15 = 0.045, and new-member attendees account for 0.30 x 0.05 = 0.015. Total attendance is 0.16, so the regular-member share is 0.10 / 0.16 = 62.5%.",
+  },
+  "user-curated-dm-1805": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A club has 20 members.",
+      "8 members play chess, 5 play badminton, and 3 play both.",
+    ],
+    question: "What is the probability that a randomly selected club member plays neither chess nor badminton?",
+    options: [
+      { key: "A", text: "1/2" },
+      { key: "B", text: "1/4" },
+      { key: "C", text: "3/10" },
+      { key: "D", text: "3/5" },
+    ],
+    answer: "A",
+    explanation:
+      "Members who play at least one of the two games = 8 + 5 - 3 = 10. Therefore, 20 - 10 = 10 members play neither. The probability is 10/20 = 1/2.",
+  },
+  "user-curated-dm-1807": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "A puzzle level is completed by 60% of players.",
+      "Five independent players try the level.",
+    ],
+    question: "What is the probability that at least four of the five players complete the level?",
+    options: [
+      { key: "A", text: "0.6" },
+      { key: "B", text: "0.26" },
+      { key: "C", text: "0.337" },
+      { key: "D", text: "0.432" },
+    ],
+    answer: "C",
+    explanation:
+      "Exactly 4 players complete the level with probability 5C4 x 0.6^4 x 0.4 = 0.2592. All 5 complete it with probability 0.6^5 = 0.07776. At least 4 complete it with probability 0.2592 + 0.07776 = 0.33696, which rounds to 0.337.",
+  },
+  "user-curated-dm-1809": {
+    tags: ["multi-step", "hard", "text-stem"],
+    stimulus: [
+      "A project team is selected from 6 designers and 4 writers.",
+      "Four people are chosen at random.",
+    ],
+    question: "What is the probability that the team includes at least two designers?",
+    options: [
+      { key: "A", text: "37/42" },
+      { key: "B", text: "4/5" },
+      { key: "C", text: "5/6" },
+      { key: "D", text: "7/10" },
+    ],
+    answer: "A",
+    explanation:
+      "Total ways to choose 4 people from 10 is 10C4 = 210. Favourable teams have exactly 2, 3, or 4 designers: (6C2 x 4C2) + (6C3 x 4C1) + 6C4 = 90 + 80 + 15 = 185. The probability is 185/210 = 37/42.",
+  },
+  "user-curated-dm-1811": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "60% of event tickets are sold online, and 30% of online tickets use a discount.",
+      "The remaining 40% of tickets are sold in person, and 15% of these use a discount.",
+    ],
+    question: "What is the probability that a randomly selected ticket used a discount?",
+    options: [
+      { key: "A", text: "30%" },
+      { key: "B", text: "22.5%" },
+      { key: "C", text: "24%" },
+      { key: "D", text: "20%" },
+    ],
+    answer: "C",
+    explanation:
+      "Use a weighted total. Discounted online tickets account for 0.60 x 0.30 = 0.18 of all tickets. Discounted in-person tickets account for 0.40 x 0.15 = 0.06. Overall probability = 0.18 + 0.06 = 0.24 = 24%.",
+  },
+  "user-curated-dm-1812": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "Three independent reminder messages are sent.",
+      "Each message has a 70% chance of being read.",
+    ],
+    question: "What is the probability that at least one of the three messages is read?",
+    options: [
+      { key: "A", text: "70%" },
+      { key: "B", text: "90%" },
+      { key: "C", text: "93%" },
+      { key: "D", text: "97.3%" },
+    ],
+    answer: "D",
+    explanation:
+      "Use the complement. A message has a 30% chance of not being read, so the chance that none of the three messages is read is 0.3^3 = 0.027. Therefore, the chance that at least one is read is 1 - 0.027 = 0.973 = 97.3%.",
+  },
+  "user-curated-dm-1810": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "A project group is selected from 6 designers and 4 engineers.",
+      "Three people are chosen at random.",
+    ],
+    question: "What is the probability that exactly two of the three people are designers?",
+    options: [
+      { key: "A", text: "2/5" },
+      { key: "B", text: "1/2" },
+      { key: "C", text: "3/5" },
+      { key: "D", text: "1/3" },
+    ],
+    answer: "B",
+    explanation:
+      "Total ways to choose 3 people from 10 is 10C3 = 120. To get exactly two designers, choose 2 of the 6 designers and 1 of the 4 engineers: 6C2 x 4C1 = 15 x 4 = 60. Probability = 60/120 = 1/2.",
+  },
+  "user-curated-dm-1814": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "40 players tried one of two puzzle routes: 25 used Route A and 15 used Route B.",
+      "Route A had a 60% completion rate, while Route B had an 80% completion rate.",
+    ],
+    question: "What is the overall probability that a randomly selected player completed their route?",
+    options: [
+      { key: "A", text: "70%" },
+      { key: "B", text: "67.5%" },
+      { key: "C", text: "60%" },
+      { key: "D", text: "72%" },
+    ],
+    answer: "B",
+    explanation:
+      "Use a weighted total because more players used Route A. Overall completion probability = (25/40 x 0.60) + (15/40 x 0.80) = 0.375 + 0.300 = 0.675 = 67.5%.",
+  },
+  "user-curated-dm-1817": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "An old signup process had an 8% error rate.",
+      "A new signup process has a 5% error rate.",
+    ],
+    question: "By what percentage did the error rate reduce compared with the old process?",
+    options: [
+      { key: "A", text: "3%" },
+      { key: "B", text: "30%" },
+      { key: "C", text: "37.5%" },
+      { key: "D", text: "62.5%" },
+    ],
+    answer: "C",
+    explanation:
+      "The error rate fell by 3 percentage points. Compared with the old 8% rate, the reduction is 3/8 = 37.5%.",
+  },
+  "user-curated-dm-1819": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "10 songs are available for a short playlist.",
+      "Exactly 3 songs are selected at random.",
+      "Two specific songs, A and B, are of interest.",
+    ],
+    question: "What is the probability that both Song A and Song B are included in the playlist?",
+    options: [
+      { key: "A", text: "1/10" },
+      { key: "B", text: "2/10" },
+      { key: "C", text: "1/15" },
+      { key: "D", text: "3/45" },
+    ],
+    answer: "C",
+    explanation:
+      "Total ways to select 3 songs from 10 is 10C3 = 120. If Songs A and B must both be included, the remaining song can be chosen from the other 8 songs. Probability = 8/120 = 1/15.",
+  },
+  "user-curated-dm-1820": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "Three warehouses send parcels for an online shop: A sends 50%, B sends 30%, and C sends 20%.",
+      "Late-delivery rates are 10% for A, 15% for B, and 20% for C.",
+    ],
+    question: "Given that a parcel is delivered late, what is the probability that it came from Warehouse C?",
+    options: [
+      { key: "A", text: "20%" },
+      { key: "B", text: "40%" },
+      { key: "C", text: "25%" },
+      { key: "D", text: "29.6%" },
+    ],
+    answer: "D",
+    explanation:
+      "Overall late-delivery probability = (0.50 x 0.10) + (0.30 x 0.15) + (0.20 x 0.20) = 0.050 + 0.045 + 0.040 = 0.135. Warehouse C late parcels account for 0.040 of all parcels, so the probability is 0.040 / 0.135 = 29.6%.",
+  },
+  "user-curated-dm-1821": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "A sorter reviews 500 competition entries.",
+      "100 entries are winners and 400 are not.",
+      "The sorter sends 92 of the 100 winning entries to the winner pile.",
+    ],
+    question: "Among the actual winning entries, what percentage are sent to the winner pile?",
+    options: [
+      { key: "A", text: "23%" },
+      { key: "B", text: "88%" },
+      { key: "C", text: "92%" },
+      { key: "D", text: "96%" },
+    ],
+    answer: "C",
+    explanation:
+      "The question restricts attention to the 100 actual winning entries. Of these, 92 are sent to the winner pile, so the percentage is 92/100 = 92%.",
+  },
+  "user-curated-dm-1822": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "A checker reviews 300 items: 100 should be accepted and 200 should be rejected.",
+      "It correctly accepts 85 items, wrongly rejects 15 acceptable items, correctly rejects 170 items, and wrongly accepts 30 rejectable items.",
+    ],
+    question: "Among items that should be rejected, what proportion did the checker correctly reject?",
+    options: [
+      { key: "A", text: "80%" },
+      { key: "B", text: "85%" },
+      { key: "C", text: "90%" },
+      { key: "D", text: "95%" },
+    ],
+    answer: "B",
+    explanation:
+      "There are 200 items that should be rejected. The checker correctly rejects 170 of them, so the proportion is 170/200 = 85%.",
+  },
+  "user-curated-dm-1823": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "Eight players each have a 35% chance of finding a bonus token.",
+      "The players search independently.",
+    ],
+    question: "What is the probability that exactly 2 of the 8 players find a bonus token?",
+    options: [
+      { key: "A", text: "35%" },
+      { key: "B", text: "12.3%" },
+      { key: "C", text: "25.9%" },
+      { key: "D", text: "18.4%" },
+    ],
+    answer: "C",
+    explanation:
+      "Use the binomial formula. Choose which 2 of the 8 players find a token: 8C2 = 28 ways. Probability = 28 x 0.35^2 x 0.65^6 = 0.259, or 25.9%.",
+  },
+  "user-curated-dm-1824": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "70% of support tickets are marked urgent.",
+      "Of urgent tickets, 80% receive a same-day response.",
+      "Of non-urgent tickets, 30% also receive a same-day response.",
+    ],
+    question: "What is the overall probability that a support ticket receives a same-day response?",
+    options: [
+      { key: "A", text: "70%" },
+      { key: "B", text: "55%" },
+      { key: "C", text: "80%" },
+      { key: "D", text: "65%" },
+    ],
+    answer: "D",
+    explanation:
+      "Use a weighted total. Same-day urgent tickets account for 0.70 x 0.80 = 0.56 of all tickets. Same-day non-urgent tickets account for 0.30 x 0.30 = 0.09. Overall probability = 0.56 + 0.09 = 0.65 = 65%.",
+  },
+  "user-curated-dm-1825": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "Two online adverts were shown during a campaign.",
+      "Advert A had 200 views and a 40% click rate. Advert B had 300 views and a 30% click rate.",
+    ],
+    question: "What was the overall click rate across both adverts?",
+    options: [
+      { key: "A", text: "30%" },
+      { key: "B", text: "34%" },
+      { key: "C", text: "35%" },
+      { key: "D", text: "40%" },
+    ],
+    answer: "B",
+    explanation:
+      "Advert A clicks = 200 x 0.40 = 80. Advert B clicks = 300 x 0.30 = 90. Total clicks = 170 from 500 views, so the overall click rate is 170/500 = 34%.",
+  },
+  "user-curated-dm-1827": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "20% of library books are marked as priority items.",
+      "Of the priority items, 70% are moved to the front display.",
+      "Of the non-priority items, 10% are also moved to the front display.",
+    ],
+    question: "What is the probability that a randomly selected library book is moved to the front display?",
+    options: [
+      { key: "A", text: "20%" },
+      { key: "B", text: "30%" },
+      { key: "C", text: "22%" },
+      { key: "D", text: "18%" },
+    ],
+    answer: "C",
+    explanation:
+      "Use a weighted total. Front-display priority items account for 0.20 x 0.70 = 0.14 of all books. Front-display non-priority items account for 0.80 x 0.10 = 0.08. Overall probability = 0.14 + 0.08 = 0.22 = 22%.",
+  },
+  "user-curated-dm-1828": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "Course P is taken by 60% of learners and has a 50% pass rate.",
+      "Course Q is taken by 40% of learners and has a 70% pass rate.",
+    ],
+    question: "Given that a learner passed, what is the probability that they took Course P?",
+    options: [
+      { key: "A", text: "60%" },
+      { key: "B", text: "50%" },
+      { key: "C", text: "48.3%" },
+      { key: "D", text: "51.7%" },
+    ],
+    answer: "D",
+    explanation:
+      "Learners who took Course P and passed account for 0.60 x 0.50 = 0.30 of all learners. Learners who took Course Q and passed account for 0.40 x 0.70 = 0.28. Among all learners who passed, the Course P share is 0.30 / (0.30 + 0.28) = 51.7%.",
+  },
+  "user-curated-dm-1829": {
+    tags: ["quick", "easy", "text-stem"],
+    stimulus: [
+      "A new route through a puzzle reduces the mistake rate from 15% to 9%.",
+    ],
+    question: "By how many percentage points did the mistake rate decrease?",
+    options: [
+      { key: "A", text: "6 percentage points" },
+      { key: "B", text: "6.7 percentage points" },
+      { key: "C", text: "11.1 percentage points" },
+      { key: "D", text: "16.7 percentage points" },
+    ],
+    answer: "A",
+    explanation:
+      "The percentage-point decrease is the direct difference between the two rates: 15% - 9% = 6 percentage points.",
+  },
+  "user-curated-dm-1830": {
+    tags: ["multi-step", "medium", "text-stem"],
+    stimulus: [
+      "Three independent upload attempts are made.",
+      "Each upload attempt has a 25% chance of failing.",
+    ],
+    question: "What is the probability that none of the 3 upload attempts fails?",
+    options: [
+      { key: "A", text: "75%" },
+      { key: "B", text: "42.2%" },
+      { key: "C", text: "25%" },
+      { key: "D", text: "57.8%" },
+    ],
+    answer: "B",
+    explanation:
+      "The probability that one upload attempt does not fail is 0.75. For all three independent attempts to avoid failure, multiply 0.75 x 0.75 x 0.75 = 0.421875, which is 42.2%.",
+  },
+  "user-curated-dm-1831": {
+    tags: ["quick", "medium", "text-stem"],
+    stimulus: [
+      "In Game A, 15% of players lose a turn.",
+      "In Game B, 6% of players lose a turn.",
+    ],
+    question: "The chance of losing a turn in Game B is what fraction of the chance in Game A?",
+    options: [
+      { key: "A", text: "0.09" },
+      { key: "B", text: "0.4" },
+      { key: "C", text: "0.6" },
+      { key: "D", text: "2.5" },
+    ],
+    answer: "B",
+    explanation:
+      "Game B loss chance divided by Game A loss chance is 6% / 15% = 0.4. So the Game B chance is 40% of the Game A chance.",
+  },
+};
+
+function applyDmProbabilityReplacement(question: UCATQuestion): UCATQuestion {
+  const replacement = DM_PROBABILITY_BATCH_1_REPLACEMENTS[question.id];
+
+  if (!replacement || question.subtype !== "dm-probability-data") {
+    return question;
+  }
+
+  return {
+    ...question,
+    leftTitle: "Probability",
+    tags: replacement.tags ?? question.tags,
+    stimulus: replacement.stimulus,
+    question: replacement.question,
+    options: replacement.options,
+    answer: replacement.answer,
+    explanation: replacement.explanation,
+  } as UCATQuestion;
+}
+
 export const CURATED_DM_QUESTIONS_FROM_CURATED: UCATQuestion[] =
-  USER_CURATED_DM_INPUTS.map(buildDmQuestion);
+  USER_CURATED_DM_INPUTS.map(buildDmQuestion).map(applyDmProbabilityReplacement);
 
 // --- RAW VENN INPUTS ----------------------------------------------------------
 // Gemini provides: set labels + number per region + questions.

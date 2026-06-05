@@ -4,7 +4,6 @@
  * 2. Ensures every question has exactly 2 Yes and 2 No options
  */
 
-import Anthropic from "@anthropic-ai/sdk";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -97,39 +96,10 @@ function parseBlock(text) {
 }
 
 async function generateDistractor(stimulus, neededDir, existingOptions) {
-  const oppDesc =
-    neededDir === "Yes"
-      ? "in favour of the proposal"
-      : "against the proposal";
-  const existing = existingOptions
-    .filter(Boolean)
-    .map((o) => `  - ${o}`)
-    .join("\n");
-
-  const msg = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 120,
-    messages: [
-      {
-        role: "user",
-        content: `Write ONE weak UCAT "strongest argument" distractor ${oppDesc}.
-
-Proposal: "${stimulus}"
-
-Rules:
-- Start with exactly "${neededDir}, because"
-- The reasoning must be logically weak (vague, circular, trivial, or irrelevant)
-- Do NOT include any label like (TRIVIAL) or (VAGUE)
-- End with a full stop
-- Output only the single argument, nothing else
-
-Existing options to avoid duplicating:
-${existing}`,
-      },
-    ],
-  });
-
-  return msg.content[0].text.trim();
+  const existing = existingOptions.filter(Boolean).join(" | ");
+  throw new Error(
+    `Manual ${neededDir} distractor required for "${stimulus}". Existing options: ${existing}`
+  );
 }
 
 // ── main ─────────────────────────────────────────────────────────────────────
@@ -145,10 +115,7 @@ async function main() {
   // ── Step 1: strip all labels from the whole file ──────────────────────────
   console.log("\nStep 1: stripping parenthetical labels…");
   const before = content;
-  content = content.replace(
-    / \((?:TRIVIAL|CIRCULAR|VAGUE|IRRELEVANT|NON[- ]SEQUITUR|OPINION|WEAK|SUBJECTIVE|ANECDOTAL|HASTY GENERALISATION|APPEAL TO AUTHORITY|AD HOMINEM)[^)]*\)/gi,
-    ""
-  );
+  content = stripLabels(content);
   const labelCount = (before.match(
     / \((?:TRIVIAL|CIRCULAR|VAGUE|IRRELEVANT|NON[- ]SEQUITUR|OPINION|WEAK|SUBJECTIVE|ANECDOTAL|HASTY GENERALISATION|APPEAL TO AUTHORITY|AD HOMINEM)[^)]*\)/gi
   ) || []).length;
@@ -170,7 +137,7 @@ async function main() {
     const noCount = all.filter((o) => getDir(o) === "No").length;
 
     if (yesCount !== 2 || noCount !== 2) {
-      toFix.push({ block, stimulus, correct, distractors, yesCount, noCount });
+      toFix.push({ block, stimulus, correct, distractors });
     }
   }
   console.log(`  Questions needing balance fix: ${toFix.length}`);
@@ -184,8 +151,7 @@ async function main() {
     const batch = toFix.slice(i, i + BATCH);
     await Promise.all(
       batch.map(async (item) => {
-        const { block, stimulus, correct, distractors, yesCount, noCount } =
-          item;
+        const { block, stimulus, correct, distractors } = item;
 
         const correctDir = getDir(correct);
         const oppDir = correctDir === "Yes" ? "No" : "Yes";

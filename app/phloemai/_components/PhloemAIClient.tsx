@@ -5952,8 +5952,14 @@ function ReportContent({
           attemptIds: reportDiagnostics.map((diagnostic) => diagnostic.id),
           section: selectedDiagnostic.section,
           accuracy: selectedDiagnostic.accuracy,
+          scorePoints: selectedDiagnostic.scorePoints,
+          maxScore: selectedDiagnostic.maxScore,
+          answeredQuestions: selectedDiagnostic.answeredQuestions,
+          totalQuestions: selectedDiagnostic.totalQuestions,
+          avgSecondsPerQuestion: selectedDiagnostic.avgSecondsPerQuestion,
           issues: selectedDiagnostic.issues,
           strengths: selectedDiagnostic.strengths,
+          studyPlanTasks: selectedDiagnostic.studyPlanTasks,
         }),
       });
       const payload = (await response.json()) as {
@@ -7180,6 +7186,60 @@ function getLatestPerSectionDiagnostics(
   return bySection;
 }
 
+function getLatestCompletedFullMockDiagnostics(
+  diagnosticHistory: DashboardDiagnostic[]
+) {
+  const byMockId = new Map<string, DashboardDiagnostic[]>();
+
+  diagnosticHistory.forEach((diagnostic) => {
+    if (!isFullMockSectionDiagnostic(diagnostic) || !diagnostic.mockId) return;
+    const diagnostics = byMockId.get(diagnostic.mockId) ?? [];
+    diagnostics.push(diagnostic);
+    byMockId.set(diagnostic.mockId, diagnostics);
+  });
+
+  const completedMocks = [...byMockId.values()]
+    .map((diagnostics) => {
+      const bySection = new Map<UCATSectionCode, DashboardDiagnostic>();
+
+      diagnostics.forEach((diagnostic) => {
+        const current = bySection.get(diagnostic.section);
+        const currentTime = current?.completedAt
+          ? new Date(current.completedAt).getTime()
+          : 0;
+        const nextTime = diagnostic.completedAt
+          ? new Date(diagnostic.completedAt).getTime()
+          : 0;
+
+        if (!current || nextTime >= currentTime) {
+          bySection.set(diagnostic.section, diagnostic);
+        }
+      });
+
+      const orderedDiagnostics = FULL_MOCK_REPORT_SECTION_ORDER.flatMap(
+        (section) => {
+          const diagnostic = bySection.get(section);
+          return diagnostic ? [diagnostic] : [];
+        }
+      );
+
+      const completedAtMs = Math.max(
+        ...orderedDiagnostics.map((diagnostic) =>
+          diagnostic.completedAt ? new Date(diagnostic.completedAt).getTime() : 0
+        )
+      );
+
+      return {
+        diagnostics: orderedDiagnostics,
+        completedAtMs,
+      };
+    })
+    .filter((mock) => mock.diagnostics.length === FULL_MOCK_REPORT_SECTION_ORDER.length)
+    .sort((first, second) => second.completedAtMs - first.completedAtMs);
+
+  return completedMocks[0]?.diagnostics ?? [];
+}
+
 function DashboardFeedbackPanel({
   latestDiagnostic,
   diagnosticHistory = [],
@@ -7200,6 +7260,17 @@ function DashboardFeedbackPanel({
   const [selectedSection, setSelectedSection] = useState<UCATSectionCode | null>(
     () => latestDiagnostic?.section ?? null
   );
+  const [generatedFullMockFeedback, setGeneratedFullMockFeedback] = useState<
+    string | null
+  >(null);
+  const [fullMockFeedbackRequesting, setFullMockFeedbackRequesting] =
+    useState(false);
+  const [fullMockFeedbackNotice, setFullMockFeedbackNotice] = useState<
+    string | null
+  >(null);
+  const [fullMockFeedbackError, setFullMockFeedbackError] = useState<
+    string | null
+  >(null);
 
   // If a new latest diagnostic arrives (e.g. just completed a mock), sync selected section.
   const prevLatestRef = useRef<string | null>(null);
@@ -7214,6 +7285,39 @@ function DashboardFeedbackPanel({
   const activeDiagnostic = selectedSection
     ? (perSectionMap.get(selectedSection) ?? null)
     : latestDiagnostic;
+  const completedFullMockDiagnostics = useMemo(
+    () => getLatestCompletedFullMockDiagnostics(diagnosticHistory),
+    [diagnosticHistory]
+  );
+  const completedFullMockPrimaryDiagnostic =
+    completedFullMockDiagnostics[0] ?? null;
+  const completedFullMockFeedbackText =
+    generatedFullMockFeedback ??
+    completedFullMockDiagnostics.find(
+      (diagnostic) =>
+        diagnostic.aiFeedbackScope === "full_mock" && diagnostic.aiFeedbackText
+    )?.aiFeedbackText ??
+    null;
+  const completedFullMockReportHref = completedFullMockPrimaryDiagnostic?.mockId
+    ? `/phloemai/report?mock=${encodeURIComponent(completedFullMockPrimaryDiagnostic.mockId)}`
+    : completedFullMockPrimaryDiagnostic
+      ? `/phloemai/report?attempt=${encodeURIComponent(completedFullMockPrimaryDiagnostic.id)}`
+      : "/phloemai/report";
+  const completedFullMockLabel =
+    completedFullMockPrimaryDiagnostic?.mockLabel ?? "Full mock";
+  const completedFullMockAccuracy =
+    completedFullMockDiagnostics.length > 0
+      ? getCombinedDiagnosticAccuracy(completedFullMockDiagnostics)
+      : 0;
+  const completedFullMockAvgSeconds =
+    completedFullMockDiagnostics.length > 0
+      ? getCombinedDiagnosticAvgSeconds(completedFullMockDiagnostics)
+      : 0;
+  const completedFullMockAiStatus = completedFullMockFeedbackText
+    ? "Ready"
+    : completedFullMockPrimaryDiagnostic?.aiFeedbackStatus === "queued_no_api_key"
+      ? "Pending"
+      : "Not requested";
   const aiText = activeDiagnostic?.aiFeedbackText ?? null;
   const aiStatusValue = aiText
     ? "Ready"
@@ -7244,6 +7348,49 @@ function DashboardFeedbackPanel({
   const feedbackReportHref = activeDiagnostic
     ? `/phloemai/report?attempt=${encodeURIComponent(activeDiagnostic.id)}`
     : "/phloemai/report";
+  const requestFullMockAiFeedback = async () => {
+    if (!completedFullMockPrimaryDiagnostic) return;
+
+    setFullMockFeedbackRequesting(true);
+    setFullMockFeedbackNotice(null);
+    setFullMockFeedbackError(null);
+
+    try {
+      const response = await fetch("/api/ai/diagnostic-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          attemptId: completedFullMockPrimaryDiagnostic.id,
+          attemptIds: completedFullMockDiagnostics.map(
+            (diagnostic) => diagnostic.id
+          ),
+        }),
+      });
+      const payload = (await response.json()) as {
+        feedback?: string;
+        error?: string;
+      };
+
+      if (!response.ok || !payload.feedback) {
+        throw new Error(
+          payload.error ?? "Full mock AI feedback could not be generated."
+        );
+      }
+
+      setGeneratedFullMockFeedback(payload.feedback);
+      setFullMockFeedbackNotice(
+        "Full mock AI feedback generated and saved across all four section reports."
+      );
+    } catch (error) {
+      setFullMockFeedbackError(
+        error instanceof Error
+          ? error.message
+          : "Full mock AI feedback could not be generated."
+      );
+    } finally {
+      setFullMockFeedbackRequesting(false);
+    }
+  };
 
   return (
     <section className={`rounded-xl border border-slate-200 bg-white p-6 shadow-sm ${className}`}>
@@ -7320,6 +7467,91 @@ function DashboardFeedbackPanel({
 
       {hasDiagnostic ? (
         <>
+          {completedFullMockDiagnostics.length ===
+            FULL_MOCK_REPORT_SECTION_ORDER.length && (
+            <div className="mt-5 rounded-xl border border-violet-100 bg-violet-50/40 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Sparkles
+                      className="h-4 w-4 text-violet-600"
+                      aria-hidden="true"
+                    />
+                    <h3 className="text-xs font-black uppercase tracking-wide text-violet-700">
+                      Full mock AI feedback
+                    </h3>
+                  </div>
+                  <p className="mt-2 text-xs font-bold leading-5 text-slate-600">
+                    {completedFullMockLabel} is complete across VR, DM, QR and
+                    SJT. Generate one combined AI feedback report instead of
+                    splitting feedback across section tabs.
+                  </p>
+                  <p className="mt-2 text-[11px] font-black text-slate-500">
+                    {completedFullMockAccuracy}% overall accuracy ·{" "}
+                    {completedFullMockAvgSeconds}s avg/question
+                  </p>
+                </div>
+                <span
+                  className={`w-fit rounded-full px-3 py-1 text-xs font-black ${
+                    completedFullMockFeedbackText
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "bg-violet-100 text-violet-700"
+                  }`}
+                >
+                  {completedFullMockAiStatus}
+                </span>
+              </div>
+
+              {completedFullMockFeedbackText ? (
+                <ExpandableAiFeedback
+                  text={completedFullMockFeedbackText}
+                  previewLength={380}
+                  className="mt-3 text-xs font-semibold leading-5 text-slate-800"
+                  paragraphClassName="whitespace-pre-wrap"
+                  buttonClassName="mt-3 text-xs font-black text-violet-700 hover:text-violet-800"
+                />
+              ) : (
+                <div className="mt-4 flex flex-col gap-3 rounded-lg border border-dashed border-violet-200 bg-white/70 p-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-xs font-semibold leading-5 text-slate-600">
+                    Use one AI diagnostic credit to create a single full-mock
+                    report from all four saved sections.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => void requestFullMockAiFeedback()}
+                    disabled={fullMockFeedbackRequesting}
+                    className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+                  >
+                    {fullMockFeedbackRequesting
+                      ? "Generating..."
+                      : "Generate full mock AI"}
+                    <Sparkles className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </div>
+              )}
+
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <Link
+                  href={completedFullMockReportHref}
+                  className="inline-flex items-center gap-2 text-xs font-black text-blue-600 hover:text-blue-700"
+                >
+                  Open full mock report
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                {fullMockFeedbackNotice && (
+                  <p className="text-xs font-black text-emerald-700">
+                    {fullMockFeedbackNotice}
+                  </p>
+                )}
+                {fullMockFeedbackError && (
+                  <p className="text-xs font-black text-red-700">
+                    {fullMockFeedbackError}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Clickable section tabs — each reflects its own latest diagnostic */}
           <div className="mt-5 flex flex-wrap gap-1 rounded-md border border-slate-200 bg-slate-50 p-1">
             {sectionTabs.map((tab) => {

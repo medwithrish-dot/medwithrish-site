@@ -9,7 +9,6 @@
  *   - Where the question just asks "What is the X?" rewrite to plain English
  */
 
-import Anthropic from "@anthropic-ai/sdk";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -106,38 +105,13 @@ function parseBlock(text) {
   return { stimulus, question, correct, explanation };
 }
 
-// ─── API call ─────────────────────────────────────────────────────────────────
+// ─── Manual rewrite guard ────────────────────────────────────────────────────
 async function fixJargon(stimulus, question, correct, explanation) {
-  const prompt = `You are helping improve a UCAT Decision Making question bank.
-
-The following question uses specialist medical/statistical terminology that test-takers cannot be expected to know in advance. Your task is to rewrite ONLY the stimulus array strings and the question string so that:
-1. Every specialist term (sensitivity, specificity, NPV, PPV, relative risk, NNT, odds ratio, ARR, RRR, likelihood ratio, etc.) is defined the first time it appears, using a plain-language parenthetical.
-2. The mathematical challenge is completely unchanged — do not alter numbers, structure, or what is being asked.
-3. If the question says "What is the X?" where X is pure jargon (e.g., "What is the NPV of the test?"), rewrite it as a plain-English question instead (e.g., "Among patients who tested negative, what proportion do NOT have the condition?").
-4. Do not change the correct answer, distractors, or explanation.
-
-Return a JSON object with exactly these keys:
-  "stimulus": array of strings (each element = one stimulus sentence/paragraph, same count as input)
-  "question": string
-
-Input:
-STIMULUS (array): ${JSON.stringify(stimulus.split(/\.,\s*|\.\s+/).map((s) => s.trim()).filter(Boolean))}
-QUESTION: ${JSON.stringify(question)}
-CORRECT ANSWER (for context only, do not change): ${JSON.stringify(correct)}
-
-Return ONLY the JSON object, no explanation.`;
-
-  const response = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 800,
-    messages: [{ role: "user", content: prompt }],
-  });
-
-  const raw = response.content[0].text.trim();
-  // Extract JSON even if model wraps in markdown
-  const jsonMatch = raw.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("No JSON in response: " + raw);
-  return JSON.parse(jsonMatch[0]);
+  throw new Error(
+    `Manual jargon rewrite required for "${question}". Keep answer ${JSON.stringify(
+      correct
+    )} and explanation ${JSON.stringify(explanation)} unchanged. Stimulus: ${stimulus}`
+  );
 }
 
 // ─── Rebuild stimulus array string ───────────────────────────────────────────
