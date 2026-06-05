@@ -3424,6 +3424,11 @@ function SectionSetup({
                   ? "Start diagnostic"
                   : "Start practice"}
           </button>
+          {!progressLoading && questionCount === 0 && (
+            <p className="mt-3 text-xs font-black text-slate-500">
+              More question-bank questions are coming soon.
+            </p>
+          )}
         </section>
       </div>
     </div>
@@ -4907,6 +4912,11 @@ function FixedDiagnosticStartScreen({
                   ? "No uncompleted questions"
                   : startLabel}
           </button>
+          {!loading && questionCount === 0 && (
+            <p className="mt-3 text-xs font-black text-slate-500">
+              More question-bank questions are coming soon.
+            </p>
+          )}
           </div>
         </section>
       </div>
