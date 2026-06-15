@@ -45,7 +45,8 @@ export type UCATQuestionQualityReview = {
 };
 
 const SECTIONS: UCATSection[] = ["vr", "dm", "qr", "sjt"];
-const OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D"];
+const STANDARD_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D"];
+const QR_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D", "E"];
 
 const TFC_SCALE = ["True", "False", "Can't tell"];
 const APPROPRIATENESS_SCALE = [
@@ -266,11 +267,16 @@ function validateSingleQuestion(question: UCATQuestion): RejectionReason | null 
 
   const optionKeys = question.options.map((option) => option.key);
   const optionTexts = question.options.map((option) => option.text);
+  const allowedOptionKeys =
+    question.section === "qr" ? QR_OPTION_KEYS : STANDARD_OPTION_KEYS;
+  const invalidOptionCount =
+    question.section === "qr"
+      ? question.options.length !== QR_OPTION_KEYS.length
+      : question.options.length < 3 || question.options.length > STANDARD_OPTION_KEYS.length;
 
   if (
-    question.options.length < 3 ||
-    question.options.length > 4 ||
-    !optionKeys.every((key) => OPTION_KEYS.includes(key)) ||
+    invalidOptionCount ||
+    !optionKeys.every((key) => allowedOptionKeys.includes(key)) ||
     !optionKeys.includes(question.answer) ||
     !hasUniqueStrings(optionTexts)
   ) {

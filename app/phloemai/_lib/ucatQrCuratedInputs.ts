@@ -27,7 +27,8 @@ export type QrCuratedInput =
       kind: "set";
       setId: string;
       stimulus: string[];
-      visual: UCATChartVisual;
+      leftTitle?: string;
+      visual?: UCATChartVisual;
       questions: Array<{
         subtype:
           | "qr-graphs"
@@ -39174,20 +39175,4237 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
     ],
   },
 
+  {
+    kind: "set",
+    setId: "freelance-income-tax-bands",
+    stimulus: [
+      "A payroll adviser used a simplified tax system for four freelance clients: the first GBP 12,500 is taxed at 0%, the next GBP 37,500 at 20%, and income above GBP 50,000 at 40%.",
+    ],
+    visual: {
+      type: "table",
+      title: "Freelance Client Taxable Income",
+      headers: ["Client", "Taxable income"],
+      rows: [
+        ["A", "GBP 28,500"],
+        ["B", "GBP 42,500"],
+        ["C", "GBP 55,000"],
+        ["D", "GBP 68,000"],
+      ],
+      note: "Tax bands are applied progressively to taxable income.",
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How much income tax does Client B pay?",
+        correct: "GBP 6,000",
+        distractors: ["GBP 8,500", "GBP 3,200", "GBP 7,500"],
+        explanation:
+          "Client B has GBP 42,500 taxable income, so GBP 42,500 - GBP 12,500 = GBP 30,000 is taxed at 20%. GBP 30,000 x 20% = GBP 6,000. Distractor GBP 8,500: taxes all GBP 42,500 at 20%. Distractor GBP 3,200: calculates Client A's tax. Distractor GBP 7,500: taxes the whole basic-rate band, not Client B's used part.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question: "How much income tax does Client D pay?",
+        correct: "GBP 14,700",
+        distractors: ["GBP 11,100", "GBP 22,200", "GBP 7,200"],
+        explanation:
+          "Client D pays 20% on GBP 37,500 and 40% on GBP 18,000 above GBP 50,000. GBP 7,500 + GBP 7,200 = GBP 14,700. Distractor GBP 11,100: taxes all income above GBP 12,500 at 20%. Distractor GBP 22,200: taxes all income above GBP 12,500 at 40%. Distractor GBP 7,200: includes only the higher-rate tax.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of the four clients' total taxable income is Client C's income?",
+        correct: "28.4%",
+        distractors: ["35.1%", "21.9%", "43.7%"],
+        explanation:
+          "Total taxable income = GBP 28,500 + GBP 42,500 + GBP 55,000 + GBP 68,000 = GBP 194,000. Client C's share is GBP 55,000/GBP 194,000 x 100 = 28.4%. Distractor 35.1%: uses Client D's income. Distractor 21.9%: uses Client B's income. Distractor 43.7%: excludes Client D from the total.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Client A's tax to Client B's tax?",
+        correct: "8:15",
+        distractors: ["15:8", "57:85", "19:12"],
+        explanation:
+          "Client A's tax is (GBP 28,500 - GBP 12,500) x 20% = GBP 3,200 and Client B's tax is GBP 6,000. GBP 3,200:GBP 6,000 simplifies to 8:15. Distractor 15:8 reverses the ratio. Distractor 57:85 uses taxable incomes GBP 28,500:GBP 42,500. Distractor 19:12 compares Client C's tax with Client B's tax.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "timezone-flight-duration-comparison",
+    stimulus: [
+      "A travel coordinator compared scheduled flights using each city's local time and UTC offset.",
+    ],
+    visual: {
+      type: "table",
+      title: "Scheduled Flight Times",
+      headers: [
+        "Flight",
+        "Departure city",
+        "Depart local",
+        "Arrival city",
+        "Arrive local",
+      ],
+      rows: [
+        ["W", "Lagos UTC+1", "09:40", "Madrid UTC+2", "13:10"],
+        ["X", "London UTC+0", "22:15", "Dubai UTC+4", "08:45 next day"],
+        ["Y", "Delhi UTC+5:30", "14:20", "Singapore UTC+8", "21:10"],
+        ["Z", "New York UTC-5", "18:30", "Reykjavik UTC+0", "04:10 next day"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the scheduled duration of Flight X?",
+        correct: "6 h 30 min",
+        distractors: ["10 h 30 min", "2 h 30 min", "14 h 30 min"],
+        explanation:
+          "Flight X departs London at 22:15 UTC and arrives Dubai at 08:45 local, which is 04:45 UTC. From 22:15 to 04:45 next day is 6 h 30 min. Distractor 10 h 30 min: compares local clock times without adjusting for UTC+4. Distractor 2 h 30 min: subtracts the 4-hour offset twice. Distractor 14 h 30 min: adds the 4-hour offset to the local clock gap.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "Which listed flight has the shortest scheduled duration?",
+        correct: "Flight W",
+        distractors: ["Flight X", "Flight Y", "Flight Z"],
+        explanation:
+          "Flight W runs from 08:40 UTC to 11:10 UTC, so its duration is 2 h 30 min. Flight X is 6 h 30 min, Flight Y is 4 h 20 min, and Flight Z is 4 h 40 min. Distractor Flight X: uses the largest adjusted duration. Distractor Flight Y: ignores Flight W. Distractor Flight Z: uses the overnight flight without adjusting the UTC offset.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Flight Y's duration to Flight Z's duration?",
+        correct: "13:14",
+        distractors: ["14:13", "41:58", "2:3"],
+        explanation:
+          "Flight Y lasts 4 h 20 min = 260 min and Flight Z lasts 4 h 40 min = 280 min. 260:280 simplifies to 13:14. Distractor 14:13 reverses the ratio. Distractor 41:58 uses the unadjusted local clock gaps. Distractor 2:3 compares Flight Y with Flight X instead.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "If Flight W departed 30 minutes later than scheduled and arrived 10 minutes later than scheduled, what would its flight duration be?",
+        correct: "2 h 10 min",
+        distractors: ["2 h 50 min", "2 h 30 min", "3 h 10 min"],
+        explanation:
+          "Flight W is scheduled to last 2 h 30 min. Departing 30 minutes later but arriving only 10 minutes later shortens the duration by 20 minutes, giving 2 h 10 min. Distractor 2 h 50 min: adds the net 20 minutes instead of subtracting it. Distractor 2 h 30 min: leaves the scheduled duration unchanged. Distractor 3 h 10 min: adds both delays to the scheduled duration.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "courier-route-speed-distance-time",
+    stimulus: [
+      "A courier company recorded scheduled route distances and journey times for four delivery routes.",
+    ],
+    visual: {
+      type: "table",
+      title: "Courier Route Schedules",
+      headers: ["Route", "Distance (km)", "Scheduled time (min)", "Parcels"],
+      rows: [
+        ["North", "84", "105", "42"],
+        ["East", "96", "120", "48"],
+        ["South", "126", "140", "56"],
+        ["West", "75", "75", "30"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the scheduled average speed for the West route?",
+        correct: "60 km/h",
+        distractors: ["75 km/h", "48 km/h", "56.3 km/h"],
+        explanation:
+          "The West route is 75 km in 75 minutes, which is 1.25 hours. 75/1.25 = 60 km/h. Distractor 75 km/h: treats 75 minutes as 1 hour. Distractor 48 km/h: calculates the North or East route speed. Distractor 56.3 km/h: divides 75 km by 1.333 hours.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of the North route time to the West route time?",
+        correct: "7:5",
+        distractors: ["5:7", "28:25", "4:5"],
+        explanation:
+          "North route time = 105 minutes and West route time = 75 minutes. 105:75 simplifies to 7:5. Distractor 5:7 reverses the ratio. Distractor 28:25 uses route distances 84:75. Distractor 4:5 uses East distance to West distance.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "By what percentage is the South route's scheduled average speed higher than the North route's scheduled average speed?",
+        correct: "12.5%",
+        distractors: ["6 km/h", "11.1%", "112.5%"],
+        explanation:
+          "South speed = 126/(140/60) = 54 km/h and North speed = 84/(105/60) = 48 km/h. The increase is 6/48 x 100 = 12.5%. Distractor 6 km/h: gives the absolute speed difference. Distractor 11.1%: uses the South speed as the denominator. Distractor 112.5%: gives South speed as a percentage of North speed.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "What is the combined scheduled average speed for the North and East routes together?",
+        correct: "48 km/h",
+        distractors: ["80 km/h", "40 km/h", "90 km/h"],
+        explanation:
+          "North and East total distance = 84 + 96 = 180 km and total time = 105 + 120 = 225 minutes = 3.75 hours. 180/3.75 = 48 km/h. Distractor 80 km/h: treats 225 minutes as 2.25 hours. Distractor 40 km/h: adds an extra 45 minutes to the time. Distractor 90 km/h: divides total distance by 2 hours.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "standalone-word-problems-mixed",
+    leftTitle: "Information",
+    stimulus: [
+      "Answer each standalone word problem using only the information given in the question.",
+    ],
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "A cleaning solution uses 18 mL of concentrate to make 450 mL of finished solution. How much concentrate is needed to make 750 mL at the same strength?",
+        correct: "30 mL",
+        distractors: ["18 mL", "24 mL", "42 mL"],
+        explanation:
+          "The concentrate fraction is 18/450 = 0.04. 0.04 x 750 = 30 mL. Distractor 18 mL: keeps the original concentrate volume. Distractor 24 mL: scales to 600 mL instead of 750 mL. Distractor 42 mL: adds the 300 mL increase as 24 mL too much concentrate.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "text-stem", "set-based"],
+        question:
+          "A student completes 40 practice questions in 50 minutes. At the same rate, how many questions would they complete in 90 minutes?",
+        correct: "72 questions",
+        distractors: ["45 questions", "80 questions", "50 questions"],
+        explanation:
+          "The rate is 40/50 = 0.8 questions per minute. 0.8 x 90 = 72 questions. Distractor 45 questions: uses half of 90 minutes as the answer. Distractor 80 questions: doubles 40 without matching the time. Distractor 50 questions: repeats the original time as a question count.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "Three printers produce 420 leaflets in 35 minutes. At the same rate, how many leaflets would five printers produce in 28 minutes?",
+        correct: "560 leaflets",
+        distractors: ["336 leaflets", "700 leaflets", "420 leaflets"],
+        explanation:
+          "One printer produces 420/(3 x 35) = 4 leaflets per minute. Five printers for 28 minutes produce 5 x 28 x 4 = 560 leaflets. Distractor 336 leaflets: keeps 3 printers for 28 minutes. Distractor 700 leaflets: uses 5 printers for 35 minutes. Distractor 420 leaflets: repeats the original output.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A rectangular floor is 12 m by 7.5 m. Each tile covers 0.5 square metres. If 10% extra tiles are ordered for wastage, how many tiles are ordered?",
+        correct: "198 tiles",
+        distractors: ["180 tiles", "99 tiles", "216 tiles"],
+        explanation:
+          "The floor area is 12 x 7.5 = 90 square metres. 90/0.5 = 180 tiles, and 10% extra gives 180 x 1.10 = 198 tiles. Distractor 180 tiles: omits wastage. Distractor 99 tiles: adds 10% to the area but does not divide by tile area. Distractor 216 tiles: adds 20% wastage instead of 10%.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "mobile-data-plan-first-month-costs",
+    stimulus: [
+      "A mobile provider compared four monthly data plans, where extra data is charged for each whole GB above the included allowance.",
+    ],
+    visual: {
+      type: "table",
+      title: "Mobile Data Plan Costs",
+      headers: ["Plan", "Monthly fee", "Included data", "Extra per GB", "Setup fee"],
+      rows: [
+        ["Starter", "GBP 12", "8 GB", "GBP 2.50", "GBP 0"],
+        ["Standard", "GBP 18", "20 GB", "GBP 1.50", "GBP 10"],
+        ["Plus", "GBP 25", "40 GB", "GBP 1.00", "GBP 15"],
+        ["Family", "GBP 34", "80 GB", "GBP 0.75", "GBP 20"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "What is the first-month cost of the Standard plan if 26 GB of data is used?",
+        correct: "GBP 37",
+        distractors: ["GBP 27", "GBP 67", "GBP 47"],
+        explanation:
+          "Standard includes 20 GB, so 26 GB uses 6 extra GB. First-month cost = GBP 18 + (6 x GBP 1.50) + GBP 10 = GBP 37. Distractor GBP 27: omits the setup fee. Distractor GBP 67: charges all 26 GB as extra data. Distractor GBP 47: uses the Family setup fee instead of the Standard setup fee.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "Which plan has the lowest first-month cost if 50 GB of data is used?",
+        correct: "Plus",
+        distractors: ["Family", "Standard", "Starter"],
+        explanation:
+          "At 50 GB, Starter costs GBP 117, Standard costs GBP 73, Plus costs GBP 50, and Family costs GBP 54. Plus is therefore lowest. Distractor Family: ignores the higher setup fee. Distractor Standard: underestimates the 30 extra GB charge. Distractor Starter: ignores the high extra-data charge.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, by what percentage is the Plus monthly fee higher than the Standard monthly fee?",
+        correct: "38.9%",
+        distractors: ["28.0%", "GBP 7", "72.0%"],
+        explanation:
+          "Plus monthly fee is GBP 25 and Standard monthly fee is GBP 18, a difference of GBP 7. 7/18 x 100 = 38.9%. Distractor 28.0%: uses Plus as the denominator. Distractor GBP 7: gives the absolute difference. Distractor 72.0%: gives Standard as a percentage of Plus.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Standard included data to Family included data?",
+        correct: "1:4",
+        distractors: ["4:1", "1:2", "9:17"],
+        explanation:
+          "Standard included data = 20 GB and Family included data = 80 GB. 20:80 simplifies to 1:4. Distractor 4:1 reverses the ratio. Distractor 1:2 compares Standard with Plus included data. Distractor 9:17 uses the monthly fees GBP 18:GBP 34.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "travel-money-exchange-rates",
+    stimulus: [
+      "A travel money desk quoted exchange rates and fixed fees for converting GBP cash into foreign currency.",
+    ],
+    visual: {
+      type: "table",
+      title: "Travel Money Exchange Rates",
+      headers: ["Currency", "Units per GBP 1", "Fixed fee", "Minimum order"],
+      rows: [
+        ["Euro", "1.16 EUR", "GBP 3", "GBP 100"],
+        ["US dollar", "1.25 USD", "GBP 4", "GBP 100"],
+        ["Japanese yen", "190 JPY", "GBP 5", "GBP 150"],
+        ["Swiss franc", "1.10 CHF", "GBP 3", "GBP 100"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "Before any fixed fee is applied, how many euros are received for GBP 250?",
+        correct: "EUR 290.00",
+        distractors: ["EUR 286.52", "EUR 215.52", "EUR 253.00"],
+        explanation:
+          "Euro rate = 1.16 EUR per GBP 1, so GBP 250 gives 250 x 1.16 = EUR 290.00 before fees. Distractor EUR 286.52: subtracts the GBP 3 fee first. Distractor EUR 215.52: divides by 1.16 instead of multiplying. Distractor EUR 253.00: adds the fee to the GBP amount without converting.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "If the US dollar fixed fee is paid from a GBP 300 budget before conversion, how many US dollars are received?",
+        correct: "USD 370.00",
+        distractors: ["USD 375.00", "USD 296.00", "USD 380.00"],
+        explanation:
+          "After the GBP 4 fee, GBP 296 is converted. GBP 296 x 1.25 = USD 370.00. Distractor USD 375.00: ignores the fixed fee. Distractor USD 296.00: subtracts the fee but does not convert. Distractor USD 380.00: adds the fee before conversion.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "data-display", "set-based"],
+        question: "Before the fixed fee, how many GBP are needed to receive JPY 38,000?",
+        correct: "GBP 200",
+        distractors: ["GBP 205", "GBP 195", "GBP 190"],
+        explanation:
+          "Japanese yen rate = 190 JPY per GBP 1. JPY 38,000/190 = GBP 200 before the fixed fee. Distractor GBP 205: adds the fixed fee. Distractor GBP 195: subtracts the fixed fee from the converted amount. Distractor GBP 190: reads the exchange rate as the GBP amount.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of the euro exchange rate to the Swiss franc exchange rate?",
+        correct: "58:55",
+        distractors: ["55:58", "116:125", "25:22"],
+        explanation:
+          "Euro rate : Swiss franc rate = 1.16:1.10 = 116:110 = 58:55. Distractor 55:58 reverses the ratio. Distractor 116:125 compares euro with US dollar. Distractor 25:22 compares US dollar with Swiss franc.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "water-tank-filling-flow-rates",
+    stimulus: [
+      "A maintenance team recorded how much water four sources added to a storage tank during a test fill.",
+    ],
+    visual: {
+      type: "table",
+      title: "Water Tank Test Fill",
+      headers: ["Source", "Flow rate (L/min)", "Run time (min)", "Water added (L)"],
+      rows: [
+        ["Hose A", "18", "25", "450"],
+        ["Hose B", "24", "20", "480"],
+        ["Pump C", "30", "18", "540"],
+        ["Pump D", "36", "15", "540"],
+        ["Total", "-", "78", "2,010"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many litres did Pump C add during the test fill?",
+        correct: "540 L",
+        distractors: ["30 L", "18 L", "2,010 L"],
+        explanation:
+          "Pump C water added = 540 L. Distractor 30 L: reads Pump C's flow rate. Distractor 18 L: reads Pump C's run time. Distractor 2,010 L: reads the total water added.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the mean flow rate across the four sources?",
+        correct: "27 L/min",
+        distractors: ["24 L/min", "36 L/min", "502.5 L"],
+        explanation:
+          "Mean flow rate = (18 + 24 + 30 + 36)/4 = 108/4 = 27 L/min. Distractor 24 L/min: reads Hose B's flow rate. Distractor 36 L/min: reads the highest flow rate. Distractor 502.5 L: calculates mean water added rather than mean flow rate.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of the total water added came from Pump C and Pump D combined?",
+        correct: "53.7%",
+        distractors: ["26.9%", "50.0%", "46.3%"],
+        explanation:
+          "Pump C and Pump D added 540 + 540 = 1,080 L. 1,080/2,010 x 100 = 53.7%. Distractor 26.9%: uses one pump only. Distractor 50.0%: assumes the two pumps are exactly half of the total. Distractor 46.3%: uses the remaining water as the percentage.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "If the tank needs 2,500 L from empty, how long would Pump D alone take to add the remaining water after this test fill?",
+        correct: "13.6 min",
+        distractors: ["68.1 min", "16.3 min", "490 L"],
+        explanation:
+          "Remaining water = 2,500 - 2,010 = 490 L. Pump D adds 36 L/min, so 490/36 = 13.6 min to 1 decimal place. Distractor 68.1 min: divides the full 2,500 L by 36. Distractor 16.3 min: uses Pump C's 30 L/min rate. Distractor 490 L: gives the remaining volume, not the time.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "theatre-ticket-pricing-discounts",
+    stimulus: [
+      "A community theatre recorded ticket prices and tickets sold for matinee and evening performances of the same play.",
+    ],
+    visual: {
+      type: "table",
+      title: "Theatre Ticket Sales",
+      headers: ["Ticket type", "Full price", "Matinee sold", "Evening sold"],
+      rows: [
+        ["Adult", "GBP 18", "120", "160"],
+        ["Student", "GBP 12", "90", "70"],
+        ["Child", "GBP 8", "60", "40"],
+        ["Senior", "GBP 10", "50", "80"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question: "What was the total full-price revenue from evening ticket sales?",
+        correct: "GBP 4,840",
+        distractors: ["GBP 4,220", "GBP 2,880", "GBP 9,060"],
+        explanation:
+          "Evening revenue = 160 x GBP 18 + 70 x GBP 12 + 40 x GBP 8 + 80 x GBP 10 = GBP 4,840. Distractor GBP 4,220: calculates matinee full-price revenue. Distractor GBP 2,880: uses Adult evening revenue only. Distractor GBP 9,060: adds matinee and evening full-price revenue.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of matinee tickets sold were Student tickets?",
+        correct: "28.1%",
+        distractors: ["13.4%", "75.0%", "25.7%"],
+        explanation:
+          "Matinee tickets sold = 120 + 90 + 60 + 50 = 320, and Student matinee tickets = 90. 90/320 x 100 = 28.1%. Distractor 13.4%: uses all tickets across both performances as the denominator. Distractor 75.0%: compares Student matinee tickets with Adult matinee tickets. Distractor 25.7%: uses total evening tickets as the denominator.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Adult tickets sold to Senior tickets sold overall?",
+        correct: "28:13",
+        distractors: ["13:28", "9:5", "16:7"],
+        explanation:
+          "Adult tickets sold = 120 + 160 = 280 and Senior tickets sold = 50 + 80 = 130. 280:130 simplifies to 28:13. Distractor 13:28 reverses the ratio. Distractor 9:5 uses Adult and Senior full prices. Distractor 16:7 compares Adult evening tickets with Student evening tickets.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "If all matinee tickets were sold at 25% off full price, what was the matinee revenue?",
+        correct: "GBP 3,165",
+        distractors: ["GBP 4,220", "GBP 1,055", "GBP 3,680"],
+        explanation:
+          "Full-price matinee revenue is 120 x GBP 18 + 90 x GBP 12 + 60 x GBP 8 + 50 x GBP 10 = GBP 4,220. With 25% off, revenue is 75% of GBP 4,220 = GBP 3,165. Distractor GBP 4,220: ignores the discount. Distractor GBP 1,055: gives the discount amount only. Distractor GBP 3,680: discounts only Adult matinee tickets.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "city-car-park-weekend-pricing",
+    stimulus: [
+      "A city car park recorded weekend ticket sales by stay band using a fixed price for each stay band.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekend Parking Ticket Sales",
+      headers: ["Stay band", "Price", "Tickets sold"],
+      rows: [
+        ["Up to 2 hours", "GBP 3", "180"],
+        ["2 to 5 hours", "GBP 6", "140"],
+        ["5 to 8 hours", "GBP 10", "90"],
+        ["Day ticket", "GBP 12", "40"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question: "What was the total revenue from all weekend parking tickets?",
+        correct: "GBP 2,760",
+        distractors: ["GBP 450", "GBP 1,350", "GBP 2,280"],
+        explanation:
+          "Revenue = 180 x GBP 3 + 140 x GBP 6 + 90 x GBP 10 + 40 x GBP 12 = GBP 2,760. Distractor GBP 450: adds ticket counts only. Distractor GBP 1,350: multiplies total tickets by the lowest price. Distractor GBP 2,280: omits the Day ticket revenue.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of tickets sold were for stays of 2 to 5 hours?",
+        correct: "31.1%",
+        distractors: ["51.4%", "26.9%", "40.0%"],
+        explanation:
+          "Total tickets = 180 + 140 + 90 + 40 = 450. The 2 to 5 hours share is 140/450 x 100 = 31.1%. Distractor 51.4%: uses the 2 to 5 hours revenue as a percentage of total revenue. Distractor 26.9%: uses the Day ticket revenue as a percentage of total revenue. Distractor 40.0%: uses Up to 2 hours tickets as a percentage of total tickets.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Up to 2 hours tickets to Day tickets?",
+        correct: "9:2",
+        distractors: ["2:9", "1:4", "14:9"],
+        explanation:
+          "Up to 2 hours tickets = 180 and Day tickets = 40. 180:40 simplifies to 9:2. Distractor 2:9 reverses the ratio. Distractor 1:4 compares the prices GBP 3:GBP 12. Distractor 14:9 compares 2 to 5 hours tickets with 5 to 8 hours tickets.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "If the Day ticket price increased by 25%, what would be the revenue from the 40 Day tickets?",
+        correct: "GBP 600",
+        distractors: ["GBP 480", "GBP 500", "GBP 720"],
+        explanation:
+          "The new Day ticket price is GBP 12 x 1.25 = GBP 15. Revenue from 40 Day tickets is 40 x GBP 15 = GBP 600. Distractor GBP 480: uses the old Day ticket price. Distractor GBP 500: adds 25% to the ticket count instead of the price. Distractor GBP 720: increases the old revenue by 50%.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "bakery-muffin-recipe-scaling",
+    stimulus: [
+      "A bakery recipe gives the ingredients needed to make 12 muffins.",
+    ],
+    visual: {
+      type: "table",
+      title: "Muffin Recipe for 12 Muffins",
+      headers: ["Ingredient", "Quantity"],
+      rows: [
+        ["Flour", "360 g"],
+        ["Sugar", "180 g"],
+        ["Butter", "240 g"],
+        ["Milk", "300 mL"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How much butter is needed to make 30 muffins?",
+        correct: "600 g",
+        distractors: ["240 g", "480 g", "720 g"],
+        explanation:
+          "The scale factor is 30/12 = 2.5. Butter needed = 240 g x 2.5 = 600 g. Distractor 240 g: keeps the original butter amount. Distractor 480 g: scales to 24 muffins instead of 30. Distractor 720 g: triples the recipe.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "Ignoring the milk, what percentage of the listed ingredient mass is sugar?",
+        correct: "23.1%",
+        distractors: ["16.7%", "30.8%", "50.0%"],
+        explanation:
+          "Ingredient mass excluding milk = 360 + 180 + 240 = 780 g. Sugar is 180/780 x 100 = 23.1%. Distractor 16.7%: includes the 300 mL milk as if it were 300 g. Distractor 30.8%: uses butter plus sugar as the denominator. Distractor 50.0%: compares sugar with flour.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of flour to butter in the recipe?",
+        correct: "3:2",
+        distractors: ["2:3", "2:1", "3:5"],
+        explanation:
+          "Flour : butter = 360:240, which simplifies to 3:2. Distractor 2:3 reverses the ratio. Distractor 2:1 compares flour with sugar. Distractor 3:5 compares flour with sugar plus butter.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How much milk is needed to make 18 muffins?",
+        correct: "450 mL",
+        distractors: ["300 mL", "375 mL", "540 mL"],
+        explanation:
+          "The scale factor is 18/12 = 1.5. Milk needed = 300 mL x 1.5 = 450 mL. Distractor 300 mL: keeps the original milk amount. Distractor 375 mL: scales to 15 muffins. Distractor 540 mL: scales using 18/10 instead of 18/12.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "electricity-tariff-meter-readings",
+    stimulus: [
+      "A letting agent compared one-month electricity usage and tariff costs for four flats.",
+    ],
+    visual: {
+      type: "table",
+      title: "Monthly Electricity Readings and Tariffs",
+      headers: ["Flat", "Opening reading", "Closing reading", "Tariff", "Standing charge"],
+      rows: [
+        ["A", "12,450 kWh", "12,810 kWh", "GBP 0.28/kWh", "GBP 12"],
+        ["B", "8,220 kWh", "8,600 kWh", "GBP 0.30/kWh", "GBP 11"],
+        ["C", "15,300 kWh", "15,840 kWh", "GBP 0.24/kWh", "GBP 14"],
+        ["D", "9,910 kWh", "10,210 kWh", "GBP 0.32/kWh", "GBP 10"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question: "What was Flat A's total electricity cost for the month?",
+        correct: "GBP 112.80",
+        distractors: ["GBP 100.80", "GBP 360.00", "GBP 124.80"],
+        explanation:
+          "Flat A used 12,810 - 12,450 = 360 kWh. Cost = 360 x GBP 0.28 + GBP 12 = GBP 112.80. Distractor GBP 100.80: omits the standing charge. Distractor GBP 360.00: gives usage as a money value. Distractor GBP 124.80: adds the standing charge twice.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of total usage came from Flat C?",
+        correct: "34.2%",
+        distractors: ["24.1%", "19.0%", "37.7%"],
+        explanation:
+          "Usage values are A 360, B 380, C 540 and D 300 kWh, totalling 1,580 kWh. Flat C's share is 540/1,580 x 100 = 34.2%. Distractor 24.1%: uses Flat B's usage. Distractor 19.0%: uses Flat D's usage. Distractor 37.7%: excludes Flat A from the total.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Flat B's usage to Flat D's usage?",
+        correct: "19:15",
+        distractors: ["15:19", "19:27", "15:16"],
+        explanation:
+          "Flat B usage = 8,600 - 8,220 = 380 kWh and Flat D usage = 10,210 - 9,910 = 300 kWh. 380:300 simplifies to 19:15. Distractor 15:19 reverses the ratio. Distractor 19:27 compares Flat B usage with Flat C usage. Distractor 15:16 compares the tariffs GBP 0.30:GBP 0.32.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean monthly electricity usage per flat?",
+        correct: "395 kWh",
+        distractors: ["540 kWh", "380 kWh", "316 kWh"],
+        explanation:
+          "Total usage = 360 + 380 + 540 + 300 = 1,580 kWh across 4 flats. 1,580/4 = 395 kWh. Distractor 540 kWh: reads the highest usage. Distractor 380 kWh: reads Flat B's usage. Distractor 316 kWh: divides by 5 instead of 4.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paint-room-coverage-geometry",
+    stimulus: [
+      "A decorating team estimated paint needs for four rooms using paint that covers 10 square metres per litre.",
+    ],
+    visual: {
+      type: "table",
+      title: "Room Painting Requirements",
+      headers: ["Room", "Wall area", "Number of coats"],
+      rows: [
+        ["Office", "42 m2", "2"],
+        ["Corridor", "65 m2", "1"],
+        ["Studio", "58 m2", "2"],
+        ["Store", "25 m2", "1"],
+      ],
+      note: "Paint covers 10 m2 per litre before rounding to whole tins.",
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "Before rounding, how many litres of paint are needed for the Studio?",
+        correct: "11.6 L",
+        distractors: ["5.8 L", "58 L", "116 L"],
+        explanation:
+          "Studio painted area = 58 m2 x 2 coats = 116 m2. At 10 m2 per litre, 116/10 = 11.6 L. Distractor 5.8 L: uses one coat only. Distractor 58 L: forgets to divide by coverage. Distractor 116 L: uses coated area as litres.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "If paint is bought in 5 L tins, how many tins are needed for the Office and Store together?",
+        correct: "3 tins",
+        distractors: ["2 tins", "11 tins", "4 tins"],
+        explanation:
+          "Office coated area = 42 x 2 = 84 m2 and Store coated area = 25 m2, so total = 109 m2. Paint needed = 109/10 = 10.9 L, requiring 3 whole 5 L tins. Distractor 2 tins: rounds 10.9 L down. Distractor 11 tins: treats litres as tins. Distractor 4 tins: adds one unnecessary extra tin.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of the total coated area is from the Corridor?",
+        correct: "22.4%",
+        distractors: ["34.2%", "25.0%", "44.8%"],
+        explanation:
+          "Total coated area = 84 + 65 + 116 + 25 = 290 m2. Corridor coated area = 65 m2, so 65/290 x 100 = 22.4%. Distractor 34.2%: uses Corridor as a share of uncoated wall area. Distractor 25.0%: assumes four rooms contribute equally. Distractor 44.8%: mistakenly applies two coats to the Corridor.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Office coated area to Studio coated area?",
+        correct: "21:29",
+        distractors: ["29:21", "21:58", "42:58"],
+        explanation:
+          "Office coated area = 42 x 2 = 84 m2 and Studio coated area = 58 x 2 = 116 m2. 84:116 simplifies to 21:29. Distractor 29:21 reverses the ratio. Distractor 21:58 uses one Studio coat against two Office coats. Distractor 42:58 uses uncoated wall areas.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "train-connection-journey-times",
+    stimulus: [
+      "A passenger recorded the scheduled times and distances for a rail journey with two connections.",
+    ],
+    visual: {
+      type: "table",
+      title: "Rail Journey Legs",
+      headers: ["Leg", "Depart", "Arrive", "Distance"],
+      rows: [
+        ["A to B", "07:40", "08:25", "54 km"],
+        ["B to C", "08:40", "09:55", "105 km"],
+        ["C to D", "10:20", "11:00", "48 km"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "How much of the journey time from 07:40 to 11:00 is waiting time between trains?",
+        correct: "40 min",
+        distractors: ["160 min", "200 min", "25 min"],
+        explanation:
+          "The waits are 08:25 to 08:40 = 15 min and 09:55 to 10:20 = 25 min. Total waiting time = 40 min. Distractor 160 min: gives travel time only. Distractor 200 min: gives total elapsed time. Distractor 25 min: uses only the second wait.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What percentage of the elapsed journey time was waiting time?",
+        correct: "20%",
+        distractors: ["25%", "80%", "12.5%"],
+        explanation:
+          "Elapsed journey time from 07:40 to 11:00 is 200 min and waiting time is 40 min. 40/200 x 100 = 20%. Distractor 25%: uses travel time of 160 min as the denominator. Distractor 80%: gives travel time as a share of elapsed time. Distractor 12.5%: uses only the first wait against total time.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1 km/h, what was the average speed while the trains were moving?",
+        correct: "77.6 km/h",
+        distractors: ["62.1 km/h", "48.0 km/h", "82.8 km/h"],
+        explanation:
+          "Total distance = 54 + 105 + 48 = 207 km and moving time = 45 + 75 + 40 = 160 min = 2.667 h. 207/2.667 = 77.6 km/h. Distractor 62.1 km/h: includes waiting time in the denominator. Distractor 48.0 km/h: uses the final-leg distance over 1 hour. Distractor 82.8 km/h: divides by 2.5 hours.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of the longest train-leg time to the shortest train-leg time?",
+        correct: "15:8",
+        distractors: ["8:15", "5:3", "35:16"],
+        explanation:
+          "The train-leg times are 45 min, 75 min and 40 min. Longest:shortest = 75:40 = 15:8. Distractor 8:15 reverses the ratio. Distractor 5:3 compares the longest leg time with the first leg time. Distractor 35:16 compares longest distance with shortest distance.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "packaging-batch-defect-yield",
+    stimulus: [
+      "A packaging line recorded carton quantities and defective units for four product batches.",
+    ],
+    visual: {
+      type: "table",
+      title: "Packaging Batch Output",
+      headers: ["Product", "Units per carton", "Cartons packed", "Defective units"],
+      rows: [
+        ["A", "24", "35", "18"],
+        ["B", "30", "28", "24"],
+        ["C", "18", "40", "12"],
+        ["D", "12", "50", "10"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many good units were produced for Product B?",
+        correct: "816",
+        distractors: ["840", "792", "24"],
+        explanation:
+          "Product B produced 30 x 28 = 840 units before defects. Good units = 840 - 24 = 816. Distractor 840: ignores defective units. Distractor 792: subtracts the defective units twice. Distractor 24: reads defective units only.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all units packed were defective?",
+        correct: "2.1%",
+        distractors: ["97.9%", "2.2%", "1.6%"],
+        explanation:
+          "Total units packed = 840 + 840 + 720 + 600 = 3,000 and total defective units = 18 + 24 + 12 + 10 = 64. 64/3,000 x 100 = 2.1%. Distractor 97.9%: gives the non-defective percentage. Distractor 2.2%: uses good units as the denominator. Distractor 1.6%: uses only Product B defective units over total units.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Product A cartons packed to Product D cartons packed?",
+        correct: "7:10",
+        distractors: ["10:7", "2:1", "5:7"],
+        explanation:
+          "Product A cartons = 35 and Product D cartons = 50. 35:50 simplifies to 7:10. Distractor 10:7 reverses the ratio. Distractor 2:1 uses units per carton 24:12. Distractor 5:7 compares Product D cartons with Product A cartons after dividing only D by 10.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the mean number of good units per product?",
+        correct: "734",
+        distractors: ["750", "816", "587.2"],
+        explanation:
+          "Good units are A 822, B 816, C 708 and D 590, totalling 2,936. Mean good units = 2,936/4 = 734. Distractor 750: uses mean units before defects. Distractor 816: reads Product B good units. Distractor 587.2: divides by 5 instead of 4.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "school-award-weighted-score",
+    stimulus: [
+      "A school award used three subject scores with different weightings to calculate a final percentage.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weighted Award Score",
+      headers: ["Subject", "Raw mark", "Maximum mark", "Weighting"],
+      rows: [
+        ["Maths", "42", "50", "40%"],
+        ["Science", "36", "45", "35%"],
+        ["English", "32", "40", "25%"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What percentage score was achieved in Maths?",
+        correct: "84%",
+        distractors: ["42%", "80%", "40%"],
+        explanation:
+          "Maths score = 42/50 x 100 = 84%. Distractor 42%: uses the raw mark as a percentage. Distractor 80%: uses Science or English percentage instead. Distractor 40%: reads the Maths weighting.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question: "What was the final weighted award score?",
+        correct: "81.6%",
+        distractors: ["81.5%", "80.0%", "84.0%"],
+        explanation:
+          "Subject percentages are Maths 84%, Science 80% and English 80%. Weighted score = 84 x 0.40 + 80 x 0.35 + 80 x 0.25 = 81.6%. Distractor 81.5%: calculates total raw marks as a percentage of total maximum marks. Distractor 80.0%: ignores the higher Maths score. Distractor 84.0%: uses Maths only.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Science raw marks to English raw marks?",
+        correct: "9:8",
+        distractors: ["8:9", "36:40", "7:5"],
+        explanation:
+          "Science raw marks = 36 and English raw marks = 32. 36:32 simplifies to 9:8. Distractor 8:9 reverses the ratio. Distractor 36:40 compares Science raw mark with English maximum mark. Distractor 7:5 uses Science weighting to English weighting.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what was the total raw mark as a percentage of the total maximum mark?",
+        correct: "81.5%",
+        distractors: ["81.6%", "81.3%", "84.0%"],
+        explanation:
+          "Total raw mark = 42 + 36 + 32 = 110 and total maximum mark = 50 + 45 + 40 = 135. 110/135 x 100 = 81.5%. Distractor 81.6%: gives the weighted score. Distractor 81.3%: takes the simple mean of the three subject percentages. Distractor 84.0%: uses the Maths score only.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "hotel-room-booking-revenue",
+    stimulus: [
+      "A hotel recorded room rates, booking lengths and rooms booked for one weekend.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekend Hotel Bookings",
+      headers: ["Room type", "Nightly rate", "Nights per booking", "Rooms booked"],
+      rows: [
+        ["Single", "GBP 75", "2", "18"],
+        ["Double", "GBP 110", "3", "24"],
+        ["Family", "GBP 160", "4", "10"],
+        ["Suite", "GBP 240", "2", "6"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question: "What was the total booking revenue before any discounts?",
+        correct: "GBP 19,900",
+        distractors: ["GBP 9,950", "GBP 7,920", "GBP 17,020"],
+        explanation:
+          "Revenue = Single GBP 2,700 + Double GBP 7,920 + Family GBP 6,400 + Suite GBP 2,880 = GBP 19,900. Distractor GBP 9,950: halves the total revenue. Distractor GBP 7,920: uses Double revenue only. Distractor GBP 17,020: omits Suite revenue.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of total revenue came from Double rooms?",
+        correct: "39.8%",
+        distractors: ["41.4%", "32.2%", "24.0%"],
+        explanation:
+          "Double room revenue = GBP 110 x 3 x 24 = GBP 7,920. Total revenue = GBP 19,900, so 7,920/19,900 x 100 = 39.8%. Distractor 41.4%: uses Double rooms as a percentage of rooms booked. Distractor 32.2%: uses Family revenue as a percentage of total revenue. Distractor 24.0%: uses Double rooms booked as a percentage of 100.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Family rooms booked to Suite rooms booked?",
+        correct: "5:3",
+        distractors: ["3:5", "2:3", "2:1"],
+        explanation:
+          "Family rooms booked = 10 and Suite rooms booked = 6. 10:6 simplifies to 5:3. Distractor 3:5 reverses the ratio. Distractor 2:3 uses Family nights and Suite nights. Distractor 2:1 compares Family nightly rate with Suite nightly rate after simplifying roughly.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "If Family room bookings received a 15% discount, what would Family room revenue be?",
+        correct: "GBP 5,440",
+        distractors: ["GBP 6,400", "GBP 960", "GBP 5,800"],
+        explanation:
+          "Full Family room revenue = GBP 160 x 4 x 10 = GBP 6,400. A 15% discount leaves 85%, so GBP 6,400 x 0.85 = GBP 5,440. Distractor GBP 6,400: ignores the discount. Distractor GBP 960: gives the discount amount only. Distractor GBP 5,800: subtracts GBP 15 from each room-night instead of 15%.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "park-map-scale-walking-route",
+    stimulus: [
+      "A park map uses a scale of 1 cm to 250 m for four walking-route segments.",
+    ],
+    visual: {
+      type: "table",
+      title: "Park Route Map Measurements",
+      headers: ["Segment", "Map length"],
+      rows: [
+        ["Entrance to Cafe", "3.6 cm"],
+        ["Cafe to Lake", "2.4 cm"],
+        ["Lake to Museum", "4.0 cm"],
+        ["Museum to Exit", "2.0 cm"],
+      ],
+      note: "Map scale: 1 cm represents 250 m.",
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What actual distance does the Lake to Museum segment represent?",
+        correct: "1,000 m",
+        distractors: ["4.0 m", "900 m", "1,600 m"],
+        explanation:
+          "Lake to Museum measures 4.0 cm, and each cm represents 250 m. 4.0 x 250 = 1,000 m. Distractor 4.0 m: gives the map length without conversion. Distractor 900 m: uses the Entrance to Cafe segment instead. Distractor 1,600 m: multiplies by 400 m per cm instead of 250 m per cm.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "At a walking speed of 5 km/h, how long would the whole route take?",
+        correct: "36.0 min",
+        distractors: ["0.6 min", "600 min", "144.0 min"],
+        explanation:
+          "Total map length is 3.6 + 2.4 + 4.0 + 2.0 = 12.0 cm, representing 3,000 m = 3.0 km. Time = 3.0/5 hours = 0.6 hours = 36.0 min. Distractor 0.6 min: leaves the answer in hours but labels it as minutes. Distractor 600 min: treats 0.6 hours as 600 minutes. Distractor 144.0 min: treats the 12.0 cm map length as 12.0 km.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of the total route distance is the Lake to Museum segment?",
+        correct: "33.3%",
+        distractors: ["25.0%", "40.0%", "16.7%"],
+        explanation:
+          "Lake to Museum distance is 1,000 m and the total route distance is 3,000 m. 1,000/3,000 x 100 = 33.3%. Distractor 25.0%: assumes each of four segments is equal. Distractor 40.0%: uses 4.0 cm as a percentage of 10.0 cm. Distractor 16.7%: uses the Museum to Exit segment.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question:
+          "What is the ratio of the Entrance to Cafe distance to the Museum to Exit distance?",
+        correct: "9:5",
+        distractors: ["5:9", "3:2", "5:3"],
+        explanation:
+          "Entrance to Cafe is 3.6 cm and Museum to Exit is 2.0 cm. 3.6:2.0 equals 900:500, which simplifies to 9:5. Distractor 5:9 reverses the ratio. Distractor 3:2 compares Entrance to Cafe with Cafe to Lake after rounding. Distractor 5:3 compares Lake to Museum with Cafe to Lake.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "delivery-van-fuel-economy",
+    stimulus: [
+      "A delivery company recorded distance, fuel use and deliveries completed by four vans during one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekly Delivery Van Performance",
+      headers: ["Van", "Distance", "Fuel used", "Deliveries"],
+      rows: [
+        ["A", "420 km", "35 L", "84"],
+        ["B", "360 km", "30 L", "72"],
+        ["C", "500 km", "50 L", "100"],
+        ["D", "330 km", "22 L", "66"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was Van D's fuel economy in kilometres per litre?",
+        correct: "15 km/L",
+        distractors: ["22 km/L", "12 km/L", "6.7 km/L"],
+        explanation:
+          "Van D travelled 330 km using 22 L of fuel. 330/22 = 15 km/L. Distractor 22 km/L: reads fuel used as the answer. Distractor 12 km/L: uses Van A or Van B fuel economy. Distractor 6.7 km/L: divides fuel by distance and scales incorrectly.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of total fuel was used by Van C?",
+        correct: "36.5%",
+        distractors: ["25.5%", "21.9%", "16.1%"],
+        explanation:
+          "Total fuel used = 35 + 30 + 50 + 22 = 137 L. Van C used 50 L, so 50/137 x 100 = 36.5%. Distractor 25.5%: uses Van A's fuel. Distractor 21.9%: uses Van B's fuel. Distractor 16.1%: uses Van D's fuel.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Van A deliveries to Van D deliveries?",
+        correct: "14:11",
+        distractors: ["11:14", "7:6", "50:33"],
+        explanation:
+          "Van A deliveries = 84 and Van D deliveries = 66. 84:66 simplifies to 14:11. Distractor 11:14 reverses the ratio. Distractor 7:6 compares Van A deliveries with Van B deliveries. Distractor 50:33 compares Van C distance with Van D distance.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "What was the mean distance travelled per van?",
+        correct: "402.5 km",
+        distractors: ["5.0 km", "1,610 km", "11.8 km"],
+        explanation:
+          "Total distance = 420 + 360 + 500 + 330 = 1,610 km across 4 vans. 1,610/4 = 402.5 km. Distractor 5.0 km: gives average distance per delivery. Distractor 1,610 km: gives the total distance. Distractor 11.8 km: divides total distance by total fuel used.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "temperature-storage-range-conversions",
+    stimulus: [
+      "A facilities team checked storage-zone temperatures and used F = (C x 9/5) + 32 to convert Celsius readings to Fahrenheit.",
+    ],
+    visual: {
+      type: "table",
+      title: "Storage-Zone Temperature Checks",
+      headers: ["Zone", "Reading", "Lower limit", "Upper limit"],
+      rows: [
+        ["Freezer", "-18 C", "-20 C", "-16 C"],
+        ["Fridge", "4 C", "2 C", "8 C"],
+        ["Room store", "21 C", "18 C", "24 C"],
+        ["Incubator", "37 C", "36 C", "38 C"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the Fridge reading in Fahrenheit?",
+        correct: "39.2 F",
+        distractors: ["36.0 F", "7.2 F", "42.2 F"],
+        explanation:
+          "For 4 C, F = (4 x 9/5) + 32 = 7.2 + 32 = 39.2 F. Distractor 36.0 F: adds 32 but does not multiply by 9/5. Distractor 7.2 F: omits the +32. Distractor 42.2 F: adds 35 instead of 32.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "What percentage of the Room store upper limit is the Room store reading?",
+        correct: "87.5%",
+        distractors: ["75.0%", "114.3%", "14.3%"],
+        explanation:
+          "Room store reading = 21 C and upper limit = 24 C. 21/24 x 100 = 87.5%. Distractor 75.0%: uses lower limit divided by upper limit. Distractor 114.3%: uses upper limit divided by reading. Distractor 14.3%: uses the 3 C gap above the reading as a percentage of the reading.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of the Incubator allowed range width to the Fridge allowed range width?",
+        correct: "1:3",
+        distractors: ["3:1", "37:4", "1:2"],
+        explanation:
+          "Incubator range width = 38 - 36 = 2 C and Fridge range width = 8 - 2 = 6 C. 2:6 simplifies to 1:3. Distractor 3:1 reverses the ratio. Distractor 37:4 compares readings instead of range widths. Distractor 1:2 compares Incubator width with the Freezer range width.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "If the Incubator reading falls by 1.5 C, by how many Fahrenheit degrees does it fall?",
+        correct: "2.7 F",
+        distractors: ["1.5 F", "34.3 F", "67.1 F"],
+        explanation:
+          "A change of 1 C equals a change of 9/5 F. 1.5 x 9/5 = 2.7 F. Distractor 1.5 F: assumes Celsius and Fahrenheit changes are equal. Distractor 34.3 F: converts 1.5 C to a Fahrenheit reading using +32. Distractor 67.1 F: subtracts 1.5 from 37 C and converts the new reading instead of the change.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "supermarket-lunch-stock-markdowns",
+    stimulus: [
+      "A supermarket recorded lunch stock sold at full price, sold after markdown and remaining at closing time.",
+    ],
+    visual: {
+      type: "table",
+      title: "Lunch Stock Outcomes",
+      headers: ["Item", "Opening stock", "Sold full price", "Sold markdown", "Remaining"],
+      rows: [
+        ["Sandwiches", "120", "72", "30", "18"],
+        ["Salads", "80", "44", "20", "16"],
+        ["Wraps", "100", "58", "24", "18"],
+        ["Fruit pots", "60", "36", "12", "12"],
+        ["Total", "360", "210", "86", "64"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-graphs",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Wraps remained at closing time?",
+        correct: "18",
+        distractors: ["58", "24", "100"],
+        explanation:
+          "Wraps remaining at closing time = 18. Distractor 58: reads Wraps sold full price. Distractor 24: reads Wraps sold markdown. Distractor 100: reads Wraps opening stock.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all opening stock was sold after markdown?",
+        correct: "23.9%",
+        distractors: ["58.3%", "17.8%", "29.1%"],
+        explanation:
+          "Sold markdown total = 86 and opening stock total = 360. 86/360 x 100 = 23.9%. Distractor 58.3%: uses full-price sales. Distractor 17.8%: uses remaining stock. Distractor 29.1%: uses markdown sales as a percentage of total sold stock.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Fruit pots sold full price to Fruit pots sold markdown?",
+        correct: "3:1",
+        distractors: ["1:3", "5:2", "6:5"],
+        explanation:
+          "Fruit pots sold full price = 36 and sold markdown = 12. 36:12 simplifies to 3:1. Distractor 1:3 reverses the ratio. Distractor 5:2 compares Sandwiches markdown with Fruit pots markdown. Distractor 6:5 compares Sandwiches full-price with Sandwiches markdown.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean opening stock per item type?",
+        correct: "90",
+        distractors: ["72", "100", "120"],
+        explanation:
+          "Opening stock total = 360 across 4 item types. 360/4 = 90. Distractor 72: divides by 5 including the total row as if it were an item type. Distractor 100: reads Wraps opening stock. Distractor 120: reads Sandwiches opening stock.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "call-centre-handling-time-rates",
+    stimulus: [
+      "A call centre recorded calls handled and average handling time by service team during one day.",
+    ],
+    visual: {
+      type: "table",
+      title: "Call Centre Team Activity",
+      headers: ["Team", "Calls handled", "Average handling time"],
+      rows: [
+        ["Billing", "240", "5 min"],
+        ["Technical", "180", "8 min"],
+        ["Renewals", "150", "6 min"],
+        ["Complaints", "90", "10 min"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the total handling time for the Technical team?",
+        correct: "24 h",
+        distractors: ["180 min", "8 h", "1,440 h"],
+        explanation:
+          "Technical handling time = 180 calls x 8 min = 1,440 min. 1,440/60 = 24 h. Distractor 180 min: uses calls handled as minutes. Distractor 8 h: uses average handling time as hours. Distractor 1,440 h: does not convert minutes to hours.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all calls were handled by Billing?",
+        correct: "36.4%",
+        distractors: ["27.3%", "22.7%", "13.6%"],
+        explanation:
+          "Total calls = 240 + 180 + 150 + 90 = 660. Billing handled 240 calls, so 240/660 x 100 = 36.4%. Distractor 27.3%: uses Technical calls. Distractor 22.7%: uses Renewals calls. Distractor 13.6%: uses Complaints calls.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Renewals calls to Complaints calls?",
+        correct: "5:3",
+        distractors: ["3:5", "8:5", "4:3"],
+        explanation:
+          "Renewals calls = 150 and Complaints calls = 90. 150:90 simplifies to 5:3. Distractor 3:5 reverses the ratio. Distractor 8:5 compares Technical average handling time with Billing average handling time. Distractor 4:3 compares Billing calls with Technical calls.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1 min, what was the weighted mean handling time per call overall?",
+        correct: "6.7 min",
+        distractors: ["7.3 min", "74.0 min", "660 min"],
+        explanation:
+          "Total handling time = 240 x 5 + 180 x 8 + 150 x 6 + 90 x 10 = 4,440 min. 4,440/660 calls = 6.7 min per call. Distractor 7.3 min: takes the simple mean of 5, 8, 6 and 10. Distractor 74.0 min: converts total handling time to hours and labels it as minutes per call. Distractor 660 min: gives total calls.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pool-chemical-dose-volumes",
+    stimulus: [
+      "A leisure centre calculated chemical doses for four pools using each pool's volume.",
+    ],
+    visual: {
+      type: "table",
+      title: "Pool Chemical Dose Rates",
+      headers: ["Pool", "Volume", "Chlorine dose", "pH dose"],
+      rows: [
+        ["Small", "25,000 L", "12 mL per 1,000 L", "5 mL per 1,000 L"],
+        ["Medium", "40,000 L", "10 mL per 1,000 L", "6 mL per 1,000 L"],
+        ["Training", "60,000 L", "8 mL per 1,000 L", "4 mL per 1,000 L"],
+        ["Main", "80,000 L", "9 mL per 1,000 L", "5 mL per 1,000 L"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How much chlorine dose is needed for the Medium pool?",
+        correct: "400 mL",
+        distractors: ["40 mL", "100 mL", "240 mL"],
+        explanation:
+          "The Medium pool has 40,000 L, which is 40 lots of 1,000 L. 40 x 10 mL = 400 mL. Distractor 40 mL: uses the number of 1,000 L units only. Distractor 100 mL: multiplies 10 by 10 instead of 40. Distractor 240 mL: uses the Medium pH dose rate.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of the total chlorine dose is for the Main pool?",
+        correct: "37.9%",
+        distractors: ["25.3%", "21.1%", "15.8%"],
+        explanation:
+          "Chlorine doses are Small 300 mL, Medium 400 mL, Training 480 mL and Main 720 mL, totalling 1,900 mL. Main share = 720/1,900 x 100 = 37.9%. Distractor 25.3%: uses Training's chlorine dose. Distractor 21.1%: uses Medium's chlorine dose. Distractor 15.8%: uses Small's chlorine dose.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Small pool volume to Main pool volume?",
+        correct: "5:16",
+        distractors: ["16:5", "5:8", "4:5"],
+        explanation:
+          "Small pool volume = 25,000 L and Main pool volume = 80,000 L. 25,000:80,000 simplifies to 5:16. Distractor 16:5 reverses the ratio. Distractor 5:8 compares Small with Medium volume. Distractor 4:5 compares Training pH dose with Main pH dose.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "If 15% extra pH dose is added to the Training pool dose, how much pH dose is added?",
+        correct: "276 mL",
+        distractors: ["240 mL", "249 mL", "204 mL"],
+        explanation:
+          "Training pH dose = 60 x 4 mL = 240 mL. Adding 15% extra gives 240 x 1.15 = 276 mL. Distractor 240 mL: omits the extra dose. Distractor 249 mL: adds 15% of 60 instead of 15% of 240. Distractor 204 mL: subtracts 15% instead of adding it.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "print-shop-batch-page-yields",
+    stimulus: [
+      "A print shop recorded page counts and copies ordered for four booklet formats.",
+    ],
+    visual: {
+      type: "table",
+      title: "Booklet Print Batches",
+      headers: ["Format", "Pages per copy", "Copies ordered"],
+      rows: [
+        ["A", "24", "350"],
+        ["B", "36", "220"],
+        ["C", "48", "180"],
+        ["D", "60", "120"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many pages are printed for Format B?",
+        correct: "7,920 pages",
+        distractors: ["220 pages", "36 pages", "8,640 pages"],
+        explanation:
+          "Format B has 36 pages per copy and 220 copies ordered. 36 x 220 = 7,920 pages. Distractor 220 pages: reads copies only. Distractor 36 pages: reads pages per copy only. Distractor 8,640 pages: calculates Format C pages.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all printed pages are Format C pages?",
+        correct: "26.9%",
+        distractors: ["24.6%", "22.4%", "55.8%"],
+        explanation:
+          "Printed pages are A 8,400, B 7,920, C 8,640 and D 7,200, totalling 32,160 pages. Format C share = 8,640/32,160 x 100 = 26.9%. Distractor 24.6%: uses Format B pages. Distractor 22.4%: uses Format D pages. Distractor 55.8%: uses Format C copies as a percentage of total copies.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Format A copies to Format D copies?",
+        correct: "35:12",
+        distractors: ["12:35", "2:5", "35:22"],
+        explanation:
+          "Format A copies = 350 and Format D copies = 120. 350:120 simplifies to 35:12. Distractor 12:35 reverses the ratio. Distractor 2:5 compares pages per copy A:D. Distractor 35:22 compares Format A copies with Format B copies.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1, what is the mean number of pages per copy across all copies ordered?",
+        correct: "37.0",
+        distractors: ["42.0", "36.0", "8,040"],
+        explanation:
+          "Total printed pages = 32,160 and total copies = 350 + 220 + 180 + 120 = 870. 32,160/870 = 37.0 pages per copy. Distractor 42.0: takes the simple mean of 24, 36, 48 and 60. Distractor 36.0: reads Format B pages per copy. Distractor 8,040: gives mean printed pages per format.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinic-rota-appointment-capacity",
+    stimulus: [
+      "A clinic manager calculated appointment capacity from appointment length, clinician count and clinic hours.",
+    ],
+    visual: {
+      type: "table",
+      title: "Clinic Appointment Capacity",
+      headers: ["Clinic", "Appointment length", "Clinicians", "Clinic hours"],
+      rows: [
+        ["GP", "10 min", "3", "5 h"],
+        ["Nurse", "15 min", "2", "6 h"],
+        ["Physio", "20 min", "2", "4 h"],
+        ["Dietitian", "30 min", "1", "5 h"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many GP appointment slots are available?",
+        correct: "90",
+        distractors: ["30", "50", "15"],
+        explanation:
+          "GP capacity = 3 clinicians x 5 h x 60 min / 10 min = 90 slots. Distractor 30: calculates one GP clinician's slots only. Distractor 50: multiplies 5 h by 10 min. Distractor 15: multiplies clinicians by hours only.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of total appointment capacity is Nurse capacity?",
+        correct: "27.9%",
+        distractors: ["52.3%", "14.0%", "25.0%"],
+        explanation:
+          "Capacities are GP 90, Nurse 48, Physio 24 and Dietitian 10, totalling 172. Nurse share = 48/172 x 100 = 27.9%. Distractor 52.3%: uses GP capacity. Distractor 14.0%: uses Physio capacity. Distractor 25.0%: assumes four clinics have equal capacity.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of Physio appointment capacity to Dietitian appointment capacity?",
+        correct: "12:5",
+        distractors: ["5:12", "2:1", "2:3"],
+        explanation:
+          "Physio capacity = 2 x 4 h x 60/20 = 24 and Dietitian capacity = 1 x 5 h x 60/30 = 10. 24:10 simplifies to 12:5. Distractor 5:12 reverses the ratio. Distractor 2:1 compares clinician counts. Distractor 2:3 compares appointment lengths 20:30.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "If 10% of GP slots go unused, how many GP appointments are attended?",
+        correct: "81",
+        distractors: ["90", "9", "72"],
+        explanation:
+          "GP capacity is 90 slots. If 10% are unused, 90% are attended: 90 x 0.90 = 81. Distractor 90: ignores unused slots. Distractor 9: gives the unused slots only. Distractor 72: applies a 20% unused rate instead of 10%.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "meal-kit-box-profit-margins",
+    stimulus: [
+      "A meal-kit company compared the first-week sales of four box types. Profit per box is calculated as sale price minus ingredient cost and delivery cost.",
+    ],
+    visual: {
+      type: "table",
+      title: "Meal-Kit Box Sales",
+      headers: ["Box type", "Sale price", "Ingredient cost", "Delivery cost", "Boxes sold"],
+      rows: [
+        ["Vegetarian", "GBP 28", "GBP 16", "GBP 3", "120"],
+        ["Family", "GBP 42", "GBP 25", "GBP 4", "80"],
+        ["Protein", "GBP 55", "GBP 34", "GBP 5", "60"],
+        ["Budget", "GBP 24", "GBP 15", "GBP 2", "150"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the profit per Family box?",
+        correct: "GBP 13",
+        distractors: ["GBP 17", "GBP 42", "GBP 9"],
+        explanation:
+          "Family profit per box = GBP 42 - GBP 25 - GBP 4 = GBP 13. Distractor GBP 17: subtracts the ingredient cost but omits delivery cost. Distractor GBP 42: reads the sale price. Distractor GBP 9: calculates Vegetarian profit per box.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the total profit from Protein boxes sold?",
+        correct: "GBP 960",
+        distractors: ["GBP 1,260", "GBP 16", "GBP 2,040"],
+        explanation:
+          "Protein profit per box = GBP 55 - GBP 34 - GBP 5 = GBP 16. For 60 boxes, total profit = 60 x GBP 16 = GBP 960. Distractor GBP 1,260: omits delivery cost before multiplying. Distractor GBP 16: gives profit per box only. Distractor GBP 2,040: gives total ingredient cost.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all boxes sold were Budget boxes?",
+        correct: "36.6%",
+        distractors: ["29.3%", "14.6%", "62.5%"],
+        explanation:
+          "Total boxes sold = 120 + 80 + 60 + 150 = 410. Budget boxes = 150, so 150/410 x 100 = 36.6%. Distractor 29.3%: uses Vegetarian boxes. Distractor 14.6%: uses Protein boxes. Distractor 62.5%: compares Budget boxes with Vegetarian boxes.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest GBP 0.10, what was the weighted mean sale price per box sold?",
+        correct: "GBP 33.20",
+        distractors: ["GBP 37.25", "GBP 410.00", "GBP 34.00"],
+        explanation:
+          "Total revenue = GBP 28 x 120 + GBP 42 x 80 + GBP 55 x 60 + GBP 24 x 150 = GBP 13,620. There were 410 boxes sold, so the weighted mean price was GBP 13,620/410 = GBP 33.20. Distractor GBP 37.25: takes the simple mean of the four sale prices. Distractor GBP 410.00: gives the number of boxes sold. Distractor GBP 34.00: uses 400 boxes instead of 410 and rounds.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "festival-shuttle-bus-capacity",
+    stimulus: [
+      "A festival operator calculated shuttle-bus capacity for four routes. Capacity equals buses per hour multiplied by seats per bus and operating hours.",
+    ],
+    visual: {
+      type: "table",
+      title: "Festival Shuttle Routes",
+      headers: ["Route", "Buses per hour", "Seats per bus", "Operating hours", "Tickets sold"],
+      rows: [
+        ["North", "6", "40", "5", "1,050"],
+        ["East", "4", "52", "6", "980"],
+        ["South", "5", "48", "4", "900"],
+        ["West", "3", "60", "7", "1,120"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the total seat capacity on the South route?",
+        correct: "960 seats",
+        distractors: ["240 seats", "900 seats", "1,248 seats"],
+        explanation:
+          "South capacity = 5 buses per hour x 48 seats x 4 hours = 960 seats. Distractor 240 seats: omits operating hours. Distractor 900 seats: reads tickets sold. Distractor 1,248 seats: calculates East capacity.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "Which route had the fewest unused seats?",
+        correct: "South",
+        distractors: ["North", "East", "West"],
+        explanation:
+          "Unused seats are North 1,200 - 1,050 = 150, East 1,248 - 980 = 268, South 960 - 900 = 60, and West 1,260 - 1,120 = 140. South had the fewest unused seats. Distractor North: has 150 unused seats. Distractor East: has the most unused seats. Distractor West: has 140 unused seats.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of West route capacity was sold as tickets?",
+        correct: "88.9%",
+        distractors: ["87.5%", "93.8%", "112.5%"],
+        explanation:
+          "West capacity = 3 x 60 x 7 = 1,260 seats. Tickets sold = 1,120, so 1,120/1,260 x 100 = 88.9%. Distractor 87.5%: uses North sold percentage. Distractor 93.8%: uses South sold percentage. Distractor 112.5%: divides capacity by tickets sold.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the ratio of North route capacity to West route capacity?",
+        correct: "20:21",
+        distractors: ["21:20", "2:1", "5:7"],
+        explanation:
+          "North capacity = 1,200 and West capacity = 1,260. 1,200:1,260 simplifies to 20:21. Distractor 21:20 reverses the ratio. Distractor 2:1 compares buses per hour. Distractor 5:7 compares operating hours.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "home-energy-smart-meter-usage",
+    stimulus: [
+      "A household recorded weekly appliance use. Energy used is calculated as power multiplied by hours used and number of days used. Electricity costs GBP 0.28 per kWh.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekly Appliance Use",
+      headers: ["Appliance", "Power", "Hours per day", "Days used"],
+      rows: [
+        ["Dryer", "2.8 kW", "1.5", "5"],
+        ["Oven", "2.2 kW", "1.0", "4"],
+        ["Dishwasher", "1.4 kW", "1.25", "6"],
+        ["Television", "0.12 kW", "5.0", "7"],
+      ],
+      note: "Cost: GBP 0.28 per kWh.",
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How much energy did the Dryer use during the week?",
+        correct: "21.0 kWh",
+        distractors: ["4.2 kWh", "14.0 kWh", "5.6 kWh"],
+        explanation:
+          "Dryer energy = 2.8 kW x 1.5 hours x 5 days = 21.0 kWh. Distractor 4.2 kWh: calculates one day's use only. Distractor 14.0 kWh: multiplies power by days only. Distractor 5.6 kWh: doubles the power but omits time and days.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the weekly electricity cost for the Television?",
+        correct: "GBP 1.18",
+        distractors: ["GBP 4.20", "GBP 0.34", "GBP 11.76"],
+        explanation:
+          "Television energy = 0.12 x 5.0 x 7 = 4.2 kWh. Cost = 4.2 x GBP 0.28 = GBP 1.18. Distractor GBP 4.20: gives kWh as a cost. Distractor GBP 0.34: multiplies power by tariff without hours and days. Distractor GBP 11.76: multiplies 42 by the tariff instead of 4.2.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of total weekly energy use was from the Dishwasher?",
+        correct: "23.6%",
+        distractors: ["47.2%", "19.8%", "9.4%"],
+        explanation:
+          "Weekly energy use is Dryer 21.0, Oven 8.8, Dishwasher 10.5 and Television 4.2 kWh, for a total of 44.5 kWh. Dishwasher share = 10.5/44.5 x 100 = 23.6%. Distractor 47.2%: uses Dryer. Distractor 19.8%: uses Oven. Distractor 9.4%: uses Television.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Oven weekly energy use to Television weekly energy use?",
+        correct: "44:21",
+        distractors: ["21:44", "55:3", "4:7"],
+        explanation:
+          "Oven energy = 2.2 x 1.0 x 4 = 8.8 kWh and Television energy = 0.12 x 5.0 x 7 = 4.2 kWh. 8.8:4.2 equals 88:42, which simplifies to 44:21. Distractor 21:44 reverses the ratio. Distractor 55:3 compares power ratings only. Distractor 4:7 compares days used.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "parcel-locker-storage-volumes",
+    stimulus: [
+      "A delivery hub uses four locker sizes. Locker volume is length x width x height, with 1,000 cubic centimetres equal to 1 litre.",
+    ],
+    visual: {
+      type: "table",
+      title: "Parcel Locker Storage",
+      headers: ["Locker size", "Dimensions", "Number of lockers", "Filled lockers"],
+      rows: [
+        ["Small", "30 cm x 40 cm x 20 cm", "48", "36"],
+        ["Medium", "45 cm x 50 cm x 30 cm", "32", "28"],
+        ["Large", "60 cm x 60 cm x 40 cm", "18", "15"],
+        ["Long", "90 cm x 30 cm x 30 cm", "12", "9"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the volume of one Medium locker?",
+        correct: "67.5 L",
+        distractors: ["67,500 L", "125 L", "45 L"],
+        explanation:
+          "Medium volume = 45 x 50 x 30 = 67,500 cubic centimetres. 67,500/1,000 = 67.5 L. Distractor 67,500 L: does not convert cubic centimetres to litres. Distractor 125 L: adds the three dimensions instead of multiplying. Distractor 45 L: reads one dimension.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question: "What is the total volume of all filled lockers?",
+        correct: "5,643 L",
+        distractors: ["316.5 L", "6,876 L", "88 L"],
+        explanation:
+          "Volumes per locker are Small 24 L, Medium 67.5 L, Large 144 L and Long 81 L. Filled volume = 36 x 24 + 28 x 67.5 + 15 x 144 + 9 x 81 = 5,643 L. Distractor 316.5 L: adds one locker of each size. Distractor 6,876 L: uses all lockers rather than filled lockers. Distractor 88 L: adds the filled-locker counts.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of Large lockers are filled?",
+        correct: "83.3%",
+        distractors: ["15.0%", "120.0%", "31.3%"],
+        explanation:
+          "Large lockers filled = 15 out of 18. 15/18 x 100 = 83.3%. Distractor 15.0%: reads the filled count as a percentage. Distractor 120.0%: divides 18 by 15. Distractor 31.3%: compares Large filled lockers with Small total lockers.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Small lockers to Long lockers?",
+        correct: "4:1",
+        distractors: ["1:4", "3:1", "4:3"],
+        explanation:
+          "There are 48 Small lockers and 12 Long lockers. 48:12 simplifies to 4:1. Distractor 1:4 reverses the ratio. Distractor 3:1 compares filled Small lockers with total Long lockers. Distractor 4:3 compares total Small lockers with filled Small lockers.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "team-bonus-points-league-table",
+    stimulus: [
+      "In a short league, teams receive 3 points for a win, 1 point for a draw and any listed bonus points.",
+    ],
+    visual: {
+      type: "table",
+      title: "League Results",
+      headers: ["Team", "Matches", "Wins", "Draws", "Bonus points"],
+      rows: [
+        ["Alpha", "12", "7", "2", "5"],
+        ["Bravo", "12", "6", "4", "4"],
+        ["Comet", "12", "5", "5", "6"],
+        ["Delta", "12", "8", "1", "2"],
+      ],
+      note: "League points = 3 per win + 1 per draw + bonus points.",
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many league points did Alpha have?",
+        correct: "28 points",
+        distractors: ["23 points", "21 points", "14 points"],
+        explanation:
+          "Alpha points = 7 wins x 3 + 2 draws x 1 + 5 bonus = 21 + 2 + 5 = 28. Distractor 23 points: omits bonus points. Distractor 21 points: counts wins only. Distractor 14 points: adds wins, draws and bonus without applying win points.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "Which two teams had the same number of league points?",
+        correct: "Bravo and Comet",
+        distractors: ["Alpha and Delta", "Alpha and Bravo", "Comet and Delta"],
+        explanation:
+          "Bravo points = 6 x 3 + 4 + 4 = 26, and Comet points = 5 x 3 + 5 + 6 = 26. Alpha has 28 and Delta has 27. Distractor Alpha and Delta: their totals are close but not equal. Distractor Alpha and Bravo: ignores Alpha's bonus points. Distractor Comet and Delta: differs by 1 point.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of Delta's points came from wins?",
+        correct: "88.9%",
+        distractors: ["66.7%", "7.4%", "96.3%"],
+        explanation:
+          "Delta points from wins = 8 x 3 = 24. Total Delta points = 24 + 1 + 2 = 27. 24/27 x 100 = 88.9%. Distractor 66.7%: uses wins as a percentage of matches. Distractor 7.4%: uses bonus points as a percentage of total points. Distractor 96.3%: includes bonus points with win points before dividing by total.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Bravo draws to Comet wins?",
+        correct: "4:5",
+        distractors: ["5:4", "6:5", "2:1"],
+        explanation:
+          "Bravo draws = 4 and Comet wins = 5, so the ratio is 4:5. Distractor 5:4 reverses the ratio. Distractor 6:5 compares Bravo wins with Comet wins. Distractor 2:1 compares each team's matches after simplifying 12:6.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "laundry-machine-cycle-throughput",
+    stimulus: [
+      "A laundry room recorded how four washing-machine programmes were used during one day.",
+    ],
+    visual: {
+      type: "table",
+      title: "Laundry Programme Use",
+      headers: ["Programme", "Cycle length", "Load per cycle", "Cycles per day", "Water per cycle"],
+      rows: [
+        ["Quick", "35 min", "6 kg", "10", "45 L"],
+        ["Eco", "50 min", "8 kg", "8", "38 L"],
+        ["Heavy", "75 min", "10 kg", "5", "70 L"],
+        ["Delicate", "40 min", "4 kg", "6", "35 L"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many kilograms of laundry were washed using the Eco programme?",
+        correct: "64 kg",
+        distractors: ["8 kg", "50 kg", "304 kg"],
+        explanation:
+          "Eco washes 8 kg per cycle for 8 cycles, giving 8 x 8 = 64 kg. Distractor 8 kg: gives one cycle only. Distractor 50 kg: reads the cycle length. Distractor 304 kg: multiplies cycles by water per cycle.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How much water was used by Heavy cycles?",
+        correct: "350 L",
+        distractors: ["70 L", "375 L", "50 L"],
+        explanation:
+          "Heavy uses 70 L per cycle for 5 cycles. 70 x 5 = 350 L. Distractor 70 L: gives one cycle only. Distractor 375 L: multiplies cycle length by cycles. Distractor 50 L: multiplies load per cycle by cycles.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What is the mean cycle length across the four programmes?",
+        correct: "50 min",
+        distractors: ["200 min", "45 min", "52.5 min"],
+        explanation:
+          "Mean cycle length = (35 + 50 + 75 + 40)/4 = 200/4 = 50 min. Distractor 200 min: gives the total. Distractor 45 min: takes a rough midpoint between Quick and Eco. Distractor 52.5 min: averages only Eco and Heavy.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of total laundry weight was washed using the Quick programme?",
+        correct: "30.3%",
+        distractors: ["32.3%", "25.3%", "12.1%"],
+        explanation:
+          "Laundry weights are Quick 60 kg, Eco 64 kg, Heavy 50 kg and Delicate 24 kg, totalling 198 kg. Quick share = 60/198 x 100 = 30.3%. Distractor 32.3%: uses Eco. Distractor 25.3%: uses Heavy. Distractor 12.1%: uses Delicate.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "art-supplies-bulk-discount",
+    stimulus: [
+      "An art department bought supplies in packs. The unit price is the price per item inside the pack, and the discount is applied to the pre-discount total for that item.",
+    ],
+    visual: {
+      type: "table",
+      title: "Art Supplies Order",
+      headers: ["Item", "Unit price", "Items per pack", "Packs ordered", "Discount"],
+      rows: [
+        ["Paint tube", "GBP 3.50", "12", "8", "10%"],
+        ["Brush", "GBP 1.20", "25", "6", "0%"],
+        ["Paper sheet", "GBP 0.08", "500", "4", "15%"],
+        ["Clay block", "GBP 6.00", "10", "5", "20%"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What was the final cost of the Clay blocks after discount?",
+        correct: "GBP 240.00",
+        distractors: ["GBP 300.00", "GBP 60.00", "GBP 120.00"],
+        explanation:
+          "Clay pre-discount cost = GBP 6.00 x 10 x 5 = GBP 300. A 20% discount leaves 80%, so final cost = GBP 300 x 0.80 = GBP 240. Distractor GBP 300.00: omits the discount. Distractor GBP 60.00: gives the discount amount. Distractor GBP 120.00: multiplies unit price by packs and discount percentage incorrectly.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question: "What was the total final cost of the order after all discounts?",
+        correct: "GBP 858.40",
+        distractors: ["GBP 976.00", "GBP 117.60", "GBP 780.80"],
+        explanation:
+          "Final costs are Paint GBP 302.40, Brush GBP 180.00, Paper GBP 136.00 and Clay GBP 240.00. Total = GBP 858.40. Distractor GBP 976.00: gives the total before discounts. Distractor GBP 117.60: gives total discount. Distractor GBP 780.80: applies the Clay 20% discount to the entire pre-discount order.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of the final order cost was Paint tubes?",
+        correct: "35.2%",
+        distractors: ["28.0%", "21.0%", "15.8%"],
+        explanation:
+          "Paint final cost = GBP 302.40 and total final cost = GBP 858.40. 302.40/858.40 x 100 = 35.2%. Distractor 28.0%: uses Clay final cost. Distractor 21.0%: uses Brush final cost. Distractor 15.8%: uses Paper final cost.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Brushes ordered to Clay blocks ordered?",
+        correct: "3:1",
+        distractors: ["1:3", "5:2", "6:5"],
+        explanation:
+          "Brushes ordered = 25 x 6 = 150 and Clay blocks ordered = 10 x 5 = 50. 150:50 simplifies to 3:1. Distractor 1:3 reverses the ratio. Distractor 5:2 compares items per pack. Distractor 6:5 compares packs ordered.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "word-only-qr-mixed-four",
+    leftTitle: "Information",
+    stimulus: [
+      "Answer each standalone word problem using only the information given in the question.",
+    ],
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "A medicine vial contains 24 mg of drug in 8 mL of solution. How many mL contain a 7.5 mg dose?",
+        correct: "2.5 mL",
+        distractors: ["3.0 mL", "7.5 mL", "15.0 mL"],
+        explanation:
+          "The concentration is 24/8 = 3 mg per mL. A 7.5 mg dose needs 7.5/3 = 2.5 mL. Distractor 3.0 mL: gives the concentration. Distractor 7.5 mL: repeats the dose number as a volume. Distractor 15.0 mL: doubles the correct volume.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A train travels 132 km in 1 hour 36 minutes. What is its average speed?",
+        correct: "82.5 km/h",
+        distractors: ["79.2 km/h", "137.5 km/h", "132 km/h"],
+        explanation:
+          "1 hour 36 minutes = 1.6 hours. Average speed = 132/1.6 = 82.5 km/h. Distractor 79.2 km/h: treats 36 minutes as 0.666 hours. Distractor 137.5 km/h: treats 1 hour 36 minutes as 0.96 hours. Distractor 132 km/h: treats the journey as exactly 1 hour.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A shop buys 80 items for GBP 18 each. It sells 65 items for GBP 24 each and sells the remaining items at 25% off GBP 24. What is the total profit?",
+        correct: "GBP 390",
+        distractors: ["GBP 480", "GBP 1,830", "GBP 270"],
+        explanation:
+          "Cost = 80 x GBP 18 = GBP 1,440. Revenue = 65 x GBP 24 + 15 x GBP 18 = GBP 1,560 + GBP 270 = GBP 1,830. Profit = GBP 1,830 - GBP 1,440 = GBP 390. Distractor GBP 480: assumes all items sell for GBP 24. Distractor GBP 1,830: gives total revenue. Distractor GBP 270: gives revenue from discounted items only.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "Two taps fill a tank at 18 L/min and 12 L/min. A drain removes 5 L/min while both taps are running. How long will it take to add 750 L to the tank?",
+        correct: "30 min",
+        distractors: ["25 min", "41.7 min", "150 min"],
+        explanation:
+          "Net filling rate = 18 + 12 - 5 = 25 L/min. Time = 750/25 = 30 min. Distractor 25 min: ignores the drain. Distractor 41.7 min: uses only the faster tap. Distractor 150 min: uses only the drain rate.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "graduated-water-usage-tariffs",
+    stimulus: [
+      "A water company used a simplified monthly tariff: a GBP 8 standing charge, the first 15 cubic metres at GBP 1.20 per cubic metre, the next 20 cubic metres at GBP 1.80 per cubic metre, and any use above 35 cubic metres at GBP 2.50 per cubic metre.",
+    ],
+    visual: {
+      type: "table",
+      title: "Monthly Household Water Use",
+      headers: ["Household", "Water used"],
+      rows: [
+        ["A", "12 cubic m"],
+        ["B", "28 cubic m"],
+        ["C", "41 cubic m"],
+        ["D", "55 cubic m"],
+      ],
+      note: "The tariff is applied progressively to each household's water use.",
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is Household B's monthly water bill?",
+        correct: "GBP 49.40",
+        distractors: ["GBP 33.60", "GBP 41.40", "GBP 58.40"],
+        explanation:
+          "Household B uses 28 cubic m. Bill = GBP 8 + 15 x GBP 1.20 + 13 x GBP 1.80 = GBP 49.40. Distractor GBP 33.60: charges all use at GBP 1.20 and omits the standing charge. Distractor GBP 41.40: omits the standing charge. Distractor GBP 58.40: charges the 13 cubic m above 15 at GBP 2.50 instead of GBP 1.80.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is Household D's monthly water bill?",
+        correct: "GBP 112.00",
+        distractors: ["GBP 99.00", "GBP 137.50", "GBP 62.00"],
+        explanation:
+          "Household D pays GBP 8 standing charge, GBP 18 for the first 15 cubic m, GBP 36 for the next 20 cubic m, and GBP 50 for the 20 cubic m above 35. Total = GBP 112.00. Distractor GBP 99.00: charges all 55 cubic m at GBP 1.80. Distractor GBP 137.50: charges all 55 cubic m at GBP 2.50. Distractor GBP 62.00: omits the top-band charge.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of the total water used by the four households was used by Household C?",
+        correct: "30.1%",
+        distractors: ["41.0%", "40.4%", "20.6%"],
+        explanation:
+          "Total water used = 12 + 28 + 41 + 55 = 136 cubic m. Household C used 41 cubic m, so 41/136 x 100 = 30.1%. Distractor 41.0%: reads Household C's use as a percentage. Distractor 40.4%: uses Household D's water use. Distractor 20.6%: uses Household B's water use.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Household B's water use to Household D's water use?",
+        correct: "28:55",
+        distractors: ["55:28", "7:10", "15:20"],
+        explanation:
+          "Household B used 28 cubic m and Household D used 55 cubic m. The ratio is 28:55. Distractor 55:28 reverses the ratio. Distractor 7:10 compares Household B's use with Household D's use above the first tariff band. Distractor 15:20 compares the first two tariff bands.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "airport-security-lane-throughput",
+    stimulus: [
+      "An airport compared security-lane capacity with the number of passengers actually screened. Capacity equals lanes open multiplied by passengers per lane per hour and opening hours.",
+    ],
+    visual: {
+      type: "table",
+      title: "Security-Lane Operation",
+      headers: ["Terminal", "Lanes open", "Passengers per lane per hour", "Opening hours", "Passengers screened"],
+      rows: [
+        ["A", "3", "180", "6", "3,000"],
+        ["B", "4", "150", "5", "2,700"],
+        ["C", "2", "220", "7", "2,940"],
+        ["D", "5", "160", "4", "2,880"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was Terminal C's security capacity?",
+        correct: "3,080 passengers",
+        distractors: ["2,940 passengers", "1,540 passengers", "440 passengers"],
+        explanation:
+          "Terminal C capacity = 2 lanes x 220 passengers per lane per hour x 7 hours = 3,080 passengers. Distractor 2,940 passengers: reads passengers screened. Distractor 1,540 passengers: halves the correct capacity. Distractor 440 passengers: omits opening hours.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "Which terminal had the highest percentage of its capacity used?",
+        correct: "Terminal C",
+        distractors: ["Terminal A", "Terminal B", "Terminal D"],
+        explanation:
+          "Capacity used: Terminal A = 3,000/3,240 = 92.6%, Terminal B = 2,700/3,000 = 90.0%, Terminal C = 2,940/3,080 = 95.5%, and Terminal D = 2,880/3,200 = 90.0%. Terminal C is highest. Distractor Terminal A: has high use but not the highest. Distractor Terminal B: has 90.0% use. Distractor Terminal D: also has 90.0% use.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What percentage of Terminal D's capacity was used?",
+        correct: "90.0%",
+        distractors: ["93.8%", "111.1%", "57.6%"],
+        explanation:
+          "Terminal D capacity = 5 x 160 x 4 = 3,200 passengers. Capacity used = 2,880/3,200 x 100 = 90.0%. Distractor 93.8%: uses Terminal A's screened passengers divided by Terminal D capacity. Distractor 111.1%: divides capacity by screened passengers. Distractor 57.6%: divides screened passengers by lanes only.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Terminal A capacity to Terminal D capacity?",
+        correct: "81:80",
+        distractors: ["80:81", "3:5", "9:8"],
+        explanation:
+          "Terminal A capacity = 3 x 180 x 6 = 3,240 and Terminal D capacity = 5 x 160 x 4 = 3,200. 3,240:3,200 simplifies to 81:80. Distractor 80:81 reverses the ratio. Distractor 3:5 compares lanes open. Distractor 9:8 compares passengers per lane per hour after simplifying.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "school-trip-coach-costs",
+    stimulus: [
+      "A school compared four trips. Coach seats available equal seats per coach multiplied by coaches booked.",
+    ],
+    visual: {
+      type: "table",
+      title: "School Trip Planning",
+      headers: ["Trip", "Coach hire per coach", "Seats per coach", "Coaches booked", "Pupils", "Ticket price"],
+      rows: [
+        ["Museum", "GBP 320", "50", "3", "130", "GBP 18"],
+        ["Zoo", "GBP 280", "45", "4", "160", "GBP 22"],
+        ["Theatre", "GBP 450", "55", "3", "150", "GBP 26"],
+        ["Science centre", "GBP 360", "40", "5", "185", "GBP 20"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many coach seats were available for the Science centre trip?",
+        correct: "200 seats",
+        distractors: ["185 seats", "40 seats", "360 seats"],
+        explanation:
+          "Science centre seats = 40 seats per coach x 5 coaches = 200 seats. Distractor 185 seats: reads pupils. Distractor 40 seats: gives one coach only. Distractor 360 seats: reads the coach hire cost.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest penny, what was the coach hire cost per pupil for the Museum trip?",
+        correct: "GBP 7.38",
+        distractors: ["GBP 6.40", "GBP 2.46", "GBP 8.62"],
+        explanation:
+          "Museum coach hire = 3 x GBP 320 = GBP 960. Dividing by 130 pupils gives GBP 960/130 = GBP 7.38 per pupil. Distractor GBP 6.40: divides one coach cost by 50 seats. Distractor GBP 2.46: divides one coach cost by all pupils. Distractor GBP 8.62: divides the Zoo coach hire by Museum pupils.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the ticket revenue from the Theatre trip?",
+        correct: "GBP 3,900",
+        distractors: ["GBP 4,290", "GBP 1,350", "GBP 3,300"],
+        explanation:
+          "Theatre ticket revenue = 150 pupils x GBP 26 = GBP 3,900. Distractor GBP 4,290: uses all available Theatre seats. Distractor GBP 1,350: gives Theatre coach hire. Distractor GBP 3,300: uses 150 pupils at the Zoo ticket price.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What percentage of Zoo coach seats were occupied by pupils?",
+        correct: "88.9%",
+        distractors: ["80.0%", "112.5%", "97.0%"],
+        explanation:
+          "Zoo seats available = 45 x 4 = 180 seats. Occupancy = 160/180 x 100 = 88.9%. Distractor 80.0%: uses Science centre seat capacity instead of Zoo seats. Distractor 112.5%: divides seats by pupils. Distractor 97.0%: uses Theatre seat capacity instead of Zoo seats.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "coffee-shop-bean-output",
+    stimulus: [
+      "A coffee shop recorded roasted coffee used for four blends. Potential cups equal kilograms roasted multiplied by cups produced per kilogram.",
+    ],
+    visual: {
+      type: "table",
+      title: "Coffee Blend Output",
+      headers: ["Blend", "Roasted coffee", "Cups per kg", "Cups sold"],
+      rows: [
+        ["House", "24 kg", "55", "1,200"],
+        ["Decaf", "18 kg", "60", "990"],
+        ["Espresso", "30 kg", "50", "1,320"],
+        ["Filter", "16 kg", "65", "910"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many potential cups could be made from the Espresso blend?",
+        correct: "1,500 cups",
+        distractors: ["1,320 cups", "80 cups", "1,800 cups"],
+        explanation:
+          "Espresso potential cups = 30 kg x 50 cups per kg = 1,500 cups. Distractor 1,320 cups: reads cups sold. Distractor 80 cups: adds kg and cups per kg. Distractor 1,800 cups: uses Decaf's cups per kg.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of Decaf potential cups were sold?",
+        correct: "91.7%",
+        distractors: ["55.0%", "108.0%", "88.0%"],
+        explanation:
+          "Decaf potential cups = 18 x 60 = 1,080. Sold percentage = 990/1,080 x 100 = 91.7%. Distractor 55.0%: uses House's cups per kg as a percentage. Distractor 108.0%: divides potential cups by cups sold. Distractor 88.0%: uses Espresso's sold percentage.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of cups sold per blend?",
+        correct: "1,105 cups",
+        distractors: ["4,420 cups", "1,200 cups", "1,080 cups"],
+        explanation:
+          "Total cups sold = 1,200 + 990 + 1,320 + 910 = 4,420. Mean = 4,420/4 = 1,105 cups. Distractor 4,420 cups: gives the total. Distractor 1,200 cups: reads House cups sold. Distractor 1,080 cups: gives Decaf potential cups.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of House roasted coffee to Filter roasted coffee?",
+        correct: "3:2",
+        distractors: ["2:3", "24:65", "6:5"],
+        explanation:
+          "House roasted coffee = 24 kg and Filter roasted coffee = 16 kg. 24:16 simplifies to 3:2. Distractor 2:3 reverses the ratio. Distractor 24:65 compares House kilograms with Filter cups per kg. Distractor 6:5 compares Decaf cups per kg with Espresso cups per kg.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "phone-screen-repair-workshop",
+    stimulus: [
+      "A phone repair workshop recorded completed screen repairs for four model groups.",
+    ],
+    visual: {
+      type: "table",
+      title: "Screen Repair Work",
+      headers: ["Model group", "Repairs", "Average time", "Price per repair", "Parts cost per repair"],
+      rows: [
+        ["A", "18", "45 min", "GBP 75", "GBP 32"],
+        ["B", "14", "60 min", "GBP 90", "GBP 40"],
+        ["C", "22", "30 min", "GBP 60", "GBP 25"],
+        ["D", "10", "75 min", "GBP 110", "GBP 55"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the total repair time for Model group B?",
+        correct: "14 h",
+        distractors: ["840 h", "60 h", "14 min"],
+        explanation:
+          "Model group B total time = 14 repairs x 60 min = 840 min. 840/60 = 14 h. Distractor 840 h: does not convert minutes to hours. Distractor 60 h: reads the average time as hours. Distractor 14 min: reads the repair count as minutes.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the total revenue from Model group C repairs?",
+        correct: "GBP 1,320",
+        distractors: ["GBP 1,100", "GBP 660", "GBP 770"],
+        explanation:
+          "Model group C revenue = 22 repairs x GBP 60 = GBP 1,320. Distractor GBP 1,100: uses Model group D's price. Distractor GBP 660: multiplies repairs by average time. Distractor GBP 770: gives Model group C revenue after subtracting parts cost.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all repairs were Model group A repairs?",
+        correct: "28.1%",
+        distractors: ["34.4%", "21.9%", "15.6%"],
+        explanation:
+          "Total repairs = 18 + 14 + 22 + 10 = 64. Model group A repairs = 18, so 18/64 x 100 = 28.1%. Distractor 34.4%: uses Model group C. Distractor 21.9%: uses Model group B. Distractor 15.6%: uses Model group D.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of total repair time for Model group A to Model group C?",
+        correct: "27:22",
+        distractors: ["22:27", "3:2", "18:22"],
+        explanation:
+          "Model group A total time = 18 x 45 = 810 min and Model group C total time = 22 x 30 = 660 min. 810:660 simplifies to 27:22. Distractor 22:27 reverses the ratio. Distractor 3:2 compares average times 45:30. Distractor 18:22 compares repair counts.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "library-book-loan-fines",
+    stimulus: [
+      "A library recorded loans and late returns during one month. Total late fine equals late items multiplied by average days late and fine per late day.",
+    ],
+    visual: {
+      type: "table",
+      title: "Library Loans and Late Fines",
+      headers: ["Category", "Items loaned", "Late items", "Average days late", "Fine per late day"],
+      rows: [
+        ["Fiction", "420", "63", "4", "GBP 0.20"],
+        ["Non-fiction", "280", "42", "5", "GBP 0.30"],
+        ["Children", "360", "36", "3", "GBP 0.10"],
+        ["DVDs", "150", "45", "2", "GBP 0.50"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the total late fine for Non-fiction items?",
+        correct: "GBP 63.00",
+        distractors: ["GBP 12.60", "GBP 42.00", "GBP 6.30"],
+        explanation:
+          "Non-fiction total fine = 42 late items x 5 days x GBP 0.30 = GBP 63.00. Distractor GBP 12.60: omits average days late. Distractor GBP 42.00: reads the late item count as a cost. Distractor GBP 6.30: divides the correct fine by 10.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of DVD loans were returned late?",
+        correct: "30.0%",
+        distractors: ["24.2%", "45.0%", "70.0%"],
+        explanation:
+          "DVD late items = 45 and DVD items loaned = 150. 45/150 x 100 = 30.0%. Distractor 24.2%: uses DVDs as a percentage of all late items. Distractor 45.0%: reads the late count as a percentage. Distractor 70.0%: gives the percentage not late.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Fiction late items to Children late items?",
+        correct: "7:4",
+        distractors: ["4:7", "7:6", "63:360"],
+        explanation:
+          "Fiction late items = 63 and Children late items = 36. 63:36 simplifies to 7:4. Distractor 4:7 reverses the ratio. Distractor 7:6 compares Fiction late items with DVDs late items after simplifying. Distractor 63:360 compares Fiction late items with Children items loaned.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of items loaned per category?",
+        correct: "302.5",
+        distractors: ["1,210", "280", "242"],
+        explanation:
+          "Total items loaned = 420 + 280 + 360 + 150 = 1,210. Mean = 1,210/4 = 302.5. Distractor 1,210: gives the total. Distractor 280: reads Non-fiction loans. Distractor 242: divides by 5 instead of 4.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "warehouse-pallet-loading-weights",
+    stimulus: [
+      "A warehouse loaded pallets with four product types. Total weight equals crates per pallet multiplied by weight per crate and pallets loaded.",
+    ],
+    visual: {
+      type: "table",
+      title: "Pallet Loading Weights",
+      headers: ["Product", "Crates per pallet", "Weight per crate", "Pallets loaded"],
+      rows: [
+        ["Apples", "24", "18 kg", "14"],
+        ["Rice", "30", "12 kg", "10"],
+        ["Paint", "16", "25 kg", "8"],
+        ["Tiles", "12", "32 kg", "9"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the total weight of Paint loaded?",
+        correct: "3,200 kg",
+        distractors: ["400 kg", "200 kg", "3,600 kg"],
+        explanation:
+          "Paint weight = 16 crates per pallet x 25 kg x 8 pallets = 3,200 kg. Distractor 400 kg: omits pallets loaded. Distractor 200 kg: multiplies weight per crate by pallets only. Distractor 3,600 kg: calculates Rice total weight.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of the total loaded weight was Rice?",
+        correct: "22.1%",
+        distractors: ["37.1%", "19.6%", "21.2%"],
+        explanation:
+          "Loaded weights are Apples 6,048 kg, Rice 3,600 kg, Paint 3,200 kg and Tiles 3,456 kg, totalling 16,304 kg. Rice share = 3,600/16,304 x 100 = 22.1%. Distractor 37.1%: uses Apples. Distractor 19.6%: uses Paint. Distractor 21.2%: uses Tiles.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of total Apple crates loaded to total Tile crates loaded?",
+        correct: "28:9",
+        distractors: ["9:28", "2:1", "3:4"],
+        explanation:
+          "Apple crates loaded = 24 x 14 = 336 and Tile crates loaded = 12 x 9 = 108. 336:108 simplifies to 28:9. Distractor 9:28 reverses the ratio. Distractor 2:1 compares crates per pallet only. Distractor 3:4 compares weight per crate approximately after simplifying 24:32.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1 kg, what was the mean loaded weight per pallet across all products?",
+        correct: "397.7 kg",
+        distractors: ["407.6 kg", "16,304 kg", "384.0 kg"],
+        explanation:
+          "Total loaded weight = 16,304 kg and total pallets = 14 + 10 + 8 + 9 = 41. Mean weight per pallet = 16,304/41 = 397.7 kg. Distractor 407.6 kg: divides by 40 pallets. Distractor 16,304 kg: gives the total weight. Distractor 384.0 kg: gives the Tile weight per pallet.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "word-only-qr-mixed-five",
+    leftTitle: "Information",
+    stimulus: [
+      "Answer each standalone word problem using only the information given in the question.",
+    ],
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "A video call starts at 14:20 in London, where the time is UTC+0. New York is UTC-5. If the call lasts 95 minutes, what is the local time in New York when it ends?",
+        correct: "10:55",
+        distractors: ["15:55", "09:55", "20:55"],
+        explanation:
+          "The call starts in New York at 09:20, since New York is 5 hours behind London. After 95 minutes, it ends at 10:55. Distractor 15:55: gives the London end time. Distractor 09:55: subtracts only 60 minutes from the London end time. Distractor 20:55: adds the time-zone difference instead of subtracting it.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "A drink is mixed in the ratio 2 parts syrup to 7 parts water. How much syrup is needed to make 1.8 L of the drink?",
+        correct: "0.4 L",
+        distractors: ["0.2 L", "1.4 L", "0.5 L"],
+        explanation:
+          "There are 2 + 7 = 9 parts in total. Syrup is 2/9 of the drink, so 1.8 x 2/9 = 0.4 L. Distractor 0.2 L: treats one part as the syrup amount. Distractor 1.4 L: gives the water amount. Distractor 0.5 L: divides 1.8 L by 3.6 instead of by 4.5.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A cyclist travels 12 km uphill at 16 km/h and then 18 km downhill at 24 km/h. What is the total journey time?",
+        correct: "90 min",
+        distractors: ["75 min", "80 min", "60 min"],
+        explanation:
+          "Uphill time = 12/16 = 0.75 h and downhill time = 18/24 = 0.75 h. Total time = 1.5 h = 90 min. Distractor 75 min: averages the two section times incorrectly. Distractor 80 min: uses 22.5 km/h as the average speed for 30 km. Distractor 60 min: uses 30 km/h for the whole journey.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "An item costs GBP 64. It is reduced by 20% and then the reduced price is increased by 25%. What is the final price?",
+        correct: "GBP 64",
+        distractors: ["GBP 68", "GBP 60", "GBP 51.20"],
+        explanation:
+          "After a 20% reduction, the price is GBP 64 x 0.80 = GBP 51.20. Increasing this by 25% gives GBP 51.20 x 1.25 = GBP 64. Distractor GBP 68: adds the percentage changes as a net 5% increase. Distractor GBP 60: treats the changes as a net 5% reduction. Distractor GBP 51.20: stops after the reduction.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "hotel-conference-room-packages",
+    stimulus: [
+      "A hotel compared four conference-room bookings. Catering cost is charged per guest, and VAT of 20% is added to room hire only.",
+    ],
+    visual: {
+      type: "table",
+      title: "Conference-Room Bookings",
+      headers: ["Room", "Room hire per hour", "Hours booked", "Catering per guest", "Guests"],
+      rows: [
+        ["Oak", "GBP 85", "6", "GBP 12", "45"],
+        ["Maple", "GBP 120", "5", "GBP 15", "38"],
+        ["Cedar", "GBP 95", "7", "GBP 10", "52"],
+        ["Birch", "GBP 150", "4", "GBP 18", "30"],
+      ],
+      note: "VAT is applied to room hire only, not catering.",
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "Before VAT, what is the total cost of the Cedar booking?",
+        correct: "GBP 1,185",
+        distractors: ["GBP 665", "GBP 520", "GBP 1,045"],
+        explanation:
+          "Cedar room hire = GBP 95 x 7 = GBP 665 and catering = GBP 10 x 52 = GBP 520. Total before VAT = GBP 1,185. Distractor GBP 665: gives room hire only. Distractor GBP 520: gives catering only. Distractor GBP 1,045: uses Maple's guest count for Cedar catering.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is Oak room hire after adding 20% VAT?",
+        correct: "GBP 612",
+        distractors: ["GBP 510", "GBP 102", "GBP 540"],
+        explanation:
+          "Oak room hire before VAT = GBP 85 x 6 = GBP 510. After 20% VAT, this is GBP 510 x 1.20 = GBP 612. Distractor GBP 510: omits VAT. Distractor GBP 102: gives the VAT amount only. Distractor GBP 540: gives Oak catering cost.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all conference guests were in the Cedar booking?",
+        correct: "31.5%",
+        distractors: ["27.3%", "23.0%", "18.2%"],
+        explanation:
+          "Total guests = 45 + 38 + 52 + 30 = 165. Cedar guests = 52, so 52/165 x 100 = 31.5%. Distractor 27.3%: uses Oak guests. Distractor 23.0%: uses Maple guests. Distractor 18.2%: uses Birch guests.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Oak room hire before VAT to Birch room hire before VAT?",
+        correct: "17:20",
+        distractors: ["20:17", "3:2", "6:4"],
+        explanation:
+          "Oak room hire before VAT = GBP 510 and Birch room hire before VAT = GBP 600. 510:600 simplifies to 17:20. Distractor 20:17 reverses the ratio. Distractor 3:2 compares the number of guests after rounding. Distractor 6:4 compares hours booked.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "railcard-ticket-discount-comparison",
+    stimulus: [
+      "A travel agent compared four discounted rail journeys. The booking fee is charged per passenger after the discount is applied.",
+    ],
+    visual: {
+      type: "table",
+      title: "Rail Journey Discounts",
+      headers: ["Journey", "Standard fare", "Railcard discount", "Booking fee", "Passengers"],
+      rows: [
+        ["City A", "GBP 42", "1/3 off", "GBP 1.50", "3"],
+        ["City B", "GBP 68", "25% off", "GBP 2.00", "2"],
+        ["City C", "GBP 55", "20% off", "GBP 1.25", "4"],
+        ["City D", "GBP 36", "10% off", "GBP 1.00", "5"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the total cost for the two City B passengers after discount and booking fees?",
+        correct: "GBP 106.00",
+        distractors: ["GBP 102.00", "GBP 136.00", "GBP 53.00"],
+        explanation:
+          "City B fare after 25% discount = GBP 68 x 0.75 = GBP 51. Adding the GBP 2 booking fee gives GBP 53 per passenger, so two passengers cost GBP 106. Distractor GBP 102.00: omits booking fees. Distractor GBP 136.00: omits the discount. Distractor GBP 53.00: gives the cost for one passenger.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the final cost per passenger for City A?",
+        correct: "GBP 29.50",
+        distractors: ["GBP 28.00", "GBP 43.50", "GBP 14.00"],
+        explanation:
+          "One-third off GBP 42 leaves two-thirds of the fare: GBP 42 x 2/3 = GBP 28. Adding the GBP 1.50 booking fee gives GBP 29.50. Distractor GBP 28.00: omits the booking fee. Distractor GBP 43.50: adds the booking fee but omits the discount. Distractor GBP 14.00: gives the discount amount.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all passengers travelled to City D?",
+        correct: "35.7%",
+        distractors: ["28.6%", "21.4%", "14.3%"],
+        explanation:
+          "Total passengers = 3 + 2 + 4 + 5 = 14. City D passengers = 5, so 5/14 x 100 = 35.7%. Distractor 28.6%: uses City C passengers. Distractor 21.4%: uses City A passengers. Distractor 14.3%: uses City B passengers.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of total railcard saving for City A passengers to total railcard saving for City C passengers?",
+        correct: "21:22",
+        distractors: ["22:21", "3:4", "42:55"],
+        explanation:
+          "City A saving = GBP 14 per passenger x 3 = GBP 42. City C saving = 20% of GBP 55 = GBP 11 per passenger, and GBP 11 x 4 = GBP 44. 42:44 simplifies to 21:22. Distractor 22:21 reverses the ratio. Distractor 3:4 compares passenger counts. Distractor 42:55 compares standard fares.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "greenhouse-seedling-germination",
+    stimulus: [
+      "A greenhouse recorded seeds planted, expected germination rate and seedlings transplanted for four crops.",
+    ],
+    visual: {
+      type: "table",
+      title: "Greenhouse Seedling Results",
+      headers: ["Crop", "Seeds planted", "Expected germination", "Trays", "Seedlings transplanted"],
+      rows: [
+        ["Tomato", "240", "85%", "12", "190"],
+        ["Pepper", "180", "70%", "9", "118"],
+        ["Basil", "300", "92%", "15", "250"],
+        ["Lettuce", "260", "80%", "13", "200"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many Basil seeds were expected to germinate?",
+        correct: "276",
+        distractors: ["250", "300", "92"],
+        explanation:
+          "Basil expected germination = 300 x 92% = 276 seeds. Distractor 250: reads seedlings transplanted. Distractor 300: reads seeds planted. Distractor 92: reads the germination percentage as a count.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question:
+          "Which crop had the highest percentage of expected germinated seedlings transplanted?",
+        correct: "Lettuce",
+        distractors: ["Tomato", "Pepper", "Basil"],
+        explanation:
+          "Expected germinated counts are Tomato 204, Pepper 126, Basil 276 and Lettuce 208. Transplanted percentages are Tomato 190/204 = 93.1%, Pepper 118/126 = 93.7%, Basil 250/276 = 90.6%, and Lettuce 200/208 = 96.2%. Lettuce is highest. Distractor Tomato: close, but lower. Distractor Pepper: lower than Lettuce. Distractor Basil: has the most transplanted seedlings but not the highest percentage.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of Pepper seeds planted were transplanted?",
+        correct: "65.6%",
+        distractors: ["70.0%", "93.7%", "30.0%"],
+        explanation:
+          "Pepper transplanted seedlings = 118 and Pepper seeds planted = 180. 118/180 x 100 = 65.6%. Distractor 70.0%: reads the germination rate. Distractor 93.7%: uses transplanted seedlings as a percentage of expected germinated seedlings. Distractor 30.0%: uses the difference between planted and expected germinated seeds.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Tomato seeds planted to Pepper seeds planted?",
+        correct: "4:3",
+        distractors: ["3:4", "17:14", "12:13"],
+        explanation:
+          "Tomato seeds planted = 240 and Pepper seeds planted = 180. 240:180 simplifies to 4:3. Distractor 3:4 reverses the ratio. Distractor 17:14 compares germination percentages 85:70 after simplifying. Distractor 12:13 compares Tomato trays with Lettuce trays.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "taxi-fare-distance-waiting",
+    stimulus: [
+      "A taxi company charges a GBP 3.20 base fare, GBP 1.80 per kilometre travelled and GBP 0.40 per minute of waiting time.",
+    ],
+    visual: {
+      type: "table",
+      title: "Taxi Trip Records",
+      headers: ["Trip", "Distance", "Waiting time", "Passengers"],
+      rows: [
+        ["A", "8.5 km", "6 min", "2"],
+        ["B", "12.0 km", "4 min", "3"],
+        ["C", "5.5 km", "10 min", "1"],
+        ["D", "16.0 km", "0 min", "4"],
+      ],
+      note: "Fare = GBP 3.20 + GBP 1.80 per km + GBP 0.40 per waiting minute.",
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the total fare for Trip B?",
+        correct: "GBP 26.40",
+        distractors: ["GBP 24.80", "GBP 21.60", "GBP 28.00"],
+        explanation:
+          "Trip B fare = GBP 3.20 + 12.0 x GBP 1.80 + 4 x GBP 0.40 = GBP 3.20 + GBP 21.60 + GBP 1.60 = GBP 26.40. Distractor GBP 24.80: omits the waiting-time charge. Distractor GBP 21.60: gives the distance charge only. Distractor GBP 28.00: doubles the waiting-time charge.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the fare per passenger for Trip D?",
+        correct: "GBP 8.00",
+        distractors: ["GBP 32.00", "GBP 7.20", "GBP 10.67"],
+        explanation:
+          "Trip D fare = GBP 3.20 + 16.0 x GBP 1.80 = GBP 32.00. With 4 passengers, the fare per passenger is GBP 32.00/4 = GBP 8.00. Distractor GBP 32.00: gives the total fare. Distractor GBP 7.20: divides the distance charge by 4 but omits the base fare. Distractor GBP 10.67: divides by 3 passengers instead of 4.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of Trip C's fare was due to waiting time?",
+        correct: "23.4%",
+        distractors: ["57.9%", "18.7%", "40.4%"],
+        explanation:
+          "Trip C fare = GBP 3.20 + 5.5 x GBP 1.80 + 10 x GBP 0.40 = GBP 17.10. Waiting charge = GBP 4.00, so 4.00/17.10 x 100 = 23.4%. Distractor 57.9%: uses the distance charge. Distractor 18.7%: uses the base fare. Distractor 40.4%: compares waiting charge with distance charge.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Trip A distance to Trip D distance?",
+        correct: "17:32",
+        distractors: ["32:17", "1:2", "3:5"],
+        explanation:
+          "Trip A distance = 8.5 km and Trip D distance = 16.0 km. 8.5:16.0 is equivalent to 85:160, which simplifies to 17:32. Distractor 32:17 reverses the ratio. Distractor 1:2 compares passengers for Trips A and D. Distractor 3:5 is a rough estimate rather than the exact simplified ratio.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "swimming-relay-split-times",
+    stimulus: [
+      "A swimming gala recorded four split times, in seconds, for each relay team.",
+    ],
+    visual: {
+      type: "table",
+      title: "Relay Split Times",
+      headers: ["Team", "Leg 1", "Leg 2", "Leg 3", "Leg 4"],
+      rows: [
+        ["A", "58.4 s", "61.2 s", "60.0 s", "57.9 s"],
+        ["B", "59.1 s", "59.8 s", "60.5 s", "58.6 s"],
+        ["C", "57.6 s", "62.0 s", "61.4 s", "58.2 s"],
+        ["D", "60.0 s", "60.3 s", "59.7 s", "59.5 s"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was Team A's total relay time?",
+        correct: "237.5 s",
+        distractors: ["58.4 s", "238.0 s", "950.0 s"],
+        explanation:
+          "Team A total = 58.4 + 61.2 + 60.0 + 57.9 = 237.5 s. Distractor 58.4 s: reads Leg 1 only. Distractor 238.0 s: calculates Team B's total. Distractor 950.0 s: multiplies the total by 4.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "Which team had the fastest total relay time?",
+        correct: "Team A",
+        distractors: ["Team B", "Team C", "Team D"],
+        explanation:
+          "Team totals are A 237.5 s, B 238.0 s, C 239.2 s and D 239.5 s. The lowest total time is Team A. Distractor Team B: is close but 0.5 s slower. Distractor Team C: has the fastest first leg but not the fastest total. Distractor Team D: has the slowest total.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was Team B's mean split time?",
+        correct: "59.5 s",
+        distractors: ["238.0 s", "59.1 s", "60.0 s"],
+        explanation:
+          "Team B total = 59.1 + 59.8 + 60.5 + 58.6 = 238.0 s. Mean split time = 238.0/4 = 59.5 s. Distractor 238.0 s: gives the total. Distractor 59.1 s: reads Leg 1. Distractor 60.0 s: rounds too coarsely.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "data-display", "set-based"],
+        question: "What is the ratio of Team C's Leg 1 time to Team C's Leg 4 time?",
+        correct: "96:97",
+        distractors: ["97:96", "57:62", "31:29"],
+        explanation:
+          "Team C Leg 1 to Leg 4 = 57.6:58.2. Multiplying by 10 gives 576:582, which simplifies to 96:97. Distractor 97:96 reverses the ratio. Distractor 57:62 compares Leg 1 with Leg 2 after rough rounding. Distractor 31:29 compares Leg 2 with Leg 4 after rough rounding.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "printer-ink-cartridge-yields",
+    stimulus: [
+      "An office recorded printer cartridge use. Potential pages equal cartridges used multiplied by pages per cartridge.",
+    ],
+    visual: {
+      type: "table",
+      title: "Printer Cartridge Output",
+      headers: ["Department", "Cartridges used", "Pages per cartridge", "Pages printed", "Wasted pages"],
+      rows: [
+        ["Admin", "6", "1,200", "6,900", "300"],
+        ["Marketing", "8", "950", "7,200", "400"],
+        ["HR", "4", "1,100", "4,050", "350"],
+        ["Finance", "5", "1,300", "6,250", "250"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was Marketing's potential page yield?",
+        correct: "7,600 pages",
+        distractors: ["7,200 pages", "950 pages", "8 pages"],
+        explanation:
+          "Marketing potential page yield = 8 cartridges x 950 pages per cartridge = 7,600 pages. Distractor 7,200 pages: reads pages printed. Distractor 950 pages: gives one cartridge only. Distractor 8 pages: reads cartridges used.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of Admin's potential page yield was wasted?",
+        correct: "4.2%",
+        distractors: ["95.8%", "300.0%", "2.5%"],
+        explanation:
+          "Admin potential yield = 6 x 1,200 = 7,200 pages. Wasted pages = 300, so 300/7,200 x 100 = 4.2%. Distractor 95.8%: uses non-wasted pages as a percentage. Distractor 300.0%: reads wasted pages as a percentage. Distractor 2.5%: divides wasted pages by pages per cartridge.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What was the mean number of pages printed per department?",
+        correct: "6,100 pages",
+        distractors: ["24,400 pages", "7,200 pages", "4,880 pages"],
+        explanation:
+          "Total pages printed = 6,900 + 7,200 + 4,050 + 6,250 = 24,400. Mean = 24,400/4 = 6,100 pages. Distractor 24,400 pages: gives the total. Distractor 7,200 pages: reads Marketing pages printed. Distractor 4,880 pages: divides by 5 instead of 4.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of HR cartridges used to Finance cartridges used?",
+        correct: "4:5",
+        distractors: ["5:4", "11:13", "81:125"],
+        explanation:
+          "HR used 4 cartridges and Finance used 5 cartridges, so the ratio is 4:5. Distractor 5:4 reverses the ratio. Distractor 11:13 compares pages per cartridge. Distractor 81:125 compares pages printed after simplifying 4,050:6,250.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "cinema-screen-advertising-slots",
+    stimulus: [
+      "A cinema sold advertising slots before screenings. Slot capacity equals adverts per showing multiplied by showings per day.",
+    ],
+    visual: {
+      type: "table",
+      title: "Cinema Advertising Slots",
+      headers: ["Screen", "Adverts per showing", "Showings per day", "Slot length", "Sold slots"],
+      rows: [
+        ["Screen 1", "8", "5", "30 s", "36"],
+        ["Screen 2", "10", "4", "20 s", "38"],
+        ["Screen 3", "6", "6", "45 s", "30"],
+        ["Screen 4", "12", "3", "30 s", "34"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was Screen 3's advertising slot capacity?",
+        correct: "36 slots",
+        distractors: ["30 slots", "45 slots", "270 slots"],
+        explanation:
+          "Screen 3 capacity = 6 adverts per showing x 6 showings = 36 slots. Distractor 30 slots: reads sold slots. Distractor 45 slots: reads slot length. Distractor 270 slots: multiplies adverts per showing by slot length.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "How many minutes of advertising were sold on Screen 1?",
+        correct: "18 min",
+        distractors: ["1,080 min", "20 min", "36 min"],
+        explanation:
+          "Screen 1 sold advertising time = 36 slots x 30 s = 1,080 s. 1,080/60 = 18 min. Distractor 1,080 min: does not convert seconds to minutes. Distractor 20 min: uses full capacity rather than sold slots. Distractor 36 min: reads sold slots as minutes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What percentage of Screen 2 advertising slot capacity was sold?",
+        correct: "95.0%",
+        distractors: ["90.0%", "105.3%", "38.0%"],
+        explanation:
+          "Screen 2 capacity = 10 x 4 = 40 slots. Sold percentage = 38/40 x 100 = 95.0%. Distractor 90.0%: uses Screen 1's sold percentage. Distractor 105.3%: divides capacity by sold slots. Distractor 38.0%: reads sold slots as a percentage.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Screen 1 slot capacity to Screen 4 slot capacity?",
+        correct: "10:9",
+        distractors: ["9:10", "2:3", "5:3"],
+        explanation:
+          "Screen 1 capacity = 8 x 5 = 40 slots and Screen 4 capacity = 12 x 3 = 36 slots. 40:36 simplifies to 10:9. Distractor 9:10 reverses the ratio. Distractor 2:3 compares adverts per showing. Distractor 5:3 compares showings per day.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "word-only-qr-mixed-six",
+    leftTitle: "Information",
+    stimulus: [
+      "Answer each standalone word problem using only the information given in the question.",
+    ],
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "GBP 720 is converted to euros at EUR 1.15 per GBP 1. A 2.5% fee is then deducted from the euros received. How many euros remain?",
+        correct: "EUR 807.30",
+        distractors: ["EUR 828.00", "EUR 20.70", "EUR 825.50"],
+        explanation:
+          "Before the fee, GBP 720 gives 720 x 1.15 = EUR 828.00. The 2.5% fee is EUR 20.70, leaving EUR 828.00 - EUR 20.70 = EUR 807.30. Distractor EUR 828.00: omits the fee. Distractor EUR 20.70: gives the fee only. Distractor EUR 825.50: subtracts EUR 2.50 rather than 2.5%.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A bus travels 45 km at 60 km/h, waits for 12 minutes, then travels 30 km at 50 km/h. What is the total journey time?",
+        correct: "93 min",
+        distractors: ["81 min", "87 min", "102 min"],
+        explanation:
+          "The first section takes 45/60 = 0.75 h = 45 min. The second takes 30/50 = 0.6 h = 36 min. Total time = 45 + 12 + 36 = 93 min. Distractor 81 min: omits the waiting time. Distractor 87 min: uses 60 km/h for the whole moving distance, then adds the wait. Distractor 102 min: uses 50 km/h for the whole moving distance, then adds the wait.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "A recipe uses flour, sugar and butter in the ratio 5:2:3. If 360 g of butter is used, what is the total mass of these three ingredients?",
+        correct: "1,200 g",
+        distractors: ["360 g", "840 g", "1,080 g"],
+        explanation:
+          "Butter is 3 parts and equals 360 g, so 1 part = 120 g. Total parts = 5 + 2 + 3 = 10, so total mass = 10 x 120 = 1,200 g. Distractor 360 g: gives butter only. Distractor 840 g: gives flour plus sugar only. Distractor 1,080 g: multiplies the butter mass by 3.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "In a class of 72 students, 5/8 studied QR. Of those who studied QR, 40% scored above target. How many students scored above target?",
+        correct: "18",
+        distractors: ["45", "29", "27"],
+        explanation:
+          "Students who studied QR = 72 x 5/8 = 45. Above target = 40% of 45 = 18 students. Distractor 45: gives the number who studied QR. Distractor 29: finds 40% of all 72 students. Distractor 27: uses the remaining 3/8 of the class.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gym-membership-class-charges",
+    stimulus: [
+      "A gym compared four membership plans. If a member attends more classes than are included, every extra class is charged at the listed extra-class fee.",
+    ],
+    visual: {
+      type: "table",
+      title: "Gym Membership Plans",
+      headers: ["Plan", "Monthly fee", "Included classes", "Extra-class fee", "Members"],
+      rows: [
+        ["Starter", "GBP 22", "6", "GBP 4.00", "90"],
+        ["Flex", "GBP 35", "12", "GBP 2.50", "75"],
+        ["Unlimited", "GBP 58", "30", "GBP 0.00", "48"],
+        ["Student", "GBP 26", "8", "GBP 3.00", "60"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the monthly cost on the Starter plan if 14 classes are attended?",
+        correct: "GBP 54",
+        distractors: ["GBP 22", "GBP 56", "GBP 32"],
+        explanation:
+          "Starter includes 6 classes, so 14 classes means 8 extra classes. Cost = GBP 22 + 8 x GBP 4 = GBP 54. Distractor GBP 22: uses the monthly fee only. Distractor GBP 56: charges all 14 classes as extra. Distractor GBP 32: calculates the extra-class charge only.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "Which plan is cheapest for a member attending 16 classes in a month?",
+        correct: "Flex",
+        distractors: ["Starter", "Unlimited", "Student"],
+        explanation:
+          "For 16 classes, Starter costs GBP 62, Flex costs GBP 45, Unlimited costs GBP 58, and Student costs GBP 50. Flex is cheapest. Distractor Starter: has the lowest monthly fee but high extra-class charges. Distractor Unlimited: has no extra-class fee but a higher monthly fee. Distractor Student: is cheaper than Starter and Unlimited but not Flex.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all listed members are on the Unlimited plan?",
+        correct: "17.6%",
+        distractors: ["33.0%", "27.5%", "22.0%"],
+        explanation:
+          "Total members = 90 + 75 + 48 + 60 = 273. Unlimited members = 48, so 48/273 x 100 = 17.6%. Distractor 33.0%: uses Starter members. Distractor 27.5%: uses Flex members. Distractor 22.0%: uses Student members.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Student monthly fee to Flex monthly fee?",
+        correct: "26:35",
+        distractors: ["35:26", "6:5", "8:12"],
+        explanation:
+          "Student monthly fee = GBP 26 and Flex monthly fee = GBP 35, so the ratio is 26:35. Distractor 35:26 reverses the ratio. Distractor 6:5 compares extra-class fees. Distractor 8:12 compares included classes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ferry-crossing-vehicle-fares",
+    stimulus: [
+      "A ferry operator charges a base fare for each vehicle plus a passenger fare for every passenger in that vehicle.",
+    ],
+    visual: {
+      type: "table",
+      title: "Ferry Vehicle Fares",
+      headers: ["Vehicle", "Base fare", "Passenger fare", "Crossings", "Average passengers"],
+      rows: [
+        ["Car", "GBP 40", "GBP 8", "120", "3"],
+        ["Van", "GBP 55", "GBP 10", "75", "2"],
+        ["Coach", "GBP 120", "GBP 6", "30", "40"],
+        ["Motorcycle", "GBP 18", "GBP 5", "50", "1"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the total fare revenue from Car crossings?",
+        correct: "GBP 7,680",
+        distractors: ["GBP 4,800", "GBP 2,880", "GBP 64"],
+        explanation:
+          "Each Car crossing costs GBP 40 + 3 x GBP 8 = GBP 64. For 120 crossings, revenue = 120 x GBP 64 = GBP 7,680. Distractor GBP 4,800: uses base fares only. Distractor GBP 2,880: uses passenger fares only. Distractor GBP 64: gives one Car crossing.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the fare for one Coach crossing with the average number of passengers?",
+        correct: "GBP 360",
+        distractors: ["GBP 120", "GBP 240", "GBP 166"],
+        explanation:
+          "One Coach crossing costs GBP 120 base fare plus 40 x GBP 6 passenger fare. GBP 120 + GBP 240 = GBP 360. Distractor GBP 120: gives the base fare only. Distractor GBP 240: gives the passenger fare only. Distractor GBP 166: adds the base fare, passenger fare and passenger count once.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all crossings were Van crossings?",
+        correct: "27.3%",
+        distractors: ["43.6%", "18.2%", "10.9%"],
+        explanation:
+          "Total crossings = 120 + 75 + 30 + 50 = 275. Van crossings = 75, so 75/275 x 100 = 27.3%. Distractor 43.6%: uses Car crossings. Distractor 18.2%: uses Motorcycle crossings. Distractor 10.9%: uses Coach crossings.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Car base fare to Motorcycle base fare?",
+        correct: "20:9",
+        distractors: ["9:20", "8:5", "12:5"],
+        explanation:
+          "Car base fare = GBP 40 and Motorcycle base fare = GBP 18. 40:18 simplifies to 20:9. Distractor 9:20 reverses the ratio. Distractor 8:5 compares passenger fares. Distractor 12:5 compares Car crossings with Motorcycle crossings.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-prescription-stock-duration",
+    stimulus: [
+      "A pharmacy tracked stock for four medicines. Daily use equals tablets per patient per day multiplied by the number of patients currently prescribed the medicine.",
+    ],
+    visual: {
+      type: "table",
+      title: "Prescription Stock Check",
+      headers: ["Medicine", "Tablets in stock", "Tablets per patient per day", "Patients", "Next delivery"],
+      rows: [
+        ["A", "1,260", "2", "15", "35 days"],
+        ["B", "900", "1", "18", "60 days"],
+        ["C", "1,680", "3", "20", "28 days"],
+        ["D", "720", "2", "12", "40 days"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many Medicine C tablets are used per day?",
+        correct: "60 tablets",
+        distractors: ["20 tablets", "3 tablets", "1,680 tablets"],
+        explanation:
+          "Medicine C daily use = 3 tablets per patient per day x 20 patients = 60 tablets. Distractor 20 tablets: reads the number of patients. Distractor 3 tablets: reads the dose per patient. Distractor 1,680 tablets: reads tablets in stock.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "For how many days will Medicine D stock last at the current daily use?",
+        correct: "30 days",
+        distractors: ["40 days", "60 days", "720 days"],
+        explanation:
+          "Medicine D daily use = 2 x 12 = 24 tablets. Stock duration = 720/24 = 30 days. Distractor 40 days: reads the next delivery time. Distractor 60 days: divides by 12 patients only. Distractor 720 days: reads tablets in stock as days.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "Which medicines have enough stock to last until the next delivery?",
+        correct: "Medicines A and C",
+        distractors: ["Medicines B and D", "Medicines A and B", "Medicines C and D"],
+        explanation:
+          "Medicine A lasts 1,260/(2 x 15) = 42 days, enough for 35 days. Medicine B lasts 900/(1 x 18) = 50 days, not enough for 60 days. Medicine C lasts 1,680/(3 x 20) = 28 days, exactly enough for 28 days. Medicine D lasts 720/(2 x 12) = 30 days, not enough for 40 days. Therefore A and C have enough stock.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of total daily tablet use is Medicine C?",
+        correct: "45.5%",
+        distractors: ["22.7%", "18.2%", "13.6%"],
+        explanation:
+          "Daily uses are A 30, B 18, C 60 and D 24 tablets, totalling 132 tablets. Medicine C share = 60/132 x 100 = 45.5%. Distractor 22.7%: uses Medicine A. Distractor 18.2%: uses Medicine D. Distractor 13.6%: uses Medicine B.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "garden-paving-slab-orders",
+    stimulus: [
+      "A landscaper calculated paving slab orders. Base slabs equal area multiplied by slabs per square metre, and wastage is then added to the base quantity.",
+    ],
+    visual: {
+      type: "table",
+      title: "Paving Slab Orders",
+      headers: ["Area", "Size", "Slabs per square metre", "Wastage", "Price per slab"],
+      rows: [
+        ["Patio", "24 sq m", "5", "10%", "GBP 1.80"],
+        ["Path", "25 sq m", "4", "5%", "GBP 2.25"],
+        ["Courtyard", "25 sq m", "6", "8%", "GBP 1.50"],
+        ["Terrace", "20 sq m", "5", "12%", "GBP 2.00"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many Patio slabs should be ordered after adding wastage?",
+        correct: "132 slabs",
+        distractors: ["120 slabs", "12 slabs", "110 slabs"],
+        explanation:
+          "Patio base slabs = 24 x 5 = 120. Adding 10% wastage gives 120 x 1.10 = 132 slabs. Distractor 120 slabs: omits wastage. Distractor 12 slabs: gives the extra slabs only. Distractor 110 slabs: subtracts 10% instead of adding it.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the cost of Courtyard slabs after adding wastage?",
+        correct: "GBP 243.00",
+        distractors: ["GBP 225.00", "GBP 18.00", "GBP 162.00"],
+        explanation:
+          "Courtyard base slabs = 25 x 6 = 150. With 8% wastage, order quantity = 150 x 1.08 = 162 slabs. Cost = 162 x GBP 1.50 = GBP 243. Distractor GBP 225.00: omits wastage. Distractor GBP 18.00: gives the extra slab cost only. Distractor GBP 162.00: gives the number of slabs as a cost.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of total base slabs are for the Path?",
+        correct: "21.3%",
+        distractors: ["25.5%", "31.9%", "23.8%"],
+        explanation:
+          "Base slabs are Patio 120, Path 100, Courtyard 150 and Terrace 100, totalling 470. Path share = 100/470 x 100 = 21.3%. Distractor 25.5%: uses Patio. Distractor 31.9%: uses Courtyard. Distractor 23.8%: uses Terrace slabs after wastage instead of base Path slabs.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Terrace base slabs to Patio base slabs?",
+        correct: "5:6",
+        distractors: ["6:5", "4:5", "12:10"],
+        explanation:
+          "Terrace base slabs = 20 x 5 = 100 and Patio base slabs = 24 x 5 = 120. 100:120 simplifies to 5:6. Distractor 6:5 reverses the ratio. Distractor 4:5 compares areas 20:25. Distractor 12:10 compares wastage percentages after simplifying incorrectly.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "restaurant-table-turnover-revenue",
+    stimulus: [
+      "A restaurant estimated covers and revenue for four seating areas. Covers equal tables multiplied by seats per table and turns per evening.",
+    ],
+    visual: {
+      type: "table",
+      title: "Restaurant Evening Turnover",
+      headers: ["Area", "Tables", "Seats per table", "Turns", "Average spend per cover"],
+      rows: [
+        ["Window", "6", "4", "3", "GBP 22"],
+        ["Garden", "8", "2", "4", "GBP 18"],
+        ["Booth", "5", "6", "2", "GBP 25"],
+        ["Bar", "10", "2", "3", "GBP 15"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many covers were available in the Garden area?",
+        correct: "64 covers",
+        distractors: ["16 covers", "32 covers", "8 covers"],
+        explanation:
+          "Garden covers = 8 tables x 2 seats per table x 4 turns = 64 covers. Distractor 16 covers: omits turns. Distractor 32 covers: doubles tables and seats but uses only two turns. Distractor 8 covers: reads tables only.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the expected revenue from Booth covers?",
+        correct: "GBP 1,500",
+        distractors: ["GBP 750", "GBP 60", "GBP 1,250"],
+        explanation:
+          "Booth covers = 5 x 6 x 2 = 60. Revenue = 60 x GBP 25 = GBP 1,500. Distractor GBP 750: omits turns. Distractor GBP 60: gives covers as a cost. Distractor GBP 1,250: uses 50 covers instead of 60.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of total covers were in the Window area?",
+        correct: "28.1%",
+        distractors: ["25.0%", "23.4%", "72.0%"],
+        explanation:
+          "Covers are Window 72, Garden 64, Booth 60 and Bar 60, totalling 256. Window share = 72/256 x 100 = 28.1%. Distractor 25.0%: assumes four equal areas. Distractor 23.4%: uses Booth or Bar covers. Distractor 72.0%: reads Window covers as a percentage.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Garden expected revenue to Bar expected revenue?",
+        correct: "32:25",
+        distractors: ["25:32", "64:60", "6:5"],
+        explanation:
+          "Garden revenue = 64 x GBP 18 = GBP 1,152 and Bar revenue = 60 x GBP 15 = GBP 900. 1,152:900 simplifies to 32:25. Distractor 25:32 reverses the ratio. Distractor 64:60 compares covers before simplifying. Distractor 6:5 compares average spend after simplifying 18:15.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "subscription-renewal-revenue",
+    stimulus: [
+      "A software company reviewed monthly subscription renewals. Renewed subscribers pay the listed monthly price for the next month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Subscription Renewals",
+      headers: ["Plan", "Starting subscribers", "Monthly price", "Renewal rate", "Support tickets"],
+      rows: [
+        ["Basic", "480", "GBP 9", "75%", "72"],
+        ["Pro", "260", "GBP 18", "80%", "65"],
+        ["Team", "140", "GBP 45", "90%", "42"],
+        ["Student", "320", "GBP 6", "65%", "80"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many Basic subscribers renewed?",
+        correct: "360",
+        distractors: ["480", "120", "75"],
+        explanation:
+          "Basic renewed subscribers = 480 x 75% = 360. Distractor 480: gives starting subscribers. Distractor 120: gives subscribers who did not renew. Distractor 75: reads the renewal rate as a count.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What next-month revenue is expected from renewed Team subscribers?",
+        correct: "GBP 5,670",
+        distractors: ["GBP 6,300", "GBP 126", "GBP 4,050"],
+        explanation:
+          "Team renewed subscribers = 140 x 90% = 126. Revenue = 126 x GBP 45 = GBP 5,670. Distractor GBP 6,300: assumes all Team subscribers renew. Distractor GBP 126: gives renewed subscribers. Distractor GBP 4,050: multiplies the price by the renewal-rate number 90.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of starting subscribers were on the Student plan?",
+        correct: "26.7%",
+        distractors: ["40.0%", "21.7%", "11.7%"],
+        explanation:
+          "Total starting subscribers = 480 + 260 + 140 + 320 = 1,200. Student subscribers = 320, so 320/1,200 x 100 = 26.7%. Distractor 40.0%: uses Basic subscribers. Distractor 21.7%: uses Pro subscribers. Distractor 11.7%: uses Team subscribers.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Pro starting subscribers to Student starting subscribers?",
+        correct: "13:16",
+        distractors: ["16:13", "3:1", "65:72"],
+        explanation:
+          "Pro starting subscribers = 260 and Student starting subscribers = 320. 260:320 simplifies to 13:16. Distractor 16:13 reverses the ratio. Distractor 3:1 compares monthly prices. Distractor 65:72 compares Pro support tickets with Basic support tickets.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "laboratory-sample-dilution-batches",
+    stimulus: [
+      "A laboratory prepared four diluted samples. Total solution per batch equals concentrate volume plus diluent volume.",
+    ],
+    visual: {
+      type: "table",
+      title: "Sample Dilution Batches",
+      headers: ["Sample", "Concentrate per batch", "Diluent per batch", "Tests per batch", "Batches"],
+      rows: [
+        ["A", "12 mL", "48 mL", "20", "5"],
+        ["B", "8 mL", "32 mL", "16", "6"],
+        ["C", "15 mL", "60 mL", "25", "4"],
+        ["D", "20 mL", "80 mL", "30", "3"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the total solution volume in one Sample C batch?",
+        correct: "75 mL",
+        distractors: ["60 mL", "15 mL", "300 mL"],
+        explanation:
+          "One Sample C batch contains 15 mL concentrate and 60 mL diluent, for a total of 75 mL. Distractor 60 mL: gives diluent only. Distractor 15 mL: gives concentrate only. Distractor 300 mL: gives all four Sample C batches.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many tests can be run from all Sample B batches?",
+        correct: "96 tests",
+        distractors: ["16 tests", "6 tests", "240 tests"],
+        explanation:
+          "Sample B provides 16 tests per batch for 6 batches. 16 x 6 = 96 tests. Distractor 16 tests: gives one batch only. Distractor 6 tests: reads batches. Distractor 240 tests: multiplies total solution volume by batches.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of one Sample D batch is concentrate?",
+        correct: "20.0%",
+        distractors: ["25.0%", "80.0%", "66.7%"],
+        explanation:
+          "Sample D total solution = 20 + 80 = 100 mL. Concentrate share = 20/100 x 100 = 20.0%. Distractor 25.0%: compares concentrate with diluent. Distractor 80.0%: gives the diluent percentage. Distractor 66.7%: compares concentrate volume with tests per batch.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of total concentrate used for Sample B to total concentrate used for Sample C?",
+        correct: "4:5",
+        distractors: ["5:4", "8:15", "6:4"],
+        explanation:
+          "Sample B total concentrate = 8 x 6 = 48 mL and Sample C total concentrate = 15 x 4 = 60 mL. 48:60 simplifies to 4:5. Distractor 5:4 reverses the ratio. Distractor 8:15 compares concentrate per batch. Distractor 6:4 compares batches.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "word-only-qr-mixed-seven",
+    leftTitle: "Information",
+    stimulus: [
+      "Answer each standalone word problem using only the information given in the question.",
+    ],
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A flight departs Cairo at 23:30 local time, where Cairo is UTC+2. It arrives in Nairobi at 04:10 the next day local time, where Nairobi is UTC+3. What is the flight duration?",
+        correct: "3 h 40 min",
+        distractors: ["4 h 40 min", "2 h 40 min", "5 h 40 min"],
+        explanation:
+          "The departure time is 21:30 UTC and the arrival time is 01:10 UTC the next day. From 21:30 to 01:10 is 3 h 40 min. Distractor 4 h 40 min: compares local clock times without adjusting for time zones. Distractor 2 h 40 min: subtracts the one-hour time-zone difference twice. Distractor 5 h 40 min: adds the one-hour difference to the local clock gap.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "A runner completes 5 km in 24 minutes. At the same pace, how far would the runner go in 42 minutes?",
+        correct: "8.75 km",
+        distractors: ["7.00 km", "8.40 km", "10.00 km"],
+        explanation:
+          "The rate is 5/24 km per minute. In 42 minutes, distance = 42 x 5/24 = 8.75 km. Distractor 7.00 km: uses a pace of 6 minutes per km. Distractor 8.40 km: rounds the pace to 5 minutes per km. Distractor 10.00 km: doubles the 5 km distance.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A simplified tax system charges 0% on the first GBP 12,500 of income, 20% on the next GBP 37,500, and 40% on income above GBP 50,000. How much tax is paid on GBP 72,000?",
+        correct: "GBP 16,300",
+        distractors: ["GBP 14,400", "GBP 8,800", "GBP 28,800"],
+        explanation:
+          "The 20% band tax is GBP 37,500 x 20% = GBP 7,500. Income above GBP 50,000 is GBP 22,000, taxed at 40%, which is GBP 8,800. Total tax = GBP 16,300. Distractor GBP 14,400: taxes all income at 20%. Distractor GBP 8,800: includes only the higher-rate tax. Distractor GBP 28,800: taxes all income at 40%.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "A technician mixes 400 mL of a 15% solution with 200 mL of a 30% solution. What is the concentration of the final mixture?",
+        correct: "20%",
+        distractors: ["22.5%", "45%", "15%"],
+        explanation:
+          "The first solution contains 400 x 15% = 60 mL active ingredient. The second contains 200 x 30% = 60 mL. The mixture contains 120 mL active ingredient in 600 mL total, so 120/600 x 100 = 20%. Distractor 22.5%: takes the simple mean of 15% and 30%. Distractor 45%: adds the percentages. Distractor 15%: uses only the first solution's concentration.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "museum-group-visit-discounts",
+    stimulus: [
+      "A museum charged GBP 14 per adult, GBP 8 per child and GBP 10 per concession visitor. Group discounts are applied to the total ticket cost before payment.",
+    ],
+    visual: {
+      type: "table",
+      title: "Museum Group Visits",
+      headers: ["Group", "Adults", "Children", "Concessions", "Group discount"],
+      rows: [
+        ["North", "24", "18", "6", "10%"],
+        ["South", "30", "12", "8", "15%"],
+        ["East", "18", "20", "10", "0%"],
+        ["West", "40", "5", "15", "20%"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the South group's ticket cost after discount?",
+        correct: "GBP 506.60",
+        distractors: ["GBP 596.00", "GBP 89.40", "GBP 533.00"],
+        explanation:
+          "South pre-discount cost = 30 x GBP 14 + 12 x GBP 8 + 8 x GBP 10 = GBP 596. A 15% discount leaves 85%, so GBP 596 x 0.85 = GBP 506.60. Distractor GBP 596.00: omits the discount. Distractor GBP 89.40: gives the discount amount only. Distractor GBP 533.00: discounts adult tickets only.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all listed visitors were in the West group?",
+        correct: "29.1%",
+        distractors: ["23.3%", "24.3%", "20.0%"],
+        explanation:
+          "Visitor totals are North 48, South 50, East 48 and West 60, for 206 visitors overall. West share = 60/206 x 100 = 29.1%. Distractor 23.3%: uses North or East. Distractor 24.3%: uses South. Distractor 20.0%: reads the West discount as a percentage.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of East children to North children?",
+        correct: "10:9",
+        distractors: ["9:10", "20:24", "5:3"],
+        explanation:
+          "East children = 20 and North children = 18. 20:18 simplifies to 10:9. Distractor 9:10 reverses the ratio. Distractor 20:24 compares East children with North adults. Distractor 5:3 compares East concessions with North concessions.",
+      },
+      {
+        subtype: "qr-averages",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest penny, what is the North group's average ticket cost per visitor after discount?",
+        correct: "GBP 10.13",
+        distractors: ["GBP 11.25", "GBP 1.13", "GBP 48.00"],
+        explanation:
+          "North pre-discount cost = 24 x GBP 14 + 18 x GBP 8 + 6 x GBP 10 = GBP 540. After a 10% discount, cost = GBP 486. There are 48 visitors, so GBP 486/48 = GBP 10.13. Distractor GBP 11.25: gives the average before discount. Distractor GBP 1.13: gives the discount amount per visitor. Distractor GBP 48.00: gives the visitor count.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "bakery-oven-output-yields",
+    stimulus: [
+      "A bakery recorded the number of batches baked, items produced per batch, items sold and selling price for four products.",
+    ],
+    visual: {
+      type: "table",
+      title: "Bakery Daily Output",
+      headers: ["Product", "Batches baked", "Items per batch", "Items sold", "Selling price"],
+      rows: [
+        ["Sourdough", "18", "24", "410", "GBP 2.40"],
+        ["Brioche", "12", "30", "330", "GBP 1.80"],
+        ["Croissant", "20", "16", "290", "GBP 1.50"],
+        ["Muffin", "15", "28", "390", "GBP 1.20"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "How many Croissants were produced?",
+        correct: "320",
+        distractors: ["290", "36", "20"],
+        explanation:
+          "Croissants produced = 20 batches x 16 items per batch = 320. Distractor 290: reads items sold. Distractor 36: adds batches and items per batch. Distractor 20: reads batches baked.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the revenue from Muffins sold?",
+        correct: "GBP 468.00",
+        distractors: ["GBP 390.00", "GBP 504.00", "GBP 18.00"],
+        explanation:
+          "Muffin revenue = 390 sold x GBP 1.20 = GBP 468.00. Distractor GBP 390.00: reads items sold as revenue. Distractor GBP 504.00: uses all Muffins produced rather than sold. Distractor GBP 18.00: multiplies batches by price.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of Sourdough items produced were sold?",
+        correct: "94.9%",
+        distractors: ["105.4%", "91.7%", "410.0%"],
+        explanation:
+          "Sourdough produced = 18 x 24 = 432. Sold percentage = 410/432 x 100 = 94.9%. Distractor 105.4%: divides produced by sold. Distractor 91.7%: uses Brioche sold percentage. Distractor 410.0%: reads items sold as a percentage.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Brioche items produced to Muffins produced?",
+        correct: "6:7",
+        distractors: ["7:6", "12:15", "30:28"],
+        explanation:
+          "Brioche produced = 12 x 30 = 360 and Muffins produced = 15 x 28 = 420. 360:420 simplifies to 6:7. Distractor 7:6 reverses the ratio. Distractor 12:15 compares batches. Distractor 30:28 compares items per batch.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "parcel-delivery-zone-charges",
+    stimulus: [
+      "A parcel company charges a fixed price per parcel plus a weight charge based on the average parcel weight in each zone.",
+    ],
+    visual: {
+      type: "table",
+      title: "Parcel Zone Charges",
+      headers: ["Zone", "Parcels", "Average weight", "Fixed charge", "Charge per kg"],
+      rows: [
+        ["Local", "80", "2.5 kg", "GBP 3.00", "GBP 0.40"],
+        ["Regional", "65", "4.0 kg", "GBP 4.50", "GBP 0.60"],
+        ["National", "50", "6.0 kg", "GBP 6.00", "GBP 0.80"],
+        ["Express", "30", "3.5 kg", "GBP 8.00", "GBP 1.20"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What was the total charge for all Regional parcels?",
+        correct: "GBP 448.50",
+        distractors: ["GBP 292.50", "GBP 156.00", "GBP 6.90"],
+        explanation:
+          "Each Regional parcel costs GBP 4.50 + 4.0 x GBP 0.60 = GBP 6.90. For 65 parcels, total charge = 65 x GBP 6.90 = GBP 448.50. Distractor GBP 292.50: uses the fixed charge only. Distractor GBP 156.00: uses the weight charge only. Distractor GBP 6.90: gives the charge for one parcel.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the charge for one Express parcel at the average weight?",
+        correct: "GBP 12.20",
+        distractors: ["GBP 8.00", "GBP 4.20", "GBP 9.20"],
+        explanation:
+          "One Express parcel costs GBP 8.00 + 3.5 x GBP 1.20 = GBP 12.20. Distractor GBP 8.00: gives the fixed charge only. Distractor GBP 4.20: gives the weight charge only. Distractor GBP 9.20: adds only one kg of weight charge.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all parcels were National parcels?",
+        correct: "22.2%",
+        distractors: ["35.6%", "28.9%", "13.3%"],
+        explanation:
+          "Total parcels = 80 + 65 + 50 + 30 = 225. National parcels = 50, so 50/225 x 100 = 22.2%. Distractor 35.6%: uses Local parcels. Distractor 28.9%: uses Regional parcels. Distractor 13.3%: uses Express parcels.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Local total charge to National total charge?",
+        correct: "16:27",
+        distractors: ["27:16", "8:5", "3:6"],
+        explanation:
+          "Local total charge = 80 x (GBP 3.00 + 2.5 x GBP 0.40) = GBP 320. National total charge = 50 x (GBP 6.00 + 6.0 x GBP 0.80) = GBP 540. 320:540 simplifies to 16:27. Distractor 27:16 reverses the ratio. Distractor 8:5 compares parcel counts. Distractor 3:6 compares fixed charges.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "office-cleaning-contract-costs",
+    stimulus: [
+      "A cleaning contractor estimated weekly cleaning time from floor area, cleaning minutes per 100 square metres and visits per week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Office Cleaning Contracts",
+      headers: ["Area", "Floor area", "Minutes per 100 sq m", "Visits per week", "Hourly charge"],
+      rows: [
+        ["Reception", "600 sq m", "12", "5", "GBP 18"],
+        ["Clinic", "900 sq m", "15", "6", "GBP 20"],
+        ["Admin", "1,200 sq m", "10", "5", "GBP 18"],
+        ["Lab", "750 sq m", "20", "4", "GBP 22"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the weekly cleaning time for the Clinic area?",
+        correct: "13.5 h",
+        distractors: ["810 h", "135 min", "9 h"],
+        explanation:
+          "Clinic cleaning time per visit = 9 x 15 = 135 min. Across 6 visits, time = 810 min = 13.5 h. Distractor 810 h: does not convert minutes to hours. Distractor 135 min: gives one visit only. Distractor 9 h: uses floor area units as hours.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the weekly cleaning cost for the Lab area?",
+        correct: "GBP 220",
+        distractors: ["GBP 600", "GBP 180", "GBP 165"],
+        explanation:
+          "Lab time per visit = 7.5 x 20 = 150 min. Across 4 visits, time = 600 min = 10 h. Weekly cost = 10 x GBP 22 = GBP 220. Distractor GBP 600: gives weekly minutes as a cost. Distractor GBP 180: uses Reception's hourly charge. Distractor GBP 165: uses 7.5 h instead of 10 h.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of total weekly cleaning time is Reception time?",
+        correct: "15.2%",
+        distractors: ["34.2%", "25.3%", "25.0%"],
+        explanation:
+          "Weekly cleaning times are Reception 360 min, Clinic 810 min, Admin 600 min and Lab 600 min, totalling 2,370 min. Reception share = 360/2,370 x 100 = 15.2%. Distractor 34.2%: uses Clinic. Distractor 25.3%: uses Admin or Lab. Distractor 25.0%: assumes four equal areas.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Clinic weekly cleaning time to Reception weekly cleaning time?",
+        correct: "9:4",
+        distractors: ["4:9", "3:2", "6:5"],
+        explanation:
+          "Clinic weekly time = 810 min and Reception weekly time = 360 min. 810:360 simplifies to 9:4. Distractor 4:9 reverses the ratio. Distractor 3:2 compares floor areas. Distractor 6:5 compares visits per week.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "donation-session-capacity",
+    stimulus: [
+      "A donation centre estimated session capacity from chairs available, donations per chair per hour and session length.",
+    ],
+    visual: {
+      type: "table",
+      title: "Donation Session Capacity",
+      headers: ["Session", "Chairs", "Donations per chair per hour", "Session length", "Donors booked"],
+      rows: [
+        ["Morning", "8", "3.0", "4 h", "90"],
+        ["Afternoon", "10", "2.5", "5 h", "118"],
+        ["Evening", "6", "3.0", "3.5 h", "60"],
+        ["Weekend", "12", "2.0", "6 h", "132"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the Afternoon session capacity?",
+        correct: "125 donations",
+        distractors: ["118 donations", "50 donations", "25 donations"],
+        explanation:
+          "Afternoon capacity = 10 chairs x 2.5 donations per chair per hour x 5 h = 125 donations. Distractor 118 donations: reads donors booked. Distractor 50 donations: multiplies chairs by session length. Distractor 25 donations: omits session length.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many unused donation slots were there in the Morning session?",
+        correct: "6",
+        distractors: ["96", "90", "8"],
+        explanation:
+          "Morning capacity = 8 x 3.0 x 4 = 96 donations. Donors booked = 90, so unused slots = 96 - 90 = 6. Distractor 96: gives capacity. Distractor 90: reads donors booked. Distractor 8: reads chairs.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What percentage of Weekend session capacity was booked?",
+        correct: "91.7%",
+        distractors: ["108.3%", "132.0%", "94.4%"],
+        explanation:
+          "Weekend capacity = 12 x 2.0 x 6 = 144 donations. Booked percentage = 132/144 x 100 = 91.7%. Distractor 108.3%: divides capacity by booked donors. Distractor 132.0%: reads donors booked as a percentage. Distractor 94.4%: uses Afternoon booked percentage.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Evening session capacity to Morning session capacity?",
+        correct: "21:32",
+        distractors: ["32:21", "3:4", "6:8"],
+        explanation:
+          "Evening capacity = 6 x 3.0 x 3.5 = 63 donations and Morning capacity = 8 x 3.0 x 4 = 96 donations. 63:96 simplifies to 21:32. Distractor 32:21 reverses the ratio. Distractor 3:4 compares session lengths after rounding. Distractor 6:8 compares chairs.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "solar-panel-daily-yield",
+    stimulus: [
+      "A property owner estimated daily solar output. Daily yield equals panels multiplied by watt rating, sun hours and efficiency factor, then divided by 1,000 to convert Wh to kWh.",
+    ],
+    visual: {
+      type: "table",
+      title: "Solar Panel Arrays",
+      headers: ["Array", "Panels", "Watt rating", "Sun hours", "Efficiency factor"],
+      rows: [
+        ["North roof", "18", "400 W", "4.5", "80%"],
+        ["South roof", "24", "380 W", "5.0", "85%"],
+        ["Garage", "12", "420 W", "4.0", "75%"],
+        ["Shed", "10", "350 W", "3.5", "70%"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question: "What is the estimated daily yield from the South roof array?",
+        correct: "38.76 kWh",
+        distractors: ["45.60 kWh", "9.12 kWh", "3.876 kWh"],
+        explanation:
+          "South roof yield = 24 x 380 W x 5.0 h x 85% / 1,000 = 38.76 kWh. Distractor 45.60 kWh: omits the efficiency factor. Distractor 9.12 kWh: omits sun hours and efficiency. Distractor 3.876 kWh: divides by 10,000 instead of 1,000.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of total daily yield is from the North roof array?",
+        correct: "29.3%",
+        distractors: ["43.9%", "17.1%", "9.7%"],
+        explanation:
+          "Daily yields are North roof 25.92 kWh, South roof 38.76 kWh, Garage 15.12 kWh and Shed 8.575 kWh, totalling 88.375 kWh. North roof share = 25.92/88.375 x 100 = 29.3%. Distractor 43.9%: uses South roof. Distractor 17.1%: uses Garage. Distractor 9.7%: uses Shed.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Garage panels to South roof panels?",
+        correct: "1:2",
+        distractors: ["2:1", "21:19", "4:5"],
+        explanation:
+          "Garage has 12 panels and South roof has 24 panels. 12:24 simplifies to 1:2. Distractor 2:1 reverses the ratio. Distractor 21:19 compares watt ratings. Distractor 4:5 compares sun hours.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "To the nearest 0.01 kWh, what is the estimated weekly yield from the Shed array?",
+        correct: "60.03 kWh",
+        distractors: ["8.58 kWh", "85.75 kWh", "12.25 kWh"],
+        explanation:
+          "Shed daily yield = 10 x 350 W x 3.5 h x 70% / 1,000 = 8.575 kWh. Weekly yield = 8.575 x 7 = 60.025 kWh, which rounds to 60.03 kWh. Distractor 8.58 kWh: gives the daily yield. Distractor 85.75 kWh: moves the decimal place. Distractor 12.25 kWh: omits the efficiency factor and gives daily yield.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "online-course-completion-rates",
+    stimulus: [
+      "An online learning provider recorded enrolments, completion rates and certificate fees for four courses.",
+    ],
+    visual: {
+      type: "table",
+      title: "Online Course Outcomes",
+      headers: ["Course", "Enrolled", "Completion rate", "Certificate fee", "Modules"],
+      rows: [
+        ["Anatomy", "320", "75%", "GBP 18", "12"],
+        ["Physiology", "280", "65%", "GBP 20", "10"],
+        ["Statistics", "160", "80%", "GBP 25", "8"],
+        ["Ethics", "240", "70%", "GBP 15", "6"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many Anatomy learners completed the course?",
+        correct: "240",
+        distractors: ["320", "80", "75"],
+        explanation:
+          "Anatomy completions = 320 x 75% = 240. Distractor 320: gives enrolled learners. Distractor 80: gives learners who did not complete. Distractor 75: reads the completion rate as a count.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What certificate revenue came from Statistics completions?",
+        correct: "GBP 3,200",
+        distractors: ["GBP 4,000", "GBP 128", "GBP 2,000"],
+        explanation:
+          "Statistics completions = 160 x 80% = 128. Certificate revenue = 128 x GBP 25 = GBP 3,200. Distractor GBP 4,000: assumes all enrolled learners completed. Distractor GBP 128: gives completions. Distractor GBP 2,000: multiplies the fee by the completion-rate number 80.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of all enrolled learners were in Physiology?",
+        correct: "28.0%",
+        distractors: ["32.0%", "16.0%", "24.0%"],
+        explanation:
+          "Total enrolled learners = 320 + 280 + 160 + 240 = 1,000. Physiology learners = 280, so 280/1,000 x 100 = 28.0%. Distractor 32.0%: uses Anatomy. Distractor 16.0%: uses Statistics. Distractor 24.0%: uses Ethics.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Ethics completions to Physiology completions?",
+        correct: "84:91",
+        distractors: ["91:84", "24:28", "14:13"],
+        explanation:
+          "Ethics completions = 240 x 70% = 168 and Physiology completions = 280 x 65% = 182. 168:182 simplifies to 84:91. Distractor 91:84 reverses the ratio. Distractor 24:28 compares enrolments after dividing by 10. Distractor 14:13 compares completion rates.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "word-only-qr-mixed-eight",
+    leftTitle: "Information",
+    stimulus: [
+      "Answer each standalone word problem using only the information given in the question.",
+    ],
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A flight leaves London at 21:45 local time, where London is UTC+1. It arrives in Toronto at 00:25 the next day local time, where Toronto is UTC-4. What is the flight duration?",
+        correct: "7 h 40 min",
+        distractors: ["2 h 40 min", "6 h 40 min", "12 h 40 min"],
+        explanation:
+          "The departure time is 20:45 UTC and the arrival time is 04:25 UTC the next day. From 20:45 to 04:25 is 7 h 40 min. Distractor 2 h 40 min: compares local clock times without time-zone adjustment. Distractor 6 h 40 min: subtracts one hour too many. Distractor 12 h 40 min: adds the five-hour time-zone difference to the local clock gap.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A car travels 90 km at 60 km/h and then 120 km at 80 km/h. What is the average speed for the whole journey?",
+        correct: "70 km/h",
+        distractors: ["71.4 km/h", "80 km/h", "210 km/h"],
+        explanation:
+          "The first section takes 90/60 = 1.5 h and the second takes 120/80 = 1.5 h. Total distance = 210 km and total time = 3 h, so average speed = 210/3 = 70 km/h. Distractor 71.4 km/h: weights the speeds by distance rather than time. Distractor 80 km/h: uses the second-section speed only. Distractor 210 km/h: gives the total distance as a speed.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "A shop sells three identical items costing GBP 45 each. In a deal, the third item is 40% off and then 10% VAT is added to the total. What is the final amount paid?",
+        correct: "GBP 128.70",
+        distractors: ["GBP 117.00", "GBP 148.50", "GBP 121.50"],
+        explanation:
+          "The first two items cost GBP 90. The third item costs GBP 45 x 60% = GBP 27, so the pre-VAT total is GBP 117. Adding 10% VAT gives GBP 117 x 1.10 = GBP 128.70. Distractor GBP 117.00: omits VAT. Distractor GBP 148.50: omits the discount. Distractor GBP 121.50: applies 10% VAT to the discounted item only.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "Six identical machines make 540 parts in 3 hours. At the same rate, how many parts would four machines make in 5 hours?",
+        correct: "600 parts",
+        distractors: ["360 parts", "900 parts", "450 parts"],
+        explanation:
+          "One machine makes 540/(6 x 3) = 30 parts per hour. Four machines for 5 hours make 4 x 5 x 30 = 600 parts. Distractor 360 parts: uses 4 machines for 3 hours. Distractor 900 parts: uses 6 machines for 5 hours. Distractor 450 parts: scales by time only.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "train-platform-carriage-capacity",
+    stimulus: [
+      "A rail operator compared passenger numbers with train capacity. Total capacity equals carriages multiplied by the sum of seats and standing spaces per carriage.",
+    ],
+    visual: {
+      type: "table",
+      title: "Train Service Capacity",
+      headers: ["Service", "Carriages", "Seats per carriage", "Standing spaces per carriage", "Passengers boarded"],
+      rows: [
+        ["Red", "8", "72", "28", "760"],
+        ["Blue", "6", "80", "20", "570"],
+        ["Green", "10", "64", "36", "940"],
+        ["Gold", "5", "90", "30", "520"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the total capacity of the Red service?",
+        correct: "800 passengers",
+        distractors: ["576 passengers", "760 passengers", "224 passengers"],
+        explanation:
+          "Red capacity = 8 x (72 + 28) = 800 passengers. Distractor 576 passengers: counts seats only. Distractor 760 passengers: reads passengers boarded. Distractor 224 passengers: counts standing spaces only.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "Which service had the lowest percentage of capacity occupied?",
+        correct: "Gold",
+        distractors: ["Red", "Blue", "Green"],
+        explanation:
+          "Occupancy percentages are Red 760/800 = 95.0%, Blue 570/600 = 95.0%, Green 940/1,000 = 94.0%, and Gold 520/600 = 86.7%. Gold is lowest. Distractor Red: has high occupancy. Distractor Blue: has high occupancy. Distractor Green: is higher than Gold.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question:
+          "To the nearest 0.1%, what percentage of all passengers boarded the Green service?",
+        correct: "33.7%",
+        distractors: ["27.2%", "20.4%", "18.6%"],
+        explanation:
+          "Total passengers boarded = 760 + 570 + 940 + 520 = 2,790. Green passengers = 940, so 940/2,790 x 100 = 33.7%. Distractor 27.2%: uses Red. Distractor 20.4%: uses Blue. Distractor 18.6%: uses Gold.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of Blue seated capacity to Gold seated capacity?",
+        correct: "16:15",
+        distractors: ["15:16", "8:9", "6:5"],
+        explanation:
+          "Blue seated capacity = 6 x 80 = 480 and Gold seated capacity = 5 x 90 = 450. 480:450 simplifies to 16:15. Distractor 15:16 reverses the ratio. Distractor 8:9 compares seats per carriage. Distractor 6:5 compares carriages.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "catering-buffet-portion-costs",
+    stimulus: [
+      "A catering company recorded portions prepared, portions sold, ingredient cost and selling price for four buffet dishes.",
+    ],
+    visual: {
+      type: "table",
+      title: "Buffet Dish Costs",
+      headers: ["Dish", "Portions prepared", "Ingredient cost per 20 portions", "Selling price", "Portions sold"],
+      rows: [
+        ["Pasta", "240", "GBP 18", "GBP 3.50", "210"],
+        ["Curry", "180", "GBP 24", "GBP 4.00", "160"],
+        ["Salad", "300", "GBP 12", "GBP 2.20", "270"],
+        ["Dessert", "200", "GBP 15", "GBP 2.80", "190"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the ingredient cost for the Curry portions prepared?",
+        correct: "GBP 216",
+        distractors: ["GBP 192", "GBP 24", "GBP 640"],
+        explanation:
+          "Curry portions prepared = 180, which is 9 lots of 20 portions. Ingredient cost = 9 x GBP 24 = GBP 216. Distractor GBP 192: uses portions sold instead of portions prepared. Distractor GBP 24: gives one lot of 20 portions. Distractor GBP 640: gives Curry sales revenue.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the revenue from Salad portions sold?",
+        correct: "GBP 594.00",
+        distractors: ["GBP 660.00", "GBP 270.00", "GBP 180.00"],
+        explanation:
+          "Salad revenue = 270 portions sold x GBP 2.20 = GBP 594.00. Distractor GBP 660.00: uses portions prepared instead of portions sold. Distractor GBP 270.00: reads portions sold as revenue. Distractor GBP 180.00: gives the ingredient cost of all Salad portions prepared.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "What percentage of Dessert portions prepared were sold?",
+        correct: "95.0%",
+        distractors: ["105.3%", "190.0%", "90.0%"],
+        explanation:
+          "Dessert portions sold = 190 and portions prepared = 200. 190/200 x 100 = 95.0%. Distractor 105.3%: divides prepared portions by sold portions. Distractor 190.0%: reads portions sold as a percentage. Distractor 90.0%: uses Curry sold percentage.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Pasta portions prepared to Curry portions prepared?",
+        correct: "4:3",
+        distractors: ["3:4", "6:5", "7:8"],
+        explanation:
+          "Pasta portions prepared = 240 and Curry portions prepared = 180. 240:180 simplifies to 4:3. Distractor 3:4 reverses the ratio. Distractor 6:5 compares ingredient costs. Distractor 7:8 compares Pasta portions sold with Curry portions sold after simplifying incorrectly.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "hospital-ward-bed-occupancy",
+    stimulus: [
+      "A hospital recorded bed numbers, occupancy, average length of stay and admissions for four wards.",
+    ],
+    visual: {
+      type: "table",
+      title: "Ward Occupancy Summary",
+      headers: ["Ward", "Beds", "Occupancy", "Average stay", "Admissions"],
+      rows: [
+        ["A", "30", "80%", "4 days", "42"],
+        ["B", "36", "75%", "5 days", "38"],
+        ["C", "25", "88%", "3 days", "50"],
+        ["D", "40", "65%", "6 days", "36"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many beds were occupied in Ward B?",
+        correct: "27 beds",
+        distractors: ["36 beds", "9 beds", "75 beds"],
+        explanation:
+          "Ward B occupied beds = 36 x 75% = 27 beds. Distractor 36 beds: reads total beds. Distractor 9 beds: gives unoccupied beds. Distractor 75 beds: reads the occupancy percentage as a bed count.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many bed-days were used by Ward D admissions?",
+        correct: "216 bed-days",
+        distractors: ["36 bed-days", "240 bed-days", "46 bed-days"],
+        explanation:
+          "Ward D admissions = 36 and average stay = 6 days, so bed-days = 36 x 6 = 216. Distractor 36 bed-days: gives admissions only. Distractor 240 bed-days: multiplies beds by average stay. Distractor 46 bed-days: adds beds and average stay.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "calculator-heavy", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of all listed beds were in Ward D?",
+        correct: "30.5%",
+        distractors: ["27.5%", "22.9%", "19.1%"],
+        explanation:
+          "Total beds = 30 + 36 + 25 + 40 = 131. Ward D has 40 beds, so 40/131 x 100 = 30.5%. Distractor 27.5%: uses Ward B. Distractor 22.9%: uses Ward A. Distractor 19.1%: uses Ward C.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the ratio of occupied beds in Ward A to occupied beds in Ward B?",
+        correct: "8:9",
+        distractors: ["9:8", "5:6", "80:75"],
+        explanation:
+          "Ward A occupied beds = 30 x 80% = 24 and Ward B occupied beds = 36 x 75% = 27. 24:27 simplifies to 8:9. Distractor 9:8 reverses the ratio. Distractor 5:6 compares total beds. Distractor 80:75 compares occupancy percentages.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "streaming-ad-campaign-metrics",
+    stimulus: [
+      "A streaming platform compared four advertising campaigns. Clicks equal impressions multiplied by click-through rate.",
+    ],
+    visual: {
+      type: "table",
+      title: "Streaming Ad Campaigns",
+      headers: ["Campaign", "Impressions", "Click-through rate", "Cost per 1,000 impressions", "Conversions"],
+      rows: [
+        ["A", "120,000", "2.5%", "GBP 6.00", "360"],
+        ["B", "90,000", "3.0%", "GBP 7.50", "405"],
+        ["C", "150,000", "1.8%", "GBP 5.20", "324"],
+        ["D", "80,000", "4.0%", "GBP 8.00", "400"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many clicks did Campaign A receive?",
+        correct: "3,000 clicks",
+        distractors: ["120,000 clicks", "2,500 clicks", "360 clicks"],
+        explanation:
+          "Campaign A clicks = 120,000 x 2.5% = 3,000. Distractor 120,000 clicks: reads impressions. Distractor 2,500 clicks: applies 2.5% to 100,000. Distractor 360 clicks: reads conversions.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the advertising cost of Campaign C?",
+        correct: "GBP 780",
+        distractors: ["GBP 5.20", "GBP 650", "GBP 1,500"],
+        explanation:
+          "Campaign C has 150 groups of 1,000 impressions. Cost = 150 x GBP 5.20 = GBP 780. Distractor GBP 5.20: gives the cost per 1,000 impressions only. Distractor GBP 650: uses 125 groups of 1,000. Distractor GBP 1,500: multiplies 150 by GBP 10.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "What percentage of Campaign D clicks became conversions?",
+        correct: "12.5%",
+        distractors: ["0.5%", "4.0%", "8.0%"],
+        explanation:
+          "Campaign D clicks = 80,000 x 4.0% = 3,200. Conversions = 400, so 400/3,200 x 100 = 12.5%. Distractor 0.5%: gives conversions as a percentage of impressions. Distractor 4.0%: reads the click-through rate. Distractor 8.0%: uses cost per 1,000 impressions as a percentage.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Campaign B impressions to Campaign D impressions?",
+        correct: "9:8",
+        distractors: ["8:9", "3:4", "81:80"],
+        explanation:
+          "Campaign B impressions = 90,000 and Campaign D impressions = 80,000. 90,000:80,000 simplifies to 9:8. Distractor 8:9 reverses the ratio. Distractor 3:4 compares click-through rates. Distractor 81:80 compares conversions after multiplying by 0.2 incorrectly.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "bike-hire-time-charges",
+    stimulus: [
+      "A bike-hire company charges a base fee that includes a fixed number of minutes. Extra time is charged for each full 15-minute block shown in the question.",
+    ],
+    visual: {
+      type: "table",
+      title: "Bike-Hire Plans",
+      headers: ["Plan", "Base fee", "Included minutes", "Extra per 15 min", "Rentals"],
+      rows: [
+        ["City", "GBP 2.50", "30", "GBP 1.20", "90"],
+        ["Park", "GBP 3.00", "45", "GBP 1.00", "70"],
+        ["River", "GBP 4.00", "60", "GBP 1.50", "45"],
+        ["Hill", "GBP 2.00", "20", "GBP 0.80", "80"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What is the cost of a 75-minute City rental?",
+        correct: "GBP 6.10",
+        distractors: ["GBP 2.50", "GBP 9.00", "GBP 3.60"],
+        explanation:
+          "City includes 30 minutes, so a 75-minute rental has 45 extra minutes, or 3 blocks of 15 minutes. Cost = GBP 2.50 + 3 x GBP 1.20 = GBP 6.10. Distractor GBP 2.50: uses the base fee only. Distractor GBP 9.00: charges all 75 minutes as extra blocks. Distractor GBP 3.60: gives the extra-time charge only.",
+      },
+      {
+        subtype: "qr-estimation",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "Which plan is cheapest for an 80-minute rental?",
+        correct: "Hill",
+        distractors: ["City", "Park", "River"],
+        explanation:
+          "For 80 minutes, City costs GBP 7.30, Park costs GBP 6.00, River costs GBP 7.00, and Hill costs GBP 5.20. Hill is cheapest. Distractor City: has a low base fee but higher extra-time cost. Distractor Park: is close but higher than Hill. Distractor River: has a higher base fee.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "data-display", "set-based"],
+        question: "To the nearest 0.1%, what percentage of rentals were Park rentals?",
+        correct: "24.6%",
+        distractors: ["31.6%", "28.1%", "15.8%"],
+        explanation:
+          "Total rentals = 90 + 70 + 45 + 80 = 285. Park rentals = 70, so 70/285 x 100 = 24.6%. Distractor 31.6%: uses City. Distractor 28.1%: uses Hill. Distractor 15.8%: uses River.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of City included minutes to River included minutes?",
+        correct: "1:2",
+        distractors: ["2:1", "3:4", "5:8"],
+        explanation:
+          "City includes 30 minutes and River includes 60 minutes. 30:60 simplifies to 1:2. Distractor 2:1 reverses the ratio. Distractor 3:4 compares base fees approximately. Distractor 5:8 compares base fees after converting GBP 2.50:GBP 4.00.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "farm-harvest-yield-revenue",
+    stimulus: [
+      "A farm estimated crop output from field area, yield per hectare, waste percentage and selling price.",
+    ],
+    visual: {
+      type: "table",
+      title: "Field Harvest Estimates",
+      headers: ["Field", "Area", "Yield per hectare", "Waste", "Price per tonne"],
+      rows: [
+        ["North", "12 ha", "6.5 tonnes", "5%", "GBP 180"],
+        ["East", "9 ha", "7.2 tonnes", "8%", "GBP 160"],
+        ["South", "15 ha", "5.8 tonnes", "4%", "GBP 190"],
+        ["West", "8 ha", "8.0 tonnes", "10%", "GBP 150"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "How many tonnes were harvested from the East field before waste?",
+        correct: "64.8 tonnes",
+        distractors: ["7.2 tonnes", "57.6 tonnes", "72.0 tonnes"],
+        explanation:
+          "East harvest before waste = 9 ha x 7.2 tonnes per hectare = 64.8 tonnes. Distractor 7.2 tonnes: gives yield per hectare only. Distractor 57.6 tonnes: calculates West harvest before waste. Distractor 72.0 tonnes: multiplies 9 by 8.0 tonnes.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "data-display", "set-based"],
+        question: "How many saleable tonnes were available from the West field after waste?",
+        correct: "57.6 tonnes",
+        distractors: ["64.0 tonnes", "6.4 tonnes", "51.2 tonnes"],
+        explanation:
+          "West harvest before waste = 8 x 8.0 = 64.0 tonnes. After 10% waste, saleable tonnes = 64.0 x 0.90 = 57.6 tonnes. Distractor 64.0 tonnes: omits waste. Distractor 6.4 tonnes: gives waste only. Distractor 51.2 tonnes: subtracts 20% rather than 10%.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
+        question: "What is the expected revenue from the North field after waste?",
+        correct: "GBP 13,338",
+        distractors: ["GBP 14,040", "GBP 702", "GBP 11,856"],
+        explanation:
+          "North harvest before waste = 12 x 6.5 = 78 tonnes. After 5% waste, saleable tonnes = 78 x 0.95 = 74.1. Revenue = 74.1 x GBP 180 = GBP 13,338. Distractor GBP 14,040: omits waste. Distractor GBP 702: gives the value of wasted crop. Distractor GBP 11,856: uses East's price.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of South field area to East field area?",
+        correct: "5:3",
+        distractors: ["3:5", "29:36", "19:16"],
+        explanation:
+          "South area = 15 ha and East area = 9 ha. 15:9 simplifies to 5:3. Distractor 3:5 reverses the ratio. Distractor 29:36 compares yields after multiplying by 5. Distractor 19:16 compares prices after simplifying 190:160.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "bookstore-inventory-turnover",
+    stimulus: [
+      "A bookshop recorded opening stock, deliveries, sales and prices for four book categories.",
+    ],
+    visual: {
+      type: "table",
+      title: "Bookshop Inventory",
+      headers: ["Category", "Opening stock", "Delivered", "Sold", "Price per book"],
+      rows: [
+        ["Fiction", "320", "140", "380", "GBP 9"],
+        ["Non-fiction", "180", "100", "210", "GBP 12"],
+        ["Revision", "240", "180", "360", "GBP 15"],
+        ["Children", "260", "90", "280", "GBP 7"],
+      ],
+    },
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the closing stock for Revision books?",
+        correct: "60",
+        distractors: ["420", "360", "180"],
+        explanation:
+          "Revision closing stock = opening stock 240 + delivered 180 - sold 360 = 60. Distractor 420: adds opening stock and deliveries only. Distractor 360: reads sold. Distractor 180: reads delivered.",
+      },
+      {
+        subtype: "qr-units-geometry",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What was the revenue from Fiction books sold?",
+        correct: "GBP 3,420",
+        distractors: ["GBP 2,880", "GBP 4,140", "GBP 380"],
+        explanation:
+          "Fiction revenue = 380 books sold x GBP 9 = GBP 3,420. Distractor GBP 2,880: uses opening stock. Distractor GBP 4,140: uses books available before sales. Distractor GBP 380: reads books sold as revenue.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "data-display", "set-based"],
+        question: "What percentage of available Non-fiction books were sold?",
+        correct: "75.0%",
+        distractors: ["210.0%", "25.0%", "116.7%"],
+        explanation:
+          "Non-fiction books available = 180 + 100 = 280. Sold percentage = 210/280 x 100 = 75.0%. Distractor 210.0%: reads sold books as a percentage. Distractor 25.0%: gives the unsold percentage. Distractor 116.7%: divides sold by opening stock.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["easy", "quick", "data-display", "set-based"],
+        question: "What is the ratio of Children books sold to Fiction books sold?",
+        correct: "14:19",
+        distractors: ["19:14", "26:32", "7:9"],
+        explanation:
+          "Children books sold = 280 and Fiction books sold = 380. 280:380 simplifies to 14:19. Distractor 19:14 reverses the ratio. Distractor 26:32 compares opening stocks. Distractor 7:9 compares prices.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "word-only-qr-mixed-nine",
+    leftTitle: "Information",
+    stimulus: [
+      "Answer each standalone word problem using only the information given in the question.",
+    ],
+    questions: [
+      {
+        subtype: "qr-units-geometry",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A flight departs Tokyo at 08:20 local time, where Tokyo is UTC+9. It arrives in Sydney at 20:05 local time on the same date, where Sydney is UTC+10. What is the flight duration?",
+        correct: "10 h 45 min",
+        distractors: ["11 h 45 min", "9 h 45 min", "12 h 45 min"],
+        explanation:
+          "The departure time is 23:20 UTC on the previous date and the arrival time is 10:05 UTC. From 23:20 to 10:05 is 10 h 45 min. Distractor 11 h 45 min: compares local clock times without adjusting for time zones. Distractor 9 h 45 min: subtracts the time-zone difference twice. Distractor 12 h 45 min: adds the time-zone difference to the local clock gap.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "A tank is 2/5 full. After 180 L is added, it is 7/10 full. What is the tank's capacity?",
+        correct: "600 L",
+        distractors: ["450 L", "252 L", "900 L"],
+        explanation:
+          "The increase is 7/10 - 2/5 = 7/10 - 4/10 = 3/10 of the tank. If 3/10 is 180 L, full capacity is 180/(3/10) = 600 L. Distractor 450 L: treats 2/5 as the added fraction. Distractor 252 L: calculates 7/10 of 360 L. Distractor 900 L: divides by 1/5 instead of 3/10.",
+      },
+      {
+        subtype: "qr-percentages",
+        tags: ["hard", "multi-step", "text-stem", "set-based"],
+        question:
+          "A price is increased by 15% and then decreased by 20%. The final price is GBP 276. What was the original price?",
+        correct: "GBP 300",
+        distractors: ["GBP 276", "GBP 317.40", "GBP 240"],
+        explanation:
+          "After a 15% increase and 20% decrease, the multiplier is 1.15 x 0.80 = 0.92. If 0.92 of the original price is GBP 276, the original price is GBP 276/0.92 = GBP 300. Distractor GBP 276: treats the final price as original. Distractor GBP 317.40: increases the final price by 15%. Distractor GBP 240: subtracts 20% from GBP 300.",
+      },
+      {
+        subtype: "qr-rates-ratios",
+        tags: ["medium", "multi-step", "text-stem", "set-based"],
+        question:
+          "Three workers pack 540 boxes in 6 hours. At the same individual rate, how many boxes would five workers pack in 4 hours?",
+        correct: "600 boxes",
+        distractors: ["360 boxes", "900 boxes", "720 boxes"],
+        explanation:
+          "One worker packs 540/(3 x 6) = 30 boxes per hour. Five workers for 4 hours pack 5 x 4 x 30 = 600 boxes. Distractor 360 boxes: uses three workers for 4 hours. Distractor 900 boxes: uses five workers for 6 hours. Distractor 720 boxes: scales only by the change in workers.",
+      },
+    ],
+  },
+
   // ===== PASTE NEW QR QUESTIONS ABOVE THIS LINE =====
 ];
 
 // ─── BUILDER ──────────────────────────────────────────────────────────────────
 
-const QR_OPTION_KEYS = ["A", "B", "C", "D"] as const;
+const QR_OPTION_KEYS = ["A", "B", "C", "D", "E"] as const;
+const QR_INITIAL_ANSWER_KEYS = ["A", "B", "C", "D"] as const;
+
+function normaliseQrOptionText(value: string) {
+  return value.replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+function formatQrFallbackNumber(value: number, decimals: number) {
+  return value.toLocaleString("en-GB", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+}
+
+function makeQrFallbackOptionText(correctText: string, attempt: number) {
+  const ratioMatch = correctText.match(/^(\d+):(\d+)$/);
+
+  if (ratioMatch) {
+    return `${Number(ratioMatch[1]) + attempt}:${ratioMatch[2]}`;
+  }
+
+  const fractionMatch = correctText.match(/^(\d+)\/(\d+)$/);
+
+  if (fractionMatch) {
+    return `${Number(fractionMatch[1]) + attempt}/${fractionMatch[2]}`;
+  }
+
+  const numericMatch = correctText.match(/^(.*?)(-?[\d,]+(?:\.\d+)?)(.*)$/);
+
+  if (numericMatch) {
+    const prefix = numericMatch[1];
+    const rawNumber = numericMatch[2];
+    const suffix = numericMatch[3];
+    const value = Number(rawNumber.replace(/,/g, ""));
+    const decimals = rawNumber.includes(".") ? rawNumber.split(".")[1].length : 0;
+    const step =
+      decimals > 0
+        ? attempt / 10 ** decimals
+        : Math.max(1, Math.round(Math.abs(value) * 0.04)) * attempt;
+    const direction = attempt % 2 === 0 ? -1 : 1;
+    const adjusted = Math.max(0, value + direction * step);
+
+    return `${prefix}${formatQrFallbackNumber(adjusted, decimals)}${suffix}`;
+  }
+
+  return [
+    "More information is required",
+    "None of the listed options",
+    "The result cannot be determined from the data",
+    "The values are equal",
+    "No change",
+  ][attempt - 1] ?? `Alternative ${attempt}`;
+}
+
+function makeUniqueQrFallbackOptionText(
+  correctText: string,
+  distractors: string[],
+  seed: number
+) {
+  const usedTexts = new Set(
+    [correctText, ...distractors].map((text) => normaliseQrOptionText(text))
+  );
+  let attempt = (seed % 3) + 1;
+
+  for (let tries = 0; tries < 12; tries += 1) {
+    const text = makeQrFallbackOptionText(correctText, attempt);
+    const normalisedText = normaliseQrOptionText(text);
+
+    if (!usedTexts.has(normalisedText)) return text;
+
+    attempt += 1;
+  }
+
+  return `Alternative ${seed + 1}`;
+}
 
 function buildQrOptions(
   correctText: string,
   distractors: [string, string, string],
   seed: number
 ) {
-  const answerIndex = seed % QR_OPTION_KEYS.length;
+  const answerIndex = seed % QR_INITIAL_ANSWER_KEYS.length;
   const wrongs = distractors.slice(0, 3);
+  wrongs.push(makeUniqueQrFallbackOptionText(correctText, wrongs, seed));
   const texts = [...wrongs];
   texts.splice(answerIndex, 0, correctText);
   return {
@@ -39231,7 +43449,7 @@ function buildQrQuestion(
       setId,
       tags: q.tags ?? ["data-display", "set-based", "medium"],
       title: "Quantitative Reasoning Practice",
-      leftTitle: "Data",
+      leftTitle: input.leftTitle ?? (input.visual ? "Data" : "Information"),
       stimulus: input.stimulus,
       visual: input.visual,
       question: q.question,

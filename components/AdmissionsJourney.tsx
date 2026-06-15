@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import PSReviewForm from "@/components/PSReviewForm";
 
 const stages = [
   {
@@ -337,76 +338,7 @@ useEffect(() => {
                         )}
 
                         {stage.showSubmissionPlaceholder && (
-                          <div
-  id="ps-submission"
-  ref={submissionRef}
-  className="mt-8 scroll-mt-28 rounded-[2rem] border border-amber-200 bg-[linear-gradient(180deg,rgba(255,251,235,0.95)_0%,rgba(255,255,255,1)_100%)] p-6"
->
-                            <div className="inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-800">
-                              Personal Statement Review
-                            </div>
-
-                            <h4 className="mt-5 text-2xl font-bold tracking-tight text-gray-900">
-                              Submit your personal statement for review
-                            </h4>
-
-                            <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-600 md:text-base">
-                              This will eventually allow students to upload
-                              their personal statement, pay securely, and
-                              receive detailed feedback. For now, this is a
-                              placeholder while the submission system is being
-                              set up. If you want personal statement reviews, contact <strong> medwithrish@gmail.com.</strong>
-                            </p>
-
-                            <div className="mt-6 grid gap-4 md:grid-cols-2">
-                              <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">
-                                  Email address
-                                </label>
-                                <input
-                                  type="email"
-                                  placeholder="Enter your email"
-                                  disabled
-                                  className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-4 text-gray-400 outline-none"
-                                />
-                              </div>
-
-                              <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">
-                                  Confirm email address
-                                </label>
-                                <input
-                                  type="email"
-                                  placeholder="Re-enter your email"
-                                  disabled
-                                  className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-4 text-gray-400 outline-none"
-                                />
-                              </div>
-                            </div>
-
-                            <div className="mt-5">
-                              <p className="mb-2 text-sm font-medium text-gray-700">
-                                Upload personal statement
-                              </p>
-
-                              <div className="rounded-[2rem] border-2 border-dashed border-amber-300 bg-white px-6 py-10 text-center">
-                                <div className="text-lg font-semibold text-gray-700">
-                                  Submission feature coming soon
-                                </div>
-                                <div className="mt-2 text-sm text-gray-500">
-                                  Upload and payment functionality will be added
-                                  here later.
-                                </div>
-                              </div>
-                            </div>
-
-                            <button
-                              disabled
-                              className="mt-6 w-full rounded-2xl bg-amber-300 px-5 py-4 text-base font-bold text-amber-900 opacity-70"
-                            >
-                              Personal statement submission coming soon
-                            </button>
-                          </div>
+                          <PSReviewForm submissionRef={submissionRef} />
                         )}
                       </div>
                     </div>

@@ -2261,14 +2261,6 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
         ))}
         {visual.regionLabels.map((label) => (
           <g key={label.id}>
-            <rect
-              x={label.x - 14}
-              y={label.y - 11}
-              width="28"
-              height="22"
-              rx="11"
-              fill="white"
-            />
             <text
               x={label.x}
               y={label.y}
@@ -2299,18 +2291,94 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
   );
 }
 
+function formatChartNumber(value: number) {
+  return Number.isInteger(value)
+    ? String(value)
+    : value.toFixed(1).replace(/\.0$/, "");
+}
+
+function splitSvgLabel(value: string, maxChars: number) {
+  const words = formatDisplayText(value).split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
+  let current = "";
+
+  for (const word of words) {
+    if (word.length > maxChars) {
+      if (current) {
+        lines.push(current);
+        current = "";
+      }
+
+      for (let i = 0; i < word.length; i += maxChars) {
+        lines.push(word.slice(i, i + maxChars));
+      }
+      continue;
+    }
+
+    const next = current ? `${current} ${word}` : word;
+
+    if (next.length > maxChars && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = next;
+    }
+  }
+
+  if (current) lines.push(current);
+  return lines.slice(0, 3);
+}
+
+function WrappedSvgLabel({
+  lines,
+  x,
+  y,
+  fontSize,
+  fontWeight = 700,
+  lineHeight = 14,
+}: {
+  lines: string[];
+  x: number;
+  y: number;
+  fontSize: number;
+  fontWeight?: number;
+  lineHeight?: number;
+}) {
+  return (
+    <text
+      x={x}
+      y={y}
+      textAnchor="middle"
+      dominantBaseline="hanging"
+      fontFamily="Arial, Helvetica, sans-serif"
+      fontSize={fontSize}
+      fontWeight={fontWeight}
+      fill="#111111"
+    >
+      {lines.map((line, index) => (
+        <tspan key={`${line}-${index}`} x={x} dy={index === 0 ? 0 : lineHeight}>
+          {line}
+        </tspan>
+      ))}
+    </text>
+  );
+}
+
 function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
   if (visual.type === "table") {
     return (
-      <div className="mx-auto mb-8 mt-5 w-full max-w-[640px] overflow-hidden rounded-sm border border-slate-300 bg-white">
-        <div className="border-b border-slate-300 bg-slate-100 px-3 py-2 text-sm font-bold">
-          {formatDisplayText(visual.title)}
-        </div>
-        <table className="w-full border-collapse text-left text-sm">
-          <thead className="bg-slate-50">
+      <div className="mx-auto mb-8 mt-5 w-full max-w-[720px] overflow-x-auto bg-white">
+        <table className="min-w-[540px] border-collapse text-center text-sm text-black">
+          <caption className="mb-2 text-center text-base font-bold text-black">
+            {formatDisplayText(visual.title)}
+          </caption>
+          <thead>
             <tr>
               {visual.headers.map((header) => (
-                <th key={header} className="border-b border-slate-200 px-3 py-2 font-bold">
+                <th
+                  key={header}
+                  className="border border-black px-3 py-1.5 align-middle font-bold leading-5"
+                >
                   {formatDisplayText(header)}
                 </th>
               ))}
@@ -2320,7 +2388,10 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             {visual.rows.map((row) => (
               <tr key={row.join("-")}>
                 {row.map((cell) => (
-                  <td key={cell} className="border-b border-slate-100 px-3 py-2">
+                  <td
+                    key={cell}
+                    className="border border-black px-3 py-1.5 align-middle leading-5"
+                  >
                     {formatDisplayText(cell)}
                   </td>
                 ))}
@@ -2329,7 +2400,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
           </tbody>
         </table>
         {visual.note && (
-          <p className="px-3 py-2 text-xs font-semibold text-slate-600">
+          <p className="mt-2 text-xs font-semibold text-black">
             {formatDisplayText(visual.note)}
           </p>
         )}
@@ -2431,14 +2502,6 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             })}
             {visual.regionLabels.map((label) => (
               <g key={label.id}>
-                <rect
-                  x={label.x - 17}
-                  y={label.y - 13}
-                  width="34"
-                  height="26"
-                  rx="13"
-                  fill="white"
-                />
                 <text
                   x={label.x}
                   y={label.y}
@@ -2476,26 +2539,45 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
   }
 
   const getSeriesFill = (index: number) => {
-    const fills = ["#52525b", "#c4c4c4", "#71717a", "#e4e4e7"];
+    const fills = ["#ffffff", "#c7c7c7", "#ececec", "#9f9f9f"];
     return fills[index % fills.length];
   };
 
-  const width = 400;
-  const height = 224;
-  const left = 70;
-  const right = 24;
-  const top = 30;
-  const bottom = 52;
-  const chartWidth = width - left - right;
-  const chartHeight = height - top - bottom;
-  const valueToY = (value: number) =>
-    top + chartHeight - (value / visual.max) * chartHeight;
-  const tickCount = 10;
+  const xAxisLabels =
+    visual.type === "bar"
+      ? visual.categories.map((category) => category.label)
+      : visual.type === "grouped-bar"
+        ? visual.groups.map((group) => group.label)
+        : visual.points.map((point) => point.label);
+  const width = visual.type === "grouped-bar" ? 660 : 620;
+  const top = 52;
+  const right = 30;
+  const chartHeight = 230;
+  const tickCount = 5;
   const ticks = Array.from(
     { length: tickCount + 1 },
     (_, index) => (visual.max / tickCount) * index
   );
-  const majorTicks = ticks.filter((_, index) => index % 2 === 0);
+  const tickLabels = ticks.map(formatChartNumber);
+  const left = Math.max(
+    84,
+    Math.max(...tickLabels.map((label) => label.length)) * 8 + 44
+  );
+  const chartWidth = width - left - right;
+  const labelSlotWidth = chartWidth / Math.max(1, xAxisLabels.length);
+  const labelMaxChars = Math.max(6, Math.floor(labelSlotWidth / 5.8));
+  const xAxisLabelLines = xAxisLabels.map((label) =>
+    splitSvgLabel(label, labelMaxChars)
+  );
+  const maxXAxisLines = Math.max(
+    1,
+    ...xAxisLabelLines.map((lines) => lines.length)
+  );
+  const bottom = 42 + maxXAxisLines * 15;
+  const height = top + chartHeight + bottom;
+  const axisBottom = top + chartHeight;
+  const valueToY = (value: number) =>
+    axisBottom - (value / visual.max) * chartHeight;
   const linePoints =
     visual.type === "line"
       ? visual.points.map((point, index) => {
@@ -2507,59 +2589,30 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
           return { ...point, x, y: valueToY(point.value) };
         })
       : [];
-  const chartKeyItems =
+  const groupedLegendItems =
     visual.type === "grouped-bar"
       ? visual.seriesLabels.map((label, index) => ({
           label,
           fill: getSeriesFill(index),
-          kind: "bar" as const,
         }))
-      : visual.type === "line"
-        ? [
-            {
-              label: visual.yLabel,
-              fill: "#3f3f46",
-              kind: "line" as const,
-            },
-          ]
-        : [
-            {
-              label: visual.yLabel,
-              fill: "#8a8a8a",
-              kind: "bar" as const,
-            },
-          ];
-  const horizontalAxisText =
-    visual.type === "grouped-bar"
-      ? "Groups shown below the bars"
-      : visual.type === "line"
-        ? "Points shown from left to right"
-        : "Categories shown below the bars";
+      : [];
 
   return (
-    <div className="mx-auto mb-8 mt-5 w-full max-w-[560px] rounded-sm border border-slate-300 bg-white p-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.08)]">
-      <h3 className="text-center text-sm font-bold">
+    <div className="mx-auto mb-8 mt-5 w-full max-w-[720px] bg-white text-black">
+      <h3 className="text-center text-base font-bold text-black">
         {formatDisplayText(visual.title)}
       </h3>
-      <div className="mt-2 overflow-x-auto">
+      <div className="mt-3 overflow-x-auto">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="h-auto w-full min-w-[320px] text-slate-800"
+          className="block h-auto text-black"
+          style={{ width: `${width}px`, maxWidth: "none" }}
           role="img"
           aria-label={formatDisplayText(visual.title)}
         >
-          <rect
-            x={left}
-            y={top}
-            width={chartWidth}
-            height={chartHeight}
-            fill="#fbfbfb"
-            stroke="#d4d4d4"
-            strokeWidth="1"
-          />
+          <rect x="0" y="0" width={width} height={height} fill="#ffffff" />
           {ticks.map((tick) => {
             const y = valueToY(tick);
-            const major = majorTicks.includes(tick);
             return (
               <g key={tick}>
                 <line
@@ -2567,74 +2620,63 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   y1={y}
                   x2={left + chartWidth}
                   y2={y}
-                  stroke={major ? "#9ca3af" : "#e5e7eb"}
-                  strokeWidth={major ? "1.1" : "0.7"}
+                  stroke="#b7b7b7"
+                  strokeWidth="1.2"
                 />
-                {major && (
-                  <text
-                    x={left - 12}
-                    y={y + 4}
-                    textAnchor="end"
-                    fontSize="11"
-                    fill="#27272a"
-                  >
-                    {Math.round(tick)}
-                  </text>
-                )}
+                <text
+                  x={left - 14}
+                  y={y + 5}
+                  textAnchor="end"
+                  fontFamily="Arial, Helvetica, sans-serif"
+                  fontSize="14"
+                  fill="#111111"
+                >
+                  {formatChartNumber(tick)}
+                </text>
               </g>
-            );
-          })}
-          {Array.from({ length: 10 }, (_, index) => {
-            const x = left + (index / 10) * chartWidth;
-            return (
-              <line
-                key={x}
-                x1={x}
-                y1={top}
-                x2={x}
-                y2={top + chartHeight}
-                stroke="#eeeeee"
-                strokeWidth="0.7"
-              />
             );
           })}
           <line
             x1={left}
-            y1={top + chartHeight}
+            y1={axisBottom}
             x2={left + chartWidth}
-            y2={top + chartHeight}
-            stroke="#111827"
-            strokeWidth="1.8"
+            y2={axisBottom}
+            stroke="#111111"
+            strokeWidth="2.2"
           />
           <line
             x1={left}
             y1={top}
             x2={left}
-            y2={top + chartHeight}
-            stroke="#111827"
-            strokeWidth="1.8"
+            y2={axisBottom}
+            stroke="#111111"
+            strokeWidth="2.2"
           />
           <text
-            x={20}
+            x={24}
             y={top + chartHeight / 2}
-            transform={`rotate(-90 20 ${top + chartHeight / 2})`}
+            transform={`rotate(-90 24 ${top + chartHeight / 2})`}
             textAnchor="middle"
-            fontSize="12"
+            fontFamily="Arial, Helvetica, sans-serif"
+            fontSize="15"
             fontWeight="700"
-            fill="#27272a"
+            fill="#111111"
           >
             {formatDisplayText(visual.yLabel)}
           </text>
 
           {visual.type === "bar" &&
             visual.categories.map((category, index) => {
-              const gap = 18;
+              const gap = Math.max(
+                10,
+                Math.min(24, chartWidth / (visual.categories.length * 3))
+              );
               const barWidth =
                 (chartWidth - gap * (visual.categories.length + 1)) /
                 visual.categories.length;
               const x = left + gap + index * (barWidth + gap);
               const y = valueToY(category.value);
-              const barHeight = top + chartHeight - y;
+              const barHeight = axisBottom - y;
               return (
                 <g key={category.label}>
                   <rect
@@ -2642,42 +2684,43 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     y={y}
                     width={barWidth}
                     height={barHeight}
-                    fill="#8a8a8a"
-                    stroke="#1f2937"
-                    strokeWidth="1.2"
+                    fill="#ffffff"
+                    stroke="#111111"
+                    strokeWidth="2"
                   />
                   <text
                     x={x + barWidth / 2}
-                    y={y - 6}
+                    y={Math.max(top + 14, y - 8)}
                     textAnchor="middle"
-                    fontSize="11"
+                    fontFamily="Arial, Helvetica, sans-serif"
+                    fontSize="14"
                     fontWeight="700"
-                    fill="#111827"
+                    fill="#111111"
                   >
-                    {category.value}
+                    {formatChartNumber(category.value)}
                   </text>
-                  <text
+                  <WrappedSvgLabel
+                    lines={xAxisLabelLines[index]}
                     x={x + barWidth / 2}
-                    y={top + chartHeight + 18}
-                    textAnchor="middle"
-                    fontSize="11"
-                    fontWeight="700"
-                    fill="#27272a"
-                  >
-                    {formatDisplayText(category.label)}
-                  </text>
+                    y={axisBottom + 18}
+                    fontSize={14}
+                    lineHeight={15}
+                  />
                 </g>
               );
             })}
 
           {visual.type === "grouped-bar" &&
             visual.groups.map((group, groupIndex) => {
-              const groupGap = 19;
+              const groupGap = Math.max(
+                18,
+                Math.min(34, chartWidth / (visual.groups.length * 4))
+              );
               const seriesCount = Math.max(1, visual.seriesLabels.length);
               const groupWidth =
                 (chartWidth - groupGap * (visual.groups.length + 1)) /
                 visual.groups.length;
-              const barGap = 3;
+              const barGap = 4;
               const barWidth =
                 (groupWidth - barGap * (seriesCount - 1)) / seriesCount;
               const x = left + groupGap + groupIndex * (groupWidth + groupGap);
@@ -2687,7 +2730,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   {group.values.map((value, valueIndex) => {
                     const barX = x + valueIndex * (barWidth + barGap);
                     const y = valueToY(value);
-                    const barHeight = top + chartHeight - y;
+                    const barHeight = axisBottom - y;
                     return (
                       <rect
                         key={`${group.label}-${visual.seriesLabels[valueIndex]}`}
@@ -2696,21 +2739,18 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                         width={barWidth}
                         height={barHeight}
                         fill={getSeriesFill(valueIndex)}
-                        stroke="#1f2937"
-                        strokeWidth="1.2"
+                        stroke="#111111"
+                        strokeWidth="2"
                       />
                     );
                   })}
-                  <text
+                  <WrappedSvgLabel
+                    lines={xAxisLabelLines[groupIndex]}
                     x={x + groupWidth / 2}
-                    y={top + chartHeight + 18}
-                    textAnchor="middle"
-                    fontSize="11"
-                    fontWeight="700"
-                    fill="#27272a"
-                  >
-                    {formatDisplayText(group.label)}
-                  </text>
+                    y={axisBottom + 18}
+                    fontSize={14}
+                    lineHeight={15}
+                  />
                 </g>
               );
             })}
@@ -2720,103 +2760,67 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
               <polyline
                 points={linePoints.map((point) => `${point.x},${point.y}`).join(" ")}
                 fill="none"
-                stroke="#3f3f46"
-                strokeWidth="3"
+                stroke="#3d3d3d"
+                strokeWidth="4"
                 strokeLinejoin="round"
                 strokeLinecap="round"
               />
-              {linePoints.map((point) => (
+              {linePoints.map((point, index) => (
                 <g key={point.label}>
                   <circle
                     cx={point.x}
                     cy={point.y}
-                    r="5"
-                    fill="#f8fafc"
-                    stroke="#111827"
-                    strokeWidth="2"
+                    r="8"
+                    fill="#ffffff"
+                    stroke="#111111"
+                    strokeWidth="3"
                   />
                   <text
                     x={point.x}
-                    y={point.y - 8}
+                    y={Math.max(top + 16, point.y - 14)}
                     textAnchor="middle"
-                    fontSize="11"
+                    fontFamily="Arial, Helvetica, sans-serif"
+                    fontSize="15"
                     fontWeight="700"
-                    fill="#111827"
+                    fill="#111111"
                   >
-                    {point.value}
+                    {formatChartNumber(point.value)}
                   </text>
-                  <text
+                  <WrappedSvgLabel
+                    lines={xAxisLabelLines[index]}
                     x={point.x}
-                    y={top + chartHeight + 18}
-                    textAnchor="middle"
-                    fontSize="11"
-                    fontWeight="700"
-                    fill="#27272a"
-                  >
-                    {formatDisplayText(point.label)}
-                  </text>
+                    y={axisBottom + 18}
+                    fontSize={14}
+                    lineHeight={15}
+                  />
                 </g>
               ))}
             </>
           )}
         </svg>
       </div>
+      {groupedLegendItems.length > 0 && (
+        <div
+          className="mx-auto mt-2 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm font-semibold text-black"
+          style={{ width: `${width}px`, maxWidth: "100%" }}
+        >
+          {groupedLegendItems.map((item) => (
+            <span key={item.label} className="inline-flex items-center gap-2">
+              <span
+                className="h-4 w-7 border border-black"
+                style={{ backgroundColor: item.fill }}
+                aria-hidden="true"
+              />
+              {formatDisplayText(item.label)}
+            </span>
+          ))}
+        </div>
+      )}
       {visual.note && (
-        <p className="mt-2 text-xs font-semibold text-slate-600">
+        <p className="mt-2 text-xs font-semibold text-black">
           {formatDisplayText(visual.note)}
         </p>
       )}
-      <div className="mb-2 mt-4 rounded-sm border border-slate-200 bg-slate-50 p-2.5 text-xs font-semibold text-slate-700">
-        <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
-          Chart key
-        </p>
-        <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          <div className="rounded-sm border border-slate-200 bg-white px-3 py-2">
-            <span className="block text-[11px] font-black uppercase tracking-wide text-slate-500">
-              Vertical axis
-            </span>
-            <span className="mt-0.5 block text-slate-900">
-              {formatDisplayText(visual.yLabel)}
-            </span>
-          </div>
-          <div className="rounded-sm border border-slate-200 bg-white px-3 py-2">
-            <span className="block text-[11px] font-black uppercase tracking-wide text-slate-500">
-              Horizontal axis
-            </span>
-            <span className="mt-0.5 block text-slate-900">
-              {horizontalAxisText}
-            </span>
-          </div>
-        </div>
-        <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          {chartKeyItems.map((item) => (
-            <div
-              key={item.label}
-              className="flex min-h-9 items-center gap-2 rounded-sm border border-slate-200 bg-white px-3 py-2"
-            >
-              {item.kind === "line" ? (
-                <span className="relative inline-flex h-4 w-8 shrink-0 items-center">
-                  <span
-                    className="h-0.5 w-8"
-                    style={{ backgroundColor: item.fill }}
-                  />
-                  <span
-                    className="absolute left-1/2 h-2.5 w-2.5 -translate-x-1/2 rounded-full border border-slate-900 bg-white"
-                    aria-hidden="true"
-                  />
-                </span>
-              ) : (
-                <span
-                  className="h-4 w-6 shrink-0 rounded-[2px] border border-slate-700"
-                  style={{ backgroundColor: item.fill }}
-                  aria-hidden="true"
-                />
-              )}
-              <span>{formatDisplayText(item.label)}</span>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
@@ -9586,7 +9590,7 @@ function UCATQuestionBankSection({
       }
     }
 
-    if (isSingleQuestion && ["a", "b", "c", "d"].includes(key)) {
+    if (isSingleQuestion && ["a", "b", "c", "d", "e"].includes(key)) {
       const optionKey = key.toUpperCase() as UCATOptionKey;
       if (question.options.some((option) => option.key === optionKey)) {
         event.preventDefault();

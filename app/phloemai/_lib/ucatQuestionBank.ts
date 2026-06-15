@@ -6,7 +6,7 @@ import { reviewUCATQuestionBank } from "./ucatQuestionQualityGate";
 
 // Future generated-bank work should first read ./ucatQuestionDesignNotes.md.
 export type UCATSection = "vr" | "dm" | "qr" | "sjt";
-export type UCATOptionKey = "A" | "B" | "C" | "D";
+export type UCATOptionKey = "A" | "B" | "C" | "D" | "E";
 export type UCATYesNoValue = "Yes" | "No";
 
 export type UCATSubtypeId =
@@ -1120,7 +1120,7 @@ function isSupportedSjtQuestion(question: UCATQuestion) {
   );
 }
 
-const QR_SINGLE_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D"];
+const QR_SINGLE_OPTION_KEYS: UCATOptionKey[] = ["A", "B", "C", "D", "E"];
 
 function isSingleSelectQuestion(question: UCATQuestion): question is UCATSingleQuestion {
   return !question.questionType || question.questionType === "single";
@@ -1181,11 +1181,21 @@ function makeQrFallbackOptionText(question: UCATSingleQuestion, attempt: number)
   ][attempt - 1] ?? `Alternative ${attempt}`;
 }
 
-function ensureQrFourOptions(question: UCATQuestion): UCATQuestion {
+function qrAnswerBucket(question: UCATSingleQuestion) {
+  const value = `${question.id}|${question.question}`;
+  let hash = 0;
+
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash * 31 + value.charCodeAt(i)) >>> 0;
+  }
+
+  return hash % QR_SINGLE_OPTION_KEYS.length;
+}
+
+function ensureQrFiveOptions(question: UCATQuestion): UCATQuestion {
   if (
     question.section !== "qr" ||
-    !isSingleSelectQuestion(question) ||
-    question.options.length >= QR_SINGLE_OPTION_KEYS.length
+    !isSingleSelectQuestion(question)
   ) {
     return question;
   }
@@ -1206,7 +1216,23 @@ function ensureQrFourOptions(question: UCATQuestion): UCATQuestion {
     usedTexts.add(normalisedText);
   }
 
-  return { ...question, options };
+  let answer = question.answer;
+  const shouldUseAnswerE = qrAnswerBucket(question) === 4;
+
+  if (shouldUseAnswerE && answer !== "E") {
+    const correctIndex = options.findIndex((option) => option.key === answer);
+    const eIndex = options.findIndex((option) => option.key === "E");
+
+    if (correctIndex !== -1 && eIndex !== -1) {
+      const correctOption = options[correctIndex];
+      const eOption = options[eIndex];
+      options[correctIndex] = { ...eOption, key: correctOption.key };
+      options[eIndex] = { ...correctOption, key: "E" };
+      answer = "E";
+    }
+  }
+
+  return { ...question, options, answer };
 }
 
 export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
@@ -5296,7 +5322,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         "The combined multiplier is 1.20 x 0.85 x 1.10 = 1.122.",
     },
     ...CURATED_QR_QUESTIONS,
-  ] as UCATQuestion[]).map(ensureQrFourOptions),
+  ] as UCATQuestion[]).map(ensureQrFiveOptions),
   sjt: [
     ...CURATED_SJT_QUESTIONS,
   ]
