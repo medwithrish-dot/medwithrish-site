@@ -2342,8 +2342,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All prime commercial lines of credit feature a variable interest rate tied to the SOFR index.",
-"No credit facility featuring a variable interest rate tied to the SOFR index allows penalty-free early termination.",
+"All prime commercial lines of credit feature a variable interest rate tied to an external benchmark rate.",
+"No credit facility featuring a variable interest rate tied to an external benchmark rate allows penalty-free early termination.",
 "Most credit facilities that do not allow penalty-free early termination require quarterly financial audits."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -2354,12 +2354,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-19-11-a", text: "No prime commercial line of credit allows penalty-free early termination.", answerCategory: "yes" },
-{ id: "dm-syl-19-11-b", text: "Some credit facilities that do not allow penalty-free early termination feature a variable interest rate tied to the SOFR index.", answerCategory: "yes" },
+{ id: "dm-syl-19-11-b", text: "Some credit facilities that do not allow penalty-free early termination feature a variable interest rate tied to an external benchmark rate.", answerCategory: "yes" },
 { id: "dm-syl-19-11-c", text: "All prime commercial lines of credit require quarterly financial audits.", answerCategory: "no" },
 { id: "dm-syl-19-11-d", text: "Some credit facilities requiring quarterly financial audits do not allow penalty-free early termination.", answerCategory: "yes" },
-{ id: "dm-syl-19-11-e", text: "Any credit facility that allows penalty-free early termination is tied to the SOFR index.", answerCategory: "no" }
+{ id: "dm-syl-19-11-e", text: "Any credit facility that allows penalty-free early termination is tied to an external benchmark rate.", answerCategory: "no" }
 ],
-explanation: "A — YES: Prime commercial lines have SOFR-tied rates, and no SOFR-tied facility allows penalty-free termination.\nB — YES: Since no SOFR-tied facility allows penalty-free early termination, all SOFR-tied facilities belong to the group that does not allow it; thus, some do.\nC — NO: Most facilities without penalty-free termination require audits, but prime commercial lines might not fall into that 'most' group.\nD — YES: Since most facilities without penalty-free termination require audits, there is a verified overlap where some audit-requiring facilities lack penalty-free termination.\nE — NO: No SOFR-tied facility allows penalty-free termination, so any facility allowing it cannot be tied to the SOFR index."
+explanation: "A — YES: Prime commercial lines have benchmark-tied rates, and no benchmark-tied facility allows penalty-free termination.\nB — YES: Since no benchmark-tied facility allows penalty-free early termination, all benchmark-tied facilities belong to the group that does not allow it; thus, some do.\nC — NO: Most facilities without penalty-free termination require audits, but prime commercial lines might not fall into that 'most' group.\nD — YES: Since most facilities without penalty-free termination require audits, there is a verified overlap where some audit-requiring facilities lack penalty-free termination.\nE — NO: No benchmark-tied facility allows penalty-free termination, so any facility allowing it cannot be tied to the external benchmark rate."
 },
 {
 kind: "drag-category",
@@ -2890,9 +2890,9 @@ categories: [
 categoryItems: [
 { id: "dm-syl-18-9-a", text: "Some prints belonging to repeat offenders are sent to the National Ballistics and Print Database.", answerCategory: "yes" },
 { id: "dm-syl-18-9-b", text: "No latent fingerprints retrieved using cyanoacrylate fuming are accessible to unauthorized private investigators.", answerCategory: "yes" },
-{ id: "dm-syl-18-10-c", text: "All prints in the National Ballistics and Print Database belong to repeat offenders.", answerCategory: "no" },
-{ id: "dm-syl-18-10-d", text: "Some prints that are not accessible to unauthorized private investigators belong to repeat offenders.", answerCategory: "yes" },
-{ id: "dm-syl-18-10-e", text: "All prints belonging to repeat offenders are retrieved using cyanoacrylate fuming.", answerCategory: "no" }
+{ id: "dm-syl-18-9-c", text: "All prints in the National Ballistics and Print Database belong to repeat offenders.", answerCategory: "no" },
+{ id: "dm-syl-18-9-d", text: "Some prints that are not accessible to unauthorized private investigators belong to repeat offenders.", answerCategory: "yes" },
+{ id: "dm-syl-18-9-e", text: "All prints belonging to repeat offenders are retrieved using cyanoacrylate fuming.", answerCategory: "no" }
 ],
 explanation: "A — YES: Some prints retrieved via fuming belong to repeat offenders, and all such fumed prints are sent to the National Database.\nB — YES: All fumed prints are sent to the database, and no prints in the database are accessible to unauthorized private investigators.\nC — NO: The database contains all fumed prints, but not all of those prints necessarily belong to repeat offenders.\nD — YES: The fumed prints belonging to repeat offenders end up in the database, making them inaccessible to unauthorized private investigators.\nE — NO: Repeat offenders' prints can be collected via many other forensic methods."
 },
@@ -3719,7 +3719,7 @@ categories: [
 categoryItems: [
 { id: "dm-syl-17-20-a", text: "Some poetry anthologies edited by the laureate receive a critical review in the Literary Gazette.", answerCategory: "yes" },
 { id: "dm-syl-17-20-b", text: "All poetry anthologies bound in handmade Japanese paper receive a critical review in the Literary Gazette.", answerCategory: "no" },
-{ id: "dm-syl-17-20-b-2", text: "Some books that receive a critical review in the Literary Gazette are bound in handmade Japanese paper.", answerCategory: "yes" }, // Fixed duplicate ID issue below
+{ id: "dm-syl-17-20-c", text: "Some books that receive a critical review in the Literary Gazette are bound in handmade Japanese paper.", answerCategory: "yes" },
 { id: "dm-syl-17-20-d", text: "No poetry anthology edited by the laureate contains translated sonnets.", answerCategory: "no" },
 { id: "dm-syl-17-20-e", text: "Every book that receives a critical review in the Literary Gazette is a poetry anthology edited by the laureate.", answerCategory: "no" }
 ],
