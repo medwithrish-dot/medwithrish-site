@@ -5123,7 +5123,7 @@ categoryItems: [
 { id: "dm-syl-11-6-d", text: "Any athlete who submits a comprehensive metabolic profile report has entered the extreme desert ultra-race.", answerCategory: "no" },
 { id: "dm-syl-11-6-e", text: "Some athletes required to submit a comprehensive metabolic profile report are not marathon runners under the age of 25.", answerCategory: "yes" }
 ],
-explanation: "A — NO: They don't have to submit it *for this race* because they can't enter, but the statement itself is poorly framed, and more importantly, they might submit it for other reasons. However, looking at logic: they cannot enter, so they aren't part of the 'all entrants' rule, but they might submit it elsewhere.\nB — NO: We know some profile-submitters are Apex-sponsored, but these individuals might be required to submit profiles for other reasons, or be part of the profile group who didn't actually enter this specific race (if others submit profiles too).\nC — YES: Because no marathon runner under 25 is permitted to enter, it is absolutely true that no one who enters is a marathon runner under 25.\nD — NO: The profile report is a requirement for entry, meaning Entry $\rightarrow$ Profile. It does not mean Profile $\rightarrow$ Entry.\nE — YES: Anyone who enters must submit the profile, and since no entrants are under-25 marathon runners, the entrants themselves represent a group of profile-submitters who are definitely not under-25 marathon runners."
+explanation: "A — NO: Under-25 marathon runners are barred from entering, so the 'all entrants must submit a report' rule never applies to them, but nothing says they couldn't be required to submit one for some other reason. We cannot confirm this universal claim.\nB — NO: We know some profile-submitters are Apex-sponsored, but these individuals might be required to submit profiles for other reasons, or be part of the profile group who didn't actually enter this specific race (if others submit profiles too).\nC — YES: Because no marathon runner under 25 is permitted to enter, it is absolutely true that no one who enters is a marathon runner under 25.\nD — NO: The profile report is a requirement for entry, meaning entering forces a report. It does not mean having a report forces entry.\nE — YES: Anyone who enters must submit the profile, and since no entrants are under-25 marathon runners, the entrants themselves represent a group of profile-submitters who are definitely not under-25 marathon runners."
 },
 {
 kind: "drag-category",
@@ -5147,7 +5147,7 @@ categoryItems: [
 { id: "dm-syl-11-7-d", text: "Most rowers who train at least five days a week have won an international regatta.", answerCategory: "no" },
 { id: "dm-syl-11-7-e", text: "Some rowers who consume less than 150 grams of protein daily train at least five days a week.", answerCategory: "no" }
 ],
-explanation: "A — YES: Most custom-oar users won a regatta. All custom-oar users train 5+ days, meaning they do not consume less than 150g protein. Thus, those regatta winners who use custom oars do not consume less than 150g protein.\nB — NO: The requirement flows from custom oars $\rightarrow$ 5+ days $\rightarrow$ 150g+ protein. It does not reverse to mean everyone eating 150g+ protein uses custom oars.\nC — YES: Since all custom-oar users train 5+ days, and no 5+ day trainers eat less than 150g protein, no custom-oar user eats less than 150g.\nD — NO: We know 'most custom-oar users' won a regatta, but custom-oar users might only be a tiny fraction of the total pool of 5+ day trainers.\nE — NO: The third premise explicitly states that *no* rower training 5+ days consumes less than 150g protein."
+explanation: "A — YES: Most custom-oar users won a regatta. All custom-oar users train 5+ days, meaning they do not consume less than 150g protein. Thus, those regatta winners who use custom oars do not consume less than 150g protein.\nB — NO: The requirement flows one way: custom oars require 5+ days of training, which requires 150g+ protein. It does not reverse to mean everyone eating 150g+ protein uses custom oars.\nC — YES: Since all custom-oar users train 5+ days, and no 5+ day trainers eat less than 150g protein, no custom-oar user eats less than 150g.\nD — NO: We know 'most custom-oar users' won a regatta, but custom-oar users might only be a tiny fraction of the total pool of 5+ day trainers.\nE — NO: The third premise explicitly states that *no* rower training 5+ days consumes less than 150g protein."
 },
 {
 kind: "drag-category",
@@ -5343,7 +5343,7 @@ categoryItems: [
 { id: "dm-syl-11-15-d", text: "Some players who consume heavily processed sugars during the season have won an MVP award.", answerCategory: "no" },
 { id: "dm-syl-11-15-e", text: "All players who avoid heavily processed sugars during the season execute film study sessions daily.", answerCategory: "no" }
 ],
-explanation: "A — YES: Accuracy > 65% $\rightarrow$ daily film study $\rightarrow$ no processed sugars. Thus, no accurate quarterback consumes them.\nB — YES: Some accurate quarterbacks won an MVP. Since all accurate quarterbacks do daily film study and avoid processed sugars, these MVP winners avoid them too.\nC — NO: Daily film study is a requirement for high accuracy, but it does not mean every person who studies film achieves that high accuracy.\nD — NO: While some MVP winners avoid sugars, we don't have information to say whether other MVP winners do or do not consume them.\nE — NO: Avoiding processed sugars is a consequence of daily film study, not a standalone trigger that forces someone to study film."
+explanation: "A — YES: Accuracy over 65% requires daily film study, which in turn rules out processed sugars. Thus, no accurate quarterback consumes them.\nB — YES: Some accurate quarterbacks won an MVP. Since all accurate quarterbacks do daily film study and avoid processed sugars, these MVP winners avoid them too.\nC — NO: Daily film study is a requirement for high accuracy, but it does not mean every person who studies film achieves that high accuracy.\nD — NO: While some MVP winners avoid sugars, we don't have information to say whether other MVP winners do or do not consume them.\nE — NO: Avoiding processed sugars is a consequence of daily film study, not a standalone trigger that forces someone to study film."
 },
 {
 kind: "drag-category",
@@ -5474,8 +5474,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All professional fencers specializing in the épée discipline use a pistol grip weapon.",
-"Most professional fencers specializing in the épée discipline have represented their country at the World Championships.",
+"All professional fencers specializing in epee use a pistol grip weapon.",
+"Most professional fencers specializing in epee have represented their country at the World Championships.",
 "No fencer using a pistol grip weapon has a reaction time slower than 180 milliseconds."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -5485,13 +5485,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-11-21-a", text: "No professional fencer specializing in the épée discipline has a reaction time slower than 180 milliseconds.", answerCategory: "yes" },
+{ id: "dm-syl-11-21-a", text: "No professional fencer specializing in epee has a reaction time slower than 180 milliseconds.", answerCategory: "yes" },
 { id: "dm-syl-11-21-b", text: "Some fencers who have represented their country at the World Championships do not have a reaction time slower than 180 milliseconds.", answerCategory: "yes" },
-{ id: "dm-syl-11-21-c", text: "All fencers with a reaction time of 180 milliseconds or faster specialize in the épée discipline.", answerCategory: "no" },
+{ id: "dm-syl-11-21-c", text: "All fencers with a reaction time of 180 milliseconds or faster specialize in epee.", answerCategory: "no" },
 { id: "dm-syl-11-21-d", text: "Some fencers who have represented their country at the World Championships use a traditional French grip weapon.", answerCategory: "no" },
 { id: "dm-syl-11-21-e", text: "Most fencers with a reaction time of 180 milliseconds or faster have competed at the World Championships.", answerCategory: "no" }
 ],
-explanation: "A — YES: épée fencers all use a pistol grip, and no pistol grip user has a reaction time slower than 180ms. Thus, no épée fencer has a slower reaction time.\nB — YES: Most épée fencers went to the World Championships. Since no épée fencer is slower than 180ms, these World Championship fencers are not slower than 180ms.\nC — NO: Having a fast reaction time is a requirement/trait of pistol grip users (including épée fencers), but sabre or foil fencers could also be fast.\nD — NO: The premises say nothing about French grips or whether World Championship fencers use them.\nE — NO: We know most épée fencers go to the World Championships, but we don't know if they make up 'most' of all fast-reacting fencers."
+explanation: "A — YES: Epee fencers all use a pistol grip, and no pistol grip user has a reaction time slower than 180ms. Thus, no epee fencer has a slower reaction time.\nB — YES: Most epee fencers went to the World Championships. Since no epee fencer is slower than 180ms, these World Championship fencers are not slower than 180ms.\nC — NO: Having a fast reaction time is a requirement/trait of pistol grip users (including epee fencers), but sabre or foil fencers could also be fast.\nD — NO: The premises say nothing about French grips or whether World Championship fencers use them.\nE — NO: We know most epee fencers go to the World Championships, but we don't know if they make up 'most' of all fast-reacting fencers."
 },
 {
 kind: "drag-category",
