@@ -125,6 +125,12 @@ export type UCATChartVisual =
       note?: string;
     }
   | {
+      type: "pie";
+      title: string;
+      slices: Array<{ label: string; value: number }>;
+      note?: string;
+    }
+  | {
       type: "table";
       title: string;
       headers: string[];
@@ -1537,18 +1543,18 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         type: "set-diagram",
         title: "Revision sessions attended",
         shapes: [
-          { id: "clinic", label: "Clinic drills", shape: "circle", x: 90, y: 110, width: 240, height: 220 },
-          { id: "essay", label: "Essay plans", shape: "rectangle", x: 230, y: 120, width: 260, height: 190 },
-          { id: "interview", label: "Interview role-play", shape: "triangle", x: 240, y: 50, width: 290, height: 300 },
+          { id: "clinic", label: "Clinic drills", shape: "circle", x: 85, y: 115, width: 250, height: 220 },
+          { id: "essay", label: "Essay plans", shape: "rectangle", x: 270, y: 125, width: 225, height: 185 },
+          { id: "interview", label: "Interview role-play", shape: "triangle", x: 205, y: 50, width: 320, height: 305 },
         ],
         regionLabels: [
-          { id: "clinic-only", text: "18", x: 150, y: 215 },
-          { id: "essay-only", text: "14", x: 440, y: 220 },
-          { id: "interview-only", text: "9", x: 385, y: 105 },
-          { id: "clinic-essay", text: "11", x: 255, y: 220 },
-          { id: "clinic-interview", text: "7", x: 290, y: 145 },
-          { id: "essay-interview", text: "10", x: 405, y: 160 },
-          { id: "all-three", text: "6", x: 330, y: 195 },
+          { id: "clinic-only", text: "18", x: 175, y: 220 },
+          { id: "essay-only", text: "14", x: 460, y: 160 },
+          { id: "interview-only", text: "9", x: 365, y: 100 },
+          { id: "clinic-essay", text: "11", x: 290, y: 160 },
+          { id: "clinic-interview", text: "7", x: 250, y: 310 },
+          { id: "essay-interview", text: "10", x: 395, y: 245 },
+          { id: "all-three", text: "6", x: 300, y: 240 },
         ],
         legend: [
           { label: "Clinic drills", shape: "circle" },
@@ -1582,20 +1588,20 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         type: "set-diagram",
         title: "Procedure features",
         shapes: [
-          { id: "long", label: "Long recovery", shape: "pentagon", x: 40, y: 60, width: 230, height: 230, rotation: -6 },
-          { id: "keyhole", label: "Keyhole", shape: "circle", x: 110, y: 140, width: 230, height: 210 },
-          { id: "invasive", label: "Invasive surgery", shape: "rectangle", x: 180, y: 110, width: 330, height: 190 },
-          { id: "fasting", label: "Fasting required", shape: "triangle", x: 300, y: 60, width: 300, height: 300 },
+          { id: "long", label: "Long recovery", shape: "pentagon", x: 40, y: 45, width: 300, height: 255 },
+          { id: "keyhole", label: "Keyhole", shape: "circle", x: 95, y: 165, width: 220, height: 205 },
+          { id: "invasive", label: "Invasive surgery", shape: "rectangle", x: 155, y: 140, width: 335, height: 185 },
+          { id: "fasting", label: "Fasting required", shape: "triangle", x: 115, y: 40, width: 380, height: 335 },
         ],
         regionLabels: [
-          { id: "long-only", text: "5", x: 130, y: 140 },
-          { id: "long-keyhole-invasive", text: "4", x: 220, y: 205 },
-          { id: "keyhole-only", text: "7", x: 175, y: 285 },
-          { id: "invasive-only", text: "8", x: 455, y: 215 },
-          { id: "fasting-only", text: "6", x: 500, y: 110 },
-          { id: "fasting-invasive", text: "9", x: 415, y: 165 },
-          { id: "keyhole-invasive-fasting", text: "3", x: 320, y: 205 },
-          { id: "long-fasting", text: "2", x: 255, y: 130 },
+          { id: "long-only", text: "5", x: 110, y: 150 },
+          { id: "long-keyhole-invasive", text: "4", x: 180, y: 200 },
+          { id: "keyhole-only", text: "7", x: 130, y: 320 },
+          { id: "invasive-only", text: "8", x: 440, y: 190 },
+          { id: "fasting-only", text: "6", x: 310, y: 350 },
+          { id: "fasting-invasive", text: "9", x: 370, y: 270 },
+          { id: "keyhole-invasive-fasting", text: "3", x: 290, y: 310 },
+          { id: "long-fasting", text: "2", x: 280, y: 120 },
         ],
         legend: [
           { label: "Long recovery", shape: "pentagon" },
@@ -1630,21 +1636,21 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         type: "set-diagram",
         title: "Applicant experience",
         shapes: [
-          { id: "volunteering", label: "Volunteering", shape: "hexagon", x: 80, y: 80, width: 270, height: 230 },
-          { id: "research", label: "Research", shape: "diamond", x: 300, y: 70, width: 230, height: 240 },
-          { id: "leadership", label: "Leadership", shape: "circle", x: 190, y: 150, width: 260, height: 220 },
-          { id: "interview-course", label: "Interview course", shape: "rectangle", x: 230, y: 210, width: 300, height: 120 },
+          { id: "volunteering", label: "Volunteering", shape: "hexagon", x: 75, y: 80, width: 300, height: 235 },
+          { id: "research", label: "Research", shape: "diamond", x: 230, y: 65, width: 280, height: 250 },
+          { id: "leadership", label: "Leadership", shape: "circle", x: 185, y: 165, width: 270, height: 220 },
+          { id: "interview-course", label: "Interview course", shape: "rectangle", x: 235, y: 265, width: 295, height: 120 },
         ],
         regionLabels: [
-          { id: "vol-only", text: "21", x: 145, y: 170 },
-          { id: "research-only", text: "12", x: 455, y: 155 },
-          { id: "lead-only", text: "17", x: 295, y: 315 },
-          { id: "course-only", text: "8", x: 485, y: 285 },
-          { id: "vol-lead", text: "14", x: 250, y: 215 },
-          { id: "research-lead", text: "9", x: 385, y: 215 },
-          { id: "vol-research", text: "5", x: 315, y: 135 },
-          { id: "lead-course", text: "6", x: 350, y: 270 },
-          { id: "all-three", text: "4", x: 325, y: 205 },
+          { id: "vol-only", text: "21", x: 185, y: 145 },
+          { id: "research-only", text: "12", x: 385, y: 135 },
+          { id: "lead-only", text: "17", x: 220, y: 330 },
+          { id: "course-only", text: "8", x: 485, y: 340 },
+          { id: "vol-lead", text: "14", x: 230, y: 235 },
+          { id: "research-lead", text: "9", x: 400, y: 230 },
+          { id: "vol-research", text: "5", x: 315, y: 145 },
+          { id: "lead-course", text: "6", x: 335, y: 340 },
+          { id: "all-three", text: "4", x: 315, y: 210 },
         ],
         legend: [
           { label: "Volunteering", shape: "hexagon" },
@@ -1682,7 +1688,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -1696,7 +1702,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -1710,7 +1716,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -1724,7 +1730,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -1756,7 +1762,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -1770,7 +1776,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -1784,7 +1790,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -1798,7 +1804,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -1831,7 +1837,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -1845,7 +1851,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -1859,7 +1865,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -1873,7 +1879,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -1906,7 +1912,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -1921,7 +1927,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -1936,7 +1942,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -1951,7 +1957,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -1986,7 +1992,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2001,7 +2007,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2016,7 +2022,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2031,7 +2037,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2067,7 +2073,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2082,7 +2088,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2097,7 +2103,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2112,7 +2118,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2146,7 +2152,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2161,7 +2167,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2176,7 +2182,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2191,7 +2197,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2226,7 +2232,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2241,7 +2247,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2256,7 +2262,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2271,7 +2277,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2305,7 +2311,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2320,7 +2326,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2335,7 +2341,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2350,7 +2356,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2385,7 +2391,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2400,7 +2406,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2415,7 +2421,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2430,7 +2436,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2465,7 +2471,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2483,7 +2489,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2501,7 +2507,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2519,7 +2525,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2554,7 +2560,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2572,7 +2578,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2590,7 +2596,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2608,7 +2614,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2645,7 +2651,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2668,7 +2674,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2691,7 +2697,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2714,7 +2720,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2754,7 +2760,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2772,7 +2778,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2790,7 +2796,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2808,7 +2814,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2846,7 +2852,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2869,7 +2875,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2892,7 +2898,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -2915,7 +2921,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -2957,7 +2963,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -2975,7 +2981,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -2993,7 +2999,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -3011,7 +3017,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -3047,7 +3053,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -3065,7 +3071,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -3083,7 +3089,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -3101,7 +3107,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -3137,7 +3143,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -3155,7 +3161,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -3173,7 +3179,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -3191,7 +3197,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -3228,7 +3234,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -3251,7 +3257,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -3274,7 +3280,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -3297,7 +3303,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -3338,7 +3344,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram",
             title: "Option A",
@@ -3356,7 +3362,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram",
             title: "Option B",
@@ -3374,7 +3380,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram",
             title: "Option C",
@@ -3392,7 +3398,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram",
             title: "Option D",
@@ -3430,7 +3436,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram", title: "Option A",
             shapes: [
@@ -3452,7 +3458,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram", title: "Option B",
             shapes: [
@@ -3474,7 +3480,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram", title: "Option C",
             shapes: [
@@ -3496,7 +3502,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram", title: "Option D",
             shapes: [
@@ -3536,7 +3542,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram", title: "Option A",
             shapes: [
@@ -3553,7 +3559,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram", title: "Option B",
             shapes: [
@@ -3570,7 +3576,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram", title: "Option C",
             shapes: [
@@ -3587,7 +3593,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram", title: "Option D",
             shapes: [
@@ -3623,7 +3629,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram", title: "Option A",
             shapes: [
@@ -3645,7 +3651,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram", title: "Option B",
             shapes: [
@@ -3667,7 +3673,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram", title: "Option C",
             shapes: [
@@ -3689,7 +3695,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram", title: "Option D",
             shapes: [
@@ -3730,7 +3736,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram", title: "Option A",
             shapes: [
@@ -3747,7 +3753,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram", title: "Option B",
             shapes: [
@@ -3764,7 +3770,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram", title: "Option C",
             shapes: [
@@ -3781,7 +3787,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram", title: "Option D",
             shapes: [
@@ -3817,7 +3823,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram", title: "Option A",
             shapes: [
@@ -3839,7 +3845,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram", title: "Option B",
             shapes: [
@@ -3861,7 +3867,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram", title: "Option C",
             shapes: [
@@ -3883,7 +3889,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram", title: "Option D",
             shapes: [
@@ -3923,7 +3929,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram", title: "Option A",
             shapes: [
@@ -3940,7 +3946,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram", title: "Option B",
             shapes: [
@@ -3957,7 +3963,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram", title: "Option C",
             shapes: [
@@ -3974,7 +3980,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram", title: "Option D",
             shapes: [
@@ -4010,7 +4016,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram", title: "Option A",
             shapes: [
@@ -4032,7 +4038,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram", title: "Option B",
             shapes: [
@@ -4054,7 +4060,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram", title: "Option C",
             shapes: [
@@ -4076,7 +4082,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram", title: "Option D",
             shapes: [
@@ -4116,7 +4122,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram", title: "Option A",
             shapes: [
@@ -4133,7 +4139,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram", title: "Option B",
             shapes: [
@@ -4150,7 +4156,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram", title: "Option C",
             shapes: [
@@ -4167,7 +4173,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram", title: "Option D",
             shapes: [
@@ -4203,7 +4209,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram", title: "Option A",
             shapes: [
@@ -4225,7 +4231,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram", title: "Option B",
             shapes: [
@@ -4247,7 +4253,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram", title: "Option C",
             shapes: [
@@ -4269,7 +4275,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram", title: "Option D",
             shapes: [
@@ -4310,7 +4316,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       options: [
         {
           key: "A",
-          text: "",
+          text: "Diagram A",
           visual: {
             type: "set-diagram", title: "Option A",
             shapes: [
@@ -4332,7 +4338,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "B",
-          text: "",
+          text: "Diagram B",
           visual: {
             type: "set-diagram", title: "Option B",
             shapes: [
@@ -4354,7 +4360,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "C",
-          text: "",
+          text: "Diagram C",
           visual: {
             type: "set-diagram", title: "Option C",
             shapes: [
@@ -4376,7 +4382,7 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
         },
         {
           key: "D",
-          text: "",
+          text: "Diagram D",
           visual: {
             type: "set-diagram", title: "Option D",
             shapes: [
