@@ -1084,7 +1084,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "Most planetary nebulae exhibit non-spherical axisymmetric geometry.",
 "Every planetary nebula exhibiting non-spherical axisymmetric geometry was shaped by a binary companion star.",
-"No object shaped by a binary companion star possesses an perfectly isolated central white dwarf."
+"No object shaped by a binary companion star possesses a perfectly isolated central white dwarf."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -1096,8 +1096,8 @@ categoryItems: [
 { id: "dm-syl-14-7-a", text: "Most planetary nebulae were shaped by a binary companion star.", answerCategory: "yes" },
 { id: "dm-syl-14-7-b", text: "Some planetary nebulae do not possess a perfectly isolated central white dwarf.", answerCategory: "yes" },
 { id: "dm-syl-14-7-c", text: "No planetary nebula possesses a perfectly isolated central white dwarf.", answerCategory: "no" },
-{ id: "dm-syl-14-7-e", text: "Some objects shaped by a binary companion star are not planetary nebulae.", answerCategory: "no" },
-{ id: "dm-syl-14-7-d", text: "Every object without a perfectly isolated central white dwarf is a planetary nebula.", answerCategory: "no" }
+{ id: "dm-syl-14-7-d", text: "Some objects shaped by a binary companion star are not planetary nebulae.", answerCategory: "no" },
+{ id: "dm-syl-14-7-e", text: "Every object without a perfectly isolated central white dwarf is a planetary nebula.", answerCategory: "no" }
 ],
 explanation: "A — YES: 'Most' nebulae have the specific geometry, and 100% of those with that geometry were shaped by a binary companion. Thus, 'most' planetary nebulae were shaped by a binary companion.\nB — YES: Since 'most' (which implies at least some) planetary nebulae were shaped by a binary companion, and no object shaped by a binary companion has an isolated central white dwarf, these specific nebulae do not have one.\nC — NO: We only know about the 'most' that have non-spherical geometry; the remaining planetary nebulae might possess isolated central white dwarfs.\nD — NO: Other types of astronomical objects could also be shaped by binary companion stars.\nE — NO: This reverses the logic; not all objects lacking an isolated white dwarf are planetary nebulae."
 },
@@ -1928,8 +1928,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "All deep-sea hydrothermal vent organisms rely on chemosynthetic microbial symbiosis.",
-"Some deep-sea hydrothermal vent organisms are extremity-dwelling extremophiles.",
-"No extremity-dwelling extremophile is vulnerable to high-temperature thermal shock."
+"Some deep-sea hydrothermal vent organisms are extreme-environment-dwelling organisms.",
+"No extreme-environment-dwelling organism is vulnerable to high-temperature thermal shock."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -1938,22 +1938,22 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-20-18-a", text: "Some organisms that rely on chemosynthetic microbial symbiosis are extremity-dwelling extremophiles.", answerCategory: "yes" },
-{ id: "dm-syl-20-18-b", text: "No extremity-dwelling extremophile relies on chemosynthetic microbial symbiosis.", answerCategory: "no" },
+{ id: "dm-syl-20-18-a", text: "Some organisms that rely on chemosynthetic microbial symbiosis are extreme-environment-dwelling organisms.", answerCategory: "yes" },
+{ id: "dm-syl-20-18-b", text: "No extreme-environment-dwelling organism relies on chemosynthetic microbial symbiosis.", answerCategory: "no" },
 { id: "dm-syl-20-18-c", text: "Some organisms that rely on chemosynthetic microbial symbiosis are not vulnerable to high-temperature thermal shock.", answerCategory: "yes" },
 { id: "dm-syl-20-18-d", text: "All organisms that are not vulnerable to high-temperature thermal shock are deep-sea hydrothermal vent organisms.", answerCategory: "no" },
 { id: "dm-syl-20-18-e", text: "Some deep-sea hydrothermal vent organisms are not vulnerable to high-temperature thermal shock.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Since some vent organisms are extremophiles, and all vent organisms rely on chemosynthesis, those specific extremophiles rely on chemosynthesis.\nB — NO: This directly contradicts the overlap established between vent organisms, extremophiles, and chemosynthetic dependence.\nC — YES: The vent organisms that are extremophiles rely on chemosynthesis and are simultaneously immune to high-temperature thermal shock.\nD — NO: Other organisms (e.g., land-based volcanic bacteria) might be immune to thermal shock without living in deep-sea hydrothermal vents.\nE — YES: The specific subset of deep-sea hydrothermal vent organisms that are extremity-dwelling extremophiles are not vulnerable to high-temperature thermal shock."
+explanation: "A — YES: Since some vent organisms are extremophiles, and all vent organisms rely on chemosynthesis, those specific extremophiles rely on chemosynthesis.\nB — NO: This directly contradicts the overlap established between vent organisms, extremophiles, and chemosynthetic dependence.\nC — YES: The vent organisms that are extremophiles rely on chemosynthesis and are simultaneously immune to high-temperature thermal shock.\nD — NO: Other organisms (e.g., land-based volcanic bacteria) might be immune to thermal shock without living in deep-sea hydrothermal vents.\nE — YES: The specific subset of deep-sea hydrothermal vent organisms that are extreme-environment-dwelling organisms are not vulnerable to high-temperature thermal shock."
 },
 {
 kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every member of the order Chiroptera must possess a modified skeletal dactylopatagium.",
-"Some members of the order Chiroptera are frugivorous canopy foragers.",
-"Any frugivorous canopy forager must exhibit specialized high-acuity color vision."
+"Every species of bat must possess a modified wing membrane.",
+"Some species of bat are fruit-eating canopy foragers.",
+"Any fruit-eating canopy forager must have specialized high-acuity color vision."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -1962,13 +1962,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-20-19-a", text: "Some organisms that exhibit specialized high-acuity color vision possess a modified skeletal dactylopatagium.", answerCategory: "yes" },
-{ id: "dm-syl-20-19-b", text: "All organisms that possess a modified skeletal dactylopatagium exhibit specialized high-acuity color vision.", answerCategory: "no" },
-{ id: "dm-syl-20-19-c", text: "Some members of the order Chiroptera exhibit specialized high-acuity color vision.", answerCategory: "yes" },
-{ id: "dm-syl-20-19-d", text: "No organism exhibiting specialized high-acuity color vision is a member of the order Chiroptera.", answerCategory: "no" },
-{ id: "dm-syl-20-19-e", text: "Every member of the order Chiroptera that is a frugivorous canopy forager possesses a modified skeletal dactylopatagium.", answerCategory: "yes" }
+{ id: "dm-syl-20-19-a", text: "Some organisms that exhibit specialized high-acuity color vision possess a modified wing membrane.", answerCategory: "yes" },
+{ id: "dm-syl-20-19-b", text: "All organisms that possess a modified wing membrane exhibit specialized high-acuity color vision.", answerCategory: "no" },
+{ id: "dm-syl-20-19-c", text: "Some species of bat exhibit specialized high-acuity color vision.", answerCategory: "yes" },
+{ id: "dm-syl-20-19-d", text: "No organism exhibiting specialized high-acuity color vision is a species of bat.", answerCategory: "no" },
+{ id: "dm-syl-20-19-e", text: "Every species of bat that is a fruit-eating canopy forager possesses a modified wing membrane.", answerCategory: "yes" }
 ],
-explanation: "A — YES: The members of Chiroptera that are frugivorous foragers exhibit high-acuity color vision, and because they are Chiroptera, they possess a modified dactylopatagium.\nB — NO: We only know that frugivorous canopy foragers must have high-acuity color vision; other members of Chiroptera might lack it.\nC — YES: The specific members of the order Chiroptera that operate as frugivorous canopy foragers are required to have specialized high-acuity color vision.\nD — NO: This contradicts the clear overlap between Chiroptera members, canopy foraging behavior, and high-acuity color vision.\nE — YES: Because all members of the order Chiroptera possess a modified skeletal dactylopatagium, this applies unconditionally to the frugivorous subset."
+explanation: "A — YES: The bat species that are fruit-eating foragers exhibit high-acuity color vision, and because they are bats, they possess a modified wing membrane.\nB — NO: We only know that fruit-eating canopy foragers must have high-acuity color vision; other bat species might lack it.\nC — YES: The specific bat species that operate as fruit-eating canopy foragers are required to have specialized high-acuity color vision.\nD — NO: This contradicts the clear overlap between bat species, canopy foraging behavior, and high-acuity color vision.\nE — YES: Because all bat species possess a modified wing membrane, this applies unconditionally to the fruit-eating subset."
 },
 {
 kind: "drag-category",
@@ -1999,9 +1999,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"No true poikilothermic organism is capable of endogenous metabolic heat production.",
-"All endothermic avian species are capable of endogenous metabolic heat production.",
-"Some true poikilothermic organisms possess complex venom-delivery fangs."
+"No cold-blooded organism is capable of producing its own body heat.",
+"All warm-blooded bird species are capable of producing their own body heat.",
+"Some cold-blooded organisms have venomous fangs."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -2010,13 +2010,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-20-21-a", text: "No endothermic avian species is a true poikilothermic organism.", answerCategory: "yes" },
-{ id: "dm-syl-20-21-b", text: "Some organisms possessing complex venom-delivery fangs are not capable of endogenous metabolic heat production.", answerCategory: "yes" },
-{ id: "dm-syl-20-21-c", text: "Some endothermic avian species possess complex venom-delivery fangs.", answerCategory: "no" },
-{ id: "dm-syl-20-21-d", text: "All organisms that are not capable of endogenous metabolic heat production are true poikilothermic organisms.", answerCategory: "no" },
-{ id: "dm-syl-20-21-e", text: "No true poikilothermic organism is an endothermic avian species.", answerCategory: "yes" }
+{ id: "dm-syl-20-21-a", text: "No warm-blooded bird species is a cold-blooded organism.", answerCategory: "yes" },
+{ id: "dm-syl-20-21-b", text: "Some organisms with venomous fangs are not capable of producing their own body heat.", answerCategory: "yes" },
+{ id: "dm-syl-20-21-c", text: "Some warm-blooded bird species have venomous fangs.", answerCategory: "no" },
+{ id: "dm-syl-20-21-d", text: "All organisms that cannot produce their own body heat are cold-blooded organisms.", answerCategory: "no" },
+{ id: "dm-syl-20-21-e", text: "No cold-blooded organism is a warm-blooded bird species.", answerCategory: "yes" }
 ],
-explanation: "A — YES: True poikilothermic organisms cannot produce endogenous metabolic heat, while endothermic avian species always can, making the sets entirely exclusive.\nB — YES: The true poikilothermic organisms that possess complex venom-delivery fangs are entirely incapable of endogenous metabolic heat production.\nC — NO: Because endothermic avian species and true poikilothermic organisms are completely separate, and venom fangs are only linked to poikilotherms here, we cannot infer an overlap.\nD — NO: There could be other organisms (like certain dormant states or non-animal life forms) that cannot produce metabolic heat but are not classified as poikilothermic organisms.\nE — YES: Because of their completely incompatible traits regarding heat production, no true poikilothermic organism can be an endothermic avian species."
+explanation: "A — YES: Cold-blooded organisms cannot produce their own body heat, while warm-blooded birds always can, making the sets entirely exclusive.\nB — YES: The cold-blooded organisms that have venomous fangs are entirely incapable of producing their own body heat.\nC — NO: Because warm-blooded birds and cold-blooded organisms are completely separate, and venomous fangs are only linked to cold-blooded organisms here, we cannot infer an overlap.\nD — NO: There could be other organisms (like those in certain dormant states) that cannot produce their own body heat but are not classified as cold-blooded.\nE — YES: Because of their completely incompatible traits regarding heat production, no cold-blooded organism can be a warm-blooded bird species."
 },
 {
 kind: "drag-category",
@@ -2047,9 +2047,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All anadromous salmonid populations undergo physiological smoltification before ocean migration.",
-"Any population undergoing physiological smoltification requires highly regulated endocrine up-regulation.",
-"Some populations requiring highly regulated endocrine up-regulation experience extreme environmental temperature stressors."
+"All migratory salmon populations undergo a major hormonal change before they migrate to the ocean.",
+"Any population undergoing this hormonal change requires tightly regulated hormone production.",
+"Some populations requiring tightly regulated hormone production experience extreme temperature stress."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -2058,22 +2058,22 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-20-23-a", text: "All anadromous salmonid populations require highly regulated endocrine up-regulation.", answerCategory: "yes" },
-{ id: "dm-syl-20-23-b", text: "Some anadromous salmonid populations experience extreme environmental temperature stressors.", answerCategory: "no" },
-{ id: "dm-syl-20-23-c", text: "Some populations requiring highly regulated endocrine up-regulation undergo physiological smoltification.", answerCategory: "yes" },
-{ id: "dm-syl-20-23-d", text: "No population that experiences extreme environmental temperature stressors undergoes physiological smoltification.", answerCategory: "no" },
-{ id: "dm-syl-20-23-e", text: "Every population that requires highly regulated endocrine up-regulation is an anadromous salmonid population.", answerCategory: "no" }
+{ id: "dm-syl-20-23-a", text: "All migratory salmon populations require tightly regulated hormone production.", answerCategory: "yes" },
+{ id: "dm-syl-20-23-b", text: "Some migratory salmon populations experience extreme temperature stress.", answerCategory: "no" },
+{ id: "dm-syl-20-23-c", text: "Some populations requiring tightly regulated hormone production undergo this hormonal change.", answerCategory: "yes" },
+{ id: "dm-syl-20-23-d", text: "No population that experiences extreme temperature stress undergoes this hormonal change.", answerCategory: "no" },
+{ id: "dm-syl-20-23-e", text: "Every population that requires tightly regulated hormone production is a migratory salmon population.", answerCategory: "no" }
 ],
-explanation: "A — YES: Since salmonids always undergo smoltification, and smoltification always requires endocrine up-regulation, salmonids must require endocrine up-regulation.\nB — NO: The premises say some populations requiring endocrine up-regulation face temperature stressors, but we cannot assume this characteristic extends to salmonids specifically.\nC — YES: Because all populations undergoing smoltification require endocrine up-regulation, they form a subset of the populations requiring endocrine up-regulation.\nD — NO: We cannot rule out an overlap between temperature stressors and smoltification, as the statements do not isolate them into mutually exclusive groups.\nE — NO: Anadromous salmonid populations are just one specific type of animal population within the broader set that requires endocrine up-regulation."
+explanation: "A — YES: Since migratory salmon always undergo this hormonal change, and the change always requires tightly regulated hormone production, salmon must require it.\nB — NO: The premises say some populations requiring tightly regulated hormone production face temperature stress, but we cannot assume this characteristic extends to salmon specifically.\nC — YES: Because all populations undergoing this hormonal change require tightly regulated hormone production, they form a subset of the populations requiring it.\nD — NO: We cannot rule out an overlap between temperature stress and this hormonal change, as the statements do not isolate them into mutually exclusive groups.\nE — NO: Migratory salmon populations are just one specific type of population within the broader set that requires tightly regulated hormone production."
 },
 {
 kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"No photosynthetic vascular plant can thrive without access to soluble soil orthophosphates.",
-"All obligate heterotrophic fungi can thrive without access to soluble soil orthophosphates.",
-"Some obligate heterotrophic fungi form extensive mycorrhizal networks with tree roots."
+"No green plant can thrive without access to soluble soil phosphates.",
+"All fungi that feed only on other organisms can thrive without access to soluble soil phosphates.",
+"Some fungi that feed only on other organisms form extensive root-fungus networks with trees."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -2082,13 +2082,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-20-24-a", text: "No obligate heterotrophic fungi is a photosynthetic vascular plant.", answerCategory: "yes" },
-{ id: "dm-syl-20-24-b", text: "Some fungi that form extensive mycorrhizal networks with tree roots can thrive without access to soluble soil orthophosphates.", answerCategory: "yes" },
-{ id: "dm-syl-20-24-c", text: "Some fungi that form extensive mycorrhizal networks with tree roots are photosynthetic vascular plants.", answerCategory: "no" },
-{ id: "dm-syl-20-24-d", text: "No photosynthetic vascular plant forms extensive mycorrhizal networks with tree roots.", answerCategory: "no" },
-{ id: "dm-syl-20-24-e", text: "Some organisms that can thrive without access to soluble soil orthophosphates form extensive mycorrhizal networks with tree roots.", answerCategory: "yes" }
+{ id: "dm-syl-20-24-a", text: "No fungus that feeds only on other organisms is a green plant.", answerCategory: "yes" },
+{ id: "dm-syl-20-24-b", text: "Some fungi that form extensive root-fungus networks with trees can thrive without access to soluble soil phosphates.", answerCategory: "yes" },
+{ id: "dm-syl-20-24-c", text: "Some fungi that form extensive root-fungus networks with trees are green plants.", answerCategory: "no" },
+{ id: "dm-syl-20-24-d", text: "No green plant forms extensive root-fungus networks with trees.", answerCategory: "no" },
+{ id: "dm-syl-20-24-e", text: "Some organisms that can thrive without access to soluble soil phosphates form extensive root-fungus networks with trees.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Plants can never thrive without orthophosphates, while heterotrophic fungi always can, establishing them as completely separate, mutually exclusive groups.\nB — YES: The obligate heterotrophic fungi that form extensive mycorrhizal networks with tree roots possess the ability to thrive without orthophosphates.\nC — NO: Since heterotrophic fungi and photosynthetic vascular plants are completely exclusive, there can be no overlap between mycorrhizal fungi and vascular plants.\nD — NO: The premises state that fungi form networks with tree roots, but do not state that plants themselves cannot form or participate in these networks.\nE — YES: This is a direct conclusion from the fact that the mycorrhizal network-forming fungi are a subset of obligate heterotrophic fungi, which can thrive without orthophosphates."
+explanation: "A — YES: Plants can never thrive without soil phosphates, while these fungi always can, establishing them as completely separate, mutually exclusive groups.\nB — YES: The fungi that form extensive root-fungus networks with trees possess the ability to thrive without soil phosphates.\nC — NO: Since these fungi and green plants are completely exclusive, there can be no overlap between network-forming fungi and green plants.\nD — NO: The premises state that fungi form networks with tree roots, but do not state that plants themselves cannot form or participate in these networks.\nE — YES: This is a direct conclusion from the fact that the network-forming fungi are a subset of fungi that can thrive without soil phosphates."
 },
 // ==========================================
 // BATCH 1: RETAIL BANKING & ACCOUNTS (01-08)
