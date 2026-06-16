@@ -10433,9 +10433,9 @@ categoryItems: [
 { id: "dm-syl-02-09-b", text: "No intern audits public sector organizations.", answerCategory: "yes" },
 { id: "dm-syl-02-09-c", text: "Some chartered accountants are interns.", answerCategory: "no" },
 { id: "dm-syl-02-09-d", text: "All professionals who use specialized risk software are chartered accountants.", answerCategory: "no" },
-{ id: "dm-syl-02-09-e", text: "No chartered accountant is an intern.", answerCategory: "yes" }
+{ id: "dm-syl-02-09-e", text: "No chartered accountant is an intern.", answerCategory: "no" }
 ],
-explanation: "A — YES: Most chartered accountants audit public sector organizations, and all such auditors use specialized risk software, so some chartered accountants use it.\nB — YES: Anyone who audits public sector organizations must use the software, but interns do not use it, so no intern does this auditing.\nC — NO: Chartered accountants who audit public organizations use the software, meaning they cannot be interns. Even for the remaining accountants, there is no evidence suggesting they are interns.\nD — NO: Anyone auditing public sector organizations uses the software, but these professionals could belong to other accounting designations, not just chartered accountants.\nE — YES: Because 'most' chartered accountants use the software, they cannot be interns. Furthermore, because auditing public sector organizations requires software, and no intern uses software, no intern can be a chartered accountant who does this work. Crucially, a chartered accountant is a fully qualified professional title, which inherently contradicts being an intern in professional classification based on the absolute software restriction applied to their core work population."
+explanation: "A — YES: Most chartered accountants audit public sector organizations, and all such auditors use specialized risk software, so some chartered accountants use it.\nB — YES: Anyone who audits public sector organizations must use the software, but interns do not use it, so no intern does this auditing.\nC — NO: Chartered accountants who audit public organizations use the software, meaning they cannot be interns. Even for the remaining accountants, there is no evidence suggesting they are interns.\nD — NO: Anyone auditing public sector organizations uses the software, but these professionals could belong to other accounting designations, not just chartered accountants.\nE — NO: Only the chartered accountants who audit public sector organizations (the 'most') are proven to use the software and therefore cannot be interns. The remaining chartered accountants are not shown to use the software, so nothing rules out them being interns."
 },
 {
 kind: "drag-category",
@@ -10625,9 +10625,9 @@ categoryItems: [
 { id: "dm-syl-02-17-b", text: "No trainee claims handler possesses an advanced credentials certificate.", answerCategory: "yes" },
 { id: "dm-syl-02-17-c", text: "Some senior actuaries are trainee claims handlers.", answerCategory: "no" },
 { id: "dm-syl-02-17-d", text: "All people who have passed the enterprise risk management exam are senior actuaries.", answerCategory: "no" },
-{ id: "dm-syl-02-17-e", text: "No senior actuary is a trainee claims handler.", answerCategory: "yes" }
+{ id: "dm-syl-02-17-e", text: "No senior actuary is a trainee claims handler.", answerCategory: "no" }
 ],
-explanation: "A — YES: Most senior actuaries possess the certificate, and everyone with the certificate has passed the exam, so some senior actuaries have passed it.\nB — YES: Anyone with the certificate has passed the exam, but since no trainee claims handler has passed the exam, none can possess the certificate.\nC — NO: Actuaries who have passed the exam cannot be trainee claims handlers, and senior status logically excludes being a trainee within professional hierarchies.\nD — NO: Passing the exam is a requirement tied to the certificate, but professionals other than senior actuaries might pass it too.\nE — YES: Because 'most' senior actuaries have passed the exam, they cannot be trainee claims handlers. By professional definition and the explicit logical exclusion (trainees cannot pass the exam that senior actuaries hold via certificates), a senior actuary cannot be a trainee."
+explanation: "A — YES: Most senior actuaries possess the certificate, and everyone with the certificate has passed the exam, so some senior actuaries have passed it.\nB — YES: Anyone with the certificate has passed the exam, but since no trainee claims handler has passed the exam, none can possess the certificate.\nC — NO: Actuaries who have passed the exam cannot be trainee claims handlers, and senior status logically excludes being a trainee within professional hierarchies.\nD — NO: Passing the exam is a requirement tied to the certificate, but professionals other than senior actuaries might pass it too.\nE — NO: Only the 'most' senior actuaries who hold the certificate are proven to have passed the exam and thus cannot be trainee claims handlers. The remaining senior actuaries are not shown to have passed the exam, so nothing rules out them being trainee claims handlers."
 },
 {
 kind: "drag-category",
@@ -10721,9 +10721,9 @@ categoryItems: [
 { id: "dm-syl-02-21-b", text: "No junior graphic designer manages multi-channel global ad campaigns.", answerCategory: "yes" },
 { id: "dm-syl-02-21-c", text: "Some senior copywriters are junior graphic designers.", answerCategory: "no" },
 { id: "dm-syl-02-21-d", text: "All professionals who have signed non-disclosure agreements are senior copywriters.", answerCategory: "no" },
-{ id: "dm-syl-02-21-e", text: "No senior copywriter is a junior graphic designer.", answerCategory: "yes" }
+{ id: "dm-syl-02-21-e", text: "No senior copywriter is a junior graphic designer.", answerCategory: "no" }
 ],
-explanation: "A — YES: Most senior copywriters manage these global campaigns, and all such managers must sign an NDA, so some senior copywriters have signed it.\nB — YES: Campaign managers must sign NDAs, and since junior graphic designers do not sign NDAs, none of them manage these campaigns.\nC — NO: Senior copywriters who manage these campaigns have signed NDAs, which explicitly prevents them from being junior graphic designers.\nD — NO: Signing an NDA is required for managing campaigns, but many other advertising roles might also require signing an NDA.\nE — YES: Because 'most' senior copywriters manage campaigns and sign NDAs, they cannot be junior graphic designers. Moreover, seniority status and different professional tracks logically exclude being a junior designer."
+explanation: "A — YES: Most senior copywriters manage these global campaigns, and all such managers must sign an NDA, so some senior copywriters have signed it.\nB — YES: Campaign managers must sign NDAs, and since junior graphic designers do not sign NDAs, none of them manage these campaigns.\nC — NO: Senior copywriters who manage these campaigns have signed NDAs, which explicitly prevents them from being junior graphic designers.\nD — NO: Signing an NDA is required for managing campaigns, but many other advertising roles might also require signing an NDA.\nE — NO: Only the 'most' senior copywriters who manage these campaigns are proven to have signed NDAs and thus cannot be junior graphic designers. The remaining senior copywriters are not shown to have signed an NDA, so nothing rules out them being junior graphic designers."
 },
 {
 kind: "drag-category",
@@ -11115,7 +11115,7 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "No Blunt is a Scribo.",
-"All Gorfs are Scribbos.",
+"All Gorfs are Scribos.",
 "Some Blunts are Whumps.",
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -11128,10 +11128,10 @@ categoryItems: [
 { id: "dm-syl-abs-14-a", text: "No Blunt is a Gorf.", answerCategory: "yes" },
 { id: "dm-syl-abs-14-b", text: "No Scribo is a Blunt.", answerCategory: "yes" },
 { id: "dm-syl-abs-14-c", text: "Some Whumps are Blunts.", answerCategory: "yes" },
-{ id: "dm-syl-abs-14-d", text: "All Scribbos are Gorfs.", answerCategory: "no" },
+{ id: "dm-syl-abs-14-d", text: "All Scribos are Gorfs.", answerCategory: "no" },
 { id: "dm-syl-abs-14-e", text: "Some Gorfs are Blunts.", answerCategory: "no" },
 ],
-explanation: "A - YES: All Gorfs are Scribbos (premise 2), and no Blunt is a Scribo (premise 1). Being a Gorf requires being a Scribo, so no Blunt can be a Gorf.\nB - YES: 'No Blunt is a Scribo' converts to 'No Scribo is a Blunt' - a valid E-statement conversion.\nC - YES: 'Some Blunts are Whumps' converts to 'Some Whumps are Blunts' - a valid I-statement conversion.\nD - NO: This reverses premise 2. All Gorfs are Scribbos does not mean all Scribbos are Gorfs.\nE - NO: This contradicts A (no Blunt is a Gorf), which converts to 'no Gorf is a Blunt' by E-conversion.",
+explanation: "A - YES: All Gorfs are Scribos (premise 2), and no Blunt is a Scribo (premise 1). Being a Gorf requires being a Scribo, so no Blunt can be a Gorf.\nB - YES: 'No Blunt is a Scribo' converts to 'No Scribo is a Blunt' - a valid E-statement conversion.\nC - YES: 'Some Blunts are Whumps' converts to 'Some Whumps are Blunts' - a valid I-statement conversion.\nD - NO: This reverses premise 2. All Gorfs are Scribos does not mean all Scribos are Gorfs.\nE - NO: This contradicts A (no Blunt is a Gorf), which converts to 'no Gorf is a Blunt' by E-conversion.",
 },
 {
 kind: "drag-category",
