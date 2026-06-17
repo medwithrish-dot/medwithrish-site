@@ -2538,6 +2538,147 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     );
   }
 
+  if (visual.type === "pie") {
+    const total = visual.slices.reduce((sum, slice) => sum + slice.value, 0);
+    const width = 620;
+    const height = 380;
+    const centerX = 250;
+    const centerY = 190;
+    const radius = 112;
+    const labelRadius = 172;
+    const fills = ["#ffffff", "#d8d8d8", "#b7b7b7", "#eeeeee", "#8f8f8f"];
+    const toPoint = (angle: number, pointRadius: number) => {
+      const radians = (angle * Math.PI) / 180;
+      return {
+        x: centerX + Math.cos(radians) * pointRadius,
+        y: centerY + Math.sin(radians) * pointRadius,
+      };
+    };
+    const slices = visual.slices.map((slice, index) => {
+      const previousTotal = visual.slices
+        .slice(0, index)
+        .reduce((sum, previousSlice) => sum + previousSlice.value, 0);
+      const sliceAngle = total > 0 ? (slice.value / total) * 360 : 0;
+      const startAngle = total > 0 ? -90 + (previousTotal / total) * 360 : -90;
+      const endAngle = startAngle + sliceAngle;
+      const midAngle = startAngle + sliceAngle / 2;
+      const start = toPoint(startAngle, radius);
+      const end = toPoint(endAngle, radius);
+      const labelPoint = toPoint(midAngle, labelRadius);
+      const leaderStart = toPoint(midAngle, radius + 8);
+      const leaderEnd = toPoint(midAngle, labelRadius - 18);
+      const largeArc = sliceAngle > 180 ? 1 : 0;
+      const path =
+        sliceAngle >= 359.99
+          ? undefined
+          : `M ${centerX} ${centerY} L ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArc} 1 ${end.x} ${end.y} Z`;
+      const percentage = total > 0 ? (slice.value / total) * 100 : 0;
+      const anchor: "start" | "middle" | "end" =
+        labelPoint.x > centerX + 12
+          ? "start"
+          : labelPoint.x < centerX - 12
+            ? "end"
+            : "middle";
+      return {
+        ...slice,
+        index,
+        path,
+        percentage,
+        labelPoint,
+        leaderStart,
+        leaderEnd,
+        anchor,
+      };
+    });
+
+    return (
+      <div className="mx-auto mb-8 mt-5 w-full max-w-[720px] bg-white text-black">
+        <h3 className="text-center text-base font-bold text-black">
+          {formatDisplayText(visual.title)}
+        </h3>
+        <div className="mt-3 overflow-x-auto">
+          <svg
+            viewBox={`0 0 ${width} ${height}`}
+            className="block h-auto text-black"
+            style={{ width: `${width}px`, maxWidth: "none" }}
+            role="img"
+            aria-label={formatDisplayText(visual.title)}
+          >
+            <rect x="0" y="0" width={width} height={height} fill="#ffffff" />
+            {slices.map((slice) =>
+              slice.path ? (
+                <path
+                  key={slice.label}
+                  d={slice.path}
+                  fill={fills[slice.index % fills.length]}
+                  stroke="#111111"
+                  strokeWidth="2"
+                />
+              ) : (
+                <circle
+                  key={slice.label}
+                  cx={centerX}
+                  cy={centerY}
+                  r={radius}
+                  fill={fills[slice.index % fills.length]}
+                  stroke="#111111"
+                  strokeWidth="2"
+                />
+              )
+            )}
+            <circle
+              cx={centerX}
+              cy={centerY}
+              r={radius}
+              fill="none"
+              stroke="#111111"
+              strokeWidth="2.4"
+            />
+            {slices.map((slice) => (
+              <g key={`${slice.label}-label`}>
+                <line
+                  x1={slice.leaderStart.x}
+                  y1={slice.leaderStart.y}
+                  x2={slice.leaderEnd.x}
+                  y2={slice.leaderEnd.y}
+                  stroke="#111111"
+                  strokeWidth="1.4"
+                />
+                <text
+                  x={slice.labelPoint.x}
+                  y={slice.labelPoint.y - 8}
+                  textAnchor={slice.anchor}
+                  fontFamily="Arial, Helvetica, sans-serif"
+                  fontSize="13"
+                  fontWeight="700"
+                  fill="#111111"
+                >
+                  {formatDisplayText(slice.label)}
+                </text>
+                <text
+                  x={slice.labelPoint.x}
+                  y={slice.labelPoint.y + 10}
+                  textAnchor={slice.anchor}
+                  fontFamily="Arial, Helvetica, sans-serif"
+                  fontSize="13"
+                  fill="#111111"
+                >
+                  {formatChartNumber(slice.value)} (
+                  {slice.percentage.toFixed(slice.percentage % 1 === 0 ? 0 : 1)}%)
+                </text>
+              </g>
+            ))}
+          </svg>
+        </div>
+        {visual.note && (
+          <p className="mt-2 text-xs font-semibold text-black">
+            {formatDisplayText(visual.note)}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   const getSeriesFill = (index: number) => {
     const fills = ["#ffffff", "#c7c7c7", "#ececec", "#9f9f9f"];
     return fills[index % fills.length];
@@ -3768,11 +3909,13 @@ function MockStartPanel({
   scoreMatrix,
   loading,
   draft,
+  onStartNewMock,
 }: {
   selectedMock: (typeof MOCK_LIBRARY)[number];
   scoreMatrix: MockScoreMatrix;
   loading: boolean;
   draft?: MockSessionDraft | null;
+  onStartNewMock: () => void;
 }) {
   const completedSections = getCompletedFullMockSections(
     scoreMatrix,
@@ -3819,6 +3962,14 @@ function MockStartPanel({
       >
         {loading ? "Loading..." : actionLabel}
       </Link>
+      <button
+        type="button"
+        onClick={onStartNewMock}
+        className="mt-3 inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-4 text-xs font-black text-emerald-700 transition-colors hover:border-emerald-300 hover:bg-emerald-100"
+      >
+        <PlusCircle className="h-4 w-4" aria-hidden="true" />
+        Start a new mock
+      </button>
     </div>
   );
 }
@@ -3953,22 +4104,30 @@ function MockScoreGraph({
                 strokeLinejoin="round"
               />
             )}
-            {points.map((point, index) => {
-              const active = index === activeIndex;
-              return (
-                <g key={point.mock.id}>
-                  <circle
-                    cx={point.x}
-                    cy={point.y ?? bottom}
-                    r={active ? 6 : 4.5}
-                    fill={point.score ? (active ? "#2563eb" : "#93c5fd") : "#e2e8f0"}
-                    stroke={active ? "#1d4ed8" : "#cbd5e1"}
-                    strokeWidth={active ? 2 : 1}
-                  />
-                </g>
-              );
-            })}
           </svg>
+          {points.map((point, index) => {
+            const active = index === activeIndex;
+            return (
+              <span
+                key={point.mock.id}
+                className={`absolute rounded-full border ${
+                  point.score
+                    ? active
+                      ? "h-4 w-4 border-blue-700 bg-blue-600 shadow-sm ring-2 ring-blue-100"
+                      : "h-3 w-3 border-blue-300 bg-blue-300"
+                    : active
+                      ? "h-4 w-4 border-slate-300 bg-slate-200 ring-2 ring-white"
+                      : "h-3 w-3 border-slate-300 bg-slate-200"
+                }`}
+                style={{
+                  left: `${(point.x / chartWidth) * 100}%`,
+                  top: `${((point.y ?? bottom) / chartHeight) * 100}%`,
+                  transform: "translate(-50%, -50%)",
+                }}
+                aria-hidden="true"
+              />
+            );
+          })}
           <div
             className="absolute inset-x-0 bottom-0 grid text-center text-[11px] font-black text-slate-600"
             style={{
@@ -4000,11 +4159,13 @@ function FullMockPerformancePanel({
   scoreMatrix,
   loading,
   draft,
+  onStartNewMock,
 }: {
   selectedMock: (typeof MOCK_LIBRARY)[number];
   scoreMatrix: MockScoreMatrix;
   loading: boolean;
   draft?: MockSessionDraft | null;
+  onStartNewMock: () => void;
 }) {
   const [selectedMetric, setSelectedMetric] =
     useState<MockScoreMetric>("overall");
@@ -4041,6 +4202,7 @@ function FullMockPerformancePanel({
           scoreMatrix={scoreMatrix}
           loading={loading}
           draft={draft}
+          onStartNewMock={onStartNewMock}
         />
         <MockScoreGraph
           selectedMock={selectedMock}
@@ -4114,25 +4276,10 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
           scoreMatrix={scoreMatrix}
           loading={scoreLoading}
           draft={selectedMockDraft}
+          onStartNewMock={() => setNewMockStep("type")}
         />
 
         {/* ── New mock picker ─────────────────────────────────────────── */}
-        {newMockStep === null && (
-          <div className="mt-5 flex items-center gap-3 border-t border-slate-100 pt-5">
-            <button
-              type="button"
-              onClick={() => setNewMockStep("type")}
-              className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700"
-            >
-              <PlusCircle className="h-4 w-4" aria-hidden="true" />
-              Start a new mock
-            </button>
-            <p className="text-xs font-semibold text-slate-500">
-              Full mock, subtest mock, or 15-min sprint
-            </p>
-          </div>
-        )}
-
         {newMockStep === "type" && (
           <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50/40 p-5">
             <div className="flex items-center justify-between gap-3">

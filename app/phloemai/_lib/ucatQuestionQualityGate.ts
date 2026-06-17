@@ -188,7 +188,7 @@ function getQrTemplate(question: UCATQuestion) {
 
   const setIndex = Number(match[1]) - 1;
   const itemIndex = Number(match[2]);
-  const families = ["table", "grouped-bar", "line", "rate", "finance"];
+  const families = ["table", "grouped-bar", "line", "pie", "rate", "finance"];
   return `${families[setIndex % families.length]}-${itemIndex}`;
 }
 

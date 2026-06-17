@@ -352,6 +352,5080 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
     ],
   },
 
+  {
+    kind: "set",
+    setId: "ward-relative-demands-discharge-letter",
+    issueTags: ["communication", "confidentiality", "teamwork"],
+    stimulus: [
+      "You are a medical student on an elderly care ward. A patient's son approaches you in the corridor and says his mother has been waiting all day for her discharge letter. He asks you to tell him exactly what medication changes were made and to pressure the junior doctor to write the letter immediately because he has already paid for a taxi.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the son that you cannot discuss the medication changes in the corridor, but offer to let the nursing team know that the family is waiting and ask whether someone can update him appropriately.",
+        answer: "B",
+        explanation:
+          "This protects confidentiality and tries to help, so it is appropriate. It is not ideal because the best response would also involve checking whether the patient has consented to sharing information with her son and ensuring the update comes from a responsible clinician.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Promise the son that the discharge letter will be completed within 10 minutes to reduce his frustration.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because you cannot guarantee another clinician's work or safely prioritise discharge paperwork without clinical context. False reassurance may worsen conflict and could pressure the team into an unsafe discharge process.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Avoid the son for the rest of the shift because relatives are not your responsibility as a student.",
+        answer: "C",
+        explanation:
+          "Avoiding him is inappropriate because it ignores a legitimate communication concern and leaves the ward team unaware of escalating frustration. It is not as serious as breaching confidentiality or making false promises, but it falls below expected professional behaviour.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is it that the son has already paid for a taxi when deciding whether to share medication details with him?",
+        answer: "C",
+        explanation:
+          "The taxi cost is of minor importance. It explains the family's frustration and may affect communication priorities, but it does not override confidentiality, consent, or the need for safe discharge documentation.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinic-consultant-dismissive-comment",
+    issueTags: ["respect-dignity", "communication", "integrity"],
+    stimulus: [
+      "You are observing an outpatient clinic. After a patient with chronic pelvic pain leaves the room, the consultant says, within earshot of the receptionist, 'Some patients just enjoy wasting appointments.' The receptionist looks uncomfortable, and the next patient is waiting outside the partly open door.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "After the clinic, speak privately to your educational supervisor about the comment and ask how best to raise concerns about disrespectful language.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it seeks guidance and avoids a public confrontation during a busy clinic. It is not ideal because the open door and receptionist's presence mean there may be an immediate professionalism concern that should be handled sooner if the patient or others may have heard.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Laugh politely so the clinic atmosphere does not become awkward.",
+        answer: "C",
+        explanation:
+          "Laughing is inappropriate because it appears to endorse a disrespectful comment about a patient. It is not the most severe response because it does not directly repeat the comment to the patient, but it still undermines professional standards.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Post about the incident on social media, without naming the consultant, to show that you do not support dismissive attitudes.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because it risks identifying the clinic, patient, or consultant and bypasses proper local escalation routes. Public posting is not a safe or professional way to handle concerns about colleagues.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is it that the consultant may have been under time pressure when assessing the professionalism of the comment?",
+        answer: "C",
+        explanation:
+          "Time pressure is of minor importance. It may explain stress, but it does not justify disrespectful comments about patients, especially where others may hear them.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "student-infection-control-shortcut",
+    issueTags: ["patient-safety", "integrity", "teamwork"],
+    stimulus: [
+      "You are on a gastroenterology ward during a suspected norovirus outbreak. A fellow student leaves an isolation room, removes their gloves, and says they will skip handwashing because they used alcohol gel twice and are late for teaching.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Remind the student that soap-and-water handwashing is needed after leaving the isolation room and suggest you both inform the teaching lead that you were delayed by infection-control precautions.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it addresses the immediate risk and offers a practical way to manage lateness. It is not ideal because if the student refuses, the concern should be escalated to ward staff rather than left as peer advice.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say nothing because infection-control reminders from one student to another can feel patronising.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because the behaviour creates a direct infection risk for vulnerable patients and staff. Avoiding awkwardness cannot take priority over outbreak control.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Use alcohol gel yourself and leave quickly so you are not late either.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because it repeats the unsafe shortcut during an outbreak. Students are still responsible for following local infection-control policy and modelling safe behaviour.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is arriving at teaching on time compared with completing the correct hand hygiene step?",
+        answer: "D",
+        explanation:
+          "Being on time is not important at all compared with preventing avoidable transmission during an outbreak. Teaching can be explained or delayed; infection spread can cause real patient harm.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gp-reception-confidentiality-call",
+    issueTags: ["confidentiality", "communication", "professional-boundaries"],
+    stimulus: [
+      "You are on a GP placement and are helping at reception for ten minutes while the receptionist speaks to a clinician. A caller says she is the partner of a patient and asks whether his STI results are back. She says he asked her to phone, but there is no record of consent on the screen.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Explain that you cannot disclose results without recorded consent and offer to arrange for the patient to contact the practice directly.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it maintains confidentiality and gives a practical next step. It is not ideal because, as a student temporarily covering reception, you should also involve the receptionist or supervisor rather than manage the call entirely alone.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Confirm whether the results are back, but do not reveal whether they are positive or negative.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because even confirming that STI results exist may disclose sensitive health information. It is less severe than sharing the actual result, but it is still a confidentiality breach.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Give the caller the result because she sounds genuine and says the patient asked her to call.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because sensitive results must not be disclosed without verified consent. A caller's reassurance is not a substitute for proper identity and consent checks.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the caller's confident tone when deciding whether to disclose the result?",
+        answer: "D",
+        explanation:
+          "The caller's tone is not important at all. Confidentiality decisions depend on consent and identity verification, not on whether the caller sounds plausible.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "theatre-list-prioritisation-pressure",
+    issueTags: ["justice", "patient-safety", "scope-of-practice"],
+    stimulus: [
+      "You are shadowing an anaesthetic registrar. A surgeon tells you privately that his private patient should be moved ahead of an NHS patient on the emergency theatre list because the private patient is 'less likely to complain'. You are not involved in theatre scheduling.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the anaesthetic registrar what the surgeon said and ask whether the list order has been agreed through the usual clinical prioritisation process.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it raises a fairness and safety concern with a clinician involved in theatre flow. It is not ideal because the responsible theatre coordinator or consultant may also need to be involved if there is evidence the list is being manipulated.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Challenge the surgeon publicly in front of the patient waiting area to make clear that you oppose unfair prioritisation.",
+        answer: "C",
+        explanation:
+          "The concern is legitimate, but a public confrontation risks breaching confidentiality and disrupting care. It is inappropriate because escalation should be calm and through the theatre team, not performed in front of patients.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Move the private patient's notes to the top of the pile so the surgeon does not become annoyed with you.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because it interferes with clinical prioritisation outside your role and may disadvantage another patient. Avoiding a senior colleague's annoyance is never a valid reason to distort a theatre list.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's private status when deciding emergency theatre priority?",
+        answer: "D",
+        explanation:
+          "Private status is not important at all for emergency theatre priority. Ordering should be based on clinical urgency, safety, and agreed theatre processes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "placement-peer-inappropriate-gift",
+    issueTags: ["professional-boundaries", "integrity", "teamwork"],
+    stimulus: [
+      "You are on a paediatric placement. A fellow student tells you that a parent has given them a GBP 100 gift card for spending extra time explaining asthma inhalers to the family. The student says they plan to keep it because refusing would seem rude.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest that the student speak to the placement supervisor before accepting the gift, because local policy may require it to be declined or declared.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises the risk of a boundary or probity concern and directs the student to policy. It is not ideal if framed only as optional advice; if the student refuses, further escalation may be needed.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the student it is fine to keep the gift because the parent clearly offered it voluntarily.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because voluntary gifts can still create perceived obligation or unfairness, especially where the value is substantial. It is not the most severe response because it does not involve requesting a gift, but it gives poor professional advice.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the student to split the gift card with you since you were also on the placement.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because it exploits a patient family's gratitude and worsens the probity problem. It would also make you personally involved in an undeclared benefit.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the exact retail value of the gift when deciding whether to declare it?",
+        answer: "B",
+        explanation:
+          "The value is important because higher-value gifts carry a greater risk of perceived influence or impropriety. It is not the only factor, as timing, context, policy, and vulnerability of the family also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-capacity-family-pressure",
+    issueTags: ["capacity-consent", "autonomy", "communication"],
+    stimulus: [
+      "You are with an FY2 reviewing an older patient who is refusing a proposed feeding tube. The patient's daughter repeatedly interrupts, saying, 'He does not understand, just get him to sign.' The FY2 has not yet assessed the patient's capacity for this decision.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest to the FY2, after the conversation pauses, that the patient's capacity for this specific decision needs to be assessed before any consent form is discussed.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it highlights the decision-specific capacity requirement without taking over the consultation. It is not ideal because the FY2 should also actively manage the daughter's interruptions and support the patient to express his own views.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the daughter to leave immediately in a sharp tone because relatives should not interfere with consent.",
+        answer: "C",
+        explanation:
+          "The daughter may need to step out if she is preventing a capacity assessment, but a sharp and immediate demand is poor communication. Relatives can provide useful context, so the issue should be managed calmly.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Encourage the patient to sign quickly so the team can avoid a difficult family disagreement.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because it pressures the patient and bypasses capacity and valid consent. Avoiding conflict with family cannot justify undermining the patient's autonomy.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the daughter's belief that the feeding tube is best for her father when deciding whether he has capacity?",
+        answer: "C",
+        explanation:
+          "Her view is of minor importance to the capacity assessment itself. It may provide context for best-interests discussions if he lacks capacity, but capacity depends on his ability to understand, retain, weigh, and communicate the decision.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "audit-data-copying-shortcut",
+    issueTags: ["integrity", "patient-safety", "teamwork"],
+    stimulus: [
+      "You are helping an FY1 complete a handover audit. The FY1 says there is no time to check the last ten cases and suggests copying the previous week's compliance figures so the department can submit the audit before the deadline.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say you are not comfortable entering unchecked data and suggest recording the sample as incomplete or asking the audit lead for an extension.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it refuses falsification and offers realistic alternatives. It is not ideal if it stops there; if the FY1 still intends to copy figures, the concern should be escalated.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Copy the previous week's figures but add a note to yourself to check whether they were probably similar later.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because it knowingly creates false audit data. A private note does not correct a submitted inaccurate record or protect patients from unsafe conclusions.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ignore the suggestion and leave the FY1 to decide because the audit is ultimately their responsibility.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because you would be ignoring a clear probity concern. It is less severe than falsifying the data yourself, but students still have a duty to raise concerns about dishonesty.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is meeting the audit submission deadline compared with avoiding false data entry?",
+        answer: "D",
+        explanation:
+          "The deadline is not important at all compared with data integrity. A delayed or incomplete audit is much safer than a false audit that could mislead quality-improvement work.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ed-queue-jump-demand",
+    issueTags: ["justice", "communication", "patient-safety"],
+    stimulus: [
+      "You are a medical student in the emergency department. A patient with a minor ankle injury recognises you from university and asks you to get them seen before others because they have an exam tomorrow. The waiting room includes several patients who arrived earlier and appear clinically stable.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Explain that patients must be prioritised by clinical need and arrival processes, but offer to tell reception if their pain or mobility has worsened.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it protects fairness while still recognising that deterioration should be communicated. It is not ideal because the student should avoid appearing to personally manage triage decisions and should signpost the patient to staff.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the triage nurse to move the patient up the queue because you know them personally.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because it uses a personal connection to seek unfair access to care. Triage must be based on clinical urgency, not familiarity with staff or students.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ignore the patient completely for the rest of the shift to avoid a conflict of interest.",
+        answer: "C",
+        explanation:
+          "Avoiding unfair influence is sensible, but ignoring the patient is poor communication and may appear rude or dismissive. A brief boundary-setting response is more professional.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's exam tomorrow when deciding clinical priority in the emergency department?",
+        answer: "D",
+        explanation:
+          "The exam is not important at all for clinical priority. It may be personally stressful, but ED ordering should be based on clinical risk, waiting processes, and deterioration.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-language-barrier-family-translator",
+    issueTags: ["communication", "capacity-consent", "respect-dignity"],
+    stimulus: [
+      "You are on a medical ward. A patient with limited English is being asked to consent to a lumbar puncture. Her adult nephew offers to translate because the booked interpreter is running late, and the team is busy.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest waiting for the professional interpreter unless the procedure is urgently required, because consent for an invasive procedure needs accurate independent communication.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it protects valid consent and avoids relying on a family member for complex medical interpretation. It is not ideal if phrased as a suggestion only; the responsible clinician must ensure consent is valid before proceeding.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Proceed with the nephew translating because family members usually understand the patient's wishes best.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because family interpretation can introduce errors, omissions, or pressure. It is not always catastrophic if the issue is simple and non-sensitive, but consent for a lumbar puncture is too significant for this shortcut.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the nephew to sign the consent form on the patient's behalf because he speaks English fluently.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because language ability does not give the nephew authority to consent for an adult patient with capacity. It bypasses the patient's autonomy and risks invalid consent.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the team's busy schedule when deciding whether to use a professional interpreter for consent?",
+        answer: "C",
+        explanation:
+          "The schedule is of minor importance. It may explain pressure on the team, but it does not override the need for valid consent and patient understanding.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-prescribing-password-sharing",
+    issueTags: ["integrity", "patient-safety", "scope-of-practice"],
+    stimulus: [
+      "You are shadowing a pharmacist on an acute ward. A junior doctor asks the pharmacist to use the doctor's prescribing login to add a routine medication because the doctor is called away and says, 'It is only paracetamol, and I will approve it later.'",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "The pharmacist should decline to use another person's login and ask the doctor to prescribe it themselves or arrange appropriate cover.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it protects prescribing accountability and system security. It is not ideal only because, depending on urgency, the pharmacist may also need to help identify another authorised prescriber promptly.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Use the login just this once because the medication is routine and low risk.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because sharing prescribing credentials destroys accountability and creates a false record. Low-risk medication does not make password sharing acceptable.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the doctor you did not hear the request and walk away.",
+        answer: "C",
+        explanation:
+          "Avoiding the request prevents immediate wrongdoing, but it is poor teamwork and fails to address an unsafe practice. A clear refusal with a safe alternative is expected.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the fact that the requested drug is paracetamol when deciding whether password sharing is acceptable?",
+        answer: "D",
+        explanation:
+          "The drug being paracetamol is not important at all to the password-sharing issue. Accountability and secure prescribing rules apply regardless of the medication.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "student-fatigue-drive-home",
+    issueTags: ["patient-safety", "professional-boundaries", "teamwork"],
+    stimulus: [
+      "You are a medical student finishing a long on-call shadowing shift. Another student says they are so tired they nearly fell asleep in handover but plans to drive home immediately because they do not want to pay for a taxi.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest they do not drive while exhausted and help them contact the site coordinator or security desk to explore safe travel or rest options.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises a real safety risk and offers practical support. It is not ideal if it relies only on persuasion; if they still intend to drive, escalation may be needed.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell them to drink coffee and drive with the window open because the journey is probably short.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because it minimises a serious risk of harm to the student and others. Caffeine and an open window are not safe solutions for severe fatigue.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Leave them to decide because they are an adult and it is not a clinical matter.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because foreseeable serious harm should not be ignored simply because it occurs after the shift. It is less direct than encouraging unsafe driving, but it still falls short of supportive professionalism.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the taxi cost compared with preventing a fatigued drive home?",
+        answer: "D",
+        explanation:
+          "The taxi cost is not important at all compared with preventing a potentially serious accident. Financial inconvenience does not justify driving when dangerously tired.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "research-consent-optional-samples",
+    issueTags: ["autonomy", "capacity-consent", "integrity"],
+    stimulus: [
+      "You are helping with a research clinic. A participant has consented to the main questionnaire study but left the optional blood-sample box blank. A researcher says most participants forget that box and asks you to tick it before the form is scanned.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Decline to tick the box and suggest asking the participant directly whether they want to consent to the optional blood sample.",
+        answer: "B",
+        explanation:
+          "This is appropriate because optional consent must be actively chosen by the participant. It is not ideal if the participant has already left and cannot be asked; in that case the optional sample should simply be treated as not consented.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tick the box because the participant consented to the main study and probably intended to help fully.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because it fabricates consent for an optional procedure. Research consent must be explicit, especially for additional biological samples.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Leave the box blank but do not mention the researcher's request to anyone.",
+        answer: "C",
+        explanation:
+          "Leaving the box blank avoids falsifying this form, but staying silent allows a potentially serious research-governance problem to recur. The request should be raised with an appropriate supervisor or study lead.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the fact that most participants usually agree to the optional sample?",
+        answer: "D",
+        explanation:
+          "That general pattern is not important at all for this participant's consent. Consent is individual and cannot be inferred from what most other participants do.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinic-interpreter-shortcut",
+    issueTags: ["communication", "respect-dignity", "patient-safety"],
+    stimulus: [
+      "You are in a diabetes clinic. The booked telephone interpreter disconnects repeatedly. The clinician suggests using a translation app on your personal phone to explain insulin dose changes because the clinic is running late.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest pausing to reconnect with an approved interpreter or rearrange the explanation safely, because insulin dose changes carry significant risk if misunderstood.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises the safety risk and the limits of informal translation tools. It is not ideal if it does not also consider immediate clinical needs, such as whether written translated materials or an approved backup service is available.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Use the app and ask the patient to nod if they understand.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because insulin instructions are high risk and nodding does not confirm understanding. A personal phone app may also create confidentiality and accuracy problems.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Skip the counselling and tell the patient the prescription label will explain everything.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because insulin changes require clear counselling and checking of understanding. Relying on a label alone creates a direct patient-safety risk.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the clinic running late when deciding whether to use an unapproved translation method for insulin counselling?",
+        answer: "C",
+        explanation:
+          "The delay is of minor importance. It is operationally frustrating, but it does not outweigh safe communication for a high-risk medication.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "maternity-observation-chart-late-entry",
+    issueTags: ["integrity", "patient-safety", "candour"],
+    stimulus: [
+      "You are on a maternity ward. A midwife realises that a blood pressure reading from two hours ago was not entered on the observation chart. She remembers it was normal and asks you to write it in with the earlier time so the chart looks complete.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest that the midwife documents it herself as a late entry, with the actual time it is being entered and the recalled observation time clearly stated.",
+        answer: "B",
+        explanation:
+          "This is appropriate because late entries can be legitimate if they are transparent and attributable. It is not ideal for the student to manage the documentation process alone; the professional who took the observation should document it.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Write the observation in using the earlier time because the value was normal and no harm occurred.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because it creates a misleading record and suggests the entry was made contemporaneously. Accurate timing matters even when the observation was normal.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Refuse to write anything but do not help the midwife find the correct late-entry process.",
+        answer: "C",
+        explanation:
+          "Refusing to falsify the chart is right, but giving no support is incomplete teamwork. The safer response is to direct the issue toward transparent late documentation.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the fact that the remembered blood pressure was normal when deciding whether to backdate the entry?",
+        answer: "D",
+        explanation:
+          "The normal result is not important at all to whether backdating is acceptable. The record must accurately show when information was entered and by whom.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "oncology-relative-gifted-information",
+    issueTags: ["confidentiality", "communication", "respect-dignity"],
+    stimulus: [
+      "You are on an oncology ward. A patient's brother brings chocolates for the team and asks you quietly whether the latest scan shows the cancer has spread. The patient is asleep, and you do not know whether the patient has agreed for information to be shared with the brother.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Thank him for the gesture but explain that scan results can only be discussed by the clinical team with the patient's consent, and offer to ask the nurse in charge how a family update can be arranged.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it preserves confidentiality while helping the relative access proper communication. It is not ideal because acceptance of gifts should also follow local policy if the gift is more than a token item.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell him whether the cancer has spread because he has clearly been supporting the patient and brought a gift for the ward.",
+        answer: "D",
+        explanation:
+          "This is very inappropriate because a relative's support and a gift do not create consent to disclose sensitive cancer information. Scan results should be shared through the responsible team and with the patient's permission.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say you are not allowed to talk to relatives and walk away immediately.",
+        answer: "C",
+        explanation:
+          "This avoids disclosure, but it is dismissive and misses an opportunity to signpost to an appropriate family update. Confidentiality should be maintained with respectful communication.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the box of chocolates when deciding whether to share the scan result?",
+        answer: "D",
+        explanation:
+          "The chocolates are not important at all to the disclosure decision. Confidentiality and patient consent are the relevant factors.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-cannula-supervision-delay",
+    issueTags: ["patient-safety", "scope-of-practice", "teamwork"],
+    stimulus: [
+      "You are a medical student on a respiratory ward. A patient needs an urgent cannula for IV antibiotics. The FY1 is tied up with a deteriorating patient and asks whether you can 'just put it in' because you have successfully inserted two cannulas before, both under direct supervision.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Explain that you can prepare the equipment and stay with the patient, but that you need an appropriately trained clinician to supervise or perform the cannulation.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises the urgency and offers useful help while staying within competence. It is not ideal because the student should also make sure the delay is actively escalated to another available clinician, not simply wait for the FY1.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Wait quietly outside the treatment room until the FY1 is free, without telling anyone else that the antibiotics are delayed.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it allows a clinically relevant delay to continue without escalation. It is not as serious as attempting an unsupervised procedure, but it is still passive and unhelpful.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the fact that you have previously inserted two cannulas successfully when deciding whether to work unsupervised?",
+        answer: "C",
+        explanation:
+          "Previous experience is of minor importance. It may support learning under supervision, but it does not by itself establish competence or authorisation to perform the procedure independently.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is it to alert another qualified member of staff if the cannula delay may postpone time-sensitive antibiotics?",
+        answer: "B",
+        explanation:
+          "This is important because delays to IV antibiotics can affect patient outcomes. It is not necessarily the single overriding issue if the FY1 is managing a more urgent emergency, but the delay should still be communicated.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gp-home-visit-parking-pressure",
+    issueTags: ["justice", "communication", "professional-boundaries"],
+    stimulus: [
+      "You are accompanying a GP on home visits. The GP parks briefly in a resident-only bay because the visit is running late. A neighbour challenges you both angrily and says doctors think rules do not apply to them.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Acknowledge the neighbour's concern politely and let the GP decide whether to move the car or explain the clinical situation.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it avoids escalating conflict and recognises that the GP is responsible for the visit logistics. It is not ideal because the response should also ensure the patient visit is not compromised and that local parking rules are respected where possible.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the neighbour that doctors are too busy saving lives to worry about parking complaints.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it is dismissive and likely to worsen the interaction. It is not the most serious breach because it does not disclose patient information, but it still damages professionalism.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is maintaining a calm tone when responding to the neighbour?",
+        answer: "B",
+        explanation:
+          "This is important because the encounter is public and could affect trust in the practice. It is not the only priority, as patient care and legality of parking also need consideration.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is proving to the neighbour that the GP's workload is heavier than theirs?",
+        answer: "C",
+        explanation:
+          "This is of minor importance. The aim should be to de-escalate and behave professionally, not to win an argument about relative workload.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dermatology-photo-consent-teaching",
+    issueTags: ["confidentiality", "capacity-consent", "respect-dignity"],
+    stimulus: [
+      "You are in dermatology clinic. A consultant asks whether you would like to take a photo of an unusual rash on your personal phone for teaching. The patient has verbally agreed to students observing the consultation, but no one has discussed photography.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask whether explicit consent for clinical photography has been obtained before any image is taken.",
+        answer: "B",
+        explanation:
+          "This is appropriate because consent for observation is not the same as consent for photography. It is not ideal because the safest process would normally use approved clinical photography systems rather than a student's personal phone.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Take the photo but crop out the patient's face afterwards.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because rashes can still be identifiable, and consent for photography has not been obtained. It is less severe than sharing the image publicly, but it remains poor practice.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the educational value of the rash when deciding whether consent is needed for a photograph?",
+        answer: "C",
+        explanation:
+          "The educational value is of minor importance to the consent requirement. A useful teaching image still needs explicit consent and appropriate storage.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is using an approved clinical photography process rather than a personal phone?",
+        answer: "B",
+        explanation:
+          "This is important because approved systems reduce confidentiality and data-security risks. It is not the only issue, as consent and patient understanding are also essential.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ed-friend-waiting-room-advice",
+    issueTags: ["professional-boundaries", "confidentiality", "communication"],
+    stimulus: [
+      "You are on an emergency department placement. A friend from your course arrives as a patient with abdominal pain and messages you asking what to say at triage to be seen faster. You are not involved in their care.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Reply that they should describe their symptoms honestly to triage staff and that you cannot advise them how to alter the triage process.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it sets a boundary and supports honest communication. It is not ideal because you may also need to avoid further involvement and tell your supervisor if you are likely to encounter your friend clinically.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest they mention severe pain even if it comes and goes, because intermittent symptoms can be missed.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it risks coaching the patient to present symptoms strategically rather than accurately. It is not necessarily malicious, but it could distort triage.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your friendship when deciding whether to access their ED notes?",
+        answer: "C",
+        explanation:
+          "The friendship is of minor importance only as a reason to be extra cautious about boundaries. It does not justify accessing records without a legitimate clinical role.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is it to avoid giving your friend advice that could manipulate triage priority?",
+        answer: "B",
+        explanation:
+          "This is important because triage depends on honest symptom reporting and clinical need. It is not the only consideration, as confidentiality and avoiding involvement in a friend's care also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "surgical-count-student-uncertainty",
+    issueTags: ["patient-safety", "teamwork", "communication"],
+    stimulus: [
+      "You are observing in theatre. During closure, you think you hear the scrub practitioner say the swab count is correct, but you are not sure because several people were speaking at once. You notice one packaged swab on a side trolley and are unsure whether it has already been counted.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Quietly ask the scrub practitioner whether the swab on the side trolley is included in the count.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it raises a possible safety issue without making an accusation. It is not ideal if the concern remains unresolved; in that case it should be escalated clearly before closure continues.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Assume the theatre team has already counted it because you are only observing.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because students can still speak up about potential safety concerns. It is not as serious as interfering with the sterile field, but silence could miss an avoidable error.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding embarrassment when deciding whether to ask about the swab count?",
+        answer: "C",
+        explanation:
+          "Avoiding embarrassment is of minor importance. It is understandable to feel hesitant, but patient safety and clear theatre communication are more important.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is using a calm, specific question rather than a vague alarm when raising the concern?",
+        answer: "B",
+        explanation:
+          "This is important because specific communication helps the team check the issue efficiently. It is not the only priority, as the concern still needs escalation if not resolved.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinic-chaperone-declined-note",
+    issueTags: ["professional-boundaries", "respect-dignity", "integrity"],
+    stimulus: [
+      "You are in a urology clinic. Before an intimate examination, the clinician offers a chaperone and the patient declines. The clinic is running late, and the clinician moves on without documenting the offer or the patient's decision.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "After the consultation, remind the clinician that the chaperone offer and the patient's decision may need to be documented.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it supports good record keeping and protects both patient and clinician. It is not ideal because documentation should ideally happen contemporaneously and in line with local policy.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Add the chaperone note yourself without checking with the clinician because you witnessed the discussion.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because the clinician responsible for the examination should ensure the clinical record is accurate. A student should not independently alter the record beyond their role, although the intent is not harmful.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the clinic running late when deciding whether the chaperone discussion should be documented?",
+        answer: "C",
+        explanation:
+          "The delay is of minor importance. Time pressure may explain why documentation was missed, but it does not remove the need for an accurate record.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is documenting that the chaperone was offered and declined?",
+        answer: "B",
+        explanation:
+          "This is important because intimate examinations require clear professional safeguards. It is not necessarily the single most urgent clinical issue, but it protects patient dignity and professional accountability.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "mental-health-confidentiality-corridor",
+    issueTags: ["confidentiality", "communication", "respect-dignity"],
+    stimulus: [
+      "You are on a mental health placement. Two nurses begin discussing a patient's relapse and drug use in a corridor near visitors. You can hear the patient's full name and details of the admission.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Politely mention that the conversation may be overheard and suggest moving to a private area.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it addresses the confidentiality risk in a respectful way. It is not ideal if the issue reflects a repeated ward culture problem, which may need broader discussion with a supervisor.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Stand nearby and listen so you can learn more about the patient's presentation.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it takes advantage of an overheard confidential conversation. It is not as serious as repeating the information, but it still fails to respect privacy.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your educational interest in the case when deciding whether to keep listening?",
+        answer: "C",
+        explanation:
+          "Educational interest is of minor importance. Learning does not justify avoidable exposure to confidential information in a public area.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is protecting confidentiality in semi-public ward areas?",
+        answer: "B",
+        explanation:
+          "This is important because patients and visitors can easily overhear identifiable details. It is not always possible to eliminate every risk, but staff should actively minimise it.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiology-pregnancy-check-assumption",
+    issueTags: ["patient-safety", "communication", "non-maleficence"],
+    stimulus: [
+      "You are observing in radiology. A patient is booked for a CT scan involving ionising radiation. A healthcare assistant says the pregnancy question was probably already asked at reception, but the checklist box is blank.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the radiographer whether the pregnancy status check still needs to be completed before the scan proceeds.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it flags a missing safety check to the responsible professional. It is not ideal if phrased too casually; the scan should not proceed until the checklist requirement is clearly resolved.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Assume reception completed the check because the patient has already reached the scanner room.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because a blank safety checklist should not be ignored. It is less severe than falsifying the checklist, but it risks an avoidable radiation-safety error.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the blank checklist box when deciding whether to ask about the pregnancy check?",
+        answer: "B",
+        explanation:
+          "This is important because the blank box is a visible gap in a safety process. It is not proof that the check was missed, but it is enough to require clarification.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding a short delay to the scan compared with confirming the safety checklist?",
+        answer: "C",
+        explanation:
+          "Avoiding a short delay is of minor importance. Timeliness matters, but it should not override a required safety check before ionising radiation.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatrics-parent-recording-consultation",
+    issueTags: ["communication", "confidentiality", "respect-dignity"],
+    stimulus: [
+      "You are in a paediatric clinic. A parent begins recording the consultation on their phone without asking. The clinician appears not to notice, and another child patient's name is visible on a clinic list in the background.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Quietly alert the clinician that recording appears to be happening and that identifiable information may be visible in the background.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it raises a confidentiality and communication issue with the person leading the consultation. It is not ideal if it stops there; the clinician should address the recording openly and respectfully with the parent.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Reach over and stop the recording yourself without speaking to the parent.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it is confrontational and may escalate the situation. The concern is legitimate, but it should be handled through calm communication by the clinician.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the clinic list visible in the background?",
+        answer: "B",
+        explanation:
+          "This is important because it may expose another patient's identity. It is not the only issue, as the recording of the consultation itself also needs to be discussed.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is proving that the parent intended to breach confidentiality before raising the concern?",
+        answer: "C",
+        explanation:
+          "Proving intent is of minor importance. The immediate issue is the risk of identifiable information being recorded, even if the parent did not mean any harm.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "research-spreadsheet-identifiable-data",
+    issueTags: ["confidentiality", "integrity", "patient-safety"],
+    stimulus: [
+      "You are helping with a quality-improvement project. A registrar emails you a spreadsheet containing patient names, NHS numbers, and medication errors, asking you to analyse it on your personal laptop over the weekend.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Reply asking whether the data can be anonymised or accessed through an approved secure system before you work on it.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises the information-governance risk and offers a safer route. It is not ideal if the email already represents a serious breach that also needs reporting through local processes.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Download the spreadsheet but promise yourself you will delete it once the analysis is done.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because storing identifiable patient data on a personal laptop may breach information-governance rules. Deleting it later reduces duration but does not make the initial handling safe.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the quality-improvement value of the project when deciding whether to use a personal laptop for identifiable data?",
+        answer: "C",
+        explanation:
+          "The project value is of minor importance to the data-security question. Quality improvement is worthwhile, but it must still follow approved information-governance processes.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking the local information-governance process before analysing identifiable patient data?",
+        answer: "B",
+        explanation:
+          "This is important because mishandling identifiable data can harm patients and the organisation. It is not the only issue, as the team also needs to ensure the project has appropriate approval and minimised data fields.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "placement-colleague-mocking-accent",
+    issueTags: ["respect-dignity", "teamwork", "communication"],
+    stimulus: [
+      "You are in a ward office after handover. A fellow student imitates a patient's accent and says it made the history 'impossible to take'. Two nurses hear the comment and look uncomfortable.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the student privately that the comment was disrespectful and suggest they focus on practical ways to improve communication with the patient.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it challenges disrespectful behaviour while keeping the response proportionate. It is not ideal if the comment is part of a pattern or has already affected the team environment, in which case a supervisor may need to know.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Laugh briefly to avoid embarrassing the student in front of the nurses.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it appears to endorse mocking a patient. It is less serious than repeating the joke to others, but it still undermines respect and dignity.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the student's intention to be funny rather than malicious?",
+        answer: "C",
+        explanation:
+          "Intent is of minor importance. It may guide how the issue is addressed, but the effect of disrespectful language on professionalism and patient dignity still matters.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is considering whether language barriers require practical support such as an interpreter?",
+        answer: "B",
+        explanation:
+          "This is important because communication difficulty should be addressed constructively. It is not the only issue, as the disrespectful comment itself still needs to be challenged.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "discharge-summary-copy-paste-risk",
+    issueTags: ["integrity", "patient-safety", "communication"],
+    stimulus: [
+      "You are helping an FY1 draft discharge summaries. The FY1 suggests copying yesterday's medication list into today's summary for a patient because the ward round was busy and the list is 'probably unchanged'.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest checking the current drug chart or asking the pharmacist before copying the medication list.",
+        answer: "B",
+        explanation:
+          "This is appropriate because discharge medication must be accurate and verified. It is not ideal if framed only as a suggestion; if the FY1 proceeds without checking, the concern should be escalated.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Copy the list but add 'please check medications' in the free-text comments.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it still places potentially inaccurate medication information in a discharge document. The warning comment reduces risk slightly but does not replace verification.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the ward round being busy when deciding whether to verify discharge medications?",
+        answer: "C",
+        explanation:
+          "The busy ward round is of minor importance. It explains time pressure but does not remove the need for accurate discharge information.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is medication accuracy in a discharge summary?",
+        answer: "B",
+        explanation:
+          "This is important because incorrect discharge medication can directly harm the patient after leaving hospital. It is not the only discharge requirement, but it is a major safety component.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-near-miss-feedback-delay",
+    issueTags: ["patient-safety", "candour", "teamwork"],
+    stimulus: [
+      "You are on a pharmacy placement. A pharmacist notices that a near-miss dispensing error was caught before reaching the patient. The ward is very busy, and the pharmacist says they will give informal feedback to the dispenser tomorrow rather than complete the near-miss form today.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask whether the near-miss can still be recorded briefly today, even if fuller feedback is given tomorrow.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it supports timely learning while recognising the ward pressure. It is not ideal because the responsible pharmacist should ensure the formal reporting process is followed, not leave it as a student prompt.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Accept the delay without comment because no harm reached the patient.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because near-misses are valuable safety data even when the patient is not harmed. It is not as serious as hiding an error that reached a patient, but it still weakens learning.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the fact that the error did not reach the patient?",
+        answer: "C",
+        explanation:
+          "This is of minor importance. It affects urgency and disclosure requirements, but it does not remove the value of recording and learning from the near-miss.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is giving feedback in a way that helps the dispenser learn rather than feel blamed?",
+        answer: "B",
+        explanation:
+          "This is important because constructive feedback supports safety culture and future reporting. It is not the only issue, as accurate documentation of the event also matters.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "safeguarding-note-sharing-student",
+    issueTags: ["patient-safety", "confidentiality", "scope-of-practice"],
+    stimulus: [
+      "You are on a paediatric placement. A friend from another medical school asks you to send them a safeguarding note template from a real case because they want to learn how such notes are written. The note includes family details but no patient name.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Decline to send the real note and suggest asking a supervisor for an anonymised teaching example instead.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it avoids sharing sensitive real-case material and offers a legitimate learning route. It is not ideal if the note is already stored somewhere insecure, which may require advice from the placement team.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Remove the patient's name and send the note because the family details are useful for learning.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because safeguarding notes can remain identifiable through family circumstances even without a name. It is not as severe as sending the full record unchanged, but it still risks confidentiality.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the friend's educational reason for wanting the note?",
+        answer: "C",
+        explanation:
+          "The educational reason is of minor importance. Learning needs should be met through approved anonymised materials, not by sharing sensitive real-case records.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is safeguarding information being treated as especially sensitive?",
+        answer: "B",
+        explanation:
+          "This is important because safeguarding records often contain highly personal details about children and families. It is not the only confidentiality issue, but it heightens the need for caution.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "icu-family-update-speculation",
+    issueTags: ["communication", "confidentiality", "teamwork"],
+    stimulus: [
+      "You are observing on ICU. A patient's cousin asks you in the relatives' room whether the patient is likely to survive. You have heard the consultant say the next 24 hours are critical, but no formal family update has happened yet.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say that you cannot give prognostic information yourself, but offer to let the nurse in charge know the family would like an update.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it avoids speculation outside your role while helping the family access the right person. It is not ideal because the team may also need to check who the patient wanted information shared with.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say that the next 24 hours are critical because you heard the consultant say this earlier.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it shares sensitive prognostic information without knowing consent or context. It is less severe than inventing reassurance or giving a definitive prediction, but still outside the student's role.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the cousin's distress when deciding whether to give your own prognosis?",
+        answer: "C",
+        explanation:
+          "The distress is of minor importance to whether you should give prognostic information yourself. It should prompt compassionate signposting, not speculation outside your role.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is ensuring family updates come from someone with the right clinical responsibility?",
+        answer: "B",
+        explanation:
+          "This is important because ICU prognostic information is complex and can be misunderstood. It is not the only consideration, as confidentiality and the patient's wishes also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinic-lateness-apology-boundary",
+    issueTags: ["communication", "respect-dignity", "teamwork"],
+    stimulus: [
+      "You are in an outpatient clinic running 70 minutes late. A patient says they have missed work and asks you directly whether the consultant is always this disorganised. The consultant is still seeing the previous patient.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Acknowledge the delay, apologise for the inconvenience, and offer to check with reception whether there is an updated estimated waiting time.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it validates the patient's frustration and offers practical help. It is not ideal because a fuller explanation and service recovery may need to come from the clinic team rather than the student.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Agree that the consultant is disorganised to show empathy with the patient.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it undermines a colleague and may not be accurate. It is not as serious as disclosing confidential information, but it is unprofessional.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's frustration when deciding whether to respond respectfully?",
+        answer: "B",
+        explanation:
+          "This is important because frustration can escalate if ignored and patients deserve respectful communication. It is not a reason to criticise colleagues or make promises outside your control.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is defending the consultant's reputation at all costs?",
+        answer: "C",
+        explanation:
+          "This is of minor importance. Professionalism matters, but the priority is honest, respectful communication and practical help rather than reflexively defending anyone.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-blood-result-text-message",
+    issueTags: ["confidentiality", "communication", "professional-boundaries"],
+    stimulus: [
+      "You are on a ward round. A patient you previously clerked messages your personal social media account asking whether their blood results are normal. You did not give them your account details, but your profile is public.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Do not discuss results over social media, and tell the ward team that the patient has contacted you so they can update the patient appropriately.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it protects confidentiality and redirects communication through proper channels. It is not ideal because you should also review your privacy settings and avoid an ongoing personal-message exchange.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Reply with a brief message saying the results look fine, without giving details.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it uses an informal personal channel for clinical information and may be misleading without context. It is less severe than sending detailed results, but still crosses a boundary.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the fact that the patient found your public profile without you giving it to them?",
+        answer: "C",
+        explanation:
+          "This is of minor importance. It explains how contact occurred, but it does not make social media an appropriate clinical communication route.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is ensuring the patient receives results through an appropriate clinical route?",
+        answer: "B",
+        explanation:
+          "This is important because patients need accurate, contextual information and a chance to ask questions. It is not the only issue, as professional boundaries also need managing.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ed-ambulance-crew-criticism",
+    issueTags: ["teamwork", "communication", "respect-dignity"],
+    stimulus: [
+      "You are in ED when an ambulance crew hands over a patient. After they leave, an FY2 says loudly at the nurses' station that the crew are useless and always bring incomplete handovers. Several staff and patients nearby can hear.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Later, ask the FY2 privately whether concerns about handover quality can be raised through the appropriate feedback route.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it redirects a legitimate safety concern into a constructive process. It is not ideal if the loud comment caused immediate distress or undermined teamwork in the moment, which may need more immediate de-escalation.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Join in by saying ambulance handovers are often poor, because this may build rapport with the ED team.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it reinforces disrespectful interprofessional comments. It is less serious than making a formal false allegation, but it damages teamwork and public trust.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is good interprofessional communication between ED and ambulance teams?",
+        answer: "B",
+        explanation:
+          "This is important because handover quality directly affects patient safety. It is not the only issue, as professionalism in public areas also matters.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is fitting in with the ED team when deciding whether to join the criticism?",
+        answer: "C",
+        explanation:
+          "Fitting in is of minor importance. Building relationships is useful, but not through disrespectful comments about colleagues.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "medical-school-peer-cheating-suspicion",
+    issueTags: ["integrity", "teamwork", "professional-boundaries"],
+    stimulus: [
+      "You are sitting a formative online prescribing quiz at medical school. You notice a classmate looking repeatedly at a second phone under the desk. You are not certain whether they are checking notes or responding to an urgent message.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "After the quiz, seek advice from the assessment lead about what you observed without accusing the classmate directly.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it raises a probity concern while recognising uncertainty. It is not ideal if there is a clear real-time invigilation process that should have been used during the quiz.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell several classmates that you think the student was cheating so they can watch them in future.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it spreads an unproven allegation. It is not as serious as fabricating evidence, but it is unfair and unprofessional.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your uncertainty about what was on the second phone?",
+        answer: "B",
+        explanation:
+          "This is important because uncertainty should shape how the concern is raised. It supports seeking advice or reporting observations factually rather than making an accusation.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding all discomfort for the classmate when deciding whether to raise the concern?",
+        answer: "C",
+        explanation:
+          "Avoiding discomfort is of minor importance. Fairness matters, but professional integrity concerns should not be ignored solely to avoid awkwardness.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "outpatient-consent-leaflet-assumption",
+    issueTags: ["capacity-consent", "communication", "autonomy"],
+    stimulus: [
+      "You are in an outpatient procedure clinic. A patient is asked to sign a consent form and says they have not read the leaflet because they forgot their glasses. The nurse says the leaflet is standard and asks you to witness the signature anyway.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask whether the patient would like the key information read aloud or explained before signing.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it supports understanding and valid consent. It is not ideal if the responsible clinician has not checked understanding, as they may need to pause and complete that discussion.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Witness the signature because the leaflet is standard and most patients sign it.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because the patient's understanding cannot be assumed from a standard leaflet. It is less serious than forcing a signature, but it still weakens the consent process.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the fact that most patients sign the same leaflet?",
+        answer: "C",
+        explanation:
+          "This is of minor importance. Consent is individual, and this patient's ability to read and understand the information still needs addressing.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking that the patient can access the information before signing?",
+        answer: "B",
+        explanation:
+          "This is important because valid consent depends on understanding relevant information. It is not the only factor, as voluntariness and capacity also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gp-video-call-background-privacy",
+    issueTags: ["confidentiality", "communication", "respect-dignity"],
+    stimulus: [
+      "You are observing a GP video consultation about anxiety medication. The patient appears to be in a shared kitchen, and another adult can be seen moving in the background. The GP begins asking about panic attacks and alcohol use.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "At a natural pause, ask the GP whether it would be worth checking that the patient is somewhere private before continuing with sensitive questions.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it identifies a confidentiality risk without taking over the consultation. It is not ideal because the GP should directly confirm privacy with the patient before sensitive topics are discussed.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say nothing because the patient chose where to sit for the video call and can move if they want to.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because patients may not realise what can be seen or heard on camera. It is not as serious as disclosing information yourself, but it misses a preventable privacy risk.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking whether the patient has privacy before discussing anxiety, alcohol use, and medication?",
+        answer: "B",
+        explanation:
+          "This is important because sensitive information may be overheard by someone in the patient's home. It is not the only issue in the consultation, but privacy should be checked before detailed discussion.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the brand of video-call platform when deciding whether the patient can be overheard at home?",
+        answer: "C",
+        explanation:
+          "The platform brand is of minor importance to the immediate privacy concern. What matters is who can see or hear the consultation from the patient's environment.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "oncology-trial-leaflet-pressure",
+    issueTags: ["autonomy", "capacity-consent", "communication"],
+    stimulus: [
+      "You are in an oncology clinic where a patient is considering a clinical trial. The research nurse says recruitment is slow and asks you to help persuade the patient to sign the consent form today, even though the patient says they want to read the leaflet at home first.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient it is reasonable to read the leaflet and discuss questions with the research team before deciding.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it supports voluntary informed consent and avoids pressure. It is not ideal because the detailed trial discussion should be led by the research team or responsible clinician.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Emphasise that trial places may run out soon so the patient should sign before leaving clinic.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it risks pressuring the patient into research participation. It is not the most severe response if the statement is factually true, but the framing undermines voluntary consent.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding therapeutic misconception when discussing a clinical trial?",
+        answer: "B",
+        explanation:
+          "This is important because patients must understand that research participation is not the same as guaranteed personal treatment benefit. It is not the only consent issue, but it is central to ethical recruitment.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the clinic's recruitment target when deciding how much time the patient should have to consider consent?",
+        answer: "C",
+        explanation:
+          "The recruitment target is of minor importance. It may matter operationally, but it should not drive pressure on an individual patient's consent decision.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ed-delayed-analgesia-complaint",
+    issueTags: ["candour", "communication", "patient-safety"],
+    stimulus: [
+      "You are in the emergency department. A patient with a fractured wrist tells you they asked for pain relief an hour ago and still have not received any. They are upset and say they want to complain.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Acknowledge their distress, apologise that they are still in pain, and tell the nurse looking after them so analgesia can be reviewed.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it responds compassionately and escalates the immediate clinical issue. It is not ideal because the formal complaint process and clinical responsibility should be handled by the ward or ED team, not the student alone.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell them ED is busy and everyone has to wait, so complaining will not help.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it dismisses pain and discourages feedback. It is not as serious as ignoring a dangerous symptom, but it is poor communication and may worsen trust.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is acting on the patient's report of uncontrolled pain?",
+        answer: "B",
+        explanation:
+          "This is important because pain relief is part of safe and humane care. It is not the only ED priority, but the report should not be ignored.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is protecting the department's reputation when responding to the complaint?",
+        answer: "C",
+        explanation:
+          "Reputation is of minor importance. The priority is honest, respectful communication and addressing the patient's pain, not defending the department.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "care-home-dnar-family-request",
+    issueTags: ["autonomy", "capacity-consent", "communication"],
+    stimulus: [
+      "You are with a geriatrician in a care home. A resident with mild dementia has been assessed as having capacity for treatment decisions today. Her daughter asks you outside the room to persuade her mother to agree to a DNAR form because the family thinks it is best.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Explain that the resident's own views need to be explored by the clinical team, and suggest the daughter raises her concerns with the geriatrician.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it respects the resident's capacity and redirects the family to the responsible clinician. It is not ideal because the geriatrician should manage the DNAR discussion directly and sensitively.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the resident that signing the DNAR would make things easier for her daughter.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it applies emotional pressure to a capacitous patient. It is not as extreme as forging agreement, but it undermines autonomous decision-making.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is understanding the daughter's concerns before the clinical team discusses escalation decisions?",
+        answer: "B",
+        explanation:
+          "This is important because family concerns can provide context and help communication. It is not the only factor, and it does not override the resident's own capacitous decision.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is making the decision quickly to reduce the daughter's anxiety?",
+        answer: "C",
+        explanation:
+          "Reducing anxiety is of minor importance compared with a careful, patient-centred DNAR discussion. Speed should not compromise consent or understanding.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiology-incidental-finding-curiosity",
+    issueTags: ["confidentiality", "integrity", "professional-boundaries"],
+    stimulus: [
+      "You are shadowing in radiology. A scan report appears on a workstation for someone with the same unusual surname as your neighbour. You are not involved in the patient's care and are waiting for the next teaching case.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Look away from the report and tell the radiographer that a non-teaching case is open on the workstation.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it avoids unnecessary access and alerts the staff member. It is not ideal if identifiable information has already been exposed for longer than necessary, as the department may need to review screen-locking habits.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Read only the conclusion to check whether it is actually your neighbour.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because curiosity is not a legitimate reason to access health information. It is less severe than sharing the result, but it is still a confidentiality breach.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your curiosity about whether the patient is your neighbour?",
+        answer: "C",
+        explanation:
+          "Personal curiosity is of minor importance and should not influence access to records. Confidentiality depends on legitimate clinical or educational need.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is having a legitimate role before viewing identifiable radiology information?",
+        answer: "B",
+        explanation:
+          "This is important because access to identifiable patient information must be justified. It is not the only issue, as departments also need safe screen and teaching practices.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paeds-vaccine-parent-misinformation",
+    issueTags: ["communication", "beneficence", "respect-dignity"],
+    stimulus: [
+      "You are in a paediatric clinic. A parent says they read online that vaccines overload the immune system and asks you, while the doctor is out of the room, whether they should delay their child's routine immunisations.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Acknowledge the concern, say the clinician can discuss vaccine safety properly, and offer to show them trusted NHS information while they wait.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it is respectful and directs the parent to reliable information. It is not ideal because detailed counselling should be provided by the clinician responsible for the consultation.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the parent that only gullible people believe vaccine myths.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it is insulting and likely to entrench mistrust. It is not a confidentiality breach or direct clinical error, but it is poor communication.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is responding respectfully to vaccine concerns?",
+        answer: "B",
+        explanation:
+          "This is important because respectful discussion can preserve trust and support informed decisions. It is not the only factor, as accurate evidence and clinician involvement also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is winning the argument quickly before the doctor returns?",
+        answer: "C",
+        explanation:
+          "Winning an argument is of minor importance. The aim is to support understanding and safe decision-making, not to score points in a debate.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "psych-patient-poem-boundary",
+    issueTags: ["professional-boundaries", "respect-dignity", "communication"],
+    stimulus: [
+      "You are on a psychiatry placement. A patient you have interviewed twice gives you a handwritten poem about how much your conversations helped them. They ask you to keep it and read it whenever you remember them.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Thank the patient kindly, explain that you need to discuss gifts and personal items with the team, and ask your supervisor how to handle it.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it is kind but recognises a boundary issue. It is not ideal because the team may need to explore what the gesture means clinically, especially if the patient is becoming attached.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Take the poem home as a personal keepsake because it is not a financial gift.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it may blur professional boundaries and reinforce attachment. It is less serious than exchanging personal contact details, but it should still be handled through supervision.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the emotional meaning of the poem to the patient?",
+        answer: "B",
+        explanation:
+          "This is important because the gesture may reflect therapeutic attachment or vulnerability. It is not the only issue, as boundaries and documentation also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your own feeling of being flattered by the poem?",
+        answer: "C",
+        explanation:
+          "Your personal feeling is of minor importance. It may be understandable, but the response should be guided by patient welfare and professional boundaries.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "lab-critical-result-handover-uncertainty",
+    issueTags: ["patient-safety", "communication", "teamwork"],
+    stimulus: [
+      "You are beside the nurses' station when the pathology lab phones with a critical potassium result. Several people speak at once, and you are not sure the nurse heard the patient's hospital number correctly before ending the call.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the nurse whether the patient details were confirmed correctly and whether the result needs reading back.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it raises a specific safety concern promptly. It is not ideal because the read-back process should be led by the qualified staff member receiving the critical result.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Assume the nurse heard correctly because they receive lab calls every day.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because critical results require accurate identification, and uncertainty should be clarified. It is not as serious as changing the result yourself, but it is unsafe passivity.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your uncertainty about the hospital number?",
+        answer: "B",
+        explanation:
+          "This is important because even a small uncertainty could lead to acting on the wrong patient's result. It is not proof of an error, but it justifies clarification.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding interrupting the nurse when a critical result may have been misheard?",
+        answer: "C",
+        explanation:
+          "Avoiding interruption is of minor importance. Courtesy matters, but a possible patient-identification error should be clarified promptly.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinic-blood-taking-practice-consent",
+    issueTags: ["capacity-consent", "scope-of-practice", "respect-dignity"],
+    stimulus: [
+      "You are in outpatient clinic and need more venepuncture practice. A patient has agreed to have bloods taken by the nurse. The nurse asks whether you want to do it instead, but the patient has not been asked about a student performing the procedure.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the nurse to check explicitly whether the patient is happy for a supervised student to take the blood sample.",
+        answer: "B",
+        explanation:
+          "This is appropriate because consent to blood tests is not the same as consent to a student performing them. It is not ideal if the supervisor does not also confirm your competence and provide appropriate supervision.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Proceed because the patient already agreed to blood tests and the procedure is the same.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because the identity and training status of the person performing a procedure can matter to consent. It is less severe if supervision is present, but explicit permission is still needed.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your need to practise venepuncture?",
+        answer: "C",
+        explanation:
+          "Your learning need is of minor importance compared with consent and patient comfort. Training matters, but it must occur within proper supervision and patient agreement.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking that the patient agrees to a student performing the blood test?",
+        answer: "B",
+        explanation:
+          "This is important because patients have the right to know who is performing a procedure. It is not the only requirement, as supervision and competence also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-whiteboard-photo-risk",
+    issueTags: ["confidentiality", "integrity", "teamwork"],
+    stimulus: [
+      "You are helping with jobs on a busy ward. The handover whiteboard lists patient names, bed numbers, diagnoses, and outstanding tasks. A fellow student suggests taking a quick phone photo so neither of you forgets the jobs.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest writing a de-identified task list instead, using bed spaces only if local policy allows and keeping it secure during the shift.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it tries to preserve task accuracy while reducing confidentiality risk. It is not ideal because the safest approach depends on local handover policy and supervision.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Take the photo and delete it at the end of the day.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because identifiable ward information would be stored on a personal phone, even temporarily. Deleting it later does not remove the initial data-security risk.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is convenience when deciding whether to photograph the whiteboard?",
+        answer: "C",
+        explanation:
+          "Convenience is of minor importance. Remembering jobs matters, but it should be done using an approved method that protects confidentiality.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is following local handover and data-security policy for ward task lists?",
+        answer: "B",
+        explanation:
+          "This is important because handover information is often identifiable and clinically sensitive. It is not the only issue, as practical team communication also needs to function.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "rehab-goal-setting-family-video",
+    issueTags: ["autonomy", "communication", "respect-dignity"],
+    stimulus: [
+      "You are on a rehabilitation ward. During goal-setting, the patient's daughter joins by video call and starts answering every question for her father. The patient is quiet but appears alert and able to communicate slowly.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest giving the patient extra time to answer first, while acknowledging that his daughter may be able to add useful context afterwards.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it supports the patient's voice without excluding the family. It is not ideal unless the team also checks whether the patient wants his daughter involved in this level of discussion.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is allowing the patient enough time to express his own rehabilitation goals?",
+        answer: "B",
+        explanation:
+          "This is important because rehabilitation goals should reflect the patient's priorities. It is not the only factor, as family support and realistic discharge planning also matter.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Let the daughter continue answering because it makes the meeting quicker.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because speed is being prioritised over the patient's autonomy. It is not as serious as deliberately excluding the patient from a best-interests decision, but it weakens patient-centred care.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the daughter's knowledge of the home environment?",
+        answer: "B",
+        explanation:
+          "This is important because home circumstances can affect safe rehabilitation planning. It is not the only consideration and should not replace the patient's own goals.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dental-student-local-anaesthetic-observation",
+    issueTags: ["scope-of-practice", "capacity-consent", "patient-safety"],
+    stimulus: [
+      "You are observing in a dental hospital. A dentist asks whether you want to inject local anaesthetic for a simple extraction. You have watched the procedure several times but have not been signed off to perform it.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say you would like to learn but should only perform the injection if the patient consents and an appropriate supervisor confirms you are allowed to do so.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises both consent and competence. It is not ideal because if you have not been signed off, the default should be not to perform it until training requirements are clear.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is being formally signed off before performing a local anaesthetic injection?",
+        answer: "B",
+        explanation:
+          "This is important because sign-off indicates competence and protects patient safety. It is not the only issue, as patient consent and supervision are also required.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Proceed because the dentist is present and the extraction is simple.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because supervision alone does not automatically mean you are competent or authorised. It is less severe than performing the injection alone, but it still risks acting outside your role.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient knowing that a student may perform the injection?",
+        answer: "B",
+        explanation:
+          "This is important because patients should know who is carrying out procedures. It is not the only factor, as they also need to understand supervision and alternatives.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-fluid-balance-estimate-gap",
+    issueTags: ["integrity", "patient-safety", "teamwork"],
+    stimulus: [
+      "You are on a renal ward. A nurse asks you to help complete a fluid balance chart. There is a four-hour gap in urine output recording, and the nurse suggests estimating the missing amount based on the rest of the day.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest documenting the gap clearly and asking the nurse in charge how missing data should be handled locally.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it avoids inventing observations and seeks the proper process. It is not ideal if the missing data may affect urgent clinical decisions, in which case the medical team should also be alerted.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is accuracy in a renal patient's fluid balance chart?",
+        answer: "B",
+        explanation:
+          "This is important because fluid decisions can affect renal function and prescribing. It is not the only clinical measure, but inaccurate entries can mislead the team.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Estimate the missing four hours so the chart looks complete.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because estimated data may be mistaken for measured output. It is less severe than fabricating a dangerous observation deliberately, but it still compromises the record.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is making the chart look complete for the ward round?",
+        answer: "C",
+        explanation:
+          "Appearance of completeness is of minor importance. A clearly documented gap is safer than a neat but inaccurate chart.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "outpatient-interpreter-family-pressure",
+    issueTags: ["communication", "capacity-consent", "autonomy"],
+    stimulus: [
+      "You are in a cardiology outpatient clinic. A patient's adult son says there is no need for the booked interpreter because he can translate. The patient looks at the son before answering every question and gives very short responses.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest using the professional interpreter as planned, while explaining that family can still support the patient if the patient wants them present.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it supports accurate communication without excluding family. It is not ideal unless the clinician also checks privately whether the patient wants the son involved.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking whether the patient wants the son to interpret or remain present?",
+        answer: "B",
+        explanation:
+          "This is important because family presence can influence what a patient feels able to say. It is not the only issue, as interpretation accuracy also matters.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Use the son as interpreter because he appears confident and wants to help.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because confidence does not ensure accuracy, neutrality, or patient comfort. It is not always harmful for family to help with simple practical points, but clinical discussion needs care.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the son's confidence in English when deciding whether to cancel the interpreter?",
+        answer: "C",
+        explanation:
+          "His confidence is of minor importance. It may be helpful socially, but it does not replace professional interpretation for clinical decisions.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiotherapy-mask-anxiety-delay",
+    issueTags: ["communication", "beneficence", "patient-safety"],
+    stimulus: [
+      "You are shadowing in radiotherapy. A patient becomes visibly anxious before mask fitting and asks whether they can pause for a few minutes. The radiographer says the list is already behind schedule.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest asking the radiographer whether a brief pause and explanation might help the patient tolerate the procedure safely.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises distress and may prevent a failed procedure. It is not ideal because the radiographer should lead the discussion and balance timing with clinical need.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is acknowledging the patient's anxiety before mask fitting?",
+        answer: "B",
+        explanation:
+          "This is important because anxiety can affect cooperation and future treatment engagement. It is not the only issue, as appointment flow and treatment planning also matter.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient everyone finds it unpleasant and they should just get it over with.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it dismisses distress and may worsen anxiety. It is not as serious as restraining the patient, but it is poor communication.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the delayed clinic list when deciding whether the patient can be supported briefly?",
+        answer: "C",
+        explanation:
+          "The delay is of minor importance compared with immediate patient distress. It matters operationally, but it should not erase compassionate support.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-pharmacy-controlled-drug-query",
+    issueTags: ["patient-safety", "integrity", "communication"],
+    stimulus: [
+      "You are on a community pharmacy placement. A regular patient asks whether their controlled drug prescription can be dispensed two days early because they are travelling. The pharmacist is checking the legal requirements and the patient becomes impatient.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient the pharmacist needs to check the prescription rules carefully and that you will let them know when the pharmacist has confirmed what is possible.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it communicates respectfully and supports safe legal practice. It is not ideal because the pharmacist should provide the definitive explanation, not the student.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking the legal and professional requirements before dispensing early?",
+        answer: "B",
+        explanation:
+          "This is important because controlled drugs have strict dispensing rules and patient-safety implications. It is not the only issue, as the patient's travel need should still be handled helpfully.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient the pharmacist is being overly cautious because they are a regular patient.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it undermines the pharmacist and suggests rules can be relaxed based on familiarity. It is not as severe as dispensing unlawfully, but it is poor professional conduct.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient being a regular customer when deciding whether legal checks can be skipped?",
+        answer: "C",
+        explanation:
+          "Being a regular customer is of minor importance. It may support communication and continuity, but it does not remove legal or safety checks.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "neurology-driving-advice-uncertainty",
+    issueTags: ["patient-safety", "communication", "scope-of-practice"],
+    stimulus: [
+      "You are in a neurology clinic. A patient with recent blackouts asks you in the corridor whether they can keep driving until the consultant writes to the DVLA. You heard part of the consultation but are not sure what advice was given.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say you are not the right person to give driving advice and offer to ask the clinic nurse or consultant to clarify before the patient leaves.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it avoids unsafe advice while helping the patient get an answer. It is not ideal if the patient is about to drive immediately, in which case urgent clarification is needed.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is clarifying driving advice before the patient leaves clinic?",
+        answer: "B",
+        explanation:
+          "This is important because incorrect driving after blackouts could endanger the patient and others. It is not the only issue, as formal DVLA guidance and documentation also matter.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient they can probably drive until they receive written instructions.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it gives speculative safety-critical advice outside your role. It is less severe than knowingly contradicting clear medical advice, but it could still cause harm.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your uncertainty about what the consultant said?",
+        answer: "B",
+        explanation:
+          "This is important because uncertainty should stop you giving definitive advice. It is not the only issue, as the advice itself may have legal and safety implications.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-student-name-badge-error",
+    issueTags: ["integrity", "communication", "professional-boundaries"],
+    stimulus: [
+      "You arrive on a ward wearing a spare badge that says 'Dr Patel' because your student badge is missing. A patient calls you doctor and begins asking for medication advice before you have a chance to explain.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Correct the patient promptly, explain that you are a medical student, and ask a qualified clinician to answer medication questions.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it is honest and protects the patient from misunderstanding your role. It is not ideal because you should also replace the incorrect badge as soon as possible.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is making your student status clear to patients?",
+        answer: "B",
+        explanation:
+          "This is important because patients should know who is involved in their care and what role they have. It is not the only issue, as supervision and accurate identification also matter.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Answer the medication question briefly because correcting the badge misunderstanding might embarrass the patient.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it allows the patient to believe you are a doctor and risks advice outside your role. It is not as serious as deliberately impersonating a doctor, but it still undermines honesty.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding awkwardness when correcting the patient's misunderstanding?",
+        answer: "C",
+        explanation:
+          "Avoiding awkwardness is of minor importance. The patient needs accurate information about your role more than a perfectly smooth interaction.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-antibiotic-delay-family-question",
+    issueTags: ["communication", "patient-safety", "teamwork"],
+    stimulus: [
+      "You are on an acute medical ward. A patient's wife asks why the first dose of IV antibiotics has not started yet. You know the cannula has been difficult to site and that the nurse has asked the doctor for help, but you are not responsible for the patient's care.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Explain that there has been a delay getting IV access and offer to ask the nurse in charge for an update on the plan.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it gives a limited, honest explanation and seeks an update from the responsible team. It is not ideal because the clinical team should provide the full explanation and address any treatment-delay concerns directly.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell her the delay is probably harmless because the team would act faster if it were serious.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it speculates and may falsely reassure about a time-sensitive treatment. It is less serious than hiding a known error, but it still goes beyond the student's role.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is making sure the family receives an accurate update from someone responsible for the patient's care?",
+        answer: "B",
+        explanation:
+          "This is important because delays can cause anxiety and may have safety implications. It is not the only issue, as the immediate clinical task of obtaining IV access also matters.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your desire to avoid worrying the patient's wife?",
+        answer: "C",
+        explanation:
+          "This is of minor importance. Communication should be calm and proportionate, but avoiding worry does not justify inaccurate reassurance.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gp-test-result-reception-query",
+    issueTags: ["confidentiality", "communication", "scope-of-practice"],
+    stimulus: [
+      "You are on a GP placement. While waiting at reception, a patient recognises you from a previous consultation and asks whether their recent blood test was abnormal. The receptionist is on another call and the result is visible on the screen.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say you cannot discuss results at reception and offer to ask the receptionist or GP how the patient can receive an appropriate update.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it protects confidentiality while helping the patient navigate the proper route. It is not ideal because visible results on the screen also raise a privacy issue that should be managed by practice staff.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Quietly say the result looks normal because the patient is anxious and the screen is already visible.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because reception is not a suitable place to disclose or interpret results. It is less severe than announcing the result publicly, but it still crosses role and confidentiality boundaries.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's anxiety when deciding whether to interpret the result yourself?",
+        answer: "C",
+        explanation:
+          "The patient's anxiety is of minor importance to whether you should interpret results. It should prompt signposting and support, not disclosure outside your role.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is preventing other people at reception from seeing or hearing test results?",
+        answer: "B",
+        explanation:
+          "This is important because reception areas can easily compromise confidentiality. It is not the only issue, as the patient still needs a safe route to receive results.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "theatre-observer-sterile-field-concern",
+    issueTags: ["patient-safety", "teamwork", "communication"],
+    stimulus: [
+      "You are observing in theatre. A staff member reaches over the sterile field to adjust equipment, and you are unsure whether their sleeve touched a sterile tray. The operation is about to continue.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say calmly that you may have seen contact with the sterile tray and ask whether it needs checking before the operation continues.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it raises a specific patient-safety concern without accusation. It is not ideal because the theatre team should then decide the sterile-field response and the student should not attempt to manage it themselves.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Stay silent because you are not certain and do not want to disrupt theatre.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because uncertainty about contamination is enough to justify speaking up. It is not as serious as knowingly contaminating equipment, but silence risks preventable harm.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is being calm and specific when raising a possible sterile-field concern?",
+        answer: "B",
+        explanation:
+          "This is important because theatre teams need clear, concise information to act safely. It is not the only priority, as the concern must still be addressed before proceeding.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding embarrassment for the staff member who reached over the tray?",
+        answer: "C",
+        explanation:
+          "Avoiding embarrassment is of minor importance. Courtesy matters, but it should not prevent a possible contamination concern being checked.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "diabetes-clinic-carer-answering",
+    issueTags: ["autonomy", "communication", "capacity-consent"],
+    stimulus: [
+      "You are in a diabetes clinic. A patient's partner answers every question about hypos, diet and insulin doses. The patient is quiet but appears able to understand and answer when directly addressed.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest giving the patient space to answer first, while acknowledging that the partner may be able to add useful detail afterwards.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it supports the patient's autonomy without dismissing the partner's role. It is not ideal unless the clinician also checks whether the patient wants the partner involved in this way.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Let the partner continue because they seem more confident and probably manage the insulin at home.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because confidence does not mean the partner should replace the patient's voice. It is less severe if the patient has invited support, but that has not been established.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is hearing the patient's own account of hypoglycaemia symptoms?",
+        answer: "B",
+        explanation:
+          "This is important because symptoms and understanding affect safe diabetes management. It is not the only information source, as the partner may still provide helpful context.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the partner's confidence when deciding who should answer clinical questions?",
+        answer: "C",
+        explanation:
+          "The partner's confidence is of minor importance. The patient's autonomy and preference should guide who speaks, not who is most assertive.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ambulance-handover-student-note",
+    issueTags: ["teamwork", "patient-safety", "integrity"],
+    stimulus: [
+      "You are in ED during ambulance handover. You write down observations to help your learning, but later realise your note includes the patient's name, NHS number and a possible safeguarding concern. You were planning to keep the note in your bag for revision.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask your supervisor how to dispose of or de-identify the note safely and avoid keeping identifiable handover information for revision.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises the confidentiality risk and seeks the correct local process. It is not ideal because identifiable details should not have been copied for personal revision in the first place.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Keep the note but promise not to show it to anyone.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because storing identifiable sensitive information in a personal bag is unsafe. It is less serious than sharing it, but it remains a confidentiality problem.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the safeguarding detail when deciding how carefully the note should be handled?",
+        answer: "B",
+        explanation:
+          "This is important because safeguarding information is especially sensitive. It is not the only factor, as all identifiable patient information needs secure handling.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your revision benefit from keeping the exact handover note?",
+        answer: "C",
+        explanation:
+          "The revision benefit is of minor importance. Learning should use de-identified or approved materials, not identifiable patient notes.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "oncology-wig-referral-private-comment",
+    issueTags: ["respect-dignity", "communication", "teamwork"],
+    stimulus: [
+      "You are in an oncology clinic. After a patient asks about wig support during chemotherapy, a staff member says in the corridor, 'Some people are so vain about hair loss.' The patient may still be nearby.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Later, tell the staff member privately that the comment could be hurtful and that appearance changes can be very distressing during cancer treatment.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it challenges disrespectful language proportionately. It is not ideal if the patient overheard the comment, as the team may need to address the harm more directly.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ignore the comment because it was not said directly to the patient.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because disrespectful comments can still damage dignity and team culture. It is not as serious as saying it to the patient, but it should not simply be accepted.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is recognising that chemotherapy-related hair loss can affect dignity and identity?",
+        answer: "B",
+        explanation:
+          "This is important because body-image changes can significantly affect wellbeing. It is not the only issue in cancer care, but it should be handled sensitively.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is whether the staff member intended the comment as a joke?",
+        answer: "C",
+        explanation:
+          "Intent is of minor importance. It may affect how feedback is phrased, but the comment can still be disrespectful and harmful.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paeds-school-letter-request",
+    issueTags: ["integrity", "communication", "professional-boundaries"],
+    stimulus: [
+      "You are in a paediatric outpatient clinic. A parent asks whether you can write a quick note saying their child should be excused from school for a week. The doctor has not yet assessed whether time off school is needed.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Explain that any school letter needs to come from the clinical team after assessment, and offer to mention the request to the doctor.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it avoids acting outside your role and helps the parent raise the issue properly. It is not ideal because the responsible clinician should set expectations about what documentation is appropriate.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Write a short informal note because the parent only needs something simple for school.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it creates medical documentation without authority or assessment. It is less serious than fabricating a diagnosis, but it still risks misleading the school.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the parent's practical need for a school note?",
+        answer: "B",
+        explanation:
+          "This is important because practical barriers matter to families. It is not the only factor, and it does not allow a student to issue clinical documentation independently.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the fact that the note would be informal rather than on hospital letterhead?",
+        answer: "C",
+        explanation:
+          "This is of minor importance. Even an informal note can be interpreted as medical advice if written by someone in a clinical setting.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renal-dialysis-arrival-lateness",
+    issueTags: ["communication", "justice", "patient-safety"],
+    stimulus: [
+      "You are on a renal dialysis unit. A patient arrives 35 minutes late for dialysis and becomes upset when told the session may need to be shortened because the next patient is booked. They say transport was delayed.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Acknowledge the transport problem and ask the dialysis nurse whether any safe adjustment can be made to the session plan.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it is empathetic and recognises that session timing is a clinical and scheduling decision. It is not ideal because the dialysis team should explain the final plan and risks.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient they should have planned transport better because other patients are waiting.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it is blaming and does not help resolve the clinical issue. It is less serious than changing the dialysis plan unsafely, but it is poor communication.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is fairness to the next booked patient when deciding how to respond?",
+        answer: "B",
+        explanation:
+          "This is important because dialysis schedules affect multiple patients. It is not the only issue, as the late patient's clinical needs and reasons for delay also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is assigning blame for the late arrival?",
+        answer: "C",
+        explanation:
+          "Assigning blame is of minor importance. The priority is safe dialysis planning and respectful communication.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dermatology-sensitive-area-exam",
+    issueTags: ["respect-dignity", "capacity-consent", "professional-boundaries"],
+    stimulus: [
+      "You are in dermatology clinic. The doctor asks a patient to undress for examination of a rash affecting the groin. The patient hesitates and looks at you, then asks whether you need to stay in the room.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Offer to leave the room if the patient would prefer, and allow the doctor to confirm consent and chaperone arrangements.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it respects the patient's dignity and choice. It is not ideal because the clinician should proactively explain why a student is present and check consent before the examination begins.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Stay in the room silently because the patient has already attended a teaching clinic.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because attendance at a teaching clinic does not remove the need for consent to student presence during an intimate examination. It is less severe than refusing to leave, but still poor practice.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's comfort with student presence during a sensitive examination?",
+        answer: "B",
+        explanation:
+          "This is important because dignity and consent are central to intimate examinations. It is not the only issue, as clinical assessment and chaperone policy also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your learning opportunity compared with the patient's preference?",
+        answer: "C",
+        explanation:
+          "Your learning opportunity is of minor importance. Clinical education matters, but it cannot override the patient's preference about student presence.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "medical-school-group-chat-patient-joke",
+    issueTags: ["confidentiality", "respect-dignity", "integrity"],
+    stimulus: [
+      "You are in a medical school group chat. A student posts a joke about a memorable patient presentation from placement, without naming the patient but including the hospital, age, and unusual diagnosis.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Message the student privately asking them to remove the post because the details could still identify the patient.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it addresses the immediate risk and avoids unnecessary public confrontation. It is not ideal if the post remains visible or this is a wider professionalism issue, which may require escalation.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "React with a laughing emoji because no name was used.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it endorses a potentially identifiable and disrespectful post. It is less serious than adding more details, but it still falls below professional standards.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the absence of the patient's name when judging whether the post is safe?",
+        answer: "C",
+        explanation:
+          "The absence of a name is of minor importance. Unusual clinical details and location can still make a patient identifiable.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is preserving patient dignity in private student group chats?",
+        answer: "B",
+        explanation:
+          "This is important because professional duties apply in private digital spaces too. It is not the only issue, as confidentiality and local reporting routes may also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-allergy-label-uncertainty",
+    issueTags: ["patient-safety", "communication", "teamwork"],
+    stimulus: [
+      "You are in a hospital pharmacy. A dispensed antibiotic has a label that looks similar to a patient's documented allergy, but you are not sure whether the drug is in the same class. The pharmacist is answering a phone call.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Set the item aside and ask the pharmacist to check the allergy relevance before it leaves the pharmacy.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it prevents a possible allergy-related error while involving the qualified professional. It is not ideal if the item is urgent, as the urgency should also be communicated clearly.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Let it go out because you are not certain there is a problem.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because uncertainty about a possible allergy conflict should be checked before supply. It is less serious than knowingly dispensing a contraindicated drug, but it is unsafe passivity.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is clarifying possible allergy conflicts before medication supply?",
+        answer: "B",
+        explanation:
+          "This is important because allergy errors can cause serious harm. It is not the only consideration, as urgency and pharmacist workload also need managing.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding interrupting the pharmacist's phone call?",
+        answer: "C",
+        explanation:
+          "Avoiding interruption is of minor importance. Courtesy matters, but a possible allergy issue should be checked before the item leaves.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "palliative-care-relative-recording",
+    issueTags: ["communication", "confidentiality", "respect-dignity"],
+    stimulus: [
+      "You are with a palliative care consultant discussing symptom control with a patient and their sister. The sister starts recording the conversation on her phone, saying she wants to play it to relatives later.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Alert the consultant so they can check whether the patient is comfortable with the recording and discuss what information may be shared.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it centres the patient's wishes and confidentiality. It is not ideal for the student to manage the recording discussion alone, as the consultant is leading the consultation.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ignore the recording because the sister is part of the family and probably has permission.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because family involvement does not automatically mean the patient consents to recording or wider sharing. It is less severe if the patient later confirms agreement, but this should be checked.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking the patient's comfort with recording a palliative care discussion?",
+        answer: "B",
+        explanation:
+          "This is important because the discussion may include sensitive symptoms, prognosis, and preferences. It is not the only issue, as relatives may also need accurate information.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the sister's wish to update other relatives?",
+        answer: "C",
+        explanation:
+          "The sister's wish is of minor importance compared with the patient's consent and confidentiality. It may be understandable, but it does not decide whether recording is acceptable.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-noisy-night-complaint",
+    issueTags: ["communication", "respect-dignity", "teamwork"],
+    stimulus: [
+      "You are on a surgical ward. A patient says they slept badly because staff were talking loudly at the nurses' station overnight. They ask whether you can make sure it does not happen again tonight.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Acknowledge the concern and tell the nurse in charge so the ward team can consider noise levels overnight.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it takes the concern seriously and involves someone who can act. It is not ideal because the nurse in charge or ward manager should provide any formal response or assurance.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Promise the patient you will personally make sure the ward is quiet tonight.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it promises control over something outside the student's role. It is less severe than dismissing the patient, but it risks false reassurance.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest the patient mentions it again if the problem continues and offer to pass the concern on now.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it gives a practical route and passes the concern to the team. It is not ideal because it places some burden back on the patient rather than ensuring proactive follow-up.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is sleep quality as part of ward-based recovery and patient experience?",
+        answer: "B",
+        explanation:
+          "This is important because sleep affects comfort, recovery, and trust in care. It is not the only ward priority, as urgent clinical work may sometimes create unavoidable noise.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinic-student-running-late",
+    issueTags: ["communication", "integrity", "teamwork"],
+    stimulus: [
+      "You are due in clinic at 9:00 but realise your bus delay means you will arrive 20 minutes late. You have the clinic coordinator's number and know a consultant is expecting you to observe the first patient.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Contact the clinic coordinator as soon as possible, apologise, and give a realistic arrival time.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it is honest and allows the clinic to plan. It is not ideal because repeated lateness would need a wider discussion with the placement team.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Wait until you arrive and apologise then, because the delay is not your fault.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because the clinic cannot plan around your absence if you do not communicate. It is less serious than lying about the delay, but it is still poor professionalism.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "On arrival, ask whether there is a suitable point to join without disrupting the consultation already underway.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it respects patient flow and the consultation environment. It is not ideal if it is used to minimise the lateness rather than acknowledge it clearly.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is communicating promptly when you know you will be late to a clinical placement?",
+        answer: "B",
+        explanation:
+          "This is important because clinical teams plan supervision and patient observation around attendance. It is not the only factor, as safe travel and honest explanation also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "surgery-consent-question-after-premed",
+    issueTags: ["capacity-consent", "patient-safety", "communication"],
+    stimulus: [
+      "You are on a day-surgery unit. A patient who has already received sedating premedication asks you a detailed question about a risk they do not remember discussing on the consent form. The anaesthetist is nearby.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the anaesthetist that the patient has a consent-related question after premedication.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it alerts a responsible clinician to a consent concern. It is not ideal because the wider surgical team may also need to review whether consent remains valid before proceeding.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Try to answer the question yourself from memory so the list is not delayed.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because consent questions after sedation need careful senior review. It is less severe than ignoring the question, but the student should not handle it alone.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Stay with the patient while the clinician is called, without giving new consent advice yourself.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it is supportive and stays within role. It is not ideal because the key action remains clinician assessment of the consent issue.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the timing of the question after sedating premedication?",
+        answer: "B",
+        explanation:
+          "This is important because sedation may affect understanding, recall, or capacity. It is not the only issue, as the content of the question and previous consent discussion also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-nurse-doorstep-chat",
+    issueTags: ["confidentiality", "communication", "respect-dignity"],
+    stimulus: [
+      "You are shadowing a community nurse. At the doorway of a patient's flat, the nurse begins discussing wound infection and antibiotic adherence while a neighbour is collecting post nearby.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "At a pause, suggest moving inside or lowering the conversation until privacy is better.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it flags a confidentiality risk tactfully. It is not ideal because the nurse leading the visit should proactively ensure privacy before discussing clinical details.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say nothing because neighbours in shared buildings are used to seeing community nurses.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because seeing a nurse visit is not the same as hearing clinical details. It is less severe than naming the diagnosis to the neighbour, but it still risks confidentiality.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Offer to stand so you block the doorway view while the nurse continues.",
+        answer: "B",
+        explanation:
+          "This is appropriate as a small privacy-supporting action. It is not ideal because visual shielding does not solve the risk of being overheard.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is privacy during doorstep or home-visit conversations?",
+        answer: "B",
+        explanation:
+          "This is important because home visits can easily expose sensitive information to neighbours or relatives. It is not the only issue, as staff safety and access also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "physiotherapy-mobility-aid-disagreement",
+    issueTags: ["autonomy", "patient-safety", "communication"],
+    stimulus: [
+      "You are observing physiotherapy. A patient wants to walk to the toilet without a frame because they feel embarrassed. The physiotherapist says the frame is still recommended due to falls risk.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Support the physiotherapist in explaining the falls risk while acknowledging that the patient feels embarrassed.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it combines safety advice with empathy. It is not ideal because the physiotherapist should lead the risk discussion and agree a practical plan with the patient.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient they can skip the frame once if they promise to be careful.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it undermines a safety recommendation outside your role. It is less severe than physically assisting an unsafe walk, but it may increase falls risk.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask whether there is a less embarrassing way to use the frame or arrange assistance to preserve dignity.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it looks for a dignity-preserving safety solution. It is not ideal if it bypasses the physiotherapist's assessment rather than involving them.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's embarrassment when planning mobility support?",
+        answer: "B",
+        explanation:
+          "This is important because embarrassment affects adherence to safety advice. It is not the only factor, as falls risk remains clinically significant.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pathology-lost-sample-apology",
+    issueTags: ["candour", "communication", "patient-safety"],
+    stimulus: [
+      "You are in phlebotomy clinic. A patient returns because their blood sample was lost and needs repeating. They are frustrated because they took time off work for the first appointment.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Apologise for the inconvenience and ask the phlebotomist or clinic lead what can be done to repeat the test as smoothly as possible.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it acknowledges the problem and seeks practical help. It is not ideal because the formal explanation and any duty-of-candour process should come from the responsible service.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient samples get lost all the time and it is just part of healthcare.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it normalises an error and dismisses the patient's inconvenience. It is less severe than lying about what happened, but it is poor communication.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Offer to find out whether the repeat sample can be prioritised in the queue.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it tries to reduce the impact of the error. It is not ideal because queue decisions must still be made fairly by clinic staff.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is acknowledging the patient's inconvenience when a sample has been lost?",
+        answer: "B",
+        explanation:
+          "This is important because honest acknowledgement can preserve trust. It is not the only issue, as the repeat test and any reporting process also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "endoscopy-relative-asking-sedation",
+    issueTags: ["confidentiality", "communication", "capacity-consent"],
+    stimulus: [
+      "You are in an endoscopy unit. A patient's adult daughter asks you how much sedation her father received and whether he said anything embarrassing during recovery. The patient is still drowsy.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Explain that recovery details should be discussed by the clinical team with the patient's consent, and offer to ask a nurse to update them appropriately.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it protects confidentiality and directs the relative to the team. It is not ideal because the team should also consider when the patient is alert enough to consent to sharing information.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Share the sedation dose because it is not as sensitive as the endoscopy findings.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because medication and recovery information are still confidential. It is less severe than sharing embarrassing comments, but it remains outside the student's role.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Avoid commenting on whether the patient said anything embarrassing and redirect the question to recovery staff.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it avoids gossip and keeps communication within proper channels. It is not ideal if it sounds evasive rather than explaining confidentiality kindly.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's drowsiness when deciding whether consent to share recovery details is reliable?",
+        answer: "B",
+        explanation:
+          "This is important because sedation can affect understanding and consent. It is not the only issue, as previous consent and usual family communication practices may also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "medical-student-handwritten-list",
+    issueTags: ["confidentiality", "integrity", "teamwork"],
+    stimulus: [
+      "You are carrying a handwritten jobs list with patient names, bed numbers and investigation plans. At the end of the day, you realise you accidentally took it home in your pocket.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Keep the list secure and ask your supervisor how to dispose of it according to local policy as soon as possible.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises the confidentiality issue and seeks the correct disposal route. It is not ideal because identifiable lists should be managed securely before leaving the clinical area.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Put it in your household recycling because it is only handwritten notes.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because identifiable patient information needs confidential disposal. It is less serious than posting it online, but household recycling is not secure.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell your supervisor what happened if the list contained particularly sensitive information or may have been seen by someone else.",
+        answer: "B",
+        explanation:
+          "This is appropriate because escalation may be needed depending on exposure and sensitivity. It is not ideal if it is delayed unnecessarily after recognising the issue.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is secure disposal of handwritten patient-identifiable notes?",
+        answer: "B",
+        explanation:
+          "This is important because handwritten notes can contain the same confidential information as electronic records. It is not the only issue, as preventing removal from the ward is also important.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-privacy-curtain-left-open",
+    issueTags: ["respect-dignity", "communication", "patient-safety"],
+    stimulus: [
+      "You are on a medical ward. A nurse is helping a patient change a wound dressing, but the bed-space curtain is partly open and visitors walking past can see into the bay. The nurse appears focused on the dressing and may not have noticed.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Quietly offer to close the curtain fully so the patient's privacy is protected.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it addresses the immediate dignity issue without criticising the nurse. It is not ideal if further help is needed, as the nurse should still lead the dressing care and confirm the patient's comfort.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Wait until the dressing is finished and then mention that the curtain was open.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because the privacy breach is happening now and can be corrected immediately. It is less serious than ignoring it entirely, but delayed action does not protect the patient at the time.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is preserving privacy during wound care on an open ward?",
+        answer: "B",
+        explanation:
+          "This is important because wound care can expose intimate or distressing details. It is not the only issue, as safe completion of the dressing also matters.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding making the nurse feel criticised when raising the curtain issue?",
+        answer: "B",
+        explanation:
+          "This is important because tactful communication helps teamwork. It is not the only factor, and it should not stop you from protecting the patient's dignity promptly.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gp-repeat-prescription-pressure",
+    issueTags: ["patient-safety", "communication", "scope-of-practice"],
+    stimulus: [
+      "You are on a GP placement. A patient at reception says they have run out of blood pressure tablets and asks you to ask the GP to issue a repeat prescription immediately. You can see from the screen that their medication review is overdue.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the receptionist or supervising GP that the patient has run out and that the medication review appears overdue.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it passes on relevant safety information to the right team. It is not ideal because the prescribing decision and risk assessment must be made by the GP or authorised clinician.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient the prescription will definitely be issued today because blood pressure tablets are routine.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it makes a promise outside your role and ignores the overdue review. It is less severe than issuing medication yourself, but it may mislead the patient.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the overdue medication review when deciding how the request should be handled?",
+        answer: "B",
+        explanation:
+          "This is important because repeat prescribing should be safe and current. It is not the only issue, as abruptly running out of medication may also carry risk.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is communicating the patient's concern promptly to practice staff?",
+        answer: "B",
+        explanation:
+          "This is important because the patient may need a same-day decision or advice. It is not the only factor, as confidentiality and prescribing responsibility still apply.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ed-triage-relative-video-call",
+    issueTags: ["confidentiality", "communication", "professional-boundaries"],
+    stimulus: [
+      "You are in the emergency department. A patient is on a video call with a relative while the triage nurse asks about chest pain, alcohol intake, and medication. The patient has not said whether they want the relative to hear the discussion.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "At a pause, ask the nurse whether the patient should be asked if they are comfortable continuing while the video call is connected.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it raises a confidentiality concern without taking over triage. It is not ideal because the nurse should directly check privacy and consent before sensitive questions continue.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Assume the patient is happy for the relative to hear because they started the call.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because starting a call does not necessarily mean consenting to share sensitive triage information. It is less severe than disclosing details yourself, but it misses a privacy concern.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking the patient's comfort with the relative hearing triage questions?",
+        answer: "B",
+        explanation:
+          "This is important because triage may involve sensitive health and lifestyle information. It is not the only issue, as urgent clinical assessment may also need to proceed efficiently.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding disruption to triage when raising the video-call issue?",
+        answer: "B",
+        explanation:
+          "This is important because ED triage needs to keep moving safely. It is not the only factor, and efficiency should not override confidentiality.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "maternity-birth-plan-dismissal",
+    issueTags: ["respect-dignity", "communication", "autonomy"],
+    stimulus: [
+      "You are on a maternity placement. A patient asks whether her birth plan can be discussed before induction starts. A busy midwife says, 'Birth plans never survive reality,' and starts preparing equipment.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the midwife whether there is time to acknowledge the patient's main preferences before induction begins.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it supports patient-centred communication while recognising time pressure. It is not ideal because the midwife should proactively discuss preferences and clinical limits with the patient.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient birth plans are only preferences and clinical staff will decide what happens.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it dismisses the patient's autonomy and may increase anxiety. It is less severe than ignoring safety concerns, but it is poor communication.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is acknowledging the patient's birth preferences even if clinical circumstances may change?",
+        answer: "B",
+        explanation:
+          "This is important because acknowledgement supports dignity and shared decision-making. It is not the only factor, as urgent clinical safety may alter plans.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the ward being busy when deciding whether to communicate respectfully?",
+        answer: "C",
+        explanation:
+          "The ward being busy is of minor importance. Workload may limit time, but it does not justify dismissive communication.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinic-interrupting-consultant-correction",
+    issueTags: ["communication", "teamwork", "integrity"],
+    stimulus: [
+      "You are observing a clinic. The consultant tells a patient their blood test was normal, but you remember from the notes that one liver enzyme was mildly raised and a repeat test was planned. You are not fully certain you have understood the result correctly.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "After the patient leaves, ask the consultant whether you understood the liver enzyme result correctly.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it clarifies a possible discrepancy without undermining the consultation. It is not ideal if the result is clinically important and the patient needs immediate correction before leaving.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Interrupt the consultant mid-sentence and tell the patient the consultant is wrong.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because you are uncertain and the public correction is likely to undermine trust. It is less severe than knowingly allowing serious misinformation to stand, but the manner is poor.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your uncertainty about the result when deciding how to raise the issue?",
+        answer: "B",
+        explanation:
+          "This is important because uncertainty should make you ask rather than accuse. It is not the only factor, as possible patient misunderstanding may still need correcting.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is preserving the patient's trust in the consultant while clarifying possible errors?",
+        answer: "B",
+        explanation:
+          "This is important because corrections should be handled professionally. It is not the only priority, as accuracy and patient safety remain essential.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "care-home-falls-bell-delay",
+    issueTags: ["patient-safety", "communication", "teamwork"],
+    stimulus: [
+      "You are on a care home placement. A resident says they pressed the call bell twice overnight after feeling dizzy but waited a long time before anyone came. The carer nearby says the unit was short-staffed.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Acknowledge the resident's concern and mention it to your supervising clinician or the nurse in charge.",
+        answer: "B",
+        explanation:
+          "This is appropriate because dizziness and delayed response may indicate a falls risk. It is not ideal because the care home team should formally review call-bell response and staffing concerns.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the resident delays are unavoidable when staffing is short.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it dismisses a safety concern and may discourage reporting. It is less severe than ignoring the resident completely, but it is not patient-centred.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the resident reporting dizziness when considering the call-bell delay?",
+        answer: "B",
+        explanation:
+          "This is important because dizziness increases falls risk and may need clinical review. It is not the only issue, as staffing and response systems also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is understanding the staffing context before judging the care home response?",
+        answer: "B",
+        explanation:
+          "This is important because context may explain delays and guide improvement. It is not the only factor, and it does not remove the need to address safety concerns.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "radiology-porter-handover-label",
+    issueTags: ["patient-safety", "communication", "teamwork"],
+    stimulus: [
+      "You are in radiology. A porter brings a patient for imaging and hands over that the patient is nil by mouth. The wristband details match, but the request form has a slightly different spelling of the surname.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the radiographer whether the spelling discrepancy needs checking before the scan proceeds.",
+        answer: "B",
+        explanation:
+          "This is appropriate because patient identification discrepancies should be clarified. It is not ideal because the radiographer should lead the formal identity check using local policy.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ignore the spelling difference because the wristband details otherwise match.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because small identity discrepancies can still signal documentation or patient-matching errors. It is less serious than scanning the wrong patient knowingly, but it is unsafe to ignore.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking identity discrepancies before imaging?",
+        answer: "B",
+        explanation:
+          "This is important because wrong-patient imaging can lead to harm and incorrect records. It is not the only issue, as urgency and clinical condition also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the porter's nil-by-mouth handover to the radiology team?",
+        answer: "B",
+        explanation:
+          "This is important because preparation status can affect imaging or sedation plans. It is not the only handover element, as identity confirmation remains essential.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "outpatient-student-introduces-wrong-role",
+    issueTags: ["integrity", "communication", "professional-boundaries"],
+    stimulus: [
+      "You are in outpatient clinic. A patient says, 'Are you the doctor?' before describing chest tightness. You are a medical student and the consultant is briefly out of the room.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Clarify that you are a medical student and that you will ask the consultant to address the chest tightness when they return.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it is honest about your role and recognises a potentially important symptom. It is not ideal if the chest tightness sounds acute, as help may need to be sought immediately.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Let the patient continue believing you are the doctor until the consultant returns.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it allows a misunderstanding about your role to persist. It is less severe than deliberately claiming to be a doctor, but still dishonest.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is correcting the patient's misunderstanding about your role?",
+        answer: "B",
+        explanation:
+          "This is important because patients should know who is involved in their care. It is not the only issue, as the symptom itself may also require prompt escalation.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is assessing whether the chest tightness may need urgent attention?",
+        answer: "B",
+        explanation:
+          "This is important because chest tightness can be clinically significant. It is not the only issue, as you must also stay within your role and involve the clinical team.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "mental-health-leave-request-uncertainty",
+    issueTags: ["patient-safety", "communication", "scope-of-practice"],
+    stimulus: [
+      "You are on an inpatient mental health ward. A patient asks you whether they are allowed to leave the ward garden unescorted. You have heard staff mention section 17 leave, but you do not know the current leave plan.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Explain that you are not sure of the current leave plan and offer to ask a nurse to clarify it with them.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it is honest and redirects to staff who know the leave status. It is not ideal if the patient is already moving to leave, when immediate staff support may be needed.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell them they can probably go if they stay nearby.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because leave conditions are safety-critical and must not be guessed. It is less severe than unlocking a door yourself, but it could still cause harm.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is your uncertainty about the leave plan?",
+        answer: "B",
+        explanation:
+          "This is important because uncertainty should prevent you from giving permission. It is not the only issue, as the patient's current risk and legal status also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is involving ward staff before the patient acts on leave advice?",
+        answer: "B",
+        explanation:
+          "This is important because ward staff hold current risk and leave information. It is not the only factor, as the patient should also be treated respectfully and given a clear explanation.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "pharmacy-methotrexate-dose-query",
+    issueTags: ["patient-safety", "communication", "teamwork"],
+    stimulus: [
+      "You are on a pharmacy placement. A patient collecting methotrexate says the box label looks different from last month and asks whether to take it every day or weekly. The pharmacist is checking another prescription.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient not to take any dose until the pharmacist has clarified the instructions with them.",
+        answer: "B",
+        explanation:
+          "This is appropriate because methotrexate dosing errors can be serious and clarification is needed. It is not ideal because the pharmacist should provide the final counselling and check the prescription.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say it is probably weekly because methotrexate is usually weekly.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because a high-risk medicine query should not be answered with probability. It is less severe than telling them to take it daily, but it still risks unsafe advice.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is escalating a methotrexate dosing uncertainty to the pharmacist?",
+        answer: "B",
+        explanation:
+          "This is important because methotrexate errors can cause serious harm. It is not the only issue, as the patient also needs clear counselling before leaving.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the label looking different from last month?",
+        answer: "B",
+        explanation:
+          "This is important because it may signal a formulation, dose, or instruction change. It is not proof of an error, but it justifies careful checking.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "surgical-ward-relative-food-allergy",
+    issueTags: ["patient-safety", "communication", "teamwork"],
+    stimulus: [
+      "You are on a surgical ward. A patient's relative brings homemade food and says it contains nuts. You remember seeing a nut allergy sticker on the patient's notes, but the patient says they are hungry and wants to eat it.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the nurse in charge to check the allergy status before the patient eats the food.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it raises a direct safety concern with staff responsible for care. It is not ideal if the patient is about to eat immediately, when you may need to ask them to pause while the nurse checks.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Let the patient decide because adults can choose what they eat.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because a documented allergy concern should be checked before exposure. It is less severe than telling them it is safe, but it ignores preventable harm.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking the allergy sticker before the patient eats the food?",
+        answer: "B",
+        explanation:
+          "This is important because nut allergy can cause serious reactions. It is not the only issue, as the patient also needs a respectful explanation.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is acknowledging the relative's good intention in bringing food?",
+        answer: "B",
+        explanation:
+          "This is important for maintaining rapport and avoiding blame. It is not the only factor, and it does not override allergy safety.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-physio-home-risk-photo",
+    issueTags: ["confidentiality", "patient-safety", "communication"],
+    stimulus: [
+      "You are shadowing a community physiotherapist. In a patient's home, the physiotherapist asks whether you can photograph a trip hazard on your personal phone so the team can remember the layout later.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask whether there is an approved device or documentation method for recording home hazards instead of using your personal phone.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises the value of documenting risk while avoiding personal-device data problems. It is not ideal because the physiotherapist should already know and follow the approved process.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Take the photo but avoid including the patient's face.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because a home environment can still identify the patient, and a personal phone is not an approved record system. It is less severe than photographing the patient directly, but still risky.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is documenting the trip hazard for falls-prevention planning?",
+        answer: "B",
+        explanation:
+          "This is important because environmental risks can directly affect safety planning. It is not the only issue, as consent and secure documentation also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding identifiable household details when recording home risks?",
+        answer: "B",
+        explanation:
+          "This is important because home details can identify a patient even without a face or name. It is not the only consideration, as the team still needs enough information to reduce risk.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "respiratory-inhaler-technique-teaching",
+    issueTags: ["communication", "beneficence", "teamwork"],
+    stimulus: [
+      "You are in a respiratory clinic. A patient with asthma says their inhaler does not work. You notice they may be breathing in after pressing the inhaler rather than during actuation, but the respiratory nurse is leading the review.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Mention to the nurse that the patient may benefit from having their inhaler technique checked.",
+        answer: "B",
+        explanation:
+          "This is appropriate because inhaler technique is clinically relevant and easy to review. It is not ideal because the nurse should lead the assessment and decide how best to demonstrate or correct technique.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Offer to demonstrate the technique if the nurse agrees and the patient is comfortable with you helping.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it can support patient education within supervision. It is not ideal unless your own technique is known to be correct and the nurse remains responsible for the teaching.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking inhaler technique before assuming the medication itself is ineffective?",
+        answer: "B",
+        explanation:
+          "This is important because poor technique can make effective medication seem ineffective. It is not the only factor, as adherence, triggers, and disease severity also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is explaining the issue without making the patient feel blamed?",
+        answer: "B",
+        explanation:
+          "This is important because shame can reduce engagement with education. It is not the only consideration, as the teaching still needs to be accurate and practical.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinic-letter-typo-patient-name",
+    issueTags: ["integrity", "communication", "patient-safety"],
+    stimulus: [
+      "You are helping prepare clinic letters. You notice that one draft letter has the correct NHS number but the patient's surname is misspelled in the first paragraph. The consultant has already dictated the clinical content.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Flag the spelling discrepancy to the clinic administrator or supervising clinician before the letter is sent.",
+        answer: "B",
+        explanation:
+          "This is appropriate because identity details in clinical letters should be accurate. It is not ideal if there are other identifiers that also need checking before dispatch.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Check the name against the patient record if you have been given appropriate access for this task.",
+        answer: "B",
+        explanation:
+          "This is appropriate if record access is part of the supervised task. It is not ideal if done casually or outside your legitimate role, because record access still needs a proper purpose.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is a name spelling error when the NHS number is correct?",
+        answer: "B",
+        explanation:
+          "This is important because mismatched identifiers can confuse patients and staff. It is not the only identifier, and the NHS number reduces but does not remove the risk.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking demographic details before clinic letters are sent?",
+        answer: "B",
+        explanation:
+          "This is important because letters are part of the clinical record and may be shared with patients and GPs. It is not the only quality issue, as clinical content also needs accuracy.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-observation-machine-battery",
+    issueTags: ["patient-safety", "teamwork", "communication"],
+    stimulus: [
+      "You are on a ward round. The observation machine battery is low and the nurse says they will finish the remaining patients before charging it. One patient due next has been breathless overnight.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask whether another observation machine is available for the breathless patient while this one charges.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it suggests a practical way to avoid delay. It is not ideal because the nurse or ward team should decide the safest workflow and prioritisation.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Mention the overnight breathlessness to the team if observations are likely to be delayed.",
+        answer: "B",
+        explanation:
+          "This is appropriate because the delay may matter clinically. It is not ideal if it replaces rather than supports a formal escalation by the nurse responsible for observations.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is prioritising observations for a patient who was breathless overnight?",
+        answer: "B",
+        explanation:
+          "This is important because breathlessness can indicate deterioration. It is not the only factor, as other patients may also have urgent needs.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is equipment readiness for routine ward observations?",
+        answer: "B",
+        explanation:
+          "This is important because equipment problems can delay detection of deterioration. It is not the only safety control, as staff judgement and escalation also matter.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gp-chaperone-request-delay",
+    issueTags: ["respect-dignity", "communication", "professional-boundaries"],
+    stimulus: [
+      "You are in a GP clinic. A patient requests a chaperone before an intimate examination. The GP says the nurse is busy and asks whether you can stay in the room instead, although the patient has not been asked whether they are comfortable with a student chaperone.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask whether the patient is happy for you to act as chaperone before agreeing to stay.",
+        answer: "B",
+        explanation:
+          "This is appropriate because the patient should be comfortable with who is present. It is not ideal because local policy may require a trained staff chaperone rather than a student.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest checking whether a trained chaperone can be available, even if this causes a short delay.",
+        answer: "B",
+        explanation:
+          "This is appropriate because chaperone arrangements should follow policy and protect the patient. It is not ideal if the discussion does not also address the patient's preference and consent.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's comfort with the identity of the chaperone?",
+        answer: "B",
+        explanation:
+          "This is important because chaperones are there to support dignity and safety. It is not the only factor, as training and policy requirements also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding a short clinic delay compared with arranging an appropriate chaperone?",
+        answer: "B",
+        explanation:
+          "Avoiding delay is important for clinic flow, but it is not the only factor and should not override appropriate chaperone arrangements.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renal-diet-fluid-advice-family",
+    issueTags: ["communication", "autonomy", "patient-safety"],
+    stimulus: [
+      "You are in a renal clinic. A patient's partner asks for a list of foods and drinks the patient should avoid. The patient is present but quiet, and the dietitian has not yet reviewed them.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest that the dietitian should give individualised advice, while encouraging the patient to say what they already understand about their fluid restriction.",
+        answer: "B",
+        explanation:
+          "This is appropriate because renal diet advice needs tailoring and the patient should be involved. It is not ideal because the dietitian should lead the specific counselling.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Offer to find approved renal diet leaflets for the patient and partner while waiting for the dietitian.",
+        answer: "B",
+        explanation:
+          "This is appropriate because approved written information can support understanding. It is not ideal if leaflets are used as a substitute for individualised advice.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is involving the patient directly rather than only speaking to the partner?",
+        answer: "B",
+        explanation:
+          "This is important because the patient is the person making daily diet and fluid choices. It is not the only factor, as partner support may be helpful.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding overly general renal diet advice?",
+        answer: "B",
+        explanation:
+          "This is important because restrictions depend on blood results, dialysis status, and comorbidities. It is not the only issue, as communication style also matters.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "oncology-port-line-dressing-question",
+    issueTags: ["patient-safety", "scope-of-practice", "communication"],
+    stimulus: [
+      "You are on an oncology day unit. A patient asks whether the redness around their port dressing is normal. You can see mild redness but are not trained to assess central line sites independently.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient you will ask the chemotherapy nurse to review the port site.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it recognises a potential line-site issue and involves the right professional. It is not ideal if you give any reassurance before the nurse reviews it.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask whether the redness is new or painful while waiting for the nurse, without giving a diagnosis.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it gathers relevant information while staying within role. It is not ideal unless the nurse still performs the clinical assessment promptly.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is prompt review of possible redness around a port dressing?",
+        answer: "B",
+        explanation:
+          "This is important because central line infections can be serious. It is not the only factor, as redness may also be minor irritation and needs proper assessment.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding false reassurance when you are unsure about a line site?",
+        answer: "B",
+        explanation:
+          "This is important because reassurance could delay escalation. It is not the only issue, as the patient also needs calm communication.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "physician-associate-title-confusion",
+    issueTags: ["integrity", "communication", "scope-of-practice"],
+    stimulus: [
+      "You are in a clinic where a physician associate introduces themselves quickly as part of the medical team. A patient later asks you whether they were seen by a doctor and seems unsure of the role.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Explain that you are not responsible for the consultation but can ask the clinician to clarify their role to the patient.",
+        answer: "B",
+        explanation:
+          "This is appropriate because role clarity matters and the clinician involved should explain it. It is not ideal if the patient needs immediate correction before making a decision based on misunderstanding.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Encourage the patient to ask the clinician directly if they want clarification.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it supports the patient's right to understand who is treating them. It is not ideal if the patient feels unable to ask and needs staff to facilitate the conversation.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is clarity about professional roles in clinical consultations?",
+        answer: "B",
+        explanation:
+          "This is important because patients should understand who is involved in their care. It is not the only issue, as competence, supervision, and communication also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding undermining a colleague while clarifying their role?",
+        answer: "B",
+        explanation:
+          "This is important because clarification should be respectful and accurate. It is not the only factor, as the patient's understanding remains the priority.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "student-feedback-form-pressure",
+    issueTags: ["integrity", "teamwork", "professional-boundaries"],
+    stimulus: [
+      "You are finishing a placement. A registrar who has been supportive asks you to mark every feedback category as excellent because the department is being inspected. You feel most categories were good but not all were excellent.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Complete the feedback honestly while keeping comments constructive and specific.",
+        answer: "B",
+        explanation:
+          "This is appropriate because feedback should be truthful and useful. It is not ideal if the pressure from the registrar feels inappropriate enough to need reporting separately.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Thank the registrar for their support but say you need to complete the form based on your own experience.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it sets a polite boundary. It is not ideal if the registrar continues pressuring students, in which case escalation may be needed.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is honest feedback for placement quality monitoring?",
+        answer: "B",
+        explanation:
+          "This is important because inflated feedback can hide problems and mislead inspectors. It is not the only factor, as feedback should also be fair and proportionate.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is gratitude to the registrar when deciding whether to exaggerate the rating?",
+        answer: "B",
+        explanation:
+          "Gratitude is important for maintaining respectful relationships, but it is not the only factor and should not lead to dishonest ratings.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ambulance-discharge-summary-delay",
+    issueTags: ["communication", "teamwork", "patient-safety"],
+    stimulus: [
+      "You are on a ward where a patient is ready to return to a care home. The ambulance crew has arrived, but the discharge summary is not finished. A junior doctor is dealing with an emergency elsewhere.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the ward nurse what information the ambulance crew can safely be given now, while checking when the doctor can complete the summary.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it supports communication and avoids leaving the crew without any update. It is not ideal because a completed medical discharge summary is still needed.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Give the crew a copy of an old clinic letter so they have something to take to the care home.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because an old clinic letter may omit recent treatment and medication changes. It is less severe than fabricating details, but it does not justify replacing the proper discharge summary.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is ensuring the care home receives accurate information about recent medication changes?",
+        answer: "B",
+        explanation:
+          "This is important because inaccurate medication information can affect patient safety after transfer. It is not the only factor, as timing and transport arrangements also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding any delay to the ambulance crew's schedule?",
+        answer: "C",
+        explanation:
+          "This has minor importance because ambulance delays can affect other patients. It is not the most important factor and does not justify sending incomplete or misleading clinical information.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "paediatric-vaccine-parent-refusal",
+    issueTags: ["autonomy", "communication", "scope-of-practice"],
+    stimulus: [
+      "You are observing a paediatric vaccination clinic. A parent says they are anxious about a vaccine and may refuse it today. The nurse is behind schedule and asks you to 'talk them round quickly'.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Offer to listen to the parent's concerns and ask the nurse or doctor to discuss the clinical questions with them.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it acknowledges the parent's concerns while keeping clinical advice within the right role. It is not ideal if it delays the nurse or doctor reviewing the concern.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the parent that refusing the vaccine would be irresponsible.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it is judgemental and may damage trust. It is less severe than giving false clinical information, but it is a poor way to support informed decision making.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is respecting the parent's opportunity to ask questions before deciding?",
+        answer: "B",
+        explanation:
+          "This is important because consent requires an informed decision and concerns should be explored respectfully. It is not the only factor, as the child's welfare and public health context also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is keeping the clinic running exactly on time when responding to the concern?",
+        answer: "C",
+        explanation:
+          "This has minor importance because delays can affect other families. It is not the most important factor and does not justify pressuring a parent into a decision.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-controlled-drug-count-mismatch",
+    issueTags: ["integrity", "patient-safety", "escalation"],
+    stimulus: [
+      "You are on a ward during the evening controlled drug count. The two nurses find one tablet fewer than expected. One nurse asks you to witness the count anyway and says they can sort the paperwork later.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say that you cannot witness a count you are not authorised to sign, and encourage the nurses to follow the ward policy for discrepancies.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it avoids dishonest documentation and points staff back to the correct process. It is not ideal because a senior nurse may also need to be informed promptly.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Warn nearby patients that medicines may have gone missing from the ward.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it spreads unverified concerns and could cause unnecessary alarm. It is less severe than falsifying the count, but it does not justify breaching professionalism.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is accurate controlled drug documentation?",
+        answer: "B",
+        explanation:
+          "This is important because controlled drugs require strict accountability and discrepancies can indicate safety issues. It is not the only issue, as the response should also avoid blame before facts are checked.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding assumptions about who caused the discrepancy?",
+        answer: "B",
+        explanation:
+          "This is important because premature blame can be unfair and unhelpful. It is not the only factor, as the discrepancy still needs proper escalation and documentation.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ophthalmology-dilating-drops-consent",
+    issueTags: ["capacity-consent", "communication", "patient-safety"],
+    stimulus: [
+      "You are helping in an ophthalmology clinic. A patient is about to receive dilating drops and says they thought it was just a quick eye check before driving home. The clinic is running late.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Pause and ask the nurse or clinician to explain the effects of the drops before they are given.",
+        answer: "B",
+        explanation:
+          "This is appropriate because the patient needs relevant information before agreeing to the drops. It is not ideal if you only pause the process without ensuring a clinician explains the practical risks.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Let the drops be given first and explain afterwards that their vision may be blurred.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because relevant information should be provided before the intervention. It is less severe than deliberately hiding the risk, but it is still poor consent practice.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking that the patient understands they may not be able to drive afterwards?",
+        answer: "B",
+        explanation:
+          "This is important because blurred vision can create a safety risk after the appointment. It is not the only factor, as the patient also needs broader information about the drops.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the clinic running late when deciding whether to pause?",
+        answer: "C",
+        explanation:
+          "This has minor importance because delays matter operationally. It is not the most important factor and does not justify proceeding without adequate information.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "clinic-dna-letter-tone",
+    issueTags: ["communication", "respect-dignity", "justice"],
+    stimulus: [
+      "You are helping a GP draft administrative letters. A patient has missed two hospital appointments. The GP asks for a direct letter, and you notice the record mentions recent transport difficulties.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Mention the note about transport difficulties to the GP and suggest wording that asks whether the patient needs support attending.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it encourages a fair, practical response rather than assuming the reason for non-attendance. It is not ideal unless the final wording is checked by the responsible clinician.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Draft a letter saying the patient is wasting NHS resources by missing appointments.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it is judgemental and may worsen engagement. It is less severe than refusing future care, but it is a poor approach to a patient with possible access barriers.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is using non-judgemental wording in patient correspondence?",
+        answer: "B",
+        explanation:
+          "This is important because letters can affect trust and future engagement. It is not the only factor, as the service still needs to address repeated missed appointments.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is considering possible access barriers before assuming deliberate non-attendance?",
+        answer: "B",
+        explanation:
+          "This is important because transport, disability, or social issues may explain missed appointments. It is not the only factor, as the patient also needs clear information about next steps.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "student-observes-consultant-phone",
+    issueTags: ["respect-dignity", "communication", "professional-boundaries"],
+    stimulus: [
+      "You are a medical student in clinic. During a consultation, the consultant repeatedly checks personal messages on their phone while the patient is describing symptoms. The patient looks uncomfortable.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Discuss the incident with your educational supervisor after the clinic, focusing on what you observed and the patient's reaction.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it raises a professionalism concern through a suitable route. It is not ideal if the patient needed support or clarification during the consultation itself.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient that you are sorry the consultant is being rude.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it undermines the consultation and uses judgemental language in front of the patient. It is less severe than ignoring a serious safety concern, but it is a poor response.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's perception that they are being listened to?",
+        answer: "B",
+        explanation:
+          "This is important because feeling ignored can reduce trust and affect the quality of information shared. It is not the only factor, as there may be clinical or contextual reasons to clarify.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the consultant's seniority when deciding whether the behaviour can be raised?",
+        answer: "C",
+        explanation:
+          "This has minor importance because raising concerns about senior staff can require tact. It is not the most important factor and does not justify ignoring poor professionalism.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "gp-reception-confidential-note",
+    issueTags: ["confidentiality", "communication", "professional-boundaries"],
+    stimulus: [
+      "You are doing work experience in a GP practice. A receptionist asks you to leave a note about a patient's mental health blood test at the front desk because the patient may collect it later.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask whether the note should be sealed or handed over privately according to the practice process.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it protects confidentiality while checking the local process. It is not ideal if you take responsibility for handling sensitive results without supervision.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Leave the note face up on the reception desk so the patient can easily spot it.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because sensitive information could be seen by other people. It is less severe than deliberately sharing the result, but it is still poor confidentiality practice.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is preventing other patients from seeing mental health information?",
+        answer: "B",
+        explanation:
+          "This is important because confidentiality applies to written information as well as conversations. It is not the only factor, as the practice also needs a reliable collection process.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking the practice's usual process before handling the note?",
+        answer: "B",
+        explanation:
+          "This is important because local processes help keep information secure and traceable. It is not the only issue, as the content remains confidential regardless of convenience.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "orthopaedic-cast-tightness-call",
+    issueTags: ["patient-safety", "escalation", "scope-of-practice"],
+    stimulus: [
+      "You are shadowing in an orthopaedic fracture clinic. A patient phones saying their new cast feels very tight and their fingers are numb. The nurse is finishing with another patient.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Alert the nurse as soon as possible and pass on the patient's exact symptoms.",
+        answer: "B",
+        explanation:
+          "This is appropriate because numbness after a cast can indicate a problem needing prompt triage. It is not ideal if you give independent advice beyond your role.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient to try loosening the cast themselves at home.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it gives unsafe advice outside your role. It is less severe than telling them to ignore numbness, but it still risks harm and delays proper assessment.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is numbness in the fingers after a new cast?",
+        answer: "B",
+        explanation:
+          "This is important because numbness may suggest compromised circulation or nerve pressure. It is not the only factor, as the patient needs assessment by an appropriate clinician.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is advising the patient not to drive themselves if urgent review is needed?",
+        answer: "B",
+        explanation:
+          "This is important because numbness, pain, or distress may make driving unsafe. It is not the only issue, as arranging the correct clinical review is the priority.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "endoscopy-bowel-prep-misunderstanding",
+    issueTags: ["patient-safety", "candour", "communication"],
+    stimulus: [
+      "You are helping in an endoscopy unit. A patient quietly tells you they misunderstood the bowel preparation instructions and ate breakfast, but they are embarrassed because the list is very full.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the nurse or endoscopist what the patient has said before the procedure goes ahead.",
+        answer: "B",
+        explanation:
+          "This is appropriate because bowel preparation affects procedure quality and safety. It is not ideal if you do not also reassure the patient that it was right to mention the issue.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest that the patient should not mention it because they feel well and the list is already full.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it encourages withholding relevant information before a procedure. It is less severe than lying in the notes, but it is still poor candour and safety practice.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is adequate bowel preparation for endoscopy quality?",
+        answer: "B",
+        explanation:
+          "This is important because inadequate preparation can reduce visibility and may affect whether the procedure is useful. It is not the only factor, as patient dignity and communication also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's embarrassment when deciding whether to tell staff?",
+        answer: "C",
+        explanation:
+          "This has minor importance because embarrassment should be handled sensitively. It is not the most important factor and does not justify hiding information relevant to the procedure.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "haematology-transfusion-wristband-check",
+    issueTags: ["patient-safety", "integrity", "escalation"],
+    stimulus: [
+      "You are on a haematology ward when blood is brought for transfusion. The patient's wristband is smudged and difficult to read. A nurse says the patient is definitely in the correct bed and asks you to help move things along.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the nurse to pause and follow the ward identity-check process before the transfusion starts.",
+        answer: "B",
+        explanation:
+          "This is appropriate because transfusion identity checks are safety-critical. It is not ideal if you try to manage the check yourself rather than involving qualified staff.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Assume it is safe because the patient answers to the name on the blood bag.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because transfusion checks require formal identity confirmation. It is less severe than knowingly transfusing the wrong patient, but it does not justify bypassing the process.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is strict identity checking before transfusion?",
+        answer: "B",
+        explanation:
+          "This is important because wrong-blood transfusion can cause serious harm. It is not the only factor, as staff also need to communicate clearly and replace unclear identifiers.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is escalating the issue if staff disagree about pausing?",
+        answer: "B",
+        explanation:
+          "This is important because unresolved disagreement about a safety check needs senior support. It is not the only issue, as the immediate action is to prevent an unsafe transfusion.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "community-midwife-translation-app",
+    issueTags: ["communication", "confidentiality", "respect-dignity"],
+    stimulus: [
+      "You are with a community midwife visiting a patient who has limited English. The patient's partner offers to translate intimate health questions. The midwife considers using a phone translation app instead.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest arranging a professional interpreter for clinical and intimate discussions where possible.",
+        answer: "B",
+        explanation:
+          "This is appropriate because professional interpreting supports accuracy, privacy, and consent. It is not ideal if urgent information is needed immediately and an interim safe approach is required.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Proceed with the partner translating intimate questions without checking the patient's preference.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it may compromise privacy and the patient's ability to speak freely. It is less severe than refusing to communicate at all, but it is a poor default.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking how the patient would prefer to communicate?",
+        answer: "B",
+        explanation:
+          "This is important because communication support should respect the patient's privacy and preferences. It is not the only factor, as accuracy and clinical urgency also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is saving appointment time by using whoever is immediately available to translate?",
+        answer: "C",
+        explanation:
+          "This has minor importance because appointments do need to run practically. It is not the most important factor and does not justify compromising confidentiality or accuracy.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "diabetes-foot-photo-teaching",
+    issueTags: ["confidentiality", "capacity-consent", "professional-boundaries"],
+    stimulus: [
+      "You are in a diabetes foot clinic. A nurse shows you a close-up photo of a patient's ulcer and says it would be useful for teaching because the patient's face is not visible. You are unsure whether consent was obtained.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the supervising clinician whether consent and local policy allow the image to be used for teaching.",
+        answer: "B",
+        explanation:
+          "This is appropriate because clinical images can still be identifiable or sensitive. It is not ideal if you assume consent has been checked without confirming the process.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Use the image in teaching because no face is visible.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because absence of a face does not by itself prove consent or anonymity. It is less severe than posting the image publicly, but it is still poor information governance.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is checking whether consent for teaching use was documented?",
+        answer: "B",
+        explanation:
+          "This is important because teaching use is separate from direct care and should follow consent and policy. It is not the only factor, as anonymisation and storage also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is whether the photo could still identify the patient indirectly?",
+        answer: "B",
+        explanation:
+          "This is important because distinctive wounds, dates, or clinical context may identify someone. It is not the only issue, as consent and secure handling are also required.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "stroke-ward-thickened-fluids-disagreement",
+    issueTags: ["patient-safety", "communication", "teamwork"],
+    stimulus: [
+      "You are on a stroke ward. A patient on thickened fluids tells their daughter they hate the texture. The daughter starts offering normal water and says the patient should be allowed to choose.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the nurse or speech and language therapist to explain the reason for thickened fluids to the patient and daughter.",
+        answer: "B",
+        explanation:
+          "This is appropriate because the restriction relates to aspiration risk and should be explained clearly. It is not ideal if you delay intervening while the patient continues drinking normal water.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the daughter that she is not allowed to give any drinks and should leave the bedside.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it is confrontational and may damage trust. It is less severe than ignoring the risk, but it is a poor way to protect the patient safely.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is explaining the safety reason behind thickened fluids?",
+        answer: "B",
+        explanation:
+          "This is important because understanding the reason may improve cooperation and reduce aspiration risk. It is not the only factor, as the patient's preferences and distress also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is respecting the patient's dislike of the texture?",
+        answer: "B",
+        explanation:
+          "This is important because preferences and comfort should be considered. It is not the only issue, as safety advice and swallow assessment still need to guide the plan.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "urgent-care-chaperone-refusal-note",
+    issueTags: ["capacity-consent", "communication", "professional-boundaries"],
+    stimulus: [
+      "You are in an urgent care centre. A patient declines a chaperone before an intimate examination but seems embarrassed and unsure. The clinician is moving quickly because the waiting room is full.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the clinician to pause briefly so the patient can be reminded that accepting or declining a chaperone is their choice.",
+        answer: "B",
+        explanation:
+          "This is appropriate because consent should be voluntary and understood. It is not ideal if you disrupt the consultation without tact or fail to involve the clinician responsible.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Assume the refusal is valid because the patient already said no once.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because the patient appears unsure and may need clarification. It is less severe than forcing a decision, but it does not justify ignoring possible discomfort.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is documenting whether a chaperone was offered and declined?",
+        answer: "B",
+        explanation:
+          "This is important because accurate documentation protects the patient and clinician. It is not the only factor, as the patient also needs to understand the offer at the time.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the busy waiting room when deciding whether to clarify consent?",
+        answer: "C",
+        explanation:
+          "This has minor importance because clinic flow matters. It is not the most important factor and does not justify proceeding if the patient's consent or preference is unclear.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "dermatology-photo-social-media-request",
+    issueTags: ["confidentiality", "professional-boundaries", "integrity"],
+    stimulus: [
+      "You are in dermatology clinic. A patient has a rare rash. Another student asks you to send them the clinical photo later because it would be useful for revision and says the patient will never know.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Decline to send the photo and ask the supervising clinician what approved teaching resources are available.",
+        answer: "B",
+        explanation:
+          "This is appropriate because clinical images should not be shared casually and approved resources may exist. It is not ideal if you do not also raise the student's request if it suggests a wider concern.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Send the photo only if you crop out the patient's name and face.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because cropping does not by itself prove consent, anonymity, or secure handling. It is less severe than posting it publicly, but it is still poor practice.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is whether the patient gave consent for teaching use of the image?",
+        answer: "B",
+        explanation:
+          "This is important because teaching use is separate from direct care and should be authorised. It is not the only issue, as secure storage and local policy also matter.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the educational value of the rare rash?",
+        answer: "C",
+        explanation:
+          "This has minor importance because unusual findings can support learning. It is not the most important factor and does not justify breaching confidentiality or image policy.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "lab-result-inbox-unread-potassium",
+    issueTags: ["patient-safety", "escalation", "teamwork"],
+    stimulus: [
+      "You are shadowing in a GP practice. A receptionist notices an abnormal potassium result in the electronic inbox that appears unread. The responsible GP is visiting a patient and another GP is between appointments.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the receptionist to follow the practice urgent-results process and alert an available clinician.",
+        answer: "B",
+        explanation:
+          "This is appropriate because abnormal potassium can need prompt clinical review. It is not ideal if you try to interpret or triage the result yourself.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Wait for the responsible GP to return because results should only be handled by their named doctor.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because urgent abnormal results may need timely review by an available clinician. It is less severe than deleting the alert, but it is a poor safety response.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is using the practice's urgent-results pathway?",
+        answer: "B",
+        explanation:
+          "This is important because agreed pathways reduce the risk of abnormal results being missed. It is not the only factor, as a clinician still needs to judge the result and patient context.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding alarmist language when raising the result?",
+        answer: "B",
+        explanation:
+          "This is important because staff should communicate clearly without overstating what they know. It is not the only issue, as the result still needs prompt escalation.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "theatre-list-consent-form-abbreviation",
+    issueTags: ["capacity-consent", "patient-safety", "integrity"],
+    stimulus: [
+      "You are in theatre admissions. A patient is waiting for surgery, and the consent form uses an abbreviation you do not recognise for the planned procedure. The patient asks you what it means.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Say you are unsure and ask the surgical team to clarify the abbreviation with the patient.",
+        answer: "B",
+        explanation:
+          "This is appropriate because the patient should understand the procedure and you should not guess. It is not ideal if clarification is not obtained before the patient proceeds.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Give your best guess based on the operation list so the patient is not left waiting.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because guessing about consent information can mislead the patient. It is less severe than deliberately falsifying consent, but it is still poor practice.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's understanding of the procedure named on the consent form?",
+        answer: "B",
+        explanation:
+          "This is important because consent depends on understanding what is being agreed to. It is not the only factor, as risks, benefits, and alternatives also need discussion.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding embarrassment about not knowing the abbreviation?",
+        answer: "C",
+        explanation:
+          "This has minor importance because staff should communicate confidently. It is not the most important factor and does not justify guessing about consent.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "care-home-antibiotic-allergy-query",
+    issueTags: ["patient-safety", "communication", "scope-of-practice"],
+    stimulus: [
+      "You are with a community nurse visiting a care home. A resident has been prescribed antibiotics, but a carer says the resident once had a rash after a similar medicine. The nurse is checking the drug chart.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Encourage the nurse to check the allergy record and clarify the history before the antibiotic is given.",
+        answer: "B",
+        explanation:
+          "This is appropriate because possible allergy information should be checked before administration. It is not ideal if you present the history as definite without confirmation.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the carer that a rash is not serious enough to delay antibiotics.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because allergy history needs clinical assessment rather than dismissal. It is less severe than administering the medicine yourself, but it is a poor safety response.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is clarifying whether the previous rash was a true allergy?",
+        answer: "B",
+        explanation:
+          "This is important because allergy labels and reactions can affect prescribing safety. It is not the only issue, as the resident's current infection still needs timely treatment.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is documenting the information if the allergy history changes?",
+        answer: "B",
+        explanation:
+          "This is important because future prescribers need accurate allergy information. It is not the only factor, as a qualified clinician must decide how to act now.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ambulatory-ecg-patient-anxiety",
+    issueTags: ["communication", "beneficence", "scope-of-practice"],
+    stimulus: [
+      "You are helping fit ambulatory ECG monitors. A patient becomes anxious and asks if the monitor means the team thinks they may die suddenly. The technician is preparing the equipment nearby.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Acknowledge the patient's anxiety and ask the technician or clinician to explain why the monitor has been requested.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it validates the concern while keeping clinical explanation within the right role. It is not ideal if you leave the patient waiting without reassurance that help is coming.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient that the monitor is routine and there is nothing to worry about.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it gives false reassurance without knowing the clinical reason. It is less severe than inventing a diagnosis, but it is still a poor response.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is responding to the emotional impact of the test?",
+        answer: "B",
+        explanation:
+          "This is important because anxiety can affect trust and understanding. It is not the only issue, as accurate clinical information about the indication also matters.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding detailed interpretation of the test indication if you are unsure?",
+        answer: "B",
+        explanation:
+          "This is important because guessing could mislead or alarm the patient. It is not the only factor, as the patient should still be directed to someone who can explain properly.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ed-intoxicated-patient-property",
+    issueTags: ["respect-dignity", "integrity", "teamwork"],
+    stimulus: [
+      "You are in the emergency department. An intoxicated patient is asleep on a trolley, and their wallet falls out while staff are moving bedding. A healthcare assistant jokes that it is safer to leave it on the table.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Point out that the property should be handled according to the department's valuables process.",
+        answer: "B",
+        explanation:
+          "This is appropriate because patient property should be kept secure and documented. It is not ideal if you personally take custody without following the proper process.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ignore it because the patient is intoxicated and may not remember what they had.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because intoxicated patients still deserve respect and protection of property. It is less severe than stealing the wallet, but it is a poor professional response.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is documenting valuable property when the patient cannot engage properly?",
+        answer: "B",
+        explanation:
+          "This is important because documentation reduces loss, dispute, and harm to trust. It is not the only factor, as staff safety and clinical care also remain important.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's intoxication when deciding whether their belongings should be protected?",
+        answer: "C",
+        explanation:
+          "This has minor importance because intoxication may affect how property is managed. It is not the most important factor and does not justify neglecting their belongings.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "ward-round-sensitive-news-corridor",
+    issueTags: ["confidentiality", "respect-dignity", "communication"],
+    stimulus: [
+      "You are on a ward round. The team begins discussing a patient's new cancer diagnosis in a corridor outside a bay because there is no free side room immediately available.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest moving the discussion to a more private place or lowering the detail until privacy is available.",
+        answer: "B",
+        explanation:
+          "This is appropriate because sensitive information should be discussed with privacy and dignity. It is not ideal if urgent clinical decisions are delayed without a temporary safe plan.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Continue listening without comment because ward corridors are often used for quick discussions.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because routine convenience does not remove confidentiality duties. It is less severe than deliberately disclosing information, but it is still a poor response.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is privacy when discussing a new cancer diagnosis?",
+        answer: "B",
+        explanation:
+          "This is important because the information is sensitive and could be overheard. It is not the only factor, as urgent care planning may also need to continue safely.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the lack of an immediately available side room?",
+        answer: "C",
+        explanation:
+          "This has minor importance because practical constraints can affect timing. It is not the most important factor and does not justify a detailed corridor discussion.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "outpatient-interpreter-daughter-embarrassed",
+    issueTags: ["communication", "confidentiality", "autonomy"],
+    stimulus: [
+      "You are in an outpatient clinic. A patient with limited English looks embarrassed while their adult daughter translates questions about urinary symptoms. The daughter says professional interpreters take too long to arrange.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Ask the clinician whether a professional interpreter can be arranged, especially for sensitive questions.",
+        answer: "B",
+        explanation:
+          "This is appropriate because sensitive symptoms require accurate and private communication. It is not ideal if urgent symptoms need an immediate interim approach while interpreting is arranged.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Assume the daughter is translating accurately because she seems confident.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because confidence does not prove accuracy or that the patient feels able to speak freely. It is less severe than refusing communication, but it is poor practice.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the patient's ability to answer sensitive questions without family pressure?",
+        answer: "B",
+        explanation:
+          "This is important because family interpreting can affect privacy and autonomy. It is not the only issue, as the patient may still value family support.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is the daughter's view that interpreters take too long?",
+        answer: "C",
+        explanation:
+          "This has minor importance because delay and convenience are practical concerns. It is not the most important factor and does not justify relying on family for sensitive clinical translation.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "mental-health-observation-level-change",
+    issueTags: ["patient-safety", "teamwork", "escalation"],
+    stimulus: [
+      "You are on a mental health ward. A patient on enhanced observations asks why they are being watched so closely. A support worker says the observation level may be reduced soon but has not checked with the nurse in charge.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Suggest that any discussion about changing observations should be confirmed with the nurse in charge.",
+        answer: "B",
+        explanation:
+          "This is appropriate because observation levels are safety decisions that require the right staff input. It is not ideal if the patient's question is left unanswered or dismissed.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Reassure the patient that the observation level will probably be reduced soon.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it gives unconfirmed reassurance about a safety plan. It is less severe than changing observations yourself, but it is still misleading.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is clear communication about why observations are in place?",
+        answer: "B",
+        explanation:
+          "This is important because patients should understand restrictions where possible. It is not the only factor, as the explanation must be balanced with risk management and care planning.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is avoiding promises about changes to observation levels?",
+        answer: "B",
+        explanation:
+          "This is important because promises could undermine trust if the plan does not change. It is not the only issue, as the patient still needs a respectful explanation.",
+      },
+    ],
+  },
+
+  {
+    kind: "set",
+    setId: "renal-dialysis-late-transport-blame",
+    issueTags: ["respect-dignity", "justice", "communication"],
+    stimulus: [
+      "You are on a renal dialysis unit. A patient arrives late because hospital transport was delayed. A staff member says loudly that late patients always disrupt the list, while the patient looks upset.",
+    ],
+    questions: [
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Speak to the staff member privately later and explain that the comment may have embarrassed the patient.",
+        answer: "B",
+        explanation:
+          "This is appropriate because it addresses disrespectful communication constructively. It is not ideal if the patient needs immediate reassurance or practical help at the time.",
+      },
+      {
+        subtype: "sjt-appropriateness",
+        question:
+          "Tell the patient in front of everyone that staff are under pressure and did not mean it.",
+        answer: "C",
+        explanation:
+          "This is inappropriate because it may minimise the patient's feelings and draw more attention to them. It is less severe than joining in the blame, but it is a poor response.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is recognising that the delay may not be the patient's fault?",
+        answer: "B",
+        explanation:
+          "This is important because fairness matters when patients rely on arranged transport. It is not the only issue, as the unit still needs to manage list timing safely.",
+      },
+      {
+        subtype: "sjt-importance",
+        question:
+          "How important is staff frustration about disrupted scheduling?",
+        answer: "C",
+        explanation:
+          "This has minor importance because service pressures are real. It is not the most important factor and does not justify humiliating a patient.",
+      },
+    ],
+  },
+
   // ===== PASTE NEW SJT QUESTIONS ABOVE THIS LINE =====
 ];
 

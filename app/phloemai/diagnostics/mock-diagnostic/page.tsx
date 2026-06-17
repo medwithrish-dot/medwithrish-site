@@ -1,6 +1,6 @@
 import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
+import { redirect } from "next/navigation";
 import { PremiumDiagnosticLock } from "../../_components/PremiumDiagnosticLock";
-import { UCATMockDiagnosticPage } from "../../_components/PhloemAIClient";
 
 export default async function Page() {
   const { isPremium } = await getPhloemEntitlements();
@@ -13,5 +13,5 @@ export default async function Page() {
     );
   }
 
-  return <UCATMockDiagnosticPage />;
+  redirect("/phloemai/mocks/full");
 }

@@ -1,0 +1,8 @@
+▲ Next.js 16.2.4 (webpack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+- Environments: .env.local
+✓ Ready in 307ms
+
+○ Compiling / ...
+ GET / 200 in 9.2s (next.js: 8.3s, proxy.ts: 311ms, application-code: 660ms)

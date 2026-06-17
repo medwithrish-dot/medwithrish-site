@@ -4207,7 +4207,23 @@ function FlagTrainerVisual({ visual }: { visual?: UCATQuestion["visual"] }) {
     );
   }
 
-  if (visual.type === "bar" || visual.type === "line") {
+  if (visual.type === "bar" || visual.type === "line" || visual.type === "pie") {
+    if (visual.type === "pie") {
+      return (
+        <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <p className="text-xs font-black text-slate-700">{visual.title}</p>
+          <div className="mt-2 grid gap-2 sm:grid-cols-2">
+            {visual.slices.map((slice) => (
+              <div key={slice.label} className="flex items-center justify-between rounded-md bg-white px-3 py-2 text-xs font-semibold text-slate-600">
+                <span>{slice.label}</span>
+                <span className="font-black text-slate-900">{slice.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
     const points = visual.type === "bar" ? visual.categories : visual.points;
     return (
       <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">

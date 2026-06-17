@@ -1,0 +1,14 @@
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.28:3000
+- Environments: .env.local
+✓ Ready in 831ms
+Creating turbopack project {
+  dir: 'C:\\Users\\usedf\\OneDrive\\Desktop\\MEDWITHRISH\\medwithrish-site',
+  testMode: true
+}
+
+ GET /phloemai/diagnostics/mock-diagnostic 200 in 3.4s (next.js: 776ms, proxy.ts: 353ms, application-code: 2.3s)
+ GET /phloemai/mocks/full 200 in 3.5s (next.js: 968ms, proxy.ts: 364ms, application-code: 2.1s)
+ GET /phloemai/diagnostics/mock-diagnostic 200 in 213ms (next.js: 14ms, proxy.ts: 19ms, application-code: 180ms)
+ GET /phloemai/mocks/full 200 in 223ms (next.js: 86ms, proxy.ts: 20ms, application-code: 118ms)
