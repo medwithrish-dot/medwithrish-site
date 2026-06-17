@@ -160,9 +160,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
       "Critics, however, highlight the ethical dangers of 'designer babies'. They fear that the technology, initially intended for therapeutic use, could be co-opted for cosmetic enhancements, such as selecting for intelligence, height, or athletic ability. This prospect raises significant concerns regarding social inequality, as only those with substantial financial resources would likely access such enhancements, potentially creating a permanent biological divide."
     ],
     "tfc": {
-      "statement": "Germline gene editing is restricted exclusively to the treatment of hereditary diseases.",
-      "answer": "False",
-      "explanation": "The text states that while therapeutic use is the intended application, critics fear it could be co-opted for cosmetic enhancements, implying it is not restricted exclusively to medical treatment."
+      "statement": "Because germline editing could eliminate hereditary diseases at the embryonic stage, the passage suggests that any resulting reduction in genetic disease would necessarily be distributed equally across all socioeconomic groups.",
+      "answer": "Can't tell",
+      "explanation": "The passage notes the therapeutic potential to eradicate hereditary disease and separately warns that cosmetic enhancements would likely be accessible only to the wealthy. It never states whether the disease-eradication benefit itself would be equally distributed, so this cannot be confirmed or denied from the text."
     },
     "detail": {
       "question": "What is the primary difference between somatic and germline editing as defined in the passage?",
@@ -246,9 +246,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
       "The release of gene-drive modified organisms into the wild presents unique 'containment' challenges. Unlike pharmaceuticals, which can be withdrawn, a released gene drive is designed to spread autonomously. Therefore, the decision to proceed carries heavy weight regarding the environmental irreversibility of such interventions."
     ],
     "tfc": {
-      "statement": "Once a gene drive is released into the wild, it is easy to stop its progression if unexpected results occur.",
-      "answer": "False",
-      "explanation": "The text states that gene drives are designed to spread autonomously and are not like pharmaceuticals that can be withdrawn, emphasizing the difficulty of containment."
+      "statement": "Because gene drives are designed to spread autonomously and cannot be withdrawn like a pharmaceutical, the decision to release one carries a different kind of risk than approving a new drug.",
+      "answer": "True",
+      "explanation": "The passage explicitly contrasts gene drives with pharmaceuticals, noting that drugs 'can be withdrawn' while a released gene drive 'is designed to spread autonomously,' and states this irreversibility carries heavy weight in the decision to proceed."
     },
     "detail": {
       "question": "What is the goal of applying gene drives to the Anopheles mosquito population?",
@@ -289,9 +289,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
       "Furthermore, advocates for patient rights counter that the current speed of drug development is insufficient for those facing imminent death. They propose that informed consent, where the patient fully acknowledges the risks of experimental treatment, should be the defining factor rather than institutional gatekeeping."
     ],
     "tfc": {
-      "statement": "Phase I of clinical trials is primarily focused on determining the comparative effectiveness of a drug.",
+      "statement": "A terminally ill patient who is granted experimental access under 'Right to Try' would have already had the drug's comparative effectiveness against existing treatments established.",
       "answer": "False",
-      "explanation": "The text explicitly states that Phase I focuses on safety, while Phase III focuses on comparative effectiveness."
+      "explanation": "Comparative effectiveness is established in Phase III, which 'Right to Try' patients bypass entirely by accessing therapies before trial phases conclude; the passage indicates only safety data (Phase I) might exist, not comparative effectiveness."
     },
     "detail": {
       "question": "What is the core argument of the 'Right to Try' movement?",
@@ -375,9 +375,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
       "Despite the potential for higher yields, global adoption remains hindered by trade barriers. Many countries impose strict labeling and import regulations on gene-edited crops, forcing farmers to navigate a complex web of international policy that often prioritizes public perception over scientific consensus."
     ],
     "tfc": {
-      "statement": "The primary difference between CRISPR gene editing and traditional GMOs is the absence of foreign DNA introduction in CRISPR.",
-      "answer": "True",
-      "explanation": "The text explicitly states that proponents argue CRISPR allows for precise changes without the introduction of foreign DNA, unlike traditional GMOs."
+      "statement": "Because traditional selective breeding has been practiced for millennia, the 'unnatural' criticism leveled at CRISPR crops must apply equally to selectively bred crops.",
+      "answer": "Can't tell",
+      "explanation": "The passage notes critics call CRISPR 'unnatural' despite selective breeding's long history, and that proponents distinguish CRISPR by its precision and lack of foreign DNA. It does not state whether critics consider selective breeding equally 'unnatural', so this cannot be confirmed from the text."
     },
     "detail": {
       "question": "What is one specific goal for using CRISPR in plant genetics mentioned in the text?",
@@ -418,9 +418,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
       "While legislative measures like the Genetic Information Nondiscrimination Act (GINA) in the United States provide some safeguards, these laws are often narrow in scope. Many experts argue that comprehensive, global protections are required to prevent a future where one's genetic identity is used against them in socio-economic contexts."
     ],
     "tfc": {
-      "statement": "Existing laws like GINA provide a comprehensive, globally applicable shield against all forms of genetic discrimination.",
-      "answer": "False",
-      "explanation": "The text describes GINA as narrow in scope and explicitly calls for 'comprehensive, global protections' as they are currently lacking."
+      "statement": "Because GINA is a US law with a narrow scope, an employer in a country without similar legislation could legally use genetic data to deny someone employment.",
+      "answer": "Can't tell",
+      "explanation": "The passage states GINA is narrow in scope and that comprehensive global protections are lacking, implying gaps exist, but it does not specify the legal status of genetic discrimination in any other country, so this exact claim cannot be confirmed from the text alone."
     },
     "detail": {
       "question": "What is a specific fear regarding employers and genetic data?",
@@ -461,9 +461,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
       "Ultimately, the goal is to create a functional surrogate that mirrors the original. Even if successful, these organisms may face significant behavioral challenges, as they would lack the learned survival strategies of their ancestors."
     ],
     "tfc": {
-      "statement": "Scientists aim to reconstruct extinct genomes by using the genomes of modern, closely related species as a baseline.",
+      "statement": "Even a genetically perfect mammoth surrogate would still face survival challenges that genome reconstruction alone could not solve.",
       "answer": "True",
-      "explanation": "The passage explains that scientists compare the genomes of extinct species to their 'closest living relatives' to attempt to reconstruct them."
+      "explanation": "The passage states that even if a genetic reconstruction is successful, the resulting organism may face behavioral challenges because it lacks the learned survival strategies of its ancestors, a problem genetics cannot fix."
     },
     "detail": {
       "question": "What is one potential ecological benefit suggested for de-extinction?",
@@ -504,9 +504,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
       "Opponents maintain that the 14-day limit provides a necessary ethical barrier, preventing the research from venturing into 'human-like' development. They fear that extending the limit could lead to the commodification of embryos and undermine respect for human life at its earliest stages."
     ],
     "tfc": {
-      "statement": "The 14-day rule is universally supported by the scientific community as the perfect ethical endpoint for embryo research.",
-      "answer": "False",
-      "explanation": "The text states that some researchers argue the limit is 'arbitrary' and should be extended, showing it is not universally supported as the 'perfect' endpoint."
+      "statement": "Extending the 14-day rule would necessarily mean allowing embryos to develop into the stage associated with 'human-like' development.",
+      "answer": "Can't tell",
+      "explanation": "Opponents fear that extending the limit could lead toward 'human-like' development, but the passage does not specify how far an extension would go or confirm that any extension would necessarily reach that stage, so this is not established either way."
     },
     "detail": {
       "question": "What development occurs at approximately 14 days that makes it a significant milestone for research?",
@@ -547,9 +547,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
       "However, the complexity of the brain means that precision is paramount. Unlike editing tissues in the liver or muscles, where mistakes might be less critical, genetic interventions in the brain carry the risk of permanent neurological damage or cognitive alteration."
     ],
     "tfc": {
-      "statement": "The blood-brain barrier serves as an obstacle for delivering gene therapies to the CNS.",
-      "answer": "True",
-      "explanation": "The passage states that the barrier is highly selective and blocks most therapeutic vectors, acting as a hurdle."
+      "statement": "Because mistakes in liver or muscle gene editing are described as 'less critical,' the passage implies such errors carry no risk at all to patients.",
+      "answer": "False",
+      "explanation": "The passage uses the comparative phrase 'might be less critical' for liver or muscle tissue, which only indicates a lower relative risk compared to brain editing, not the complete absence of risk."
     },
     "detail": {
       "question": "What is one method mentioned for bypassing the blood-brain barrier?",
@@ -591,9 +591,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics maintain that the reliance on rare earth minerals for battery production introduces new environmental and geopolitical risks. Furthermore, the decommissioning of existing coal and gas infrastructure involves massive stranded assets that currently complicate the fiscal transition for many developing nations."
 ],
 "tfc": {
-"statement": "The primary obstacle to renewable energy adoption is currently a lack of technological capability.",
+"statement": "Because solar and wind costs are now competitive with fossil fuels, grid stability is no longer considered a barrier to renewable adoption.",
 "answer": "False",
-"explanation": "The text explicitly states that the transition is no longer a matter of technological feasibility, but of political and economic will."
+"explanation": "The passage states costs have become competitive, but separately identifies the intermittent nature of these sources as 'a significant challenge for grid stability', so cost competitiveness has not resolved the stability issue."
 },
 "detail": {
 "question": "According to the passage, what contributes to the complexity of the fiscal transition for developing nations?",
@@ -634,9 +634,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Adaptation strategies are being implemented, such as the construction of sea walls and the restoration of mangroves. However, these are often localized efforts and may be insufficient to combat the long-term, systemic shifts predicted by current climate models."
 ],
 "tfc": {
-"statement": "Current adaptation strategies are considered sufficient to counter long-term climate changes.",
-"answer": "False",
-"explanation": "The text states that localized efforts may be insufficient to combat the long-term, systemic shifts predicted."
+"statement": "Because mangrove restoration is described as a localized effort, it must be having no measurable effect on coastal communities.",
+"answer": "Can't tell",
+"explanation": "The passage says localized efforts 'may be insufficient' to combat long-term systemic shifts, but this does not mean they have zero effect locally; the passage does not quantify their measurable impact, so this cannot be confirmed."
 },
 "detail": {
 "question": "What is identified as a primary cause of coral reef bleaching?",
@@ -677,9 +677,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics also point out the risk of leaks from storage sites, which could undermine climate mitigation goals. Proponents argue that continued research and economies of scale will eventually drive down costs and improve safety protocols, making it an indispensable tool for heavy industry."
 ],
 "tfc": {
-"statement": "The author suggests that CCS technology is currently ready for immediate, widespread, and cost-effective deployment.",
-"answer": "False",
-"explanation": "The text mentions high implementation costs and technical complexities, implying it is not yet fully cost-effective or simple to deploy."
+"statement": "If economies of scale eventually lower CCS costs as proponents predict, the risk of storage leaks would also be resolved.",
+"answer": "Can't tell",
+"explanation": "The passage discusses cost reduction and safety improvements as separate, parallel benefits of continued research; it does not state that lower costs would resolve or be linked to the leak risk, so this causal connection is not established."
 },
 "detail": {
 "question": "What is the primary function of CCS technology as described in the text?",
@@ -720,9 +720,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Furthermore, the infrastructure for mass charging remains underdeveloped in many rural and suburban areas, acting as a barrier to consumer adoption. Government subsidies are currently used to bridge the cost gap between traditional vehicles and EVs."
 ],
 "tfc": {
-"statement": "Electric vehicles are universally considered to be carbon-neutral throughout their entire manufacturing and operational lifecycle.",
+"statement": "An EV charged on a coal-heavy grid would have the same overall climate benefit as one charged on a renewable-heavy grid.",
 "answer": "False",
-"explanation": "The text explains that the lifecycle impact depends on the energy source and explicitly mentions that benefits are diminished if the grid relies on fossil fuels."
+"explanation": "The passage states the lifecycle environmental benefit of an EV depends on the electricity source used for charging, and that benefits are 'significantly diminished' on a coal- or gas-reliant grid, so the two scenarios would not produce equivalent benefits."
 },
 "detail": {
 "question": "What acts as a barrier to the adoption of electric vehicles in rural areas?",
@@ -763,9 +763,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "However, transforming existing infrastructure is capital-intensive and often meets resistance from developers. Despite these challenges, cities that ignore climate adaptation measures face increased health risks and energy costs for cooling systems."
 ],
 "tfc": {
-"statement": "Rural areas consistently experience higher temperatures than city centers during heatwaves.",
-"answer": "False",
-"explanation": "The text states that cities trap heat, causing temperatures to be higher than in rural areas."
+"statement": "A city that installs green roofs but takes no other measures would eliminate its urban heat island effect entirely.",
+"answer": "Can't tell",
+"explanation": "The passage states green roofs and trees can 'mitigate' the heat island effect, not eliminate it, and it does not quantify how much a single measure alone would reduce the effect, so total elimination cannot be confirmed or denied."
 },
 "detail": {
 "question": "What effect do trees and green roofs have in urban settings?",
@@ -849,9 +849,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Innovative initiatives, including debt-for-nature swaps, are attempting to incentivize governments to protect these regions. The long-term success of these programs is contingent upon rigorous monitoring and the enforcement of protective legislation."
 ],
 "tfc": {
-"statement": "Forest clearing results in the release of previously stored carbon into the atmosphere.",
-"answer": "True",
-"explanation": "The text explicitly states that when forests are cleared, stored carbon is released back into the atmosphere."
+"statement": "Debt-for-nature swaps alone guarantee the long-term protection of forests like the Amazon.",
+"answer": "False",
+"explanation": "The passage states that the long-term success of programs like debt-for-nature swaps depends on rigorous monitoring and enforcement of legislation, meaning the swap itself does not guarantee protection."
 },
 "detail": {
 "question": "What is an example of an economic activity that conflicts with forest conservation?",
@@ -892,9 +892,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Proponents believe that litigation acts as a vital tool to hold powerful entities accountable. Critics, however, argue that courts are not the appropriate venue for setting climate policy, suggesting that such decisions should remain with elected legislatures."
 ],
 "tfc": {
-"statement": "All climate change litigation cases have resulted in successful forced reductions of emissions by corporations.",
-"answer": "False",
-"explanation": "The text explicitly states that courts have seen a 'mixed range of outcomes' and that some cases have been dismissed."
+"statement": "A case being dismissed for lacking legal standing means a court rejected the claim that there is a human right to a stable environment.",
+"answer": "Can't tell",
+"explanation": "The passage distinguishes dismissal for lack of standing (a procedural issue) from rulings on the substance of a claim; it does not state that standing dismissals reflect a judgment on the underlying right, so this cannot be confirmed."
 },
 "detail": {
 "question": "What is the basis for many climate change lawsuits mentioned in the text?",
@@ -935,9 +935,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While some see the economic opportunities of a navigable Arctic, environmentalists warn of the catastrophic risks posed by potential oil spills and the disruption of local indigenous cultures."
 ],
 "tfc": {
-"statement": "The Arctic is warming at approximately the same rate as the rest of the world.",
+"statement": "The opening of new Arctic shipping routes is likely to reduce competition between nations over the region's resources.",
 "answer": "False",
-"explanation": "The text states the Arctic is warming at a rate significantly faster than the global average."
+"explanation": "The passage states the shift invites 'increased commercial and military competition for resources in the region,' the opposite of reduced competition."
 },
 "detail": {
 "question": "What potential benefit is mentioned regarding the reduction of sea ice?",
@@ -978,9 +978,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite these limitations, the broad scientific consensus remains that human activity is the primary driver of current warming trends. Policy decisions are frequently based on the ranges provided by these models, which account for both optimistic and pessimistic outcomes."
 ],
 "tfc": {
-"statement": "Climate models are currently considered to have zero margin of error.",
+"statement": "Because cloud feedback is a major source of uncertainty, the broad scientific consensus on humans driving current warming is also in question.",
 "answer": "False",
-"explanation": "The text states that models still contain 'inherent uncertainties'."
+"explanation": "The passage explicitly separates the two: despite modeling uncertainties like cloud feedback, it states the broad scientific consensus that human activity is the primary driver of warming 'remains' intact."
 },
 "detail": {
 "question": "What is identified as a 'major source of uncertainty' in climate modeling?",
@@ -1023,9 +1023,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Conservationists argue that protecting existing habitats is more cost-effective than attempting to restore degraded ecosystems or reintroduce lost species."
 ],
 "tfc": {
-"statement": "The current rate of species extinction is entirely caused by human activities.",
+"statement": "Because extinction is a natural process, the current 100-to-1,000-times elevated rate of species loss must also be considered a natural phenomenon.",
 "answer": "False",
-"explanation": "The text states that while human activities are the primary driver, extinction is also a natural process, meaning it is not *entirely* caused by humans."
+"explanation": "The passage acknowledges extinction is natural in principle, but explicitly attributes the current elevated rate to anthropogenic activities, distinguishing the baseline natural process from the human-driven acceleration."
 },
 "detail": {
 "question": "Which of the following is NOT listed as a driver of biodiversity loss?",
