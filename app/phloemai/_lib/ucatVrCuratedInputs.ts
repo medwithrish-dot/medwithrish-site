@@ -25638,21 +25638,21 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 },
 {
 "stimulus": ["Management science applies mathematical modeling, statistics, and numerical analysis to make better management decisions. It often employs optimization techniques to maximize efficiency or minimize costs. One common tool is linear programming, which finds the best outcome in a mathematical model whose requirements are represented by linear relationships. A key challenge in management science is the 'garbage in, garbage out' phenomenon, where the quality of the output is strictly determined by the quality of the input data. Consequently, data cleansing and validation are considered foundational steps in any management science project."],
-"tfc": {"statement": "Linear programming is the only tool used in management science to improve efficiency.", "answer": "False", "explanation": "The text describes linear programming as 'one common tool', not the only one."},
+"tfc": {"statement": "Because output quality depends on input quality, a management science model built on flawed data will produce decisions that are no more reliable than the data itself, regardless of how sophisticated the optimization technique used.", "answer": "True", "explanation": "Combining the 'garbage in, garbage out' principle with the foundational role of data cleansing implies that no optimization technique, however advanced, can compensate for poor-quality input data."},
 "detail": {"question": "What is required to ensure high-quality output in management science models?", "correct": "Accurate input data", "distractors": ["Complex linear relationships", "Manual decision-making", "Increased computational power"], "explanation": "The text emphasizes that output quality is strictly determined by input quality."},
 "inference": {"question": "What can be inferred about the role of data analysts in management science?", "correct": "They must prioritize data integrity to ensure valid models", "distractors": ["They only perform manual labor", "They are primarily responsible for management decisions", "They ignore mathematical modeling in favor of statistics"], "explanation": "Given the 'garbage in, garbage out' risk, ensuring data integrity is essential."},
 "fourth": {"type": "summary", "question": "Which of the following best summarizes the focus of management science?", "correct": "Using quantitative techniques to optimize decision-making processes", "distractors": ["Automating all managerial roles in a company", "Focusing exclusively on reducing organizational costs", "Developing new mathematical theories for business"], "explanation": "The passage defines it as using modeling and numerical analysis to improve decisions."}
 },
 {
 "stimulus": ["Marketing theory explores the strategies used by businesses to communicate value to customers. The marketing mix, often represented as the '4 Ps' (Product, Price, Place, Promotion), serves as the foundational framework. In the digital age, this has evolved to include concepts like 'digital footprints' and 'programmatic advertising', which allow for hyper-targeting of consumer segments. Critics argue that these methods can lead to consumer manipulation, as companies collect vast amounts of personal data to predict and influence future purchasing behaviors, often without the consumer's explicit realization of the degree of tracking involved."],
-"tfc": {"statement": "The '4 Ps' framework is no longer relevant in modern marketing.", "answer": "False", "explanation": "The text describes it as the 'foundational framework' and mentions it has 'evolved', not that it is obsolete."},
+"tfc": {"statement": "Because programmatic advertising allows companies to predict purchasing behavior without consumers being fully aware of the tracking involved, every consumer who has been served a targeted ad has been manipulated into a purchase.", "answer": "Can't tell", "explanation": "The passage says hyper-targeting can lead to manipulation and that consumers often don't realize the scope of tracking, but it never claims that being tracked or targeted is equivalent to being manipulated into buying, nor that this happens to every consumer exposed to such ads."},
 "detail": {"question": "What does the 'Place' component of the marketing mix refer to?", "correct": "Distribution channels and availability", "distractors": ["Pricing strategies", "Digital advertising platforms", "Product design features"], "explanation": "While not explicitly defined in the text, the 4Ps framework context implies distribution/location; here, the focus is on the framework existence."},
 "inference": {"question": "What does the author suggest about consumer data collection?", "correct": "It raises ethical concerns regarding consumer autonomy", "distractors": ["It is essential for product development", "It is universally welcomed by consumers", "It makes marketing less effective over time"], "explanation": "The mention of 'manipulation' and lack of 'explicit realization' suggests an ethical concern."},
 "fourth": {"type": "author", "question": "What is the author's tone regarding modern digital marketing techniques?", "correct": "Critical and cautious", "distractors": ["Enthusiastic and supportive", "Neutral and objective", "Hostile and dismissive"], "explanation": "The author uses words like 'manipulation' and 'critics argue' to express caution."}
 },
 {
 "stimulus": ["Consumer behavior is the study of how individuals select, buy, use, and dispose of ideas, goods, and services to satisfy their needs and wants. A major influence is social proof, a psychological phenomenon where people assume the actions of others in an attempt to reflect correct behavior in a given situation. This is heavily leveraged by social media influencers who showcase products to followers. While businesses view this as a powerful conversion tool, consumer psychologists caution that it can lead to impulsive buying patterns, driven more by herd mentality than actual product utility or personal necessity."],
-"tfc": {"statement": "Social proof is a strategy created by social media influencers.", "answer": "False", "explanation": "The text identifies it as a 'psychological phenomenon' that influencers 'leverage', not one they created."},
+"tfc": {"statement": "Because impulsive buying driven by social proof is described as motivated more by herd mentality than by product utility, purchases made under social proof's influence are always regretted by the consumer afterward.", "answer": "Can't tell", "explanation": "The passage says such purchases are driven by herd mentality rather than utility or necessity, but it never states anything about whether consumers later regret these purchases."},
 "detail": {"question": "What is the main driver of impulsive buying according to consumer psychologists?", "correct": "Herd mentality", "distractors": ["Product utility", "Personal necessity", "Analytical decision-making"], "explanation": "The text explicitly states buying is driven more by herd mentality than utility."},
 "inference": {"question": "How might a business use social proof to increase sales?", "correct": "By partnering with individuals who have a large following", "distractors": ["By focusing only on product price", "By ignoring consumer psychological needs", "By banning the use of social media"], "explanation": "The text mentions influencers showcase products to followers as a way to leverage social proof."},
 "fourth": {"type": "negative", "question": "Which of the following does NOT influence consumer behavior as defined in the text?", "correct": "Government economic policies", "distractors": ["Social proof", "Personal needs", "Product availability"], "explanation": "The text focuses on selection, usage, and disposal driven by needs and psychological phenomena, not policy."},
@@ -25666,7 +25666,7 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 },
 {
 "stimulus": ["The history of science is marked by paradigm shifts—fundamental changes in the basic concepts and experimental practices of a scientific discipline. Thomas Kuhn argued that science does not progress linearly through the mere accumulation of facts, but through periods of 'normal science' punctuated by revolutionary breakthroughs. When a dominant paradigm fails to account for anomalies, it eventually collapses, leading to a period of crisis. This crisis is resolved when a new paradigm emerges, which is often incommensurable with the old one, meaning they share no common language or set of rules."],
-"tfc": {"statement": "Scientific progress is a slow, steady accumulation of information.", "answer": "False", "explanation": "The text argues against this, suggesting instead that it progresses through paradigm shifts and revolutionary breakthroughs."},
+"tfc": {"statement": "Because incommensurable paradigms share no common language or rules, scientists working under a new paradigm can never fully understand the reasoning of the paradigm it replaced.", "answer": "Can't tell", "explanation": "The passage says incommensurable paradigms share no common language or rules, but it does not state that this makes it impossible to ever understand the old paradigm's reasoning -- only that they are not directly comparable."},
 "detail": {"question": "What triggers a period of crisis in science?", "correct": "The failure to explain anomalies within the current paradigm", "distractors": ["The linear accumulation of new facts", "The emergence of a new language", "The decline of experimental practices"], "explanation": "The text states a crisis occurs when a dominant paradigm fails to account for anomalies."},
 "inference": {"question": "What does the term 'incommensurable' imply about the relationship between two paradigms?", "correct": "They are fundamentally different and cannot be directly compared", "distractors": ["They are virtually identical in their goals", "One is always objectively superior to the other", "They are easily compatible with one another"], "explanation": "The text clarifies that they share no common language or rules, indicating a lack of compatibility."},
 "fourth": {"type": "negative", "question": "Which of the following is NOT described as a part of scientific progress in the passage?", "correct": "A slow, continuous process of fact-gathering", "distractors": ["Normal science", "Paradigm shifts", "Crisis periods"], "explanation": "The passage explicitly rejects the idea of progress as a linear accumulation of facts."}
@@ -25687,7 +25687,7 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 },
 {
 "stimulus": ["Forensic science faces significant challenges regarding the reliability of 'pattern matching' evidence, such as bite mark analysis or shoeprint comparison. Unlike DNA profiling, which is based on statistical probability and well-defined laboratory standards, many pattern matching disciplines rely heavily on the subjective interpretation of the examiner. Critics argue that this introduces cognitive bias, where the examiner's preconceptions or knowledge of other case details influence their analysis. Consequently, there is an ongoing push for forensic disciplines to adopt more rigorous, empirical testing methods to ensure their findings can withstand the scrutiny of scientific validation."],
-"tfc": {"statement": "DNA profiling is considered more reliable than bite mark analysis.", "answer": "True", "explanation": "The text contrasts DNA profiling (statistical, defined standards) with pattern matching (subjective, bias-prone), implying DNA is the more reliable/standardized method."},
+"tfc": {"statement": "Because pattern matching disciplines rely on subjective interpretation while DNA profiling relies on statistical probability, any forensic finding produced using subjective interpretation is necessarily less scientifically valid than one produced using statistical methods.", "answer": "Can't tell", "explanation": "The passage contrasts DNA profiling's statistical basis with pattern matching's subjectivity and notes the latter is criticized for introducing bias, but it does not make the general claim that subjective methods are always less valid than statistical ones in every case."},
 "detail": {"question": "What is the primary criticism of pattern matching evidence?", "correct": "It is overly reliant on subjective human judgment", "distractors": ["It is too expensive to perform", "It is not accepted in any court of law", "It requires the same data as DNA profiling"], "explanation": "The text notes it relies heavily on subjective interpretation."},
 "inference": {"question": "What does the passage imply about the scientific status of current forensic pattern matching?", "correct": "It may not meet modern standards of empirical validation", "distractors": ["It is already perfectly scientifically validated", "It is entirely useless in criminal investigations", "It will soon be replaced entirely by DNA profiling"], "explanation": "The push for more 'rigorous, empirical testing methods' implies that current methods are lacking in this regard."},
 "fourth": {"type": "summary", "question": "Which of the following best describes the conflict in the passage?", "correct": "The tension between traditional forensic techniques and scientific standards", "distractors": ["The struggle between police and forensic scientists", "The debate over the funding of forensic laboratories", "The difference between biological and non-biological evidence"], "explanation": "The passage discusses the shift from subjective pattern matching to more objective, empirical standards."}
@@ -25703,9 +25703,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 {
 "stimulus": ["Forensic science, the application of scientific methods to criminal and civil laws, has undergone a paradigm shift with the advent of rapid DNA analysis.", "Traditionally, processing DNA samples required days or weeks in a centralized laboratory setting, creating bottlenecks in investigative timelines.", "The integration of microfluidic technology into portable 'lab-on-a-chip' systems now allows for the generation of a DNA profile in under two hours.", "While this reduces the time suspects spend in custody prior to charging, some legal experts caution against the trade-off in analytical depth.", "Rapid systems often target a smaller set of genetic markers compared to traditional laboratory methods, which may limit the statistical power of the evidence in complex mixtures.", "Despite these concerns, the ability to obtain near-instantaneous results has proven transformative in high-stakes investigations such as kidnapping or terrorism, where the window for preventing further harm is narrow."],
 "tfc": {
-"statement": "Rapid DNA analysis provides a more statistically robust profile than traditional laboratory methods in all instances.",
-"answer": "False",
-"explanation": "The text explicitly states that rapid systems may target a smaller set of genetic markers, which can limit the statistical power of the evidence compared to traditional methods."
+"statement": "Because rapid DNA systems target fewer genetic markers and reduce custody time before charging, suspects in kidnapping or terrorism cases are now charged based on less statistically powerful evidence than they would have been under traditional laboratory processing.",
+"answer": "Can't tell",
+"explanation": "The passage establishes both facts separately -- reduced markers limiting statistical power, and reduced custody time before charging -- but never states that charging decisions in these specific high-stakes cases are actually based on the less powerful rapid profiles rather than confirmed later with traditional methods."
 },
 "detail": {
 "question": "Approximately how long did it traditionally take to process DNA samples?",
@@ -25730,9 +25730,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 {
 "stimulus": ["In the field of criminology, the concept of 'routine activity theory' posits that crime occurs when three elements converge in space and time: a motivated offender, a suitable target, and the absence of a capable guardian.", "This framework shifts focus away from the offender's psychological predisposition toward the environmental conditions that facilitate criminal acts.", "Critics of this theory argue that it oversimplifies criminality by ignoring systemic socio-economic factors that drive motivation.", "However, proponents suggest that by addressing environmental vulnerabilities, such as improving street lighting or increasing surveillance, societies can effectively deter crime regardless of the underlying motivations of potential offenders.", "Evidence from several urban studies suggests that minor modifications to physical space can significantly disrupt the convergence required for criminal activity, thereby reducing local crime rates without requiring broad social intervention."],
 "tfc": {
-"statement": "Routine activity theory primarily focuses on why individuals become motivated to commit crimes.",
+"statement": "Because routine activity theory shifts focus away from offender psychology and toward environmental conditions, urban studies showing crime reduction from lighting improvements demonstrate that offender motivation plays no role in whether a crime occurs.",
 "answer": "False",
-"explanation": "The text states the theory shifts focus away from the offender's psychological predisposition toward environmental conditions."
+"explanation": "Routine activity theory still requires a motivated offender as one of its three necessary elements; addressing environmental vulnerabilities only removes one of the three converging factors, it does not eliminate the role of motivation altogether."
 },
 "detail": {
 "question": "According to the passage, what is not one of the three elements required for a crime to occur?",
@@ -25757,9 +25757,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 {
 "stimulus": ["Forensic entomology, the study of insect colonization on human remains, provides critical data for determining the post-mortem interval (PMI).", "The success of this method relies on the predictable succession of insect species that colonize a body as it decomposes.", "However, environmental variables such as temperature, humidity, and the presence of chemicals or toxins in the body can drastically alter the colonization rate.", "For instance, certain drugs found in the tissue can accelerate the growth of necrophagous insects, leading to an inaccurate estimate of time of death.", "Despite these challenges, when combined with other forensic indicators, entomological evidence remains a cornerstone of death investigations, often providing the most accurate estimate when other methods are compromised."],
 "tfc": {
-"statement": "Environmental conditions have no impact on the accuracy of post-mortem interval estimations.",
+"statement": "Because certain drugs accelerate necrophagous insect growth and entomological evidence is still described as a cornerstone of death investigations, the presence of toxins in a body never significantly affects the overall usefulness of entomological PMI estimates.",
 "answer": "False",
-"explanation": "The text explicitly states that variables like temperature and humidity can drastically alter colonization rates."
+"explanation": "The text says toxins can accelerate insect growth, leading to inaccurate time-of-death estimates -- a direct limitation on usefulness in that scenario -- even though entomology overall remains valuable when other methods are compromised."
 },
 "detail": {
 "question": "What can happen to the growth rate of necrophagous insects if toxins are present in the body?",
@@ -25784,9 +25784,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 {
 "stimulus": ["Ballistic fingerprinting involves analyzing the unique microscopic markings left on bullets and cartridge casings by the firing mechanism of a firearm.", "These markings are created by the interaction between the soft metal of the ammunition and the harder metal components of the gun, such as the firing pin and breech face.", "While ballistic databases are extensive, experts caution that they are not infallible. Corrosion, damage to the weapon, or even simple wear over time can alter the markings produced.", "Furthermore, manufacturing processes can sometimes result in 'subclass' characteristics—similarities between firearms of the same make and model—which can potentially lead to misidentifications if examiners are not sufficiently trained.", "As such, ballistic evidence is typically used to corroborate other evidence rather than serving as the sole basis for a criminal conviction."],
 "tfc": {
-"statement": "Ballistic markings are completely permanent and remain identical throughout the lifespan of a firearm.",
-"answer": "False",
-"explanation": "The text states that corrosion, wear, and damage can alter the markings produced over time."
+"statement": "Because subclass characteristics can cause firearms of the same make and model to produce similar markings, and wear can also alter the markings a single firearm produces over time, a ballistics match between two casings becomes less reliable evidence the older the suspect firearm is.",
+"answer": "Can't tell",
+"explanation": "The passage describes two separate sources of potential error (subclass similarity between different guns, and wear/corrosion changing one gun's markings over time) but never combines them to state that reliability specifically declines with a firearm's age."
 },
 "detail": {
 "question": "What causes the unique markings on a bullet or cartridge casing?",
@@ -25811,9 +25811,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 {
 "stimulus": ["Forensic odontology utilizes the comparison of bite marks or dental records to identify victims or link suspects to crime scenes.", "While dental enamel is one of the most durable substances in the human body, resisting heat and decomposition, the identification of bite marks remains controversial.", "Critics highlight the lack of a standardized system for analyzing bite marks, noting that the skin is a poor medium for capturing precise dental impressions due to its elasticity and susceptibility to swelling.", "Conversely, the use of dental records for identification in mass casualty incidents is widely accepted due to the high degree of inter-individual variation and stability of restorative work.", "Modern technological advances, such as 3D digital imaging, are now being explored to enhance the objectivity of dental comparisons, potentially bridging the gap between current skepticism and scientific acceptance."],
 "tfc": {
-"statement": "Dental records are considered highly unreliable for identifying individuals after mass casualty events.",
+"statement": "Because dental enamel resists heat and decomposition and dental records are widely accepted for mass casualty identification, bite mark analysis must also be a well-accepted identification method in mass casualty contexts.",
 "answer": "False",
-"explanation": "The text states that using dental records for this purpose is 'widely accepted'."
+"explanation": "The passage explicitly separates these two uses of dental evidence: durable enamel and stable records support reliable identification via dental records, but bite mark analysis is described as controversial due to the unreliability of skin as an impression medium, regardless of enamel durability."
 },
 "detail": {
 "question": "What is identified as a primary reason why bite mark analysis is controversial?",
@@ -25838,9 +25838,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 {
 "stimulus": ["Digital forensics involves the recovery and investigation of material found in digital devices, often in relation to computer crime.", "One of the most complex challenges in this field is the prevalence of encryption, which can hide data even from sophisticated forensic tools.", "Investigators often rely on 'live forensics', capturing data from a device while it is running and unlocked, to bypass the need for encryption keys that may be impossible to recover.", "However, this method requires a specialized skill set to ensure that data integrity is maintained, as interacting with a running system can inadvertently alter metadata or overwrite evidence.", "To mitigate these risks, forensic software now employs write-blocking technology, ensuring that data is accessed without being modified, thus preserving the chain of custody essential for legal proceedings."],
 "tfc": {
-"statement": "Encryption is no longer a significant barrier for modern digital forensic investigators.",
+"statement": "Because live forensics is used to bypass encryption keys that may be impossible to recover, investigators who successfully use live forensics on a device no longer need to worry about preserving the integrity of the data they access.",
 "answer": "False",
-"explanation": "The text identifies encryption as one of the most complex challenges in the field."
+"explanation": "The passage states that live forensics introduces its own data integrity risk, since interacting with a running system can alter metadata or overwrite evidence, which is exactly why write-blocking technology and specialized skills are required."
 },
 "detail": {
 "question": "What is 'live forensics'?",
@@ -25865,9 +25865,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 {
 "stimulus": ["Criminologists studying white-collar crime often face significant difficulties in evidence collection compared to violent crime investigations.", "While physical evidence like fingerprints or DNA is often left at the scene of a violent crime, white-collar crimes such as fraud or embezzlement primarily leave a 'paper trail' of digital or physical documentation.", "This documentation can be intentionally obscured through complex corporate structures or shredded before an investigation begins.", "Furthermore, the perpetrators of white-collar crime often have the financial resources to employ legal teams that aggressively challenge the admissibility of evidence.", "The prosecution of these crimes therefore relies heavily on forensic accounting, which traces the flow of funds to uncover illicit activities, yet this process is time-consuming and often requires cross-jurisdictional cooperation."],
 "tfc": {
-"statement": "White-collar criminals are rarely able to afford legal defense teams.",
+"statement": "Because white-collar crimes leave a paper trail that can be obscured or shredded, and perpetrators often have resources to mount aggressive legal challenges, white-collar crime cases are generally easier to prosecute than violent crimes that leave physical evidence.",
 "answer": "False",
-"explanation": "The text states that these perpetrators often have the resources to employ legal teams that aggressively challenge evidence."
+"explanation": "The passage states the opposite implication: criminologists face 'significant difficulties' in white-collar cases precisely because evidence can be destroyed and legal challenges are well-resourced, making such cases harder, not easier, to prosecute than violent crimes with physical evidence."
 },
 "detail": {
 "question": "What is the main source of evidence in white-collar crime cases?",
@@ -25892,9 +25892,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 {
 "stimulus": ["Forensic toxicology serves to detect and identify drugs, poisons, and other toxic substances in the human body post-mortem or in living subjects.", "A major hurdle in this field is post-mortem redistribution, where drugs migrate from organs into the blood after death, creating artificially high or low concentrations.", "To counteract this, toxicologists must analyze multiple samples from different tissues, such as liver, vitreous humor, and hair, to verify the actual systemic concentration at the time of death.", "Analytical techniques like mass spectrometry are critical for providing the necessary sensitivity to detect trace amounts of substances.", "As synthetic drug trends evolve, forensic toxicologists are under constant pressure to update their detection libraries, making the field dynamic and reliant on continuous scientific innovation."],
 "tfc": {
-"statement": "Post-mortem redistribution results in perfectly consistent drug concentration levels across all bodily fluids.",
-"answer": "False",
-"explanation": "The text states it creates 'artificially high or low concentrations' and requires multiple samples to verify systemic concentration."
+"statement": "Because post-mortem redistribution can create artificially high or low drug concentrations, a toxicologist who tests only blood samples could report a systemic concentration at time of death that is inaccurate.",
+"answer": "True",
+"explanation": "Since redistribution skews concentrations specifically in blood as drugs migrate from organs, and the passage states toxicologists must analyze multiple tissues to verify the true systemic concentration, relying on blood alone risks an inaccurate result."
 },
 "detail": {
 "question": "Which sample is mentioned as an alternative to blood in toxicology analysis?",
@@ -25919,9 +25919,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 {
 "stimulus": ["DNA phenotyping is an emerging forensic technique that uses DNA to predict the physical appearance of an unknown individual.", "By analyzing specific genetic markers associated with traits like eye color, hair texture, and facial structure, researchers can create a composite image of a suspect.", "However, this method is still in its infancy and faces significant ethical and technical limitations.", "Critics argue that such images may lead to biased investigations, where police might focus on individuals who share a similar phenotype to the composite, potentially violating civil liberties.", "Furthermore, environmental factors like sun exposure, diet, and age are not encoded in DNA, meaning the resulting 'snapshot' may be inaccurate in describing how an individual appears in real life."],
 "tfc": {
-"statement": "DNA phenotyping can accurately predict the age and lifestyle choices of an unknown suspect.",
-"answer": "False",
-"explanation": "The text states that environmental factors like diet and age are not encoded in DNA and affect how an individual appears."
+"statement": "Because DNA phenotyping composites do not account for environmental factors like sun exposure or diet, a composite image generated from a suspect's DNA could resemble that suspect less closely the more their environmentally-influenced appearance diverges from their genetic baseline.",
+"answer": "True",
+"explanation": "Since the passage states the resulting composite reflects only genetically-encoded traits and explicitly omits environmental factors that affect real-life appearance, a person whose appearance has been significantly shaped by such factors would logically match the composite less closely."
 },
 "detail": {
 "question": "Which trait is specifically mentioned as being analyzable via DNA phenotyping?",
@@ -25946,9 +25946,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 {
 "stimulus": ["The use of facial recognition technology (FRT) in criminal investigation has sparked intense debate regarding accuracy and surveillance.", "FRT systems work by mapping facial features from an image and comparing them against a database of known faces.", "Studies have shown that these algorithms often demonstrate varying levels of accuracy depending on the ethnicity and gender of the subject, with higher error rates for women and minority populations.", "Proponents of FRT argue that it is an efficient tool for identifying suspects in high-volume video surveillance footage.", "Conversely, civil rights groups advocate for strict regulation or complete bans on public use, fearing that the normalization of FRT leads to a 'surveillance state' where individuals are constantly monitored without consent."],
 "tfc": {
-"statement": "Facial recognition technology shows consistent accuracy levels regardless of the ethnicity or gender of the person being identified.",
+"statement": "Because FRT systems show higher error rates for women and minority populations, civil rights groups' concerns about FRT are based solely on its accuracy problems rather than on surveillance itself.",
 "answer": "False",
-"explanation": "The text states that algorithms show varying levels of accuracy, with higher error rates for women and minority populations."
+"explanation": "The passage attributes the civil rights groups' opposition primarily to fears of a 'surveillance state' and non-consensual monitoring, a separate concern from the accuracy disparities, which are mentioned independently as a criticism from studies, not specifically attributed to civil rights groups."
 },
 "detail": {
 "question": "How do facial recognition systems generally process an image?",
@@ -26019,9 +26019,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Modern forensic laboratories are moving toward integrated approaches where microscopic examinations are treated merely as screening tools. Definitive conclusions are now reserved for DNA analysis or mass spectrometry. This shift highlights a broader move within the forensic community away from purely subjective, observation-based methods toward quantitative, empirical data sets."
 ],
 "tfc": {
-"statement": "Microscopic hair comparison is currently the primary method for definitive forensic identification.",
-"answer": "False",
-"explanation": "The passage states that modern laboratories now use microscopic examinations only as screening tools, reserving definitive conclusions for DNA or mass spectrometry."
+"statement": "Because microscopic hair comparison is now used only as a screening tool, the independent audits that revealed its error rates must have been conducted before this shift in laboratory practice took place.",
+"answer": "Can't tell",
+"explanation": "The passage states that the audits revealed error rates and that this contributed to the shift toward screening-only use, but it does not specify the chronological relationship between when the audits occurred and when the practice fully shifted -- the two could have occurred concurrently over a period of transition."
 },
 "detail": {
 "question": "What does the text identify as a reason for the declining reliance on microscopic hair comparison?",
