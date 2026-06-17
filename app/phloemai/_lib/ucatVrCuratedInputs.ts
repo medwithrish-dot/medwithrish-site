@@ -13197,9 +13197,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Furthermore, there is a concern that excessive reliance on automated systems could lead to the atrophy of clinical skills among junior doctors, who must learn to interpret images independently before relying on assistive technology."
 ],
 "tfc": {
-"statement": "The use of AI in radiology currently eliminates the need for human radiologists to verify diagnostic findings.",
-"answer": "False",
-"explanation": "The text states that AI reduces diagnostic errors and alleviates workload, but it does not claim to replace the need for human verification or oversight."
+"statement": "Because AI can reduce radiologists' workload, junior doctors are guaranteed to develop weaker independent image-interpretation skills over time.",
+"answer": "Can't tell",
+"explanation": "The passage raises atrophy of clinical skills as a concern dependent on doctors relying on the tools before learning to interpret images independently, but it does not state that this skill decline is guaranteed to happen; it is presented as a risk, not a certainty."
 },
 "detail": {
 "question": "According to the passage, what is one major barrier to the widespread implementation of AI in radiology?",
@@ -13241,9 +13241,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Ethical frameworks, such as the 'trolley problem' scenarios, are now being integrated into the software architecture, forcing developers to make value judgments that were once exclusively the domain of human drivers."
 ],
 "tfc": {
-"statement": "Autonomous vehicles currently perform better in complex urban settings than on standard highways.",
+"statement": "Because ethical frameworks are now built into vehicle software, developers no longer need to make value judgments themselves when designing autonomous systems.",
 "answer": "False",
-"explanation": "The text states that autonomous vehicles have shown capabilities on highways, but urban navigation remains problematic."
+"explanation": "The passage states that integrating ethical frameworks is 'forcing developers to make value judgments that were once exclusively the domain of human drivers' — i.e. developers must now make these judgments, not that the software removes the need for them to do so."
 },
 "detail": {
 "question": "What creates the primary difficulty for computational modeling in autonomous vehicles?",
@@ -13285,9 +13285,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This leads to 'hallucinations,' where the model generates factually incorrect information that appears highly confident, posing risks in high-stakes fields like legal or medical research."
 ],
 "tfc": {
-"statement": "Large language models are inherently incapable of generating incorrect information.",
-"answer": "False",
-"explanation": "The passage explicitly describes 'hallucinations,' where models generate factually incorrect information."
+"statement": "Because LLMs predict tokens based on statistical probability rather than semantic understanding, their confident-sounding outputs are always less reliable than human expert judgment in legal or medical research.",
+"answer": "Can't tell",
+"explanation": "The passage notes that hallucinations pose risks in high-stakes fields, but it never compares the overall reliability of LLM outputs against human expert judgment, so a blanket claim that LLMs are always less reliable than humans cannot be confirmed from the text."
 },
 "detail": {
 "question": "What feature allows LLMs to predict tokens in a sequence?",
@@ -13329,9 +13329,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "As court cases proceed globally, the industry faces an uncertain future regarding ownership and the economic value of human versus machine creativity."
 ],
 "tfc": {
-"statement": "There is currently a clear international legal consensus regarding copyright laws for AI-generated works.",
-"answer": "False",
-"explanation": "The passage states that there is no clear legal consensus on whether AI-generated work can be copyrighted."
+"statement": "Because copyright laws were written for human creators, courts globally have already ruled that AI-generated works cannot be copyrighted.",
+"answer": "Can't tell",
+"explanation": "The passage states there is no clear legal consensus and that court cases are still proceeding globally, so it does not confirm that any definitive ruling against copyrightability has been reached; the mismatch between old laws and new technology is the source of ongoing uncertainty, not evidence of a settled outcome."
 },
 "detail": {
 "question": "What is one benefit of generative AI mentioned in the passage?",
@@ -13373,9 +13373,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Achieving 'quantum supremacy,' where a quantum computer solves a problem that is practically impossible for a classical machine, remains a milestone that requires robust error correction methods."
 ],
 "tfc": {
-"statement": "Quantum computers rely on binary states to perform prime factorization calculations.",
-"answer": "False",
-"explanation": "The text states they use qubits and superposition, distinguishing them from classical binary computing."
+"statement": "Because qubits can exist in multiple states simultaneously, quantum computers have already achieved quantum supremacy on prime factorization tasks.",
+"answer": "Can't tell",
+"explanation": "The passage explains superposition gives quantum computers theoretical exponential advantages on tasks like prime factorization, but it states that quantum supremacy 'remains a milestone' requiring further error correction — it does not confirm this milestone has already been reached for any specific task."
 },
 "detail": {
 "question": "What process causes errors in quantum computation?",
@@ -13417,9 +13417,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "As AI tools become more commoditized, even low-skilled attackers gain the ability to launch sophisticated, large-scale campaigns, forcing organizations to move toward 'zero-trust' security architectures."
 ],
 "tfc": {
-"statement": "AI in cybersecurity is used exclusively for defensive purposes by organizations.",
-"answer": "False",
-"explanation": "The passage explains that attackers use AI to automate vulnerability discovery and craft phishing campaigns."
+"statement": "Because AI tools are becoming commoditized, defenders are losing the cat-and-mouse race against attackers overall.",
+"answer": "Can't tell",
+"explanation": "The passage states that commoditized AI lets low-skilled attackers launch sophisticated campaigns and that this forces a shift to zero-trust architectures, but it never states which side—defenders or attackers—is winning overall; it only describes the dynamic, not an outcome."
 },
 "detail": {
 "question": "What is one way attackers use AI, according to the text?",
@@ -13461,9 +13461,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite the safety improvements, the psychological impact of working alongside machines and the potential for task de-skilling remain topics of ongoing industrial research."
 ],
 "tfc": {
-"statement": "Traditional robots are generally safer for human collaboration than modern cobots.",
+"statement": "Because cobots take over physically taxing tasks, the psychological strain on workers from sharing a workspace with machines has already been resolved.",
 "answer": "False",
-"explanation": "The passage states that cobots have sensors to prevent injury and are designed to work with humans, unlike traditional robots that were safety-caged."
+"explanation": "The passage explicitly states the psychological impact of working alongside machines 'remains' a topic of ongoing research, meaning it has not been resolved despite the ergonomic gains from task reallocation."
 },
 "detail": {
 "question": "What distinguishes 'cobots' from traditional manufacturing robots?",
@@ -13505,9 +13505,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Because these particles can easily enter the bloodstream or respiratory system, standard regulatory frameworks, which focus on chemical composition rather than particle size, may prove insufficient for safety standards."
 ],
 "tfc": {
-"statement": "Current regulatory frameworks are perfectly equipped to assess the safety of all nano-materials.",
-"answer": "False",
-"explanation": "The passage suggests that current frameworks focus on chemical composition, not particle size, and may be insufficient."
+"statement": "Because carbon nanotubes have a high surface-to-volume ratio, they are confirmed to cause long-term harm when they enter the human bloodstream.",
+"answer": "Can't tell",
+"explanation": "The passage states their high surface-to-volume ratio makes long-term health impact 'a subject of intense scrutiny' and that particles 'can easily enter the bloodstream,' but it stops short of confirming that harm actually results — the health effects are described as unresolved, not proven."
 },
 "detail": {
 "question": "What makes carbon nanotubes beneficial for aerospace engineering?",
@@ -13549,9 +13549,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Securing these systems requires a fundamental rethink of infrastructure security, moving beyond simple perimeter defense to ensuring the integrity of the data being transmitted at every node."
 ],
 "tfc": {
-"statement": "Cyber-physical systems reduce the number of potential entry points for a cyber attack.",
+"statement": "Because CPS broadens the attack surface, perimeter defense alone is now considered an adequate security strategy for smart grids.",
 "answer": "False",
-"explanation": "The passage states that CPS connectivity 'broadens the attack surface'."
+"explanation": "The passage states the opposite: securing CPS requires 'moving beyond simple perimeter defense to ensuring the integrity of the data being transmitted at every node,' meaning perimeter defense alone is presented as inadequate, not sufficient."
 },
 "detail": {
 "question": "What is the primary function of cyber-physical systems described in the text?",
@@ -13593,9 +13593,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "However, the complexity involved in synthesizing these materials often limits their production to a laboratory scale, creating a gap between academic potential and industrial viability."
 ],
 "tfc": {
-"statement": "Smart materials exhibit irreversible changes when exposed to environmental stimuli.",
-"answer": "False",
-"explanation": "The text explicitly states that these materials change in a 'reversible manner'."
+"statement": "Because smart materials are complex to synthesize, they are currently more common in academic labs than in commercial car bodies or eyewear.",
+"answer": "True",
+"explanation": "The passage states that synthesis complexity 'often limits their production to a laboratory scale, creating a gap between academic potential and industrial viability,' implying lab settings currently host more of this work than widespread commercial production, even though applications like self-healing polymers and tinting lenses are cited as existing use cases."
 },
 "detail": {
 "question": "Which of the following is an example of a smart material application mentioned?",
@@ -13637,9 +13637,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Medical professionals often struggle to interpret how a specific diagnostic conclusion was reached, which complicates the process of clinical validation and accountability in the event of an misdiagnosis."
 ],
 "tfc": {
-"statement": "Machine learning algorithms have already been proven to be superior to human doctors in all aspects of diagnostic medicine.",
+"statement": "Because deep learning models are described as a 'black box', no medical professional can ever determine which features in an image led to a given diagnosis.",
 "answer": "Can't tell",
-"explanation": "The text states that AI identifies patterns imperceptible to humans, but it does not claim that AI is superior in all aspects of diagnosis."
+"explanation": "The passage says professionals 'often struggle' to interpret how a conclusion was reached, which implies frequent difficulty, not an absolute, universal impossibility — the stronger claim ('no medical professional can ever') goes beyond what the text supports."
 },
 "detail": {
 "question": "What is a primary technical challenge mentioned regarding AI in medicine?",
@@ -13680,9 +13680,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite these advantages, the high capital investment required for robotic platforms remains a significant barrier for many smaller community hospitals, potentially widening the gap in healthcare quality between urban centers and rural areas."
 ],
 "tfc": {
-"statement": "Robotic surgery is more cost-effective for small hospitals than traditional surgery.",
-"answer": "False",
-"explanation": "The text states that high capital investment is a 'significant barrier' for smaller hospitals, contradicting the idea that it is cost-effective."
+"statement": "Because robotic surgery reduces blood loss and hospital stays, it lowers overall healthcare costs for rural patients compared to urban patients.",
+"answer": "Can't tell",
+"explanation": "The passage notes reduced blood loss and shorter stays as patient-level clinical benefits, but separately states that the high capital cost is a barrier that may widen the urban-rural quality gap. It never compares total costs experienced by rural versus urban patients, so this combined claim cannot be confirmed or denied from the text."
 },
 "detail": {
 "question": "Which feature of robotic systems helps reduce tissue disruption?",
@@ -13723,9 +13723,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "A significant percentage of data breaches occur due to human error, such as clicking on phishing emails, which bypasses even the most sophisticated defensive software."
 ],
 "tfc": {
-"statement": "Most hospital data breaches are caused by outdated defensive software.",
+"statement": "Because human error bypasses sophisticated defensive software, firewalls and encryption are not useful safeguards for hospital networks.",
 "answer": "False",
-"explanation": "The text states that a 'significant percentage' of breaches are caused by human error, not software issues."
+"explanation": "The passage says technical safeguards are 'insufficient without comprehensive staff training,' implying they are still necessary and useful, just not sufficient on their own — it does not say they are not useful at all."
 },
 "detail": {
 "question": "What is the primary danger cited regarding ransomware attacks on hospital networks?",
@@ -13766,9 +13766,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Engineers must ensure that these sustainable innovations do not compromise the rigorous hygiene standards necessary for preventing hospital-acquired infections."
 ],
 "tfc": {
-"statement": "Hospitals have relatively low energy demands due to their small size.",
-"answer": "False",
-"explanation": "The text describes hospitals as 'high-energy consumers' due to climate control and air filtration needs."
+"statement": "Because hospitals must maintain rigorous hygiene standards, passive solar heating cannot be used in any hospital design.",
+"answer": "Can't tell",
+"explanation": "The passage says engineers must ensure innovations like passive solar heating 'do not compromise' hygiene standards, implying a design constraint to manage, not an outright ban on the technology — the passage does not state passive solar heating is incompatible with hospitals."
 },
 "detail": {
 "question": "What is a key requirement for any new sustainable hospital design?",
