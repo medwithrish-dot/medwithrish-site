@@ -4913,9 +4913,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This period fostered unprecedented advancements in perspective art, anatomical accuracy, and scientific inquiry, challenging established ecclesiastical authority."
 ],
 "tfc": {
-"statement": "The Renaissance movement was exclusively confined to the geographical boundaries of Florence.",
-"answer": "False",
-"explanation": "While the stimulus identifies Florence as a significant location of origin, it does not claim the movement was confined solely to that city."
+"statement": "Because the Renaissance challenged ecclesiastical authority, it must have eliminated the Church's political power across Europe.",
+"answer": "Can't tell",
+"explanation": "The passage states that scientific inquiry and individual focus 'challenged' ecclesiastical authority, but it never describes the extent of the Church's political power or whether it was eliminated, so this cannot be confirmed from the passage."
 },
 "detail": {
 "question": "What served as the intellectual cornerstone of the Renaissance?",
@@ -4957,9 +4957,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This democratization of knowledge significantly increased literacy rates and encouraged individual interpretation of texts, weakening institutional control over information."
 ],
 "tfc": {
-"statement": "Prior to the printing press, the general populace had widespread access to literary works.",
-"answer": "False",
-"explanation": "The text states that books were restricted to the clergy and nobility due to their rarity and cost before the printing press."
+"statement": "Because the printing press increased literacy and individual interpretation of texts, it must have eliminated the clergy's influence over religious doctrine entirely.",
+"answer": "Can't tell",
+"explanation": "The passage states the press weakened institutional control over information and increased independent interpretation, but it never claims the clergy's influence over doctrine was eliminated entirely, so this cannot be confirmed from the passage."
 },
 "detail": {
 "question": "Who is credited with the invention of the printing press?",
@@ -5001,9 +5001,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "By applying anatomical studies to their work, Renaissance painters were able to capture human emotion and physical realism with unprecedented accuracy."
 ],
 "tfc": {
-"statement": "Renaissance art maintained the same symbolic representation style as the Middle Ages.",
+"statement": "The mathematical techniques developed by Brunelleschi and Masaccio were applied only to architecture, not to painting.",
 "answer": "False",
-"explanation": "The text explicitly describes the Renaissance style as a departure from the flat, symbolic representations of the Middle Ages."
+"explanation": "The passage states these artists developed linear perspective techniques specifically to create three-dimensional depth in painting, and links anatomical study to capturing human form in painting, so the techniques were applied to painting, not solely architecture."
 },
 "detail": {
 "question": "Which artists are explicitly mentioned as contributors to the development of linear perspective?",
@@ -5045,9 +5045,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While some states functioned as republics, many were effectively controlled by autocratic rulers or mercantile families who used patronage to cement their status."
 ],
 "tfc": {
-"statement": "Renaissance Italian city-states operated under a single, unified government.",
+"statement": "Because the Medici used patronage to cement their status in Florence, all Renaissance city-states must have been ruled by merchant families rather than republics.",
 "answer": "False",
-"explanation": "The passage describes Italy as having a 'complex system of city-states' that competed with one another."
+"explanation": "The passage states that 'some states functioned as republics' while many others were controlled by autocratic rulers or merchant families, so it was not the case that all city-states were ruled by merchant families."
 },
 "detail": {
 "question": "Which family is mentioned as an example of a dynasty that gained influence in Florence?",
@@ -5133,9 +5133,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "However, this wealth was not distributed equally; the majority of the urban and rural population continued to live in poverty."
 ],
 "tfc": {
-"statement": "Economic prosperity in the Renaissance was uniformly shared across all social classes.",
+"statement": "Because Italian city-states controlled Mediterranean trade routes, the majority of the urban and rural population must have directly profited from this trade.",
 "answer": "False",
-"explanation": "The text states that wealth was not distributed equally and that most people lived in poverty."
+"explanation": "The passage states that despite the influx of capital from trade, wealth was not distributed equally and the majority of the population continued to live in poverty, so most people did not directly profit."
 },
 "detail": {
 "question": "Which geographical region was crucial to the control of trade routes for Italian city-states?",
@@ -5177,9 +5177,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite these improvements, educational opportunities remained highly gendered and largely restricted to the sons of the elite."
 ],
 "tfc": {
-"statement": "Renaissance education was designed primarily to create religious scholars.",
+"statement": "Because the printing press made classical texts more accessible to students, education during the Renaissance became equally available to sons and daughters of the elite.",
 "answer": "False",
-"explanation": "The text states the aim was to create well-rounded citizens, specifically noting it was 'rather than just' for religious scholars."
+"explanation": "The passage states that despite improvements from the printing press, educational opportunities remained 'highly gendered' and restricted to the sons of the elite, so access was not equal between sons and daughters."
 },
 "detail": {
 "question": "What was the 'Studia Humanitatis' curriculum focused on?",
@@ -5221,9 +5221,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The inclusion of secular themes, such as human desire and social critique, marked a stark contrast to the devotional works of the medieval period."
 ],
 "tfc": {
-"statement": "Renaissance authors wrote exclusively in Latin to ensure academic rigor.",
-"answer": "False",
-"explanation": "The text states that there was a move away from the 'exclusive use of Latin' toward vernacular writing."
+"statement": "The shift to vernacular writing was driven primarily by a desire to discuss religious devotion more accessibly.",
+"answer": "Can't tell",
+"explanation": "The passage links the vernacular shift to national identity and the inclusion of secular themes like human desire and social critique, but it never states what motivated authors to adopt the vernacular in the first place, so the cause cannot be confirmed from the passage."
 },
 "detail": {
 "question": "Which of the following authors is explicitly cited as using local dialects?",
@@ -5265,9 +5265,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While legal reforms were sought to centralize power, they also introduced the concept of the rights of individuals in relation to the state."
 ],
 "tfc": {
-"statement": "Renaissance legal systems prioritized oral tradition over written Roman principles.",
+"statement": "Because Renaissance legal reforms centralized state power, they must have abolished any notion of individual rights against the state.",
 "answer": "False",
-"explanation": "The text mentions a shift toward Roman principles and a reduction in reliance on oral traditions."
+"explanation": "The passage states that while reforms sought to centralize power, they also 'introduced the concept of the rights of individuals in relation to the state,' so individual rights were not abolished but rather newly introduced alongside centralization."
 },
 "detail": {
 "question": "Which historical legal text was revived and studied during the Renaissance?",
@@ -5398,9 +5398,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Urban planning strategies that prioritize public transit and green spaces are often hindered by political gridlock and the prioritization of short-term economic gains over long-term urban livability."
 ],
 "tfc": {
-"statement": "The majority of the global population currently lives in rural settings.",
+"statement": "The passage attributes strains on housing and public services in cities to insufficient government funding rather than to population concentration.",
 "answer": "False",
-"explanation": "The text states that a significant majority of the global population now resides in urban environments."
+"explanation": "The passage explicitly attributes these strains to 'this concentration of people,' not to a lack of government funding, which is never mentioned as a cause."
 },
 "detail": {
 "question": "What is identified as a primary challenge for municipal governments in urban centers?",
@@ -5442,9 +5442,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Conversely, proponents of universalism maintain that fundamental human rights are inherent to all individuals, regardless of their cultural, social, or geographical background, and should be protected above regional interests."
 ],
 "tfc": {
-"statement": "International treaties ensure that human rights are enforced consistently across all nations.",
+"statement": "Cultural relativists and universalists agree that human rights frameworks should be based on traditions specific to each region.",
 "answer": "False",
-"explanation": "The text states that 'the enforcement of these rights remains highly inconsistent across different geopolitical regions.'"
+"explanation": "The passage states that universalists maintain rights are inherent to all individuals 'regardless of their cultural, social, or geographical background, and should be protected above regional interests,' which is the opposite of basing frameworks on region-specific traditions; only cultural relativists hold that view."
 },
 "detail": {
 "question": "What concern do cultural relativists raise regarding universal human rights?",
@@ -5486,9 +5486,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite its growth, challenges remain in finding primary source documentation for women whose lives were not historically recorded, requiring historians to employ creative interpretive methodologies."
 ],
 "tfc": {
-"statement": "Recent feminist historiography exclusively focuses on women in prominent leadership positions.",
+"statement": "The shift toward analyzing everyday experiences across social classes has fully resolved the challenge of limited primary source documentation.",
 "answer": "False",
-"explanation": "The text states that scholarship has shifted 'toward analyzing the everyday experiences of women across diverse social classes'."
+"explanation": "The passage states that despite this shift, 'challenges remain in finding primary source documentation for women whose lives were not historically recorded,' so the documentation challenge has not been fully resolved."
 },
 "detail": {
 "question": "What is a major challenge identified in feminist history research?",
@@ -5530,9 +5530,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The eventual dissolution of the Soviet Union signaled the end of this bipolarity, yet the legacy of Cold War institutional structures continues to influence contemporary international relations."
 ],
 "tfc": {
-"statement": "The Cold War consisted exclusively of direct military confrontations between the US and the USSR.",
+"statement": "Because the Cold War ended with the dissolution of the Soviet Union, the institutional structures it created stopped influencing international relations.",
 "answer": "False",
-"explanation": "The text notes that the era was defined by proxy wars, soft power, and cultural competition, not just direct confrontation."
+"explanation": "The passage states that despite the dissolution of the Soviet Union, 'the legacy of Cold War institutional structures continues to influence contemporary international relations,' so the influence did not stop."
 },
 "detail": {
 "question": "What does the passage identify as a key characteristic of the Cold War era?",
@@ -5574,9 +5574,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The movement significantly laid the groundwork for modern democratic principles, although the full realization of these ideals has remained an ongoing process through subsequent centuries."
 ],
 "tfc": {
-"statement": "Enlightenment thinkers completely eliminated prejudices related to race, class, and gender in their works.",
+"statement": "Because Enlightenment thinkers laid the groundwork for modern democratic principles, those principles were fully realized by the end of the movement.",
 "answer": "False",
-"explanation": "The passage explicitly states that their views were often limited by contemporary prejudices based on race, class, and gender."
+"explanation": "The passage states that 'the full realization of these ideals has remained an ongoing process through subsequent centuries,' meaning they were not fully realized by the end of the Enlightenment."
 },
 "detail": {
 "question": "What was a primary goal of Enlightenment philosophers?",
@@ -5618,9 +5618,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Modern historical perspectives often analyze these developments by balancing the long-term gains in technological capacity with the immediate human and environmental costs associated with the transition."
 ],
 "tfc": {
-"statement": "The Industrial Revolution had no negative impact on the environment.",
-"answer": "False",
-"explanation": "The passage explicitly mentions 'environmental degradation' as a significant social challenge introduced during the period."
+"statement": "Because the Industrial Revolution increased the production of consumer goods, modern historians conclude its overall effects were primarily beneficial.",
+"answer": "Can't tell",
+"explanation": "The passage states that modern historians balance long-term technological gains against immediate human and environmental costs, but it does not state that they concluded the overall effects were primarily beneficial, so this cannot be confirmed from the passage."
 },
 "detail": {
 "question": "How did production methods change during the Industrial Revolution?",
