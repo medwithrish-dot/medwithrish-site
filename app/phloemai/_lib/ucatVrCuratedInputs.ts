@@ -17659,9 +17659,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite the necessity of trials, ethical concerns persist regarding informed consent, particularly when trial participants face life-threatening conditions and may experience the 'therapeutic misconception'—the false belief that the trial is primarily designed for their individual benefit rather than scientific advancement. Furthermore, the selection of participants must balance scientific requirements for homogeneity with the ethical imperative for social justice and representativeness."
 ],
 "tfc": {
-"statement": "Phase IV clinical trials primarily aim to determine the initial safety dosage for new drug candidates.",
-"answer": "False",
-"explanation": "Phase I trials are designed to evaluate safety and dosage in small groups, while Phase IV trials occur post-market to monitor long-term outcomes."
+"statement": "Because Phase II and III trials test efficacy against current standards of care, a drug that completes them is guaranteed to be safer than existing treatments.",
+"answer": "Can't tell",
+"explanation": "Phase II and III monitor side effects and compare efficacy against standards of care, but the passage never claims that passing these phases guarantees a drug is safer than existing treatments — it only describes the testing and monitoring process."
 },
 "detail": {
 "question": "According to the passage, what is the primary purpose of Phase III clinical trials?",
@@ -17702,9 +17702,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Regulatory bodies are currently struggling to keep pace with the speed of innovation, needing to balance the fostering of technological advancements with the necessity of ensuring patient safety. There is also an implicit risk of algorithmic bias, where models trained on non-representative datasets exacerbate healthcare disparities for under-represented groups."
 ],
 "tfc": {
-"statement": "The 'black box' problem in medical AI refers to the lack of transparency in how algorithms arrive at specific conclusions.",
-"answer": "True",
-"explanation": "The text explicitly states that the 'black box' nature means the decision-making process is not transparent, complicating ethical requirements."
+"statement": "Because algorithmic bias and the 'black box' problem are both cited as risks, models trained on diverse datasets would no longer raise any explainability concerns.",
+"answer": "False",
+"explanation": "Training on diverse data addresses representativeness and bias, but the passage describes the 'black box' problem as a separate issue rooted in the model's lack of transparency, not in dataset diversity, so it would not resolve explainability concerns."
 },
 "detail": {
 "question": "Which factor is NOT cited as a challenge to integrating AI into medical workflows?",
@@ -17745,9 +17745,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "There are also concerns regarding the loss of the 'human touch.' Physical examinations, which provide critical diagnostic cues such as palpation and patient demeanor, cannot be replicated through screens. Thus, telemedicine is generally viewed as a complement to, rather than a replacement for, traditional in-person care."
 ],
 "tfc": {
-"statement": "Telemedicine is considered a complete replacement for all traditional, in-person clinical examinations.",
+"statement": "Because telemedicine reduces the burden on healthcare facilities, it has eliminated the diagnostic value of physical examinations.",
 "answer": "False",
-"explanation": "The text states that telemedicine is viewed as a complement to, rather than a replacement for, traditional in-person care."
+"explanation": "The passage credits telemedicine with reducing facility burden through efficient triage, but separately states that physical exams provide diagnostic cues like palpation that cannot be replicated through screens — the efficiency benefit does not eliminate that diagnostic value."
 },
 "detail": {
 "question": "Which of the following is cited as a significant barrier to telemedicine access?",
@@ -17788,9 +17788,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Effective policy requires evidence-based decision-making, yet social and political pressures often dictate the direction of reform. Decisions are frequently made based on short-term electoral cycles rather than the long-term sustainability of the health system."
 ],
 "tfc": {
-"statement": "The 'healthcare iron triangle' suggests that improvements in one area are almost always independent of the other two.",
-"answer": "False",
-"explanation": "The text states that they are competing objectives and improvements in one often come at the expense of another."
+"statement": "Expanding healthcare access to all citizens necessarily reduces the overall quality of care provided.",
+"answer": "Can't tell",
+"explanation": "The passage states that expanding access may increase aggregate costs, implying a trade-off with cost, but it never specifies that access trades off against quality specifically — the 'iron triangle' involves three factors, and the passage does not confirm which pairing is affected in this example."
 },
 "detail": {
 "question": "What are the three components of the 'healthcare iron triangle' mentioned in the passage?",
@@ -17831,9 +17831,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Long-term pandemic preparedness hinges on strengthening health systems, maintaining stockpiles of essential supplies, and fostering international cooperation. However, countries often face 'panic-neglect' cycles: high levels of investment during a crisis followed by a significant decline in resources and interest as the threat recedes."
 ],
 "tfc": {
-"statement": "Non-pharmaceutical interventions are deemed useless by the author if a vaccine is not immediately available.",
-"answer": "False",
-"explanation": "The text describes NPIs as the 'primary defenses' in the absence of vaccines, not that they are useless."
+"statement": "Because NPIs are socially and economically disruptive, countries that rely on them are more likely to fall into the 'panic-neglect' cycle described in the passage.",
+"answer": "Can't tell",
+"explanation": "The passage discusses NPI disruption and the 'panic-neglect' cycle as two separate points about pandemic response, but it never links the two — there is no stated connection between using NPIs and the likelihood of falling into a panic-neglect cycle."
 },
 "detail": {
 "question": "What is described as the 'panic-neglect' cycle in the context of pandemic preparedness?",
@@ -17874,9 +17874,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Ethical dilemmas arise when data utility for medical advancement conflicts with individual privacy rights. Some argue for 'data altruism,' where individuals contribute data for the greater good, while others emphasize the need for stringent controls to prevent misuse, such as discriminatory insurance premiums based on genetic health risks."
 ],
 "tfc": {
-"statement": "Modern de-identification techniques are completely foolproof in preventing the re-identification of medical data.",
-"answer": "False",
-"explanation": "The text explicitly states that 'anonymized' data can often be re-identified when cross-referenced with other datasets."
+"statement": "Because re-identification of anonymized health data is possible, legal frameworks like GDPR and HIPAA have failed to provide any meaningful protection for patients.",
+"answer": "Can't tell",
+"explanation": "The passage notes that anonymized data can sometimes be re-identified and that legal frameworks aim to protect sensitive health data, but it never evaluates whether those frameworks are failing or provide no meaningful protection overall — that judgment goes beyond what is stated."
 },
 "detail": {
 "question": "According to the passage, what is a potential risk of misusing sensitive medical data?",
@@ -17917,9 +17917,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "In contemporary practice, these principles are often applied to difficult cases like advanced directives or end-of-life care. The goal is to reach decisions that respect the patient's values while adhering to the clinical and legal standards of the medical institution."
 ],
 "tfc": {
-"statement": "The principle of autonomy requires that patients always receive the treatment they request, regardless of clinical appropriateness.",
+"statement": "A doctor who withdraws a life-sustaining treatment that is causing a patient significant suffering is acting against the principle of non-maleficence.",
 "answer": "False",
-"explanation": "Autonomy respects the right to make choices, but it does not imply that medical staff must comply with medically inappropriate requests."
+"explanation": "The passage frames non-maleficence as the duty to 'do no harm' and notes it conflicts with beneficence specifically when life-sustaining treatment causes suffering — withdrawing such treatment to stop the harm would align with, not violate, non-maleficence."
 },
 "detail": {
 "question": "Which of the following is defined as the principle of acting in the patient’s best interest?",
@@ -17960,9 +17960,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The global scientific community continues to call for moratoriums on germline editing until the long-term safety and social implications can be thoroughly assessed. Regulation faces the challenge of international variability, where different jurisdictions may adopt vastly different standards for what constitutes acceptable research."
 ],
 "tfc": {
-"statement": "The scientific community unanimously supports the immediate and wide-scale application of germline editing in clinical practice.",
-"answer": "False",
-"explanation": "The text notes that the community has called for moratoriums on germline editing due to safety and ethical concerns."
+"statement": "Because germline edits are heritable, the moratorium calls mentioned in the passage apply equally to somatic gene editing.",
+"answer": "Can't tell",
+"explanation": "The passage explicitly ties the call for moratoriums to germline editing's heritability, but it never states whether somatic editing (which is not heritable) is subject to the same moratorium calls — this is not addressed either way."
 },
 "detail": {
 "question": "What is the primary difference between somatic gene editing and the germline editing mentioned in the passage?",
@@ -18003,9 +18003,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The clinical reality involves complex assessments of mental capacity and the distinction between withdrawal of life-sustaining treatment (which is often legal) and active intervention to end life. Different cultures and legal systems approach this divide with varying degrees of permissiveness."
 ],
 "tfc": {
-"statement": "The withdrawal of life-sustaining treatment is globally recognized as being identical to active euthanasia in all legal systems.",
-"answer": "False",
-"explanation": "The text notes a distinction between withdrawal of treatment (often legal) and active intervention, and that systems vary in their permissiveness."
+"statement": "Because the 'slippery slope' argument warns that voluntary euthanasia could lead to involuntary procedures, all legal systems that permit voluntary euthanasia have already seen this occur.",
+"answer": "Can't tell",
+"explanation": "The slippery slope is presented as a hypothetical concern raised by opponents, not as a documented outcome — the passage gives no information about whether involuntary procedures have actually occurred in any jurisdiction that permits voluntary euthanasia."
 },
 "detail": {
 "question": "What is the 'slippery slope' argument against euthanasia?",
@@ -18046,9 +18046,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Allocation policies strive for equity, prioritizing candidates based on clinical urgency, compatibility, and, in some systems, potential for post-transplant life expectancy. The challenge remains to maintain public trust in the system, as any perception of unfairness can lead to a decline in donation rates."
 ],
 "tfc": {
-"statement": "The sale of human organs for transplant is widely encouraged by medical institutions as a way to bridge the gap between supply and demand.",
-"answer": "False",
-"explanation": "The text states that most jurisdictions strictly prohibit the sale of organs and advocate for altruistic donation."
+"statement": "Because most jurisdictions prohibit organ sales to prevent donor exploitation, opt-out consent models must also be designed to prevent commodification of body parts.",
+"answer": "Can't tell",
+"explanation": "The passage discusses the organ-sale prohibition and the opt-out/opt-in consent debate as separate topics; it never states that opt-out models are specifically designed around preventing commodification, so no link between the two can be confirmed from the text."
 },
 "detail": {
 "question": "Which factor is NOT explicitly mentioned as a criterion for organ allocation?",
@@ -18090,9 +18090,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Regulators face the challenge of balancing innovation with patient safety. Policies must ensure that AI systems are trained on diverse datasets to avoid algorithmic bias, which could exacerbate existing healthcare inequalities. Without rigorous longitudinal testing, the wholesale adoption of AI in clinical settings remains a subject of intense ethical and practical scrutiny."
 ],
 "tfc": {
-"statement": "The integration of AI in diagnostic processes is universally accepted by the medical community as a superior alternative to human clinicians.",
+"statement": "Because AI systems can identify anomalies that fatigued practitioners might miss, deskilling is not considered a genuine risk of AI adoption.",
 "answer": "False",
-"explanation": "The stimulus notes that the integration of AI is met with 'both enthusiasm and caution' and mentions critics who worry about 'deskilling' and 'the black box problem', refuting the claim of universal acceptance."
+"explanation": "The passage separately raises deskilling as a risk where professionals become 'over-dependent on automated tools, potentially compromising their core diagnostic capabilities' — the benefit of catching missed anomalies does not negate this distinct risk identified in the text."
 },
 "detail": {
 "question": "According to the passage, what is a primary benefit of using machine learning algorithms for medical imaging?",
@@ -18176,9 +18176,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Without clear, enforceable regulations, the public trust essential for data-sharing initiatives could evaporate. Policymakers must therefore harmonize technical solutions with ethical safeguards to ensure the security of personal medical information."
 ],
 "tfc": {
-"statement": "Research has demonstrated that current anonymization techniques are completely immune to re-identification attacks.",
-"answer": "False",
-"explanation": "The text states that research has shown that 'sophisticated re-identification attacks can sometimes reverse' anonymization processes."
+"statement": "Dynamic consent models were developed specifically as a technical countermeasure to re-identification attacks.",
+"answer": "Can't tell",
+"explanation": "The passage presents re-identification risk and dynamic consent models in separate contexts — consent models address patient control over data use, not the technical anonymization weakness — so no stated link between the two as cause and solution can be confirmed."
 },
 "detail": {
 "question": "What is the primary reason given for the significant risk of privacy breaches in AI healthcare?",
@@ -18219,9 +18219,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "To maximize the benefits of telemedicine, infrastructure investments must reach disadvantaged areas, and digital literacy training must be provided to bridge the generational gap."
 ],
 "tfc": {
-"statement": "Specialists are able to consult with patients located in distant regions regardless of the patient's internet connectivity.",
+"statement": "Elderly patients are excluded from AI-driven telemedicine for the same reason that rural patients are excluded.",
 "answer": "False",
-"explanation": "The text states that the 'digital divide persists' and that patients in regions with poor connectivity are 'disproportionately excluded' from these advancements."
+"explanation": "The passage attributes rural exclusion to poor internet connectivity (the digital divide) but attributes elderly exclusion to discomfort with sophisticated technology — these are presented as two distinct causes, not the same reason."
 },
 "detail": {
 "question": "What is one specific disadvantage of 'remote-only' medicine mentioned in the passage?",
@@ -18262,9 +18262,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Ultimately, AI is a tool to complement, not replace, traditional clinical research. A hybrid model, where AI identifies leads but human-led trials confirm safety and efficacy, is likely the most prudent path forward."
 ],
 "tfc": {
-"statement": "AI models are currently able to perfectly predict how every drug candidate will behave in a living human organism.",
-"answer": "False",
-"explanation": "The text mentions that 'computer models... may fail to account for unpredictable interactions that occur in living organisms'."
+"statement": "A drug candidate that performs well in 'in silico' simulations is consequently more likely to suffer from the 'over-fitting' problem described in the passage.",
+"answer": "Can't tell",
+"explanation": "Over-fitting is described as a risk of the models used to identify candidates, not as a property of the candidates themselves, and the passage draws no causal link between performing well in simulation and being prone to over-fitting — that connection is not stated."
 },
 "detail": {
 "question": "What is the primary advantage of the 'in silico' approach in drug development?",
