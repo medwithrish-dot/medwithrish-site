@@ -1,0 +1,8 @@
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          20064
+- Dir:          C:\Users\usedf\OneDrive\Desktop\MEDWITHRISH\medwithrish-site
+- Log:          .next\dev\logs\next-development.log
+
+Run taskkill /PID 20064 /F to stop it.

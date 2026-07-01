@@ -329,12 +329,14 @@ type MockScoreRecord = {
   display: string;
   completedAt: string;
   accuracy: number;
+  sessionId: string | null;
 };
 type MockScoreMatrix = Record<
   MockId,
   Partial<Record<UCATSection, MockScoreRecord>>
 >;
 type MockScoreSessionRow = {
+  id: string;
   summary: unknown;
   completed_at: string | null;
   source: string | null;
@@ -870,6 +872,7 @@ function getSectionScoreRecord(summary: PracticeSessionSummary): MockScoreRecord
       display: `Band ${band}`,
       completedAt,
       accuracy: summary.accuracy,
+      sessionId: null,
     };
   }
 
@@ -881,6 +884,7 @@ function getSectionScoreRecord(summary: PracticeSessionSummary): MockScoreRecord
     display: String(scaledScore),
     completedAt,
     accuracy: summary.accuracy,
+    sessionId: null,
   };
 }
 
@@ -926,6 +930,7 @@ function buildMockScoreMatrix(
     matrix[mockId][section] = {
       ...getSectionScoreRecord({ ...summary, completedAt }),
       completedAt,
+      sessionId: row.id ?? null,
     };
   });
 
@@ -970,6 +975,18 @@ function isIncompleteSavedPracticeSet(set: SavedPracticeSet) {
     set.summary.finished === false ||
     set.summary.answeredQuestions < set.summary.totalQuestions
   );
+}
+
+function formatSavedSetDate(value: string | null | undefined) {
+  if (!value) return "Saved set";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Saved set";
+
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 function isPracticeSessionId(value: string | null | undefined) {
@@ -2373,6 +2390,405 @@ function WrappedSvgLabel({
   );
 }
 
+type ChartPatternKind =
+  | "solid"
+  | "diagonal"
+  | "horizontal"
+  | "vertical"
+  | "dots"
+  | "crosshatch";
+type LinePointShape = "circle" | "square" | "diamond";
+type QuestionChartVariant = {
+  id: string;
+  chartWidthOffset: number;
+  chartHeight: number;
+  top: number;
+  right: number;
+  tickCount: number;
+  gridStroke: string;
+  gridDasharray?: string;
+  axisStrokeWidth: number;
+  dataStrokeWidth: number;
+  barCornerRadius: number;
+  barGapScale: number;
+  valueFontSize: number;
+  labelFontSize: number;
+  labelCharDivisor: number;
+  fills: string[];
+  patterns: ChartPatternKind[];
+  lineStroke: string;
+  lineStrokeWidth: number;
+  lineDasharray?: string;
+  linePointShape: LinePointShape;
+  linePointRadius: number;
+  pieWidth: number;
+  pieHeight: number;
+  pieRadius: number;
+  pieStartAngle: number;
+  pieLabelOffset: number;
+  pieCenterOffset: number;
+};
+
+const QUESTION_CHART_VARIANTS: Array<Omit<QuestionChartVariant, "id">> = [
+  {
+    chartWidthOffset: 0,
+    chartHeight: 230,
+    top: 52,
+    right: 30,
+    tickCount: 5,
+    gridStroke: "#b7b7b7",
+    axisStrokeWidth: 2.2,
+    dataStrokeWidth: 2,
+    barCornerRadius: 0,
+    barGapScale: 1,
+    valueFontSize: 14,
+    labelFontSize: 14,
+    labelCharDivisor: 5.8,
+    fills: ["#ffffff", "#c7c7c7", "#ececec", "#9f9f9f"],
+    patterns: ["solid", "solid", "solid", "solid"],
+    lineStroke: "#3d3d3d",
+    lineStrokeWidth: 4,
+    linePointShape: "circle",
+    linePointRadius: 8,
+    pieWidth: 620,
+    pieHeight: 380,
+    pieRadius: 112,
+    pieStartAngle: -90,
+    pieLabelOffset: 60,
+    pieCenterOffset: 0,
+  },
+  {
+    chartWidthOffset: -36,
+    chartHeight: 210,
+    top: 48,
+    right: 42,
+    tickCount: 4,
+    gridStroke: "#d4d4d4",
+    gridDasharray: "4 5",
+    axisStrokeWidth: 1.8,
+    dataStrokeWidth: 1.8,
+    barCornerRadius: 0,
+    barGapScale: 1.3,
+    valueFontSize: 13,
+    labelFontSize: 13,
+    labelCharDivisor: 6.3,
+    fills: ["#f9f9f9", "#d0d0d0", "#ededed", "#9d9d9d"],
+    patterns: ["diagonal", "solid", "horizontal", "dots"],
+    lineStroke: "#111111",
+    lineStrokeWidth: 3.2,
+    lineDasharray: "9 5",
+    linePointShape: "square",
+    linePointRadius: 7,
+    pieWidth: 590,
+    pieHeight: 360,
+    pieRadius: 102,
+    pieStartAngle: -35,
+    pieLabelOffset: 62,
+    pieCenterOffset: -12,
+  },
+  {
+    chartWidthOffset: 24,
+    chartHeight: 250,
+    top: 58,
+    right: 34,
+    tickCount: 5,
+    gridStroke: "#c9c9c9",
+    axisStrokeWidth: 2.5,
+    dataStrokeWidth: 2.3,
+    barCornerRadius: 2,
+    barGapScale: 0.85,
+    valueFontSize: 15,
+    labelFontSize: 14,
+    labelCharDivisor: 5.5,
+    fills: ["#ffffff", "#bcbcbc", "#e7e7e7", "#777777"],
+    patterns: ["vertical", "crosshatch", "solid", "diagonal"],
+    lineStroke: "#555555",
+    lineStrokeWidth: 4.5,
+    linePointShape: "diamond",
+    linePointRadius: 8,
+    pieWidth: 650,
+    pieHeight: 398,
+    pieRadius: 122,
+    pieStartAngle: 0,
+    pieLabelOffset: 68,
+    pieCenterOffset: 8,
+  },
+  {
+    chartWidthOffset: 54,
+    chartHeight: 220,
+    top: 46,
+    right: 50,
+    tickCount: 6,
+    gridStroke: "#dedede",
+    gridDasharray: "2 6",
+    axisStrokeWidth: 1.6,
+    dataStrokeWidth: 2.6,
+    barCornerRadius: 0,
+    barGapScale: 1.05,
+    valueFontSize: 13,
+    labelFontSize: 13,
+    labelCharDivisor: 6,
+    fills: ["#eeeeee", "#ffffff", "#adadad", "#d8d8d8"],
+    patterns: ["horizontal", "diagonal", "solid", "dots"],
+    lineStroke: "#222222",
+    lineStrokeWidth: 2.8,
+    lineDasharray: "3 5",
+    linePointShape: "circle",
+    linePointRadius: 6.5,
+    pieWidth: 670,
+    pieHeight: 390,
+    pieRadius: 108,
+    pieStartAngle: -125,
+    pieLabelOffset: 72,
+    pieCenterOffset: 20,
+  },
+  {
+    chartWidthOffset: -10,
+    chartHeight: 240,
+    top: 56,
+    right: 28,
+    tickCount: 5,
+    gridStroke: "#bdbdbd",
+    axisStrokeWidth: 2,
+    dataStrokeWidth: 1.7,
+    barCornerRadius: 3,
+    barGapScale: 1.15,
+    valueFontSize: 14,
+    labelFontSize: 13,
+    labelCharDivisor: 5.9,
+    fills: ["#ffffff", "#d9d9d9", "#8f8f8f", "#f3f3f3"],
+    patterns: ["dots", "solid", "crosshatch", "vertical"],
+    lineStroke: "#111111",
+    lineStrokeWidth: 3.5,
+    linePointShape: "square",
+    linePointRadius: 6.5,
+    pieWidth: 630,
+    pieHeight: 370,
+    pieRadius: 116,
+    pieStartAngle: -65,
+    pieLabelOffset: 58,
+    pieCenterOffset: -4,
+  },
+];
+
+function stableChartHash(value: string) {
+  let hash = 2166136261;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
+function getQuestionChartVariant(visual: UCATChartVisual): QuestionChartVariant {
+  const hash = stableChartHash(`${visual.type}:${visual.title}`);
+  const variant = QUESTION_CHART_VARIANTS[hash % QUESTION_CHART_VARIANTS.length];
+
+  return {
+    id: `qrchart-${hash.toString(36)}`,
+    ...variant,
+  };
+}
+
+function getChartPatternKind(
+  variant: QuestionChartVariant,
+  index: number
+): ChartPatternKind {
+  return variant.patterns[index % variant.patterns.length];
+}
+
+function getChartBaseFill(variant: QuestionChartVariant, index: number) {
+  return variant.fills[index % variant.fills.length];
+}
+
+function getChartPatternId(variant: QuestionChartVariant, index: number) {
+  return `${variant.id}-fill-${index}`;
+}
+
+function getChartSvgFill(variant: QuestionChartVariant, index: number) {
+  const pattern = getChartPatternKind(variant, index);
+  return pattern === "solid"
+    ? getChartBaseFill(variant, index)
+    : `url(#${getChartPatternId(variant, index)})`;
+}
+
+function ChartPatternMark({ kind }: { kind: ChartPatternKind }) {
+  const stroke = "#4a4a4a";
+
+  if (kind === "diagonal") {
+    return (
+      <>
+        <line x1="-2" y1="8" x2="8" y2="-2" stroke={stroke} strokeWidth="1" />
+        <line x1="4" y1="10" x2="10" y2="4" stroke={stroke} strokeWidth="1" />
+      </>
+    );
+  }
+
+  if (kind === "horizontal") {
+    return (
+      <>
+        <line x1="0" y1="2" x2="8" y2="2" stroke={stroke} strokeWidth="1" />
+        <line x1="0" y1="6" x2="8" y2="6" stroke={stroke} strokeWidth="1" />
+      </>
+    );
+  }
+
+  if (kind === "vertical") {
+    return (
+      <>
+        <line x1="2" y1="0" x2="2" y2="8" stroke={stroke} strokeWidth="1" />
+        <line x1="6" y1="0" x2="6" y2="8" stroke={stroke} strokeWidth="1" />
+      </>
+    );
+  }
+
+  if (kind === "dots") {
+    return (
+      <>
+        <circle cx="2" cy="2" r="0.9" fill={stroke} />
+        <circle cx="6" cy="6" r="0.9" fill={stroke} />
+      </>
+    );
+  }
+
+  if (kind === "crosshatch") {
+    return (
+      <>
+        <line x1="-2" y1="8" x2="8" y2="-2" stroke={stroke} strokeWidth="0.9" />
+        <line x1="0" y1="0" x2="8" y2="8" stroke={stroke} strokeWidth="0.9" />
+      </>
+    );
+  }
+
+  return null;
+}
+
+function ChartPatternDefs({
+  variant,
+  count,
+}: {
+  variant: QuestionChartVariant;
+  count: number;
+}) {
+  return (
+    <defs>
+      {Array.from({ length: count }, (_, index) => {
+        const pattern = getChartPatternKind(variant, index);
+
+        if (pattern === "solid") return null;
+
+        return (
+          <pattern
+            key={getChartPatternId(variant, index)}
+            id={getChartPatternId(variant, index)}
+            width="8"
+            height="8"
+            patternUnits="userSpaceOnUse"
+          >
+            <rect width="8" height="8" fill={getChartBaseFill(variant, index)} />
+            <ChartPatternMark kind={pattern} />
+          </pattern>
+        );
+      })}
+    </defs>
+  );
+}
+
+function getLegendSwatchStyle(kind: ChartPatternKind, fill: string) {
+  const ink = "rgba(17, 17, 17, 0.5)";
+
+  if (kind === "diagonal") {
+    return {
+      backgroundColor: fill,
+      backgroundImage: `repeating-linear-gradient(135deg, transparent 0 4px, ${ink} 4px 5px)`,
+    };
+  }
+
+  if (kind === "horizontal") {
+    return {
+      backgroundColor: fill,
+      backgroundImage: `repeating-linear-gradient(0deg, transparent 0 4px, ${ink} 4px 5px)`,
+    };
+  }
+
+  if (kind === "vertical") {
+    return {
+      backgroundColor: fill,
+      backgroundImage: `repeating-linear-gradient(90deg, transparent 0 4px, ${ink} 4px 5px)`,
+    };
+  }
+
+  if (kind === "dots") {
+    return {
+      backgroundColor: fill,
+      backgroundImage: `radial-gradient(${ink} 1px, transparent 1.2px)`,
+      backgroundSize: "6px 6px",
+    };
+  }
+
+  if (kind === "crosshatch") {
+    return {
+      backgroundColor: fill,
+      backgroundImage: `repeating-linear-gradient(45deg, transparent 0 4px, ${ink} 4px 5px), repeating-linear-gradient(135deg, transparent 0 4px, ${ink} 4px 5px)`,
+    };
+  }
+
+  return { backgroundColor: fill };
+}
+
+function LinePointMarker({
+  x,
+  y,
+  variant,
+}: {
+  x: number;
+  y: number;
+  variant: QuestionChartVariant;
+}) {
+  const radius = variant.linePointRadius;
+  const strokeWidth = Math.max(2, variant.dataStrokeWidth);
+
+  if (variant.linePointShape === "square") {
+    return (
+      <rect
+        x={x - radius}
+        y={y - radius}
+        width={radius * 2}
+        height={radius * 2}
+        fill="#ffffff"
+        stroke="#111111"
+        strokeWidth={strokeWidth}
+      />
+    );
+  }
+
+  if (variant.linePointShape === "diamond") {
+    return (
+      <polygon
+        points={`${x},${y - radius} ${x + radius},${y} ${x},${y + radius} ${
+          x - radius
+        },${y}`}
+        fill="#ffffff"
+        stroke="#111111"
+        strokeWidth={strokeWidth}
+      />
+    );
+  }
+
+  return (
+    <circle
+      cx={x}
+      cy={y}
+      r={radius}
+      fill="#ffffff"
+      stroke="#111111"
+      strokeWidth={strokeWidth}
+    />
+  );
+}
+
 function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
   if (visual.type === "table") {
     return (
@@ -2548,14 +2964,14 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
   }
 
   if (visual.type === "pie") {
+    const variant = getQuestionChartVariant(visual);
     const total = visual.slices.reduce((sum, slice) => sum + slice.value, 0);
-    const width = 620;
-    const height = 380;
-    const centerX = 250;
-    const centerY = 190;
-    const radius = 112;
-    const labelRadius = 172;
-    const fills = ["#ffffff", "#d8d8d8", "#b7b7b7", "#eeeeee", "#8f8f8f"];
+    const width = variant.pieWidth;
+    const height = variant.pieHeight;
+    const centerX = width / 2 + variant.pieCenterOffset;
+    const centerY = height / 2;
+    const radius = variant.pieRadius;
+    const labelRadius = radius + variant.pieLabelOffset;
     const toPoint = (angle: number, pointRadius: number) => {
       const radians = (angle * Math.PI) / 180;
       return {
@@ -2568,7 +2984,10 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
         .slice(0, index)
         .reduce((sum, previousSlice) => sum + previousSlice.value, 0);
       const sliceAngle = total > 0 ? (slice.value / total) * 360 : 0;
-      const startAngle = total > 0 ? -90 + (previousTotal / total) * 360 : -90;
+      const startAngle =
+        total > 0
+          ? variant.pieStartAngle + (previousTotal / total) * 360
+          : variant.pieStartAngle;
       const endAngle = startAngle + sliceAngle;
       const midAngle = startAngle + sliceAngle / 2;
       const start = toPoint(startAngle, radius);
@@ -2614,14 +3033,15 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             aria-label={formatDisplayText(visual.title)}
           >
             <rect x="0" y="0" width={width} height={height} fill="#ffffff" />
+            <ChartPatternDefs variant={variant} count={visual.slices.length} />
             {slices.map((slice) =>
               slice.path ? (
                 <path
                   key={slice.label}
                   d={slice.path}
-                  fill={fills[slice.index % fills.length]}
+                  fill={getChartSvgFill(variant, slice.index)}
                   stroke="#111111"
-                  strokeWidth="2"
+                  strokeWidth={variant.dataStrokeWidth}
                 />
               ) : (
                 <circle
@@ -2629,9 +3049,9 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   cx={centerX}
                   cy={centerY}
                   r={radius}
-                  fill={fills[slice.index % fills.length]}
+                  fill={getChartSvgFill(variant, slice.index)}
                   stroke="#111111"
-                  strokeWidth="2"
+                  strokeWidth={variant.dataStrokeWidth}
                 />
               )
             )}
@@ -2641,7 +3061,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
               r={radius}
               fill="none"
               stroke="#111111"
-              strokeWidth="2.4"
+              strokeWidth={variant.axisStrokeWidth}
             />
             {slices.map((slice) => (
               <g key={`${slice.label}-label`}>
@@ -2651,14 +3071,14 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   x2={slice.leaderEnd.x}
                   y2={slice.leaderEnd.y}
                   stroke="#111111"
-                  strokeWidth="1.4"
+                  strokeWidth={Math.max(1.2, variant.axisStrokeWidth - 0.8)}
                 />
                 <text
                   x={slice.labelPoint.x}
                   y={slice.labelPoint.y - 8}
                   textAnchor={slice.anchor}
                   fontFamily="Arial, Helvetica, sans-serif"
-                  fontSize="13"
+                  fontSize={variant.labelFontSize}
                   fontWeight="700"
                   fill="#111111"
                 >
@@ -2669,7 +3089,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   y={slice.labelPoint.y + 10}
                   textAnchor={slice.anchor}
                   fontFamily="Arial, Helvetica, sans-serif"
-                  fontSize="13"
+                  fontSize={variant.labelFontSize}
                   fill="#111111"
                 >
                   {formatChartNumber(slice.value)} (
@@ -2688,10 +3108,8 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     );
   }
 
-  const getSeriesFill = (index: number) => {
-    const fills = ["#ffffff", "#c7c7c7", "#ececec", "#9f9f9f"];
-    return fills[index % fills.length];
-  };
+  const variant = getQuestionChartVariant(visual);
+  const getSeriesFill = (index: number) => getChartSvgFill(variant, index);
 
   const xAxisLabels =
     visual.type === "bar"
@@ -2699,11 +3117,12 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
       : visual.type === "grouped-bar"
         ? visual.groups.map((group) => group.label)
         : visual.points.map((point) => point.label);
-  const width = visual.type === "grouped-bar" ? 660 : 620;
-  const top = 52;
-  const right = 30;
-  const chartHeight = 230;
-  const tickCount = 5;
+  const width =
+    (visual.type === "grouped-bar" ? 660 : 620) + variant.chartWidthOffset;
+  const top = variant.top;
+  const right = variant.right;
+  const chartHeight = variant.chartHeight;
+  const tickCount = variant.tickCount;
   const ticks = Array.from(
     { length: tickCount + 1 },
     (_, index) => (visual.max / tickCount) * index
@@ -2715,7 +3134,10 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
   );
   const chartWidth = width - left - right;
   const labelSlotWidth = chartWidth / Math.max(1, xAxisLabels.length);
-  const labelMaxChars = Math.max(6, Math.floor(labelSlotWidth / 5.8));
+  const labelMaxChars = Math.max(
+    6,
+    Math.floor(labelSlotWidth / variant.labelCharDivisor)
+  );
   const xAxisLabelLines = xAxisLabels.map((label) =>
     splitSvgLabel(label, labelMaxChars)
   );
@@ -2743,7 +3165,8 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
     visual.type === "grouped-bar"
       ? visual.seriesLabels.map((label, index) => ({
           label,
-          fill: getSeriesFill(index),
+          baseFill: getChartBaseFill(variant, index),
+          pattern: getChartPatternKind(variant, index),
         }))
       : [];
 
@@ -2761,6 +3184,16 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
           aria-label={formatDisplayText(visual.title)}
         >
           <rect x="0" y="0" width={width} height={height} fill="#ffffff" />
+          <ChartPatternDefs
+            variant={variant}
+            count={
+              visual.type === "bar"
+                ? visual.categories.length
+                : visual.type === "grouped-bar"
+                  ? visual.seriesLabels.length
+                  : 0
+            }
+          />
           {ticks.map((tick) => {
             const y = valueToY(tick);
             return (
@@ -2770,15 +3203,16 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                   y1={y}
                   x2={left + chartWidth}
                   y2={y}
-                  stroke="#b7b7b7"
+                  stroke={variant.gridStroke}
                   strokeWidth="1.2"
+                  strokeDasharray={variant.gridDasharray}
                 />
                 <text
                   x={left - 14}
                   y={y + 5}
                   textAnchor="end"
                   fontFamily="Arial, Helvetica, sans-serif"
-                  fontSize="14"
+                  fontSize={variant.labelFontSize}
                   fill="#111111"
                 >
                   {formatChartNumber(tick)}
@@ -2792,7 +3226,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             x2={left + chartWidth}
             y2={axisBottom}
             stroke="#111111"
-            strokeWidth="2.2"
+            strokeWidth={variant.axisStrokeWidth}
           />
           <line
             x1={left}
@@ -2800,7 +3234,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             x2={left}
             y2={axisBottom}
             stroke="#111111"
-            strokeWidth="2.2"
+            strokeWidth={variant.axisStrokeWidth}
           />
           <text
             x={24}
@@ -2808,7 +3242,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             transform={`rotate(-90 24 ${top + chartHeight / 2})`}
             textAnchor="middle"
             fontFamily="Arial, Helvetica, sans-serif"
-            fontSize="15"
+            fontSize={variant.labelFontSize + 1}
             fontWeight="700"
             fill="#111111"
           >
@@ -2817,9 +3251,13 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
 
           {visual.type === "bar" &&
             visual.categories.map((category, index) => {
-              const gap = Math.max(
+              const baseGap = Math.max(
                 10,
                 Math.min(24, chartWidth / (visual.categories.length * 3))
+              );
+              const gap = Math.max(
+                8,
+                Math.min(34, baseGap * variant.barGapScale)
               );
               const barWidth =
                 (chartWidth - gap * (visual.categories.length + 1)) /
@@ -2834,16 +3272,18 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     y={y}
                     width={barWidth}
                     height={barHeight}
-                    fill="#ffffff"
+                    rx={variant.barCornerRadius}
+                    ry={variant.barCornerRadius}
+                    fill={getSeriesFill(index)}
                     stroke="#111111"
-                    strokeWidth="2"
+                    strokeWidth={variant.dataStrokeWidth}
                   />
                   <text
                     x={x + barWidth / 2}
                     y={Math.max(top + 14, y - 8)}
                     textAnchor="middle"
                     fontFamily="Arial, Helvetica, sans-serif"
-                    fontSize="14"
+                    fontSize={variant.valueFontSize}
                     fontWeight="700"
                     fill="#111111"
                   >
@@ -2853,7 +3293,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     lines={xAxisLabelLines[index]}
                     x={x + barWidth / 2}
                     y={axisBottom + 18}
-                    fontSize={14}
+                    fontSize={variant.labelFontSize}
                     lineHeight={15}
                   />
                 </g>
@@ -2862,9 +3302,13 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
 
           {visual.type === "grouped-bar" &&
             visual.groups.map((group, groupIndex) => {
-              const groupGap = Math.max(
+              const baseGroupGap = Math.max(
                 18,
                 Math.min(34, chartWidth / (visual.groups.length * 4))
+              );
+              const groupGap = Math.max(
+                14,
+                Math.min(42, baseGroupGap * variant.barGapScale)
               );
               const seriesCount = Math.max(1, visual.seriesLabels.length);
               const groupWidth =
@@ -2888,9 +3332,11 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                         y={y}
                         width={barWidth}
                         height={barHeight}
+                        rx={variant.barCornerRadius}
+                        ry={variant.barCornerRadius}
                         fill={getSeriesFill(valueIndex)}
                         stroke="#111111"
-                        strokeWidth="2"
+                        strokeWidth={variant.dataStrokeWidth}
                       />
                     );
                   })}
@@ -2898,7 +3344,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     lines={xAxisLabelLines[groupIndex]}
                     x={x + groupWidth / 2}
                     y={axisBottom + 18}
-                    fontSize={14}
+                    fontSize={variant.labelFontSize}
                     lineHeight={15}
                   />
                 </g>
@@ -2910,27 +3356,21 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
               <polyline
                 points={linePoints.map((point) => `${point.x},${point.y}`).join(" ")}
                 fill="none"
-                stroke="#3d3d3d"
-                strokeWidth="4"
+                stroke={variant.lineStroke}
+                strokeWidth={variant.lineStrokeWidth}
+                strokeDasharray={variant.lineDasharray}
                 strokeLinejoin="round"
                 strokeLinecap="round"
               />
               {linePoints.map((point, index) => (
                 <g key={point.label}>
-                  <circle
-                    cx={point.x}
-                    cy={point.y}
-                    r="8"
-                    fill="#ffffff"
-                    stroke="#111111"
-                    strokeWidth="3"
-                  />
+                  <LinePointMarker x={point.x} y={point.y} variant={variant} />
                   <text
                     x={point.x}
                     y={Math.max(top + 16, point.y - 14)}
                     textAnchor="middle"
                     fontFamily="Arial, Helvetica, sans-serif"
-                    fontSize="15"
+                    fontSize={variant.valueFontSize}
                     fontWeight="700"
                     fill="#111111"
                   >
@@ -2940,7 +3380,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
                     lines={xAxisLabelLines[index]}
                     x={point.x}
                     y={axisBottom + 18}
-                    fontSize={14}
+                    fontSize={variant.labelFontSize}
                     lineHeight={15}
                   />
                 </g>
@@ -2958,7 +3398,7 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
             <span key={item.label} className="inline-flex items-center gap-2">
               <span
                 className="h-4 w-7 border border-black"
-                style={{ backgroundColor: item.fill }}
+                style={getLegendSwatchStyle(item.pattern, item.baseFill)}
                 aria-hidden="true"
               />
               {formatDisplayText(item.label)}
@@ -3120,6 +3560,9 @@ function SectionSetup({
   trackingStarting,
   onTrackingModeChange,
   onTrackingRingChange,
+  savedPracticeSets,
+  onReviewSavedSet,
+  onContinueSavedSet,
   onStart,
   diagnosticMode,
   mock,
@@ -3155,6 +3598,9 @@ function SectionSetup({
   trackingStarting: boolean;
   onTrackingModeChange: (mode: TrackingMode) => void;
   onTrackingRingChange: (visible: boolean) => void;
+  savedPracticeSets: SavedPracticeSet[];
+  onReviewSavedSet: (set: SavedPracticeSet) => void;
+  onContinueSavedSet: (set: SavedPracticeSet) => void;
   onStart: () => void;
   mock?: (typeof MOCK_LIBRARY)[number];
 }) {
@@ -3176,6 +3622,7 @@ function SectionSetup({
       : questionCount * meta.secondsPerQuestion;
   const customQuestionSelected =
     lengthMode === "questions" && questionTargetMode === "custom";
+  const recentSavedSets = !diagnosticMode ? savedPracticeSets.slice(0, 6) : [];
 
   return (
     <div className="min-h-screen bg-[#f6f8fb] px-4 py-8 text-[#111827]">
@@ -3214,6 +3661,77 @@ function SectionSetup({
                 ? "Checking your completed questions before building the next set."
                 : `${completedCount} completed, ${remainingQuestionCount} left in ${meta.code}. Completed questions will not appear again.`}
             </div>
+          )}
+
+          {!diagnosticMode && recentSavedSets.length > 0 && (
+            <section className="mt-5 rounded-xl border border-slate-200 bg-white p-4">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h2 className="text-sm font-black uppercase tracking-wide text-slate-900">
+                    Saved sets
+                  </h2>
+                  <p className="mt-1 text-xs font-bold text-slate-500">
+                    {recentSavedSets.length} recent {meta.code} set
+                    {recentSavedSets.length === 1 ? "" : "s"}
+                  </p>
+                </div>
+                <span className="text-xs font-black text-slate-500">
+                  Completed and unfinished
+                </span>
+              </div>
+              <div className="mt-3 grid gap-2">
+                {recentSavedSets.map((set) => {
+                  const incomplete = isIncompleteSavedPracticeSet(set);
+                  const actionLabel = incomplete ? "Continue" : "Review";
+                  return (
+                    <article
+                      key={set.id}
+                      className="grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3 sm:grid-cols-[1fr_auto] sm:items-center"
+                    >
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span
+                            className={`rounded-full px-2.5 py-1 text-[11px] font-black ${
+                              incomplete
+                                ? "bg-amber-50 text-amber-700"
+                                : "bg-emerald-50 text-emerald-700"
+                            }`}
+                          >
+                            {incomplete ? "Unfinished" : "Completed"}
+                          </span>
+                          <p className="text-xs font-black text-slate-900">
+                            {formatSavedSetDate(set.completedAt)}
+                          </p>
+                        </div>
+                        <p className="mt-2 text-sm font-black text-slate-950">
+                          Score {formatMarkScore(set.summary.scorePoints, set.summary.maxScore)}
+                        </p>
+                        <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                          {set.summary.answeredQuestions}/{set.summary.totalQuestions} answered -
+                          {set.summary.accuracy}% accuracy -
+                          {set.summary.avgSecondsPerQuestion}s avg
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          incomplete
+                            ? onContinueSavedSet(set)
+                            : onReviewSavedSet(set)
+                        }
+                        className={`inline-flex h-10 items-center justify-center rounded-md px-4 text-xs font-black transition-colors ${
+                          incomplete
+                            ? "bg-amber-600 text-white hover:bg-amber-700"
+                            : "bg-blue-600 text-white hover:bg-blue-700"
+                        }`}
+                      >
+                        {actionLabel}
+                      </button>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
           )}
 
           {diagnosticMode === "subset" && (
@@ -3636,7 +4154,7 @@ function useMockScoreMatrix(
 
         const { data, error } = await supabase
           .from("practice_sessions")
-          .select("summary,completed_at,source")
+          .select("id,summary,completed_at,source")
           .eq("user_id", user.id)
           .eq("source", FULL_SECTION_DIAGNOSTIC_SOURCE)
           .order("completed_at", { ascending: false })
@@ -3886,6 +4404,7 @@ function getMockMetricPoint(
       scaledSections.reduce((sum, record) => sum + record.accuracy, 0) /
         scaledSections.length
     ),
+    sessionId: null,
   };
 }
 
@@ -4224,7 +4743,7 @@ function FullMockPerformancePanel({
   );
 }
 
-type NewMockStep = null | "type" | "subtest-section" | "sprint-section";
+type NewMockStep = null | "type" | "subtest-section";
 
 function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
   const [mockFilter, setMockFilter] = useState<MockFilter>("all");
@@ -4301,7 +4820,7 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
                 Cancel
               </button>
             </div>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {[
                 {
                   label: "Full mock",
@@ -4316,13 +4835,6 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
                   desc: "Choose one UCAT section. Full question count, official timing.",
                   href: null,
                   onClick: () => setNewMockStep("subtest-section"),
-                },
-                {
-                  label: "15-min sprint",
-                  badge: "~15 min",
-                  desc: "Choose one section. Reduced question set, 15-minute timer.",
-                  href: null,
-                  onClick: () => setNewMockStep("sprint-section"),
                 },
               ].map((option) =>
                 option.href ? (
@@ -4356,11 +4868,11 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
           </div>
         )}
 
-        {(newMockStep === "subtest-section" || newMockStep === "sprint-section") && (
+        {newMockStep === "subtest-section" && (
           <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50/40 p-5">
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-sm font-black text-slate-950">
-                Choose section — {newMockStep === "sprint-section" ? "15-min sprint" : "Subtest mock"}
+                Choose section — Subtest mock
               </h2>
               <button
                 type="button"
@@ -4375,9 +4887,7 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
                 <Link
                   key={section}
                   href={withMockQuery(
-                    newMockStep === "sprint-section"
-                      ? `/phloemai/mocks/sprint/${section}`
-                      : `/phloemai/mocks/subtest/${section}`,
+                    `/phloemai/mocks/subtest/${section}`,
                     selectedMock.id
                   )}
                   className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-colors hover:border-blue-400 hover:bg-blue-50/60"
@@ -4387,9 +4897,7 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
                   </span>
                   <p className="mt-3 text-sm font-black text-slate-950">{title}</p>
                   <p className="mt-1 text-xs font-semibold text-slate-500">
-                    {newMockStep === "sprint-section"
-                      ? `~${Math.round(SECTION_MOCK_SHORT_SECONDS / 60)} min, ~${getSprintQuestionTarget(section)} questions`
-                      : `${FULL_MOCK_TARGETS[section]} questions, official time`}
+                    {`${FULL_MOCK_TARGETS[section]} questions, official time`}
                   </p>
                 </Link>
               ))}
@@ -4452,14 +4960,27 @@ function FullMockDiagnosticOverview({ mockId }: { mockId: MockId }) {
                   <div className="mt-2.5 flex flex-wrap gap-1.5">
                     {FULL_MOCK_SECTION_ORDER.map((section) => {
                       const meta = getUCATSectionMeta(section);
+                      const score = scoreMatrix[mock.id]?.[section] ?? null;
+                      const sectionHref = score?.sessionId
+                        ? withMockQuery(
+                            `/phloemai/mocks/full/${section}?set=${encodeURIComponent(
+                              score.sessionId
+                            )}`,
+                            mock.id
+                          )
+                        : withMockQuery(
+                            `/phloemai/mocks/full/${section}`,
+                            mock.id
+                          );
                       return (
                         <Link
                           key={section}
-                          href={withMockQuery(
-                            `/phloemai/mocks/full/${section}`,
-                            mock.id
-                          )}
-                          className="inline-flex h-7 items-center justify-center rounded-md border border-slate-200 bg-white px-2.5 text-xs font-black text-slate-700 transition-colors hover:border-blue-300 hover:text-blue-700"
+                          href={sectionHref}
+                          className={`inline-flex h-7 items-center justify-center rounded-md border px-2.5 text-xs font-black transition-colors ${
+                            score
+                              ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-300 hover:bg-emerald-100"
+                              : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-700"
+                          }`}
                         >
                           {meta.code}
                         </Link>
@@ -6727,6 +7248,13 @@ function MarkedReviewScreen({
       : aiFeedbackState?.credits === 1
         ? "1 AI diagnostic credit"
         : `${aiFeedbackState?.credits ?? 0} AI diagnostic credits`;
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
+  const safeSelectedQuestionIndex = Math.min(
+    selectedQuestionIndex,
+    Math.max(0, summary.questions.length - 1)
+  );
+  const selectedQuestion =
+    summary.questions[safeSelectedQuestionIndex] ?? summary.questions[0] ?? null;
 
   useEffect(() => {
     if (!aiFeedbackState?.nextAvailableAt || aiFeedbackState.text) return;
@@ -6886,80 +7414,171 @@ function MarkedReviewScreen({
         />
 
         <section className="rounded-md border border-slate-400 bg-white p-5 shadow-lg">
-          <h2 className="text-lg font-black">Question-by-question review</h2>
-          <div className="mt-4 space-y-4">
-            {summary.questions.map((item) => (
-              <article
-                key={item.questionId}
-                className="rounded-md border border-slate-400 bg-white p-4 shadow-sm"
-              >
-                <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="text-lg font-black">Question map</h2>
+              <p className="mt-1 text-xs font-bold text-slate-500">
+                {summary.correctQuestions}/{summary.totalQuestions} correct -
+                {summary.flaggedQuestions} flagged
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2 text-[11px] font-black text-slate-600">
+              {[
+                ["bg-emerald-500", "Correct"],
+                ["bg-yellow-400", "Partial"],
+                ["bg-red-500", "Incorrect"],
+                ["bg-slate-300", "Unanswered"],
+              ].map(([colour, label]) => (
+                <span key={label} className="inline-flex items-center gap-1.5">
+                  <span className={`h-2.5 w-2.5 rounded-full ${colour}`} />
+                  {label}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(320px,1.1fr)]">
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(3.25rem,1fr))] gap-2">
+                {summary.questions.map((item, index) => {
+                  const active = index === safeSelectedQuestionIndex;
+                  const statusClass =
+                    item.resultStatus === "correct"
+                      ? "border-emerald-300 bg-emerald-50 text-emerald-800"
+                      : item.resultStatus === "partial"
+                        ? "border-yellow-300 bg-yellow-50 text-yellow-800"
+                      : item.resultStatus === "incorrect"
+                        ? "border-red-300 bg-red-50 text-red-800"
+                        : "border-slate-300 bg-white text-slate-600";
+
+                  return (
+                    <button
+                      key={item.questionId}
+                      type="button"
+                      onClick={() => setSelectedQuestionIndex(index)}
+                      aria-pressed={active}
+                      className={`relative flex aspect-square min-h-0 flex-col items-center justify-center rounded-md border text-xs font-black transition ${
+                        active
+                          ? `${statusClass} ring-2 ring-blue-500 ring-offset-2`
+                          : `${statusClass} hover:ring-2 hover:ring-blue-200`
+                      }`}
+                      title={`Question ${item.questionIndex + 1}: ${item.resultStatus}`}
+                    >
+                      <span>Q{item.questionIndex + 1}</span>
+                      <span className="mt-1 text-[10px] font-bold opacity-75">
+                        {formatDuration(item.totalSeconds)}
+                      </span>
+                      {item.flagged && (
+                        <Flag
+                          className="absolute right-1 top-1 h-3 w-3 text-amber-600"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {selectedQuestion && (
+              <article className="rounded-lg border border-slate-300 bg-white p-4 shadow-sm">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <p className="text-xs font-black uppercase tracking-wide text-slate-500">
-                      Q{item.questionIndex + 1}
+                      Q{selectedQuestion.questionIndex + 1} - {selectedQuestion.subtypeLabel}
                     </p>
-                    <h3 className="mt-1 text-base font-black text-slate-950">
+                    <h3 className="mt-2 text-base font-black leading-6 text-slate-950">
                       {formatQuestionTextForSubtype(
-                        item.questionText,
-                        item.subtype
+                        selectedQuestion.questionText,
+                        selectedQuestion.subtype
                       )}
                     </h3>
-                    <p className="mt-2 text-sm font-semibold text-slate-600">
-                      Your answer: {formatDisplayText(item.selectedAnswerText)}
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-slate-600">
-                      Correct: {formatDisplayText(item.correctAnswerText)}
-                    </p>
-                    <p className="mt-1 text-sm font-black text-slate-700">
-                      Score: {formatMarkScore(item.scorePoints, item.maxScore)}
-                    </p>
-                    {item.issueLabels.length > 0 && (
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {item.issueLabels.map((label) => (
-                          <span
-                            key={label}
-                            className="rounded-full border border-slate-300 bg-slate-100 px-2.5 py-1 text-[11px] font-black uppercase tracking-wide text-slate-600"
-                          >
-                            {label}
-                          </span>
-                        ))}
-                      </div>
-                    )}
                   </div>
                   <span
                     className={`w-fit rounded-full px-2.5 py-1 text-xs font-black ${
-                      item.resultStatus === "correct"
+                      selectedQuestion.resultStatus === "correct"
                         ? "bg-emerald-50 text-emerald-700"
-                        : item.resultStatus === "partial"
+                        : selectedQuestion.resultStatus === "partial"
                           ? "bg-yellow-50 text-yellow-700"
-                        : item.resultStatus === "incorrect"
+                        : selectedQuestion.resultStatus === "incorrect"
                           ? "bg-red-50 text-red-700"
-                          : "bg-amber-50 text-amber-700"
+                          : "bg-slate-100 text-slate-600"
                     }`}
                   >
-                    {item.resultStatus === "correct"
+                    {selectedQuestion.resultStatus === "correct"
                       ? "Correct"
-                      : item.resultStatus === "partial"
-                        ? "Half mark"
-                        : item.resultStatus === "incorrect"
+                      : selectedQuestion.resultStatus === "partial"
+                        ? "Partial"
+                        : selectedQuestion.resultStatus === "incorrect"
                           ? "Incorrect"
                           : "Unanswered"}
                   </span>
                 </div>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  {[
+                    ["Score", formatMarkScore(selectedQuestion.scorePoints, selectedQuestion.maxScore)],
+                    ["Time", formatDuration(selectedQuestion.totalSeconds)],
+                    ["Visits", String(selectedQuestion.visits)],
+                  ].map(([label, value]) => (
+                    <div key={label} className="rounded-md border border-slate-200 bg-slate-50 p-3">
+                      <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">
+                        {label}
+                      </p>
+                      <p className="mt-1 text-sm font-black text-slate-900">
+                        {value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-4 grid gap-3 md:grid-cols-2">
+                  <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
+                    <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+                      Your answer
+                    </p>
+                    <p className="mt-2 text-sm font-semibold leading-6 text-slate-800">
+                      {formatDisplayText(selectedQuestion.selectedAnswerText)}
+                    </p>
+                  </div>
+                  <div className="rounded-md border border-emerald-200 bg-emerald-50 p-3">
+                    <p className="text-xs font-black uppercase tracking-wide text-emerald-700">
+                      Correct answer
+                    </p>
+                    <p className="mt-2 text-sm font-semibold leading-6 text-slate-800">
+                      {formatDisplayText(selectedQuestion.correctAnswerText)}
+                    </p>
+                  </div>
+                </div>
+
+                {selectedQuestion.issueLabels.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {selectedQuestion.issueLabels.map((label) => (
+                      <span
+                        key={label}
+                        className="rounded-full border border-slate-300 bg-white px-2.5 py-1 text-[11px] font-black uppercase tracking-wide text-slate-600"
+                      >
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
                 <div className="mt-4 rounded-md border border-slate-300 bg-slate-100 p-4">
                   <p className="text-sm font-black text-slate-900">
                     Explanation
                   </p>
                   <HumanReadableExplanation
-                    explanation={item.explanation}
-                    correctAnswerText={item.correctAnswerText}
-                    selectedAnswerText={item.selectedAnswerText}
-                    resultStatus={item.resultStatus}
+                    explanation={selectedQuestion.explanation}
+                    correctAnswerText={selectedQuestion.correctAnswerText}
+                    selectedAnswerText={selectedQuestion.selectedAnswerText}
+                    resultStatus={selectedQuestion.resultStatus}
                   />
                 </div>
-                <QuestionDataCollectedPanel item={item} />
+
+                <QuestionDataCollectedPanel item={selectedQuestion} />
               </article>
-            ))}
+            )}
           </div>
         </section>
 
@@ -7453,13 +8072,14 @@ function UCATQuestionBankSection({
         if (questionError) throw questionError;
 
         let sessionRows: SavedPracticeSessionRow[] = [];
-        if (!diagnosticMode) {
+        const savedSetSource = getPracticeSource(diagnosticMode);
+        if (savedSetSource !== FREE_QR_DIAGNOSTIC_SOURCE) {
           const { data: recentSessionRows, error: sessionError } = await supabase
             .from("practice_sessions")
             .select("id,summary,completed_at,created_at,source")
             .eq("user_id", user.id)
             .in("section", sectionValues)
-            .eq("source", "question_bank")
+            .eq("source", savedSetSource)
             .order("completed_at", { ascending: false })
             .limit(50);
 
@@ -7476,7 +8096,7 @@ function UCATQuestionBankSection({
                 .select("id,summary,completed_at,created_at,source")
                 .eq("user_id", user.id)
                 .eq("id", practiceSetId)
-                .eq("source", "question_bank")
+                .eq("source", savedSetSource)
                 .maybeSingle();
 
             if (requestedSessionError) throw requestedSessionError;
@@ -8968,6 +9588,9 @@ function UCATQuestionBankSection({
           attentionTracker.setShowRing(visible);
           recordEvent("setup_tracking_ring", { visible });
         }}
+        savedPracticeSets={savedPracticeSets}
+        onReviewSavedSet={reviewSavedPracticeSet}
+        onContinueSavedSet={continueSavedPracticeSet}
         onStart={startPractice}
         mock={diagnosticMode ? selectedMock : undefined}
       />
@@ -10186,18 +10809,38 @@ function UCATQuestionBankSection({
           style={{ left: calcPos.x, top: calcPos.y }}
         >
           <div
-            className="rounded-2xl overflow-hidden"
+            className="relative overflow-hidden rounded-[6px] border border-[#03284f]"
             style={{
-              width: "210px",
-              background: "#0f1f72",
-              padding: "12px",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.1)",
+              width: "236px",
+              background: "linear-gradient(180deg, #0967b1 0%, #004785 100%)",
+              padding: "10px 10px 13px",
+              boxShadow:
+                "0 14px 24px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.2)",
             }}
           >
-            {/* Brand bar — drag handle */}
             <div
-              className="flex items-center justify-between rounded-lg mb-3 px-3 py-1.5 cursor-grab active:cursor-grabbing"
-              style={{ background: "rgba(255,255,255,0.07)" }}
+              className="absolute inset-x-0 top-0 h-[8px]"
+              style={{
+                background:
+                  "repeating-linear-gradient(180deg, #003a6f 0 1px, #0d72bd 1px 2px)",
+              }}
+              aria-hidden="true"
+            />
+            <button
+              type="button"
+              aria-label="Close calculator"
+              className="absolute right-1.5 top-1 z-10 flex h-5 w-5 items-center justify-center rounded-[2px] bg-[#03487f] text-sm font-black leading-none text-white/80 hover:bg-[#0b72ba] hover:text-white"
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={() => toggleCalculator()}
+            >
+              x
+            </button>
+            <div
+              className="relative mt-2 cursor-grab border border-[#003660] bg-[#07599b] p-2 active:cursor-grabbing"
+              style={{
+                boxShadow:
+                  "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -2px 0 rgba(0,0,0,0.18)",
+              }}
               onMouseDown={(e) => {
                 const drag = calcDragRef.current;
                 drag.dragging = true;
@@ -10208,69 +10851,57 @@ function UCATQuestionBankSection({
                 e.preventDefault();
               }}
             >
-              <span style={{ color: "rgba(255,255,255,0.9)", fontSize: "11px", fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase" }}>
-                phloem
-              </span>
-              <button
-                type="button"
-                onMouseDown={(e) => e.stopPropagation()}
-                onClick={() => toggleCalculator()}
-                style={{ color: "rgba(255,255,255,0.5)", fontSize: "16px", lineHeight: 1, background: "none", border: "none", cursor: "pointer", padding: "0 2px" }}
+              <div
+                className="flex h-[42px] items-center justify-end overflow-hidden border-[3px] border-[#d8e0d1] bg-[#f6f7ef] px-2 font-mono text-[20px] leading-none text-black"
+                style={{ boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.22)" }}
               >
-                ×
-              </button>
+                {calcDisplay}
+              </div>
+              <div className="mt-2 grid grid-cols-[78px_minmax(0,1fr)] items-end gap-2">
+                <div className="grid h-[32px] grid-cols-3 overflow-hidden border border-[#0d2533] bg-[#101b1e]">
+                  <span className="border-r border-[#2b3a38] bg-[#1b2728]" aria-hidden="true" />
+                  <span className="border-r border-[#2b3a38] bg-[#182526]" aria-hidden="true" />
+                  <span className="bg-[#142121]" aria-hidden="true" />
+                </div>
+                <div className="pb-0.5 text-right text-white">
+                  <div className="text-[10px] font-bold uppercase">PHLOEM</div>
+                  <div className="text-[20px] font-black leading-none">PH-108</div>
+                </div>
+              </div>
             </div>
 
-            {/* LCD display */}
             <div
-              className="font-mono text-right text-xl mb-3 px-3 rounded"
-              style={{
-                background: "#9db882",
-                border: "3px solid #2a3a1a",
-                color: "#1a2800",
-                boxShadow: "inset 0 2px 8px rgba(0,0,0,0.4)",
-                letterSpacing: "0.05em",
-                minHeight: "48px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
+              className="mt-3 border border-[#003a6b] bg-[#00559b] p-2"
+              style={{ boxShadow: "inset 0 1px 4px rgba(0,0,0,0.35)" }}
             >
-              {calcDisplay}
+              <div className="grid grid-cols-4 gap-[6px]">
+                <button type="button" onClick={() => memoryRecallClear()} className="h-8 rounded-[2px] border border-[#8b0f0f] bg-[#c9141c] text-[12px] font-black text-white shadow-[0_3px_0_#731012] active:translate-y-px">MRC</button>
+                <button type="button" onClick={() => memoryAdd(-1)} className="h-8 rounded-[2px] border border-[#8b0f0f] bg-[#c9141c] text-[12px] font-black text-white shadow-[0_3px_0_#731012] active:translate-y-px">M-</button>
+                <button type="button" onClick={() => memoryAdd(1)} className="h-8 rounded-[2px] border border-[#8b0f0f] bg-[#c9141c] text-[12px] font-black text-white shadow-[0_3px_0_#731012] active:translate-y-px">M+</button>
+                <button type="button" onClick={() => resetCalculator()} className="h-8 rounded-[2px] border border-[#8b0f0f] bg-[#c9141c] text-[12px] font-black text-white shadow-[0_3px_0_#731012] active:translate-y-px">CE</button>
+
+                {["7", "8", "9"].map((d) => (
+                  <button key={d} type="button" onClick={() => inputCalcDigit(d)} className="h-8 rounded-[2px] border border-[#c4c0b4] bg-[#f7f5ed] text-[15px] font-black text-[#004785] shadow-[0_3px_0_#aaa493] active:translate-y-px">{d}</button>
+                ))}
+                <button type="button" onClick={() => commitCalcOperation("/")} className="h-8 rounded-[2px] border border-[#8b0f0f] bg-[#c9141c] text-[15px] font-black text-white shadow-[0_3px_0_#731012] active:translate-y-px">/</button>
+
+                {["4", "5", "6"].map((d) => (
+                  <button key={d} type="button" onClick={() => inputCalcDigit(d)} className="h-8 rounded-[2px] border border-[#c4c0b4] bg-[#f7f5ed] text-[15px] font-black text-[#004785] shadow-[0_3px_0_#aaa493] active:translate-y-px">{d}</button>
+                ))}
+                <button type="button" onClick={() => commitCalcOperation("*")} className="h-8 rounded-[2px] border border-[#8b0f0f] bg-[#c9141c] text-[15px] font-black text-white shadow-[0_3px_0_#731012] active:translate-y-px">x</button>
+
+                {["1", "2", "3"].map((d) => (
+                  <button key={d} type="button" onClick={() => inputCalcDigit(d)} className="h-8 rounded-[2px] border border-[#c4c0b4] bg-[#f7f5ed] text-[15px] font-black text-[#004785] shadow-[0_3px_0_#aaa493] active:translate-y-px">{d}</button>
+                ))}
+                <button type="button" onClick={() => commitCalcOperation("-")} className="h-8 rounded-[2px] border border-[#8b0f0f] bg-[#c9141c] text-[15px] font-black text-white shadow-[0_3px_0_#731012] active:translate-y-px">-</button>
+
+                <button type="button" onClick={() => inputCalcDigit("0")} className="h-8 rounded-[2px] border border-[#c4c0b4] bg-[#f7f5ed] text-[15px] font-black text-[#004785] shadow-[0_3px_0_#aaa493] active:translate-y-px">0</button>
+                <button type="button" onClick={() => inputCalcDecimal()} className="h-8 rounded-[2px] border border-[#c4c0b4] bg-[#f7f5ed] text-[15px] font-black text-[#004785] shadow-[0_3px_0_#aaa493] active:translate-y-px">.</button>
+                <button type="button" onClick={() => commitCalcOperation()} className="h-8 rounded-[2px] border border-[#8b0f0f] bg-[#c9141c] text-[15px] font-black text-white shadow-[0_3px_0_#731012] active:translate-y-px">=</button>
+                <button type="button" onClick={() => commitCalcOperation("+")} className="h-8 rounded-[2px] border border-[#8b0f0f] bg-[#c9141c] text-[15px] font-black text-white shadow-[0_3px_0_#731012] active:translate-y-px">+</button>
+              </div>
             </div>
-
-            {/* Button grid */}
-            <div className="grid grid-cols-4 gap-1.5">
-              {/* Memory row */}
-              <button type="button" onClick={() => memoryRecallClear()} className="py-2 rounded text-xs font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>MRC</button>
-              <button type="button" onClick={() => memoryAdd(-1)} className="py-2 rounded text-xs font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>M−</button>
-              <button type="button" onClick={() => memoryAdd(1)} className="py-2 rounded text-xs font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>M+</button>
-              <button type="button" onClick={() => resetCalculator()} className="py-2 rounded text-xs font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>CE</button>
-
-              {/* Row: 7 8 9 ÷ */}
-              {["7", "8", "9"].map((d) => (
-                <button key={d} type="button" onClick={() => inputCalcDigit(d)} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#f5f0e8", color: "#0f1f72", boxShadow: "0 3px 0 #b0a898" }}>{d}</button>
-              ))}
-              <button type="button" onClick={() => commitCalcOperation("/")} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>÷</button>
-
-              {/* Row: 4 5 6 × */}
-              {["4", "5", "6"].map((d) => (
-                <button key={d} type="button" onClick={() => inputCalcDigit(d)} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#f5f0e8", color: "#0f1f72", boxShadow: "0 3px 0 #b0a898" }}>{d}</button>
-              ))}
-              <button type="button" onClick={() => commitCalcOperation("*")} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>×</button>
-
-              {/* Row: 1 2 3 − */}
-              {["1", "2", "3"].map((d) => (
-                <button key={d} type="button" onClick={() => inputCalcDigit(d)} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#f5f0e8", color: "#0f1f72", boxShadow: "0 3px 0 #b0a898" }}>{d}</button>
-              ))}
-              <button type="button" onClick={() => commitCalcOperation("-")} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>−</button>
-
-              {/* Row: 0 . = + */}
-              <button type="button" onClick={() => inputCalcDigit("0")} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#f5f0e8", color: "#0f1f72", boxShadow: "0 3px 0 #b0a898" }}>0</button>
-              <button type="button" onClick={() => inputCalcDecimal()} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#f5f0e8", color: "#0f1f72", boxShadow: "0 3px 0 #b0a898" }}>.</button>
-              <button type="button" onClick={() => commitCalcOperation()} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>=</button>
-              <button type="button" onClick={() => commitCalcOperation("+")} className="py-2 rounded text-sm font-bold active:translate-y-px" style={{ background: "#c01818", color: "#fff", boxShadow: "0 3px 0 #700a0a" }}>+</button>
-            </div>
+            <div className="mt-3 h-[13px] border-t border-[#0b72ba] bg-[#03487f]" aria-hidden="true" />
           </div>
         </div>
       )}

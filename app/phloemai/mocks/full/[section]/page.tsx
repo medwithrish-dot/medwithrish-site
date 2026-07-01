@@ -5,12 +5,19 @@ import { UCAT_SECTIONS } from "../../../_lib/ucatQuestionBank";
 
 type FullMockSectionSearchParams = {
   mock?: string | string[];
+  set?: string | string[];
 };
 
 function getMockId(searchParams: FullMockSectionSearchParams) {
   return Array.isArray(searchParams.mock)
     ? searchParams.mock[0]
     : searchParams.mock;
+}
+
+function getPracticeSetId(searchParams: FullMockSectionSearchParams) {
+  return Array.isArray(searchParams.set)
+    ? searchParams.set[0]
+    : searchParams.set;
 }
 
 function withMockBackHref(mockId?: string) {
@@ -31,7 +38,8 @@ export default async function Page({
   searchParams: Promise<FullMockSectionSearchParams>;
 }) {
   const { section } = await params;
-  const mockId = getMockId(await searchParams);
+  const resolvedSearchParams = await searchParams;
+  const mockId = getMockId(resolvedSearchParams);
   const { isPremium } = await getPhloemEntitlements();
 
   if (!isPremium) {
@@ -48,6 +56,7 @@ export default async function Page({
       section={section}
       diagnosticMode="full-section"
       mockId={mockId}
+      practiceSetId={getPracticeSetId(resolvedSearchParams)}
       backHref={withMockBackHref(mockId)}
       backLabel="Back to full mocks"
     />

@@ -3908,10 +3908,10 @@ function PracticeContent({
             />
           </div>
           <Link
-            href="/phloemai/question-bank"
+            href="/phloemai/progress"
             className="mt-5 inline-flex items-center gap-2 text-sm font-black text-blue-600 hover:text-blue-700"
           >
-            View all practice
+            View progress
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </section>
