@@ -20399,9 +20399,9 @@ subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
 "Five cleanroom operators—Rachel, Sam, Tarek, Vanessa, and Wendy—are scheduled for individual quality control shifts from Monday to Friday, one operator per day.",
-"• Rachel's shift must be on either Monday or Friday.",
+"• Rachel's shift must be on Monday.",
 "• Sam's shift must be on the day immediately following Vanessa's shift.",
-"• There must be exactly one shift scheduled between Tarek's shift and Wendy's shift.",
+"• There must be exactly one shift scheduled between Rachel's shift and Wendy's shift.",
 "• Wendy's shift cannot be on Thursday."
 ],
 question: "Which of the following must be true?",
@@ -20411,7 +20411,7 @@ distractors: [
 "Tarek's shift is on Wednesday.",
 "Wendy's shift is on Friday."
 ],
-explanation: "Let the days from Monday to Friday be M, T, W, Th, F. The cleanroom operators are R, S, T, V, and W. From the conditions, we can perform a step-by-step deduction:\n1) Condition 1 fixes Rachel on Monday (M).\n2) Condition 4 states there is exactly one shift between Wendy and Rachel. Since Rachel is on Monday (day 1), Wendy must be scheduled on Wednesday (day 3).\n3) The remaining available days are Tuesday (day 2), Thursday (day 4), and Friday (day 5).\n4) Condition 2 states that Sam's shift is immediately after Vanessa's shift, creating a consecutive VS block. The only remaining consecutive slots available are Thursday and Friday. Therefore, Vanessa must be on Thursday and Sam must be on Friday.\n5) This leaves Tuesday open for the remaining operator, Tarek. Condition 3 is satisfied because Tarek (Tuesday) is scheduled somewhere before Wendy (Wednesday).\n\nThis completely determines the weekly schedule: Monday: Rachel, Tuesday: Tarek, Wednesday: Wendy, Thursday: Vanessa, Friday: Sam. Looking at the options, 'Vanessa's shift is on Thursday' must be true."
+explanation: "Let the days from Monday to Friday be M, T, W, Th, F. Rachel is fixed on Monday. Since exactly one shift must fall between Rachel and Wendy, Wendy must be on Wednesday. The remaining days are Tuesday, Thursday, and Friday for Tarek, Vanessa, and Sam. Sam must be immediately after Vanessa, and the only consecutive pair left is Thursday-Friday, so Vanessa is on Thursday and Sam is on Friday. Tarek is left on Tuesday. Therefore, Vanessa's shift is on Thursday must be true."
 },
 {
 kind: "single",
@@ -20533,7 +20533,7 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "Alpha is tested in Period 3.",
 distractors: [
-"Beta is tested in Period 2.",
+"Beta is tested in Period 4.",
 "Gamma is tested in Period 3.",
 "Delta is tested in Period 3."
 ],
@@ -20635,7 +20635,7 @@ question: "Which of the following must be true?",
 correct: "P1's run is Run 1.",
 distractors: [
 "P5's run is Run 1.",
-"P2's run is Run 4.",
+"P2's run is Run 2.",
 "P3's run is Run 3."
 ],
 explanation: "Let the runs be 1, 2, 3, 4, 5. P4 is fixed at Run 5, leaving Runs 1, 2, 3, and 4 open. P5 and P2 must form a consecutive P5-P2 block. Let's test the three possible locations for this block:\n- If the P5-P2 block is at Runs 1 and 2 (P5=1, P2=2): Runs 3 and 4 remain for P1 and P3. Since P1 must be before P3, P1 is Run 3 and P3 is Run 4. However, this violates the condition that P3 cannot be Run 4. Thus, this is invalid.\n- If the P5-P2 block is at Runs 2 and 3 (P5=2, P2=3): Runs 1 and 4 remain for P1 and P3. Since P1 must be before P3, P1 is Run 1 and P3 is Run 4. This again violates the condition that P3 cannot be Run 4. Thus, this is invalid.\n- If the P5-P2 block is at Runs 3 and 4 (P5=3, P2=4): Runs 1 and 2 remain for P1 and P3. Since P1 must be before P3, P1 takes Run 1 and P3 takes Run 2. This satisfies all conditions: P1 is not Run 2, and P3 is not Run 4.\n\nThis results in exactly one unique valid sequence: Run 1: P1, Run 2: P3, Run 3: P5, Run 4: P2, Run 5: P4. Therefore, it must be true that P1's run is Run 1."
@@ -21035,7 +21035,7 @@ correct: "Vance's leave is scheduled for Week 1.",
 distractors: [
 "Zoe's leave is scheduled for Week 2.",
 "Xavier's leave is scheduled for Week 5.",
-"Yvonne's leave is scheduled for Week 2."
+"Yvonne's leave is scheduled for Week 4."
 ],
 explanation: "Let's perform an exhaustive case analysis for Weeks 1 to 5. Condition 3 fixes Willa's leave in Week 3. Condition 4 states there is exactly one week between Vance and Willa (Week 3), which means Vance's leave must be scheduled for either Week 1 or Week 5. Let's test these two possibilities: Case 1: Vance's leave is scheduled for Week 5. Condition 2 states Vance's leave must be earlier than Yvonne's leave. If Vance is in Week 5, it is impossible for Yvonne to be later than Vance. Thus, Case 1 is completely invalid. Case 2: Vance's leave is scheduled for Week 1. This leaves Weeks 2, 4, and 5 empty. Condition 5 states Yvonne cannot be scheduled for Week 5, so Yvonne must be scheduled for Week 2 or Week 4. Condition 1 states Xavier and Zoe must have immediately adjacent leave weeks. The remaining empty weeks must accommodate the adjacent pair {Xavier, Zoe} and the single manager Yvonne. Let's look at the subcases: Subcase 2a: Yvonne is scheduled for Week 2. This leaves Weeks 4 and 5 empty, which perfectly accommodates the adjacent pair {Xavier, Zoe} (one in Week 4, the other in Week 5). This satisfies all conditions, giving valid arrangements like [Vance, Yvonne, Willa, Xavier, Zoe]. Subcase 2b: Yvonne is scheduled for Week 4. This leaves Weeks 2 and 5 empty. However, Weeks 2 and 5 are not adjacent, so they cannot accommodate the adjacent pair {Xavier, Zoe}. Thus, Subcase 2b is invalid. Thus, in all valid scenarios, Vance's leave is always scheduled for Week 1. Therefore, 'Vance's leave is scheduled for Week 1' must be true."
 },
@@ -21078,7 +21078,7 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "Nigel takes his leave in Week 1.",
 distractors: [
-"Mona takes her leave in Week 3.",
+"Mona takes her leave in Week 4.",
 "Olivia takes her leave in Week 5.",
 "Kevin takes his leave in Week 3."
 ],
@@ -21101,7 +21101,7 @@ correct: "Penelope takes her sabbatical in Week 1.",
 distractors: [
 "Quinn takes his sabbatical in Week 2.",
 "Samuel takes his sabbatical in Week 3.",
-"Thomas takes his sabbatical in Week 5."
+"Thomas takes his sabbatical in Week 2."
 ],
 explanation: "Let's track the weeks 1, 2, 3, 4, 5. Rachel is fixed in Week 4 (* , _ , _ , Rachel , _). Penelope must be before Thomas, and there must be at least one week between Penelope and Rachel (4). This means Penelope cannot be in Week 3 (0 weeks gap) or Week 4. So Penelope must be in Week 1 or Week 2. If Penelope is in Week 2, the gap between Week 2 and Week 4 is exactly one week (Week 3), which satisfies 'at least one week'. Let's test if Penelope can be in Week 2. If Penelope is in Week 2, the remaining slots are 1, 3, and 5 for Quinn, Samuel, and Thomas. Quinn and Samuel must be adjacent, so they must occupy consecutive slots. But the remaining slots 1, 3, and 5 are not consecutive! Therefore, Penelope cannot be in Week 2. Penelope must be in Week 1. With Penelope in Week 1 and Rachel in Week 4, the remaining slots are 2, 3, and 5. Quinn and Samuel must be adjacent, so they must occupy Weeks 2 and 3. This leaves Week 5 for Thomas. Let's check if Thomas (5) is after Penelope (1): yes. Now we just need to place Quinn and Samuel in Weeks 2 and 3. Quinn cannot be in Week 1 (he is in 2 or 3). Can Quinn be in Week 2 and Samuel in Week 3? Yes. Can Samuel be in Week 2 and Quinn in Week 3? Yes. Both variations are perfectly valid: [Penelope, Quinn, Samuel, Rachel, Thomas] and [Penelope, Samuel, Quinn, Rachel, Thomas]. In both configurations, Penelope is always in Week 1."
 },
@@ -21146,8 +21146,8 @@ question: "Which of the following must be true?",
 correct: "Fred takes his leave in May.",
 distractors: [
 "Harold takes his leave in March.",
-"Julia takes her leave in March.",
-"Kurt takes his leave in February."
+"Julia takes her leave in April.",
+"Kurt takes his leave in April."
 ],
 explanation: "Let's map the months: Jan, Feb, Mar, Apr, May. Gina is fixed in January (Gina, _ , _ , _ , *). There is exactly one month between Gina (Jan) and Julia, so Julia must be in March (Gina, *, Julia, _ , *). Julia and Kurt are adjacent, so Kurt must be in either February or April. Case 1: Kurt is in February. Then the remaining months are April and May. Harold must be before Fred (Harold < Fred), so Harold is in April and Fred is in May. Let's check Harold's restriction: 'Harold cannot take his leave in February'—Harold is in April, so this is valid. Case 2: Kurt is in April. Then the remaining months are February and May. Harold must be before Fred, so Harold is in February and Fred is in May. But Harold cannot be in February! So Case 2 is invalid. Thus, Case 1 is the unique valid arrangement: Jan: Gina, Feb: Kurt, Mar: Julia, Apr: Harold, May: Fred. Therefore, Fred must take his leave in May."
 },
@@ -21275,9 +21275,9 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "Xander takes leave in Term 5.",
 distractors: [
-"Umesh takes leave in Term 4.",
-"Walt takes leave in Term 3.",
-"Sian takes leave in Term 2."
+"Umesh takes leave in Term 2.",
+"Walt takes leave in Term 4.",
+"Sian takes leave in Term 4."
 ],
 explanation: "Let's analyze the slots: 1, 2, 3, 4, 5. Vidya is in Term 1 (Vidya, _ , _ , _ , *). Exactly one term between Vidya (1) and Walt means Walt must be in Term 3 (Vidya, _ , Walt , _ , *). Walt and Sian are adjacent, so Sian can be in Term 2 or Term 4. Case 1: Sian is in Term 2. The remaining slots are Term 4 and Term 5 for Umesh and Xander. Since Umesh must be before Xander (Umesh < Xander), Umesh is in Term 4 and Xander is in Term 5. Check Umesh's restriction: 'Umesh cannot take leave in Term 2'—he is in 4, so valid. Case 2: Sian is in Term 4. The remaining slots are Term 2 and Term 5 for Umesh and Xander. Since Umesh < Xander, Umesh is in Term 2 and Xander is in Term 5. But Umesh cannot take leave in Term 2! So Case 2 is invalid. Thus, Case 1 is the unique valid configuration: Term 1: Vidya, Term 2: Sian, Term 3: Walt, Term 4: Umesh, Term 5: Xander. Therefore, 'Xander takes leave in Term 5' must be true."
 },
@@ -21475,7 +21475,7 @@ stimulus: [
 question: "Which of the following must be selected?",
 correct: "GasChrom",
 distractors: [
-"MassSpec",
+"Fluorometer",
 "Centrifuge",
 "Incubator"
 ],
@@ -21495,7 +21495,7 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "Beatrice is chosen.",
 distractors: [
-"David is chosen.",
+"Elena is not chosen.",
 "Foster is chosen.",
 "Chloe is chosen."
 ],
@@ -21575,9 +21575,9 @@ stimulus: [
 question: "Which of the following must be selected?",
 correct: "Denise",
 distractors: [
-"Arthur",
+"Beatrice",
 "Carlos",
-"Fred"
+"Emily"
 ],
 explanation: "We need exactly 4 representatives from {A, B, C, D, E, F}. Condition 4 excludes Beatrice (B). We must choose 4 from the remaining 5: {A, C, D, E, F}. This means exactly one of these 5 will be excluded. Condition 2 states Carlos (C) and Emily (E) cannot both be selected, meaning at least one of them must be excluded. Since we can only exclude exactly one person from the five candidates, the person excluded must be either C or E. This implies that Arthur (A), Denise (D), and Fred (F) MUST be selected. Let's verify: if A, D, F are selected, we have 3 members. We then select exactly one of C or E to make 4. Let's check Condition 1: If A is selected, D is selected (true, both are). Condition 3: If F is selected, A is selected (true, both are). No conditions are violated. Therefore, Denise must be selected."
 },
@@ -21809,13 +21809,13 @@ stimulus: [
 "• No two officers share a tier."
 ],
 question: "Which of the following must be true?",
-correct: "Xander is at Tier 1.",
+correct: "Victor is at Tier 1.",
 distractors: [
-"Victor is at Tier 2.",
+"Xander is at Tier 2.",
 "Wendy is at Tier 3.",
 "Alistair is at Tier 6."
 ],
-explanation: "Let's analyze the constraints. Zachary is fixed at Tier 4. Xander is exactly three tiers senior to Yasmin (Y = X + 3). Let's find valid slots for (X, Y):\n- If X = 1, then Y = 4 (Invalid, Zachary is at Tier 4).\n- If X = 2, then Y = 5. The remaining tiers are 1, 3, and 6. The remaining officers Victor, Wendy, and Alistair follow the chain V > W > A (since V > W and A < W). This forces V = 1, W = 3, and A = 6. This is a valid arrangement.\n- If X = 3, then Y = 6. The remaining tiers are 1, 2, and 5. The chain V > W > A forces V = 1, W = 2, and A = 5. This is also a valid arrangement.\nLet's check if there is an option that is always true. In the first valid arrangement: X=2, Y=5, V=1, W=3, A=6. In the second valid arrangement: X=3, Y=6, V=1, W=2, A=5. In both arrangements, Victor is always at Tier 1! Let's update the options so that 'Victor is at Tier 1' is the correct answer and replace the current options."
+explanation: "Zachary is fixed at Tier 4. Xander is exactly three tiers senior to Yasmin, so the valid pairs are Xander/Yasmin = Tier 2/Tier 5 or Tier 3/Tier 6. In the first case, Victor, Wendy, and Alistair must fill Tiers 1, 3, and 6 in the order Victor above Wendy above Alistair, so Victor is Tier 1. In the second case, they must fill Tiers 1, 2, and 5 in that same order, again forcing Victor into Tier 1. Therefore, Victor is at Tier 1 must be true."
 },
 {
 kind: "single",
@@ -21832,7 +21832,7 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "Victor is at Tier 1.",
 distractors: [
-"Xander is at Tier 2.",
+"Xander is at Tier 1.",
 "Wendy is at Tier 3.",
 "Alistair is at Tier 6."
 ],
@@ -21966,9 +21966,9 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "Neurology is in Room 1.",
 distractors: [
-"Cardiology is in Room 2.",
+"Cardiology is in Room 4.",
 "Oncology is in Room 3.",
-"Pediatrics is in Room 5."
+"Pediatrics is in Room 2."
 ],
 explanation: "Let's analyze the positions of Neurology (N) and Oncology (O). There are exactly two rooms between them, so they can be in (Room 1, Room 4) or (Room 2, Room 5). Since O cannot be in Room 5, if they are in Rooms 2 and 5, N must be in Room 5 and O must be in Room 2. However, Pediatrics (P) must be to the right of N. If N is in Room 5, there is no room to its right for P. Thus, N and O cannot be in Rooms 2 and 5. Therefore, N and O must be in Rooms 1 and 4. Since O cannot be in Room 1, N must be in Room 1 and O must be in Room 4. Now we have: Room 1 = N, Room 4 = O. The remaining rooms are 2, 3, and 5. Cardiology (C) is immediately to the left of Dermatology (D), so C and D must occupy adjacent rooms. The only adjacent rooms available are Rooms 2 and 3. Thus, C is in Room 2 and D is in Room 3. This leaves Room 5 for P. Checking all conditions: P (Room 5) is to the right of N (Room 1). D (Room 3) is not in Room 5. All conditions are perfectly satisfied. Thus, N must be in Room 1."
 },
@@ -22053,9 +22053,9 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "Ethics is assigned to Track Alpha.",
 distractors: [
-"Aerospace is assigned to Track Beta.",
+"Aerospace is assigned to Track Alpha.",
 "Blockchain is assigned to Track Alpha.",
-"Fintech is assigned to Track Beta."
+"Fintech is assigned to Track Alpha."
 ],
 explanation: "Each track must have exactly 3 panels. We know Climatology (C) is in Track Alpha. Since Blockchain (B) and C are in different tracks, B must be in Track Beta. Deep-learning (D) is in Track Alpha. So Track Alpha currently has C and D. Track Beta has B. Aerospace (A) and Fintech (F) are in the same track. If they are both in Track Alpha, Track Alpha would have C, D, A, F (4 panels), which exceeds the limit of 3. Therefore, A and F must both be in Track Beta. Now Track Beta has B, A, F (3 panels), which fills Track Beta completely. The remaining panel, Ethics (E), must therefore be assigned to Track Alpha. Let's check the conditional condition: 'If Ethics is assigned to Track Beta, then...'. Since Ethics is in Track Alpha, the condition is vacuously true. All conditions are satisfied perfectly."
 },
@@ -22258,7 +22258,7 @@ stimulus: [
 "• George is assigned to the Leadership track.",
 "• If Julia is assigned to the Technical track, then Ian is also assigned to the Technical track.",
 "• Laura is not assigned to the Operations track.",
-"• Exactly three employees are assigned to the Technical track."
+"• Exactly three employees are assigned to the Leadership track."
 ],
 question: "Which of the following must be true?",
 correct: "Julia is not assigned to the Technical track.",
@@ -22279,7 +22279,7 @@ stimulus: [
 "• Oliver and Paula do not join the same society.",
 "• If Rachel joins the Debate society, then Quinton joins the Film society.",
 "• Marcus does not join the Film society.",
-"• Exactly three students join the Environment society."
+"• Exactly three students join the Debate society."
 ],
 question: "Which of the following must be true?",
 correct: "Marcus joins the Debate society.",
@@ -22318,9 +22318,9 @@ leftTitle: "Puzzle",
 stimulus: [
 "Six children (Leo, Mia, Noah, Olivia, Penn, and Quinn) are sorted into three summer camp groups: Red, Blue, or Yellow. Each group has at least one child.",
 "• Leo and Mia are sorted into the same group.",
-"• Noah and Olivia are sorted into different groups.",
+"• Noah and Olivia are sorted into the same group.",
 "• If Penn is sorted into the Red group, then Quinn is sorted into the Blue group.",
-"• Leo is not sorted into the Blue group.",
+"• Leo is not sorted into the Red group.",
 "• Exactly three children are sorted into the Red group."
 ],
 question: "Which of the following must be true?",
@@ -22330,7 +22330,7 @@ distractors: [
 "Quinn is sorted into the Blue group.",
 "Leo is sorted into the Blue group."
 ],
-explanation: "Let's perform an exhaustive analysis of the constraints:\n1. Exactly three children are sorted into the Red group.\n2. Leo is not sorted into the Red group, and since Leo and Mia are in the same group, Mia cannot be in the Red group either. This leaves only four children available for the Red group: Noah, Olivia, Penn, and Quinn.\n3. Noah and Olivia must be sorted into the same group. If they were not in the Red group, the Red group would have to be formed entirely by Penn and Quinn. However, that only provides two children, which is impossible since the Red group requires exactly three members. Therefore, Noah and Olivia must be sorted into the Red group.\n4. Since Noah must be in the Red group, 'Noah is sorted into the Red group' is always true.\n5. Let's verify the distractors can be false with valid arrangements:\n- Arrangement A: Red = {Noah, Olivia, Quinn}, Yellow = {Leo, Mia}, Blue = {Penn}. This satisfies all rules, and here Penn is Yellow/Blue, Quinn is Red (not Blue), so 'Penn is sorted into the Red group' and 'Quinn is sorted into the Blue group' are false.\n- Arrangement B: Red = {Noah, Olivia, Penn}, Blue = {Quinn}, Yellow = {Leo, Mia}. Here Leo is Yellow, which disproves 'Leo is sorted into the Blue group'."
+explanation: "Exactly three children must be in the Red group. Leo is not in Red, and Leo and Mia are in the same group, so neither Leo nor Mia can fill a Red slot. Noah and Olivia must be in the same group. If Noah and Olivia were not in Red, only Penn and Quinn would remain available for Red, which is not enough to make three Red children. Therefore Noah and Olivia must both be in Red, so Noah is sorted into the Red group must be true. Penn and Quinn are not fixed because either one can be the third Red child, and Leo can be placed outside Red."
 },
 {
 kind: "single",
@@ -22385,9 +22385,10 @@ leftTitle: "Puzzle",
 stimulus: [
 "Five residents (Kiran, Liam, Mona, Nina, and Owen) join three fitness divisions: Cardio, Strength, or Yoga. Every resident joins exactly one division.",
 "• Kiran and Liam join different divisions.",
-"• If Mona joins the Strength division, then Nina also joins the Strength division.",
+"• Mona and Nina join the same division.",
 "• Owen joins the Yoga division.",
-"• Exactly two residents join the Cardio division."
+"• Exactly two residents join the Cardio division.",
+"• Exactly one resident joins the Strength division."
 ],
 question: "Which of the following must be true?",
 correct: "Mona joins the Cardio division.",
@@ -24344,11 +24345,11 @@ stimulus: [
 "• Lithograph 2 is not ranked lowest."
 ],
 question: "Which of the following must be true?",
-correct: "Lithograph 1 is ranked third.",
+correct: "Lithograph 6 is ranked sixth.",
 distractors: [
+"Lithograph 1 is ranked third.",
 "Lithograph 3 is ranked fifth.",
-"Lithograph 4 is ranked first.",
-"Lithograph 6 dignity fourth."
+"Lithograph 4 is ranked first."
 ],
 explanation: "Lithograph 5 = 2. Lithograph 3 is two places below Lithograph 1 (1 = n, 3 = n+2). Since slot 2 is taken, the possible positions for (1, 3) are (1, 3), (3, 5), or (4, 6). Case 1: 1 = 1, 3 = 3. Remaining slots are 4, 5, 6. Condition 4 says 6 is lower than 3, so 6 must be 4, 5, or 6. Condition 5 says 2 is not lowest, and Condition 2 says 4 > 2. If 1=1 and 3=3, remaining elements to place are 4, 2, 6 into slots 4, 5, 6. Since 4 > 2 and 2 is not lowest (6), we must have 4 = 4, 2 = 5, 6 = 6. Let's check Condition 4: 6(6) is lower than 3(3) -> True. Case 2: 1 = 3, 3 = 5. Remaining slots are 1, 4, 6. 6 must be lower than 3(5), so 6 = 6. Then 4 and 2 must occupy 1 and 4. Since 4 > 2, 4 = 1 and 2 = 4. Let's check Condition 5: 2 is not lowest (6) -> True. This means both Case 1 and Case 2 are structurally possible unless bounded further. Let's check if Lithograph 6 is always lower than Lithograph 3, meaning it's forced last in both cases. Yes, in Case 1, 6=6. In Case 2, 6=6. Therefore, Lithograph 6 is ranked sixth must be true."
 },
@@ -24401,6 +24402,7 @@ stimulus: [
 "Six vintage posters—Art, Film, Travel, War, Sports, and Music—are ranked 1st to 6th by value.",
 "• Art is ranked immediately above Film.",
 "• Travel is ranked higher than War.",
+"• Travel is ranked first.",
 "• Sports is ranked fifth.",
 "• Music is ranked either first or fourth.",
 "• There is at least one poster ranked between Art and Sports."
@@ -24412,7 +24414,7 @@ distractors: [
 "Film is ranked second.",
 "Travel is ranked third."
 ],
-explanation: "Sports = 5. Music is 1 or 4. Case 1: Music = 1. Remaining slots are 2, 3, 4, 6. Art is immediately above Film (Art, Film). The available adjacent pairs are (2,3) or (3,4). Let's test Art=2, Film=3. Remaining slots are 4 and 6 for Travel and War. Since Travel > War, Travel = 4, War = 6. Let's check Condition 5: at least one poster between Art(2) and Sports(5) -> True (slots 3 and 4 are between them). Let's test Art=3, Film=4. Remaining slots 2 and 6. Travel=2, War=6. Condition 5: between Art(3) and Sports(5) is slot 4 (Film) -> True. Case 2: Music = 4. Remaining slots are 1, 2, 3, 6. Art and Film must be adjacent, so they must be (1,2) or (2,3). If Art=1, Film=2, remaining slots 3 and 6 for Travel and War (Travel=3, War=6). Condition 5: between Art(1) and Sports(5) -> True. If Art=2, Film=3, remaining slots 1 and 6 (Travel=1, War=6). Condition 5 -> True. Notice that across all possibilities, Music is not locked unless we inspect further constraints. Let's look for a constraint that forces a unique answer: if Music = 1, then Art/Film can be 2/3 or 3/4. If Music = 4, Art/Film can be 1/2 or 2/3. This means Music's position determines the structure. Let's assume the question requires Music to be 4th to avoid a conflict with another unstated constraint, or Music is explicitly forced to be 4th because if Music=1, Film could be 4th (conflict if Music=4). Let's look at 'Music is ranked fourth' as the intended invariant under stricter filtering."
+explanation: "Travel is fixed at 1st and Sports is fixed at 5th. Music must be either 1st or 4th, but 1st is already occupied by Travel, so Music must be 4th. The Art-Film immediate pair then has to occupy 2nd and 3rd, leaving War 6th. Therefore, Music is ranked fourth must be true."
 },
 {
 kind: "single",
@@ -24495,11 +24497,11 @@ stimulus: [
 "• There are exactly two tests scheduled between T6 and T5."
 ],
 question: "Which of the following must be true?",
-correct: "T5 is scheduled fifth.",
+correct: "T5 is scheduled first.",
 distractors: [
-"T1 is scheduled third.",
-"T6 is scheduled fourth.",
-"T4 is scheduled sixth."
+"T1 is scheduled fourth.",
+"T6 is scheduled third.",
+"T4 is scheduled fifth."
 ],
 explanation: "T3 = 2. T5 can be 1 or 5. Let's analyze both. Case 1: T5 = 1. Exactly two tests between T6 and T5(1) means T6 must be 4. Condition 1 says T1 is immediately before T6, so T1 = 3. Remaining slots are 5 and 6 for T2 and T4. Condition 2 says T4 is after T2, so T2 = 5 and T4 = 6. Let's check all conditions: T5=1, T3=2, T1=3, T6=4, T2=5, T4=6. This is valid. Case 2: T5 = 5. Exactly two tests between T6 and T5(5) means T6 must be 2. But T3 = 2, so this causes a conflict. Thus, Case 2 is impossible. Therefore, Case 1 is the unique valid arrangement: T5=1, T3=2, T1=3, T6=4, T2=5, T4=6. This means 'T5 is scheduled first' is true."
 },
@@ -25925,8 +25927,7 @@ subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
 "Eight engineers—Yara, Zack, Alan, Bella, Cole, Dana, Eric, and Faye—are divided into Morning (3), Afternoon (3), and Night (2) shifts.",
-"• Yara and Zack work different shifts, and both work Night.",
-"• This is impossible since they must work different shifts but both work Night, which would mean 2 Night slots. Wait, if they both work Night, they are in the same shift. Let's rephrase: Yara works the Night shift, and Zack works the Morning shift.",
+"• Yara works the Night shift, and Zack works the Morning shift.",
 "• Alan and Bella work the same shift.",
 "• Cole and Dana work different shifts, and neither works Morning.",
 "• Eric works the Afternoon shift."
@@ -25938,7 +25939,7 @@ distractors: [
 "Dana works the Night shift.",
 "Faye works the Morning shift."
 ],
-explanation: "Let's correct the setup clear of errors: Yara=N, Zack=M, Eric=A. Counts: M=3, A=3, N=2. Current slots filled: M=1, A=1, N=1. Slots left: M=2, A=2, N=1. Cole and Dana work different shifts and neither works Morning, so they must split between Afternoon and Night. Thus, one of (Cole/Dana) is A, and the other is N. This uses up 1 A slot and 1 N slot. Slots left now: M=2, A=1, N=0. Alan and Bella work the same shift. Since A has only 1 slot left and N has 0, Alan and Bella must both work the Morning shift. This leaves M=0, A=1. The remaining person Faye must work the Afternoon shift. This unique distribution satisfies all conditions. Therefore, Alan and Bella work the Morning shift must be true. Distractor counterexamples: Cole works the Afternoon shift can be false (he can be Night). Dana works the Night shift can be false (she can be Afternoon)."
+explanation: "Yara is fixed on Night, Zack on Morning, and Eric on Afternoon. With shift counts of Morning 3, Afternoon 3, and Night 2, the remaining slots are Morning 2, Afternoon 2, and Night 1. Cole and Dana work different shifts and neither works Morning, so they must split between Afternoon and Night. That uses the last Night slot and one Afternoon slot, leaving exactly two Morning slots and one Afternoon slot. Alan and Bella work the same shift, so they cannot both fit in Afternoon and must both work Morning. Therefore, Alan and Bella work the Morning shift must be true."
 },
 {
 kind: "single",
@@ -26252,13 +26253,13 @@ stimulus: [
 "• Mint is ranked 2nd."
 ],
 question: "Which of the following must be true?",
-correct: "Choco is ranked 4th.",
+correct: "Honey is ranked 1st.",
 distractors: [
+"Choco is ranked 4th.",
 "Berry is ranked 5th.",
-"Sweet is ranked 6th.",
-"Honey is ranked 1st."
+"Sweet is ranked 6th."
 ],
-explanation: "We know Mint = 2nd and Candy = 3rd. Since Mint > Choco > Berry, and Mint is 2nd, Choco and Berry must be below 2nd. Since Candy is 3rd, Choco must be 4th or lower. If Choco were 5th or lower, there would be no room for Sweet and Frost to be consecutive without breaking other constraints in certain setups, but let's look at the direct chain: Mint(2) > Choco > Berry. Since Candy is 3rd, Choco can be 4th. If Choco is 4th, Berry can be 5th, 6th, 7th, 8th. Can Choco be 5th? If Choco is 5th, then Berry must be 6th, 7th, or 8th. Let's see if that leaves room for Sweet and Frost to be consecutive. If Choco is 4th, it directly follows Candy(3). Since Mint is 2nd, the only spot above Mint is 1st. Thus, Choco must be 4th."
+explanation: "Mint is fixed 2nd and Candy is fixed 3rd. Choco must be lower than Mint and higher than Berry, so neither Choco nor Berry can take 1st. Sweet and Frost must be consecutive, and because 2nd is occupied, neither can occupy 1st as part of a consecutive pair. Sugar also cannot be 1st because Honey must be ranked higher than Sugar. The only dessert bar that can occupy 1st is Honey, so Honey is ranked 1st must be true."
 },
 
 // BATCH 3: Topic 04 - Ordering and ranking (Context: Ivy League Academic Standings)
@@ -26310,7 +26311,7 @@ subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
 "Seven academic journals (Quarterly, Review, Journal, Annals, Letters, Gazette, Chronicle) are ranked 1st to 7th by impact factor.",
-"• Quarterly is ranked higher than Review.",
+"• Review is ranked higher than Quarterly.",
 "• Journal is exactly four places higher than Annals.",
 "• Letters is ranked lower than Gazette.",
 "• Chronicle is ranked 7th.",
@@ -26323,7 +26324,7 @@ distractors: [
 "Review is ranked 3rd.",
 "Gazette is ranked 4th."
 ],
-explanation: "We know Chronicle = 7th. Journal is exactly 4 places higher than Annals, so Annals = Journal + 4. The possible pairs for (Journal, Annals) are (1, 5) and (2, 6) and (3, 7 - invalid since Chronicle is 7th). We also know Quarterly > Review > Journal. This means Journal cannot be 1st, because at least two journals (Quarterly and Review) must be ranked higher than it. Therefore, Journal must be 2nd, and Annals must be 6th. This is uniquely determined."
+explanation: "Chronicle is fixed at 7th. Journal is exactly four places higher than Annals, so the possible Journal/Annals pairs are 1st/5th, 2nd/6th, or 3rd/7th. The 3rd/7th pair is impossible because Chronicle is already 7th. Journal also cannot be 1st because Review must be ranked higher than Journal. Therefore Journal must be 2nd and Annals must be 6th. The remaining rules can then be satisfied, so Journal ranked 2nd is the forced conclusion."
 },
 {
 kind: "single",
@@ -26335,16 +26336,17 @@ stimulus: [
 "• Stanford is exactly three places higher than Columbia.",
 "• NYU is ranked lower than Chicago.",
 "• Penn is ranked 5th.",
-"• Yale is ranked higher than Stanford."
+"• Yale is ranked higher than Stanford.",
+"• Columbia is not ranked 7th."
 ],
 question: "Which of the following must be true?",
 correct: "Stanford is ranked 3rd.",
 distractors: [
-"Harvard is ranked 1st.",
-"Yale is ranked 2nd.",
+"Harvard is ranked 2nd.",
+"Yale is ranked 1st.",
 "Columbia is ranked 7th."
 ],
-explanation: "We know Penn = 5th. The chain is Harvard > Yale > Stanford > Columbia (with Columbia = Stanford + 3). Since Penn is 5th, the possible pairs for (Stanford, Columbia) are (1, 4), (2, 5 - invalid), (3, 6), and (4, 7). If Stanford is 1st, there is no room for Harvard and Yale above it. If Stanford is 3rd, Columbia is 6th. Then Harvard and Yale can be 1st and 2nd. This works perfectly. If Stanford is 4th, Columbia is 7th. Then Harvard and Yale must be 1st, 2nd, or 3rd. This is also valid. In both cases, Stanford is either 3rd or 4th. Let's check what must be true: Yale is always ranked 2nd or 3rd."
+explanation: "Penn is fixed 5th. Stanford is exactly three places higher than Columbia, and Columbia is not 7th, so the only viable Stanford/Columbia pair is 3rd/6th. The pair 2nd/5th is blocked by Penn, and 4th/7th is blocked by Columbia's restriction. Since Harvard is higher than Yale and Yale is higher than Stanford, Harvard and Yale must take 1st and 2nd in that order. Therefore, Stanford is ranked 3rd must be true."
 },
 {
 kind: "single",
@@ -26428,10 +26430,10 @@ question: "Which of the following must be true?",
 correct: "If L1 is selected, P2 must be selected.",
 distractors: [
 "P1 and L2 can never be selected together.",
-"If L3 is selected, P1 must be selected.",
+"If L3 is selected, P3 must be selected.",
 "L2 and L1 can never be selected together."
 ],
-explanation: "If L1 is selected, then P3 must also be selected. Because P1 would exclude L1, P1 cannot be selected. The board still needs exactly two philosophers, so P2 must be the second philosopher. This configuration is valid with L2 as the second legal expert, giving {L1, L2, P2, P3}. P1 and L2 can be selected together in a different valid team, L3 does not force P1, and L1 and L2 can be selected together."
+explanation: "If L1 is selected, then P3 must also be selected. Because P1 would exclude L1, P1 cannot be selected. The board still needs exactly two philosophers, so P2 must be the second philosopher. This configuration is valid with L2 as the second legal expert, giving {L1, L2, P2, P3}. P1 and L2 can be selected together in a different valid team, L3 cannot be selected with P3, and L1 and L2 can be selected together."
 },
 {
 kind: "single",
@@ -26558,7 +26560,7 @@ question: "Which of the following must be true?",
 correct: "L4 and O1 can never be selected together.",
 distractors: [
 "If O2 is selected, L4 cannot be selected.",
-"O1 and O3 can never be selected together.",
+"O2 and O3 can never be selected together.",
 "L3 is selected if L1 is selected."
 ],
 explanation: "Let's review Rule 5 directly: 'If L4 is selected, O1 cannot be selected.' This conditional statement explicitly forbids L4 and O1 from being on the same team. If O1 were selected, L4 could not be selected; if L4 were selected, O1 could not be selected. Thus, they can never be selected together under any circumstances, making this option inherently true."
@@ -26730,7 +26732,7 @@ question: "Which of the following must be true?",
 correct: "R4 and S1 can never be selected together.",
 distractors: [
 "If S2 is selected, R4 cannot be selected.",
-"S1 and S3 can never be selected together.",
+"S2 and S3 can never be selected together.",
 "R3 is selected if R1 is selected."
 ],
 explanation: "Rule 5 directly specifies: 'If R4 is selected, S1 cannot be selected.' This conditional statement ensures that R4 and S1 are mutually exclusive and can never appear together on the same 4-member team."
@@ -26828,11 +26830,11 @@ subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
 "Six children—Toby, Una, Victor, Wendy, Xander, and Yasmin—are sitting in a row of six consecutive chairs facing a stage, numbered 1 to 6 from left to right.",
-"• Toby sits in an even-numbered chair.",
+"• Toby sits in chair 2.",
 "• Wendy sits immediately to the left of Xander.",
 "• Yasmin sits somewhere to the right of Xander.",
 "• Una sits in chair 1.",
-"• Victor does not sit next to Toby."
+"• Victor sits immediately to the right of Xander."
 ],
 question: "Which of the following must be true?",
 correct: "Yasmin sits in chair 6.",
@@ -26856,7 +26858,7 @@ stimulus: [
 "• Harry sits directly opposite India.",
 "• Jack sits immediately to the left of Gemma.",
 "• Kira sits next to India.",
-"• Leo does not sit next to Harry."
+"• Leo sits directly opposite Jack."
 ],
 question: "Which of the following must be true?",
 correct: "Leo sits in seat 3.",
@@ -26895,9 +26897,9 @@ leftTitle: "Puzzle",
 stimulus: [
 "Six children—Ushma, Vivi, Wendy, Xena, Yuri, and Zayd—are playing a game sitting around a circular campfire, facing inward.",
 "• Ushma is sitting directly opposite Xena.",
-"• Vivi is sitting two seats away from Xena.",
+"• Vivi is sitting next to Xena.",
 "• Wendy is sitting immediately to the right of Ushma.",
-"• Yuri is not sitting next to Xena."
+"• Yuri is sitting immediately to the right of Xena."
 ],
 question: "Which of the following must be true?",
 correct: "Vivi is sitting directly opposite Wendy.",
@@ -26906,7 +26908,7 @@ distractors: [
 "Yuri is sitting next to Ushma.",
 "Zayd is sitting in seat 3."
 ],
-explanation: "Let's analyze the 6 seats clockwise: 1, 2, 3, 4, 5, 6. Place Ushma at seat 1. Since Xena is directly opposite Ushma, Xena is at seat 4. Wendy is immediately to the right of Ushma, which is seat 2. Vivi is two seats away from Xena (4). Two seats away from 4 means seat 2 or seat 6. Since seat 2 is occupied by Wendy, Vivi must be at seat 6. Note that seat 6 is directly opposite seat 2 (Wendy), so Vivi is sitting directly opposite Wendy. Yuri is immediately to the right of Xena (4), which corresponds to seat 3. The only remaining seat is 5, which must be occupied by Zayd. The complete unique arrangement is: 1: Ushma, 2: Wendy, 3: Yuri, 4: Xena, 5: Zayd, 6: Vivi. Therefore, 'Vivi is sitting directly opposite Wendy' must be true."
+explanation: "Number the 6 seats clockwise as 1 to 6 and place Ushma at seat 1. Xena must sit directly opposite Ushma, so Xena is at seat 4. Wendy is immediately to the right of Ushma, giving Wendy seat 2. Yuri is immediately to the right of Xena, giving Yuri seat 3. Vivi must sit next to Xena, and seat 3 is already occupied by Yuri, so Vivi must sit in seat 5. Seat 5 is directly opposite seat 2, so Vivi is sitting directly opposite Wendy. Zayd is left in seat 6."
 },
 {
 kind: "single",
@@ -26916,7 +26918,7 @@ stimulus: [
 "Five students—Anna, Ben, Cole, Dan, and Elsa—are sitting around a circular table with five seats numbered 1 to 5 clockwise.",
 "• Anna sits in seat 1.",
 "• Ben sits next to Anna.",
-"• Cole does not sit next to Anna.",
+"• Cole sits in seat 3.",
 "• Dan sits immediately to the right of Elsa."
 ],
 question: "Which of the following must be true?",
@@ -43866,8 +43868,479 @@ function applyDmProbabilityReplacement(question: UCATQuestion): UCATQuestion {
   } as UCATQuestion;
 }
 
+type PlainSyllogismPremiseCount = 2 | 3 | 4 | 5;
+
+type PlainSyllogismDraft = {
+  premiseCount: PlainSyllogismPremiseCount;
+  statements: string[];
+  items: Array<{
+    text: string;
+    answerCategory: "yes" | "no";
+    explanation: string;
+  }>;
+};
+
+const PLAIN_SYLLOGISM_NOUNS = [
+  "cards",
+  "tickets",
+  "tokens",
+  "badges",
+  "boxes",
+  "buttons",
+  "tiles",
+  "folders",
+  "keys",
+  "cups",
+  "stickers",
+  "labels",
+  "flags",
+  "bands",
+  "passes",
+  "mats",
+  "books",
+  "maps",
+  "bags",
+  "coins",
+  "tags",
+  "notes",
+  "discs",
+];
+
+function plainSyllogismTags(
+  premiseCount: PlainSyllogismPremiseCount
+): UCATQuestionTag[] {
+  if (premiseCount === 5) {
+    return ["hard", "multi-step", "text-stem", "set-based"];
+  }
+
+  if (premiseCount === 4) {
+    return ["medium", "multi-step", "text-stem", "set-based"];
+  }
+
+  return ["easy", "quick", "text-stem", "set-based"];
+}
+
+function plainSyllogismTerms(index: number, variantIndex: number) {
+  const noun =
+    PLAIN_SYLLOGISM_NOUNS[
+      (index * 11 + variantIndex * 3) % PLAIN_SYLLOGISM_NOUNS.length
+    ];
+  const baseGroup = index * 6 + 1;
+
+  return Array.from({ length: 6 }, (_unused, slot) => {
+    return `group ${baseGroup + slot} ${noun}`;
+  });
+}
+
+function makePlainSyllogismDraft(
+  premiseCount: PlainSyllogismPremiseCount,
+  terms: string[],
+  variantIndex: number
+): PlainSyllogismDraft {
+  const [a, b, c, d, e, f] = terms;
+
+  if (premiseCount === 2) {
+    const templates: PlainSyllogismDraft[] = [
+      {
+        premiseCount,
+        statements: [`Some ${a} are ${b}.`, `All ${b} are ${c}.`],
+        items: [
+          {
+            text: `Some ${a} are ${c}.`,
+            answerCategory: "yes",
+            explanation: `The ${a} that are ${b} must also be ${c}.`,
+          },
+          {
+            text: `Some ${c} are ${a}.`,
+            answerCategory: "yes",
+            explanation: `Those same items are both ${a} and ${c}.`,
+          },
+          {
+            text: `All ${a} are ${c}.`,
+            answerCategory: "no",
+            explanation: `Only some ${a} are linked to ${b}, so all ${a} are not covered.`,
+          },
+          {
+            text: `Some ${a} are not ${b}.`,
+            answerCategory: "no",
+            explanation: `Some ${a} are ${b}; that does not prove any ${a} sit outside ${b}.`,
+          },
+          {
+            text: `All ${c} are ${b}.`,
+            answerCategory: "no",
+            explanation: `All ${b} are ${c}, but the reverse has not been given.`,
+          },
+        ],
+      },
+      {
+        premiseCount,
+        statements: [`No ${a} are ${b}.`, `Some ${c} are ${a}.`],
+        items: [
+          {
+            text: `Some ${c} are not ${b}.`,
+            answerCategory: "yes",
+            explanation: `The ${c} that are ${a} cannot be ${b}.`,
+          },
+          {
+            text: `No ${b} are ${a}.`,
+            answerCategory: "yes",
+            explanation: `No ${a} are ${b}, so the two groups do not overlap.`,
+          },
+          {
+            text: `Some ${a} are ${c}.`,
+            answerCategory: "yes",
+            explanation: `Some ${c} are ${a}; the same items are also ${a} that are ${c}.`,
+          },
+          {
+            text: `All ${c} are ${a}.`,
+            answerCategory: "no",
+            explanation: `Only some ${c} are stated to be ${a}.`,
+          },
+          {
+            text: `Some ${a} are ${b}.`,
+            answerCategory: "no",
+            explanation: `This is blocked by the statement that no ${a} are ${b}.`,
+          },
+        ],
+      },
+    ];
+
+    return templates[variantIndex % templates.length];
+  }
+
+  if (premiseCount === 3) {
+    const templates: PlainSyllogismDraft[] = [
+      {
+        premiseCount,
+        statements: [`Some ${a} are ${b}.`, `All ${b} are ${c}.`, `No ${c} are ${d}.`],
+        items: [
+          {
+            text: `Some ${a} are ${c}.`,
+            answerCategory: "yes",
+            explanation: `The ${a} that are ${b} must also be ${c}.`,
+          },
+          {
+            text: `Some ${a} are not ${d}.`,
+            answerCategory: "yes",
+            explanation: `Those ${a} are ${c}, and no ${c} are ${d}.`,
+          },
+          {
+            text: `No ${b} are ${d}.`,
+            answerCategory: "yes",
+            explanation: `All ${b} are ${c}, and ${c} cannot overlap with ${d}.`,
+          },
+          {
+            text: `All ${a} are ${c}.`,
+            answerCategory: "no",
+            explanation: `Only some ${a} are linked to ${b} and then ${c}.`,
+          },
+          {
+            text: `Some ${d} are ${b}.`,
+            answerCategory: "no",
+            explanation: `${b} sit inside ${c}, and no ${c} are ${d}.`,
+          },
+        ],
+      },
+      {
+        premiseCount,
+        statements: [`Not all ${a} are ${b}.`, `All ${a} are ${c}.`, `No ${c} are ${d}.`],
+        items: [
+          {
+            text: `Some ${a} are not ${b}.`,
+            answerCategory: "yes",
+            explanation: `Not all ${a} are ${b} means at least one ${a} is outside ${b}.`,
+          },
+          {
+            text: `No ${a} are ${d}.`,
+            answerCategory: "yes",
+            explanation: `All ${a} are ${c}, and no ${c} are ${d}.`,
+          },
+          {
+            text: `Some ${c} are not ${b}.`,
+            answerCategory: "yes",
+            explanation: `The ${a} outside ${b} are still ${c}.`,
+          },
+          {
+            text: `All ${c} are ${a}.`,
+            answerCategory: "no",
+            explanation: `All ${a} are ${c}, but the reverse is not guaranteed.`,
+          },
+          {
+            text: `Some ${d} are ${a}.`,
+            answerCategory: "no",
+            explanation: `${a} sit inside ${c}, and no ${c} overlap with ${d}.`,
+          },
+        ],
+      },
+    ];
+
+    return templates[variantIndex % templates.length];
+  }
+
+  if (premiseCount === 4) {
+    const templates: PlainSyllogismDraft[] = [
+      {
+        premiseCount,
+        statements: [
+          `Some ${a} are ${b}.`,
+          `All ${b} are ${c}.`,
+          `No ${c} are ${d}.`,
+          `All ${d} are ${e}.`,
+        ],
+        items: [
+          {
+            text: `Some ${a} are ${c}.`,
+            answerCategory: "yes",
+            explanation: `The ${a} that are ${b} must also be ${c}.`,
+          },
+          {
+            text: `Some ${a} are not ${d}.`,
+            answerCategory: "yes",
+            explanation: `Those ${a} are ${c}, and no ${c} are ${d}.`,
+          },
+          {
+            text: `No ${b} are ${d}.`,
+            answerCategory: "yes",
+            explanation: `${b} sit inside ${c}, and ${c} cannot overlap with ${d}.`,
+          },
+          {
+            text: `Some ${e} are ${c}.`,
+            answerCategory: "no",
+            explanation: `All ${d} are ${e}, but that does not put any ${e} inside ${c}.`,
+          },
+          {
+            text: `All ${a} are ${c}.`,
+            answerCategory: "no",
+            explanation: `Only some ${a} are linked through ${b} to ${c}.`,
+          },
+        ],
+      },
+      {
+        premiseCount,
+        statements: [
+          `Most ${a} are ${b}.`,
+          `All ${b} are ${c}.`,
+          `No ${c} are ${d}.`,
+          `Some ${d} are ${e}.`,
+        ],
+        items: [
+          {
+            text: `Some ${a} are ${c}.`,
+            answerCategory: "yes",
+            explanation: `Most ${a} are ${b}, so at least some ${a} are ${b}; all ${b} are ${c}.`,
+          },
+          {
+            text: `Some ${a} are not ${d}.`,
+            answerCategory: "yes",
+            explanation: `The ${a} that are ${b} are also ${c}, and no ${c} are ${d}.`,
+          },
+          {
+            text: `Some ${e} are not ${c}.`,
+            answerCategory: "yes",
+            explanation: `Some ${d} are ${e}, and no ${d} can be ${c}.`,
+          },
+          {
+            text: `All ${a} are ${c}.`,
+            answerCategory: "no",
+            explanation: `Most ${a} are linked to ${c}, not necessarily all ${a}.`,
+          },
+          {
+            text: `No ${e} are ${c}.`,
+            answerCategory: "no",
+            explanation: `Only some ${e} are known to come from ${d}. Other ${e} are unknown.`,
+          },
+        ],
+      },
+      {
+        premiseCount,
+        statements: [
+          `Not all ${a} are ${b}.`,
+          `All ${a} are ${c}.`,
+          `No ${c} are ${d}.`,
+          `Some ${d} are ${e}.`,
+        ],
+        items: [
+          {
+            text: `Some ${a} are not ${b}.`,
+            answerCategory: "yes",
+            explanation: `Not all ${a} are ${b} means at least one ${a} is outside ${b}.`,
+          },
+          {
+            text: `No ${a} are ${d}.`,
+            answerCategory: "yes",
+            explanation: `All ${a} are ${c}, and no ${c} are ${d}.`,
+          },
+          {
+            text: `Some ${c} are not ${b}.`,
+            answerCategory: "yes",
+            explanation: `The ${a} outside ${b} are still ${c}.`,
+          },
+          {
+            text: `Some ${e} are not ${a}.`,
+            answerCategory: "yes",
+            explanation: `Some ${e} are ${d}, and no ${d} can be ${a}.`,
+          },
+          {
+            text: `Some ${e} are ${c}.`,
+            answerCategory: "no",
+            explanation: `The known ${e} are ${d}, and ${d} cannot overlap with ${c}.`,
+          },
+        ],
+      },
+    ];
+
+    return templates[variantIndex % templates.length];
+  }
+
+  const templates: PlainSyllogismDraft[] = [
+    {
+      premiseCount,
+      statements: [
+        `Some ${a} are ${b}.`,
+        `All ${b} are ${c}.`,
+        `No ${c} are ${d}.`,
+        `All ${d} are ${e}.`,
+        `No ${e} are ${f}.`,
+      ],
+      items: [
+        {
+          text: `Some ${a} are ${c}.`,
+          answerCategory: "yes",
+          explanation: `The ${a} that are ${b} must also be ${c}.`,
+        },
+        {
+          text: `Some ${a} are not ${d}.`,
+          answerCategory: "yes",
+          explanation: `Those ${a} are ${c}, and no ${c} are ${d}.`,
+        },
+        {
+          text: `No ${b} are ${d}.`,
+          answerCategory: "yes",
+          explanation: `${b} sit inside ${c}, and ${c} cannot overlap with ${d}.`,
+        },
+        {
+          text: `No ${d} are ${f}.`,
+          answerCategory: "yes",
+          explanation: `All ${d} are ${e}, and no ${e} are ${f}.`,
+        },
+        {
+          text: `Some ${c} are ${f}.`,
+          answerCategory: "no",
+          explanation: `The statements never place any ${c} inside ${f}.`,
+        },
+      ],
+    },
+    {
+      premiseCount,
+      statements: [
+        `All ${a} are ${b}.`,
+        `Some ${c} are ${a}.`,
+        `No ${c} are ${d}.`,
+        `All ${d} are ${e}.`,
+        `No ${e} are ${f}.`,
+      ],
+      items: [
+        {
+          text: `Some ${c} are ${b}.`,
+          answerCategory: "yes",
+          explanation: `Some ${c} are ${a}, and all ${a} are ${b}.`,
+        },
+        {
+          text: `Some ${a} are ${b}.`,
+          answerCategory: "yes",
+          explanation: `The ${c} that are ${a} show that some ${a} exist, and all ${a} are ${b}.`,
+        },
+        {
+          text: `Some ${a} are not ${d}.`,
+          answerCategory: "yes",
+          explanation: `Some ${a} are ${c}, and no ${c} are ${d}.`,
+        },
+        {
+          text: `No ${d} are ${f}.`,
+          answerCategory: "yes",
+          explanation: `All ${d} are ${e}, and no ${e} are ${f}.`,
+        },
+        {
+          text: `No ${b} are ${d}.`,
+          answerCategory: "no",
+          explanation: `Only some ${b} are known through ${a}; the rest of ${b} are unknown.`,
+        },
+      ],
+    },
+  ];
+
+  return templates[variantIndex % templates.length];
+}
+
+const PLAIN_SYLLOGISM_PREMISE_COUNTS: PlainSyllogismPremiseCount[] = [
+  ...Array.from({ length: 48 }, () => 2 as const),
+  ...Array.from({ length: 160 }, () => 3 as const),
+  ...Array.from({ length: 224 }, () => 4 as const),
+  ...Array.from({ length: 16 }, () => 5 as const),
+];
+
+function buildPlainSyllogismQuestion(
+  questionIndex: number,
+  premiseCount: PlainSyllogismPremiseCount,
+  variantIndex: number
+): UCATQuestion {
+  const draft = makePlainSyllogismDraft(
+    premiseCount,
+    plainSyllogismTerms(questionIndex, variantIndex),
+    variantIndex
+  );
+  const id = `dm-syllogism-plain-${String(questionIndex + 1).padStart(4, "0")}`;
+
+  return {
+    id,
+    section: "dm" as const,
+    subtype: "dm-syllogisms" as const,
+    tags: plainSyllogismTags(premiseCount),
+    questionType: "drag-category" as const,
+    title: "Decision Making Practice",
+    leftTitle: "Syllogisms",
+    stimulus: draft.statements,
+    question: "Use only the statements above. Which conclusions must be true?",
+    instruction: "Drag each conclusion into Yes or No.",
+    categories: [
+      { id: "yes", label: "Yes" },
+      { id: "no", label: "No" },
+    ],
+    categoryItems: draft.items.map((item, itemIndex) => ({
+      id: `${id}-${String.fromCharCode(97 + itemIndex)}`,
+      text: item.text,
+      answerCategory: item.answerCategory,
+    })),
+    explanation: draft.items
+      .map((item, itemIndex) => {
+        const label = String.fromCharCode(65 + itemIndex);
+        const answer = item.answerCategory === "yes" ? "Yes" : "No";
+        return `${label}: ${answer} - ${item.explanation}`;
+      })
+      .join("\n"),
+  };
+}
+
+const plainSyllogismSeenByCount: Record<PlainSyllogismPremiseCount, number> = {
+  2: 0,
+  3: 0,
+  4: 0,
+  5: 0,
+};
+
+const PLAIN_DM_SYLLOGISM_QUESTIONS: UCATQuestion[] =
+  PLAIN_SYLLOGISM_PREMISE_COUNTS.map((premiseCount, questionIndex) => {
+    const variantIndex = plainSyllogismSeenByCount[premiseCount]++;
+    return buildPlainSyllogismQuestion(questionIndex, premiseCount, variantIndex);
+  });
+
 export const CURATED_DM_QUESTIONS_FROM_CURATED: UCATQuestion[] =
-  USER_CURATED_DM_INPUTS.map(buildDmQuestion).map(applyDmProbabilityReplacement);
+  [
+    ...USER_CURATED_DM_INPUTS.map(buildDmQuestion)
+      .map(applyDmProbabilityReplacement)
+      .filter((question) => question.subtype !== "dm-syllogisms"),
+    ...PLAIN_DM_SYLLOGISM_QUESTIONS,
+  ];
 
 // --- RAW VENN INPUTS ----------------------------------------------------------
 // Gemini provides: set labels + number per region + questions.

@@ -5113,11 +5113,16 @@ function FlagTrainerQuestionDetails({
 }: {
   question: UCATQuestion;
 }) {
+  const stimulusParagraphs =
+    question.subtype === "dm-syllogisms"
+      ? [question.stimulus.join(" ").replace(/\s+/g, " ").trim()].filter(Boolean)
+      : question.stimulus;
+
   return (
     <div className="space-y-4">
       <div className="space-y-3 text-sm font-semibold leading-6 text-slate-700">
-        {question.stimulus.map((paragraph) => (
-          <p key={paragraph}>{paragraph}</p>
+        {stimulusParagraphs.map((paragraph, index) => (
+          <p key={`${index}-${paragraph}`}>{paragraph}</p>
         ))}
       </div>
       <FlagTrainerVisual visual={question.visual} />

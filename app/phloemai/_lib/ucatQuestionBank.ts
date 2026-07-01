@@ -1257,7 +1257,9 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       title: "Decision Making Practice",
       leftTitle: "Syllogism",
       stimulus: [
-        "All medicines in Cabinet A require refrigeration. Some medicines in Cabinet A are antibiotics. No refrigerated item is kept on the ward trolley.",
+        "All medicines in Cabinet A require refrigeration.",
+        "Some medicines in Cabinet A are antibiotics.",
+        "No refrigerated item is kept on the ward trolley.",
       ],
       question:
         "Place 'Yes' if the conclusion follows. Place 'No' if the conclusion does not follow.",
@@ -1281,7 +1283,9 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       title: "Decision Making Practice",
       leftTitle: "Syllogism",
       stimulus: [
-        "Every person on the reserve list has completed the interview. No applicant who completed the interview is awaiting an identity check. Some applicants awaiting an identity check have paid the test fee.",
+        "Every person on the reserve list has completed the interview.",
+        "No applicant who completed the interview is awaiting an identity check.",
+        "Some applicants awaiting an identity check have paid the test fee.",
       ],
       question:
         "Place 'Yes' if the conclusion follows. Place 'No' if the conclusion does not follow.",
@@ -1305,7 +1309,9 @@ export const LEGACY_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
       title: "Decision Making Practice",
       leftTitle: "Syllogism",
       stimulus: [
-        "All evening seminar attendees are second-year students. Some second-year students are peer mentors. No peer mentor is assigned to Group K.",
+        "All evening seminar attendees are second-year students.",
+        "Some second-year students are peer mentors.",
+        "No peer mentor is assigned to Group K.",
       ],
       question:
         "Place 'Yes' if the conclusion follows. Place 'No' if the conclusion does not follow.",

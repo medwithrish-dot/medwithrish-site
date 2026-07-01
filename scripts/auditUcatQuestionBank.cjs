@@ -647,6 +647,43 @@ for (const section of sections) {
     });
 }
 
+const vrTfcQuestions = UCAT_QUESTION_BANK.vr.filter(
+  (question) => question.subtype === "vr-tfc" && Array.isArray(question.options)
+);
+const vrTfcAnswerCounts = {
+  True: 0,
+  False: 0,
+  "Can't tell": 0,
+};
+
+for (const question of vrTfcQuestions) {
+  const answerText = question.options.find((option) => option.key === question.answer)?.text;
+  if (answerText in vrTfcAnswerCounts) {
+    vrTfcAnswerCounts[answerText] += 1;
+  }
+}
+
+const vrTfcTotal = vrTfcQuestions.length;
+const vrTfcPercent = Object.fromEntries(
+  Object.entries(vrTfcAnswerCounts).map(([answer, count]) => [
+    answer,
+    vrTfcTotal === 0 ? 0 : Number(((count / vrTfcTotal) * 100).toFixed(1)),
+  ])
+);
+const vrTfcMaxShare = Math.max(...Object.values(vrTfcPercent));
+const vrTfcMinShare = Math.min(...Object.values(vrTfcPercent));
+
+console.log("\nVR true/false/can't-tell answer balance:");
+Object.entries(vrTfcAnswerCounts).forEach(([answer, count]) => {
+  console.log(`  ${answer}: ${count} (${vrTfcPercent[answer]}%)`);
+});
+
+if (vrTfcMaxShare > 45 || vrTfcMinShare < 20) {
+  console.warn(
+    "VR audit warning: true/false/can't-tell answers are heavily imbalanced."
+  );
+}
+
 console.log(`\nTotal accepted UCAT questions: ${allQuestions.length}`);
 
 if (highQualityGeneratedLayer) {

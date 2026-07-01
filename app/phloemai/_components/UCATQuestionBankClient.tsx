@@ -1528,6 +1528,15 @@ function formatQuestionTextForSubtype(value: string, subtype: UCATSubtypeId) {
   return text.replace(/^author'?s?\s+(opinion|view|attitude)\s*:\s*/i, "");
 }
 
+function getStimulusParagraphs(question: UCATQuestion) {
+  if (question.subtype !== "dm-syllogisms") {
+    return question.stimulus;
+  }
+
+  const combined = question.stimulus.join(" ").replace(/\s+/g, " ").trim();
+  return combined ? [combined] : [];
+}
+
 function humaniseExplanationText(value: string) {
   return formatDisplayText(value)
     .replace(/\s+/g, " ")
@@ -10289,8 +10298,8 @@ function UCATQuestionBankSection({
                 : "max-w-none space-y-4 text-base leading-[21px] text-black"
             }
           >
-            {question.stimulus.map((paragraph) => (
-              <p key={paragraph}>{formatDisplayText(paragraph)}</p>
+            {getStimulusParagraphs(question).map((paragraph, index) => (
+              <p key={`${index}-${paragraph}`}>{formatDisplayText(paragraph)}</p>
             ))}
             {question.visual && <QuestionVisual visual={question.visual} />}
           </div>
