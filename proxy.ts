@@ -2,6 +2,14 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/phloemai/")) {
+    const stayTunedUrl = request.nextUrl.clone();
+    stayTunedUrl.pathname = "/phloemai";
+    stayTunedUrl.search = "";
+
+    return NextResponse.redirect(stayTunedUrl);
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey =
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??

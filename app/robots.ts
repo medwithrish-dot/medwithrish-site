@@ -11,16 +11,10 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: ["/", "/phloemai"],
+      allow: ["/"],
       disallow: [
         "/api/",
-        "/phloemai/account",
-        "/phloemai/dashboard",
-        "/phloemai/report",
-        "/phloemai/progress",
-        "/phloemai/question-bank",
-        "/phloemai/diagnostic",
-        "/phloemai/skills-trainers",
+        "/phloemai/",
       ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,

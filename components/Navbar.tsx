@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Lock } from "lucide-react";
 import { useState } from "react";
 
 const navItems: {
@@ -8,6 +9,8 @@ const navItems: {
   href?: string;
   bold?: boolean;
   special?: boolean;
+  locked?: boolean;
+  badge?: string;
   items?: { label: string; href: string; external?: boolean }[];
 }[] = [
   { label: "Journey", href: "#journey", bold: true },
@@ -69,7 +72,7 @@ const navItems: {
     ],
   },
 
-  { label: "PhloemAI", href: "/phloemai", special: true },
+  { label: "PhloemAI", special: true, locked: true, badge: "Stay tuned!" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -155,6 +158,27 @@ export default function Navbar() {
                       )}
                     </div>
                   </div>
+                );
+              }
+
+              if (item.locked) {
+                return (
+                  <button
+                    key={item.label}
+                    type="button"
+                    disabled
+                    aria-label={`${item.label} is a work in progress. Stay tuned.`}
+                    title={`${item.label} is a work in progress. Stay tuned.`}
+                    className="inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1.5 text-sm font-semibold text-cyan-700 shadow-sm"
+                  >
+                    <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span>{item.label}</span>
+                    {item.badge && (
+                      <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold leading-none text-blue-700">
+                        {item.badge}
+                      </span>
+                    )}
+                  </button>
                 );
               }
 
@@ -246,6 +270,28 @@ export default function Navbar() {
                         </div>
                       )}
                     </div>
+                  );
+                }
+
+                if (item.locked) {
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      disabled
+                      aria-label={`${item.label} is a work in progress. Stay tuned.`}
+                      className="flex w-full cursor-not-allowed items-center justify-between rounded-xl border border-cyan-200 bg-cyan-50 px-4 py-3 text-sm font-semibold text-cyan-700"
+                    >
+                      <span className="inline-flex items-center gap-2">
+                        <Lock className="h-4 w-4" aria-hidden="true" />
+                        {item.label}
+                      </span>
+                      {item.badge && (
+                        <span className="rounded-full bg-white px-2 py-1 text-[10px] font-bold leading-none text-blue-700">
+                          {item.badge}
+                        </span>
+                      )}
+                    </button>
                   );
                 }
 
