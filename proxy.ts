@@ -1,13 +1,26 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  isValidPhloemPreviewToken,
+  PHLOEMAI_PREVIEW_COOKIE,
+} from "@/utils/phloemai/preview-access";
+
+const PHLOEMAI_PUBLIC_PATHS = new Set(["/phloemai", "/phloemai/access"]);
 
 export async function proxy(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/phloemai/")) {
-    const stayTunedUrl = request.nextUrl.clone();
-    stayTunedUrl.pathname = "/phloemai";
-    stayTunedUrl.search = "";
+  const pathname = request.nextUrl.pathname;
 
-    return NextResponse.redirect(stayTunedUrl);
+  if (pathname.startsWith("/phloemai/") && !PHLOEMAI_PUBLIC_PATHS.has(pathname)) {
+    const previewToken = request.cookies.get(PHLOEMAI_PREVIEW_COOKIE)?.value;
+    const hasPreviewAccess = await isValidPhloemPreviewToken(previewToken);
+
+    if (!hasPreviewAccess) {
+      const stayTunedUrl = request.nextUrl.clone();
+      stayTunedUrl.pathname = "/phloemai";
+      stayTunedUrl.search = "";
+
+      return NextResponse.redirect(stayTunedUrl);
+    }
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
