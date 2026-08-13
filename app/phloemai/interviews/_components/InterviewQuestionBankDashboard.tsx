@@ -1,5 +1,9 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
+  ArrowRight,
   BarChart3,
   Bell,
   BookOpen,
@@ -9,13 +13,11 @@ import {
   Clock,
   FileText,
   Flame,
-  GraduationCap,
   Grid3X3,
   Home,
   Landmark,
   MessageCircle,
   Mic,
-  RotateCw,
   Scale,
   Search,
   ShieldCheck,
@@ -59,9 +61,8 @@ const categories = [
   {
     title: "Personal & Motivation",
     description: "Why medicine, work experience, resilience",
-    count: "150+",
-    done: "48 / 150 done",
-    percent: 32,
+    completed: 48,
+    total: 150,
     icon: User,
     colour: "#0f9b7d",
     bg: "bg-[#e7f7f2]",
@@ -70,9 +71,8 @@ const categories = [
   {
     title: "Communication & Teamwork",
     description: "Working in teams, resolving conflicts, leadership",
-    count: "180+",
-    done: "50 / 180 done",
-    percent: 28,
+    completed: 50,
+    total: 180,
     icon: Users,
     colour: "#2477ef",
     bg: "bg-[#eaf2ff]",
@@ -81,9 +81,8 @@ const categories = [
   {
     title: "Ethics & Professionalism",
     description: "Confidentiality, consent, values and dilemmas",
-    count: "220+",
-    done: "55 / 220 done",
-    percent: 25,
+    completed: 55,
+    total: 220,
     icon: Scale,
     colour: "#ea5a1d",
     bg: "bg-[#fff0e7]",
@@ -92,9 +91,8 @@ const categories = [
   {
     title: "NHS & Healthcare",
     description: "NHS structure, challenges, policies and priorities",
-    count: "160+",
-    done: "61 / 160 done",
-    percent: 38,
+    completed: 61,
+    total: 160,
     icon: ShieldCheck,
     colour: "#0f9b61",
     bg: "bg-[#e8f8ef]",
@@ -103,9 +101,8 @@ const categories = [
   {
     title: "Hot Topics",
     description: "Current events, health policy, global issues",
-    count: "200+",
-    done: "60 / 200 done",
-    percent: 30,
+    completed: 60,
+    total: 200,
     icon: Flame,
     colour: "#7c4dde",
     bg: "bg-[#f1ecff]",
@@ -114,62 +111,38 @@ const categories = [
   {
     title: "Data & Analysis",
     description: "Graphs, statistics, research evidence",
-    count: "120+",
-    done: "32 / 120 done",
-    percent: 27,
+    completed: 32,
+    total: 120,
     icon: BarChart3,
     colour: "#169dad",
     bg: "bg-[#e8f8fb]",
-    href: "/phloemai/interviews/question-bank",
+    href: "/phloemai/interviews/stations/data-analysis",
   },
   {
     title: "Role Play & MMI Tasks",
     description: "Scenario based tasks, role plays and stations",
-    count: "100+",
-    done: "24 / 100 done",
-    percent: 24,
+    completed: 24,
+    total: 100,
     icon: MessageCircle,
     colour: "#e9487f",
     bg: "bg-[#ffe9f0]",
-    href: "/phloemai/interviews/ai-interviews",
+    href: "/phloemai/interviews/stations/role-play-mmi-tasks",
   },
   {
     title: "Curveballs & Quick-Fire",
     description: "Unexpected questions, rapid fire challenges",
-    count: "80+",
-    done: "16 / 80 done",
-    percent: 20,
+    completed: 16,
+    total: 80,
     icon: Zap,
     colour: "#f59e0b",
     bg: "bg-[#fff4db]",
-    href: "/phloemai/interviews/question-bank",
-  },
-] as const;
-
-const summaryItems = [
-  {
-    title: "Real interview questions",
-    text: "Curated from actual interviews and applicants",
-    icon: ShieldCheck,
-    colour: "text-[#0d7774]",
-  },
-  {
-    title: "Regularly updated",
-    text: "New questions added weekly",
-    icon: RotateCw,
-    colour: "text-[#119a61]",
-  },
-  {
-    title: "Built for med school applicants",
-    text: "Designed by experts, trusted by thousands",
-    icon: GraduationCap,
-    colour: "text-[#6b3fd5]",
+    href: "/phloemai/interviews/stations/curveballs-quick-fire",
   },
 ] as const;
 
 function MedMaxLogo() {
   return (
-    <div className="flex items-center gap-3">
+    <Link href="/phloemai/interviews" className="flex items-center gap-3">
       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0c5d57] text-xl font-black text-[#62e7df]">
         M
       </div>
@@ -177,7 +150,7 @@ function MedMaxLogo() {
         <p className="text-xl font-black leading-6 text-white">MedMax</p>
         <p className="mt-1 text-sm font-medium text-slate-200">Med Interviews</p>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -215,7 +188,10 @@ function Sidebar() {
         ))}
       </nav>
 
-      <div className="mt-auto rounded-xl border border-white/10 bg-white/5 p-4">
+      <Link
+        href="/phloemai/account"
+        className="mt-auto block rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10"
+      >
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#96e7df] text-sm font-bold text-[#07534e]">
             RS
@@ -228,7 +204,7 @@ function Sidebar() {
           </div>
           <ChevronDown className="h-4 w-4 text-slate-200" aria-hidden="true" />
         </div>
-      </div>
+      </Link>
     </aside>
   );
 }
@@ -251,15 +227,53 @@ function ProgressRing({ percent, colour }: { percent: number; colour: string }) 
   );
 }
 
+function getPercent(completed: number, total: number) {
+  if (total <= 0) return 0;
+  return Math.round((completed / total) * 100);
+}
+
+function MiniRing({
+  percent,
+  colour,
+}: {
+  percent: number;
+  colour: string;
+}) {
+  return (
+    <div className="relative h-12 w-12 shrink-0">
+      <div
+        className="absolute inset-0 rounded-full"
+        style={{
+          background: `conic-gradient(${colour} 0deg ${
+            percent * 3.6
+          }deg, #e7edf0 ${percent * 3.6}deg 360deg)`,
+        }}
+      />
+      <div className="absolute inset-[5px] flex items-center justify-center rounded-full bg-white">
+        <span className="text-xs font-black" style={{ color: colour }}>
+          {percent}%
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function CategoryCard({ category }: { category: (typeof categories)[number] }) {
   const Icon = category.icon;
+  const percent = getPercent(category.completed, category.total);
+  const remaining = category.total - category.completed;
 
   return (
     <Link
       href={category.href}
-      className="min-h-[176px] rounded-xl border border-[#d9e2e7] bg-white p-5 shadow-sm transition-colors hover:border-[#159a9d] hover:bg-[#fbfdfd]"
+      className="group relative min-h-[204px] overflow-hidden rounded-xl border border-[#d9e2e7] bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#159a9d] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#159a9d]/40"
     >
-      <div className="grid grid-cols-[62px_minmax(0,1fr)] gap-4">
+      <div
+        className="absolute inset-x-0 top-0 h-1 opacity-0 transition-opacity group-hover:opacity-100"
+        style={{ backgroundColor: category.colour }}
+      />
+
+      <div className="grid grid-cols-[62px_minmax(0,1fr)_32px] gap-4">
         <div
           className={`flex h-14 w-14 items-center justify-center rounded-full ${category.bg}`}
           style={{ color: category.colour }}
@@ -274,6 +288,12 @@ function CategoryCard({ category }: { category: (typeof categories)[number] }) {
             {category.description}
           </p>
         </div>
+        <span
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f1f6f8] text-[#4a6370] transition-colors group-hover:bg-[#e3f4f2] group-hover:text-[#08787b]"
+          aria-hidden="true"
+        >
+          <ArrowRight className="h-4 w-4" />
+        </span>
       </div>
 
       <div className="mt-6 grid grid-cols-[minmax(0,1fr)_52px] items-end gap-4">
@@ -282,16 +302,11 @@ function CategoryCard({ category }: { category: (typeof categories)[number] }) {
             className="text-2xl font-black leading-none"
             style={{ color: category.colour }}
           >
-            {category.count}
+            {category.total}+
           </p>
           <p className="mt-1 text-xs font-semibold text-[#314956]">questions</p>
         </div>
-        <div
-          className="flex h-12 w-12 items-center justify-center rounded-full border-4 border-[#e7edf0] text-xs font-black"
-          style={{ color: category.colour }}
-        >
-          {category.percent}%
-        </div>
+        <MiniRing percent={percent} colour={category.colour} />
       </div>
 
       <div className="mt-4">
@@ -299,13 +314,13 @@ function CategoryCard({ category }: { category: (typeof categories)[number] }) {
           <div
             className="h-full rounded-full"
             style={{
-              width: `${category.percent}%`,
+              width: `${percent}%`,
               backgroundColor: category.colour,
             }}
           />
         </div>
         <p className="mt-2 text-xs font-medium text-[#314956]">
-          {category.done}
+          {category.completed} / {category.total} done - {remaining} left
         </p>
       </div>
     </Link>
@@ -313,6 +328,37 @@ function CategoryCard({ category }: { category: (typeof categories)[number] }) {
 }
 
 export function InterviewQuestionBankDashboard() {
+  const [query, setQuery] = useState("");
+  const totals = useMemo(
+    () =>
+      categories.reduce(
+        (acc, category) => ({
+          total: acc.total + category.total,
+          completed: acc.completed + category.completed,
+        }),
+        { total: 0, completed: 0 }
+      ),
+    []
+  );
+  const overallPercent = getPercent(totals.completed, totals.total);
+  const remaining = totals.total - totals.completed;
+  const normalisedQuery = query.trim().toLowerCase();
+  const filteredCategories = useMemo(() => {
+    if (!normalisedQuery) return categories;
+    return categories.filter((category) =>
+      [category.title, category.description]
+        .join(" ")
+        .toLowerCase()
+        .includes(normalisedQuery)
+    );
+  }, [normalisedQuery]);
+
+  const openRandomQuestion = () => {
+    const category =
+      categories[Math.floor(Math.random() * categories.length)] ?? categories[0];
+    window.location.assign(category.href);
+  };
+
   return (
     <main className="phloem-dashboard-compact min-h-screen bg-[#f5f8fa] text-[#071923]">
       <div className="grid min-h-screen lg:grid-cols-[250px_1fr]">
@@ -321,8 +367,17 @@ export function InterviewQuestionBankDashboard() {
         <section className="min-w-0">
           <header className="flex h-16 items-center justify-end border-b border-[#dfe7ec] bg-white px-6">
             <div className="flex items-center gap-5">
-              <Bell className="h-5 w-5 text-[#071923]" aria-hidden="true" />
-              <div className="flex items-center gap-3">
+              <Link
+                href="/phloemai/interviews/notifications"
+                aria-label="Notifications"
+                className="rounded-lg p-2 text-[#071923] transition-colors hover:bg-[#edf7f6] hover:text-[#08787b]"
+              >
+                <Bell className="h-5 w-5" aria-hidden="true" />
+              </Link>
+              <Link
+                href="/phloemai/account"
+                className="flex items-center gap-3 rounded-xl px-2 py-1 transition-colors hover:bg-[#edf7f6]"
+              >
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c9f1ec] text-sm font-bold text-[#08787b]">
                   RS
                 </div>
@@ -335,66 +390,76 @@ export function InterviewQuestionBankDashboard() {
                   </p>
                 </div>
                 <ChevronDown className="h-4 w-4 text-[#314956]" aria-hidden="true" />
-              </div>
+              </Link>
             </div>
           </header>
 
-          <div className="px-5 py-8 sm:px-7 lg:px-10">
+          <div className="mx-auto max-w-[1540px] px-5 py-8 sm:px-7 lg:px-10">
             <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
               <div>
                 <h1 className="text-3xl font-black tracking-tight text-[#071923]">
                   Question Bank
                 </h1>
                 <p className="mt-2 text-sm font-medium text-[#4a6370]">
-                  Explore 1000+ interview questions across 8 categories.
+                  Explore {totals.total}+ interview questions across{" "}
+                  {categories.length} categories.
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <label className="flex h-12 min-w-0 items-center gap-3 rounded-lg border border-[#d4dee6] bg-white px-4 shadow-sm sm:w-[380px]">
                   <Search className="h-5 w-5 shrink-0 text-[#4a6370]" aria-hidden="true" />
                   <input
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
                     className="min-w-0 flex-1 bg-transparent text-sm font-medium text-[#071923] outline-none placeholder:text-[#8091a0]"
                     placeholder="Search questions, topics or keywords..."
                   />
                 </label>
-                <Link
-                  href="/phloemai/interviews/stations/ethics-confidentiality"
+                <button
+                  type="button"
+                  onClick={openRandomQuestion}
                   className="flex h-12 items-center justify-center gap-3 rounded-lg border border-[#159a9d] bg-white px-5 text-sm font-black text-[#08787b] shadow-sm transition-colors hover:bg-[#edf7f6]"
                 >
                   <Shuffle className="h-5 w-5" aria-hidden="true" />
                   Random Question
-                </Link>
+                </button>
               </div>
             </div>
 
             <section className="mt-7 rounded-xl border border-[#d9e2e7] bg-white p-6 shadow-sm">
               <div className="grid gap-6 xl:grid-cols-[120px_minmax(260px,1fr)_1px_1.7fr] xl:items-center">
-                <ProgressRing percent={26} colour="#159a9d" />
+                <ProgressRing percent={overallPercent} colour="#159a9d" />
                 <div>
                   <h2 className="text-base font-black text-[#071923]">
                     Overall Progress
                   </h2>
                   <p className="mt-2 text-sm font-medium text-[#314956]">
-                    312 / 1210 completed
+                    {totals.completed} / {totals.total} completed
                   </p>
                   <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#e3eaee]">
-                    <div className="h-full w-[26%] rounded-full bg-[#159a9d]" />
+                    <div
+                      className="h-full rounded-full bg-[#159a9d]"
+                      style={{ width: `${overallPercent}%` }}
+                    />
                   </div>
                   <p className="mt-3 text-xs font-medium text-[#314956]">
-                    898 questions remaining
+                    {remaining} questions remaining
                   </p>
                 </div>
                 <div className="hidden h-24 w-px bg-[#d9e2e7] xl:block" />
-                <div className="grid gap-4 sm:grid-cols-4">
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                   {[
-                    { label: "Categories", value: "8", icon: Grid3X3 },
-                    { label: "Total Questions", value: "1210+", icon: FileText },
-                    { label: "Completed", value: "312", icon: CheckCircle2 },
-                    { label: "Remaining", value: "898", icon: Clock },
+                    { label: "Categories", value: String(categories.length), icon: Grid3X3 },
+                    { label: "Total Questions", value: `${totals.total}+`, icon: FileText },
+                    { label: "Completed", value: String(totals.completed), icon: CheckCircle2 },
+                    { label: "Remaining", value: String(remaining), icon: Clock },
                   ].map((item) => {
                     const Icon = item.icon;
                     return (
-                      <div key={item.label} className="flex items-center gap-3">
+                      <div
+                        key={item.label}
+                        className="flex items-center gap-3 rounded-lg bg-[#f7fafb] p-3"
+                      >
                         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#eef5f5] text-[#08787b]">
                           <Icon className="h-5 w-5" aria-hidden="true" />
                         </span>
@@ -413,48 +478,37 @@ export function InterviewQuestionBankDashboard() {
               </div>
             </section>
 
-            <section className="mt-5 grid gap-4 xl:grid-cols-4">
-              {categories.map((category) => (
+            <div className="mt-5 flex items-center justify-between gap-4">
+              <p className="text-xs font-bold uppercase tracking-[0.08em] text-[#08787b]">
+                {normalisedQuery
+                  ? `${filteredCategories.length} matching categories`
+                  : "All categories"}
+              </p>
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="text-xs font-bold text-[#4a6370] hover:text-[#08787b]"
+                >
+                  Clear search
+                </button>
+              )}
+            </div>
+
+            <section className="mt-3 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {filteredCategories.map((category) => (
                 <CategoryCard key={category.title} category={category} />
               ))}
-            </section>
-
-            <section className="mt-5 rounded-xl border border-[#cfe0df] bg-[#f3fbfb] p-5 shadow-sm">
-              <div className="grid gap-5 xl:grid-cols-[1.2fr_1fr_1fr_1.2fr] xl:divide-x xl:divide-[#d5e4e4]">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0d7774] text-white">
-                    <BookOpen className="h-7 w-7" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <p className="text-3xl font-black leading-none text-[#071923]">
-                      1000+
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-[#08787b]">
-                      questions across 8 categories
-                    </p>
-                  </div>
+              {filteredCategories.length === 0 && (
+                <div className="rounded-xl border border-dashed border-[#b9cbcf] bg-white p-8 text-center xl:col-span-4">
+                  <p className="text-sm font-black text-[#071923]">
+                    No categories found
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-[#4a6370]">
+                    Try searching for ethics, teamwork, NHS, data or motivation.
+                  </p>
                 </div>
-
-                {summaryItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div
-                      key={item.title}
-                      className="flex items-center gap-4 xl:px-7"
-                    >
-                      <Icon className={`h-8 w-8 shrink-0 ${item.colour}`} aria-hidden="true" />
-                      <div>
-                        <p className="text-sm font-black text-[#071923]">
-                          {item.title}
-                        </p>
-                        <p className="mt-1 text-xs font-medium leading-5 text-[#314956]">
-                          {item.text}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              )}
             </section>
           </div>
         </section>

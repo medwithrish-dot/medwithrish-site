@@ -154,6 +154,117 @@ const stationPages = {
       },
     ],
   },
+  "data-analysis": {
+    title: "Data & Analysis",
+    subtitle:
+      "Practise explaining graphs, statistics, research evidence and uncertainty in interview answers.",
+    activeLabel: "Question Bank",
+    stats: [
+      { label: "Questions", value: "120+" },
+      { label: "Completed", value: "32" },
+      { label: "Readiness", value: "27%" },
+    ],
+    primaryAction: {
+      title: "Start data interpretation",
+      description: "Work through a short graph or statistics prompt with follow-up questions.",
+      href: "/phloemai/interviews/reports",
+      action: "Start",
+    },
+    cards: [
+      {
+        title: "Common prompts",
+        description: "Graphs, audit results, research quality and communicating risk.",
+        href: "/phloemai/interviews/question-bank",
+        action: "Open prompts",
+      },
+      {
+        title: "Guides",
+        description: "Review how to structure evidence-based interview answers.",
+        href: "/phloemai/interviews/guides",
+        action: "Open guides",
+      },
+      {
+        title: "Progress",
+        description: "See how data questions affect your interview readiness.",
+        href: "/phloemai/interviews/progress",
+        action: "View progress",
+      },
+    ],
+  },
+  "role-play-mmi-tasks": {
+    title: "Role Play & MMI Tasks",
+    subtitle:
+      "Practise scenario-based stations with clear communication, empathy and task management.",
+    activeLabel: "Question Bank",
+    stats: [
+      { label: "Questions", value: "100+" },
+      { label: "Completed", value: "24" },
+      { label: "Readiness", value: "24%" },
+    ],
+    primaryAction: {
+      title: "Start role-play station",
+      description: "Open a scenario prompt and practise the first minute of your response.",
+      href: "/phloemai/interviews/ai-interviews",
+      action: "Start",
+    },
+    cards: [
+      {
+        title: "Communication",
+        description: "Practise checking understanding, signposting and responding to emotion.",
+        href: "/phloemai/interviews/stations/teamwork-group-discussion",
+        action: "Practise",
+      },
+      {
+        title: "Question bank",
+        description: "Return to the full set of interview prompt categories.",
+        href: "/phloemai/interviews/question-bank",
+        action: "Open bank",
+      },
+      {
+        title: "Reports",
+        description: "Review role-play feedback and next action points.",
+        href: "/phloemai/interviews/reports",
+        action: "View reports",
+      },
+    ],
+  },
+  "curveballs-quick-fire": {
+    title: "Curveballs & Quick-Fire",
+    subtitle:
+      "Build confidence with unexpected questions, quick reasoning prompts and follow-ups.",
+    activeLabel: "Question Bank",
+    stats: [
+      { label: "Questions", value: "80+" },
+      { label: "Completed", value: "16" },
+      { label: "Readiness", value: "20%" },
+    ],
+    primaryAction: {
+      title: "Start quick-fire practice",
+      description: "Answer a short prompt under time pressure, then review your structure.",
+      href: "/phloemai/interviews/ai-interviews",
+      action: "Start",
+    },
+    cards: [
+      {
+        title: "Hot topics",
+        description: "Move from quick-fire answers into current healthcare topics.",
+        href: "/phloemai/interviews/stations/nhs-waiting-lists",
+        action: "Practise",
+      },
+      {
+        title: "Question bank",
+        description: "Return to all interview question categories.",
+        href: "/phloemai/interviews/question-bank",
+        action: "Open bank",
+      },
+      {
+        title: "Progress",
+        description: "Track how quick-fire practice changes your readiness.",
+        href: "/phloemai/interviews/progress",
+        action: "View progress",
+      },
+    ],
+  },
   "teamwork-group-discussion": {
     title: "Teamwork - Group Discussion",
     subtitle:
