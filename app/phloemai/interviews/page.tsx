@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
+  BadgeCheck,
   BarChart3,
   Bell,
   BookOpen,
@@ -209,15 +210,24 @@ export default function InterviewPrepDashboardPage() {
             ))}
           </div>
 
-          <Link
-            href="/phloemai/pricing"
-            className="mt-5 flex h-20 items-center gap-3 rounded-xl border border-white/10 bg-[#082f2c] px-4 text-sm font-bold text-white shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b]"
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#123f3b] text-[#8be5df]">
-              <Zap className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <span className="leading-5">Upgrade to Premium</span>
-          </Link>
+          <div className="mt-8 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f3b] text-[#8be5df]">
+              <BadgeCheck className="h-6 w-6" aria-hidden="true" />
+            </div>
+            <h2 className="mt-4 text-sm font-bold text-white">
+              Upgrade to Premium
+            </h2>
+            <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
+              Unlock more interview stations, deeper analytics and guided
+              practice.
+            </p>
+            <Link
+              href="/phloemai/pricing"
+              className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-[#1aa0a5] text-sm font-bold text-white transition-colors hover:bg-[#14888c]"
+            >
+              Upgrade to Premium
+            </Link>
+          </div>
         </aside>
 
         <section className="min-w-0 px-5 py-7 sm:px-6 lg:px-6 lg:py-5">
