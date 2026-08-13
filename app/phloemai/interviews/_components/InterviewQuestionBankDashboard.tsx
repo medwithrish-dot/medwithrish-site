@@ -5,57 +5,22 @@ import Link from "next/link";
 import {
   ArrowRight,
   BarChart3,
-  Bell,
-  BookOpen,
   CheckCircle2,
-  ChevronDown,
-  ClipboardList,
   Clock,
   FileText,
   Flame,
   Grid3X3,
-  Home,
-  Landmark,
   MessageCircle,
-  Mic,
   Scale,
   Search,
   ShieldCheck,
   Shuffle,
-  Trophy,
   User,
   Users,
   Zap,
 } from "lucide-react";
-
-const navSections = [
-  {
-    items: [
-      { label: "Dashboard", icon: Home, href: "/phloemai/interviews" },
-      { label: "AI Interviews", icon: Mic, href: "/phloemai/interviews/ai-interviews" },
-      {
-        label: "Question Bank",
-        icon: ClipboardList,
-        href: "/phloemai/interviews/question-bank",
-        active: true,
-      },
-      { label: "Universities", icon: Landmark, href: "/phloemai/interviews/universities" },
-      { label: "Guides", icon: BookOpen, href: "/phloemai/interviews/guides" },
-    ],
-  },
-  {
-    items: [
-      { label: "Groups", icon: Users, href: "/phloemai/interviews/groups" },
-      { label: "Leaderboard", icon: Trophy, href: "/phloemai/interviews/leaderboard" },
-    ],
-  },
-  {
-    items: [
-      { label: "Progress", icon: BarChart3, href: "/phloemai/interviews/progress" },
-      { label: "Reports", icon: FileText, href: "/phloemai/interviews/reports" },
-    ],
-  },
-] as const;
+import { InterviewAccountControls } from "../InterviewAccountControls";
+import { InterviewSidebar } from "./InterviewSidebar";
 
 const categories = [
   {
@@ -139,75 +104,6 @@ const categories = [
     href: "/phloemai/interviews/stations/curveballs-quick-fire",
   },
 ] as const;
-
-function MedMaxLogo() {
-  return (
-    <Link href="/phloemai/interviews" className="flex items-center gap-3">
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0c5d57] text-xl font-black text-[#62e7df]">
-        M
-      </div>
-      <div>
-        <p className="text-xl font-black leading-6 text-white">MedMax</p>
-        <p className="mt-1 text-sm font-medium text-slate-200">Med Interviews</p>
-      </div>
-    </Link>
-  );
-}
-
-function Sidebar() {
-  return (
-    <aside className="hidden min-h-screen bg-[#04332f] px-4 py-7 text-white lg:flex lg:flex-col">
-      <MedMaxLogo />
-
-      <nav className="mt-7 space-y-7">
-        {navSections.map((section, index) => (
-          <div
-            key={index}
-            className={`${index === 0 ? "border-t" : ""} border-white/10 pt-6`}
-          >
-            <div className="space-y-2">
-              {section.items.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className={`flex h-12 items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
-                      "active" in item && item.active
-                        ? "bg-[#0f817a] text-white shadow-sm"
-                        : "text-slate-200 hover:bg-white/10 hover:text-white"
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </nav>
-
-      <Link
-        href="/phloemai/account"
-        className="mt-auto block rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10"
-      >
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#96e7df] text-sm font-bold text-[#07534e]">
-            RS
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-bold text-white">Rishoo S.</p>
-            <p className="mt-1 truncate text-xs font-medium text-slate-300">
-              Premium Plan
-            </p>
-          </div>
-          <ChevronDown className="h-4 w-4 text-slate-200" aria-hidden="true" />
-        </div>
-      </Link>
-    </aside>
-  );
-}
 
 function ProgressRing({ percent, colour }: { percent: number; colour: string }) {
   return (
@@ -327,7 +223,11 @@ function CategoryCard({ category }: { category: (typeof categories)[number] }) {
   );
 }
 
-export function InterviewQuestionBankDashboard() {
+export function InterviewQuestionBankDashboard({
+  showPremiumCard,
+}: {
+  showPremiumCard: boolean;
+}) {
   const [query, setQuery] = useState("");
   const totals = useMemo(
     () =>
@@ -360,42 +260,16 @@ export function InterviewQuestionBankDashboard() {
   };
 
   return (
-    <main className="phloem-dashboard-compact min-h-screen bg-[#f5f8fa] text-[#071923]">
-      <div className="grid min-h-screen lg:grid-cols-[250px_1fr]">
-        <Sidebar />
+    <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
+      <div className="grid min-h-screen lg:grid-cols-[230px_1fr]">
+        <InterviewSidebar
+          activeLabel="Question Bank"
+          showPremiumCard={showPremiumCard}
+        />
 
-        <section className="min-w-0">
-          <header className="flex h-16 items-center justify-end border-b border-[#dfe7ec] bg-white px-6">
-            <div className="flex items-center gap-5">
-              <Link
-                href="/phloemai/interviews/notifications"
-                aria-label="Notifications"
-                className="rounded-lg p-2 text-[#071923] transition-colors hover:bg-[#edf7f6] hover:text-[#08787b]"
-              >
-                <Bell className="h-5 w-5" aria-hidden="true" />
-              </Link>
-              <Link
-                href="/phloemai/account"
-                className="flex items-center gap-3 rounded-xl px-2 py-1 transition-colors hover:bg-[#edf7f6]"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c9f1ec] text-sm font-bold text-[#08787b]">
-                  RS
-                </div>
-                <div className="hidden sm:block">
-                  <p className="text-sm font-bold leading-4 text-[#071923]">
-                    Rishoo S.
-                  </p>
-                  <p className="mt-1 text-xs font-medium text-[#314956]">
-                    Premium Plan
-                  </p>
-                </div>
-                <ChevronDown className="h-4 w-4 text-[#314956]" aria-hidden="true" />
-              </Link>
-            </div>
-          </header>
-
-          <div className="mx-auto max-w-[1540px] px-5 py-8 sm:px-7 lg:px-10">
-            <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+        <section className="min-w-0 px-5 py-7 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-[1540px]">
+            <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h1 className="text-3xl font-black tracking-tight text-[#071923]">
                   Question Bank
@@ -405,25 +279,27 @@ export function InterviewQuestionBankDashboard() {
                   {categories.length} categories.
                 </p>
               </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <label className="flex h-12 min-w-0 items-center gap-3 rounded-lg border border-[#d4dee6] bg-white px-4 shadow-sm sm:w-[380px]">
-                  <Search className="h-5 w-5 shrink-0 text-[#4a6370]" aria-hidden="true" />
-                  <input
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    className="min-w-0 flex-1 bg-transparent text-sm font-medium text-[#071923] outline-none placeholder:text-[#8091a0]"
-                    placeholder="Search questions, topics or keywords..."
-                  />
-                </label>
-                <button
-                  type="button"
-                  onClick={openRandomQuestion}
-                  className="flex h-12 items-center justify-center gap-3 rounded-lg border border-[#159a9d] bg-white px-5 text-sm font-black text-[#08787b] shadow-sm transition-colors hover:bg-[#edf7f6]"
-                >
-                  <Shuffle className="h-5 w-5" aria-hidden="true" />
-                  Random Question
-                </button>
-              </div>
+              <InterviewAccountControls />
+            </header>
+
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row xl:justify-end">
+              <label className="flex h-12 min-w-0 items-center gap-3 rounded-lg border border-[#d4dee6] bg-white px-4 shadow-sm sm:w-[420px]">
+                <Search className="h-5 w-5 shrink-0 text-[#4a6370]" aria-hidden="true" />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  className="min-w-0 flex-1 bg-transparent text-sm font-medium text-[#071923] outline-none placeholder:text-[#8091a0]"
+                  placeholder="Search questions, topics or keywords..."
+                />
+              </label>
+              <button
+                type="button"
+                onClick={openRandomQuestion}
+                className="flex h-12 items-center justify-center gap-3 rounded-lg border border-[#159a9d] bg-white px-5 text-sm font-black text-[#08787b] shadow-sm transition-colors hover:bg-[#edf7f6]"
+              >
+                <Shuffle className="h-5 w-5" aria-hidden="true" />
+                Random Question
+              </button>
             </div>
 
             <section className="mt-7 rounded-xl border border-[#d9e2e7] bg-white p-6 shadow-sm">

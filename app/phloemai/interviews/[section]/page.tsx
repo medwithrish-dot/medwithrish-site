@@ -5,6 +5,7 @@ import {
   type InterviewWorkspacePageProps,
 } from "../_components/InterviewWorkspacePage";
 import { InterviewQuestionBankDashboard } from "../_components/InterviewQuestionBankDashboard";
+import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
 
 const sectionPages = {
   "ai-interviews": {
@@ -341,7 +342,9 @@ export default async function Page({
   if (!page) notFound();
 
   if (section === "question-bank") {
-    return <InterviewQuestionBankDashboard />;
+    const { isPremium } = await getPhloemEntitlements();
+
+    return <InterviewQuestionBankDashboard showPremiumCard={!isPremium} />;
   }
 
   return <InterviewWorkspacePage {...page} />;

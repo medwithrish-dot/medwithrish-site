@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
 import { InterviewAccountControls } from "./InterviewAccountControls";
-import { InterviewSidebar } from "./_components/InterviewWorkspacePage";
+import { InterviewSidebar } from "./_components/InterviewSidebar";
 
 export const metadata: Metadata = {
   title: "Med Interviews | PhloemAI",
