@@ -9,6 +9,7 @@ import {
   Check,
   ChevronRight,
   ClipboardList,
+  CreditCard,
   FileText,
   Flame,
   Home,
@@ -40,6 +41,7 @@ const sidebarSections = [
       { label: "AI Interviews", icon: Mic },
       { label: "Question Bank", icon: ClipboardList },
       { label: "Universities", icon: Landmark },
+      { label: "Guides", icon: BookOpen },
     ],
   },
   {
@@ -114,15 +116,17 @@ const performance = [
 function SidebarLink({
   icon: Icon,
   label,
+  href = "#",
   active = false,
 }: {
   icon: typeof Home;
   label: string;
+  href?: string;
   active?: boolean;
 }) {
   return (
     <Link
-      href="#"
+      href={href}
       className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
         active
           ? "bg-[#123f3b] text-[#8be5df]"
@@ -190,7 +194,17 @@ export default function InterviewPrepDashboardPage() {
 
           <nav className="mt-8 space-y-2">
             <div>
-              <SidebarLink icon={Home} label="Dashboard" active />
+              <SidebarLink
+                icon={Home}
+                label="Dashboard"
+                href="/phloemai/interviews"
+                active
+              />
+              <SidebarLink
+                icon={CreditCard}
+                label="Pricing"
+                href="/phloemai/pricing"
+              />
             </div>
           </nav>
 
