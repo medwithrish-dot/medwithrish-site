@@ -348,3 +348,114 @@ body {
     gap: 0.85rem;
   }
 }
+
+.phloem-dashboard-compact {
+  --phloem-ink: #071923;
+  --phloem-muted: #5c7183;
+  --phloem-canvas: #eef1f3;
+  --phloem-panel: #ffffff;
+  --phloem-line: #d8e0e6;
+  --phloem-teal: #159a9d;
+  --phloem-teal-dark: #08787b;
+  --phloem-teal-soft: #e8f3f2;
+  color: var(--phloem-ink);
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  font-weight: 400;
+}
+
+.phloem-dashboard-compact h1,
+.phloem-dashboard-compact h2,
+.phloem-dashboard-compact h3,
+.phloem-dashboard-compact p,
+.phloem-dashboard-compact span,
+.phloem-dashboard-compact button,
+.phloem-dashboard-compact a {
+  letter-spacing: 0;
+}
+
+.phloem-dashboard-compact .font-black {
+  font-weight: 700;
+}
+
+.phloem-dashboard-compact .font-bold {
+  font-weight: 600;
+}
+
+.phloem-dashboard-compact .font-medium {
+  font-weight: 500;
+}
+
+.phloem-dashboard-compact .tracking-wide {
+  letter-spacing: 0;
+}
+
+.phloem-dashboard-compact .bg-\[\#f8fbff\] {
+  background-color: var(--phloem-canvas);
+}
+
+.phloem-dashboard-compact .text-\[\#0b1143\] {
+  color: var(--phloem-ink);
+}
+
+.phloem-dashboard-compact .text-slate-500 {
+  color: var(--phloem-muted);
+}
+
+.phloem-dashboard-compact .text-blue-600,
+.phloem-dashboard-compact .text-blue-700,
+.phloem-dashboard-compact .text-indigo-600,
+.phloem-dashboard-compact .text-violet-600,
+.phloem-dashboard-compact .text-purple-600 {
+  color: var(--phloem-teal-dark);
+}
+
+.phloem-dashboard-compact .hover\:text-blue-600:hover,
+.phloem-dashboard-compact .hover\:text-blue-700:hover,
+.phloem-dashboard-compact .hover\:text-indigo-600:hover {
+  color: var(--phloem-teal-dark);
+}
+
+.phloem-dashboard-compact .bg-blue-600,
+.phloem-dashboard-compact .bg-indigo-600 {
+  background-color: var(--phloem-teal);
+}
+
+.phloem-dashboard-compact .hover\:bg-blue-700:hover,
+.phloem-dashboard-compact .hover\:bg-indigo-700:hover {
+  background-color: var(--phloem-teal-dark);
+}
+
+.phloem-dashboard-compact .bg-blue-50,
+.phloem-dashboard-compact .bg-indigo-50,
+.phloem-dashboard-compact .bg-violet-50,
+.phloem-dashboard-compact .bg-purple-50 {
+  background-color: var(--phloem-teal-soft);
+}
+
+.phloem-dashboard-compact .bg-blue-100,
+.phloem-dashboard-compact .bg-indigo-100,
+.phloem-dashboard-compact .bg-violet-100 {
+  background-color: #d7ebe9;
+}
+
+.phloem-dashboard-compact .border-blue-100,
+.phloem-dashboard-compact .border-blue-200,
+.phloem-dashboard-compact .border-indigo-100,
+.phloem-dashboard-compact .border-violet-100 {
+  border-color: #c9ddda;
+}
+
+.phloem-dashboard-compact .hover\:border-blue-200:hover,
+.phloem-dashboard-compact .hover\:border-blue-300:hover {
+  border-color: #91c7c3;
+}
+
+.phloem-dashboard-compact .ring-blue-50,
+.phloem-dashboard-compact .ring-blue-100 {
+  --tw-ring-color: #c9ddda;
+}
+
+.phloem-dashboard-compact .focus-visible\:ring-blue-500:focus-visible,
+.phloem-dashboard-compact .focus-visible\:ring-teal-400:focus-visible {
+  --tw-ring-color: var(--phloem-teal);
+}

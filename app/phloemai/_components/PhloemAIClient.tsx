@@ -1594,18 +1594,18 @@ function PhloemAreaSwitcher({
         aria-expanded={open}
         aria-controls={menuId}
         title="Switch area"
-        className="group flex w-full cursor-pointer items-center gap-2 rounded-xl border border-blue-100 bg-blue-50/60 px-2 py-2 text-left shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        className="group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-[#0b3431] px-2.5 py-2.5 text-left shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
       >
         <PhloemAIFaviconMark className="h-10 w-10 rounded-xl" />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-lg font-black">
-            Phloem<span className="text-blue-600">AI</span>
+          <span className="block truncate text-lg font-bold text-white">
+            Phloem<span className="text-[#79d8d6]">AI</span>
           </span>
-          <span className="mt-0.5 block truncate text-xs font-bold text-slate-500">
+          <span className="mt-0.5 block truncate text-xs font-semibold text-slate-300">
             UCAT Tutor
           </span>
         </span>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-blue-600 ring-1 ring-blue-100 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f4a45] text-[#86e6e1] ring-1 ring-white/10 transition-colors group-hover:bg-[#1aa0a5] group-hover:text-white">
           <ChevronDown
             className={`h-4 w-4 transition-transform ${
               open ? "rotate-180" : ""
@@ -8829,13 +8829,13 @@ function UCATDashboard({
   )}`;
 
   return (
-    <div className="phloem-dashboard-compact min-h-screen bg-[#f8fbff] text-[#0b1143]">
+    <div className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
       <div
-        className="grid min-h-screen lg:grid-cols-[190px_1fr]"
+        className="grid min-h-screen lg:grid-cols-[230px_1fr]"
         aria-hidden={authGateActive}
         inert={authGateActive ? true : undefined}
       >
-        <aside className="hidden border-r border-slate-200 bg-white px-3 py-5 lg:block">
+        <aside className="hidden border-r border-[#093f3a] bg-[#042724] px-4 py-5 text-slate-100 lg:block">
           <PhloemAreaSwitcher
             open={areaSwitcherOpen}
             onOpen={() => {
@@ -8850,7 +8850,7 @@ function UCATDashboard({
             menuId="phloem-area-switcher"
           />
 
-          <nav className="mt-10 space-y-3">
+          <nav className="mt-8 space-y-2">
             {dashboardNavItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -8860,10 +8860,10 @@ function UCATDashboard({
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-black transition-colors ${
+                  className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
                     isActive
-                      ? "bg-indigo-50 text-blue-600 shadow-sm"
-                      : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                      ? "bg-[#123f3b] text-[#89e4df] shadow-sm"
+                      : "text-slate-300 hover:bg-[#0b3431] hover:text-white"
                   }`}
                 >
                   <Icon className="h-5 w-5" aria-hidden="true" />
@@ -8874,15 +8874,15 @@ function UCATDashboard({
           </nav>
 
           <div className="mt-8">
-            <p className="px-4 text-xs font-black uppercase tracking-wide text-slate-400">
+            <p className="px-4 text-xs font-bold uppercase tracking-wide text-slate-500">
               Skills Trainers
             </p>
             <Link
               href="/phloemai/skills-trainers"
-              className={`mt-3 flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-black transition-colors ${
+              className={`mt-3 flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
                 view === "skills-trainers"
-                  ? "bg-indigo-50 text-blue-600 shadow-sm"
-                  : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                  ? "bg-[#123f3b] text-[#89e4df] shadow-sm"
+                  : "text-slate-300 hover:bg-[#0b3431] hover:text-white"
               }`}
             >
               <Zap className="h-5 w-5" aria-hidden="true" />
@@ -8890,14 +8890,14 @@ function UCATDashboard({
             </Link>
           </div>
 
-          <div className="mt-8 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-blue-600">
-              <Sparkles className="h-6 w-6" aria-hidden="true" />
+          <div className="mt-8 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f3b] text-[#8be5df]">
+              <BadgeCheck className="h-6 w-6" aria-hidden="true" />
             </div>
-            <h2 className="mt-4 text-sm font-black">
+            <h2 className="mt-4 text-sm font-bold text-white">
               Unlock Premium diagnostics
             </h2>
-            <p className="mt-3 text-sm font-medium leading-6 text-slate-600">
+            <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
               Go Premium for diagnostic mocks, deeper analytics and a daily
               AI diagnostic credit.
             </p>
@@ -8906,7 +8906,7 @@ function UCATDashboard({
                 type="button"
                 onClick={handleSubscriptionAction}
                 disabled={checkoutLoading}
-                className="mt-5 h-10 w-full rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+                className="mt-5 h-10 w-full rounded-lg bg-[#1aa0a5] text-sm font-bold text-white transition-colors hover:bg-[#14888c] disabled:cursor-not-allowed disabled:bg-slate-600"
               >
                 {hasStripeCustomer
                   ? checkoutLoading
@@ -8917,7 +8917,7 @@ function UCATDashboard({
             ) : (
               <Link
                 href="/phloemai/pricing"
-                className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-blue-600 text-sm font-black text-white transition-colors hover:bg-blue-700"
+                className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-[#1aa0a5] text-sm font-bold text-white transition-colors hover:bg-[#14888c]"
               >
                 View Plans
               </Link>
@@ -8929,22 +8929,22 @@ function UCATDashboard({
             )}
           </div>
 
-          <div className="mt-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="text-sm font-medium text-slate-500">Current plan</p>
+          <div className="mt-5 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
+            <p className="text-sm font-medium text-slate-400">Current plan</p>
             <div className="mt-2 flex items-center justify-between">
-              <span className="text-sm font-black">{plan}</span>
+              <span className="text-sm font-bold text-white">{plan}</span>
               {plan === "Premium" ? (
                 <button
                   type="button"
                   onClick={handleSubscriptionAction}
-                  className="text-sm font-black text-blue-600 hover:text-blue-700"
+                  className="text-sm font-bold text-[#89e4df] hover:text-white"
                 >
                   {hasStripeCustomer ? "Manage" : "Manual access"}
                 </button>
               ) : (
                 <Link
                   href="/phloemai/pricing"
-                  className="text-sm font-black text-blue-600 hover:text-blue-700"
+                  className="text-sm font-bold text-[#89e4df] hover:text-white"
                 >
                   View plans
                 </Link>
@@ -8952,26 +8952,26 @@ function UCATDashboard({
             </div>
           </div>
 
-          <div className="mt-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+          <div className="mt-5 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
               Legal
             </p>
             <div className="mt-3 space-y-2 text-xs font-bold">
               <Link
                 href="/terms-and-conditions"
-                className="block text-slate-600 hover:text-blue-600"
+                className="block text-slate-300 hover:text-white"
               >
                 Terms and Conditions
               </Link>
               <Link
                 href="/privacy-policy"
-                className="block text-slate-600 hover:text-blue-600"
+                className="block text-slate-300 hover:text-white"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/phloemai-disclaimer"
-                className="block text-slate-600 hover:text-blue-600"
+                className="block text-slate-300 hover:text-white"
               >
                 AI/Data Disclaimer
               </Link>
@@ -9178,7 +9178,7 @@ function UCATDashboard({
               >
                 <div className="mb-3 rounded-xl bg-slate-50 p-2">
                   <p className="px-3 pb-2 text-xs font-black uppercase tracking-wide text-slate-400">
-                    Switch area
+                    Areas
                   </p>
                   <div className="grid gap-1">
                     {phloemAreaSwitchItems.map((item) => {
