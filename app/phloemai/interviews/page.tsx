@@ -21,9 +21,11 @@ import {
   Users,
   Zap,
 } from "lucide-react";
+import { InterviewAccountControls } from "./InterviewAccountControls";
+import { InterviewAreaSwitcher } from "./InterviewAreaSwitcher";
 
 export const metadata: Metadata = {
-  title: "Interview Prep Dashboard | PhloemAI",
+  title: "Med Interviews | PhloemAI",
   description:
     "A medicine and dentistry interview preparation dashboard for MMI practice, university tracking, question banks and interview readiness.",
   alternates: {
@@ -184,25 +186,7 @@ export default function InterviewPrepDashboardPage() {
     <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
       <div className="grid min-h-screen lg:grid-cols-[230px_1fr]">
         <aside className="hidden border-r border-[#093f3a] bg-[#042724] px-4 py-5 text-slate-100 lg:block">
-          <Link
-            href="/phloemai/dashboard"
-            className="group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-[#0b3431] px-2.5 py-2.5 text-left shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
-          >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#123f3b] text-xs font-bold text-white">
-              MWR
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-lg font-bold text-white">
-                Phloem<span className="text-[#8be5df]">AI</span>
-              </span>
-              <span className="mt-0.5 block truncate text-xs font-semibold text-slate-300">
-                Interview Prep
-              </span>
-            </span>
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f4a45] text-[#86e6e1] ring-1 ring-white/10 transition-colors group-hover:bg-[#1aa0a5] group-hover:text-white">
-              <ChevronRight className="h-4 w-4" aria-hidden="true" />
-            </span>
-          </Link>
+          <InterviewAreaSwitcher />
 
           <nav className="mt-8 space-y-2">
             <div>
@@ -257,15 +241,7 @@ export default function InterviewPrepDashboardPage() {
                 Let&apos;s keep your interview prep on track.
               </p>
             </div>
-            <div className="flex items-center gap-5">
-              <button
-                type="button"
-                aria-label="Notifications"
-                className="relative flex h-10 w-10 items-center justify-center rounded-lg text-[#071923] transition-colors hover:bg-white"
-              >
-                <span className="absolute right-2 top-1.5 h-2.5 w-2.5 rounded-full bg-[#159a9d]" />
-                <Bell className="h-5 w-5" aria-hidden="true" />
-              </button>
+            <div className="flex flex-wrap items-center justify-end gap-4">
               <Link
                 href="#"
                 className="flex h-10 min-w-[260px] items-center justify-between rounded-lg border border-[#d8e0e6] bg-white px-4 text-sm font-semibold text-[#071923] shadow-sm transition-colors hover:border-[#159a9d]"
@@ -276,6 +252,7 @@ export default function InterviewPrepDashboardPage() {
                 </span>
                 <ChevronRight className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />
               </Link>
+              <InterviewAccountControls />
             </div>
           </header>
 

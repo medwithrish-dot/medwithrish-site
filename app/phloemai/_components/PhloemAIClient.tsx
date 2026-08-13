@@ -1502,31 +1502,17 @@ const dashboardNavItems = [
 
 const phloemAreaSwitchItems = [
   {
-    label: "PhloemAI UCAT Tutor",
+    label: "UCAT",
     eyebrow: "Current workspace",
     href: "/phloemai/dashboard",
     icon: Brain,
     current: true,
   },
   {
-    label: "Interview Prep",
+    label: "Med Interviews",
     eyebrow: "MMI and panel dashboard",
     href: "/phloemai/interviews",
     icon: MessageSquare,
-    current: false,
-  },
-  {
-    label: "UCAT resources",
-    eyebrow: "Tutoring and prep",
-    href: "/ucat-tutoring",
-    icon: Target,
-    current: false,
-  },
-  {
-    label: "Resources library",
-    eyebrow: "Guides and trackers",
-    href: "/resources",
-    icon: ClipboardList,
     current: false,
   },
 ] as const;
