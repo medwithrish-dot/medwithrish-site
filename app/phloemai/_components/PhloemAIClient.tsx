@@ -1509,9 +1509,9 @@ const phloemAreaSwitchItems = [
     current: true,
   },
   {
-    label: "Interviews",
-    eyebrow: "MMI and panel prep",
-    href: "/interviews",
+    label: "Interview Prep",
+    eyebrow: "MMI and panel dashboard",
+    href: "/phloemai/interviews",
     icon: MessageSquare,
     current: false,
   },
@@ -1632,13 +1632,13 @@ function PhloemAreaSwitcher({
                 onClick={onClose}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors ${
                   item.current
-                    ? "bg-indigo-50 text-blue-700"
-                    : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                    ? "bg-[#edf7f6] text-[#08787b]"
+                    : "text-slate-700 hover:bg-[#f4f8f8] hover:text-[#08787b]"
                 }`}
               >
                 <span
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-                    item.current ? "bg-white text-blue-600" : "bg-slate-100 text-slate-500"
+                    item.current ? "bg-white text-[#08787b]" : "bg-[#edf7f6] text-[#4a6370]"
                   }`}
                 >
                   <Icon className="h-5 w-5" aria-hidden="true" />
