@@ -42,6 +42,7 @@ import {
   BarChart3,
   Bell,
   Bookmark,
+  BookOpen,
   Brain,
   Calculator,
   Check,
@@ -65,6 +66,7 @@ import {
   Timer,
   Trash2,
   UserRound,
+  Users,
   Wrench,
   X,
   Zap,
@@ -8858,6 +8860,28 @@ function UCATDashboard({
               );
             })}
           </nav>
+
+          <div className="mt-8">
+            <p className="px-4 text-xs font-bold uppercase tracking-wide text-slate-500">
+              Community
+            </p>
+            <div className="mt-3 space-y-2">
+              <Link
+                href="#"
+                className="flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold text-slate-300 transition-colors hover:bg-[#0b3431] hover:text-white"
+              >
+                <Users className="h-5 w-5" aria-hidden="true" />
+                Groups
+              </Link>
+              <Link
+                href="/resources"
+                className="flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold text-slate-300 transition-colors hover:bg-[#0b3431] hover:text-white"
+              >
+                <BookOpen className="h-5 w-5" aria-hidden="true" />
+                Guides
+              </Link>
+            </div>
+          </div>
 
           <div className="mt-8">
             <p className="px-4 text-xs font-bold uppercase tracking-wide text-slate-500">
