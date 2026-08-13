@@ -1533,45 +1533,91 @@ const phloemAreaSwitchItems = [
 
 function PhloemAreaSwitcher({
   open,
+  onOpen,
   onToggle,
   onClose,
   menuId,
   className = "",
 }: {
   open: boolean;
+  onOpen: () => void;
   onToggle: () => void;
   onClose: () => void;
   menuId: string;
   className?: string;
 }) {
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearCloseTimer = () => {
+    if (!closeTimerRef.current) return;
+    clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = null;
+  };
+
+  const handleOpen = () => {
+    clearCloseTimer();
+    onOpen();
+  };
+
+  const handleCloseSoon = () => {
+    clearCloseTimer();
+    closeTimerRef.current = setTimeout(() => {
+      onClose();
+      closeTimerRef.current = null;
+    }, 180);
+  };
+
+  useEffect(() => clearCloseTimer, []);
+
   return (
-    <div className={`relative ${className}`}>
+    <div
+      className={`relative ${className}`}
+      onMouseEnter={handleOpen}
+      onMouseLeave={handleCloseSoon}
+    >
       <button
         type="button"
-        onClick={onToggle}
+        onClick={() => {
+          if (open) {
+            handleOpen();
+            return;
+          }
+
+          onToggle();
+        }}
+        onFocus={handleOpen}
         onKeyDown={(event) => {
           if (event.key === "Escape") onClose();
         }}
+        aria-label="Switch MedWithRish area"
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={menuId}
-        className="-mx-1 flex w-full items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        title="Switch area"
+        className="group flex w-full cursor-pointer items-center gap-2 rounded-xl border border-blue-100 bg-blue-50/60 px-2 py-2 text-left shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
       >
-        <PhloemAIFaviconMark className="h-11 w-11 rounded-xl" />
+        <PhloemAIFaviconMark className="h-10 w-10 rounded-xl" />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-xl font-black">
+          <span className="block truncate text-lg font-black">
             Phloem<span className="text-blue-600">AI</span>
           </span>
-          <span className="block truncate text-sm font-bold text-slate-500">
-            UCAT Tutor
+          <span className="mt-0.5 flex items-center gap-2">
+            <span className="truncate text-xs font-bold text-slate-500">
+              UCAT Tutor
+            </span>
+            <span className="rounded-full bg-white px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide text-blue-600 ring-1 ring-blue-100">
+              Switch
+            </span>
           </span>
         </span>
-        <ChevronDown
-          className={`h-4 w-4 shrink-0 text-slate-500 transition-transform ${
-            open ? "rotate-180" : ""
-          }`}
-          aria-hidden="true"
-        />
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-blue-600 ring-1 ring-blue-100 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+          <ChevronDown
+            className={`h-4 w-4 transition-transform ${
+              open ? "rotate-180" : ""
+            }`}
+            aria-hidden="true"
+          />
+        </span>
       </button>
 
       {open && (
@@ -8797,6 +8843,10 @@ function UCATDashboard({
         <aside className="hidden border-r border-slate-200 bg-white px-3 py-5 lg:block">
           <PhloemAreaSwitcher
             open={areaSwitcherOpen}
+            onOpen={() => {
+              setAreaSwitcherOpen(true);
+              setAccountMenuOpen(false);
+            }}
             onToggle={() => {
               setAreaSwitcherOpen((current) => !current);
               setAccountMenuOpen(false);
