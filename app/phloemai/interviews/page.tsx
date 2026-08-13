@@ -10,15 +10,12 @@ import {
   ChevronRight,
   ClipboardList,
   CreditCard,
-  FileText,
   Flame,
   Home,
   Landmark,
   MessageSquare,
   Mic,
-  Settings,
   ShieldQuestion,
-  Trophy,
   Users,
   Zap,
 } from "lucide-react";
@@ -38,29 +35,15 @@ const sidebarSections = [
   {
     label: "Practice",
     items: [
-      { label: "AI Interviews", icon: Mic },
-      { label: "Question Bank", icon: ClipboardList },
-      { label: "Universities", icon: Landmark },
-      { label: "Guides", icon: BookOpen },
+      { label: "AI Interviews", icon: Mic, href: "#" },
+      { label: "Question Bank", icon: ClipboardList, href: "#" },
+      { label: "Universities", icon: Landmark, href: "#" },
+      { label: "Guides", icon: BookOpen, href: "/resources" },
     ],
   },
   {
     label: "Community",
-    items: [
-      { label: "Groups", icon: Users },
-      { label: "Leaderboard", icon: Trophy },
-    ],
-  },
-  {
-    label: "Insights",
-    items: [
-      { label: "Progress", icon: BarChart3 },
-      { label: "Reports", icon: FileText },
-    ],
-  },
-  {
-    label: "Tools",
-    items: [{ label: "Mic Check", icon: Mic }],
+    items: [{ label: "Groups", icon: Users, href: "#" }],
   },
 ] as const;
 
@@ -220,28 +203,12 @@ export default function InterviewPrepDashboardPage() {
                       key={item.label}
                       icon={item.icon}
                       label={item.label}
+                      href={item.href}
                     />
                   ))}
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="mt-8 space-y-2">
-            <SidebarLink icon={Settings} label="Settings" />
-            <SidebarLink icon={ShieldQuestion} label="Help & Support" />
-          </div>
-
-          <div className="mt-8 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f3b] text-[#8be5df]">
-              <Mic className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <h2 className="mt-4 text-sm font-bold text-white">
-              Interview practice
-            </h2>
-            <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
-              MMI, panel, ethics and motivation prep in one dashboard.
-            </p>
           </div>
         </aside>
 
