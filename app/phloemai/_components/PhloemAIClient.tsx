@@ -8876,44 +8876,31 @@ function UCATDashboard({
             </Link>
           </div>
 
-          <div className="mt-8 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f3b] text-[#8be5df]">
-              <BadgeCheck className="h-6 w-6" aria-hidden="true" />
-            </div>
-            <h2 className="mt-4 text-sm font-bold text-white">
-              Unlock Premium diagnostics
-            </h2>
-            <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
-              Go Premium for diagnostic mocks, deeper analytics and a daily
-              AI diagnostic credit.
-            </p>
-            {plan === "Premium" ? (
-              <button
-                type="button"
-                onClick={handleSubscriptionAction}
-                disabled={checkoutLoading}
-                className="mt-5 h-10 w-full rounded-lg bg-[#1aa0a5] text-sm font-bold text-white transition-colors hover:bg-[#14888c] disabled:cursor-not-allowed disabled:bg-slate-600"
-              >
-                {hasStripeCustomer
-                  ? checkoutLoading
-                    ? "Opening..."
-                    : "Manage Billing"
-                  : "Premium active"}
-              </button>
-            ) : (
+          {plan !== "Premium" && (
+            <div className="mt-8 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f3b] text-[#8be5df]">
+                <BadgeCheck className="h-6 w-6" aria-hidden="true" />
+              </div>
+              <h2 className="mt-4 text-sm font-bold text-white">
+                Unlock Premium diagnostics
+              </h2>
+              <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
+                Go Premium for diagnostic mocks, deeper analytics and a daily
+                AI diagnostic credit.
+              </p>
               <Link
                 href="/phloemai/pricing"
                 className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-[#1aa0a5] text-sm font-bold text-white transition-colors hover:bg-[#14888c]"
               >
                 View Plans
               </Link>
-            )}
-            {checkoutError && (
-              <p className="mt-3 text-xs font-bold leading-5 text-red-600">
-                {checkoutError}
-              </p>
-            )}
-          </div>
+              {checkoutError && (
+                <p className="mt-3 text-xs font-bold leading-5 text-red-600">
+                  {checkoutError}
+                </p>
+              )}
+            </div>
+          )}
 
           <div className="mt-5 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
             <p className="text-sm font-medium text-slate-400">Current plan</p>
