@@ -9,13 +9,13 @@ import {
   Check,
   ChevronRight,
   ClipboardList,
-  CreditCard,
   Flame,
   Home,
   Landmark,
   MessageSquare,
   Mic,
   ShieldQuestion,
+  Trophy,
   Users,
   Zap,
 } from "lucide-react";
@@ -43,7 +43,10 @@ const sidebarSections = [
   },
   {
     label: "Community",
-    items: [{ label: "Groups", icon: Users, href: "#" }],
+    items: [
+      { label: "Groups", icon: Users, href: "#" },
+      { label: "Leaderboard", icon: Trophy, href: "#" },
+    ],
   },
 ] as const;
 
@@ -183,11 +186,6 @@ export default function InterviewPrepDashboardPage() {
                 href="/phloemai/interviews"
                 active
               />
-              <SidebarLink
-                icon={CreditCard}
-                label="Pricing"
-                href="/phloemai/pricing"
-              />
             </div>
           </nav>
 
@@ -210,6 +208,16 @@ export default function InterviewPrepDashboardPage() {
               </div>
             ))}
           </div>
+
+          <Link
+            href="/phloemai/pricing"
+            className="mt-5 flex h-20 items-center gap-3 rounded-xl border border-white/10 bg-[#082f2c] px-4 text-sm font-bold text-white shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b]"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#123f3b] text-[#8be5df]">
+              <Zap className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <span className="leading-5">Upgrade to Premium</span>
+          </Link>
         </aside>
 
         <section className="min-w-0 px-5 py-7 sm:px-6 lg:px-6 lg:py-5">
