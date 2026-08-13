@@ -1601,13 +1601,8 @@ function PhloemAreaSwitcher({
           <span className="block truncate text-lg font-black">
             Phloem<span className="text-blue-600">AI</span>
           </span>
-          <span className="mt-0.5 flex items-center gap-2">
-            <span className="truncate text-xs font-bold text-slate-500">
-              UCAT Tutor
-            </span>
-            <span className="rounded-full bg-white px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide text-blue-600 ring-1 ring-blue-100">
-              Switch
-            </span>
+          <span className="mt-0.5 block truncate text-xs font-bold text-slate-500">
+            UCAT Tutor
           </span>
         </span>
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-blue-600 ring-1 ring-blue-100 transition-colors group-hover:bg-blue-600 group-hover:text-white">
