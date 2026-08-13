@@ -85,13 +85,13 @@ export function InterviewAccountControls() {
 
   return (
     <div className="flex items-center gap-4">
-      <button
-        type="button"
+      <Link
+        href="/phloemai/interviews/notifications"
         aria-label="Notifications"
         className="rounded-lg p-2 text-slate-700 transition-colors hover:bg-white hover:text-[#08787b]"
       >
         <Bell className="h-5 w-5" aria-hidden="true" />
-      </button>
+      </Link>
       <div className="hidden h-8 w-px bg-slate-200 sm:block" />
       <div className="relative">
         <button
@@ -174,13 +174,13 @@ export function InterviewAccountControls() {
                 UCAT dashboard
               </Link>
               <Link
-                href="/phloemai/report"
+                href="/phloemai/interviews/reports"
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-bold text-slate-700 hover:bg-[#f4f8f8] hover:text-[#08787b]"
                 role="menuitem"
               >
                 <Bookmark className="h-4 w-4" aria-hidden="true" />
-                Reports
+                Interview reports
               </Link>
               <button
                 type="button"

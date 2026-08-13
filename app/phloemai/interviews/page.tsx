@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
-  BadgeCheck,
   BarChart3,
   Bell,
   BookOpen,
@@ -11,17 +10,14 @@ import {
   ChevronRight,
   ClipboardList,
   Flame,
-  Home,
-  Landmark,
   MessageSquare,
-  Mic,
   ShieldQuestion,
-  Trophy,
   Users,
   Zap,
 } from "lucide-react";
+import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
 import { InterviewAccountControls } from "./InterviewAccountControls";
-import { InterviewAreaSwitcher } from "./InterviewAreaSwitcher";
+import { InterviewSidebar } from "./_components/InterviewWorkspacePage";
 
 export const metadata: Metadata = {
   title: "Med Interviews | PhloemAI",
@@ -31,25 +27,6 @@ export const metadata: Metadata = {
     canonical: "/phloemai/interviews",
   },
 };
-
-const sidebarSections = [
-  {
-    label: "Practice",
-    items: [
-      { label: "AI Interviews", icon: Mic, href: "#" },
-      { label: "Question Bank", icon: ClipboardList, href: "#" },
-      { label: "Universities", icon: Landmark, href: "#" },
-      { label: "Guides", icon: BookOpen, href: "/resources" },
-    ],
-  },
-  {
-    label: "Community",
-    items: [
-      { label: "Groups", icon: Users, href: "#" },
-      { label: "Leaderboard", icon: Trophy, href: "#" },
-    ],
-  },
-] as const;
 
 const stats = [
   { label: "Stations completed", value: "42", icon: ClipboardList },
@@ -63,25 +40,43 @@ const interviews = [
     meta: "18 days remaining",
     score: "82%",
     colour: "bg-[#0f766e]",
+    href: "/phloemai/interviews/universities/manchester",
   },
   {
     name: "Sheffield",
     meta: "32 days remaining",
     score: "71%",
     colour: "bg-[#159a9d]",
+    href: "/phloemai/interviews/universities/sheffield",
   },
   {
     name: "Birmingham",
     meta: "Date not set",
     score: "61%",
     colour: "bg-[#e07a2f]",
+    href: "/phloemai/interviews/universities/birmingham",
   },
 ] as const;
 
 const plan = [
-  { label: "Motivation question", status: "Completed", done: true },
-  { label: "Ethics AI station", status: "8 mins", done: false },
-  { label: "Hot topic: NHS waiting lists", status: "8 mins", done: false },
+  {
+    label: "Motivation question",
+    status: "Completed",
+    done: true,
+    href: "/phloemai/interviews/stations/motivation-question",
+  },
+  {
+    label: "Ethics AI station",
+    status: "8 mins",
+    done: false,
+    href: "/phloemai/interviews/stations/ethics-ai-station",
+  },
+  {
+    label: "Hot topic: NHS waiting lists",
+    status: "8 mins",
+    done: false,
+    href: "/phloemai/interviews/stations/nhs-waiting-lists",
+  },
 ] as const;
 
 const strengths = [
@@ -94,37 +89,39 @@ const strengths = [
 ] as const;
 
 const performance = [
-  { label: "Manchester Mock #2", meta: "3 days ago", score: "78%", colour: "text-[#129a72]", icon: ClipboardList },
-  { label: "Ethics - Resource Allocation", meta: "5 days ago", score: "72%", colour: "text-[#e07a2f]", icon: BookOpen },
-  { label: "Motivation - Personal Why", meta: "1 week ago", score: "81%", colour: "text-[#129a72]", icon: MessageSquare },
-  { label: "Teamwork - Group Discussion", meta: "1 week ago", score: "74%", colour: "text-[#129a72]", icon: Users },
+  {
+    label: "Manchester Mock #2",
+    meta: "3 days ago",
+    score: "78%",
+    colour: "text-[#129a72]",
+    icon: ClipboardList,
+    href: "/phloemai/interviews/reports/manchester-mock-2",
+  },
+  {
+    label: "Ethics - Resource Allocation",
+    meta: "5 days ago",
+    score: "72%",
+    colour: "text-[#e07a2f]",
+    icon: BookOpen,
+    href: "/phloemai/interviews/reports/ethics-resource-allocation",
+  },
+  {
+    label: "Motivation - Personal Why",
+    meta: "1 week ago",
+    score: "81%",
+    colour: "text-[#129a72]",
+    icon: MessageSquare,
+    href: "/phloemai/interviews/reports/motivation-personal-why",
+  },
+  {
+    label: "Teamwork - Group Discussion",
+    meta: "1 week ago",
+    score: "74%",
+    colour: "text-[#129a72]",
+    icon: Users,
+    href: "/phloemai/interviews/reports/teamwork-group-discussion",
+  },
 ] as const;
-
-function SidebarLink({
-  icon: Icon,
-  label,
-  href = "#",
-  active = false,
-}: {
-  icon: typeof Home;
-  label: string;
-  href?: string;
-  active?: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
-        active
-          ? "bg-[#123f3b] text-[#8be5df]"
-          : "text-slate-300 hover:bg-[#0b3431] hover:text-white"
-      }`}
-    >
-      <Icon className="h-5 w-5" aria-hidden="true" />
-      <span>{label}</span>
-    </Link>
-  );
-}
 
 function ProgressRing() {
   return (
@@ -151,84 +148,42 @@ function ProgressRing() {
 function PanelTitle({
   title,
   action,
+  actionHref,
 }: {
   title: string;
   action?: string;
+  actionHref?: string;
 }) {
   return (
     <div className="flex w-full items-center justify-between gap-4">
       <h2 className="text-xs font-bold uppercase tracking-[0.08em] text-[#08787b]">
         {title}
       </h2>
-      {action && (
+      {action && actionHref && (
         <Link
-          href="#"
+          href={actionHref}
           className="text-xs font-semibold text-[#08787b] hover:text-[#042724]"
         >
           {action}
         </Link>
       )}
+      {action && !actionHref && (
+        <span className="text-xs font-semibold text-[#08787b]">{action}</span>
+      )}
     </div>
   );
 }
 
-export default function InterviewPrepDashboardPage() {
+export default async function InterviewPrepDashboardPage() {
+  const { isPremium } = await getPhloemEntitlements();
+
   return (
     <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
       <div className="grid min-h-screen lg:grid-cols-[230px_1fr]">
-        <aside className="hidden border-r border-[#093f3a] bg-[#042724] px-4 py-5 text-slate-100 lg:block">
-          <InterviewAreaSwitcher />
-
-          <nav className="mt-8 space-y-2">
-            <div>
-              <SidebarLink
-                icon={Home}
-                label="Dashboard"
-                href="/phloemai/interviews"
-                active
-              />
-            </div>
-          </nav>
-
-          <div className="mt-8 space-y-8">
-            {sidebarSections.map((section) => (
-              <div key={section.label}>
-                <p className="px-4 text-xs font-bold uppercase tracking-wide text-slate-500">
-                  {section.label}
-                </p>
-                <div className="mt-3 space-y-2">
-                  {section.items.map((item) => (
-                    <SidebarLink
-                      key={item.label}
-                      icon={item.icon}
-                      label={item.label}
-                      href={item.href}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f3b] text-[#8be5df]">
-              <BadgeCheck className="h-6 w-6" aria-hidden="true" />
-            </div>
-            <h2 className="mt-4 text-sm font-bold text-white">
-              Upgrade to Premium
-            </h2>
-            <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
-              Unlock more interview stations, deeper analytics and guided
-              practice.
-            </p>
-            <Link
-              href="/phloemai/pricing"
-              className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-[#1aa0a5] text-sm font-bold text-white transition-colors hover:bg-[#14888c]"
-            >
-              Upgrade to Premium
-            </Link>
-          </div>
-        </aside>
+        <InterviewSidebar
+          activeLabel="Dashboard"
+          showPremiumCard={!isPremium}
+        />
 
         <section className="min-w-0 px-5 py-7 sm:px-6 lg:px-6 lg:py-5">
           <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -242,7 +197,7 @@ export default function InterviewPrepDashboardPage() {
             </div>
             <div className="flex flex-wrap items-center justify-end gap-4">
               <Link
-                href="#"
+                href="/phloemai/interviews/universities/manchester"
                 className="flex h-10 min-w-[260px] items-center justify-between rounded-lg border border-[#d8e0e6] bg-white px-4 text-sm font-semibold text-[#071923] shadow-sm transition-colors hover:border-[#159a9d]"
               >
                 <span className="flex items-center gap-2">
@@ -316,7 +271,7 @@ export default function InterviewPrepDashboardPage() {
                 </div>
               </div>
               <Link
-                href="#"
+                href="/phloemai/interviews/stations/ethics-confidentiality"
                 className="mt-5 flex h-10 items-center justify-center gap-3 rounded-lg bg-[#159a9d] px-4 text-sm font-bold text-white transition-colors hover:bg-[#08787b]"
               >
                 Start AI Station
@@ -329,7 +284,7 @@ export default function InterviewPrepDashboardPage() {
               <div className="mt-5 overflow-hidden rounded-lg border border-[#d8e0e6]">
                 {interviews.map((interview, index) => (
                   <Link
-                    href="#"
+                    href={interview.href}
                     key={interview.name}
                     className={`grid grid-cols-[36px_minmax(0,1fr)_78px_16px] items-center gap-3 bg-white px-3 py-3 transition-colors hover:bg-[#f4f8f8] ${
                       index === interviews.length - 1 ? "" : "border-b border-[#e4eaee]"
@@ -367,7 +322,7 @@ export default function InterviewPrepDashboardPage() {
                 ))}
               </div>
               <Link
-                href="#"
+                href="/phloemai/interviews/universities"
                 className="mt-5 flex items-center justify-between text-sm font-bold text-[#08787b] hover:text-[#042724]"
               >
                 View all universities
@@ -380,7 +335,7 @@ export default function InterviewPrepDashboardPage() {
               <div className="mt-5 overflow-hidden rounded-lg border border-[#d8e0e6]">
                 {plan.map((item, index) => (
                   <Link
-                    href="#"
+                    href={item.href}
                     key={item.label}
                     className={`grid grid-cols-[26px_minmax(0,1fr)_72px_14px] items-center gap-3 bg-white px-3 py-3 transition-colors hover:bg-[#f4f8f8] ${
                       index === plan.length - 1 ? "" : "border-b border-[#e4eaee]"
@@ -410,7 +365,7 @@ export default function InterviewPrepDashboardPage() {
                 ))}
               </div>
               <Link
-                href="#"
+                href="/phloemai/interviews/plan"
                 className="mt-5 flex items-center justify-between text-sm font-bold text-[#08787b] hover:text-[#042724]"
               >
                 View full plan
@@ -448,7 +403,7 @@ export default function InterviewPrepDashboardPage() {
                 })}
               </div>
               <Link
-                href="#"
+                href="/phloemai/interviews/progress"
                 className="mt-6 flex items-center gap-3 text-sm font-bold text-[#08787b] hover:text-[#042724]"
               >
                 View progress
@@ -457,13 +412,17 @@ export default function InterviewPrepDashboardPage() {
             </article>
 
             <article className="min-h-[250px] rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-sm">
-              <PanelTitle title="Recent performance" action="View all" />
+              <PanelTitle
+                title="Recent performance"
+                action="View all"
+                actionHref="/phloemai/interviews/reports"
+              />
               <div className="mt-5 space-y-4">
                 {performance.map((item) => {
                   const Icon = item.icon;
                   return (
                     <Link
-                      href="#"
+                      href={item.href}
                       key={item.label}
                       className="grid grid-cols-[34px_minmax(0,1fr)_42px] items-center gap-3 rounded-lg transition-colors hover:bg-[#f4f8f8]"
                     >
@@ -500,7 +459,7 @@ export default function InterviewPrepDashboardPage() {
                   Great job. Your consistency is paying off.
                 </p>
                 <Link
-                  href="#"
+                  href="/phloemai/interviews/reports"
                   className="mt-4 inline-flex h-10 items-center justify-center rounded-lg border border-[#9bcac8] bg-white px-5 text-sm font-bold text-[#08787b] transition-colors hover:border-[#159a9d] hover:bg-[#edf7f6]"
                 >
                   See full report

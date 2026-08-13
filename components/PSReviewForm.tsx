@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 type ReviewType = "medicine" | "dental";
@@ -16,11 +16,11 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const checkout = searchParams.get("checkout");
-    if (checkout === "success") setStatus("success");
-    if (checkout === "cancelled") setStatus("cancelled");
-  }, [searchParams]);
+  const checkout = searchParams.get("checkout");
+  const checkoutStatus =
+    checkout === "success" || checkout === "cancelled" ? checkout : null;
+  const displayedStatus =
+    status === "idle" && checkoutStatus ? checkoutStatus : status;
 
   const handleFile = useCallback((f: File | null) => {
     if (!f) return;
@@ -95,9 +95,10 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
     }
   };
 
-  const isLoading = status === "uploading" || status === "redirecting";
+  const isLoading =
+    displayedStatus === "uploading" || displayedStatus === "redirecting";
 
-  if (status === "success") {
+  if (displayedStatus === "success") {
     return (
       <div
         id="ps-submission"
@@ -107,7 +108,7 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
         <div className="text-3xl">✓</div>
         <h4 className="mt-3 text-xl font-bold text-green-800">Payment received!</h4>
         <p className="mt-2 text-sm text-green-700">
-          Your personal statement has been submitted. You'll receive feedback at <strong>{email || "your email"}</strong> soon.
+          Your personal statement has been submitted. You&apos;ll receive feedback at <strong>{email || "your email"}</strong> soon.
         </p>
       </div>
     );
@@ -131,7 +132,7 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
         Upload your PDF, pay securely, and receive detailed written feedback on structure, reflection, clarity, and competitiveness.
       </p>
 
-      {status === "cancelled" && (
+      {displayedStatus === "cancelled" && (
         <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           Payment was cancelled — your file was not submitted. Try again below.
         </div>

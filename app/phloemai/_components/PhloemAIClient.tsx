@@ -8867,7 +8867,7 @@ function UCATDashboard({
             </p>
             <div className="mt-3 space-y-2">
               <Link
-                href="#"
+                href="/phloemai/groups"
                 className="flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold text-slate-300 transition-colors hover:bg-[#0b3431] hover:text-white"
               >
                 <Users className="h-5 w-5" aria-hidden="true" />
