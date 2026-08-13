@@ -4,6 +4,7 @@ import {
   InterviewWorkspacePage,
   type InterviewWorkspacePageProps,
 } from "../_components/InterviewWorkspacePage";
+import { InterviewQuestionBankDashboard } from "../_components/InterviewQuestionBankDashboard";
 
 const sectionPages = {
   "ai-interviews": {
@@ -338,6 +339,10 @@ export default async function Page({
   const page = sectionPageMap[section];
 
   if (!page) notFound();
+
+  if (section === "question-bank") {
+    return <InterviewQuestionBankDashboard />;
+  }
 
   return <InterviewWorkspacePage {...page} />;
 }
