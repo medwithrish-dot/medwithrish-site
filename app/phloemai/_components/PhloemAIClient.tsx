@@ -8979,7 +8979,7 @@ function UCATDashboard({
           </div>
         </aside>
 
-        <main className="min-w-0">
+        <main className="phloem-dashboard-main min-w-0">
           <header className="border-b border-slate-200 bg-white px-6 py-6 lg:px-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
@@ -9325,7 +9325,7 @@ function UCATDashboard({
                   <h2 className="text-sm font-black uppercase tracking-wide">
                     Personalised Study Plan/Tasks
                   </h2>
-                  <p className="mt-2 text-xs font-bold leading-5 text-slate-500">
+                  <p className="mt-2 text-xs font-bold leading-5 text-[#2b414d]">
                     Every saved fix from your latest diagnostic becomes a task here.
                   </p>
                 </div>
@@ -9356,7 +9356,7 @@ function UCATDashboard({
                             {step}
                           </span>
                           <h3 className="mt-3 text-sm font-black">{title}</h3>
-                          <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                          <p className="mt-1 text-xs font-bold leading-5 text-[#2b414d]">
                             {text}
                           </p>
                         </div>
@@ -9432,7 +9432,7 @@ function UCATDashboard({
                         </h3>
                         <p
                           className={`mt-1 text-xs font-bold ${
-                            completed ? "text-slate-400" : "text-slate-500"
+                            completed ? "text-slate-400" : "text-[#263d48]"
                           }`}
                         >
                           {task.fix}

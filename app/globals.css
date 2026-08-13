@@ -351,7 +351,7 @@ body {
 
 .phloem-dashboard-compact {
   --phloem-ink: #071923;
-  --phloem-muted: #5c7183;
+  --phloem-muted: #78909a;
   --phloem-canvas: #eef1f3;
   --phloem-panel: #ffffff;
   --phloem-line: #d8e0e6;
@@ -399,6 +399,14 @@ body {
 
 .phloem-dashboard-compact .text-slate-500 {
   color: var(--phloem-muted);
+}
+
+.phloem-dashboard-main .text-slate-500 {
+  color: #334a56;
+}
+
+.phloem-dashboard-main .text-slate-600 {
+  color: #263d48;
 }
 
 .phloem-dashboard-compact .text-blue-600,
