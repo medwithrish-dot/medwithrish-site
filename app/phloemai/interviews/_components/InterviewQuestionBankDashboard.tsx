@@ -200,7 +200,7 @@ function Sidebar() {
                     key={item.label}
                     href={item.href}
                     className={`flex h-12 items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
-                      item.active
+                      "active" in item && item.active
                         ? "bg-[#0f817a] text-white shadow-sm"
                         : "text-slate-200 hover:bg-white/10 hover:text-white"
                     }`}
