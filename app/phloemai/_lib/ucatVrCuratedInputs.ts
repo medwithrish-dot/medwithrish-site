@@ -38,19 +38,31 @@ type VrFourOption = {
   explanation: string;
 };
 
+type VrTfcStatement = {
+  statement: string;
+  answer: "True" | "False" | "Can't tell";
+  explanation: string;
+};
+
 export type VrPassageInput = {
   stimulus: string[];
-  tfc: {
-    statement: string;
-    answer: "True" | "False" | "Can't tell";
-    explanation: string;
-  };
-  detail: VrFourOption;
-  inference: VrFourOption;
-  fourth: VrFourOption & {
-    type: "summary" | "author" | "negative";
-  };
-};
+  tfc: VrTfcStatement;
+} & (
+  | {
+      extraTfc: [VrTfcStatement, VrTfcStatement, VrTfcStatement];
+      detail?: never;
+      inference?: never;
+      fourth?: never;
+    }
+  | {
+      detail: VrFourOption;
+      inference: VrFourOption;
+      fourth: VrFourOption & {
+        type: "summary" | "author" | "negative";
+      };
+      extraTfc?: never;
+    }
+);
 
 const VR_FOURTH_SUBTYPE_MAP: Record<"summary" | "author" | "negative", UCATSubtypeId> = {
   summary: "vr-summary",
@@ -64,13 +76,42 @@ const VR_FOURTH_TAG_MAP: Record<"summary" | "author" | "negative", UCATQuestionT
   negative: ["negative-except", "text-stem", "set-based", "hard"],
 };
 
+function tfcAnswerKey(answer: VrTfcStatement["answer"]): UCATOptionKey {
+  return answer === "True" ? "A" : answer === "False" ? "B" : "C";
+}
+
+function buildTfcQuestion(
+  setId: string,
+  stimulus: string[],
+  tfc: VrTfcStatement,
+  questionNumber: number
+): UCATQuestion {
+  return {
+    id: `${setId}-${questionNumber}`,
+    section: "vr",
+    subtype: "vr-tfc",
+    setId,
+    tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
+    title: "Verbal Reasoning Practice",
+    leftTitle: "Passage",
+    stimulus,
+    question: tfc.statement,
+    options: TFC_OPTIONS,
+    answer: tfcAnswerKey(tfc.answer),
+    explanation: tfc.explanation,
+  };
+}
+
 function buildVrPassageQuestions(
   setId: string,
   input: VrPassageInput,
   seedBase: number
 ): UCATQuestion[] {
-  const tfcAnswer: UCATOptionKey =
-    input.tfc.answer === "True" ? "A" : input.tfc.answer === "False" ? "B" : "C";
+  if ("extraTfc" in input && input.extraTfc) {
+    return [input.tfc, ...input.extraTfc].map((tfc, index) =>
+      buildTfcQuestion(setId, input.stimulus, tfc, index + 1)
+    );
+  }
 
   const { options: detailOpts, answer: detailAns } = buildOptions(
     input.detail.correct,
@@ -89,20 +130,7 @@ function buildVrPassageQuestions(
   );
 
   return [
-    {
-      id: `${setId}-1`,
-      section: "vr",
-      subtype: "vr-tfc",
-      setId,
-      tags: ["true-false-cant-tell", "text-stem", "set-based", "easy"],
-      title: "Verbal Reasoning Practice",
-      leftTitle: "Passage",
-      stimulus: input.stimulus,
-      question: input.tfc.statement,
-      options: TFC_OPTIONS,
-      answer: tfcAnswer,
-      explanation: input.tfc.explanation,
-    },
+    buildTfcQuestion(setId, input.stimulus, input.tfc, 1),
     {
       id: `${setId}-2`,
       section: "vr",
@@ -289,9 +317,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
       "Furthermore, advocates for patient rights counter that the current speed of drug development is insufficient for those facing imminent death. They propose that informed consent, where the patient fully acknowledges the risks of experimental treatment, should be the defining factor rather than institutional gatekeeping."
     ],
     "tfc": {
-      "statement": "A terminally ill patient who is granted experimental access under 'Right to Try' would have already had the drug's comparative effectiveness against existing treatments established.",
-      "answer": "False",
-      "explanation": "Comparative effectiveness is established in Phase III, which 'Right to Try' patients bypass entirely by accessing therapies before trial phases conclude; the passage indicates only safety data (Phase I) might exist, not comparative effectiveness."
+      "statement": "The Right to Try movement argues that some terminally ill patients should be granted access to unproven gene therapies before clinical trial phases have concluded.",
+      "answer": "True",
+      "explanation": "The passage states that patients with terminal genetic conditions argue they should have access to unproven gene therapies even if clinical trial phases have not concluded."
     },
     "detail": {
       "question": "What is the core argument of the 'Right to Try' movement?",
@@ -547,9 +575,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
       "However, the complexity of the brain means that precision is paramount. Unlike editing tissues in the liver or muscles, where mistakes might be less critical, genetic interventions in the brain carry the risk of permanent neurological damage or cognitive alteration."
     ],
     "tfc": {
-      "statement": "Because mistakes in liver or muscle gene editing are described as 'less critical,' the passage implies such errors carry no risk at all to patients.",
-      "answer": "False",
-      "explanation": "The passage uses the comparative phrase 'might be less critical' for liver or muscle tissue, which only indicates a lower relative risk compared to brain editing, not the complete absence of risk."
+      "statement": "The blood-brain barrier can block therapeutic vectors from reaching target neurons in CNS gene therapy.",
+      "answer": "True",
+      "explanation": "The passage describes the blood-brain barrier as blocking most therapeutic vectors, including viral delivery systems, from reaching target neurons."
     },
     "detail": {
       "question": "What is one method mentioned for bypassing the blood-brain barrier?",
@@ -591,9 +619,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics maintain that the reliance on rare earth minerals for battery production introduces new environmental and geopolitical risks. Furthermore, the decommissioning of existing coal and gas infrastructure involves massive stranded assets that currently complicate the fiscal transition for many developing nations."
 ],
 "tfc": {
-"statement": "Because solar and wind costs are now competitive with fossil fuels, grid stability is no longer considered a barrier to renewable adoption.",
-"answer": "False",
-"explanation": "The passage states costs have become competitive, but separately identifies the intermittent nature of these sources as 'a significant challenge for grid stability', so cost competitiveness has not resolved the stability issue."
+"statement": "The intermittent nature of solar and wind energy presents a significant challenge for grid stability.",
+"answer": "True",
+"explanation": "The passage states that the intermittent nature of solar and wind energy presents a significant challenge for grid stability."
 },
 "detail": {
 "question": "According to the passage, what contributes to the complexity of the fiscal transition for developing nations?",
@@ -720,9 +748,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Furthermore, the infrastructure for mass charging remains underdeveloped in many rural and suburban areas, acting as a barrier to consumer adoption. Government subsidies are currently used to bridge the cost gap between traditional vehicles and EVs."
 ],
 "tfc": {
-"statement": "An EV charged on a coal-heavy grid would have the same overall climate benefit as one charged on a renewable-heavy grid.",
-"answer": "False",
-"explanation": "The passage states the lifecycle environmental benefit of an EV depends on the electricity source used for charging, and that benefits are 'significantly diminished' on a coal- or gas-reliant grid, so the two scenarios would not produce equivalent benefits."
+"statement": "The lifecycle environmental benefit of an electric vehicle depends heavily on the energy source used for charging.",
+"answer": "True",
+"explanation": "The passage states that EV lifecycle impact depends heavily on the energy source used for charging."
 },
 "detail": {
 "question": "What acts as a barrier to the adoption of electric vehicles in rural areas?",
@@ -849,9 +877,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Innovative initiatives, including debt-for-nature swaps, are attempting to incentivize governments to protect these regions. The long-term success of these programs is contingent upon rigorous monitoring and the enforcement of protective legislation."
 ],
 "tfc": {
-"statement": "Debt-for-nature swaps alone guarantee the long-term protection of forests like the Amazon.",
-"answer": "False",
-"explanation": "The passage states that the long-term success of programs like debt-for-nature swaps depends on rigorous monitoring and enforcement of legislation, meaning the swap itself does not guarantee protection."
+"statement": "The long-term success of forest conservation initiatives depends on rigorous monitoring and enforcement of protective legislation.",
+"answer": "True",
+"explanation": "The passage states that the long-term success of these programs is contingent upon rigorous monitoring and enforcement of protective legislation."
 },
 "detail": {
 "question": "What is an example of an economic activity that conflicts with forest conservation?",
@@ -935,9 +963,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While some see the economic opportunities of a navigable Arctic, environmentalists warn of the catastrophic risks posed by potential oil spills and the disruption of local indigenous cultures."
 ],
 "tfc": {
-"statement": "The opening of new Arctic shipping routes is likely to reduce competition between nations over the region's resources.",
-"answer": "False",
-"explanation": "The passage states the shift invites 'increased commercial and military competition for resources in the region,' the opposite of reduced competition."
+"statement": "The opening of new Arctic shipping routes could reduce transit times for international trade.",
+"answer": "True",
+"explanation": "The passage states that the reduction in sea ice is opening new shipping routes, which could reduce transit times for international trade."
 },
 "detail": {
 "question": "What potential benefit is mentioned regarding the reduction of sea ice?",
@@ -978,9 +1006,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite these limitations, the broad scientific consensus remains that human activity is the primary driver of current warming trends. Policy decisions are frequently based on the ranges provided by these models, which account for both optimistic and pessimistic outcomes."
 ],
 "tfc": {
-"statement": "Because cloud feedback is a major source of uncertainty, the broad scientific consensus on humans driving current warming is also in question.",
-"answer": "False",
-"explanation": "The passage explicitly separates the two: despite modeling uncertainties like cloud feedback, it states the broad scientific consensus that human activity is the primary driver of warming 'remains' intact."
+"statement": "Climate models contain uncertainties, but the broad scientific consensus remains that human activity is the primary driver of current warming trends.",
+"answer": "True",
+"explanation": "The passage states that climate models still contain uncertainties and that, despite these limitations, the broad consensus remains that human activity is the primary driver of current warming."
 },
 "detail": {
 "question": "What is identified as a 'major source of uncertainty' in climate modeling?",
@@ -1023,9 +1051,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Conservationists argue that protecting existing habitats is more cost-effective than attempting to restore degraded ecosystems or reintroduce lost species."
 ],
 "tfc": {
-"statement": "Because extinction is a natural process, the current 100-to-1,000-times elevated rate of species loss must also be considered a natural phenomenon.",
-"answer": "False",
-"explanation": "The passage acknowledges extinction is natural in principle, but explicitly attributes the current elevated rate to anthropogenic activities, distinguishing the baseline natural process from the human-driven acceleration."
+"statement": "The current rate of species loss is estimated to be 100 to 1,000 times higher than natural background rates.",
+"answer": "True",
+"explanation": "The passage states that the current rate of species loss is estimated to be 100 to 1,000 times higher than natural background rates."
 },
 "detail": {
 "question": "Which of the following is NOT listed as a driver of biodiversity loss?",
@@ -1055,9 +1083,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Local management practices, such as controlling agricultural runoff, can improve the reef's ability to recover from bleaching but cannot mitigate global thermal stress."
 ],
 "tfc": {
-"statement": "Local management strategies are sufficient to protect the reef from global thermal stress.",
-"answer": "False",
-"explanation": "The text states that while local management improves recovery, it cannot mitigate global thermal stress."
+"statement": "Local management practices can improve the reef's ability to recover from bleaching.",
+"answer": "True",
+"explanation": "The passage states that local management practices, such as controlling agricultural runoff, can improve the reef's ability to recover from bleaching."
 },
 "detail": {
 "question": "What triggers the expulsion of zooxanthellae from corals?",
@@ -1087,9 +1115,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "International agreements aiming to curb deforestation have seen mixed success, as local economic pressures often override long-term environmental goals."
 ],
 "tfc": {
-"statement": "All species in the Amazon benefit from the current trend of habitat fragmentation.",
-"answer": "False",
-"explanation": "The text explicitly states that while some edge-dwellers thrive, deep-forest specialists experience population declines."
+"statement": "Habitat fragmentation in the Amazon can limit gene flow among animal populations.",
+"answer": "True",
+"explanation": "The passage states that fragmentation limits gene flow among animal populations."
 },
 "detail": {
 "question": "What is the primary threat to animal populations caused by habitat fragmentation in the Amazon?",
@@ -1119,9 +1147,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite their importance in climate mitigation, peatlands are frequently overlooked in global carbon credit schemes."
 ],
 "tfc": {
-"statement": "Forests contain more stored carbon than the world's peatlands.",
-"answer": "False",
-"explanation": "The text states that peatlands store more carbon than all the world's forests combined."
+"statement": "Peatlands store more carbon than all the world's forests combined.",
+"answer": "True",
+"explanation": "The passage states that peatlands store more carbon than all the world's forests combined."
 },
 "detail": {
 "question": "What percentage of the earth's land surface do peatlands cover?",
@@ -1183,9 +1211,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Technological solutions to reverse acidification on a global scale are currently non-existent."
 ],
 "tfc": {
-"statement": "Ocean acidification has no impact on the availability of carbonate ions.",
-"answer": "False",
-"explanation": "The text states that the process reduces the availability of carbonate ions."
+"statement": "Ocean acidification reduces the availability of carbonate ions.",
+"answer": "True",
+"explanation": "The passage states that ocean acidification reduces the availability of carbonate ions."
 },
 "detail": {
 "question": "What is the primary consequence of ocean acidification for shellfish?",
@@ -1215,9 +1243,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Without successful pollination, global agriculture would face significant yield reductions, impacting the diversity and affordability of human diets."
 ],
 "tfc": {
-"statement": "Pollinators are responsible for the reproduction of less than half of the world's food crops.",
-"answer": "False",
-"explanation": "The text states they are vital for over 75% of food crops."
+"statement": "Pollinators are vital for the reproduction of over 75% of the world's food crops.",
+"answer": "True",
+"explanation": "The passage states that pollinators are vital for the reproduction of over 75% of the world's food crops."
 },
 "detail": {
 "question": "Which of the following is NOT listed as a cause for pollinator decline?",
@@ -1247,9 +1275,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Success in wilding projects often requires large areas of land, making implementation challenging in densely populated regions."
 ],
 "tfc": {
-"statement": "Wilding projects are easily implemented in all geographic locations.",
-"answer": "False",
-"explanation": "The text notes that success requires large areas of land, making it challenging in densely populated regions."
+"statement": "Wilding projects can be challenging to implement in densely populated regions because they often require large areas of land.",
+"answer": "True",
+"explanation": "The passage states that wilding projects often require large areas of land, making implementation challenging in densely populated regions."
 },
 "detail": {
 "question": "What is a central tenet of the 'wilding' movement?",
@@ -1279,9 +1307,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Transparent communication between scientists and the public is seen as a key step in gaining social acceptance for such technologies."
 ],
 "tfc": {
-"statement": "There is universal consensus on the safety of genetically modified crops.",
-"answer": "False",
-"explanation": "The text mentions public skepticism and the existence of the 'precautionary principle', suggesting there is not universal consensus."
+"statement": "Transparent communication between scientists and the public is seen as important for gaining acceptance of genetically modified crop technologies.",
+"answer": "True",
+"explanation": "The passage states that transparent communication between scientists and the public is a key step in gaining social acceptance for such technologies."
 },
 "detail": {
 "question": "What is the primary motivation for creating these genetically modified crops?",
@@ -1311,9 +1339,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The long-term success of these initiatives depends on continued funding and the commitment of local urban authorities."
 ],
 "tfc": {
-"statement": "Urban greening projects always take priority over high-density housing development.",
-"answer": "False",
-"explanation": "The text states that these projects are often sidelined in favor of housing or infrastructure."
+"statement": "Sustainable urban planning can integrate biodiversity into city environments through green roofs, urban parks and wildlife corridors.",
+"answer": "True",
+"explanation": "The passage states that sustainable urban planning aims to integrate biodiversity into city environments through green roofs, urban parks and wildlife corridors."
 },
 "detail": {
 "question": "Which of the following is NOT an example of integrating biodiversity into cities?",
@@ -1343,9 +1371,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Furthermore, climate change is altering precipitation patterns, resulting in more frequent and severe weather events, including droughts, floods, and hurricanes. Ecosystems worldwide are struggling to adapt to these rapid shifts, threatening biodiversity and altering agricultural productivity."
 ],
 "tfc": {
-"statement": "The primary cause of the current rapid climate change is natural fluctuations in solar radiation.",
-"answer": "False",
-"explanation": "The stimulus identifies anthropogenic activities, such as industrial processes and fossil fuel combustion, as the primary drivers of climate change, not natural solar radiation fluctuations."
+"statement": "Current rapid climate change is described as primarily driven by anthropogenic activities.",
+"answer": "True",
+"explanation": "The passage states that the Earth's current rapid climate changes are primarily driven by anthropogenic activities."
 },
 "detail": {
 "question": "Which of the following is cited as a direct consequence of rising global temperatures?",
@@ -1386,9 +1414,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Economic and infrastructural barriers also persist. Building new grid infrastructure and retrofitting existing systems require substantial investment and political will. Despite these hurdles, many nations are increasingly prioritizing renewable energy in their national policy frameworks to achieve long-term energy security."
 ],
 "tfc": {
-"statement": "The implementation of renewable energy is currently free of significant economic challenges.",
-"answer": "False",
-"explanation": "The stimulus explicitly mentions that economic and infrastructural barriers persist and require substantial investment."
+"statement": "Renewable energy adoption faces economic and infrastructural barriers that require substantial investment and political will.",
+"answer": "True",
+"explanation": "The passage states that economic and infrastructural barriers persist and that grid work requires substantial investment and political will."
 },
 "detail": {
 "question": "According to the passage, what is a primary challenge associated with solar and wind energy?",
@@ -1429,9 +1457,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Efforts to preserve biodiversity include the creation of protected areas and the implementation of conservation biology strategies. Scientists emphasize that protecting natural habitats is not only a moral obligation but also essential for providing ecosystem services like pollination and water purification that humans depend upon."
 ],
 "tfc": {
-"statement": "The primary factor leading to biodiversity loss is the natural evolution of species.",
-"answer": "False",
-"explanation": "The passage identifies habitat destruction, pollution, and invasive species as the primary drivers of decline, not natural evolution."
+"statement": "Habitat destruction, pollution and invasive species contribute to biodiversity decline.",
+"answer": "True",
+"explanation": "The passage identifies habitat destruction as a leading factor in species loss and says pollution and invasive species further exacerbate these trends."
 },
 "detail": {
 "question": "According to the passage, what is a key reason why high biodiversity is beneficial?",
@@ -1472,9 +1500,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Geologists also study mineral resources and energy deposits, such as oil, gas, and coal. By analyzing geological formations, they can estimate the location and accessibility of these resources, which are foundational to modern society's economic structures."
 ],
 "tfc": {
-"statement": "Geology is solely focused on the study of modern-day economic resources.",
-"answer": "False",
-"explanation": "The stimulus defines geology as the study of the Earth's history, materials, and processes, in addition to identifying economic resources."
+"statement": "Geology studies the Earth's materials, structures and processes, as well as mineral resources and energy deposits.",
+"answer": "True",
+"explanation": "The passage defines geology as the study of Earth's materials, structures and processes, and also says geologists study mineral resources and energy deposits."
 },
 "detail": {
 "question": "What does the theory of plate tectonics help explain?",
@@ -1515,9 +1543,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The field is increasingly focused on extreme weather events, aiming to provide earlier and more accurate warnings to the public. These warnings are vital for disaster preparedness and for mitigating the impact of severe storms on human life and property."
 ],
 "tfc": {
-"statement": "Modern meteorology can predict weather patterns with absolute certainty, regardless of the time frame.",
-"answer": "False",
-"explanation": "The stimulus states that due to atmospheric chaos, predictions remain inherently probabilistic."
+"statement": "Meteorological predictions remain inherently probabilistic, especially when looking further into the future.",
+"answer": "True",
+"explanation": "The passage states that atmospheric chaos means predictions remain inherently probabilistic, especially further into the future."
 },
 "detail": {
 "question": "What tools are mentioned as being used for observing current atmospheric conditions?",
@@ -1558,9 +1586,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics of evolutionary biology sometimes highlight perceived 'gaps' in the fossil record. However, scientists point to genetic evidence and observed micro-evolutionary changes as robust support for the overarching theory of evolution, which remains the cornerstone of modern biology."
 ],
 "tfc": {
-"statement": "According to the passage, natural selection is the only mechanism driving evolution.",
-"answer": "False",
-"explanation": "The stimulus states that evolution is driven by multiple mechanisms, including genetic mutation and gene flow, in addition to natural selection."
+"statement": "Evolution is driven by mechanisms such as natural selection, genetic mutation and gene flow.",
+"answer": "True",
+"explanation": "The passage states that evolution is driven by mechanisms including natural selection, genetic mutation and gene flow."
 },
 "detail": {
 "question": "What is defined as the process where organisms better adapted to their environment survive to produce more offspring?",
@@ -1601,9 +1629,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite these gains, the brain's complexity remains a profound challenge. The subjective nature of consciousness and the precise mechanisms of memory remain topics of intense investigation and ongoing scientific debate."
 ],
 "tfc": {
-"statement": "Neuroscience has already fully solved the mystery of how human consciousness works.",
-"answer": "False",
-"explanation": "The text identifies the brain's complexity and the nature of consciousness as areas of intense, ongoing investigation."
+"statement": "The subjective nature of consciousness remains a topic of intense investigation and ongoing scientific debate.",
+"answer": "True",
+"explanation": "The passage states that the subjective nature of consciousness remains a topic of intense investigation and ongoing scientific debate."
 },
 "detail": {
 "question": "Which of the following are mentioned as examples of modern neuroimaging techniques?",
@@ -1644,9 +1672,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "International cooperation is vital for addressing this global threat. Agreements like the Paris Accord represent attempts by nations to commit to reducing emissions, though the implementation and enforcement of such agreements continue to be points of intense diplomatic negotiation."
 ],
 "tfc": {
-"statement": "Diplomatic negotiations are unnecessary for the implementation of international climate agreements.",
-"answer": "False",
-"explanation": "The text states that the implementation and enforcement of agreements continue to be points of 'intense diplomatic negotiation.'"
+"statement": "The implementation and enforcement of international climate agreements remain points of intense diplomatic negotiation.",
+"answer": "True",
+"explanation": "The passage states that implementation and enforcement of agreements continue to be points of intense diplomatic negotiation."
 },
 "detail": {
 "question": "Since when have human activities been the main driver of climate change?",
@@ -1687,9 +1715,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Policy support, such as feed-in tariffs and subsidies for renewable installations, has significantly accelerated the adoption of these technologies. However, long-term success depends on continuous innovation in energy storage and grid management software."
 ],
 "tfc": {
-"statement": "Traditional fossil fuel plants produce energy that is prone to significant fluctuations based on weather.",
-"answer": "False",
-"explanation": "The passage identifies fossil fuel plants as providing a 'steady base load,' contrasting them with the variability of wind and solar."
+"statement": "Solar and wind power output can fluctuate based on weather conditions.",
+"answer": "True",
+"explanation": "The passage states that solar and wind power output can fluctuate based on weather conditions."
 },
 "detail": {
 "question": "What is the primary role of smart grid technology in the context of renewable energy?",
@@ -1730,9 +1758,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics argue that focusing solely on hotspots may neglect other areas that are also important for maintaining global ecological functions. However, proponents maintain that in the face of rapid habitat loss, a targeted approach is the most effective strategy for immediate impact."
 ],
 "tfc": {
-"statement": "Biodiversity hotspots cover the vast majority of the Earth's land surface.",
-"answer": "False",
-"explanation": "The stimulus states that these hotspots cover only a 'small fraction of the Earth's total land surface.'"
+"statement": "Biodiversity hotspots cover a small fraction of the Earth's land surface while containing many unique species.",
+"answer": "True",
+"explanation": "The passage states that hotspots cover a small fraction of the Earth's land surface yet contain a disproportionately high number of unique species."
 },
 "detail": {
 "question": "What characterizes a biodiversity hotspot according to the passage?",
@@ -1775,9 +1803,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Societal structures were irrevocably altered as populations migrated from rural farmlands to rapidly expanding, often unsanitary, urban industrial centers."
 ],
 "tfc": {
-"statement": "The Industrial Revolution relied exclusively on innovations within the textile industry to maintain its momentum.",
-"answer": "False",
-"explanation": "The text notes that while the textile industry provided the initial spark, the movement 'quickly expanded' to include iron production and steam power, meaning it did not rely exclusively on textiles."
+"statement": "The Industrial Revolution began with textile innovations and quickly expanded to iron production and steam power.",
+"answer": "True",
+"explanation": "The passage states that the movement was initially sparked by textile innovations and quickly expanded to iron production and steam power."
 },
 "detail": {
 "question": "According to the passage, which of the following was a direct consequence of the shift to urban industrial centers?",
@@ -1819,9 +1847,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Although these ideas laid the groundwork for modern democracy, their implementation was often inconsistent, frequently excluding women, the poor, and non-European populations from the promise of universal rights."
 ],
 "tfc": {
-"statement": "Enlightenment philosophers successfully extended the promise of universal rights to all members of society during their era.",
-"answer": "False",
-"explanation": "The text states that the implementation of their ideas was 'often inconsistent,' explicitly noting that it excluded women, the poor, and non-European populations."
+"statement": "Enlightenment thinkers emphasized human reason, scientific inquiry and individual liberty.",
+"answer": "True",
+"explanation": "The passage states that Enlightenment thinkers emphasized human reason, scientific inquiry and individual liberty as sources of authority and legitimacy."
 },
 "detail": {
 "question": "What did Enlightenment thinkers promote as the primary sources of authority?",
@@ -1863,9 +1891,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While these civilizations were isolated geographically, archaeological evidence suggests that trade networks existed, facilitating the exchange of goods and ideas between regions."
 ],
 "tfc": {
-"statement": "There is no archaeological evidence to suggest that ancient civilizations interacted with one another.",
-"answer": "False",
-"explanation": "The passage explicitly states that 'archaeological evidence suggests that trade networks existed,' which contradicts the claim."
+"statement": "Archaeological evidence suggests that trade networks existed between ancient civilizations.",
+"answer": "True",
+"explanation": "The passage states that archaeological evidence suggests trade networks existed, facilitating the exchange of goods and ideas between regions."
 },
 "detail": {
 "question": "What role did river valleys play in the development of ancient civilizations?",
@@ -1907,9 +1935,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The end of the Cold War followed the political and economic instability of the Soviet Union, culminating in its formal dissolution in 1991."
 ],
 "tfc": {
-"statement": "The United States and the Soviet Union engaged in several direct, full-scale military conflicts during the Cold War.",
-"answer": "False",
-"explanation": "The passage states that 'direct military engagement between the two superpowers never occurred' due to the threat of Mutually Assured Destruction."
+"statement": "The Cold War was characterized by proxy wars, a nuclear arms race and competition for global influence.",
+"answer": "True",
+"explanation": "The passage states that the Cold War was characterized by proxy wars, a nuclear arms race and competition for global influence."
 },
 "detail": {
 "question": "What was the main reason direct military conflict between the superpowers was avoided?",
@@ -1995,9 +2023,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While famous for its masterpieces in art and architecture, the Renaissance was also characterized by intense political maneuvering among Italian city-states."
 ],
 "tfc": {
-"statement": "Humanism during the Renaissance focused exclusively on religious themes and divine intervention.",
-"answer": "False",
-"explanation": "The text states that Humanism shifted the focus 'from strictly religious themes to secular ones.'"
+"statement": "Humanism during the Renaissance shifted focus from strictly religious themes to secular ones.",
+"answer": "True",
+"explanation": "The passage states that Humanism shifted focus from strictly religious themes to secular ones."
 },
 "detail": {
 "question": "What role did the printing press play during the Renaissance?",
@@ -2039,9 +2067,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The rapid pace of globalization has created significant challenges, requiring international cooperation to address issues such as environmental sustainability and the regulation of multinational corporations."
 ],
 "tfc": {
-"statement": "There is universal consensus that globalization is inherently beneficial to all participants.",
-"answer": "False",
-"explanation": "The text presents both proponents and critics, noting that critics argue it exacerbates inequality and exploitation."
+"statement": "Critics of globalization argue that it can exacerbate income inequality and lead to labor exploitation in developing nations.",
+"answer": "True",
+"explanation": "The passage states that critics contend globalization often exacerbates income inequality and leads to exploitation of labor in developing nations."
 },
 "detail": {
 "question": "According to the text, what is a primary criticism of globalization?",
@@ -2083,9 +2111,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Urban planning has become essential in managing these growth patterns to ensure cities remain livable and sustainable for future generations."
 ],
 "tfc": {
-"statement": "Urbanization is always associated with a decline in access to educational services.",
-"answer": "False",
-"explanation": "The text states that urbanization often leads to 'better access to healthcare, education, and services.'"
+"statement": "Urbanization often leads to better access to healthcare, education and services.",
+"answer": "True",
+"explanation": "The passage states that urbanization often leads to better access to healthcare, education and services."
 },
 "detail": {
 "question": "What is identified as a primary cause of urbanization?",
@@ -2127,9 +2155,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite broad international consensus on these rights, their enforcement remains a significant challenge, often constrained by state sovereignty and varying political ideologies."
 ],
 "tfc": {
-"statement": "The enforcement of human rights is rarely hindered by the political ideologies of individual states.",
-"answer": "False",
-"explanation": "The text states that enforcement 'remains a significant challenge, often constrained by state sovereignty and varying political ideologies.'"
+"statement": "The enforcement of human rights remains a significant challenge, often constrained by state sovereignty and varying political ideologies.",
+"answer": "True",
+"explanation": "The passage states that human-rights enforcement remains a significant challenge, often constrained by state sovereignty and varying political ideologies."
 },
 "detail": {
 "question": "When did the concept of human rights gain significant modern prominence?",
@@ -2171,9 +2199,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "By highlighting systemic inequalities and the long-term struggle for gender equality, this field provides a more comprehensive understanding of historical progress."
 ],
 "tfc": {
-"statement": "Mainstream historical narratives have traditionally provided equal representation of men’s and women’s contributions.",
-"answer": "False",
-"explanation": "The text states that mainstream history 'often marginalized women’s roles, focusing predominantly on... events dominated by men.'"
+"statement": "Mainstream history has often marginalized women's roles and focused predominantly on events dominated by men.",
+"answer": "True",
+"explanation": "The passage states that mainstream history often marginalized women's roles, focusing predominantly on political, military and economic events dominated by men."
 },
 "detail": {
 "question": "What is a primary goal of feminist historians?",
@@ -2216,9 +2244,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While natural climate variability exists, the current rate of warming is statistically decoupled from historical fluctuations, suggesting a clear causal link to industrial activity."
 ],
 "tfc": {
-"statement": "The current rate of global warming is primarily caused by natural climate variability.",
-"answer": "False",
-"explanation": "The text states that the current rate of warming is statistically decoupled from historical natural fluctuations and links it to industrial activity."
+"statement": "The rapid increase in global temperatures is described as primarily driven by anthropogenic greenhouse gas emissions.",
+"answer": "True",
+"explanation": "The passage states that the rapid increase in global temperatures is primarily driven by anthropogenic greenhouse gas emissions."
 },
 "detail": {
 "question": "What is mentioned as being at its highest level in human history?",
@@ -2248,9 +2276,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Forecasters emphasize that while short-term weather prediction has improved, chaos theory suggests inherent limits to long-range meteorological precision."
 ],
 "tfc": {
-"statement": "Computer models can currently predict localized thunderstorms with long-range certainty.",
-"answer": "False",
-"explanation": "The text states that localized thunderstorms 'remain difficult to forecast with long-range certainty.'"
+"statement": "Localized thunderstorms remain difficult to forecast with long-range certainty.",
+"answer": "True",
+"explanation": "The passage states that localized thunderstorms remain difficult to forecast with long-range certainty."
 },
 "detail": {
 "question": "What has contributed to the reduction of errors in precipitation forecasting?",
@@ -2312,9 +2340,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "By cross-referencing multiple proxy sources, climatologists are able to build a robust narrative of Earth's past climate states."
 ],
 "tfc": {
-"statement": "Thermometers have existed long enough to provide accurate data for the entirety of Earth's history.",
-"answer": "False",
-"explanation": "The text states that proxy data is used for periods 'long before the invention of the thermometer.'"
+"statement": "Proxy data is used to estimate climate conditions from periods long before the invention of the thermometer.",
+"answer": "True",
+"explanation": "The passage states that proxy data allows scientists to estimate conditions from thousands of years ago, long before thermometers were invented."
 },
 "detail": {
 "question": "Which of the following is cited as an example of a proxy data source?",
@@ -2344,9 +2372,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Modern climate research aims to predict the onset of these events to help farmers and governments prepare for agricultural volatility."
 ],
 "tfc": {
-"statement": "El Niño and La Niña only impact the weather in the Equatorial Pacific region.",
-"answer": "False",
-"explanation": "The text states these patterns have a 'cascading effect on global weather,' including areas as far as 'South America and Australia.'"
+"statement": "El Niño and La Niña influence global weather, including rainfall and temperature trends as far away as South America and Australia.",
+"answer": "True",
+"explanation": "The passage states that these patterns have a cascading effect on global weather, influencing areas as far away as South America and Australia."
 },
 "detail": {
 "question": "What happens to trade winds during an El Niño year?",
@@ -2376,9 +2404,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Climatologists closely monitor these aerosols as they can mask or enhance the signals of anthropogenic climate change."
 ],
 "tfc": {
-"statement": "Weather patterns and storms are the primary characteristics of the stratosphere.",
-"answer": "False",
-"explanation": "The text states that weather primarily occurs in the 'troposphere,' whereas the stratosphere is characterized by 'stable, layered air flows.'"
+"statement": "The stratosphere is characterized by stable, layered air flows, while weather primarily occurs in the troposphere.",
+"answer": "True",
+"explanation": "The passage contrasts weather in the troposphere with the stable, layered air flows of the stratosphere."
 },
 "detail": {
 "question": "What can cause a temporary cooling of the Earth's surface by affecting the stratosphere?",
@@ -2408,9 +2436,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Forecasting the movement of these systems is a cornerstone of meteorological science, as their interactions dictate regional weather conditions."
 ],
 "tfc": {
-"statement": "Anticyclones are typically associated with stormy and unsettled weather conditions.",
-"answer": "False",
-"explanation": "The text states that anticyclones are characterized by 'outward-circulating winds and generally clear, stable skies.'"
+"statement": "Anticyclones are high-pressure systems characterized by outward-circulating winds and generally clear, stable skies.",
+"answer": "True",
+"explanation": "The passage states that an anticyclone is a high-pressure system with outward-circulating winds and generally clear, stable skies."
 },
 "detail": {
 "question": "In a cyclone, how do the winds circulate?",
@@ -2440,9 +2468,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "As urbanization continues, city planners are exploring ways to incorporate green roofs and reflective surfaces to mitigate this warming effect."
 ],
 "tfc": {
-"statement": "Urban areas are usually cooler than rural areas due to the high density of buildings.",
-"answer": "False",
-"explanation": "The text states that city centers experience 'significantly higher temperatures' than surrounding rural areas."
+"statement": "Urban heat islands occur when city centers experience significantly higher temperatures than surrounding rural areas.",
+"answer": "True",
+"explanation": "The passage defines urban heat islands as city centers experiencing significantly higher temperatures than surrounding rural areas."
 },
 "detail": {
 "question": "What contributes to the heat island effect by reducing cooling?",
@@ -2472,9 +2500,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Recent measurements suggest the ozone layer is gradually recovering, though complete restoration is expected to take several more decades."
 ],
 "tfc": {
-"statement": "The depletion of the ozone layer was primarily caused by natural volcanic activity.",
-"answer": "False",
-"explanation": "The text attributes the depletion of the ozone layer to 'chlorofluorocarbons (CFCs)'."
+"statement": "Scientists discovered that chlorofluorocarbons were depleting the ozone layer during the late 20th century.",
+"answer": "True",
+"explanation": "The passage states that scientists discovered CFCs were depleting the ozone layer during the late 20th century."
 },
 "detail": {
 "question": "What agreement was responsible for phasing out ozone-depleting substances?",
@@ -2536,9 +2564,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While the movement encouraged tolerance and progress, it was not uniformly applied; the treatment of women and colonized peoples remained largely outside the scope of early Enlightenment reform."
 ],
 "tfc": {
-"statement": "The Enlightenment successfully dismantled all forms of social inequality within the 18th century.",
-"answer": "False",
-"explanation": "The text explicitly states that the movement did not uniformly apply to women and colonized peoples, indicating that social inequalities persisted."
+"statement": "The treatment of women and colonized peoples remained largely outside the scope of early Enlightenment reform.",
+"answer": "True",
+"explanation": "The passage states that women and colonized peoples remained largely outside the scope of early Enlightenment reform."
 },
 "detail": {
 "question": "Which two figures are explicitly mentioned as advocates for the social contract?",
@@ -2579,9 +2607,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Authorities often viewed these gatherings with suspicion, fearing that the free exchange of information would destabilize the existing power structure."
 ],
 "tfc": {
-"statement": "Coffeehouses were exclusive venues reserved only for the elite members of the aristocracy.",
-"answer": "False",
-"explanation": "The passage states that coffeehouses allowed individuals from various social classes to gather, contradicting the idea of exclusivity."
+"statement": "Coffeehouses allowed individuals from various social classes to gather and engage in intellectual discourse.",
+"answer": "True",
+"explanation": "The passage states that coffeehouses allowed people from various social classes to gather and engage in intellectual discourse."
 },
 "detail": {
 "question": "What nickname was given to coffeehouses during the 18th century?",
@@ -2622,9 +2650,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While natural law provided a powerful argument against tyranny, critics argued that it was often used to justify colonial expansion by claiming that certain cultures did not 'properly' utilize or cultivate their land."
 ],
 "tfc": {
-"statement": "Natural law theory relies heavily on the specific dictates of religious institutions.",
-"answer": "False",
-"explanation": "The passage states that natural law proponents argued these truths were accessible independent of any specific religious code."
+"statement": "Natural law proponents argued that objective moral truths are accessible through reason and independent of any specific religious or legal code.",
+"answer": "True",
+"explanation": "The passage states that natural law involved objective moral truths accessible through reason and independent of specific religious or legal codes."
 },
 "detail": {
 "question": "According to John Locke, what are the three inherent rights mentioned?",
@@ -2665,9 +2693,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This era of 'reason' sought to dispel superstitions and replace them with verifiable knowledge, sparking both scientific innovation and intense debate regarding the role of religion in society."
 ],
 "tfc": {
-"statement": "Enlightenment thinkers believed that human social structures were too complex to be studied using scientific methods.",
-"answer": "False",
-"explanation": "The text states that thinkers believed human society could be understood and improved through the application of the scientific method."
+"statement": "Many Enlightenment thinkers began applying empirical observation to history, economics, and sociology.",
+"answer": "True",
+"explanation": "The passage states that many thinkers began to apply empirical observation to history, economics, and sociology."
 },
 "detail": {
 "question": "Who is mentioned as having introduced a mechanical view of the universe?",
@@ -2708,9 +2736,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite its influence, the project faced heavy censorship from both Church and State authorities, who feared the loss of their control over what citizens were permitted to know."
 ],
 "tfc": {
-"statement": "The Encyclopédie was fully supported by both Church and State authorities upon its release.",
-"answer": "False",
-"explanation": "The passage notes that the project faced heavy censorship from both Church and State authorities."
+"statement": "The Encyclopédie faced heavy censorship from both Church and State authorities.",
+"answer": "True",
+"explanation": "The passage states that the Encyclopédie faced heavy censorship from both Church and State authorities."
 },
 "detail": {
 "question": "Who was the leader of the project known as the 'Encyclopédie'?",
@@ -2751,9 +2779,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "By mimicking the artistic values of ancient civilizations, Enlightenment thinkers sought to connect their modern quest for order and rationality with the perceived greatness of antiquity."
 ],
 "tfc": {
-"statement": "Neoclassicism placed a higher value on emotional intensity than on clarity or reason.",
-"answer": "False",
-"explanation": "The passage states that Neoclassicism prioritized clarity of thought and reason over emotional intensity."
+"statement": "Neoclassicism favored balance, symmetry, and clarity.",
+"answer": "True",
+"explanation": "The passage states that Neoclassicism favored balance, symmetry, and clarity."
 },
 "detail": {
 "question": "Which ancient civilizations were viewed as the pinnacle of cultural achievement by Neoclassicists?",
@@ -2794,9 +2822,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The push for tolerance helped lay the groundwork for modern secularism, suggesting that the state should remain neutral regarding individual religious beliefs."
 ],
 "tfc": {
-"statement": "Voltaire's support for tolerance was absolute and free from any personal prejudices.",
-"answer": "False",
-"explanation": "The text notes that Voltaire's tolerance had limits and that his writings sometimes contained prejudices."
+"statement": "Voltaire argued that institutionalized intolerance caused unnecessary conflict and hindered societal progress.",
+"answer": "True",
+"explanation": "The passage states that Voltaire argued institutionalized intolerance caused unnecessary conflict and hindered societal progress."
 },
 "detail": {
 "question": "What did Voltaire identify as a primary cause of societal conflict?",
@@ -2837,9 +2865,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "In both cases, Enlightenment thought provided the vocabulary to challenge absolute power, although the resulting political systems evolved in distinct directions."
 ],
 "tfc": {
-"statement": "Enlightenment ideals had no impact on the American Revolution.",
-"answer": "False",
-"explanation": "The passage states that Enlightenment ideals significantly impacted the American Revolution."
+"statement": "Enlightenment ideals significantly impacted the American and French Revolutions.",
+"answer": "True",
+"explanation": "The passage states that Enlightenment ideals traveled beyond Europe and significantly impacted the American and French Revolutions."
 },
 "detail": {
 "question": "Which two revolutions are cited as being influenced by Enlightenment ideals?",
@@ -2880,9 +2908,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This new perspective encouraged the development of capitalism, though critics have often argued that unregulated self-interest can also lead to exploitation and inequality."
 ],
 "tfc": {
-"statement": "Mercantilism advocated for the free exchange of goods and production-based wealth.",
-"answer": "False",
-"explanation": "Mercantilism is described as focusing on hoarding gold and viewing wealth as limited, which is the opposite of the free market ideas presented."
+"statement": "Mercantilism viewed national wealth as limited and dependent on hoarding gold.",
+"answer": "True",
+"explanation": "The passage describes mercantilism as the view that national wealth was limited and dependent on hoarding gold."
 },
 "detail": {
 "question": "What is the primary argument of Adam Smith's 'invisible hand'?",
@@ -2923,9 +2951,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While the Enlightenment valued urban society and progress, Romantics often looked back to the past, emphasizing the beauty of the untamed wilderness and the subjective nature of the individual spirit."
 ],
 "tfc": {
-"statement": "Romanticism fully adopted the Enlightenment's focus on mechanical and rational explanations of the world.",
-"answer": "False",
-"explanation": "The text states that Romantics criticized the Enlightenment's mechanical view and its over-reliance on reason."
+"statement": "Romantic thinkers criticized the Enlightenment's mechanical view of the world and its over-reliance on pure reason.",
+"answer": "True",
+"explanation": "The passage states that Romantic thinkers criticized the Enlightenment's mechanical view of the world and its over-reliance on pure reason."
 },
 "detail": {
 "question": "What did Romantics prioritize over scientific categorization?",
@@ -2968,9 +2996,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The global impact was characterized by nuclear proliferation and the formation of competing military alliances, most notably NATO and the Warsaw Pact."
 ],
 "tfc": {
-"statement": "The Soviet Union and the United States engaged in direct, large-scale military battles on each other's soil during the Cold War.",
-"answer": "False",
-"explanation": "The text explicitly states that direct military confrontation between the superpowers was avoided due to the doctrine of Mutually Assured Destruction."
+"statement": "Direct military confrontation between the United States and the Soviet Union was avoided because of Mutually Assured Destruction.",
+"answer": "True",
+"explanation": "The passage states that direct military confrontation between the superpowers was avoided due to Mutually Assured Destruction."
 },
 "detail": {
 "question": "According to the passage, which timeframe defines the Cold War?",
@@ -3000,9 +3028,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The eventual fall of the wall in November 1989 signaled the beginning of the collapse of communist regimes across Eastern Europe."
 ],
 "tfc": {
-"statement": "The Berlin Wall was built specifically to encourage trade between East and West Germany.",
-"answer": "False",
-"explanation": "The text states it was built to prevent the mass exodus of East German citizens, not to facilitate trade."
+"statement": "The Berlin Wall was built to prevent the mass exodus of East German citizens seeking asylum in West Berlin.",
+"answer": "True",
+"explanation": "The passage states that the Berlin Wall was constructed to prevent the mass exodus of East German citizens seeking asylum in West Berlin."
 },
 "detail": {
 "question": "How long did the Berlin Wall stand?",
@@ -3032,9 +3060,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Economic historians argue that the plan was instrumental in fostering the rapid industrial recovery known as the 'economic miracle'."
 ],
 "tfc": {
-"statement": "The Soviet Union accepted Marshall Plan aid to help recover from the devastation of the war.",
-"answer": "False",
-"explanation": "The text states that the Soviet Union rejected the aid and pressured others to do the same."
+"statement": "The Soviet Union rejected Marshall Plan aid and pressured its satellite states to do the same.",
+"answer": "True",
+"explanation": "The passage states that the Soviet Union rejected the aid and pressured its satellite states to do the same."
 },
 "detail": {
 "question": "What was the approximate financial value of the assistance provided by the Marshall Plan?",
@@ -3064,9 +3092,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Beyond prestige, the competition accelerated rapid advancements in telecommunications, computing, and aerospace engineering."
 ],
 "tfc": {
-"statement": "The launch of Sputnik 1 occurred after the Apollo 11 moon landing.",
-"answer": "False",
-"explanation": "Sputnik 1 was launched in 1957, while the Apollo 11 landing occurred in 1969."
+"statement": "The launch of Sputnik 1 by the Soviet Union in 1957 began the Space Race described in the passage.",
+"answer": "True",
+"explanation": "The passage states that the Space Race began with the launch of Sputnik 1 by the Soviet Union in 1957."
 },
 "detail": {
 "question": "Which specific event is cited as a technological victory for the United States?",
@@ -3096,9 +3124,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics argued that the policy often led the United States to support authoritarian regimes simply because they were anti-communist."
 ],
 "tfc": {
-"statement": "Containment was a policy supported universally by all historians without any criticism.",
-"answer": "False",
-"explanation": "The text explicitly mentions that critics argued the policy led to supporting authoritarian regimes."
+"statement": "Critics argued that Containment often led the United States to support authoritarian regimes because they were anti-communist.",
+"answer": "True",
+"explanation": "The passage states that critics argued Containment often led the United States to support authoritarian regimes simply because they were anti-communist."
 },
 "detail": {
 "question": "Who is credited with formulating the policy of Containment?",
@@ -3128,9 +3156,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The resolution, which involved the removal of Soviet missiles from Cuba and a secret US commitment to remove missiles from Turkey, led to the establishment of a direct 'hotline' between Moscow and Washington."
 ],
 "tfc": {
-"statement": "The Cuban Missile Crisis resulted in an immediate nuclear exchange.",
-"answer": "False",
-"explanation": "The passage describes it as the moment the world came closest, but it does not state that a nuclear exchange occurred."
+"statement": "The Cuban Missile Crisis is described as the moment when the Cold War came closest to full-scale nuclear war.",
+"answer": "True",
+"explanation": "The passage states that the Cuban Missile Crisis is widely regarded as the moment when the Cold War came closest to escalating into full-scale nuclear war."
 },
 "detail": {
 "question": "How long did the standoff between Kennedy and Khrushchev last?",
@@ -3160,9 +3188,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While it had limited impact on the direct actions of the superpowers, it provided a platform for decolonized nations to discuss developmental and sovereignty issues."
 ],
 "tfc": {
-"statement": "The Non-Aligned Movement encouraged its member nations to join either NATO or the Warsaw Pact.",
-"answer": "False",
-"explanation": "The movement sought to remain neutral and provided an alternative for those not wanting to join either sphere."
+"statement": "The Non-Aligned Movement aimed to provide an alternative for nations that did not wish to join either the American or Soviet sphere of influence.",
+"answer": "True",
+"explanation": "The passage states that the Non-Aligned Movement provided an alternative for nations that did not want to join either sphere of influence."
 },
 "detail": {
 "question": "Who was one of the instrumental figures in the formation of the Non-Aligned Movement?",
@@ -3192,9 +3220,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The era highlighted the potential for diplomacy, even between fundamentally opposed political systems."
 ],
 "tfc": {
-"statement": "Détente was a period of permanent peace that ended all conflicts between the US and the USSR.",
-"answer": "False",
-"explanation": "The text describes it as a period of 'eased tensions' that ended abruptly, not permanent peace."
+"statement": "Détente was a period of eased tensions that characterized the Cold War in the 1970s.",
+"answer": "True",
+"explanation": "The passage states that Détente was a period of eased tensions during the Cold War in the 1970s."
 },
 "detail": {
 "question": "Which event is identified as the cause for the end of Détente?",
@@ -3224,9 +3252,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While intended to revitalize the Soviet system, these reforms inadvertently encouraged nationalist movements that contributed to the eventual dissolution of the USSR."
 ],
 "tfc": {
-"statement": "Gorbachev's reforms were designed specifically to dissolve the Soviet Union immediately.",
-"answer": "False",
-"explanation": "The text states they were intended to 'revitalize the Soviet system,' but they 'inadvertently' led to dissolution."
+"statement": "Perestroika and Glasnost were reform policies introduced by Soviet leader Mikhail Gorbachev in the late 1980s.",
+"answer": "True",
+"explanation": "The passage states that Perestroika and Glasnost were introduced by Mikhail Gorbachev in the late 1980s."
 },
 "detail": {
 "question": "What was the literal meaning of Glasnost?",
@@ -3256,9 +3284,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The legacy of the era remains a subject of intense study, particularly regarding the lasting impacts on global military alliances and nuclear non-proliferation."
 ],
 "tfc": {
-"statement": "The end of the Cold War resulted in a perfectly stable world with no further regional conflicts.",
-"answer": "False",
-"explanation": "The text mentions that the vacuum left by the rivalry resulted in 'new regional instabilities'."
+"statement": "The end of the Cold War in 1991 prompted a transition toward a unipolar world order dominated by the United States.",
+"answer": "True",
+"explanation": "The passage states that the end of the Cold War in 1991 prompted a transition toward a unipolar world order dominated by the United States."
 },
 "detail": {
 "question": "When did the Cold War officially end according to the passage?",
@@ -3289,9 +3317,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Ultimately, the Enlightenment provided the intellectual scaffolding for the American and French Revolutions, forever altering the geopolitical landscape."
 ],
 "tfc": {
-"statement": "Enlightenment thinkers were universally supportive of granting the masses full political agency.",
-"answer": "False",
-"explanation": "The text explicitly states that some figures remained skeptical of total democratization, fearing the chaos of 'mob rule' if the masses were granted full agency."
+"statement": "Some Enlightenment figures remained skeptical of total democratization because they feared mob rule without proper education.",
+"answer": "True",
+"explanation": "The passage states that some Enlightenment figures feared the chaos of mob rule if the masses were granted full political agency without proper education."
 },
 "detail": {
 "question": "Which institutions are specifically mentioned as targets of questioning by Enlightenment thinkers?",
@@ -3377,9 +3405,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While the Renaissance is often romanticized as an era of total enlightenment, it remained a period of significant social inequality, where the benefits of humanistic education were largely restricted to the urban elite."
 ],
 "tfc": {
-"statement": "During the Renaissance, humanism resulted in a complete shift away from all religious themes in art.",
-"answer": "False",
-"explanation": "The text states that patronage allowed artists to pursue projects that 'deviated from strictly religious themes', not that they abandoned them entirely."
+"statement": "Renaissance patronage allowed creators to pursue projects that deviated from strictly religious themes.",
+"answer": "True",
+"explanation": "The passage states that patronage allowed creators to pursue projects that deviated from strictly religious themes."
 },
 "detail": {
 "question": "What primary shift in intellectual focus is attributed to humanism?",
@@ -3465,9 +3493,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Successful urbanization requires careful urban planning to manage density, environmental impact, and social integration."
 ],
 "tfc": {
-"statement": "The growth of cities in developing nations always keeps pace with the demand for services.",
-"answer": "False",
-"explanation": "The text states that urbanization in developing countries often occurs 'faster than the city can provide adequate housing or services'."
+"statement": "In many developing countries, urbanization often occurs faster than cities can provide adequate housing or services.",
+"answer": "True",
+"explanation": "The passage states that this shift often occurs faster than the city can provide adequate housing or services."
 },
 "detail": {
 "question": "What is cited as a reason for people moving to cities in developing nations?",
@@ -3509,9 +3537,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Furthermore, debates persist regarding the universality of human rights, with some arguing that cultural relativism should play a role in how these rights are interpreted within different societal contexts."
 ],
 "tfc": {
-"statement": "The Universal Declaration of Human Rights allows for exceptions based on a person's religion.",
-"answer": "False",
-"explanation": "The text asserts that everyone is entitled to fundamental freedoms 'regardless of nationality, race, or religion'."
+"statement": "The Universal Declaration of Human Rights asserts that everyone is entitled to fundamental freedoms regardless of nationality, race, or religion.",
+"answer": "True",
+"explanation": "The passage states that the declaration asserts everyone is entitled to fundamental freedoms regardless of nationality, race, or religion."
 },
 "detail": {
 "question": "When was the Universal Declaration of Human Rights adopted?",
@@ -3597,9 +3625,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "These systemic issues prompted the emergence of labor unions and early social reform legislation, as society grappled with the consequences of rapid technological change."
 ],
 "tfc": {
-"statement": "The Industrial Revolution had no impact on where people lived.",
-"answer": "False",
-"explanation": "The passage explicitly states that the growth of factory systems accelerated urbanization as workers migrated to industrial centers."
+"statement": "The growth of factory systems accelerated urbanization as workers migrated to industrial centers.",
+"answer": "True",
+"explanation": "The passage states that factory systems accelerated urbanization as workers migrated to industrial centers."
 },
 "detail": {
 "question": "In which industry did the shift from manual labor to machine-based production begin?",
@@ -3641,9 +3669,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The end of the Cold War, triggered by the dissolution of the Soviet Union, brought about a period of political realignment and the reshaping of international alliances."
 ],
 "tfc": {
-"statement": "Direct, large-scale military conflict between the US and USSR was the primary feature of the Cold War.",
-"answer": "False",
-"explanation": "The text notes the conflict was characterized by proxies, espionage, and the arms race, 'rather than direct military confrontation'."
+"statement": "The Cold War was largely fought through proxies, espionage, and the nuclear arms race rather than direct military confrontation between the superpowers.",
+"answer": "True",
+"explanation": "The passage states that the Cold War was largely fought through proxies, espionage, and the nuclear arms race rather than direct military confrontation."
 },
 "detail": {
 "question": "What was the core ideological conflict mentioned in the text?",
@@ -3685,9 +3713,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The collapse of these civilizations is often attributed to a combination of factors, including environmental degradation, external invasions, and economic instability."
 ],
 "tfc": {
-"statement": "Agricultural surpluses were unnecessary for the development of specialized labor roles.",
-"answer": "False",
-"explanation": "The text states that surplus was essential for supporting classes such as artisans, priests, and administrators who did not work in farming."
+"statement": "Agricultural surpluses were essential for supporting non-farming classes such as artisans, priests, and administrators.",
+"answer": "True",
+"explanation": "The passage states that agricultural surplus was essential for supporting individuals who did not work in farming, such as artisans, priests, and administrators."
 },
 "detail": {
 "question": "What is mentioned as a characteristic of ancient civilizations?",
@@ -3729,9 +3757,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "By the mid-twentieth century, the collapse of these colonial structures left nascent independent nations struggling to build cohesive national identities within borders that had never reflected the lived realities of their populations. This legacy continues to influence political stability and ethnic conflicts in the region today."
 ],
 "tfc": {
-"statement": "The Berlin Conference of 1884-1885 included African leaders in its deliberations regarding territorial claims.",
-"answer": "False",
-"explanation": "The text explicitly states that European nations negotiated territorial claims without the presence or consent of African leaders."
+"statement": "At the Berlin Conference of 1884-1885, European nations negotiated territorial claims without the presence or consent of African leaders.",
+"answer": "True",
+"explanation": "The passage states that European nations negotiated territorial claims at the Berlin Conference without the presence or consent of African leaders."
 },
 "detail": {
 "question": "What primary factor did European powers prioritize when determining new African borders?",
@@ -3772,9 +3800,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "As these intellectual movements gained momentum, colonial regimes struggled to maintain their moral legitimacy. The reliance on the 'civilizing' narrative became increasingly unsustainable in the face of indigenous intellectual resistance and the shifting global attitudes toward empire."
 ],
 "tfc": {
-"statement": "Colonial education systems were intentionally designed to foster indigenous independence movements.",
-"answer": "False",
-"explanation": "The passage states that education systems were designed for assimilation, and the emergence of independence movements was a paradox rather than the intended design."
+"statement": "Colonial education systems were designed to assimilate the indigenous elite into European cultural and intellectual paradigms.",
+"answer": "True",
+"explanation": "The passage states that colonial education systems were designed to assimilate the indigenous elite into European cultural and intellectual paradigms."
 },
 "detail": {
 "question": "What were the three pillars of the 'civilizing mission' according to European justifications?",
@@ -3815,9 +3843,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This process of replacement was rarely completed without significant, ongoing indigenous resistance. Contemporary debates regarding land rights, historical reparations, and the recognition of indigenous governance are direct consequences of the unfinished project of settler colonial dispossession."
 ],
 "tfc": {
-"statement": "Extractive colonialism relied on the permanent displacement of indigenous people to create a new society.",
-"answer": "False",
-"explanation": "The text explicitly distinguishes settler colonialism from extractive colonialism, stating that the latter focused on profiting from resources using local labour."
+"statement": "Settler colonialism sought the permanent displacement or elimination of indigenous populations to secure land for settlers.",
+"answer": "True",
+"explanation": "The passage states that settler colonialism aimed at the permanent displacement or elimination of indigenous populations to secure land for settlers."
 },
 "detail": {
 "question": "What is the primary function of the 'terra nullius' doctrine as described in the text?",
@@ -3858,9 +3886,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Even post-independence, the legacy of these health disparities remained entrenched in the infrastructure of medical institutions, which continued to favor urban centers over rural areas, reflecting the colonial design of servicing only the elite hubs of power."
 ],
 "tfc": {
-"statement": "Colonial medical services were consistently designed to provide universal coverage for all local residents.",
-"answer": "False",
-"explanation": "The text states that colonial medicine was primarily for European administrators and soldiers, and often unavailable to the broader indigenous population."
+"statement": "Colonial medicine was introduced to improve the health of European administrators and soldiers and was often unavailable to the broader indigenous populace.",
+"answer": "True",
+"explanation": "The passage states that colonial medicine was introduced for European administrators and soldiers and was often unavailable to the broader indigenous populace."
 },
 "detail": {
 "question": "What was the main reason for the shift to monoculture farming under colonial rule?",
@@ -3944,9 +3972,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Some critics of this theory argue that it oversimplifies the complex internal factors that contributed to local economic struggles, such as political mismanagement or lack of investment. However, the structural constraints imposed during the colonial era remain a significant point of reference in development economics."
 ],
 "tfc": {
-"statement": "Dependency theory is universally accepted by all economists as the only explanation for global economic disparity.",
-"answer": "False",
-"explanation": "The passage mentions that 'some critics... argue that it oversimplifies' the situation, indicating it is not universally accepted as the sole explanation."
+"statement": "Some critics of dependency theory argue that it oversimplifies the complex internal factors contributing to local economic struggles.",
+"answer": "True",
+"explanation": "The passage states that some critics argue dependency theory oversimplifies internal factors such as political mismanagement or lack of investment."
 },
 "detail": {
 "question": "What is the 'periphery-core' dynamic according to the text?",
@@ -3987,9 +4015,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The enduring legacy of these legal systems is evident in many post-colonial states, where the tension between inherited colonial law and local concepts of justice remains a significant hurdle to legal reform and democratic consolidation."
 ],
 "tfc": {
-"statement": "Colonial powers respected indigenous legal systems by leaving them entirely unchanged throughout the period of colonial rule.",
-"answer": "False",
-"explanation": "The passage states that colonial powers often manipulated and codified customary laws, turning them into rigid state regulations."
+"statement": "Colonial powers often manipulated customary laws by codifying them in ways that served colonial interests.",
+"answer": "True",
+"explanation": "The passage states that colonial powers often manipulated existing customary laws, codifying them in ways that served colonial interests."
 },
 "detail": {
 "question": "What was the purpose of the dual legal system described in the passage?",
@@ -4073,9 +4101,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The recovery of these histories is a major focus of current academic research, which seeks to uncover the diverse ways in which women resisted colonial gender norms and how those norms continue to influence the gender dynamics of modern post-colonial nations."
 ],
 "tfc": {
-"statement": "Colonial legal systems generally strengthened the economic autonomy of indigenous women by granting them new property rights.",
-"answer": "False",
-"explanation": "The text states that these laws removed the rights of women to hold property and stripped them of economic agency."
+"statement": "Colonial legal systems often removed women's rights to hold property or inherit land.",
+"answer": "True",
+"explanation": "The passage states that colonial legal systems often removed women's rights to hold property or inherit land."
 },
 "detail": {
 "question": "How did colonial officials perceive indigenous women based on the text?",
@@ -4116,9 +4144,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The influence of these religious transformations persists in contemporary society. Religious institutions in post-colonial nations often hold significant social and political power, and the debates about how these institutions fit into a modern, democratic framework are still very much ongoing."
 ],
 "tfc": {
-"statement": "Indigenous communities strictly rejected any elements of Christian teachings throughout the colonial period.",
-"answer": "False",
-"explanation": "The passage notes the emergence of syncretic movements that blended traditional beliefs with Christian teachings, showing engagement rather than total rejection."
+"statement": "In many colonies, religious movements blended traditional beliefs with Christian teachings and became vehicles for anti-colonial organizing.",
+"answer": "True",
+"explanation": "The passage states that syncretic religious movements blended traditional beliefs with Christian teachings and became vehicles for anti-colonial organizing."
 },
 "detail": {
 "question": "What incentive was often linked to the conversion of local populations to Christianity?",
@@ -4161,9 +4189,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While historians argue over the exact conclusion of the Cold War, the dissolution of the Soviet Union in 1991 is widely regarded as the definitive end."
 ],
 "tfc": {
-"statement": "The United States and the Soviet Union engaged in direct, full-scale military warfare during the Cold War.",
-"answer": "False",
-"explanation": "The passage explicitly states that the Cold War was not a direct military conflict between the two superpowers, but rather a period of geopolitical tension manifested through proxy wars."
+"statement": "The Cold War was not a direct military conflict between the United States and the Soviet Union, but a prolonged period of geopolitical tension.",
+"answer": "True",
+"explanation": "The passage states that the Cold War was not a direct military conflict between the two superpowers, but a prolonged period of geopolitical tension."
 },
 "detail": {
 "question": "When was the Truman Doctrine established?",
@@ -4193,9 +4221,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This economic divide exacerbated existing tensions and solidified the 'Iron Curtain' that separated the European continent for decades."
 ],
 "tfc": {
-"statement": "Soviet-aligned states eagerly accepted financial aid from the Marshall Plan to rebuild their infrastructure.",
-"answer": "False",
-"explanation": "The passage states that Soviet leadership rejected the aid and influenced Soviet-aligned states to do the same."
+"statement": "Soviet leadership perceived the Marshall Plan as an attempt to undermine Soviet influence in Eastern Europe.",
+"answer": "True",
+"explanation": "The passage states that Soviet leadership perceived the Marshall Plan as an attempt to undermine their influence in Eastern Europe."
 },
 "detail": {
 "question": "Approximately how much economic assistance did the Marshall Plan provide?",
@@ -4257,9 +4285,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Conversely, the Warsaw Pact was formed by the Soviet Union and its satellite states as a counterweight to NATO, cementing the bipolar nature of the era."
 ],
 "tfc": {
-"statement": "The Warsaw Pact was created to support the expansion of NATO's influence.",
-"answer": "False",
-"explanation": "The text identifies the Warsaw Pact as a counterweight to NATO, not a supporter of its influence."
+"statement": "The Warsaw Pact was formed by the Soviet Union and its satellite states as a counterweight to NATO.",
+"answer": "True",
+"explanation": "The passage states that the Warsaw Pact was formed by the Soviet Union and its satellite states as a counterweight to NATO."
 },
 "detail": {
 "question": "When was NATO established?",
@@ -4321,9 +4349,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This objective was achieved with the Apollo 11 mission in 1969, which is often considered the symbolic conclusion of the Space Race, even as scientific collaboration later emerged."
 ],
 "tfc": {
-"statement": "The Space Race resulted in a decrease in technological innovation in the aerospace sector.",
-"answer": "False",
-"explanation": "The passage explicitly states that the competition 'drove unprecedented advancements in aerospace engineering'."
+"statement": "The Space Race drove unprecedented advancements in aerospace engineering.",
+"answer": "True",
+"explanation": "The passage states that the Space Race drove unprecedented advancements in aerospace engineering."
 },
 "detail": {
 "question": "What was the first satellite launched by the Soviet Union mentioned in the text?",
@@ -4353,9 +4381,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite the criticism, containment remained the dominant framework for US international relations until the collapse of the Soviet Union."
 ],
 "tfc": {
-"statement": "The policy of containment was restricted solely to military actions and troop deployments.",
-"answer": "False",
-"explanation": "The text states that the policy was 'not exclusively military' and included economic and diplomatic efforts."
+"statement": "The policy of containment included economic aid and diplomatic efforts as well as military dimensions.",
+"answer": "True",
+"explanation": "The passage states that containment was not exclusively military and included economic aid and diplomatic efforts."
 },
 "detail": {
 "question": "What did critics argue were the negative effects of the containment policy?",
@@ -4385,9 +4413,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The persistence of these conflicts demonstrated the willingness of the superpowers to risk regional stability to maintain their global spheres of influence."
 ],
 "tfc": {
-"statement": "Superpowers completely avoided involvement in the Korean and Vietnam wars.",
-"answer": "False",
-"explanation": "The passage states that they provided 'significant financial, military, and advisory support'."
+"statement": "The United States and Soviet Union provided significant financial, military, and advisory support to their respective sides in proxy wars.",
+"answer": "True",
+"explanation": "The passage states that the superpowers provided significant financial, military, and advisory support to their respective sides."
 },
 "detail": {
 "question": "Which two wars are explicitly listed as examples of proxy wars in the text?",
@@ -4417,9 +4445,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The speech served to alert the Western public to the shifting reality of postwar relations, catalyzing a more robust approach to Soviet containment."
 ],
 "tfc": {
-"statement": "Winston Churchill's speech was universally praised by all politicians at the time.",
-"answer": "False",
-"explanation": "The text mentions that 'some contemporary politicians criticized his blunt assessment'."
+"statement": "Some contemporary politicians criticized Winston Churchill's blunt assessment in the Iron Curtain speech.",
+"answer": "True",
+"explanation": "The passage states that some contemporary politicians criticized Churchill's blunt assessment."
 },
 "detail": {
 "question": "In what year did Churchill deliver the 'Iron Curtain' speech?",
@@ -4449,9 +4477,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "By 1991, the Soviet Union itself had dissolved, marking the official end of the era and the start of a new geopolitical chapter."
 ],
 "tfc": {
-"statement": "The fall of the Berlin Wall occurred after the official dissolution of the Soviet Union.",
-"answer": "False",
-"explanation": "The text states the wall fell in 1989, whereas the Soviet Union dissolved in 1991."
+"statement": "The Berlin Wall fell in 1989 before German reunification in 1990 and the dissolution of the Soviet Union in 1991.",
+"answer": "True",
+"explanation": "The passage states that the Berlin Wall fell in 1989, Germany reunified in 1990, and the Soviet Union dissolved in 1991."
 },
 "detail": {
 "question": "When did the reunification of Germany occur?",
@@ -4481,9 +4509,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The legacy of colonialism remains a subject of intense academic debate. Post-colonial scholars argue that the arbitrary drawing of borders by colonial powers created lasting geopolitical instability that continues to affect nations today, long after formal independence movements dismantled the colonial administrative structures."
 ],
 "tfc": {
-"statement": "Colonial powers were primarily motivated by altruistic desires to bring technological advancement to indigenous populations.",
-"answer": "False",
-"explanation": "The text states that colonial expansion was driven by mercantilist policies and the extraction of raw materials, rather than altruistic motivations."
+"statement": "Colonial expansion was driven by mercantilist policies, including the extraction of raw materials and the establishment of strategic trade routes.",
+"answer": "True",
+"explanation": "The passage states that colonial powers were driven by mercantilist policies and sought to extract raw materials and establish strategic trade routes."
 },
 "detail": {
 "question": "According to the passage, what is cited as a hallmark of colonial rule?",
@@ -4524,9 +4552,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While the Enlightenment is often celebrated for championing human rights and freedom of expression, it was not without contradictions. Many prominent figures of the time held views that excluded women and non-European peoples from the universal rights they championed."
 ],
 "tfc": {
-"statement": "Enlightenment philosophers universally advocated for the rights of all human beings regardless of gender or ethnicity.",
-"answer": "False",
-"explanation": "The passage notes that the Enlightenment was contradictory, as many prominent figures excluded women and non-European peoples from the rights they championed."
+"statement": "Many prominent Enlightenment figures held views that excluded women and non-European peoples from the universal rights they championed.",
+"answer": "True",
+"explanation": "The passage states that many prominent Enlightenment figures excluded women and non-European peoples from the universal rights they championed."
 },
 "detail": {
 "question": "What was the primary priority for thinkers during the Enlightenment?",
@@ -4567,9 +4595,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Over time, however, environmental factors such as soil salinization, prolonged drought, or river flooding often contributed to the decline of these societies. Furthermore, internal social stratification and external threats from nomadic groups frequently destabilized these early urban centers."
 ],
 "tfc": {
-"statement": "Ancient civilizations were often able to maintain their power structures indefinitely due to their advanced irrigation systems.",
-"answer": "False",
-"explanation": "The passage mentions that environmental factors and social stratification often contributed to the decline of these societies, implying they did not maintain power indefinitely."
+"statement": "Environmental factors such as soil salinization, prolonged drought, or river flooding often contributed to the decline of ancient civilizations.",
+"answer": "True",
+"explanation": "The passage states that environmental factors such as soil salinization, prolonged drought, or river flooding often contributed to the decline of these societies."
 },
 "detail": {
 "question": "What was a direct consequence of the food surplus produced in ancient civilizations?",
@@ -4610,9 +4638,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While the threat of mutually assured destruction (MAD) prevented direct open war between the two superpowers, it fostered a state of perpetual anxiety. This period accelerated scientific and technological advancements, most notably the 'Space Race,' as nations sought to demonstrate their superiority through technological milestones."
 ],
 "tfc": {
-"statement": "The United States and the Soviet Union engaged in several major direct military battles during the Cold War.",
-"answer": "False",
-"explanation": "The passage states that the threat of 'mutually assured destruction' prevented direct open war between the two superpowers, relying instead on proxy wars."
+"statement": "The threat of mutually assured destruction prevented direct open war between the United States and the Soviet Union.",
+"answer": "True",
+"explanation": "The passage states that mutually assured destruction prevented direct open war between the two superpowers."
 },
 "detail": {
 "question": "What primary factor drove the scientific and technological race during the Cold War?",
@@ -4653,9 +4681,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Although the Renaissance is often associated with progress and enlightenment, it was also a period of significant social and political upheaval. The period saw the consolidation of power by merchant families and the rise of the nation-state, which fundamentally changed the landscape of European power politics."
 ],
 "tfc": {
-"statement": "The Renaissance focused exclusively on artistic development while ignoring developments in philosophy or science.",
-"answer": "False",
-"explanation": "The passage states that the Renaissance included a revival of classical philosophy and encouraged direct observation in science, not just art."
+"statement": "The Renaissance was characterized by a revival of interest in classical philosophy, art, and literature.",
+"answer": "True",
+"explanation": "The passage states that the Renaissance was characterized by a profound revival of interest in classical philosophy, art, and literature."
 },
 "detail": {
 "question": "What is described as a central intellectual movement of the Renaissance?",
@@ -4696,9 +4724,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "In the modern era, globalization also includes the rapid movement of digital information. This instantaneous exchange allows for global collaboration but also poses new challenges regarding national sovereignty and the regulation of international corporations that operate across various jurisdictions."
 ],
 "tfc": {
-"statement": "Globalization has faced no significant criticism because it has uniformly improved economic conditions across all nations.",
-"answer": "False",
-"explanation": "The passage explicitly mentions that critics are concerned about environmental consequences and the exploitation of labor, contradicting the idea that there is no criticism."
+"statement": "Critics of globalization express concern over environmental and social consequences, including low-wage labor exploitation and cultural homogenization.",
+"answer": "True",
+"explanation": "The passage states that critics express concern over globalization's environmental and social consequences, including low-wage labor exploitation and cultural homogenization."
 },
 "detail": {
 "question": "What are two primary drivers of globalization mentioned in the text?",
@@ -4739,9 +4767,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "As the global population becomes increasingly urban, city planners are faced with the challenge of creating sustainable environments. Solutions such as green infrastructure, efficient public transportation, and inclusive housing policies are increasingly viewed as essential for maintaining the viability and quality of life in large metropolitan areas."
 ],
 "tfc": {
-"statement": "Urbanization was a phenomenon that only began in the 21st century.",
-"answer": "False",
-"explanation": "The passage states that urbanization accelerated during the Industrial Revolution, meaning it has a much longer history."
+"statement": "Urbanization accelerated during the Industrial Revolution as people moved from rural areas to urban centers in search of manufacturing jobs.",
+"answer": "True",
+"explanation": "The passage states that urbanization accelerated during the Industrial Revolution as people moved from rural areas to urban centers in search of manufacturing jobs."
 },
 "detail": {
 "question": "What historically drove people to migrate from rural to urban areas?",
@@ -4782,9 +4810,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite the existence of international agreements, the enforcement of human rights remains a complex issue. Many nations prioritize state sovereignty, making it difficult for international bodies to intervene in domestic human rights violations. Consequently, the discourse around human rights often balances the need for global standards against the realities of national political independence."
 ],
 "tfc": {
-"statement": "The enforcement of human rights is straightforward due to universal acceptance of international law.",
-"answer": "False",
-"explanation": "The passage explicitly states that enforcement remains a complex issue because nations prioritize state sovereignty, making intervention difficult."
+"statement": "The enforcement of human rights remains complex because many nations prioritize state sovereignty.",
+"answer": "True",
+"explanation": "The passage states that human-rights enforcement remains complex because many nations prioritize state sovereignty, making intervention difficult."
 },
 "detail": {
 "question": "What international event significantly influenced the development of modern human rights frameworks?",
@@ -4825,9 +4853,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Modern feminist history also increasingly looks at the intersectionality of gender with other social categories, such as race, class, and sexuality. By doing so, it provides a more nuanced understanding of how oppression functions and how different groups have resisted it throughout history."
 ],
 "tfc": {
-"statement": "Feminist history focuses only on the history of women in positions of extreme political power.",
-"answer": "False",
-"explanation": "The passage states that the focus has shifted from documenting the lives of 'great women' to analyzing broader social and political structures."
+"statement": "Feminist history has shifted from documenting the lives of great women to analyzing broader structures that maintain gender hierarchies.",
+"answer": "True",
+"explanation": "The passage states that feminist historians shifted from documenting great women to analyzing broader social, economic, and political structures that maintain gender hierarchies."
 },
 "detail": {
 "question": "What does modern feminist history increasingly emphasize when analyzing oppression?",
@@ -4868,9 +4896,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Ultimately, the interpretation of history depends on the framework used. Whether one emphasizes material conditions or intellectual agency, the complexity of human history ensures that no single factor can fully explain the progression of civilization over time."
 ],
 "tfc": {
-"statement": "The passage argues that economic conditions are the sole factor determining the intellectual climate of an era.",
-"answer": "False",
-"explanation": "The passage presents both economic conditions and intellectual breakthroughs as competing or complementary theories, stating that no single factor can fully explain historical progression."
+"statement": "The passage states that no single factor can fully explain the progression of civilization over time.",
+"answer": "True",
+"explanation": "The passage states that the complexity of human history ensures that no single factor can fully explain the progression of civilization over time."
 },
 "detail": {
 "question": "According to the passage, what acts as the 'engine' for structural change?",
@@ -5001,9 +5029,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "By applying anatomical studies to their work, Renaissance painters were able to capture human emotion and physical realism with unprecedented accuracy."
 ],
 "tfc": {
-"statement": "The mathematical techniques developed by Brunelleschi and Masaccio were applied only to architecture, not to painting.",
-"answer": "False",
-"explanation": "The passage states these artists developed linear perspective techniques specifically to create three-dimensional depth in painting, and links anatomical study to capturing human form in painting, so the techniques were applied to painting, not solely architecture."
+"statement": "Brunelleschi and Masaccio developed mathematical techniques to create the illusion of three-dimensional depth on two-dimensional surfaces.",
+"answer": "True",
+"explanation": "The passage states that Brunelleschi and Masaccio developed mathematical techniques to create the illusion of three-dimensional depth on two-dimensional surfaces."
 },
 "detail": {
 "question": "Which artists are explicitly mentioned as contributors to the development of linear perspective?",
@@ -5045,9 +5073,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While some states functioned as republics, many were effectively controlled by autocratic rulers or mercantile families who used patronage to cement their status."
 ],
 "tfc": {
-"statement": "Because the Medici used patronage to cement their status in Florence, all Renaissance city-states must have been ruled by merchant families rather than republics.",
-"answer": "False",
-"explanation": "The passage states that 'some states functioned as republics' while many others were controlled by autocratic rulers or merchant families, so it was not the case that all city-states were ruled by merchant families."
+"statement": "Some Renaissance city-states functioned as republics, while many were controlled by autocratic rulers or mercantile families.",
+"answer": "True",
+"explanation": "The passage states that some city-states functioned as republics, while many were effectively controlled by autocratic rulers or mercantile families."
 },
 "detail": {
 "question": "Which family is mentioned as an example of a dynasty that gained influence in Florence?",
@@ -5133,9 +5161,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "However, this wealth was not distributed equally; the majority of the urban and rural population continued to live in poverty."
 ],
 "tfc": {
-"statement": "Because Italian city-states controlled Mediterranean trade routes, the majority of the urban and rural population must have directly profited from this trade.",
-"answer": "False",
-"explanation": "The passage states that despite the influx of capital from trade, wealth was not distributed equally and the majority of the population continued to live in poverty, so most people did not directly profit."
+"statement": "The wealth generated by Renaissance trade and banking was not distributed equally, and most urban and rural people continued to live in poverty.",
+"answer": "True",
+"explanation": "The passage states that Renaissance wealth was not distributed equally and that the majority of the urban and rural population continued to live in poverty."
 },
 "detail": {
 "question": "Which geographical region was crucial to the control of trade routes for Italian city-states?",
@@ -5177,9 +5205,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite these improvements, educational opportunities remained highly gendered and largely restricted to the sons of the elite."
 ],
 "tfc": {
-"statement": "Because the printing press made classical texts more accessible to students, education during the Renaissance became equally available to sons and daughters of the elite.",
-"answer": "False",
-"explanation": "The passage states that despite improvements from the printing press, educational opportunities remained 'highly gendered' and restricted to the sons of the elite, so access was not equal between sons and daughters."
+"statement": "Renaissance educational opportunities remained highly gendered and largely restricted to the sons of the elite.",
+"answer": "True",
+"explanation": "The passage states that educational opportunities remained highly gendered and largely restricted to the sons of the elite."
 },
 "detail": {
 "question": "What was the 'Studia Humanitatis' curriculum focused on?",
@@ -5265,9 +5293,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While legal reforms were sought to centralize power, they also introduced the concept of the rights of individuals in relation to the state."
 ],
 "tfc": {
-"statement": "Because Renaissance legal reforms centralized state power, they must have abolished any notion of individual rights against the state.",
-"answer": "False",
-"explanation": "The passage states that while reforms sought to centralize power, they also 'introduced the concept of the rights of individuals in relation to the state,' so individual rights were not abolished but rather newly introduced alongside centralization."
+"statement": "Renaissance legal reforms introduced the concept of the rights of individuals in relation to the state.",
+"answer": "True",
+"explanation": "The passage states that Renaissance legal reforms introduced the concept of the rights of individuals in relation to the state."
 },
 "detail": {
 "question": "Which historical legal text was revived and studied during the Renaissance?",
@@ -5309,9 +5337,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "However, these instances were limited to the uppermost social strata and rarely extended to the broader female population."
 ],
 "tfc": {
-"statement": "Women of all social classes frequently played prominent political roles in the Renaissance.",
-"answer": "False",
-"explanation": "The text states that instances of women in power were limited to the uppermost social strata."
+"statement": "Instances of Renaissance women in power were limited to the uppermost social strata and rarely extended to the broader female population.",
+"answer": "True",
+"explanation": "The passage states that examples of women in power were limited to the uppermost social strata and rarely extended to the broader female population."
 },
 "detail": {
 "question": "Who is given as an example of a woman who influenced the cultural landscape?",
@@ -5398,9 +5426,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Urban planning strategies that prioritize public transit and green spaces are often hindered by political gridlock and the prioritization of short-term economic gains over long-term urban livability."
 ],
 "tfc": {
-"statement": "The passage attributes strains on housing and public services in cities to insufficient government funding rather than to population concentration.",
-"answer": "False",
-"explanation": "The passage explicitly attributes these strains to 'this concentration of people,' not to a lack of government funding, which is never mentioned as a cause."
+"statement": "The concentration of people in urban centers often strains public services, housing affordability, and environmental sustainability.",
+"answer": "True",
+"explanation": "The passage states that the concentration of people in urban centers often results in severe strains on public services, housing affordability, and environmental sustainability."
 },
 "detail": {
 "question": "What is identified as a primary challenge for municipal governments in urban centers?",
@@ -5442,9 +5470,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Conversely, proponents of universalism maintain that fundamental human rights are inherent to all individuals, regardless of their cultural, social, or geographical background, and should be protected above regional interests."
 ],
 "tfc": {
-"statement": "Cultural relativists and universalists agree that human rights frameworks should be based on traditions specific to each region.",
-"answer": "False",
-"explanation": "The passage states that universalists maintain rights are inherent to all individuals 'regardless of their cultural, social, or geographical background, and should be protected above regional interests,' which is the opposite of basing frameworks on region-specific traditions; only cultural relativists hold that view."
+"statement": "Cultural relativists argue that universal human rights may reflect Western perspectives and ignore local traditions and moral values.",
+"answer": "True",
+"explanation": "The passage states that cultural relativists argue universal human rights often reflect Western perspectives and may ignore local traditions and moral values."
 },
 "detail": {
 "question": "What concern do cultural relativists raise regarding universal human rights?",
@@ -5486,9 +5514,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite its growth, challenges remain in finding primary source documentation for women whose lives were not historically recorded, requiring historians to employ creative interpretive methodologies."
 ],
 "tfc": {
-"statement": "The shift toward analyzing everyday experiences across social classes has fully resolved the challenge of limited primary source documentation.",
-"answer": "False",
-"explanation": "The passage states that despite this shift, 'challenges remain in finding primary source documentation for women whose lives were not historically recorded,' so the documentation challenge has not been fully resolved."
+"statement": "Challenges remain in finding primary source documentation for women whose lives were not historically recorded.",
+"answer": "True",
+"explanation": "The passage states that challenges remain in finding primary source documentation for women whose lives were not historically recorded."
 },
 "detail": {
 "question": "What is a major challenge identified in feminist history research?",
@@ -5530,9 +5558,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The eventual dissolution of the Soviet Union signaled the end of this bipolarity, yet the legacy of Cold War institutional structures continues to influence contemporary international relations."
 ],
 "tfc": {
-"statement": "Because the Cold War ended with the dissolution of the Soviet Union, the institutional structures it created stopped influencing international relations.",
-"answer": "False",
-"explanation": "The passage states that despite the dissolution of the Soviet Union, 'the legacy of Cold War institutional structures continues to influence contemporary international relations,' so the influence did not stop."
+"statement": "The legacy of Cold War institutional structures continues to influence contemporary international relations.",
+"answer": "True",
+"explanation": "The passage states that the legacy of Cold War institutional structures continues to influence contemporary international relations."
 },
 "detail": {
 "question": "What does the passage identify as a key characteristic of the Cold War era?",
@@ -5574,9 +5602,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The movement significantly laid the groundwork for modern democratic principles, although the full realization of these ideals has remained an ongoing process through subsequent centuries."
 ],
 "tfc": {
-"statement": "Because Enlightenment thinkers laid the groundwork for modern democratic principles, those principles were fully realized by the end of the movement.",
-"answer": "False",
-"explanation": "The passage states that 'the full realization of these ideals has remained an ongoing process through subsequent centuries,' meaning they were not fully realized by the end of the Enlightenment."
+"statement": "The full realization of Enlightenment democratic ideals has remained an ongoing process through subsequent centuries.",
+"answer": "True",
+"explanation": "The passage states that the full realization of these ideals has remained an ongoing process through subsequent centuries."
 },
 "detail": {
 "question": "What was a primary goal of Enlightenment philosophers?",
@@ -5662,9 +5690,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The wider population, including the peasantry, saw few immediate improvements in their daily lives, as the socio-economic disparities of the time remained largely unchanged."
 ],
 "tfc": {
-"statement": "The intellectual and artistic advancements of the Renaissance were universally accessible to all social classes.",
-"answer": "False",
-"explanation": "The passage states that these benefits were 'primarily concentrated among the wealthy elite and the merchant class'."
+"statement": "The benefits of Renaissance intellectual and artistic life were primarily concentrated among the wealthy elite and the merchant class.",
+"answer": "True",
+"explanation": "The passage states that these benefits were primarily concentrated among the wealthy elite and the merchant class."
 },
 "detail": {
 "question": "What was a defining characteristic of the Renaissance?",
@@ -5750,9 +5778,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Studying these ancient societies provides valuable insights into the sustainability of complex human systems and the recurring factors that contribute to the rise and fall of great powers."
 ],
 "tfc": {
-"statement": "Ancient civilizations developed in a uniform manner, utilizing identical agricultural techniques.",
-"answer": "False",
-"explanation": "The passage states they thrived in 'different environments' and doesn't claim they used identical techniques."
+"statement": "Ancient civilizations thrived in different environments and frequently shared common challenges such as resource management, defense, and social cohesion.",
+"answer": "True",
+"explanation": "The passage states that ancient civilizations thrived in different environments and frequently shared common challenges such as resource management, defense, and social cohesion."
 },
 "detail": {
 "question": "What is often cited as a cause for the collapse of ancient civilizations?",
@@ -5789,14 +5817,14 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 
 {
 "stimulus": ["The concept of urbanization is characterized by the physical growth of urban areas, often resulting from rural migration and suburban concentration. Historically, this process has been linked to industrialization, but modern urbanization is frequently driven by service-sector growth.", "While urban centers offer increased access to employment and specialized services, they also face significant challenges. High population density can strain existing infrastructure, leading to housing shortages, sanitation issues, and increased pressure on public transport systems.", "Furthermore, rapid urban expansion can exacerbate socioeconomic inequalities, creating stark contrasts between affluent central districts and marginalized peripheral settlements. Effective urban management requires a balanced approach to infrastructure development, social equity, and environmental sustainability."],
-"tfc": {"statement": "Modern urbanization is exclusively driven by industrialization.", "answer": "False", "explanation": "The text explicitly states that while historically linked to industrialization, modern urbanization is frequently driven by service-sector growth."},
+"tfc": {"statement": "Modern urbanization is frequently driven by service-sector growth.", "answer": "True", "explanation": "The passage states that modern urbanization is frequently driven by service-sector growth."},
 "detail": {"question": "What is one mentioned consequence of high population density in urban areas?", "correct": "Strain on existing infrastructure.", "distractors": ["A decrease in rural migration.", "The elimination of socioeconomic inequality.", "An immediate improvement in sanitation systems."], "explanation": "The passage lists infrastructure strain, housing shortages, and sanitation issues as results of high population density."},
 "inference": {"question": "Which of the following can be inferred about urban management?", "correct": "It must address a multifaceted range of issues including equity and infrastructure.", "distractors": ["It is primarily focused on limiting rural migration.", "It is no longer concerned with environmental sustainability.", "It successfully eliminates all socioeconomic disparities."], "explanation": "The text suggests effective management requires a balanced approach to multiple factors, including social equity and sustainability."},
 "fourth": {"type": "summary", "question": "Which best summarizes the passage?", "correct": "Urbanization provides opportunities but requires careful management to mitigate negative socioeconomic and infrastructural consequences.", "distractors": ["Industrialization is the only factor responsible for the growth of modern cities.", "Infrastructure development is the sole solution to all urban problems.", "Urban expansion inevitably leads to the total eradication of poverty."], "explanation": "The passage outlines the nature of urbanization, its challenges, and the need for balanced management."}
 },
 {
 "stimulus": ["The term 'human rights' refers to universal entitlements that belong to every person, regardless of nationality, race, gender, or belief. These rights are protected by international law, notably the Universal Declaration of Human Rights.", "Despite international consensus, the enforcement of human rights remains complex. Sovereignty often conflicts with intervention, as nations are typically hesitant to permit external scrutiny of their domestic policies.", "Furthermore, the interpretation of certain rights can vary significantly between cultures, leading to debates over whether some rights are truly universal or culturally relative. Nevertheless, international organizations continue to exert pressure on governments to adhere to these foundational principles."],
-"tfc": {"statement": "There is unanimous international agreement on the interpretation of every human right.", "answer": "False", "explanation": "The text states that interpretation of certain rights can vary significantly between cultures, leading to debates."},
+"tfc": {"statement": "The interpretation of certain human rights can vary significantly between cultures.", "answer": "True", "explanation": "The passage states that the interpretation of certain rights can vary significantly between cultures."},
 "detail": {"question": "What is mentioned as a potential barrier to enforcing human rights?", "correct": "The conflict between sovereignty and intervention.", "distractors": ["A lack of international consensus on existence.", "The absence of the Universal Declaration of Human Rights.", "Global apathy toward universal entitlements."], "explanation": "The passage explicitly notes that sovereignty often conflicts with intervention as nations hesitate to permit scrutiny."},
 "inference": {"question": "What does the passage imply about the enforcement of human rights?", "correct": "Enforcement is challenged by political and cultural factors.", "distractors": ["Enforcement is easily managed by international law.", "Enforcement has been completely successful globally.", "Enforcement is not a priority for international organizations."], "explanation": "The complexities of sovereignty and cultural differences mentioned imply that enforcement is not straightforward."},
 "fourth": {"type": "summary", "question": "What is the core theme of the passage?", "correct": "Human rights are universally defined but face significant challenges regarding enforcement, interpretation, and national sovereignty.", "distractors": ["Human rights are entirely subjective and lack any legal standing.", "National sovereignty is the only factor protecting human rights.", "International organizations have successfully resolved all human rights disputes."], "explanation": "The passage captures the ideal of human rights versus the practical difficulties of their implementation."}
@@ -5817,42 +5845,42 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 },
 {
 "stimulus": ["The Renaissance, a period of transition from the Middle Ages to modernity, was marked by a renewed interest in classical philosophy, literature, and art. Originating in Italy, it spread across Europe, fostering an environment of intellectual inquiry.", "Central to this era was the philosophy of humanism, which emphasized human potential and the value of secular knowledge. This shifted the focus of art and learning from purely theological concerns to more human-centric expressions.", "While often romanticized, the Renaissance was also characterized by significant political instability and social hierarchies. Despite these conditions, the era left an enduring legacy in science, art, and the methodology of education."],
-"tfc": {"statement": "The Renaissance focused exclusively on theological studies.", "answer": "False", "explanation": "The text states that the focus shifted from theological concerns to more human-centric expressions through humanism."},
+"tfc": {"statement": "Humanism shifted the focus of art and learning from purely theological concerns to more human-centric expressions.", "answer": "True", "explanation": "The passage states that humanism shifted art and learning away from purely theological concerns toward more human-centric expressions."},
 "detail": {"question": "Where did the Renaissance originate?", "correct": "Italy.", "distractors": ["Northern Europe.", "The Middle East.", "Greece."], "explanation": "The first paragraph explicitly states that the Renaissance originated in Italy."},
 "inference": {"question": "What does the passage imply about the legacy of the Renaissance?", "correct": "Its influence transcended the era's social and political challenges.", "distractors": ["It was purely a period of political stability.", "Its influence was limited only to the field of art.", "It had little impact on modern methodology."], "explanation": "The passage notes that despite instability, the era left an enduring legacy in multiple fields."},
 "fourth": {"type": "author", "question": "What is the author's tone toward the Renaissance?", "correct": "Balanced, acknowledging both its intellectual advancements and its social complexities.", "distractors": ["Highly critical, focusing only on the political instability.", "Romanticized and uncritical of the era's flaws.", "Exclusively focused on the theological impacts of the period."], "explanation": "The author provides a balanced view by highlighting intellectual achievements while noting the period's instability and social hierarchies."}
 },
 {
 "stimulus": ["Colonialism involves the establishment and maintenance of control over a foreign territory and its people by a dominant power. Often, this relationship is characterized by the extraction of resources and the imposition of the colonial power's culture.", "The consequences of colonialism are profound and long-lasting, frequently restructuring the economies and social systems of the colonized territory. Many post-colonial states have struggled to overcome the infrastructural imbalances and political fractures left behind.", "Historical discourse around colonialism is diverse, with some focusing on the administrative 'advancements' brought by colonizers, while others emphasize the systemic exploitation and cultural erosion of indigenous populations."],
-"tfc": {"statement": "Colonialism primarily results in the strengthening of indigenous social systems.", "answer": "False", "explanation": "The text states that colonialism involves resource extraction, cultural imposition, and the restructuring of social systems, which often leaves behind political fractures."},
+"tfc": {"statement": "Colonialism is often characterized by the extraction of resources and the imposition of the colonial power's culture.", "answer": "True", "explanation": "The passage states that colonialism is often characterized by resource extraction and the imposition of the colonial power's culture."},
 "detail": {"question": "What is mentioned as a characteristic of the relationship in colonialism?", "correct": "The extraction of resources.", "distractors": ["A partnership of equals.", "The complete isolation of the foreign territory.", "The voluntary integration of indigenous culture."], "explanation": "The passage notes that the relationship is often characterized by the extraction of resources and the imposition of the colonizer's culture."},
 "inference": {"question": "What does the passage suggest about the long-term impact on post-colonial states?", "correct": "They face challenges resulting from historical systemic exploitation.", "distractors": ["They have successfully moved past all historical issues.", "They are immune to the effects of previous administrative restructuring.", "They are better off due to the administrative advancements of the colonizers."], "explanation": "The text mentions that states struggle to overcome infrastructural imbalances and political fractures left behind."},
 "fourth": {"type": "summary", "question": "Which sentence best summarizes the passage?", "correct": "Colonialism is a complex, exploitative practice with enduring consequences that continue to shape the stability and structure of post-colonial nations.", "distractors": ["Colonialism was a strictly positive administrative expansion.", "The history of colonialism is universally agreed upon by all scholars.", "Post-colonial states have no issues resulting from their past."], "explanation": "The passage captures the definition, consequences, and ongoing historical debates regarding colonialism."}
 },
 {
 "stimulus": ["Cold War history is defined by the prolonged period of geopolitical tension between the United States, the Soviet Union, and their respective allies. Unlike 'hot' wars, this era was characterized by proxy conflicts, arms races, and ideological posturing rather than direct large-scale combat between the two superpowers.", "The arms race, particularly the proliferation of nuclear weapons, created a climate of constant fear known as 'mutually assured destruction.' This concept acted as a deterrent, preventing direct escalation into a global nuclear conflict.", "The end of the Cold War saw the dissolution of the Soviet Union and a shift in the global order. However, the legacy of this era persists in modern international relations, where the structures and alliances formed during this period continue to influence contemporary geopolitical strategy."],
-"tfc": {"statement": "The Cold War featured constant direct military combat between the United States and the Soviet Union.", "answer": "False", "explanation": "The text states it was characterized by proxy conflicts rather than direct large-scale combat between the two superpowers."},
+"tfc": {"statement": "Cold War history was characterized by proxy conflicts, arms races, and ideological posturing rather than direct large-scale combat between the superpowers.", "answer": "True", "explanation": "The passage states that the Cold War was characterized by proxy conflicts, arms races, and ideological posturing rather than direct large-scale combat between the two superpowers."},
 "detail": {"question": "What was the purpose of the concept of 'mutually assured destruction'?", "correct": "To serve as a deterrent against direct nuclear conflict.", "distractors": ["To promote peace through cultural exchange.", "To facilitate the dissolution of the Soviet Union.", "To encourage the development of conventional weapons."], "explanation": "The passage explains that this concept acted as a deterrent, preventing direct escalation into global nuclear conflict."},
 "inference": {"question": "How does the passage characterize the impact of the Cold War on today's world?", "correct": "It continues to influence current geopolitical strategies and alliances.", "distractors": ["It has no lasting effect on modern international relations.", "It completely destroyed all international alliances.", "It made the concept of geopolitical strategy obsolete."], "explanation": "The final sentence states that the structures and alliances formed during this period continue to influence contemporary strategies."},
 "fourth": {"type": "negative", "question": "Which of the following is NOT described as a feature of the Cold War?", "correct": "Direct large-scale combat between the superpowers.", "distractors": ["Proxy conflicts.", "Arms races.", "Ideological posturing."], "explanation": "The text explicitly states that the era was marked by proxy conflicts, not direct large-scale combat."}
 },
 {
 "stimulus": ["Ancient civilizations were complex societies that developed agricultural techniques, centralized governments, and architectural marvels. These societies laid the foundations for many modern legal, scientific, and political systems.", "A common theme across early civilizations, such as those in Mesopotamia or the Nile Valley, was the necessity of managing water resources for sustenance and trade. This requirement often drove the development of early governance and social stratification.", "While these civilizations were highly advanced for their time, they were not immune to environmental degradation or political collapse. Studying these societies provides insight into the lifecycle of complex systems and the factors that contribute to societal longevity."],
-"tfc": {"statement": "Managing water resources was a negligible factor in the development of early civilizations.", "answer": "False", "explanation": "The text states it was a common theme and a necessity that often drove the development of governance and social stratification."},
+"tfc": {"statement": "Managing water resources was a necessity that often drove the development of early governance and social stratification.", "answer": "True", "explanation": "The passage states that managing water resources was a necessity that often drove early governance and social stratification."},
 "detail": {"question": "Which examples of early civilizations does the text provide?", "correct": "Mesopotamia and the Nile Valley.", "distractors": ["The Roman and Greek Empires.", "The Mayan and Aztec civilizations.", "The Indus and Yellow River valleys."], "explanation": "The second paragraph explicitly lists Mesopotamia and the Nile Valley."},
 "inference": {"question": "What is the primary value of studying ancient civilizations mentioned by the author?", "correct": "To understand the factors that impact the durability and failure of complex societal systems.", "distractors": ["To replicate their exact agricultural techniques today.", "To prove that they were superior to all modern societies.", "To discover lost architectural secrets."], "explanation": "The final sentence mentions studying them provides insight into the lifecycle and factors contributing to longevity."},
 "fourth": {"type": "summary", "question": "Which best summarizes the focus of the passage?", "correct": "Ancient civilizations were foundational, complex societies whose history offers lessons on resource management and societal stability.", "distractors": ["Ancient civilizations failed because they ignored environmental issues.", "Centralized government is the only key to societal survival.", "Ancient societies are identical to modern societies in every way."], "explanation": "The passage highlights their foundational nature and the lessons we can draw from them."}
 },
 {
 "stimulus": ["The Enlightenment was an intellectual movement of the 18th century characterized by an emphasis on reason, individualism, and skepticism of traditional authority. Philosophers of this era sought to improve society through the application of the scientific method.", "Key themes included the rights of the individual, the separation of church and state, and the belief in human progress. This period challenged the monarchical systems prevalent at the time, providing an ideological basis for subsequent political revolutions.", "While the movement championed universal rights, it often failed to include marginalized groups, such as women and enslaved people, in its practical application of these ideals. Despite these exclusions, the Enlightenment remains a pivotal moment in the development of modern political thought."],
-"tfc": {"statement": "Enlightenment philosophers generally encouraged blind obedience to traditional authority.", "answer": "False", "explanation": "The text states the movement was characterized by skepticism of traditional authority."},
+"tfc": {"statement": "The Enlightenment was characterized by skepticism of traditional authority and an emphasis on reason and individualism.", "answer": "True", "explanation": "The passage states that the Enlightenment was characterized by reason, individualism, and skepticism of traditional authority."},
 "detail": {"question": "What methodology did Enlightenment philosophers seek to apply to improve society?", "correct": "The scientific method.", "distractors": ["Ancient monarchical tradition.", "Pure religious dogma.", "The theory of divine right."], "explanation": "The first paragraph mentions they sought to improve society through the application of the scientific method."},
 "inference": {"question": "What can be inferred about the practical application of Enlightenment ideals?", "correct": "It was inconsistent and did not universally encompass all groups in society.", "distractors": ["It was perfectly applied to all people immediately.", "It focused exclusively on the rights of women and the enslaved.", "It had no influence on later political revolutions."], "explanation": "The text notes that it often failed to include marginalized groups in the practical application of its ideals."},
 "fourth": {"type": "negative", "question": "Which of the following was NOT a key theme of the Enlightenment mentioned?", "correct": "Strengthening monarchical control.", "distractors": ["Reason.", "Individualism.", "Separation of church and state."], "explanation": "The text explicitly states that the period challenged, rather than strengthened, monarchical systems."}
 },
 {
 "stimulus": ["The Industrial Revolution marked a major turning point in human history, transitioning societies from agrarian economies to those dominated by machine manufacturing. This period initiated unprecedented levels of urbanization and mass production.", "The technological advancements, such as the steam engine and the power loom, vastly increased efficiency. However, these changes also brought about harsh working conditions, including long hours and the exploitation of child labor.", "The long-term effects of the Industrial Revolution include elevated standards of living and technological sophistication, but it also catalyzed environmental impacts that continue to be addressed today. It fundamentally reshaped the social fabric of the western world."],
-"tfc": {"statement": "The Industrial Revolution had no negative social impact on the working class.", "answer": "False", "explanation": "The text discusses harsh working conditions, long hours, and the exploitation of child labor."},
+"tfc": {"statement": "The Industrial Revolution brought harsh working conditions, including long hours and the exploitation of child labor.", "answer": "True", "explanation": "The passage states that the Industrial Revolution brought harsh working conditions, including long hours and child labor exploitation."},
 "detail": {"question": "What were two specific technological advancements mentioned in the text?", "correct": "The steam engine and the power loom.", "distractors": ["The telegraph and the radio.", "The printing press and the compass.", "The cotton gin and the water wheel."], "explanation": "The second paragraph explicitly identifies the steam engine and the power loom."},
 "inference": {"question": "What can be inferred about the transition from agrarian economies?", "correct": "It fundamentally altered both social and environmental landscapes.", "distractors": ["It was a smooth transition without any societal pushback.", "It was limited solely to the agricultural sector.", "It resulted in the immediate elimination of all labor issues."], "explanation": "The text mentions the reshaping of the social fabric and ongoing environmental impacts."},
 "fourth": {"type": "summary", "question": "Which statement best summarizes the Industrial Revolution's impact?", "correct": "It was a complex transition that drove technological and economic growth at the cost of significant social and environmental strain.", "distractors": ["It was purely a story of human progress with no downsides.", "It destroyed the idea of mass production in the west.", "It was an event that only affected the rural agrarian class."], "explanation": "The passage weighs the growth and sophistication against the harsh working conditions and environmental impacts."}
@@ -5865,9 +5893,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Proponents argue that human rights are universal by definition, asserting that basic dignity and freedom from oppression are intrinsic to all human beings, regardless of their cultural background."
 ],
 "tfc": {
-"statement": "The UDHR is universally accepted by all nations without cultural or ideological critique.",
-"answer": "False",
-"explanation": "The stimulus explicitly states that critics argue the concept is Western-centric, indicating that there is indeed critique regarding its universal application."
+"statement": "Critics of human rights often argue that the concept is inherently Western-centric.",
+"answer": "True",
+"explanation": "The passage states that critics often argue the concept of human rights is inherently Western-centric."
 },
 "detail": {
 "question": "According to the passage, what is the primary purpose of the UDHR?",
@@ -5908,8 +5936,8 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Sociologists warn that the divide between the affluent urban elite and the working poor in major metropolises is widening, threatening social cohesion."
 ],
 "tfc": {
-"statement": "Urbanization is currently leading to a decrease in the global city-dwelling population.",
-"answer": "False",
+"statement": "Urbanization in the 21st century has reached unprecedented levels, with more than half of the global population now living in cities.",
+"answer": "True",
 "explanation": "The passage states that urbanization has reached unprecedented levels and that more than half of the global population now lives in cities."
 },
 "detail": {
@@ -5994,9 +6022,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Moreover, there are growing concerns that globalization leads to cultural homogenization, as dominant cultural influences increasingly permeate local traditions."
 ],
 "tfc": {
-"statement": "Globalization is perceived to have only positive effects on all participants.",
-"answer": "False",
-"explanation": "The passage discusses negative impacts like vulnerability to volatile markets, job loss via outsourcing, and cultural homogenization."
+"statement": "The impact of globalization is not distributed equally across all participants.",
+"answer": "True",
+"explanation": "The passage states that the impact of globalization is not distributed equally."
 },
 "detail": {
 "question": "According to the passage, what is a primary benefit of globalization?",
@@ -6037,9 +6065,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While the Renaissance fostered scientific and artistic innovation, its benefits were largely concentrated among the wealthy elite, with limited impact on the daily lives of the peasant population."
 ],
 "tfc": {
-"statement": "Humanism during the Renaissance focused primarily on strengthening ecclesiastical authority.",
-"answer": "False",
-"explanation": "The passage states that humanism focused on individual agency, which was a 'sharp contrast' to the focus on ecclesiastical authority."
+"statement": "Humanism during the Renaissance emphasized the value and agency of the individual.",
+"answer": "True",
+"explanation": "The passage states that humanism emphasized the value and agency of the individual."
 },
 "detail": {
 "question": "Where did the Renaissance initially gain momentum?",
@@ -6080,9 +6108,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Historians now debate the extent to which the Cold War was a 'long peace' in Europe, despite the immense loss of life in proxy conflicts throughout the Global South."
 ],
 "tfc": {
-"statement": "The Cold War featured constant direct military combat between the United States and the Soviet Union.",
-"answer": "False",
-"explanation": "The passage states it was characterized not by direct large-scale conflict between the two, but by proxy wars and an arms race."
+"statement": "The Cold War was characterized by proxy wars, an arms race, and ideological competition rather than direct large-scale conflict between the two superpowers.",
+"answer": "True",
+"explanation": "The passage states that the Cold War was characterized not by direct large-scale conflict, but by proxy wars, an arms race, and ideological competition."
 },
 "detail": {
 "question": "What is mentioned as a deterrent against direct military confrontation?",
@@ -6123,9 +6151,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While they achieved significant advancements in mathematics and engineering, these societies were also marked by extreme social hierarchies and slavery, which were central to maintaining their political and economic structures."
 ],
 "tfc": {
-"statement": "Ancient civilizations were characterized by a lack of social hierarchy.",
-"answer": "False",
-"explanation": "The passage states that these societies were marked by extreme social hierarchies."
+"statement": "Ancient civilizations were marked by extreme social hierarchies and slavery.",
+"answer": "True",
+"explanation": "The passage states that these societies were marked by extreme social hierarchies and slavery."
 },
 "detail": {
 "question": "What allowed for the specialization of labor in ancient civilizations?",
@@ -6166,9 +6194,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While this era fostered democratic ideals, it was also criticized for its exclusionary nature, as many prominent thinkers did not apply their egalitarian principles to women or non-European peoples."
 ],
 "tfc": {
-"statement": "Enlightenment philosophers believed that government power should be based solely on divine right.",
-"answer": "False",
-"explanation": "The passage states they suggested government legitimacy is derived from the consent of the governed, not divine right."
+"statement": "Enlightenment social contract thought suggested that government legitimacy is derived from the consent of the governed rather than divine right.",
+"answer": "True",
+"explanation": "The passage states that the social contract suggested government legitimacy is derived from the consent of the governed rather than divine right."
 },
 "detail": {
 "question": "What were the primary values prioritized by the Enlightenment movement?",
@@ -6209,9 +6237,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The concentration of factories in urban areas triggered a massive demographic shift, as populations migrated from the countryside to cities, resulting in rapid, often unplanned, urban expansion."
 ],
 "tfc": {
-"statement": "The Industrial Revolution led to a decrease in the availability of consumer goods.",
-"answer": "False",
-"explanation": "The passage states that mass production 'significantly increased the availability of consumer goods'."
+"statement": "Mass production during the Industrial Revolution significantly increased the availability of consumer goods.",
+"answer": "True",
+"explanation": "The passage states that mass production significantly increased the availability of consumer goods."
 },
 "detail": {
 "question": "What kind of work environment was common during the early Industrial Revolution?",
@@ -6252,9 +6280,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The legacy of colonialism continues to influence global power structures, with many post-colonial nations struggling to overcome the political and economic instability resulting from decades of external control."
 ],
 "tfc": {
-"statement": "Colonialism had no impact on the culture or language of the colonized people.",
-"answer": "False",
-"explanation": "The passage states that colonialism often led to 'the imposition of the colonial power's culture and language'."
+"statement": "Colonialism often led to the exploitation of resources and the imposition of the colonial power's culture and language.",
+"answer": "True",
+"explanation": "The passage states that colonialism often led to resource exploitation and the imposition of the colonial power's culture and language."
 },
 "detail": {
 "question": "How did colonial powers typically justify their control, according to the passage?",
@@ -6433,9 +6461,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Successful urban transition models suggest that investing in human capital and sustainable urban design is essential for turning these demographic shifts into economic dividends."
 ],
 "tfc": {
-"statement": "Rapid urbanization is always accompanied by an increase in industrial capacity in modern developing countries.",
-"answer": "False",
-"explanation": "The text states that in the contemporary era, rapid urbanization in developing nations often occurs without a commensurate expansion in industrial capacity."
+"statement": "In the contemporary era, rapid urbanization in developing nations often occurs without a commensurate expansion in industrial capacity.",
+"answer": "True",
+"explanation": "The passage states that rapid urbanization in developing nations often occurs without a commensurate expansion in industrial capacity."
 },
 "detail": {
 "question": "What is described as a direct consequence of rapid population density in the absence of infrastructure?",
@@ -6478,9 +6506,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Understanding these historical roots is vital for addressing the ongoing socioeconomic disparities that persist in many formerly colonized regions."
 ],
 "tfc": {
-"statement": "Colonial administrations were primarily focused on creating fair and representative institutions for the local population.",
-"answer": "False",
-"explanation": "The text claims that these systems were fundamentally built on hierarchies that marginalized indigenous populations."
+"statement": "Colonial systems were fundamentally built on hierarchies that marginalized indigenous populations.",
+"answer": "True",
+"explanation": "The passage states that colonial systems were fundamentally built on hierarchies that marginalized indigenous populations."
 },
 "detail": {
 "question": "Which of the following is cited as a reason for many current national border disputes?",
@@ -6523,9 +6551,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Thus, while it served as a catalyst for modern secularism, its legacy remains a subject of intense historical scrutiny."
 ],
 "tfc": {
-"statement": "Enlightenment thinkers universally rejected all forms of prejudice.",
-"answer": "False",
-"explanation": "The text notes that the movement has been criticized for excluding women and justifying colonial practices."
+"statement": "The Enlightenment has been criticized for contradictions regarding the exclusion of women and the justification of colonial practices by some leading philosophers.",
+"answer": "True",
+"explanation": "The passage states that the movement has been criticized for contradictions regarding the exclusion of women and the justification of colonial practices by some leading philosophers."
 },
 "detail": {
 "question": "When was the peak of the Enlightenment period?",
@@ -6568,9 +6596,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Consequently, the period serves as a foundational case study for understanding the complex trade-offs between rapid industrial development and social welfare."
 ],
 "tfc": {
-"statement": "The Industrial Revolution had purely positive effects on the environment.",
-"answer": "False",
-"explanation": "The text explicitly states the period was characterized by environmental degradation."
+"statement": "The Industrial Revolution was characterized by environmental degradation as well as harsh working conditions and child labor exploitation.",
+"answer": "True",
+"explanation": "The passage states that the period was characterized by environmental degradation, harsh working conditions, and the exploitation of child labor."
 },
 "detail": {
 "question": "Which of the following was NOT cited as a negative feature of the Industrial Revolution?",
@@ -6613,9 +6641,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "These historical lessons are increasingly relevant today as modern societies face their own environmental and structural challenges."
 ],
 "tfc": {
-"statement": "Modern societies can learn nothing from the collapse of ancient civilizations.",
-"answer": "False",
-"explanation": "The text states these historical lessons are increasingly relevant today as modern societies face their own challenges."
+"statement": "Historical lessons from ancient civilizations are increasingly relevant today as modern societies face environmental and structural challenges.",
+"answer": "True",
+"explanation": "The passage states that these historical lessons are increasingly relevant today as modern societies face environmental and structural challenges."
 },
 "detail": {
 "question": "What was a common factor that required sophisticated coordination in many ancient societies?",
@@ -6658,9 +6686,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The eventual dissolution of the Soviet Union signaled the end of this bipolar order, forcing the international system to adapt to a new, more fragmented geopolitical reality."
 ],
 "tfc": {
-"statement": "The Cold War featured direct military confrontation between the US and the USSR in all instances.",
-"answer": "False",
-"explanation": "The text describes the Cold War as a struggle defined by ideological competition and proxy wars, rather than direct state-on-state military conflict."
+"statement": "The Cold War was a global struggle defined by ideological competition and proxy wars rather than a traditional military conflict between two states.",
+"answer": "True",
+"explanation": "The passage states that the Cold War was not a traditional military conflict between two states, but a global struggle defined by ideological competition and proxy wars."
 },
 "detail": {
 "question": "What concept refers to the maintaining of peace via the threat of total destruction?",
@@ -6749,9 +6777,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "These findings have profound implications for public policy, as governments can use 'nudges'—subtle shifts in the environment—to encourage healthier or more socially beneficial behaviors without removing the freedom of choice."
 ],
 "tfc": {
-"statement": "The traditional economic model accounts for cognitive biases in its calculations.",
-"answer": "False",
-"explanation": "The passage states that behavioral economics challenges the traditional model because the latter assumes rational agents, whereas behavioral economics highlights that human decision-making is influenced by biases."
+"statement": "Behavioral economics challenges the traditional model of the rational economic agent.",
+"answer": "True",
+"explanation": "The passage states that behavioral economics challenges the traditional model of the rational economic agent."
 },
 "detail": {
 "question": "According to the passage, what is the 'framing effect'?",
@@ -6839,9 +6867,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "To counter this, economists argue for 'prospective analysis,' which focuses exclusively on future costs and benefits."
 ],
 "tfc": {
-"statement": "Prospective analysis encourages individuals to consider past investments.",
-"answer": "False",
-"explanation": "The passage defines prospective analysis as a method that focuses exclusively on future costs and benefits, excluding past investments."
+"statement": "Prospective analysis focuses exclusively on future costs and benefits.",
+"answer": "True",
+"explanation": "The passage defines prospective analysis as a method that focuses exclusively on future costs and benefits."
 },
 "detail": {
 "question": "According to the text, what drives people to persist in the sunk cost fallacy?",
@@ -6884,9 +6912,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This challenges the Expected Utility Theory, which assumes individuals process probabilities and outcomes consistently regardless of reference points."
 ],
 "tfc": {
-"statement": "Expected Utility Theory assumes that reference points significantly influence decision-making.",
-"answer": "False",
-"explanation": "The passage states that Expected Utility Theory assumes individuals process outcomes consistently regardless of reference points, which contrasts with the premise of Prospect Theory."
+"statement": "Expected Utility Theory assumes individuals process probabilities and outcomes consistently regardless of reference points.",
+"answer": "True",
+"explanation": "The passage states that Expected Utility Theory assumes individuals process probabilities and outcomes consistently regardless of reference points."
 },
 "detail": {
 "question": "What is the role of a 'reference point' in Prospect Theory?",
@@ -6929,9 +6957,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While efficient in many day-to-day situations, the availability heuristic can lead to significant miscalculations in risk assessment and resource allocation."
 ],
 "tfc": {
-"statement": "The availability heuristic often causes people to correctly estimate the frequency of mundane risks.",
-"answer": "False",
-"explanation": "The passage states that it leads to an 'overestimation' of rare, vivid events and implies that mundane risks are often neglected or underestimated in comparison."
+"statement": "The availability heuristic can lead people to overestimate the frequency of rare, vivid events.",
+"answer": "True",
+"explanation": "The passage states that vivid, emotional, or recent events are more easily recalled, often leading to an overestimation of their frequency."
 },
 "detail": {
 "question": "What contributes to the availability heuristic being an unreliable source of probability estimation?",
@@ -6974,9 +7002,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Behavioral economists suggest that strategies such as 'commitment devices'—voluntary contracts that lock individuals into future plans—can help mitigate the negative effects of present bias."
 ],
 "tfc": {
-"statement": "Hyperbolic discounting suggests that individuals value future rewards more than immediate ones.",
-"answer": "False",
-"explanation": "Hyperbolic discounting is the tendency to value immediate rewards more than future ones, not the other way around."
+"statement": "Hyperbolic discounting describes a tendency to value immediate rewards more highly than future rewards.",
+"answer": "True",
+"explanation": "The passage states that most individuals place a significantly higher value on immediate rewards compared to rewards in the future."
 },
 "detail": {
 "question": "What are 'commitment devices' as mentioned in the passage?",
@@ -7019,9 +7047,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The effect has broad implications for professional development, suggesting that feedback and objective performance metrics are crucial for accurate self-assessment."
 ],
 "tfc": {
-"statement": "Highly competent individuals always accurately assess their performance relative to others.",
-"answer": "False",
-"explanation": "The text states that high-competence individuals often 'underestimate their relative performance,' meaning they do not necessarily assess it accurately."
+"statement": "Highly competent individuals may underestimate their relative performance.",
+"answer": "True",
+"explanation": "The passage states that individuals with high competence often underestimate their relative performance."
 },
 "detail": {
 "question": "What is a primary reason why low-ability individuals overestimate their skills?",
@@ -7064,9 +7092,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This can lead to significant market bubbles or panic, as the collective actions of a group may deviate from rational decision-making."
 ],
 "tfc": {
-"statement": "Individuals always rely on social proof when making a decision.",
-"answer": "False",
-"explanation": "The passage says it is 'particularly effective when an individual is uncertain,' implying it is not the universal or only method of decision-making."
+"statement": "Social proof is particularly effective when an individual is uncertain about the correct course of action.",
+"answer": "True",
+"explanation": "The passage states that social proof is particularly effective when an individual is uncertain about the correct course of action."
 },
 "detail": {
 "question": "Under what condition is social proof most likely to be used?",
@@ -7154,9 +7182,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Understanding the peak-end rule allows businesses and healthcare providers to design experiences that prioritize positive emotional memories."
 ],
 "tfc": {
-"statement": "The peak-end rule suggests that the total duration of an experience is the most important factor in memory.",
-"answer": "False",
-"explanation": "The passage states that people judge experiences based on the peak and end, and explicitly notes that the peak-end rule shows memory is not a reliable record of duration."
+"statement": "The peak-end rule suggests that people judge an experience largely based on its most intense point and its end.",
+"answer": "True",
+"explanation": "The passage states that people judge an experience largely based on how they felt at its peak and at its end."
 },
 "detail": {
 "question": "What does the peak-end rule primarily measure?",
@@ -7199,9 +7227,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Modern interpretations of Stoicism have surged in popularity, often focusing on its practical applications in stress management and cognitive resilience."
 ],
 "tfc": {
-"statement": "Stoics believe that achieving 'apatheia' requires the total suppression of all human emotions.",
-"answer": "False",
-"explanation": "The text explicitly defines 'apatheia' as a state of tranquility undisturbed by passions, rather than a lack of feeling."
+"statement": "Stoic apatheia is described as a state of tranquility undisturbed by passions rather than a lack of feeling.",
+"answer": "True",
+"explanation": "The passage defines apatheia as tranquility undisturbed by passions, not as a lack of feeling."
 },
 "detail": {
 "question": "According to the passage, who founded Stoicism?",
@@ -7231,9 +7259,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This radical freedom often brings 'existential angst'—a sense of dread stemming from the heavy responsibility of defining one's own meaning in a seemingly indifferent universe."
 ],
 "tfc": {
-"statement": "Existentialists believe that human nature is fixed at birth.",
-"answer": "False",
-"explanation": "The text states that 'existence precedes essence' and that humans do not have a predetermined nature."
+"statement": "Existentialism argues that humans are born without a predetermined purpose or nature.",
+"answer": "True",
+"explanation": "The passage states that existence precedes essence and that humans are born without a predetermined purpose or nature."
 },
 "detail": {
 "question": "What is the primary cause of 'existential angst' mentioned in the text?",
@@ -7263,9 +7291,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics often point to the 'tyranny of the majority' problem, where individual rights might be sacrificed for the benefit of the many."
 ],
 "tfc": {
-"statement": "Utilitarianism prioritizes individual rights above collective benefit.",
-"answer": "False",
-"explanation": "The passage notes that critics worry individual rights might be sacrificed for the benefit of the many."
+"statement": "Critics of utilitarianism worry that individual rights might be sacrificed for the benefit of the many.",
+"answer": "True",
+"explanation": "The passage explicitly identifies the tyranny of the majority problem as a criticism of utilitarianism."
 },
 "detail": {
 "question": "Who is cited as a foundational figure in Utilitarianism?",
@@ -7295,9 +7323,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Empiricists, conversely, hold that knowledge originates primarily through sensory experience and observation. Modern epistemology now incorporates Bayesian analysis to model how individuals update beliefs in response to new evidence."
 ],
 "tfc": {
-"statement": "Rationalists believe that sensory input is the most reliable path to truth.",
-"answer": "False",
-"explanation": "The passage defines Rationalists as believing reason is the chief source of knowledge, independent of sensory experience."
+"statement": "Rationalists such as Descartes regard reason as the chief source of knowledge, independent of sensory experience.",
+"answer": "True",
+"explanation": "The passage states that Rationalists, such as Descartes, see reason as the chief source of knowledge independent of sensory experience."
 },
 "detail": {
 "question": "Which philosopher is explicitly associated with Rationalism in the text?",
@@ -7327,9 +7355,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "These questions remain largely outside the realm of empirical verification, leading to significant disagreements regarding the 'hard problem of consciousness'."
 ],
 "tfc": {
-"statement": "Physicalists argue that the mind is a separate entity from the body.",
-"answer": "False",
-"explanation": "The text states that Physicalism argues everything is physical and mental states are manifestations of neurological processes."
+"statement": "Physicalists argue that mental states are manifestations of neurological processes.",
+"answer": "True",
+"explanation": "The passage says Physicalism treats mental states as manifestations of neurological processes."
 },
 "detail": {
 "question": "What does Metaphysics investigate?",
@@ -7359,9 +7387,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "As systems become more autonomous, the issue of 'accountability gaps' grows—determining who is responsible when an autonomous machine causes harm."
 ],
 "tfc": {
-"statement": "Algorithms are inherently free from human prejudice.",
-"answer": "False",
-"explanation": "The text notes that algorithmic bias occurs when systems replicate or exacerbate human prejudices."
+"statement": "Algorithmic bias can occur when automated systems replicate or exacerbate human prejudices in training data.",
+"answer": "True",
+"explanation": "The passage says algorithmic bias occurs when automated systems replicate or exacerbate prejudices found in training data."
 },
 "detail": {
 "question": "What is an 'accountability gap' in the context of technology?",
@@ -7391,9 +7419,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Legislation like the GDPR aims to provide users with more control, yet enforcement remains challenging in a borderless digital economy."
 ],
 "tfc": {
-"statement": "Data anonymization is a foolproof method for ensuring individual privacy.",
-"answer": "False",
-"explanation": "The text states that researchers have demonstrated that re-identification is possible."
+"statement": "Researchers have demonstrated that re-identification can be possible despite data anonymization.",
+"answer": "True",
+"explanation": "The passage states that re-identification is possible by cross-referencing datasets."
 },
 "detail": {
 "question": "What is the primary goal of surveillance capitalism according to the text?",
@@ -7423,9 +7451,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Opponents, however, highlight the 'chilling effect'—a phenomenon where individuals alter their behavior or restrict their expression because they feel they are being watched, potentially stifling democratic participation."
 ],
 "tfc": {
-"statement": "The 'chilling effect' is described as a benefit to national security.",
-"answer": "False",
-"explanation": "The text describes the chilling effect as a negative outcome where people restrict their expression."
+"statement": "The 'chilling effect' may cause individuals to restrict their expression because they feel watched.",
+"answer": "True",
+"explanation": "The passage describes the chilling effect as people altering behavior or restricting expression when they feel watched."
 },
 "detail": {
 "question": "What was the historical association of surveillance?",
@@ -7455,9 +7483,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics raise questions about social inequality, suggesting that such enhancements may only be available to the wealthy, creating a divide between the 'enhanced' and 'unenhanced'."
 ],
 "tfc": {
-"statement": "Transhumanism and Post-humanism are completely unrelated concepts.",
-"answer": "False",
-"explanation": "The text describes Transhumanism as a 'related subset' of Post-humanism."
+"statement": "Transhumanism is presented as a related subset of Post-humanism.",
+"answer": "True",
+"explanation": "The passage directly describes Transhumanism as a related subset of Post-humanism."
 },
 "detail": {
 "question": "What is the goal of Transhumanism?",
@@ -7487,9 +7515,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Governments frequently use these insights to encourage beneficial habits, such as retirement saving, without resorting to mandatory regulations."
 ],
 "tfc": {
-"statement": "Behavioral economics relies heavily on the assumption that individuals always make perfectly rational choices.",
-"answer": "False",
-"explanation": "The text explicitly states that behavioral economics 'challenges the classical assumption that humans are rational actors'."
+"statement": "Behavioral economics challenges the assumption that humans always make decisions as rational actors.",
+"answer": "True",
+"explanation": "The passage states that behavioral economics challenges the classical assumption that humans are rational actors who always maximize utility."
 },
 "detail": {
 "question": "What is 'loss aversion'?",
@@ -7519,9 +7547,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics often suggest that existentialism leads to moral nihilism. However, proponents argue that by acknowledging the lack of inherent meaning in the universe, individuals are empowered to construct their own authentic moral frameworks, rather than blindly following inherited societal dogmas."
 ],
 "tfc": {
-"statement": "Existentialists believe that humans have a pre-determined purpose assigned at birth.",
-"answer": "False",
-"explanation": "The passage explicitly states that existentialism posits 'existence precedes essence' and that humans are born without a pre-defined purpose."
+"statement": "Existentialism holds that humans are born without a pre-defined purpose or nature.",
+"answer": "True",
+"explanation": "The passage states that existence precedes essence and that humans are born without a pre-defined purpose or nature."
 },
 "detail": {
 "question": "What does Sartre argue is a consequence of radical freedom?",
@@ -7550,9 +7578,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Living in bad faith is viewed as a form of self-deception. Authentic living requires the constant recognition that one is not a fixed entity and that every situation remains an open space for new choices."
 ],
 "tfc": {
-"statement": "An individual in bad faith acknowledges their constant ability to choose.",
-"answer": "False",
-"explanation": "The passage defines bad faith as the act of denying one's freedom and responsibility, pretending there is no choice."
+"statement": "An individual in bad faith denies their freedom and responsibility by pretending they have no choice.",
+"answer": "True",
+"explanation": "The passage defines bad faith as denying one's freedom and responsibility by pretending there is no choice."
 },
 "detail": {
 "question": "Why might someone adopt a rigid societal role according to the passage?",
@@ -7581,9 +7609,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "In 'The Myth of Sisyphus,' the protagonist is condemned to roll a boulder up a hill forever. Camus concludes that 'one must imagine Sisyphus happy' because he accepts his fate and continues his struggle, thereby asserting his defiance against the indifference of the gods."
 ],
 "tfc": {
-"statement": "Camus suggests that the best way to deal with the Absurd is through religious faith.",
-"answer": "False",
-"explanation": "The passage explicitly states that Camus rejected 'philosophical suicide,' which he identified as leaping into irrational faith."
+"statement": "Camus rejected philosophical suicide as a response to the Absurd.",
+"answer": "True",
+"explanation": "The passage explicitly states that Camus rejected philosophical suicide, described as leaping into irrational faith."
 },
 "detail": {
 "question": "What defines the 'Absurd' according to Camus?",
@@ -7612,9 +7640,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This literary tradition highlights the existential necessity of individual choice. Characters often find themselves in situations where external systems—bureaucracy, social norms, or theological certainty—fail to provide guidance, forcing the individual into a confrontation with their own solitude."
 ],
 "tfc": {
-"statement": "The protagonist in 'Notes from Underground' supports the idea that human actions are entirely predictable through natural laws.",
-"answer": "False",
-"explanation": "The passage states the protagonist rejects the idea that humans are like 'piano keys' played by natural laws."
+"statement": "The protagonist in 'Notes from Underground' rejects the idea that humans are merely controlled by natural laws.",
+"answer": "True",
+"explanation": "The passage says the protagonist rejects the notion that humans are like piano keys played by the laws of nature."
 },
 "detail": {
 "question": "What themes do the authors mentioned have in common?",
@@ -7643,9 +7671,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Her work bridges the gap between individualist existentialism and collective responsibility. She challenges the notion that existentialism is purely selfish, asserting that the pursuit of personal freedom must involve a commitment to the liberation of others."
 ],
 "tfc": {
-"statement": "De Beauvoir suggests that individual freedom is independent of the freedom of others.",
-"answer": "False",
-"explanation": "De Beauvoir argues that one cannot be free unless others are free, emphasizing interdependence."
+"statement": "De Beauvoir argues that individual freedom is bound to the freedom of others.",
+"answer": "True",
+"explanation": "The passage says one's own freedom is bound to the freedom of those around them."
 },
 "detail": {
 "question": "What happens when an individual chooses to oppress others, according to De Beauvoir?",
@@ -7674,9 +7702,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Problems arise when individuals fixate solely on their facticity, using it as an excuse for their current situation. Existentialism insists that while we cannot change our facticity, we can always change the meaning we assign to it and the actions we take based on it."
 ],
 "tfc": {
-"statement": "According to existentialists, an individual's birthplace is a factor that can be completely altered through willpower.",
-"answer": "False",
-"explanation": "The text categorizes birthplace as 'facticity,' which consists of things we cannot change."
+"statement": "According to the passage, an individual's birthplace is part of facticity and cannot be changed.",
+"answer": "True",
+"explanation": "The passage lists birthplace as part of facticity, which includes things we cannot change."
 },
 "detail": {
 "question": "What is the primary definition of 'transcendence' in this context?",
@@ -7705,9 +7733,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "For Kierkegaard, the decision to believe is a subjective, passionate commitment made in the face of uncertainty. It is not an intellectual conclusion, but a radical act of personal will that defines the individual’s spiritual life."
 ],
 "tfc": {
-"statement": "Kierkegaard argued that having scientific proof for God's existence would enhance the value of faith.",
-"answer": "False",
-"explanation": "Kierkegaard believed that if God's existence could be proven, faith would be unnecessary."
+"statement": "Kierkegaard believed that if God's existence could be proven through logic or science, faith would be unnecessary.",
+"answer": "True",
+"explanation": "The passage states that proof of God's existence through logic or science would make faith unnecessary."
 },
 "detail": {
 "question": "How does Kierkegaard characterize the decision to believe?",
@@ -7736,9 +7764,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Facing our mortality, which he terms 'being-towards-death,' is not meant to be morbid. Instead, it is a way to stop living in distraction. By realizing our time is finite, we are prompted to live more authentically and make decisions that are truly our own."
 ],
 "tfc": {
-"statement": "Heidegger views 'being-towards-death' as a way to encourage morbid reflection.",
-"answer": "False",
-"explanation": "The text explicitly states that facing mortality is not meant to be morbid, but a way to stop living in distraction."
+"statement": "Heidegger presents 'being-towards-death' as a way to stop living in distraction.",
+"answer": "True",
+"explanation": "The passage says facing mortality is not meant to be morbid, but is a way to stop living in distraction."
 },
 "detail": {
 "question": "What is the primary role of the 'anonymous public' (Das Man) in Heidegger's philosophy?",
@@ -7767,9 +7795,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "An engaged individual takes a stance, acknowledging that their silence contributes to the maintenance or transformation of the status quo. In this framework, indifference is not neutrality; it is a choice to let things remain as they are."
 ],
 "tfc": {
-"statement": "According to the passage, an individual can choose to be neutral by opting for non-action.",
-"answer": "False",
-"explanation": "The passage clarifies that even silence or non-action is a choice, and indifference is not neutrality."
+"statement": "According to the passage, even silence or non-action is a choice that carries moral weight.",
+"answer": "True",
+"explanation": "The passage states that silence or non-action is a choice with moral weight."
 },
 "detail": {
 "question": "What does the 'ivory tower' approach represent in this context?",
@@ -7829,9 +7857,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "John Stuart Mill later refined this theory by introducing the distinction between higher and lower pleasures. He argued that intellectual and moral pleasures hold greater value than mere physical gratification. Critics, however, argue that this framework reduces complex human moral experiences to a simple calculation, often disregarding individual rights in favor of the 'greater good'."
 ],
 "tfc": {
-"statement": "John Stuart Mill believed that physical pleasures were superior to intellectual ones.",
-"answer": "False",
-"explanation": "The text explicitly states that Mill argued that intellectual and moral pleasures hold greater value than physical gratification."
+"statement": "John Stuart Mill argued that intellectual and moral pleasures hold greater value than physical gratification.",
+"answer": "True",
+"explanation": "The passage states that Mill considered intellectual and moral pleasures more valuable than mere physical gratification."
 },
 "detail": {
 "question": "According to the passage, who is credited with founding classical utilitarianism?",
@@ -7859,9 +7887,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "A strict act-utilitarian would argue that pulling the lever is the moral choice because it minimizes the loss of life. However, deontologists argue that intentionally causing a death is inherently wrong, regardless of the consequences. This clash highlights the difficulty of applying purely consequentialist logic to life-or-death decisions."
 ],
 "tfc": {
-"statement": "Deontologists agree that pulling the lever is the morally correct action.",
-"answer": "False",
-"explanation": "The text states that deontologists argue that intentionally causing a death is inherently wrong, regardless of the consequences."
+"statement": "Deontologists argue that intentionally causing a death is inherently wrong, regardless of the consequences.",
+"answer": "True",
+"explanation": "The passage states that deontologists view intentionally causing a death as inherently wrong."
 },
 "detail": {
 "question": "In the scenario described, how many workers are on the primary track?",
@@ -7889,9 +7917,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This approach aims to solve issues like the 'justice objection,' where act utilitarianism might justify immoral acts if they produce a net benefit. By adhering to rules like 'do not kill' or 'keep promises,' society can maintain stability and trust, which contributes significantly to long-term utility."
 ],
 "tfc": {
-"statement": "Rule utilitarianism evaluates every specific action based on its unique outcome.",
-"answer": "False",
-"explanation": "The passage states that rule utilitarianism proposes following a set of rules, rather than evaluating each individual action by its consequences."
+"statement": "Rule utilitarianism proposes following rules that would maximize overall happiness if universally adopted.",
+"answer": "True",
+"explanation": "The passage says rule utilitarians support rules that, if universally adopted, would lead to the greatest overall happiness."
 },
 "detail": {
 "question": "According to the text, what does rule utilitarianism aim to solve?",
@@ -7949,9 +7977,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Conversely, negative utilitarianism focuses on the minimization of suffering as the primary moral goal. Proponents of the negative approach argue that the prevention of extreme pain is more urgent and meaningful than the promotion of minor pleasures. Critics note that a literal interpretation of negative utilitarianism could lead to the logically absurd conclusion that painless existence—or even total non-existence—is the highest moral good."
 ],
 "tfc": {
-"statement": "Negative utilitarianism prioritizes the promotion of minor pleasures.",
-"answer": "False",
-"explanation": "The text states that negative utilitarianism focuses on the minimization of suffering."
+"statement": "Negative utilitarianism focuses on the minimization of suffering as its primary moral goal.",
+"answer": "True",
+"explanation": "The passage states that negative utilitarianism makes the minimization of suffering its primary moral goal."
 },
 "detail": {
 "question": "What is the primary goal of positive utilitarianism?",
@@ -7979,9 +8007,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Nozick argues that most people would choose not to plug in, because they value actually doing things, not just the experience of doing them. This suggests that humans possess values beyond simple pleasure-seeking, which undermines the core assumption of classical utilitarianism."
 ],
 "tfc": {
-"statement": "Nozick suggests that the majority of people would opt to live permanently in the experience machine.",
-"answer": "False",
-"explanation": "Nozick argues that most people would choose not to plug in."
+"statement": "Nozick argues that most people would choose not to plug into the experience machine.",
+"answer": "True",
+"explanation": "The passage states that Nozick believes most people would choose not to plug in."
 },
 "detail": {
 "question": "What is the name of the thought experiment mentioned?",
@@ -8039,9 +8067,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This utilitarian approach, while practically necessary, often faces ethical scrutiny. By prioritizing those most likely to recover, the system may systematically disadvantage those with pre-existing chronic conditions or disabilities, leading to debates about health equity versus total outcome maximization."
 ],
 "tfc": {
-"statement": "Public health triage protocols are rarely guided by utilitarian principles.",
-"answer": "False",
-"explanation": "The passage notes that utilitarianism is highly influential in public health policy and the allocation of resources."
+"statement": "Utilitarianism is highly influential in public health policy, especially in allocating scarce medical resources.",
+"answer": "True",
+"explanation": "The passage says utilitarianism is highly influential in public health policy, particularly for allocating scarce medical resources."
 },
 "detail": {
 "question": "What is a major goal of triage protocols during crises?",
@@ -8099,9 +8127,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Some philosophers attempt to reconcile these views, suggesting that a person of good character is more likely to intuitively act in ways that maximize overall utility. However, the two frameworks remain fundamentally different in their primary moral focus."
 ],
 "tfc": {
-"statement": "Utilitarianism and virtue ethics both prioritize the character of the individual as the starting point for moral action.",
-"answer": "False",
-"explanation": "The passage states that utilitarianism focuses on outcomes, while virtue ethics focuses on character."
+"statement": "Utilitarianism focuses on the outcome of an action, while virtue ethics focuses on the character of the actor.",
+"answer": "True",
+"explanation": "The passage explicitly contrasts utilitarianism's focus on outcomes with virtue ethics' focus on character."
 },
 "detail": {
 "question": "According to the passage, what is the main question asked by a virtue ethicist?",
@@ -8178,9 +8206,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Unless a physicalist account can explain the qualitative 'feel' of experience—often termed 'qualia'—the debate between these schools remains unresolved."
 ],
 "tfc": {
-"statement": "Dualists believe that mental states are entirely dependent on brain activity.",
-"answer": "False",
-"explanation": "The text states that dualists argue mental states exist independently of the brain's biological processes."
+"statement": "Dualists argue that mental states are non-physical entities that exist independently of the brain's biological processes.",
+"answer": "True",
+"explanation": "The passage says dualists view mental states as non-physical and independent of the brain's biological processes."
 },
 "detail": {
 "question": "What term is used in the passage to describe the 'feel' of subjective experience?",
@@ -8313,9 +8341,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The legal framework surrounding these technologies often lags behind their implementation, leaving a gap in regulation."
 ],
 "tfc": {
-"statement": "Legislative regulation has kept pace with the rapid advancement of surveillance technology.",
-"answer": "False",
-"explanation": "The text states that the legal framework 'often lags behind' the implementation of these technologies."
+"statement": "The legal framework surrounding surveillance technology often lags behind its implementation.",
+"answer": "True",
+"explanation": "The passage states that legal frameworks often lag behind the implementation of surveillance technologies."
 },
 "detail": {
 "question": "What is the 'chilling effect' defined as in the passage?",
@@ -8358,9 +8386,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The discourse seeks to redefine what it means to be a 'person' in an era where the distinction between biological and artificial life is increasingly blurred."
 ],
 "tfc": {
-"statement": "Post-humanism strongly supports the traditional humanist definition of a rational and autonomous individual.",
-"answer": "False",
-"explanation": "The passage states that post-humanism challenges the traditional liberal humanist view of the human as a stable, autonomous subject."
+"statement": "Post-humanism challenges the traditional liberal humanist view of the human as a stable, autonomous, and rational subject.",
+"answer": "True",
+"explanation": "The passage states that post-humanism challenges the traditional view of the human as stable, autonomous, and rational."
 },
 "detail": {
 "question": "What is one example of human enhancement mentioned in the passage?",
@@ -8403,9 +8431,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "While popular, these policies are sometimes criticized for being paternalistic or manipulative if the goals of the 'nudge' are not transparent."
 ],
 "tfc": {
-"statement": "Loss aversion describes the tendency for people to value potential gains more than avoiding losses.",
-"answer": "False",
-"explanation": "The text explicitly states loss aversion is the preference for avoiding losses over acquiring equivalent gains."
+"statement": "Loss aversion describes the tendency to prefer avoiding losses over acquiring equivalent gains.",
+"answer": "True",
+"explanation": "The passage defines loss aversion as the tendency to prefer avoiding losses to acquiring equivalent gains."
 },
 "detail": {
 "question": "What is a 'nudge' in the context of behavioral economics?",
@@ -8448,9 +8476,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Defenders often argue that rule-utilitarianism—following general rules that tend to maximize happiness—addresses these moral pitfalls."
 ],
 "tfc": {
-"statement": "The 'rights objection' suggests that utilitarianism always prioritizes individual rights over the majority's benefit.",
-"answer": "False",
-"explanation": "The text says the rights objection suggests utilitarianism could justify harming a minority for the majority's gain, which is the opposite of prioritizing individual rights."
+"statement": "The 'rights objection' suggests that utilitarianism could justify harming a minority for the majority's gain.",
+"answer": "True",
+"explanation": "The passage states that the rights objection concerns utilitarianism theoretically justifying harm to a minority if it benefits the majority."
 },
 "detail": {
 "question": "What is the 'greatest happiness principle'?",
@@ -8493,9 +8521,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Proponents argue that this is a misunderstanding, as Stoics advocate for active engagement in the world while remaining internally detached from the outcomes."
 ],
 "tfc": {
-"statement": "Stoics define 'apatheia' as the complete lack of any human emotion.",
-"answer": "False",
-"explanation": "The text explicitly clarifies that 'apatheia' is not emotional indifference, but freedom from disturbing passions and irrational reactions."
+"statement": "Stoics define 'apatheia' as freedom from disturbing passions and irrational reactions to external events.",
+"answer": "True",
+"explanation": "The passage clarifies that apatheia is not emotional indifference, but freedom from disturbing passions and irrational reactions."
 },
 "detail": {
 "question": "According to Stoicism, what is the 'only true good'?",
@@ -8538,9 +8566,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics argue that such an emphasis on the individual can lead to nihilism or an inability to form cohesive social moral frameworks."
 ],
 "tfc": {
-"statement": "Existentialists believe that humans have a clear, innate purpose determined at birth.",
-"answer": "False",
-"explanation": "The text says 'existence precedes essence,' meaning humans are not born with a predetermined purpose."
+"statement": "Existentialists argue that humans are not born with a predetermined purpose.",
+"answer": "True",
+"explanation": "The passage says existence precedes essence, meaning humans are not born with a predetermined purpose."
 },
 "detail": {
 "question": "What does the phrase 'existence precedes essence' imply?",
@@ -8583,9 +8611,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Consequently, contemporary epistemologists continue to debate whether additional conditions, such as the absence of defeaters or the reliability of the cognitive process, are necessary to bridge this gap."
 ],
 "tfc": {
-"statement": "Edmund Gettier argued that truth, belief, and justification are sufficient criteria for defining knowledge.",
-"answer": "False",
-"explanation": "The stimulus states that Gettier demonstrated these conditions are insufficient."
+"statement": "Edmund Gettier demonstrated that truth, belief, and justification are insufficient criteria for defining knowledge.",
+"answer": "True",
+"explanation": "The passage states that Gettier showed these three conditions are insufficient for knowledge."
 },
 "detail": {
 "question": "According to the passage, which historical figure is associated with the classical account of knowledge?",
@@ -8627,9 +8655,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics of metaphysical inquiry often argue that because these questions lack empirical verifiability, they remain perpetually speculative, devoid of concrete answers."
 ],
 "tfc": {
-"statement": "Metaphysics relies exclusively on empirical evidence to verify its claims about reality.",
-"answer": "False",
-"explanation": "The passage notes that metaphysics transcends physical observations and critics argue it lacks empirical verifiability."
+"statement": "Metaphysics investigates reality in ways that transcend the physical observations of the natural sciences.",
+"answer": "True",
+"explanation": "The passage states that metaphysics investigates the fundamental nature of reality beyond physical observations."
 },
 "detail": {
 "question": "What is the main distinction between dualism and monism as presented in the text?",
@@ -8671,9 +8699,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Proponents of rigorous oversight argue that proactive ethical design is essential to prevent systemic bias and ensure societal benefit, rather than merely responding to harms after they occur."
 ],
 "tfc": {
-"statement": "Regulatory frameworks currently keep pace with the rapid innovation in technology.",
-"answer": "False",
-"explanation": "The passage states that the rapid pace of innovation often outstrips the development of regulatory frameworks."
+"statement": "The rapid pace of technological innovation often outstrips the development of regulatory frameworks.",
+"answer": "True",
+"explanation": "The passage states that innovation often moves faster than regulatory frameworks can develop."
 },
 "detail": {
 "question": "According to the passage, who is a possible candidate for accountability in autonomous systems?",
@@ -8759,9 +8787,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Ethicists argue that there must be a rigorous balance between the collective desire for security and the individual’s right to live without constant observation."
 ],
 "tfc": {
-"statement": "Surveillance technologies are exclusively used to target marginalized communities.",
-"answer": "False",
-"explanation": "The passage states they are integrated into public infrastructure for safety, and while they have often targeted marginalized communities, this is not their exclusive usage."
+"statement": "Surveillance technologies are increasingly integrated into public infrastructure for safety and crime prevention.",
+"answer": "True",
+"explanation": "The passage states that surveillance technologies are increasingly integrated into public infrastructure, purportedly for safety and crime prevention."
 },
 "detail": {
 "question": "What are two specific surveillance technologies mentioned?",
@@ -8803,9 +8831,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "However, traditionalists argue that such views threaten the intrinsic dignity and uniqueness traditionally associated with the human condition."
 ],
 "tfc": {
-"statement": "Post-humanists believe in maintaining strict boundaries between human beings and machines.",
-"answer": "False",
-"explanation": "The passage states that post-humanists view these boundaries as fluid and subject to transformation."
+"statement": "Post-humanists argue that the boundaries of what it means to be human are fluid and subject to transformation.",
+"answer": "True",
+"explanation": "The passage states that post-humanists see the boundaries of humanity as fluid and transformable."
 },
 "detail": {
 "question": "According to the passage, what is the 'anthropocentric view'?",
@@ -8847,9 +8875,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite this, behavioral economics has gained traction in public policy, particularly in areas like retirement saving and health, where individual decisions often diverge from long-term self-interest."
 ],
 "tfc": {
-"statement": "Behavioral economics is based on the assumption that individuals always act as perfectly rational agents.",
-"answer": "False",
-"explanation": "The passage explicitly states it departs from the classic economic model of the 'rational actor'."
+"statement": "Behavioral economics departs from the classic economic model of the rational actor.",
+"answer": "True",
+"explanation": "The passage states that behavioral economics departs from the classic rational actor model."
 },
 "detail": {
 "question": "What is a 'nudge' according to the passage?",
@@ -8891,9 +8919,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Despite this, the theory remains highly influential, providing a pragmatic framework for evaluating public policy and moral dilemmas where multiple interests compete."
 ],
 "tfc": {
-"statement": "Utilitarianism focuses on the intentions of the actor rather than the consequences of the action.",
-"answer": "False",
-"explanation": "The passage describes it as a consequentialist theory, meaning consequences determine moral worth."
+"statement": "Utilitarianism determines the moral worth of an action by its contribution to overall utility.",
+"answer": "True",
+"explanation": "The passage defines utilitarianism as a consequentialist theory where moral worth depends on contribution to overall utility."
 },
 "detail": {
 "question": "Who are the two figures explicitly mentioned as foundational to Utilitarianism?",
@@ -8935,9 +8963,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics often mistake this approach for emotional suppression, but proponents argue that it is actually about maintaining rational judgment despite chaotic circumstances."
 ],
 "tfc": {
-"statement": "Stoics believe that happiness is achieved by gaining total control over external world events.",
-"answer": "False",
-"explanation": "The passage says Stoics distinguish between what is in our control (thoughts/actions) and what is not (external events), and advocate for indifference toward the latter."
+"statement": "Stoics distinguish between what is within our control and what is outside of it.",
+"answer": "True",
+"explanation": "The passage says Stoics distinguish between controllable thoughts and actions and uncontrollable external events."
 },
 "detail": {
 "question": "What is the term for the state of inner tranquility sought by Stoics?",
@@ -8979,9 +9007,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics often argue that this focus on individual agency neglects the structural and social constraints that define human experience."
 ],
 "tfc": {
-"statement": "Existentialists believe that every human is born with a predetermined essence or purpose.",
-"answer": "False",
-"explanation": "The passage states that existentialists, specifically Sartre, argue that 'existence precedes essence,' meaning there is no predetermined purpose."
+"statement": "Existentialists argue that individuals have no predetermined purpose.",
+"answer": "True",
+"explanation": "The passage states that Sartre's idea that existence precedes essence means individuals have no predetermined purpose."
 },
 "detail": {
 "question": "What does the term 'existence precedes essence' suggest?",
@@ -9018,14 +9046,14 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 
 {
 "stimulus": ["Digital privacy has become a cornerstone of the modern social contract, yet its definition remains fluid.", "While many argue that encryption is a fundamental right necessary to protect individuals from overreaching surveillance, others contend that in the name of public safety, law enforcement must maintain 'backdoor' access to encrypted communications.", "This tension creates a dichotomy between individual autonomy and collective security, often pitting civil liberties advocates against governmental intelligence agencies.", "Technological advancements move faster than the legislative frameworks designed to regulate them, leaving a legal vacuum where data harvesting by corporations often goes unchecked.", "Privacy is no longer just about secrecy; it is about control over one's own data profile in a hyper-connected economy."],
-"tfc": {"statement": "Legislative frameworks currently keep pace with the rapid evolution of digital technologies.", "answer": "False", "explanation": "The text explicitly states that technological advancements move faster than legislative frameworks, creating a legal vacuum."},
+"tfc": {"statement": "Technological advancements move faster than the legislative frameworks designed to regulate them.", "answer": "True", "explanation": "The passage states that technological advancements move faster than legislative frameworks, leaving a legal vacuum."},
 "detail": {"question": "What does the text suggest is the primary motivation for law enforcement to access encrypted communications?", "correct": "Public safety", "distractors": ["Corporate data harvesting", "Individual autonomy", "Technological advancement"], "explanation": "The passage notes that those who favor 'backdoor' access do so in the name of public safety."},
 "inference": {"question": "Which of the following best characterizes the author's view on the state of digital privacy?", "correct": "It is a complex issue lacking a clear regulatory consensus.", "distractors": ["It is solely a matter of individual secrecy.", "It is a battle that has already been won by corporations.", "It is fundamentally incompatible with a functioning modern economy."], "explanation": "The author describes a 'dichotomy,' 'tension,' and a 'legal vacuum,' implying the issue is unsettled and multifaceted."},
 "fourth": {"type": "summary", "question": "Which statement best summarizes the main argument of the passage?", "correct": "Digital privacy represents a volatile intersection of public security, individual rights, and inadequate regulation.", "distractors": ["Encryption is the only way to ensure personal freedom in the digital age.", "Governments have successfully managed to balance surveillance with privacy.", "Corporate data harvesting is the only threat to privacy currently being addressed by law."], "explanation": "The passage explores the struggle between various interests (security vs. rights) and the lack of regulatory control over data."}
 },
 {
 "stimulus": ["Surveillance technologies are increasingly ubiquitous, embedded in urban infrastructure under the guise of 'smart city' initiatives.", "Facial recognition, automated license plate readers, and pervasive sensor networks are now standard components of municipal planning.", "Proponents argue that these tools optimize resource allocation, reduce crime rates, and improve traffic flow efficiency.", "However, critics highlight the potential for 'function creep,' where data collected for one purpose, such as traffic management, is eventually repurposed for mass profiling or political monitoring.", "Without strict, transparent oversight, the transition from urban convenience to mass surveillance may become irreversible."],
-"tfc": {"statement": "The integration of surveillance technology into cities is exclusively intended for political monitoring.", "answer": "False", "explanation": "The text states that proponents argue these tools are for optimizing resources, reducing crime, and improving traffic flow, not exclusively political monitoring."},
+"tfc": {"statement": "Proponents argue that smart city surveillance tools can optimize resources, reduce crime, and improve traffic flow.", "answer": "True", "explanation": "The passage says proponents claim these tools optimize resource allocation, reduce crime rates, and improve traffic flow efficiency."},
 "detail": {"question": "Which of the following is NOT listed as a component of modern 'smart city' infrastructure?", "correct": "Biometric DNA sequencing", "distractors": ["Facial recognition", "Automated license plate readers", "Sensor networks"], "explanation": "The text lists facial recognition, license plate readers, and sensor networks, but does not mention DNA sequencing."},
 "inference": {"question": "What is meant by the term 'function creep' in this context?", "correct": "The usage of data for purposes beyond those for which it was originally gathered.", "distractors": ["The gradual failure of outdated urban sensors.", "The increasing cost of maintaining smart city systems.", "The unauthorized leaking of private citizen data to the press."], "explanation": "The text defines function creep by providing the example of data collected for traffic being repurposed for profiling."},
 "fourth": {"type": "negative", "question": "Which of the following is NOT suggested as a potential risk of current surveillance practices?", "correct": "An increase in traffic congestion.", "distractors": ["The loss of personal anonymity.", "The potential for political monitoring.", "The lack of transparency in oversight."], "explanation": "The passage mentions improving traffic flow as a benefit, not a risk of surveillance."}
@@ -9039,42 +9067,42 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 },
 {
 "stimulus": ["Surveillance-based business models, often termed 'surveillance capitalism,' rely on the commodification of personal experience.", "By harvesting behavioral data, companies create predictive models that aim to influence future user choices, from retail purchases to political affiliations.", "The power dynamic is asymmetric: users provide the data, but corporations retain the insights and the capacity to manipulate outcomes.", "Privacy advocates warn that this undermines the autonomy of the individual, transforming the user from a customer into a product.", "Regulation, while increasing in regions like the EU, struggles to constrain the global reach of these profit-driven entities."],
-"tfc": {"statement": "In surveillance capitalism, the user is considered the primary beneficiary of the predictive models.", "answer": "False", "explanation": "The text suggests the user is a 'product' and that corporations retain the insights and the power to manipulate outcomes, not the user."},
+"tfc": {"statement": "In surveillance capitalism, users provide data while corporations retain the insights and capacity to manipulate outcomes.", "answer": "True", "explanation": "The passage states that users provide the data while corporations retain the insights and the capacity to manipulate outcomes."},
 "detail": {"question": "What specific types of outcomes are mentioned as being influenced by predictive models?", "correct": "Retail purchases and political affiliations", "distractors": ["Medical records and genetic markers", "Urban planning and traffic safety", "Educational attainment and employment history"], "explanation": "The text explicitly mentions retail purchases and political affiliations as examples of influenced choices."},
 "inference": {"question": "Why does the author describe the power dynamic as 'asymmetric'?", "correct": "Because corporations have control over data insights that the users do not.", "distractors": ["Because corporations are physically larger than individual users.", "Because users are forced to pay for services they do not want.", "Because governments are not involved in these transactions."], "explanation": "The text notes that users provide data but corporations retain the insights and power, indicating an imbalance of control."},
 "fourth": {"type": "summary", "question": "Which of the following best summarizes the 'surveillance capitalism' model described?", "correct": "A system where personal behavioral data is harvested to profit from predicting and influencing human behavior.", "distractors": ["A form of government control that forces individuals to share their digital data.", "A retail strategy that focuses on protecting consumer privacy to build brand loyalty.", "A legislative effort to ensure all internet users receive compensation for their data."], "explanation": "This summarizes the passage's explanation of data harvesting for the purpose of predictive influence and profit."}
 },
 {
 "stimulus": ["The ethics of digital privacy frequently clash with the requirements of national security.", "Intelligence agencies argue that total encryption creates 'going dark' scenarios where critical criminal activity is hidden from investigation.", "While the public values privacy, they also fear threats such as terrorism or large-scale cyber-attacks.", "The debate is rarely resolved by technical compromise, as any weakness deliberately introduced for law enforcement—a 'backdoor'—can be exploited by malicious actors.", "Ultimately, the goal of creating a 'secure yet accessible' digital ecosystem remains an elusive target in the modern age."],
-"tfc": {"statement": "There is currently a widely accepted technical solution that satisfies both privacy and security requirements.", "answer": "False", "explanation": "The text explicitly states that the debate is 'rarely resolved by technical compromise' and that a 'secure yet accessible' ecosystem remains 'elusive'."},
+"tfc": {"statement": "Creating a secure yet accessible digital ecosystem remains an elusive target.", "answer": "True", "explanation": "The passage states that the goal of a secure yet accessible digital ecosystem remains elusive."},
 "detail": {"question": "What term is used in the text to describe the inability of intelligence agencies to view encrypted communications?", "correct": "Going dark", "distractors": ["Data black hole", "Encryption void", "Signal loss"], "explanation": "The text uses the phrase 'going dark' to describe the scenario where criminal activity is hidden from investigation."},
 "inference": {"question": "What is the primary technical concern regarding the creation of a 'backdoor' in encryption?", "correct": "It could be used by criminals to compromise security.", "distractors": ["It would make the software too slow for regular use.", "It would violate international trade agreements.", "It would prevent governments from ever accessing the data."], "explanation": "The text mentions that any weakness (backdoor) can be exploited by malicious actors."},
 "fourth": {"type": "negative", "question": "Which of the following is NOT explicitly mentioned as a fear held by the public?", "correct": "Loss of corporate profit", "distractors": ["Terrorism", "Large-scale cyber-attacks", "Criminal activity"], "explanation": "The text mentions terrorism and cyber-attacks; it does not mention public concern regarding corporate profits."}
 },
 {
 "stimulus": ["The digital divide is no longer just about access to the internet; it is now about access to privacy.", "Wealthier individuals can afford tools, legal counsel, and private platforms that allow them to opt-out of the surveillance-based economy.", "Conversely, those with fewer resources often rely on free, ad-supported digital services that require the surrender of personal data as the cost of entry.", "This creates a tiered society where the ability to maintain one's privacy is a luxury item rather than a fundamental right.", "As digital participation becomes mandatory for employment and government services, the choice to remain 'private' is increasingly vanishing."],
-"tfc": {"statement": "Privacy is currently accessible to all socioeconomic groups as a fundamental right.", "answer": "False", "explanation": "The text argues that privacy has become a luxury item and that the ability to maintain it is tiered, contradicting the notion that it is accessible to all as a fundamental right."},
+"tfc": {"statement": "The ability to maintain one's privacy is presented as a luxury item rather than a fundamental right.", "answer": "True", "explanation": "The passage states that privacy has become tiered and is treated as a luxury item rather than a fundamental right."},
 "detail": {"question": "What is cited as the 'cost of entry' for free digital services?", "correct": "The surrender of personal data", "distractors": ["A subscription fee", "The need for high-speed internet", "Professional legal counsel"], "explanation": "The text states that free, ad-supported services require 'the surrender of personal data as the cost of entry'."},
 "inference": {"question": "How does the author characterize the shift in the 'digital divide'?", "correct": "It has moved from an issue of access to an issue of privacy.", "distractors": ["It has disappeared entirely due to universal connectivity.", "It is no longer a relevant concern in the modern era.", "It is solely focused on the speed of internet connections."], "explanation": "The first sentence explicitly states: 'The digital divide is no longer just about access to the internet; it is now about access to privacy.'"},
 "fourth": {"type": "summary", "question": "Which statement best captures the main point regarding the digital divide?", "correct": "Privacy has become a socioeconomic marker, where only the wealthy can effectively shield themselves from data-driven surveillance.", "distractors": ["Digital services should be banned to ensure equality for everyone.", "The poor are more likely to have better privacy protections than the rich.", "The internet is becoming less important for daily tasks like employment."], "explanation": "The text highlights how privacy has become a luxury, resulting in a tiered society."}
 },
 {
 "stimulus": ["The philosophy of 'Privacy by Design' advocates for integrating data protection measures into the development phase of any technology.", "Rather than treating privacy as an 'add-on' or a reactive compliance measure, it should be the default setting.", "This approach limits data collection to the minimum necessary for the product to function, a principle known as data minimization.", "While this framework is theoretically robust, many companies view it as a hindrance to the data-heavy business models that drive their revenue.", "Consequently, the adoption of Privacy by Design remains fragmented and inconsistent across the global tech landscape."],
-"tfc": {"statement": "Most global technology companies have fully adopted 'Privacy by Design' as their primary business strategy.", "answer": "False", "explanation": "The text states that adoption remains 'fragmented and inconsistent' and that companies often view it as a hindrance."},
+"tfc": {"statement": "The adoption of Privacy by Design remains fragmented and inconsistent across the global tech landscape.", "answer": "True", "explanation": "The passage states that Privacy by Design adoption remains fragmented and inconsistent."},
 "detail": {"question": "What is the core principle of 'data minimization' as described in the text?", "correct": "Limiting data collection to what is essential for the product.", "distractors": ["Removing all user data after 24 hours.", "Allowing users to choose what data they delete.", "Encrypting all collected data with military-grade keys."], "explanation": "The text defines data minimization as limiting collection to the minimum necessary for the product to function."},
 "inference": {"question": "Why do many companies resist 'Privacy by Design'?", "correct": "It conflicts with their revenue-generating business models.", "distractors": ["It is too technically difficult to implement.", "It is illegal in many jurisdictions.", "It prevents them from providing any services to customers."], "explanation": "The text notes that companies view it as a 'hindrance to the data-heavy business models' that generate their revenue."},
 "fourth": {"type": "author", "question": "What is the author's implied stance on 'Privacy by Design'?", "correct": "It is a beneficial but underutilized approach to privacy.", "distractors": ["It is a failed concept that should be abandoned.", "It is the only way to destroy all tech companies.", "It is unnecessary given current encryption standards."], "explanation": "The author presents the approach as 'theoretically robust' but acknowledges its inconsistent adoption, suggesting it should be more widely used."}
 },
 {
 "stimulus": ["Social media platforms often use 'dark patterns' to nudge users into sharing more information than they might intend.", "These user interface designs can include pre-checked boxes, confusing navigation, or time-pressured prompts that discourage informed consent.", "When users feel that they have no choice but to accept intrusive terms, they experience a loss of agency.", "This practice complicates the legality of 'consent,' as many regulators argue that forced or coerced consent is not true consent at all.", "Transparency, therefore, is the vital link between user interface design and ethical data practices."],
-"tfc": {"statement": "Regulators generally accept 'dark patterns' as a standard and ethical way to obtain user consent.", "answer": "False", "explanation": "The text indicates that regulators argue forced or coerced consent (often involving dark patterns) is 'not true consent at all'."},
+"tfc": {"statement": "Many regulators argue that forced or coerced consent is not true consent at all.", "answer": "True", "explanation": "The passage states that many regulators regard forced or coerced consent as not true consent."},
 "detail": {"question": "Which of the following is cited as an example of a 'dark pattern'?", "correct": "Pre-checked boxes", "distractors": ["Clear terms of service documentation", "Automatic end-to-end encryption", "Two-factor authentication"], "explanation": "The text explicitly lists 'pre-checked boxes' as a type of dark pattern."},
 "inference": {"question": "What is the primary effect of dark patterns on the user?", "correct": "Diminished sense of control over their data.", "distractors": ["Increased understanding of privacy settings.", "Greater security of personal messages.", "Improved speed of platform performance."], "explanation": "The text states that users feel they have 'no choice' and experience a 'loss of agency' due to these practices."},
 "fourth": {"type": "summary", "question": "What does the passage conclude is necessary to solve the issue of coerced consent?", "correct": "Transparency in design.", "distractors": ["Banning all user interfaces.", "Strict government control of the internet.", "Eliminating the need for consent entirely."], "explanation": "The text states: 'Transparency, therefore, is the vital link between user interface design and ethical data practices.'"}
 },
 {
 "stimulus": ["Data portability—the right of users to take their information from one platform to another—is seen as a remedy for platform monopolies.", "By lowering the 'switching cost' for users, competitors can more easily enter the market and challenge dominant firms.", "However, technical interoperability is a significant hurdle; simply allowing data transfer does not guarantee that the format will be compatible with new services.", "Furthermore, moving data involves security risks, as data in transit may be vulnerable to interception.", "While it is a powerful tool for consumer empowerment, data portability is not a panacea for the broader issues of digital surveillance."],
-"tfc": {"statement": "Data portability is considered a complete solution to all problems regarding digital surveillance.", "answer": "False", "explanation": "The passage explicitly states that while it is a powerful tool, it is 'not a panacea for the broader issues of digital surveillance.'"},
+"tfc": {"statement": "Data portability is a powerful tool for consumer empowerment, but not a panacea for broader digital surveillance issues.", "answer": "True", "explanation": "The passage states that data portability is powerful but not a panacea for broader digital surveillance issues."},
 "detail": {"question": "What is one technical challenge associated with data portability mentioned in the text?", "correct": "Format compatibility", "distractors": ["Lack of consumer interest", "High subscription fees", "Inadequate legal counsel"], "explanation": "The text states that 'format will be compatible' is a hurdle to the process."},
 "inference": {"question": "How does data portability relate to market competition?", "correct": "It encourages competition by making it easier for users to switch platforms.", "distractors": ["It forces companies to merge to survive.", "It discourages new firms from entering the market.", "It limits the number of services a user can subscribe to."], "explanation": "The text states that it lowers 'switching costs,' which allows competitors to enter the market more easily."},
 "fourth": {"type": "negative", "question": "Which of the following is NOT listed as a risk or hurdle for data portability?", "correct": "Government prohibition of data sharing.", "distractors": ["Security risks during transit.", "Technical interoperability.", "The risk of data interception."], "explanation": "Government prohibition is not mentioned; the text focuses on technical and security challenges."}
@@ -9094,9 +9122,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics suggest that assigning liability to the software developers is necessary to drive improvements in safety, yet this risks stifling innovation if developers fear insurmountable litigation costs. Ultimately, the future of AI in medicine depends on developing 'explainable AI' (XAI) that can bridge the gap between technical complexity and clinical necessity."
 ],
 "tfc": {
-"statement": "Assigning legal liability to software developers for AI diagnostic errors is presented in the text as a solution with no potential drawbacks.",
-"answer": "False",
-"explanation": "The passage states that assigning liability to developers 'risks stifling innovation if developers fear insurmountable litigation costs' — so this proposed solution is explicitly framed as carrying its own risk, not as a drawback-free fix."
+"statement": "Assigning liability to software developers for AI diagnostic errors risks stifling innovation if developers fear high litigation costs.",
+"answer": "True",
+"explanation": "The passage states that assigning liability to developers may stifle innovation if they fear insurmountable litigation costs."
 },
 "detail": {
 "question": "What is the primary concern associated with 'black box' algorithms?",
@@ -9137,9 +9165,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This debate is further complicated by the global nature of technology competition. Even if one nation halts development to prioritize safety, others may continue, potentially resulting in a 'race to the bottom' where safety protocols are sacrificed for strategic advantage."
 ],
 "tfc": {
-"statement": "Accelerationists believe that the potential risks of AI are significant enough to warrant a mandatory pause in development.",
-"answer": "False",
-"explanation": "The text states that accelerationists believe the risks are 'overstated' and that rapid development is necessary, whereas proponents of 'slow AI' support a pause."
+"statement": "Accelerationists argue that AI risks are overstated and that rapid development is necessary to solve existing global problems.",
+"answer": "True",
+"explanation": "The passage says accelerationists view the risks as overstated and rapid development as necessary."
 },
 "detail": {
 "question": "What is the 'alignment problem' as described in the text?",
@@ -9223,9 +9251,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Furthermore, the complexity of terms-of-service agreements ensures that most users remain functionally illiterate regarding what they are agreeing to. Until there is a fundamental shift in how digital services are designed—moving from 'privacy by policy' to 'privacy by design'—the current trajectory of erosion seems likely to continue."
 ],
 "tfc": {
-"statement": "The author believes that GDPR has successfully eliminated all significant privacy loopholes.",
-"answer": "False",
-"explanation": "The text explicitly states that 'the rapid pace of technological development often leaves regulation lagging behind' and that new methods are invented as soon as old ones are closed."
+"statement": "The rapid pace of technological development often leaves privacy regulation lagging behind.",
+"answer": "True",
+"explanation": "The passage states that rapid technological development often leaves regulation behind and new harvesting methods emerge."
 },
 "detail": {
 "question": "Why does the author argue that privacy is a 'matter of degrees' rather than a binary state?",
@@ -9352,9 +9380,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "However, some critics label this as paternalistic, arguing that the state should not interfere in private decisions, even to improve outcomes. The ethical challenge lies in determining the boundary between helpful guidance and coercive manipulation."
 ],
 "tfc": {
-"statement": "Behavioral economics relies on the assumption that individuals always make choices that maximize their long-term utility.",
-"answer": "False",
-"explanation": "The passage states that behavioral economics rejects the model of perfectly rational actors, instead acknowledging cognitive biases."
+"statement": "Behavioral economics acknowledges that humans are subject to cognitive biases and heuristics.",
+"answer": "True",
+"explanation": "The passage states that behavioral economics recognizes cognitive biases and heuristics rather than assuming perfect rationality."
 },
 "detail": {
 "question": "What is given as an example of a successful nudge?",
@@ -9395,9 +9423,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Critics argue that even rule-utilitarianism fails to protect individual autonomy, as it still treats human well-being as a commodity to be measured and summed. Despite these flaws, the framework remains a cornerstone of public health decision-making, where limited resources must be allocated to benefit the greatest number of people."
 ],
 "tfc": {
-"statement": "Because rule-utilitarianism addresses the tyranny of the majority, critics agree it fully protects individual autonomy.",
-"answer": "False",
-"explanation": "The passage states rule-utilitarianism attempts to solve the tyranny-of-the-majority problem, but critics argue it 'still fails to protect individual autonomy' since it treats well-being as a summable commodity — so solving one problem does not mean autonomy is protected."
+"statement": "Critics argue that even rule-utilitarianism fails to protect individual autonomy.",
+"answer": "True",
+"explanation": "The passage states that critics believe rule-utilitarianism still fails to protect individual autonomy."
 },
 "detail": {
 "question": "What is the fundamental goal of utilitarianism?",
@@ -9481,9 +9509,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "However, critics point out that this inward focus can be misinterpreted as passivity. If one only cares about their own mind, they may lose the motivation to address external systemic injustices. The challenge, therefore, is to practice internal control without abandoning the collective responsibility to improve society."
 ],
 "tfc": {
-"statement": "Because Stoicism's resurgence stems from people wanting to disengage from digital 'noise', the philosophy as a whole is incompatible with maintaining collective responsibility for social problems.",
-"answer": "False",
-"explanation": "The passage describes the modern appeal of disengaging from noise, but explicitly frames the challenge as practicing internal control 'without abandoning' collective responsibility — disengagement from noise is not equated with incompatibility with social responsibility; the text presents the two as reconcilable, not mutually exclusive."
+"statement": "The passage frames modern Stoicism as requiring internal control without abandoning collective responsibility.",
+"answer": "True",
+"explanation": "The passage states that the challenge is to practice internal control without abandoning collective responsibility to improve society."
 },
 "detail": {
 "question": "What is the central premise of Stoicism?",
@@ -9568,9 +9596,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Regulatory bodies, such as the EU's General Data Protection Regulation (GDPR), have attempted to bridge this gap by enforcing transparency. By requiring companies to gain explicit consent for data processing, regulators hope to restore agency to the user. However, the complexity of 'consent forms' often means that users agree to terms without true comprehension, undermining the effectiveness of such legislation."
 ],
 "tfc": {
-"statement": "Because GDPR requires explicit consent and users continue to use tracking-heavy services anyway, the regulation has fully closed the gap between stated privacy preferences and actual user behavior.",
-"answer": "False",
-"explanation": "The passage states GDPR's consent requirements are undermined because complex consent forms mean users 'agree to terms without true comprehension' — so the privacy paradox (the gap between stated preference and behavior) persists rather than being closed by the regulation."
+"statement": "The complexity of consent forms can undermine the effectiveness of privacy legislation.",
+"answer": "True",
+"explanation": "The passage says complex consent forms often lead users to agree without true comprehension, undermining such legislation."
 },
 "detail": {
 "question": "What is defined as the 'privacy paradox' in the passage?",
@@ -9611,9 +9639,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The dual challenge remains: balancing the societal benefits of AI-driven research—such as medical breakthroughs or traffic optimization—against the fundamental right to remain unmonitored."
 ],
 "tfc": {
-"statement": "Implementing differential privacy is a low-cost, high-precision solution.",
-"answer": "False",
-"explanation": "The text states that the implementation of these techniques is 'costly and can sometimes diminish the precision'."
+"statement": "Implementing differential privacy can be costly and may sometimes reduce the precision of analysis.",
+"answer": "True",
+"explanation": "The passage states that differential privacy is costly to implement and can diminish analytical precision."
 },
 "detail": {
 "question": "What does the author identify as the requirement for machine learning algorithms?",
@@ -9654,9 +9682,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "This immutability makes the storage of biometric data one of the most sensitive aspects of digital security. Industry experts argue that until robust, decentralized storage methods—where the biometric data remains on the user's device rather than a central server—become the norm, the risk of catastrophic data loss remains high."
 ],
 "tfc": {
-"statement": "Biometric data is generally considered safer than passwords because it can be reset if compromised.",
-"answer": "False",
-"explanation": "The text states the exact opposite: biometric data cannot be reset, making it 'compromised permanently'."
+"statement": "Once a biometric template is leaked, it is compromised permanently.",
+"answer": "True",
+"explanation": "The passage states that unlike a password, a leaked biometric template cannot be reset and is permanently compromised."
 },
 "detail": {
 "question": "What is the recommended solution mentioned by industry experts for biometric security?",
@@ -9697,9 +9725,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The challenge for modern organizations is not merely prohibition, but rather the creation of user-friendly alternatives that meet the same security standards as current IT policies, ensuring that employees are not forced to look elsewhere to get their jobs done."
 ],
 "tfc": {
-"statement": "The primary cause of 'shadow IT' is usually the desire to harm company security.",
-"answer": "False",
-"explanation": "The passage suggests that employees use these tools 'to increase productivity or bypass clunky company-sanctioned systems', not with malicious intent."
+"statement": "Employees often use shadow IT to increase productivity or bypass clunky company-sanctioned systems.",
+"answer": "True",
+"explanation": "The passage states that employees often use unauthorized tools to increase productivity or bypass clunky sanctioned systems."
 },
 "detail": {
 "question": "What happens when shadow systems are used?",
@@ -9740,9 +9768,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The issue has spurred a global conversation about the 'ownership' of one's digital self. If a company can predict your next move better than you can, the concept of informed consent begins to lose its meaning."
 ],
 "tfc": {
-"statement": "Critics of data mining argue that targeted advertising is always beneficial to the consumer.",
-"answer": "False",
-"explanation": "The text states that critics worry about 'manipulation of consumer psychology' and that it is not always in the consumer's interest."
+"statement": "Critics of data mining worry that companies can manipulate consumer psychology in ways that are not always in the consumer's best interest.",
+"answer": "True",
+"explanation": "The passage states that critics point to manipulation of consumer psychology and influence that is not always in the consumer's interest."
 },
 "detail": {
 "question": "What do companies use consumer behavior data for?",
@@ -9783,9 +9811,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "The debate continues: where should the line be drawn between protecting an individual’s privacy and the public's right to access information?"
 ],
 "tfc": {
-"statement": "The 'Right to be Forgotten' is an absolute right that allows any information to be deleted.",
-"answer": "False",
-"explanation": "The text notes that it faces conflicts with 'legitimate public interest, such as journalism or historical documentation', implying it is not absolute."
+"statement": "The 'Right to be Forgotten' can conflict with legitimate public interest, such as journalism or historical documentation.",
+"answer": "True",
+"explanation": "The passage states that legitimate public interest, including journalism or historical documentation, can conflict with an individual's desire for privacy."
 },
 "detail": {
 "question": "What is the stated goal of the 'Right to be Forgotten'?",
@@ -9826,9 +9854,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "Transparency regarding data usage is currently insufficient, leading to a climate of mistrust that may hinder the long-term adoption of smart home technology."
 ],
 "tfc": {
-"statement": "All consumers are fully aware that third-party contractors review their audio recordings.",
-"answer": "False",
-"explanation": "The passage says these disclosures left consumers feeling 'betrayed', implying they were not originally aware or expecting this."
+"statement": "Reports of third-party contractors reviewing private conversations left many smart-home consumers feeling betrayed.",
+"answer": "True",
+"explanation": "The passage says disclosures about contractors reviewing snippets of private conversations left many consumers feeling betrayed."
 },
 "detail": {
 "question": "Why do smart home devices need to be 'always-on'?",
@@ -9869,9 +9897,9 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 "As cities become more digitized, the policy challenge is to integrate these efficiencies while maintaining physical safety and the anonymity of the average pedestrian."
 ],
 "tfc": {
-"statement": "Smart city sensors can only be used to improve energy and traffic management.",
-"answer": "False",
-"explanation": "The text mentions that they also track the 'movement of individuals through public spaces'."
+"statement": "Smart city functionality can allow the movement of individuals through public spaces to be monitored and mapped.",
+"answer": "True",
+"explanation": "The passage states that the tracking required for smart city functionality can monitor and map individual movement through public spaces."
 },
 "detail": {
 "question": "What is a major risk associated with 'Smart City' infrastructure, according to the text?",
@@ -9958,14 +9986,14 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 },
 {
 "stimulus": ["In the age of digital ubiquity, the concept of privacy has shifted from a physical state of seclusion to a complex management of data shadows. Every online interaction, from financial transactions to social media engagement, leaves an indelible footprint that is collected, analyzed, and often traded by corporate entities. This commodification of personal data has turned the average internet user into a product rather than a consumer.", "Regulatory frameworks like the GDPR in Europe represent an attempt to regain control, yet these laws often struggle to keep pace with the hyper-accelerated nature of technological innovation. While some argue that user data provides essential personalization and service improvement, others warn that without rigorous oversight, the erosion of digital privacy will inevitably lead to systemic inequality and the loss of individual agency in the digital marketplace."],
-"tfc": {"statement": "Because GDPR was created to give individuals control over their data, the passage indicates it has succeeded in preventing the commodification of personal data described elsewhere in the text.", "answer": "False", "explanation": "The passage states regulatory frameworks like GDPR 'often struggle to keep pace' with technological innovation, and that without rigorous oversight the erosion of privacy 'will inevitably lead to systemic inequality' — the text does not present GDPR as having solved the commodification problem it describes."},
+"tfc": {"statement": "Regulatory frameworks like GDPR often struggle to keep pace with rapid technological innovation.", "answer": "True", "explanation": "The passage states that GDPR-like frameworks represent an attempt to regain control, but often struggle to keep pace with technological innovation."},
 "detail": {"question": "What happens to the user when personal data is commodified according to the passage?", "correct": "The user is transformed into a product.", "distractors": ["The user gains increased control over their digital footprint.", "The user is shielded from the effects of systemic inequality.", "The user loses access to the digital marketplace entirely."], "explanation": "The passage states that the 'commodification of personal data has turned the average internet user into a product rather than a consumer.'"},
 "inference": {"question": "Why might some argue in favor of collecting user data?", "correct": "It allows for the enhancement of services and personalized experiences.", "distractors": ["It guarantees the total privacy of all consumers.", "It is the only way to satisfy international GDPR requirements.", "It prevents corporate entities from becoming too powerful."], "explanation": "The text explicitly mentions that 'some argue that user data provides essential personalization and service improvement.'"},
 "fourth": {"type": "negative", "question": "Which of the following is NOT mentioned as a potential consequence of the erosion of digital privacy?", "correct": "The immediate bankruptcy of all large corporate entities.", "distractors": ["Systemic inequality.", "The loss of individual agency.", "The necessity for more rigorous oversight."], "explanation": "The passage discusses systemic inequality and the loss of agency, but it does not mention the bankruptcy of corporations."}
 },
 {
 "stimulus": ["Smart cities utilize advanced surveillance and data collection to optimize municipal services, such as traffic management and energy distribution. While these efficiencies are often touted as the primary benefit, the underlying dependence on interconnected sensors raises significant concerns regarding cybersecurity. If a central system is compromised, the potential for disruption of critical infrastructure—from power grids to water supplies—becomes a tangible threat to public safety.", "Furthermore, the integration of facial recognition technology into public spaces has normalized constant identification. This creates a society where the distinction between public and private life is increasingly blurred. Municipal leaders must therefore weigh the allure of optimized city living against the potential risks of creating a digital panopticon where citizen movement is tracked and recorded as a matter of standard protocol."],
-"tfc": {"statement": "Smart city initiatives prioritize cybersecurity over municipal service optimization.", "answer": "False", "explanation": "The text indicates that efficiencies in municipal services are 'often touted as the primary benefit' and mentions cybersecurity as a concern resulting from that dependence, not as a priority."},
+"tfc": {"statement": "Smart city initiatives use surveillance and data collection to optimize municipal services such as traffic management and energy distribution.", "answer": "True", "explanation": "The passage states that smart cities use surveillance and data collection to optimize services including traffic management and energy distribution."},
 "detail": {"question": "What is identified as a threat resulting from a compromised smart city system?", "correct": "The disruption of critical infrastructure like power and water.", "distractors": ["The mandatory installation of facial recognition in homes.", "The cessation of all municipal data collection.", "The complete privatization of public spaces."], "explanation": "The passage explicitly links a system compromise to the disruption of 'critical infrastructure—from power grids to water supplies.'"},
 "inference": {"question": "What does the author mean by the term 'digital panopticon'?", "correct": "A environment where citizens are constantly tracked and feel the pressure of perpetual surveillance.", "distractors": ["A highly efficient city with no traffic congestion.", "A secure storage facility for municipal records.", "A technological solution to urban poverty."], "explanation": "The term is used in the context of facial recognition and tracking, implying a state where constant monitoring is the standard."},
 "fourth": {"type": "author", "question": "What is the author's tone regarding the implementation of smart city technology?", "correct": "Cautionary.", "distractors": ["Unconditionally supportive.", "Exclusively celebratory.", "Indifferent."], "explanation": "The author highlights the benefits but focuses heavily on the dangers, risks, and concerns, indicating a cautious tone."}
@@ -9979,42 +10007,42 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 },
 {
 "stimulus": ["The rise of artificial intelligence (AI) in workplace monitoring has brought about a significant shift in how employee performance is evaluated. Algorithmic management systems can track keystrokes, monitor idle time, and analyze communication patterns with unprecedented precision. Supporters claim that such transparency provides objective feedback and identifies areas for professional development. ", "Critics, however, argue that these systems create an atmosphere of anxiety and erode trust between management and staff. When employees feel that every movement is monitored, the focus often shifts from high-quality output to the performance of productivity, where workers engage in 'busy work' simply to satisfy the algorithm. This trend toward hyper-monitoring may lead to burnout and higher turnover rates, ultimately undermining the productivity gains that the technology promised."],
-"tfc": {"statement": "Algorithmic management is viewed exclusively as a positive development by all stakeholders.", "answer": "False", "explanation": "The text explicitly states that critics argue these systems create anxiety and erode trust."},
+"tfc": {"statement": "Critics argue that algorithmic management can create anxiety and erode trust between management and staff.", "answer": "True", "explanation": "The passage states that critics believe these systems create anxiety and erode trust."},
 "detail": {"question": "According to the passage, what is one of the behaviors employees adopt to satisfy the algorithm?", "correct": "Performing 'busy work' to appear productive.", "distractors": ["Ignoring instructions from management.", "Refusing to communicate with colleagues.", "Working fewer hours than required."], "explanation": "The text mentions that workers engage in 'busy work' simply to satisfy the algorithm."},
 "inference": {"question": "What does the author suggest might be the ironic outcome of AI-based monitoring?", "correct": "A decline in the very productivity the technology aims to improve.", "distractors": ["An increase in employee trust toward management.", "A shift from manual labor to entirely automated work.", "A total elimination of the need for human management."], "explanation": "The text states that hyper-monitoring may lead to burnout and turnover, 'ultimately undermining the productivity gains that the technology promised.'"},
 "fourth": {"type": "negative", "question": "Which of the following is NOT a consequence of workplace AI monitoring mentioned in the text?", "correct": "Increased collaboration between departments.", "distractors": ["Employee burnout.", "Erosion of trust.", "Focus on 'busy work'."], "explanation": "Increased collaboration is not mentioned; the text focuses on negative effects like burnout, erosion of trust, and unproductive busy work."}
 },
 {
 "stimulus": ["Deepfake technology, driven by advances in generative AI, has made it possible to create highly realistic simulations of human beings. While the entertainment industry has utilized this for special effects, the political and social implications are profound. The potential for these tools to create deceptive videos of public figures poses a severe threat to the integrity of democratic elections, as voters may struggle to differentiate between authentic footage and fabricated content.", "Detection software is currently being developed to counter these threats; however, the arms race between generative models and detection tools is constant. As detection methods improve, so do the deepfakes, creating a situation of 'epistemic insecurity' where individuals may eventually doubt the authenticity of any visual information. This environment could lead to widespread public apathy, as voters decide that truth is impossible to discern."],
-"tfc": {"statement": "The development of detection software is consistently ahead of the advancement of deepfake technology.", "answer": "False", "explanation": "The text describes an 'arms race' where as detection methods improve, so do the deepfakes, suggesting no permanent lead."},
+"tfc": {"statement": "The arms race between deepfake generation and detection tools is described as constant.", "answer": "True", "explanation": "The passage states that the arms race between generative models and detection tools is constant."},
 "detail": {"question": "What does 'epistemic insecurity' refer to in this passage?", "correct": "A state where individuals doubt the authenticity of visual information.", "distractors": ["A technical fault in generative AI systems.", "The loss of data in a software storage system.", "The ability to detect deepfakes with absolute certainty."], "explanation": "The text defines this state as one where 'individuals may eventually doubt the authenticity of any visual information.'"},
 "inference": {"question": "What is the primary danger deepfakes pose to democratic processes?", "correct": "They may cause voters to lose faith in the reality of the information they consume.", "distractors": ["They make all politicians look and sound identical.", "They are exclusively used by the film industry to cheat audiences.", "They force all candidates to use AI during debates."], "explanation": "The text emphasizes the risk to integrity and the potential for public apathy when truth becomes difficult to discern."},
 "fourth": {"type": "author", "question": "How would the author describe the future of the deepfake 'arms race'?", "correct": "Unpredictable and potentially damaging to societal trust.", "distractors": ["A temporary issue that will be solved shortly.", "An irrelevant development with no real-world consequences.", "A positive step towards more creative political communication."], "explanation": "The author uses words like 'severe threat' and warns of 'widespread public apathy,' reflecting a concern for the future."}
 },
 {
 "stimulus": ["Data mining, while providing significant value for personalized advertising and market research, often bypasses meaningful user consent. Companies frequently employ 'dark patterns'—design elements intended to trick or nudge users into agreeing to extensive data collection terms that they would otherwise reject. This opacity makes it nearly impossible for the average user to know precisely how their personal history is being monetized.", "Privacy advocates argue that consent must be informed and explicit to be legitimate. However, the complexity of modern privacy policies, often spanning dozens of pages of legal jargon, renders the concept of 'informed' consent largely theoretical. Without radical simplification of terms and a move toward privacy-by-design, the promise of data-driven convenience will continue to conflict with the fundamental right to individual privacy."],
-"tfc": {"statement": "Most users currently understand exactly how their data is being used by companies.", "answer": "False", "explanation": "The text states that opacity makes it 'nearly impossible for the average user to know precisely how their personal history is being monetized.'"},
+"tfc": {"statement": "Opacity makes it nearly impossible for the average user to know precisely how their personal history is being monetized.", "answer": "True", "explanation": "The passage states that opacity makes it nearly impossible for average users to know how their personal history is monetized."},
 "detail": {"question": "What are 'dark patterns' as described in the text?", "correct": "Design elements used to manipulate users into consenting to data collection.", "distractors": ["Software bugs that inadvertently expose user information.", "A legal requirement for privacy policies to be written in plain language.", "Advanced security features that encrypt user data."], "explanation": "The passage defines them as 'design elements intended to trick or nudge users into agreeing to extensive data collection.'"},
 "inference": {"question": "Why is the current concept of 'informed' consent considered 'theoretical' by the author?", "correct": "Because privacy policies are too complex and jargon-heavy for users to actually comprehend.", "distractors": ["Because users do not actually care about their privacy.", "Because the law no longer requires companies to obtain consent.", "Because companies have already moved to 'privacy-by-design' models."], "explanation": "The text mentions the complexity and legal jargon as the reasons why being truly 'informed' is difficult."},
 "fourth": {"type": "summary", "question": "Which of the following best captures the main point of the passage?", "correct": "Current data collection practices undermine the concept of meaningful user consent.", "distractors": ["Data mining should be banned entirely for all industries.", "Privacy policies are usually brief and easy to understand.", "Companies are always transparent about how they monetize data."], "explanation": "The passage argues that current methods and policies make true consent impossible, challenging the status quo of data mining."}
 },
 {
 "stimulus": ["Biometric identification, ranging from fingerprint scanners to gait recognition, is increasingly integrated into public and private security. The advantage of such technology is clear: it offers a 'password-less' future where physical traits provide inherently stronger security than fallible human-generated credentials. However, biometrics are irreversible. If a password is compromised, it can be reset; if a biometric record—like a retinal scan—is stolen, the individual cannot 'reset' their eye.", "This permanence necessitates extremely high standards for the storage and protection of such sensitive information. Yet, as governments and corporations rush to adopt these systems, the security of the databases housing this biological data often lags behind. The result is a dangerous paradox where the very technology designed to secure our identity could, if breached, lead to identity theft that is impossible to mitigate."],
-"tfc": {"statement": "Biometric data is easier to change than a traditional password if compromised.", "answer": "False", "explanation": "The text states that 'biometrics are irreversible' and compares this to passwords that can be reset."},
+"tfc": {"statement": "Biometrics are irreversible in a way that traditional passwords are not.", "answer": "True", "explanation": "The passage explains that passwords can be reset, whereas biometric records such as retinal scans cannot be reset."},
 "detail": {"question": "Which example is given as a type of biometric identification?", "correct": "Gait recognition.", "distractors": ["Digital passwords.", "Email verification.", "Two-factor authentication codes."], "explanation": "The text mentions 'fingerprint scanners to gait recognition' as examples of biometric identification."},
 "inference": {"question": "What is the 'dangerous paradox' described by the author?", "correct": "Technologies meant to enhance security create permanent vulnerabilities.", "distractors": ["Biometrics are too expensive to be used in modern society.", "The public refuses to use fingerprint scanners but loves passwords.", "Identity theft has decreased since the introduction of biometrics."], "explanation": "The paradox is that the technology meant to secure identity actually creates a permanent risk of un-mitigatable identity theft."},
 "fourth": {"type": "negative", "question": "Which of the following is NOT an advantage or characteristic of biometrics mentioned?", "correct": "They are easily updated to maintain security.", "distractors": ["They offer a 'password-less' future.", "They use physical traits for authentication.", "They are currently experiencing widespread adoption."], "explanation": "The passage explicitly notes that biometrics are 'irreversible' and cannot be reset, making this statement false."}
 },
 {
 "stimulus": ["The use of AI in predicting criminal behavior, often termed 'predictive policing,' is a controversial application of technology in the justice system. By analyzing historical crime data, algorithms suggest areas or individuals with a high probability of future offending. While proponents argue that this enables the efficient allocation of limited police resources, critics express deep concern regarding algorithmic bias.", "Because historical data often reflects systemic biases within policing practices, AI models can inadvertently perpetuate these patterns, disproportionately targeting marginalized communities. Furthermore, these systems often operate as 'black boxes,' providing recommendations without explaining the underlying reasoning. This lack of transparency challenges the principle of due process, as individuals may be subject to intensified scrutiny based on an algorithm that is not subject to public or judicial review."],
-"tfc": {"statement": "Predictive policing algorithms are always transparent regarding their decision-making process.", "answer": "False", "explanation": "The text describes these systems as 'black boxes' that operate without explaining their underlying reasoning."},
+"tfc": {"statement": "Predictive policing systems often operate as black boxes without explaining their underlying reasoning.", "answer": "True", "explanation": "The passage states that these systems often operate as black boxes, providing recommendations without explaining their reasoning."},
 "detail": {"question": "Why might predictive policing models reinforce existing biases?", "correct": "They rely on historical data that already contains systemic police bias.", "distractors": ["The algorithms are programmed by biased individuals specifically to target minorities.", "The data is collected from unreliable sources outside the police force.", "The police intentionally feed the AI false crime statistics."], "explanation": "The text states: 'Because historical data often reflects systemic biases within policing practices, AI models can inadvertently perpetuate these patterns.'"},
 "inference": {"question": "Why does the author suggest predictive policing challenges the principle of due process?", "correct": "Because decisions affecting individuals are made by opaque algorithms that aren't properly reviewed.", "distractors": ["Because it makes the judicial system too efficient.", "Because it requires everyone to be under constant review.", "Because it replaces human judges entirely."], "explanation": "The passage notes the lack of transparency and the absence of judicial or public review as challenges to due process."},
 "fourth": {"type": "summary", "question": "What is the central concern regarding predictive policing?", "correct": "The risk that biased, non-transparent algorithms will perpetuate unfair policing practices.", "distractors": ["That it will make police work obsolete.", "That it will make policing too expensive for cities.", "That the computers are not fast enough to predict crimes."], "explanation": "The summary focuses on the conflict between efficiency and the issues of bias and lack of transparency."}
 },
 {
 "stimulus": ["Digital rights management (DRM) technologies are designed to control the usage of digital media, ensuring that copyright holders maintain control over their content. In the publishing industry, this has enabled the growth of e-books and digital subscriptions. However, DRM often restricts the legal rights of users, such as the ability to lend books, resell digital goods, or access content offline for extended periods.", "This tension between content protection and user ownership has sparked a movement towards open-access and DRM-free content. Critics argue that DRM treats all users as potential pirates and effectively turns consumers into renters of digital content they technically 'purchased.' As platforms move toward a subscription-only model, the ability of individuals to own digital cultural products is increasingly in jeopardy, raising questions about the future of digital preservation and library access."],
-"tfc": {"statement": "DRM technologies are generally praised for increasing the rights of digital consumers.", "answer": "False", "explanation": "The text describes DRM as restricting the rights of users and sparking criticism for treating them as renters."},
+"tfc": {"statement": "DRM technologies often restrict legal user rights such as lending books, reselling digital goods, or extended offline access.", "answer": "True", "explanation": "The passage states that DRM often restricts user rights including lending, reselling, and accessing content offline for extended periods."},
 "detail": {"question": "Which of the following is an example of a user right restricted by DRM?", "correct": "The ability to lend digital books.", "distractors": ["The ability to access the internet.", "The right to create original digital media.", "The right to pay for a subscription."], "explanation": "The text explicitly lists 'the ability to lend books' as a user right that is often restricted by DRM."},
 "inference": {"question": "What does the author suggest about the shift toward subscription-only models?", "correct": "It endangers the long-term ownership of digital cultural goods.", "distractors": ["It is a universally preferred model by both companies and consumers.", "It eliminates the need for any digital rights management.", "It is the only way to ensure authors are paid for their work."], "explanation": "The text states that 'the ability of individuals to own digital cultural products is increasingly in jeopardy' due to the subscription-only model."},
 "fourth": {"type": "author", "question": "What is the author's primary concern regarding the future of digital media?", "correct": "The erosion of consumer ownership and the threat to digital preservation.", "distractors": ["That authors are not making enough profit from digital sales.", "That e-books are replacing physical books too slowly.", "That library access is becoming too easy for the general public."], "explanation": "The author focuses on the loss of ownership, the implications for library access, and the challenges of long-term preservation."}
@@ -10043,21 +10071,21 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 },
 {
 "stimulus": ["Behavioral economists have identified the 'endowment effect' as the tendency for individuals to place a higher value on an object simply because they own it. In experiments, people often demand a much higher price to sell an item they possess than they would be willing to pay to acquire the exact same item.", "This effect challenges the assumption that the value of an item is objective and determined by the market. Instead, it suggests that the act of ownership creates an emotional attachment that inflates the perceived worth of the good in the mind of the owner.", "Marketing professionals frequently exploit this bias through 'free trials' or 'money-back guarantees.' By putting a product in a consumer's hands, the marketer fosters a sense of ownership, making it psychologically more difficult for the consumer to return the item than it would have been to refrain from buying it in the first place."],
-"tfc": {"statement": "The market value of an item is usually identical to the value assigned by its owner.", "answer": "False", "explanation": "The passage states that the endowment effect suggests the act of ownership 'inflates the perceived worth of the good' beyond objective market value."},
+"tfc": {"statement": "The endowment effect suggests that ownership can inflate the perceived worth of an item.", "answer": "True", "explanation": "The passage states that ownership creates emotional attachment that inflates the perceived worth of the good."},
 "detail": {"question": "What happens during a 'free trial' experiment that utilizes the endowment effect?", "correct": "The consumer develops a sense of ownership, increasing the difficulty of returning the item.", "distractors": ["The consumer realizes the item is worth less than the market price.", "The consumer immediately buys the item at a discounted rate.", "The consumer loses their emotional attachment to the item."], "explanation": "The text explains that by putting a product in a consumer's hands, it 'fosters a sense of ownership, making it psychologically more difficult for the consumer to return the item.'"},
 "inference": {"question": "Why would an individual demand a higher price to sell an item than they would pay to buy it?", "correct": "Because the emotional attachment associated with ownership alters their perception of value.", "distractors": ["Because they expect the item to increase in value in the future.", "Because they believe the market price is lower than the actual cost of production.", "Because they want to make a significant profit on every transaction."], "explanation": "The text states that ownership creates an 'emotional attachment that inflates the perceived worth of the good in the mind of the owner.'"},
 "fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "The endowment effect causes owners to overvalue their possessions, a tendency that is often strategically leveraged by marketers.", "distractors": ["The endowment effect proves that objective market values are superior to personal valuations.", "Marketing professionals are unethical for using the endowment effect to sell products.", "Ownership is the most important factor in determining the actual cost of goods."], "explanation": "The summary covers the definition of the endowment effect, its psychological basis, and its practical application in marketing."}
 },
 {
 "stimulus": ["Hyperbolic discounting refers to the human tendency to prefer smaller, immediate rewards over larger, later rewards, with the preference for the immediate reward becoming increasingly strong the sooner it can be obtained. This explains why people often struggle with long-term goals like saving for retirement or dieting.", "While an individual might rationally agree that a $1,000 reward in a year is better than $100 today, when presented with the choice of $100 now versus $105 in one month, many will choose the $100 now. This inconsistent decision-making over time is a hallmark of human behavior.", "Policymakers have used this insight to design programs like 'Save More Tomorrow,' which allows employees to commit to increasing their savings rates in the future. By bypassing the immediate 'pain' of saving today, individuals can align their long-term interests with their present actions."],
-"tfc": {"statement": "People's preferences for rewards remain consistent regardless of how soon the reward is available.", "answer": "False", "explanation": "The passage notes that the preference for immediate rewards becomes 'increasingly strong the sooner it can be obtained,' which characterizes the inconsistent nature of hyperbolic discounting."},
+"tfc": {"statement": "Hyperbolic discounting involves a stronger preference for immediate rewards as those rewards become sooner available.", "answer": "True", "explanation": "The passage states that the preference for immediate rewards becomes increasingly strong the sooner they can be obtained."},
 "detail": {"question": "What is the primary function of the 'Save More Tomorrow' program?", "correct": "To help employees commit to future savings increases.", "distractors": ["To provide immediate rewards for saving money today.", "To teach employees the basics of classical economic theory.", "To allow employees to withdraw their savings penalty-free."], "explanation": "The text states that the program 'allows employees to commit to increasing their savings rates in the future.'"},
 "inference": {"question": "Why do individuals struggle with long-term goals according to the passage?", "correct": "They find the immediate cost of pursuing such goals difficult to endure.", "distractors": ["They do not understand the value of long-term rewards.", "They are inherently incapable of planning for the future.", "They are forced by policymakers to prioritize immediate rewards."], "explanation": "The text implies that the 'pain' of saving or dieting in the present is the barrier, which hyperbolic discounting prioritizes over larger future benefits."},
 "fourth": {"type": "negative", "question": "Which of the following does NOT describe hyperbolic discounting?", "correct": "Choosing the larger reward regardless of the waiting time involved.", "distractors": ["Preferring a smaller immediate reward over a larger later reward.", "Struggling to maintain long-term goals like retirement saving.", "Exhibiting inconsistent decision-making over different timeframes."], "explanation": "Hyperbolic discounting specifically involves the tendency to favor the immediate reward, whereas choosing the larger reward regardless of time would be consistent, rational behavior."}
 },
 {
 "stimulus": ["The 'framing effect' describes how the way information is presented affects the decisions that people make. When choices are framed in terms of potential gains, people tend to be risk-averse. Conversely, when choices are framed in terms of potential losses, people tend to be risk-seeking.", "A classic example involves medical treatments. If a treatment is described as having a '90% survival rate,' most people favor it. If the same treatment is described as having a '10% mortality rate,' they are more likely to reject it, despite the outcome being mathematically identical.", "This effect highlights the susceptibility of human judgment to the presentation of data. Professionals, such as doctors and financial advisors, have an ethical responsibility to be aware of how their framing of options might unintentionally sway their clients' choices."],
-"tfc": {"statement": "A patient told a treatment has a '10% mortality rate' is, according to the framing effect described, more likely to accept that treatment than a patient told it has a '90% survival rate'.", "answer": "False", "explanation": "The passage states the opposite relationship: framing in terms of survival ('90% survival rate') makes people more likely to favor a treatment, while framing the same outcome as a loss ('10% mortality rate') makes them 'more likely to reject it' — so the statement reverses which framing leads to greater acceptance."},
+"tfc": {"statement": "A treatment framed as having a '90% survival rate' is more likely to be favored than the same treatment framed as having a '10% mortality rate'.", "answer": "True", "explanation": "The passage says people favor a treatment described with a 90% survival rate but are more likely to reject the same treatment described as a 10% mortality rate."},
 "detail": {"question": "How do people generally react when choices are framed in terms of potential losses?", "correct": "They tend to be risk-seeking.", "distractors": ["They tend to be risk-averse.", "They are more likely to accept the treatment.", "They ignore the information provided."], "explanation": "The text states: 'when choices are framed in terms of potential losses, people tend to be risk-seeking.'"},
 "inference": {"question": "What is the implication of the framing effect for professionals?", "correct": "They must be cautious about how they communicate information to clients.", "distractors": ["They should always present information in the most optimistic light.", "They should stop providing statistics to their clients.", "They should aim to make their clients risk-averse in all situations."], "explanation": "The passage mentions that professionals have an 'ethical responsibility to be aware of how their framing of options might unintentionally sway their clients' choices.'"},
 "fourth": {"type": "summary", "question": "Which of the following best captures the main point of the passage?", "correct": "The presentation of choices influences decision-making, necessitating ethical awareness in communication.", "distractors": ["The framing effect proves that people are incapable of making logical decisions.", "Medical treatments should only be described in terms of survival rates.", "Risk-seeking behavior is the ideal approach for all financial and medical decisions."], "explanation": "The passage defines the framing effect and concludes with its practical implication regarding the ethical responsibilities of professionals."}
@@ -28308,49 +28336,49 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 },
 {
 "stimulus": ["Media literacy has become an essential pedagogical tool in the 21st century, aimed at helping individuals navigate the complexities of modern information streams. Critics argue that simply teaching users to identify 'fake news' is insufficient, as it fails to address the underlying psychological biases that make individuals susceptible to misinformation. Instead, proponents of comprehensive media literacy suggest a focus on understanding the political and economic incentives that shape media production, arguing that this fosters a more systemic understanding of media bias."],
-"tfc": {"statement": "Proponents of comprehensive media literacy believe identifying fake news is the only skill required to navigate modern media.", "answer": "False", "explanation": "The passage states that critics argue identifying 'fake news' is insufficient and instead propose a focus on political and economic incentives."},
+"tfc": {"statement": "Comprehensive media literacy includes understanding the political and economic incentives that shape media production.", "answer": "True", "explanation": "The passage states that proponents suggest focusing on the political and economic incentives that shape media production."},
 "detail": {"question": "What is the suggested focus for a more effective approach to media literacy?", "correct": "Economic and political incentives behind media", "distractors": ["Psychological testing of users", "Fact-checking every news source", "Limiting the use of social media"], "explanation": "The text suggests that understanding the 'political and economic incentives that shape media production' is key to a more systemic understanding."},
 "inference": {"question": "What can be inferred about the author's view on current media literacy efforts?", "correct": "They may be too simplistic to solve the problem of misinformation.", "distractors": ["They are completely ineffective and should be abandoned.", "They prioritize political bias over economic reality.", "They are only useful for younger students."], "explanation": "The author presents the argument that current efforts are 'insufficient' because they don't address psychological biases, implying they need more depth."},
 "fourth": {"type": "negative", "question": "According to the passage, which factor is NOT mentioned as a component of comprehensive media literacy?", "correct": "Memorization of current news events", "distractors": ["Understanding economic incentives", "Recognizing psychological biases", "Analyzing political motivations"], "explanation": "The text does not mention the memorization of news events; it focuses on systemic understanding and bias."}
 },
 {
 "stimulus": ["The phenomenon of 'filter bubbles' has significant implications for democratic discourse. Algorithms designed to personalize content frequently trap users within narrow ideological silos, limiting exposure to diverse viewpoints. While proponents argue that personalization improves user experience by filtering out irrelevant noise, sociologists contend that this process creates an 'echo chamber' effect. This isolation diminishes the common ground necessary for civil debate, potentially radicalizing political positions as users become detached from conflicting information."],
-"tfc": {"statement": "The echo chamber effect is universally viewed as a positive feature by technologists.", "answer": "False", "explanation": "The passage notes that sociologists, not just technologists, provide a critical view, characterizing it as an 'echo chamber' that diminishes common ground."},
+"tfc": {"statement": "Filter bubbles can limit exposure to diverse viewpoints and create an echo chamber effect.", "answer": "True", "explanation": "The passage says algorithms can trap users in narrow ideological silos, limiting exposure to diverse viewpoints, and that sociologists call this an echo chamber effect."},
 "detail": {"question": "Why do some argue that algorithm-based personalization is beneficial?", "correct": "It filters out irrelevant content", "distractors": ["It exposes users to diverse viewpoints", "It prevents the spread of misinformation", "It increases civil discourse"], "explanation": "The text states that 'proponents argue that personalization improves user experience by filtering out irrelevant noise.'"},
 "inference": {"question": "What does the passage imply about the relationship between filter bubbles and political radicalization?", "correct": "Limited exposure to opposing views may intensify existing political stances.", "distractors": ["Filter bubbles are the sole cause of all political radicalization.", "Radicalization is impossible without internet usage.", "Algorithms are explicitly designed to radicalize users."], "explanation": "The text suggests that isolation from conflicting information is a factor that 'potentially' leads to radicalization, implying a causal link through ideological separation."},
 "fourth": {"type": "author", "question": "What is the author’s tone regarding the effect of filter bubbles on discourse?", "correct": "Concerned", "distractors": ["Indifferent", "Optimistic", "Hostile"], "explanation": "The author uses words like 'significantly,' 'trap,' 'limits,' and 'diminishes,' conveying a serious, concerned perspective on the impact on democracy."}
 },
 {
 "stimulus": ["The emergence of 'citizen journalism' has democratized the production of news, allowing individuals to document events in real-time. This shift has been particularly impactful in conflict zones where traditional media may have limited access. However, the lack of professional standards and verification tools among non-professional reporters poses significant risks. While citizen journalists provide immediate, ground-level perspectives, their contributions often lack the historical context and investigative depth associated with established journalism outlets."],
-"tfc": {"statement": "Citizen journalists possess the same level of investigative training as traditional news outlets.", "answer": "False", "explanation": "The passage explicitly contrasts the contributions of citizen journalists with the 'investigative depth associated with established journalism outlets.'"},
+"tfc": {"statement": "Citizen journalists can provide immediate ground-level perspectives while lacking the investigative depth of established journalism outlets.", "answer": "True", "explanation": "The passage says citizen journalists provide immediate, ground-level perspectives but often lack the historical context and investigative depth of established outlets."},
 "detail": {"question": "What is identified as a major benefit of citizen journalism?", "correct": "Access to events in restricted areas", "distractors": ["Superior verification techniques", "Professional editorial standards", "Extensive historical analysis"], "explanation": "The text highlights the impact in 'conflict zones where traditional media may have limited access' as a key benefit."},
 "inference": {"question": "What can be inferred about the reliability of citizen journalism compared to professional outlets?", "correct": "It requires more caution due to the absence of standard editorial vetting.", "distractors": ["It is more reliable because it is closer to the source.", "It is inherently biased and should be ignored.", "It is a perfect substitute for traditional media."], "explanation": "The lack of professional standards and verification tools suggests that consumers must be more cautious when using such sources."},
 "fourth": {"type": "summary", "question": "Which of the following best summarizes the role of citizen journalism?", "correct": "It offers unique real-time insights but lacks the rigorous standards of professional news.", "distractors": ["It is the future of journalism and will replace experts.", "It is too dangerous to be a valid news source.", "It provides superior analysis of historical events."], "explanation": "The summary balances the 'real-time' access with the 'lack of rigor' mentioned in the passage."}
 },
 {
 "stimulus": ["In the digital age, media ownership has become increasingly concentrated, with a small number of corporations controlling a vast array of information outlets. This consolidation raises concerns regarding media pluralism. When ownership is centralized, there is a risk that the diversity of political and cultural viewpoints presented to the public may be curtailed to serve corporate interests. Critics argue that such market structures undermine the democratic requirement for an informed citizenry, as news agendas become aligned with the financial objectives of parent companies."],
-"tfc": {"statement": "Market consolidation of media outlets has no impact on the variety of political viewpoints.", "answer": "False", "explanation": "The passage states that consolidation raises concerns that the 'diversity of political and cultural viewpoints... may be curtailed.'"},
+"tfc": {"statement": "Media ownership consolidation raises concerns that the diversity of political and cultural viewpoints may be curtailed.", "answer": "True", "explanation": "The passage states that consolidation raises concerns that diversity of political and cultural viewpoints may be curtailed."},
 "detail": {"question": "What is the primary concern mentioned regarding media ownership consolidation?", "correct": "Threat to media pluralism", "distractors": ["Decreased profit margins", "Loss of technological innovation", "Increase in independent news outlets"], "explanation": "The text explicitly states that consolidation 'raises concerns regarding media pluralism.'"},
 "inference": {"question": "What does the author imply about corporate interests in media?", "correct": "They may conflict with the public's need for diverse information.", "distractors": ["They are essential for improving news quality.", "They are the only way to fund quality journalism.", "They are entirely separate from news agenda setting."], "explanation": "The inference is that if agendas align with financial objectives, they may override the diversity needed for an informed citizenry."},
 "fourth": {"type": "negative", "question": "Which of the following is NOT a consequence of media consolidation according to the text?", "correct": "An increase in the number of independent news sources.", "distractors": ["Potential reduction in viewpoint diversity", "Alignment of news agendas with corporate interests", "Risks to democratic media requirements"], "explanation": "The text describes a reduction, not an increase, in independent perspectives due to consolidation."}
 },
 {
 "stimulus": ["Advertising models have heavily influenced the evolution of digital media. By relying on clicks and impressions for revenue, digital platforms have incentivized the production of 'clickbait'—content designed to provoke an immediate, often sensational, emotional response. This model rewards speed and engagement over accuracy and long-form analysis. As a result, the quality of news is often compromised, as the economic pressure to generate high traffic figures takes precedence over the ethical duty to inform the public accurately."],
-"tfc": {"statement": "The digital advertising model prioritizes accurate reporting over engagement metrics.", "answer": "False", "explanation": "The text states that the model 'rewards speed and engagement over accuracy.'"},
+"tfc": {"statement": "The digital advertising model rewards speed and engagement over accuracy and long-form analysis.", "answer": "True", "explanation": "The passage states that the model rewards speed and engagement over accuracy and long-form analysis."},
 "detail": {"question": "What is the primary goal of 'clickbait' content?", "correct": "To elicit an immediate emotional response", "distractors": ["To provide in-depth analysis", "To educate the public", "To support investigative journalism"], "explanation": "The passage defines clickbait as content 'designed to provoke an immediate, often sensational, emotional response.'"},
 "inference": {"question": "What can be inferred about the future of high-quality, long-form journalism in an advertising-heavy model?", "correct": "It may face economic challenges due to its lack of sensationalism.", "distractors": ["It will thrive because readers crave depth.", "It will be replaced by advertising content.", "It will receive government funding to compensate for revenue loss."], "explanation": "Since the model rewards engagement and speed, high-quality, slow-paced analysis is at an economic disadvantage."},
 "fourth": {"type": "summary", "question": "Which of the following summarizes the impact of advertising on digital media?", "correct": "Economic incentives for traffic encourage sensationalism at the expense of journalistic accuracy.", "distractors": ["Advertising funds news so that it can be free for everyone.", "Digital media is inherently unethical due to advertising.", "Clickbait is the most effective way to inform the public."], "explanation": "This captures the causal link between the advertising model and the resulting decline in quality."}
 },
 {
 "stimulus": ["The term 'post-truth' is often used to describe a contemporary political climate where emotional appeals carry more weight than objective facts. In this environment, the status of traditional media as a arbiter of truth is challenged. Public trust in institutional news has declined, often fueled by political rhetoric that labels critical reporting as 'biased.' This erosion of trust is not merely a rejection of specific news outlets but a broader skepticism toward the very concept of objective reality in news reporting."],
-"tfc": {"statement": "The 'post-truth' phenomenon is limited to a skepticism of specific news outlets.", "answer": "False", "explanation": "The passage states it is a 'broader skepticism toward the very concept of objective reality in news reporting,' not just specific outlets."},
+"tfc": {"statement": "The post-truth phenomenon includes broader skepticism toward objective reality in news reporting.", "answer": "True", "explanation": "The passage states that the erosion of trust is broader skepticism toward the concept of objective reality in news reporting."},
 "detail": {"question": "What defines the 'post-truth' political climate?", "correct": "Emotional appeals are more influential than facts", "distractors": ["Objective facts are highly valued", "Traditional media remains the sole arbiter of truth", "Public trust in institutions is increasing"], "explanation": "The passage describes it as a climate where 'emotional appeals carry more weight than objective facts.'"},
 "inference": {"question": "What is the role of political rhetoric in the 'post-truth' environment?", "correct": "It helps undermine trust in critical journalism.", "distractors": ["It clarifies complex political issues.", "It supports the role of traditional media.", "It promotes objective reporting standards."], "explanation": "The text notes that trust is 'fueled by political rhetoric that labels critical reporting as biased.'"},
 "fourth": {"type": "author", "question": "What is the author’s primary observation about public trust?", "correct": "It has moved beyond skepticism of individual sources to questioning the nature of truth itself.", "distractors": ["It is declining only due to fake news.", "It is easily restored by better reporting.", "It is increasing as people seek more news sources."], "explanation": "The author highlights a foundational shift in how the public perceives reality, not just media outlets."}
 },
 {
 "stimulus": ["Gatekeeping, the process by which editors decide which stories are presented to the public, has undergone significant changes in the digital age. Previously, this process acted as a filter for misinformation and ensured a level of editorial quality. While digital democratization has allowed for more voices to be heard, it has also dismantled these traditional barriers. This has left the responsibility of verification to the individual consumer, who is often ill-equipped to navigate the sheer volume of competing information without the guidance of professional gatekeepers."],
-"tfc": {"statement": "The shift away from traditional gatekeeping has left consumers with less responsibility for verifying information.", "answer": "False", "explanation": "The passage states that the process 'left the responsibility of verification to the individual consumer,' implying they now have more responsibility."},
+"tfc": {"statement": "The shift away from traditional gatekeeping has left responsibility for verification to the individual consumer.", "answer": "True", "explanation": "The passage states that dismantling traditional barriers has left the responsibility of verification to the individual consumer."},
 "detail": {"question": "What was a primary function of the traditional gatekeeping process?", "correct": "Ensuring quality and filtering misinformation", "distractors": ["Limiting the number of journalists", "Promoting corporate news agendas", "Increasing the speed of news delivery"], "explanation": "The text states it 'acted as a filter for misinformation and ensured a level of editorial quality.'"},
 "inference": {"question": "What can be inferred about the digital news landscape compared to the traditional one?", "correct": "It provides more access but less certainty for the reader.", "distractors": ["It is objectively superior for democracy.", "It is safer because there is more competition.", "It has made verification obsolete."], "explanation": "More voices (access) means less editorial oversight (less certainty) for the reader."},
 "fourth": {"type": "summary", "question": "Which of the following summarizes the change in gatekeeping described?", "correct": "The removal of editorial gatekeepers has empowered the audience but also increased the burden of fact-checking on the public.", "distractors": ["Gatekeeping was a barrier to progress that has been successfully eliminated.", "Digital news is always superior to traditional news.", "Professional editors are no longer needed in the modern era."], "explanation": "The summary acknowledges both the benefits (more voices) and the drawbacks (burden on public)."}
@@ -28364,10 +28392,446 @@ export const USER_CURATED_VR_PASSAGES: VrPassageInput[] = [
 },
 {
 "stimulus": ["Satirical news programs have carved out a unique space in the media landscape, often functioning as a check on political power. By using humor to highlight contradictions and hypocrisy, these programs can reach audiences that might otherwise ignore conventional news. However, the blending of entertainment and information has led to debates about the responsibility of these outlets. Some argue that humor can delegitimize serious issues, while others maintain that it is an effective tool for engaging the public in political discourse."],
-"tfc": {"statement": "There is a consensus among critics that satire is a beneficial tool for political engagement.", "answer": "False", "explanation": "The text notes a debate, mentioning that 'some argue' it can delegitimize issues, while others 'maintain' it is effective."},
+"tfc": {"statement": "Satirical news programs use humor to highlight contradictions and hypocrisy.", "answer": "True", "explanation": "The passage states that satirical programs use humor to highlight contradictions and hypocrisy."},
 "detail": {"question": "How do satirical programs reach audiences that might avoid traditional news?", "correct": "By using humor", "distractors": ["By focusing only on hard data", "By employing traditional gatekeepers", "By avoiding political topics"], "explanation": "The passage states they use 'humor to highlight contradictions and hypocrisy' to reach broader audiences."},
 "inference": {"question": "What is the central tension mentioned regarding satirical media?", "correct": "The balance between entertainment and the seriousness of news.", "distractors": ["The balance between liberal and conservative bias.", "The cost of production versus audience size.", "The speed of the news cycle versus accuracy."], "explanation": "The text discusses the 'blending of entertainment and information' and the potential to 'delegitimize serious issues.'"},
 "fourth": {"type": "summary", "question": "Which of the following is the best summary of the role of satire in media?", "correct": "Satire serves as a potential tool for political engagement, though its approach sparks debate regarding its impact on the seriousness of information.", "distractors": ["Satire is the most effective way to report news today.", "Satire is entirely irresponsible and should be banned.", "Satire has replaced traditional news as the primary source of truth."], "explanation": "The summary captures both the potential benefit (engagement) and the central debate."}
+},
+{
+"stimulus": ["Several NHS trusts have piloted 'hospital at home' schemes for patients who are clinically stable but still require regular observation. Under these schemes, nurses visit patients in their homes while wearable sensors transmit observations such as heart rate, oxygen saturation and temperature to a central team. Video check-ins are used to review symptoms and escalate concerns. Supporters argue that the model can reduce pressure on acute wards and allow patients to recover in familiar surroundings. Critics caution that it depends on reliable digital access, clear escalation pathways and carers who are able to help if a patient's condition changes suddenly."],
+"tfc": {"statement": "The hospital at home schemes described used both wearable sensors and video check-ins to monitor patients outside the ward.", "answer": "True", "explanation": "The passage states that wearable sensors transmit observations and that video check-ins are used to review symptoms and escalate concerns."},
+"detail": {"question": "Which patient group is described as suitable for the hospital at home schemes?", "correct": "Clinically stable patients who still need regular observation", "distractors": ["Patients needing emergency surgery", "Patients with no need for clinical monitoring", "Patients who cannot access any home support"], "explanation": "The passage says the schemes are for patients who are clinically stable but still require regular observation."},
+"inference": {"question": "Why might unreliable internet access limit the success of a hospital at home scheme?", "correct": "It could interrupt remote monitoring and communication with the clinical team.", "distractors": ["It would prevent nurses from visiting patients at home.", "It would make all wearable sensors medically inaccurate.", "It would remove the need for escalation pathways."], "explanation": "The model relies on transmitted observations and video check-ins, so unreliable digital access could disrupt those parts of care."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT mentioned as a condition or concern for hospital at home schemes?", "correct": "The cost of hospital parking for relatives", "distractors": ["Reliable digital access", "Clear escalation pathways", "Carers able to help if the patient deteriorates"], "explanation": "The passage lists digital access, escalation pathways and carer support as concerns, but does not mention parking costs."}
+},
+{
+"stimulus": ["Contextual admissions policies in medical schools consider an applicant's achievements alongside the educational and social circumstances in which those achievements were gained. A candidate who attended a low-performing school or experienced significant disruption may receive additional consideration, even if their raw grades are slightly below the usual offer threshold. Advocates argue that this approach identifies potential that traditional metrics may overlook and can widen participation in medicine. Opponents worry that the policy may be misunderstood as lowering standards, so universities often emphasize that all admitted students must still meet essential academic and professional requirements before starting the course."],
+"tfc": {"statement": "Students admitted through contextual admissions perform worse in clinical placements than students admitted through standard routes.", "answer": "Can't tell", "explanation": "The passage discusses how contextual admissions decisions are made and how the policy is perceived, but it gives no comparative evidence about later clinical placement performance."},
+"detail": {"question": "What does a contextual admissions policy take into account besides an applicant's achievements?", "correct": "The educational and social circumstances behind those achievements", "distractors": ["Only the applicant's interview score", "The applicant's preferred medical specialty", "Whether the applicant has already worked as a doctor"], "explanation": "The passage says contextual admissions consider achievements alongside educational and social circumstances."},
+"inference": {"question": "Why do universities emphasize that contextual applicants must still meet essential requirements?", "correct": "To address concerns that contextual admissions may be seen as reducing standards.", "distractors": ["To show that grades are never considered in admissions", "To prove that all applicants come from identical backgrounds", "To discourage applicants from low-performing schools"], "explanation": "The passage says opponents worry the policy may be misunderstood as lowering standards, so universities stress that essential requirements still apply."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Contextual admissions aim to recognize potential in light of disadvantage while maintaining minimum entry requirements.", "distractors": ["Contextual admissions remove all academic requirements for medical applicants.", "Medical schools use contextual admissions only to select students with the highest grades.", "Universities have abandoned contextual admissions because the policy is impossible to explain."], "explanation": "The passage balances the aim of widening participation with the point that admitted students must still satisfy essential requirements."}
+},
+{
+"stimulus": ["Community diagnostic hubs are designed to move some routine tests away from large hospital sites and into smaller centres closer to where patients live. A hub may offer blood tests, ultrasound appointments and respiratory checks in the same visit, reducing the need for multiple hospital trips. Supporters argue that this can shorten waiting lists by separating planned diagnostics from emergency hospital pressures. However, planners still need to consider transport links, staffing shortages and whether abnormal results can be reviewed quickly by specialist teams. A hub that improves access for one neighbourhood may be less useful for patients who cannot travel easily to its location."],
+"tfc": {"statement": "Community diagnostic hubs can combine several routine tests in a single visit closer to a patient's home.", "answer": "True", "explanation": "The passage says hubs move routine tests into smaller centres closer to patients and may offer blood tests, ultrasound appointments and respiratory checks in the same visit."},
+"detail": {"question": "According to the passage, why might diagnostic hubs help shorten waiting lists?", "correct": "They separate planned diagnostics from emergency hospital pressures.", "distractors": ["They remove the need for specialist review of abnormal results.", "They ensure every patient can walk to their appointment.", "They replace all emergency departments with local centres."], "explanation": "The passage states that separating planned diagnostics from emergency hospital pressures can help shorten waiting lists."},
+"inference": {"question": "Why does the passage mention transport links as a planning concern?", "correct": "Improved local provision may still exclude patients who cannot reach the hub.", "distractors": ["Diagnostic hubs are only intended for patients who drive.", "Transport links determine whether blood tests are clinically valid.", "Hospitals no longer need to consider patient access."], "explanation": "The passage notes that a hub may be less useful for patients who cannot travel easily to its location."},
+"fourth": {"type": "author", "question": "Which phrase best describes the author's attitude toward community diagnostic hubs?", "correct": "Supportive but aware of practical limitations", "distractors": ["Dismissive of any local testing model", "Certain that hubs solve every waiting-list problem", "Focused only on financial savings"], "explanation": "The author describes potential benefits while also raising issues such as transport, staffing and specialist review."}
+},
+{
+"stimulus": ["Electronic prescribing systems can warn clinicians when a proposed medicine conflicts with a recorded allergy, duplicates another prescription or exceeds a usual dose range. Early versions of these systems often produced frequent low-priority warnings, causing some clinicians to override alerts without reading them closely. Newer systems therefore try to rank alerts by clinical seriousness and suppress messages that are unlikely to change prescribing decisions. This approach may reduce alert fatigue, but designers must be careful not to hide rare warnings that would prevent serious harm. The safest system is not necessarily the one with the most alerts, but the one that presents the right warning at the right moment."],
+"tfc": {"statement": "Hospitals using ranked electronic prescribing alerts have lower medication-related mortality than hospitals using older alert systems.", "answer": "Can't tell", "explanation": "The passage explains how ranked alerts are intended to reduce alert fatigue, but it gives no comparative mortality data."},
+"detail": {"question": "What problem did frequent low-priority warnings create in early electronic prescribing systems?", "correct": "Clinicians could become used to overriding alerts without reading them closely.", "distractors": ["They prevented clinicians from recording allergies.", "They removed all dose information from prescriptions.", "They made duplicate prescriptions impossible."], "explanation": "The passage states that frequent low-priority warnings caused some clinicians to override alerts without reading them closely."},
+"inference": {"question": "Why might suppressing some alerts be risky?", "correct": "A rare but important warning might be hidden before it prevents harm.", "distractors": ["Clinicians would no longer be allowed to prescribe medicines.", "All warnings would become legally invalid.", "Patients would be unable to report allergies."], "explanation": "The passage says designers must avoid hiding rare warnings that would prevent serious harm."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Electronic prescribing alerts need careful prioritization so important warnings stand out without overwhelming clinicians.", "distractors": ["Electronic prescribing systems should show every possible alert to be safe.", "Alert fatigue is solved by removing all prescribing warnings.", "Dose ranges are irrelevant once prescriptions become electronic."], "explanation": "The passage argues that safety depends on presenting the right warning at the right moment, rather than simply increasing alert volume."}
+},
+{
+"stimulus": ["Antimicrobial stewardship programmes aim to preserve the effectiveness of antibiotics by helping clinicians choose the narrowest suitable drug, dose and duration for each infection. In hospitals, stewardship teams may review prescriptions after laboratory results return and suggest changing from broad-spectrum treatment to a more targeted option. The goal is not to deny antibiotics to patients who need them, but to reduce unnecessary exposure that can encourage resistant organisms. Successful programmes depend on rapid microbiology reporting, clear local guidelines and conversations that respect the judgement of the team caring for the patient."],
+"tfc": {"statement": "Antimicrobial stewardship programmes seek to reduce unnecessary antibiotic exposure while still treating patients who need antibiotics.", "answer": "True", "explanation": "The passage says the goal is not to deny antibiotics to patients who need them, but to reduce unnecessary exposure that can encourage resistant organisms."},
+"detail": {"question": "What change might a stewardship team suggest after laboratory results return?", "correct": "Switching from broad-spectrum treatment to a more targeted option", "distractors": ["Stopping all microbiology reporting", "Using the longest possible antibiotic course", "Replacing local guidelines with patient surveys"], "explanation": "The passage states that teams may suggest changing from broad-spectrum treatment to a more targeted option."},
+"inference": {"question": "Why are rapid microbiology reports important for stewardship?", "correct": "They help clinicians refine treatment once more specific information is available.", "distractors": ["They prove that antibiotics are never needed.", "They remove the need for clinical judgement.", "They make broad-spectrum treatment compulsory."], "explanation": "The passage links prescription review to laboratory results, so timely results support more targeted prescribing."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT described as a requirement for successful antimicrobial stewardship?", "correct": "Ignoring the judgement of the treating team", "distractors": ["Rapid microbiology reporting", "Clear local guidelines", "Respectful conversations with the caring team"], "explanation": "The passage says successful programmes depend on rapid reporting, clear guidelines and conversations that respect the treating team's judgement."}
+},
+{
+"stimulus": ["Simulation suites allow healthcare students to practise clinical communication and emergency decision-making without putting real patients at risk. Some scenarios use actors as patients, while others use responsive mannequins that can display changing observations. Debriefing after the scenario is often treated as the most important part of the session, because it allows learners to explain their thinking, identify missed cues and plan how they would respond differently next time. Although simulation can build confidence, educators warn that it cannot fully reproduce the emotional complexity of working with an unwell person and their family in a real clinical environment."],
+"tfc": {"statement": "Students who practise in simulation suites always make fewer errors in real emergencies than students who do not use simulation.", "answer": "Can't tell", "explanation": "The passage says simulation can build confidence and support practice, but it gives no direct comparison of real emergency error rates between students who do and do not use simulation."},
+"detail": {"question": "Why is debriefing described as especially important in simulation training?", "correct": "It lets learners review their thinking and plan improvements.", "distractors": ["It replaces the need to practise communication.", "It ensures scenarios never feel stressful.", "It allows students to avoid feedback from educators."], "explanation": "The passage states that debriefing helps learners explain their thinking, identify missed cues and plan different responses."},
+"inference": {"question": "What limitation of simulation training is suggested by the passage?", "correct": "It may not capture all the emotional pressures of real clinical care.", "distractors": ["It is only useful for laboratory scientists.", "It prevents students from learning emergency decisions.", "It cannot involve actors or mannequins."], "explanation": "The passage warns that simulation cannot fully reproduce the emotional complexity of caring for an unwell person and family."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Simulation offers safe clinical practice and reflection, but it has limits compared with real patient care.", "distractors": ["Simulation is unsafe because it exposes real patients to trainee errors.", "Debriefing is a minor optional part of simulation teaching.", "Simulation has replaced all real clinical placements for healthcare students."], "explanation": "The passage emphasizes safe practice and debriefing while noting that simulation cannot fully mirror real clinical complexity."}
+},
+{
+"stimulus": ["Patient-reported outcome measures, often shortened to PROMs, ask patients to describe symptoms, function and quality of life in their own words or through structured questionnaires. A clinic may collect PROMs before and after treatment to understand whether an intervention improved what matters to the patient, not just what appears on a scan or blood test. Advocates say this can make care more person-centred and reveal problems that routine clinical measures miss. However, the usefulness of PROMs depends on clear questions, accessible formats and careful interpretation, because scores can be affected by language, confidence and expectations as well as by health itself."],
+"tfc": {"statement": "PROMs can capture aspects of treatment impact that may not be shown by scans or blood tests alone.", "answer": "True", "explanation": "The passage says PROMs help assess what matters to the patient, not just what appears on a scan or blood test, and may reveal problems routine clinical measures miss."},
+"detail": {"question": "What do patient-reported outcome measures ask patients to describe?", "correct": "Symptoms, function and quality of life", "distractors": ["Hospital staffing levels", "The cost of laboratory equipment", "The technical settings used for imaging"], "explanation": "The passage defines PROMs as asking patients to describe symptoms, function and quality of life."},
+"inference": {"question": "Why might accessible formats matter when collecting PROMs?", "correct": "Patients need to understand and answer the questions for the scores to be meaningful.", "distractors": ["Accessible formats ensure all treatments are successful.", "They remove the need to interpret patient responses.", "They make scans and blood tests unnecessary."], "explanation": "The passage says usefulness depends on accessible formats and careful interpretation, implying comprehension affects the value of the responses."},
+"fourth": {"type": "author", "question": "Which phrase best describes the author's view of PROMs?", "correct": "Positive about their value but cautious about interpretation", "distractors": ["Convinced they should replace all clinical tests", "Dismissive of patient views in treatment decisions", "Focused only on the cost of questionnaires"], "explanation": "The author highlights person-centred benefits while warning that scores can be affected by language, confidence and expectations."}
+},
+{
+"stimulus": ["Green prescribing schemes encourage clinicians to recommend nature-based activities, such as guided walks, community gardening or conservation volunteering, as part of a wider plan to support wellbeing. These schemes are usually aimed at people whose social isolation, low mood or long-term conditions may be helped by safe outdoor activity and local connection. They are not presented as a substitute for urgent medical care, medication or psychological therapy when those are required. Evaluators often find it difficult to separate the effect of contact with nature from the effect of meeting other people, having a routine and receiving attention from supportive staff."],
+"tfc": {"statement": "Green prescribing schemes have been proven to improve wellbeing solely because of contact with nature, rather than because of social contact or routine.", "answer": "Can't tell", "explanation": "The passage says evaluators find it difficult to separate the effect of nature from social contact, routine and supportive staff, so it does not prove nature is the sole cause."},
+"detail": {"question": "Which activity is given as an example of green prescribing?", "correct": "Community gardening", "distractors": ["Emergency surgery", "Genetic sequencing", "Inpatient ventilation"], "explanation": "The passage lists guided walks, community gardening and conservation volunteering as examples."},
+"inference": {"question": "Why does the passage stress that green prescribing is not a substitute for urgent care?", "correct": "It is intended as supportive wellbeing activity, not as replacement treatment when medical care is required.", "distractors": ["It is only available inside emergency departments.", "It has no connection to wellbeing or social isolation.", "It prevents clinicians from recommending medication."], "explanation": "The passage frames green prescribing as part of a wider wellbeing plan while preserving the need for urgent care, medication or therapy when required."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT mentioned as a factor that may contribute to the effects of green prescribing?", "correct": "Receiving a higher dose of prescribed medication", "distractors": ["Meeting other people", "Having a routine", "Receiving attention from supportive staff"], "explanation": "The passage mentions social contact, routine and supportive staff, but not higher medication doses as part of the effect."}
+},
+{
+"stimulus": ["Pharmacogenomic testing examines genetic variants that can influence how a person processes certain medicines. For some drugs, a variant in a drug-metabolising enzyme may mean that a standard dose is cleared too slowly, increasing the risk of side effects, or too quickly, reducing the likely benefit. Supporters argue that testing can make prescribing more precise when strong evidence links a variant to a drug response. However, implementation is uneven because results need to be available at the point of prescribing, clinicians require clear guidance, and not every medicine has a clinically useful genetic marker."],
+"tfc": {"statement": "Pharmacogenomic testing can identify genetic variants that affect how some patients process certain medicines.", "answer": "True", "explanation": "The passage states that pharmacogenomic testing examines genetic variants that can influence how a person processes certain medicines."},
+"detail": {"question": "What might happen if a medicine is cleared too slowly?", "correct": "The risk of side effects may increase.", "distractors": ["The medicine becomes unrelated to dose.", "The patient no longer needs prescribing advice.", "The drug is automatically cleared too quickly next time."], "explanation": "The passage says slow clearance can increase the risk of side effects."},
+"inference": {"question": "Why is point-of-prescribing availability important for pharmacogenomic results?", "correct": "Clinicians need the information when they are making the prescribing decision.", "distractors": ["Genetic variants disappear after a prescription is written.", "Every medicine has the same genetic marker.", "Testing is useful only after side effects have already occurred."], "explanation": "The passage notes implementation is uneven because results need to be available at the point of prescribing."},
+"fourth": {"type": "author", "question": "Which phrase best describes the author's view of pharmacogenomic testing?", "correct": "Promising when evidence and practical systems support its use", "distractors": ["Scientifically impossible in all prescribing decisions", "Useful for every medicine without exception", "Valuable only when clinicians ignore prescribing guidance"], "explanation": "The passage presents potential precision benefits but stresses evidence, timely results and clear guidance."}
+},
+{
+"stimulus": ["Multiple mini-interviews, or MMIs, are used by some medical schools to assess applicants through a circuit of short stations rather than a single long interview. Each station may focus on a different skill, such as ethical reasoning, communication, prioritisation or reflection on a healthcare scenario. Supporters argue that using several stations reduces the influence of a single poor interaction and samples a wider range of attributes. Applicants often find the format intense because they must reset quickly between tasks. Schools still need trained assessors and carefully designed prompts so that station scores reflect relevant qualities rather than familiarity with a particular interview style."],
+"tfc": {"statement": "MMI performance has been shown to predict future professionalism more accurately than every other admissions method.", "answer": "Can't tell", "explanation": "The passage explains how MMIs work and why supporters value them, but it does not compare their predictive accuracy with every other admissions method."},
+"detail": {"question": "How do MMIs differ from a single long interview?", "correct": "They use a circuit of short stations.", "distractors": ["They remove all assessment of communication.", "They assess applicants only after they start medical school.", "They require every applicant to complete a written exam instead."], "explanation": "The passage defines MMIs as a circuit of short stations rather than a single long interview."},
+"inference": {"question": "Why might several stations reduce the influence of a single poor interaction?", "correct": "Performance is sampled across multiple tasks instead of depending on one encounter.", "distractors": ["Assessors are not involved in MMI scoring.", "Every station tests the exact same prompt.", "Applicants are allowed to repeat stations until they pass."], "explanation": "The passage says several stations sample a wider range of attributes and reduce the influence of one poor interaction."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "MMIs broaden admissions assessment through multiple short tasks, but they require careful design and trained assessors.", "distractors": ["MMIs are single long interviews focused only on academic grades.", "MMIs remove the need to judge communication and ethics.", "MMIs are easy for all applicants because no station changes task."], "explanation": "The passage explains the multi-station benefit while emphasizing prompt design and assessor training."}
+},
+{
+"stimulus": ["Falls prevention clinics assess older adults who have fallen or who feel unsteady when walking. A review may include medication checks, vision screening, blood pressure measurements while standing and sitting, and a discussion of footwear or hazards at home. The clinic's aim is not simply to tell patients to avoid activity, because reduced movement can weaken muscles and increase future risk. Instead, clinicians often combine strength exercises, balance training and home adjustments so that patients can stay active with fewer avoidable hazards."],
+"tfc": {"statement": "Falls prevention clinics may recommend strength exercises and home adjustments rather than simply advising patients to avoid activity.", "answer": "True", "explanation": "The passage says clinics do not simply tell patients to avoid activity and often combine strength exercises, balance training and home adjustments."},
+"detail": {"question": "Which assessment is listed as part of a falls prevention review?", "correct": "Blood pressure measurements while standing and sitting", "distractors": ["Genetic sequencing for inherited disease", "A full dental extraction plan", "A mandatory overnight hospital admission"], "explanation": "The passage lists blood pressure measurements while standing and sitting as one possible part of the review."},
+"inference": {"question": "Why might advising complete inactivity be harmful?", "correct": "Reduced movement can weaken muscles and increase future risk.", "distractors": ["It makes home hazards disappear immediately.", "It improves balance training without practice.", "It removes the need to review medication."], "explanation": "The passage states that reduced movement can weaken muscles and increase future risk."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT mentioned as part of falls prevention?", "correct": "Replacing all medicines with antibiotics", "distractors": ["Medication checks", "Vision screening", "Discussion of footwear"], "explanation": "Medication checks, vision screening and footwear are mentioned, but antibiotics are not."}
+},
+{
+"stimulus": ["Digital pathology allows microscope slides to be scanned into high-resolution images that can be viewed on a computer. This can help hospitals share difficult cases with specialists at other sites without transporting the glass slide itself. It may also support teaching, because several students can inspect the same image at once and annotations can be added to highlight features. However, adoption requires secure image storage, reliable displays and careful quality checks so that colour, focus and scale are not distorted in ways that affect interpretation."],
+"tfc": {"statement": "Hospitals using digital pathology always report faster cancer diagnoses than hospitals using glass slides alone.", "answer": "Can't tell", "explanation": "The passage describes possible sharing and teaching benefits, but it gives no universal comparison of cancer diagnosis speed."},
+"detail": {"question": "What does digital pathology allow hospitals to share without transporting the glass slide itself?", "correct": "High-resolution scanned images of microscope slides", "distractors": ["Original paper consent forms", "Physical surgical instruments", "Only handwritten laboratory labels"], "explanation": "The passage says slides can be scanned into high-resolution images and shared with specialists without transporting the glass slide."},
+"inference": {"question": "Why are colour and focus checks important in digital pathology?", "correct": "Distortion could affect how the image is interpreted.", "distractors": ["They remove the need for secure storage.", "They prove that teaching is impossible.", "They make specialist review unnecessary."], "explanation": "The passage warns that colour, focus and scale distortions can affect interpretation."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Digital pathology can improve sharing and teaching, but it requires careful technical safeguards.", "distractors": ["Digital pathology prevents specialists from viewing cases remotely.", "Digital pathology is useful only when images are stored insecurely.", "Digital pathology replaces all quality checks with annotations."], "explanation": "The passage balances sharing and teaching benefits against storage, display and quality-control requirements."}
+},
+{
+"stimulus": ["Blood conservation programmes aim to reduce avoidable transfusions while ensuring that patients who need blood products receive them promptly. Before planned surgery, teams may identify and treat anaemia, review medicines that increase bleeding risk and plan techniques that minimise blood loss during the operation. These programmes do not assume that transfusion is wrong; rather, they encourage clinicians to consider whether each unit is likely to provide meaningful benefit. Clear emergency pathways remain essential, because some patients lose blood too quickly for slower conservation measures to be enough."],
+"tfc": {"statement": "Blood conservation programmes can include treating anaemia before planned surgery.", "answer": "True", "explanation": "The passage says teams may identify and treat anaemia before planned surgery as part of blood conservation."},
+"detail": {"question": "What do blood conservation programmes encourage clinicians to consider?", "correct": "Whether each unit of blood is likely to provide meaningful benefit", "distractors": ["Whether all transfusions should be banned", "Whether emergency pathways should be removed", "Whether anaemia should be ignored until after surgery"], "explanation": "The passage says clinicians are encouraged to consider whether each unit is likely to provide meaningful benefit."},
+"inference": {"question": "Why do emergency pathways remain important?", "correct": "Some patients lose blood too quickly for slower conservation measures to be enough.", "distractors": ["Conservation programmes are used only for minor paperwork.", "Blood loss can never occur during surgery.", "Anaemia treatment always works instantly."], "explanation": "The passage states that some patients may lose blood too quickly for slower measures."},
+"fourth": {"type": "author", "question": "Which phrase best describes the author's attitude toward blood conservation?", "correct": "Balanced, supporting appropriate reduction without denying needed transfusion", "distractors": ["Opposed to all transfusions in every case", "Concerned only with saving storage space", "Dismissive of planning before surgery"], "explanation": "The author says programmes reduce avoidable transfusion while ensuring patients who need blood products receive them promptly."}
+},
+{
+"stimulus": ["Longitudinal portfolios are used in some healthcare courses to collect evidence of learning over time. Students may include reflections, feedback from supervisors, examples of clinical reasoning and records of practical skills they have attempted. A portfolio can show development that a single exam might miss, especially when students revisit earlier goals and document how they responded to feedback. Critics argue that portfolios can become box-ticking exercises if learners write what they think assessors want to hear rather than honestly analysing their progress."],
+"tfc": {"statement": "Students with longitudinal portfolios achieve higher final exam scores than students assessed only by written papers.", "answer": "Can't tell", "explanation": "The passage explains what portfolios can show, but it does not compare final exam scores between assessment systems."},
+"detail": {"question": "Which item may be included in a longitudinal portfolio?", "correct": "Feedback from supervisors", "distractors": ["Only anonymous exam rankings", "The hospital's annual electricity bill", "A complete ban on reflective writing"], "explanation": "The passage lists feedback from supervisors as one example of portfolio evidence."},
+"inference": {"question": "Why might portfolios show development that a single exam misses?", "correct": "They collect evidence over time and can show responses to feedback.", "distractors": ["They prevent students from receiving feedback.", "They remove all records of practical skills.", "They assess only one isolated performance."], "explanation": "The passage says portfolios collect evidence over time and allow students to revisit goals and document responses to feedback."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT mentioned as possible portfolio evidence?", "correct": "A national newspaper review of the course", "distractors": ["Reflections", "Examples of clinical reasoning", "Records of practical skills"], "explanation": "Reflections, reasoning examples and skill records are mentioned, but newspaper reviews are not."}
+},
+{
+"stimulus": ["Remote cardiac rehabilitation programmes provide exercise advice, education and risk-factor support to people recovering from heart problems without requiring every session to take place in a hospital gym. Participants may receive home activity plans, phone reviews and wearable activity goals, alongside advice about medicines, smoking cessation and diet. Supporters argue that remote options can help people who live far from a centre or who struggle to attend during working hours. However, teams must identify patients who need closer supervision because of symptoms, frailty or uncertainty about safe exercise intensity."],
+"tfc": {"statement": "Remote cardiac rehabilitation can include home activity plans and advice about medicines, smoking cessation and diet.", "answer": "True", "explanation": "The passage states that participants may receive home activity plans and advice about medicines, smoking cessation and diet."},
+"detail": {"question": "Who might particularly benefit from remote cardiac rehabilitation options?", "correct": "People who live far from a centre or struggle to attend during working hours", "distractors": ["Only people who have no heart problems", "Patients who require no exercise advice", "Clinicians who want to stop all follow-up"], "explanation": "The passage says remote options can help people far from a centre or unable to attend during working hours."},
+"inference": {"question": "Why must some patients be identified for closer supervision?", "correct": "Symptoms, frailty or uncertainty about exercise intensity may make remote support insufficient.", "distractors": ["Every patient must exercise without advice.", "Remote rehabilitation excludes all medicine advice.", "Hospital gyms are never used for rehabilitation."], "explanation": "The passage names symptoms, frailty and uncertainty about safe exercise intensity as reasons for closer supervision."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Remote cardiac rehabilitation improves flexibility for some patients but still requires careful risk assessment.", "distractors": ["Remote cardiac rehabilitation means patients receive no education or support.", "Remote rehabilitation is appropriate for every patient without screening.", "Remote programmes focus only on diet and ignore exercise."], "explanation": "The passage presents access benefits while emphasizing the need to identify patients requiring closer supervision."}
+},
+{
+"stimulus": ["Vaccine cold-chain systems keep temperature-sensitive vaccines within a specified range from storage to administration. A breach can occur if a fridge door is left open, a delivery is delayed or monitoring equipment fails. Clinics may use digital temperature loggers that record readings throughout the day and alert staff when temperatures move outside the accepted range. Even with monitoring, staff must know how to quarantine affected stock and decide whether specialist advice is needed before any vaccine is used. The purpose of the system is to protect vaccine quality, not merely to produce a complete set of temperature records."],
+"tfc": {"statement": "Clinics using digital temperature loggers never experience vaccine cold-chain breaches.", "answer": "Can't tell", "explanation": "The passage says loggers can record readings and alert staff, but it does not state that breaches never occur in clinics using them."},
+"detail": {"question": "What can digital temperature loggers do in a vaccine cold-chain system?", "correct": "Record readings and alert staff when temperatures leave the accepted range", "distractors": ["Administer vaccines without staff involvement", "Remove the need to quarantine affected stock", "Make delayed deliveries impossible"], "explanation": "The passage says loggers record readings and alert staff when temperatures move outside the accepted range."},
+"inference": {"question": "Why might affected stock need to be quarantined?", "correct": "Staff may need to check whether vaccine quality was compromised before use.", "distractors": ["Cold-chain systems are only about paperwork.", "All vaccines become stronger after warming.", "Temperature readings have no relevance to vaccine quality."], "explanation": "The passage links quarantine and specialist advice to protecting vaccine quality after a possible breach."},
+"fourth": {"type": "author", "question": "Which phrase best captures the author's view of cold-chain monitoring?", "correct": "Monitoring is useful only when paired with action and judgement.", "distractors": ["Temperature records matter more than vaccine quality.", "Digital loggers make staff training unnecessary.", "Cold-chain breaches cannot happen during delivery."], "explanation": "The passage stresses that staff must act on breaches and that the purpose is quality protection, not records alone."}
+},
+{
+"stimulus": ["Social prescribing link workers connect people with non-clinical sources of support that may improve wellbeing. A patient might be referred for help joining a local exercise group, accessing debt advice, finding a befriending service or learning about community classes. The role is based on the idea that health can be shaped by loneliness, housing, money worries and confidence, not only by diagnoses. Link workers do not replace doctors or nurses; instead, they help address practical and social needs that may sit alongside medical treatment."],
+"tfc": {"statement": "Social prescribing link workers may connect patients with non-clinical support such as exercise groups or debt advice.", "answer": "True", "explanation": "The passage says link workers connect people with non-clinical support and gives exercise groups and debt advice as examples."},
+"detail": {"question": "Which factor is mentioned as shaping health alongside diagnoses?", "correct": "Loneliness", "distractors": ["The colour of hospital uniforms", "The brand of a clinic computer", "The number of parking spaces only"], "explanation": "The passage lists loneliness, housing, money worries and confidence as factors that can shape health."},
+"inference": {"question": "Why does the passage say link workers do not replace doctors or nurses?", "correct": "Their role is to address social and practical needs alongside medical treatment.", "distractors": ["They are responsible for all surgery.", "They provide only emergency medication.", "They prevent patients from receiving clinical care."], "explanation": "The passage states that link workers help with practical and social needs that may sit alongside medical treatment."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes social prescribing in the passage?", "correct": "It connects patients with community support for social factors that influence wellbeing.", "distractors": ["It removes all medical treatment from healthcare.", "It is used only to choose hospital uniforms.", "It focuses exclusively on laboratory diagnoses."], "explanation": "The passage emphasizes connecting patients to community support for social and practical factors affecting wellbeing."}
+},
+{
+"stimulus": ["Health literacy materials try to make medical information easier to understand and use. A leaflet about asthma inhalers might include plain language, labelled pictures, a short action plan and advice about when to seek urgent help. Designers often test materials with patients because words that seem simple to clinicians may still be confusing to the intended audience. Good materials do not guarantee that every patient will follow advice, but they can reduce avoidable confusion and support conversations between patients and healthcare professionals."],
+"tfc": {"statement": "Every patient who receives a plain-language leaflet follows all medical advice correctly.", "answer": "Can't tell", "explanation": "The passage says good materials do not guarantee that every patient will follow advice, so it does not support this universal claim."},
+"detail": {"question": "What might an asthma inhaler leaflet include?", "correct": "A short action plan", "distractors": ["A list of unrelated legal cases", "Instructions to avoid all urgent help", "Only complex technical abbreviations"], "explanation": "The passage lists a short action plan as one possible feature."},
+"inference": {"question": "Why test materials with patients?", "correct": "Clinician-friendly wording may still be confusing to the intended audience.", "distractors": ["Patients are expected to rewrite all medical guidelines.", "Testing ensures advice will always be followed perfectly.", "Pictures make every leaflet inaccurate."], "explanation": "The passage says words that seem simple to clinicians may still confuse patients."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT described as a feature of the asthma leaflet example?", "correct": "A schedule for hospital staff rotas", "distractors": ["Plain language", "Labelled pictures", "Advice about urgent help"], "explanation": "Plain language, labelled pictures and urgent-help advice are mentioned; staff rotas are not."}
+},
+{
+"stimulus": ["Sepsis screening tools are designed to help clinical teams notice patterns that may indicate a dangerous response to infection. A tool might prompt staff to consider temperature, heart rate, blood pressure, breathing rate and mental state together rather than treating each sign in isolation. The value of screening lies partly in encouraging early escalation when several warning signs appear. However, tools cannot replace clinical judgement because some patients trigger alerts for reasons other than sepsis, while others may be seriously unwell before all thresholds are crossed."],
+"tfc": {"statement": "Sepsis screening tools encourage staff to consider several observations together rather than in isolation.", "answer": "True", "explanation": "The passage says a tool might prompt staff to consider temperature, heart rate, blood pressure, breathing rate and mental state together rather than separately."},
+"detail": {"question": "Which observation is listed as part of a possible sepsis screen?", "correct": "Breathing rate", "distractors": ["Shoe size", "Favourite food", "Home postcode only"], "explanation": "The passage lists breathing rate among the signs that may be considered."},
+"inference": {"question": "Why can screening tools not replace clinical judgement?", "correct": "Alerts may occur for non-sepsis reasons, and some unwell patients may not meet every threshold.", "distractors": ["They never consider any observations.", "They are designed only for healthy volunteers.", "They make escalation impossible."], "explanation": "The passage explains that false triggers and incomplete threshold crossing mean judgement remains necessary."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Sepsis screening can support early recognition, but it must be interpreted with clinical judgement.", "distractors": ["Sepsis tools remove the need for staff to observe patients.", "Sepsis can be ruled out whenever one sign is normal.", "Screening tools are valuable only when escalation is avoided."], "explanation": "The passage presents screening as useful for early escalation but not as a replacement for judgement."}
+},
+{
+"stimulus": ["Consumer sleep trackers estimate sleep duration and stages using signals such as movement and heart-rate patterns. Some users find them helpful for noticing routines that affect rest, such as late caffeine, irregular bedtimes or alcohol use. Sleep clinicians caution that the devices are not the same as formal sleep studies, which can measure brain activity, breathing and oxygen levels in a controlled way. For some people, constant checking may even worsen anxiety about sleep, especially if they treat every nightly score as a precise medical verdict."],
+"tfc": {"statement": "Consumer sleep trackers are as accurate as formal sleep studies for diagnosing every sleep disorder.", "answer": "Can't tell", "explanation": "The passage contrasts trackers with formal sleep studies and warns against treating scores as precise medical verdicts, but it does not prove equal diagnostic accuracy for every disorder."},
+"detail": {"question": "Which routine is mentioned as something a sleep tracker user might notice?", "correct": "Late caffeine", "distractors": ["A hospital theatre list", "A vaccine storage breach", "A blood transfusion request"], "explanation": "The passage lists late caffeine as one routine that may affect rest."},
+"inference": {"question": "Why might constant checking worsen sleep anxiety?", "correct": "Users may treat every nightly score as a precise medical verdict.", "distractors": ["Trackers prevent people from seeing bedtime routines.", "Formal sleep studies cannot measure oxygen levels.", "Movement signals are unrelated to any estimate."], "explanation": "The passage says anxiety can worsen when users treat every score as a precise medical verdict."},
+"fourth": {"type": "author", "question": "Which phrase best describes the author's attitude toward consumer sleep trackers?", "correct": "They may be useful for habits but should not be overinterpreted medically.", "distractors": ["They are perfect diagnostic substitutes for sleep studies.", "They have no possible role in noticing routines.", "They should be used to replace all clinician advice."], "explanation": "The passage notes habit-tracking benefits while distinguishing trackers from formal sleep studies and warning about overinterpretation."}
+},
+{
+"stimulus": ["Shared decision-making clinics encourage patients and clinicians to compare reasonable treatment options together. A consultation may include discussion of likely benefits, possible harms, recovery time and how each option fits with the patient's priorities. Decision aids can help by showing information in a consistent format, but they are not meant to pressure every patient toward the same choice. The approach works best when clinicians explain uncertainty honestly and patients have enough time to ask questions before deciding."],
+"tfc": {"statement": "Shared decision-making clinics consider both clinical information and the patient's priorities when comparing treatment options.", "answer": "True", "explanation": "The passage says consultations may discuss benefits, harms and recovery time alongside how each option fits with the patient's priorities."},
+"detail": {"question": "What is one topic that may be discussed in a shared decision-making consultation?", "correct": "Possible harms", "distractors": ["The hospital's catering contract", "The clinician's commute time", "The colour of clinic furniture"], "explanation": "The passage lists possible harms as one area for discussion."},
+"inference": {"question": "Why should clinicians explain uncertainty honestly?", "correct": "Patients need realistic information before choosing between reasonable options.", "distractors": ["Uncertainty means no treatment can be discussed.", "Decision aids are designed to hide risks.", "Every patient must be pushed toward the same option."], "explanation": "The passage links honest uncertainty, time for questions and choosing between options."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT described as a purpose of decision aids?", "correct": "Pressuring every patient toward the same choice", "distractors": ["Showing information consistently", "Supporting discussion of options", "Helping patients compare treatment choices"], "explanation": "The passage says decision aids are not meant to pressure every patient toward the same choice."}
+},
+{
+"stimulus": ["Peer-support groups bring together people with similar health experiences so that they can share practical tips and emotional encouragement. In diabetes care, a group might discuss meal planning, glucose monitoring, exercise barriers and how to talk to family members about lifestyle changes. Facilitators usually remind participants that personal experiences are not a substitute for individualized clinical advice, especially when medicines or symptoms change. Researchers may find it difficult to measure the effect of peer support because motivation, social connection and formal education can overlap during the same programme."],
+"tfc": {"statement": "Peer-support groups for diabetes have been proven to improve glucose control only through formal education, not through motivation or social connection.", "answer": "Can't tell", "explanation": "The passage says these factors can overlap and that researchers may find effects difficult to measure, so it does not prove formal education is the only mechanism."},
+"detail": {"question": "Which topic might a diabetes peer-support group discuss?", "correct": "Meal planning", "distractors": ["Replacing all clinical advice", "Hospital car-park design", "Surgical theatre ventilation"], "explanation": "The passage lists meal planning as a possible discussion topic."},
+"inference": {"question": "Why do facilitators warn that personal experiences are not a substitute for individualized clinical advice?", "correct": "A person's medicines or symptoms may require advice specific to their situation.", "distractors": ["Group members are forbidden to discuss practical tips.", "Clinical advice is never relevant to diabetes care.", "Peer support can only discuss hospital finances."], "explanation": "The passage especially notes the need for individualized advice when medicines or symptoms change."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Peer support can offer practical and emotional help, but it should sit alongside individualized clinical advice.", "distractors": ["Peer support replaces all clinician involvement in diabetes care.", "Peer-support groups discuss only one fixed medication dose.", "Researchers can always isolate peer support effects with no difficulty."], "explanation": "The passage balances group benefits with cautions about individual advice and measurement."}
+},
+{
+"stimulus": ["Medication reconciliation is the process of comparing a patient's current medicines with new prescriptions when care moves between settings, such as from hospital to home. Pharmacists or clinicians may check the hospital discharge summary, the GP medication record and what the patient says they actually take. The aim is to spot unintended omissions, duplications, dose changes or interactions before harm occurs. Reconciliation can be time-consuming, especially when records disagree, but it is intended to make transitions safer rather than to create a new medicine list without discussion."],
+"tfc": {"statement": "Medication reconciliation compares medicine information across care settings to identify unintended changes or duplications.", "answer": "True", "explanation": "The passage defines reconciliation as comparing medicines when care moves between settings and says it aims to spot omissions, duplications, dose changes and interactions."},
+"detail": {"question": "Which source may be checked during medication reconciliation?", "correct": "The hospital discharge summary", "distractors": ["A clinic's wall colour chart", "A weather forecast for the ward", "A patient's shoe size record"], "explanation": "The passage lists the hospital discharge summary as one source that may be checked."},
+"inference": {"question": "Why can medication reconciliation be time-consuming?", "correct": "Different medication records may disagree with each other.", "distractors": ["It ignores what patients say they take.", "It requires every patient to start all medicines again.", "It avoids checking for interactions."], "explanation": "The passage says reconciliation can be time-consuming, especially when records disagree."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT described as a target of medication reconciliation?", "correct": "Choosing the colour of medicine packaging", "distractors": ["Unintended omissions", "Duplications", "Medicine interactions"], "explanation": "The passage mentions omissions, duplications and interactions, but not packaging colour."}
+},
+{
+"stimulus": ["Carrier screening can identify whether someone carries a genetic variant that could be passed to a child, even if the person has no symptoms themselves. In some services, screening is offered before pregnancy or early in pregnancy so that couples can understand reproductive options and prepare for possible outcomes. Genetic counsellors try to explain probabilities without implying that one choice is morally required. The emotional impact varies widely: some people find information empowering, while others feel anxious because results may affect relatives who did not ask to be tested."],
+"tfc": {"statement": "People who receive carrier screening always feel reassured once they learn their result.", "answer": "Can't tell", "explanation": "The passage says emotional impact varies widely, with some people empowered and others anxious, so it does not support the claim that everyone feels reassured."},
+"detail": {"question": "What can carrier screening identify?", "correct": "Whether someone carries a genetic variant that could be passed to a child", "distractors": ["Whether someone has attended every clinic appointment", "The exact date of every future pregnancy", "Whether a person has completed all vaccinations"], "explanation": "The passage defines carrier screening as identifying whether someone carries a variant that could be passed to a child."},
+"inference": {"question": "Why might carrier screening results affect relatives?", "correct": "A genetic result can reveal information relevant to family members as well as the tested person.", "distractors": ["Relatives are always tested without consent.", "Genetic variants cannot be shared within families.", "Carrier screening is unrelated to inherited information."], "explanation": "The passage says results may affect relatives who did not ask to be tested, implying family relevance."},
+"fourth": {"type": "author", "question": "Which phrase best describes the author's attitude toward carrier screening?", "correct": "Balanced about its informational value and emotional complexity", "distractors": ["Certain that it is emotionally simple for everyone", "Focused only on laboratory cost", "Dismissive of reproductive decision-making"], "explanation": "The passage presents reproductive planning benefits while noting varied emotional effects and counselling responsibilities."}
+},
+{
+"stimulus": ["Outpatient parenteral antimicrobial therapy, often called OPAT, allows selected patients to receive intravenous antibiotics without remaining in hospital for the whole course. Some patients attend a clinic for each dose, while others are taught to manage a device at home with nursing support. The service can free inpatient beds and let people recover in familiar surroundings, but it requires careful patient selection, reliable line care and clear plans for reviewing blood tests or worsening symptoms. OPAT is therefore a way of changing where treatment happens, not a sign that the infection is trivial."],
+"tfc": {"statement": "OPAT can allow selected patients to receive intravenous antibiotics outside a full hospital stay.", "answer": "True", "explanation": "The passage states that OPAT allows selected patients to receive intravenous antibiotics without remaining in hospital for the whole course."},
+"detail": {"question": "What is one requirement for safe OPAT described in the passage?", "correct": "Reliable line care", "distractors": ["Avoiding all blood-test review", "Treating every infection as trivial", "Removing all nursing support"], "explanation": "The passage lists reliable line care as one requirement for OPAT."},
+"inference": {"question": "Why does the passage say OPAT does not mean an infection is trivial?", "correct": "The treatment may still require intravenous antibiotics and careful monitoring.", "distractors": ["OPAT is used only for people without infections.", "Clinic dosing means antibiotics are never needed.", "Home treatment removes all clinical risk."], "explanation": "The passage emphasizes patient selection, line care and review plans despite treatment happening outside hospital."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes OPAT in the passage?", "correct": "It shifts some intravenous antibiotic treatment out of hospital while preserving monitoring and safety requirements.", "distractors": ["It replaces antibiotics with observation only.", "It is suitable for every patient regardless of risk.", "It prevents the need for line care or symptom review."], "explanation": "The passage presents OPAT as a change in treatment location, with continued selection, line-care and review needs."}
+},
+{
+"stimulus": ["The nocebo effect occurs when negative expectations contribute to a person experiencing or noticing symptoms. In medicine, this can complicate conversations about side effects: patients deserve honest information, but a long list of possible symptoms presented without context may increase anxiety. Some clinicians use balanced framing, explaining common and serious risks while also saying what most people tolerate well and what to do if symptoms occur. The aim is not to hide information, but to support informed consent without unnecessarily amplifying worry."],
+"tfc": {"statement": "Balanced framing has been proven to eliminate all side effects caused by the nocebo effect.", "answer": "Can't tell", "explanation": "The passage says balanced framing may support informed consent without amplifying worry, but it does not prove that it eliminates all nocebo-related side effects."},
+"detail": {"question": "What is the nocebo effect?", "correct": "Negative expectations contributing to symptoms being experienced or noticed", "distractors": ["A treatment that works only without consent", "A type of hospital appointment letter", "A genetic test for drug metabolism"], "explanation": "The passage defines the nocebo effect as negative expectations contributing to symptoms."},
+"inference": {"question": "Why might listing side effects without context be unhelpful?", "correct": "It may increase anxiety while giving patients little sense of likelihood or response.", "distractors": ["Patients never need information about side effects.", "All symptoms are imaginary when expectations are involved.", "Clinicians are trying to hide serious risks."], "explanation": "The passage says a long list without context may increase anxiety and contrasts this with balanced framing."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT described as an aim of balanced framing?", "correct": "Hiding side-effect information from patients", "distractors": ["Supporting informed consent", "Explaining common and serious risks", "Reducing unnecessary worry"], "explanation": "The passage states that the aim is not to hide information, but to support informed consent without unnecessarily amplifying worry."}
+},
+{
+"stimulus": ["Teach-back is a communication method in which a clinician asks a patient to explain key information in their own words. The aim is not to test the patient, but to check whether the explanation was clear enough to support safe action after the appointment. It can be used when discussing medicines, wound care or warning signs that should prompt urgent help. The method may take extra time, but it can reveal misunderstandings that a simple yes-or-no question would miss."],
+"tfc": {"statement": "Teach-back asks patients to explain key information in their own words so clinicians can check understanding.", "answer": "True", "explanation": "The passage states that teach-back involves asking a patient to explain key information in their own words to check whether the explanation was clear."},
+"detail": {"question": "What is the aim of teach-back according to the passage?", "correct": "To check whether the explanation was clear enough to support safe action", "distractors": ["To test patients under exam conditions", "To replace all written information", "To prevent patients from asking questions"], "explanation": "The passage says the aim is not to test the patient but to check whether the explanation was clear enough to support safe action."},
+"inference": {"question": "Why might teach-back be more useful than a yes-or-no question?", "correct": "It can reveal misunderstandings that a simple confirmation might hide.", "distractors": ["It removes the need to explain medicines.", "It guarantees every patient remembers every detail forever.", "It prevents clinicians from discussing warning signs."], "explanation": "The passage says teach-back can reveal misunderstandings that a simple yes-or-no question would miss."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Teach-back supports safer communication by checking patient understanding in their own words.", "distractors": ["Teach-back is designed to grade patients on medical knowledge.", "Teach-back is useful only when no medicines are discussed.", "Teach-back prevents clinicians from giving safety-netting advice."], "explanation": "The passage presents teach-back as a way to check understanding and support safe action after appointments."}
+},
+{
+"stimulus": ["AI symptom checkers ask users about symptoms and then suggest possible next steps, such as self-care, booking a routine appointment or seeking urgent help. Designers hope these tools can help people navigate services, especially when they are unsure how serious a problem might be. However, the tools depend on the quality of user input and the rules or models behind their recommendations. Clinicians caution that symptom checkers should not be treated as a definitive diagnosis, particularly when symptoms are severe, unusual or changing quickly."],
+"tfc": {"statement": "AI symptom checkers have been proven to diagnose severe illnesses more accurately than clinicians in every situation.", "answer": "Can't tell", "explanation": "The passage describes possible uses and cautions, but it does not provide evidence that symptom checkers outperform clinicians in every situation."},
+"detail": {"question": "What might an AI symptom checker suggest?", "correct": "Seeking urgent help", "distractors": ["Cancelling all future appointments", "Ignoring severe symptoms", "Replacing all clinician judgement"], "explanation": "The passage lists seeking urgent help as one possible suggested next step."},
+"inference": {"question": "Why does the quality of user input matter?", "correct": "The tool's recommendation depends partly on the symptoms the user reports.", "distractors": ["The tool can diagnose without any symptoms being entered.", "User input is unrelated to the recommendation.", "The tool is always definitive regardless of what is typed."], "explanation": "The passage says symptom checkers depend on the quality of user input and the rules or models behind recommendations."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT a caution mentioned about AI symptom checkers?", "correct": "They should always be treated as a definitive diagnosis.", "distractors": ["They depend on user input quality", "They depend on the rules or models behind recommendations", "They may be unsuitable when symptoms change quickly"], "explanation": "The passage warns that symptom checkers should not be treated as definitive diagnoses, especially with severe, unusual or changing symptoms."}
+},
+{
+"stimulus": ["Surgical safety checklists are structured pauses used by operating teams to confirm essential details before and during an operation. A team may verify the patient's identity, the planned procedure, allergy status, antibiotic timing, equipment needs and the count of instruments before the patient leaves theatre. The checklist is not meant to replace professional skill; rather, it creates a shared moment for the team to notice mismatches or missing information. Its value depends on staff treating the process as a real conversation rather than a form completed from habit."],
+"tfc": {"statement": "Surgical safety checklists create structured pauses for teams to confirm essential details during an operation pathway.", "answer": "True", "explanation": "The passage describes surgical safety checklists as structured pauses used to confirm essential details before and during an operation."},
+"detail": {"question": "Which detail may be verified using a surgical safety checklist?", "correct": "The patient's allergy status", "distractors": ["The hospital's annual electricity contract", "The surgeon's preferred lunch order", "The colour of the waiting-room chairs"], "explanation": "The passage lists allergy status as one of the details a team may verify."},
+"inference": {"question": "Why does the passage emphasize conversation rather than a form completed from habit?", "correct": "The checklist works best when staff actively identify mismatches or missing information.", "distractors": ["The checklist is designed to remove teamwork.", "Forms are illegal in operating theatres.", "Professional skill is no longer relevant once a checklist exists."], "explanation": "The passage says the checklist creates a shared moment to notice problems and depends on staff treating it as a real conversation."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Surgical safety checklists support team communication by prompting active confirmation of key safety details.", "distractors": ["Surgical checklists replace the need for trained operating staff.", "Surgical checklists are useful only after a patient has left theatre.", "Surgical checklists are mainly designed to record hospital furniture choices."], "explanation": "The passage presents checklists as active team pauses for confirming safety information, not as substitutes for skill."}
+},
+{
+"stimulus": ["Remote blood pressure monitoring lets patients record readings at home and share them with a clinic through an app, website or telephone system. For some patients, repeated home readings may give a fuller picture than a single clinic measurement, especially if anxiety raises their blood pressure during appointments. Clinicians can use the information to adjust treatment or invite a patient for review. However, the approach relies on a validated cuff, correct technique, reliable reporting and clear advice about when a very high reading should prompt urgent help."],
+"tfc": {"statement": "Remote blood pressure monitoring has been proven to produce better treatment decisions than clinic measurement alone for every patient.", "answer": "Can't tell", "explanation": "The passage explains possible advantages and requirements, but it does not prove that remote monitoring is better than clinic measurement alone for every patient."},
+"detail": {"question": "How might patients share home blood pressure readings with a clinic?", "correct": "Through an app, website or telephone system", "distractors": ["Only by visiting an operating theatre", "By replacing all clinical reviews", "Through a vaccine storage fridge"], "explanation": "The passage states that readings may be shared through an app, website or telephone system."},
+"inference": {"question": "Why might repeated home readings be useful for some patients?", "correct": "They can reduce reliance on a single clinic measurement affected by appointment anxiety.", "distractors": ["They prove that clinic measurements are always false.", "They remove the need for validated equipment.", "They make urgent advice unnecessary for very high readings."], "explanation": "The passage says repeated home readings may give a fuller picture, especially if anxiety raises blood pressure during appointments."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT listed as a requirement for remote blood pressure monitoring?", "correct": "A hospital admission for every reading", "distractors": ["A validated cuff", "Correct measurement technique", "Reliable reporting"], "explanation": "The passage lists a validated cuff, correct technique and reliable reporting, but not hospital admission for every reading."}
+},
+{
+"stimulus": ["Near-miss reporting systems allow healthcare workers to record incidents that could have harmed a patient but were noticed before harm occurred. Examples might include a medicine prepared for the wrong patient but stopped before administration, or equipment found to be missing before a procedure began. The purpose is to learn from weak points in a process rather than to punish staff for speaking up. Reports are most useful when teams look for repeated patterns, share lessons and make practical changes that reduce the chance of the same problem reaching a patient next time."],
+"tfc": {"statement": "Near-miss reporting systems focus on incidents that could have harmed a patient but were caught before harm occurred.", "answer": "True", "explanation": "The passage defines near-miss reporting as recording incidents that could have harmed a patient but were noticed before harm occurred."},
+"detail": {"question": "Which example is described as a near miss?", "correct": "A medicine prepared for the wrong patient but stopped before administration", "distractors": ["A patient choosing a hospital meal", "A clinic buying new waiting-room chairs", "A staff rota being printed in colour"], "explanation": "The passage gives the wrong-patient medicine being stopped before administration as an example."},
+"inference": {"question": "Why are repeated patterns in reports important?", "correct": "They can reveal process weaknesses that teams can change before patients are harmed.", "distractors": ["They prove that every report should lead to punishment.", "They show that no practical changes are possible.", "They mean individual staff should stop reporting incidents."], "explanation": "The passage says reports are most useful when teams look for patterns, share lessons and make changes."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Near-miss reporting helps teams learn from caught errors and improve processes before harm reaches patients.", "distractors": ["Near-miss reporting is mainly designed to punish staff who speak up.", "Near-miss reporting records only incidents after serious harm has occurred.", "Near-miss reporting is unrelated to changing healthcare processes."], "explanation": "The passage emphasizes learning from potential harm, identifying patterns and making practical safety changes."}
+},
+{
+"stimulus": ["Ambient clinical scribes use microphones and software to draft notes from a consultation while the clinician speaks with the patient. Supporters hope the tools will reduce time spent typing after appointments and allow clinicians to maintain better eye contact. The draft usually still requires checking because speech recognition can mishear medical terms, assign comments to the wrong speaker or include information the patient did not intend to share. Clinics considering the technology also need to explain consent, data storage and who is responsible for correcting errors before the note becomes part of the record."],
+"tfc": {"statement": "Ambient clinical scribes have been proven to remove the need for clinicians to check consultation notes in every clinic.", "answer": "Can't tell", "explanation": "The passage says drafts usually still require checking and does not provide evidence that checking can be removed in every clinic."},
+"detail": {"question": "What do ambient clinical scribes use to draft notes?", "correct": "Microphones and software", "distractors": ["Paper-only prescription pads", "A surgical checklist alone", "A blood pressure cuff"], "explanation": "The passage states that ambient clinical scribes use microphones and software to draft notes from a consultation."},
+"inference": {"question": "Why is clinician checking still needed?", "correct": "The draft may contain misheard terms, speaker errors or unintended information.", "distractors": ["The software cannot produce any text at all.", "Patients are never present during consultations.", "Checking is needed only to choose waiting-room music."], "explanation": "The passage lists several possible drafting errors, including misheard medical terms and comments assigned to the wrong speaker."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT mentioned as an issue clinics should explain before using ambient scribes?", "correct": "The colour of the consultation room walls", "distractors": ["Consent", "Data storage", "Responsibility for correcting errors"], "explanation": "The passage mentions consent, data storage and responsibility for correcting errors, but not wall colour."}
+},
+{
+"stimulus": ["Pressure ulcers can develop when skin and underlying tissue are damaged by prolonged pressure, especially in patients who have limited mobility or reduced sensation. Prevention plans may include regular skin inspection, help with changing position, pressure-relieving mattresses or cushions, and attention to nutrition and hydration. A risk score can prompt staff to act early, but it should not be used mechanically without considering the patient's condition. Effective prevention often depends on small actions being repeated reliably across shifts rather than on a single dramatic intervention."],
+"tfc": {"statement": "Pressure-ulcer prevention may involve skin checks, repositioning support and pressure-relieving equipment.", "answer": "True", "explanation": "The passage states that prevention plans may include regular skin inspection, help with changing position and pressure-relieving mattresses or cushions."},
+"detail": {"question": "Which patient factor is described as increasing pressure-ulcer risk?", "correct": "Limited mobility", "distractors": ["A preference for morning appointments", "Having a printed discharge letter", "Living near a hospital"], "explanation": "The passage says pressure ulcers are especially a risk in patients with limited mobility or reduced sensation."},
+"inference": {"question": "Why should a risk score not be used mechanically?", "correct": "Staff still need to consider the patient's actual condition.", "distractors": ["Risk scores prevent staff from inspecting skin.", "Pressure ulcers can only be prevented by surgery.", "Nutrition and hydration are unrelated to prevention."], "explanation": "The passage says a risk score can prompt early action but should not replace consideration of the patient's condition."},
+"fourth": {"type": "summary", "question": "Which of the following best summarizes the passage?", "correct": "Pressure-ulcer prevention relies on repeated practical measures guided by patient-specific risk.", "distractors": ["Pressure ulcers are prevented by one single intervention in every case.", "Risk scores remove the need for staff judgement.", "Patients with limited mobility are described as having no pressure-ulcer risk."], "explanation": "The passage emphasizes repeated actions, practical prevention measures and the need to interpret risk in context."}
+},
+{
+"stimulus": ["Some inhalers use propellant gases that give them a higher carbon footprint than many dry-powder devices. Lower-carbon inhaler prescribing therefore interests clinicians who want to reduce the environmental impact of respiratory care. However, a switch is only appropriate if the patient can use the new device correctly and their asthma or COPD remains well controlled. Inspiratory flow, hand strength, technique, preference and access to training may all affect whether a different inhaler is suitable. A poorly planned switch could worsen symptoms and lead to extra appointments or urgent treatment."],
+"tfc": {"statement": "Patients switched to lower-carbon inhalers have fewer asthma attacks over the next year than patients who remain on propellant inhalers.", "answer": "Can't tell", "explanation": "The passage discusses environmental impact and suitability factors, but it gives no comparative data about asthma attacks over the following year."},
+"detail": {"question": "What factor may affect whether a patient can use a different inhaler?", "correct": "Inspiratory flow", "distractors": ["The colour of the clinic carpet", "The hospital's parking policy", "The number of windows in the pharmacy"], "explanation": "The passage lists inspiratory flow as one factor affecting whether a different inhaler is suitable."},
+"inference": {"question": "Why could an unsuitable inhaler switch undermine patient care?", "correct": "It could worsen symptom control and lead to extra appointments or urgent treatment.", "distractors": ["It would always remove the need for training.", "It would make respiratory symptoms impossible to monitor.", "It would guarantee better control for every patient."], "explanation": "The passage warns that a poorly planned switch could worsen symptoms and create additional healthcare needs."},
+"fourth": {"type": "negative", "question": "Which of the following is NOT presented as a consideration before switching inhalers?", "correct": "Whether every patient can switch without review", "distractors": ["Patient technique", "Access to training", "Whether control remains stable"], "explanation": "The passage says switching is only appropriate when the patient can use the device correctly and control remains good, so universal switching without review is not a consideration."}
+},
+{
+"stimulus": ["Professional interpreter services support healthcare consultations when patients and clinicians do not share a fluent language. Interpreters may work in person, by telephone or by video, and their role is to translate the meaning of questions and answers as accurately as possible. Relying on relatives can sometimes seem convenient, but family members may filter sensitive information, misunderstand medical terminology or feel uncomfortable discussing certain symptoms. Even with an interpreter present, clinicians still need to speak clearly, pause regularly and check that the patient has understood the plan."],
+"tfc": {"statement": "Professional interpreters can support consultations when patients and clinicians do not share a fluent language.", "answer": "True", "explanation": "The passage states that professional interpreter services support consultations when patients and clinicians do not share a fluent language."},
+"extraTfc": [
+{"statement": "Clinics using professional interpreters have lower complaint rates than clinics relying on relatives.", "answer": "Can't tell", "explanation": "The passage describes reasons professional interpreters may be useful, but it does not compare complaint rates between different clinic models."},
+{"statement": "The passage says relatives may misunderstand medical terminology or filter sensitive information.", "answer": "True", "explanation": "The passage says family members may filter sensitive information and misunderstand medical terminology."},
+{"statement": "Telephone interpreters are preferred by every patient over video interpreters.", "answer": "Can't tell", "explanation": "The passage lists telephone and video interpreting as options, but it does not state that every patient prefers telephone interpreting."}
+]
+},
+{
+"stimulus": ["Safety-netting advice is given when a clinician explains what should happen if a patient's condition does not improve, worsens or develops warning signs. It may include specific symptoms to watch for, how soon improvement is expected, which service to contact and when urgent help is needed. The advice is especially important when a diagnosis is uncertain or an illness could change over time. Vague instructions such as 'come back if worse' may be less useful than tailored advice, because patients can interpret worsening in very different ways."],
+"tfc": {"statement": "Safety-netting advice can explain which warning signs should prompt a patient to seek further help.", "answer": "True", "explanation": "The passage says safety-netting may include specific symptoms to watch for and when urgent help is needed."},
+"extraTfc": [
+{"statement": "Written safety-netting instructions reduce emergency admissions for every condition.", "answer": "Can't tell", "explanation": "The passage explains what safety-netting advice may include, but it does not provide evidence about emergency admission rates for every condition."},
+{"statement": "The passage says safety-netting is especially important when a diagnosis is uncertain.", "answer": "True", "explanation": "The passage directly states that safety-netting advice is especially important when a diagnosis is uncertain or an illness could change over time."},
+{"statement": "All clinicians currently document safety-netting advice in exactly the same way.", "answer": "Can't tell", "explanation": "The passage discusses the content and clarity of advice, but it does not describe how all clinicians document it."}
+]
+},
+{
+"stimulus": ["Care navigation in general practice involves trained staff asking patients brief questions about the reason for contact so they can direct them to an appropriate source of help. The outcome might be a GP appointment, a nurse review, a community pharmacist, a physiotherapist or advice to seek urgent care. Care navigators are not expected to diagnose illness; they follow agreed protocols and should escalate unclear or worrying symptoms. The approach can free GP appointments for problems that need medical review, but it depends on privacy, clear scripts and patients understanding why they are being asked for information."],
+"tfc": {"statement": "Care navigation can direct patients to support other than a GP appointment.", "answer": "True", "explanation": "The passage says outcomes may include a nurse review, community pharmacist, physiotherapist or urgent care advice as well as a GP appointment."},
+"extraTfc": [
+{"statement": "Practices using care navigation always achieve shorter waiting times than practices that do not use it.", "answer": "Can't tell", "explanation": "The passage says care navigation can free GP appointments, but it does not provide a universal comparison of waiting times between practices."},
+{"statement": "Care navigators follow agreed protocols rather than being expected to diagnose illness.", "answer": "True", "explanation": "The passage states that care navigators are not expected to diagnose and should follow agreed protocols."},
+{"statement": "Patients prefer care navigation to online consultation forms in every general practice.", "answer": "Can't tell", "explanation": "The passage does not compare patient preferences for care navigation and online consultation forms."}
+]
+},
+{
+"stimulus": ["Clinical chaperones may be offered during intimate examinations to support patient comfort and maintain professional standards. A chaperone can witness the examination, provide reassurance and help ensure that consent and dignity are respected. Patients should be told why a chaperone is being offered and can usually accept or decline, unless local policy requires one for a particular situation. Good practice also includes recording whether a chaperone was offered, who was present and any relevant patient preference. The presence of a chaperone does not remove the need for clear explanation before and during the examination."],
+"tfc": {"statement": "Clinical chaperones may support patient comfort and professional standards during intimate examinations.", "answer": "True", "explanation": "The passage says chaperones may be offered during intimate examinations to support comfort and maintain professional standards."},
+"extraTfc": [
+{"statement": "Offering chaperones has been proven to eliminate all complaints about intimate examinations.", "answer": "Can't tell", "explanation": "The passage describes purposes and good practice, but it does not provide evidence that chaperones eliminate all complaints."},
+{"statement": "The passage says documenting who was present can be part of good chaperone practice.", "answer": "True", "explanation": "The passage states that good practice includes recording whether a chaperone was offered and who was present."},
+{"statement": "Clinics with formal chaperone policies complete intimate examinations faster than clinics without them.", "answer": "Can't tell", "explanation": "The passage does not compare examination speed between clinics with and without formal chaperone policies."}
+]
+},
+{
+"stimulus": ["Patient portals allow people to view selected parts of their health record online, such as appointment letters, medication lists and some test results. Supporters argue that this can improve transparency and help patients prepare questions before appointments. However, results may sometimes appear before a clinician has explained their meaning, which can cause anxiety if wording is unfamiliar or alarming. Some systems therefore delay particularly sensitive results or add plain-language guidance. Portals also require attention to privacy, account security and digital exclusion, and they do not remove the clinician's responsibility to follow up important abnormal findings."],
+"tfc": {"statement": "Patient portals can allow people to view selected parts of their health record online.", "answer": "True", "explanation": "The passage states that portals allow people to view selected parts of their health record online, including letters, medicine lists and some test results."},
+"extraTfc": [
+{"statement": "Patients who use portals understand blood test results more accurately than patients who receive results by letter.", "answer": "Can't tell", "explanation": "The passage discusses transparency and possible anxiety, but it does not compare understanding between portal users and patients receiving letters."},
+{"statement": "Some portal systems may delay sensitive results or add plain-language guidance.", "answer": "True", "explanation": "The passage says some systems delay particularly sensitive results or add plain-language guidance."},
+{"statement": "Portals reduce follow-up phone calls in every clinical specialty.", "answer": "Can't tell", "explanation": "The passage does not provide evidence about follow-up phone call rates across clinical specialties."}
+]
+},
+{
+"stimulus": ["Clinical photographs may be used to document wounds, rashes or other visible findings so that changes can be monitored over time or specialist advice can be requested. Consent should cover why the image is being taken, where it will be stored, who may see it and whether it is for direct care only or might also be used for teaching. Images can sometimes identify a patient even when the face is not shown, because tattoos, scars or unusual body markings may be visible. Secure storage and accurate labelling are therefore important, but a photograph should not be treated as a replacement for examining the patient when examination is clinically needed."],
+"tfc": {"statement": "Clinical photographs can be used to monitor visible findings over time.", "answer": "True", "explanation": "The passage says photographs may document visible findings so changes can be monitored over time."},
+"extraTfc": [
+{"statement": "Clinical photographs improve diagnostic accuracy for every skin condition more than direct examination does.", "answer": "Can't tell", "explanation": "The passage describes uses for photographs but does not compare diagnostic accuracy with direct examination for every skin condition."},
+{"statement": "Consent for clinical photography should include who may see the image and how it may be used.", "answer": "True", "explanation": "The passage says consent should cover who may see the image and whether it is for direct care only or teaching."},
+{"statement": "Hospitals using dedicated clinical photography systems never experience image-labelling errors.", "answer": "Can't tell", "explanation": "The passage says accurate labelling is important, but it does not state that errors never occur in dedicated systems."}
+]
+},
+{
+"stimulus": ["Fit notes are medical statements used when a health condition affects someone's ability to work. A clinician can state that a patient is not fit for work, or that they may be fit if adjustments are possible. Suggested adjustments might include a phased return, altered hours, amended duties or workplace adaptations. The note does not force an employer to make every adjustment, and the final plan may depend on the job, workplace policy and discussion between employee and employer. Fit notes are intended to support a conversation about safe work, not to provide a full occupational health assessment."],
+"tfc": {"statement": "A fit note can state that a patient may be fit for work if adjustments are possible.", "answer": "True", "explanation": "The passage says a clinician can state that a patient may be fit if adjustments are possible."},
+"extraTfc": [
+{"statement": "Employees who receive fit notes return to work faster than employees who receive no medical statement.", "answer": "Can't tell", "explanation": "The passage explains what fit notes can contain, but it does not compare return-to-work times between groups."},
+{"statement": "A phased return and altered hours are examples of adjustments that might be suggested on a fit note.", "answer": "True", "explanation": "The passage lists a phased return and altered hours among possible suggested adjustments."},
+{"statement": "Every employer must accept every workplace adjustment listed on a fit note.", "answer": "Can't tell", "explanation": "The passage says a fit note does not force an employer to make every adjustment, and it does not state that every adjustment must be accepted."}
+]
+},
+{
+"stimulus": ["Preoperative assessment clinics review patients before planned surgery to identify issues that could affect anaesthetic or surgical risk. Staff may check medical history, medicines, allergies, previous anaesthetic problems and recent test results. Some patients need additional investigations, medicine changes or specialist advice before an operation date is confirmed. The process can reduce surprises on the day of surgery, but it cannot remove every risk or guarantee that an operation will go ahead. Clear communication matters because patients may need to understand fasting instructions, transport plans and which medicines to take or pause."],
+"tfc": {"statement": "Preoperative assessment can include checking medicines, allergies and previous anaesthetic problems.", "answer": "True", "explanation": "The passage lists medicines, allergies and previous anaesthetic problems as details staff may check."},
+"extraTfc": [
+{"statement": "Hospitals with preoperative assessment clinics cancel fewer operations than hospitals without such clinics.", "answer": "Can't tell", "explanation": "The passage says the process can reduce surprises, but it does not compare cancellation rates between hospitals."},
+{"statement": "Some patients may need additional investigations or medicine changes before an operation date is confirmed.", "answer": "True", "explanation": "The passage states that some patients need additional investigations, medicine changes or specialist advice before an operation date is confirmed."},
+{"statement": "All patients prefer telephone preoperative assessment to face-to-face assessment.", "answer": "Can't tell", "explanation": "The passage does not compare patient preferences for telephone and face-to-face assessment."}
+]
+},
+{
+"stimulus": ["Patient-initiated follow-up allows selected patients to contact a specialist service when they need review, rather than attending routine appointments at fixed intervals. It may be used when a condition is stable but could flare unpredictably, provided the patient knows what changes should prompt contact. Services usually give written criteria, a contact route and advice about what to do if symptoms become urgent. The model can reduce unnecessary routine appointments and give patients more flexibility, but it depends on clear communication, reliable access and a system that responds when patients ask for help."],
+"tfc": {"statement": "Patient-initiated follow-up can replace fixed routine appointments for selected patients who know when to seek review.", "answer": "True", "explanation": "The passage says selected patients may contact the service when they need review rather than attending fixed routine appointments, provided they know what changes should prompt contact."},
+"extraTfc": [
+{"statement": "Patient-initiated follow-up produces better outcomes than scheduled follow-up for every stable condition.", "answer": "Can't tell", "explanation": "The passage describes possible uses and requirements, but it does not compare outcomes across every stable condition."},
+{"statement": "Services using patient-initiated follow-up usually give written criteria and a contact route.", "answer": "True", "explanation": "The passage states that services usually provide written criteria, a contact route and urgent advice."},
+{"statement": "All patients offered patient-initiated follow-up contact the service at the clinically ideal time.", "answer": "Can't tell", "explanation": "The passage says the model depends on clear communication and reliable access, but it does not state that all patients contact services at the ideal time."}
+]
+},
+{
+"stimulus": ["Appointment reminder systems send patients messages before a planned consultation, test or procedure. Reminders may arrive by text message, automated phone call, email or letter, and can include the date, time, location and preparation instructions. They may also explain how to cancel or rearrange an appointment so the slot can be used by someone else. However, reminders depend on accurate contact details and should consider privacy, language, disability and whether a patient shares a phone or email account. A reminder can support attendance, but it does not replace clinical prioritisation or make every missed appointment avoidable."],
+"tfc": {"statement": "Appointment reminders can include the date, time, location and preparation instructions for a planned consultation.", "answer": "True", "explanation": "The passage says reminders can include the date, time, location and preparation instructions."},
+"extraTfc": [
+{"statement": "Text reminders have been proven more effective than automated phone calls for every patient group.", "answer": "Can't tell", "explanation": "The passage lists different reminder methods but does not compare their effectiveness for every patient group."},
+{"statement": "Accurate contact details are important for appointment reminder systems.", "answer": "True", "explanation": "The passage states that reminders depend on accurate contact details."},
+{"statement": "Clinics using appointment reminders never have missed appointments.", "answer": "Can't tell", "explanation": "The passage says reminders can support attendance but do not make every missed appointment avoidable."}
+]
+},
+{
+"stimulus": ["Specimen labelling checks are used when blood, urine or tissue samples are collected for laboratory testing. Staff may confirm the patient's identity, match the sample container to the request, and record details such as the date, time and collector. Missing or mismatched labels can lead to a sample being rejected, which may delay diagnosis or require the patient to have another sample taken. Barcoded systems and bedside scanning can reduce transcription errors, but they still rely on staff using the system correctly and checking that the right label is attached to the right container."],
+"tfc": {"statement": "Specimen labelling checks can help match a collected sample to the correct patient and request.", "answer": "True", "explanation": "The passage says staff may confirm the patient's identity and match the sample container to the request."},
+"extraTfc": [
+{"statement": "Hospitals using barcoded specimen systems reject fewer samples than hospitals using handwritten labels.", "answer": "Can't tell", "explanation": "The passage says barcoded systems can reduce transcription errors, but it does not compare rejection rates between hospitals."},
+{"statement": "Missing or mismatched specimen labels can delay diagnosis or require another sample.", "answer": "True", "explanation": "The passage states that missing or mismatched labels can cause rejection, delay diagnosis or require another sample."},
+{"statement": "Bedside scanning removes the need for staff to check that the right label is on the right container.", "answer": "Can't tell", "explanation": "The passage says scanning still relies on staff using the system correctly and checking the label-container match."}
+]
+},
+{
+"stimulus": ["Clinic letters copied to patients summarize what was discussed during a consultation and are often sent to the GP as well. A useful letter may include the diagnosis being considered, agreed next steps, medicine changes, tests requested and any symptoms that should prompt earlier review. Copying letters to patients can improve transparency and help them remember plans after an appointment. However, letters written mainly for professionals may contain abbreviations or cautious wording that patients find confusing. Services therefore need to consider plain language, timely delivery and how patients can ask questions if something in the letter is unclear."],
+"tfc": {"statement": "Clinic letters copied to patients can summarize agreed next steps and medicine changes.", "answer": "True", "explanation": "The passage says a useful letter may include agreed next steps and medicine changes."},
+"extraTfc": [
+{"statement": "Patients who receive copied clinic letters always understand their treatment plan better than patients who do not.", "answer": "Can't tell", "explanation": "The passage says copied letters can help patients remember plans, but it does not prove that every patient understands better."},
+{"statement": "Letters written mainly for professionals may contain abbreviations that patients find confusing.", "answer": "True", "explanation": "The passage states that professional-facing letters may contain abbreviations or cautious wording that patients find confusing."},
+{"statement": "Every clinic letter copied to a patient is delivered before the patient leaves the hospital.", "answer": "Can't tell", "explanation": "The passage says services should consider timely delivery, but it does not state that every copied letter is delivered before departure."}
+]
+},
+{
+"stimulus": ["Shared care agreements describe how specialist and primary care teams share responsibility for some medicines after treatment has been started or stabilized by a specialist. An agreement may specify who prescribes repeat supplies, who checks blood tests, what side effects should be monitored and when specialist advice should be sought. The arrangement can make ongoing treatment more convenient for patients, but it depends on clear roles, available monitoring and communication between teams. Shared care does not mean the medicine is risk-free or that specialist input is no longer needed."],
+"tfc": {"statement": "Shared care agreements can set out how specialist and primary care teams divide prescribing and monitoring responsibilities.", "answer": "True", "explanation": "The passage states that shared care agreements describe how specialist and primary care teams share responsibility and may specify prescribing and monitoring roles."},
+"extraTfc": [
+{"statement": "Patients managed under shared care agreements experience fewer side effects than patients managed only by specialists.", "answer": "Can't tell", "explanation": "The passage explains how shared care may be organized, but it does not compare side-effect rates between care models."},
+{"statement": "A shared care agreement may state when specialist advice should be sought.", "answer": "True", "explanation": "The passage says an agreement may specify when specialist advice should be sought."},
+{"statement": "Every medicine started by a specialist is suitable for shared care in primary care.", "answer": "Can't tell", "explanation": "The passage describes requirements for shared care, but it does not state that every specialist-started medicine is suitable."}
+]
+},
+{
+"stimulus": ["Pharmacy collection lockers allow patients to collect dispensed medicines from secure compartments, sometimes outside normal counter opening hours. Staff place the prepared prescription in a locker and send the patient a code or app notification for collection. The system can be convenient for routine repeat medicines, but not every medicine is suitable. Items needing refrigeration, controlled-drug checks or detailed counselling may require direct handover from pharmacy staff. Lockers also need reliable identity checks, privacy safeguards, collection deadlines and a plan for medicines that are not collected."],
+"tfc": {"statement": "Pharmacy collection lockers can let patients collect prepared medicines from secure compartments.", "answer": "True", "explanation": "The passage says lockers allow patients to collect dispensed medicines from secure compartments."},
+"extraTfc": [
+{"statement": "Collection lockers reduce pharmacy waiting times more than home delivery services.", "answer": "Can't tell", "explanation": "The passage discusses locker convenience but does not compare waiting times with home delivery services."},
+{"statement": "Some medicines may be unsuitable for locker collection if they need refrigeration or detailed counselling.", "answer": "True", "explanation": "The passage lists refrigeration and detailed counselling as reasons medicines may require direct handover."},
+{"statement": "All patients prefer locker collection to speaking directly with pharmacy staff.", "answer": "Can't tell", "explanation": "The passage does not describe patient preferences for lockers compared with direct pharmacy contact."}
+]
+},
+{
+"stimulus": ["Multidisciplinary team meetings bring professionals from different specialties together to discuss patients whose care may need several forms of expertise. In cancer care, for example, surgeons, oncologists, radiologists, pathologists, specialist nurses and coordinators may review scans, biopsy results and the patient's general fitness before recommending next steps. The meeting can help create a shared plan, but recommendations still need to be discussed with the patient because preferences, personal circumstances and new information may affect the final decision. MDT work also depends on accurate records and timely access to investigation results."],
+"tfc": {"statement": "Multidisciplinary team meetings can bring several specialties together to review information before recommending next steps.", "answer": "True", "explanation": "The passage states that professionals from different specialties may review scans, biopsy results and fitness before recommending next steps."},
+"extraTfc": [
+{"statement": "Patients discussed at multidisciplinary team meetings have higher survival rates than patients discussed by a single clinician.", "answer": "Can't tell", "explanation": "The passage explains how MDT meetings support planning, but it does not compare survival rates between care models."},
+{"statement": "MDT recommendations may still need discussion with the patient before a final decision is made.", "answer": "True", "explanation": "The passage says recommendations still need to be discussed with the patient because preferences, circumstances and new information may affect the final decision."},
+{"statement": "Every MDT meeting includes exactly the same combination of professionals.", "answer": "Can't tell", "explanation": "The passage gives examples of professionals who may attend in cancer care, but it does not state that every MDT has the same membership."}
+]
+},
+{
+"stimulus": ["Dose administration aids are containers that organize medicines into compartments labelled by day or time of dose. They may help some people manage complex medicine schedules, especially when several tablets are taken at different times. However, they are not suitable for every medicine: some tablets should remain in original packaging, some doses change frequently and some medicines need special storage. Preparing an aid also requires an accurate current medicine list and a plan for updating it after hospital discharge or clinic changes. The container can support routine, but it cannot replace counselling about what each medicine is for or when to seek advice."],
+"tfc": {"statement": "Dose administration aids can organize medicines into compartments labelled by day or dose time.", "answer": "True", "explanation": "The passage defines dose administration aids as containers that organize medicines into compartments labelled by day or time of dose."},
+"extraTfc": [
+{"statement": "People using dose administration aids have fewer medicine-related hospital admissions than people using original packaging.", "answer": "Can't tell", "explanation": "The passage describes possible support for medicine routines, but it does not compare hospital admission rates."},
+{"statement": "An accurate current medicine list is needed when preparing a dose administration aid.", "answer": "True", "explanation": "The passage states that preparing an aid requires an accurate current medicine list."},
+{"statement": "Patients find dose administration aids easier to understand than printed medicine lists in every situation.", "answer": "Can't tell", "explanation": "The passage does not compare how patients understand dose aids and printed medicine lists."}
+]
+},
+{
+"stimulus": ["Fluid balance charts record a patient's fluid intake and output over time. They may include drinks, intravenous fluids, urine, vomit, drain losses and other measurable sources. The chart can help clinicians notice dehydration, fluid overload or changes in kidney function risk, especially when a patient is acutely unwell or receiving intravenous fluids. However, the chart is only useful if entries are timely and reasonably accurate; missed drinks or unmeasured urine can make the totals misleading. Staff also need to interpret the numbers alongside weight, blood tests, symptoms and the overall clinical picture."],
+"tfc": {"statement": "Fluid balance charts can record both fluid intake and fluid output over time.", "answer": "True", "explanation": "The passage states that fluid balance charts record a patient's fluid intake and output over time."},
+"extraTfc": [
+{"statement": "Hospitals using electronic fluid balance charts have lower rates of acute kidney injury than hospitals using paper charts.", "answer": "Can't tell", "explanation": "The passage describes how fluid balance charts are used, but it does not compare kidney injury rates between electronic and paper systems."},
+{"statement": "Missed drinks or unmeasured urine can make fluid balance totals misleading.", "answer": "True", "explanation": "The passage says missed drinks or unmeasured urine can make the totals misleading."},
+{"statement": "Every patient with a completed fluid balance chart needs intravenous fluids.", "answer": "Can't tell", "explanation": "The passage says charts may be useful for patients receiving intravenous fluids, but it does not state that every patient with a chart needs them."}
+]
+},
+{
+"stimulus": ["Venous thromboembolism risk assessment estimates a hospital patient's chance of developing harmful blood clots during or after an admission. Staff consider factors such as reduced mobility, recent surgery, active cancer, pregnancy, dehydration and previous clotting events. The assessment also considers bleeding risk, because clot-prevention medicine may be unsafe for some patients. Preventive steps can include early movement, hydration advice, compression devices or anticoagulant injections, depending on the balance of risks. The assessment should be reviewed if the patient's condition changes, rather than treated as a one-off form."],
+"tfc": {"statement": "Venous thromboembolism risk assessment considers both clotting risk and bleeding risk.", "answer": "True", "explanation": "The passage says staff estimate clot risk and also consider bleeding risk because clot-prevention medicine may be unsafe for some patients."},
+"extraTfc": [
+{"statement": "Patients given anticoagulant injections after surgery develop fewer clots than patients given compression devices.", "answer": "Can't tell", "explanation": "The passage lists possible preventive steps but does not compare clot rates between anticoagulant injections and compression devices."},
+{"statement": "Reduced mobility and recent surgery are examples of factors considered in VTE risk assessment.", "answer": "True", "explanation": "The passage lists reduced mobility and recent surgery among the factors staff consider."},
+{"statement": "All patients assessed for venous thromboembolism receive the same preventive treatment.", "answer": "Can't tell", "explanation": "The passage says preventive steps depend on the balance of risks, but it does not state that all patients receive the same treatment."}
+]
+},
+{
+"stimulus": ["Paediatric weight-based dosing is used for medicines where a child's dose depends on their current body weight. Staff usually record weight in kilograms, check the calculated dose against a maximum safe dose and consider factors such as age, kidney function or the reason for treatment. In emergencies, an estimated weight may sometimes be used, but it should be replaced by a measured weight as soon as practical. Clear units and independent checks matter because confusion between kilograms and pounds, or between milligrams and millilitres, can lead to serious dosing errors."],
+"tfc": {"statement": "Paediatric weight-based dosing can use a child's current body weight to calculate a medicine dose.", "answer": "True", "explanation": "The passage states that weight-based dosing is used for medicines where a child's dose depends on current body weight."},
+"extraTfc": [
+{"statement": "Electronic dose calculators have eliminated paediatric medication errors in emergency departments.", "answer": "Can't tell", "explanation": "The passage discusses weight-based dosing and unit checks, but it does not provide evidence that electronic calculators eliminate errors."},
+{"statement": "The passage says estimated emergency weights should be replaced by measured weights as soon as practical.", "answer": "True", "explanation": "The passage directly states that an estimated weight should be replaced by a measured weight as soon as practical."},
+{"statement": "Every medicine given to a child requires a weight-based dose calculation.", "answer": "Can't tell", "explanation": "The passage refers to medicines where dose depends on weight, but it does not state that every medicine for children requires weight-based dosing."}
+]
+},
+{
+"stimulus": ["Post-discharge follow-up calls are made after some patients leave hospital to check whether the transition home is going as planned. A call may ask about new symptoms, medicine access, wound care, follow-up appointments and whether the patient understands who to contact if problems arise. The call can identify practical issues that were not obvious on the ward, such as a prescription not being collected or a carer being unavailable. However, it is not a full clinical review, and urgent symptoms still require the patient to use emergency or same-day services rather than waiting for a scheduled call."],
+"tfc": {"statement": "Post-discharge follow-up calls can check whether patients understand who to contact if problems arise.", "answer": "True", "explanation": "The passage says a call may ask whether the patient understands who to contact if problems arise."},
+"extraTfc": [
+{"statement": "Patients who receive post-discharge follow-up calls are never readmitted to hospital.", "answer": "Can't tell", "explanation": "The passage describes possible uses of follow-up calls, but it does not state that readmissions never occur."},
+{"statement": "A follow-up call may identify practical problems such as an uncollected prescription.", "answer": "True", "explanation": "The passage gives an uncollected prescription as an example of a practical issue a call may identify."},
+{"statement": "All post-discharge follow-up calls are carried out by the consultant who treated the patient in hospital.", "answer": "Can't tell", "explanation": "The passage does not state who must carry out all follow-up calls."}
+]
+},
+{
+"stimulus": ["Bedside blood transfusion checks are performed immediately before a transfusion starts. Staff confirm the patient's identity against the wristband and prescription, compare the blood component label with the compatibility record, and check details such as expiry time and the appearance of the pack. These checks are a final safeguard before administration, but they do not replace earlier laboratory testing or correct sample labelling. Once the transfusion begins, staff still need to monitor the patient for symptoms that could suggest a reaction."],
+"tfc": {"statement": "Bedside transfusion checks can include confirming patient identity and comparing the blood component label with the compatibility record.", "answer": "True", "explanation": "The passage says staff confirm identity and compare the blood component label with the compatibility record."},
+"extraTfc": [
+{"statement": "Barcode scanning at the bedside has been proven to remove all transfusion identification errors.", "answer": "Can't tell", "explanation": "The passage does not discuss barcode scanning or prove that any system removes all identification errors."},
+{"statement": "Monitoring is still needed after a transfusion has started.", "answer": "True", "explanation": "The passage says staff still need to monitor the patient for symptoms after the transfusion begins."},
+{"statement": "Hospitals using bedside transfusion checks have lower reaction rates than hospitals that do not use them.", "answer": "Can't tell", "explanation": "The passage explains what the checks involve, but it does not compare reaction rates between hospitals."}
+]
+},
+{
+"stimulus": ["Steroid emergency cards are carried by some patients who may need urgent steroid replacement if they become seriously unwell, injured or unable to take their usual medication. The card alerts ambulance, emergency department or ward staff that the patient could be at risk if steroid treatment is missed. It may include the patient's regular steroid medicine, emergency instructions and advice to seek urgent help if vomiting prevents tablets from staying down. The card is meant to support recognition in an emergency, but it should sit alongside an up-to-date care plan and patient-specific advice."],
+"tfc": {"statement": "A steroid emergency card can alert healthcare staff that a patient may need urgent steroid replacement.", "answer": "True", "explanation": "The passage states that the card alerts staff that the patient could need urgent steroid replacement if seriously unwell, injured or unable to take usual medication."},
+"extraTfc": [
+{"statement": "Patients carrying steroid emergency cards have fewer adrenal crises than patients who do not carry them.", "answer": "Can't tell", "explanation": "The passage describes the purpose of the card, but it does not compare adrenal crisis rates between patients with and without cards."},
+{"statement": "A steroid emergency card should sit alongside an up-to-date care plan and patient-specific advice.", "answer": "True", "explanation": "The passage says the card should sit alongside an up-to-date care plan and patient-specific advice."},
+{"statement": "All steroid emergency cards list the same medicine dose for every patient.", "answer": "Can't tell", "explanation": "The passage says a card may include the patient's regular steroid medicine, but it does not state that all cards list the same dose."}
+]
 }
 
   // ===== PASTE NEW PASSAGES ABOVE THIS LINE =====

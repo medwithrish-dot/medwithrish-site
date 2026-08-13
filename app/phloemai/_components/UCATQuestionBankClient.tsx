@@ -1420,6 +1420,61 @@ function shuffleList<T>(items: T[]) {
   return shuffled;
 }
 
+const VR_TFC_ANSWER_TEXTS = ["True", "False", "Can't tell"] as const;
+type VrTfcAnswerText = (typeof VR_TFC_ANSWER_TEXTS)[number];
+
+function isVrTfcAnswerText(value: string | undefined): value is VrTfcAnswerText {
+  return VR_TFC_ANSWER_TEXTS.includes(value as VrTfcAnswerText);
+}
+
+function getVrTfcAnswerText(set: UCATQuestion[]) {
+  const tfcQuestion = set.find(
+    (question): question is UCATSingleQuestion =>
+      question.subtype === "vr-tfc" && isUCATSingleSelectQuestion(question)
+  );
+
+  if (!tfcQuestion) return null;
+
+  const answerText = tfcQuestion.options.find(
+    (option) => option.key === tfcQuestion.answer
+  )?.text;
+
+  return isVrTfcAnswerText(answerText) ? answerText : null;
+}
+
+function balanceVrTfcSets(sets: UCATQuestion[][]) {
+  const buckets = new Map<VrTfcAnswerText, UCATQuestion[][]>(
+    VR_TFC_ANSWER_TEXTS.map((answer) => [answer, []])
+  );
+  const unbucketed: UCATQuestion[][] = [];
+
+  sets.forEach((set) => {
+    const answerText = getVrTfcAnswerText(set);
+    if (!answerText) {
+      unbucketed.push(set);
+      return;
+    }
+
+    buckets.get(answerText)?.push(set);
+  });
+
+  const shuffledBuckets = VR_TFC_ANSWER_TEXTS.map((answer) =>
+    shuffleList(buckets.get(answer) ?? [])
+  );
+  const balanced: UCATQuestion[][] = [];
+
+  while (shuffledBuckets.some((bucket) => bucket.length > 0)) {
+    shuffleList(shuffledBuckets)
+      .filter((bucket) => bucket.length > 0)
+      .forEach((bucket) => {
+        const nextSet = bucket.shift();
+        if (nextSet) balanced.push(nextSet);
+      });
+  }
+
+  return [...balanced, ...shuffleList(unbucketed)];
+}
+
 function buildSjtPracticeQuestionSet(
   questions: UCATQuestion[],
   targetCount: number
@@ -1461,11 +1516,11 @@ function buildVrPassageQuestionSet(
       return num(a.id) - num(b.id);
     });
 
-  // Prefer complete 4-question sets; shuffle so randomness is preserved.
-  const complete = shuffleList(
+  // Prefer complete 4-question sets; balance T/F/Can't tell where present.
+  const complete = balanceVrTfcSets(
     Array.from(setMap.values()).filter((s) => s.length >= 4)
   );
-  const partial = shuffleList(
+  const partial = balanceVrTfcSets(
     Array.from(setMap.values()).filter((s) => s.length < 4)
   );
   const all = [...complete, ...partial];
@@ -1546,11 +1601,17 @@ function formatQuestionTextForSubtype(value: string, subtype: UCATSubtypeId) {
 }
 
 function getStimulusParagraphs(question: UCATQuestion) {
-  if (question.subtype !== "dm-syllogisms") {
+  if (question.section !== "dm") {
     return question.stimulus;
   }
 
-  const combined = question.stimulus.join(" ").replace(/\s+/g, " ").trim();
+  const combined = question.stimulus
+    .map((paragraph) => paragraph.replace(/^\s*(?:[-*]|\u2022)\s+/, "").trim())
+    .filter(Boolean)
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+
   return combined ? [combined] : [];
 }
 
@@ -2301,18 +2362,6 @@ function OptionVisual({ visual }: { visual: UCATChartVisual }) {
           </g>
         ))}
       </svg>
-      {visual.legend && (
-        <p className="mt-1 text-center text-[9px] font-semibold leading-3 text-slate-600">
-          {visual.legend
-            .map(
-              (item) =>
-                `${item.shape.charAt(0).toUpperCase()}${item.shape.slice(1)} = ${
-                  formatDisplayText(item.label)
-                }`
-            )
-            .join(" | ")}
-        </p>
-      )}
     </div>
   );
 }
@@ -2945,18 +2994,6 @@ function QuestionVisual({ visual }: { visual: UCATChartVisual }) {
         {visual.note && (
           <p className="mt-2 text-xs font-semibold text-slate-600">
             {formatDisplayText(visual.note)}
-          </p>
-        )}
-        {visual.legend && (
-          <p className="mt-2 text-center text-xs font-semibold text-slate-700">
-            {visual.legend
-              .map(
-                (item) =>
-                  `${item.shape.charAt(0).toUpperCase()}${item.shape.slice(1)} = ${
-                    formatDisplayText(item.label)
-                  }`
-              )
-              .join(" | ")}
           </p>
         )}
       </div>

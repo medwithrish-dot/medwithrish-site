@@ -17,9 +17,9 @@ const popularResources = [
     description: "Compare mock difficulty, average section scores, totals, and SJT bands.",
   },
   {
-    title: "Interview Tutoring",
-    href: "/interview-tutoring",
-    description: "MMI and panel interview preparation with feedback and structure.",
+    title: "Interview Prep Hub",
+    href: "/interviews",
+    description: "MMI, panel, ethics, motivation and reflection preparation.",
   },
 ];
 
@@ -75,6 +75,7 @@ const stages = [
     title: "Interviews",
     description: "Prepare for MMI and panel interviews with structure.",
     resources: [
+      { title: "Medicine and Dentistry Interviews", href: "/interviews" },
       { title: "FREE Medicine Interview Guide", href: "https://payhip.com/Medwithrish", external: true },
       { title: "Interview Tutoring", href: "/interview-tutoring" },
     ],

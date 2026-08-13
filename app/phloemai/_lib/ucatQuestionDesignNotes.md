@@ -143,6 +143,7 @@ For a 35-question DM batch, the current UCAT-style mix is:
 - Logical puzzles should have a compact rule set and one clean answer. Check for alternative valid arrangements before committing.
 - Strongest argument options should include one relevant, balanced answer and three weak distractors: irrelevant, overgeneralised, unsupported, or missing the core issue.
 - Yes/No paragraph or data questions should usually show 5 conclusions and the same `Yes` / `No` drag-category feel or the app's equivalent yes/no response controls. Include a mix of directly stated facts, unsupported causal claims, reversals, and small calculations.
+- Data-based Yes/No inference questions should use a real visual, usually a compact table, bar chart, line chart or grouped-bar chart. Keep labels short, avoid over-wide tables, and check the visual renders cleanly on narrow screens.
 - Do not confuse DM Yes/No drag-category questions with SJT four-option rating questions. The MedEntry-style layout with conclusion tiles and `Yes` / `No` target boxes is for DM syllogisms and DM conclusion questions.
 - Venn/set questions should use exact-region wording in the stimulus when numbers are already filled in.
 - Probability questions should be calculator-light where possible and should have distractors that match common mistakes.

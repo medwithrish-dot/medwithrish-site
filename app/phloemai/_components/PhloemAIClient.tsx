@@ -1500,6 +1500,125 @@ const dashboardNavItems = [
   },
 ] as const;
 
+const phloemAreaSwitchItems = [
+  {
+    label: "PhloemAI UCAT Tutor",
+    eyebrow: "Current workspace",
+    href: "/phloemai/dashboard",
+    icon: Brain,
+    current: true,
+  },
+  {
+    label: "Interviews",
+    eyebrow: "MMI and panel prep",
+    href: "/interviews",
+    icon: MessageSquare,
+    current: false,
+  },
+  {
+    label: "UCAT resources",
+    eyebrow: "Tutoring and prep",
+    href: "/ucat-tutoring",
+    icon: Target,
+    current: false,
+  },
+  {
+    label: "Resources library",
+    eyebrow: "Guides and trackers",
+    href: "/resources",
+    icon: ClipboardList,
+    current: false,
+  },
+] as const;
+
+function PhloemAreaSwitcher({
+  open,
+  onToggle,
+  onClose,
+  menuId,
+  className = "",
+}: {
+  open: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+  menuId: string;
+  className?: string;
+}) {
+  return (
+    <div className={`relative ${className}`}>
+      <button
+        type="button"
+        onClick={onToggle}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") onClose();
+        }}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={menuId}
+        className="-mx-1 flex w-full items-center gap-2 rounded-xl px-1 py-1 text-left transition-colors hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      >
+        <PhloemAIFaviconMark className="h-11 w-11 rounded-xl" />
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-xl font-black">
+            Phloem<span className="text-blue-600">AI</span>
+          </span>
+          <span className="block truncate text-sm font-bold text-slate-500">
+            UCAT Tutor
+          </span>
+        </span>
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 text-slate-500 transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
+          aria-hidden="true"
+        />
+      </button>
+
+      {open && (
+        <div
+          id={menuId}
+          role="menu"
+          className="absolute left-0 z-30 mt-2 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-xl"
+        >
+          {phloemAreaSwitchItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                role="menuitem"
+                aria-current={item.current ? "page" : undefined}
+                onClick={onClose}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors ${
+                  item.current
+                    ? "bg-indigo-50 text-blue-700"
+                    : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                }`}
+              >
+                <span
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
+                    item.current ? "bg-white text-blue-600" : "bg-slate-100 text-slate-500"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-black">
+                    {item.label}
+                  </span>
+                  <span className="mt-0.5 block truncate text-xs font-bold text-slate-500">
+                    {item.eyebrow}
+                  </span>
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 const sectionScores = [
   {
     code: "VR",
@@ -2206,6 +2325,7 @@ type StudyPlanDisplayTask = DashboardDiagnosticTask & {
 };
 
 type ReportSectionFilter = "All" | UCATSectionCode;
+type ProgressSetFilter = "All" | "Incomplete" | "Completed";
 
 function normaliseIssueText(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -3542,7 +3662,7 @@ function RecentPracticeSetsPanel({
       {completedSets.length > 0 && (
         <div>
           <div className="bg-slate-50 px-3 py-2 text-xs font-black uppercase tracking-wide text-slate-500">
-            Marked sets
+            Completed sets
           </div>
           {completedSets.map(renderSet)}
         </div>
@@ -5408,6 +5528,36 @@ function ProgressContent({
   const completedQuestionSetCount = recentPracticeSets.filter(
     (set) => !set.isIncomplete
   ).length;
+  const incompleteQuestionSetCount = recentPracticeSets.filter(
+    (set) => set.isIncomplete
+  ).length;
+  const [progressSetFilter, setProgressSetFilter] =
+    useState<ProgressSetFilter>("All");
+  const filteredRecentPracticeSets = recentPracticeSets.filter((set) => {
+    if (progressSetFilter === "Incomplete") return set.isIncomplete;
+    if (progressSetFilter === "Completed") return !set.isIncomplete;
+    return true;
+  });
+  const progressSetFilterOptions: Array<{
+    value: ProgressSetFilter;
+    count: number;
+  }> = [
+    { value: "All", count: recentPracticeSets.length },
+    { value: "Incomplete", count: incompleteQuestionSetCount },
+    { value: "Completed", count: completedQuestionSetCount },
+  ];
+  const recentSetsEmptyTitle =
+    progressSetFilter === "Incomplete"
+      ? "No incomplete sets."
+      : progressSetFilter === "Completed"
+        ? "No completed sets yet."
+        : "No practice sets saved yet.";
+  const recentSetsEmptyText =
+    progressSetFilter === "Incomplete"
+      ? "Started sets you have not finished will appear here."
+      : progressSetFilter === "Completed"
+        ? "Mark a finished set to add it here."
+        : "Start a question-bank set and mark it when you are ready.";
   const sectionImprovementItems = sectionCodes.flatMap((code) => {
     const answered = practiceStats.sectionAnswered[code];
     if (answered === 0) return [];
@@ -5485,16 +5635,43 @@ function ProgressContent({
                 <Info className="h-4 w-4 text-slate-400" aria-hidden="true" />
               </div>
               <p className="mt-1 text-xs font-bold text-slate-500">
-                {completedQuestionSetCount} completed question set{completedQuestionSetCount === 1 ? "" : "s"}
+                {incompleteQuestionSetCount} incomplete, {completedQuestionSetCount} completed
               </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {progressSetFilterOptions.map((option) => {
+                const active = progressSetFilter === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setProgressSetFilter(option.value)}
+                    className={`inline-flex h-8 items-center gap-2 rounded-full px-4 text-xs font-black transition-colors ${
+                      active
+                        ? "bg-blue-600 text-white"
+                        : "border border-slate-200 bg-white text-slate-500 hover:bg-blue-50 hover:text-blue-600"
+                    }`}
+                  >
+                    {option.value}
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] ${
+                        active ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
+                      }`}
+                    >
+                      {option.count}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           <div className="mt-5">
             <RecentPracticeSetsPanel
-              sets={recentPracticeSets}
-              emptyTitle="No practice sets saved yet."
-              emptyText="Start a question-bank set and mark it when you are ready."
+              sets={filteredRecentPracticeSets}
+              emptyTitle={recentSetsEmptyTitle}
+              emptyText={recentSetsEmptyText}
               onRemoveSet={onRemoveSet}
               onRemoveAllSets={onRemoveAllSets}
               removingSetId={removingPracticeSetId}
@@ -7819,6 +7996,7 @@ function UCATDashboard({
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [areaSwitcherOpen, setAreaSwitcherOpen] = useState(false);
   const [progressSnapshotView, setProgressSnapshotView] =
     useState<DashboardProgressSnapshotView>("accuracy");
   const [completedDashboardTaskIds, setCompletedDashboardTaskIds] = useState<
@@ -8617,21 +8795,15 @@ function UCATDashboard({
         inert={authGateActive ? true : undefined}
       >
         <aside className="hidden border-r border-slate-200 bg-white px-3 py-5 lg:block">
-          <Link
-            href="/phloemai"
-            aria-label="Open PhloemAI landing page"
-            className="-mx-1 flex items-center gap-3 rounded-xl px-1 py-1 transition-colors hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-          >
-            <PhloemAIFaviconMark className="h-11 w-11 rounded-xl" />
-            <span>
-              <span className="block text-xl font-black">
-                Phloem<span className="text-blue-600">AI</span>
-              </span>
-              <span className="block text-sm font-bold text-slate-500">
-                UCAT Tutor
-              </span>
-            </span>
-          </Link>
+          <PhloemAreaSwitcher
+            open={areaSwitcherOpen}
+            onToggle={() => {
+              setAreaSwitcherOpen((current) => !current);
+              setAccountMenuOpen(false);
+            }}
+            onClose={() => setAreaSwitcherOpen(false)}
+            menuId="phloem-area-switcher"
+          />
 
           <nav className="mt-10 space-y-3">
             {dashboardNavItems.map((item) => {
@@ -8771,6 +8943,7 @@ function UCATDashboard({
                 onClick={() => {
                   setMobileMenuOpen((current) => !current);
                   setAccountMenuOpen(false);
+                  setAreaSwitcherOpen(false);
                 }}
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 lg:hidden"
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
@@ -8823,6 +8996,7 @@ function UCATDashboard({
                   onClick={() => {
                     setAccountMenuOpen((current) => !current);
                     setMobileMenuOpen(false);
+                    setAreaSwitcherOpen(false);
                   }}
                   className="flex items-center gap-3 rounded-xl border border-transparent px-2 py-1 transition-colors hover:border-blue-100 hover:bg-blue-50"
                   aria-expanded={accountMenuOpen}
@@ -8957,6 +9131,32 @@ function UCATDashboard({
                 id="phloem-mobile-menu"
                 className="mt-4 w-full rounded-xl border border-slate-200 bg-white p-3 shadow-sm lg:hidden"
               >
+                <div className="mb-3 rounded-xl bg-slate-50 p-2">
+                  <p className="px-3 pb-2 text-xs font-black uppercase tracking-wide text-slate-400">
+                    Switch area
+                  </p>
+                  <div className="grid gap-1">
+                    {phloemAreaSwitchItems.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-black transition-colors ${
+                            item.current
+                              ? "bg-white text-blue-600 shadow-sm"
+                              : "text-slate-700 hover:bg-white hover:text-blue-600"
+                          }`}
+                        >
+                          <Icon className="h-4 w-4" aria-hidden="true" />
+                          {item.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <nav className="grid gap-2" aria-label="Mobile PhloemAI menu">
                   {dashboardNavItems.map((item) => {
                     const Icon = item.icon;

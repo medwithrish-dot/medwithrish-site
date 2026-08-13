@@ -42287,6 +42287,6151 @@ explanation: "RR = Risk in treatment / Risk in control = 0.06 / 0.15 = 0.4. An R
       "E → YES: H1 total = 142 + 136 + 128 + 118 + 112 + 106 = £742k. Mean = £742k ÷ 6 = £123.7k. £123,700 < £125,000.",
   },
 
+  // --- Inference Yes/No small set 1 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Museum Trial",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A city museum trialled timed entry during three Saturday mornings because visitor numbers had often exceeded the capacity of its main gallery. Tickets remained free but had to be booked in advance for the trial sessions. Compared with similar Saturdays earlier in the year, average queue time fell from 45 minutes to 20 minutes, while 18% fewer visitors entered during the trial mornings. Staff recorded fewer crowding complaints, but cafe revenue fell because fewer walk-in visitors stayed after being unable to enter immediately.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-museum-inf-23-a",
+        text: "The timed-entry trial was introduced because the main gallery had sometimes become too crowded.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-museum-inf-23-b",
+        text: "Timed entry increased the number of visitors entering on Saturday mornings.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-museum-inf-23-c",
+        text: "The trial eliminated queueing at the museum.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-museum-inf-23-d",
+        text: "The staff records suggest that crowding complaints decreased during the trial.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-museum-inf-23-e",
+        text: "The information proves that timed entry should be adopted permanently.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The trial was introduced because visitor numbers had often exceeded the capacity of the main gallery.\n" +
+      "B: NO - The passage says 18% fewer visitors entered during the trial mornings.\n" +
+      "C: NO - Queue time fell to 20 minutes, so queueing was reduced but not eliminated.\n" +
+      "D: YES - Staff recorded fewer crowding complaints during the trial.\n" +
+      "E: NO - The passage gives mixed outcomes and does not prove a permanent policy should be adopted.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Dental Clinics",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows appointment data for four community dental clinics in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Community dental clinic appointments",
+      headers: ["Clinic", "Appointments Available", "Appointments Booked", "No-shows", "Urgent Slots"],
+      rows: [
+        ["North", "240", "216", "18", "36"],
+        ["East", "180", "171", "9", "24"],
+        ["South", "220", "198", "22", "28"],
+        ["West", "160", "144", "12", "20"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-dental-inf-23-a",
+        text: "East had the highest booking rate as a proportion of appointments available.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-dental-inf-23-b",
+        text: "South had more attended appointments than North.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-dental-inf-23-c",
+        text: "Across all four clinics, the no-show rate among booked appointments was below 8%.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-dental-inf-23-d",
+        text: "North had more urgent slots than East and West combined.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-dental-inf-23-e",
+        text: "Across all four clinics, 71 appointment slots were not booked.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - Booking rates are North 216/240 = 90%, East 171/180 = 95%, South 198/220 = 90%, and West 144/160 = 90%.\n" +
+      "B: NO - Attended appointments are booked minus no-shows: South 198 - 22 = 176, while North 216 - 18 = 198.\n" +
+      "C: NO - Total no-shows = 18 + 9 + 22 + 12 = 61. Total booked = 216 + 171 + 198 + 144 = 729. 61/729 = 8.4%, not below 8%.\n" +
+      "D: NO - East and West urgent slots total 24 + 20 = 44, which is greater than North's 36.\n" +
+      "E: YES - Total available = 800 and total booked = 729, so unbooked slots = 800 - 729 = 71.",
+  },
+
+  // --- Inference Yes/No small set 2 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "E-book Access",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A school library added e-book access for exam revision titles after students on long bus routes reported difficulty borrowing printed copies before closing time. The subscription allows three simultaneous readers per title. During the first term, overnight use accounted for 40% of all e-book sessions. The library did not reduce its printed stock, because the librarian said printed copies were still preferred for in-class study.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-ebook-inf-24-a",
+        text: "The e-book service was partly introduced to help students who found it difficult to borrow printed copies before the library closed.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-ebook-inf-24-b",
+        text: "The library replaced its printed revision titles with e-books.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-ebook-inf-24-c",
+        text: "No more than three students can read the same e-book title at the same time.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-ebook-inf-24-d",
+        text: "Most e-book sessions took place overnight during the first term.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-ebook-inf-24-e",
+        text: "The paragraph proves that students learn better from printed copies than from e-books.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The service followed reports from students on long bus routes who struggled to borrow printed copies before closing time.\n" +
+      "B: NO - The library did not reduce its printed stock, so replacement does not follow.\n" +
+      "C: YES - The subscription allows three simultaneous readers per title.\n" +
+      "D: NO - Overnight use was 40% of sessions. Most would mean more than 50%.\n" +
+      "E: NO - Preference for printed copies in class is reported, but learning outcomes are not compared.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Blood Donation",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows booking and collection data for four mobile blood donation venues in one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Mobile blood donation venue data",
+      headers: ["Venue", "Booked Donors", "Attended Donors", "First-time Donors", "Units Collected"],
+      rows: [
+        ["Town Hall", "120", "108", "28", "98"],
+        ["Campus", "90", "81", "36", "75"],
+        ["Leisure Centre", "100", "86", "24", "80"],
+        ["Business Park", "80", "72", "18", "68"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-blooddon-inf-24-a",
+        text: "Campus had the highest proportion of first-time donors among attendees.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-blooddon-inf-24-b",
+        text: "Total units collected exceeded total attended donors by at least 20.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-blooddon-inf-24-c",
+        text: "Town Hall collected more units than Campus and Business Park combined.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-blooddon-inf-24-d",
+        text: "Leisure Centre had the lowest attendance rate among booked donors.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-blooddon-inf-24-e",
+        text: "Across the four venues, more than 300 units were collected.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - First-time donor shares among attendees are Town Hall 28/108 = 25.9%, Campus 36/81 = 44.4%, Leisure Centre 24/86 = 27.9%, and Business Park 18/72 = 25.0%.\n" +
+      "B: NO - Total units collected = 98 + 75 + 80 + 68 = 321. Total attended donors = 108 + 81 + 86 + 72 = 347. Units collected are lower, not at least 20 higher.\n" +
+      "C: NO - Campus and Business Park collected 75 + 68 = 143 units, which exceeds Town Hall's 98.\n" +
+      "D: YES - Attendance rates are Town Hall 108/120 = 90%, Campus 81/90 = 90%, Leisure Centre 86/100 = 86%, and Business Park 72/80 = 90%.\n" +
+      "E: YES - Total units collected = 321, which is more than 300.",
+  },
+
+  // --- Inference Yes/No small set 3 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Recycling Trial",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A town council piloted fortnightly household recycling collections in two neighbourhoods after route planners estimated that weekly recycling rounds used more fuel than any other local waste service. During the pilot, collection truck mileage fell by 28%. Residents could request larger recycling bins at no extra charge. Missed-collection reports rose in the first month but had returned to their usual level by the third month. The council said the pilot had not measured contamination in recycling bins, so a separate audit would be needed before any wider rollout decision.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-recycling-inf-25-a",
+        text: "The pilot was linked to concerns about the fuel use of weekly recycling rounds.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-recycling-inf-25-b",
+        text: "Collection truck mileage increased during the pilot.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-recycling-inf-25-c",
+        text: "Residents had to pay extra to request larger recycling bins.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-recycling-inf-25-d",
+        text: "Missed-collection reports were still above their usual level in the third month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-recycling-inf-25-e",
+        text: "A wider rollout decision was not yet fully supported by the pilot because bin contamination had not been measured.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - The pilot followed route-planner estimates that weekly recycling rounds used more fuel than any other local waste service.\n" +
+      "B: NO - Mileage fell by 28%, so it did not increase.\n" +
+      "C: NO - Larger recycling bins could be requested at no extra charge.\n" +
+      "D: NO - Missed-collection reports had returned to their usual level by the third month.\n" +
+      "E: YES - The council said contamination had not been measured and that a separate audit was needed before a wider rollout decision.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Workshop Attendance",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The grouped bar chart below shows attendance at evening skills workshops by booking method across four months.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Workshop attendance by booking method",
+      yLabel: "Attendees",
+      seriesLabels: ["Online", "Phone", "Walk-in"],
+      groups: [
+        { label: "Jan", values: [46, 18, 20] },
+        { label: "Feb", values: [52, 16, 22] },
+        { label: "Mar", values: [60, 20, 18] },
+        { label: "Apr", values: [58, 24, 16] },
+      ],
+      max: 70,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-workshop-inf-25-a",
+        text: "Across the four months, online bookings accounted for more than half of all workshop attendees.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-workshop-inf-25-b",
+        text: "Walk-in attendance increased every month from January to April.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-workshop-inf-25-c",
+        text: "April had a higher total attendance than March.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-workshop-inf-25-d",
+        text: "Phone bookings in April were 50% higher than phone bookings in February.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-workshop-inf-25-e",
+        text: "Walk-in attendance in January and February combined equalled phone bookings in March and April combined.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Online total = 46 + 52 + 60 + 58 = 216. Overall total = 370. 216/370 = 58.4%, which is more than half.\n" +
+      "B: NO - Walk-in attendance was 20, 22, 18, then 16, so it fell after February.\n" +
+      "C: NO - March total = 60 + 20 + 18 = 98. April total = 58 + 24 + 16 = 98. April was equal to March, not higher.\n" +
+      "D: YES - Phone bookings rose from 16 in February to 24 in April. The increase is 8, and 8/16 = 50%.\n" +
+      "E: NO - Walk-in Jan + Feb = 20 + 22 = 42. Phone Mar + Apr = 20 + 24 = 44.",
+  },
+
+  // --- Inference Yes/No small set 4 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Reusable Cups",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A university cafe offered a discount to customers using reusable cups for six weeks after a waste audit found that disposable cup bins often filled before lunchtime on busy lecture days. The proportion of coffee transactions using reusable cups rose from 18% in the week before the discount to 31% in the final week. Total coffee sales were unchanged. The manager warned that the rise could not be attributed solely to the discount, because warmer weather began during the same period and no comparison cafe was monitored.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-cups-inf-26-a",
+        text: "The discount was introduced after an audit found a problem with disposable cup waste.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cups-inf-26-b",
+        text: "The proportion of reusable-cup transactions more than doubled by the final week.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-cups-inf-26-c",
+        text: "Total coffee sales fell during the six-week discount period.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-cups-inf-26-d",
+        text: "The information proves that the discount alone caused the rise in reusable-cup use.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-cups-inf-26-e",
+        text: "In the final week, fewer than one third of coffee transactions used reusable cups.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - The discount followed a waste audit finding that disposable cup bins often filled before lunchtime.\n" +
+      "B: NO - Doubling 18% gives 36%. The final-week figure was 31%, which is higher but not more than double.\n" +
+      "C: NO - The passage states that total coffee sales were unchanged.\n" +
+      "D: NO - The manager explicitly warns that the rise cannot be attributed solely to the discount.\n" +
+      "E: YES - One third is about 33.3%. The final-week figure was 31%, which is below one third.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Response Times",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the mean response time for a student support email inbox over six consecutive weeks.",
+    ],
+    visual: {
+      type: "line",
+      title: "Mean support inbox response time",
+      yLabel: "Minutes",
+      points: [
+        { label: "W1", value: 38 },
+        { label: "W2", value: 34 },
+        { label: "W3", value: 29 },
+        { label: "W4", value: 31 },
+        { label: "W5", value: 26 },
+        { label: "W6", value: 24 },
+      ],
+      max: 45,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-response-inf-26-a",
+        text: "The lowest mean response time was recorded in Week 6.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-response-inf-26-b",
+        text: "Mean response time decreased every week from Week 1 to Week 6.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-response-inf-26-c",
+        text: "The reduction in mean response time from Week 1 to Week 6 exceeded 35%.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-response-inf-26-d",
+        text: "The average mean response time across Weeks 4 to 6 was below 28 minutes.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-response-inf-26-e",
+        text: "Week 4's mean response time was 5 minutes longer than Week 3's.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Week 6 is 24 minutes, the lowest value shown.\n" +
+      "B: NO - Response time increased from Week 3 (29 minutes) to Week 4 (31 minutes).\n" +
+      "C: YES - The reduction is 38 - 24 = 14 minutes. 14/38 = 36.8%, which exceeds 35%.\n" +
+      "D: YES - Weeks 4 to 6 average = (31 + 26 + 24) / 3 = 27 minutes, below 28 minutes.\n" +
+      "E: NO - Week 4 was 31 minutes and Week 3 was 29 minutes, a difference of 2 minutes.",
+  },
+
+  // --- Inference Yes/No small set 5 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Library Lockers",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A college library installed self-service reservation lockers near the entrance after evening students said the loans desk often closed before they arrived on campus. Reserved books could be collected from lockers until 10 pm, but returned books still had to be placed in the normal returns box. During the first month, loans collected from reservations rose by 22%, while loans issued at the staffed counter were unchanged. The library said the trial could not yet be used to decide staffing levels because desk opening hours had not changed.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-lockers-inf-27-a",
+        text: "The lockers were introduced partly because some students could not reach the loans desk before it closed.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lockers-inf-27-b",
+        text: "The lockers allowed students to return books directly into them.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lockers-inf-27-c",
+        text: "Loans issued at the staffed counter fell during the first month of the trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lockers-inf-27-d",
+        text: "Reserved books could be collected from lockers after the loans desk had closed.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lockers-inf-27-e",
+        text: "The trial proved that staffing levels at the loans desk should be reduced.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Evening students reported that the loans desk often closed before they arrived on campus.\n" +
+      "B: NO - Returned books still had to be placed in the normal returns box.\n" +
+      "C: NO - Loans issued at the staffed counter were unchanged, not lower.\n" +
+      "D: YES - Reserved books could be collected until 10 pm, after normal desk closure for the affected students.\n" +
+      "E: NO - The library explicitly said the trial could not yet be used to decide staffing levels.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Bike Hires",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The bar chart below shows the number of bike hires from four docking stations on the same Saturday.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Saturday bike hires by docking station",
+      yLabel: "Bike hires",
+      categories: [
+        { label: "Harbour", value: 84 },
+        { label: "Market", value: 96 },
+        { label: "Campus", value: 72 },
+        { label: "Stadium", value: 108 },
+      ],
+      max: 120,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-bikehire-inf-27-a",
+        text: "Stadium recorded the highest number of bike hires.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-bikehire-inf-27-b",
+        text: "Market and Campus together recorded more hires than Harbour and Stadium together.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-bikehire-inf-27-c",
+        text: "The mean number of hires across the four stations was 90.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-bikehire-inf-27-d",
+        text: "Campus recorded fewer than three quarters of Market's hires.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-bikehire-inf-27-e",
+        text: "Harbour and Market together recorded the same number of hires as Campus and Stadium together.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - Stadium had 108 hires, the largest value shown.\n" +
+      "B: NO - Market + Campus = 96 + 72 = 168. Harbour + Stadium = 84 + 108 = 192.\n" +
+      "C: YES - Total hires = 84 + 96 + 72 + 108 = 360. Mean = 360 / 4 = 90.\n" +
+      "D: NO - Three quarters of Market's hires = 0.75 x 96 = 72. Campus recorded 72, exactly three quarters, not fewer.\n" +
+      "E: YES - Harbour + Market = 84 + 96 = 180. Campus + Stadium = 72 + 108 = 180.",
+  },
+
+  // --- Inference Yes/No small set 6 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Online Triage",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A GP practice introduced an online form for routine administrative requests after receptionists reported that repeat-prescription calls were blocking the urgent phone line. The form told patients with urgent symptoms to telephone the practice or use emergency services instead. In the first month, administrative phone calls fell by 35%, but the average wait for a clinical appointment was unchanged. The practice had not yet translated the form, so it said the effect on patients who did not read English was unknown.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-triageform-inf-28-a",
+        text: "The form was introduced to handle routine administrative requests, not urgent symptoms.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-triageform-inf-28-b",
+        text: "Administrative phone calls decreased in the first month after the form was introduced.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-triageform-inf-28-c",
+        text: "The average wait for a clinical appointment shortened during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-triageform-inf-28-d",
+        text: "The practice had already measured the form's effect on patients who did not read English.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-triageform-inf-28-e",
+        text: "Patients with urgent symptoms were told to use the online form instead of telephoning.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The form was for routine administrative requests, while urgent symptoms were directed elsewhere.\n" +
+      "B: YES - Administrative phone calls fell by 35% in the first month.\n" +
+      "C: NO - The average wait for a clinical appointment was unchanged.\n" +
+      "D: NO - The effect on patients who did not read English was stated to be unknown.\n" +
+      "E: NO - Patients with urgent symptoms were told to telephone the practice or use emergency services.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Meal Deliveries",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows meal delivery data for four neighbourhood routes in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Community meal delivery routes",
+      headers: ["Route", "Meals Scheduled", "Meals Delivered", "Late Deliveries", "Volunteer Hours"],
+      rows: [
+        ["North", "180", "174", "12", "46"],
+        ["East", "150", "141", "9", "38"],
+        ["South", "165", "160", "16", "44"],
+        ["West", "135", "132", "6", "32"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-meals-inf-28-a",
+        text: "West had the lowest number of late deliveries.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-meals-inf-28-b",
+        text: "East delivered a higher proportion of scheduled meals than North.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-meals-inf-28-c",
+        text: "Across all four routes, more than 600 meals were delivered.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-meals-inf-28-d",
+        text: "South had fewer late deliveries per volunteer hour than East.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-meals-inf-28-e",
+        text: "The total number of scheduled meals not delivered was 23.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - Late deliveries were North 12, East 9, South 16, and West 6; West was lowest.\n" +
+      "B: NO - East delivered 141/150 = 94.0% of scheduled meals, while North delivered 174/180 = 96.7%.\n" +
+      "C: YES - Total delivered = 174 + 141 + 160 + 132 = 607, which is more than 600.\n" +
+      "D: NO - South had 16/44 = 0.36 late deliveries per volunteer hour. East had 9/38 = 0.24. South's rate was higher, not lower.\n" +
+      "E: YES - Scheduled but not delivered = (180 - 174) + (150 - 141) + (165 - 160) + (135 - 132) = 6 + 9 + 5 + 3 = 23.",
+  },
+
+  // --- Inference Yes/No small set 7 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Park Lighting",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A council installed temporary lighting along two park paths for a winter trial after commuters reported avoiding the park after dusk. The lights operated only between 5 pm and 10 pm to limit disturbance to nearby homes. Evening footfall on the lit paths rose by 48% during the trial, while morning footfall was unchanged. The council said the trial did not show whether crime had fallen, because no police incident data had yet been analysed.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-lighting-inf-29-a",
+        text: "The lighting trial was introduced after some commuters reported avoiding the park after dusk.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lighting-inf-29-b",
+        text: "The temporary lights operated throughout the night.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lighting-inf-29-c",
+        text: "Morning footfall on the lit paths increased during the trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lighting-inf-29-d",
+        text: "Evening footfall on the lit paths increased during the trial.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lighting-inf-29-e",
+        text: "The trial proved that crime in the park had fallen.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The trial followed reports from commuters who avoided the park after dusk.\n" +
+      "B: NO - The lights operated only from 5 pm to 10 pm.\n" +
+      "C: NO - Morning footfall was unchanged.\n" +
+      "D: YES - Evening footfall on the lit paths rose by 48%.\n" +
+      "E: NO - The council said no police incident data had yet been analysed, so a fall in crime was not proven.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Study Rooms",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The grouped bar chart below shows study-room bookings and unused booked slots across four campus buildings in one week.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Study-room bookings by building",
+      yLabel: "Slots",
+      seriesLabels: ["Booked Slots", "Unused Booked Slots"],
+      groups: [
+        { label: "Arts", values: [84, 12] },
+        { label: "Science", values: [120, 18] },
+        { label: "Health", values: [96, 10] },
+        { label: "Law", values: [72, 9] },
+      ],
+      max: 130,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-studyrooms-inf-29-a",
+        text: "Science had the highest number of booked slots.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-studyrooms-inf-29-b",
+        text: "Health had the lowest proportion of unused booked slots.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-studyrooms-inf-29-c",
+        text: "Arts and Law together had more booked slots than Science and Health together.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-studyrooms-inf-29-d",
+        text: "Across all four buildings, fewer than 50 booked slots were unused.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-studyrooms-inf-29-e",
+        text: "Law had exactly three quarters as many booked slots as Health.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - Science had 120 booked slots, the highest value shown.\n" +
+      "B: YES - Unused shares are Arts 12/84 = 14.3%, Science 18/120 = 15.0%, Health 10/96 = 10.4%, and Law 9/72 = 12.5%; Health is lowest.\n" +
+      "C: NO - Arts + Law = 84 + 72 = 156. Science + Health = 120 + 96 = 216.\n" +
+      "D: YES - Total unused booked slots = 12 + 18 + 10 + 9 = 49, fewer than 50.\n" +
+      "E: YES - Three quarters of Health's 96 booked slots is 72, which equals Law's bookings.",
+  },
+
+  // --- Inference Yes/No small set 8 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Food Stall Trial",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A market moved two hot-food stalls to the square's north side for a four-week trial because traders on that side said lunchtime shoppers rarely walked past their pitches. During the trial, sales at the moved stalls rose, but sales at three nearby produce stalls fell. The market manager said the trial could not show whether total market spending had increased, because cash-only traders were not included in the sales survey.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-foodstalls-inf-30-a",
+        text: "The trial was intended to address low lunchtime footfall on the north side of the square.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-foodstalls-inf-30-b",
+        text: "Sales at the moved hot-food stalls fell during the trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-foodstalls-inf-30-c",
+        text: "Sales at some nearby produce stalls fell during the trial.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-foodstalls-inf-30-d",
+        text: "The sales survey included every trader in the market.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-foodstalls-inf-30-e",
+        text: "The trial proved that total market spending had increased.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Traders on the north side said lunchtime shoppers rarely walked past their pitches, prompting the trial.\n" +
+      "B: NO - Sales at the moved stalls rose.\n" +
+      "C: YES - Sales at three nearby produce stalls fell.\n" +
+      "D: NO - Cash-only traders were not included in the sales survey.\n" +
+      "E: NO - The manager said the trial could not show whether total market spending had increased.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Air Quality",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the daily mean nitrogen dioxide level at a roadside monitoring station over one working week.",
+    ],
+    visual: {
+      type: "line",
+      title: "Roadside nitrogen dioxide levels",
+      yLabel: "Micrograms per cubic metre",
+      points: [
+        { label: "Mon", value: 42 },
+        { label: "Tue", value: 38 },
+        { label: "Wed", value: 44 },
+        { label: "Thu", value: 35 },
+        { label: "Fri", value: 31 },
+      ],
+      max: 50,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-airquality-inf-30-a",
+        text: "The highest nitrogen dioxide level was recorded on Wednesday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-airquality-inf-30-b",
+        text: "Nitrogen dioxide fell every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-airquality-inf-30-c",
+        text: "The Friday level was more than 25% lower than the Monday level.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-airquality-inf-30-d",
+        text: "The mean level for the week was exactly 38 micrograms per cubic metre.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-airquality-inf-30-e",
+        text: "Thursday's level was lower than Tuesday's by 5 micrograms per cubic metre.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Wednesday was 44, the highest value shown.\n" +
+      "B: NO - The level rose from Tuesday (38) to Wednesday (44).\n" +
+      "C: YES - Monday to Friday fell from 42 to 31, a drop of 11. 11/42 = 26.2%, which is more than 25%.\n" +
+      "D: YES - Mean = (42 + 38 + 44 + 35 + 31) / 5 = 190 / 5 = 38.\n" +
+      "E: NO - Tuesday was 38 and Thursday was 35, a difference of 3, not 5.",
+  },
+
+  // --- Inference Yes/No small set 9 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Pharmacy Queue",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A pharmacy trialled a text-message collection system after customers complained that the prescription queue often blocked the shop entrance. Customers who opted in received a message when their prescription was ready; customers without mobile phones could still wait in the shop. During the first fortnight, the average queue length fell from 14 people to 8 people and recorded waiting-time complaints decreased. The number of dispensing errors was unchanged, so the pharmacist said the trial did not show an improvement in dispensing accuracy.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-pharmqueue-inf-31-a",
+        text: "The text-message system was introduced after complaints about the prescription queue.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-pharmqueue-inf-31-b",
+        text: "All customers were required to use a mobile phone to collect prescriptions.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-pharmqueue-inf-31-c",
+        text: "The average queue length fell by more than one third during the first fortnight.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-pharmqueue-inf-31-d",
+        text: "Recorded waiting-time complaints increased during the first fortnight.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-pharmqueue-inf-31-e",
+        text: "The trial showed an improvement in dispensing accuracy.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The system was trialled after customers complained about the prescription queue blocking the entrance.\n" +
+      "B: NO - Customers without mobile phones could still wait in the shop.\n" +
+      "C: YES - Queue length fell from 14 to 8, a drop of 6. 6/14 = 42.9%, which is more than one third.\n" +
+      "D: NO - Recorded waiting-time complaints decreased.\n" +
+      "E: NO - Dispensing errors were unchanged, and the pharmacist said accuracy improvement was not shown.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Club Attendance",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The bar chart below shows attendance at four after-school clubs during the same week.",
+    ],
+    visual: {
+      type: "bar",
+      title: "After-school club attendance",
+      yLabel: "Students",
+      categories: [
+        { label: "Coding", value: 64 },
+        { label: "Drama", value: 48 },
+        { label: "Football", value: 72 },
+        { label: "Art", value: 56 },
+      ],
+      max: 80,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-clubs-inf-31-a",
+        text: "Football had the highest attendance of the four clubs.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-clubs-inf-31-b",
+        text: "Coding and Art together had more attendees than Drama and Football together.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-clubs-inf-31-c",
+        text: "The mean attendance across the four clubs was 60 students.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-clubs-inf-31-d",
+        text: "Drama had fewer than three quarters as many attendees as Coding.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-clubs-inf-31-e",
+        text: "The difference between the highest and lowest club attendance was 24 students.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - Football had 72 attendees, the highest value shown.\n" +
+      "B: NO - Coding + Art = 64 + 56 = 120. Drama + Football = 48 + 72 = 120. They are equal, so Coding and Art are not greater.\n" +
+      "C: YES - Total attendance = 64 + 48 + 72 + 56 = 240. Mean = 240 / 4 = 60.\n" +
+      "D: NO - Three quarters of Coding's 64 attendees is 48. Drama had exactly 48, not fewer than 48.\n" +
+      "E: YES - Highest attendance = 72 and lowest = 48. Difference = 24.",
+  },
+
+  // --- Inference Yes/No small set 10 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Quiet Coach",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A rail company trialled bookable quiet-coach seats on three commuter services after passenger surveys identified noise as the most common complaint on those routes. Quiet-coach seats had to be reserved in advance, while seats in other carriages remained unreserved. During the trial, noise complaints relating to the quiet coach fell, but overall punctuality on the three services was unchanged. The company said the trial did not test whether passengers on other routes wanted the same arrangement.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-quietcoach-inf-32-a",
+        text: "The trial was introduced after survey evidence about passenger noise complaints.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-quietcoach-inf-32-b",
+        text: "Every seat on the three commuter services had to be reserved in advance.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-quietcoach-inf-32-c",
+        text: "Noise complaints relating to the quiet coach fell during the trial.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-quietcoach-inf-32-d",
+        text: "Overall punctuality improved on the three services during the trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-quietcoach-inf-32-e",
+        text: "The trial established that passengers on other routes wanted bookable quiet-coach seats.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Passenger surveys identified noise as the most common complaint on the routes used for the trial.\n" +
+      "B: NO - Only quiet-coach seats had to be reserved; other carriages remained unreserved.\n" +
+      "C: YES - The passage states that noise complaints relating to the quiet coach fell.\n" +
+      "D: NO - Overall punctuality was unchanged.\n" +
+      "E: NO - The company said the trial did not test passenger demand on other routes.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Clinic Cancellations",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows appointment cancellation data for four outpatient services in one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Outpatient appointment cancellations",
+      headers: ["Service", "Booked Appointments", "Cancellations", "Same-day Cancellations", "Slots Refilled"],
+      rows: [
+        ["Dermatology", "240", "30", "12", "18"],
+        ["ENT", "180", "27", "15", "10"],
+        ["Physiotherapy", "220", "22", "8", "20"],
+        ["Podiatry", "160", "24", "6", "12"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-cancel-inf-32-a",
+        text: "Physiotherapy had the lowest cancellation rate as a proportion of booked appointments.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cancel-inf-32-b",
+        text: "ENT had the highest number of same-day cancellations.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cancel-inf-32-c",
+        text: "Across all four services, total cancellations exceeded 105.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-cancel-inf-32-d",
+        text: "Physiotherapy refilled at least 95% of its cancelled appointment slots.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-cancel-inf-32-e",
+        text: "Podiatry had fewer same-day cancellations than Dermatology.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - Cancellation rates are Dermatology 30/240 = 12.5%, ENT 27/180 = 15.0%, Physiotherapy 22/220 = 10.0%, and Podiatry 24/160 = 15.0%; Physiotherapy is lowest.\n" +
+      "B: YES - Same-day cancellations are Dermatology 12, ENT 15, Physiotherapy 8, and Podiatry 6; ENT is highest.\n" +
+      "C: NO - Total cancellations = 30 + 27 + 22 + 24 = 103, which does not exceed 105.\n" +
+      "D: NO - Physiotherapy refilled 20 of 22 cancelled slots, about 90.9%, which is below 95%.\n" +
+      "E: YES - Podiatry had 6 same-day cancellations, fewer than Dermatology's 12.",
+  },
+
+  // --- Inference Yes/No small set 11 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Home Visits",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A GP practice trialled home blood-pressure checks for housebound patients after nurses reported that routine checks were often delayed when transport arrangements failed. Only patients already on the chronic-disease register were eligible for the trial. During the first three months, missed blood-pressure reviews among eligible housebound patients fell by 30%, but the number of urgent GP home visits was unchanged. The practice manager said the trial did not show whether non-housebound patients would benefit from the same service.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-homevisits-inf-33-a",
+        text: "The trial was introduced partly because failed transport arrangements delayed routine checks.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-homevisits-inf-33-b",
+        text: "All patients at the practice were eligible for home blood-pressure checks.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-homevisits-inf-33-c",
+        text: "Missed blood-pressure reviews among eligible housebound patients decreased during the first three months.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-homevisits-inf-33-d",
+        text: "The number of urgent GP home visits fell during the trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-homevisits-inf-33-e",
+        text: "The trial showed that non-housebound patients would benefit from the same service.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Nurses reported that routine checks were delayed when transport arrangements failed.\n" +
+      "B: NO - Eligibility was limited to housebound patients already on the chronic-disease register.\n" +
+      "C: YES - Missed blood-pressure reviews among eligible housebound patients fell by 30%.\n" +
+      "D: NO - The number of urgent GP home visits was unchanged.\n" +
+      "E: NO - The practice manager said the trial did not show whether non-housebound patients would benefit.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Water Use",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows daily water use in a hospital laundry unit over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "Laundry unit water use",
+      yLabel: "Litres",
+      points: [
+        { label: "Mon", value: 520 },
+        { label: "Tue", value: 480 },
+        { label: "Wed", value: 500 },
+        { label: "Thu", value: 450 },
+        { label: "Fri", value: 420 },
+      ],
+      max: 600,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-wateruse-inf-33-a",
+        text: "The lowest water use was recorded on Friday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-wateruse-inf-33-b",
+        text: "Water use fell every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-wateruse-inf-33-c",
+        text: "Monday and Tuesday together used 130 litres more water than Thursday and Friday together.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-wateruse-inf-33-d",
+        text: "The mean daily water use across the five weekdays was below 470 litres.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-wateruse-inf-33-e",
+        text: "Wednesday's water use was 50 litres higher than Thursday's.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - Friday was 420 litres, the lowest value shown.\n" +
+      "B: NO - Water use rose from Tuesday (480 litres) to Wednesday (500 litres).\n" +
+      "C: YES - Monday + Tuesday = 520 + 480 = 1000. Thursday + Friday = 450 + 420 = 870. The difference is 130 litres.\n" +
+      "D: NO - Mean daily use = (520 + 480 + 500 + 450 + 420) / 5 = 2370 / 5 = 474 litres, not below 470.\n" +
+      "E: YES - Wednesday was 500 litres and Thursday was 450 litres, a difference of 50 litres.",
+  },
+
+  // --- Inference Yes/No small set 12 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Breakfast Club",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A primary school opened a breakfast club after teachers reported that some pupils arrived before supervision began and said they had not eaten. The club charged a small fee, but families receiving free school meals did not pay. During the first half-term, late arrivals fell among pupils registered for the club, while overall school attendance was unchanged. The headteacher said the trial did not measure academic results.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-breakfast-inf-34-a",
+        text: "The club was introduced after teachers reported concerns about pupils arriving early and hungry.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-breakfast-inf-34-b",
+        text: "Every family had to pay a fee for the breakfast club.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-breakfast-inf-34-c",
+        text: "Late arrivals fell among pupils registered for the club during the first half-term.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-breakfast-inf-34-d",
+        text: "Overall school attendance improved during the first half-term.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-breakfast-inf-34-e",
+        text: "The trial measured whether the club improved academic results.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Teachers reported that some pupils arrived before supervision began and said they had not eaten.\n" +
+      "B: NO - Families receiving free school meals did not pay the fee.\n" +
+      "C: YES - Late arrivals fell among pupils registered for the club.\n" +
+      "D: NO - Overall school attendance was unchanged.\n" +
+      "E: NO - The headteacher said academic results were not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Bus Punctuality",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The grouped bar chart below shows scheduled buses and late buses on four town routes in one week.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Bus punctuality by route",
+      yLabel: "Buses",
+      seriesLabels: ["Scheduled", "Late"],
+      groups: [
+        { label: "A1", values: [180, 18] },
+        { label: "B2", values: [150, 15] },
+        { label: "C3", values: [120, 24] },
+        { label: "D4", values: [160, 16] },
+      ],
+      max: 200,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-buspunctual-inf-34-a",
+        text: "Route C3 had the highest proportion of late buses.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-buspunctual-inf-34-b",
+        text: "Route B2 had fewer late buses than Route D4.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-buspunctual-inf-34-c",
+        text: "Across the four routes, exactly 600 buses were scheduled.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-buspunctual-inf-34-d",
+        text: "Routes A1 and D4 together had exactly 34 late buses.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-buspunctual-inf-34-e",
+        text: "Route C3 had more scheduled buses than Route B2.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Late-bus proportions are A1 18/180 = 10%, B2 15/150 = 10%, C3 24/120 = 20%, and D4 16/160 = 10%; C3 is highest.\n" +
+      "B: YES - B2 had 15 late buses, fewer than D4's 16.\n" +
+      "C: NO - Total scheduled buses = 180 + 150 + 120 + 160 = 610, not 600.\n" +
+      "D: YES - A1 and D4 had 18 + 16 = 34 late buses.\n" +
+      "E: NO - C3 had 120 scheduled buses, fewer than B2's 150.",
+  },
+
+  // --- Inference Yes/No small set 13 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Waiting Room Signs",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A clinic added digital calling screens in its waiting room after patients with hearing difficulties said staff often announced names too quietly. Patients could still ask reception staff to call them in person instead. During the first month, missed call-ins fell from 14 to 6 and interruptions at the reception desk decreased. The clinic manager said the effect of the screens on patient privacy had not yet been assessed.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-signs-inf-35-a",
+        text: "The screens were introduced after feedback from patients with hearing difficulties.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-signs-inf-35-b",
+        text: "All patients had to rely on the digital screens to know when they were being called.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-signs-inf-35-c",
+        text: "Missed call-ins fell by more than half during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-signs-inf-35-d",
+        text: "Interruptions at the reception desk increased during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-signs-inf-35-e",
+        text: "The clinic had already assessed the privacy impact of the screens.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The screens were added after patients with hearing difficulties said names were often announced too quietly.\n" +
+      "B: NO - Patients could still ask reception staff to call them in person.\n" +
+      "C: YES - Missed call-ins fell from 14 to 6, a reduction of 8. 8/14 = 57.1%, which is more than half.\n" +
+      "D: NO - Interruptions at reception decreased.\n" +
+      "E: NO - The manager said the privacy effect had not yet been assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Training Uptake",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows staff training uptake in four hospital departments during one quarter.",
+    ],
+    visual: {
+      type: "table",
+      title: "Quarterly staff training uptake",
+      headers: ["Department", "Eligible Staff", "Completed Training", "Refresher Needed", "Sessions Run"],
+      rows: [
+        ["Reception", "48", "36", "12", "4"],
+        ["Nursing", "80", "68", "10", "6"],
+        ["Pharmacy", "40", "30", "8", "3"],
+        ["Estates", "32", "20", "9", "2"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-training-inf-35-a",
+        text: "Nursing had the highest completion rate among eligible staff.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-training-inf-35-b",
+        text: "Estates had more staff complete training than Pharmacy.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-training-inf-35-c",
+        text: "Across all four departments, more than 150 staff completed training.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-training-inf-35-d",
+        text: "Reception and Pharmacy together had 20 staff needing refresher training.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-training-inf-35-e",
+        text: "Every department ran at least three training sessions.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Completion rates are Reception 36/48 = 75%, Nursing 68/80 = 85%, Pharmacy 30/40 = 75%, and Estates 20/32 = 62.5%; Nursing is highest.\n" +
+      "B: NO - Estates had 20 completions, fewer than Pharmacy's 30.\n" +
+      "C: YES - Total completions = 36 + 68 + 30 + 20 = 154, which is more than 150.\n" +
+      "D: YES - Reception and Pharmacy refresher totals are 12 + 8 = 20.\n" +
+      "E: NO - Estates ran 2 sessions, which is fewer than three.",
+  },
+
+  // --- Inference Yes/No small set 14 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Reminder Calls",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A dental service began making reminder calls 48 hours before appointments after its no-show rate had exceeded the monthly target for three consecutive months. Calls were made only for patients who did not have a mobile number recorded for text reminders. In the first two months of the scheme, the no-show rate fell from 11% to 8%, but demand for emergency appointments was unchanged. The service manager said there was not enough data to compare the cost of calls with the cost of text reminders.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-remindercalls-inf-36-a",
+        text: "The reminder calls were introduced after the no-show rate had exceeded target for three consecutive months.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-remindercalls-inf-36-b",
+        text: "All patients received reminder calls before appointments.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-remindercalls-inf-36-c",
+        text: "The no-show rate fell by 3 percentage points in the first two months of the scheme.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-remindercalls-inf-36-d",
+        text: "Demand for emergency appointments fell during the first two months of the scheme.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-remindercalls-inf-36-e",
+        text: "The service had enough data to compare the cost of calls with the cost of text reminders.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The no-show rate had exceeded the monthly target for three consecutive months before calls began.\n" +
+      "B: NO - Calls were only for patients without a mobile number recorded for text reminders.\n" +
+      "C: YES - The no-show rate fell from 11% to 8%, a fall of 3 percentage points.\n" +
+      "D: NO - Demand for emergency appointments was unchanged.\n" +
+      "E: NO - The manager said there was not enough data for the cost comparison.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Screening Invites",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The bar chart below shows the number of screening invitations sent by four contact methods in one month.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Screening invitations by method",
+      yLabel: "Invitations",
+      categories: [
+        { label: "Letter", value: 320 },
+        { label: "Text", value: 280 },
+        { label: "Phone", value: 160 },
+        { label: "Email", value: 240 },
+      ],
+      max: 350,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-screening-inf-36-a",
+        text: "Letters were used for the largest number of invitations.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-screening-inf-36-b",
+        text: "The number of phone invitations was exactly half the number of letter invitations.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-screening-inf-36-c",
+        text: "Text and email invitations together were fewer than letter and phone invitations together.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-screening-inf-36-d",
+        text: "The mean number of invitations per contact method was exactly 250.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-screening-inf-36-e",
+        text: "Email invitations exceeded text invitations by 40.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Letter invitations numbered 320, the highest value shown.\n" +
+      "B: YES - Phone invitations numbered 160, exactly half of 320 letter invitations.\n" +
+      "C: NO - Text + Email = 280 + 240 = 520, while Letter + Phone = 320 + 160 = 480. Text and email together were greater, not fewer.\n" +
+      "D: YES - Total invitations = 320 + 280 + 160 + 240 = 1000. Mean = 1000 / 4 = 250.\n" +
+      "E: NO - Email was 240 and Text was 280, so email was 40 fewer, not 40 more.",
+  },
+
+  // --- Inference Yes/No small set 15 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Lab Result Portal",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A pathology laboratory introduced an online result portal for GP practices after courier delays meant some routine paper reports arrived several days late. Only non-urgent results were released through the portal; urgent abnormal results were still telephoned to the requesting practice. In the first month, calls asking whether routine results had arrived fell by 26%, but the median laboratory processing time was unchanged. The laboratory director said the trial did not assess whether patient outcomes improved.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-labportal-inf-37-a",
+        text: "The portal was introduced after courier delays affected routine paper reports.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-labportal-inf-37-b",
+        text: "Urgent abnormal results were released only through the online portal.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-labportal-inf-37-c",
+        text: "Calls asking whether routine results had arrived decreased in the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-labportal-inf-37-d",
+        text: "The median laboratory processing time shortened during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-labportal-inf-37-e",
+        text: "The trial assessed whether patient outcomes improved.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The portal followed courier delays affecting routine paper reports.\n" +
+      "B: NO - Urgent abnormal results were still telephoned to the requesting practice.\n" +
+      "C: YES - Calls asking whether routine results had arrived fell by 26%.\n" +
+      "D: NO - The median laboratory processing time was unchanged.\n" +
+      "E: NO - The director said patient outcomes were not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Ward Discharges",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows discharge planning data for four hospital wards on the same Friday.",
+    ],
+    visual: {
+      type: "table",
+      title: "Friday ward discharge data",
+      headers: ["Ward", "Planned Discharges", "Completed by Noon", "Delayed Discharges", "Beds Ready by 4 pm"],
+      rows: [
+        ["Acute", "50", "22", "12", "44"],
+        ["Surgical", "40", "20", "8", "36"],
+        ["Elderly", "36", "12", "10", "30"],
+        ["Paeds", "24", "14", "4", "22"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-discharges-inf-37-a",
+        text: "Paeds had the highest proportion of planned discharges completed by noon.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-discharges-inf-37-b",
+        text: "Elderly had more delayed discharges than Acute.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-discharges-inf-37-c",
+        text: "Across the four wards, planned discharges exceeded 140.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-discharges-inf-37-d",
+        text: "Surgical and Paeds together had exactly 12 delayed discharges.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-discharges-inf-37-e",
+        text: "Across the four wards, exactly 130 beds were ready by 4 pm.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - By-noon proportions are Acute 22/50 = 44%, Surgical 20/40 = 50%, Elderly 12/36 = 33.3%, and Paeds 14/24 = 58.3%; Paeds is highest.\n" +
+      "B: NO - Elderly had 10 delayed discharges, fewer than Acute's 12.\n" +
+      "C: YES - Total planned discharges = 50 + 40 + 36 + 24 = 150, which exceeds 140.\n" +
+      "D: YES - Surgical and Paeds delayed discharges total 8 + 4 = 12.\n" +
+      "E: NO - Beds ready by 4 pm total 44 + 36 + 30 + 22 = 132, not 130.",
+  },
+
+  // --- Inference Yes/No small set 16 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Study Pods",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A university library trialled bookable group-study pods after students complained that larger group rooms were often occupied by individuals. Pod bookings were limited to two hours, while ordinary walk-in study rooms remained available without booking. During the first four weeks, complaints about unavailable group-study space fell, but the library did not collect data on exam performance. The library manager said the trial could not show whether students studied more effectively.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-studypods-inf-38-a",
+        text: "The pods were trialled after complaints about group rooms being used by individuals.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-studypods-inf-38-b",
+        text: "Pod bookings could last for any length of time.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-studypods-inf-38-c",
+        text: "Ordinary walk-in study rooms remained available without booking.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-studypods-inf-38-d",
+        text: "Complaints about unavailable group-study space increased during the first four weeks.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-studypods-inf-38-e",
+        text: "The trial showed whether students studied more effectively.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The trial followed complaints that larger group rooms were often occupied by individuals.\n" +
+      "B: NO - Pod bookings were limited to two hours.\n" +
+      "C: YES - Ordinary walk-in study rooms remained available without booking.\n" +
+      "D: NO - Complaints about unavailable group-study space fell.\n" +
+      "E: NO - Exam-performance data was not collected, and the manager said study effectiveness could not be shown.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Prescription Requests",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the number of repeat prescription requests processed by lunchtime over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "Repeat prescriptions processed by lunchtime",
+      yLabel: "Requests",
+      points: [
+        { label: "Mon", value: 86 },
+        { label: "Tue", value: 94 },
+        { label: "Wed", value: 90 },
+        { label: "Thu", value: 102 },
+        { label: "Fri", value: 88 },
+      ],
+      max: 110,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-prescriptions-inf-38-a",
+        text: "The highest number of requests processed by lunchtime was recorded on Thursday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-prescriptions-inf-38-b",
+        text: "The number processed increased every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-prescriptions-inf-38-c",
+        text: "Tuesday and Wednesday together had exactly 184 requests processed by lunchtime.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-prescriptions-inf-38-d",
+        text: "Friday's number was lower than Monday's number.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-prescriptions-inf-38-e",
+        text: "The mean number processed by lunchtime across the five days was 92.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - Thursday was 102, the highest value shown.\n" +
+      "B: NO - The number fell from Tuesday (94) to Wednesday (90), and again from Thursday (102) to Friday (88).\n" +
+      "C: YES - Tuesday + Wednesday = 94 + 90 = 184.\n" +
+      "D: NO - Friday was 88, which is higher than Monday's 86.\n" +
+      "E: YES - Mean = (86 + 94 + 90 + 102 + 88) / 5 = 460 / 5 = 92.",
+  },
+
+  // --- Inference Yes/No small set 17 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Medicine Lockers",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A hospital outpatient pharmacy installed prescription collection lockers after patients reported that queues were difficult to fit around work shifts. The lockers were used only for repeat prescriptions approved before 4 pm; controlled drugs and refrigerated medicines still had to be collected from the staffed counter. During the first six weeks, evening collections increased and queue-length complaints fell, while the dispensing error rate was unchanged. The pharmacy lead said the trial did not show that lockers made dispensing safer.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-lockers-inf-39-a",
+        text: "The lockers were introduced after patients reported difficulties caused by pharmacy queues.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lockers-inf-39-b",
+        text: "Controlled drugs could be collected from the prescription lockers.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lockers-inf-39-c",
+        text: "Evening prescription collections increased during the first six weeks.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lockers-inf-39-d",
+        text: "Queue-length complaints increased during the first six weeks.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lockers-inf-39-e",
+        text: "The trial showed that lockers made dispensing safer.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Patients had reported that queues were difficult to fit around work shifts.\n" +
+      "B: NO - Controlled drugs still had to be collected from the staffed counter.\n" +
+      "C: YES - Evening collections increased during the first six weeks.\n" +
+      "D: NO - Queue-length complaints fell.\n" +
+      "E: NO - The dispensing error rate was unchanged, and the pharmacy lead said safer dispensing was not shown.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Flu Clinics",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows activity at four flu vaccination clinics during one weekend.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekend flu vaccination clinics",
+      headers: ["Site", "Booked Appointments", "Vaccinations Given", "Walk-ins", "Staff Hours"],
+      rows: [
+        ["Main Hall", "240", "228", "36", "30"],
+        ["Library", "180", "162", "24", "24"],
+        ["Sports Centre", "210", "189", "42", "28"],
+        ["Community Room", "150", "135", "18", "20"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-fluclinics-inf-39-a",
+        text: "Main Hall gave the highest number of vaccinations.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-fluclinics-inf-39-b",
+        text: "Sports Centre had more walk-ins than Library.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-fluclinics-inf-39-c",
+        text: "Across the four sites, exactly 700 vaccinations were given.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-fluclinics-inf-39-d",
+        text: "Community Room used fewer staff hours than every other site.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-fluclinics-inf-39-e",
+        text: "Sports Centre and Community Room together gave more vaccinations than Main Hall and Library together.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Main Hall gave 228 vaccinations, the highest number shown.\n" +
+      "B: YES - Sports Centre had 42 walk-ins, more than Library's 24.\n" +
+      "C: NO - Total vaccinations = 228 + 162 + 189 + 135 = 714, not 700.\n" +
+      "D: YES - Community Room used 20 staff hours, fewer than Main Hall 30, Library 24, and Sports Centre 28.\n" +
+      "E: NO - Sports Centre + Community Room = 189 + 135 = 324, while Main Hall + Library = 228 + 162 = 390.",
+  },
+
+  // --- Inference Yes/No small set 18 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Bike Repair Scheme",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A council offered free bike repairs at two libraries after a travel survey found that repair costs were a common reason residents avoided cycling short journeys. Repair slots had to be booked online, and walk-up repairs were not accepted. In the first month, 138 bikes were repaired; 62% belonged to residents who said they usually travelled by car for journeys under three miles. The council said the trial did not measure whether traffic congestion changed.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-bikerepair-inf-40-a",
+        text: "The scheme was introduced after survey evidence about repair costs discouraging cycling.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-bikerepair-inf-40-b",
+        text: "Residents could receive walk-up bike repairs without booking.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-bikerepair-inf-40-c",
+        text: "More than half of the repaired bikes belonged to residents who usually used a car for short journeys.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-bikerepair-inf-40-d",
+        text: "The trial measured whether traffic congestion changed.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-bikerepair-inf-40-e",
+        text: "Free bike repairs were offered at every library in the council area.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The scheme followed a travel survey finding that repair costs discouraged residents from cycling short journeys.\n" +
+      "B: NO - Repair slots had to be booked online, and walk-up repairs were not accepted.\n" +
+      "C: YES - 62% is more than half.\n" +
+      "D: NO - The council said congestion change was not measured.\n" +
+      "E: NO - Repairs were offered at two libraries; the passage does not say every library was included.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Clinic Calls",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The grouped bar chart below shows incoming calls and calls answered within five minutes for four clinic teams on one Monday.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Clinic call handling by team",
+      yLabel: "Calls",
+      seriesLabels: ["Incoming", "Answered Within 5 Min"],
+      groups: [
+        { label: "Admin", values: [120, 96] },
+        { label: "Nurses", values: [80, 68] },
+        { label: "Results", values: [100, 70] },
+        { label: "Booking", values: [140, 112] },
+      ],
+      max: 150,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-cliniccalls-inf-40-a",
+        text: "Booking received the highest number of incoming calls.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cliniccalls-inf-40-b",
+        text: "Nurses answered a higher proportion of calls within five minutes than Admin.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cliniccalls-inf-40-c",
+        text: "Results answered exactly three quarters of its incoming calls within five minutes.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-cliniccalls-inf-40-d",
+        text: "Admin and Booking together answered 208 calls within five minutes.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cliniccalls-inf-40-e",
+        text: "Across all four teams, fewer than 340 calls were answered within five minutes.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Booking received 140 incoming calls, the highest number shown.\n" +
+      "B: YES - Nurses answered 68/80 = 85% within five minutes, while Admin answered 96/120 = 80%.\n" +
+      "C: NO - Results answered 70/100 = 70%, not three quarters.\n" +
+      "D: YES - Admin and Booking answered 96 + 112 = 208 calls within five minutes.\n" +
+      "E: NO - Total answered within five minutes = 96 + 68 + 70 + 112 = 346, which is not fewer than 340.",
+  },
+
+  // --- Inference Yes/No small set 19 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Accessible Parking",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A hospital reserved short-stay accessible parking bays near the outpatient entrance after a patient survey found that people with mobility difficulties were often late because only distant spaces were available. The reserved bays required both a blue badge and an appointment letter; general visitor parking was unchanged. In the first month, mobility-related late arrivals fell by 18%, but the number of missed appointments was unchanged. The hospital said the trial did not assess satisfaction among visitors without mobility difficulties.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-accessparking-inf-41-a",
+        text: "The reserved bays were introduced after survey evidence about mobility-related parking difficulties.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-accessparking-inf-41-b",
+        text: "General visitor parking arrangements were changed during the trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-accessparking-inf-41-c",
+        text: "Using a reserved bay required both a blue badge and an appointment letter.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-accessparking-inf-41-d",
+        text: "The number of missed appointments fell during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-accessparking-inf-41-e",
+        text: "The trial assessed satisfaction among visitors without mobility difficulties.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The survey found that people with mobility difficulties were often late because only distant spaces were available.\n" +
+      "B: NO - General visitor parking was unchanged.\n" +
+      "C: YES - The bays required both a blue badge and an appointment letter.\n" +
+      "D: NO - The number of missed appointments was unchanged.\n" +
+      "E: NO - The hospital said satisfaction among visitors without mobility difficulties was not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Community Classes",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows booking and attendance data for four community exercise classes in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Community exercise class attendance",
+      headers: ["Class", "Places", "Bookings", "Attended", "Waiting List"],
+      rows: [
+        ["Balance", "60", "54", "48", "12"],
+        ["Stretch", "50", "45", "42", "8"],
+        ["Circuit", "70", "63", "56", "14"],
+        ["Pilates", "40", "36", "30", "6"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-classes-inf-41-a",
+        text: "Circuit had the highest number of bookings.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-classes-inf-41-b",
+        text: "Stretch had the highest attendance rate among those who booked.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-classes-inf-41-c",
+        text: "Across the four classes, exactly 180 people attended.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-classes-inf-41-d",
+        text: "Balance and Pilates together had 18 people on waiting lists.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-classes-inf-41-e",
+        text: "Pilates had bookings for fewer than 90% of its places.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Circuit had 63 bookings, the highest number shown.\n" +
+      "B: YES - Attendance rates among bookings are Balance 48/54 = 88.9%, Stretch 42/45 = 93.3%, Circuit 56/63 = 88.9%, and Pilates 30/36 = 83.3%; Stretch is highest.\n" +
+      "C: NO - Total attendance = 48 + 42 + 56 + 30 = 176, not 180.\n" +
+      "D: YES - Balance and Pilates waiting lists total 12 + 6 = 18.\n" +
+      "E: NO - Pilates had 36 bookings for 40 places, exactly 90%, not fewer than 90%.",
+  },
+
+  // --- Inference Yes/No small set 20 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Ward Tablets",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A hospital ward provided tablets for patient video calls after visiting restrictions led to complaints from relatives about lack of contact. Tablets were offered only to patients assessed as able to use them safely, and staff helped set up calls when needed. Clinical consultations were not carried out using the tablets. In the first month, 210 family video calls were made and complaints about lack of contact fell, but the ward did not collect data on length of stay.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-wardtablets-inf-42-a",
+        text: "The tablets were introduced after complaints from relatives about lack of contact.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-wardtablets-inf-42-b",
+        text: "Every patient on the ward was offered use of a tablet.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-wardtablets-inf-42-c",
+        text: "Clinical consultations were carried out using the tablets.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-wardtablets-inf-42-d",
+        text: "Complaints about lack of contact fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-wardtablets-inf-42-e",
+        text: "The ward collected data on whether the tablets reduced length of stay.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Visiting restrictions led to complaints from relatives about lack of contact.\n" +
+      "B: NO - Tablets were offered only to patients assessed as able to use them safely.\n" +
+      "C: NO - Clinical consultations were not carried out using the tablets.\n" +
+      "D: YES - Complaints about lack of contact fell during the first month.\n" +
+      "E: NO - The ward did not collect data on length of stay.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Recycling Points",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The bar chart below shows the number of recycling bags collected from four campus collection points in one week.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Recycling bags collected",
+      yLabel: "Bags",
+      categories: [
+        { label: "Entrance", value: 72 },
+        { label: "Canteen", value: 96 },
+        { label: "Library", value: 60 },
+        { label: "Gym", value: 84 },
+      ],
+      max: 110,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-recyclingpoints-inf-42-a",
+        text: "Canteen had the highest number of recycling bags collected.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-recyclingpoints-inf-42-b",
+        text: "Entrance and Library together collected fewer bags than Canteen and Gym together.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-recyclingpoints-inf-42-c",
+        text: "The mean number of bags collected per point was exactly 78.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-recyclingpoints-inf-42-d",
+        text: "Gym collected 20 more bags than Library.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-recyclingpoints-inf-42-e",
+        text: "Library collected at least three quarters as many bags as Canteen.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Canteen collected 96 bags, the highest value shown.\n" +
+      "B: YES - Entrance + Library = 72 + 60 = 132, while Canteen + Gym = 96 + 84 = 180.\n" +
+      "C: YES - Total bags = 72 + 96 + 60 + 84 = 312. Mean = 312 / 4 = 78.\n" +
+      "D: NO - Gym collected 84 and Library collected 60, a difference of 24, not 20.\n" +
+      "E: NO - Three quarters of Canteen's 96 bags is 72. Library collected 60, which is below 72.",
+  },
+
+  // --- Inference Yes/No small set 21 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Translation Line",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A council housing office introduced a telephone translation line after staff reported that tenants with limited English often had to return with relatives to complete forms. The line was available only between 9 am and 5 pm on weekdays, and existing translated leaflets remained in use. In the first month, incomplete housing forms fell by 21%, but average appointment length was unchanged. The council said the trial did not assess whether housing decisions became more accurate.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-translation-inf-43-a",
+        text: "The translation line was introduced after staff reported difficulties with form completion.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-translation-inf-43-b",
+        text: "The translation line was available at all times.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-translation-inf-43-c",
+        text: "Existing translated leaflets were withdrawn when the line was introduced.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-translation-inf-43-d",
+        text: "Incomplete housing forms fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-translation-inf-43-e",
+        text: "The trial assessed whether housing decisions became more accurate.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Staff reported that tenants with limited English often had to return with relatives to complete forms.\n" +
+      "B: NO - The line was available only between 9 am and 5 pm on weekdays.\n" +
+      "C: NO - Existing translated leaflets remained in use.\n" +
+      "D: YES - Incomplete housing forms fell by 21%.\n" +
+      "E: NO - The council said decision accuracy was not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Shelter Beds",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows bed use and referrals at four overnight shelters on the same night.",
+    ],
+    visual: {
+      type: "table",
+      title: "Overnight shelter use",
+      headers: ["Shelter", "Beds Available", "Beds Used", "New Referrals", "Turned Away"],
+      rows: [
+        ["North", "48", "44", "18", "4"],
+        ["East", "36", "32", "12", "6"],
+        ["South", "42", "39", "15", "3"],
+        ["West", "30", "24", "10", "8"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-shelterbeds-inf-43-a",
+        text: "North had the highest number of beds used.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-shelterbeds-inf-43-b",
+        text: "West had the lowest occupancy rate.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-shelterbeds-inf-43-c",
+        text: "Across the four shelters, more than 20 people were turned away.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-shelterbeds-inf-43-d",
+        text: "East and South together had exactly 25 new referrals.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-shelterbeds-inf-43-e",
+        text: "South turned away more people than North.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - North had 44 beds used, the highest number shown.\n" +
+      "B: YES - Occupancy rates are North 44/48 = 91.7%, East 32/36 = 88.9%, South 39/42 = 92.9%, and West 24/30 = 80%; West is lowest.\n" +
+      "C: YES - Total turned away = 4 + 6 + 3 + 8 = 21, which is more than 20.\n" +
+      "D: NO - East and South new referrals total 12 + 15 = 27, not 25.\n" +
+      "E: NO - South turned away 3 people, fewer than North's 4.",
+  },
+
+  // --- Inference Yes/No small set 22 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Homework Texts",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A secondary school began sending homework deadline text reminders after teachers reported that many pupils were missing online submission dates. Texts were sent only to parents who had opted in, and paper planners continued to be used by all pupils. During the first half-term, missing homework fell by 17% among pupils whose parents received texts, but the school did not collect data on GCSE grades. The deputy head said the trial could not show whether academic performance had improved.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-homeworktexts-inf-44-a",
+        text: "The reminders were introduced after teachers reported missed online submission dates.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-homeworktexts-inf-44-b",
+        text: "Texts were sent to the parents of every pupil.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-homeworktexts-inf-44-c",
+        text: "Paper planners continued to be used by all pupils.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-homeworktexts-inf-44-d",
+        text: "Missing homework increased among pupils whose parents received texts.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-homeworktexts-inf-44-e",
+        text: "The trial showed that academic performance had improved.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Teachers reported that many pupils were missing online submission dates.\n" +
+      "B: NO - Texts were sent only to parents who had opted in.\n" +
+      "C: YES - Paper planners continued to be used by all pupils.\n" +
+      "D: NO - Missing homework fell by 17% among pupils whose parents received texts.\n" +
+      "E: NO - GCSE grade data was not collected, and the deputy head said performance improvement could not be shown.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Ticket Checks",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the number of rail tickets checked during the morning peak over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "Morning peak ticket checks",
+      yLabel: "Tickets Checked",
+      points: [
+        { label: "Mon", value: 320 },
+        { label: "Tue", value: 350 },
+        { label: "Wed", value: 340 },
+        { label: "Thu", value: 360 },
+        { label: "Fri", value: 330 },
+      ],
+      max: 380,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-ticketchecks-inf-44-a",
+        text: "The highest number of tickets checked was recorded on Thursday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-ticketchecks-inf-44-b",
+        text: "The number of tickets checked increased every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-ticketchecks-inf-44-c",
+        text: "Tuesday and Wednesday together had 690 tickets checked.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-ticketchecks-inf-44-d",
+        text: "The mean number of tickets checked across the five weekdays was exactly 340.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-ticketchecks-inf-44-e",
+        text: "Friday had 20 fewer tickets checked than Monday.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Thursday had 360 tickets checked, the highest value shown.\n" +
+      "B: NO - The number fell from Tuesday (350) to Wednesday (340), and from Thursday (360) to Friday (330).\n" +
+      "C: YES - Tuesday + Wednesday = 350 + 340 = 690.\n" +
+      "D: YES - Mean = (320 + 350 + 340 + 360 + 330) / 5 = 1700 / 5 = 340.\n" +
+      "E: NO - Friday had 330 tickets checked, which is 10 more than Monday's 320.",
+  },
+
+  // --- Inference Yes/No small set 23 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Medication Reviews",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A GP practice began offering telephone medication reviews for patients taking five or more regular medicines after an audit found that face-to-face annual reviews were often missed by housebound patients. Patients could request an in-person review instead. In the first two months, completed reviews among eligible housebound patients rose by 34%, while the number of medication-related hospital admissions was unchanged. The lead pharmacist said the trial did not show that medicines were being used more safely.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-medreviews-inf-45-a",
+        text: "The telephone reviews were introduced after an audit found missed face-to-face reviews among housebound patients.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-medreviews-inf-45-b",
+        text: "Every patient taking any regular medicine was eligible for a telephone medication review.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-medreviews-inf-45-c",
+        text: "Patients could request an in-person review instead of a telephone review.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-medreviews-inf-45-d",
+        text: "Medication-related hospital admissions fell during the first two months.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-medreviews-inf-45-e",
+        text: "The trial showed that medicines were being used more safely.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - The audit found that face-to-face annual reviews were often missed by housebound patients.\n" +
+      "B: NO - The review offer was for patients taking five or more regular medicines, not every patient taking any regular medicine.\n" +
+      "C: YES - Patients could request an in-person review instead.\n" +
+      "D: NO - Medication-related hospital admissions were unchanged.\n" +
+      "E: NO - The lead pharmacist said safer medicine use was not shown.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Volunteer Shifts",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows volunteer shift data for four areas of a community centre in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Community centre volunteer shifts",
+      headers: ["Area", "Scheduled Shifts", "Filled Shifts", "Late Cancellations", "New Volunteers"],
+      rows: [
+        ["Help Desk", "40", "36", "4", "6"],
+        ["Cafe", "32", "30", "2", "8"],
+        ["Garden", "28", "21", "5", "3"],
+        ["Shop", "36", "27", "6", "5"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-volunteershifts-inf-45-a",
+        text: "Cafe had the highest filled-shift rate.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-volunteershifts-inf-45-b",
+        text: "Shop filled more shifts than Garden.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-volunteershifts-inf-45-c",
+        text: "Across all four areas, there were exactly 18 late cancellations.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-volunteershifts-inf-45-d",
+        text: "Cafe and Garden together had 11 new volunteers.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-volunteershifts-inf-45-e",
+        text: "Every area filled at least 80% of its scheduled shifts.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Filled-shift rates are Help Desk 36/40 = 90%, Cafe 30/32 = 93.75%, Garden 21/28 = 75%, and Shop 27/36 = 75%; Cafe is highest.\n" +
+      "B: YES - Shop filled 27 shifts, more than Garden's 21.\n" +
+      "C: NO - Total late cancellations = 4 + 2 + 5 + 6 = 17, not 18.\n" +
+      "D: YES - Cafe and Garden new volunteers total 8 + 3 = 11.\n" +
+      "E: NO - Garden and Shop each filled 75% of scheduled shifts, below 80%.",
+  },
+
+  // --- Inference Yes/No small set 24 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Allergen Cards",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A school canteen placed allergen cards beside hot dishes after parents complained that the weekly menu was difficult to check quickly. The cards listed the 14 major allergens but did not show calorie counts. During the first half-term, allergen-information questions to serving staff fell by 40%, while total lunch sales were unchanged. The catering manager said the trial did not test whether pupils with allergies ate school meals more often.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-allergencards-inf-46-a",
+        text: "The cards were introduced after parents complained that the menu was hard to check quickly.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-allergencards-inf-46-b",
+        text: "The allergen cards showed calorie counts for hot dishes.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-allergencards-inf-46-c",
+        text: "The cards listed the 14 major allergens.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-allergencards-inf-46-d",
+        text: "Allergen-information questions to serving staff increased during the first half-term.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-allergencards-inf-46-e",
+        text: "The trial tested whether pupils with allergies ate school meals more often.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Parents had complained that the weekly menu was difficult to check quickly.\n" +
+      "B: NO - The cards did not show calorie counts.\n" +
+      "C: YES - The cards listed the 14 major allergens.\n" +
+      "D: NO - Allergen-information questions to serving staff fell by 40%.\n" +
+      "E: NO - The manager said this was not tested.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Pool Sessions",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The bar chart below shows attendance at four swimming pool session types on the same Saturday.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Saturday pool session attendance",
+      yLabel: "Attendees",
+      categories: [
+        { label: "Lane", value: 96 },
+        { label: "Aqua", value: 72 },
+        { label: "Family", value: 120 },
+        { label: "Lessons", value: 84 },
+      ],
+      max: 130,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-poolsessions-inf-46-a",
+        text: "Family swim had the highest attendance.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-poolsessions-inf-46-b",
+        text: "Lane and Aqua sessions together had more attendees than Family and Lessons together.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-poolsessions-inf-46-c",
+        text: "The mean attendance across the four session types was exactly 93.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-poolsessions-inf-46-d",
+        text: "Lessons had 12 more attendees than Aqua.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-poolsessions-inf-46-e",
+        text: "Lane attendance was more than 80% of Family swim attendance.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Family swim had 120 attendees, the highest value shown.\n" +
+      "B: NO - Lane + Aqua = 96 + 72 = 168, while Family + Lessons = 120 + 84 = 204.\n" +
+      "C: YES - Total attendance = 96 + 72 + 120 + 84 = 372. Mean = 372 / 4 = 93.\n" +
+      "D: YES - Lessons had 84 attendees and Aqua had 72, a difference of 12.\n" +
+      "E: NO - 80% of Family attendance is 96. Lane was exactly 80%, not more than 80%.",
+  },
+
+  // --- Inference Yes/No small set 25 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Discharge Leaflets",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A hospital ward introduced easy-read medicine leaflets after patients said discharge instructions were difficult to follow. The leaflets were given only to patients whose medicines changed before discharge, and the standard discharge summary was still issued. In the first month, calls to the ward about dose timings fell by 32%, while readmissions were unchanged. The ward said it had not formally tested whether patients understood their medicines better.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-dischargeleaflets-inf-47-a",
+        text: "The leaflets were introduced after patients reported difficulty following discharge instructions.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-dischargeleaflets-inf-47-b",
+        text: "The easy-read leaflets replaced the standard discharge summary.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-dischargeleaflets-inf-47-c",
+        text: "The leaflets were given only to patients whose medicines changed before discharge.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-dischargeleaflets-inf-47-d",
+        text: "Readmissions fell during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-dischargeleaflets-inf-47-e",
+        text: "The ward formally tested whether patients understood their medicines better.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Patients said discharge instructions were difficult to follow.\n" +
+      "B: NO - The standard discharge summary was still issued.\n" +
+      "C: YES - The leaflets were given only to patients whose medicines changed before discharge.\n" +
+      "D: NO - Readmissions were unchanged.\n" +
+      "E: NO - The ward said understanding of medicines had not been formally tested.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Library Returns",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows return and renewal data for four library branches in one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Monthly library return data",
+      headers: ["Branch", "Items Due", "Returned On Time", "Returned Late", "Renewed Online"],
+      rows: [
+        ["Central", "420", "336", "64", "90"],
+        ["East", "300", "240", "45", "72"],
+        ["South", "360", "306", "36", "84"],
+        ["West", "240", "180", "48", "60"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-libraryreturns-inf-47-a",
+        text: "South had the highest on-time return rate.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-libraryreturns-inf-47-b",
+        text: "West had fewer late returns than East.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-libraryreturns-inf-47-c",
+        text: "Across the four branches, more than 1,000 items were returned on time.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-libraryreturns-inf-47-d",
+        text: "Central and East together had exactly 162 online renewals.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-libraryreturns-inf-47-e",
+        text: "Every branch had an on-time return rate of at least 80%.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - On-time rates are Central 336/420 = 80%, East 240/300 = 80%, South 306/360 = 85%, and West 180/240 = 75%; South is highest.\n" +
+      "B: NO - West had 48 late returns, more than East's 45.\n" +
+      "C: YES - Total returned on time = 336 + 240 + 306 + 180 = 1062, which is more than 1000.\n" +
+      "D: YES - Central and East online renewals total 90 + 72 = 162.\n" +
+      "E: NO - West's on-time return rate was 180/240 = 75%, below 80%.",
+  },
+
+  // --- Inference Yes/No small set 26 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Bin Alerts",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A council began sending text alerts about household bin collection days after residents complained that dates were confusing after bank holidays. Texts were sent only to households that had registered a mobile number, and paper calendars continued to be delivered to all households. During the first two months, missed-bin reports fell among registered households, while total recycling tonnage was unchanged. The council said the trial did not assess whether unregistered households had fewer missed collections.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-binalerts-inf-48-a",
+        text: "The text alerts were introduced after complaints about confusing collection dates.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-binalerts-inf-48-b",
+        text: "All households received text alerts.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-binalerts-inf-48-c",
+        text: "Paper calendars continued to be delivered to all households.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-binalerts-inf-48-d",
+        text: "Total recycling tonnage increased during the first two months.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-binalerts-inf-48-e",
+        text: "The trial assessed whether unregistered households had fewer missed collections.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Residents had complained that collection dates were confusing after bank holidays.\n" +
+      "B: NO - Texts were sent only to households that had registered a mobile number.\n" +
+      "C: YES - Paper calendars continued to be delivered to all households.\n" +
+      "D: NO - Total recycling tonnage was unchanged.\n" +
+      "E: NO - The council said unregistered households were not assessed for fewer missed collections.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Care Visits",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the number of home care visits completed by lunchtime over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "Home care visits completed by lunchtime",
+      yLabel: "Visits",
+      points: [
+        { label: "Mon", value: 18 },
+        { label: "Tue", value: 22 },
+        { label: "Wed", value: 20 },
+        { label: "Thu", value: 24 },
+        { label: "Fri", value: 16 },
+      ],
+      max: 30,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-homecarevisits-inf-48-a",
+        text: "The highest number of completed visits by lunchtime was recorded on Thursday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-homecarevisits-inf-48-b",
+        text: "The number of completed visits increased every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-homecarevisits-inf-48-c",
+        text: "Monday and Friday together had fewer completed visits than Tuesday and Wednesday together.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-homecarevisits-inf-48-d",
+        text: "The mean number of completed visits across the five weekdays was exactly 20.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-homecarevisits-inf-48-e",
+        text: "Friday had half as many completed visits as Thursday.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Thursday had 24 completed visits, the highest value shown.\n" +
+      "B: NO - The number fell from Tuesday (22) to Wednesday (20), and from Thursday (24) to Friday (16).\n" +
+      "C: YES - Monday + Friday = 18 + 16 = 34, while Tuesday + Wednesday = 22 + 20 = 42.\n" +
+      "D: YES - Mean = (18 + 22 + 20 + 24 + 16) / 5 = 100 / 5 = 20.\n" +
+      "E: NO - Half of Thursday's 24 visits is 12, but Friday had 16.",
+  },
+
+  // --- Inference Yes/No small set 27 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Pharmacy Labels",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A community pharmacy began offering large-print medicine labels after customers with visual impairments said standard labels were hard to read. Large-print labels were provided only when patients requested them, and standard labels continued to be used for other prescriptions. In the first month, phone calls asking staff to clarify dose instructions fell, but recorded dispensing errors were unchanged. The pharmacist said the trial did not show whether patients took their medicines more regularly.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-pharmlabels-inf-49-a",
+        text: "The large-print labels were introduced after feedback from customers with visual impairments.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-pharmlabels-inf-49-b",
+        text: "Every prescription was supplied with a large-print label.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-pharmlabels-inf-49-c",
+        text: "Standard labels continued to be used for some prescriptions.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-pharmlabels-inf-49-d",
+        text: "Recorded dispensing errors fell during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-pharmlabels-inf-49-e",
+        text: "The trial showed whether patients took their medicines more regularly.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Customers with visual impairments said standard labels were hard to read.\n" +
+      "B: NO - Large-print labels were provided only when patients requested them.\n" +
+      "C: YES - Standard labels continued to be used for other prescriptions.\n" +
+      "D: NO - Recorded dispensing errors were unchanged.\n" +
+      "E: NO - The pharmacist said medicine-taking regularity was not shown.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Ambulance Handover",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows ambulance handover data for four hospital sites during one evening shift.",
+    ],
+    visual: {
+      type: "table",
+      title: "Ambulance handovers by site",
+      headers: ["Site", "Arrivals", "Under 30 Min", "Over 60 Min", "Available Bays"],
+      rows: [
+        ["North", "90", "54", "12", "10"],
+        ["East", "75", "60", "6", "8"],
+        ["South", "80", "56", "8", "9"],
+        ["West", "65", "39", "13", "7"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-ambulance-inf-49-a",
+        text: "East had the highest proportion of arrivals handed over in under 30 minutes.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-ambulance-inf-49-b",
+        text: "West had more handovers taking over 60 minutes than North.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-ambulance-inf-49-c",
+        text: "Across the four sites, exactly 300 ambulance arrivals were recorded.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-ambulance-inf-49-d",
+        text: "North and South together had exactly 20 handovers taking over 60 minutes.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-ambulance-inf-49-e",
+        text: "Every site handed over at least two thirds of arrivals in under 30 minutes.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Under-30-minute proportions are North 54/90 = 60%, East 60/75 = 80%, South 56/80 = 70%, and West 39/65 = 60%; East is highest.\n" +
+      "B: YES - West had 13 handovers over 60 minutes, more than North's 12.\n" +
+      "C: NO - Total arrivals = 90 + 75 + 80 + 65 = 310, not 300.\n" +
+      "D: YES - North and South handovers over 60 minutes total 12 + 8 = 20.\n" +
+      "E: NO - North and West each handed over 60% in under 30 minutes, below two thirds.",
+  },
+
+  // --- Inference Yes/No small set 28 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Exam Room Clocks",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A college installed countdown clocks in exam rooms after students complained that wall clocks were hard to see from some seats. The clocks were installed only in rooms used for formal exams, and invigilators continued to give verbal timing announcements. During the first exam period, timing-related questions to invigilators fell, but the college did not compare exam scores with previous years. The exams officer said the trial did not show whether students performed better.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-examclocks-inf-50-a",
+        text: "The countdown clocks were introduced after students complained about visibility of wall clocks.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-examclocks-inf-50-b",
+        text: "Countdown clocks were installed in every room at the college.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-examclocks-inf-50-c",
+        text: "Invigilators stopped giving verbal timing announcements.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-examclocks-inf-50-d",
+        text: "Timing-related questions to invigilators fell during the first exam period.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-examclocks-inf-50-e",
+        text: "The trial showed whether students performed better.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Students complained that wall clocks were hard to see from some seats.\n" +
+      "B: NO - Clocks were installed only in rooms used for formal exams.\n" +
+      "C: NO - Invigilators continued to give verbal timing announcements.\n" +
+      "D: YES - Timing-related questions to invigilators fell.\n" +
+      "E: NO - Exam scores were not compared with previous years, and performance improvement was not shown.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Appointment Slots",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The grouped bar chart below shows available appointment slots and booked slots for a clinic over four weekdays.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Clinic appointment slots",
+      yLabel: "Slots",
+      seriesLabels: ["Available", "Booked"],
+      groups: [
+        { label: "Mon", values: [80, 72] },
+        { label: "Tue", values: [75, 60] },
+        { label: "Wed", values: [90, 81] },
+        { label: "Thu", values: [70, 63] },
+      ],
+      max: 100,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-slots-inf-50-a",
+        text: "Wednesday had the highest number of available slots.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-slots-inf-50-b",
+        text: "Tuesday had the lowest booking rate.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-slots-inf-50-c",
+        text: "Monday and Tuesday together had exactly 132 booked slots.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-slots-inf-50-d",
+        text: "Across the four weekdays, more than 280 slots were booked.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-slots-inf-50-e",
+        text: "Thursday had 10 unbooked slots.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Wednesday had 90 available slots, the highest value shown.\n" +
+      "B: YES - Booking rates are Monday 72/80 = 90%, Tuesday 60/75 = 80%, Wednesday 81/90 = 90%, and Thursday 63/70 = 90%; Tuesday is lowest.\n" +
+      "C: YES - Monday and Tuesday booked slots total 72 + 60 = 132.\n" +
+      "D: NO - Total booked slots = 72 + 60 + 81 + 63 = 276, which is not more than 280.\n" +
+      "E: NO - Thursday had 70 - 63 = 7 unbooked slots, not 10.",
+  },
+
+  // --- Inference Yes/No small set 29 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Clinic Maps",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A hospital introduced colour-coded outpatient maps after reception staff reported that patients were often late because they could not find the correct clinic. The maps covered only outpatient departments, and volunteer guides continued to help visitors at the main entrance. During the first month, late arrivals caused by wayfinding problems fell, but the hospital did not measure overall patient satisfaction. The site manager said the trial did not show whether inpatient wards were easier to find.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-clinicmaps-inf-51-a",
+        text: "The maps were introduced after staff reported that some patients struggled to find the correct clinic.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-clinicmaps-inf-51-b",
+        text: "The maps covered inpatient wards as well as outpatient departments.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-clinicmaps-inf-51-c",
+        text: "Volunteer guides continued to help visitors at the main entrance.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-clinicmaps-inf-51-d",
+        text: "The hospital measured overall patient satisfaction during the trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-clinicmaps-inf-51-e",
+        text: "The trial showed whether inpatient wards were easier to find.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Reception staff reported that patients were often late because they could not find the correct clinic.\n" +
+      "B: NO - The maps covered only outpatient departments.\n" +
+      "C: YES - Volunteer guides continued to help visitors at the main entrance.\n" +
+      "D: NO - Overall patient satisfaction was not measured.\n" +
+      "E: NO - The site manager said the trial did not show whether inpatient wards were easier to find.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Blood Samples",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows blood sample processing data for four services in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekly blood sample processing",
+      headers: ["Service", "Samples Sent", "Rejected Samples", "Repeat Samples", "Same-day Results"],
+      rows: [
+        ["GP", "240", "12", "8", "180"],
+        ["Ward", "180", "9", "15", "144"],
+        ["Clinic", "160", "16", "12", "120"],
+        ["Community", "120", "6", "5", "96"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-bloodsamples-inf-51-a",
+        text: "Clinic had the highest rejection rate among samples sent.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-bloodsamples-inf-51-b",
+        text: "Community had fewer repeat samples than GP.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-bloodsamples-inf-51-c",
+        text: "Across all four services, exactly 43 samples were rejected.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-bloodsamples-inf-51-d",
+        text: "Ward produced same-day results for more than 80% of samples sent.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-bloodsamples-inf-51-e",
+        text: "GP and Clinic together produced more same-day results than Ward and Community together.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - Rejection rates are GP 12/240 = 5%, Ward 9/180 = 5%, Clinic 16/160 = 10%, and Community 6/120 = 5%; Clinic is highest.\n" +
+      "B: YES - Community had 5 repeat samples, fewer than GP's 8.\n" +
+      "C: YES - Rejected samples total 12 + 9 + 16 + 6 = 43.\n" +
+      "D: NO - Ward produced same-day results for 144/180 = 80% of samples, not more than 80%.\n" +
+      "E: YES - GP + Clinic same-day results = 180 + 120 = 300, while Ward + Community = 144 + 96 = 240.",
+  },
+
+  // --- Inference Yes/No small set 30 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Cafe Queue App",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A college cafe introduced a pre-order app after students complained that queues for hot drinks were too long between lectures. The app could be used only for hot drinks, and customers could still order at the counter. During the first fortnight, queue-length complaints fell and total cafe sales were unchanged. The cafe manager said the trial did not assess whether food orders were prepared more accurately.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-cafeapp-inf-52-a",
+        text: "The app was introduced after complaints about hot-drink queues.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cafeapp-inf-52-b",
+        text: "The app could be used to pre-order food as well as hot drinks.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-cafeapp-inf-52-c",
+        text: "Customers could still order at the counter.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cafeapp-inf-52-d",
+        text: "Total cafe sales increased during the first fortnight.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-cafeapp-inf-52-e",
+        text: "The trial assessed whether food orders were prepared more accurately.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Students complained that queues for hot drinks were too long between lectures.\n" +
+      "B: NO - The app could be used only for hot drinks.\n" +
+      "C: YES - Customers could still order at the counter.\n" +
+      "D: NO - Total cafe sales were unchanged.\n" +
+      "E: NO - The cafe manager said food-order accuracy was not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Missed Deliveries",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the number of missed parcel deliveries recorded over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "Missed parcel deliveries",
+      yLabel: "Missed Deliveries",
+      points: [
+        { label: "Mon", value: 28 },
+        { label: "Tue", value: 24 },
+        { label: "Wed", value: 30 },
+        { label: "Thu", value: 22 },
+        { label: "Fri", value: 26 },
+      ],
+      max: 35,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-misseddeliveries-inf-52-a",
+        text: "The highest number of missed deliveries was recorded on Wednesday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-misseddeliveries-inf-52-b",
+        text: "The number of missed deliveries decreased every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-misseddeliveries-inf-52-c",
+        text: "Monday and Tuesday together had four more missed deliveries than Thursday and Friday together.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-misseddeliveries-inf-52-d",
+        text: "The mean number of missed deliveries across the five weekdays was exactly 26.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-misseddeliveries-inf-52-e",
+        text: "Friday had fewer missed deliveries than Tuesday.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Wednesday had 30 missed deliveries, the highest value shown.\n" +
+      "B: NO - Missed deliveries rose from Tuesday (24) to Wednesday (30), and from Thursday (22) to Friday (26).\n" +
+      "C: YES - Monday + Tuesday = 28 + 24 = 52, while Thursday + Friday = 22 + 26 = 48, a difference of 4.\n" +
+      "D: YES - Mean = (28 + 24 + 30 + 22 + 26) / 5 = 130 / 5 = 26.\n" +
+      "E: NO - Friday had 26 missed deliveries, more than Tuesday's 24.",
+  },
+
+  // --- Inference Yes/No small set 31 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Visitor Badges",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A hospital introduced temporary visitor badges after ward nurses reported that unfamiliar visitors sometimes entered wards outside visiting times. Badges were issued at reception only to visitors who could name a patient and show a valid visiting slot. Emergency department visitors were not included in the scheme. During the first month, interruptions to ward staff about visitor identity fell, but parking complaints were unchanged. The hospital said the trial did not measure patient safety incidents.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-visitorbadges-inf-53-a",
+        text: "The badges were introduced after nurses reported concerns about unfamiliar visitors entering wards outside visiting times.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-visitorbadges-inf-53-b",
+        text: "Emergency department visitors were included in the badge scheme.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-visitorbadges-inf-53-c",
+        text: "A visitor needed both a named patient and a valid visiting slot to receive a badge.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-visitorbadges-inf-53-d",
+        text: "Parking complaints fell during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-visitorbadges-inf-53-e",
+        text: "The trial measured patient safety incidents.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Nurses reported that unfamiliar visitors sometimes entered wards outside visiting times.\n" +
+      "B: NO - Emergency department visitors were not included in the scheme.\n" +
+      "C: YES - Badges were issued only to visitors who could name a patient and show a valid visiting slot.\n" +
+      "D: NO - Parking complaints were unchanged.\n" +
+      "E: NO - The hospital said patient safety incidents were not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Food Waste",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows meal-service and waste data for four catering areas in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekly catering waste",
+      headers: ["Area", "Meals Served", "Waste Bags", "Reusable Trays", "Staff Hours"],
+      rows: [
+        ["Main", "520", "18", "410", "42"],
+        ["Cafe", "360", "15", "250", "30"],
+        ["Ward", "420", "12", "336", "36"],
+        ["Training", "300", "9", "210", "24"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-foodwaste-inf-53-a",
+        text: "Ward had the lowest number of waste bags per meal served.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-foodwaste-inf-53-b",
+        text: "Main served more meals than Cafe and Training combined.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-foodwaste-inf-53-c",
+        text: "Across the four areas, exactly 54 waste bags were recorded.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-foodwaste-inf-53-d",
+        text: "Training used reusable trays for exactly 70% of meals served.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-foodwaste-inf-53-e",
+        text: "Cafe used fewer staff hours than Training.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Waste bags per meal are Main 18/520 = 3.5%, Cafe 15/360 = 4.2%, Ward 12/420 = 2.9%, and Training 9/300 = 3.0%; Ward is lowest.\n" +
+      "B: NO - Main served 520 meals, while Cafe and Training together served 360 + 300 = 660.\n" +
+      "C: YES - Waste bags total 18 + 15 + 12 + 9 = 54.\n" +
+      "D: YES - Training used 210 reusable trays for 300 meals, which is exactly 70%.\n" +
+      "E: NO - Cafe used 30 staff hours, more than Training's 24.",
+  },
+
+  // --- Inference Yes/No small set 32 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Sports Hall Doors",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A school opened a side entrance for evening sports clubs after parents said the main reception queue made collection slow. The side entrance could be used only by pupils registered for that evening's club and it closed at 7 pm. The main reception remained open for other visitors. During the first month, collection-time complaints fell, but the number of sports-club places was unchanged. The school said the trial did not test whether club attendance improved.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-sportdoors-inf-54-a",
+        text: "The side entrance was opened after complaints about slow collection through main reception.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-sportdoors-inf-54-b",
+        text: "Any visitor to the school could use the side entrance.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-sportdoors-inf-54-c",
+        text: "The main reception remained open for other visitors.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-sportdoors-inf-54-d",
+        text: "The number of sports-club places increased during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-sportdoors-inf-54-e",
+        text: "The trial tested whether club attendance improved.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Parents said the main reception queue made collection slow.\n" +
+      "B: NO - The side entrance was only for pupils registered for that evening's sports club.\n" +
+      "C: YES - The main reception remained open for other visitors.\n" +
+      "D: NO - The number of sports-club places was unchanged.\n" +
+      "E: NO - The school said attendance improvement was not tested.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Tutor Attendance",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The bar chart below shows attendance at four online tutoring sessions in one week.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Online tutoring attendance",
+      yLabel: "Students",
+      categories: [
+        { label: "Biology", value: 68 },
+        { label: "Chemistry", value: 56 },
+        { label: "Physics", value: 72 },
+        { label: "Maths", value: 64 },
+      ],
+      max: 80,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-tutorattendance-inf-54-a",
+        text: "Physics had the highest attendance.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-tutorattendance-inf-54-b",
+        text: "Biology and Maths together had more attendees than Chemistry and Physics together.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-tutorattendance-inf-54-c",
+        text: "The mean attendance across the four sessions was exactly 65 students.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-tutorattendance-inf-54-d",
+        text: "Chemistry had fewer than three quarters as many attendees as Physics.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-tutorattendance-inf-54-e",
+        text: "Maths had 8 fewer attendees than Biology.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Physics had 72 attendees, the highest value shown.\n" +
+      "B: YES - Biology + Maths = 68 + 64 = 132, while Chemistry + Physics = 56 + 72 = 128.\n" +
+      "C: YES - Total attendance = 68 + 56 + 72 + 64 = 260. Mean = 260 / 4 = 65.\n" +
+      "D: NO - Three quarters of Physics attendance is 54. Chemistry had 56, not fewer than 54.\n" +
+      "E: NO - Maths had 64 attendees and Biology had 68, a difference of 4, not 8.",
+  },
+
+  // --- Inference Yes/No small set 33 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Lost Property Form",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A bus company introduced an online lost-property form after depot staff reported that routine phone enquiries about lost items were blocking lines used for service updates. Passengers could still phone about items containing medication or official documents. During the first month, routine lost-property phone calls fell by 45%, but the number of items returned to owners was unchanged. The company said the trial did not measure passenger satisfaction.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-lostproperty-inf-55-a",
+        text: "The form was introduced after staff reported routine lost-property calls blocking service-update lines.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lostproperty-inf-55-b",
+        text: "Passengers with lost medication had to use the online form instead of phoning.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lostproperty-inf-55-c",
+        text: "Routine lost-property phone calls decreased during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lostproperty-inf-55-d",
+        text: "The number of items returned to owners increased during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lostproperty-inf-55-e",
+        text: "The trial measured passenger satisfaction.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Staff reported that routine lost-property calls were blocking lines used for service updates.\n" +
+      "B: NO - Passengers could still phone about items containing medication or official documents.\n" +
+      "C: YES - Routine lost-property phone calls fell by 45%.\n" +
+      "D: NO - The number of items returned to owners was unchanged.\n" +
+      "E: NO - The company said passenger satisfaction was not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Dental Supplies",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows dental supply use at four clinics in one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Monthly dental supply use",
+      headers: ["Clinic", "Packs Ordered", "Packs Used", "Emergency Orders", "Stock Left"],
+      rows: [
+        ["North", "120", "108", "4", "12"],
+        ["East", "90", "72", "6", "18"],
+        ["South", "110", "99", "3", "11"],
+        ["West", "80", "64", "5", "16"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-dentalsupplies-inf-55-a",
+        text: "South used 90% of the packs it ordered.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-dentalsupplies-inf-55-b",
+        text: "West had more emergency orders than East.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-dentalsupplies-inf-55-c",
+        text: "Across the four clinics, exactly 343 packs were used.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-dentalsupplies-inf-55-d",
+        text: "North and East together had 30 packs left in stock.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-dentalsupplies-inf-55-e",
+        text: "Every clinic used at least 85% of the packs it ordered.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - South used 99 of 110 packs, which is 90%.\n" +
+      "B: NO - West had 5 emergency orders, fewer than East's 6.\n" +
+      "C: YES - Total packs used = 108 + 72 + 99 + 64 = 343.\n" +
+      "D: YES - North and East stock left totals 12 + 18 = 30.\n" +
+      "E: NO - East used 72/90 = 80% and West used 64/80 = 80%, both below 85%.",
+  },
+
+  // --- Inference Yes/No small set 34 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Laptop Loans",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A sixth form created a laptop-loan scheme after tutors reported that some students could not complete online homework at home. Loans were available only to students without regular access to a computer, and each loan lasted up to four weeks. During the first term, missed online assignments fell among students using the scheme, but the school did not compare exam results. The head of year said the trial did not show whether students' grades improved.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-laptoploans-inf-56-a",
+        text: "The scheme was created after tutors reported problems with students completing online homework at home.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-laptoploans-inf-56-b",
+        text: "Laptop loans were available to all students at the sixth form.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-laptoploans-inf-56-c",
+        text: "Each loan could last up to four weeks.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-laptoploans-inf-56-d",
+        text: "Missed online assignments increased among students using the scheme.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-laptoploans-inf-56-e",
+        text: "The trial showed whether students' grades improved.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Tutors reported that some students could not complete online homework at home.\n" +
+      "B: NO - Loans were available only to students without regular access to a computer.\n" +
+      "C: YES - Each loan lasted up to four weeks.\n" +
+      "D: NO - Missed online assignments fell among students using the scheme.\n" +
+      "E: NO - Exam results were not compared, and the head of year said grade improvement was not shown.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Helpdesk Tickets",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The bar chart below shows helpdesk tickets logged in four categories during one week.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Weekly helpdesk tickets",
+      yLabel: "Tickets",
+      categories: [
+        { label: "Password", value: 84 },
+        { label: "WiFi", value: 63 },
+        { label: "Printing", value: 49 },
+        { label: "Accounts", value: 70 },
+      ],
+      max: 90,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-helpdesk-inf-56-a",
+        text: "Password issues had the highest number of tickets.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-helpdesk-inf-56-b",
+        text: "Printing had fewer than two thirds as many tickets as WiFi.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-helpdesk-inf-56-c",
+        text: "Across all four categories, exactly 266 tickets were logged.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-helpdesk-inf-56-d",
+        text: "WiFi and Accounts together had more tickets than Password and Printing together.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-helpdesk-inf-56-e",
+        text: "Accounts had 14 fewer tickets than Password.",
+        answer: "Yes",
+      },
+    ],
+    explanation:
+      "A: YES - Password issues had 84 tickets, the highest value shown.\n" +
+      "B: NO - Two thirds of WiFi's 63 tickets is 42. Printing had 49, not fewer than 42.\n" +
+      "C: YES - Total tickets = 84 + 63 + 49 + 70 = 266.\n" +
+      "D: NO - WiFi + Accounts = 63 + 70 = 133, and Password + Printing = 84 + 49 = 133, so they are equal.\n" +
+      "E: YES - Accounts had 70 tickets and Password had 84, a difference of 14.",
+  },
+
+  // --- Inference Yes/No small set 35 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Hearing Loop",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A clinic installed portable hearing-loop devices at reception after patients with hearing aids said appointment instructions were sometimes missed in the noisy waiting area. The devices were used only at the reception desk, and consultation rooms were unchanged. During the first month, requests for repeated appointment directions fell, but overall check-in time was unchanged. The clinic said the trial did not measure communication during clinical consultations.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-hearingloop-inf-57-a",
+        text: "The devices were installed after feedback from patients with hearing aids.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-hearingloop-inf-57-b",
+        text: "Hearing-loop devices were installed in the consultation rooms.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-hearingloop-inf-57-c",
+        text: "Requests for repeated appointment directions fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-hearingloop-inf-57-d",
+        text: "Overall check-in time shortened during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-hearingloop-inf-57-e",
+        text: "The trial measured communication during clinical consultations.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Patients with hearing aids said instructions were sometimes missed in the noisy waiting area.\n" +
+      "B: NO - The devices were used only at reception, and consultation rooms were unchanged.\n" +
+      "C: YES - Requests for repeated appointment directions fell.\n" +
+      "D: NO - Overall check-in time was unchanged.\n" +
+      "E: NO - The clinic said communication during clinical consultations was not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Vaccine Stock",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows vaccine stock use at four community clinics in one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Monthly vaccine stock use",
+      headers: ["Clinic", "Doses Delivered", "Doses Used", "Doses Expired", "Doses Remaining"],
+      rows: [
+        ["North", "500", "420", "15", "65"],
+        ["East", "400", "340", "10", "50"],
+        ["South", "450", "360", "18", "72"],
+        ["West", "350", "315", "7", "28"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-vaccinestock-inf-57-a",
+        text: "West used the highest proportion of delivered doses.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-vaccinestock-inf-57-b",
+        text: "South had fewer expired doses than North.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-vaccinestock-inf-57-c",
+        text: "Across the four clinics, exactly 1,435 doses were used.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-vaccinestock-inf-57-d",
+        text: "North and East together had 115 doses remaining.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-vaccinestock-inf-57-e",
+        text: "Every clinic had fewer than 15 doses expire.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Use rates are North 420/500 = 84%, East 340/400 = 85%, South 360/450 = 80%, and West 315/350 = 90%; West is highest.\n" +
+      "B: NO - South had 18 expired doses, more than North's 15.\n" +
+      "C: YES - Doses used total 420 + 340 + 360 + 315 = 1,435.\n" +
+      "D: YES - North and East remaining doses total 65 + 50 = 115.\n" +
+      "E: NO - North had exactly 15 expired doses and South had 18, so not every clinic had fewer than 15 expire.",
+  },
+
+  // --- Inference Yes/No small set 36 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Quiet Workspace",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A public library introduced bookable quiet desks after readers complained that study spaces near the children's area were too noisy. Quiet desks could be booked for up to three hours, while ordinary desks remained available without booking. During the first month, complaints about lack of quiet study space fell, but computer bookings were unchanged. The library said the trial did not measure whether users completed more work.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-quietworkspace-inf-58-a",
+        text: "The quiet desks were introduced after complaints about noisy study spaces.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-quietworkspace-inf-58-b",
+        text: "Quiet desks could be booked for an unlimited length of time.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-quietworkspace-inf-58-c",
+        text: "Ordinary desks remained available without booking.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-quietworkspace-inf-58-d",
+        text: "Computer bookings increased during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-quietworkspace-inf-58-e",
+        text: "The trial measured whether users completed more work.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Readers complained that study spaces near the children's area were too noisy.\n" +
+      "B: NO - Quiet desks could be booked for up to three hours.\n" +
+      "C: YES - Ordinary desks remained available without booking.\n" +
+      "D: NO - Computer bookings were unchanged.\n" +
+      "E: NO - The library said it did not measure whether users completed more work.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Lunch Orders",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the number of school lunch pre-orders made over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "School lunch pre-orders",
+      yLabel: "Pre-orders",
+      points: [
+        { label: "Mon", value: 140 },
+        { label: "Tue", value: 132 },
+        { label: "Wed", value: 156 },
+        { label: "Thu", value: 148 },
+        { label: "Fri", value: 164 },
+      ],
+      max: 180,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-lunchorders-inf-58-a",
+        text: "The highest number of pre-orders was made on Friday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lunchorders-inf-58-b",
+        text: "Pre-orders increased every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lunchorders-inf-58-c",
+        text: "Wednesday and Thursday together had exactly 304 pre-orders.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lunchorders-inf-58-d",
+        text: "The mean number of pre-orders across the five weekdays was exactly 148.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lunchorders-inf-58-e",
+        text: "Tuesday had 10 fewer pre-orders than Monday.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Friday had 164 pre-orders, the highest value shown.\n" +
+      "B: NO - Pre-orders fell from Monday (140) to Tuesday (132), and from Wednesday (156) to Thursday (148).\n" +
+      "C: YES - Wednesday + Thursday = 156 + 148 = 304.\n" +
+      "D: YES - Mean = (140 + 132 + 156 + 148 + 164) / 5 = 740 / 5 = 148.\n" +
+      "E: NO - Tuesday had 132 and Monday had 140, a difference of 8, not 10.",
+  },
+
+  // --- Inference Yes/No small set 37 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Password Kiosk",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A college installed a password-reset kiosk after students complained that waiting for IT help caused delays before online exams. The kiosk could reset ordinary forgotten passwords, but accounts flagged for suspicious activity still had to be handled by the IT desk. During the first month, password-reset tickets fell by 38%, while total IT tickets were unchanged. The IT manager said the trial did not assess whether account security incidents changed.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-passwordkiosk-inf-59-a",
+        text: "The kiosk was installed after complaints about delays getting IT help before online exams.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-passwordkiosk-inf-59-b",
+        text: "Accounts flagged for suspicious activity could be reset through the kiosk.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-passwordkiosk-inf-59-c",
+        text: "Password-reset tickets fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-passwordkiosk-inf-59-d",
+        text: "Total IT tickets fell during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-passwordkiosk-inf-59-e",
+        text: "The trial assessed whether account security incidents changed.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Students complained that waiting for IT help caused delays before online exams.\n" +
+      "B: NO - Accounts flagged for suspicious activity still had to be handled by the IT desk.\n" +
+      "C: YES - Password-reset tickets fell by 38%.\n" +
+      "D: NO - Total IT tickets were unchanged.\n" +
+      "E: NO - The manager said account security incidents were not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Library Seating",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows study-seat use across four library areas at 10 am on the same weekday.",
+    ],
+    visual: {
+      type: "table",
+      title: "Library seating at 10 am",
+      headers: ["Area", "Seats Available", "Seats Occupied", "Reserved Seats", "Broken Seats"],
+      rows: [
+        ["Ground", "120", "108", "24", "6"],
+        ["First", "90", "72", "18", "3"],
+        ["Second", "80", "68", "12", "4"],
+        ["Quiet", "60", "54", "15", "1"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-libraryseating-inf-59-a",
+        text: "Ground had the highest number of occupied seats.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-libraryseating-inf-59-b",
+        text: "Quiet had a higher occupancy rate than First.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-libraryseating-inf-59-c",
+        text: "Across all four areas, exactly 302 seats were occupied.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-libraryseating-inf-59-d",
+        text: "Every area had fewer than 5 broken seats.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-libraryseating-inf-59-e",
+        text: "First and Quiet together had fewer than 30 reserved seats.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Ground had 108 occupied seats, the highest number shown.\n" +
+      "B: YES - Quiet occupancy was 54/60 = 90%, while First occupancy was 72/90 = 80%.\n" +
+      "C: YES - Occupied seats total 108 + 72 + 68 + 54 = 302.\n" +
+      "D: NO - Ground had 6 broken seats, which is not fewer than 5.\n" +
+      "E: NO - First and Quiet reserved seats total 18 + 15 = 33, not fewer than 30.",
+  },
+
+  // --- Inference Yes/No small set 38 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Shared Inbox",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A GP practice introduced a shared inbox for routine administrative requests after receptionists reported that requests sent to individual staff were sometimes missed when staff were absent. The inbox was not for clinical symptoms, which patients were told to report by telephone. During the first month, duplicate administrative emails fell, but the practice's response-time target was unchanged. The practice manager said the trial did not measure whether clinical outcomes improved.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-sharedinbox-inf-60-a",
+        text: "The shared inbox was introduced after staff reported missed requests when individual staff were absent.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-sharedinbox-inf-60-b",
+        text: "Patients were told to use the shared inbox for clinical symptoms.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-sharedinbox-inf-60-c",
+        text: "Duplicate administrative emails fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-sharedinbox-inf-60-d",
+        text: "The practice's response-time target changed during the trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-sharedinbox-inf-60-e",
+        text: "The trial measured whether clinical outcomes improved.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Receptionists reported that requests sent to individual staff were sometimes missed when staff were absent.\n" +
+      "B: NO - Clinical symptoms had to be reported by telephone.\n" +
+      "C: YES - Duplicate administrative emails fell.\n" +
+      "D: NO - The response-time target was unchanged.\n" +
+      "E: NO - The manager said clinical outcomes were not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Safety Workshops",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The grouped bar chart below shows capacity and attendance for four staff safety workshops in one week.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Staff safety workshop attendance",
+      yLabel: "Places",
+      seriesLabels: ["Capacity", "Attended"],
+      groups: [
+        { label: "First Aid", values: [40, 36] },
+        { label: "CPR", values: [30, 27] },
+        { label: "Moving", values: [35, 28] },
+        { label: "Fire", values: [25, 20] },
+      ],
+      max: 45,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-safetyworkshops-inf-60-a",
+        text: "First Aid had the highest capacity.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-safetyworkshops-inf-60-b",
+        text: "CPR had a higher attendance rate than Moving.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-safetyworkshops-inf-60-c",
+        text: "Moving and Fire together had exactly 48 attendees.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-safetyworkshops-inf-60-d",
+        text: "Across all four workshops, more than 115 people attended.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-safetyworkshops-inf-60-e",
+        text: "Every workshop filled at least 85% of its capacity.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - First Aid had capacity for 40 places, the highest value shown.\n" +
+      "B: YES - CPR attendance was 27/30 = 90%, while Moving attendance was 28/35 = 80%.\n" +
+      "C: YES - Moving and Fire attendees total 28 + 20 = 48.\n" +
+      "D: NO - Total attendance = 36 + 27 + 28 + 20 = 111, which is not more than 115.\n" +
+      "E: NO - Moving and Fire each filled 80% of capacity, below 85%.",
+  },
+
+  // --- Inference Yes/No small set 39 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Clinic Check-in",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A GP surgery introduced a self check-in screen after reception staff reported that queues at the desk were delaying some patients before appointments. The screen could only mark arrival for booked appointments; patients with urgent symptoms or address changes still had to speak to reception. During the first month, complaints about reception queues fell, but the rate of missed appointments was unchanged. The practice said the trial did not assess clinical safety.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-checkin-inf-61-a",
+        text: "The check-in screen was introduced after staff reported desk queues delaying some patients.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-checkin-inf-61-b",
+        text: "The screen could be used by patients who did not have booked appointments.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-checkin-inf-61-c",
+        text: "Patients with address changes still had to speak to reception.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-checkin-inf-61-d",
+        text: "The rate of missed appointments fell during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-checkin-inf-61-e",
+        text: "The trial assessed clinical safety.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Reception staff reported that desk queues were delaying some patients before appointments.\n" +
+      "B: NO - The screen could only mark arrival for booked appointments.\n" +
+      "C: YES - Patients with address changes still had to speak to reception.\n" +
+      "D: NO - The rate of missed appointments was unchanged.\n" +
+      "E: NO - The practice said clinical safety was not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Specimen Couriers",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows specimen courier collection data for four clinic sites in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekly specimen courier collections",
+      headers: ["Site", "Samples Ready", "Collected Same Day", "Missed Pickups", "Extra Runs"],
+      rows: [
+        ["North", "180", "168", "4", "6"],
+        ["East", "150", "135", "6", "5"],
+        ["South", "160", "152", "3", "4"],
+        ["West", "120", "102", "8", "3"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-couriers-inf-61-a",
+        text: "South had the highest same-day collection rate.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-couriers-inf-61-b",
+        text: "West had fewer missed pickups than East.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-couriers-inf-61-c",
+        text: "Across the four sites, exactly 557 samples were collected the same day.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-couriers-inf-61-d",
+        text: "North and South together had 10 extra runs.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-couriers-inf-61-e",
+        text: "Every site had at least 90% of samples collected the same day.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Same-day rates are North 168/180 = 93.3%, East 135/150 = 90%, South 152/160 = 95%, and West 102/120 = 85%; South is highest.\n" +
+      "B: NO - West had 8 missed pickups, more than East's 6.\n" +
+      "C: YES - Same-day collections total 168 + 135 + 152 + 102 = 557.\n" +
+      "D: YES - North and South extra runs total 6 + 4 = 10.\n" +
+      "E: NO - West had 102/120 = 85% collected the same day, below 90%.",
+  },
+
+  // --- Inference Yes/No small set 40 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Lecture Captions",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A university introduced live captions in large lecture theatres after students with hearing difficulties said captioned recordings were usually uploaded too late for revision. The live captions were used only for lectures with more than 80 students, and small seminars were unchanged. During the first term, accessibility complaints about large lectures fell, but lecture attendance was unchanged. The university said the trial did not compare exam scores.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-lecturecaptions-inf-62-a",
+        text: "The live captions were introduced after feedback from students with hearing difficulties.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lecturecaptions-inf-62-b",
+        text: "Small seminars were included in the live-captioning trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lecturecaptions-inf-62-c",
+        text: "Accessibility complaints about large lectures fell during the first term.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lecturecaptions-inf-62-d",
+        text: "Lecture attendance increased during the first term.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lecturecaptions-inf-62-e",
+        text: "The trial compared exam scores.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Students with hearing difficulties said captioned recordings were uploaded too late for revision.\n" +
+      "B: NO - The live captions were used only for lectures with more than 80 students, and small seminars were unchanged.\n" +
+      "C: YES - Accessibility complaints about large lectures fell.\n" +
+      "D: NO - Lecture attendance was unchanged.\n" +
+      "E: NO - The university said exam scores were not compared.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Radiology Reports",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the number of routine radiology reports completed over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "Routine radiology reports completed",
+      yLabel: "Reports",
+      points: [
+        { label: "Mon", value: 46 },
+        { label: "Tue", value: 52 },
+        { label: "Wed", value: 48 },
+        { label: "Thu", value: 56 },
+        { label: "Fri", value: 50 },
+      ],
+      max: 60,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-radiology-inf-62-a",
+        text: "The highest number of reports was completed on Thursday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-radiology-inf-62-b",
+        text: "The number of completed reports increased every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-radiology-inf-62-c",
+        text: "Tuesday and Wednesday together had exactly 100 completed reports.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-radiology-inf-62-d",
+        text: "The mean number of reports completed across the five weekdays was exactly 50.4.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-radiology-inf-62-e",
+        text: "Friday had 8 fewer completed reports than Thursday.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Thursday had 56 completed reports, the highest value shown.\n" +
+      "B: NO - Completed reports fell from Tuesday (52) to Wednesday (48), and from Thursday (56) to Friday (50).\n" +
+      "C: YES - Tuesday + Wednesday = 52 + 48 = 100.\n" +
+      "D: YES - Mean = (46 + 52 + 48 + 56 + 50) / 5 = 252 / 5 = 50.4.\n" +
+      "E: NO - Thursday had 56 reports and Friday had 50, a difference of 6, not 8.",
+  },
+
+  // --- Inference Yes/No small set 41 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Carer Passes",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A hospital introduced digital carer passes after carers reported having to repeat explanations at ward doors when supporting patients. Passes were issued only to named carers of patients who needed support with communication or mobility, and ordinary visitor rules were unchanged. During the first month, queries at ward entrances about carer identity fell, but complaints about visiting times were unchanged. The hospital said the trial did not measure patient recovery.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-carerpasses-inf-63-a",
+        text: "The passes were introduced after carers reported needing to repeat explanations at ward doors.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-carerpasses-inf-63-b",
+        text: "Digital carer passes were issued to all hospital visitors.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-carerpasses-inf-63-c",
+        text: "Ordinary visitor rules were unchanged.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-carerpasses-inf-63-d",
+        text: "Complaints about visiting times fell during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-carerpasses-inf-63-e",
+        text: "The trial measured patient recovery.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Carers reported having to repeat explanations at ward doors when supporting patients.\n" +
+      "B: NO - Passes were issued only to named carers of patients needing support with communication or mobility.\n" +
+      "C: YES - Ordinary visitor rules were unchanged.\n" +
+      "D: NO - Complaints about visiting times were unchanged.\n" +
+      "E: NO - The hospital said patient recovery was not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Pharmacy Deliveries",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows prescription delivery data for four pharmacy routes in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekly prescription deliveries",
+      headers: ["Route", "Parcels Scheduled", "Delivered Same Day", "Returned Parcels", "Driver Hours"],
+      rows: [
+        ["North", "180", "171", "6", "36"],
+        ["East", "150", "135", "9", "30"],
+        ["South", "160", "152", "4", "32"],
+        ["West", "120", "102", "12", "24"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-pharmdeliveries-inf-63-a",
+        text: "West had the lowest same-day delivery rate.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-pharmdeliveries-inf-63-b",
+        text: "East had more returned parcels than North.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-pharmdeliveries-inf-63-c",
+        text: "Across the four routes, exactly 560 parcels were delivered the same day.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-pharmdeliveries-inf-63-d",
+        text: "North and South together used exactly 68 driver hours.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-pharmdeliveries-inf-63-e",
+        text: "Every route delivered at least 90% of scheduled parcels the same day.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Same-day rates are North 171/180 = 95%, East 135/150 = 90%, South 152/160 = 95%, and West 102/120 = 85%; West is lowest.\n" +
+      "B: YES - East had 9 returned parcels, more than North's 6.\n" +
+      "C: YES - Same-day deliveries total 171 + 135 + 152 + 102 = 560.\n" +
+      "D: YES - North and South driver hours total 36 + 32 = 68.\n" +
+      "E: NO - West delivered 102/120 = 85% the same day, below 90%.",
+  },
+
+  // --- Inference Yes/No small set 42 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Revision Emails",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A school began sending weekly revision emails after teachers reported that many exam-year pupils were missing optional revision sessions. Emails were sent only to pupils in exam years, and revision notices continued to be posted on classroom boards. During the first half-term, attendance at optional revision sessions rose among exam-year pupils, while homework completion was unchanged. The school said the trial did not measure final exam grades.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-revisionemails-inf-64-a",
+        text: "The emails were introduced after teachers reported missed optional revision sessions.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-revisionemails-inf-64-b",
+        text: "Weekly revision emails were sent to all pupils in the school.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-revisionemails-inf-64-c",
+        text: "Revision notices continued to be posted on classroom boards.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-revisionemails-inf-64-d",
+        text: "Homework completion increased during the first half-term.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-revisionemails-inf-64-e",
+        text: "The trial measured final exam grades.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Teachers reported that many exam-year pupils were missing optional revision sessions.\n" +
+      "B: NO - Emails were sent only to pupils in exam years.\n" +
+      "C: YES - Revision notices continued to be posted on classroom boards.\n" +
+      "D: NO - Homework completion was unchanged.\n" +
+      "E: NO - The school said final exam grades were not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Gym Bookings",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The grouped bar chart below shows gym class capacity and booked places for four session types in one week.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Gym class bookings",
+      yLabel: "Places",
+      seriesLabels: ["Capacity", "Booked"],
+      groups: [
+        { label: "Morning", values: [50, 45] },
+        { label: "Lunch", values: [40, 32] },
+        { label: "Evening", values: [60, 54] },
+        { label: "Weekend", values: [70, 56] },
+      ],
+      max: 80,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-gymbookings-inf-64-a",
+        text: "Weekend sessions had the highest capacity.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-gymbookings-inf-64-b",
+        text: "Morning sessions had a higher booking rate than Lunch sessions.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-gymbookings-inf-64-c",
+        text: "Morning and Evening sessions together had exactly 99 booked places.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-gymbookings-inf-64-d",
+        text: "Across all four session types, more than 190 places were booked.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-gymbookings-inf-64-e",
+        text: "Every session type had at least 85% of places booked.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Weekend sessions had capacity for 70 places, the highest value shown.\n" +
+      "B: YES - Morning booking rate was 45/50 = 90%, while Lunch booking rate was 32/40 = 80%.\n" +
+      "C: YES - Morning and Evening booked places total 45 + 54 = 99.\n" +
+      "D: NO - Total booked places = 45 + 32 + 54 + 56 = 187, which is not more than 190.\n" +
+      "E: NO - Lunch and Weekend each had 80% of places booked, below 85%.",
+  },
+
+  // --- Inference Yes/No small set 43 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Meal Choices",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A hospital ward introduced electronic meal-choice tablets after dietitians reported that some handwritten meal forms were missed before the catering deadline. The tablets were used only by patients who could choose meals independently; choices needing nurse assistance continued on paper forms. During the first month, wrong-meal complaints fell by 25%, while the total number of meals served was unchanged. The ward said the trial did not assess patients' nutritional intake.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-mealchoices-inf-65-a",
+        text: "The tablets were introduced after concerns that some handwritten meal forms were missed.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-mealchoices-inf-65-b",
+        text: "Every patient on the ward had to use an electronic tablet to choose meals.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-mealchoices-inf-65-c",
+        text: "Meal choices needing nurse assistance continued to use paper forms.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-mealchoices-inf-65-d",
+        text: "The total number of meals served increased during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-mealchoices-inf-65-e",
+        text: "The trial assessed patients' nutritional intake.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Dietitians reported that some handwritten meal forms were missed before the catering deadline.\n" +
+      "B: NO - The tablets were used only by patients who could choose meals independently.\n" +
+      "C: YES - Choices needing nurse assistance continued on paper forms.\n" +
+      "D: NO - The total number of meals served was unchanged.\n" +
+      "E: NO - The ward said nutritional intake was not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Park Inspections",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows maintenance inspection data for four park areas in one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Monthly park maintenance inspections",
+      headers: ["Area", "Inspections Scheduled", "Inspections Completed", "Issues Found", "Fixed Same Week"],
+      rows: [
+        ["Play Area", "40", "36", "12", "9"],
+        ["Paths", "50", "45", "10", "8"],
+        ["Toilets", "30", "24", "9", "6"],
+        ["Lighting", "20", "18", "4", "4"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-parkinspections-inf-65-a",
+        text: "Paths had the highest number of completed inspections.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-parkinspections-inf-65-b",
+        text: "Lighting had all issues fixed in the same week.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-parkinspections-inf-65-c",
+        text: "Across all four areas, exactly 35 issues were found.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-parkinspections-inf-65-d",
+        text: "Toilets had a higher inspection completion rate than Play Area.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-parkinspections-inf-65-e",
+        text: "Play Area and Paths together had fewer same-week fixes than Toilets and Lighting together.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Paths had 45 completed inspections, the highest number shown.\n" +
+      "B: YES - Lighting had 4 issues found and 4 fixed the same week.\n" +
+      "C: YES - Issues found total 12 + 10 + 9 + 4 = 35.\n" +
+      "D: NO - Toilets completed 24/30 = 80% of inspections, while Play Area completed 36/40 = 90%.\n" +
+      "E: NO - Play Area and Paths had 9 + 8 = 17 same-week fixes, while Toilets and Lighting had 6 + 4 = 10.",
+  },
+
+  // --- Inference Yes/No small set 44 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Nurse Booking",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A secondary school introduced online booking for routine school-nurse appointments after office staff reported that pupils often queued during registration to ask about non-urgent issues. Pupils with same-day urgent concerns were still told to go directly to the office. During the first half-term, advance nurse appointments increased and unplanned office interruptions fell, but the school did not collect data on health outcomes.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-nursebooking-inf-66-a",
+        text: "Online booking was introduced after office staff reported queues about non-urgent issues.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-nursebooking-inf-66-b",
+        text: "Pupils with same-day urgent concerns were told to use online booking instead of going to the office.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-nursebooking-inf-66-c",
+        text: "Advance nurse appointments increased during the first half-term.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-nursebooking-inf-66-d",
+        text: "Unplanned office interruptions increased during the first half-term.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-nursebooking-inf-66-e",
+        text: "The school collected data on health outcomes.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Office staff reported that pupils often queued during registration about non-urgent issues.\n" +
+      "B: NO - Pupils with same-day urgent concerns were still told to go directly to the office.\n" +
+      "C: YES - Advance nurse appointments increased during the first half-term.\n" +
+      "D: NO - Unplanned office interruptions fell.\n" +
+      "E: NO - The school did not collect health-outcome data.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Fountain Refills",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the number of water-bottle refills recorded at a college fountain over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "Water-bottle refills",
+      yLabel: "Refills",
+      points: [
+        { label: "Mon", value: 64 },
+        { label: "Tue", value: 72 },
+        { label: "Wed", value: 68 },
+        { label: "Thu", value: 80 },
+        { label: "Fri", value: 76 },
+      ],
+      max: 90,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-fountainrefills-inf-66-a",
+        text: "The highest number of refills was recorded on Thursday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-fountainrefills-inf-66-b",
+        text: "The number of refills increased every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-fountainrefills-inf-66-c",
+        text: "Tuesday and Wednesday together had exactly 140 refills.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-fountainrefills-inf-66-d",
+        text: "The mean number of refills across the five weekdays was exactly 72.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-fountainrefills-inf-66-e",
+        text: "Friday had 8 fewer refills than Thursday.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Thursday had 80 refills, the highest value shown.\n" +
+      "B: NO - Refills fell from Tuesday (72) to Wednesday (68), and from Thursday (80) to Friday (76).\n" +
+      "C: YES - Tuesday + Wednesday = 72 + 68 = 140.\n" +
+      "D: YES - Mean = (64 + 72 + 68 + 80 + 76) / 5 = 360 / 5 = 72.\n" +
+      "E: NO - Friday had 76 refills and Thursday had 80, a difference of 4, not 8.",
+  },
+
+  // --- Inference Yes/No small set 45 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Appointment Letters",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A clinic redesigned its appointment letters after patients reported missing important preparation instructions before procedures. The new plain-English letters were used only for appointments requiring preparation, and standard reminder texts continued to be sent. During the first month, calls asking what to do before appointments fell, but the cancellation rate was unchanged. The clinic said the trial did not assess whether clinical outcomes improved.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-letters-inf-67-a",
+        text: "The letters were redesigned after patients reported missing preparation instructions.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-letters-inf-67-b",
+        text: "The new letters were used for every clinic appointment.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-letters-inf-67-c",
+        text: "Standard reminder texts continued to be sent.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-letters-inf-67-d",
+        text: "The cancellation rate fell during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-letters-inf-67-e",
+        text: "The trial assessed whether clinical outcomes improved.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Patients had reported missing important preparation instructions before procedures.\n" +
+      "B: NO - The new letters were used only for appointments requiring preparation.\n" +
+      "C: YES - Standard reminder texts continued to be sent.\n" +
+      "D: NO - The cancellation rate was unchanged.\n" +
+      "E: NO - The clinic said clinical outcomes were not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Cleaning Checks",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows cleaning-check data for four hospital areas in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekly cleaning checks",
+      headers: ["Area", "Checks Scheduled", "Checks Completed", "Failed Checks", "Rechecked"],
+      rows: [
+        ["Wards", "90", "84", "6", "6"],
+        ["Clinics", "70", "63", "7", "5"],
+        ["Theatres", "60", "57", "3", "3"],
+        ["Offices", "50", "40", "5", "4"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-cleaningchecks-inf-67-a",
+        text: "Theatres had the highest completion rate for scheduled checks.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cleaningchecks-inf-67-b",
+        text: "Offices had fewer failed checks than Clinics.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cleaningchecks-inf-67-c",
+        text: "Across the four areas, more than 250 checks were completed.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-cleaningchecks-inf-67-d",
+        text: "Wards and Theatres together had exactly 9 failed checks.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-cleaningchecks-inf-67-e",
+        text: "Every area completed at least 85% of scheduled checks.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Completion rates are Wards 84/90 = 93.3%, Clinics 63/70 = 90%, Theatres 57/60 = 95%, and Offices 40/50 = 80%; Theatres is highest.\n" +
+      "B: YES - Offices had 5 failed checks, fewer than Clinics' 7.\n" +
+      "C: NO - Completed checks total 84 + 63 + 57 + 40 = 244, which is not more than 250.\n" +
+      "D: YES - Wards and Theatres failed checks total 6 + 3 = 9.\n" +
+      "E: NO - Offices completed 40/50 = 80% of scheduled checks, below 85%.",
+  },
+
+  // --- Inference Yes/No small set 46 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Exam ID Checks",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A training centre introduced photo-ID checks at exam-room doors after invigilators reported that some candidates arrived without the documents needed for registration. Candidates without ID were directed to a separate support desk, and exam start times were not changed. During the first exam week, registration delays inside exam rooms fell, but the number of candidates arriving late was unchanged. The centre said the trial did not measure exam performance.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-examid-inf-68-a",
+        text: "The checks were introduced after invigilators reported problems with candidates missing registration documents.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-examid-inf-68-b",
+        text: "Candidates without ID were sent directly into the exam room.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-examid-inf-68-c",
+        text: "Exam start times were changed during the trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-examid-inf-68-d",
+        text: "Registration delays inside exam rooms fell during the first exam week.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-examid-inf-68-e",
+        text: "The trial measured exam performance.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Invigilators reported that some candidates arrived without documents needed for registration.\n" +
+      "B: NO - Candidates without ID were directed to a separate support desk.\n" +
+      "C: NO - Exam start times were not changed.\n" +
+      "D: YES - Registration delays inside exam rooms fell.\n" +
+      "E: NO - The centre said exam performance was not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Desk Bookings",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The grouped bar chart below shows available desks and booked desks in four study zones on the same day.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Study zone desk bookings",
+      yLabel: "Desks",
+      seriesLabels: ["Available", "Booked"],
+      groups: [
+        { label: "North", values: [48, 42] },
+        { label: "East", values: [40, 36] },
+        { label: "South", values: [56, 49] },
+        { label: "West", values: [32, 28] },
+      ],
+      max: 60,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-deskbookings-inf-68-a",
+        text: "South had the highest number of available desks.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-deskbookings-inf-68-b",
+        text: "East had a higher booking rate than North.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-deskbookings-inf-68-c",
+        text: "North and West together had exactly 70 booked desks.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-deskbookings-inf-68-d",
+        text: "Across the four zones, more than 160 desks were booked.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-deskbookings-inf-68-e",
+        text: "Every zone had at least 90% of desks booked.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - South had 56 available desks, the highest value shown.\n" +
+      "B: YES - East had 36/40 = 90% of desks booked, while North had 42/48 = 87.5%.\n" +
+      "C: YES - North and West booked desks total 42 + 28 = 70.\n" +
+      "D: NO - Total booked desks = 42 + 36 + 49 + 28 = 155, which is not more than 160.\n" +
+      "E: NO - North, South and West were each below 90% booked.",
+  },
+
+  // --- Inference Yes/No small set 47 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Queue Tickets",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A council office introduced numbered queue tickets after residents complained that people joining different desk queues were not being seen in arrival order. Tickets were used only for housing and benefits enquiries; licence renewals continued to use a separate appointments desk. During the first month, complaints about queue fairness fell, but the average time spent waiting was unchanged. The office manager said the trial did not measure whether decisions were made more quickly.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-queuetickets-inf-69-a",
+        text: "The ticket system was introduced after complaints about residents not being seen in arrival order.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-queuetickets-inf-69-b",
+        text: "Licence renewals used the numbered queue-ticket system.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-queuetickets-inf-69-c",
+        text: "Complaints about queue fairness fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-queuetickets-inf-69-d",
+        text: "The average time spent waiting decreased during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-queuetickets-inf-69-e",
+        text: "The trial measured whether decisions were made more quickly.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Residents complained that people joining different desk queues were not being seen in arrival order.\n" +
+      "B: NO - Licence renewals continued to use a separate appointments desk.\n" +
+      "C: YES - Complaints about queue fairness fell during the first month.\n" +
+      "D: NO - The average time spent waiting was unchanged.\n" +
+      "E: NO - The office manager said decision speed was not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Blood Pressure Checks",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows blood-pressure check activity for four community clinic sessions in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Community blood-pressure checks",
+      headers: ["Session", "Booked Patients", "Attended", "High Readings", "Follow-ups Booked"],
+      rows: [
+        ["Mon AM", "60", "54", "12", "10"],
+        ["Tue PM", "48", "42", "9", "8"],
+        ["Wed AM", "52", "39", "13", "9"],
+        ["Thu PM", "40", "36", "6", "6"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-bpchecks-inf-69-a",
+        text: "Thu PM had a higher attendance rate than Wed AM.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-bpchecks-inf-69-b",
+        text: "Wed AM had more high readings than Mon AM.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-bpchecks-inf-69-c",
+        text: "Across the four sessions, exactly 171 patients attended.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-bpchecks-inf-69-d",
+        text: "Every session booked follow-ups for at least 80% of patients with high readings.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-bpchecks-inf-69-e",
+        text: "Tue PM and Thu PM together had 18 high readings.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Thu PM attendance was 36/40 = 90%, while Wed AM attendance was 39/52 = 75%.\n" +
+      "B: YES - Wed AM had 13 high readings, more than Mon AM's 12.\n" +
+      "C: YES - Total attendance = 54 + 42 + 39 + 36 = 171.\n" +
+      "D: NO - Wed AM booked 9 follow-ups for 13 high readings, below 80%.\n" +
+      "E: NO - Tue PM and Thu PM high readings total 9 + 6 = 15, not 18.",
+  },
+
+  // --- Inference Yes/No small set 48 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Locker Notices",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A leisure centre put expiry notices on hire lockers after staff reported that some lockers were being left full overnight despite same-day hire rules. Notices were placed only on lockers hired with a day pass, and annual members' lockers were managed separately. During the first month, overnight locker clear-outs fell, but lost-property claims were unchanged. The centre said the trial did not assess whether changing-room crowding improved.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-lockernotices-inf-70-a",
+        text: "The notices were introduced after staff reported lockers being left full overnight.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lockernotices-inf-70-b",
+        text: "Annual members' lockers were managed in the same way as day-pass lockers.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lockernotices-inf-70-c",
+        text: "Overnight locker clear-outs fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lockernotices-inf-70-d",
+        text: "Lost-property claims increased during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lockernotices-inf-70-e",
+        text: "The trial assessed whether changing-room crowding improved.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Staff reported that some lockers were being left full overnight despite same-day hire rules.\n" +
+      "B: NO - Annual members' lockers were managed separately.\n" +
+      "C: YES - Overnight locker clear-outs fell during the first month.\n" +
+      "D: NO - Lost-property claims were unchanged.\n" +
+      "E: NO - The centre said changing-room crowding was not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Bus Boardings",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The bar chart below shows passenger boardings at four bus stops during the morning peak.",
+    ],
+    visual: {
+      type: "bar",
+      title: "Morning peak bus boardings",
+      yLabel: "Passengers",
+      categories: [
+        { label: "Station", value: 118 },
+        { label: "Market", value: 94 },
+        { label: "College", value: 106 },
+        { label: "Park", value: 82 },
+      ],
+      max: 130,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-busboardings-inf-70-a",
+        text: "Station had the highest number of passenger boardings.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-busboardings-inf-70-b",
+        text: "Market and Park together had fewer boardings than Station and College together.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-busboardings-inf-70-c",
+        text: "Across the four stops, exactly 400 passenger boardings were recorded.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-busboardings-inf-70-d",
+        text: "College had 20 more boardings than Market.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-busboardings-inf-70-e",
+        text: "Park had at least three quarters as many boardings as Station.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Station had 118 boardings, the highest value shown.\n" +
+      "B: YES - Market + Park = 94 + 82 = 176, while Station + College = 118 + 106 = 224.\n" +
+      "C: YES - Total boardings = 118 + 94 + 106 + 82 = 400.\n" +
+      "D: NO - College had 106 boardings and Market had 94, a difference of 12, not 20.\n" +
+      "E: NO - Three quarters of Station's 118 boardings is 88.5. Park had 82, which is below that.",
+  },
+
+  // --- Inference Yes/No small set 49 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Consent Videos",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A dental clinic introduced short consent videos before minor procedures after patients said the written information leaflets were difficult to understand quickly. The videos were shown only to patients booked for procedures, and paper consent forms still had to be signed. During the first month, questions about procedure risks fell, but the number of cancelled procedures was unchanged. The clinic said the trial did not measure whether patients were less anxious.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-consentvideos-inf-71-a",
+        text: "The videos were introduced after patients reported difficulty understanding written leaflets quickly.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-consentvideos-inf-71-b",
+        text: "The videos replaced the need to sign paper consent forms.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-consentvideos-inf-71-c",
+        text: "Questions about procedure risks fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-consentvideos-inf-71-d",
+        text: "The number of cancelled procedures fell during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-consentvideos-inf-71-e",
+        text: "The trial measured whether patients were less anxious.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Patients said the written information leaflets were difficult to understand quickly.\n" +
+      "B: NO - Paper consent forms still had to be signed.\n" +
+      "C: YES - Questions about procedure risks fell during the first month.\n" +
+      "D: NO - The number of cancelled procedures was unchanged.\n" +
+      "E: NO - The clinic said patient anxiety was not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Wheelchair Loans",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows wheelchair loan data for four hospital collection points in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekly wheelchair loans",
+      headers: ["Point", "Requests", "Loans Completed", "Same-day Returns", "Unfulfilled Requests"],
+      rows: [
+        ["Entrance", "72", "66", "40", "6"],
+        ["Outpatients", "60", "54", "30", "5"],
+        ["Ward Desk", "48", "42", "24", "6"],
+        ["Car Park", "40", "32", "18", "8"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-wheelchairloans-inf-71-a",
+        text: "Entrance completed the highest number of wheelchair loans.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-wheelchairloans-inf-71-b",
+        text: "Car Park had the lowest loan-completion rate.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-wheelchairloans-inf-71-c",
+        text: "Across the four collection points, exactly 194 wheelchair loans were completed.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-wheelchairloans-inf-71-d",
+        text: "Outpatients and Ward Desk together had more unfulfilled requests than Entrance and Car Park together.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-wheelchairloans-inf-71-e",
+        text: "Every collection point completed at least 85% of requests.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Entrance completed 66 loans, the highest number shown.\n" +
+      "B: YES - Completion rates are Entrance 66/72 = 91.7%, Outpatients 54/60 = 90%, Ward Desk 42/48 = 87.5%, and Car Park 32/40 = 80%; Car Park is lowest.\n" +
+      "C: YES - Completed loans total 66 + 54 + 42 + 32 = 194.\n" +
+      "D: NO - Outpatients and Ward Desk unfulfilled requests total 5 + 6 = 11, while Entrance and Car Park total 6 + 8 = 14.\n" +
+      "E: NO - Car Park completed 32/40 = 80% of requests, below 85%.",
+  },
+
+  // --- Inference Yes/No small set 50 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Trip Forms",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A school introduced online consent forms for day trips after teachers reported that pupils often forgot to return paper forms. Residential trips continued to use paper forms because extra medical details were needed. During the first term, returned consent forms increased for day trips, but the average time staff spent processing forms was unchanged. The school said the trial did not assess parent satisfaction.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-tripforms-inf-72-a",
+        text: "Online consent forms were introduced after teachers reported that paper forms were often not returned.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-tripforms-inf-72-b",
+        text: "Residential trips used the online consent forms.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-tripforms-inf-72-c",
+        text: "Returned consent forms increased for day trips during the first term.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-tripforms-inf-72-d",
+        text: "The average time staff spent processing forms decreased during the first term.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-tripforms-inf-72-e",
+        text: "The trial assessed parent satisfaction.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Teachers reported that pupils often forgot to return paper forms.\n" +
+      "B: NO - Residential trips continued to use paper forms.\n" +
+      "C: YES - Returned consent forms increased for day trips.\n" +
+      "D: NO - The average processing time was unchanged.\n" +
+      "E: NO - The school said parent satisfaction was not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Maintenance Calls",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the number of maintenance calls logged by a housing office over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "Maintenance calls logged",
+      yLabel: "Calls",
+      points: [
+        { label: "Mon", value: 34 },
+        { label: "Tue", value: 38 },
+        { label: "Wed", value: 32 },
+        { label: "Thu", value: 40 },
+        { label: "Fri", value: 36 },
+      ],
+      max: 45,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-maintcalls-inf-72-a",
+        text: "The highest number of calls was logged on Thursday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-maintcalls-inf-72-b",
+        text: "The number of calls increased every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-maintcalls-inf-72-c",
+        text: "Tuesday and Wednesday together had exactly 70 calls logged.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-maintcalls-inf-72-d",
+        text: "The mean number of calls logged across the five weekdays was exactly 36.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-maintcalls-inf-72-e",
+        text: "Friday had 4 fewer calls than Tuesday.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Thursday had 40 calls, the highest value shown.\n" +
+      "B: NO - Calls fell from Tuesday (38) to Wednesday (32), and from Thursday (40) to Friday (36).\n" +
+      "C: YES - Tuesday + Wednesday = 38 + 32 = 70.\n" +
+      "D: YES - Mean = (34 + 38 + 32 + 40 + 36) / 5 = 180 / 5 = 36.\n" +
+      "E: NO - Friday had 36 calls and Tuesday had 38, a difference of 2, not 4.",
+  },
+
+  // --- Inference Yes/No small set 51 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Return Kiosks",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A public library installed self-service return kiosks after borrowers complained that the returns desk queue was too long at lunchtime. The kiosks accepted only standard loan returns; queries about lost or damaged items still had to be handled by staff. During the first month, complaints about returns-desk queues fell, but total library loans were unchanged. The library said the trial did not assess whether returned books were reshelved more quickly.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-returnkiosks-inf-73-a",
+        text: "The kiosks were installed after complaints about the returns desk queue.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-returnkiosks-inf-73-b",
+        text: "The kiosks handled queries about lost or damaged items.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-returnkiosks-inf-73-c",
+        text: "Complaints about returns-desk queues fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-returnkiosks-inf-73-d",
+        text: "Total library loans increased during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-returnkiosks-inf-73-e",
+        text: "The trial assessed whether returned books were reshelved more quickly.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Borrowers complained that the returns desk queue was too long at lunchtime.\n" +
+      "B: NO - Queries about lost or damaged items still had to be handled by staff.\n" +
+      "C: YES - Complaints about returns-desk queues fell during the first month.\n" +
+      "D: NO - Total library loans were unchanged.\n" +
+      "E: NO - The library said reshelving speed was not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Workshop Materials",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows workshop material-pack use for four courses in one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Monthly workshop material packs",
+      headers: ["Course", "Packs Prepared", "Packs Used", "Late Requests", "Packs Left"],
+      rows: [
+        ["First Aid", "80", "72", "6", "8"],
+        ["Coding", "60", "54", "8", "6"],
+        ["Art", "50", "40", "4", "10"],
+        ["Cooking", "70", "63", "7", "7"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-materials-inf-73-a",
+        text: "Cooking used exactly 90% of the packs prepared for it.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-materials-inf-73-b",
+        text: "Coding had more late requests than First Aid.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-materials-inf-73-c",
+        text: "Across the four courses, exactly 229 packs were used.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-materials-inf-73-d",
+        text: "Art had fewer packs left than First Aid.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-materials-inf-73-e",
+        text: "Every course used at least 85% of its prepared packs.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Cooking used 63 of 70 packs, which is exactly 90%.\n" +
+      "B: YES - Coding had 8 late requests, more than First Aid's 6.\n" +
+      "C: YES - Packs used total 72 + 54 + 40 + 63 = 229.\n" +
+      "D: NO - Art had 10 packs left, more than First Aid's 8.\n" +
+      "E: NO - Art used 40/50 = 80% of prepared packs, below 85%.",
+  },
+
+  // --- Inference Yes/No small set 52 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Car Park Signs",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A hospital installed digital car park signs after patients complained that they often drove around full visitor car parks before appointments. The signs showed spaces only in the two main visitor car parks; disabled bays and staff parking were not included. During the first month, complaints about finding visitor parking fell, but outpatient attendance was unchanged. The hospital said the trial did not measure traffic emissions around the site.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-carparksigns-inf-74-a",
+        text: "The signs were introduced after complaints about finding spaces in visitor car parks.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-carparksigns-inf-74-b",
+        text: "The signs showed available disabled bays and staff parking spaces.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-carparksigns-inf-74-c",
+        text: "Complaints about finding visitor parking fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-carparksigns-inf-74-d",
+        text: "Outpatient attendance increased during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-carparksigns-inf-74-e",
+        text: "The trial measured traffic emissions around the hospital site.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Patients complained about driving around full visitor car parks before appointments.\n" +
+      "B: NO - Disabled bays and staff parking were not included.\n" +
+      "C: YES - Complaints about finding visitor parking fell during the first month.\n" +
+      "D: NO - Outpatient attendance was unchanged.\n" +
+      "E: NO - The hospital said traffic emissions were not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Reading Sessions",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The grouped bar chart below shows capacity and attendance for four children's reading sessions in one week.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Children's reading session attendance",
+      yLabel: "Places",
+      seriesLabels: ["Capacity", "Attended"],
+      groups: [
+        { label: "Stories", values: [30, 27] },
+        { label: "Rhymes", values: [25, 20] },
+        { label: "Comics", values: [20, 18] },
+        { label: "Poetry", values: [15, 12] },
+      ],
+      max: 35,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-readingsessions-inf-74-a",
+        text: "Stories had the highest capacity.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-readingsessions-inf-74-b",
+        text: "Comics had a higher attendance rate than Rhymes.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-readingsessions-inf-74-c",
+        text: "Stories and Comics together had exactly 45 attendees.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-readingsessions-inf-74-d",
+        text: "Across all four sessions, more than 80 children attended.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-readingsessions-inf-74-e",
+        text: "Every session filled at least 85% of its capacity.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Stories had capacity for 30 places, the highest value shown.\n" +
+      "B: YES - Comics attendance was 18/20 = 90%, while Rhymes attendance was 20/25 = 80%.\n" +
+      "C: YES - Stories and Comics attendees total 27 + 18 = 45.\n" +
+      "D: NO - Total attendance = 27 + 20 + 18 + 12 = 77, which is not more than 80.\n" +
+      "E: NO - Rhymes and Poetry each filled 80% of capacity, below 85%.",
+  },
+
+  // --- Inference Yes/No small set 53 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Callback Requests",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A GP practice introduced an online callback request form after reception staff reported that routine administrative calls were blocking phone lines early in the morning. The form was for routine requests only; patients with urgent symptoms were still told to telephone. During the first month, abandoned phone calls fell, but the average wait for a clinical appointment was unchanged. The practice said the trial did not assess the experience of patients without internet access.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-callbackrequests-inf-75-a",
+        text: "The form was introduced after routine administrative calls were reported to be blocking phone lines.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-callbackrequests-inf-75-b",
+        text: "Patients with urgent symptoms were told to use the online callback request form.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-callbackrequests-inf-75-c",
+        text: "Abandoned phone calls fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-callbackrequests-inf-75-d",
+        text: "The average wait for a clinical appointment shortened during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-callbackrequests-inf-75-e",
+        text: "The trial assessed the experience of patients without internet access.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Reception staff reported that routine administrative calls were blocking phone lines early in the morning.\n" +
+      "B: NO - Patients with urgent symptoms were still told to telephone.\n" +
+      "C: YES - Abandoned phone calls fell during the first month.\n" +
+      "D: NO - The average wait for a clinical appointment was unchanged.\n" +
+      "E: NO - The practice said patients without internet access were not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Food Parcels",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows food parcel delivery data for four volunteer routes in one week.",
+    ],
+    visual: {
+      type: "table",
+      title: "Weekly food parcel deliveries",
+      headers: ["Route", "Requests", "Parcels Delivered", "Late Deliveries", "Volunteer Hours"],
+      rows: [
+        ["North", "140", "132", "10", "22"],
+        ["East", "120", "108", "12", "18"],
+        ["South", "100", "95", "5", "16"],
+        ["West", "80", "68", "8", "12"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-foodparcels-inf-75-a",
+        text: "South had the highest parcel delivery rate.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-foodparcels-inf-75-b",
+        text: "West delivered fewer parcels than East.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-foodparcels-inf-75-c",
+        text: "Across the four routes, exactly 403 parcels were delivered.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-foodparcels-inf-75-d",
+        text: "East had fewer late deliveries than North.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-foodparcels-inf-75-e",
+        text: "Every route delivered at least 90% of requested parcels.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Delivery rates are North 132/140 = 94.3%, East 108/120 = 90%, South 95/100 = 95%, and West 68/80 = 85%; South is highest.\n" +
+      "B: YES - West delivered 68 parcels, fewer than East's 108.\n" +
+      "C: YES - Parcels delivered total 132 + 108 + 95 + 68 = 403.\n" +
+      "D: NO - East had 12 late deliveries, more than North's 10.\n" +
+      "E: NO - West delivered 68/80 = 85% of requested parcels, below 90%.",
+  },
+
+  // --- Inference Yes/No small set 54 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Labelling Shelves",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A school science department relabelled shelves in the shared chemical store after technicians found that older labels used inconsistent names. The new labels were applied only in the shared store, and classroom cupboards were not relabelled. During the first term, incident reports about misplaced bottles fell, but science department purchasing costs were unchanged. The head of science said the trial did not assess pupils' practical exam scores.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-labellingshelves-inf-76-a",
+        text: "The shelves were relabelled after technicians found inconsistent older labels.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-labellingshelves-inf-76-b",
+        text: "Classroom cupboards were relabelled as part of the trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-labellingshelves-inf-76-c",
+        text: "Incident reports about misplaced bottles fell during the first term.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-labellingshelves-inf-76-d",
+        text: "Science department purchasing costs fell during the first term.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-labellingshelves-inf-76-e",
+        text: "The trial assessed pupils' practical exam scores.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Technicians found that older labels used inconsistent names.\n" +
+      "B: NO - Classroom cupboards were not relabelled.\n" +
+      "C: YES - Incident reports about misplaced bottles fell during the first term.\n" +
+      "D: NO - Purchasing costs were unchanged.\n" +
+      "E: NO - The head of science said practical exam scores were not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Study App Logins",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the number of student study-app logins over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "Student study-app logins",
+      yLabel: "Logins",
+      points: [
+        { label: "Mon", value: 210 },
+        { label: "Tue", value: 225 },
+        { label: "Wed", value: 195 },
+        { label: "Thu", value: 240 },
+        { label: "Fri", value: 230 },
+      ],
+      max: 260,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-studyapplogins-inf-76-a",
+        text: "The highest number of logins was recorded on Thursday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-studyapplogins-inf-76-b",
+        text: "The number of logins increased every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-studyapplogins-inf-76-c",
+        text: "Tuesday and Wednesday together had exactly 420 logins.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-studyapplogins-inf-76-d",
+        text: "The mean number of logins across the five weekdays was exactly 220.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-studyapplogins-inf-76-e",
+        text: "Friday had 25 more logins than Monday.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Thursday had 240 logins, the highest value shown.\n" +
+      "B: NO - Logins fell from Tuesday (225) to Wednesday (195), and from Thursday (240) to Friday (230).\n" +
+      "C: YES - Tuesday + Wednesday = 225 + 195 = 420.\n" +
+      "D: YES - Mean = (210 + 225 + 195 + 240 + 230) / 5 = 1100 / 5 = 220.\n" +
+      "E: NO - Friday had 230 logins and Monday had 210, a difference of 20, not 25.",
+  },
+
+  // --- Inference Yes/No small set 55 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Bus Stop Screens",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A council installed real-time departure screens at two busy bus stops after passengers complained that printed timetable posters were confusing after route changes. The screens showed live departure times only, and printed timetables remained in place. During the first month, questions to drivers about departure times fell, but bus punctuality on the affected routes was unchanged. The council said the trial did not assess passenger satisfaction at stops without screens.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-busstopscreens-inf-77-a",
+        text: "The screens were installed after complaints about confusing printed timetable posters.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-busstopscreens-inf-77-b",
+        text: "The screens showed disruption details as well as live departure times.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-busstopscreens-inf-77-c",
+        text: "Printed timetables remained in place at the stops.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-busstopscreens-inf-77-d",
+        text: "Bus punctuality on the affected routes improved during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-busstopscreens-inf-77-e",
+        text: "The trial assessed passenger satisfaction at stops without screens.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Passengers complained that printed timetable posters were confusing after route changes.\n" +
+      "B: NO - The screens showed live departure times only.\n" +
+      "C: YES - Printed timetables remained in place.\n" +
+      "D: NO - Bus punctuality on the affected routes was unchanged.\n" +
+      "E: NO - The council said satisfaction at stops without screens was not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Minibus Trips",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows community minibus activity for four routes in one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Monthly community minibus trips",
+      headers: ["Route", "Trips Scheduled", "Trips Completed", "Late Trips", "Volunteer Drivers"],
+      rows: [
+        ["North", "120", "114", "9", "12"],
+        ["East", "100", "90", "12", "10"],
+        ["South", "110", "99", "6", "11"],
+        ["West", "80", "72", "8", "8"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-minibus-inf-77-a",
+        text: "South had the lowest proportion of completed trips that were late.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-minibus-inf-77-b",
+        text: "East completed fewer trips than South.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-minibus-inf-77-c",
+        text: "Across the four routes, exactly 375 trips were completed.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-minibus-inf-77-d",
+        text: "Every route completed more than 90% of its scheduled trips.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-minibus-inf-77-e",
+        text: "North and East together had fewer late trips than South and West together.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Late-trip proportions among completed trips are North 9/114 = 7.9%, East 12/90 = 13.3%, South 6/99 = 6.1%, and West 8/72 = 11.1%; South is lowest.\n" +
+      "B: YES - East completed 90 trips, fewer than South's 99.\n" +
+      "C: YES - Completed trips total 114 + 90 + 99 + 72 = 375.\n" +
+      "D: NO - East, South and West each completed exactly 90% of scheduled trips, not more than 90%.\n" +
+      "E: NO - North and East late trips total 9 + 12 = 21, while South and West total 6 + 8 = 14.",
+  },
+
+  // --- Inference Yes/No small set 56 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Fridge Alarms",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A pharmacy fitted temperature alarms to medicine fridges after staff found two overnight readings outside the permitted range. The alarms sent a message to the duty phone only if a fridge stayed outside range for more than ten minutes, and manual temperature logs continued. During the first two months, out-of-range periods were identified sooner, but the amount of medicine discarded was unchanged. The pharmacy said the trial did not measure patient outcomes.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-fridgealarms-inf-78-a",
+        text: "The alarms were fitted after staff found overnight temperature readings outside the permitted range.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-fridgealarms-inf-78-b",
+        text: "The alarms sent a message whenever a fridge was outside range for any length of time.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-fridgealarms-inf-78-c",
+        text: "Manual temperature logs continued after the alarms were fitted.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-fridgealarms-inf-78-d",
+        text: "The amount of medicine discarded fell during the first two months.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-fridgealarms-inf-78-e",
+        text: "The trial measured patient outcomes.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Staff found two overnight readings outside the permitted range before the alarms were fitted.\n" +
+      "B: NO - Messages were sent only if a fridge stayed outside range for more than ten minutes.\n" +
+      "C: YES - Manual temperature logs continued.\n" +
+      "D: NO - The amount of medicine discarded was unchanged.\n" +
+      "E: NO - The pharmacy said patient outcomes were not measured.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Medicine Queries",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The line chart below shows the number of calls to a medicines advice helpline over five weekdays.",
+    ],
+    visual: {
+      type: "line",
+      title: "Medicines advice helpline calls",
+      yLabel: "Calls",
+      points: [
+        { label: "Mon", value: 42 },
+        { label: "Tue", value: 36 },
+        { label: "Wed", value: 48 },
+        { label: "Thu", value: 40 },
+        { label: "Fri", value: 44 },
+      ],
+      max: 55,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-medicinequeries-inf-78-a",
+        text: "The highest number of calls was recorded on Wednesday.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-medicinequeries-inf-78-b",
+        text: "The number of calls decreased every day from Monday to Friday.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-medicinequeries-inf-78-c",
+        text: "Tuesday and Thursday together had exactly 76 calls.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-medicinequeries-inf-78-d",
+        text: "The mean number of calls across the five weekdays was exactly 42.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-medicinequeries-inf-78-e",
+        text: "Friday had 10 more calls than Tuesday.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Wednesday had 48 calls, the highest value shown.\n" +
+      "B: NO - Calls rose from Tuesday (36) to Wednesday (48), and from Thursday (40) to Friday (44).\n" +
+      "C: YES - Tuesday + Thursday = 36 + 40 = 76.\n" +
+      "D: YES - Mean = (42 + 36 + 48 + 40 + 44) / 5 = 210 / 5 = 42.\n" +
+      "E: NO - Friday had 44 calls and Tuesday had 36, a difference of 8, not 10.",
+  },
+
+  // --- Inference Yes/No small set 57 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Waiting List Updates",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A physiotherapy service introduced online waiting-list updates after patients complained that they could not tell whether their referrals had been received. The updates showed referral receipt and the estimated month of assessment, but not clinical priority. Urgent referrals continued to be handled by telephone. During the first month, status-check calls fell, but the average wait for assessment was unchanged. The service said the trial did not assess treatment outcomes.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-waitingupdates-inf-79-a",
+        text: "The updates were introduced after patients complained about not knowing whether referrals had been received.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-waitingupdates-inf-79-b",
+        text: "The online updates showed each patient's clinical priority.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-waitingupdates-inf-79-c",
+        text: "Urgent referrals continued to be handled by telephone.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-waitingupdates-inf-79-d",
+        text: "The average wait for assessment shortened during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-waitingupdates-inf-79-e",
+        text: "The trial assessed treatment outcomes.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Patients complained that they could not tell whether referrals had been received.\n" +
+      "B: NO - The updates did not show clinical priority.\n" +
+      "C: YES - Urgent referrals continued to be handled by telephone.\n" +
+      "D: NO - The average wait for assessment was unchanged.\n" +
+      "E: NO - The service said treatment outcomes were not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Interpreter Bookings",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The table below shows interpreter booking data for four services in one month.",
+    ],
+    visual: {
+      type: "table",
+      title: "Monthly interpreter bookings",
+      headers: ["Service", "Requests", "Interpreters Booked", "Unfilled Requests", "Languages Covered"],
+      rows: [
+        ["GP", "90", "81", "6", "12"],
+        ["Dental", "60", "48", "8", "9"],
+        ["Maternity", "80", "72", "4", "14"],
+        ["Eye", "50", "35", "10", "8"],
+      ],
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-interpreterbookings-inf-79-a",
+        text: "Maternity had fewer unfilled interpreter requests than GP.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-interpreterbookings-inf-79-b",
+        text: "Eye had the lowest interpreter booking rate.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-interpreterbookings-inf-79-c",
+        text: "Across all four services, exactly 236 interpreters were booked.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-interpreterbookings-inf-79-d",
+        text: "Every service booked interpreters for at least 80% of requests.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-interpreterbookings-inf-79-e",
+        text: "Dental and Eye together had fewer unfilled requests than GP and Maternity together.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Maternity had 4 unfilled requests, fewer than GP's 6.\n" +
+      "B: YES - Booking rates are GP 81/90 = 90%, Dental 48/60 = 80%, Maternity 72/80 = 90%, and Eye 35/50 = 70%; Eye is lowest.\n" +
+      "C: YES - Interpreters booked total 81 + 48 + 72 + 35 = 236.\n" +
+      "D: NO - Eye booked interpreters for 35/50 = 70% of requests, below 80%.\n" +
+      "E: NO - Dental and Eye unfilled requests total 8 + 10 = 18, while GP and Maternity total 6 + 4 = 10.",
+  },
+
+  // --- Inference Yes/No small set 58 ---
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Staff Lanyards",
+    tags: ["text-stem", "inference-question", "medium"],
+    stimulus: [
+      "A hospital introduced colour-coded staff lanyards in outpatient clinics after patients said it was difficult to identify who could answer clinical questions. The lanyards were introduced only for outpatient clinic staff, and ward staff uniforms were unchanged. During the first month, direction requests to nurses fell, but formal complaints about communication were unchanged. The hospital said the trial did not assess whether treatment started sooner.",
+    ],
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-lanyards-inf-80-a",
+        text: "The lanyards were introduced after patients reported difficulty identifying staff roles.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lanyards-inf-80-b",
+        text: "Ward staff uniforms changed as part of the lanyard trial.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lanyards-inf-80-c",
+        text: "Direction requests to nurses fell during the first month.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-lanyards-inf-80-d",
+        text: "Formal complaints about communication fell during the first month.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-lanyards-inf-80-e",
+        text: "The trial assessed whether treatment started sooner.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Patients said it was difficult to identify who could answer clinical questions.\n" +
+      "B: NO - Ward staff uniforms were unchanged.\n" +
+      "C: YES - Direction requests to nurses fell during the first month.\n" +
+      "D: NO - Formal complaints about communication were unchanged.\n" +
+      "E: NO - The hospital said treatment start time was not assessed.",
+  },
+
+  {
+    kind: "yes-no",
+    subtype: "dm-yes-no",
+    leftTitle: "Tablet Loans",
+    tags: ["data-display", "set-based", "inference-question", "medium", "time-consuming"],
+    stimulus: [
+      "The grouped bar chart below shows tablet computers issued and returned at four loan points in one week.",
+    ],
+    visual: {
+      type: "grouped-bar",
+      title: "Weekly tablet computer loans",
+      yLabel: "Tablets",
+      seriesLabels: ["Issued", "Returned"],
+      groups: [
+        { label: "Ward", values: [36, 34] },
+        { label: "Clinic", values: [30, 27] },
+        { label: "Therapy", values: [24, 20] },
+        { label: "Library", values: [40, 36] },
+      ],
+      max: 45,
+    },
+    question:
+      "For each of the following statements, select 'Yes' if it follows from the information given, or 'No' if it does not.",
+    instruction: "Select Yes or No for each statement.",
+    yesNoStatements: [
+      {
+        id: "dm-yn-tabletloans-inf-80-a",
+        text: "Library issued the highest number of tablets.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-tabletloans-inf-80-b",
+        text: "Ward had a higher return rate than Clinic.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-tabletloans-inf-80-c",
+        text: "Therapy and Clinic together returned exactly 47 tablets.",
+        answer: "Yes",
+      },
+      {
+        id: "dm-yn-tabletloans-inf-80-d",
+        text: "Across the four loan points, fewer than 115 tablets were issued.",
+        answer: "No",
+      },
+      {
+        id: "dm-yn-tabletloans-inf-80-e",
+        text: "Every loan point returned at least 90% of tablets issued.",
+        answer: "No",
+      },
+    ],
+    explanation:
+      "A: YES - Library issued 40 tablets, the highest value shown.\n" +
+      "B: YES - Ward returned 34/36 = 94.4% of issued tablets, while Clinic returned 27/30 = 90%.\n" +
+      "C: YES - Therapy and Clinic returned 20 + 27 = 47 tablets.\n" +
+      "D: NO - Total tablets issued = 36 + 30 + 24 + 40 = 130, which is not fewer than 115.\n" +
+      "E: NO - Therapy returned 20/24 = 83.3%, below 90%.",
+  },
+
   // ===== PASTE NEW DM QUESTIONS ABOVE THIS LINE =====
 ];
 
@@ -43880,30 +50025,669 @@ type PlainSyllogismDraft = {
   }>;
 };
 
-const PLAIN_SYLLOGISM_NOUNS = [
-  "cards",
-  "tickets",
-  "tokens",
-  "badges",
-  "boxes",
-  "buttons",
-  "tiles",
-  "folders",
-  "keys",
-  "cups",
-  "stickers",
-  "labels",
-  "flags",
-  "bands",
-  "passes",
-  "mats",
-  "books",
-  "maps",
-  "bags",
-  "coins",
-  "tags",
-  "notes",
-  "discs",
+type PlainSyllogismTheme = {
+  subject: string;
+  modifiers: [string, string, string, string, string, string, ...string[]];
+};
+
+const PLAIN_SYLLOGISM_THEMES: PlainSyllogismTheme[] = [
+  {
+    subject: "library books",
+    modifiers: [
+      "with blue spine dots",
+      "on the reserve shelf",
+      "borrowed by school groups",
+      "waiting for repair",
+      "listed in the reading challenge",
+      "sent to mobile branches",
+      "with missing dust jackets",
+      "kept behind the enquiry desk",
+      "requested online",
+      "printed in large type",
+    ],
+  },
+  {
+    subject: "market stalls",
+    modifiers: [
+      "selling hot food",
+      "using reusable crates",
+      "open after 4 pm",
+      "listed on the weekend map",
+      "sharing a card reader",
+      "under the glass roof",
+      "offering vegetarian portions",
+      "beside the north gate",
+      "using numbered queue signs",
+      "with chilled display cabinets",
+    ],
+  },
+  {
+    subject: "clinic appointments",
+    modifiers: [
+      "booked before noon",
+      "marked as routine reviews",
+      "held in room three",
+      "needing a consent form",
+      "arranged by reception",
+      "with follow-up calls",
+      "listed on the tablet screen",
+      "using colour-coded letters",
+      "scheduled for new patients",
+      "requiring a printed leaflet",
+    ],
+  },
+  {
+    subject: "museum objects",
+    modifiers: [
+      "displayed in glass cases",
+      "included in school tours",
+      "shown on audio guides",
+      "waiting for conservation",
+      "found near the river",
+      "marked with red labels",
+      "handled by volunteers",
+      "pictured on activity cards",
+      "loaned from private collections",
+      "kept in the archive room",
+    ],
+  },
+  {
+    subject: "bakery orders",
+    modifiers: [
+      "collected before breakfast",
+      "packed in window boxes",
+      "containing nut-free cakes",
+      "placed through the website",
+      "paid for in advance",
+      "with handwritten labels",
+      "waiting in the chilled cabinet",
+      "sent to office meetings",
+      "using reusable trays",
+      "ready after 3 pm",
+    ],
+  },
+  {
+    subject: "bus routes",
+    modifiers: [
+      "stopping outside the hospital",
+      "shown on live screens",
+      "diverted on market days",
+      "served by electric buses",
+      "leaving from bay four",
+      "printed on paper timetables",
+      "running after midnight",
+      "passing the college gates",
+      "using contactless payment",
+      "listed on the shelter map",
+    ],
+  },
+  {
+    subject: "lab samples",
+    modifiers: [
+      "stored in the cold room",
+      "marked with orange stickers",
+      "collected before 9 am",
+      "needing duplicate labels",
+      "logged by the night team",
+      "sent for external testing",
+      "kept in sealed tubes",
+      "taken from control batches",
+      "waiting for microscope review",
+      "listed on the safety sheet",
+    ],
+  },
+  {
+    subject: "charity donations",
+    modifiers: [
+      "sorted into clothing bins",
+      "left during opening hours",
+      "tagged for window display",
+      "needing electrical checks",
+      "packed in clear bags",
+      "collected by van drivers",
+      "listed on gift-aid forms",
+      "kept behind the till",
+      "priced by volunteers",
+      "sent to the warehouse",
+    ],
+  },
+  {
+    subject: "school trips",
+    modifiers: [
+      "leaving before registration",
+      "using coach bay passes",
+      "needing packed lunches",
+      "listed on parent letters",
+      "visiting the science museum",
+      "with first-aid bags",
+      "approved by the headteacher",
+      "returning after 5 pm",
+      "using numbered wristbands",
+      "staffed by trainee teachers",
+    ],
+  },
+  {
+    subject: "garden tools",
+    modifiers: [
+      "kept in the shared shed",
+      "marked with green tape",
+      "used for pruning",
+      "borrowed on Saturdays",
+      "waiting to be sharpened",
+      "listed on the sign-out board",
+      "returned with muddy handles",
+      "stored beside the compost bays",
+      "reserved by plot holders",
+      "bought with grant money",
+    ],
+  },
+  {
+    subject: "theatre props",
+    modifiers: [
+      "needed in scene two",
+      "stored in labelled boxes",
+      "checked before rehearsals",
+      "made from painted plastic",
+      "carried by stage assistants",
+      "listed on cue sheets",
+      "kept on the left table",
+      "used in weekend matinees",
+      "waiting for small repairs",
+      "borrowed from another venue",
+    ],
+  },
+  {
+    subject: "parcel lockers",
+    modifiers: [
+      "near the station entrance",
+      "opened with text codes",
+      "reserved before noon",
+      "used for chilled parcels",
+      "checked by depot staff",
+      "shown on collection emails",
+      "assigned to local shops",
+      "waiting for courier pickup",
+      "marked as oversized",
+      "available after 6 pm",
+    ],
+  },
+  {
+    subject: "sports kits",
+    modifiers: [
+      "kept in blue crates",
+      "issued to away teams",
+      "washed after matches",
+      "missing spare socks",
+      "labelled by age group",
+      "stored beside the changing rooms",
+      "used for cup fixtures",
+      "returned by coaches",
+      "checked on Friday evenings",
+      "sponsored by local firms",
+    ],
+  },
+  {
+    subject: "cafe tables",
+    modifiers: [
+      "reserved for prams",
+      "beside the window",
+      "using numbered flags",
+      "cleared before lunch",
+      "listed on the booking sheet",
+      "set for four people",
+      "near the quiet corner",
+      "used by laptop customers",
+      "waiting for high chairs",
+      "included in the evening layout",
+    ],
+  },
+  {
+    subject: "festival wristbands",
+    modifiers: [
+      "valid for Saturday entry",
+      "collected at the east gate",
+      "marked for camping access",
+      "issued to volunteers",
+      "linked to workshop bookings",
+      "printed with silver stars",
+      "checked at food stalls",
+      "used for author signings",
+      "kept in sealed envelopes",
+      "replaced at the help desk",
+    ],
+  },
+  {
+    subject: "archive photos",
+    modifiers: [
+      "donated by local families",
+      "showing railway workers",
+      "stored in acid-free sleeves",
+      "waiting for digital scans",
+      "captioned by volunteers",
+      "listed in the town index",
+      "marked for exhibition use",
+      "kept in cabinet four",
+      "requested by researchers",
+      "missing date information",
+    ],
+  },
+  {
+    subject: "community hall keys",
+    modifiers: [
+      "signed out by hirers",
+      "kept in the wall safe",
+      "used for kitchen access",
+      "returned after weekend events",
+      "labelled with room numbers",
+      "held by committee members",
+      "listed on the key register",
+      "needed for projector cupboards",
+      "collected from reception",
+      "replaced after lock changes",
+    ],
+  },
+  {
+    subject: "student laptops",
+    modifiers: [
+      "borrowed from lockers",
+      "returned after four hours",
+      "missing power adapters",
+      "used in design classes",
+      "booked through the library",
+      "marked with asset stickers",
+      "running exam software",
+      "kept on the charging shelf",
+      "issued to first-year students",
+      "checked by technicians",
+    ],
+  },
+  {
+    subject: "recipe cards",
+    modifiers: [
+      "used in cooking classes",
+      "printed in large type",
+      "showing vegetarian meals",
+      "laminated for reuse",
+      "kept beside the sinks",
+      "translated into Polish",
+      "listing allergy warnings",
+      "collected after sessions",
+      "written for beginners",
+      "stored in yellow folders",
+    ],
+  },
+  {
+    subject: "rail tickets",
+    modifiers: [
+      "bought from station kiosks",
+      "valid after 6 pm",
+      "printed with seat numbers",
+      "collected through apps",
+      "used on branch-line trains",
+      "marked for bicycle spaces",
+      "refunded at ticket offices",
+      "issued with railcards",
+      "checked at platform gates",
+      "booked as group fares",
+    ],
+  },
+  {
+    subject: "swimming lesson cards",
+    modifiers: [
+      "kept at reception",
+      "showing safe-entry skills",
+      "signed by instructors",
+      "used by beginner groups",
+      "checked after Saturday classes",
+      "stored in waterproof folders",
+      "marked for deep-water practice",
+      "given to parents",
+      "updated during assessments",
+      "printed with lane numbers",
+    ],
+  },
+  {
+    subject: "repair forms",
+    modifiers: [
+      "filed by the workshop",
+      "marked urgent",
+      "sent with broken chairs",
+      "signed by caretakers",
+      "listing missing screws",
+      "submitted before noon",
+      "kept in red trays",
+      "used for outdoor benches",
+      "checked by contractors",
+      "closed after payment",
+    ],
+  },
+  {
+    subject: "walking maps",
+    modifiers: [
+      "showing riverside paths",
+      "printed for visitors",
+      "marked with bench numbers",
+      "kept at the information stand",
+      "updated after bridge repairs",
+      "used by school groups",
+      "folded into pocket guides",
+      "showing step-free routes",
+      "given out on Sundays",
+      "stored in council offices",
+    ],
+  },
+  {
+    subject: "uniform items",
+    modifiers: [
+      "sorted by size",
+      "donated to the exchange",
+      "labelled with orange tags",
+      "needed by Year 7 pupils",
+      "washed before display",
+      "listed on request forms",
+      "kept in clear boxes",
+      "collected by families",
+      "missing school badges",
+      "set aside for repairs",
+    ],
+  },
+  {
+    subject: "blood pressure slips",
+    modifiers: [
+      "printed by self-check machines",
+      "placed in review folders",
+      "showing morning readings",
+      "marked for pharmacist calls",
+      "kept near consultation rooms",
+      "brought to GP appointments",
+      "stored with consent forms",
+      "checked by practice nurses",
+      "missing patient initials",
+      "used for routine checks",
+    ],
+  },
+  {
+    subject: "bike repair stands",
+    modifiers: [
+      "installed outside libraries",
+      "fitted with tyre pumps",
+      "checked on Mondays",
+      "used by cycling societies",
+      "listed on campus maps",
+      "missing small tools",
+      "placed near covered parking",
+      "funded by travel grants",
+      "reported through maintenance forms",
+      "available after dark",
+    ],
+  },
+  {
+    subject: "meal trays",
+    modifiers: [
+      "with blue covers",
+      "sent to surgical wards",
+      "marked for low-salt diets",
+      "checked by ward assistants",
+      "waiting in heated trolleys",
+      "listed on diet sheets",
+      "returned after lunch",
+      "missing printed tickets",
+      "prepared before noon",
+      "used for vegetarian meals",
+    ],
+  },
+  {
+    subject: "course folders",
+    modifiers: [
+      "issued to new students",
+      "containing workshop timetables",
+      "marked with purple tabs",
+      "kept by tutors",
+      "submitted after induction",
+      "missing assessment sheets",
+      "stored in the admin office",
+      "used for evening classes",
+      "printed in large type",
+      "checked before enrolment",
+    ],
+  },
+  {
+    subject: "dog-waste bins",
+    modifiers: [
+      "shown on park maps",
+      "near the main gate",
+      "emptied on Mondays",
+      "marked for general litter",
+      "reported by rangers",
+      "installed beside footpaths",
+      "listed on council webpages",
+      "damaged after storms",
+      "used in weekend patrol areas",
+      "painted dark green",
+    ],
+  },
+  {
+    subject: "music scores",
+    modifiers: [
+      "kept in rehearsal folders",
+      "marked for alto parts",
+      "borrowed by choir members",
+      "printed on cream paper",
+      "returned after concerts",
+      "missing page numbers",
+      "filed by composer",
+      "used in evening rehearsals",
+      "stored beside the piano",
+      "checked by conductors",
+    ],
+  },
+  {
+    subject: "car-park permits",
+    modifiers: [
+      "valid for blue bays",
+      "issued to clinic patients",
+      "printed with expiry times",
+      "collected from reception",
+      "used during infusion appointments",
+      "returned to security",
+      "kept in envelope folders",
+      "marked for visitor spaces",
+      "requested online",
+      "checked at exit barriers",
+    ],
+  },
+  {
+    subject: "plant pots",
+    modifiers: [
+      "labelled with seed dates",
+      "kept in the greenhouse",
+      "watered by volunteers",
+      "showing tomato seedlings",
+      "moved to outdoor benches",
+      "marked with white sticks",
+      "used in school sessions",
+      "waiting for compost",
+      "listed on the planting rota",
+      "damaged by frost",
+    ],
+  },
+  {
+    subject: "visitor badges",
+    modifiers: [
+      "issued at the main desk",
+      "marked for morning entry",
+      "used by named carers",
+      "returned after visits",
+      "printed with ward numbers",
+      "kept in plastic sleeves",
+      "checked during mealtimes",
+      "requested by contractors",
+      "stored in reception drawers",
+      "collected by volunteers",
+    ],
+  },
+  {
+    subject: "workshop bookings",
+    modifiers: [
+      "made through the website",
+      "confirmed by email",
+      "needing payment in advance",
+      "held in the upstairs room",
+      "listed on tutor sheets",
+      "cancelled after reminders",
+      "reserved for beginners",
+      "using shared toolkits",
+      "scheduled after 6 pm",
+      "checked by reception",
+    ],
+  },
+  {
+    subject: "blood test envelopes",
+    modifiers: [
+      "marked for nurse calls",
+      "kept in the results tray",
+      "showing test dates",
+      "sent from routine clinics",
+      "checked by duty doctors",
+      "missing patient initials",
+      "filed before lunchtime",
+      "using green stickers",
+      "listed on reception logs",
+      "returned after review",
+    ],
+  },
+  {
+    subject: "climbing route cards",
+    modifiers: [
+      "showing difficulty bands",
+      "fixed below red holds",
+      "written by route setters",
+      "changed this month",
+      "used by beginner groups",
+      "checked during safety walks",
+      "marked with setter initials",
+      "kept near the bouldering wall",
+      "damaged during busy sessions",
+      "listed on the centre board",
+    ],
+  },
+  {
+    subject: "lost-property bags",
+    modifiers: [
+      "tagged with route numbers",
+      "stored in depot cupboards",
+      "containing travel cards",
+      "claimed by passengers",
+      "found after school runs",
+      "photographed by staff",
+      "listed in the daily log",
+      "kept for three weeks",
+      "marked with collection dates",
+      "moved to the front desk",
+    ],
+  },
+  {
+    subject: "homework club desks",
+    modifiers: [
+      "marked with number cards",
+      "reserved after school",
+      "used by unbooked pupils",
+      "near charging sockets",
+      "checked by volunteers",
+      "cleared before closing",
+      "listed on the door sheet",
+      "set aside for group work",
+      "missing chair labels",
+      "used during exam week",
+    ],
+  },
+  {
+    subject: "exercise bands",
+    modifiers: [
+      "packed in discharge bags",
+      "marked as light resistance",
+      "issued by physiotherapists",
+      "listed on exercise sheets",
+      "kept in ward cupboards",
+      "returned after classes",
+      "used for shoulder exercises",
+      "shown on QR videos",
+      "checked by assistants",
+      "missing colour labels",
+    ],
+  },
+  {
+    subject: "photo consent forms",
+    modifiers: [
+      "signed by parents",
+      "stored in trip folders",
+      "marked for website use",
+      "checked before assemblies",
+      "missing class names",
+      "sent with newsletters",
+      "kept in the office safe",
+      "used for sports day",
+      "listed on teacher spreadsheets",
+      "returned after reminders",
+    ],
+  },
+  {
+    subject: "refill jars",
+    modifiers: [
+      "filled with grains",
+      "using silver scoops",
+      "marked with allergen notes",
+      "weighed at the counter",
+      "cleaned after closing",
+      "listed on stock sheets",
+      "kept near dried fruit",
+      "missing scoop labels",
+      "used by regular members",
+      "sealed during deliveries",
+    ],
+  },
+  {
+    subject: "book festival seats",
+    modifiers: [
+      "reserved for panel talks",
+      "near the signing queue",
+      "marked as step-free",
+      "held for school groups",
+      "listed on booking emails",
+      "released after noon",
+      "checked by ushers",
+      "printed on weekend passes",
+      "beside the main aisle",
+      "kept for late arrivals",
+    ],
+  },
+];
+
+const PLAIN_SYLLOGISM_CONTEXTS = [
+  "from the Abbey branch",
+  "from the Riverside site",
+  "from the Northgate list",
+  "from the Orchard session",
+  "from the Market Street desk",
+  "from the Hillview rota",
+  "from the Station Road batch",
+  "from the Lakeside office",
+  "from the Beacon trial",
+  "from the Elm Park register",
+  "from the Westfield cabinet",
+  "from the Harbour room",
+  "from the Green Lane folder",
+  "from the Meadow House schedule",
+  "from the Castle Yard shelf",
+  "from the Oak Street collection",
+  "from the Bridge Hall list",
+  "from the Mill Road store",
+  "from the Southwell timetable",
+  "from the Parkside counter",
+  "from the Brookfield box",
+  "from the Cedar House log",
+  "from the Queensway file",
+  "from the Eastgate trolley",
 ];
 
 function plainSyllogismTags(
@@ -43921,14 +50705,21 @@ function plainSyllogismTags(
 }
 
 function plainSyllogismTerms(index: number, variantIndex: number) {
-  const noun =
-    PLAIN_SYLLOGISM_NOUNS[
-      (index * 11 + variantIndex * 3) % PLAIN_SYLLOGISM_NOUNS.length
+  const theme =
+    PLAIN_SYLLOGISM_THEMES[
+      (index * 13 + variantIndex * 7) % PLAIN_SYLLOGISM_THEMES.length
     ];
-  const baseGroup = index * 6 + 1;
+  const context =
+    PLAIN_SYLLOGISM_CONTEXTS[
+      Math.floor(index / PLAIN_SYLLOGISM_THEMES.length) %
+        PLAIN_SYLLOGISM_CONTEXTS.length
+    ];
+  const offset =
+    Math.floor(index / PLAIN_SYLLOGISM_THEMES.length) + variantIndex * 2;
 
   return Array.from({ length: 6 }, (_unused, slot) => {
-    return `group ${baseGroup + slot} ${noun}`;
+    const modifier = theme.modifiers[(slot + offset) % theme.modifiers.length];
+    return `${theme.subject} ${modifier} ${context}`;
   });
 }
 

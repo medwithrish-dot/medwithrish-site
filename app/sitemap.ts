@@ -18,6 +18,7 @@ const publicRoutes: Array<{
   { path: "/ucat-mock-difficulty", changeFrequency: "weekly", priority: 0.85 },
   { path: "/ucat-score-tracker", changeFrequency: "monthly", priority: 0.85 },
   { path: "/ucat-timeline", changeFrequency: "monthly", priority: 0.85 },
+  { path: "/interviews", changeFrequency: "monthly", priority: 0.85 },
   { path: "/resources", changeFrequency: "monthly", priority: 0.8 },
   { path: "/about", changeFrequency: "monthly", priority: 0.75 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.7 },

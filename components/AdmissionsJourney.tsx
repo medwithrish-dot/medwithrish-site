@@ -113,6 +113,11 @@ const stages = [
       "Strong interview preparation helps students communicate clearly, think ethically, and perform confidently under pressure. Medicine/dentistry interviews are a hurdle students are unfamiliar with and often fail at. It is highly important to prepare carefully and invest a lot of time into practice. Interviews test communication, personality and critical thinking generally. Fortunately, we've prepared a FREE medicine interviews guide that has helped 300+ students. Click below for more!",
     buttons: [
       {
+        label: "Click here for the interview prep hub",
+        href: "/interviews",
+        variant: "primary",
+      },
+      {
         label: "Click here for the FREE medicine interviews guide",
         href: "https://payhip.com/Medwithrish",
         variant: "secondary",
