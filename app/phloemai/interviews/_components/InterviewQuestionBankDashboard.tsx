@@ -164,7 +164,7 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
     <Link
       href={category.href}
       aria-label={`Open ${category.title} interview questions`}
-      className="group relative flex min-h-[184px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
+      className="group relative flex h-[236px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
       style={{
         background: `linear-gradient(135deg, ${category.tint} 0%, rgba(255,255,255,0.92) 54%, #ffffff 100%)`,
       }}
@@ -221,7 +221,7 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
         </span>
       </div>
 
-      <div className="mt-[22px]">
+      <div className="mt-auto pt-4">
         <div className="flex items-baseline justify-between gap-3">
           <p className="text-sm font-semibold text-[#526976]">
             {category.total} questions
@@ -392,7 +392,7 @@ export function InterviewQuestionBankDashboard({
               )}
             </div>
 
-            <section className="mt-3 grid items-start gap-[18px] md:grid-cols-2 xl:grid-cols-4">
+            <section className="mt-3 grid gap-[18px] md:grid-cols-2 xl:grid-cols-4">
               {filteredCategories.map((category) => (
                 <CategoryCard key={category.title} category={category} />
               ))}
