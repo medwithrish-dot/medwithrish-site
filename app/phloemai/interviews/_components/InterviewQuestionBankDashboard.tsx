@@ -5,20 +5,20 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
-  BarChart3,
+  ChartNoAxesColumnIncreasing,
   CheckCircle2,
   Clock,
+  Drama,
   FileText,
   Flame,
   Grid3X3,
-  MessageCircle,
+  HeartHandshake,
+  MessagesSquare,
   Scale,
   Search,
-  ShieldCheck,
   Shuffle,
-  User,
-  Users,
-  Zap,
+  Sparkles,
+  Stethoscope,
 } from "lucide-react";
 import { InterviewAccountControls } from "../InterviewAccountControls";
 import { InterviewSidebar } from "./InterviewSidebar";
@@ -47,7 +47,7 @@ const categories = [
     description: "Work experience / resilience / motivation",
     completed: 48,
     total: 150,
-    icon: User,
+    icon: HeartHandshake,
     colour: "#0f9b7d",
     tint: "#f4fbf8",
     iconTint: "#e2f5ef",
@@ -58,7 +58,7 @@ const categories = [
     description: "Teamwork / conflict / leadership",
     completed: 50,
     total: 180,
-    icon: Users,
+    icon: MessagesSquare,
     colour: "#2477ef",
     tint: "#f5f9ff",
     iconTint: "#e6f0ff",
@@ -80,7 +80,7 @@ const categories = [
     description: "NHS structure / policy / priorities",
     completed: 61,
     total: 160,
-    icon: ShieldCheck,
+    icon: Stethoscope,
     colour: "#0f9b61",
     tint: "#f5fbf7",
     iconTint: "#e2f5ea",
@@ -102,7 +102,7 @@ const categories = [
     description: "Graphs / statistics / evidence",
     completed: 32,
     total: 120,
-    icon: BarChart3,
+    icon: ChartNoAxesColumnIncreasing,
     colour: "#169dad",
     tint: "#f4fbfc",
     iconTint: "#e3f5f8",
@@ -113,7 +113,7 @@ const categories = [
     description: "Scenarios / empathy / stations",
     completed: 24,
     total: 100,
-    icon: MessageCircle,
+    icon: Drama,
     colour: "#e9487f",
     tint: "#fff6f9",
     iconTint: "#ffe6ef",
@@ -124,7 +124,7 @@ const categories = [
     description: "Unexpected questions / rapid fire",
     completed: 16,
     total: 80,
-    icon: Zap,
+    icon: Sparkles,
     colour: "#f59e0b",
     tint: "#fffbf2",
     iconTint: "#fff1ce",
@@ -140,8 +140,8 @@ function getPercent(completed: number, total: number) {
 function SummaryStat({ label, value, icon: Icon }: SummaryStatItem) {
   return (
     <div className="grid min-w-0 grid-cols-[40px_minmax(0,1fr)] items-center gap-3">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#eef5f5] text-[#08787b]">
-        <Icon className="h-5 w-5" aria-hidden="true" />
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#08787b] shadow-sm ring-1 ring-[#d8e7e7]">
+        <Icon className="h-5 w-5" strokeWidth={2.35} aria-hidden="true" />
       </span>
       <span className="min-w-0">
         <span className="block truncate text-base font-black text-[#071923]">
@@ -177,13 +177,29 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
 
       <div className="grid grid-cols-[56px_minmax(0,1fr)_32px] items-start gap-[18px]">
         <div
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
+          className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl text-white ring-1 ring-white/70 transition-transform duration-200 group-hover:scale-[1.04]"
           style={{
-            backgroundColor: category.iconTint,
-            color: category.colour,
+            background: `linear-gradient(135deg, ${category.colour} 0%, ${category.colour} 72%, #071923 150%)`,
+            boxShadow: `0 14px 24px ${category.colour}26`,
           }}
         >
-          <Icon className="h-7 w-7" aria-hidden="true" />
+          <span
+            className="absolute -right-3 -top-3 h-9 w-9 rounded-full bg-white/25"
+            aria-hidden="true"
+          />
+          <span
+            className="absolute -bottom-4 -left-4 h-11 w-11 rounded-full bg-white/10"
+            aria-hidden="true"
+          />
+          <span
+            className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/25"
+            aria-hidden="true"
+          />
+          <Icon
+            className="relative h-7 w-7 drop-shadow-[0_1px_1px_rgba(0,0,0,0.16)]"
+            strokeWidth={2.35}
+            aria-hidden="true"
+          />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-base font-black leading-6 text-[#071923]">
@@ -194,10 +210,14 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
           </p>
         </div>
         <span
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#5d707a] transition-colors group-hover:bg-white/75 group-hover:text-[#08787b]"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm ring-1 ring-white/65 transition-transform group-hover:translate-x-0.5"
+          style={{
+            backgroundColor: category.iconTint,
+            color: category.colour,
+          }}
           aria-hidden="true"
         >
-          <ArrowRight className="h-5 w-5" />
+          <ArrowRight className="h-[18px] w-[18px]" strokeWidth={2.45} />
         </span>
       </div>
 
