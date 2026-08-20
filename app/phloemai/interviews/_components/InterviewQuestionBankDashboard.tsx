@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
   BarChart3,
@@ -22,139 +23,139 @@ import {
 import { InterviewAccountControls } from "../InterviewAccountControls";
 import { InterviewSidebar } from "./InterviewSidebar";
 
+type InterviewQuestionCategory = {
+  title: string;
+  description: string;
+  completed: number;
+  total: number;
+  icon: LucideIcon;
+  colour: string;
+  tint: string;
+  iconTint: string;
+  href: string;
+};
+
+type SummaryStatItem = {
+  label: string;
+  value: string;
+  icon: LucideIcon;
+};
+
 const categories = [
   {
     title: "Personal & Motivation",
-    description: "Why medicine, work experience, resilience",
+    description: "Work experience / resilience / motivation",
     completed: 48,
     total: 150,
     icon: User,
     colour: "#0f9b7d",
-    bg: "bg-[#e7f7f2]",
+    tint: "#f4fbf8",
+    iconTint: "#e2f5ef",
     href: "/phloemai/interviews/stations/motivation-question",
   },
   {
     title: "Communication & Teamwork",
-    description: "Working in teams, resolving conflicts, leadership",
+    description: "Teamwork / conflict / leadership",
     completed: 50,
     total: 180,
     icon: Users,
     colour: "#2477ef",
-    bg: "bg-[#eaf2ff]",
+    tint: "#f5f9ff",
+    iconTint: "#e6f0ff",
     href: "/phloemai/interviews/stations/teamwork-group-discussion",
   },
   {
     title: "Ethics & Professionalism",
-    description: "Confidentiality, consent, values and dilemmas",
+    description: "Confidentiality / consent / dilemmas",
     completed: 55,
     total: 220,
     icon: Scale,
     colour: "#ea5a1d",
-    bg: "bg-[#fff0e7]",
+    tint: "#fff8f3",
+    iconTint: "#ffede3",
     href: "/phloemai/interviews/stations/ethics-confidentiality",
   },
   {
     title: "NHS & Healthcare",
-    description: "NHS structure, challenges, policies and priorities",
+    description: "NHS structure / policy / priorities",
     completed: 61,
     total: 160,
     icon: ShieldCheck,
     colour: "#0f9b61",
-    bg: "bg-[#e8f8ef]",
+    tint: "#f5fbf7",
+    iconTint: "#e2f5ea",
     href: "/phloemai/interviews/stations/nhs-waiting-lists",
   },
   {
     title: "Hot Topics",
-    description: "Current events, health policy, global issues",
+    description: "Current events / health policy / debate",
     completed: 60,
     total: 200,
     icon: Flame,
     colour: "#7c4dde",
-    bg: "bg-[#f1ecff]",
+    tint: "#faf7ff",
+    iconTint: "#f0eaff",
     href: "/phloemai/interviews/stations/nhs-waiting-lists",
   },
   {
     title: "Data & Analysis",
-    description: "Graphs, statistics, research evidence",
+    description: "Graphs / statistics / evidence",
     completed: 32,
     total: 120,
     icon: BarChart3,
     colour: "#169dad",
-    bg: "bg-[#e8f8fb]",
+    tint: "#f4fbfc",
+    iconTint: "#e3f5f8",
     href: "/phloemai/interviews/stations/data-analysis",
   },
   {
     title: "Role Play & MMI Tasks",
-    description: "Scenario based tasks, role plays and stations",
+    description: "Scenarios / empathy / stations",
     completed: 24,
     total: 100,
     icon: MessageCircle,
     colour: "#e9487f",
-    bg: "bg-[#ffe9f0]",
+    tint: "#fff6f9",
+    iconTint: "#ffe6ef",
     href: "/phloemai/interviews/stations/role-play-mmi-tasks",
   },
   {
     title: "Curveballs & Quick-Fire",
-    description: "Unexpected questions, rapid fire challenges",
+    description: "Unexpected questions / rapid fire",
     completed: 16,
     total: 80,
     icon: Zap,
     colour: "#f59e0b",
-    bg: "bg-[#fff4db]",
+    tint: "#fffbf2",
+    iconTint: "#fff1ce",
     href: "/phloemai/interviews/stations/curveballs-quick-fire",
   },
-] as const;
-
-function ProgressRing({ percent, colour }: { percent: number; colour: string }) {
-  return (
-    <div className="relative h-28 w-28 shrink-0">
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: `conic-gradient(${colour} 0deg ${
-            percent * 3.6
-          }deg, #e7edf0 ${percent * 3.6}deg 360deg)`,
-        }}
-      />
-      <div className="absolute inset-[10px] flex items-center justify-center rounded-full bg-white">
-        <span className="text-2xl font-black text-[#071923]">{percent}%</span>
-      </div>
-    </div>
-  );
-}
+] as const satisfies readonly InterviewQuestionCategory[];
 
 function getPercent(completed: number, total: number) {
   if (total <= 0) return 0;
   return Math.round((completed / total) * 100);
 }
 
-function MiniRing({
-  percent,
-  colour,
-}: {
-  percent: number;
-  colour: string;
-}) {
+function SummaryStat({ label, value, icon: Icon }: SummaryStatItem) {
   return (
-    <div className="relative h-12 w-12 shrink-0">
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: `conic-gradient(${colour} 0deg ${
-            percent * 3.6
-          }deg, #e7edf0 ${percent * 3.6}deg 360deg)`,
-        }}
-      />
-      <div className="absolute inset-[5px] flex items-center justify-center rounded-full bg-white">
-        <span className="text-xs font-black" style={{ color: colour }}>
-          {percent}%
+    <div className="grid min-w-0 grid-cols-[40px_minmax(0,1fr)] items-center gap-3">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#eef5f5] text-[#08787b]">
+        <Icon className="h-5 w-5" aria-hidden="true" />
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-base font-black text-[#071923]">
+          {value}
         </span>
-      </div>
+        <span className="mt-1 block truncate text-xs font-medium text-[#5d707a]">
+          {label}
+        </span>
+      </span>
     </div>
   );
 }
 
-function CategoryCard({ category }: { category: (typeof categories)[number] }) {
+function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
   const Icon = category.icon;
   const percent = getPercent(category.completed, category.total);
   const remaining = category.total - category.completed;
@@ -162,51 +163,60 @@ function CategoryCard({ category }: { category: (typeof categories)[number] }) {
   return (
     <Link
       href={category.href}
-      className="group relative min-h-[204px] overflow-hidden rounded-xl border border-[#d9e2e7] bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#159a9d] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#159a9d]/40"
+      aria-label={`Open ${category.title} interview questions`}
+      className="group relative flex min-h-[226px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-[22px] pt-6 shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
+      style={{
+        background: `linear-gradient(135deg, ${category.tint} 0%, rgba(255,255,255,0.92) 54%, #ffffff 100%)`,
+      }}
     >
-      <div
-        className="absolute inset-x-0 top-0 h-1 opacity-0 transition-opacity group-hover:opacity-100"
+      <span
+        className="absolute inset-x-0 top-0 h-1"
         style={{ backgroundColor: category.colour }}
+        aria-hidden="true"
       />
 
-      <div className="grid grid-cols-[62px_minmax(0,1fr)_32px] gap-4">
+      <div className="grid grid-cols-[56px_minmax(0,1fr)_32px] items-start gap-[18px]">
         <div
-          className={`flex h-14 w-14 items-center justify-center rounded-full ${category.bg}`}
-          style={{ color: category.colour }}
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
+          style={{
+            backgroundColor: category.iconTint,
+            color: category.colour,
+          }}
         >
-          <Icon className="h-8 w-8" aria-hidden="true" />
+          <Icon className="h-7 w-7" aria-hidden="true" />
         </div>
-        <div className="min-w-0">
-          <h2 className="text-sm font-black text-[#071923]">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-base font-black leading-6 text-[#071923]">
             {category.title}
           </h2>
-          <p className="mt-2 min-h-10 text-xs font-medium leading-5 text-[#314956]">
+          <p className="mt-3 text-sm font-medium leading-6 text-[#4f6470]">
             {category.description}
           </p>
         </div>
         <span
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f1f6f8] text-[#4a6370] transition-colors group-hover:bg-[#e3f4f2] group-hover:text-[#08787b]"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#5d707a] transition-colors group-hover:bg-white/75 group-hover:text-[#08787b]"
           aria-hidden="true"
         >
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-5 w-5" />
         </span>
       </div>
 
-      <div className="mt-6 grid grid-cols-[minmax(0,1fr)_52px] items-end gap-4">
-        <div>
-          <p
-            className="text-2xl font-black leading-none"
-            style={{ color: category.colour }}
-          >
-            {category.total}+
+      <div className="mt-auto pt-[28px]">
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="text-sm font-semibold text-[#526976]">
+            {category.total} questions
           </p>
-          <p className="mt-1 text-xs font-semibold text-[#314956]">questions</p>
+          <p
+            className="rounded-full px-2.5 py-1 text-xs font-black"
+            style={{
+              backgroundColor: category.iconTint,
+              color: category.colour,
+            }}
+          >
+            {percent}% complete
+          </p>
         </div>
-        <MiniRing percent={percent} colour={category.colour} />
-      </div>
-
-      <div className="mt-4">
-        <div className="h-1.5 overflow-hidden rounded-full bg-[#e3eaee]">
+        <div className="mt-[12px] h-1.5 overflow-hidden rounded-full bg-[#dfe8ea]">
           <div
             className="h-full rounded-full"
             style={{
@@ -215,8 +225,8 @@ function CategoryCard({ category }: { category: (typeof categories)[number] }) {
             }}
           />
         </div>
-        <p className="mt-2 text-xs font-medium text-[#314956]">
-          {category.completed} / {category.total} done - {remaining} left
+        <p className="mt-[14px] text-xs font-medium text-[#5d707a]">
+          {category.completed} done / {remaining} left
         </p>
       </div>
     </Link>
@@ -242,6 +252,12 @@ export function InterviewQuestionBankDashboard({
   );
   const overallPercent = getPercent(totals.completed, totals.total);
   const remaining = totals.total - totals.completed;
+  const summaryStats = [
+    { label: "Categories", value: String(categories.length), icon: Grid3X3 },
+    { label: "Total Questions", value: String(totals.total), icon: FileText },
+    { label: "Completed", value: String(totals.completed), icon: CheckCircle2 },
+    { label: "Remaining", value: String(remaining), icon: Clock },
+  ] satisfies readonly SummaryStatItem[];
   const normalisedQuery = query.trim().toLowerCase();
   const filteredCategories = useMemo(() => {
     if (!normalisedQuery) return categories;
@@ -283,7 +299,7 @@ export function InterviewQuestionBankDashboard({
             </header>
 
             <div className="mt-5 flex flex-col gap-3 sm:flex-row xl:justify-end">
-              <label className="flex h-12 min-w-0 items-center gap-3 rounded-lg border border-[#d4dee6] bg-white px-4 shadow-sm sm:w-[420px]">
+              <label className="flex h-12 min-w-0 items-center gap-3 rounded-lg bg-white/80 px-4 ring-1 ring-[#d8e2e6]/60 sm:w-[420px]">
                 <Search className="h-5 w-5 shrink-0 text-[#4a6370]" aria-hidden="true" />
                 <input
                   value={query}
@@ -295,61 +311,46 @@ export function InterviewQuestionBankDashboard({
               <button
                 type="button"
                 onClick={openRandomQuestion}
-                className="flex h-12 items-center justify-center gap-3 rounded-lg border border-[#159a9d] bg-white px-5 text-sm font-black text-[#08787b] shadow-sm transition-colors hover:bg-[#edf7f6]"
+                className="flex h-12 items-center justify-center gap-3 rounded-lg bg-[#edf7f6] px-5 text-sm font-black text-[#08787b] ring-1 ring-[#b9dcda]/60 transition-colors hover:bg-[#e2f2f0]"
               >
                 <Shuffle className="h-5 w-5" aria-hidden="true" />
                 Random Question
               </button>
             </div>
 
-            <section className="mt-7 rounded-xl border border-[#d9e2e7] bg-white p-6 shadow-sm">
-              <div className="grid gap-6 xl:grid-cols-[120px_minmax(260px,1fr)_1px_1.7fr] xl:items-center">
-                <ProgressRing percent={overallPercent} colour="#159a9d" />
+            <section className="mt-7 rounded-xl bg-white/80 p-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)]">
+              <div className="grid gap-[28px] xl:grid-cols-[minmax(280px,1fr)_1.4fr] xl:items-center">
                 <div>
-                  <h2 className="text-base font-black text-[#071923]">
-                    Overall Progress
-                  </h2>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <h2 className="text-base font-black text-[#071923]">
+                      Overall Progress
+                    </h2>
+                    <span className="text-2xl font-black text-[#071923]">
+                      {overallPercent}%
+                    </span>
+                  </div>
                   <p className="mt-2 text-sm font-medium text-[#314956]">
                     {totals.completed} / {totals.total} completed
                   </p>
-                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#e3eaee]">
+                  <div className="mt-[18px] h-2 overflow-hidden rounded-full bg-[#dfe8ea]">
                     <div
                       className="h-full rounded-full bg-[#159a9d]"
                       style={{ width: `${overallPercent}%` }}
                     />
                   </div>
-                  <p className="mt-3 text-xs font-medium text-[#314956]">
+                  <p className="mt-[14px] text-xs font-medium text-[#5d707a]">
                     {remaining} questions remaining
                   </p>
                 </div>
-                <div className="hidden h-24 w-px bg-[#d9e2e7] xl:block" />
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  {[
-                    { label: "Categories", value: String(categories.length), icon: Grid3X3 },
-                    { label: "Total Questions", value: `${totals.total}+`, icon: FileText },
-                    { label: "Completed", value: String(totals.completed), icon: CheckCircle2 },
-                    { label: "Remaining", value: String(remaining), icon: Clock },
-                  ].map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <div
-                        key={item.label}
-                        className="flex items-center gap-3 rounded-lg bg-[#f7fafb] p-3"
-                      >
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#eef5f5] text-[#08787b]">
-                          <Icon className="h-5 w-5" aria-hidden="true" />
-                        </span>
-                        <span>
-                          <span className="block text-lg font-black text-[#071923]">
-                            {item.value}
-                          </span>
-                          <span className="mt-1 block text-xs font-medium text-[#4a6370]">
-                            {item.label}
-                          </span>
-                        </span>
-                      </div>
-                    );
-                  })}
+                <div className="grid gap-[20px] sm:grid-cols-2 xl:grid-cols-4">
+                  {summaryStats.map((item) => (
+                    <SummaryStat
+                      key={item.label}
+                      label={item.label}
+                      value={item.value}
+                      icon={item.icon}
+                    />
+                  ))}
                 </div>
               </div>
             </section>
@@ -371,7 +372,7 @@ export function InterviewQuestionBankDashboard({
               )}
             </div>
 
-            <section className="mt-3 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <section className="mt-3 grid gap-[18px] md:grid-cols-2 xl:grid-cols-4">
               {filteredCategories.map((category) => (
                 <CategoryCard key={category.title} category={category} />
               ))}

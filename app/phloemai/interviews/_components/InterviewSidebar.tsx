@@ -73,7 +73,7 @@ function SidebarLink({
       href={href}
       className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
         active
-          ? "bg-[#123f3b] text-[#8be5df]"
+          ? "bg-white/[0.07] text-[#8be5df]"
           : "text-slate-300 hover:bg-[#0b3431] hover:text-white"
       }`}
     >
@@ -85,9 +85,7 @@ function SidebarLink({
 
 function LegalLinks({ className = "mt-5" }: { className?: string }) {
   return (
-    <div
-      className={`${className} rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm`}
-    >
+    <div className={`${className} rounded-xl bg-white/[0.04] p-4`}>
       <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
         Legal
       </p>
@@ -157,7 +155,7 @@ export function InterviewSidebar({
       </div>
 
       {showPremiumCard && (
-        <div className="mt-8 rounded-xl border border-white/10 bg-[#082f2c] p-4 shadow-sm">
+        <div className="mt-8 rounded-xl bg-white/[0.04] p-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f3b] text-[#8be5df]">
             <BadgeCheck className="h-6 w-6" aria-hidden="true" />
           </div>
