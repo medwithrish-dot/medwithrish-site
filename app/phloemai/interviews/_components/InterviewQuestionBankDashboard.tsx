@@ -164,7 +164,7 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
     <Link
       href={category.href}
       aria-label={`Open ${category.title} interview questions`}
-      className="group relative flex min-h-[226px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-[22px] pt-6 shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
+      className="group relative flex min-h-[184px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
       style={{
         background: `linear-gradient(135deg, ${category.tint} 0%, rgba(255,255,255,0.92) 54%, #ffffff 100%)`,
       }}
@@ -175,7 +175,7 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
         aria-hidden="true"
       />
 
-      <div className="grid grid-cols-[56px_minmax(0,1fr)_32px] items-start gap-[18px]">
+      <div className="grid grid-cols-[52px_minmax(0,1fr)_32px] items-start gap-4">
         <div
           className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl text-white ring-1 ring-white/70 transition-transform duration-200 group-hover:scale-[1.04]"
           style={{
@@ -205,7 +205,7 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
           <h2 className="text-base font-black leading-6 text-[#071923]">
             {category.title}
           </h2>
-          <p className="mt-3 text-sm font-medium leading-6 text-[#4f6470]">
+          <p className="mt-2 text-sm font-medium leading-6 text-[#4f6470]">
             {category.description}
           </p>
         </div>
@@ -221,7 +221,7 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
         </span>
       </div>
 
-      <div className="mt-auto pt-[28px]">
+      <div className="mt-[22px]">
         <div className="flex items-baseline justify-between gap-3">
           <p className="text-sm font-semibold text-[#526976]">
             {category.total} questions
@@ -245,7 +245,7 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
             }}
           />
         </div>
-        <p className="mt-[14px] text-xs font-medium text-[#5d707a]">
+        <p className="mt-[10px] text-xs font-medium text-[#5d707a]">
           {category.completed} done / {remaining} left
         </p>
       </div>
@@ -392,7 +392,7 @@ export function InterviewQuestionBankDashboard({
               )}
             </div>
 
-            <section className="mt-3 grid gap-[18px] md:grid-cols-2 xl:grid-cols-4">
+            <section className="mt-3 grid items-start gap-[18px] md:grid-cols-2 xl:grid-cols-4">
               {filteredCategories.map((category) => (
                 <CategoryCard key={category.title} category={category} />
               ))}
