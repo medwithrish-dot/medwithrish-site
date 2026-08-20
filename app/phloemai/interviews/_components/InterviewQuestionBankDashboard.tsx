@@ -26,6 +26,7 @@ import { InterviewSidebar } from "./InterviewSidebar";
 type InterviewQuestionCategory = {
   title: string;
   description: string;
+  subcategories: readonly string[];
   completed: number;
   total: number;
   icon: LucideIcon;
@@ -45,6 +46,13 @@ const categories = [
   {
     title: "Personal & Motivation",
     description: "Work experience / resilience / motivation",
+    subcategories: [
+      "Motivation for Medicine",
+      "Medical School & Course",
+      "Work Experience & Reflection",
+      "Personal Insight",
+      "Strengths, Weaknesses & Resilience",
+    ],
     completed: 48,
     total: 150,
     icon: HeartHandshake,
@@ -56,6 +64,14 @@ const categories = [
   {
     title: "Communication & Teamwork",
     description: "Teamwork / conflict / leadership",
+    subcategories: [
+      "Communication & Empathy",
+      "Teamwork",
+      "Leadership",
+      "Conflict & Difficult Conversations",
+      "Giving & Receiving Feedback",
+      "Working in Healthcare Teams",
+    ],
     completed: 50,
     total: 180,
     icon: MessagesSquare,
@@ -67,6 +83,16 @@ const categories = [
   {
     title: "Ethics & Professionalism",
     description: "Confidentiality / consent / dilemmas",
+    subcategories: [
+      "Core Medical Ethics",
+      "Consent, Capacity & Confidentiality",
+      "Safeguarding & Duty of Candour",
+      "Professionalism & Professional Boundaries",
+      "End-of-Life Care & Assisted Dying",
+      "Organ Donation & Resource Allocation",
+      "Ethical & Professional Scenarios",
+      "Situational Judgement",
+    ],
     completed: 55,
     total: 220,
     icon: Scale,
@@ -78,6 +104,14 @@ const categories = [
   {
     title: "NHS & Healthcare",
     description: "NHS structure / policy / priorities",
+    subcategories: [
+      "NHS Structure & Challenges",
+      "Role of a Doctor",
+      "Health Inequalities",
+      "Public Health",
+      "Healthcare Policy & Funding",
+      "Healthcare Resources & Priorities",
+    ],
     completed: 61,
     total: 160,
     icon: Stethoscope,
@@ -87,8 +121,16 @@ const categories = [
     href: "/phloemai/interviews/stations/nhs-waiting-lists",
   },
   {
-    title: "Hot Topics",
+    title: "Hot Topics & Current Affairs",
     description: "Current events / health policy / debate",
+    subcategories: [
+      "Current NHS Issues",
+      "Technology, AI & Digital Health",
+      "New Treatments & Innovation",
+      "Public Health Debates",
+      "Workforce Issues",
+      "Ethics in the News",
+    ],
     completed: 60,
     total: 200,
     icon: Flame,
@@ -98,8 +140,16 @@ const categories = [
     href: "/phloemai/interviews/stations/nhs-waiting-lists",
   },
   {
-    title: "Data & Analysis",
+    title: "Data, Research & Critical Thinking",
     description: "Graphs / statistics / evidence",
+    subcategories: [
+      "Data Interpretation",
+      "Graphs & Trends",
+      "Research & Evidence",
+      "Critical Appraisal",
+      "Article Analysis",
+      "Critical Thinking",
+    ],
     completed: 32,
     total: 120,
     icon: ChartNoAxesColumnIncreasing,
@@ -109,8 +159,16 @@ const categories = [
     href: "/phloemai/interviews/stations/data-analysis",
   },
   {
-    title: "Role Play & MMI Tasks",
+    title: "Practical MMI & Role Play",
     description: "Scenarios / empathy / stations",
+    subcategories: [
+      "Role Play",
+      "Communication Tasks",
+      "Group Discussion",
+      "Group Tasks",
+      "Prioritisation Stations",
+      "Data Stations",
+    ],
     completed: 24,
     total: 100,
     icon: Drama,
@@ -122,6 +180,13 @@ const categories = [
   {
     title: "Curveballs & Quick-Fire",
     description: "Unexpected questions / rapid fire",
+    subcategories: [
+      "Personal Quick-Fire",
+      "Creative Questions",
+      "Hypotheticals",
+      "Opinion Questions",
+      "Unexpected Questions",
+    ],
     completed: 16,
     total: 80,
     icon: Sparkles,
@@ -164,7 +229,7 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
     <Link
       href={category.href}
       aria-label={`Open ${category.title} interview questions`}
-      className="group relative flex h-[236px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
+      className="group relative flex h-[336px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
       style={{
         background: `linear-gradient(135deg, ${category.tint} 0%, rgba(255,255,255,0.92) 54%, #ffffff 100%)`,
       }}
@@ -205,8 +270,11 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
           <h2 className="text-base font-black leading-6 text-[#071923]">
             {category.title}
           </h2>
-          <p className="mt-2 text-sm font-medium leading-6 text-[#4f6470]">
-            {category.description}
+          <p
+            className="mt-1 text-[11px] font-black uppercase leading-4 tracking-[0.08em]"
+            style={{ color: category.colour }}
+          >
+            {category.subcategories.length} subcategories
           </p>
         </div>
         <span
@@ -220,6 +288,19 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
           <ArrowRight className="h-[18px] w-[18px]" strokeWidth={2.45} />
         </span>
       </div>
+
+      <ul className="mt-[14px] grid gap-1 text-[11px] font-medium leading-[0.95rem] text-[#405562]">
+        {category.subcategories.map((subcategory) => (
+          <li key={subcategory} className="grid grid-cols-[7px_minmax(0,1fr)] gap-2">
+            <span
+              className="mt-[0.42rem] h-1 w-1 rounded-full"
+              style={{ backgroundColor: category.colour }}
+              aria-hidden="true"
+            />
+            <span>{subcategory}</span>
+          </li>
+        ))}
+      </ul>
 
       <div className="mt-auto pt-4">
         <div className="flex items-baseline justify-between gap-3">
@@ -282,7 +363,7 @@ export function InterviewQuestionBankDashboard({
   const filteredCategories = useMemo(() => {
     if (!normalisedQuery) return categories;
     return categories.filter((category) =>
-      [category.title, category.description]
+      [category.title, category.description, ...category.subcategories]
         .join(" ")
         .toLowerCase()
         .includes(normalisedQuery)
