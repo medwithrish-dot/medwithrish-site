@@ -31,18 +31,29 @@ import {
   UsersRound,
 } from "lucide-react";
 import { InterviewAccountControls } from "../InterviewAccountControls";
+import {
+  INTERVIEW_QUESTIONS,
+  type InterviewQuestion,
+  type InterviewQuestionCategoryTitle,
+  type InterviewQuestionStatus,
+  type InterviewQuestionSubcategory,
+} from "../_data/interviewQuestionBank";
 import { InterviewSidebar } from "./InterviewSidebar";
 
 type InterviewQuestionCategory = {
-  title: string;
+  title: InterviewQuestionCategoryTitle;
   description: string;
-  subcategories: readonly string[];
-  completed: number;
-  total: number;
+  subcategories: readonly InterviewQuestionSubcategory[];
   icon: LucideIcon;
   colour: string;
   tint: string;
   iconTint: string;
+};
+
+type InterviewQuestionCategorySummary = InterviewQuestionCategory & {
+  questions: readonly InterviewQuestion[];
+  completed: number;
+  total: number;
 };
 
 type SummaryStatItem = {
@@ -51,15 +62,8 @@ type SummaryStatItem = {
   icon: LucideIcon;
 };
 
-type QuestionStatus = "completed" | "review" | "not-attempted";
+type QuestionStatus = InterviewQuestionStatus;
 type StatusFilter = "all" | "unanswered" | "review";
-
-type PlaceholderQuestion = {
-  id: string;
-  number: number;
-  text: string;
-  status: QuestionStatus;
-};
 
 const categories = [
   {
@@ -72,8 +76,6 @@ const categories = [
       "Personal Insight",
       "Strengths, Weaknesses & Resilience",
     ],
-    completed: 48,
-    total: 150,
     icon: HeartHandshake,
     colour: "#0f9b7d",
     tint: "#f4fbf8",
@@ -90,8 +92,6 @@ const categories = [
       "Giving & Receiving Feedback",
       "Working in Healthcare Teams",
     ],
-    completed: 50,
-    total: 180,
     icon: MessagesSquare,
     colour: "#2477ef",
     tint: "#f5f9ff",
@@ -110,8 +110,6 @@ const categories = [
       "Ethical & Professional Scenarios",
       "Situational Judgement",
     ],
-    completed: 55,
-    total: 220,
     icon: Scale,
     colour: "#ea5a1d",
     tint: "#fff8f3",
@@ -128,8 +126,6 @@ const categories = [
       "Healthcare Policy & Funding",
       "Healthcare Resources & Priorities",
     ],
-    completed: 61,
-    total: 160,
     icon: Stethoscope,
     colour: "#0f9b61",
     tint: "#f5fbf7",
@@ -146,8 +142,6 @@ const categories = [
       "Workforce Issues",
       "Ethics in the News",
     ],
-    completed: 60,
-    total: 200,
     icon: Flame,
     colour: "#7c4dde",
     tint: "#faf7ff",
@@ -164,8 +158,6 @@ const categories = [
       "Article Analysis",
       "Critical Thinking",
     ],
-    completed: 32,
-    total: 120,
     icon: ChartNoAxesColumnIncreasing,
     colour: "#169dad",
     tint: "#f4fbfc",
@@ -182,8 +174,6 @@ const categories = [
       "Prioritisation Stations",
       "Data Stations",
     ],
-    completed: 24,
-    total: 100,
     icon: Drama,
     colour: "#e9487f",
     tint: "#fff6f9",
@@ -199,8 +189,6 @@ const categories = [
       "Opinion Questions",
       "Unexpected Questions",
     ],
-    completed: 16,
-    total: 80,
     icon: Sparkles,
     colour: "#f59e0b",
     tint: "#fffbf2",
@@ -220,19 +208,6 @@ const subcategoryIcons = [
   FileText,
   Sparkles,
 ] as const satisfies readonly LucideIcon[];
-
-const questionTemplates = [
-  "What matters most when discussing {topic}?",
-  "Give a short example linked to {topic}.",
-  "How would you structure an answer about {topic}?",
-  "What reflection would strengthen this response?",
-  "What follow-up could challenge your reasoning here?",
-  "How could you connect {topic} back to patient care?",
-  "What is one mistake to avoid in this answer?",
-  "What would a balanced response include?",
-  "How would you make this answer more personal?",
-  "What evidence or experience could support your point?",
-] as const;
 
 const statusMeta = {
   completed: {
@@ -260,30 +235,45 @@ function getPercent(completed: number, total: number) {
   return Math.round((completed / total) * 100);
 }
 
-function distributeCount(total: number, parts: number, index: number) {
-  if (parts <= 0) return 0;
-  const base = Math.floor(total / parts);
-  const remainder = total % parts;
-  return base + (index < remainder ? 1 : 0);
+function getCompletedCount(questions: readonly InterviewQuestion[]) {
+  return questions.filter((question) => question.status === "completed").length;
+}
+
+function getCategoryQuestions(categoryTitle: InterviewQuestionCategoryTitle) {
+  return INTERVIEW_QUESTIONS.filter(
+    (question) => question.category === categoryTitle
+  );
+}
+
+function withQuestionStats(
+  category: InterviewQuestionCategory
+): InterviewQuestionCategorySummary {
+  const questions = getCategoryQuestions(category.title);
+
+  return {
+    ...category,
+    questions,
+    completed: getCompletedCount(questions),
+    total: questions.length,
+  };
+}
+
+function getSubcategoryQuestions(
+  category: InterviewQuestionCategorySummary,
+  subcategory: InterviewQuestionSubcategory
+) {
+  return category.questions.filter(
+    (question) => question.subcategory === subcategory
+  );
 }
 
 function getSubcategoryStats(
-  category: InterviewQuestionCategory,
-  subcategoryIndex: number
+  category: InterviewQuestionCategorySummary,
+  subcategory: InterviewQuestionSubcategory
 ) {
-  const total = distributeCount(
-    category.total,
-    category.subcategories.length,
-    subcategoryIndex
-  );
-  const completed = Math.min(
-    total,
-    distributeCount(
-      category.completed,
-      category.subcategories.length,
-      subcategoryIndex
-    )
-  );
+  const questions = getSubcategoryQuestions(category, subcategory);
+  const completed = getCompletedCount(questions);
+  const total = questions.length;
 
   return {
     total,
@@ -293,47 +283,19 @@ function getSubcategoryStats(
   };
 }
 
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
-function getQuestionId(subcategory: string, questionNumber: number) {
-  return `${slugify(subcategory)}-${questionNumber}`;
-}
-
-function getQuestionStatus(
-  questionNumber: number,
-  completedCount: number
-): QuestionStatus {
-  if (questionNumber <= completedCount) {
-    return questionNumber % 5 === 0 ? "review" : "completed";
-  }
-
-  return questionNumber % 7 === 0 ? "review" : "not-attempted";
-}
-
-function createPlaceholderQuestions(
-  subcategory: string,
-  total: number,
-  completedCount: number
-): PlaceholderQuestion[] {
-  const topic = subcategory.toLowerCase();
-
-  return Array.from({ length: total }, (_, index) => {
-    const number = index + 1;
-    const template = questionTemplates[index % questionTemplates.length];
-
-    return {
-      id: getQuestionId(subcategory, number),
-      number,
-      text: template.replace("{topic}", topic),
-      status: getQuestionStatus(number, completedCount),
-    };
-  });
+function getQuestionSearchText(question: InterviewQuestion) {
+  return [
+    question.text,
+    question.category,
+    question.subcategory,
+    question.sourceSectionTitle,
+    question.sourceTopic,
+    question.difficulty,
+    ...question.tags,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 }
 
 function scrollToTop() {
@@ -364,7 +326,7 @@ function CategoryCard({
   category,
   onOpen,
 }: {
-  category: InterviewQuestionCategory;
+  category: InterviewQuestionCategorySummary;
   onOpen: () => void;
 }) {
   const Icon = category.icon;
@@ -486,14 +448,14 @@ function SubcategoryCard({
   isActive,
   onSelect,
 }: {
-  category: InterviewQuestionCategory;
-  title: string;
+  category: InterviewQuestionCategorySummary;
+  title: InterviewQuestionSubcategory;
   index: number;
   isActive: boolean;
   onSelect: () => void;
 }) {
   const Icon = subcategoryIcons[index % subcategoryIcons.length];
-  const stats = getSubcategoryStats(category, index);
+  const stats = getSubcategoryStats(category, title);
 
   return (
     <button
@@ -571,7 +533,7 @@ function QuestionBankCategoryView({
   onQuestionQueryChange,
   onSpotlightQuestion,
 }: {
-  category: InterviewQuestionCategory;
+  category: InterviewQuestionCategorySummary;
   selectedSubcategoryIndex: number;
   statusFilter: StatusFilter;
   questionQuery: string;
@@ -586,19 +548,20 @@ function QuestionBankCategoryView({
   const Icon = category.icon;
   const percent = getPercent(category.completed, category.total);
   const selectedSubcategory =
-    category.subcategories[selectedSubcategoryIndex] ?? category.subcategories[0];
-  const selectedStats = getSubcategoryStats(
-    category,
-    selectedSubcategoryIndex
-  );
+    category.subcategories[selectedSubcategoryIndex] ??
+    category.subcategories[0] ??
+    "Motivation for Medicine";
+  const selectedStats = getSubcategoryStats(category, selectedSubcategory);
   const questions = useMemo(
+    () => getSubcategoryQuestions(category, selectedSubcategory),
+    [category, selectedSubcategory]
+  );
+  const questionNumbers = useMemo(
     () =>
-      createPlaceholderQuestions(
-        selectedSubcategory,
-        selectedStats.total,
-        selectedStats.completed
+      new Map(
+        questions.map((question, index) => [question.id, index + 1] as const)
       ),
-    [selectedStats.completed, selectedStats.total, selectedSubcategory]
+    [questions]
   );
   const normalisedQuestionQuery = questionQuery.trim().toLowerCase();
   const filteredQuestions = questions.filter((question) => {
@@ -609,7 +572,7 @@ function QuestionBankCategoryView({
       (statusFilter === "review" && question.status === "review");
     const matchesQuery =
       !normalisedQuestionQuery ||
-      question.text.toLowerCase().includes(normalisedQuestionQuery);
+      getQuestionSearchText(question).includes(normalisedQuestionQuery);
 
     return matchesStatus && matchesQuery;
   });
@@ -638,16 +601,16 @@ function QuestionBankCategoryView({
     );
     const nextSubcategory =
       category.subcategories[nextSubcategoryIndex] ?? category.subcategories[0];
-    const nextStats = getSubcategoryStats(category, nextSubcategoryIndex);
-    const nextQuestionNumber = Math.max(
-      1,
-      Math.floor(Math.random() * nextStats.total) + 1
-    );
+    if (!nextSubcategory) return;
+    const nextQuestions = getSubcategoryQuestions(category, nextSubcategory);
+    const nextQuestion =
+      nextQuestions[Math.floor(Math.random() * nextQuestions.length)] ??
+      nextQuestions[0];
 
     onSelectSubcategory(nextSubcategoryIndex);
     onStatusFilterChange("all");
     onQuestionQueryChange("");
-    onSpotlightQuestion(getQuestionId(nextSubcategory, nextQuestionNumber));
+    onSpotlightQuestion(nextQuestion?.id ?? null);
   };
 
   const resumePractice = () => {
@@ -816,17 +779,28 @@ function QuestionBankCategoryView({
                         key={question.id}
                         type="button"
                         onClick={() => onSpotlightQuestion(question.id)}
-                        className={`grid min-h-[56px] w-full grid-cols-[40px_minmax(0,1fr)_32px_18px] items-center gap-4 px-5 text-left transition-colors ${
+                        className={`grid min-h-[70px] w-full grid-cols-[40px_minmax(0,1fr)_32px_18px] items-center gap-4 px-5 py-3 text-left transition-colors ${
                           index === filteredQuestions.length - 1
                             ? ""
                             : "border-b border-[#edf1f3]"
                         } ${isSpotlight ? "bg-[#f1fbfa]" : "bg-white hover:bg-[#f8fbfb]"}`}
                       >
                         <span className="text-sm font-medium text-[#526976]">
-                          {String(question.number).padStart(2, "0")}
+                          {String(
+                            questionNumbers.get(question.id) ?? index + 1
+                          ).padStart(2, "0")}
                         </span>
-                        <span className="text-sm font-medium leading-5 text-[#071923]">
-                          {question.text}
+                        <span className="min-w-0">
+                          <span className="block text-sm font-medium leading-5 text-[#071923]">
+                            {question.text}
+                          </span>
+                          <span className="mt-1 block truncate text-[11px] font-semibold uppercase tracking-[0.08em] text-[#748791]">
+                            {question.difficulty} / section{" "}
+                            {question.sourceSection}
+                            {question.sourceTopic
+                              ? ` / ${question.sourceTopic}`
+                              : ""}
+                          </span>
                         </span>
                         <StatusIcon status={question.status} />
                         <ChevronRight className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />
@@ -918,37 +892,52 @@ export function InterviewQuestionBankDashboard({
   const [spotlightQuestionId, setSpotlightQuestionId] = useState<string | null>(
     null
   );
+  const categoriesWithStats = useMemo(
+    () => categories.map((category) => withQuestionStats(category)),
+    []
+  );
   const totals = useMemo(
     () =>
-      categories.reduce(
+      categoriesWithStats.reduce(
         (acc, category) => ({
           total: acc.total + category.total,
           completed: acc.completed + category.completed,
         }),
         { total: 0, completed: 0 }
       ),
-    []
+    [categoriesWithStats]
   );
   const overallPercent = getPercent(totals.completed, totals.total);
   const remaining = totals.total - totals.completed;
   const summaryStats = [
-    { label: "Categories", value: String(categories.length), icon: Grid3X3 },
+    {
+      label: "Categories",
+      value: String(categoriesWithStats.length),
+      icon: Grid3X3,
+    },
     { label: "Total Questions", value: String(totals.total), icon: FileText },
     { label: "Completed", value: String(totals.completed), icon: CheckCircle2 },
     { label: "Remaining", value: String(remaining), icon: Clock },
   ] satisfies readonly SummaryStatItem[];
   const normalisedQuery = query.trim().toLowerCase();
   const filteredCategories = useMemo(() => {
-    if (!normalisedQuery) return categories;
-    return categories.filter((category) =>
-      [category.title, category.description, ...category.subcategories]
+    if (!normalisedQuery) return categoriesWithStats;
+    return categoriesWithStats.filter((category) =>
+      [
+        category.title,
+        category.description,
+        ...category.subcategories,
+        ...category.questions.map((question) => getQuestionSearchText(question)),
+      ]
         .join(" ")
         .toLowerCase()
         .includes(normalisedQuery)
     );
-  }, [normalisedQuery]);
+  }, [categoriesWithStats, normalisedQuery]);
   const selectedCategory = selectedCategoryTitle
-    ? categories.find((category) => category.title === selectedCategoryTitle)
+    ? categoriesWithStats.find(
+        (category) => category.title === selectedCategoryTitle
+      )
     : undefined;
 
   const resetQuestionState = () => {
@@ -957,7 +946,7 @@ export function InterviewQuestionBankDashboard({
     setSpotlightQuestionId(null);
   };
 
-  const openCategory = (category: InterviewQuestionCategory) => {
+  const openCategory = (category: InterviewQuestionCategorySummary) => {
     setSelectedCategoryTitle(category.title);
     setSelectedSubcategoryIndex(0);
     resetQuestionState();
@@ -965,24 +954,26 @@ export function InterviewQuestionBankDashboard({
   };
 
   const openRandomQuestion = () => {
-    const category =
-      categories[Math.floor(Math.random() * categories.length)] ?? categories[0];
-    const subcategoryIndex = Math.floor(
-      Math.random() * category.subcategories.length
+    const question =
+      INTERVIEW_QUESTIONS[
+        Math.floor(Math.random() * INTERVIEW_QUESTIONS.length)
+      ] ?? INTERVIEW_QUESTIONS[0];
+    const category = categoriesWithStats.find(
+      (item) => item.title === question?.category
     );
-    const subcategory =
-      category.subcategories[subcategoryIndex] ?? category.subcategories[0];
-    const stats = getSubcategoryStats(category, subcategoryIndex);
-    const questionNumber = Math.max(
-      1,
-      Math.floor(Math.random() * stats.total) + 1
+    if (!question || !category) return;
+    const subcategoryIndex = Math.max(
+      0,
+      category.subcategories.findIndex(
+        (subcategory) => subcategory === question.subcategory
+      )
     );
 
     setSelectedCategoryTitle(category.title);
     setSelectedSubcategoryIndex(subcategoryIndex);
     setStatusFilter("all");
     setQuestionQuery("");
-    setSpotlightQuestionId(getQuestionId(subcategory, questionNumber));
+    setSpotlightQuestionId(question.id);
     scrollToTop();
   };
 
@@ -1028,7 +1019,7 @@ export function InterviewQuestionBankDashboard({
                 </h1>
                 <p className="mt-2 text-sm font-medium text-[#4a6370]">
                   Explore {totals.total}+ interview questions across{" "}
-                  {categories.length} categories.
+                  {categoriesWithStats.length} categories.
                 </p>
               </div>
               <InterviewAccountControls />
