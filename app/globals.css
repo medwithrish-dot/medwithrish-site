@@ -23,6 +23,33 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+:where(
+  a[href],
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary,
+  label[for],
+  label:has(input:not(:disabled), select:not(:disabled), textarea:not(:disabled)),
+  input[type="button"]:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  input[type="reset"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  select:not(:disabled)
+):not(.cursor-not-allowed, .cursor-wait) {
+  cursor: pointer;
+}
+
+:where(
+  button:disabled,
+  input:disabled,
+  select:disabled,
+  textarea:disabled,
+  [aria-disabled="true"]
+):not(.cursor-wait) {
+  cursor: not-allowed;
+}
+
 html,
 body {
   overflow-x: hidden;
