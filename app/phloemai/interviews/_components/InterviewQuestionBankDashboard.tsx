@@ -1,24 +1,34 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
+  ArrowLeft,
   ArrowRight,
+  BriefcaseBusiness,
   ChartNoAxesColumnIncreasing,
   CheckCircle2,
+  ChevronRight,
+  Circle,
   Clock,
   Drama,
   FileText,
   Flame,
+  GraduationCap,
   Grid3X3,
   HeartHandshake,
+  Lightbulb,
   MessagesSquare,
+  Play,
+  RefreshCw,
   Scale,
   Search,
+  ShieldCheck,
   Shuffle,
   Sparkles,
   Stethoscope,
+  UserRound,
+  UsersRound,
 } from "lucide-react";
 import { InterviewAccountControls } from "../InterviewAccountControls";
 import { InterviewSidebar } from "./InterviewSidebar";
@@ -33,13 +43,22 @@ type InterviewQuestionCategory = {
   colour: string;
   tint: string;
   iconTint: string;
-  href: string;
 };
 
 type SummaryStatItem = {
   label: string;
   value: string;
   icon: LucideIcon;
+};
+
+type QuestionStatus = "completed" | "review" | "not-attempted";
+type StatusFilter = "all" | "unanswered" | "review";
+
+type PlaceholderQuestion = {
+  id: string;
+  number: number;
+  text: string;
+  status: QuestionStatus;
 };
 
 const categories = [
@@ -59,7 +78,6 @@ const categories = [
     colour: "#0f9b7d",
     tint: "#f4fbf8",
     iconTint: "#e2f5ef",
-    href: "/phloemai/interviews/stations/motivation-question",
   },
   {
     title: "Communication & Teamwork",
@@ -78,7 +96,6 @@ const categories = [
     colour: "#2477ef",
     tint: "#f5f9ff",
     iconTint: "#e6f0ff",
-    href: "/phloemai/interviews/stations/teamwork-group-discussion",
   },
   {
     title: "Ethics & Professionalism",
@@ -99,7 +116,6 @@ const categories = [
     colour: "#ea5a1d",
     tint: "#fff8f3",
     iconTint: "#ffede3",
-    href: "/phloemai/interviews/stations/ethics-confidentiality",
   },
   {
     title: "NHS & Healthcare",
@@ -118,7 +134,6 @@ const categories = [
     colour: "#0f9b61",
     tint: "#f5fbf7",
     iconTint: "#e2f5ea",
-    href: "/phloemai/interviews/stations/nhs-waiting-lists",
   },
   {
     title: "Hot Topics & Current Affairs",
@@ -137,7 +152,6 @@ const categories = [
     colour: "#7c4dde",
     tint: "#faf7ff",
     iconTint: "#f0eaff",
-    href: "/phloemai/interviews/stations/nhs-waiting-lists",
   },
   {
     title: "Data, Research & Critical Thinking",
@@ -156,7 +170,6 @@ const categories = [
     colour: "#169dad",
     tint: "#f4fbfc",
     iconTint: "#e3f5f8",
-    href: "/phloemai/interviews/stations/data-analysis",
   },
   {
     title: "Practical MMI & Role Play",
@@ -175,7 +188,6 @@ const categories = [
     colour: "#e9487f",
     tint: "#fff6f9",
     iconTint: "#ffe6ef",
-    href: "/phloemai/interviews/stations/role-play-mmi-tasks",
   },
   {
     title: "Curveballs & Quick-Fire",
@@ -193,13 +205,141 @@ const categories = [
     colour: "#f59e0b",
     tint: "#fffbf2",
     iconTint: "#fff1ce",
-    href: "/phloemai/interviews/stations/curveballs-quick-fire",
   },
 ] as const satisfies readonly InterviewQuestionCategory[];
+
+const subcategoryIcons = [
+  Lightbulb,
+  GraduationCap,
+  BriefcaseBusiness,
+  UserRound,
+  ShieldCheck,
+  MessagesSquare,
+  UsersRound,
+  ChartNoAxesColumnIncreasing,
+  FileText,
+  Sparkles,
+] as const satisfies readonly LucideIcon[];
+
+const questionTemplates = [
+  "What matters most when discussing {topic}?",
+  "Give a short example linked to {topic}.",
+  "How would you structure an answer about {topic}?",
+  "What reflection would strengthen this response?",
+  "What follow-up could challenge your reasoning here?",
+  "How could you connect {topic} back to patient care?",
+  "What is one mistake to avoid in this answer?",
+  "What would a balanced response include?",
+  "How would you make this answer more personal?",
+  "What evidence or experience could support your point?",
+] as const;
+
+const statusMeta = {
+  completed: {
+    label: "Completed",
+    icon: CheckCircle2,
+    colour: "#0f9b7d",
+  },
+  review: {
+    label: "Needs Review",
+    icon: RefreshCw,
+    colour: "#f59e0b",
+  },
+  "not-attempted": {
+    label: "Not Attempted",
+    icon: Circle,
+    colour: "#b8c3ca",
+  },
+} as const satisfies Record<
+  QuestionStatus,
+  { label: string; icon: LucideIcon; colour: string }
+>;
 
 function getPercent(completed: number, total: number) {
   if (total <= 0) return 0;
   return Math.round((completed / total) * 100);
+}
+
+function distributeCount(total: number, parts: number, index: number) {
+  if (parts <= 0) return 0;
+  const base = Math.floor(total / parts);
+  const remainder = total % parts;
+  return base + (index < remainder ? 1 : 0);
+}
+
+function getSubcategoryStats(
+  category: InterviewQuestionCategory,
+  subcategoryIndex: number
+) {
+  const total = distributeCount(
+    category.total,
+    category.subcategories.length,
+    subcategoryIndex
+  );
+  const completed = Math.min(
+    total,
+    distributeCount(
+      category.completed,
+      category.subcategories.length,
+      subcategoryIndex
+    )
+  );
+
+  return {
+    total,
+    completed,
+    remaining: total - completed,
+    percent: getPercent(completed, total),
+  };
+}
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function getQuestionId(subcategory: string, questionNumber: number) {
+  return `${slugify(subcategory)}-${questionNumber}`;
+}
+
+function getQuestionStatus(
+  questionNumber: number,
+  completedCount: number
+): QuestionStatus {
+  if (questionNumber <= completedCount) {
+    return questionNumber % 5 === 0 ? "review" : "completed";
+  }
+
+  return questionNumber % 7 === 0 ? "review" : "not-attempted";
+}
+
+function createPlaceholderQuestions(
+  subcategory: string,
+  total: number,
+  completedCount: number
+): PlaceholderQuestion[] {
+  const topic = subcategory.toLowerCase();
+
+  return Array.from({ length: total }, (_, index) => {
+    const number = index + 1;
+    const template = questionTemplates[index % questionTemplates.length];
+
+    return {
+      id: getQuestionId(subcategory, number),
+      number,
+      text: template.replace("{topic}", topic),
+      status: getQuestionStatus(number, completedCount),
+    };
+  });
+}
+
+function scrollToTop() {
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 }
 
 function SummaryStat({ label, value, icon: Icon }: SummaryStatItem) {
@@ -220,7 +360,13 @@ function SummaryStat({ label, value, icon: Icon }: SummaryStatItem) {
   );
 }
 
-function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
+function CategoryCard({
+  category,
+  onOpen,
+}: {
+  category: InterviewQuestionCategory;
+  onOpen: () => void;
+}) {
   const Icon = category.icon;
   const percent = getPercent(category.completed, category.total);
   const remaining = category.total - category.completed;
@@ -229,10 +375,11 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
     category.subcategories.length - visibleSubcategories.length;
 
   return (
-    <Link
-      href={category.href}
+    <button
+      type="button"
+      onClick={onOpen}
       aria-label={`Open ${category.title} interview questions`}
-      className="group relative flex h-[276px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
+      className="group relative flex h-[276px] w-full flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] text-left shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
       style={{
         background: `linear-gradient(135deg, ${category.tint} 0%, rgba(255,255,255,0.92) 54%, #ffffff 100%)`,
       }}
@@ -328,7 +475,431 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
           <p>{percent}% complete</p>
         </div>
       </div>
-    </Link>
+    </button>
+  );
+}
+
+function SubcategoryCard({
+  category,
+  title,
+  index,
+  isActive,
+  onSelect,
+}: {
+  category: InterviewQuestionCategory;
+  title: string;
+  index: number;
+  isActive: boolean;
+  onSelect: () => void;
+}) {
+  const Icon = subcategoryIcons[index % subcategoryIcons.length];
+  const stats = getSubcategoryStats(category, index);
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={isActive}
+      className="flex min-h-[176px] w-[220px] shrink-0 flex-col rounded-xl border bg-white p-5 text-left shadow-[0_1px_3px_rgba(7,25,35,0.06)] transition-all hover:-translate-y-0.5 hover:shadow-[0_10px_22px_rgba(7,25,35,0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
+      style={{
+        borderColor: isActive ? category.colour : "#d8e0e6",
+        boxShadow: isActive
+          ? `0 10px 24px ${category.colour}18`
+          : undefined,
+      }}
+    >
+      <span
+        className="flex h-11 w-11 items-center justify-center rounded-lg"
+        style={{
+          backgroundColor: category.iconTint,
+          color: category.colour,
+        }}
+      >
+        <Icon className="h-6 w-6" strokeWidth={2.25} aria-hidden="true" />
+      </span>
+      <span className="mt-5 block text-base font-black leading-5 text-[#071923]">
+        {title}
+      </span>
+      <span className="mt-auto pt-4 text-xs font-medium leading-5 text-[#4a6370]">
+        {stats.total} questions
+        <br />
+        {stats.completed} done
+      </span>
+      <span className="mt-3 grid grid-cols-[minmax(0,1fr)_34px] items-center gap-3">
+        <span className="h-1.5 overflow-hidden rounded-full bg-[#e2eaee]">
+          <span
+            className="block h-full rounded-full"
+            style={{
+              width: `${stats.percent}%`,
+              backgroundColor: category.colour,
+            }}
+          />
+        </span>
+        <span className="text-right text-xs font-semibold text-[#405562]">
+          {stats.percent}%
+        </span>
+      </span>
+    </button>
+  );
+}
+
+function StatusIcon({ status }: { status: QuestionStatus }) {
+  const meta = statusMeta[status];
+  const Icon = meta.icon;
+
+  return (
+    <Icon
+      className="h-5 w-5"
+      strokeWidth={status === "not-attempted" ? 0 : 2.2}
+      fill={status === "not-attempted" ? meta.colour : "none"}
+      style={{ color: meta.colour }}
+      aria-label={meta.label}
+    />
+  );
+}
+
+function QuestionBankCategoryView({
+  category,
+  selectedSubcategoryIndex,
+  statusFilter,
+  questionQuery,
+  spotlightQuestionId,
+  showPremiumCard,
+  onBack,
+  onSelectSubcategory,
+  onStatusFilterChange,
+  onQuestionQueryChange,
+  onSpotlightQuestion,
+}: {
+  category: InterviewQuestionCategory;
+  selectedSubcategoryIndex: number;
+  statusFilter: StatusFilter;
+  questionQuery: string;
+  spotlightQuestionId: string | null;
+  showPremiumCard: boolean;
+  onBack: () => void;
+  onSelectSubcategory: (index: number) => void;
+  onStatusFilterChange: (filter: StatusFilter) => void;
+  onQuestionQueryChange: (query: string) => void;
+  onSpotlightQuestion: (questionId: string | null) => void;
+}) {
+  const Icon = category.icon;
+  const percent = getPercent(category.completed, category.total);
+  const selectedSubcategory =
+    category.subcategories[selectedSubcategoryIndex] ?? category.subcategories[0];
+  const selectedStats = getSubcategoryStats(
+    category,
+    selectedSubcategoryIndex
+  );
+  const questions = useMemo(
+    () =>
+      createPlaceholderQuestions(
+        selectedSubcategory,
+        selectedStats.total,
+        selectedStats.completed
+      ),
+    [selectedStats.completed, selectedStats.total, selectedSubcategory]
+  );
+  const normalisedQuestionQuery = questionQuery.trim().toLowerCase();
+  const filteredQuestions = questions.filter((question) => {
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "unanswered" &&
+        question.status === "not-attempted") ||
+      (statusFilter === "review" && question.status === "review");
+    const matchesQuery =
+      !normalisedQuestionQuery ||
+      question.text.toLowerCase().includes(normalisedQuestionQuery);
+
+    return matchesStatus && matchesQuery;
+  });
+  const statusCounts = questions.reduce(
+    (acc, question) => ({
+      ...acc,
+      [question.status]: acc[question.status] + 1,
+    }),
+    { completed: 0, review: 0, "not-attempted": 0 } satisfies Record<
+      QuestionStatus,
+      number
+    >
+  );
+  const remaining = category.total - category.completed;
+
+  const selectSubcategory = (index: number) => {
+    onSelectSubcategory(index);
+    onStatusFilterChange("all");
+    onQuestionQueryChange("");
+    onSpotlightQuestion(null);
+  };
+
+  const openRandomQuestion = () => {
+    const nextSubcategoryIndex = Math.floor(
+      Math.random() * category.subcategories.length
+    );
+    const nextSubcategory =
+      category.subcategories[nextSubcategoryIndex] ?? category.subcategories[0];
+    const nextStats = getSubcategoryStats(category, nextSubcategoryIndex);
+    const nextQuestionNumber = Math.max(
+      1,
+      Math.floor(Math.random() * nextStats.total) + 1
+    );
+
+    onSelectSubcategory(nextSubcategoryIndex);
+    onStatusFilterChange("all");
+    onQuestionQueryChange("");
+    onSpotlightQuestion(getQuestionId(nextSubcategory, nextQuestionNumber));
+  };
+
+  const resumePractice = () => {
+    const nextQuestion =
+      questions.find((question) => question.status === "not-attempted") ??
+      questions[0];
+
+    onStatusFilterChange("all");
+    onQuestionQueryChange("");
+    onSpotlightQuestion(nextQuestion?.id ?? null);
+  };
+
+  const filterOptions = [
+    { label: "All", value: "all" },
+    { label: "Unanswered", value: "unanswered" },
+    { label: "Review", value: "review" },
+  ] as const satisfies readonly { label: string; value: StatusFilter }[];
+
+  return (
+    <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
+      <div className="grid min-h-screen lg:grid-cols-[230px_1fr]">
+        <InterviewSidebar
+          activeLabel="Question Bank"
+          showPremiumCard={showPremiumCard}
+        />
+
+        <section className="min-w-0 px-5 py-7 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-[1540px]">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <button
+                type="button"
+                onClick={onBack}
+                className="inline-flex w-fit items-center gap-2 text-sm font-bold text-[#08787b] transition-colors hover:text-[#042724]"
+              >
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                Back to all categories
+              </button>
+              <InterviewAccountControls />
+            </div>
+
+            <section className="mt-5 rounded-xl border border-[#d8e0e6] bg-white/90 p-5 shadow-[0_1px_3px_rgba(7,25,35,0.08)]">
+              <div className="grid gap-5 lg:grid-cols-[88px_minmax(0,1fr)_auto] lg:items-center">
+                <div
+                  className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl text-white ring-1 ring-white/70"
+                  style={{
+                    background: `linear-gradient(135deg, ${category.colour} 0%, ${category.colour} 72%, #071923 150%)`,
+                    boxShadow: `0 18px 30px ${category.colour}26`,
+                  }}
+                >
+                  <span
+                    className="absolute -right-4 -top-4 h-12 w-12 rounded-full bg-white/25"
+                    aria-hidden="true"
+                  />
+                  <span
+                    className="absolute -bottom-5 -left-5 h-14 w-14 rounded-full bg-white/10"
+                    aria-hidden="true"
+                  />
+                  <Icon className="relative h-10 w-10" strokeWidth={2.3} aria-hidden="true" />
+                </div>
+                <div className="min-w-0">
+                  <h1 className="text-2xl font-black leading-tight text-[#071923] sm:text-3xl">
+                    {category.title}
+                  </h1>
+                  <p className="mt-3 text-sm font-medium text-[#4a6370]">
+                    {category.total} questions{" "}
+                    <span className="mx-2 text-[#9babb4]">/</span>
+                    {category.completed} done{" "}
+                    <span className="mx-2 text-[#9babb4]">/</span>
+                    {remaining} left{" "}
+                    <span className="mx-2 text-[#9babb4]">/</span>
+                    {percent}% complete
+                  </p>
+                </div>
+                <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
+                  <button
+                    type="button"
+                    onClick={openRandomQuestion}
+                    className="inline-flex h-12 items-center justify-center gap-3 rounded-lg bg-[#06254a] px-5 text-sm font-black text-white shadow-sm transition-colors hover:bg-[#071923]"
+                  >
+                    <Shuffle className="h-5 w-5" aria-hidden="true" />
+                    Random Question
+                  </button>
+                  <button
+                    type="button"
+                    onClick={resumePractice}
+                    className="inline-flex h-12 items-center justify-center gap-3 rounded-lg border border-[#b8c8cf] bg-white px-5 text-sm font-black text-[#071923] shadow-sm transition-colors hover:border-[#08787b] hover:text-[#08787b]"
+                  >
+                    <Play className="h-5 w-5" aria-hidden="true" />
+                    Resume Practice
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <section className="mt-6">
+              <h2 className="text-base font-black text-[#071923]">
+                Subcategories
+              </h2>
+              <div className="mt-4 flex gap-4 overflow-x-auto pb-2">
+                {category.subcategories.map((subcategory, index) => (
+                  <SubcategoryCard
+                    key={subcategory}
+                    category={category}
+                    title={subcategory}
+                    index={index}
+                    isActive={index === selectedSubcategoryIndex}
+                    onSelect={() => selectSubcategory(index)}
+                  />
+                ))}
+              </div>
+            </section>
+
+            <section className="mt-6 border-t border-[#d8e0e6] pt-5">
+              <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_330px] xl:items-end">
+                <div>
+                  <h2 className="text-xl font-black leading-tight text-[#071923]">
+                    {selectedSubcategory}
+                  </h2>
+                  <p className="mt-1 text-sm font-medium text-[#4a6370]">
+                    {selectedStats.total} questions
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_330px] xl:grid-cols-1">
+                  <div className="grid grid-cols-3 overflow-hidden rounded-lg border border-[#d8e0e6] bg-white">
+                    {filterOptions.map((option) => {
+                      const isActive = option.value === statusFilter;
+
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => onStatusFilterChange(option.value)}
+                          aria-pressed={isActive}
+                          className={`h-10 px-3 text-xs font-black transition-colors ${
+                            isActive
+                              ? "bg-[#06254a] text-white"
+                              : "text-[#071923] hover:bg-[#f4f8f8]"
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <label className="flex h-10 min-w-0 items-center gap-3 rounded-lg border border-[#d8e0e6] bg-white px-3">
+                    <input
+                      value={questionQuery}
+                      onChange={(event) =>
+                        onQuestionQueryChange(event.target.value)
+                      }
+                      className="min-w-0 flex-1 bg-transparent text-sm font-medium text-[#071923] outline-none placeholder:text-[#8091a0]"
+                      placeholder="Search questions..."
+                    />
+                    <Search className="h-5 w-5 shrink-0 text-[#071923]" aria-hidden="true" />
+                  </label>
+                </div>
+              </div>
+
+              <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_220px]">
+                <div className="overflow-hidden rounded-xl border border-[#d8e0e6] bg-white shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
+                  {filteredQuestions.map((question, index) => {
+                    const isSpotlight = question.id === spotlightQuestionId;
+
+                    return (
+                      <button
+                        key={question.id}
+                        type="button"
+                        onClick={() => onSpotlightQuestion(question.id)}
+                        className={`grid min-h-[56px] w-full grid-cols-[40px_minmax(0,1fr)_32px_18px] items-center gap-4 px-5 text-left transition-colors ${
+                          index === filteredQuestions.length - 1
+                            ? ""
+                            : "border-b border-[#edf1f3]"
+                        } ${isSpotlight ? "bg-[#f1fbfa]" : "bg-white hover:bg-[#f8fbfb]"}`}
+                      >
+                        <span className="text-sm font-medium text-[#526976]">
+                          {String(question.number).padStart(2, "0")}
+                        </span>
+                        <span className="text-sm font-medium leading-5 text-[#071923]">
+                          {question.text}
+                        </span>
+                        <StatusIcon status={question.status} />
+                        <ChevronRight className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />
+                      </button>
+                    );
+                  })}
+                  {filteredQuestions.length === 0 && (
+                    <div className="p-8 text-center">
+                      <p className="text-sm font-black text-[#071923]">
+                        No questions found
+                      </p>
+                      <p className="mt-2 text-sm font-medium text-[#4a6370]">
+                        Try a different filter or search term.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <aside className="space-y-4">
+                  <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
+                    <h2 className="text-sm font-black text-[#071923]">
+                      Status
+                    </h2>
+                    <div className="mt-4 space-y-4">
+                      {(
+                        [
+                          "completed",
+                          "review",
+                          "not-attempted",
+                        ] as const satisfies readonly QuestionStatus[]
+                      ).map((status) => (
+                        <div
+                          key={status}
+                          className="grid grid-cols-[24px_minmax(0,1fr)_28px] items-center gap-3"
+                        >
+                          <StatusIcon status={status} />
+                          <span className="text-xs font-medium text-[#4a6370]">
+                            {statusMeta[status].label}
+                          </span>
+                          <span className="text-right text-xs font-black text-[#071923]">
+                            {statusCounts[status]}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                  <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
+                    <h2 className="text-sm font-black text-[#071923]">
+                      Progress
+                    </h2>
+                    <p className="mt-3 text-sm font-medium leading-6 text-[#4a6370]">
+                      {selectedStats.completed} done / {selectedStats.remaining} left
+                    </p>
+                    <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#e2eaee]">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${selectedStats.percent}%`,
+                          backgroundColor: category.colour,
+                        }}
+                      />
+                    </div>
+                    <p className="mt-3 text-xs font-medium text-[#5d707a]">
+                      {selectedStats.percent}% complete
+                    </p>
+                  </section>
+                </aside>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
 
@@ -338,6 +909,15 @@ export function InterviewQuestionBankDashboard({
   showPremiumCard: boolean;
 }) {
   const [query, setQuery] = useState("");
+  const [selectedCategoryTitle, setSelectedCategoryTitle] = useState<
+    string | null
+  >(null);
+  const [selectedSubcategoryIndex, setSelectedSubcategoryIndex] = useState(0);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [questionQuery, setQuestionQuery] = useState("");
+  const [spotlightQuestionId, setSpotlightQuestionId] = useState<string | null>(
+    null
+  );
   const totals = useMemo(
     () =>
       categories.reduce(
@@ -367,12 +947,69 @@ export function InterviewQuestionBankDashboard({
         .includes(normalisedQuery)
     );
   }, [normalisedQuery]);
+  const selectedCategory = selectedCategoryTitle
+    ? categories.find((category) => category.title === selectedCategoryTitle)
+    : undefined;
+
+  const resetQuestionState = () => {
+    setStatusFilter("all");
+    setQuestionQuery("");
+    setSpotlightQuestionId(null);
+  };
+
+  const openCategory = (category: InterviewQuestionCategory) => {
+    setSelectedCategoryTitle(category.title);
+    setSelectedSubcategoryIndex(0);
+    resetQuestionState();
+    scrollToTop();
+  };
 
   const openRandomQuestion = () => {
     const category =
       categories[Math.floor(Math.random() * categories.length)] ?? categories[0];
-    window.location.assign(category.href);
+    const subcategoryIndex = Math.floor(
+      Math.random() * category.subcategories.length
+    );
+    const subcategory =
+      category.subcategories[subcategoryIndex] ?? category.subcategories[0];
+    const stats = getSubcategoryStats(category, subcategoryIndex);
+    const questionNumber = Math.max(
+      1,
+      Math.floor(Math.random() * stats.total) + 1
+    );
+
+    setSelectedCategoryTitle(category.title);
+    setSelectedSubcategoryIndex(subcategoryIndex);
+    setStatusFilter("all");
+    setQuestionQuery("");
+    setSpotlightQuestionId(getQuestionId(subcategory, questionNumber));
+    scrollToTop();
   };
+
+  const backToCategories = () => {
+    setSelectedCategoryTitle(null);
+    setSelectedSubcategoryIndex(0);
+    resetQuestionState();
+    scrollToTop();
+  };
+
+  if (selectedCategory) {
+    return (
+      <QuestionBankCategoryView
+        category={selectedCategory}
+        selectedSubcategoryIndex={selectedSubcategoryIndex}
+        statusFilter={statusFilter}
+        questionQuery={questionQuery}
+        spotlightQuestionId={spotlightQuestionId}
+        showPremiumCard={showPremiumCard}
+        onBack={backToCategories}
+        onSelectSubcategory={setSelectedSubcategoryIndex}
+        onStatusFilterChange={setStatusFilter}
+        onQuestionQueryChange={setQuestionQuery}
+        onSpotlightQuestion={setSpotlightQuestionId}
+      />
+    );
+  }
 
   return (
     <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
@@ -473,7 +1110,11 @@ export function InterviewQuestionBankDashboard({
 
             <section className="mt-3 grid gap-[18px] md:grid-cols-2 xl:grid-cols-4">
               {filteredCategories.map((category) => (
-                <CategoryCard key={category.title} category={category} />
+                <CategoryCard
+                  key={category.title}
+                  category={category}
+                  onOpen={() => openCategory(category)}
+                />
               ))}
               {filteredCategories.length === 0 && (
                 <div className="rounded-xl border border-dashed border-[#b9cbcf] bg-white p-8 text-center xl:col-span-4">
