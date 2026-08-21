@@ -198,6 +198,17 @@ const categories = [
   },
 ] as const satisfies readonly InterviewQuestionCategory[];
 
+const categoryTitleLines = {
+  "Personal & Motivation": ["Personal &", "Motivation"],
+  "Communication & Teamwork": ["Communication", "& Teamwork"],
+  "Ethics & Professionalism": ["Ethics &", "Professionalism"],
+  "NHS & Healthcare": ["NHS &", "Healthcare"],
+  "Hot Topics & Current Affairs": ["Hot Topics &", "Current Affairs"],
+  "Data, Research & Critical Thinking": ["Data, Research &", "Critical Thinking"],
+  "Practical MMI & Role Play": ["Practical MMI", "& Role Play"],
+  "Curveballs & Quick-Fire": ["Curveballs &", "Quick-Fire"],
+} as const satisfies Record<InterviewQuestionCategoryTitle, readonly [string, string]>;
+
 const subcategoryIcons = [
   Lightbulb,
   GraduationCap,
@@ -343,6 +354,7 @@ function CategoryCard({
   const visibleSubcategories = category.subcategories.slice(0, 3);
   const hiddenSubcategoryCount =
     category.subcategories.length - visibleSubcategories.length;
+  const titleLines = categoryTitleLines[category.title];
 
   return (
     <button
@@ -387,8 +399,12 @@ function CategoryCard({
           />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="text-base font-black leading-6 text-[#071923]">
-            {category.title}
+          <h2 className="min-h-12 text-base font-black leading-6 text-[#071923]">
+            {titleLines.map((line) => (
+              <span key={line} className="block whitespace-nowrap">
+                {line}
+              </span>
+            ))}
           </h2>
           <p
             className="mt-1 text-[11px] font-black uppercase leading-4 tracking-[0.08em]"
