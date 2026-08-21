@@ -224,12 +224,15 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
   const Icon = category.icon;
   const percent = getPercent(category.completed, category.total);
   const remaining = category.total - category.completed;
+  const visibleSubcategories = category.subcategories.slice(0, 3);
+  const hiddenSubcategoryCount =
+    category.subcategories.length - visibleSubcategories.length;
 
   return (
     <Link
       href={category.href}
       aria-label={`Open ${category.title} interview questions`}
-      className="group relative flex h-[336px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
+      className="group relative flex h-[264px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
       style={{
         background: `linear-gradient(135deg, ${category.tint} 0%, rgba(255,255,255,0.92) 54%, #ffffff 100%)`,
       }}
@@ -270,12 +273,6 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
           <h2 className="text-base font-black leading-6 text-[#071923]">
             {category.title}
           </h2>
-          <p
-            className="mt-1 text-[11px] font-black uppercase leading-4 tracking-[0.08em]"
-            style={{ color: category.colour }}
-          >
-            {category.subcategories.length} subcategories
-          </p>
         </div>
         <span
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm ring-1 ring-white/65 transition-transform group-hover:translate-x-0.5"
@@ -290,7 +287,7 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
       </div>
 
       <ul className="mt-[14px] grid gap-1 text-[11px] font-medium leading-[0.95rem] text-[#405562]">
-        {category.subcategories.map((subcategory) => (
+        {visibleSubcategories.map((subcategory) => (
           <li key={subcategory} className="grid grid-cols-[7px_minmax(0,1fr)] gap-2">
             <span
               className="mt-[0.42rem] h-1 w-1 rounded-full"
@@ -300,6 +297,19 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
             <span>{subcategory}</span>
           </li>
         ))}
+        {hiddenSubcategoryCount > 0 && (
+          <li className="pt-1">
+            <span
+              className="inline-flex rounded-full px-2.5 py-1 text-[10px] font-black leading-none"
+              style={{
+                backgroundColor: category.iconTint,
+                color: category.colour,
+              }}
+            >
+              +{hiddenSubcategoryCount} more
+            </span>
+          </li>
+        )}
       </ul>
 
       <div className="mt-auto pt-4">
