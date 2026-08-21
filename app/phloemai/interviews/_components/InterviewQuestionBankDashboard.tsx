@@ -1028,7 +1028,7 @@ export function InterviewQuestionBankDashboard({
               <InterviewAccountControls />
             </header>
 
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row xl:justify-end">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
               <label className="flex h-12 min-w-0 items-center gap-3 rounded-lg bg-white/80 px-4 ring-1 ring-[#d8e2e6]/60 sm:w-[420px]">
                 <Search className="h-5 w-5 shrink-0 text-[#4a6370]" aria-hidden="true" />
                 <input
