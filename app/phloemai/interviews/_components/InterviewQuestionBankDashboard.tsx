@@ -232,7 +232,7 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
     <Link
       href={category.href}
       aria-label={`Open ${category.title} interview questions`}
-      className="group relative flex h-[264px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
+      className="group relative flex h-[276px] flex-col overflow-hidden rounded-xl border border-white/80 bg-white p-5 pt-[22px] shadow-[0_1px_3px_rgba(7,25,35,0.08)] transition-all hover:-translate-y-0.5 hover:border-white hover:shadow-[0_10px_24px_rgba(7,25,35,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#159a9d]/40"
       style={{
         background: `linear-gradient(135deg, ${category.tint} 0%, rgba(255,255,255,0.92) 54%, #ffffff 100%)`,
       }}
@@ -273,6 +273,12 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
           <h2 className="text-base font-black leading-6 text-[#071923]">
             {category.title}
           </h2>
+          <p
+            className="mt-1 text-[11px] font-black uppercase leading-4 tracking-[0.08em]"
+            style={{ color: category.colour }}
+          >
+            {category.subcategories.length} subcategories
+          </p>
         </div>
         <span
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm ring-1 ring-white/65 transition-transform group-hover:translate-x-0.5"
@@ -298,35 +304,16 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
           </li>
         ))}
         {hiddenSubcategoryCount > 0 && (
-          <li className="pt-1">
-            <span
-              className="inline-flex rounded-full px-2.5 py-1 text-[10px] font-black leading-none"
-              style={{
-                backgroundColor: category.iconTint,
-                color: category.colour,
-              }}
-            >
-              +{hiddenSubcategoryCount} more
-            </span>
+          <li className="pl-[15px] pt-0.5 text-[10px] font-semibold leading-4 text-[#748791]">
+            +{hiddenSubcategoryCount} more
           </li>
         )}
       </ul>
 
       <div className="mt-auto pt-4">
-        <div className="flex items-baseline justify-between gap-3">
-          <p className="text-sm font-semibold text-[#526976]">
-            {category.total} questions
-          </p>
-          <p
-            className="rounded-full px-2.5 py-1 text-xs font-black"
-            style={{
-              backgroundColor: category.iconTint,
-              color: category.colour,
-            }}
-          >
-            {percent}% complete
-          </p>
-        </div>
+        <p className="text-sm font-semibold text-[#526976]">
+          {category.total} questions
+        </p>
         <div className="mt-[12px] h-1.5 overflow-hidden rounded-full bg-[#dfe8ea]">
           <div
             className="h-full rounded-full"
@@ -336,9 +323,10 @@ function CategoryCard({ category }: { category: InterviewQuestionCategory }) {
             }}
           />
         </div>
-        <p className="mt-[10px] text-xs font-medium text-[#5d707a]">
-          {category.completed} done / {remaining} left
-        </p>
+        <div className="mt-[10px] flex items-center justify-between gap-3 text-xs font-medium text-[#5d707a]">
+          <p>{category.completed} done / {remaining} left</p>
+          <p>{percent}% complete</p>
+        </div>
       </div>
     </Link>
   );
