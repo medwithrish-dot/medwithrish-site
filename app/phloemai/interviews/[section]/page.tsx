@@ -314,6 +314,18 @@ const sectionPages = {
 const sectionPageMap: Record<string, InterviewWorkspacePageProps | undefined> =
   sectionPages;
 
+type QuestionBankSearchParams = {
+  category?: string | string[];
+  subcategory?: string | string[];
+  question?: string | string[];
+};
+
+function getSingleSearchParam(value: string | string[] | undefined) {
+  if (Array.isArray(value)) return value[0];
+
+  return value;
+}
+
 export function generateStaticParams() {
   return Object.keys(sectionPages).map((section) => ({ section }));
 }
@@ -333,8 +345,10 @@ export async function generateMetadata({
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: Promise<{ section: string }>;
+  searchParams: Promise<QuestionBankSearchParams>;
 }) {
   const { section } = await params;
   const page = sectionPageMap[section];
@@ -342,9 +356,24 @@ export default async function Page({
   if (!page) notFound();
 
   if (section === "question-bank") {
+    const questionBankSearchParams = await searchParams;
+    const subcategoryParam = getSingleSearchParam(
+      questionBankSearchParams.subcategory
+    );
     const { isPremium } = await getPhloemEntitlements();
 
-    return <InterviewQuestionBankDashboard showPremiumCard={!isPremium} />;
+    return (
+      <InterviewQuestionBankDashboard
+        showPremiumCard={!isPremium}
+        initialCategoryTitle={getSingleSearchParam(
+          questionBankSearchParams.category
+        )}
+        initialSubcategoryIndex={
+          subcategoryParam === undefined ? undefined : Number(subcategoryParam)
+        }
+        initialQuestionId={getSingleSearchParam(questionBankSearchParams.question)}
+      />
+    );
   }
 
   return <InterviewWorkspacePage {...page} />;

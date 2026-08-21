@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowLeft,
@@ -17,12 +17,17 @@ import {
   GraduationCap,
   Grid3X3,
   HeartHandshake,
+  Keyboard,
   Lightbulb,
+  Mic,
   MessagesSquare,
+  Pause,
   Play,
   RefreshCw,
+  RotateCcw,
   Scale,
   Search,
+  Send,
   ShieldCheck,
   Shuffle,
   Sparkles,
@@ -243,9 +248,228 @@ const statusMeta = {
   { label: string; icon: LucideIcon; colour: string }
 >;
 
+type QuestionPracticeMode = "text" | "voice";
+
+type QuestionBankNavigationInput = {
+  categoryTitle?: string | null;
+  subcategoryIndex?: number | null;
+  questionId?: string | null;
+};
+
+type QuestionBankNavigationState = {
+  selectedCategoryTitle: string | null;
+  selectedSubcategoryIndex: number;
+  activeQuestionId: string | null;
+  statusFilter: StatusFilter;
+};
+
+type SpeechRecognitionResultLike = {
+  isFinal: boolean;
+  0: {
+    transcript: string;
+  };
+};
+
+type SpeechRecognitionEventLike = {
+  resultIndex: number;
+  results: {
+    length: number;
+    [index: number]: SpeechRecognitionResultLike;
+  };
+};
+
+type SpeechRecognitionLike = {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onend: (() => void) | null;
+  onerror: ((event: { error?: string }) => void) | null;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  start: () => void;
+  stop: () => void;
+};
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
+
+type SpeechRecognitionWindow = Window & {
+  SpeechRecognition?: SpeechRecognitionConstructor;
+  webkitSpeechRecognition?: SpeechRecognitionConstructor;
+};
+
+const questionBankPath = "/phloemai/interviews/question-bank";
+
+const structureChecklist = [
+  "Starts with a direct answer",
+  "Uses one clear example or piece of evidence",
+  "Explains the reasoning behind the answer",
+  "Links back to patient care or professional judgement",
+  "Finishes with a concise closing point",
+] as const;
+
+const categoryRubric = {
+  "Personal & Motivation": [
+    "Shows genuine motivation rather than a generic reason",
+    "Reflects on work experience or personal learning",
+    "Connects qualities to the realities of medical training",
+    "Avoids overclaiming and stays balanced",
+  ],
+  "Communication & Teamwork": [
+    "Acknowledges the other person's perspective",
+    "Uses clear signposting and calm language",
+    "Balances listening with appropriate action",
+    "Explains how the team or patient benefits",
+  ],
+  "Ethics & Professionalism": [
+    "Identifies the main stakeholders",
+    "Balances autonomy, beneficence, non-maleficence and justice",
+    "Mentions escalation, confidentiality or safeguarding where relevant",
+    "Gives a justified and professional decision",
+  ],
+  "NHS & Healthcare": [
+    "Shows accurate understanding of the healthcare context",
+    "Considers patients, staff and system pressures",
+    "Balances benefits, limitations and trade-offs",
+    "Uses a realistic example or current issue",
+  ],
+  "Hot Topics & Current Affairs": [
+    "Explains why the issue matters now",
+    "Considers more than one viewpoint",
+    "Links the topic back to patients and healthcare workers",
+    "Avoids making unsupported claims",
+  ],
+  "Data, Research & Critical Thinking": [
+    "States the main trend or conclusion clearly",
+    "Mentions limitations, bias or uncertainty",
+    "Distinguishes evidence from assumption",
+    "Explains the practical implication",
+  ],
+  "Practical MMI & Role Play": [
+    "Clarifies the task and the person's concern",
+    "Uses empathy and professional boundaries",
+    "Keeps the response structured under pressure",
+    "Ends with a safe next step",
+  ],
+  "Curveballs & Quick-Fire": [
+    "Answers the actual question directly",
+    "Gives a brief reason or example",
+    "Stays composed and avoids rambling",
+    "Shows personality while remaining professional",
+  ],
+} as const satisfies Record<InterviewQuestionCategoryTitle, readonly string[]>;
+
 function getPercent(completed: number, total: number) {
   if (total <= 0) return 0;
   return Math.round((completed / total) * 100);
+}
+
+function getSuggestedAnswerSeconds(question: InterviewQuestion) {
+  let seconds = 180;
+
+  if (question.text.length > 180) seconds += 60;
+  if (question.text.length > 320) seconds += 60;
+  if (
+    question.category === "Ethics & Professionalism" ||
+    question.category === "Practical MMI & Role Play" ||
+    question.subcategory === "Data Stations" ||
+    question.subcategory === "Group Tasks"
+  ) {
+    seconds += 60;
+  }
+  if (question.difficulty === "advanced") seconds += 60;
+
+  return Math.min(seconds, 480);
+}
+
+function formatTimer(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function getWordCount(value: string) {
+  const words = value.trim().match(/\S+/g);
+
+  return words?.length ?? 0;
+}
+
+function getSpokenMinutes(wordCount: number) {
+  if (wordCount <= 0) return "0:00";
+
+  return formatTimer(Math.round((wordCount / 130) * 60));
+}
+
+function appendTranscript(answer: string, transcript: string) {
+  const trimmedTranscript = transcript.trim();
+  if (!trimmedTranscript) return answer;
+
+  const spacer = answer.trim() ? " " : "";
+
+  return `${answer.trimEnd()}${spacer}${trimmedTranscript}`;
+}
+
+function buildQuestionBankUrl({
+  categoryTitle,
+  subcategoryIndex,
+  questionId,
+}: QuestionBankNavigationInput) {
+  const params = new URLSearchParams();
+
+  if (categoryTitle) params.set("category", categoryTitle);
+  if (typeof subcategoryIndex === "number") {
+    params.set("subcategory", String(subcategoryIndex));
+  }
+  if (questionId) params.set("question", questionId);
+
+  const queryString = params.toString();
+
+  return queryString ? `${questionBankPath}?${queryString}` : questionBankPath;
+}
+
+function resolveQuestionBankNavigationState(
+  categoriesWithStats: readonly InterviewQuestionCategorySummary[],
+  input: QuestionBankNavigationInput
+): QuestionBankNavigationState {
+  const question = input.questionId
+    ? INTERVIEW_QUESTIONS.find((item) => item.id === input.questionId)
+    : undefined;
+  const category = categoriesWithStats.find(
+    (item) => item.title === (question?.category ?? input.categoryTitle)
+  );
+
+  if (!category) {
+    return {
+      selectedCategoryTitle: null,
+      selectedSubcategoryIndex: 0,
+      activeQuestionId: null,
+      statusFilter: defaultStatusFilter,
+    };
+  }
+
+  const questionSubcategoryIndex = question
+    ? category.subcategories.findIndex(
+        (subcategory) => subcategory === question.subcategory
+      )
+    : -1;
+  const nextSubcategoryIndex =
+    questionSubcategoryIndex >= 0
+      ? questionSubcategoryIndex
+      : Number.isInteger(input.subcategoryIndex) &&
+          input.subcategoryIndex !== null &&
+          input.subcategoryIndex !== undefined &&
+          input.subcategoryIndex >= 0 &&
+          input.subcategoryIndex < category.subcategories.length
+        ? input.subcategoryIndex
+        : 0;
+
+  return {
+    selectedCategoryTitle: category.title,
+    selectedSubcategoryIndex: nextSubcategoryIndex,
+    activeQuestionId: question?.id ?? null,
+    statusFilter: question
+      ? getFilterForQuestionStatus(question.status)
+      : defaultStatusFilter,
+  };
 }
 
 function getCompletedCount(questions: readonly InterviewQuestion[]) {
@@ -544,30 +768,539 @@ function StatusIcon({ status }: { status: QuestionStatus }) {
   );
 }
 
+function ChecklistToggle({
+  id,
+  label,
+  isChecked,
+  onToggle,
+}: {
+  id: string;
+  label: string;
+  isChecked: boolean;
+  onToggle: (id: string) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => onToggle(id)}
+      aria-pressed={isChecked}
+      className={`grid w-full grid-cols-[24px_minmax(0,1fr)] items-start gap-3 rounded-lg border px-3 py-3 text-left transition-colors ${
+        isChecked
+          ? "border-[#b9dcda] bg-[#f1fbfa]"
+          : "border-[#d8e0e6] bg-white hover:border-[#b9dcda] hover:bg-[#f8fbfb]"
+      }`}
+    >
+      {isChecked ? (
+        <CheckCircle2 className="mt-0.5 h-5 w-5 text-[#0f9b7d]" strokeWidth={2.2} />
+      ) : (
+        <Circle className="mt-1 h-4 w-4 text-[#b8c3ca]" fill="#b8c3ca" strokeWidth={0} />
+      )}
+      <span className="text-sm font-medium leading-5 text-[#314956]">
+        {label}
+      </span>
+    </button>
+  );
+}
+
+function QuestionPracticeView({
+  category,
+  selectedSubcategory,
+  question,
+  questionNumber,
+  showPremiumCard,
+  onBackToQuestions,
+}: {
+  category: InterviewQuestionCategorySummary;
+  selectedSubcategory: InterviewQuestionSubcategory;
+  question: InterviewQuestion;
+  questionNumber: number;
+  showPremiumCard: boolean;
+  onBackToQuestions: () => void;
+}) {
+  const Icon = category.icon;
+  const suggestedSeconds = getSuggestedAnswerSeconds(question);
+  const [answer, setAnswer] = useState("");
+  const [timeRemaining, setTimeRemaining] = useState(suggestedSeconds);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [practiceMode, setPracticeMode] = useState<QuestionPracticeMode>("text");
+  const [isListening, setIsListening] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(() => {
+    if (typeof window === "undefined") return false;
+
+    const speechWindow = window as SpeechRecognitionWindow;
+
+    return Boolean(
+      speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition
+    );
+  });
+  const [speechError, setSpeechError] = useState<string | null>(null);
+  const [interimTranscript, setInterimTranscript] = useState("");
+  const [checkedItems, setCheckedItems] = useState<Set<string>>(() => new Set());
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const wordCount = getWordCount(answer);
+  const elapsedSeconds = suggestedSeconds - timeRemaining;
+  const timerPercent = getPercent(elapsedSeconds, suggestedSeconds);
+  const rubricGroups = [
+    {
+      title: "Structure",
+      items: structureChecklist,
+    },
+    {
+      title: "Mark Scheme",
+      items: categoryRubric[category.title],
+    },
+    {
+      title: "Question Fit",
+      items: [
+        `Addresses ${question.subcategory.toLowerCase()} directly`,
+        `Keeps the depth appropriate for a ${question.difficulty} question`,
+      ],
+    },
+  ] as const;
+  const totalChecklistItems = rubricGroups.reduce(
+    (total, group) => total + group.items.length,
+    0
+  );
+  const checkedCount = checkedItems.size;
+  const checklistPercent = getPercent(checkedCount, totalChecklistItems);
+
+  const startAttempt = () => {
+    setHasStarted(true);
+    setHasSubmitted(false);
+    setTimeRemaining((current) => (current > 0 ? current : suggestedSeconds));
+    setIsTimerRunning(true);
+  };
+
+  const stopListening = () => {
+    const recognition = recognitionRef.current;
+
+    recognitionRef.current = null;
+    if (recognition) {
+      recognition.onend = null;
+      recognition.onerror = null;
+      recognition.onresult = null;
+      recognition.stop();
+    }
+    setIsListening(false);
+    setInterimTranscript("");
+  };
+
+  const startListening = () => {
+    if (typeof window === "undefined") return;
+
+    const speechWindow = window as SpeechRecognitionWindow;
+    const SpeechRecognition =
+      speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      setSpeechSupported(false);
+      setSpeechError("Voice transcription is not available in this browser.");
+      return;
+    }
+
+    stopListening();
+    setSpeechSupported(true);
+    setSpeechError(null);
+    setPracticeMode("voice");
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-GB";
+    recognition.onresult = (event) => {
+      let finalTranscript = "";
+      let interim = "";
+
+      for (let index = event.resultIndex; index < event.results.length; index += 1) {
+        const result = event.results[index];
+        const transcript = result[0]?.transcript ?? "";
+
+        if (result.isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interim += transcript;
+        }
+      }
+
+      if (finalTranscript.trim()) {
+        setAnswer((current) => appendTranscript(current, finalTranscript));
+        startAttempt();
+      }
+      setInterimTranscript(interim.trim());
+    };
+    recognition.onerror = (event) => {
+      setSpeechError(
+        event.error
+          ? `Voice transcription stopped: ${event.error}.`
+          : "Voice transcription stopped."
+      );
+      setIsListening(false);
+    };
+    recognition.onend = () => {
+      setIsListening(false);
+      setInterimTranscript("");
+      recognitionRef.current = null;
+    };
+
+    try {
+      recognition.start();
+      recognitionRef.current = recognition;
+      setIsListening(true);
+      startAttempt();
+    } catch {
+      setSpeechError("Voice transcription could not start.");
+      setIsListening(false);
+      recognitionRef.current = null;
+    }
+  };
+
+  const resetAttempt = () => {
+    stopListening();
+    setAnswer("");
+    setTimeRemaining(suggestedSeconds);
+    setHasStarted(false);
+    setIsTimerRunning(false);
+    setHasSubmitted(false);
+    setCheckedItems(new Set());
+  };
+
+  const toggleChecklistItem = (id: string) => {
+    setCheckedItems((current) => {
+      const next = new Set(current);
+
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    return () => {
+      const recognition = recognitionRef.current;
+
+      recognitionRef.current = null;
+      if (recognition) {
+        recognition.onend = null;
+        recognition.onerror = null;
+        recognition.onresult = null;
+        recognition.stop();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isTimerRunning) return undefined;
+
+    const intervalId = window.setInterval(() => {
+      setTimeRemaining((current) => {
+        if (current <= 1) {
+          window.clearInterval(intervalId);
+          setIsTimerRunning(false);
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, [isTimerRunning]);
+
+  const handleAnswerChange = (value: string) => {
+    setAnswer(value);
+    setHasSubmitted(false);
+
+    if (value.trim() && !hasStarted) {
+      startAttempt();
+    }
+  };
+
+  return (
+    <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
+      <div className="grid min-h-screen lg:grid-cols-[230px_1fr]">
+        <InterviewSidebar
+          activeLabel="Question Bank"
+          showPremiumCard={showPremiumCard}
+        />
+
+        <section className="min-w-0 px-5 py-7 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-[1540px]">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <button
+                type="button"
+                onClick={onBackToQuestions}
+                className="inline-flex w-fit items-center gap-2 text-sm font-bold text-[#08787b] transition-colors hover:text-[#042724]"
+              >
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                Back to questions
+              </button>
+              <InterviewAccountControls />
+            </div>
+
+            <section className="mt-5 rounded-xl border border-[#d8e0e6] bg-white/90 p-5 shadow-[0_1px_3px_rgba(7,25,35,0.08)]">
+              <div className="grid gap-5 xl:grid-cols-[80px_minmax(0,1fr)_260px] xl:items-center">
+                <div
+                  className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl text-white ring-1 ring-white/70"
+                  style={{
+                    background: `linear-gradient(135deg, ${category.colour} 0%, ${category.colour} 72%, #071923 150%)`,
+                    boxShadow: `0 18px 30px ${category.colour}26`,
+                  }}
+                >
+                  <span className="absolute -right-4 -top-4 h-12 w-12 rounded-full bg-white/25" aria-hidden="true" />
+                  <span className="absolute -bottom-5 -left-5 h-14 w-14 rounded-full bg-white/10" aria-hidden="true" />
+                  <Icon className="relative h-10 w-10" strokeWidth={2.3} aria-hidden="true" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-black uppercase tracking-[0.08em] text-[#08787b]">
+                    {category.title} / {selectedSubcategory}
+                  </p>
+                  <h1 className="mt-3 text-2xl font-black leading-tight text-[#071923]">
+                    {question.text}
+                  </h1>
+                  <p className="mt-3 text-sm font-medium text-[#4a6370]">
+                    Question {String(questionNumber).padStart(2, "0")}{" "}
+                    <span className="mx-2 text-[#9babb4]">/</span>
+                    {question.difficulty}{" "}
+                    <span className="mx-2 text-[#9babb4]">/</span>
+                    section {question.sourceSection}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-[#d8e0e6] bg-[#f8fbfb] p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-xs font-black uppercase tracking-[0.08em] text-[#4a6370]">
+                      Timer
+                    </span>
+                    <span className="text-2xl font-black text-[#071923]">
+                      {formatTimer(timeRemaining)}
+                    </span>
+                  </div>
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#dfe8ea]">
+                    <div
+                      className="h-full rounded-full bg-[#159a9d]"
+                      style={{ width: `${timerPercent}%` }}
+                    />
+                  </div>
+                  <p className="mt-3 text-xs font-medium text-[#5d707a]">
+                    Suggested {formatTimer(suggestedSeconds)} answer
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
+              <div className="space-y-5">
+                <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                      <h2 className="text-base font-black text-[#071923]">
+                        Your Response
+                      </h2>
+                      <p className="mt-2 text-sm font-medium text-[#4a6370]">
+                        {wordCount} words / about {getSpokenMinutes(wordCount)} spoken
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          isTimerRunning ? setIsTimerRunning(false) : startAttempt()
+                        }
+                        className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#06254a] px-4 text-sm font-black text-white shadow-sm transition-colors hover:bg-[#071923]"
+                      >
+                        {isTimerRunning ? (
+                          <Pause className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <Play className="h-4 w-4" aria-hidden="true" />
+                        )}
+                        {isTimerRunning ? "Pause" : hasStarted ? "Resume" : "Start"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={resetAttempt}
+                        className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#b8c8cf] bg-white px-4 text-sm font-black text-[#071923] shadow-sm transition-colors hover:border-[#08787b] hover:text-[#08787b]"
+                      >
+                        <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 flex w-fit overflow-hidden rounded-lg border border-[#d8e0e6] bg-white">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPracticeMode("text");
+                        stopListening();
+                      }}
+                      aria-pressed={practiceMode === "text"}
+                      className={`inline-flex h-10 items-center gap-2 px-4 text-sm font-black transition-colors ${
+                        practiceMode === "text"
+                          ? "bg-[#06254a] text-white"
+                          : "text-[#071923] hover:bg-[#f4f8f8]"
+                      }`}
+                    >
+                      <Keyboard className="h-4 w-4" aria-hidden="true" />
+                      Text
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isListening) {
+                          stopListening();
+                        } else {
+                          startListening();
+                        }
+                      }}
+                      aria-pressed={practiceMode === "voice"}
+                      className={`inline-flex h-10 items-center gap-2 px-4 text-sm font-black transition-colors ${
+                        practiceMode === "voice"
+                          ? "bg-[#06254a] text-white"
+                          : "text-[#071923] hover:bg-[#f4f8f8]"
+                      }`}
+                    >
+                      <Mic className="h-4 w-4" aria-hidden="true" />
+                      {isListening ? "Listening" : "Voice"}
+                    </button>
+                  </div>
+
+                  {speechError && (
+                    <p className="mt-3 rounded-lg border border-[#f5d5a5] bg-[#fff8ec] px-3 py-2 text-sm font-medium text-[#8a5600]">
+                      {speechError}
+                    </p>
+                  )}
+                  {practiceMode === "voice" && speechSupported && !speechError && (
+                    <p className="mt-3 text-sm font-medium text-[#4a6370]">
+                      {isListening ? "Voice transcription active" : "Voice transcription ready"}
+                      {interimTranscript ? `: ${interimTranscript}` : ""}
+                    </p>
+                  )}
+
+                  <textarea
+                    value={answer}
+                    onChange={(event) => handleAnswerChange(event.target.value)}
+                    className="mt-4 min-h-[330px] w-full resize-y rounded-xl border border-[#d8e0e6] bg-[#fbfdfd] p-4 text-base font-medium leading-7 text-[#071923] outline-none transition-colors placeholder:text-[#8091a0] focus:border-[#159a9d] focus:bg-white focus:ring-2 focus:ring-[#159a9d]/15"
+                    placeholder="Start typing your answer..."
+                  />
+
+                  <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-sm font-medium text-[#4a6370]">
+                      {timeRemaining === 0
+                        ? "Time is up"
+                        : hasStarted
+                          ? "Attempt in progress"
+                          : "Ready to start"}
+                    </p>
+                    <button
+                      type="button"
+                      disabled={!answer.trim()}
+                      onClick={() => {
+                        setHasSubmitted(true);
+                        setIsTimerRunning(false);
+                        stopListening();
+                      }}
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#159a9d] px-5 text-sm font-black text-white shadow-sm transition-colors hover:bg-[#08787b] disabled:cursor-not-allowed disabled:bg-[#b8c8cf]"
+                    >
+                      <Send className="h-4 w-4" aria-hidden="true" />
+                      Finish & Review
+                    </button>
+                  </div>
+                </section>
+
+                {hasSubmitted && (
+                  <section className="rounded-xl border border-[#b9dcda] bg-[#f1fbfa] p-5">
+                    <h2 className="text-base font-black text-[#071923]">
+                      Review Snapshot
+                    </h2>
+                    <p className="mt-2 text-sm font-medium leading-6 text-[#4a6370]">
+                      Response saved for this session. Tick the checklist items you covered, then adjust the answer before moving on.
+                    </p>
+                  </section>
+                )}
+              </div>
+
+              <aside className="space-y-5">
+                <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
+                  <div className="flex items-center justify-between gap-4">
+                    <h2 className="text-base font-black text-[#071923]">
+                      Mark Scheme
+                    </h2>
+                    <span className="text-sm font-black text-[#08787b]">
+                      {checklistPercent}%
+                    </span>
+                  </div>
+                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#dfe8ea]">
+                    <div
+                      className="h-full rounded-full bg-[#159a9d]"
+                      style={{ width: `${checklistPercent}%` }}
+                    />
+                  </div>
+                  <p className="mt-3 text-sm font-medium text-[#4a6370]">
+                    {checkedCount} / {totalChecklistItems} covered
+                  </p>
+                </section>
+
+                {rubricGroups.map((group) => (
+                  <section
+                    key={group.title}
+                    className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]"
+                  >
+                    <h3 className="text-sm font-black uppercase tracking-[0.08em] text-[#08787b]">
+                      {group.title}
+                    </h3>
+                    <div className="mt-4 space-y-3">
+                      {group.items.map((item) => {
+                        const id = `${group.title}-${item}`;
+
+                        return (
+                          <ChecklistToggle
+                            key={id}
+                            id={id}
+                            label={item}
+                            isChecked={checkedItems.has(id)}
+                            onToggle={toggleChecklistItem}
+                          />
+                        );
+                      })}
+                    </div>
+                  </section>
+                ))}
+              </aside>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
+
 function QuestionBankCategoryView({
   category,
   selectedSubcategoryIndex,
   statusFilter,
   questionQuery,
-  spotlightQuestionId,
   showPremiumCard,
   onBack,
   onSelectSubcategory,
   onStatusFilterChange,
   onQuestionQueryChange,
-  onSpotlightQuestion,
+  onOpenQuestion,
 }: {
   category: InterviewQuestionCategorySummary;
   selectedSubcategoryIndex: number;
   statusFilter: StatusFilter;
   questionQuery: string;
-  spotlightQuestionId: string | null;
   showPremiumCard: boolean;
   onBack: () => void;
   onSelectSubcategory: (index: number) => void;
   onStatusFilterChange: (filter: StatusFilter) => void;
   onQuestionQueryChange: (query: string) => void;
-  onSpotlightQuestion: (questionId: string | null) => void;
+  onOpenQuestion: (question: InterviewQuestion) => void;
 }) {
   const Icon = category.icon;
   const percent = getPercent(category.completed, category.total);
@@ -616,7 +1349,6 @@ function QuestionBankCategoryView({
     onSelectSubcategory(index);
     onStatusFilterChange(defaultStatusFilter);
     onQuestionQueryChange("");
-    onSpotlightQuestion(null);
   };
 
   const openRandomQuestion = () => {
@@ -631,14 +1363,7 @@ function QuestionBankCategoryView({
       nextQuestions[Math.floor(Math.random() * nextQuestions.length)] ??
       nextQuestions[0];
 
-    onSelectSubcategory(nextSubcategoryIndex);
-    onStatusFilterChange(
-      nextQuestion
-        ? getFilterForQuestionStatus(nextQuestion.status)
-        : defaultStatusFilter
-    );
-    onQuestionQueryChange("");
-    onSpotlightQuestion(nextQuestion?.id ?? null);
+    if (nextQuestion) onOpenQuestion(nextQuestion);
   };
 
   const resumePractice = () => {
@@ -646,9 +1371,7 @@ function QuestionBankCategoryView({
       questions.find((question) => question.status === "not-attempted") ??
       questions[0];
 
-    onStatusFilterChange(defaultStatusFilter);
-    onQuestionQueryChange("");
-    onSpotlightQuestion(nextQuestion?.id ?? null);
+    if (nextQuestion) onOpenQuestion(nextQuestion);
   };
 
   const filterOptions = [
@@ -789,42 +1512,38 @@ function QuestionBankCategoryView({
 
               <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_220px]">
                 <div className="overflow-hidden rounded-xl border border-[#d8e0e6] bg-white shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
-                  {filteredQuestions.map((question, index) => {
-                    const isSpotlight = question.id === spotlightQuestionId;
-
-                    return (
-                      <button
-                        key={question.id}
-                        type="button"
-                        onClick={() => onSpotlightQuestion(question.id)}
-                        className={`grid min-h-[70px] w-full grid-cols-[40px_minmax(0,1fr)_32px_18px] items-center gap-4 px-5 py-3 text-left transition-colors ${
-                          index === filteredQuestions.length - 1
-                            ? ""
-                            : "border-b border-[#edf1f3]"
-                        } ${isSpotlight ? "bg-[#f1fbfa]" : "bg-white hover:bg-[#f8fbfb]"}`}
-                      >
-                        <span className="text-sm font-medium text-[#526976]">
-                          {String(
-                            questionNumbers.get(question.id) ?? index + 1
-                          ).padStart(2, "0")}
+                  {filteredQuestions.map((question, index) => (
+                    <button
+                      key={question.id}
+                      type="button"
+                      onClick={() => onOpenQuestion(question)}
+                      className={`grid min-h-[70px] w-full grid-cols-[40px_minmax(0,1fr)_32px_18px] items-center gap-4 bg-white px-5 py-3 text-left transition-colors hover:bg-[#f8fbfb] ${
+                        index === filteredQuestions.length - 1
+                          ? ""
+                          : "border-b border-[#edf1f3]"
+                      }`}
+                    >
+                      <span className="text-sm font-medium text-[#526976]">
+                        {String(
+                          questionNumbers.get(question.id) ?? index + 1
+                        ).padStart(2, "0")}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-sm font-medium leading-5 text-[#071923]">
+                          {question.text}
                         </span>
-                        <span className="min-w-0">
-                          <span className="block text-sm font-medium leading-5 text-[#071923]">
-                            {question.text}
-                          </span>
-                          <span className="mt-1 block truncate text-[11px] font-semibold uppercase tracking-[0.08em] text-[#748791]">
-                            {question.difficulty} / section{" "}
-                            {question.sourceSection}
-                            {question.sourceTopic
-                              ? ` / ${question.sourceTopic}`
-                              : ""}
-                          </span>
+                        <span className="mt-1 block truncate text-[11px] font-semibold uppercase tracking-[0.08em] text-[#748791]">
+                          {question.difficulty} / section{" "}
+                          {question.sourceSection}
+                          {question.sourceTopic
+                            ? ` / ${question.sourceTopic}`
+                            : ""}
                         </span>
-                        <StatusIcon status={question.status} />
-                        <ChevronRight className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />
-                      </button>
-                    );
-                  })}
+                      </span>
+                      <StatusIcon status={question.status} />
+                      <ChevronRight className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />
+                    </button>
+                  ))}
                   {filteredQuestions.length === 0 && (
                     <div className="p-8 text-center">
                       <p className="text-sm font-black text-[#071923]">
@@ -897,23 +1616,46 @@ function QuestionBankCategoryView({
 
 export function InterviewQuestionBankDashboard({
   showPremiumCard,
+  initialCategoryTitle,
+  initialSubcategoryIndex,
+  initialQuestionId,
 }: {
   showPremiumCard: boolean;
+  initialCategoryTitle?: string;
+  initialSubcategoryIndex?: number;
+  initialQuestionId?: string;
 }) {
   const [query, setQuery] = useState("");
-  const [selectedCategoryTitle, setSelectedCategoryTitle] = useState<
-    string | null
-  >(null);
-  const [selectedSubcategoryIndex, setSelectedSubcategoryIndex] = useState(0);
-  const [statusFilter, setStatusFilter] =
-    useState<StatusFilter>(defaultStatusFilter);
-  const [questionQuery, setQuestionQuery] = useState("");
-  const [spotlightQuestionId, setSpotlightQuestionId] = useState<string | null>(
-    null
-  );
   const categoriesWithStats = useMemo(
     () => categories.map((category) => withQuestionStats(category)),
     []
+  );
+  const initialNavigationState = useMemo(
+    () =>
+      resolveQuestionBankNavigationState(categoriesWithStats, {
+        categoryTitle: initialCategoryTitle,
+        subcategoryIndex: initialSubcategoryIndex,
+        questionId: initialQuestionId,
+      }),
+    [
+      categoriesWithStats,
+      initialCategoryTitle,
+      initialQuestionId,
+      initialSubcategoryIndex,
+    ]
+  );
+  const [selectedCategoryTitle, setSelectedCategoryTitle] = useState<
+    string | null
+  >(initialNavigationState.selectedCategoryTitle);
+  const [selectedSubcategoryIndex, setSelectedSubcategoryIndex] = useState(
+    initialNavigationState.selectedSubcategoryIndex
+  );
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>(
+    initialNavigationState.statusFilter
+  );
+  const [questionQuery, setQuestionQuery] = useState("");
+  const [activeQuestionId, setActiveQuestionId] = useState<string | null>(
+    initialNavigationState.activeQuestionId
   );
   const totals = useMemo(
     () =>
@@ -958,27 +1700,76 @@ export function InterviewQuestionBankDashboard({
         (category) => category.title === selectedCategoryTitle
       )
     : undefined;
+  const activeQuestion = activeQuestionId
+    ? INTERVIEW_QUESTIONS.find((question) => question.id === activeQuestionId)
+    : undefined;
+  const selectedSubcategory =
+    selectedCategory?.subcategories[selectedSubcategoryIndex] ??
+    selectedCategory?.subcategories[0];
+  const activeQuestionNumber =
+    selectedCategory && selectedSubcategory && activeQuestion
+      ? Math.max(
+          1,
+          getSubcategoryQuestions(selectedCategory, selectedSubcategory).findIndex(
+            (question) => question.id === activeQuestion.id
+          ) + 1
+        )
+      : 1;
+
+  const updateQuestionBankUrl = (
+    nextState: {
+      categoryTitle?: string | null;
+      subcategoryIndex?: number;
+      questionId?: string | null;
+    },
+    mode: "push" | "replace" = "push"
+  ) => {
+    if (typeof window === "undefined") return;
+
+    const url = buildQuestionBankUrl(nextState);
+
+    if (mode === "replace") {
+      window.history.replaceState(null, "", url);
+    } else {
+      window.history.pushState(null, "", url);
+    }
+  };
 
   const resetQuestionState = () => {
     setStatusFilter(defaultStatusFilter);
     setQuestionQuery("");
-    setSpotlightQuestionId(null);
+    setActiveQuestionId(null);
   };
 
-  const openCategory = (category: InterviewQuestionCategorySummary) => {
+  const openCategory = (
+    category: InterviewQuestionCategorySummary,
+    mode: "push" | "replace" = "push"
+  ) => {
     setSelectedCategoryTitle(category.title);
     setSelectedSubcategoryIndex(0);
     resetQuestionState();
+    updateQuestionBankUrl(
+      { categoryTitle: category.title, subcategoryIndex: 0 },
+      mode
+    );
     scrollToTop();
   };
 
-  const openRandomQuestion = () => {
-    const question =
-      INTERVIEW_QUESTIONS[
-        Math.floor(Math.random() * INTERVIEW_QUESTIONS.length)
-      ] ?? INTERVIEW_QUESTIONS[0];
+  const selectSubcategory = (
+    index: number,
+    categoryTitle = selectedCategory?.title
+  ) => {
+    setSelectedSubcategoryIndex(index);
+    resetQuestionState();
+    updateQuestionBankUrl({ categoryTitle, subcategoryIndex: index });
+  };
+
+  const openQuestion = (
+    question: InterviewQuestion,
+    mode: "push" | "replace" = "push"
+  ) => {
     const category = categoriesWithStats.find(
-      (item) => item.title === question?.category
+      (item) => item.title === question.category
     );
     if (!question || !category) return;
     const subcategoryIndex = Math.max(
@@ -992,7 +1783,36 @@ export function InterviewQuestionBankDashboard({
     setSelectedSubcategoryIndex(subcategoryIndex);
     setStatusFilter(getFilterForQuestionStatus(question.status));
     setQuestionQuery("");
-    setSpotlightQuestionId(question.id);
+    setActiveQuestionId(question.id);
+    updateQuestionBankUrl(
+      {
+        categoryTitle: category.title,
+        subcategoryIndex,
+        questionId: question.id,
+      },
+      mode
+    );
+    scrollToTop();
+  };
+
+  const openRandomQuestion = () => {
+    const question =
+      INTERVIEW_QUESTIONS[
+        Math.floor(Math.random() * INTERVIEW_QUESTIONS.length)
+      ] ?? INTERVIEW_QUESTIONS[0];
+
+    if (question) openQuestion(question);
+  };
+
+  const backToQuestionList = () => {
+    setActiveQuestionId(null);
+    updateQuestionBankUrl(
+      {
+        categoryTitle: selectedCategory?.title,
+        subcategoryIndex: selectedSubcategoryIndex,
+      },
+      "replace"
+    );
     scrollToTop();
   };
 
@@ -1000,8 +1820,49 @@ export function InterviewQuestionBankDashboard({
     setSelectedCategoryTitle(null);
     setSelectedSubcategoryIndex(0);
     resetQuestionState();
+    updateQuestionBankUrl({}, "push");
     scrollToTop();
   };
+
+  useEffect(() => {
+    const applyUrlState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const subcategoryParam = params.get("subcategory");
+      const nextState = resolveQuestionBankNavigationState(
+        categoriesWithStats,
+        {
+          categoryTitle: params.get("category"),
+          subcategoryIndex:
+            subcategoryParam === null ? null : Number(subcategoryParam),
+          questionId: params.get("question"),
+        }
+      );
+
+      setSelectedCategoryTitle(nextState.selectedCategoryTitle);
+      setSelectedSubcategoryIndex(nextState.selectedSubcategoryIndex);
+      setStatusFilter(nextState.statusFilter);
+      setQuestionQuery("");
+      setActiveQuestionId(nextState.activeQuestionId);
+    };
+
+    window.addEventListener("popstate", applyUrlState);
+
+    return () => window.removeEventListener("popstate", applyUrlState);
+  }, [categoriesWithStats]);
+
+  if (selectedCategory && selectedSubcategory && activeQuestion) {
+    return (
+      <QuestionPracticeView
+        key={activeQuestion.id}
+        category={selectedCategory}
+        selectedSubcategory={selectedSubcategory}
+        question={activeQuestion}
+        questionNumber={activeQuestionNumber}
+        showPremiumCard={showPremiumCard}
+        onBackToQuestions={backToQuestionList}
+      />
+    );
+  }
 
   if (selectedCategory) {
     return (
@@ -1010,13 +1871,12 @@ export function InterviewQuestionBankDashboard({
         selectedSubcategoryIndex={selectedSubcategoryIndex}
         statusFilter={statusFilter}
         questionQuery={questionQuery}
-        spotlightQuestionId={spotlightQuestionId}
         showPremiumCard={showPremiumCard}
         onBack={backToCategories}
-        onSelectSubcategory={setSelectedSubcategoryIndex}
+        onSelectSubcategory={(index) => selectSubcategory(index)}
         onStatusFilterChange={setStatusFilter}
         onQuestionQueryChange={setQuestionQuery}
-        onSpotlightQuestion={setSpotlightQuestionId}
+        onOpenQuestion={openQuestion}
       />
     );
   }
