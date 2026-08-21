@@ -63,7 +63,9 @@ type SummaryStatItem = {
 };
 
 type QuestionStatus = InterviewQuestionStatus;
-type StatusFilter = "all" | "unanswered" | "review";
+type StatusFilter = "answered" | "unanswered" | "review";
+
+const defaultStatusFilter = "unanswered" satisfies StatusFilter;
 
 const categories = [
   {
@@ -296,6 +298,12 @@ function getQuestionSearchText(question: InterviewQuestion) {
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
+}
+
+function getFilterForQuestionStatus(status: QuestionStatus): StatusFilter {
+  if (status === "completed") return "answered";
+  if (status === "review") return "review";
+  return "unanswered";
 }
 
 function scrollToTop() {
@@ -566,7 +574,7 @@ function QuestionBankCategoryView({
   const normalisedQuestionQuery = questionQuery.trim().toLowerCase();
   const filteredQuestions = questions.filter((question) => {
     const matchesStatus =
-      statusFilter === "all" ||
+      (statusFilter === "answered" && question.status === "completed") ||
       (statusFilter === "unanswered" &&
         question.status === "not-attempted") ||
       (statusFilter === "review" && question.status === "review");
@@ -590,7 +598,7 @@ function QuestionBankCategoryView({
 
   const selectSubcategory = (index: number) => {
     onSelectSubcategory(index);
-    onStatusFilterChange("all");
+    onStatusFilterChange(defaultStatusFilter);
     onQuestionQueryChange("");
     onSpotlightQuestion(null);
   };
@@ -608,7 +616,11 @@ function QuestionBankCategoryView({
       nextQuestions[0];
 
     onSelectSubcategory(nextSubcategoryIndex);
-    onStatusFilterChange("all");
+    onStatusFilterChange(
+      nextQuestion
+        ? getFilterForQuestionStatus(nextQuestion.status)
+        : defaultStatusFilter
+    );
     onQuestionQueryChange("");
     onSpotlightQuestion(nextQuestion?.id ?? null);
   };
@@ -618,13 +630,13 @@ function QuestionBankCategoryView({
       questions.find((question) => question.status === "not-attempted") ??
       questions[0];
 
-    onStatusFilterChange("all");
+    onStatusFilterChange(defaultStatusFilter);
     onQuestionQueryChange("");
     onSpotlightQuestion(nextQuestion?.id ?? null);
   };
 
   const filterOptions = [
-    { label: "All", value: "all" },
+    { label: "Answered", value: "answered" },
     { label: "Unanswered", value: "unanswered" },
     { label: "Review", value: "review" },
   ] as const satisfies readonly { label: string; value: StatusFilter }[];
@@ -724,49 +736,39 @@ function QuestionBankCategoryView({
             </section>
 
             <section className="mt-6 border-t border-[#d8e0e6] pt-5">
-              <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_330px] xl:items-end">
-                <div>
-                  <h2 className="text-xl font-black leading-tight text-[#071923]">
-                    {selectedSubcategory}
-                  </h2>
-                  <p className="mt-1 text-sm font-medium text-[#4a6370]">
-                    {selectedStats.total} questions
-                  </p>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_330px] xl:grid-cols-1">
-                  <div className="grid grid-cols-3 overflow-hidden rounded-lg border border-[#d8e0e6] bg-white">
-                    {filterOptions.map((option) => {
-                      const isActive = option.value === statusFilter;
+              <div className="grid gap-3 lg:grid-cols-[minmax(0,520px)_minmax(260px,330px)] lg:items-center lg:justify-between">
+                <div className="grid grid-cols-3 overflow-hidden rounded-lg border border-[#d8e0e6] bg-white">
+                  {filterOptions.map((option) => {
+                    const isActive = option.value === statusFilter;
 
-                      return (
-                        <button
-                          key={option.value}
-                          type="button"
-                          onClick={() => onStatusFilterChange(option.value)}
-                          aria-pressed={isActive}
-                          className={`h-10 px-3 text-xs font-black transition-colors ${
-                            isActive
-                              ? "bg-[#06254a] text-white"
-                              : "text-[#071923] hover:bg-[#f4f8f8]"
-                          }`}
-                        >
-                          {option.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <label className="flex h-10 min-w-0 items-center gap-3 rounded-lg border border-[#d8e0e6] bg-white px-3">
-                    <input
-                      value={questionQuery}
-                      onChange={(event) =>
-                        onQuestionQueryChange(event.target.value)
-                      }
-                      className="min-w-0 flex-1 bg-transparent text-sm font-medium text-[#071923] outline-none placeholder:text-[#8091a0]"
-                      placeholder="Search questions..."
-                    />
-                    <Search className="h-5 w-5 shrink-0 text-[#071923]" aria-hidden="true" />
-                  </label>
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => onStatusFilterChange(option.value)}
+                        aria-pressed={isActive}
+                        className={`h-10 px-3 text-xs font-black transition-colors ${
+                          isActive
+                            ? "bg-[#06254a] text-white"
+                            : "text-[#071923] hover:bg-[#f4f8f8]"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
                 </div>
+                <label className="flex h-10 min-w-0 items-center gap-3 rounded-lg border border-[#d8e0e6] bg-white px-3">
+                  <input
+                    value={questionQuery}
+                    onChange={(event) =>
+                      onQuestionQueryChange(event.target.value)
+                    }
+                    className="min-w-0 flex-1 bg-transparent text-sm font-medium text-[#071923] outline-none placeholder:text-[#8091a0]"
+                    placeholder="Search questions..."
+                  />
+                  <Search className="h-5 w-5 shrink-0 text-[#071923]" aria-hidden="true" />
+                </label>
               </div>
 
               <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_220px]">
@@ -887,7 +889,8 @@ export function InterviewQuestionBankDashboard({
     string | null
   >(null);
   const [selectedSubcategoryIndex, setSelectedSubcategoryIndex] = useState(0);
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [statusFilter, setStatusFilter] =
+    useState<StatusFilter>(defaultStatusFilter);
   const [questionQuery, setQuestionQuery] = useState("");
   const [spotlightQuestionId, setSpotlightQuestionId] = useState<string | null>(
     null
@@ -941,7 +944,7 @@ export function InterviewQuestionBankDashboard({
     : undefined;
 
   const resetQuestionState = () => {
-    setStatusFilter("all");
+    setStatusFilter(defaultStatusFilter);
     setQuestionQuery("");
     setSpotlightQuestionId(null);
   };
@@ -971,7 +974,7 @@ export function InterviewQuestionBankDashboard({
 
     setSelectedCategoryTitle(category.title);
     setSelectedSubcategoryIndex(subcategoryIndex);
-    setStatusFilter("all");
+    setStatusFilter(getFilterForQuestionStatus(question.status));
     setQuestionQuery("");
     setSpotlightQuestionId(question.id);
     scrollToTop();
