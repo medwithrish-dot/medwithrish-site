@@ -1939,7 +1939,7 @@ function QuestionBankCategoryView({
 
             <section className="mt-6">
               <h2 className="text-base font-black text-[#071923]">
-                Subcategories
+                Subcategories ({category.subcategories.length})
               </h2>
               <div className="mt-4 flex gap-4 overflow-x-auto pb-2">
                 {category.subcategories.map((subcategory, index) => (
