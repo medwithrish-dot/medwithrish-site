@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowLeft,
@@ -71,6 +71,8 @@ type QuestionStatus = InterviewQuestionStatus;
 type StatusFilter = "answered" | "unanswered" | "review";
 
 const defaultStatusFilter = "unanswered" satisfies StatusFilter;
+const completedQuestionStorageKey = "phloemai-interview-question-completed";
+const savedResponseStorageKeyPrefix = "phloemai-interview-question-response:";
 
 const categories = [
   {
@@ -249,6 +251,19 @@ const statusMeta = {
 >;
 
 type QuestionPracticeMode = "text" | "voice";
+type QuestionAttemptPhase = "idle" | "answering" | "review";
+type QuestionCompletionReason = "manual" | "timer";
+
+type SavedQuestionResponse = {
+  questionId: string;
+  answer: string;
+  completedAt: string;
+  elapsedSeconds: number;
+  suggestedSeconds: number;
+  mode: QuestionPracticeMode;
+  completionReason: QuestionCompletionReason;
+  wordCount: number;
+};
 
 type QuestionBankNavigationInput = {
   categoryTitle?: string | null;
@@ -408,6 +423,92 @@ function appendTranscript(answer: string, transcript: string) {
   return `${answer.trimEnd()}${spacer}${trimmedTranscript}`;
 }
 
+function getSavedResponseStorageKey(questionId: string) {
+  return `${savedResponseStorageKeyPrefix}${questionId}`;
+}
+
+function readCompletedQuestionIds() {
+  if (typeof window === "undefined") return new Set<string>();
+
+  try {
+    const saved = window.localStorage.getItem(completedQuestionStorageKey);
+    const parsed: unknown = saved ? JSON.parse(saved) : [];
+
+    if (!Array.isArray(parsed)) return new Set<string>();
+
+    return new Set(parsed.filter((item): item is string => typeof item === "string"));
+  } catch {
+    return new Set<string>();
+  }
+}
+
+function writeCompletedQuestionIds(questionIds: ReadonlySet<string>) {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(
+      completedQuestionStorageKey,
+      JSON.stringify([...questionIds].sort())
+    );
+  } catch {
+    // Local progress is best-effort; the attempt still completes in memory.
+  }
+}
+
+function readSavedQuestionResponse(questionId: string): SavedQuestionResponse | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const saved = window.localStorage.getItem(getSavedResponseStorageKey(questionId));
+    const parsed: unknown = saved ? JSON.parse(saved) : null;
+
+    if (!parsed || typeof parsed !== "object") return null;
+
+    const response = parsed as Partial<SavedQuestionResponse>;
+
+    if (
+      response.questionId !== questionId ||
+      typeof response.answer !== "string" ||
+      typeof response.completedAt !== "string" ||
+      typeof response.elapsedSeconds !== "number" ||
+      typeof response.suggestedSeconds !== "number" ||
+      (response.mode !== "text" && response.mode !== "voice") ||
+      (response.completionReason !== "manual" &&
+        response.completionReason !== "timer") ||
+      typeof response.wordCount !== "number"
+    ) {
+      return null;
+    }
+
+    return response as SavedQuestionResponse;
+  } catch {
+    return null;
+  }
+}
+
+function writeSavedQuestionResponse(response: SavedQuestionResponse) {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(
+      getSavedResponseStorageKey(response.questionId),
+      JSON.stringify(response)
+    );
+  } catch {
+    // Local response saving is best-effort; the review screen still shows it.
+  }
+}
+
+function removeSavedQuestionResponse(questionId: string) {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.removeItem(getSavedResponseStorageKey(questionId));
+  } catch {
+    // Ignore storage failures; resetting still clears the visible attempt.
+  }
+}
+
 function buildQuestionBankUrl({
   categoryTitle,
   subcategoryIndex,
@@ -430,8 +531,9 @@ function resolveQuestionBankNavigationState(
   categoriesWithStats: readonly InterviewQuestionCategorySummary[],
   input: QuestionBankNavigationInput
 ): QuestionBankNavigationState {
+  const questions = categoriesWithStats.flatMap((category) => category.questions);
   const question = input.questionId
-    ? INTERVIEW_QUESTIONS.find((item) => item.id === input.questionId)
+    ? questions.find((item) => item.id === input.questionId)
     : undefined;
   const category = categoriesWithStats.find(
     (item) => item.title === (question?.category ?? input.categoryTitle)
@@ -472,20 +574,37 @@ function resolveQuestionBankNavigationState(
   };
 }
 
+function getQuestionStatus(
+  question: InterviewQuestion,
+  completedQuestionIds: ReadonlySet<string>
+): QuestionStatus {
+  return completedQuestionIds.has(question.id) ? "completed" : question.status;
+}
+
 function getCompletedCount(questions: readonly InterviewQuestion[]) {
   return questions.filter((question) => question.status === "completed").length;
 }
 
-function getCategoryQuestions(categoryTitle: InterviewQuestionCategoryTitle) {
-  return INTERVIEW_QUESTIONS.filter(
+function getCategoryQuestions(
+  categoryTitle: InterviewQuestionCategoryTitle,
+  completedQuestionIds: ReadonlySet<string>
+): InterviewQuestion[] {
+  const questions: readonly InterviewQuestion[] = INTERVIEW_QUESTIONS;
+
+  return questions.filter(
     (question) => question.category === categoryTitle
-  );
+  ).map((question) => {
+    const status = getQuestionStatus(question, completedQuestionIds);
+
+    return status === question.status ? question : { ...question, status };
+  });
 }
 
 function withQuestionStats(
-  category: InterviewQuestionCategory
+  category: InterviewQuestionCategory,
+  completedQuestionIds: ReadonlySet<string>
 ): InterviewQuestionCategorySummary {
-  const questions = getCategoryQuestions(category.title);
+  const questions = getCategoryQuestions(category.title, completedQuestionIds);
 
   return {
     ...category,
@@ -809,6 +928,8 @@ function QuestionPracticeView({
   questionNumber,
   showPremiumCard,
   onBackToQuestions,
+  onQuestionCompleted,
+  onQuestionReset,
 }: {
   category: InterviewQuestionCategorySummary;
   selectedSubcategory: InterviewQuestionSubcategory;
@@ -816,11 +937,15 @@ function QuestionPracticeView({
   questionNumber: number;
   showPremiumCard: boolean;
   onBackToQuestions: () => void;
+  onQuestionCompleted: (questionId: string) => void;
+  onQuestionReset: (questionId: string) => void;
 }) {
   const Icon = category.icon;
   const suggestedSeconds = getSuggestedAnswerSeconds(question);
   const [answer, setAnswer] = useState("");
   const [timeRemaining, setTimeRemaining] = useState(suggestedSeconds);
+  const [attemptPhase, setAttemptPhase] =
+    useState<QuestionAttemptPhase>("idle");
   const [hasStarted, setHasStarted] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [practiceMode, setPracticeMode] = useState<QuestionPracticeMode>("text");
@@ -837,10 +962,15 @@ function QuestionPracticeView({
   const [speechError, setSpeechError] = useState<string | null>(null);
   const [interimTranscript, setInterimTranscript] = useState("");
   const [checkedItems, setCheckedItems] = useState<Set<string>>(() => new Set());
-  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [savedResponse, setSavedResponse] =
+    useState<SavedQuestionResponse | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const answerRef = useRef("");
+  const interimTranscriptRef = useRef("");
+  const timeRemainingRef = useRef(suggestedSeconds);
+  const attemptPhaseRef = useRef<QuestionAttemptPhase>("idle");
   const wordCount = getWordCount(answer);
-  const elapsedSeconds = suggestedSeconds - timeRemaining;
+  const elapsedSeconds = Math.max(0, suggestedSeconds - timeRemaining);
   const timerPercent = getPercent(elapsedSeconds, suggestedSeconds);
   const rubricGroups = [
     {
@@ -865,30 +995,140 @@ function QuestionPracticeView({
   );
   const checkedCount = checkedItems.size;
   const checklistPercent = getPercent(checkedCount, totalChecklistItems);
+  const draftAnswer = appendTranscript(answer, interimTranscript);
+  const canFinish = Boolean(draftAnswer.trim());
+  const isReviewing = attemptPhase === "review";
+  const primaryTimerActionLabel =
+    isTimerRunning || isListening ? "Pause" : hasStarted ? "Resume" : "Start";
+  const savedAnswer = savedResponse?.answer ?? answer;
+  const savedWordCount = savedResponse?.wordCount ?? getWordCount(savedAnswer);
+  const reviewElapsedSeconds = savedResponse?.elapsedSeconds ?? elapsedSeconds;
+  const completionLabel =
+    savedResponse?.completionReason === "timer"
+      ? "Timer ended"
+      : "Submitted manually";
 
-  const startAttempt = () => {
-    setHasStarted(true);
-    setHasSubmitted(false);
-    setTimeRemaining((current) => (current > 0 ? current : suggestedSeconds));
-    setIsTimerRunning(true);
-  };
-
-  const stopListening = () => {
-    const recognition = recognitionRef.current;
-
-    recognitionRef.current = null;
-    if (recognition) {
-      recognition.onend = null;
-      recognition.onerror = null;
-      recognition.onresult = null;
-      recognition.stop();
+  const beginAttempt = useCallback(() => {
+    if (
+      attemptPhaseRef.current === "review" ||
+      timeRemainingRef.current <= 0
+    ) {
+      return false;
     }
-    setIsListening(false);
-    setInterimTranscript("");
-  };
 
-  const startListening = () => {
-    if (typeof window === "undefined") return;
+    attemptPhaseRef.current = "answering";
+    setAttemptPhase("answering");
+    setHasStarted(true);
+    setSavedResponse(null);
+    setIsTimerRunning(true);
+
+    return true;
+  }, []);
+
+  const commitInterimTranscript = useCallback(() => {
+    const interim = interimTranscriptRef.current.trim();
+
+    if (!interim) return answerRef.current;
+
+    const nextAnswer = appendTranscript(answerRef.current, interim);
+
+    answerRef.current = nextAnswer;
+    interimTranscriptRef.current = "";
+    setAnswer(nextAnswer);
+    setInterimTranscript("");
+
+    return nextAnswer;
+  }, []);
+
+  const stopListening = useCallback(
+    ({ commitInterim = false }: { commitInterim?: boolean } = {}) => {
+      if (commitInterim) {
+        commitInterimTranscript();
+      }
+
+      const recognition = recognitionRef.current;
+
+      recognitionRef.current = null;
+      if (recognition) {
+        recognition.onend = null;
+        recognition.onerror = null;
+        recognition.onresult = null;
+
+        try {
+          recognition.stop();
+        } catch {
+          // The browser may already have stopped recognition.
+        }
+      }
+
+      setIsListening(false);
+
+      if (!commitInterim) {
+        interimTranscriptRef.current = "";
+        setInterimTranscript("");
+      }
+    },
+    [commitInterimTranscript]
+  );
+
+  const completeAttempt = useCallback(
+    (completionReason: QuestionCompletionReason) => {
+      if (attemptPhaseRef.current === "review") return;
+
+      const finalAnswer = appendTranscript(
+        answerRef.current,
+        interimTranscriptRef.current
+      );
+      const remainingSeconds =
+        completionReason === "timer" ? 0 : timeRemainingRef.current;
+      const completedAt = new Date().toISOString();
+      const response: SavedQuestionResponse = {
+        questionId: question.id,
+        answer: finalAnswer,
+        completedAt,
+        elapsedSeconds: Math.min(
+          suggestedSeconds,
+          Math.max(0, suggestedSeconds - remainingSeconds)
+        ),
+        suggestedSeconds,
+        mode: practiceMode,
+        completionReason,
+        wordCount: getWordCount(finalAnswer),
+      };
+
+      attemptPhaseRef.current = "review";
+      answerRef.current = finalAnswer;
+      interimTranscriptRef.current = "";
+      timeRemainingRef.current = remainingSeconds;
+      setAnswer(finalAnswer);
+      setInterimTranscript("");
+      setSavedResponse(response);
+      setAttemptPhase("review");
+      setHasStarted(true);
+      setIsTimerRunning(false);
+      setTimeRemaining(remainingSeconds);
+      stopListening();
+      writeSavedQuestionResponse(response);
+      onQuestionCompleted(question.id);
+      scrollToTop();
+    },
+    [
+      onQuestionCompleted,
+      practiceMode,
+      question.id,
+      stopListening,
+      suggestedSeconds,
+    ]
+  );
+
+  const startListening = useCallback(() => {
+    if (
+      typeof window === "undefined" ||
+      attemptPhaseRef.current === "review" ||
+      timeRemainingRef.current <= 0
+    ) {
+      return;
+    }
 
     const speechWindow = window as SpeechRecognitionWindow;
     const SpeechRecognition =
@@ -900,7 +1140,7 @@ function QuestionPracticeView({
       return;
     }
 
-    stopListening();
+    stopListening({ commitInterim: true });
     setSpeechSupported(true);
     setSpeechError(null);
     setPracticeMode("voice");
@@ -910,6 +1150,13 @@ function QuestionPracticeView({
     recognition.interimResults = true;
     recognition.lang = "en-GB";
     recognition.onresult = (event) => {
+      if (
+        recognitionRef.current !== recognition ||
+        attemptPhaseRef.current === "review"
+      ) {
+        return;
+      }
+
       let finalTranscript = "";
       let interim = "";
 
@@ -925,12 +1172,24 @@ function QuestionPracticeView({
       }
 
       if (finalTranscript.trim()) {
-        setAnswer((current) => appendTranscript(current, finalTranscript));
-        startAttempt();
+        const nextAnswer = appendTranscript(answerRef.current, finalTranscript);
+
+        answerRef.current = nextAnswer;
+        setAnswer(nextAnswer);
+        setSavedResponse(null);
       }
+
+      interimTranscriptRef.current = interim.trim();
       setInterimTranscript(interim.trim());
     };
     recognition.onerror = (event) => {
+      if (recognitionRef.current !== recognition) return;
+
+      commitInterimTranscript();
+      recognitionRef.current = null;
+      recognition.onend = null;
+      recognition.onerror = null;
+      recognition.onresult = null;
       setSpeechError(
         event.error
           ? `Voice transcription stopped: ${event.error}.`
@@ -939,32 +1198,185 @@ function QuestionPracticeView({
       setIsListening(false);
     };
     recognition.onend = () => {
-      setIsListening(false);
-      setInterimTranscript("");
+      if (recognitionRef.current !== recognition) return;
+
+      commitInterimTranscript();
       recognitionRef.current = null;
+      setIsListening(false);
     };
+
+    recognitionRef.current = recognition;
 
     try {
       recognition.start();
-      recognitionRef.current = recognition;
       setIsListening(true);
-      startAttempt();
+      beginAttempt();
     } catch {
+      recognitionRef.current = null;
       setSpeechError("Voice transcription could not start.");
       setIsListening(false);
-      recognitionRef.current = null;
+    }
+  }, [beginAttempt, commitInterimTranscript, stopListening]);
+
+  const pauseAttempt = useCallback(() => {
+    setIsTimerRunning(false);
+    stopListening({ commitInterim: true });
+  }, [stopListening]);
+
+  const resumeAttempt = useCallback(() => {
+    if (practiceMode === "voice") {
+      startListening();
+      return;
+    }
+
+    beginAttempt();
+  }, [beginAttempt, practiceMode, startListening]);
+
+  const resetAttempt = useCallback(() => {
+    stopListening();
+    answerRef.current = "";
+    interimTranscriptRef.current = "";
+    timeRemainingRef.current = suggestedSeconds;
+    attemptPhaseRef.current = "idle";
+    setAnswer("");
+    setTimeRemaining(suggestedSeconds);
+    setAttemptPhase("idle");
+    setHasStarted(false);
+    setIsTimerRunning(false);
+    setSavedResponse(null);
+    setSpeechError(null);
+    setCheckedItems(new Set());
+    removeSavedQuestionResponse(question.id);
+    onQuestionReset(question.id);
+  }, [onQuestionReset, question.id, stopListening, suggestedSeconds]);
+
+  const handlePrimaryTimerAction = () => {
+    if (isTimerRunning || isListening) {
+      pauseAttempt();
+      return;
+    }
+
+    resumeAttempt();
+  };
+
+  const handleAnswerChange = (value: string) => {
+    answerRef.current = value;
+    setAnswer(value);
+    setSavedResponse(null);
+
+    if (value.trim() && attemptPhaseRef.current === "idle") {
+      beginAttempt();
     }
   };
 
-  const resetAttempt = () => {
-    stopListening();
-    setAnswer("");
-    setTimeRemaining(suggestedSeconds);
-    setHasStarted(false);
+  const handleBackToQuestions = () => {
     setIsTimerRunning(false);
-    setHasSubmitted(false);
-    setCheckedItems(new Set());
+    stopListening({ commitInterim: true });
+    onBackToQuestions();
   };
+
+  const switchToTextMode = () => {
+    setPracticeMode("text");
+    setSpeechError(null);
+    stopListening({ commitInterim: true });
+  };
+
+  const toggleVoiceMode = () => {
+    if (isListening) {
+      stopListening({ commitInterim: true });
+      return;
+    }
+
+    startListening();
+  };
+
+  useEffect(() => {
+    answerRef.current = answer;
+  }, [answer]);
+
+  useEffect(() => {
+    interimTranscriptRef.current = interimTranscript;
+  }, [interimTranscript]);
+
+  useEffect(() => {
+    timeRemainingRef.current = timeRemaining;
+  }, [timeRemaining]);
+
+  useEffect(() => {
+    attemptPhaseRef.current = attemptPhase;
+  }, [attemptPhase]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      const saved = readSavedQuestionResponse(question.id);
+
+      if (!saved) return;
+
+      const remainingSeconds = Math.max(
+        0,
+        suggestedSeconds - Math.min(saved.elapsedSeconds, suggestedSeconds)
+      );
+
+      answerRef.current = saved.answer;
+      interimTranscriptRef.current = "";
+      timeRemainingRef.current = remainingSeconds;
+      attemptPhaseRef.current = "review";
+      setAnswer(saved.answer);
+      setInterimTranscript("");
+      setSavedResponse(saved);
+      setTimeRemaining(remainingSeconds);
+      setAttemptPhase("review");
+      setHasStarted(true);
+      setIsTimerRunning(false);
+      stopListening();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [question.id, stopListening, suggestedSeconds]);
+
+  useEffect(() => {
+    return () => {
+      const recognition = recognitionRef.current;
+
+      recognitionRef.current = null;
+      if (recognition) {
+        recognition.onend = null;
+        recognition.onerror = null;
+        recognition.onresult = null;
+
+        try {
+          recognition.stop();
+        } catch {
+          // The browser may already have stopped recognition.
+        }
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isTimerRunning || attemptPhase !== "answering") return undefined;
+
+    const intervalId = window.setInterval(() => {
+      setTimeRemaining((current) => {
+        const next = Math.max(0, current - 1);
+
+        timeRemainingRef.current = next;
+        if (next === 0) {
+          setIsTimerRunning(false);
+        }
+
+        return next;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, [attemptPhase, isTimerRunning]);
+
+  useEffect(() => {
+    if (attemptPhase === "answering" && timeRemaining === 0) {
+      completeAttempt("timer");
+    }
+  }, [attemptPhase, completeAttempt, timeRemaining]);
 
   const toggleChecklistItem = (id: string) => {
     setCheckedItems((current) => {
@@ -980,46 +1392,55 @@ function QuestionPracticeView({
     });
   };
 
-  useEffect(() => {
-    return () => {
-      const recognition = recognitionRef.current;
+  const renderMarkScheme = () => (
+    <aside className="space-y-5">
+      <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-base font-black text-[#071923]">
+            Mark Scheme
+          </h2>
+          <span className="text-sm font-black text-[#08787b]">
+            {checklistPercent}%
+          </span>
+        </div>
+        <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#dfe8ea]">
+          <div
+            className="h-full rounded-full bg-[#159a9d]"
+            style={{ width: `${checklistPercent}%` }}
+          />
+        </div>
+        <p className="mt-3 text-sm font-medium text-[#4a6370]">
+          {checkedCount} / {totalChecklistItems} covered
+        </p>
+      </section>
 
-      recognitionRef.current = null;
-      if (recognition) {
-        recognition.onend = null;
-        recognition.onerror = null;
-        recognition.onresult = null;
-        recognition.stop();
-      }
-    };
-  }, []);
+      {rubricGroups.map((group) => (
+        <section
+          key={group.title}
+          className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]"
+        >
+          <h3 className="text-sm font-black uppercase tracking-[0.08em] text-[#08787b]">
+            {group.title}
+          </h3>
+          <div className="mt-4 space-y-3">
+            {group.items.map((item) => {
+              const id = `${group.title}-${item}`;
 
-  useEffect(() => {
-    if (!isTimerRunning) return undefined;
-
-    const intervalId = window.setInterval(() => {
-      setTimeRemaining((current) => {
-        if (current <= 1) {
-          window.clearInterval(intervalId);
-          setIsTimerRunning(false);
-          return 0;
-        }
-
-        return current - 1;
-      });
-    }, 1000);
-
-    return () => window.clearInterval(intervalId);
-  }, [isTimerRunning]);
-
-  const handleAnswerChange = (value: string) => {
-    setAnswer(value);
-    setHasSubmitted(false);
-
-    if (value.trim() && !hasStarted) {
-      startAttempt();
-    }
-  };
+              return (
+                <ChecklistToggle
+                  key={id}
+                  id={id}
+                  label={item}
+                  isChecked={checkedItems.has(id)}
+                  onToggle={toggleChecklistItem}
+                />
+              );
+            })}
+          </div>
+        </section>
+      ))}
+    </aside>
+  );
 
   return (
     <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
@@ -1034,7 +1455,7 @@ function QuestionPracticeView({
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <button
                 type="button"
-                onClick={onBackToQuestions}
+                onClick={handleBackToQuestions}
                 className="inline-flex w-fit items-center gap-2 text-sm font-bold text-[#08787b] transition-colors hover:text-[#042724]"
               >
                 <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -1093,8 +1514,60 @@ function QuestionPracticeView({
               </div>
             </section>
 
-            <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
-              <div className="space-y-5">
+            {isReviewing ? (
+              <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
+                <div className="space-y-5">
+                  <section className="rounded-xl border border-[#b9dcda] bg-[#f1fbfa] p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                      <div>
+                        <h2 className="text-base font-black text-[#071923]">
+                          Saved Response
+                        </h2>
+                        <p className="mt-2 text-sm font-medium text-[#4a6370]">
+                          {completionLabel} / {savedWordCount} words /{" "}
+                          {formatTimer(reviewElapsedSeconds)} used
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={resetAttempt}
+                          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#b8c8cf] bg-white px-4 text-sm font-black text-[#071923] shadow-sm transition-colors hover:border-[#08787b] hover:text-[#08787b]"
+                        >
+                          <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                          Try Again
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleBackToQuestions}
+                          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#06254a] px-4 text-sm font-black text-white shadow-sm transition-colors hover:bg-[#071923]"
+                        >
+                          <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                          Done
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-5 min-h-[240px] whitespace-pre-wrap rounded-xl border border-[#b9dcda] bg-white p-4 text-base font-medium leading-7 text-[#071923]">
+                      {savedAnswer.trim() ||
+                        "No response was captured before the timer ended."}
+                    </div>
+                  </section>
+
+                  <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
+                    <h2 className="text-base font-black text-[#071923]">
+                      Review Snapshot
+                    </h2>
+                    <p className="mt-2 text-sm font-medium leading-6 text-[#4a6370]">
+                      Response saved for this browser. Use the mark scheme to
+                      check coverage before moving on.
+                    </p>
+                  </section>
+                </div>
+
+                {renderMarkScheme()}
+              </section>
+            ) : (
+              <section className="mt-5 max-w-5xl">
                 <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div>
@@ -1108,17 +1581,16 @@ function QuestionPracticeView({
                     <div className="flex flex-wrap items-center gap-2">
                       <button
                         type="button"
-                        onClick={() =>
-                          isTimerRunning ? setIsTimerRunning(false) : startAttempt()
-                        }
-                        className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#06254a] px-4 text-sm font-black text-white shadow-sm transition-colors hover:bg-[#071923]"
+                        onClick={handlePrimaryTimerAction}
+                        disabled={timeRemaining === 0}
+                        className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#06254a] px-4 text-sm font-black text-white shadow-sm transition-colors hover:bg-[#071923] disabled:cursor-not-allowed disabled:bg-[#b8c8cf]"
                       >
-                        {isTimerRunning ? (
+                        {isTimerRunning || isListening ? (
                           <Pause className="h-4 w-4" aria-hidden="true" />
                         ) : (
                           <Play className="h-4 w-4" aria-hidden="true" />
                         )}
-                        {isTimerRunning ? "Pause" : hasStarted ? "Resume" : "Start"}
+                        {primaryTimerActionLabel}
                       </button>
                       <button
                         type="button"
@@ -1134,10 +1606,7 @@ function QuestionPracticeView({
                   <div className="mt-5 flex w-fit overflow-hidden rounded-lg border border-[#d8e0e6] bg-white">
                     <button
                       type="button"
-                      onClick={() => {
-                        setPracticeMode("text");
-                        stopListening();
-                      }}
+                      onClick={switchToTextMode}
                       aria-pressed={practiceMode === "text"}
                       className={`inline-flex h-10 items-center gap-2 px-4 text-sm font-black transition-colors ${
                         practiceMode === "text"
@@ -1150,17 +1619,12 @@ function QuestionPracticeView({
                     </button>
                     <button
                       type="button"
-                      onClick={() => {
-                        if (isListening) {
-                          stopListening();
-                        } else {
-                          startListening();
-                        }
-                      }}
+                      onClick={toggleVoiceMode}
                       aria-pressed={practiceMode === "voice"}
-                      className={`inline-flex h-10 items-center gap-2 px-4 text-sm font-black transition-colors ${
+                      disabled={timeRemaining === 0}
+                      className={`inline-flex h-10 items-center gap-2 px-4 text-sm font-black transition-colors disabled:cursor-not-allowed disabled:text-[#8fa0a8] ${
                         practiceMode === "voice"
-                          ? "bg-[#06254a] text-white"
+                          ? "bg-[#06254a] text-white disabled:bg-[#b8c8cf] disabled:text-white"
                           : "text-[#071923] hover:bg-[#f4f8f8]"
                       }`}
                     >
@@ -1192,18 +1656,16 @@ function QuestionPracticeView({
                     <p className="text-sm font-medium text-[#4a6370]">
                       {timeRemaining === 0
                         ? "Time is up"
-                        : hasStarted
+                        : isTimerRunning || isListening
                           ? "Attempt in progress"
-                          : "Ready to start"}
+                          : hasStarted
+                            ? "Paused"
+                            : "Ready to start"}
                     </p>
                     <button
                       type="button"
-                      disabled={!answer.trim()}
-                      onClick={() => {
-                        setHasSubmitted(true);
-                        setIsTimerRunning(false);
-                        stopListening();
-                      }}
+                      disabled={!canFinish}
+                      onClick={() => completeAttempt("manual")}
                       className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#159a9d] px-5 text-sm font-black text-white shadow-sm transition-colors hover:bg-[#08787b] disabled:cursor-not-allowed disabled:bg-[#b8c8cf]"
                     >
                       <Send className="h-4 w-4" aria-hidden="true" />
@@ -1211,67 +1673,8 @@ function QuestionPracticeView({
                     </button>
                   </div>
                 </section>
-
-                {hasSubmitted && (
-                  <section className="rounded-xl border border-[#b9dcda] bg-[#f1fbfa] p-5">
-                    <h2 className="text-base font-black text-[#071923]">
-                      Review Snapshot
-                    </h2>
-                    <p className="mt-2 text-sm font-medium leading-6 text-[#4a6370]">
-                      Response saved for this session. Tick the checklist items you covered, then adjust the answer before moving on.
-                    </p>
-                  </section>
-                )}
-              </div>
-
-              <aside className="space-y-5">
-                <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
-                  <div className="flex items-center justify-between gap-4">
-                    <h2 className="text-base font-black text-[#071923]">
-                      Mark Scheme
-                    </h2>
-                    <span className="text-sm font-black text-[#08787b]">
-                      {checklistPercent}%
-                    </span>
-                  </div>
-                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#dfe8ea]">
-                    <div
-                      className="h-full rounded-full bg-[#159a9d]"
-                      style={{ width: `${checklistPercent}%` }}
-                    />
-                  </div>
-                  <p className="mt-3 text-sm font-medium text-[#4a6370]">
-                    {checkedCount} / {totalChecklistItems} covered
-                  </p>
-                </section>
-
-                {rubricGroups.map((group) => (
-                  <section
-                    key={group.title}
-                    className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]"
-                  >
-                    <h3 className="text-sm font-black uppercase tracking-[0.08em] text-[#08787b]">
-                      {group.title}
-                    </h3>
-                    <div className="mt-4 space-y-3">
-                      {group.items.map((item) => {
-                        const id = `${group.title}-${item}`;
-
-                        return (
-                          <ChecklistToggle
-                            key={id}
-                            id={id}
-                            label={item}
-                            isChecked={checkedItems.has(id)}
-                            onToggle={toggleChecklistItem}
-                          />
-                        );
-                      })}
-                    </div>
-                  </section>
-                ))}
-              </aside>
-            </section>
+              </section>
+            )}
           </div>
         </section>
       </div>
@@ -1626,9 +2029,15 @@ export function InterviewQuestionBankDashboard({
   initialQuestionId?: string;
 }) {
   const [query, setQuery] = useState("");
+  const [completedQuestionIds, setCompletedQuestionIds] = useState<Set<string>>(
+    () => new Set()
+  );
   const categoriesWithStats = useMemo(
-    () => categories.map((category) => withQuestionStats(category)),
-    []
+    () =>
+      categories.map((category) =>
+        withQuestionStats(category, completedQuestionIds)
+      ),
+    [completedQuestionIds]
   );
   const initialNavigationState = useMemo(
     () =>
@@ -1657,6 +2066,15 @@ export function InterviewQuestionBankDashboard({
   const [activeQuestionId, setActiveQuestionId] = useState<string | null>(
     initialNavigationState.activeQuestionId
   );
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setCompletedQuestionIds(readCompletedQuestionIds());
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
   const totals = useMemo(
     () =>
       categoriesWithStats.reduce(
@@ -1700,8 +2118,12 @@ export function InterviewQuestionBankDashboard({
         (category) => category.title === selectedCategoryTitle
       )
     : undefined;
+  const questionsWithProgress = useMemo(
+    () => categoriesWithStats.flatMap((category) => category.questions),
+    [categoriesWithStats]
+  );
   const activeQuestion = activeQuestionId
-    ? INTERVIEW_QUESTIONS.find((question) => question.id === activeQuestionId)
+    ? questionsWithProgress.find((question) => question.id === activeQuestionId)
     : undefined;
   const selectedSubcategory =
     selectedCategory?.subcategories[selectedSubcategoryIndex] ??
@@ -1797,12 +2219,38 @@ export function InterviewQuestionBankDashboard({
 
   const openRandomQuestion = () => {
     const question =
-      INTERVIEW_QUESTIONS[
-        Math.floor(Math.random() * INTERVIEW_QUESTIONS.length)
-      ] ?? INTERVIEW_QUESTIONS[0];
+      questionsWithProgress[
+        Math.floor(Math.random() * questionsWithProgress.length)
+      ] ?? questionsWithProgress[0];
 
     if (question) openQuestion(question);
   };
+
+  const markQuestionCompleted = useCallback((questionId: string) => {
+    setCompletedQuestionIds((current) => {
+      if (current.has(questionId)) return current;
+
+      const next = new Set(current);
+
+      next.add(questionId);
+      writeCompletedQuestionIds(next);
+
+      return next;
+    });
+  }, []);
+
+  const resetQuestionCompletion = useCallback((questionId: string) => {
+    setCompletedQuestionIds((current) => {
+      if (!current.has(questionId)) return current;
+
+      const next = new Set(current);
+
+      next.delete(questionId);
+      writeCompletedQuestionIds(next);
+
+      return next;
+    });
+  }, []);
 
   const backToQuestionList = () => {
     setActiveQuestionId(null);
@@ -1860,6 +2308,8 @@ export function InterviewQuestionBankDashboard({
         questionNumber={activeQuestionNumber}
         showPremiumCard={showPremiumCard}
         onBackToQuestions={backToQuestionList}
+        onQuestionCompleted={markQuestionCompleted}
+        onQuestionReset={resetQuestionCompletion}
       />
     );
   }
