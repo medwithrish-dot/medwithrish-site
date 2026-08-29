@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { User } from "@supabase/supabase-js";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowLeft,
@@ -44,6 +45,10 @@ import {
   type InterviewQuestionSubcategory,
 } from "../_data/interviewQuestionBank";
 import { InterviewSidebar } from "./InterviewSidebar";
+import {
+  createClient as createSupabaseClient,
+  hasSupabaseConfig,
+} from "@/utils/supabase/client";
 
 type InterviewQuestionCategory = {
   title: InterviewQuestionCategoryTitle;
@@ -69,9 +74,13 @@ type SummaryStatItem = {
 
 type QuestionStatus = InterviewQuestionStatus;
 type StatusFilter = "answered" | "unanswered" | "review";
+type QuestionStatusById = Map<string, QuestionStatus>;
+type ProgressStorage = "browser" | "supabase";
+type SupabaseBrowserClient = ReturnType<typeof createSupabaseClient>;
 
 const defaultStatusFilter = "unanswered" satisfies StatusFilter;
 const completedQuestionStorageKey = "phloemai-interview-question-completed";
+const questionStatusStorageKey = "phloemai-interview-question-statuses";
 const savedResponseStorageKeyPrefix = "phloemai-interview-question-response:";
 
 const categories = [
@@ -265,6 +274,23 @@ type SavedQuestionResponse = {
   wordCount: number;
 };
 
+type QuestionProgressSnapshot = {
+  statusById: QuestionStatusById;
+  savedResponsesByQuestionId: Map<string, SavedQuestionResponse>;
+};
+
+type InterviewQuestionProgressRow = {
+  question_id: string;
+  status: string | null;
+  answer: string | null;
+  completed_at: string | null;
+  elapsed_seconds: number | null;
+  suggested_seconds: number | null;
+  mode: string | null;
+  completion_reason: string | null;
+  word_count: number | null;
+};
+
 type QuestionBankNavigationInput = {
   categoryTitle?: string | null;
   subcategoryIndex?: number | null;
@@ -427,6 +453,14 @@ function getSavedResponseStorageKey(questionId: string) {
   return `${savedResponseStorageKeyPrefix}${questionId}`;
 }
 
+function isQuestionStatus(value: unknown): value is QuestionStatus {
+  return (
+    value === "completed" ||
+    value === "review" ||
+    value === "not-attempted"
+  );
+}
+
 function readCompletedQuestionIds() {
   if (typeof window === "undefined") return new Set<string>();
 
@@ -452,6 +486,68 @@ function writeCompletedQuestionIds(questionIds: ReadonlySet<string>) {
     );
   } catch {
     // Local progress is best-effort; the attempt still completes in memory.
+  }
+}
+
+function readQuestionStatusById(): QuestionStatusById {
+  if (typeof window === "undefined") return new Map();
+
+  const statusById: QuestionStatusById = new Map();
+
+  try {
+    const saved = window.localStorage.getItem(questionStatusStorageKey);
+    const parsed: unknown = saved ? JSON.parse(saved) : {};
+
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      Object.entries(parsed as Record<string, unknown>).forEach(
+        ([questionId, status]) => {
+          if (isQuestionStatus(status) && status !== "not-attempted") {
+            statusById.set(questionId, status);
+          }
+        }
+      );
+    }
+
+    readCompletedQuestionIds().forEach((questionId) => {
+      if (!statusById.has(questionId)) {
+        statusById.set(questionId, "completed");
+      }
+    });
+
+    readSavedResponseQuestionIds().forEach((questionId) => {
+      if (!statusById.has(questionId)) {
+        statusById.set(questionId, "completed");
+      }
+    });
+  } catch {
+    return new Map();
+  }
+
+  return statusById;
+}
+
+function writeQuestionStatusById(statusById: ReadonlyMap<string, QuestionStatus>) {
+  if (typeof window === "undefined") return;
+
+  try {
+    const savedStatuses = Object.fromEntries(
+      [...statusById.entries()]
+        .filter(([, status]) => status !== "not-attempted")
+        .sort(([firstId], [secondId]) => firstId.localeCompare(secondId))
+    );
+    const completedIds = new Set(
+      [...statusById.entries()]
+        .filter(([, status]) => status === "completed")
+        .map(([questionId]) => questionId)
+    );
+
+    window.localStorage.setItem(
+      questionStatusStorageKey,
+      JSON.stringify(savedStatuses)
+    );
+    writeCompletedQuestionIds(completedIds);
+  } catch {
+    // Local progress is best-effort; Supabase remains the preferred store.
   }
 }
 
@@ -510,6 +606,20 @@ function readSavedResponseQuestionIds() {
   return questionIds;
 }
 
+function readSavedQuestionResponsesById() {
+  const responsesByQuestionId = new Map<string, SavedQuestionResponse>();
+
+  readSavedResponseQuestionIds().forEach((questionId) => {
+    const response = readSavedQuestionResponse(questionId);
+
+    if (response) {
+      responsesByQuestionId.set(questionId, response);
+    }
+  });
+
+  return responsesByQuestionId;
+}
+
 function writeSavedQuestionResponse(response: SavedQuestionResponse) {
   if (typeof window === "undefined") return;
 
@@ -530,6 +640,214 @@ function removeSavedQuestionResponse(questionId: string) {
     window.localStorage.removeItem(getSavedResponseStorageKey(questionId));
   } catch {
     // Ignore storage failures; resetting still clears the visible attempt.
+  }
+}
+
+function readBrowserQuestionProgress(): QuestionProgressSnapshot {
+  const statusById = readQuestionStatusById();
+  const savedResponsesByQuestionId = readSavedQuestionResponsesById();
+
+  savedResponsesByQuestionId.forEach((_response, questionId) => {
+    if (!statusById.has(questionId)) {
+      statusById.set(questionId, "completed");
+    }
+  });
+
+  return {
+    statusById,
+    savedResponsesByQuestionId,
+  };
+}
+
+function writeBrowserQuestionProgress(
+  questionId: string,
+  status: QuestionStatus,
+  response?: SavedQuestionResponse
+) {
+  const statusById = readQuestionStatusById();
+
+  if (status === "not-attempted") {
+    statusById.delete(questionId);
+    removeSavedQuestionResponse(questionId);
+  } else {
+    statusById.set(questionId, status);
+
+    if (response) {
+      writeSavedQuestionResponse(response);
+    }
+  }
+
+  writeQuestionStatusById(statusById);
+}
+
+function questionProgressRowToSavedResponse(
+  row: InterviewQuestionProgressRow
+): SavedQuestionResponse | null {
+  if (row.answer === null) return null;
+
+  return {
+    questionId: row.question_id,
+    answer: row.answer,
+    completedAt: row.completed_at ?? "",
+    elapsedSeconds: row.elapsed_seconds ?? 0,
+    suggestedSeconds: row.suggested_seconds ?? 0,
+    mode: row.mode === "voice" ? "voice" : "text",
+    completionReason: row.completion_reason === "timer" ? "timer" : "manual",
+    wordCount: row.word_count ?? getWordCount(row.answer),
+  };
+}
+
+function rowsToQuestionProgressSnapshot(
+  rows: readonly InterviewQuestionProgressRow[]
+): QuestionProgressSnapshot {
+  const statusById: QuestionStatusById = new Map();
+  const savedResponsesByQuestionId = new Map<string, SavedQuestionResponse>();
+
+  rows.forEach((row) => {
+    if (!row.question_id) return;
+
+    const status = isQuestionStatus(row.status)
+      ? row.status
+      : "not-attempted";
+    const response = questionProgressRowToSavedResponse(row);
+
+    if (status !== "not-attempted") {
+      statusById.set(row.question_id, status);
+    }
+    if (response) {
+      savedResponsesByQuestionId.set(row.question_id, response);
+    }
+  });
+
+  return {
+    statusById,
+    savedResponsesByQuestionId,
+  };
+}
+
+function mergeQuestionProgressSnapshots(
+  remoteSnapshot: QuestionProgressSnapshot,
+  browserSnapshot: QuestionProgressSnapshot
+): QuestionProgressSnapshot {
+  const statusById = new Map(browserSnapshot.statusById);
+  const savedResponsesByQuestionId = new Map(
+    browserSnapshot.savedResponsesByQuestionId
+  );
+
+  remoteSnapshot.statusById.forEach((status, questionId) => {
+    statusById.set(questionId, status);
+  });
+  remoteSnapshot.savedResponsesByQuestionId.forEach((response, questionId) => {
+    savedResponsesByQuestionId.set(questionId, response);
+  });
+
+  return {
+    statusById,
+    savedResponsesByQuestionId,
+  };
+}
+
+async function readSupabaseQuestionProgress(
+  supabase: SupabaseBrowserClient
+): Promise<QuestionProgressSnapshot> {
+  const { data, error } = await supabase
+    .from("interview_question_progress")
+    .select(
+      [
+        "question_id",
+        "status",
+        "answer",
+        "completed_at",
+        "elapsed_seconds",
+        "suggested_seconds",
+        "mode",
+        "completion_reason",
+        "word_count",
+      ].join(",")
+    );
+
+  if (error) throw error;
+
+  return rowsToQuestionProgressSnapshot(
+    (data ?? []) as unknown as InterviewQuestionProgressRow[]
+  );
+}
+
+async function writeSupabaseQuestionProgress({
+  supabase,
+  userId,
+  questionId,
+  status,
+  response,
+}: {
+  supabase: SupabaseBrowserClient;
+  userId: string;
+  questionId: string;
+  status: QuestionStatus;
+  response?: SavedQuestionResponse;
+}) {
+  if (status === "not-attempted") {
+    const { error } = await supabase
+      .from("interview_question_progress")
+      .delete()
+      .eq("user_id", userId)
+      .eq("question_id", questionId);
+
+    if (error) throw error;
+    return;
+  }
+
+  const { error } = await supabase.from("interview_question_progress").upsert(
+    {
+      user_id: userId,
+      question_id: questionId,
+      status,
+      answer: response?.answer ?? null,
+      completed_at: response?.completedAt ?? null,
+      elapsed_seconds: response?.elapsedSeconds ?? 0,
+      suggested_seconds: response?.suggestedSeconds ?? 0,
+      mode: response?.mode ?? null,
+      completion_reason: response?.completionReason ?? null,
+      word_count: response?.wordCount ?? 0,
+    },
+    { onConflict: "user_id,question_id" }
+  );
+
+  if (error) throw error;
+}
+
+async function syncBrowserProgressToSupabase({
+  supabase,
+  userId,
+  browserSnapshot,
+  remoteSnapshot,
+}: {
+  supabase: SupabaseBrowserClient;
+  userId: string;
+  browserSnapshot: QuestionProgressSnapshot;
+  remoteSnapshot: QuestionProgressSnapshot;
+}) {
+  const questionIds = new Set([
+    ...browserSnapshot.statusById.keys(),
+    ...browserSnapshot.savedResponsesByQuestionId.keys(),
+  ]);
+
+  for (const questionId of questionIds) {
+    if (
+      remoteSnapshot.statusById.has(questionId) ||
+      remoteSnapshot.savedResponsesByQuestionId.has(questionId)
+    ) {
+      continue;
+    }
+
+    await writeSupabaseQuestionProgress({
+      supabase,
+      userId,
+      questionId,
+      status: browserSnapshot.statusById.get(questionId) ?? "completed",
+      response: browserSnapshot.savedResponsesByQuestionId.get(questionId),
+    });
+    writeBrowserQuestionProgress(questionId, "not-attempted");
   }
 }
 
@@ -600,9 +918,9 @@ function resolveQuestionBankNavigationState(
 
 function getQuestionStatus(
   question: InterviewQuestion,
-  completedQuestionIds: ReadonlySet<string>
+  statusById: ReadonlyMap<string, QuestionStatus>
 ): QuestionStatus {
-  return completedQuestionIds.has(question.id) ? "completed" : question.status;
+  return statusById.get(question.id) ?? "not-attempted";
 }
 
 function getCompletedCount(questions: readonly InterviewQuestion[]) {
@@ -611,14 +929,14 @@ function getCompletedCount(questions: readonly InterviewQuestion[]) {
 
 function getCategoryQuestions(
   categoryTitle: InterviewQuestionCategoryTitle,
-  completedQuestionIds: ReadonlySet<string>
+  statusById: ReadonlyMap<string, QuestionStatus>
 ): InterviewQuestion[] {
   const questions: readonly InterviewQuestion[] = INTERVIEW_QUESTIONS;
 
   return questions.filter(
     (question) => question.category === categoryTitle
   ).map((question) => {
-    const status = getQuestionStatus(question, completedQuestionIds);
+    const status = getQuestionStatus(question, statusById);
 
     return status === question.status ? question : { ...question, status };
   });
@@ -626,9 +944,9 @@ function getCategoryQuestions(
 
 function withQuestionStats(
   category: InterviewQuestionCategory,
-  completedQuestionIds: ReadonlySet<string>
+  statusById: ReadonlyMap<string, QuestionStatus>
 ): InterviewQuestionCategorySummary {
-  const questions = getCategoryQuestions(category.title, completedQuestionIds);
+  const questions = getCategoryQuestions(category.title, statusById);
 
   return {
     ...category,
@@ -951,18 +1269,22 @@ function QuestionPracticeView({
   question,
   questionNumber,
   showPremiumCard,
+  initialSavedResponse,
   onBackToQuestions,
-  onQuestionCompleted,
+  onQuestionResponseSaved,
   onQuestionReset,
+  onQuestionStatusChange,
 }: {
   category: InterviewQuestionCategorySummary;
   selectedSubcategory: InterviewQuestionSubcategory;
   question: InterviewQuestion;
   questionNumber: number;
   showPremiumCard: boolean;
+  initialSavedResponse: SavedQuestionResponse | null;
   onBackToQuestions: () => void;
-  onQuestionCompleted: (questionId: string) => void;
+  onQuestionResponseSaved: (response: SavedQuestionResponse) => void;
   onQuestionReset: (questionId: string) => void;
+  onQuestionStatusChange: (questionId: string, status: QuestionStatus) => void;
 }) {
   const Icon = category.icon;
   const suggestedSeconds = getSuggestedAnswerSeconds(question);
@@ -1031,6 +1353,15 @@ function QuestionPracticeView({
     savedResponse?.completionReason === "timer"
       ? "Timer ended"
       : "Submitted manually";
+  const reviewStatusOptions = [
+    { label: "Answered", status: "completed", icon: CheckCircle2 },
+    { label: "Review", status: "review", icon: RefreshCw },
+    { label: "Unanswered", status: "not-attempted", icon: Circle },
+  ] as const satisfies readonly {
+    label: string;
+    status: QuestionStatus;
+    icon: LucideIcon;
+  }[];
 
   const beginAttempt = useCallback(() => {
     if (
@@ -1132,12 +1463,11 @@ function QuestionPracticeView({
       setIsTimerRunning(false);
       setTimeRemaining(remainingSeconds);
       stopListening();
-      writeSavedQuestionResponse(response);
-      onQuestionCompleted(question.id);
+      onQuestionResponseSaved(response);
       scrollToTop();
     },
     [
-      onQuestionCompleted,
+      onQuestionResponseSaved,
       practiceMode,
       question.id,
       stopListening,
@@ -1274,6 +1604,15 @@ function QuestionPracticeView({
     onQuestionReset(question.id);
   }, [onQuestionReset, question.id, stopListening, suggestedSeconds]);
 
+  const handleReviewStatusChange = (status: QuestionStatus) => {
+    if (status === "not-attempted") {
+      resetAttempt();
+      return;
+    }
+
+    onQuestionStatusChange(question.id, status);
+  };
+
   const handlePrimaryTimerAction = () => {
     if (isTimerRunning || isListening) {
       pauseAttempt();
@@ -1332,7 +1671,7 @@ function QuestionPracticeView({
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      const saved = readSavedQuestionResponse(question.id);
+      const saved = initialSavedResponse ?? readSavedQuestionResponse(question.id);
 
       if (!saved) return;
 
@@ -1356,7 +1695,7 @@ function QuestionPracticeView({
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [question.id, stopListening, suggestedSeconds]);
+  }, [initialSavedResponse, question.id, stopListening, suggestedSeconds]);
 
   useEffect(() => {
     return () => {
@@ -1579,11 +1918,38 @@ function QuestionPracticeView({
 
                   <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
                     <h2 className="text-base font-black text-[#071923]">
-                      Review Snapshot
+                      Status
                     </h2>
-                    <p className="mt-2 text-sm font-medium leading-6 text-[#4a6370]">
-                      Response saved for this browser. Use the mark scheme to
-                      check coverage before moving on.
+                    <div className="mt-4 grid gap-2 sm:grid-cols-3">
+                      {reviewStatusOptions.map((option) => {
+                        const OptionIcon = option.icon;
+                        const isActive = question.status === option.status;
+
+                        return (
+                          <button
+                            key={option.status}
+                            type="button"
+                            onClick={() => handleReviewStatusChange(option.status)}
+                            aria-pressed={isActive}
+                            className={`inline-flex h-11 items-center justify-center gap-2 rounded-lg border px-3 text-sm font-black shadow-sm transition-colors ${
+                              isActive
+                                ? "border-[#159a9d] bg-[#159a9d] text-white"
+                                : "border-[#d8e0e6] bg-white text-[#071923] hover:border-[#08787b] hover:text-[#08787b]"
+                            }`}
+                          >
+                            <OptionIcon
+                              className="h-4 w-4"
+                              strokeWidth={option.status === "not-attempted" ? 0 : 2.2}
+                              fill={option.status === "not-attempted" ? "currentColor" : "none"}
+                              aria-hidden="true"
+                            />
+                            {option.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p className="mt-3 text-sm font-medium leading-6 text-[#4a6370]">
+                      Response saved. Check it against the mark scheme before moving on.
                     </p>
                   </section>
                 </div>
@@ -1848,9 +2214,12 @@ function QuestionBankCategoryView({
   };
 
   const filterOptions = [
-    { label: "Answered", value: "answered" },
-    { label: "Unanswered", value: "unanswered" },
-    { label: "Review", value: "review" },
+    { label: `Answered (${statusCounts.completed})`, value: "answered" },
+    {
+      label: `Unanswered (${statusCounts["not-attempted"]})`,
+      value: "unanswered",
+    },
+    { label: `Review (${statusCounts.review})`, value: "review" },
   ] as const satisfies readonly { label: string; value: StatusFilter }[];
 
   useEffect(() => {
@@ -2145,18 +2514,28 @@ export function InterviewQuestionBankDashboard({
   initialQuestionId?: string;
 }) {
   const [query, setQuery] = useState("");
-  const [completedQuestionIds, setCompletedQuestionIds] = useState<Set<string>>(
-    () => new Set()
+  const supabaseReady = hasSupabaseConfig();
+  const supabase = useMemo(
+    () => (supabaseReady ? createSupabaseClient() : null),
+    [supabaseReady]
   );
-  const [savedResponseQuestionIds, setSavedResponseQuestionIds] = useState<
-    Set<string>
-  >(() => new Set());
+  const progressStorageRef = useRef<ProgressStorage>("browser");
+  const progressUserRef = useRef<User | null>(null);
+  const [questionStatusById, setQuestionStatusById] =
+    useState<QuestionStatusById>(() => new Map());
+  const [savedResponsesByQuestionId, setSavedResponsesByQuestionId] = useState(
+    () => new Map<string, SavedQuestionResponse>()
+  );
   const categoriesWithStats = useMemo(
     () =>
       categories.map((category) =>
-        withQuestionStats(category, completedQuestionIds)
+        withQuestionStats(category, questionStatusById)
       ),
-    [completedQuestionIds]
+    [questionStatusById]
+  );
+  const savedResponseQuestionIds = useMemo(
+    () => new Set(savedResponsesByQuestionId.keys()),
+    [savedResponsesByQuestionId]
   );
   const initialNavigationState = useMemo(
     () =>
@@ -2187,17 +2566,79 @@ export function InterviewQuestionBankDashboard({
   );
 
   useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      const savedResponseIds = readSavedResponseQuestionIds();
-      const completedIds = readCompletedQuestionIds();
+    if (!supabase) {
+      const timeoutId = window.setTimeout(() => {
+        const localSnapshot = readBrowserQuestionProgress();
 
-      savedResponseIds.forEach((questionId) => completedIds.add(questionId));
-      setSavedResponseQuestionIds(savedResponseIds);
-      setCompletedQuestionIds(completedIds);
-    }, 0);
+        progressStorageRef.current = "browser";
+        progressUserRef.current = null;
+        setQuestionStatusById(localSnapshot.statusById);
+        setSavedResponsesByQuestionId(localSnapshot.savedResponsesByQuestionId);
+      }, 0);
 
-    return () => window.clearTimeout(timeoutId);
-  }, []);
+      return () => window.clearTimeout(timeoutId);
+    }
+
+    let isMounted = true;
+    const client = supabase;
+
+    async function loadProgressForUser(user: User | null) {
+      if (!user) {
+        const localSnapshot = readBrowserQuestionProgress();
+
+        if (!isMounted) return;
+        progressStorageRef.current = "browser";
+        progressUserRef.current = null;
+        setQuestionStatusById(localSnapshot.statusById);
+        setSavedResponsesByQuestionId(localSnapshot.savedResponsesByQuestionId);
+        return;
+      }
+
+      try {
+        const browserSnapshot = readBrowserQuestionProgress();
+        const remoteSnapshot = await readSupabaseQuestionProgress(client);
+        const mergedSnapshot = mergeQuestionProgressSnapshots(
+          remoteSnapshot,
+          browserSnapshot
+        );
+
+        if (!isMounted) return;
+        progressStorageRef.current = "supabase";
+        progressUserRef.current = user;
+        setQuestionStatusById(mergedSnapshot.statusById);
+        setSavedResponsesByQuestionId(mergedSnapshot.savedResponsesByQuestionId);
+        void syncBrowserProgressToSupabase({
+          supabase: client,
+          userId: user.id,
+          browserSnapshot,
+          remoteSnapshot,
+        }).catch(() => undefined);
+      } catch {
+        const localSnapshot = readBrowserQuestionProgress();
+
+        if (!isMounted) return;
+        progressStorageRef.current = "browser";
+        progressUserRef.current = user;
+        setQuestionStatusById(localSnapshot.statusById);
+        setSavedResponsesByQuestionId(localSnapshot.savedResponsesByQuestionId);
+      }
+    }
+
+    void client.auth.getSession().then(({ data }) => {
+      void loadProgressForUser(data.session?.user ?? null);
+    });
+
+    const {
+      data: { subscription },
+    } = client.auth.onAuthStateChange((_event, session) => {
+      void loadProgressForUser(session?.user ?? null);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
 
   const totals = useMemo(
     () =>
@@ -2350,49 +2791,106 @@ export function InterviewQuestionBankDashboard({
     if (question) openQuestion(question);
   };
 
-  const markQuestionCompleted = useCallback((questionId: string) => {
-    setSavedResponseQuestionIds((current) => {
-      if (current.has(questionId)) return current;
+  const persistQuestionProgress = useCallback(
+    async (
+      questionId: string,
+      status: QuestionStatus,
+      response?: SavedQuestionResponse
+    ) => {
+      const user = progressUserRef.current;
 
-      const next = new Set(current);
+      if (!supabase || !user || progressStorageRef.current !== "supabase") {
+        return false;
+      }
 
-      next.add(questionId);
+      try {
+        await writeSupabaseQuestionProgress({
+          supabase,
+          userId: user.id,
+          questionId,
+          status,
+          response,
+        });
+        return true;
+      } catch {
+        progressStorageRef.current = "browser";
+        return false;
+      }
+    },
+    [supabase]
+  );
 
-      return next;
-    });
-    setCompletedQuestionIds((current) => {
-      if (current.has(questionId)) return current;
+  const updateQuestionProgress = useCallback(
+    (
+      questionId: string,
+      status: QuestionStatus,
+      response?: SavedQuestionResponse
+    ) => {
+      setQuestionStatusById((current) => {
+        const next = new Map(current);
 
-      const next = new Set(current);
+        if (status === "not-attempted") {
+          next.delete(questionId);
+        } else {
+          next.set(questionId, status);
+        }
 
-      next.add(questionId);
-      writeCompletedQuestionIds(next);
+        return next;
+      });
+      setSavedResponsesByQuestionId((current) => {
+        const next = new Map(current);
 
-      return next;
-    });
-  }, []);
+        if (status === "not-attempted") {
+          next.delete(questionId);
+        } else if (response) {
+          next.set(questionId, response);
+        }
 
-  const resetQuestionCompletion = useCallback((questionId: string) => {
-    setSavedResponseQuestionIds((current) => {
-      if (!current.has(questionId)) return current;
+        return next;
+      });
 
-      const next = new Set(current);
+      if (progressStorageRef.current !== "supabase") {
+        writeBrowserQuestionProgress(questionId, status, response);
+        return;
+      }
 
-      next.delete(questionId);
+      void persistQuestionProgress(questionId, status, response).then(
+        (savedToSupabase) => {
+          if (!savedToSupabase) {
+            writeBrowserQuestionProgress(questionId, status, response);
+          } else {
+            writeBrowserQuestionProgress(questionId, "not-attempted");
+          }
+        }
+      );
+    },
+    [persistQuestionProgress]
+  );
 
-      return next;
-    });
-    setCompletedQuestionIds((current) => {
-      if (!current.has(questionId)) return current;
+  const saveQuestionResponse = useCallback(
+    (response: SavedQuestionResponse) => {
+      updateQuestionProgress(response.questionId, "completed", response);
+    },
+    [updateQuestionProgress]
+  );
 
-      const next = new Set(current);
+  const resetQuestionCompletion = useCallback(
+    (questionId: string) => {
+      updateQuestionProgress(questionId, "not-attempted");
+    },
+    [updateQuestionProgress]
+  );
 
-      next.delete(questionId);
-      writeCompletedQuestionIds(next);
-
-      return next;
-    });
-  }, []);
+  const updateQuestionStatus = useCallback(
+    (questionId: string, status: QuestionStatus) => {
+      updateQuestionProgress(
+        questionId,
+        status,
+        savedResponsesByQuestionId.get(questionId)
+      );
+    },
+    [savedResponsesByQuestionId, updateQuestionProgress]
+  );
 
   const backToQuestionList = () => {
     setActiveQuestionId(null);
@@ -2449,9 +2947,13 @@ export function InterviewQuestionBankDashboard({
         question={activeQuestion}
         questionNumber={activeQuestionNumber}
         showPremiumCard={showPremiumCard}
+        initialSavedResponse={
+          savedResponsesByQuestionId.get(activeQuestion.id) ?? null
+        }
         onBackToQuestions={backToQuestionList}
-        onQuestionCompleted={markQuestionCompleted}
+        onQuestionResponseSaved={saveQuestionResponse}
         onQuestionReset={resetQuestionCompletion}
+        onQuestionStatusChange={updateQuestionStatus}
       />
     );
   }
