@@ -274,6 +274,11 @@ type SavedQuestionResponse = {
   wordCount: number;
 };
 
+type MarkSchemeSection = {
+  title: "General" | "Start" | "Middle" | "End";
+  items: readonly string[];
+};
+
 type QuestionProgressSnapshot = {
   statusById: QuestionStatusById;
   savedResponsesByQuestionId: Map<string, SavedQuestionResponse>;
@@ -339,64 +344,283 @@ type SpeechRecognitionWindow = Window & {
 
 const questionBankPath = "/phloemai/interviews/question-bank";
 
-const structureChecklist = [
-  "Starts with a direct answer",
-  "Uses one clear example or piece of evidence",
-  "Explains the reasoning behind the answer",
-  "Links back to patient care or professional judgement",
-  "Finishes with a concise closing point",
-] as const;
-
 const categoryRubric = {
   "Personal & Motivation": [
-    "Shows genuine motivation rather than a generic reason",
-    "Reflects on work experience or personal learning",
-    "Connects qualities to the realities of medical training",
-    "Avoids overclaiming and stays balanced",
+    {
+      title: "General",
+      items: [
+        "Shows genuine motivation rather than a generic claim",
+        "Uses specific experiences and explains what they taught you",
+        "Links personal qualities to the realities of medical training and patient care",
+      ],
+    },
+    {
+      title: "Start",
+      items: [
+        "Answers the question directly in the first sentence",
+        "Names one clear personal trigger, value or experience",
+        "Sets a balanced tone without sounding over-rehearsed",
+      ],
+    },
+    {
+      title: "Middle",
+      items: [
+        "Develops one example with reflection, not just description",
+        "Explains how your thinking or behaviour changed",
+        "Connects strengths and limitations to the role of a doctor",
+      ],
+    },
+    {
+      title: "End",
+      items: [
+        "Summarises why medicine remains a considered choice",
+        "Mentions ongoing learning or realistic preparation",
+        "Finishes with a concise link back to patients or service",
+      ],
+    },
   ],
   "Communication & Teamwork": [
-    "Acknowledges the other person's perspective",
-    "Uses clear signposting and calm language",
-    "Balances listening with appropriate action",
-    "Explains how the team or patient benefits",
+    {
+      title: "General",
+      items: [
+        "Acknowledges the other person's perspective before acting",
+        "Uses calm, clear and professional language",
+        "Balances listening, teamwork and appropriate escalation",
+      ],
+    },
+    {
+      title: "Start",
+      items: [
+        "Identifies the communication problem or team goal",
+        "Shows empathy for the person or colleague involved",
+        "States the immediate priority clearly",
+      ],
+    },
+    {
+      title: "Middle",
+      items: [
+        "Explains how you would gather information and listen actively",
+        "Describes a collaborative next step with clear reasoning",
+        "Handles disagreement without blame or defensiveness",
+      ],
+    },
+    {
+      title: "End",
+      items: [
+        "Checks understanding or confirms shared agreement",
+        "States when you would escalate or seek support",
+        "Links the outcome back to safe patient-centred care",
+      ],
+    },
   ],
   "Ethics & Professionalism": [
-    "Identifies the main stakeholders",
-    "Balances autonomy, beneficence, non-maleficence and justice",
-    "Mentions escalation, confidentiality or safeguarding where relevant",
-    "Gives a justified and professional decision",
+    {
+      title: "General",
+      items: [
+        "Identifies the main stakeholders and competing duties",
+        "Balances autonomy, beneficence, non-maleficence and justice",
+        "Keeps confidentiality, consent and safeguarding in view where relevant",
+      ],
+    },
+    {
+      title: "Start",
+      items: [
+        "States the ethical tension instead of jumping to a verdict",
+        "Clarifies missing facts that would affect the decision",
+        "Names the patient's safety and rights as priorities",
+      ],
+    },
+    {
+      title: "Middle",
+      items: [
+        "Weighs more than one reasonable perspective",
+        "Applies professional guidance or escalation appropriately",
+        "Explains consequences for the patient, staff and wider system",
+      ],
+    },
+    {
+      title: "End",
+      items: [
+        "Gives a justified decision or safe next step",
+        "Documents, escalates or reviews where needed",
+        "Maintains professionalism even when the situation is difficult",
+      ],
+    },
   ],
   "NHS & Healthcare": [
-    "Shows accurate understanding of the healthcare context",
-    "Considers patients, staff and system pressures",
-    "Balances benefits, limitations and trade-offs",
-    "Uses a realistic example or current issue",
+    {
+      title: "General",
+      items: [
+        "Shows accurate understanding of the healthcare context",
+        "Considers patients, staff and system pressures",
+        "Balances benefits, limitations and trade-offs",
+      ],
+    },
+    {
+      title: "Start",
+      items: [
+        "Defines the issue in simple terms",
+        "States why it matters to patients or clinicians",
+        "Avoids unsupported statistics or sweeping claims",
+      ],
+    },
+    {
+      title: "Middle",
+      items: [
+        "Explains causes, effects and practical constraints",
+        "Uses a realistic example from healthcare or work experience",
+        "Considers fairness, resources and quality of care",
+      ],
+    },
+    {
+      title: "End",
+      items: [
+        "Gives a balanced final view rather than one-sided criticism",
+        "Mentions teamwork, prevention or improvement where relevant",
+        "Links back to the responsibilities of future doctors",
+      ],
+    },
   ],
   "Hot Topics & Current Affairs": [
-    "Explains why the issue matters now",
-    "Considers more than one viewpoint",
-    "Links the topic back to patients and healthcare workers",
-    "Avoids making unsupported claims",
+    {
+      title: "General",
+      items: [
+        "Explains why the issue matters now",
+        "Considers more than one viewpoint",
+        "Links the topic back to patients and healthcare workers",
+      ],
+    },
+    {
+      title: "Start",
+      items: [
+        "Introduces the topic accurately and neutrally",
+        "States the main debate or tension",
+        "Separates known facts from opinion",
+      ],
+    },
+    {
+      title: "Middle",
+      items: [
+        "Explores benefits, risks and unintended consequences",
+        "Uses evidence-aware reasoning without pretending certainty",
+        "Considers impact on trust, access and safety",
+      ],
+    },
+    {
+      title: "End",
+      items: [
+        "Offers a measured conclusion",
+        "Identifies what further evidence or safeguards would help",
+        "Brings the answer back to compassionate, effective care",
+      ],
+    },
   ],
   "Data, Research & Critical Thinking": [
-    "States the main trend or conclusion clearly",
-    "Mentions limitations, bias or uncertainty",
-    "Distinguishes evidence from assumption",
-    "Explains the practical implication",
+    {
+      title: "General",
+      items: [
+        "States the main trend or conclusion clearly",
+        "Mentions limitations, bias or uncertainty",
+        "Distinguishes evidence from assumption",
+      ],
+    },
+    {
+      title: "Start",
+      items: [
+        "Identifies what the data, article or prompt is asking",
+        "States the key observation before detailed interpretation",
+        "Defines any comparison, denominator or outcome clearly",
+      ],
+    },
+    {
+      title: "Middle",
+      items: [
+        "Explains patterns using cautious, logical reasoning",
+        "Flags confounders, sample issues or missing context",
+        "Connects interpretation to clinical or public health impact",
+      ],
+    },
+    {
+      title: "End",
+      items: [
+        "Summarises the safest conclusion supported by the evidence",
+        "States what extra information would improve confidence",
+        "Avoids overclaiming beyond the data provided",
+      ],
+    },
   ],
   "Practical MMI & Role Play": [
-    "Clarifies the task and the person's concern",
-    "Uses empathy and professional boundaries",
-    "Keeps the response structured under pressure",
-    "Ends with a safe next step",
+    {
+      title: "General",
+      items: [
+        "Clarifies the task and the person's concern",
+        "Uses empathy while keeping professional boundaries",
+        "Keeps the response structured under pressure",
+      ],
+    },
+    {
+      title: "Start",
+      items: [
+        "Introduces yourself or frames the interaction respectfully",
+        "Checks what the person understands or needs",
+        "Sets a safe and calm tone",
+      ],
+    },
+    {
+      title: "Middle",
+      items: [
+        "Listens actively and responds to emotion",
+        "Explains options or information in plain language",
+        "Handles conflict, distress or uncertainty without rushing",
+      ],
+    },
+    {
+      title: "End",
+      items: [
+        "Agrees a safe next step or follow-up",
+        "Checks understanding and invites questions",
+        "Escalates appropriately if risk or safeguarding is present",
+      ],
+    },
   ],
   "Curveballs & Quick-Fire": [
-    "Answers the actual question directly",
-    "Gives a brief reason or example",
-    "Stays composed and avoids rambling",
-    "Shows personality while remaining professional",
+    {
+      title: "General",
+      items: [
+        "Answers the actual question directly",
+        "Gives a brief reason or example",
+        "Shows personality while remaining professional",
+      ],
+    },
+    {
+      title: "Start",
+      items: [
+        "Pauses briefly and chooses a clear angle",
+        "Gives a direct first-line answer",
+        "Avoids apologising for needing a moment to think",
+      ],
+    },
+    {
+      title: "Middle",
+      items: [
+        "Builds the answer with one focused reason",
+        "Uses a short example if it adds value",
+        "Keeps the response controlled rather than rambling",
+      ],
+    },
+    {
+      title: "End",
+      items: [
+        "Returns to the main point",
+        "Ends confidently without adding unnecessary extras",
+        "Keeps the closing professional and human",
+      ],
+    },
   ],
-} as const satisfies Record<InterviewQuestionCategoryTitle, readonly string[]>;
+} as const satisfies Record<
+  InterviewQuestionCategoryTitle,
+  readonly MarkSchemeSection[]
+>;
 
 function getPercent(completed: number, total: number) {
   if (total <= 0) return 0;
@@ -1002,6 +1226,20 @@ function getFilterForQuestionStatus(status: QuestionStatus): StatusFilter {
   return "unanswered";
 }
 
+function getQuestionMarkScheme(question: InterviewQuestion): MarkSchemeSection[] {
+  return categoryRubric[question.category].map((section) => ({
+    title: section.title,
+    items:
+      section.title === "General"
+        ? [
+            ...section.items,
+            `Addresses the ${question.subcategory.toLowerCase()} focus directly`,
+            `Keeps the depth appropriate for a ${question.difficulty} question`,
+          ]
+        : section.items,
+  }));
+}
+
 function scrollToTop() {
   window.requestAnimationFrame(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1318,23 +1556,7 @@ function QuestionPracticeView({
   const wordCount = getWordCount(answer);
   const elapsedSeconds = Math.max(0, suggestedSeconds - timeRemaining);
   const timerPercent = getPercent(elapsedSeconds, suggestedSeconds);
-  const rubricGroups = [
-    {
-      title: "Structure",
-      items: structureChecklist,
-    },
-    {
-      title: "Mark Scheme",
-      items: categoryRubric[category.title],
-    },
-    {
-      title: "Question Fit",
-      items: [
-        `Addresses ${question.subcategory.toLowerCase()} directly`,
-        `Keeps the depth appropriate for a ${question.difficulty} question`,
-      ],
-    },
-  ] as const;
+  const rubricGroups = getQuestionMarkScheme(question);
   const totalChecklistItems = rubricGroups.reduce(
     (total, group) => total + group.items.length,
     0
@@ -1775,6 +1997,15 @@ function QuestionPracticeView({
         <p className="mt-3 text-sm font-medium text-[#4a6370]">
           {checkedCount} / {totalChecklistItems} covered
         </p>
+        <a
+          href="/phloemai/interview-question-markscheme-rubrics.pdf"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#b8c8cf] bg-white px-4 text-sm font-black text-[#071923] shadow-sm transition-colors hover:border-[#08787b] hover:text-[#08787b]"
+        >
+          <FileText className="h-4 w-4" aria-hidden="true" />
+          Rubric PDF
+        </a>
       </section>
 
       {rubricGroups.map((group) => (
@@ -1782,7 +2013,7 @@ function QuestionPracticeView({
           key={group.title}
           className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]"
         >
-          <h3 className="text-sm font-black uppercase tracking-[0.08em] text-[#08787b]">
+          <h3 className="text-sm font-black text-[#08787b]">
             {group.title}
           </h3>
           <div className="mt-4 space-y-3">
@@ -1892,6 +2123,14 @@ function QuestionPracticeView({
                         </p>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          disabled
+                          className="inline-flex h-10 cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-[#d8e0e6] bg-white/70 px-4 text-sm font-black text-[#748791] shadow-sm"
+                        >
+                          <Sparkles className="h-4 w-4" aria-hidden="true" />
+                          AI Feedback
+                        </button>
                         <button
                           type="button"
                           onClick={resetAttempt}
