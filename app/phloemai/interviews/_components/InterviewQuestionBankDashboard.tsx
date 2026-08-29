@@ -486,6 +486,30 @@ function readSavedQuestionResponse(questionId: string): SavedQuestionResponse | 
   }
 }
 
+function readSavedResponseQuestionIds() {
+  if (typeof window === "undefined") return new Set<string>();
+
+  const questionIds = new Set<string>();
+
+  try {
+    for (let index = 0; index < window.localStorage.length; index += 1) {
+      const key = window.localStorage.key(index);
+
+      if (!key?.startsWith(savedResponseStorageKeyPrefix)) continue;
+
+      const questionId = key.slice(savedResponseStorageKeyPrefix.length);
+
+      if (readSavedQuestionResponse(questionId)) {
+        questionIds.add(questionId);
+      }
+    }
+  } catch {
+    return new Set<string>();
+  }
+
+  return questionIds;
+}
+
 function writeSavedQuestionResponse(response: SavedQuestionResponse) {
   if (typeof window === "undefined") return;
 
@@ -1521,7 +1545,7 @@ function QuestionPracticeView({
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                       <div>
                         <h2 className="text-base font-black text-[#071923]">
-                          Saved Response
+                          Review Saved Answer
                         </h2>
                         <p className="mt-2 text-sm font-medium text-[#4a6370]">
                           {completionLabel} / {savedWordCount} words /{" "}
@@ -1532,15 +1556,15 @@ function QuestionPracticeView({
                         <button
                           type="button"
                           onClick={resetAttempt}
-                          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#b8c8cf] bg-white px-4 text-sm font-black text-[#071923] shadow-sm transition-colors hover:border-[#08787b] hover:text-[#08787b]"
+                          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#159a9d] px-4 text-sm font-black text-white shadow-sm transition-colors hover:bg-[#08787b]"
                         >
                           <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                          Try Again
+                          Retry This Question
                         </button>
                         <button
                           type="button"
                           onClick={handleBackToQuestions}
-                          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#06254a] px-4 text-sm font-black text-white shadow-sm transition-colors hover:bg-[#071923]"
+                          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#b8c8cf] bg-white px-4 text-sm font-black text-[#071923] shadow-sm transition-colors hover:border-[#08787b] hover:text-[#08787b]"
                         >
                           <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                           Done
@@ -1687,6 +1711,7 @@ function QuestionBankCategoryView({
   selectedSubcategoryIndex,
   statusFilter,
   questionQuery,
+  savedResponseQuestionIds,
   showPremiumCard,
   onBack,
   onSelectSubcategory,
@@ -1698,6 +1723,7 @@ function QuestionBankCategoryView({
   selectedSubcategoryIndex: number;
   statusFilter: StatusFilter;
   questionQuery: string;
+  savedResponseQuestionIds: ReadonlySet<string>;
   showPremiumCard: boolean;
   onBack: () => void;
   onSelectSubcategory: (index: number) => void;
@@ -1736,6 +1762,10 @@ function QuestionBankCategoryView({
 
     return matchesStatus && matchesQuery;
   });
+  const savedResponseQuestions = questions.filter((question) =>
+    savedResponseQuestionIds.has(question.id)
+  );
+  const firstSavedResponseQuestion = savedResponseQuestions[0] ?? null;
   const statusCounts = questions.reduce(
     (acc, question) => ({
       ...acc,
@@ -1913,40 +1943,72 @@ function QuestionBankCategoryView({
                 </label>
               </div>
 
+              {firstSavedResponseQuestion && (
+                <div className="mt-4 grid gap-3 rounded-xl border border-[#b9dcda] bg-[#f1fbfa] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+                  <div className="min-w-0">
+                    <p className="text-xs font-black uppercase tracking-[0.08em] text-[#08787b]">
+                      Review
+                    </p>
+                    <p className="mt-1 text-sm font-bold text-[#071923]">
+                      {savedResponseQuestions.length === 1
+                        ? "1 saved answer is ready to check."
+                        : `${savedResponseQuestions.length} saved answers are ready to check.`}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onOpenQuestion(firstSavedResponseQuestion)}
+                    className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#159a9d] px-4 text-sm font-black text-white shadow-sm transition-colors hover:bg-[#08787b]"
+                  >
+                    <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                    Check Saved Answer
+                  </button>
+                </div>
+              )}
+
               <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_220px]">
                 <div className="overflow-hidden rounded-xl border border-[#d8e0e6] bg-white shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
-                  {filteredQuestions.map((question, index) => (
-                    <button
-                      key={question.id}
-                      type="button"
-                      onClick={() => onOpenQuestion(question)}
-                      className={`grid min-h-[70px] w-full grid-cols-[40px_minmax(0,1fr)_32px_18px] items-center gap-4 bg-white px-5 py-3 text-left transition-colors hover:bg-[#f8fbfb] ${
-                        index === filteredQuestions.length - 1
-                          ? ""
-                          : "border-b border-[#edf1f3]"
-                      }`}
-                    >
-                      <span className="text-sm font-medium text-[#526976]">
-                        {String(
-                          questionNumbers.get(question.id) ?? index + 1
-                        ).padStart(2, "0")}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block text-sm font-medium leading-5 text-[#071923]">
-                          {question.text}
+                  {filteredQuestions.map((question, index) => {
+                    const hasSavedResponse = savedResponseQuestionIds.has(question.id);
+
+                    return (
+                      <button
+                        key={question.id}
+                        type="button"
+                        onClick={() => onOpenQuestion(question)}
+                        className={`grid min-h-[70px] w-full grid-cols-[40px_minmax(0,1fr)_32px_18px] items-center gap-4 bg-white px-5 py-3 text-left transition-colors hover:bg-[#f8fbfb] ${
+                          index === filteredQuestions.length - 1
+                            ? ""
+                            : "border-b border-[#edf1f3]"
+                        } ${hasSavedResponse ? "bg-[#fbfffe]" : ""}`}
+                      >
+                        <span className="text-sm font-medium text-[#526976]">
+                          {String(
+                            questionNumbers.get(question.id) ?? index + 1
+                          ).padStart(2, "0")}
                         </span>
-                        <span className="mt-1 block truncate text-[11px] font-semibold uppercase tracking-[0.08em] text-[#748791]">
-                          {question.difficulty} / section{" "}
-                          {question.sourceSection}
-                          {question.sourceTopic
-                            ? ` / ${question.sourceTopic}`
-                            : ""}
+                        <span className="min-w-0">
+                          <span className="block text-sm font-medium leading-5 text-[#071923]">
+                            {question.text}
+                          </span>
+                          <span className="mt-1 block truncate text-[11px] font-semibold uppercase tracking-[0.08em] text-[#748791]">
+                            {question.difficulty} / section{" "}
+                            {question.sourceSection}
+                            {question.sourceTopic
+                              ? ` / ${question.sourceTopic}`
+                              : ""}
+                          </span>
+                          {hasSavedResponse && (
+                            <span className="mt-2 inline-flex items-center gap-2 rounded-md bg-[#e2f5ef] px-2 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-[#08787b]">
+                              Review / Check saved answer
+                            </span>
+                          )}
                         </span>
-                      </span>
-                      <StatusIcon status={question.status} />
-                      <ChevronRight className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />
-                    </button>
-                  ))}
+                        <StatusIcon status={question.status} />
+                        <ChevronRight className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />
+                      </button>
+                    );
+                  })}
                   {filteredQuestions.length === 0 && (
                     <div className="p-8 text-center">
                       <p className="text-sm font-black text-[#071923]">
@@ -2032,6 +2094,9 @@ export function InterviewQuestionBankDashboard({
   const [completedQuestionIds, setCompletedQuestionIds] = useState<Set<string>>(
     () => new Set()
   );
+  const [savedResponseQuestionIds, setSavedResponseQuestionIds] = useState<
+    Set<string>
+  >(() => new Set());
   const categoriesWithStats = useMemo(
     () =>
       categories.map((category) =>
@@ -2069,7 +2134,12 @@ export function InterviewQuestionBankDashboard({
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      setCompletedQuestionIds(readCompletedQuestionIds());
+      const savedResponseIds = readSavedResponseQuestionIds();
+      const completedIds = readCompletedQuestionIds();
+
+      savedResponseIds.forEach((questionId) => completedIds.add(questionId));
+      setSavedResponseQuestionIds(savedResponseIds);
+      setCompletedQuestionIds(completedIds);
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
@@ -2227,6 +2297,15 @@ export function InterviewQuestionBankDashboard({
   };
 
   const markQuestionCompleted = useCallback((questionId: string) => {
+    setSavedResponseQuestionIds((current) => {
+      if (current.has(questionId)) return current;
+
+      const next = new Set(current);
+
+      next.add(questionId);
+
+      return next;
+    });
     setCompletedQuestionIds((current) => {
       if (current.has(questionId)) return current;
 
@@ -2240,6 +2319,15 @@ export function InterviewQuestionBankDashboard({
   }, []);
 
   const resetQuestionCompletion = useCallback((questionId: string) => {
+    setSavedResponseQuestionIds((current) => {
+      if (!current.has(questionId)) return current;
+
+      const next = new Set(current);
+
+      next.delete(questionId);
+
+      return next;
+    });
     setCompletedQuestionIds((current) => {
       if (!current.has(questionId)) return current;
 
@@ -2321,6 +2409,7 @@ export function InterviewQuestionBankDashboard({
         selectedSubcategoryIndex={selectedSubcategoryIndex}
         statusFilter={statusFilter}
         questionQuery={questionQuery}
+        savedResponseQuestionIds={savedResponseQuestionIds}
         showPremiumCard={showPremiumCard}
         onBack={backToCategories}
         onSelectSubcategory={(index) => selectSubcategory(index)}
