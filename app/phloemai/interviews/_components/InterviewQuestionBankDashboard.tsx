@@ -274,6 +274,13 @@ type SavedQuestionResponse = {
   wordCount: number;
 };
 
+type TranscriptSegment = {
+  id: string;
+  text: string;
+  startSeconds: number;
+  endSeconds: number;
+};
+
 type MarkSchemeSection = {
   title: "General" | "Start" | "Middle" | "End";
   items: readonly string[];
@@ -1548,9 +1555,27 @@ function QuestionPracticeView({
   const [checkedItems, setCheckedItems] = useState<Set<string>>(() => new Set());
   const [savedResponse, setSavedResponse] =
     useState<SavedQuestionResponse | null>(null);
+  const [isRecordingAudio, setIsRecordingAudio] = useState(false);
+  const [recordingUrl, setRecordingUrl] = useState<string | null>(null);
+  const [recordingError, setRecordingError] = useState<string | null>(null);
+  const [recordingElapsedSeconds, setRecordingElapsedSeconds] = useState(0);
+  const [playbackSeconds, setPlaybackSeconds] = useState(0);
+  const [transcriptSegments, setTranscriptSegments] = useState<
+    TranscriptSegment[]
+  >(() => []);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const discardRecordingOnStopRef = useRef(false);
+  const recordingUrlRef = useRef<string | null>(null);
+  const recordingStartedAtRef = useRef<number | null>(null);
+  const recordingElapsedBeforeStartRef = useRef(0);
+  const recordingTickerRef = useRef<number | null>(null);
   const answerRef = useRef("");
   const interimTranscriptRef = useRef("");
+  const transcriptSegmentsRef = useRef<TranscriptSegment[]>([]);
+  const transcriptSegmentCounterRef = useRef(0);
   const timeRemainingRef = useRef(suggestedSeconds);
   const attemptPhaseRef = useRef<QuestionAttemptPhase>("idle");
   const wordCount = getWordCount(answer);
@@ -1584,6 +1609,15 @@ function QuestionPracticeView({
     status: QuestionStatus;
     icon: LucideIcon;
   }[];
+  const activePlaybackSegmentId =
+    transcriptSegments.find(
+      (segment) =>
+        playbackSeconds >= segment.startSeconds &&
+        playbackSeconds <= segment.endSeconds
+    )?.id ?? null;
+  const recorderBars = [
+    11, 18, 26, 15, 30, 20, 13, 24, 32, 18, 27, 14, 22, 30, 16, 25, 12, 20,
+  ];
 
   const beginAttempt = useCallback(() => {
     if (
@@ -1602,6 +1636,183 @@ function QuestionPracticeView({
     return true;
   }, []);
 
+  const getRecordingElapsedMs = useCallback(() => {
+    const activeElapsedMs =
+      recordingStartedAtRef.current === null
+        ? 0
+        : Date.now() - recordingStartedAtRef.current;
+
+    return recordingElapsedBeforeStartRef.current + activeElapsedMs;
+  }, []);
+
+  const stopRecordingTicker = useCallback(() => {
+    if (recordingTickerRef.current === null) return;
+
+    window.clearInterval(recordingTickerRef.current);
+    recordingTickerRef.current = null;
+  }, []);
+
+  const startRecordingTicker = useCallback(() => {
+    stopRecordingTicker();
+    setRecordingElapsedSeconds(Math.round(getRecordingElapsedMs() / 1000));
+    recordingTickerRef.current = window.setInterval(() => {
+      setRecordingElapsedSeconds(Math.round(getRecordingElapsedMs() / 1000));
+    }, 250);
+  }, [getRecordingElapsedMs, stopRecordingTicker]);
+
+  const revokeRecordingUrl = useCallback(() => {
+    if (!recordingUrlRef.current) return;
+
+    window.URL.revokeObjectURL(recordingUrlRef.current);
+    recordingUrlRef.current = null;
+    setRecordingUrl(null);
+  }, []);
+
+  const stopMediaStream = useCallback(() => {
+    mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+    mediaStreamRef.current = null;
+  }, []);
+
+  const stopAudioRecording = useCallback(() => {
+    if (recordingStartedAtRef.current !== null) {
+      recordingElapsedBeforeStartRef.current +=
+        Date.now() - recordingStartedAtRef.current;
+      recordingStartedAtRef.current = null;
+    }
+
+    stopRecordingTicker();
+    setRecordingElapsedSeconds(Math.round(getRecordingElapsedMs() / 1000));
+
+    const recorder = mediaRecorderRef.current;
+
+    if (!recorder || recorder.state === "inactive") {
+      mediaRecorderRef.current = null;
+      stopMediaStream();
+      setIsRecordingAudio(false);
+      return;
+    }
+
+    try {
+      recorder.stop();
+    } catch {
+      mediaRecorderRef.current = null;
+      stopMediaStream();
+      setIsRecordingAudio(false);
+    }
+  }, [getRecordingElapsedMs, stopMediaStream, stopRecordingTicker]);
+
+  const clearAudioRecording = useCallback(() => {
+    discardRecordingOnStopRef.current = true;
+    stopAudioRecording();
+    audioChunksRef.current = [];
+    recordingElapsedBeforeStartRef.current = 0;
+    recordingStartedAtRef.current = null;
+    transcriptSegmentsRef.current = [];
+    transcriptSegmentCounterRef.current = 0;
+    setRecordingElapsedSeconds(0);
+    setPlaybackSeconds(0);
+    setTranscriptSegments([]);
+    setRecordingError(null);
+    revokeRecordingUrl();
+  }, [revokeRecordingUrl, stopAudioRecording]);
+
+  const startAudioRecording = useCallback(async () => {
+    if (
+      typeof window === "undefined" ||
+      typeof navigator === "undefined" ||
+      !navigator.mediaDevices?.getUserMedia ||
+      !("MediaRecorder" in window)
+    ) {
+      setRecordingError("Audio recording is not available in this browser.");
+      return;
+    }
+
+    const currentRecorder = mediaRecorderRef.current;
+
+    if (currentRecorder && currentRecorder.state !== "inactive") return;
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+
+      mediaStreamRef.current = stream;
+      mediaRecorderRef.current = recorder;
+      discardRecordingOnStopRef.current = false;
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+      recorder.onstop = () => {
+        const shouldDiscard = discardRecordingOnStopRef.current;
+
+        mediaRecorderRef.current = null;
+        stopMediaStream();
+        setIsRecordingAudio(false);
+
+        if (shouldDiscard) {
+          discardRecordingOnStopRef.current = false;
+          return;
+        }
+
+        const recordingBlob = new Blob(audioChunksRef.current, {
+          type: recorder.mimeType || "audio/webm",
+        });
+
+        if (recordingBlob.size <= 0) return;
+
+        revokeRecordingUrl();
+        const nextRecordingUrl = window.URL.createObjectURL(recordingBlob);
+
+        recordingUrlRef.current = nextRecordingUrl;
+        setRecordingUrl(nextRecordingUrl);
+      };
+
+      recorder.start();
+      recordingStartedAtRef.current = Date.now();
+      setIsRecordingAudio(true);
+      setRecordingError(null);
+      startRecordingTicker();
+    } catch {
+      stopMediaStream();
+      mediaRecorderRef.current = null;
+      setIsRecordingAudio(false);
+      setRecordingError("Audio recording could not start.");
+    }
+  }, [revokeRecordingUrl, startRecordingTicker, stopMediaStream]);
+
+  const addTranscriptSegment = useCallback(
+    (transcript: string) => {
+      const cleanTranscript = transcript.trim();
+
+      if (!cleanTranscript) return;
+
+      const endSeconds = Math.max(0.4, getRecordingElapsedMs() / 1000);
+      const spokenWordCount = getWordCount(cleanTranscript);
+      const estimatedDuration = Math.max(0.8, spokenWordCount / 2.6);
+      const previousEndSeconds =
+        transcriptSegmentsRef.current.at(-1)?.endSeconds ?? 0;
+      const startSeconds = Math.max(
+        previousEndSeconds,
+        endSeconds - estimatedDuration
+      );
+      const segment: TranscriptSegment = {
+        id: `segment-${transcriptSegmentCounterRef.current}`,
+        text: cleanTranscript,
+        startSeconds,
+        endSeconds: Math.max(endSeconds, startSeconds + 0.4),
+      };
+
+      transcriptSegmentCounterRef.current += 1;
+      transcriptSegmentsRef.current = [
+        ...transcriptSegmentsRef.current,
+        segment,
+      ];
+      setTranscriptSegments(transcriptSegmentsRef.current);
+    },
+    [getRecordingElapsedMs]
+  );
+
   const commitInterimTranscript = useCallback(() => {
     const interim = interimTranscriptRef.current.trim();
 
@@ -1613,9 +1824,10 @@ function QuestionPracticeView({
     interimTranscriptRef.current = "";
     setAnswer(nextAnswer);
     setInterimTranscript("");
+    addTranscriptSegment(interim);
 
     return nextAnswer;
-  }, []);
+  }, [addTranscriptSegment]);
 
   const stopListening = useCallback(
     ({ commitInterim = false }: { commitInterim?: boolean } = {}) => {
@@ -1639,13 +1851,14 @@ function QuestionPracticeView({
       }
 
       setIsListening(false);
+      stopAudioRecording();
 
       if (!commitInterim) {
         interimTranscriptRef.current = "";
         setInterimTranscript("");
       }
     },
-    [commitInterimTranscript]
+    [commitInterimTranscript, stopAudioRecording]
   );
 
   const completeAttempt = useCallback(
@@ -1656,6 +1869,7 @@ function QuestionPracticeView({
         answerRef.current,
         interimTranscriptRef.current
       );
+      const finalInterimTranscript = interimTranscriptRef.current;
       const remainingSeconds =
         completionReason === "timer" ? 0 : timeRemainingRef.current;
       const completedAt = new Date().toISOString();
@@ -1684,11 +1898,13 @@ function QuestionPracticeView({
       setHasStarted(true);
       setIsTimerRunning(false);
       setTimeRemaining(remainingSeconds);
+      addTranscriptSegment(finalInterimTranscript);
       stopListening();
       onQuestionResponseSaved(response);
       scrollToTop();
     },
     [
+      addTranscriptSegment,
       onQuestionResponseSaved,
       practiceMode,
       question.id,
@@ -1716,7 +1932,9 @@ function QuestionPracticeView({
       return;
     }
 
-    stopListening({ commitInterim: true });
+    if (recognitionRef.current) {
+      stopListening({ commitInterim: true });
+    }
     setSpeechSupported(true);
     setSpeechError(null);
     setPracticeMode("voice");
@@ -1753,6 +1971,7 @@ function QuestionPracticeView({
         answerRef.current = nextAnswer;
         setAnswer(nextAnswer);
         setSavedResponse(null);
+        addTranscriptSegment(finalTranscript);
       }
 
       interimTranscriptRef.current = interim.trim();
@@ -1772,6 +1991,7 @@ function QuestionPracticeView({
           : "Voice transcription stopped."
       );
       setIsListening(false);
+      stopAudioRecording();
     };
     recognition.onend = () => {
       if (recognitionRef.current !== recognition) return;
@@ -1779,12 +1999,14 @@ function QuestionPracticeView({
       commitInterimTranscript();
       recognitionRef.current = null;
       setIsListening(false);
+      stopAudioRecording();
     };
 
     recognitionRef.current = recognition;
 
     try {
       recognition.start();
+      void startAudioRecording();
       setIsListening(true);
       beginAttempt();
     } catch {
@@ -1792,7 +2014,14 @@ function QuestionPracticeView({
       setSpeechError("Voice transcription could not start.");
       setIsListening(false);
     }
-  }, [beginAttempt, commitInterimTranscript, stopListening]);
+  }, [
+    addTranscriptSegment,
+    beginAttempt,
+    commitInterimTranscript,
+    startAudioRecording,
+    stopAudioRecording,
+    stopListening,
+  ]);
 
   const pauseAttempt = useCallback(() => {
     setIsTimerRunning(false);
@@ -1810,6 +2039,7 @@ function QuestionPracticeView({
 
   const resetAttempt = useCallback(() => {
     stopListening();
+    clearAudioRecording();
     answerRef.current = "";
     interimTranscriptRef.current = "";
     timeRemainingRef.current = suggestedSeconds;
@@ -1824,7 +2054,13 @@ function QuestionPracticeView({
     setCheckedItems(new Set());
     removeSavedQuestionResponse(question.id);
     onQuestionReset(question.id);
-  }, [onQuestionReset, question.id, stopListening, suggestedSeconds]);
+  }, [
+    clearAudioRecording,
+    onQuestionReset,
+    question.id,
+    stopListening,
+    suggestedSeconds,
+  ]);
 
   const handleReviewStatusChange = (status: QuestionStatus) => {
     if (status === "not-attempted") {
@@ -1848,6 +2084,9 @@ function QuestionPracticeView({
     answerRef.current = value;
     setAnswer(value);
     setSavedResponse(null);
+    transcriptSegmentsRef.current = [];
+    setTranscriptSegments([]);
+    setPlaybackSeconds(0);
 
     if (value.trim() && attemptPhaseRef.current === "idle") {
       beginAttempt();
@@ -1922,6 +2161,7 @@ function QuestionPracticeView({
   useEffect(() => {
     return () => {
       const recognition = recognitionRef.current;
+      const recorder = mediaRecorderRef.current;
 
       recognitionRef.current = null;
       if (recognition) {
@@ -1935,8 +2175,26 @@ function QuestionPracticeView({
           // The browser may already have stopped recognition.
         }
       }
+
+      discardRecordingOnStopRef.current = true;
+      if (recorder && recorder.state !== "inactive") {
+        recorder.ondataavailable = null;
+        recorder.onstop = null;
+        try {
+          recorder.stop();
+        } catch {
+          // The recorder may already have stopped.
+        }
+      }
+      stopMediaStream();
+      stopRecordingTicker();
+
+      if (recordingUrlRef.current) {
+        window.URL.revokeObjectURL(recordingUrlRef.current);
+        recordingUrlRef.current = null;
+      }
     };
-  }, []);
+  }, [stopMediaStream, stopRecordingTicker]);
 
   useEffect(() => {
     if (!isTimerRunning || attemptPhase !== "answering") return undefined;
@@ -1976,6 +2234,135 @@ function QuestionPracticeView({
       return next;
     });
   };
+
+  const renderTranscriptText = () => {
+    const hasSegments = transcriptSegments.length > 0;
+    const hasAnswer = Boolean(answer.trim());
+    const hasInterim = Boolean(interimTranscript.trim());
+
+    if (!hasSegments && !hasAnswer && !hasInterim) {
+      return (
+        <span className="text-[#8091a0]">
+          Start speaking and your transcript will appear here...
+        </span>
+      );
+    }
+
+    if (hasSegments) {
+      return (
+        <>
+          {transcriptSegments.map((segment) => {
+            const isPlaybackActive = segment.id === activePlaybackSegmentId;
+
+            return (
+              <span
+                key={segment.id}
+                className={`rounded px-0.5 transition-colors ${
+                  isPlaybackActive
+                    ? "bg-[#dff7ef] text-[#056d57] ring-1 ring-[#9ad8c7]"
+                    : "text-[#071923]"
+                }`}
+              >
+                {segment.text}{" "}
+              </span>
+            );
+          })}
+          {hasInterim && (
+            <span className="rounded bg-[#e2f5ef] px-1 font-semibold text-[#0f9b7d]">
+              {interimTranscript}
+            </span>
+          )}
+        </>
+      );
+    }
+
+    return (
+      <>
+        {hasAnswer && <span className="text-[#071923]">{answer} </span>}
+        {hasInterim && (
+          <span className="rounded bg-[#e2f5ef] px-1 font-semibold text-[#0f9b7d]">
+            {interimTranscript}
+          </span>
+        )}
+      </>
+    );
+  };
+
+  const renderVoiceRecorderPanel = () => (
+    <div className="mt-4 rounded-xl border border-[#cfe2df] bg-[#fbfdfd] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-3">
+          <span
+            className={`inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-black ${
+              isListening
+                ? "bg-[#e2f5ef] text-[#08787b]"
+                : "bg-[#eef3f4] text-[#4a6370]"
+            }`}
+          >
+            <span
+              className={`h-2.5 w-2.5 rounded-full ${
+                isListening ? "animate-pulse bg-[#0f9b7d]" : "bg-[#b8c8cf]"
+              }`}
+              aria-hidden="true"
+            />
+            {isListening ? "Listening" : "Voice ready"}
+          </span>
+          <span className="text-sm font-black text-[#071923]">
+            {formatTimer(recordingElapsedSeconds)}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 text-xs font-black text-[#4a6370]">
+          <span className="h-2.5 w-2.5 rounded-sm bg-[#071923]" aria-hidden="true" />
+          Confirmed
+          <span className="ml-3 h-2.5 w-2.5 rounded-sm bg-[#0f9b7d]" aria-hidden="true" />
+          Live
+        </div>
+      </div>
+
+      <div
+        className="mt-4 flex h-9 items-center gap-1 overflow-hidden rounded-lg bg-white px-3 ring-1 ring-[#d8e0e6]"
+        aria-hidden="true"
+      >
+        {recorderBars.map((height, index) => (
+          <span
+            key={`${height}-${index}`}
+            className={`w-1 rounded-full transition-colors ${
+              isRecordingAudio ? "bg-[#0f9b7d]" : "bg-[#b9d9d3]"
+            }`}
+            style={{
+              height,
+              opacity: isRecordingAudio ? 0.95 : 0.45,
+            }}
+          />
+        ))}
+      </div>
+
+      {recordingError && (
+        <p className="mt-3 rounded-lg border border-[#f5d5a5] bg-[#fff8ec] px-3 py-2 text-sm font-medium text-[#8a5600]">
+          {recordingError}
+        </p>
+      )}
+
+      {recordingUrl && (
+        <audio
+          controls
+          src={recordingUrl}
+          onTimeUpdate={(event) =>
+            setPlaybackSeconds(event.currentTarget.currentTime)
+          }
+          onSeeked={(event) =>
+            setPlaybackSeconds(event.currentTarget.currentTime)
+          }
+          onEnded={() => setPlaybackSeconds(0)}
+          className="mt-4 w-full"
+        />
+      )}
+
+      <div className="mt-4 min-h-[260px] rounded-xl border border-[#d8e0e6] bg-white p-4 text-base font-medium leading-7 text-[#071923]">
+        {renderTranscriptText()}
+      </div>
+    </div>
+  );
 
   const renderMarkScheme = () => (
     <aside className="space-y-5">
@@ -2153,6 +2540,8 @@ function QuestionPracticeView({
                       {savedAnswer.trim() ||
                         "No response was captured before the timer ended."}
                     </div>
+                    {(recordingUrl || transcriptSegments.length > 0) &&
+                      renderVoiceRecorderPanel()}
                   </section>
 
                   <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
@@ -2250,7 +2639,7 @@ function QuestionPracticeView({
                       type="button"
                       onClick={toggleVoiceMode}
                       aria-pressed={practiceMode === "voice"}
-                      disabled={timeRemaining === 0}
+                      disabled={timeRemaining === 0 || !speechSupported}
                       className={`inline-flex h-10 items-center gap-2 px-4 text-sm font-black transition-colors disabled:cursor-not-allowed disabled:text-[#8fa0a8] ${
                         practiceMode === "voice"
                           ? "bg-[#06254a] text-white disabled:bg-[#b8c8cf] disabled:text-white"
@@ -2267,19 +2656,18 @@ function QuestionPracticeView({
                       {speechError}
                     </p>
                   )}
-                  {practiceMode === "voice" && speechSupported && !speechError && (
-                    <p className="mt-3 text-sm font-medium text-[#4a6370]">
-                      {isListening ? "Voice transcription active" : "Voice transcription ready"}
-                      {interimTranscript ? `: ${interimTranscript}` : ""}
-                    </p>
+                  {practiceMode === "voice" ? (
+                    renderVoiceRecorderPanel()
+                  ) : (
+                    <textarea
+                      value={answer}
+                      onChange={(event) =>
+                        handleAnswerChange(event.target.value)
+                      }
+                      className="mt-4 min-h-[330px] w-full resize-y rounded-xl border border-[#d8e0e6] bg-[#fbfdfd] p-4 text-base font-medium leading-7 text-[#071923] outline-none transition-colors placeholder:text-[#8091a0] focus:border-[#159a9d] focus:bg-white focus:ring-2 focus:ring-[#159a9d]/15"
+                      placeholder="Start typing your answer..."
+                    />
                   )}
-
-                  <textarea
-                    value={answer}
-                    onChange={(event) => handleAnswerChange(event.target.value)}
-                    className="mt-4 min-h-[330px] w-full resize-y rounded-xl border border-[#d8e0e6] bg-[#fbfdfd] p-4 text-base font-medium leading-7 text-[#071923] outline-none transition-colors placeholder:text-[#8091a0] focus:border-[#159a9d] focus:bg-white focus:ring-2 focus:ring-[#159a9d]/15"
-                    placeholder="Start typing your answer..."
-                  />
 
                   <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm font-medium text-[#4a6370]">
