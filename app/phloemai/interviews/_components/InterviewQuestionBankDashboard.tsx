@@ -1615,9 +1615,6 @@ function QuestionPracticeView({
         playbackSeconds >= segment.startSeconds &&
         playbackSeconds <= segment.endSeconds
     )?.id ?? null;
-  const recorderBars = [
-    11, 18, 26, 15, 30, 20, 13, 24, 32, 18, 27, 14, 22, 30, 16, 25, 12, 20,
-  ];
 
   const beginAttempt = useCallback(() => {
     if (
@@ -2294,18 +2291,20 @@ function QuestionPracticeView({
         <div className="flex flex-wrap items-center gap-3">
           <span
             className={`inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-black ${
-              isListening
+              isListening || isRecordingAudio
                 ? "bg-[#e2f5ef] text-[#08787b]"
                 : "bg-[#eef3f4] text-[#4a6370]"
             }`}
           >
             <span
               className={`h-2.5 w-2.5 rounded-full ${
-                isListening ? "animate-pulse bg-[#0f9b7d]" : "bg-[#b8c8cf]"
+                isListening || isRecordingAudio
+                  ? "animate-pulse bg-[#0f9b7d]"
+                  : "bg-[#b8c8cf]"
               }`}
               aria-hidden="true"
             />
-            {isListening ? "Listening" : "Voice ready"}
+            {isRecordingAudio ? "Recording" : isListening ? "Listening" : "Voice ready"}
           </span>
           <span className="text-sm font-black text-[#071923]">
             {formatTimer(recordingElapsedSeconds)}
@@ -2317,24 +2316,6 @@ function QuestionPracticeView({
           <span className="ml-3 h-2.5 w-2.5 rounded-sm bg-[#0f9b7d]" aria-hidden="true" />
           Live
         </div>
-      </div>
-
-      <div
-        className="mt-4 flex h-9 items-center gap-1 overflow-hidden rounded-lg bg-white px-3 ring-1 ring-[#d8e0e6]"
-        aria-hidden="true"
-      >
-        {recorderBars.map((height, index) => (
-          <span
-            key={`${height}-${index}`}
-            className={`w-1 rounded-full transition-colors ${
-              isRecordingAudio ? "bg-[#0f9b7d]" : "bg-[#b9d9d3]"
-            }`}
-            style={{
-              height,
-              opacity: isRecordingAudio ? 0.95 : 0.45,
-            }}
-          />
-        ))}
       </div>
 
       {recordingError && (
@@ -2358,7 +2339,7 @@ function QuestionPracticeView({
         />
       )}
 
-      <div className="mt-4 min-h-[260px] rounded-xl border border-[#d8e0e6] bg-white p-4 text-base font-medium leading-7 text-[#071923]">
+      <div className="mt-4 min-h-[104px] rounded-xl border border-[#d8e0e6] bg-white p-4 text-base font-medium leading-7 text-[#071923]">
         {renderTranscriptText()}
       </div>
     </div>
