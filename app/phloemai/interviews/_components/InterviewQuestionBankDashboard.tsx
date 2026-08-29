@@ -1732,6 +1732,10 @@ function QuestionBankCategoryView({
   onOpenQuestion: (question: InterviewQuestion) => void;
 }) {
   const Icon = category.icon;
+  const questionListRef = useRef<HTMLDivElement | null>(null);
+  const scrollRestoreTimeoutRef = useRef<number | null>(null);
+  const [temporaryListMinHeight, setTemporaryListMinHeight] =
+    useState<number | null>(null);
   const percent = getPercent(category.completed, category.total);
   const selectedSubcategory =
     category.subcategories[selectedSubcategoryIndex] ??
@@ -1784,6 +1788,42 @@ function QuestionBankCategoryView({
     onQuestionQueryChange("");
   };
 
+  const handleStatusFilterChange = (filter: StatusFilter) => {
+    if (filter === statusFilter) return;
+
+    const scrollY = window.scrollY;
+    const listHeight = questionListRef.current?.getBoundingClientRect().height;
+
+    if (listHeight && listHeight > 0) {
+      setTemporaryListMinHeight(listHeight);
+    }
+
+    onStatusFilterChange(filter);
+
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: scrollY, behavior: "auto" });
+
+      if (scrollRestoreTimeoutRef.current !== null) {
+        window.clearTimeout(scrollRestoreTimeoutRef.current);
+      }
+
+      scrollRestoreTimeoutRef.current = window.setTimeout(() => {
+        setTemporaryListMinHeight(null);
+        window.requestAnimationFrame(() => {
+          const maxScrollY = Math.max(
+            0,
+            document.documentElement.scrollHeight - window.innerHeight
+          );
+
+          window.scrollTo({
+            top: Math.min(scrollY, maxScrollY),
+            behavior: "auto",
+          });
+        });
+      }, 120);
+    });
+  };
+
   const openRandomQuestion = () => {
     const nextSubcategoryIndex = Math.floor(
       Math.random() * category.subcategories.length
@@ -1812,6 +1852,14 @@ function QuestionBankCategoryView({
     { label: "Unanswered", value: "unanswered" },
     { label: "Review", value: "review" },
   ] as const satisfies readonly { label: string; value: StatusFilter }[];
+
+  useEffect(() => {
+    return () => {
+      if (scrollRestoreTimeoutRef.current !== null) {
+        window.clearTimeout(scrollRestoreTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
@@ -1917,7 +1965,7 @@ function QuestionBankCategoryView({
                       <button
                         key={option.value}
                         type="button"
-                        onClick={() => onStatusFilterChange(option.value)}
+                        onClick={() => handleStatusFilterChange(option.value)}
                         aria-pressed={isActive}
                         className={`h-10 px-3 text-xs font-black transition-colors ${
                           isActive
@@ -1967,7 +2015,13 @@ function QuestionBankCategoryView({
               )}
 
               <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_220px]">
-                <div className="overflow-hidden rounded-xl border border-[#d8e0e6] bg-white shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
+                <div
+                  ref={questionListRef}
+                  className="overflow-hidden rounded-xl border border-[#d8e0e6] bg-white shadow-[0_1px_3px_rgba(7,25,35,0.05)]"
+                  style={{
+                    minHeight: temporaryListMinHeight ?? undefined,
+                  }}
+                >
                   {filteredQuestions.map((question, index) => {
                     const hasSavedResponse = savedResponseQuestionIds.has(question.id);
 
