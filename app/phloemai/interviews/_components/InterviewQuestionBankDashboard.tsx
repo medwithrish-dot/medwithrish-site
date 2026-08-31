@@ -276,6 +276,7 @@ type SavedQuestionResponse = {
 
 type TranscriptSegment = {
   id: string;
+  kind: "speech" | "pause";
   text: string;
   startSeconds: number;
   endSeconds: number;
@@ -659,8 +660,22 @@ function formatTimer(totalSeconds: number) {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
+const longSpeechPauseThresholdSeconds = 2.5;
+const speechPauseMarkerPattern = /\[\s*\d+\s+seconds?\s+pause\s*\]/gi;
+
+function stripSpeechPauseMarkers(value: string) {
+  return value.replace(speechPauseMarkerPattern, " ");
+}
+
+function formatSpeechPauseMarker(durationSeconds: number) {
+  const roundedSeconds = Math.max(1, Math.round(durationSeconds));
+  const unit = roundedSeconds === 1 ? "second" : "seconds";
+
+  return `[${roundedSeconds} ${unit} pause]`;
+}
+
 function getWordCount(value: string) {
-  const words = value.trim().match(/\S+/g);
+  const words = stripSpeechPauseMarkers(value).trim().match(/\S+/g);
 
   return words?.length ?? 0;
 }
@@ -1917,36 +1932,91 @@ function QuestionPracticeView({
     stopMediaStream,
   ]);
 
-  const addTranscriptSegment = useCallback(
+  const appendTranscriptSegment = useCallback(
+    (segment: Omit<TranscriptSegment, "id">) => {
+      const nextSegment: TranscriptSegment = {
+        id: `segment-${transcriptSegmentCounterRef.current}`,
+        ...segment,
+      };
+
+      transcriptSegmentCounterRef.current += 1;
+      transcriptSegmentsRef.current = [
+        ...transcriptSegmentsRef.current,
+        nextSegment,
+      ];
+      setTranscriptSegments(transcriptSegmentsRef.current);
+    },
+    []
+  );
+
+  const addPauseMarkerUntil = useCallback(
+    (endSeconds: number) => {
+      const previousEndSeconds =
+        transcriptSegmentsRef.current.at(-1)?.endSeconds ?? 0;
+      const normalizedEndSeconds = Math.max(previousEndSeconds, endSeconds);
+      const pauseDurationSeconds = normalizedEndSeconds - previousEndSeconds;
+
+      if (pauseDurationSeconds < longSpeechPauseThresholdSeconds) {
+        return answerRef.current;
+      }
+
+      const pauseMarker = formatSpeechPauseMarker(pauseDurationSeconds);
+      const nextAnswer = appendTranscript(answerRef.current, pauseMarker);
+
+      answerRef.current = nextAnswer;
+      setAnswer(nextAnswer);
+      appendTranscriptSegment({
+        kind: "pause",
+        text: pauseMarker,
+        startSeconds: previousEndSeconds,
+        endSeconds: normalizedEndSeconds,
+      });
+
+      return nextAnswer;
+    },
+    [appendTranscriptSegment]
+  );
+
+  const commitTranscript = useCallback(
     (transcript: string) => {
       const cleanTranscript = transcript.trim();
 
-      if (!cleanTranscript) return;
+      if (!cleanTranscript) return answerRef.current;
 
       const endSeconds = Math.max(0.4, getRecordingElapsedMs() / 1000);
       const spokenWordCount = getWordCount(cleanTranscript);
       const estimatedDuration = Math.max(0.8, spokenWordCount / 2.6);
       const previousEndSeconds =
         transcriptSegmentsRef.current.at(-1)?.endSeconds ?? 0;
+      const estimatedStartSeconds = Math.max(0, endSeconds - estimatedDuration);
+
+      if (
+        estimatedStartSeconds - previousEndSeconds >=
+        longSpeechPauseThresholdSeconds
+      ) {
+        addPauseMarkerUntil(estimatedStartSeconds);
+      }
+
+      const effectivePreviousEndSeconds =
+        transcriptSegmentsRef.current.at(-1)?.endSeconds ?? 0;
       const startSeconds = Math.max(
-        previousEndSeconds,
-        endSeconds - estimatedDuration
+        effectivePreviousEndSeconds,
+        estimatedStartSeconds
       );
-      const segment: TranscriptSegment = {
-        id: `segment-${transcriptSegmentCounterRef.current}`,
+      const nextAnswer = appendTranscript(answerRef.current, cleanTranscript);
+
+      answerRef.current = nextAnswer;
+      setAnswer(nextAnswer);
+      appendTranscriptSegment({
+        kind: "speech",
         text: cleanTranscript,
         startSeconds,
         endSeconds: Math.max(endSeconds, startSeconds + 0.4),
-      };
+      });
 
-      transcriptSegmentCounterRef.current += 1;
-      transcriptSegmentsRef.current = [
-        ...transcriptSegmentsRef.current,
-        segment,
-      ];
-      setTranscriptSegments(transcriptSegmentsRef.current);
+      return nextAnswer;
     },
-    [getRecordingElapsedMs]
+    [addPauseMarkerUntil, appendTranscriptSegment, getRecordingElapsedMs]
   );
 
   const commitInterimTranscript = useCallback(() => {
@@ -1954,16 +2024,13 @@ function QuestionPracticeView({
 
     if (!interim) return answerRef.current;
 
-    const nextAnswer = appendTranscript(answerRef.current, interim);
+    const nextAnswer = commitTranscript(interim);
 
-    answerRef.current = nextAnswer;
     interimTranscriptRef.current = "";
-    setAnswer(nextAnswer);
     setInterimTranscript("");
-    addTranscriptSegment(interim);
 
     return nextAnswer;
-  }, [addTranscriptSegment]);
+  }, [commitTranscript]);
 
   const stopListening = useCallback(
     ({ commitInterim = false }: { commitInterim?: boolean } = {}) => {
@@ -2000,11 +2067,17 @@ function QuestionPracticeView({
     (completionReason: QuestionCompletionReason) => {
       if (attemptPhaseRef.current === "review") return;
 
-      const finalAnswer = appendTranscript(
-        answerRef.current,
-        interimTranscriptRef.current
+      const hasFinalInterimTranscript = Boolean(
+        interimTranscriptRef.current.trim()
       );
-      const finalInterimTranscript = interimTranscriptRef.current;
+
+      if (hasFinalInterimTranscript) {
+        commitInterimTranscript();
+      } else {
+        addPauseMarkerUntil(Math.max(0, getRecordingElapsedMs() / 1000));
+      }
+
+      const finalAnswer = answerRef.current;
       const remainingSeconds =
         completionReason === "timer" ? 0 : timeRemainingRef.current;
       const completedAt = new Date().toISOString();
@@ -2033,15 +2106,16 @@ function QuestionPracticeView({
       setHasStarted(true);
       setIsTimerRunning(false);
       setTimeRemaining(remainingSeconds);
-      addTranscriptSegment(finalInterimTranscript);
       stopListening();
       finalizeAudioRecording();
       onQuestionResponseSaved(response);
       scrollToTop();
     },
     [
-      addTranscriptSegment,
+      addPauseMarkerUntil,
+      commitInterimTranscript,
       finalizeAudioRecording,
+      getRecordingElapsedMs,
       onQuestionResponseSaved,
       practiceMode,
       question.id,
@@ -2103,12 +2177,8 @@ function QuestionPracticeView({
       }
 
       if (finalTranscript.trim()) {
-        const nextAnswer = appendTranscript(answerRef.current, finalTranscript);
-
-        answerRef.current = nextAnswer;
-        setAnswer(nextAnswer);
+        commitTranscript(finalTranscript);
         setSavedResponse(null);
-        addTranscriptSegment(finalTranscript);
       }
 
       interimTranscriptRef.current = interim.trim();
@@ -2130,6 +2200,7 @@ function QuestionPracticeView({
       setIsListening(false);
       setIsTimerRunning(false);
       pauseAudioRecording();
+      addPauseMarkerUntil(Math.max(0, getRecordingElapsedMs() / 1000));
     };
     recognition.onend = () => {
       if (recognitionRef.current !== recognition) return;
@@ -2139,6 +2210,7 @@ function QuestionPracticeView({
       setIsListening(false);
       setIsTimerRunning(false);
       pauseAudioRecording();
+      addPauseMarkerUntil(Math.max(0, getRecordingElapsedMs() / 1000));
     };
 
     recognitionRef.current = recognition;
@@ -2154,9 +2226,11 @@ function QuestionPracticeView({
       setIsListening(false);
     }
   }, [
-    addTranscriptSegment,
+    addPauseMarkerUntil,
     beginAttempt,
     commitInterimTranscript,
+    commitTranscript,
+    getRecordingElapsedMs,
     pauseAudioRecording,
     startAudioRecording,
     stopListening,
@@ -2166,7 +2240,13 @@ function QuestionPracticeView({
     setIsTimerRunning(false);
     stopListening({ commitInterim: true });
     pauseAudioRecording();
-  }, [pauseAudioRecording, stopListening]);
+    addPauseMarkerUntil(Math.max(0, getRecordingElapsedMs() / 1000));
+  }, [
+    addPauseMarkerUntil,
+    getRecordingElapsedMs,
+    pauseAudioRecording,
+    stopListening,
+  ]);
 
   const resumeAttempt = useCallback(() => {
     if (practiceMode === "voice") {
@@ -2245,6 +2325,7 @@ function QuestionPracticeView({
     setSpeechError(null);
     stopListening({ commitInterim: true });
     pauseAudioRecording();
+    addPauseMarkerUntil(Math.max(0, getRecordingElapsedMs() / 1000));
   };
 
   const toggleVoiceMode = () => {
@@ -2402,6 +2483,7 @@ function QuestionPracticeView({
         <>
           {transcriptSegments.map((segment) => {
             const isPlaybackActive = segment.id === activePlaybackSegmentId;
+            const isPauseMarker = segment.kind === "pause";
 
             return (
               <span
@@ -2409,6 +2491,8 @@ function QuestionPracticeView({
                 className={`rounded px-0.5 transition-colors ${
                   isPlaybackActive
                     ? "bg-[#dff7ef] text-[#056d57] ring-1 ring-[#9ad8c7]"
+                    : isPauseMarker
+                      ? "bg-[#eef3f4] font-semibold text-[#4a6370] ring-1 ring-[#d8e0e6]"
                     : "text-[#071923]"
                 }`}
               >
