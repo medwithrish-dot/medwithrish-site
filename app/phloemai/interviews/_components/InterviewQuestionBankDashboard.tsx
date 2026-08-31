@@ -1567,6 +1567,7 @@ function QuestionPracticeView({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const audioRecorderSessionRef = useRef(0);
   const discardRecordingOnStopRef = useRef(false);
   const recordingUrlRef = useRef<string | null>(null);
   const recordingStartedAtRef = useRef<number | null>(null);
@@ -1665,42 +1666,142 @@ function QuestionPracticeView({
     setRecordingUrl(null);
   }, []);
 
-  const stopMediaStream = useCallback(() => {
-    mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
-    mediaStreamRef.current = null;
-  }, []);
+  const stopMediaStream = useCallback(
+    (stream: MediaStream | null = mediaStreamRef.current) => {
+      stream?.getTracks().forEach((track) => track.stop());
 
-  const stopAudioRecording = useCallback(() => {
+      if (!stream || mediaStreamRef.current === stream) {
+        mediaStreamRef.current = null;
+      }
+    },
+    []
+  );
+
+  const refreshRecordingUrl = useCallback(
+    (mimeType: string) => {
+      if (
+        typeof window === "undefined" ||
+        audioChunksRef.current.length === 0
+      ) {
+        return;
+      }
+
+      const recordingBlob = new Blob(audioChunksRef.current, {
+        type: mimeType || "audio/webm",
+      });
+
+      if (recordingBlob.size <= 0) return;
+
+      revokeRecordingUrl();
+      const nextRecordingUrl = window.URL.createObjectURL(recordingBlob);
+
+      recordingUrlRef.current = nextRecordingUrl;
+      setRecordingUrl(nextRecordingUrl);
+    },
+    [revokeRecordingUrl]
+  );
+
+  const captureRecordingElapsed = useCallback(() => {
+    const elapsedMs = getRecordingElapsedMs();
+
     if (recordingStartedAtRef.current !== null) {
-      recordingElapsedBeforeStartRef.current +=
-        Date.now() - recordingStartedAtRef.current;
+      recordingElapsedBeforeStartRef.current = elapsedMs;
       recordingStartedAtRef.current = null;
     }
 
     stopRecordingTicker();
-    setRecordingElapsedSeconds(Math.round(getRecordingElapsedMs() / 1000));
+    setRecordingElapsedSeconds(Math.round(elapsedMs / 1000));
 
+    return elapsedMs;
+  }, [getRecordingElapsedMs, stopRecordingTicker]);
+
+  const pauseAudioRecording = useCallback(() => {
     const recorder = mediaRecorderRef.current;
+
+    captureRecordingElapsed();
+    setIsRecordingAudio(false);
 
     if (!recorder || recorder.state === "inactive") {
       mediaRecorderRef.current = null;
       stopMediaStream();
-      setIsRecordingAudio(false);
       return;
     }
 
+    if (recorder.state !== "recording") return;
+
     try {
-      recorder.stop();
+      recorder.requestData();
     } catch {
-      mediaRecorderRef.current = null;
-      stopMediaStream();
-      setIsRecordingAudio(false);
+      // Some browsers do not flush data while transitioning recorder states.
     }
-  }, [getRecordingElapsedMs, stopMediaStream, stopRecordingTicker]);
+
+    try {
+      recorder.pause();
+    } catch {
+      setRecordingError("Audio recording could not pause cleanly.");
+    }
+  }, [captureRecordingElapsed, stopMediaStream]);
+
+  const finalizeAudioRecording = useCallback(
+    ({ discard = false }: { discard?: boolean } = {}) => {
+      const recorder = mediaRecorderRef.current;
+
+      if (discard) {
+        discardRecordingOnStopRef.current = true;
+      }
+
+      captureRecordingElapsed();
+      setIsRecordingAudio(false);
+
+      if (!recorder || recorder.state === "inactive") {
+        mediaRecorderRef.current = null;
+        stopMediaStream();
+
+        if (discard) {
+          audioChunksRef.current = [];
+          discardRecordingOnStopRef.current = false;
+          revokeRecordingUrl();
+        } else {
+          refreshRecordingUrl("audio/webm");
+        }
+
+        return;
+      }
+
+      if (!discard) {
+        try {
+          recorder.requestData();
+        } catch {
+          // The final data chunk will still be emitted by recorder.stop().
+        }
+      }
+
+      try {
+        recorder.stop();
+      } catch {
+        mediaRecorderRef.current = null;
+        stopMediaStream();
+
+        if (discard) {
+          audioChunksRef.current = [];
+          discardRecordingOnStopRef.current = false;
+          revokeRecordingUrl();
+        } else {
+          refreshRecordingUrl(recorder.mimeType || "audio/webm");
+        }
+      }
+    },
+    [
+      captureRecordingElapsed,
+      refreshRecordingUrl,
+      revokeRecordingUrl,
+      stopMediaStream,
+    ]
+  );
 
   const clearAudioRecording = useCallback(() => {
-    discardRecordingOnStopRef.current = true;
-    stopAudioRecording();
+    finalizeAudioRecording({ discard: true });
+    audioRecorderSessionRef.current += 1;
     audioChunksRef.current = [];
     recordingElapsedBeforeStartRef.current = 0;
     recordingStartedAtRef.current = null;
@@ -1711,7 +1812,7 @@ function QuestionPracticeView({
     setTranscriptSegments([]);
     setRecordingError(null);
     revokeRecordingUrl();
-  }, [revokeRecordingUrl, stopAudioRecording]);
+  }, [finalizeAudioRecording, revokeRecordingUrl]);
 
   const startAudioRecording = useCallback(async () => {
     if (
@@ -1726,43 +1827,76 @@ function QuestionPracticeView({
 
     const currentRecorder = mediaRecorderRef.current;
 
-    if (currentRecorder && currentRecorder.state !== "inactive") return;
+    if (currentRecorder?.state === "recording") return;
+
+    if (currentRecorder?.state === "paused") {
+      try {
+        currentRecorder.resume();
+        recordingStartedAtRef.current = Date.now();
+        setIsRecordingAudio(true);
+        setRecordingError(null);
+        startRecordingTicker();
+      } catch {
+        setRecordingError("Audio recording could not resume.");
+      }
+
+      return;
+    }
+
+    if (currentRecorder?.state === "inactive") {
+      mediaRecorderRef.current = null;
+      stopMediaStream();
+    }
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
+      const sessionId = audioRecorderSessionRef.current + 1;
 
+      audioRecorderSessionRef.current = sessionId;
+      audioChunksRef.current = [];
+      revokeRecordingUrl();
       mediaStreamRef.current = stream;
       mediaRecorderRef.current = recorder;
       discardRecordingOnStopRef.current = false;
       recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
-      recorder.onstop = () => {
-        const shouldDiscard = discardRecordingOnStopRef.current;
-
-        mediaRecorderRef.current = null;
-        stopMediaStream();
-        setIsRecordingAudio(false);
-
-        if (shouldDiscard) {
-          discardRecordingOnStopRef.current = false;
+        if (
+          event.data.size <= 0 ||
+          discardRecordingOnStopRef.current ||
+          sessionId !== audioRecorderSessionRef.current
+        ) {
           return;
         }
 
-        const recordingBlob = new Blob(audioChunksRef.current, {
-          type: recorder.mimeType || "audio/webm",
-        });
+        audioChunksRef.current.push(event.data);
 
-        if (recordingBlob.size <= 0) return;
+        if (recorder.state !== "inactive") {
+          refreshRecordingUrl(recorder.mimeType || "audio/webm");
+        }
+      };
+      recorder.onstop = () => {
+        const isCurrentSession = sessionId === audioRecorderSessionRef.current;
+        const shouldDiscard =
+          discardRecordingOnStopRef.current || !isCurrentSession;
 
-        revokeRecordingUrl();
-        const nextRecordingUrl = window.URL.createObjectURL(recordingBlob);
+        if (mediaRecorderRef.current === recorder) {
+          mediaRecorderRef.current = null;
+        }
+        stopMediaStream(stream);
 
-        recordingUrlRef.current = nextRecordingUrl;
-        setRecordingUrl(nextRecordingUrl);
+        if (isCurrentSession) {
+          setIsRecordingAudio(false);
+        }
+
+        if (shouldDiscard) {
+          if (isCurrentSession) {
+            audioChunksRef.current = [];
+            discardRecordingOnStopRef.current = false;
+          }
+          return;
+        }
+
+        refreshRecordingUrl(recorder.mimeType || "audio/webm");
       };
 
       recorder.start();
@@ -1776,7 +1910,12 @@ function QuestionPracticeView({
       setIsRecordingAudio(false);
       setRecordingError("Audio recording could not start.");
     }
-  }, [revokeRecordingUrl, startRecordingTicker, stopMediaStream]);
+  }, [
+    refreshRecordingUrl,
+    revokeRecordingUrl,
+    startRecordingTicker,
+    stopMediaStream,
+  ]);
 
   const addTranscriptSegment = useCallback(
     (transcript: string) => {
@@ -1848,14 +1987,13 @@ function QuestionPracticeView({
       }
 
       setIsListening(false);
-      stopAudioRecording();
 
       if (!commitInterim) {
         interimTranscriptRef.current = "";
         setInterimTranscript("");
       }
     },
-    [commitInterimTranscript, stopAudioRecording]
+    [commitInterimTranscript]
   );
 
   const completeAttempt = useCallback(
@@ -1897,11 +2035,13 @@ function QuestionPracticeView({
       setTimeRemaining(remainingSeconds);
       addTranscriptSegment(finalInterimTranscript);
       stopListening();
+      finalizeAudioRecording();
       onQuestionResponseSaved(response);
       scrollToTop();
     },
     [
       addTranscriptSegment,
+      finalizeAudioRecording,
       onQuestionResponseSaved,
       practiceMode,
       question.id,
@@ -1988,7 +2128,8 @@ function QuestionPracticeView({
           : "Voice transcription stopped."
       );
       setIsListening(false);
-      stopAudioRecording();
+      setIsTimerRunning(false);
+      pauseAudioRecording();
     };
     recognition.onend = () => {
       if (recognitionRef.current !== recognition) return;
@@ -1996,7 +2137,8 @@ function QuestionPracticeView({
       commitInterimTranscript();
       recognitionRef.current = null;
       setIsListening(false);
-      stopAudioRecording();
+      setIsTimerRunning(false);
+      pauseAudioRecording();
     };
 
     recognitionRef.current = recognition;
@@ -2015,15 +2157,16 @@ function QuestionPracticeView({
     addTranscriptSegment,
     beginAttempt,
     commitInterimTranscript,
+    pauseAudioRecording,
     startAudioRecording,
-    stopAudioRecording,
     stopListening,
   ]);
 
   const pauseAttempt = useCallback(() => {
     setIsTimerRunning(false);
     stopListening({ commitInterim: true });
-  }, [stopListening]);
+    pauseAudioRecording();
+  }, [pauseAudioRecording, stopListening]);
 
   const resumeAttempt = useCallback(() => {
     if (practiceMode === "voice") {
@@ -2093,6 +2236,7 @@ function QuestionPracticeView({
   const handleBackToQuestions = () => {
     setIsTimerRunning(false);
     stopListening({ commitInterim: true });
+    finalizeAudioRecording({ discard: true });
     onBackToQuestions();
   };
 
@@ -2100,11 +2244,12 @@ function QuestionPracticeView({
     setPracticeMode("text");
     setSpeechError(null);
     stopListening({ commitInterim: true });
+    pauseAudioRecording();
   };
 
   const toggleVoiceMode = () => {
     if (isListening) {
-      stopListening({ commitInterim: true });
+      pauseAttempt();
       return;
     }
 
@@ -2150,10 +2295,17 @@ function QuestionPracticeView({
       setHasStarted(true);
       setIsTimerRunning(false);
       stopListening();
+      finalizeAudioRecording({ discard: true });
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [initialSavedResponse, question.id, stopListening, suggestedSeconds]);
+  }, [
+    finalizeAudioRecording,
+    initialSavedResponse,
+    question.id,
+    stopListening,
+    suggestedSeconds,
+  ]);
 
   useEffect(() => {
     return () => {
