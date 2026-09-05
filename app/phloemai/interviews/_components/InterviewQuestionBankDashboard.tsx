@@ -1568,6 +1568,9 @@ function QuestionPracticeView({
   const [speechError, setSpeechError] = useState<string | null>(null);
   const [interimTranscript, setInterimTranscript] = useState("");
   const [checkedItems, setCheckedItems] = useState<Set<string>>(() => new Set());
+  const [openMarkSchemeSections, setOpenMarkSchemeSections] = useState<
+    Set<MarkSchemeSection["title"]>
+  >(() => new Set(["General", "Start", "Middle", "End"]));
   const [savedResponse, setSavedResponse] =
     useState<SavedQuestionResponse | null>(null);
   const [isRecordingAudio, setIsRecordingAudio] = useState(false);
@@ -2465,6 +2468,20 @@ function QuestionPracticeView({
     });
   };
 
+  const toggleMarkSchemeSection = (title: MarkSchemeSection["title"]) => {
+    setOpenMarkSchemeSections((current) => {
+      const next = new Set(current);
+
+      if (next.has(title)) {
+        next.delete(title);
+      } else {
+        next.add(title);
+      }
+
+      return next;
+    });
+  };
+
   const renderTranscriptText = () => {
     const hasSegments = transcriptSegments.length > 0;
     const hasAnswer = Boolean(answer.trim());
@@ -2612,31 +2629,65 @@ function QuestionPracticeView({
         </a>
       </section>
 
-      {rubricGroups.map((group) => (
-        <section
-          key={group.title}
-          className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]"
-        >
-          <h3 className="text-sm font-black text-[#08787b]">
-            {group.title}
-          </h3>
-          <div className="mt-4 space-y-3">
-            {group.items.map((item) => {
-              const id = `${group.title}-${item}`;
+      {rubricGroups.map((group) => {
+        const isOpen = openMarkSchemeSections.has(group.title);
+        const panelId = `mark-scheme-${group.title.toLowerCase()}`;
+        const checkedInGroup = group.items.reduce((total, item) => {
+          const id = `${group.title}-${item}`;
 
-              return (
-                <ChecklistToggle
-                  key={id}
-                  id={id}
-                  label={item}
-                  isChecked={checkedItems.has(id)}
-                  onToggle={toggleChecklistItem}
+          return total + (checkedItems.has(id) ? 1 : 0);
+        }, 0);
+
+        return (
+          <section
+            key={group.title}
+            className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]"
+          >
+            <button
+              type="button"
+              aria-expanded={isOpen}
+              aria-controls={panelId}
+              onClick={() => toggleMarkSchemeSection(group.title)}
+              className="flex w-full items-center justify-between gap-3 text-left"
+            >
+              <span className="min-w-0">
+                <span className="block text-sm font-black text-[#08787b]">
+                  {group.title}
+                </span>
+                <span className="mt-1 block text-xs font-bold text-[#5d7280]">
+                  {checkedInGroup} / {group.items.length}
+                </span>
+              </span>
+              <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#d8e0e6] bg-[#f7fafb] text-[#4a6370] transition-colors hover:border-[#08787b] hover:text-[#08787b]">
+                <ChevronRight
+                  className={`h-4 w-4 transition-transform ${
+                    isOpen ? "rotate-90" : ""
+                  }`}
+                  aria-hidden="true"
                 />
-              );
-            })}
-          </div>
-        </section>
-      ))}
+              </span>
+            </button>
+
+            {isOpen && (
+              <div id={panelId} className="mt-4 space-y-3">
+                {group.items.map((item) => {
+                  const id = `${group.title}-${item}`;
+
+                  return (
+                    <ChecklistToggle
+                      key={id}
+                      id={id}
+                      label={item}
+                      isChecked={checkedItems.has(id)}
+                      onToggle={toggleChecklistItem}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        );
+      })}
     </aside>
   );
 
