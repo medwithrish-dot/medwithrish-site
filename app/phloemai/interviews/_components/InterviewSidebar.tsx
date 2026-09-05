@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   BadgeCheck,
+  BarChart3,
   BookOpen,
   ClipboardList,
   Home,
@@ -55,6 +56,14 @@ const sidebarSections = [
       },
     ],
   },
+  {
+    label: "Your practice",
+    items: [
+      { label: "Progress", icon: BarChart3, href: "/phloemai/interviews/progress" },
+      { label: "Plan", icon: ClipboardList, href: "/phloemai/interviews/plan" },
+      { label: "Reports", icon: BookOpen, href: "/phloemai/interviews/reports" },
+    ],
+  },
 ] as const;
 
 function SidebarLink({
@@ -71,6 +80,7 @@ function SidebarLink({
   return (
     <Link
       href={href}
+      aria-current={active ? "page" : undefined}
       className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
         active
           ? "bg-white/[0.07] text-[#8be5df]"

@@ -34,9 +34,9 @@ export type InterviewWorkspacePageProps = {
 };
 
 const fallbackStats = [
-  { label: "Readiness", value: "78%" },
-  { label: "Stations", value: "42" },
-  { label: "Practice", value: "5h 32m" },
+  { label: "Readiness", value: "—" },
+  { label: "Stations", value: "—" },
+  { label: "Practice", value: "—" },
 ] as const;
 
 export async function InterviewWorkspacePage({

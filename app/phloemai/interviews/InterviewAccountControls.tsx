@@ -26,11 +26,12 @@ function getUserName(user: User | null) {
         ? user.user_metadata.name
         : "";
 
-  return metadataName || user?.email?.split("@")[0] || "Rishoo";
+  return metadataName || user?.email?.split("@")[0] || "Guest";
 }
 
 export function InterviewAccountControls() {
   const [user, setUser] = useState<User | null>(null);
+  const [plan, setPlan] = useState("Free plan");
   const [menuOpen, setMenuOpen] = useState(false);
   const supabaseReady = hasSupabaseConfig();
   const supabase = useMemo(
@@ -50,6 +51,10 @@ export function InterviewAccountControls() {
       } = await client.auth.getSession();
 
       if (mounted) setUser(session?.user ?? null);
+      if (session?.user) {
+        const { data } = await client.from("profiles").select("current_plan").eq("id", session.user.id).maybeSingle();
+        if (mounted) setPlan(data?.current_plan === "premium" ? "Premium plan" : "Free plan");
+      }
     }
 
     void loadSession();
@@ -67,7 +72,7 @@ export function InterviewAccountControls() {
   }, [supabase]);
 
   const displayName = getUserName(user);
-  const firstName = displayName.split(" ")[0] || "Rishoo";
+  const firstName = displayName.split(" ")[0] || "Guest";
   const initial = firstName.charAt(0).toUpperCase() || "R";
   const email = user?.email ?? "Account settings";
 
@@ -82,6 +87,8 @@ export function InterviewAccountControls() {
     setMenuOpen(false);
     window.location.assign("/phloemai");
   };
+
+  if (!user) return <Link href="/phloemai/account" className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[#cfe0df] bg-white px-5 py-3 text-sm font-bold text-[#08787b] hover:bg-[#edf7f6]">Sign in / create account</Link>;
 
   return (
     <div className="flex items-center gap-4">
@@ -109,7 +116,7 @@ export function InterviewAccountControls() {
               {firstName}
             </span>
             <span className="mt-1 block text-[11px] font-bold uppercase tracking-wide text-[#6f8792]">
-              Premium plan
+              {plan}
             </span>
           </span>
           <ChevronDown className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />
@@ -131,7 +138,7 @@ export function InterviewAccountControls() {
                     {email}
                   </p>
                   <span className="mt-3 inline-flex rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#8be5df] ring-1 ring-white/20">
-                    Premium plan
+                    {plan}
                   </span>
                 </div>
               </div>

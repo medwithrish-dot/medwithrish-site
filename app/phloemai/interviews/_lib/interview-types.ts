@@ -1,0 +1,30 @@
+export type InterviewMode = "free" | "university" | "station" | "reference";
+export type InterviewAnswer = { question: string; answer: string };
+export type InterviewFeedback = {
+  score: number;
+  summary: string;
+  strengths: string[];
+  improvements: string[];
+  rubric: { criterion: string; score: number; reason: string }[];
+};
+export type InterviewAttempt = {
+  id: string;
+  mode: InterviewMode;
+  universitySlug: string | null;
+  stationSlug: string;
+  title: string;
+  status: "in_progress" | "grading" | "completed" | "failed";
+  startedAt: string;
+  completedAt: string | null;
+  preparationSeconds: number;
+  stationSeconds: number;
+  breakSeconds: number;
+  stationIndex: number;
+  stationCount: number;
+  questions: string[];
+  answers: InterviewAnswer[];
+  feedback: InterviewFeedback | null;
+  metrics: Record<string, number>;
+  nextAvailableAt: string | null;
+  circuitId: string;
+};

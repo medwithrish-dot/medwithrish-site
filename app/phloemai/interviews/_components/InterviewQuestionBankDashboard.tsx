@@ -45,6 +45,7 @@ import {
   type InterviewQuestionSubcategory,
 } from "../_data/interviewQuestionBank";
 import { InterviewSidebar } from "./InterviewSidebar";
+import { InterviewMobileNav } from "./InterviewMobileNav";
 import {
   createClient as createSupabaseClient,
   hasSupabaseConfig,
@@ -695,8 +696,14 @@ function appendTranscript(answer: string, transcript: string) {
   return `${answer.trimEnd()}${spacer}${trimmedTranscript}`;
 }
 
-function getSavedResponseStorageKey(questionId: string) {
-  return `${savedResponseStorageKeyPrefix}${questionId}`;
+// Legacy keys remain the guest store. Account stores use a disjoint prefix so
+// a shared browser never imports another person's answers on sign-in.
+function questionProgressStorageKey(key: string, userId: string | null) {
+  return userId ? `phloemai-interview-account:${userId}:${key}` : key;
+}
+
+function getSavedResponseStorageKey(questionId: string, userId: string | null) {
+  return questionProgressStorageKey(`${savedResponseStorageKeyPrefix}${questionId}`, userId);
 }
 
 function isQuestionStatus(value: unknown): value is QuestionStatus {
@@ -707,11 +714,11 @@ function isQuestionStatus(value: unknown): value is QuestionStatus {
   );
 }
 
-function readCompletedQuestionIds() {
+function readCompletedQuestionIds(userId: string | null) {
   if (typeof window === "undefined") return new Set<string>();
 
   try {
-    const saved = window.localStorage.getItem(completedQuestionStorageKey);
+    const saved = window.localStorage.getItem(questionProgressStorageKey(completedQuestionStorageKey, userId));
     const parsed: unknown = saved ? JSON.parse(saved) : [];
 
     if (!Array.isArray(parsed)) return new Set<string>();
@@ -722,12 +729,12 @@ function readCompletedQuestionIds() {
   }
 }
 
-function writeCompletedQuestionIds(questionIds: ReadonlySet<string>) {
+function writeCompletedQuestionIds(questionIds: ReadonlySet<string>, userId: string | null) {
   if (typeof window === "undefined") return;
 
   try {
     window.localStorage.setItem(
-      completedQuestionStorageKey,
+      questionProgressStorageKey(completedQuestionStorageKey, userId),
       JSON.stringify([...questionIds].sort())
     );
   } catch {
@@ -735,13 +742,13 @@ function writeCompletedQuestionIds(questionIds: ReadonlySet<string>) {
   }
 }
 
-function readQuestionStatusById(): QuestionStatusById {
+function readQuestionStatusById(userId: string | null): QuestionStatusById {
   if (typeof window === "undefined") return new Map();
 
   const statusById: QuestionStatusById = new Map();
 
   try {
-    const saved = window.localStorage.getItem(questionStatusStorageKey);
+    const saved = window.localStorage.getItem(questionProgressStorageKey(questionStatusStorageKey, userId));
     const parsed: unknown = saved ? JSON.parse(saved) : {};
 
     if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
@@ -754,13 +761,13 @@ function readQuestionStatusById(): QuestionStatusById {
       );
     }
 
-    readCompletedQuestionIds().forEach((questionId) => {
+    readCompletedQuestionIds(userId).forEach((questionId) => {
       if (!statusById.has(questionId)) {
         statusById.set(questionId, "completed");
       }
     });
 
-    readSavedResponseQuestionIds().forEach((questionId) => {
+    readSavedResponseQuestionIds(userId).forEach((questionId) => {
       if (!statusById.has(questionId)) {
         statusById.set(questionId, "completed");
       }
@@ -772,7 +779,7 @@ function readQuestionStatusById(): QuestionStatusById {
   return statusById;
 }
 
-function writeQuestionStatusById(statusById: ReadonlyMap<string, QuestionStatus>) {
+function writeQuestionStatusById(statusById: ReadonlyMap<string, QuestionStatus>, userId: string | null) {
   if (typeof window === "undefined") return;
 
   try {
@@ -788,20 +795,20 @@ function writeQuestionStatusById(statusById: ReadonlyMap<string, QuestionStatus>
     );
 
     window.localStorage.setItem(
-      questionStatusStorageKey,
+      questionProgressStorageKey(questionStatusStorageKey, userId),
       JSON.stringify(savedStatuses)
     );
-    writeCompletedQuestionIds(completedIds);
+    writeCompletedQuestionIds(completedIds, userId);
   } catch {
     // Local progress is best-effort; Supabase remains the preferred store.
   }
 }
 
-function readSavedQuestionResponse(questionId: string): SavedQuestionResponse | null {
+function readSavedQuestionResponse(questionId: string, userId: string | null): SavedQuestionResponse | null {
   if (typeof window === "undefined") return null;
 
   try {
-    const saved = window.localStorage.getItem(getSavedResponseStorageKey(questionId));
+    const saved = window.localStorage.getItem(getSavedResponseStorageKey(questionId, userId));
     const parsed: unknown = saved ? JSON.parse(saved) : null;
 
     if (!parsed || typeof parsed !== "object") return null;
@@ -828,20 +835,21 @@ function readSavedQuestionResponse(questionId: string): SavedQuestionResponse | 
   }
 }
 
-function readSavedResponseQuestionIds() {
+function readSavedResponseQuestionIds(userId: string | null) {
   if (typeof window === "undefined") return new Set<string>();
 
   const questionIds = new Set<string>();
+  const prefix = questionProgressStorageKey(savedResponseStorageKeyPrefix, userId);
 
   try {
     for (let index = 0; index < window.localStorage.length; index += 1) {
       const key = window.localStorage.key(index);
 
-      if (!key?.startsWith(savedResponseStorageKeyPrefix)) continue;
+      if (!key?.startsWith(prefix)) continue;
 
-      const questionId = key.slice(savedResponseStorageKeyPrefix.length);
+      const questionId = key.slice(prefix.length);
 
-      if (readSavedQuestionResponse(questionId)) {
+      if (readSavedQuestionResponse(questionId, userId)) {
         questionIds.add(questionId);
       }
     }
@@ -852,11 +860,11 @@ function readSavedResponseQuestionIds() {
   return questionIds;
 }
 
-function readSavedQuestionResponsesById() {
+function readSavedQuestionResponsesById(userId: string | null) {
   const responsesByQuestionId = new Map<string, SavedQuestionResponse>();
 
-  readSavedResponseQuestionIds().forEach((questionId) => {
-    const response = readSavedQuestionResponse(questionId);
+  readSavedResponseQuestionIds(userId).forEach((questionId) => {
+    const response = readSavedQuestionResponse(questionId, userId);
 
     if (response) {
       responsesByQuestionId.set(questionId, response);
@@ -866,12 +874,12 @@ function readSavedQuestionResponsesById() {
   return responsesByQuestionId;
 }
 
-function writeSavedQuestionResponse(response: SavedQuestionResponse) {
+function writeSavedQuestionResponse(response: SavedQuestionResponse, userId: string | null) {
   if (typeof window === "undefined") return;
 
   try {
     window.localStorage.setItem(
-      getSavedResponseStorageKey(response.questionId),
+      getSavedResponseStorageKey(response.questionId, userId),
       JSON.stringify(response)
     );
   } catch {
@@ -879,19 +887,19 @@ function writeSavedQuestionResponse(response: SavedQuestionResponse) {
   }
 }
 
-function removeSavedQuestionResponse(questionId: string) {
+function removeSavedQuestionResponse(questionId: string, userId: string | null) {
   if (typeof window === "undefined") return;
 
   try {
-    window.localStorage.removeItem(getSavedResponseStorageKey(questionId));
+    window.localStorage.removeItem(getSavedResponseStorageKey(questionId, userId));
   } catch {
     // Ignore storage failures; resetting still clears the visible attempt.
   }
 }
 
-function readBrowserQuestionProgress(): QuestionProgressSnapshot {
-  const statusById = readQuestionStatusById();
-  const savedResponsesByQuestionId = readSavedQuestionResponsesById();
+function readBrowserQuestionProgress(userId: string | null): QuestionProgressSnapshot {
+  const statusById = readQuestionStatusById(userId);
+  const savedResponsesByQuestionId = readSavedQuestionResponsesById(userId);
 
   savedResponsesByQuestionId.forEach((_response, questionId) => {
     if (!statusById.has(questionId)) {
@@ -908,22 +916,23 @@ function readBrowserQuestionProgress(): QuestionProgressSnapshot {
 function writeBrowserQuestionProgress(
   questionId: string,
   status: QuestionStatus,
-  response?: SavedQuestionResponse
+  response: SavedQuestionResponse | undefined,
+  userId: string | null
 ) {
-  const statusById = readQuestionStatusById();
+  const statusById = readQuestionStatusById(userId);
 
   if (status === "not-attempted") {
     statusById.delete(questionId);
-    removeSavedQuestionResponse(questionId);
+    removeSavedQuestionResponse(questionId, userId);
   } else {
     statusById.set(questionId, status);
 
     if (response) {
-      writeSavedQuestionResponse(response);
+      writeSavedQuestionResponse(response, userId);
     }
   }
 
-  writeQuestionStatusById(statusById);
+  writeQuestionStatusById(statusById, userId);
 }
 
 function questionProgressRowToSavedResponse(
@@ -994,7 +1003,8 @@ function mergeQuestionProgressSnapshots(
 }
 
 async function readSupabaseQuestionProgress(
-  supabase: SupabaseBrowserClient
+  supabase: SupabaseBrowserClient,
+  userId: string
 ): Promise<QuestionProgressSnapshot> {
   const { data, error } = await supabase
     .from("interview_question_progress")
@@ -1010,7 +1020,8 @@ async function readSupabaseQuestionProgress(
         "completion_reason",
         "word_count",
       ].join(",")
-    );
+    )
+    .eq("user_id", userId);
 
   if (error) throw error;
 
@@ -1093,7 +1104,7 @@ async function syncBrowserProgressToSupabase({
       status: browserSnapshot.statusById.get(questionId) ?? "completed",
       response: browserSnapshot.savedResponsesByQuestionId.get(questionId),
     });
-    writeBrowserQuestionProgress(questionId, "not-attempted");
+    writeBrowserQuestionProgress(questionId, "not-attempted", undefined, userId);
   }
 }
 
@@ -2275,7 +2286,6 @@ function QuestionPracticeView({
     setSavedResponse(null);
     setSpeechError(null);
     setCheckedItems(new Set());
-    removeSavedQuestionResponse(question.id);
     onQuestionReset(question.id);
   }, [
     clearAudioRecording,
@@ -2358,7 +2368,7 @@ function QuestionPracticeView({
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      const saved = initialSavedResponse ?? readSavedQuestionResponse(question.id);
+      const saved = initialSavedResponse;
 
       if (!saved) return;
 
@@ -2693,6 +2703,7 @@ function QuestionPracticeView({
 
   return (
     <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
+      <InterviewMobileNav activeLabel="Question Bank" />
       <div className="grid min-h-screen lg:grid-cols-[230px_1fr]">
         <InterviewSidebar
           activeLabel="Question Bank"
@@ -3127,6 +3138,7 @@ function QuestionBankCategoryView({
 
   return (
     <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
+      <InterviewMobileNav activeLabel="Question Bank" />
       <div className="grid min-h-screen lg:grid-cols-[230px_1fr]">
         <InterviewSidebar
           activeLabel="Question Bank"
@@ -3416,6 +3428,7 @@ export function InterviewQuestionBankDashboard({
   );
   const progressStorageRef = useRef<ProgressStorage>("browser");
   const progressUserRef = useRef<User | null>(null);
+  const [progressOwnerKey, setProgressOwnerKey] = useState<string | null>(null);
   const [questionStatusById, setQuestionStatusById] =
     useState<QuestionStatusById>(() => new Map());
   const [savedResponsesByQuestionId, setSavedResponsesByQuestionId] = useState(
@@ -3463,43 +3476,40 @@ export function InterviewQuestionBankDashboard({
   useEffect(() => {
     if (!supabase) {
       const timeoutId = window.setTimeout(() => {
-        const localSnapshot = readBrowserQuestionProgress();
-
+        const localSnapshot = readBrowserQuestionProgress(null);
         progressStorageRef.current = "browser";
         progressUserRef.current = null;
+        setProgressOwnerKey("guest");
         setQuestionStatusById(localSnapshot.statusById);
         setSavedResponsesByQuestionId(localSnapshot.savedResponsesByQuestionId);
       }, 0);
-
       return () => window.clearTimeout(timeoutId);
     }
 
     let isMounted = true;
+    let loadVersion = 0;
     const client = supabase;
 
     async function loadProgressForUser(user: User | null) {
-      if (!user) {
-        const localSnapshot = readBrowserQuestionProgress();
+      if (!isMounted) return;
+      const version = ++loadVersion;
+      const userId = user?.id ?? null;
+      const browserSnapshot = readBrowserQuestionProgress(userId);
 
-        if (!isMounted) return;
-        progressStorageRef.current = "browser";
-        progressUserRef.current = null;
-        setQuestionStatusById(localSnapshot.statusById);
-        setSavedResponsesByQuestionId(localSnapshot.savedResponsesByQuestionId);
-        return;
-      }
+      // Replace the displayed owner before any network work. An auth change also
+      // remounts the practice view, stopping its recorder and clearing its answer.
+      progressStorageRef.current = "browser";
+      progressUserRef.current = user;
+      setProgressOwnerKey(userId ?? "guest");
+      setQuestionStatusById(browserSnapshot.statusById);
+      setSavedResponsesByQuestionId(browserSnapshot.savedResponsesByQuestionId);
+      if (!user) return;
 
       try {
-        const browserSnapshot = readBrowserQuestionProgress();
-        const remoteSnapshot = await readSupabaseQuestionProgress(client);
-        const mergedSnapshot = mergeQuestionProgressSnapshots(
-          remoteSnapshot,
-          browserSnapshot
-        );
-
-        if (!isMounted) return;
+        const remoteSnapshot = await readSupabaseQuestionProgress(client, user.id);
+        if (!isMounted || version !== loadVersion) return;
+        const mergedSnapshot = mergeQuestionProgressSnapshots(remoteSnapshot, browserSnapshot);
         progressStorageRef.current = "supabase";
-        progressUserRef.current = user;
         setQuestionStatusById(mergedSnapshot.statusById);
         setSavedResponsesByQuestionId(mergedSnapshot.savedResponsesByQuestionId);
         void syncBrowserProgressToSupabase({
@@ -3509,28 +3519,27 @@ export function InterviewQuestionBankDashboard({
           remoteSnapshot,
         }).catch(() => undefined);
       } catch {
-        const localSnapshot = readBrowserQuestionProgress();
-
-        if (!isMounted) return;
+        // Keep this account's local snapshot. Never fall back to the guest store.
+        if (!isMounted || version !== loadVersion) return;
         progressStorageRef.current = "browser";
-        progressUserRef.current = user;
-        setQuestionStatusById(localSnapshot.statusById);
-        setSavedResponsesByQuestionId(localSnapshot.savedResponsesByQuestionId);
       }
     }
 
     void client.auth.getSession().then(({ data }) => {
-      void loadProgressForUser(data.session?.user ?? null);
+      if (loadVersion === 0) void loadProgressForUser(data.session?.user ?? null);
+    }).catch(() => {
+      // Auth failures must not expose legacy guest answers while identity is unknown.
+      if (!isMounted || loadVersion !== 0) return;
+      setProgressOwnerKey("unavailable");
     });
 
-    const {
-      data: { subscription },
-    } = client.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = client.auth.onAuthStateChange((_event, session) => {
       void loadProgressForUser(session?.user ?? null);
     });
 
     return () => {
       isMounted = false;
+      loadVersion += 1;
       subscription.unsubscribe();
     };
   }, [supabase]);
@@ -3708,7 +3717,7 @@ export function InterviewQuestionBankDashboard({
         });
         return true;
       } catch {
-        progressStorageRef.current = "browser";
+        if (progressUserRef.current?.id === user.id) progressStorageRef.current = "browser";
         return false;
       }
     },
@@ -3721,6 +3730,7 @@ export function InterviewQuestionBankDashboard({
       status: QuestionStatus,
       response?: SavedQuestionResponse
     ) => {
+      const userId = progressUserRef.current?.id ?? null;
       setQuestionStatusById((current) => {
         const next = new Map(current);
 
@@ -3745,16 +3755,16 @@ export function InterviewQuestionBankDashboard({
       });
 
       if (progressStorageRef.current !== "supabase") {
-        writeBrowserQuestionProgress(questionId, status, response);
+        writeBrowserQuestionProgress(questionId, status, response, userId);
         return;
       }
 
       void persistQuestionProgress(questionId, status, response).then(
         (savedToSupabase) => {
           if (!savedToSupabase) {
-            writeBrowserQuestionProgress(questionId, status, response);
+            writeBrowserQuestionProgress(questionId, status, response, userId);
           } else {
-            writeBrowserQuestionProgress(questionId, "not-attempted");
+            writeBrowserQuestionProgress(questionId, "not-attempted", undefined, userId);
           }
         }
       );
@@ -3833,10 +3843,22 @@ export function InterviewQuestionBankDashboard({
     return () => window.removeEventListener("popstate", applyUrlState);
   }, [categoriesWithStats]);
 
+  if (progressOwnerKey === null || progressOwnerKey === "unavailable") {
+    return (
+      <main className="min-h-screen bg-[#eef1f3] text-[#071923]">
+        <InterviewMobileNav activeLabel="Question Bank" />
+        <div className="mx-auto max-w-xl px-6 py-16" role="status">
+          <h1 className="text-2xl font-bold">Question Bank</h1>
+          <p className="mt-4 text-sm text-[#4a6370]">{progressOwnerKey === null ? "Loading your question history..." : "We could not confirm your account. Reload the page to try again."}</p>
+        </div>
+      </main>
+    );
+  }
+
   if (selectedCategory && selectedSubcategory && activeQuestion) {
     return (
       <QuestionPracticeView
-        key={activeQuestion.id}
+        key={`${progressOwnerKey}:${activeQuestion.id}`}
         category={selectedCategory}
         selectedSubcategory={selectedSubcategory}
         question={activeQuestion}
@@ -3873,6 +3895,7 @@ export function InterviewQuestionBankDashboard({
 
   return (
     <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
+      <InterviewMobileNav activeLabel="Question Bank" />
       <div className="grid min-h-screen lg:grid-cols-[230px_1fr]">
         <InterviewSidebar
           activeLabel="Question Bank"
