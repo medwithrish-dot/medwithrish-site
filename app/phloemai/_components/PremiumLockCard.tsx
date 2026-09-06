@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { LockKeyhole, Sparkles } from "lucide-react";
 
 type PremiumLockCardProps = {
@@ -22,6 +23,7 @@ export function PremiumLockCard({
   checkoutLoading = false,
   onUpgrade,
 }: PremiumLockCardProps) {
+  const router = useRouter();
   const [openingCheckout, setOpeningCheckout] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const loading = checkoutLoading || openingCheckout;
@@ -30,7 +32,7 @@ export function PremiumLockCard({
     setError(null);
 
     if (!onUpgrade) {
-      window.location.assign("/phloemai/pricing");
+      router.push("/phloemai/pricing");
       return;
     }
 

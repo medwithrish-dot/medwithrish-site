@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import {
   createClient as createSupabaseClient,
@@ -239,7 +240,11 @@ export function AttentionTrackingDemo() {
   const answerHoverSwitchCountRef = useRef(0);
   const currentAnswerHoverRef = useRef<{ key: AnswerKey; startedAt: number } | null>(null);
   const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const questionDeadlineRef = useRef(0);
+  const questionRequestRef = useRef<AbortController | null>(null);
   const stateRef = useRef<SessionState>("idle");
+
+  useEffect(() => () => questionRequestRef.current?.abort(), []);
 
   useEffect(() => {
     stateRef.current = state;
@@ -262,10 +267,15 @@ export function AttentionTrackingDemo() {
   }, []);
 
   const fetchQuestion = useCallback(async () => {
+    questionRequestRef.current?.abort();
+    const controller = new AbortController();
+    questionRequestRef.current = controller;
     setState("loading");
     try {
-      const data = await fetchUCATQuestion();
+      const data = await fetchUCATQuestion(controller.signal);
+      if (controller.signal.aborted) return;
       const now = Date.now();
+      questionDeadlineRef.current = now + 120_000;
       setQuestion(data);
       setSelected(null);
       setConfirmedAnswer(null);
@@ -276,10 +286,12 @@ export function AttentionTrackingDemo() {
       stateRef.current = "active";
       setState("active");
     } catch {
+      if (controller.signal.aborted) return;
+      resetAttentionTracker();
       stateRef.current = "idle";
       setState("idle");
     }
-  }, [resetAnswerTelemetry, resetAttentionAttempt]);
+  }, [resetAnswerTelemetry, resetAttentionAttempt, resetAttentionTracker]);
 
   const startEyeTracking = useCallback(() => {
     void beginEyeTracking(fetchQuestion);
@@ -296,6 +308,7 @@ export function AttentionTrackingDemo() {
   }, [beginPracticeOnly, fetchQuestion]);
 
   const reset = () => {
+    questionRequestRef.current?.abort();
     resetAttentionTracker();
     setSelected(null);
     setConfirmedAnswer(null);
@@ -487,14 +500,10 @@ export function AttentionTrackingDemo() {
   useEffect(() => {
     if (state !== "active") return;
     timerIdRef.current = setInterval(() => {
-      setTimeLeft((t) => {
-        if (t <= 1) {
-          finishQuestion(null);
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
+      const remaining = Math.max(0, Math.ceil((questionDeadlineRef.current - Date.now()) / 1000));
+      setTimeLeft(remaining);
+      if (remaining === 0) finishQuestion(null);
+    }, 250);
     return () => {
       if (timerIdRef.current) clearInterval(timerIdRef.current);
     };
@@ -8009,6 +8018,7 @@ function UCATDashboard({
   initialReportId?: string | null;
   initialMockId?: string | null;
 }) {
+  const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<PhloemProfile | null>(null);
@@ -8321,20 +8331,24 @@ function UCATDashboard({
 
     const supabaseClient = supabase;
     let mounted = true;
+    let authRevision = 0;
+    let loadedUserId: string | null | undefined;
+    let pendingLoad: Promise<void> | null = null;
+    let loadGeneration = 0;
 
-    async function loadProfile(nextUser: User) {
+    async function loadProfile(nextUser: User, isCurrent: () => boolean) {
       const { data } = await supabaseClient
         .from("profiles")
         .select("full_name,current_plan,diagnostic_credits,ai_diagnostic_last_used_at,stripe_customer_id,stripe_subscription_id,subscription_status")
         .eq("id", nextUser.id)
         .maybeSingle();
 
-      if (mounted) {
+      if (isCurrent()) {
         setProfile((data as PhloemProfile | null) ?? null);
       }
     }
 
-    async function loadPracticeStats(nextUser: User) {
+    async function loadPracticeStats(nextUser: User, isCurrent: () => boolean) {
       const { data, error } = await supabaseClient
         .from("practice_question_attempts")
         .select("question_id,section,answered,correct,total_seconds,created_at,metadata")
@@ -8342,7 +8356,7 @@ function UCATDashboard({
         .order("created_at", { ascending: false })
         .limit(1500);
 
-      if (!mounted) return;
+      if (!isCurrent()) return;
 
       if (error) {
         setPracticeStats(createEmptyPracticeStats());
@@ -8352,7 +8366,7 @@ function UCATDashboard({
       setPracticeStats(buildPracticeStats((data ?? []) as PracticeAttemptRow[]));
     }
 
-    async function loadRecentPracticeSets(nextUser: User) {
+    async function loadRecentPracticeSets(nextUser: User, isCurrent: () => boolean) {
       const { data, error } = await supabaseClient
         .from("practice_sessions")
         .select(
@@ -8363,7 +8377,7 @@ function UCATDashboard({
         .order("completed_at", { ascending: false })
         .limit(30);
 
-      if (!mounted) return;
+      if (!isCurrent()) return;
 
       if (error) {
         setRecentPracticeSets([]);
@@ -8387,7 +8401,7 @@ function UCATDashboard({
       setRecentPracticeSets(sets);
     }
 
-    async function loadDiagnosticHistory(nextUser: User) {
+    async function loadDiagnosticHistory(nextUser: User, isCurrent: () => boolean) {
       const requestedReportId = view === "report" ? initialReportId : null;
       const diagnosticSelect =
         "id,accuracy,completed_at,ai_feedback,ai_feedback_status,metadata,source";
@@ -8398,7 +8412,7 @@ function UCATDashboard({
         .order("completed_at", { ascending: false })
         .limit(100);
 
-      if (!mounted) return;
+      if (!isCurrent()) return;
       if (error || !data) {
         setLatestDiagnostic(null);
         setDiagnosticHistory([]);
@@ -8419,7 +8433,7 @@ function UCATDashboard({
             .eq("id", requestedReportId)
             .maybeSingle();
 
-        if (!mounted) return;
+        if (!isCurrent()) return;
 
         if (!requestedReportError && requestedReport) {
           diagnosticRows = [
@@ -8447,7 +8461,7 @@ function UCATDashboard({
       setLatestDiagnostic(history[0] ?? null);
     }
 
-    async function syncCheckoutIfNeeded(nextUser: User) {
+    async function syncCheckoutIfNeeded(nextUser: User, isCurrent: () => boolean) {
       const params = new URLSearchParams(window.location.search);
       const sessionId = params.get("session_id");
 
@@ -8465,10 +8479,12 @@ function UCATDashboard({
           throw new Error(data.error ?? "Could not sync checkout.");
         }
 
-        await loadProfile(nextUser);
+        if (!isCurrent()) return;
+        await loadProfile(nextUser, isCurrent);
+        if (!isCurrent()) return;
         window.history.replaceState(null, "", window.location.pathname);
       } catch (error) {
-        if (mounted) {
+        if (isCurrent()) {
           setCheckoutError(
             error instanceof Error
               ? `Payment succeeded, but plan sync failed: ${error.message}`
@@ -8508,61 +8524,77 @@ function UCATDashboard({
       setAuthMessage("Email confirmed. Opening your dashboard...");
     }
 
-    async function loadSession() {
-      await exchangeEmailConfirmationCode();
-
-      const {
-        data: { session: currentSession },
-      } = await supabaseClient.auth.getSession();
-
-      if (!mounted) return;
-
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
-
-      if (currentSession?.user) {
-        await loadProfile(currentSession.user);
-        await loadPracticeStats(currentSession.user);
-        await loadRecentPracticeSets(currentSession.user);
-        await loadDiagnosticHistory(currentSession.user);
-        await syncCheckoutIfNeeded(currentSession.user);
-      } else {
-        setProfile(null);
-        setPracticeStats(createEmptyPracticeStats());
-        setRecentPracticeSets([]);
-        setLatestDiagnostic(null);
-        setDiagnosticHistory([]);
+    function loadAccount(nextSession: Session | null, forceRefresh = false) {
+      const nextUser = nextSession?.user ?? null;
+      setSession(nextSession);
+      setUser(nextUser);
+      if (!forceRefresh && loadedUserId === (nextUser?.id ?? null)) {
+        return pendingLoad ?? Promise.resolve();
       }
 
-      setLoading(false);
+      const generation = ++loadGeneration;
+      const isCurrent = () => mounted && generation === loadGeneration;
+      loadedUserId = nextUser?.id ?? null;
+      // Clear the previous account before any new account queries can settle.
+      setProfile(null);
+      setPracticeStats(createEmptyPracticeStats());
+      setRecentPracticeSets([]);
+      setLatestDiagnostic(null);
+      setDiagnosticHistory([]);
+      if (!nextUser) {
+        setLoading(false);
+        pendingLoad = null;
+        return Promise.resolve();
+      }
+
+      setLoading(true);
+      pendingLoad = (async () => {
+        const results = await Promise.allSettled([
+          loadProfile(nextUser, isCurrent),
+          loadPracticeStats(nextUser, isCurrent),
+          loadRecentPracticeSets(nextUser, isCurrent),
+          loadDiagnosticHistory(nextUser, isCurrent),
+        ]);
+        if (!isCurrent()) return;
+        if (results.some((result) => result.status === "rejected")) {
+          setAuthError("Some account data could not be loaded. Please refresh to try again.");
+        }
+        await syncCheckoutIfNeeded(nextUser, isCurrent);
+        if (isCurrent()) setLoading(false);
+      })();
+      return pendingLoad;
     }
 
-    void loadSession();
+    async function loadSession() {
+      try {
+        await exchangeEmailConfirmationCode();
+        const revision = authRevision;
+        const {
+          data: { session: currentSession },
+        } = await supabaseClient.auth.getSession();
+        if (!mounted || revision !== authRevision) return;
+        await loadAccount(currentSession);
+      } catch {
+        if (!mounted) return;
+        setAuthError("Your account could not be loaded. Please refresh to try again.");
+        setLoading(false);
+      }
+    }
 
     const {
       data: { subscription },
-    } = supabaseClient.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setUser(nextSession?.user ?? null);
-      setLoading(false);
-
-      if (nextSession?.user) {
-        void loadProfile(nextSession.user);
-        void loadPracticeStats(nextSession.user);
-        void loadRecentPracticeSets(nextSession.user);
-        void loadDiagnosticHistory(nextSession.user);
-        void syncCheckoutIfNeeded(nextSession.user);
-      } else {
-        setProfile(null);
-        setPracticeStats(createEmptyPracticeStats());
-        setRecentPracticeSets([]);
-        setLatestDiagnostic(null);
-        setDiagnosticHistory([]);
-      }
+    } = supabaseClient.auth.onAuthStateChange((event, nextSession) => {
+      // getSession below handles the initial account load once.
+      if (!mounted || event === "INITIAL_SESSION") return;
+      authRevision += 1;
+      void loadAccount(nextSession, event === "USER_UPDATED");
     });
+
+    void loadSession();
 
     return () => {
       mounted = false;
+      loadGeneration += 1;
       subscription.unsubscribe();
     };
   }, [initialReportId, supabase, view]);
@@ -8659,7 +8691,7 @@ function UCATDashboard({
 
   const handleUpgrade = async () => {
     setCheckoutError(null);
-    window.location.assign("/phloemai/pricing");
+    router.push("/phloemai/pricing");
   };
 
   const handleSubscriptionAction = async () => {
@@ -8669,7 +8701,7 @@ function UCATDashboard({
     }
 
     if (!hasStripeCustomer) {
-      window.location.assign("/phloemai/pricing");
+      router.push("/phloemai/pricing");
       return;
     }
 
@@ -9774,6 +9806,7 @@ function PricingComparisonValue({
 }
 
 function RedesignedTutorHero() {
+  const router = useRouter();
   const [hasLandingDiagnosticReport, setHasLandingDiagnosticReport] =
     useState(false);
   const [premiumCheckoutLoading, setPremiumCheckoutLoading] = useState(false);
@@ -9880,7 +9913,8 @@ function RedesignedTutorHero() {
       };
 
       if (response.status === 401) {
-        window.location.assign("/phloemai/dashboard");
+        router.push("/phloemai/dashboard");
+        setPremiumCheckoutLoading(false);
         return;
       }
 
@@ -10561,6 +10595,7 @@ export function PhloemAIPageShell({ children }: { children: React.ReactNode }) {
 }
 
 export function PhloemAIPricingPage() {
+  const router = useRouter();
   const [premiumCheckoutLoading, setPremiumCheckoutLoading] = useState(false);
   const [premiumCheckoutError, setPremiumCheckoutError] = useState<string | null>(null);
 
@@ -10578,7 +10613,8 @@ export function PhloemAIPricingPage() {
       };
 
       if (response.status === 401) {
-        window.location.assign("/phloemai/dashboard");
+        router.push("/phloemai/dashboard");
+        setPremiumCheckoutLoading(false);
         return;
       }
 

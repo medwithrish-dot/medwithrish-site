@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Personal Statements Guide | MedWithRish",
+  description: "Plan and refine your medicine or dentistry personal statement with guidance on structure and reflection.",
+  alternates: { canonical: "/personal-statements-guide" },
+};
+
 import Link from "next/link";
 
 const keyIdeas = [

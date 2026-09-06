@@ -170,14 +170,23 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug }:
     return () => controller.abort();
   }, [applyResponse, showError]);
 
+  const clockDeadline = attempt?.status === "in_progress"
+    ? Date.parse(attempt.startedAt) + (attempt.preparationSeconds + attempt.stationSeconds) * 1000
+    : attempt?.nextAvailableAt ? Date.parse(attempt.nextAvailableAt) : 0;
   useEffect(() => {
-    if (!attempt) return;
-    const timer = window.setInterval(() => setNow(Date.now() + clockOffsetRef.current), 1000);
+    if (clockDeadline <= Date.now() + clockOffsetRef.current) return;
+    const timer = window.setInterval(() => {
+      const currentTime = Date.now() + clockOffsetRef.current;
+      setNow(currentTime);
+      if (currentTime >= clockDeadline) window.clearInterval(timer);
+    }, 1000);
     return () => window.clearInterval(timer);
-  }, [attempt?.id, attempt]);
+  }, [clockDeadline]);
 
   const saveDraft = useCallback(async () => {
-    if (savePromiseRef.current) await savePromiseRef.current;
+    // Every waiter must recheck the lock: several events can queue behind the
+    // same request. A failed earlier save must not prevent saving the latest text.
+    while (savePromiseRef.current) await savePromiseRef.current.catch(() => {});
     const current = attemptRef.current;
     if (!current || current.status !== "in_progress" || previewRef.current) return;
     const snapshot = answersRef.current;

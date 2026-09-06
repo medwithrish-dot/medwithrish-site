@@ -15,6 +15,7 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
   const [errorMsg, setErrorMsg] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const submittingRef = useRef(false);
 
   const checkout = searchParams.get("checkout");
   const checkoutStatus =
@@ -23,13 +24,18 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
     status === "idle" && checkoutStatus ? checkoutStatus : status;
 
   const handleFile = useCallback((f: File | null) => {
-    if (!f) return;
+    if (!f || submittingRef.current) return;
+    setFile(null);
     if (f.type !== "application/pdf") {
       setErrorMsg("Only PDF files are accepted.");
       return;
     }
     if (f.size > 10 * 1024 * 1024) {
       setErrorMsg("File must be under 10MB.");
+      return;
+    }
+    if (f.size === 0) {
+      setErrorMsg("The PDF is empty. Please choose another file.");
       return;
     }
     setErrorMsg("");
@@ -53,9 +59,11 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
   const onDragLeave = () => setIsDragging(false);
 
   const handleSubmit = async () => {
+    if (submittingRef.current) return;
     setErrorMsg("");
+    const normalizedEmail = email.trim();
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
       setErrorMsg("Please enter a valid email address.");
       return;
     }
@@ -64,6 +72,7 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
       return;
     }
 
+    submittingRef.current = true;
     setStatus("uploading");
 
     try {
@@ -81,15 +90,19 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
       const checkoutRes = await fetch("/api/ps-review/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, reviewType, filePath: uploadData.filePath }),
+        body: JSON.stringify({ email: normalizedEmail, reviewType, filePath: uploadData.filePath }),
       });
 
       const checkoutData = await checkoutRes.json();
       if (!checkoutRes.ok) throw new Error(checkoutData.error ?? "Checkout failed.");
+      if (typeof checkoutData.url !== "string" || !checkoutData.url.startsWith("https://")) {
+        throw new Error("Payment could not be opened. Please try again.");
+      }
 
       setStatus("redirecting");
       window.location.href = checkoutData.url;
     } catch (err) {
+      submittingRef.current = false;
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong.");
       setStatus("error");
     }
@@ -147,6 +160,8 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
               key={type}
               type="button"
               onClick={() => setReviewType(type)}
+              disabled={isLoading}
+              aria-pressed={reviewType === type}
               className={`rounded-lg px-5 py-2 text-sm font-semibold capitalize transition ${
                 reviewType === type
                   ? "bg-amber-400 text-amber-900 shadow-sm"
@@ -161,11 +176,13 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
 
       {/* Email */}
       <div className="mt-5">
-        <label className="mb-2 block text-sm font-medium text-gray-700">
+        <label htmlFor="ps-review-email" className="mb-2 block text-sm font-medium text-gray-700">
           Your email address
         </label>
         <input
+          id="ps-review-email"
           type="email"
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email — we'll send feedback here"
@@ -178,6 +195,16 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
       <div className="mt-5">
         <p className="mb-2 text-sm font-medium text-gray-700">Upload personal statement (PDF)</p>
         <div
+          role="button"
+          tabIndex={isLoading ? -1 : 0}
+          aria-label={file ? `Change PDF: ${file.name}` : "Choose your personal statement PDF"}
+          aria-disabled={isLoading}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              if (!isLoading) fileInputRef.current?.click();
+            }
+          }}
           onDrop={onDrop}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
@@ -195,7 +222,11 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
             type="file"
             accept="application/pdf"
             className="hidden"
-            onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
+            disabled={isLoading}
+            onChange={(e) => {
+              handleFile(e.target.files?.[0] ?? null);
+              e.target.value = "";
+            }}
           />
           {file ? (
             <>
@@ -218,7 +249,7 @@ export default function PSReviewForm({ submissionRef }: { submissionRef: React.R
       </div>
 
       {errorMsg && (
-        <p className="mt-3 text-sm font-medium text-red-600">{errorMsg}</p>
+        <p role="alert" className="mt-3 text-sm font-medium text-red-600">{errorMsg}</p>
       )}
 
       <button

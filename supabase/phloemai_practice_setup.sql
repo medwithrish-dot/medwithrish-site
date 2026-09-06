@@ -19,9 +19,8 @@ alter table public.diagnostic_sections
   add constraint diagnostic_sections_score_check
     check (score >= 0 and score <= 900);
 
-update public.profiles
-set diagnostic_credits = 1
-where current_plan = 'free';
+-- New profiles receive one credit through the column default. Preserve consumed
+-- credits when this setup is rerun for existing accounts.
 
 create table if not exists public.practice_sessions (
   id uuid primary key default gen_random_uuid(),

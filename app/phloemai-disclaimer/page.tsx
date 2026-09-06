@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/phloemai-disclaimer" },
   title: "PhloemAI Disclaimer | MedWithRish",
   description: "Important limits for PhloemAI AI feedback, data collection and UCAT preparation.",
 };

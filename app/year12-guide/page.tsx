@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Year 12 Guide | MedWithRish",
+  description: "Plan Year 12 study, predicted grades and preparation for medical and dental applications.",
+  alternates: { canonical: "/year12-guide" },
+};
+
 import Link from "next/link";
 
 const keyIdeas = [

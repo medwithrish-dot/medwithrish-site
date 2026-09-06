@@ -16,10 +16,18 @@ export async function POST(request: Request) {
       return Response.json({ error: "Log in before syncing." }, { status: 401 });
     }
 
-    const { sessionId } = (await request.json()) as { sessionId?: string };
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return Response.json({ error: "Invalid request body." }, { status: 400 });
+    }
+    const sessionId = body && typeof body === "object" && "sessionId" in body
+      ? body.sessionId
+      : null;
 
-    if (!sessionId) {
-      return Response.json({ error: "Missing sessionId." }, { status: 400 });
+    if (typeof sessionId !== "string" || !/^cs_[a-zA-Z0-9_]{1,240}$/.test(sessionId)) {
+      return Response.json({ error: "Invalid sessionId." }, { status: 400 });
     }
 
     const stripe = createStripeClient();

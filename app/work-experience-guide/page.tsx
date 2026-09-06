@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Work Experience Guide | MedWithRish",
+  description: "Learn how to make the most of healthcare work experience and reflect on what you observe.",
+  alternates: { canonical: "/work-experience-guide" },
+};
+
 import Link from "next/link";
 
 const keyIdeas = [

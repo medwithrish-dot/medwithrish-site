@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import SocialLinks from "./SocialLinks";
 
 export default function Hero() {
@@ -56,12 +57,12 @@ export default function Hero() {
 
             <div className="mt-7 flex flex-wrap gap-4">
 
-              <a
+              <Link
                 href="/resources"
                 className="rounded-full bg-gray-900 px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
               >
                 Explore Resources
-              </a>
+              </Link>
 
               
 

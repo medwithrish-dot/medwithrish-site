@@ -13,8 +13,11 @@ export const billingActionStatuses = [
 ] as const;
 
 function getSubscriptionPeriodEnd(subscription: Stripe.Subscription) {
-  const value = (subscription as { current_period_end?: number })
-    .current_period_end;
+  // Stripe moved billing periods to subscription items. Keep the legacy field
+  // as a fallback for webhooks configured with an older API version.
+  const value =
+    subscription.items.data[0]?.current_period_end ??
+    (subscription as { current_period_end?: number }).current_period_end;
 
   return typeof value === "number"
     ? new Date(value * 1000).toISOString()
@@ -34,11 +37,13 @@ async function findUserIdForSubscription(
   if (metadataUserId) return metadataUserId;
 
   const customerId = getCustomerId(subscription.customer);
-  const { data: profile } = await admin
+  const { data: profile, error } = await admin
     .from("profiles")
     .select("id")
     .eq("stripe_customer_id", customerId)
     .maybeSingle();
+
+  if (error) throw error;
 
   return typeof profile?.id === "string" ? profile.id : null;
 }

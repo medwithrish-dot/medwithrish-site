@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "UCAT Preparation Timeline | MedWithRish",
+  description: "Plan your UCAT preparation with a structured timeline for learning strategies, practice and mock exams.",
+  alternates: { canonical: "/ucat-timeline" },
+};
+
 import Link from "next/link";
 
 const keyIdeas = [

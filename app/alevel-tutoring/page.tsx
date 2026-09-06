@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "A-Level Tutoring | MedWithRish",
+  description: "Get support with A-Level topics, exam technique, revision planning and predicted grades.",
+  alternates: { canonical: "/alevel-tutoring" },
+};
+
 import GuidePage from "@/components/GuidePage";
 
 export default function Page() {

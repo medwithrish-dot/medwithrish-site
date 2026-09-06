@@ -6,36 +6,60 @@ import { syncStripeSubscription } from "@/utils/stripe-subscriptions";
 
 export const runtime = "nodejs";
 
+function escapeHtml(value: string) {
+  const entities: Record<string, string> = {
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  };
+  return value.replace(/[&<>"']/g, (character) => entities[character]);
+}
+
 async function handlePSReviewPayment(session: Stripe.Checkout.Session) {
+  if (session.payment_status !== "paid" && session.payment_status !== "no_payment_required") return;
   const { student_email, file_path, review_type } = session.metadata ?? {};
-  if (!student_email || !file_path || !review_type) return;
+  if (!student_email || !file_path || (review_type !== "medicine" && review_type !== "dental")) {
+    throw new Error("Personal statement payment is missing submission details.");
+  }
 
   const admin = createAdminClient();
 
-  await admin.from("ps_submissions").insert({
+  const { error: submissionError } = await admin.from("ps_submissions").insert({
     student_email,
     file_path,
     review_type,
     stripe_session_id: session.id,
   });
+  // A duplicate session can occur when Stripe retries a previously received event.
+  if (submissionError) {
+    if (submissionError.code !== "23505") throw submissionError;
+    const { data: existing, error: existingError } = await admin
+      .from("ps_submissions")
+      .select("stripe_session_id")
+      .eq("stripe_session_id", session.id)
+      .maybeSingle();
+    if (existingError || !existing) throw existingError ?? submissionError;
+  }
 
-  const { data: signedUrlData } = await admin.storage
+  const { data: signedUrlData, error: signedUrlError } = await admin.storage
     .from("ps-uploads")
     .createSignedUrl(file_path, 365 * 24 * 60 * 60);
+
+  if (signedUrlError) throw signedUrlError;
 
   const downloadUrl = signedUrlData?.signedUrl ?? null;
 
   const resend = new Resend(process.env.RESEND_API_KEY);
   const label = review_type === "medicine" ? "Medicine" : "Dental";
-  const paidAt = new Date().toLocaleString("en-GB", {
+  const safeEmail = escapeHtml(student_email);
+  const paidAt = new Date(session.created * 1000).toLocaleString("en-GB", {
     day: "numeric",
     month: "short",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Europe/London",
   });
 
-  await resend.emails.send({
+  const { error: emailError } = await resend.emails.send({
     from: "onboarding@resend.dev",
     to: "medwithrish@gmail.com",
     subject: `New PS Review Submission — ${label}`,
@@ -48,7 +72,7 @@ async function handlePSReviewPayment(session: Stripe.Checkout.Session) {
         </tr>
         <tr>
           <td style="padding:8px 12px;background:#f5f5f5;font-weight:600">Student email</td>
-          <td style="padding:8px 12px"><a href="mailto:${student_email}">${student_email}</a></td>
+          <td style="padding:8px 12px"><a href="mailto:${safeEmail}">${safeEmail}</a></td>
         </tr>
         <tr>
           <td style="padding:8px 12px;background:#f5f5f5;font-weight:600">Paid at</td>
@@ -58,13 +82,14 @@ async function handlePSReviewPayment(session: Stripe.Checkout.Session) {
           <td style="padding:8px 12px;background:#f5f5f5;font-weight:600">PDF</td>
           <td style="padding:8px 12px">
             ${downloadUrl
-              ? `<a href="${downloadUrl}" style="color:#2563eb;font-weight:600">Download personal statement</a> (link valid for 1 year)`
+              ? `<a href="${escapeHtml(downloadUrl)}" style="color:#2563eb;font-weight:600">Download personal statement</a> (link valid for 1 year)`
               : "File unavailable — check Supabase storage bucket <strong>ps-uploads</strong>."}
           </td>
         </tr>
       </table>
     `,
   });
+  if (emailError) throw new Error(emailError.message);
 }
 
 export async function POST(request: Request) {
@@ -77,11 +102,17 @@ export async function POST(request: Request) {
     );
   }
 
-  const stripe = createStripeClient();
   const signature = request.headers.get("stripe-signature");
 
   if (!signature) {
     return Response.json({ error: "Missing Stripe signature." }, { status: 400 });
+  }
+
+  let stripe: ReturnType<typeof createStripeClient>;
+  try {
+    stripe = createStripeClient();
+  } catch {
+    return Response.json({ error: "Stripe is not configured." }, { status: 500 });
   }
 
   let event: Stripe.Event;
@@ -100,7 +131,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    if (event.type === "checkout.session.completed") {
+    if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
       const session = event.data.object as Stripe.Checkout.Session;
 
       if (session.mode === "payment" && session.metadata?.submission_type === "ps_review") {
@@ -121,10 +152,13 @@ export async function POST(request: Request) {
     }
 
     if (
+      event.type === "customer.subscription.created" ||
       event.type === "customer.subscription.updated" ||
       event.type === "customer.subscription.deleted"
     ) {
-      await syncStripeSubscription(event.data.object as Stripe.Subscription);
+      // Stripe may deliver events out of order; reconcile the current state.
+      const subscription = await stripe.subscriptions.retrieve(event.data.object.id);
+      await syncStripeSubscription(subscription);
     }
 
     return Response.json({ received: true });

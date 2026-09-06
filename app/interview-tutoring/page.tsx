@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Interview Tutoring | MedWithRish",
+  description: "Practise medicine and dentistry MMI and panel interviews with individual feedback.",
+  alternates: { canonical: "/interview-tutoring" },
+};
+
 import GuidePage from "@/components/GuidePage";
 
 export default function Page() {

@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About MedWithRish | MedWithRish",
+  description: "Meet Rish and learn about MedWithRish medical and dental admissions resources and tutoring.",
+  alternates: { canonical: "/about" },
+};
+
 import Navbar from "@/components/Navbar";
 
 export default function AboutPage() {

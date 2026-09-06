@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "GCSE Tutoring | MedWithRish",
+  description: "Build stronger GCSE grades and confidence with revision planning, teaching and exam practice.",
+  alternates: { canonical: "/gcse-tutoring" },
+};
+
 import GuidePage from "@/components/GuidePage";
 
 export default function Page() {

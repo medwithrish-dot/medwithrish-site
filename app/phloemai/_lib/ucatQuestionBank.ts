@@ -319,6 +319,11 @@ export const UCAT_SUBTYPES: Record<
       description: "Work with overlaps, exclusions and grouped information.",
     },
     {
+      id: "dm-venn-select",
+      label: "Venn diagram selection",
+      description: "Choose the diagram that represents the stated relationships.",
+    },
+    {
       id: "dm-probability-data",
       label: "Probability",
       description: "Use chance, combinations and conditional probability.",
@@ -5366,12 +5371,12 @@ export function getUCATSectionMeta(section: UCATSection) {
   return UCAT_SECTIONS.find((item) => item.slug === section) ?? UCAT_SECTIONS[0];
 }
 
+const UCAT_SUBTYPE_META = new Map(
+  Object.values(UCAT_SUBTYPES).flat().map((subtype) => [subtype.id, subtype])
+);
+
 export function getUCATSubtypeMeta(subtype: UCATSubtypeId) {
-  return (
-    Object.values(UCAT_SUBTYPES)
-      .flat()
-      .find((item) => item.id === subtype) ?? UCAT_SUBTYPES.vr[0]
-  );
+  return UCAT_SUBTYPE_META.get(subtype) ?? UCAT_SUBTYPES.vr[0];
 }
 
 export function getUCATSjtIssueLabel(issueTag: UCATSjtIssueTag) {

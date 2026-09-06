@@ -8,7 +8,12 @@ import {
 } from "@/utils/phloemai/preview-access";
 
 export async function POST(request: NextRequest) {
-  const formData = await request.formData();
+  let formData: FormData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return NextResponse.json({ error: "Invalid access form." }, { status: 400 });
+  }
   const submittedPassword = formData.get("password");
   const accessUrl = new URL("/phloemai/access", request.url);
 

@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Personal Statement Sessions | MedWithRish",
+  description: "Improve the structure, clarity and reflection in your personal statement with a one-to-one session.",
+  alternates: { canonical: "/personal-statement-session" },
+};
+
 import GuidePage from "@/components/GuidePage";
 
 export default function Page() {

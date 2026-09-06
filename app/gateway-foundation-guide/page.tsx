@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Gateway and Foundation Courses Guide | MedWithRish",
+  description: "Understand gateway and foundation routes into medicine and dentistry and their eligibility criteria.",
+  alternates: { canonical: "/gateway-foundation-guide" },
+};
+
 import Link from "next/link";
 
 const keyIdeas = [

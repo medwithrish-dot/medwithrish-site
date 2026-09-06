@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/terms-and-conditions" },
   title: "Terms and Conditions | MedWithRish",
   description: "Terms for using MedWithRish and PhloemAI UCAT Tutor.",
 };

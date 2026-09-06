@@ -72,7 +72,7 @@ export default function TopBanner() {
         </p>
 
         {/* Scroll Arrow */}
-        <a href="#success-stories" className="mt-4 inline-flex">
+        <a href="#success-stories" aria-label="See student success stories" className="mt-4 inline-flex">
           <ScrollIndicator />
         </a>
 

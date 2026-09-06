@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact MedWithRish | MedWithRish",
+  description: "Contact Rish about UCAT tutoring, interviews, personal statement reviews and admissions resources.",
+  alternates: { canonical: "/contact" },
+};
+
 import Image from "next/image";
 import Link from "next/link";
 import SocialLinks from "@/components/SocialLinks";
@@ -28,7 +36,7 @@ function StoryGrid({ images }: { images: string[] }) {
             alt={`Student success story ${index + 1}`}
             fill
             className="object-cover"
-            sizes="140px"
+            sizes="(max-width: 1023px) calc((100vw - 110px) / 2), 142px"
           />
         </div>
       ))}
@@ -61,7 +69,7 @@ export default function ContactPage() {
                   width={112}
                   height={112}
                   className="h-full w-full object-cover"
-                  priority
+                  preload
                 />
               </div>
 

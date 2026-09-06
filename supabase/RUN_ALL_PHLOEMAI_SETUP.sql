@@ -153,10 +153,6 @@ to authenticated
 using (id = auth.uid());
 
 drop policy if exists "Profiles can be inserted by owner" on public.profiles;
-create policy "Profiles can be inserted by owner"
-on public.profiles for insert
-to authenticated
-with check (id = auth.uid());
 
 drop policy if exists "Profiles can be updated by owner" on public.profiles;
 create policy "Profiles can be updated by owner"
@@ -194,8 +190,11 @@ using (user_id = auth.uid())
 with check (user_id = auth.uid());
 
 grant usage on schema public to authenticated;
+-- Profiles are created by the auth trigger; plan and credit fields are server-only.
+revoke insert, update, delete on public.profiles from authenticated;
+grant select on public.profiles to authenticated;
+grant update(full_name) on public.profiles to authenticated;
 grant select, insert, update, delete on
-  public.profiles,
   public.diagnostic_attempts,
   public.diagnostic_sections,
   public.fix_tasks,

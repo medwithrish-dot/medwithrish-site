@@ -73,12 +73,20 @@ export async function POST(request: Request) {
     const siteUrl = getRequiredSiteUrl(request);
 
     const stripe = createStripeClient();
+    let customerUnavailable = false;
     try {
       const customer = await stripe.customers.retrieve(profile.stripe_customer_id);
-      if (customer.deleted) {
-        throw new Error("Deleted Stripe customer.");
+      customerUnavailable = Boolean(customer.deleted);
+    } catch (error) {
+      if (
+        !error || typeof error !== "object" ||
+        !("code" in error) || error.code !== "resource_missing"
+      ) {
+        throw error;
       }
-    } catch {
+      customerUnavailable = true;
+    }
+    if (customerUnavailable) {
       return Response.json(
         {
           error:

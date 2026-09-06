@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Related Healthcare Careers Guide | MedWithRish",
+  description: "Explore healthcare careers and alternative pathways alongside medicine and dentistry.",
+  alternates: { canonical: "/related-careers-guide" },
+};
+
 import Link from "next/link";
 
 const careers = [

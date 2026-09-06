@@ -8,9 +8,9 @@ function isModifiedClick(event: MouseEvent) {
 }
 
 function getInternalLinkTarget(event: MouseEvent) {
-  if (event.defaultPrevented || isModifiedClick(event)) return null;
+  if (event.button !== 0 || event.defaultPrevented || isModifiedClick(event)) return null;
 
-  const target = event.target as Element | null;
+  const target = event.target instanceof Element ? event.target : null;
   const anchor = target?.closest("a[href]") as HTMLAnchorElement | null;
   if (!anchor) return null;
   if (anchor.target && anchor.target !== "_self") return null;
@@ -34,9 +34,11 @@ export default function RouteLoadingBar() {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const loadingRef = useRef(false);
-  const targetRouteRef = useRef<string | null>(null);
+  const startingRouteRef = useRef<string | null>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const crawlTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const frameRef = useRef<number | null>(null);
 
   useEffect(() => {
     function startLoading(event: MouseEvent) {
@@ -45,19 +47,30 @@ export default function RouteLoadingBar() {
 
       if (hideTimer.current) clearTimeout(hideTimer.current);
       if (crawlTimer.current) clearInterval(crawlTimer.current);
+      if (timeoutTimer.current) clearTimeout(timeoutTimer.current);
+      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
 
-      targetRouteRef.current = `${nextUrl.pathname}?${nextUrl.searchParams.toString()}`;
+      const currentUrl = new URL(window.location.href);
+      startingRouteRef.current = `${currentUrl.pathname}?${currentUrl.searchParams.toString()}`;
       loadingRef.current = true;
       setIsLoading(true);
       setProgress(12);
 
-      requestAnimationFrame(() => setProgress(42));
+      frameRef.current = requestAnimationFrame(() => setProgress(42));
       crawlTimer.current = setInterval(() => {
         setProgress((current) => {
           if (current >= 88) return current;
           return current + Math.max(2, (90 - current) * 0.08);
         });
       }, 220);
+      // Failed or cancelled navigation may never publish another route.
+      timeoutTimer.current = setTimeout(() => {
+        if (crawlTimer.current) clearInterval(crawlTimer.current);
+        loadingRef.current = false;
+        startingRouteRef.current = null;
+        setIsLoading(false);
+        setProgress(0);
+      }, 15_000);
     }
 
     document.addEventListener("click", startLoading, true);
@@ -65,17 +78,21 @@ export default function RouteLoadingBar() {
       document.removeEventListener("click", startLoading, true);
       if (hideTimer.current) clearTimeout(hideTimer.current);
       if (crawlTimer.current) clearInterval(crawlTimer.current);
+      if (timeoutTimer.current) clearTimeout(timeoutTimer.current);
+      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     };
   }, []);
 
   useEffect(() => {
-    if (!loadingRef.current || targetRouteRef.current !== routeKey) return;
+    if (!loadingRef.current || startingRouteRef.current === routeKey) return;
 
     if (crawlTimer.current) clearInterval(crawlTimer.current);
+    if (timeoutTimer.current) clearTimeout(timeoutTimer.current);
+    if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     setProgress(100);
     hideTimer.current = setTimeout(() => {
       loadingRef.current = false;
-      targetRouteRef.current = null;
+      startingRouteRef.current = null;
       setIsLoading(false);
       setProgress(0);
     }, 260);

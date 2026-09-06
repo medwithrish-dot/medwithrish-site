@@ -39,8 +39,8 @@ export function getPassageSections(question: QuestionData) {
   };
 }
 
-export async function fetchUCATQuestion() {
-  const response = await fetch("/api/rishbot/question");
+export async function fetchUCATQuestion(signal?: AbortSignal) {
+  const response = await fetch("/api/rishbot/question", { signal });
 
   if (!response.ok) {
     throw new Error("Could not fetch UCAT question");

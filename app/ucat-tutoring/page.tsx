@@ -1,11 +1,12 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "UCAT Tutoring | MedWithRish",
+  description: "One-to-one UCAT support focused on strategy, timing, question approach and score improvement.",
+  alternates: { canonical: "/ucat-tutoring" },
+};
+
 import Link from "next/link";
- 
-        <Link
-          href="/resources"
-          className="text-sm font-semibold text-blue-600 hover:underline"
-        >
-          ← Back to resources
-        </Link>
 const includes = [
   "Subtest-specific strategy and timing work",
   "Review of mistakes and weak-question patterns",
@@ -22,6 +23,9 @@ export default function UCATTutoringPage() {
   return (
     <main className="bg-[#f7fafe] px-6 pb-16 pt-10">
       <div className="mx-auto max-w-6xl">
+        <Link href="/resources" className="mb-6 inline-flex text-sm font-semibold text-blue-600 hover:underline">
+          ← Back to resources
+        </Link>
         <section className="rounded-[2.5rem] border border-gray-200 bg-white p-8 shadow-sm md:p-12">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
             Tutoring

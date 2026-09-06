@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Medical and Dental Admissions Resources | MedWithRish",
+  description: "Explore UCAT tools, interview preparation, personal statement guides and tutoring resources.",
+  alternates: { canonical: "/resources" },
+};
+
 import Link from "next/link";
 
 const popularResources = [

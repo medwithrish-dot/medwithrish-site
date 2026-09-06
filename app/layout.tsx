@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/next";
 import RouteLoadingBar from "@/components/RouteLoadingBar";
+import { getPublicSiteUrl } from "@/utils/site-url";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,18 +16,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.startsWith("http")
-    ? process.env.NEXT_PUBLIC_SITE_URL
-    : "https://www.medwithrish.com";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(getPublicSiteUrl()),
   title: "MedWithRish",
   description: "Leading medical/dental admissions advice.",
-  alternates: {
-    canonical: "/",
-  },
 };
 
 export default function RootLayout({

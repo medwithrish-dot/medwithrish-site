@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-static";
+
 const FALLBACK = {
   sectionA:
     "A town clinic introduced a same-day triage desk after patients reported long waits for routine appointments. Under the new system, a nurse reviewed each request and directed patients to a pharmacist, telephone appointment, or in-person consultation. In the first month, the number of face-to-face appointments fell, but the average time spent on each in-person consultation increased.",

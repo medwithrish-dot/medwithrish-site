@@ -182,6 +182,8 @@ export function useAttentionTracker<ZoneId extends string>({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const faceLandmarkerRef = useRef<FaceLandmarkerInstance | null>(null);
   const animFrameRef = useRef<number | null>(null);
+  const eyeGenerationRef = useRef(0);
+  const lastVideoTimeRef = useRef<number | null>(null);
   const neutralRef = useRef<number | null>(null);
   const neutralHorizRef = useRef<number | null>(null);
   const gainVRef = useRef<number>(60);
@@ -197,6 +199,28 @@ export function useAttentionTracker<ZoneId extends string>({
   const afterEyeCalibrationRef = useRef<(() => void) | null>(null);
 
   const trackingProfile = trackingProfiles[trackingMode];
+
+  const releaseEyeResources = useCallback(() => {
+    eyeGenerationRef.current += 1;
+    afterEyeCalibrationRef.current = null;
+    if (animFrameRef.current !== null) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
+    const video = videoRef.current;
+    videoRef.current = null;
+    if (video) {
+      (video.srcObject as MediaStream | null)?.getTracks().forEach((track) => track.stop());
+      video.srcObject = null;
+      video.remove();
+    }
+    const landmarker = faceLandmarkerRef.current;
+    faceLandmarkerRef.current = null;
+    landmarker?.close();
+    lastVideoTimeRef.current = null;
+  }, []);
+
+  useEffect(() => releaseEyeResources, [releaseEyeResources]);
 
   useEffect(() => {
     activeRef.current = isActive;
@@ -515,12 +539,27 @@ export function useAttentionTracker<ZoneId extends string>({
   const runLoop = useCallback(() => {
     const video = videoRef.current;
     const lmRef = faceLandmarkerRef.current;
-    if (!video || !lmRef || video.readyState < 2) {
+    if (!video || !lmRef) return;
+    if (
+      video.readyState < 2 ||
+      (!activeRef.current && eyeStatus !== "calibrating") ||
+      lastVideoTimeRef.current === video.currentTime
+    ) {
       animFrameRef.current = requestAnimationFrame(runLoopRef.current);
       return;
     }
 
-    const results = lmRef.detectForVideo(video, performance.now());
+    lastVideoTimeRef.current = video.currentTime;
+    let results: ReturnType<FaceLandmarkerInstance["detectForVideo"]>;
+    try {
+      results = lmRef.detectForVideo(video, performance.now());
+    } catch {
+      releaseEyeResources();
+      setError(true);
+      setTrackingMode("none");
+      setEyeStatus("idle");
+      return;
+    }
     if (results.faceLandmarks?.[0]) {
       const lm = results.faceLandmarks[0];
       const headRefY = (lm[133].y + lm[362].y) / 2;
@@ -555,7 +594,7 @@ export function useAttentionTracker<ZoneId extends string>({
     }
 
     animFrameRef.current = requestAnimationFrame(runLoopRef.current);
-  }, [eyeStatus, recordPoint]);
+  }, [eyeStatus, recordPoint, releaseEyeResources]);
 
   useEffect(() => {
     runLoopRef.current = runLoop;
@@ -563,13 +602,21 @@ export function useAttentionTracker<ZoneId extends string>({
 
   const startEyeTracking = useCallback(
     async (onReady?: () => void) => {
+      releaseEyeResources();
+      const generation = eyeGenerationRef.current;
+      const isCurrent = () => generation === eyeGenerationRef.current;
       setEyeStatus("enabling");
+      setTrackingMode("none");
       afterEyeCalibrationRef.current = onReady ?? null;
 
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "user", width: 640, height: 480 },
         });
+        if (!isCurrent()) {
+          stream.getTracks().forEach((track) => track.stop());
+          return;
+        }
         const video = document.createElement("video");
         video.srcObject = stream;
         video.autoplay = true;
@@ -580,11 +627,14 @@ export function useAttentionTracker<ZoneId extends string>({
         document.body.appendChild(video);
         videoRef.current = video;
         await video.play();
+        if (!isCurrent()) return;
 
         const { FaceLandmarker, FilesetResolver } = await import("@mediapipe/tasks-vision");
+        if (!isCurrent()) return;
         const vision = await FilesetResolver.forVisionTasks(
           "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.34/wasm"
         );
+        if (!isCurrent()) return;
         const landmarker = await FaceLandmarker.createFromOptions(vision, {
           baseOptions: {
             modelAssetPath:
@@ -596,28 +646,28 @@ export function useAttentionTracker<ZoneId extends string>({
           outputFaceBlendshapes: false,
           outputFacialTransformationMatrixes: false,
         });
+        if (!isCurrent()) {
+          landmarker.close();
+          return;
+        }
         faceLandmarkerRef.current = landmarker as FaceLandmarkerInstance;
 
         calibVertSamplesRef.current = CALIB_PHASES.map(() => []);
         calibHorizSamplesRef.current = CALIB_PHASES.map(() => []);
-        animFrameRef.current = requestAnimationFrame(runLoop);
+        animFrameRef.current = requestAnimationFrame(runLoopRef.current);
         setTrackingMode("eye");
         setCalibCountdown(3);
         setError(false);
         setEyeStatus("calibrating");
       } catch {
+        if (!isCurrent()) return;
+        releaseEyeResources();
         setError(true);
         setTrackingMode("none");
         setEyeStatus("idle");
-        afterEyeCalibrationRef.current = null;
-        if (videoRef.current) {
-          (videoRef.current.srcObject as MediaStream | null)?.getTracks().forEach((t) => t.stop());
-          videoRef.current.remove();
-          videoRef.current = null;
-        }
       }
     },
-    [runLoop]
+    [releaseEyeResources]
   );
 
   useEffect(() => {
@@ -688,15 +738,19 @@ export function useAttentionTracker<ZoneId extends string>({
   }, [eyeStatus]);
 
   const startMouseTracking = useCallback(() => {
+    releaseEyeResources();
+    setEyeStatus("idle");
     setTrackingMode("mouse");
     setError(false);
-  }, []);
+  }, [releaseEyeResources]);
 
   const startPracticeOnly = useCallback(() => {
+    releaseEyeResources();
+    setEyeStatus("idle");
     setTrackingMode("none");
     dataReceivedRef.current = false;
     setDataReceived(false);
-  }, []);
+  }, [releaseEyeResources]);
 
   const resetAttempt = useCallback(
     (now = Date.now()) => {
@@ -741,28 +795,15 @@ export function useAttentionTracker<ZoneId extends string>({
       }
 
       lastTimeRef.current = now;
-      if (!options.keepTracking && animFrameRef.current) {
-        cancelAnimationFrame(animFrameRef.current);
-        animFrameRef.current = null;
-      }
+      if (!options.keepTracking) releaseEyeResources();
 
       return finalZoneTimes;
     },
-    [recordEarlyDwell]
+    [recordEarlyDwell, releaseEyeResources]
   );
 
   const stopTracking = useCallback(() => {
-    if (animFrameRef.current) {
-      cancelAnimationFrame(animFrameRef.current);
-      animFrameRef.current = null;
-    }
-    if (videoRef.current) {
-      (videoRef.current.srcObject as MediaStream | null)?.getTracks().forEach((t) => t.stop());
-      videoRef.current.remove();
-      videoRef.current = null;
-    }
-    faceLandmarkerRef.current?.close();
-    faceLandmarkerRef.current = null;
+    releaseEyeResources();
     neutralRef.current = null;
     neutralHorizRef.current = null;
     gainVRef.current = 60;
@@ -782,7 +823,8 @@ export function useAttentionTracker<ZoneId extends string>({
     regionSwitchCountRef.current = 0;
     setPointer(null);
     setEyeStatus("idle");
-  }, [zoneIds]);
+    setTrackingMode("none");
+  }, [releaseEyeResources, zoneIds]);
 
   const resetTracker = useCallback(() => {
     stopTracking();

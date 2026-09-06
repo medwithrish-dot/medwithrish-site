@@ -1597,6 +1597,7 @@ function QuestionPracticeView({
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRecorderSessionRef = useRef(0);
+  const audioRecordingRequestRef = useRef(0);
   const discardRecordingOnStopRef = useRef(false);
   const recordingUrlRef = useRef<string | null>(null);
   const recordingStartedAtRef = useRef<number | null>(null);
@@ -1745,6 +1746,7 @@ function QuestionPracticeView({
   }, [getRecordingElapsedMs, stopRecordingTicker]);
 
   const pauseAudioRecording = useCallback(() => {
+    audioRecordingRequestRef.current += 1;
     const recorder = mediaRecorderRef.current;
 
     captureRecordingElapsed();
@@ -1773,6 +1775,7 @@ function QuestionPracticeView({
 
   const finalizeAudioRecording = useCallback(
     ({ discard = false }: { discard?: boolean } = {}) => {
+      audioRecordingRequestRef.current += 1;
       const recorder = mediaRecorderRef.current;
 
       if (discard) {
@@ -1877,8 +1880,16 @@ function QuestionPracticeView({
       stopMediaStream();
     }
 
+    const requestId = ++audioRecordingRequestRef.current;
+    let requestedStream: MediaStream | null = null;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      requestedStream = stream;
+      // Permission prompts can outlive a question, a pause, or the whole page.
+      if (requestId !== audioRecordingRequestRef.current) {
+        stopMediaStream(stream);
+        return;
+      }
       const recorder = new MediaRecorder(stream);
       const sessionId = audioRecorderSessionRef.current + 1;
 
@@ -1934,7 +1945,8 @@ function QuestionPracticeView({
       setRecordingError(null);
       startRecordingTicker();
     } catch {
-      stopMediaStream();
+      if (requestedStream) stopMediaStream(requestedStream);
+      if (requestId !== audioRecordingRequestRef.current) return;
       mediaRecorderRef.current = null;
       setIsRecordingAudio(false);
       setRecordingError("Audio recording could not start.");
@@ -2403,6 +2415,7 @@ function QuestionPracticeView({
 
   useEffect(() => {
     return () => {
+      audioRecordingRequestRef.current += 1;
       const recognition = recognitionRef.current;
       const recorder = mediaRecorderRef.current;
 

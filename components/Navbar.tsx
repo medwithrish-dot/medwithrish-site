@@ -13,7 +13,7 @@ const navItems: {
   badge?: string;
   items?: { label: string; href: string; external?: boolean }[];
 }[] = [
-  { label: "Journey", href: "#journey", bold: true },
+  { label: "Journey", href: "/#journey", bold: true },
 
   {
     label: "UCAT",
@@ -134,7 +134,7 @@ export default function Navbar() {
                       </button>
                     )}
 
-                    <div className="invisible absolute left-0 top-full z-50 mt-2 w-72 rounded-xl border border-gray-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                    <div className="invisible absolute left-0 top-full z-50 w-72 rounded-xl border border-gray-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                       {item.items.map((subItem) =>
                         subItem.external ? (
                           <a
@@ -205,7 +205,9 @@ export default function Navbar() {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 lg:hidden"
-            aria-label="Open navigation menu"
+            aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
           >
             <div className="space-y-1.5">
               <span className="block h-0.5 w-5 bg-gray-700" />
@@ -216,7 +218,16 @@ export default function Navbar() {
         </div>
 
         {mobileOpen && (
-          <div className="border-t border-gray-200 bg-white px-6 py-4 lg:hidden">
+          <div
+            id="mobile-navigation"
+            className="max-h-[calc(100dvh-49px)] overflow-y-auto border-t border-gray-200 bg-white px-6 py-4 lg:hidden"
+            onClick={(event) => {
+              if (event.target instanceof Element && event.target.closest("a[href]")) {
+                setMobileOpen(false);
+                setOpenMobileDropdown(null);
+              }
+            }}
+          >
             <div className="space-y-2">
               {navItems.map((item) => {
                 if (item.items) {
@@ -227,6 +238,7 @@ export default function Navbar() {
                       <button
                         type="button"
                         onClick={() => setOpenMobileDropdown(isOpen ? null : item.label)}
+                        aria-expanded={isOpen}
                         className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-gray-800"
                       >
                         <span>{item.label}</span>

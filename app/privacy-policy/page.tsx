@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privacy-policy" },
   title: "Privacy Policy | MedWithRish",
   description: "How MedWithRish and PhloemAI collect, use and protect personal data.",
 };

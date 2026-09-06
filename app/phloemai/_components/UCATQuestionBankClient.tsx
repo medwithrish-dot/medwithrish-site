@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createClient as createSupabaseClient,
@@ -7727,6 +7728,7 @@ function UCATQuestionBankSection({
   backHref?: string;
   backLabel?: string;
 }) {
+  const router = useRouter();
   const [navigatorOpen, setNavigatorOpen] = useState(false);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selected, setSelected] = useState<UCATOptionKey | null>(null);
@@ -8945,7 +8947,7 @@ function UCATQuestionBankSection({
 
   const handleUpgrade = async () => {
     setCheckoutError(null);
-    window.location.assign("/phloemai/pricing");
+    router.push("/phloemai/pricing");
   };
 
   const requestDiagnosticAiFeedback = async () => {

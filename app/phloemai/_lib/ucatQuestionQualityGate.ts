@@ -276,6 +276,8 @@ function validateSingleQuestion(question: UCATQuestion): RejectionReason | null 
 
   if (
     invalidOptionCount ||
+    new Set(optionKeys).size !== optionKeys.length ||
+    optionTexts.some((text) => !normaliseWhitespace(text)) ||
     !optionKeys.every((key) => allowedOptionKeys.includes(key)) ||
     !optionKeys.includes(question.answer) ||
     !hasUniqueStrings(optionTexts)
@@ -293,18 +295,18 @@ function validateSingleQuestion(question: UCATQuestion): RejectionReason | null 
 
   if (
     question.subtype === "sjt-appropriateness" &&
-    question.options.some(
+    (question.options.length !== APPROPRIATENESS_SCALE.length || question.options.some(
       (option, index) => option.text !== APPROPRIATENESS_SCALE[index]
-    )
+    ))
   ) {
     return "invalid-sjt-scale";
   }
 
   if (
     question.subtype === "sjt-importance" &&
-    question.options.some(
+    (question.options.length !== IMPORTANCE_SCALE.length || question.options.some(
       (option, index) => option.text !== IMPORTANCE_SCALE[index]
-    )
+    ))
   ) {
     return "invalid-sjt-scale";
   }
@@ -382,6 +384,26 @@ function validateStructure(
 
   if (normaliseWhitespace(question.explanation).length < 24) {
     return "weak-explanation";
+  }
+
+  if (question.questionType === "drag-order") {
+    const ids = question.dragItems.map((item) => item.id);
+    if (
+      ids.length < 2 || !hasUniqueStrings(ids) ||
+      question.answerOrder.length !== ids.length ||
+      !hasUniqueStrings(question.answerOrder) ||
+      !question.answerOrder.every((id) => ids.includes(id))
+    ) return "invalid-answer";
+  }
+
+  if (question.questionType === "most-least") {
+    const ids = question.actionItems.map((item) => item.id);
+    if (
+      ids.length < 2 || !hasUniqueStrings(ids) ||
+      question.answerSlots.most === question.answerSlots.least ||
+      !ids.includes(question.answerSlots.most) ||
+      !ids.includes(question.answerSlots.least)
+    ) return "invalid-answer";
   }
 
   return (

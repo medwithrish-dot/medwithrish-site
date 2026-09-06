@@ -17,6 +17,7 @@ function speechHarness() {
   const effects = [];
   const timers = [];
   const played = [];
+  const transcripts = [];
   const recognitions = [];
   let cancellations = 0;
   const react = {
@@ -47,6 +48,7 @@ function speechHarness() {
     window: {
       SpeechRecognition: Recognition,
       setTimeout: callback => { timers.push(callback); return timers.length; },
+      clearTimeout: id => { if (id !== undefined) timers[id - 1] = null; },
       speechSynthesis: {
         cancel: () => { cancellations += 1; },
         getVoices: () => [],
@@ -54,14 +56,18 @@ function speechHarness() {
       },
     },
   });
-  const speech = loaded.exports.useInterviewSpeech({ onTranscript() {} });
+  const speech = loaded.exports.useInterviewSpeech({ onTranscript: text => transcripts.push(text) });
   const cleanups = effects.map(effect => effect()).filter(Boolean);
   let unmounted = false;
   return {
-    speech, played, recognitions,
+    speech, played, recognitions, transcripts,
     get cancellations() { return cancellations; },
     finishStopTimeouts() {
-      while (timers.length) timers.shift()();
+      for (let index = 0; index < timers.length; index += 1) {
+        const callback = timers[index];
+        timers[index] = null;
+        callback?.();
+      }
     },
     unmount() {
       if (unmounted) return;
@@ -118,4 +124,27 @@ test("only the newest read-aloud request plays while recognition is stopping", a
   room.finishStopTimeouts();
   await Promise.all([first, newest]);
   assert.deepEqual(room.played, ["The current question."]);
+});
+
+test("concurrent microphone stops preserve the final transcript and share one shutdown", async t => {
+  const room = speechHarness();
+  t.after(() => room.unmount());
+  room.speech.start();
+  const recognition = room.recognitions[0];
+  const first = room.speech.stop();
+  const second = room.speech.stop();
+
+  assert.equal(first, second, "Both callers wait for the same microphone shutdown");
+  assert.equal(recognition.stopCalls, 1);
+  assert.equal(recognition.abortCalls, 0, "A second caller must not discard pending speech");
+  recognition.onresult?.({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "My final reflection." } }] });
+  recognition.end();
+  await Promise.all([first, second]);
+  assert.deepEqual(room.transcripts, ["My final reflection."]);
+  assert.equal(recognition.onresult, null);
+
+  room.speech.start();
+  const nextRecognition = room.recognitions[1];
+  room.finishStopTimeouts();
+  assert.equal(nextRecognition.abortCalls, 0, "An old fallback cannot stop the next answer");
 });

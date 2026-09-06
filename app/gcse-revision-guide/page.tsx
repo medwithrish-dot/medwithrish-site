@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "GCSE Revision Guide | MedWithRish",
+  description: "Explore practical GCSE revision strategies, planning and exam preparation.",
+  alternates: { canonical: "/gcse-revision-guide" },
+};
+
 import Link from "next/link";
 
 const keyIdeas = [

@@ -77,14 +77,11 @@ export function InterviewAccountControls() {
   const email = user?.email ?? "Account settings";
 
   const handleLogout = async () => {
-    if (!supabase) {
-      window.location.assign("/phloemai");
-      return;
-    }
-
-    await supabase.auth.signOut();
+    if (supabase) await supabase.auth.signOut();
     setUser(null);
     setMenuOpen(false);
+    // A full navigation clears interview state and previously cached account pages.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.assign("/phloemai");
   };
 

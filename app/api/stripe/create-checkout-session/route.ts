@@ -47,8 +47,15 @@ async function customerExists(
   try {
     const customer = await stripe.customers.retrieve(customerId);
     return !customer.deleted;
-  } catch {
-    return false;
+  } catch (error) {
+    if (
+      error && typeof error === "object" &&
+      "code" in error && error.code === "resource_missing"
+    ) {
+      return false;
+    }
+    // An outage is not evidence that the customer has been deleted.
+    throw error;
   }
 }
 

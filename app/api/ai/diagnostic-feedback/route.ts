@@ -185,23 +185,23 @@ function buildPromptData(
   const savedStudyPlanTasks = parseStudyPlanTasks(metadata.studyPlanTasks);
 
   return {
-    section: asString(summary.section) ?? body.section,
-    accuracy: asNumber(summary.accuracy) ?? body.accuracy,
-    scorePoints: asNumber(summary.scorePoints) ?? body.scorePoints,
-    maxScore: asNumber(summary.maxScore) ?? body.maxScore,
+    section: asString(summary.section) ?? asString(body.section),
+    accuracy: asNumber(summary.accuracy) ?? asNumber(body.accuracy),
+    scorePoints: asNumber(summary.scorePoints) ?? asNumber(body.scorePoints),
+    maxScore: asNumber(summary.maxScore) ?? asNumber(body.maxScore),
     answeredQuestions:
-      asNumber(summary.answeredQuestions) ?? body.answeredQuestions,
-    totalQuestions: asNumber(summary.totalQuestions) ?? body.totalQuestions,
+      asNumber(summary.answeredQuestions) ?? asNumber(body.answeredQuestions),
+    totalQuestions: asNumber(summary.totalQuestions) ?? asNumber(body.totalQuestions),
     avgSecondsPerQuestion:
-      asNumber(summary.avgSecondsPerQuestion) ?? body.avgSecondsPerQuestion,
-    issues: savedIssues.length ? savedIssues : body.issues ?? [],
-    strengths: savedStrengths.length ? savedStrengths : body.strengths ?? [],
+      asNumber(summary.avgSecondsPerQuestion) ?? asNumber(body.avgSecondsPerQuestion),
+    issues: savedIssues.length ? savedIssues : parseIssues(body.issues),
+    strengths: savedStrengths.length ? savedStrengths : asStringArray(body.strengths),
     questionTimings: savedQuestionTimings.length
       ? savedQuestionTimings
-      : body.questionTimings ?? [],
+      : parseQuestionTimings(body.questionTimings),
     studyPlanTasks: savedStudyPlanTasks.length
       ? savedStudyPlanTasks
-      : body.studyPlanTasks ?? [],
+      : parseStudyPlanTasks(body.studyPlanTasks),
   };
 }
 
@@ -393,12 +393,13 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  if (!body.attemptId) {
+  if (!body || typeof body !== "object" || typeof body.attemptId !== "string" || !body.attemptId.trim()) {
     return Response.json(
       { error: "A saved diagnostic attempt is required." },
       { status: 400 }
     );
   }
+  body.attemptId = body.attemptId.trim();
 
   let supabase;
   try {
@@ -446,6 +447,7 @@ export async function POST(request: Request) {
     .select(
       "id,user_id,ai_feedback,ai_feedback_requested_at,ai_feedback_status,metadata"
     )
+    .eq("user_id", user.id)
     .in("id", requestedAttemptIds);
 
   if (attemptError) {
@@ -459,7 +461,7 @@ export async function POST(request: Request) {
 
   if (
     !attemptRow ||
-    attemptRows.length === 0 ||
+    attemptRows.length !== requestedAttemptIds.length ||
     attemptRows.some((attempt) => attempt.user_id !== user.id)
   ) {
     return Response.json(
@@ -573,7 +575,8 @@ export async function POST(request: Request) {
             ai_diagnostic_last_used_at: requestedAt,
           }
     )
-    .eq("id", user.id);
+    .eq("id", user.id)
+    .eq("current_plan", plan);
 
   if (plan === "premium") {
     if (previousLastUsedAt) {
@@ -670,7 +673,7 @@ export async function POST(request: Request) {
       ...reservedSnapshot,
     });
   } catch (error) {
-    await admin
+    const refundQuery = admin
       .from("profiles")
       .update(
         plan === "premium"
@@ -680,7 +683,14 @@ export async function POST(request: Request) {
               ai_diagnostic_last_used_at: previousLastUsedAt,
             }
       )
-      .eq("id", user.id);
+      .eq("id", user.id)
+      .eq("current_plan", plan)
+      .eq("ai_diagnostic_last_used_at", requestedAt);
+
+    if (plan === "free") {
+      refundQuery.eq("diagnostic_credits", Math.max(0, currentSnapshot.credits - 1));
+    }
+    await refundQuery;
 
     return Response.json(
       {

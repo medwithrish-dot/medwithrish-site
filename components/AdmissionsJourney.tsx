@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import PSReviewForm from "@/components/PSReviewForm";
 
@@ -159,28 +159,24 @@ function buttonClasses(variant: string) {
 export default function AdmissionsJourney() {
   const submissionRef = useRef<HTMLDivElement | null>(null);
   const journeyRef = useRef<HTMLElement | null>(null);
-  const shouldScrollRef = useRef(false);
+  const scrollRequestRef = useRef({ routeKey: "", completed: false });
   const searchParams = useSearchParams();
-
-  const urlStage = useMemo(() => {
-    const s = searchParams.get("stage");
-    return s ? s.padStart(2, "0") : null;
-  }, [searchParams]);
-
-  // "~url" means no user override — follow URL param or default
-  const [userStage, setUserStage] = useState<string | null>("~url");
-  const openStage = userStage === "~url" ? (urlStage ?? "04") : userStage;
-  const setOpenStage = (stage: string | null) => setUserStage(stage ?? null);
-
-  useEffect(() => {
-    const scrollTarget = searchParams.get("scroll");
-    if (urlStage === "05" && scrollTarget === "ps-submission") {
-      shouldScrollRef.current = true;
-    }
-  }, [urlStage, searchParams]);
+  const routeKey = searchParams.toString();
+  const requestedStage = searchParams.get("stage")?.padStart(2, "0");
+  const urlStage = stages.some((stage) => stage.number === requestedStage)
+    ? requestedStage
+    : "04";
+  const scrollTarget = searchParams.get("scroll");
+  // A manual selection belongs to the current URL; new deep links take precedence.
+  const [userStage, setUserStage] = useState<{ routeKey: string; stage: string | null } | null>(null);
+  const openStage = userStage?.routeKey === routeKey ? userStage.stage : urlStage;
+  const setOpenStage = (stage: string | null) => setUserStage({ routeKey, stage });
 
 useEffect(() => {
-  if (openStage === "05" && shouldScrollRef.current) {
+  if (scrollRequestRef.current.routeKey !== routeKey) {
+    scrollRequestRef.current = { routeKey, completed: false };
+  }
+  if (!scrollRequestRef.current.completed && openStage === "05" && urlStage === "05" && scrollTarget === "ps-submission") {
     const timer = setTimeout(() => {
       const element = submissionRef.current;
 
@@ -196,14 +192,14 @@ useEffect(() => {
           top: y,
           behavior: "smooth",
         });
+        scrollRequestRef.current.completed = true;
       }
 
-      shouldScrollRef.current = false;
     }, 500);
 
     return () => clearTimeout(timer);
   }
-}, [openStage]);
+}, [openStage, urlStage, scrollTarget, routeKey]);
   return (
     <section
   id="journey"
@@ -251,6 +247,8 @@ useEffect(() => {
                 <button
                   type="button"
                   onClick={() => setOpenStage(isOpen ? null : stage.number)}
+                  aria-expanded={isOpen}
+                  aria-controls={`journey-stage-${stage.number}`}
                   className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left md:px-8 cursor-pointer"
                 >
                   <div className="flex items-center gap-4">
@@ -293,6 +291,9 @@ useEffect(() => {
                 </button>
 
                 <div
+                  id={`journey-stage-${stage.number}`}
+                  inert={!isOpen}
+                  aria-hidden={!isOpen}
                   className={`grid transition-all duration-300 ease-in-out ${
                     isOpen
                       ? "grid-rows-[1fr] opacity-100"

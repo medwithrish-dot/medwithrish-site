@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MedWithRish
 
-## Getting Started
+Next.js App Router website for admissions resources, personal statement reviews,
+PhloemAI UCAT practice and interview preparation.
 
-First, run the development server:
+## Local development
 
-```bash
+Use Node.js 20.9 or later and npm. Install dependencies from the lockfile:
+
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. Keep secrets in the ignored `.env.local` file.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Account features use `NEXT_PUBLIC_SUPABASE_URL`,
+`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (or `NEXT_PUBLIC_SUPABASE_ANON_KEY`) and
+the server-only `SUPABASE_SERVICE_ROLE_KEY`. Set `NEXT_PUBLIC_SITE_URL` to the
+site origin, including `https://`, without a path, query or fragment.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Optional integrations:
 
-## Learn More
+- Stripe: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
+  `STRIPE_PREMIUM_PRICE_ID` and `STRIPE_PS_REVIEW_PRICE_ID`.
+- Personal statement notifications: `RESEND_API_KEY`.
+- UCAT feedback: `ANTHROPIC_API_KEY`.
+- Interview feedback: `GEMINI_API_KEY`; optionally `INTERVIEW_GEMINI_MODEL`.
+- Preview access: `PHLOEMAI_PREVIEW_PASSWORD` and `PHLOEMAI_PREVIEW_TOKEN_SECRET`.
 
-To learn more about Next.js, take a look at the following resources:
+Database setup and feature configuration are documented in
+[`supabase/phloemai_settings.md`](supabase/phloemai_settings.md) and
+[`docs/interview-platform-setup.md`](docs/interview-platform-setup.md).
+Changing a SQL file does not apply it to a deployed Supabase database.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Verification
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```sh
+npm run lint
+npm run typecheck
+npm test
+npm run audit:ucat-questions
+npm run build
+```
 
-## Deploy on Vercel
+The regression suite substitutes network providers and runs database checks in
+embedded PostgreSQL (PGlite). It does not need credentials or write to live
+accounts, send emails, create payments or call AI providers. The production build
+uses the local environment configuration and downloads the configured Google
+fonts.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check dependency advisories with `npm audit` and
+`npm --prefix ucat-generator audit`. The generator currently contains package
+configuration only; its installed dependencies are ignored by Git and can be
+restored with `npm --prefix ucat-generator ci`.

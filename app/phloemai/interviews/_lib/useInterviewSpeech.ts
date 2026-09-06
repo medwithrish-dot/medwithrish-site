@@ -45,25 +45,28 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript
   const recognitionRef = useRef<Recognition | null>(null);
   const onTranscriptRef = useRef(onTranscript);
   const finishRef = useRef<(() => void) | null>(null);
+  const stoppingRef = useRef<Promise<void> | null>(null);
   const mountedRef = useRef(true);
   const speechRequestRef = useRef(0);
 
   useEffect(() => { onTranscriptRef.current = onTranscript; }, [onTranscript]);
 
   const stop = useCallback((): Promise<void> => {
+    if (stoppingRef.current) return stoppingRef.current;
     const recognition = recognitionRef.current;
     if (!recognition) return Promise.resolve();
-    return new Promise((resolve) => {
+    const pending = new Promise<void>((resolve) => {
       let settled = false;
       const finish = () => {
         if (settled) return;
         settled = true;
+        window.clearTimeout(timer);
         if (finishRef.current === finish) finishRef.current = null;
+        recognition.onresult = null;
+        recognition.onend = null;
+        recognition.onerror = null;
         if (recognitionRef.current === recognition) {
           recognitionRef.current = null;
-          recognition.onresult = null;
-          recognition.onend = null;
-          recognition.onerror = null;
           try { recognition.abort(); } catch { /* Already stopped. */ }
         }
         if (mountedRef.current) {
@@ -72,12 +75,14 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript
         }
         resolve();
       };
-      finishRef.current?.();
       finishRef.current = finish;
       // Some browsers never send onend after permissions/network errors.
-      window.setTimeout(finish, 700);
+      const timer = window.setTimeout(finish, 700);
       try { recognition.stop(); } catch { finish(); }
     });
+    stoppingRef.current = pending;
+    void pending.then(() => { if (stoppingRef.current === pending) stoppingRef.current = null; });
+    return pending;
   }, []);
 
   const stopSpeaking = useCallback(() => {
@@ -87,7 +92,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript
   }, []);
 
   const start = useCallback(() => {
-    if (recognitionRef.current) return;
+    if (!mountedRef.current || recognitionRef.current || stoppingRef.current) return;
     const speechWindow = window as SpeechWindow;
     const Constructor = speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
     if (!Constructor) {
@@ -123,10 +128,14 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript
       setError(message);
     };
     recognition.onend = () => {
-      if (recognitionRef.current === recognition) recognitionRef.current = null;
+      if (recognitionRef.current !== recognition) return;
+      if (finishRef.current) { finishRef.current(); return; }
+      recognitionRef.current = null;
+      recognition.onresult = null;
+      recognition.onerror = null;
+      recognition.onend = null;
       setListening(false);
       setInterimTranscript("");
-      finishRef.current?.();
     };
     recognitionRef.current = recognition;
     try {

@@ -139,6 +139,7 @@ export default function SuccessStories() {
           alt={featuredStory.alt}
           width={1200}
           height={1600}
+          sizes="240px"
           className="h-auto w-full rounded-[0.9rem] object-cover"
         />
       </div>
@@ -169,6 +170,7 @@ export default function SuccessStories() {
         alt={story.alt}
         width={900}
         height={1200}
+        sizes="(max-width: 639px) calc(100vw - 74px), (max-width: 1023px) calc((100vw - 98px) / 2), (max-width: 1199px) calc((100vw - 122px) / 3), 342px"
         className="h-auto w-full rounded-2xl object-contain"
       />
 

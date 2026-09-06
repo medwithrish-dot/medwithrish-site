@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Free UCAT Mock Score Tracker | MedWithRish",
+  description: "Download the free MedWithRish UCAT spreadsheet to track mock scores, section performance and progress.",
+  alternates: { canonical: "/ucat-score-tracker" },
+};
+
 import Link from "next/link";
 
 export default function UCATScoreTrackerPage() {
