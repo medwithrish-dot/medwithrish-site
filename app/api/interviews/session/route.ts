@@ -33,8 +33,13 @@ export async function POST(request: Request) {
     if (mode === "university" && !university) throw new InterviewError("Choose a university");
     const index = body.stationIndex === undefined ? 0 : Number(body.stationIndex);
     const circuitMode = mode === "university" || mode === "reference";
-    const count = mode === "university" ? Math.min(20, university!.stationCount) : mode === "reference" ? 5 : 1;
-    if (!Number.isInteger(index) || index < 0 || index >= count || (!circuitMode && index !== 0)) throw new InterviewError("Invalid station number");
+    const defaultCount = mode === "university" ? Math.min(20, university!.stationCount) : mode === "reference" ? 5 : 1;
+    let count = defaultCount;
+    if (body.stationCount !== undefined) {
+      if (typeof body.stationCount !== "number" || !Number.isInteger(body.stationCount) || body.stationCount < 1 || body.stationCount > interviewStations.length || (!circuitMode && body.stationCount !== 1)) throw new InterviewError("Choose between one and nine stations");
+      count = body.stationCount;
+    }
+    if (!Number.isInteger(index) || index < 0 || index >= 20 || (!circuitMode && index !== 0)) throw new InterviewError("Invalid station number");
     if (body.circuitId !== undefined && !validId(body.circuitId)) throw new InterviewError("Invalid circuit ID");
     const circuitId = typeof body.circuitId === "string" ? body.circuitId : randomUUID();
     if (index > 0) {
@@ -42,9 +47,12 @@ export async function POST(request: Request) {
       const { data: previous, error } = await admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("circuit_id", circuitId).eq("station_index", index - 1).maybeSingle();
       if (error) databaseError(error);
       if (!previous || previous.status !== "completed" || previous.mode !== mode || previous.university_slug !== (mode === "university" ? university!.slug : null)) throw new InterviewError("Complete the previous station first", 409);
+      count = previous.station_count;
+      if (body.stationCount !== undefined && body.stationCount !== count) throw new InterviewError("The number of stations cannot change during a circuit", 409);
       if (Date.now() < Date.parse(previous.completed_at) + previous.break_seconds * 1000) throw new InterviewError("Your break is still running. The next station will be ready shortly.", 409);
     }
-    const station = mode === "free" ? interviewStations[0] : mode === "station" ? findInterviewStation(String(body.stationSlug ?? "")) : interviewStations[index % interviewStations.length];
+    if (index >= count) throw new InterviewError("This circuit has no more stations", 409);
+    const station = mode === "free" ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : interviewStations[index % interviewStations.length];
     if (!station) throw new InterviewError("Station not found", 404);
     const payload = {
       mode, university_slug: mode === "university" ? university!.slug : null, station_slug: station.slug,

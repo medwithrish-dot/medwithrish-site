@@ -36,8 +36,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     const subcategory = single(search.subcategory);
     return <InterviewQuestionBankDashboard showPremiumCard={!isPremium} initialCategoryTitle={single(search.category)} initialSubcategoryIndex={subcategory === undefined ? undefined : Number(subcategory)} initialQuestionId={single(search.question)} />;
   }
-  return <InterviewShell {...config} heroHeader={section === "ai-interviews" && !single(search.attempt) && !single(search.university) && !single(search.station)}>
-    {section === "ai-interviews" ? (single(search.attempt) || single(search.university) || single(search.station)
+  return <InterviewShell {...config} heroHeader={section === "ai-interviews"}>
+    {section === "ai-interviews" ? (single(search.attempt) || single(search.university) || single(search.station) || single(search.setup)
       ? <AIInterviewRunner initialUniversitySlug={single(search.university)} initialStationSlug={single(search.station)} />
       : <AIInterviewLanding />)
       : section === "groups" ? <InterviewGroups />

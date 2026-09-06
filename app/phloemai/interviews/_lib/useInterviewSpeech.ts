@@ -35,7 +35,7 @@ export function getTranscriptHints(transcript: string) {
   return { wordCount: words.length, fillerCount, repetitionCount };
 }
 
-export function useInterviewSpeech({ onTranscript }: { onTranscript: (text: string) => void }) {
+export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript: (text: string) => void; rate?: number }) {
   const supported = useSyncExternalStore(subscribe, recognitionAvailable, serverUnsupported);
   const voiceSupported = useSyncExternalStore(subscribe, synthesisAvailable, serverUnsupported);
   const [listening, setListening] = useState(false);
@@ -46,6 +46,7 @@ export function useInterviewSpeech({ onTranscript }: { onTranscript: (text: stri
   const onTranscriptRef = useRef(onTranscript);
   const finishRef = useRef<(() => void) | null>(null);
   const mountedRef = useRef(true);
+  const speechRequestRef = useRef(0);
 
   useEffect(() => { onTranscriptRef.current = onTranscript; }, [onTranscript]);
 
@@ -80,8 +81,9 @@ export function useInterviewSpeech({ onTranscript }: { onTranscript: (text: stri
   }, []);
 
   const stopSpeaking = useCallback(() => {
+    speechRequestRef.current += 1;
     if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
-    setSpeaking(false);
+    if (mountedRef.current) setSpeaking(false);
   }, []);
 
   const start = useCallback(() => {
@@ -137,7 +139,9 @@ export function useInterviewSpeech({ onTranscript }: { onTranscript: (text: stri
   }, [stopSpeaking]);
 
   const speak = useCallback(async (text: string) => {
+    const request = ++speechRequestRef.current;
     await stop();
+    if (!mountedRef.current || request !== speechRequestRef.current) return;
     if (!("speechSynthesis" in window)) {
       setError("Read-aloud is unavailable in this browser. The question is displayed on screen.");
       return;
@@ -145,23 +149,24 @@ export function useInterviewSpeech({ onTranscript }: { onTranscript: (text: stri
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-GB";
-    utterance.rate = 0.95;
+    utterance.rate = rate;
     const voice = window.speechSynthesis.getVoices().find((candidate) => candidate.lang === "en-GB");
     if (voice) utterance.voice = voice;
-    utterance.onend = () => { if (mountedRef.current) setSpeaking(false); };
+    utterance.onend = () => { if (mountedRef.current && request === speechRequestRef.current) setSpeaking(false); };
     utterance.onerror = (event) => {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current || request !== speechRequestRef.current) return;
       setSpeaking(false);
       if (event.error !== "canceled" && event.error !== "interrupted") setError("Read-aloud could not play. You can read the question on screen.");
     };
     setSpeaking(true);
     window.speechSynthesis.speak(utterance);
-  }, [stop]);
+  }, [stop, rate]);
 
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      speechRequestRef.current += 1;
       const recognition = recognitionRef.current;
       if (recognition) {
         recognition.onresult = null;

@@ -49,3 +49,11 @@
 @media (max-width: 1200px) { .hero { gap: 24px; padding: 28px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 760px) { .hero { grid-template-columns: 1fr; padding: 24px; } .intro h1 { font-size: 34px; } .featured { padding: 22px; } .benefits { margin-top: 22px; } }
 @media (max-width: 520px) { .cards { grid-template-columns: 1fr; } .filters { flex-direction: column; } .filters select { max-width: none; } .hero { padding: 22px; border-radius: 18px; } .intro h1 { font-size: 30px; } }
+.customAction { margin-top: 24px; width: fit-content; }
+.roomPreviewLink { display: flex; align-items: center; gap: 16px; padding: 22px; margin: 22px 0; border: 1px solid #cddccc; border-radius: 12px; background: #f6f9f0; color: #567c54; }
+.roomPreviewLink > svg { flex-shrink: 0; }
+.roomPreviewLink > div { flex: 1; }
+.roomPreviewLink strong { font-size: 13px; color: #2c573b; }
+.roomPreviewLink p { margin: 5px 0 0; font-size: 11px; line-height: 1.8; color: #819478; }
+.roomPreviewLink a { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; }
+@media (max-width: 650px) { .roomPreviewLink { flex-wrap: wrap; } .roomPreviewLink a { width: 100%; margin-left: 39px; } }
