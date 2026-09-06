@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight, Clock3, Mic, Search } from "lucide-react";
+import styles from "../_components/AIInterviewLanding.module.css";
 import { interviewUniversities, universityTimingSummary, UNIVERSITY_SOURCES_CHECKED } from "../_data/universities";
 
 type UniversityCatalogueMode = "practice" | "reference";
@@ -16,6 +17,52 @@ export function UniversityCatalogue({ mode = "reference" }: { mode?: UniversityC
     const searchable = `${entry.name} ${entry.slug} ${entry.timingNote}`.toLowerCase().replace(/[’']/g, "");
     return searchable.includes(normalized) && (format === "All" || entry.format === format);
   });
+
+  if (practiceMode) return (
+    <section className={styles.catalogue} aria-labelledby="university-heading">
+      <div className={styles.catalogueHeading}>
+        <h2 id="university-heading">Find your medical school</h2>
+        <p>Your university. Your next practice session.</p>
+      </div>
+      <div className={styles.filters}>
+        <label className={styles.search}>
+          <span className="sr-only">Search universities</span>
+          <Search size={18} aria-hidden="true" />
+          <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search university or medical school..." />
+        </label>
+        <select aria-label="Interview format" value={format} onChange={(event) => setFormat(event.target.value)}>
+          <option value="All">All interview formats</option>
+          <option value="MMI">MMI</option>
+          <option value="Panel">Panel</option>
+          <option value="Mixed">Mixed / group assessment</option>
+          <option value="Unconfirmed">Awarding body / general practice</option>
+        </select>
+      </div>
+      <div className={styles.results}>
+        <span role="status">{visible.length} {visible.length === 1 ? "practice option" : "practice options"}</span>
+        {(query || format !== "All") && <button type="button" onClick={() => { setQuery(""); setFormat("All"); }}>Clear filters</button>}
+      </div>
+      {visible.length === 0 ? <p className={styles.empty}>No medical schools match your search. Try another name or clear your filters.</p> : (
+        <div className={styles.cards}>
+          {visible.map((entry) => (
+            <article key={entry.slug} className={styles.card}>
+              <div className={styles.cardHeader}>
+                <span className={styles.monogram} aria-hidden="true">{entry.name.replace(/University of |University|of /g, "").trim().split(/\s+/).map((word) => word[0]).join("").slice(0, 2).toUpperCase()}</span>
+                <div><h3><Link href={`/phloemai/interviews/universities/${entry.slug}`}>{entry.name}</Link></h3><span className={styles.format}>{entry.format === "Unconfirmed" ? "General practice" : entry.format === "Mixed" ? "Mixed / group" : entry.format}</span></div>
+              </div>
+              <p className={styles.timing}><Clock3 size={16} aria-hidden="true" />{universityTimingSummary(entry)}</p>
+              <p className={styles.preparation}>{entry.preparationSeconds > 0 ? `${entry.preparationSeconds}s preparation per block` : "No separate preparation timer"}{entry.breakSeconds > 0 ? ` · ${entry.breakSeconds}s intervals` : ""}</p>
+              <div className={styles.cardFooter}>
+                <Link href={`/phloemai/interviews/ai-interviews?university=${entry.slug}`} className={styles.primaryAction} aria-label={`Start AI interview for ${entry.name}`}><Mic size={16} aria-hidden="true" />Start AI interview<ArrowRight size={16} aria-hidden="true" /></Link>
+                <div className={styles.details}><span>{entry.timingStatus === "published" ? "Reported timing" : "Practice preset"}</span><Link href={`/phloemai/interviews/universities/${entry.slug}`} aria-label={`View format and sources for ${entry.name}`}>Format &amp; sources</Link></div>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+      <p className={styles.sourceNote}>Practice presets may include estimated timings. Always follow your university invitation. Sources checked {UNIVERSITY_SOURCES_CHECKED}.</p>
+    </section>
+  );
 
   return (
     <section className="mt-7">

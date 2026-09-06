@@ -1,35 +1,31 @@
 import Link from "next/link";
-import { ArrowUpRight, Mic } from "lucide-react";
+import { ArrowRight, AudioLines, ChartNoAxesColumnIncreasing, MessageSquareText, Mic } from "lucide-react";
 import { UniversityCatalogue } from "../universities/UniversityCatalogue";
+import styles from "./AIInterviewLanding.module.css";
 
 export function AIInterviewLanding() {
   return (
-    <>
-      <Link
-        href="/phloemai/interviews/ai-interviews?station=why-medicine"
-        className="flex items-center gap-4 rounded-2xl border border-[#bcdedb] bg-[#e3f5f2] p-5 transition-colors hover:bg-white sm:p-6"
-      >
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#08787b] text-white">
-          <Mic className="h-5 w-5" aria-hidden="true" />
-        </span>
-        <span className="flex-1">
-          <span className="block text-xs font-bold uppercase tracking-wider text-[#08787b]">
-            Free for everyone
-          </span>
-          <span className="mt-1 block text-lg font-bold">
-            Start with Why medicine?
-          </span>
-          <span className="mt-1 block text-sm leading-6 text-[#314956]">
-            Practise your motivation, get feedback, and choose whether to join
-            the leaderboard.
-          </span>
-        </span>
-        <ArrowUpRight
-          className="h-5 w-5 shrink-0 text-[#08787b]"
-          aria-hidden="true"
-        />
-      </Link>
+    <div className={styles.landing}>
+      <section className={styles.hero} aria-labelledby="practice-title">
+        <div className={styles.intro}>
+          <p className={styles.eyebrow}>Real practice. Growing confidence.</p>
+          <h1 id="practice-title">Your next step towards medical school.</h1>
+          <p className={styles.description}>Practise AI interviews for your target universities, get personalised feedback, and make every answer count.</p>
+          <div className={styles.benefits}>
+            <span><Mic size={18} aria-hidden="true" /> University-specific practice</span>
+            <span><MessageSquareText size={18} aria-hidden="true" /> Actionable feedback</span>
+            <span><ChartNoAxesColumnIncreasing size={18} aria-hidden="true" /> Track your progress</span>
+          </div>
+        </div>
+        <aside className={styles.featured} aria-labelledby="free-interview-title">
+          <div className={styles.featuredTop}><span className={styles.freeBadge}>FREE INTERVIEW</span><AudioLines size={26} aria-hidden="true" /></div>
+          <h2 id="free-interview-title">Why medicine?</h2>
+          <p>A classic first question. Practise your answer and get AI feedback, free.</p>
+          <Link href="/phloemai/interviews/ai-interviews?station=why-medicine" className={styles.primaryAction}><Mic size={18} aria-hidden="true" /> Start free interview <ArrowRight size={18} aria-hidden="true" /></Link>
+          <span className={styles.featuredNote}>A little practice is a great place to start.</span>
+        </aside>
+      </section>
       <UniversityCatalogue mode="practice" />
-    </>
+    </div>
   );
 }
