@@ -61,7 +61,7 @@ export function toInterviewAttempt(row: Record<string, unknown>): InterviewAttem
   return {
     id: row.id as string, mode: row.mode as InterviewAttempt["mode"], universitySlug: row.university_slug as string | null,
     stationSlug: row.station_slug as string, title: row.title as string, status: row.status as InterviewAttempt["status"],
-    startedAt: row.started_at as string, completedAt, preparationSeconds: Number(row.preparation_seconds), stationSeconds: Number(row.station_seconds),
+    startedAt: row.started_at as string, completedAt, answerSubmittedAt: row.answer_submitted_at as string | null | undefined, preparationSeconds: Number(row.preparation_seconds), stationSeconds: Number(row.station_seconds),
     breakSeconds: Number(row.break_seconds), stationIndex: Number(row.station_index), stationCount: Number(row.station_count),
     questions: row.questions as string[], answers: row.answers as InterviewAttempt["answers"], metrics: (row.metrics ?? {}) as Record<string, number>,
     feedback: row.feedback as InterviewAttempt["feedback"], circuitId: row.circuit_id as string,

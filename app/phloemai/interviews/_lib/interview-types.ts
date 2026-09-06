@@ -16,6 +16,7 @@ export type InterviewAttempt = {
   status: "in_progress" | "grading" | "completed" | "failed";
   startedAt: string;
   completedAt: string | null;
+  answerSubmittedAt?: string | null;
   preparationSeconds: number;
   stationSeconds: number;
   breakSeconds: number;

@@ -6,7 +6,7 @@ import { InterviewShell } from "../_components/InterviewShell";
 import { AIInterviewRunner } from "../_components/AIInterviewRunner";
 import { InterviewGroups } from "../_components/InterviewGroups";
 import { InterviewLeaderboard } from "../_components/InterviewLeaderboard";
-import { InterviewHistoryViews } from "../_components/InterviewHistoryViews";
+import { InterviewPreparationViews } from "../_components/InterviewPreparationViews";
 import { InterviewGuides } from "../_components/InterviewGuides";
 
 const pages: Record<string, { title: string; subtitle: string; activeLabel: string }> = {
@@ -40,6 +40,6 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       : section === "groups" ? <InterviewGroups />
       : section === "leaderboard" ? <InterviewLeaderboard />
       : section === "guides" ? <InterviewGuides />
-      : <InterviewHistoryViews view={section as "progress" | "plan" | "notifications"} />}
+      : <InterviewPreparationViews view={section as "progress" | "plan" | "notifications"} />}
   </InterviewShell>;
 }

@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:interviews:db": "node scripts/test-interview-platform.mjs",
+    "test:interviews:dashboard": "node --test scripts/test-interview-dashboard.mjs scripts/test-interview-preparation.mjs && node scripts/test-interview-dashboard-db.mjs",
     "audit:ucat-questions": "node scripts/auditUcatQuestionBank.cjs",
     "review:ucat-generated": "node scripts/reviewGeneratedUcatQuestions.cjs"
   },

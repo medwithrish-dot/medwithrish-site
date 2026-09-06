@@ -7,6 +7,7 @@ For the existing PhloemAI Supabase project, open **SQL Editor**, run each comple
 1. `supabase/phloemai_security_patch.sql` — protects the existing account plan from browser edits. Safe to rerun.
 2. `supabase/phloemai_interview_platform.sql` — private attempts, scores, opt-in leaderboard, durable usage limits and grading locks.
 3. `supabase/phloemai_interview_groups.sql` — study groups, membership, invitations and shared station rooms.
+4. `supabase/phloemai_interview_dashboard.sql` — university choices/dates, preparation goals, task completion and precise practice-time tracking. If steps 1–3 are already installed, only this new file is needed for dashboard personalisation.
 
 If the question bank's existing account progress has never been set up, also run `supabase/phloemai_interview_question_progress.sql`. The interview scripts do not replace that feature.
 
@@ -50,6 +51,20 @@ The group owner creates and starts a shared eight-minute station. Members contri
 
 The overall leaderboard includes only opted-in, completed free Why medicine? attempts under rubric `why-medicine-v1`. It shows a nickname, score and rank, never email, user IDs or transcripts. One best attempt per person is ranked; equal scores use earliest completion. Members can withdraw their score or change their nickname.
 
+## Personal dashboard
+
+The optional setup saves up to ten universities, dates (or “not confirmed”), preparation experience, up to three focus themes, and a weekly goal of 1–14 stations. Students can change or remove these details from the dashboard or plan page. These preferences do not unlock paid content or alter grades. Only the account owner can read them. New or signed-out students see useful empty states, never example dates or results.
+
+- **Practice statistics:** lifetime completed count, scored count, average and answering time come from a private SQL aggregate. No transcripts are sent to the dashboard. New attempts record the first submission timestamp, so preparation and grading/retry delays are excluded. Older durations are explicitly labelled estimates and capped to station duration.
+- **Recent score:** the ring averages the latest five scored attempts and shows its sample size. It is labelled a practice score, not a prediction of admission or a manufactured readiness measure.
+- **Your interviews:** schools come from the student's shortlist. Countdowns use Europe/London calendar days, including daylight-saving transitions. Unknown and past dates have distinct labels. Each school's average uses only its latest five scored university-specific attempts; generic practice is never copied across schools.
+- **Next action and today's plan:** completed history, stated focus, preparation experience, approaching dates, account access and weekly goal inform suggestions. Plans use results from before the current UK day, so completing a station checks it off instead of replacing it. Reading/reflection tasks have explicit saved completion controls. Station completion always comes from a completed attempt, never a client checkbox. Daily tasks reset with the UK date.
+- **Strengths and weaknesses:** each theme uses up to five recent scored samples. Comparisons need at least two themes with two or more samples each; tied themes are not labelled a strength or weakness. Single attempts stay visible without a strong inference.
+- **Weekly insight:** compares the current seven UK calendar days with the preceding seven, requiring at least two scores in each. Changes are percentage points; different station mixes are disclosed. Weekly goal progress counts completed stations, not guide checkboxes.
+- **Bounded queries:** activity and theme detail uses the latest 500 lightweight attempt records. A note appears when history exceeds this; lifetime totals still include every saved attempt. Personalisation is deterministic and makes no additional AI requests.
+
+After the dashboard SQL, check two accounts: save/remove schools, clear a known date to unknown, refresh and verify persistence; record a real interview and check today's task, recent score and totals; mark/unmark a reading task and verify that it is private to the current account. Dates are personal planning information and do not schedule emails or change any university's actual interview arrangements.
+
 Five equally weighted rubric dimensions are assessed from 0 to 100. The server, not the browser or model's claimed percentage, converts their average `r` to:
 
 ```text
@@ -65,5 +80,6 @@ Google's [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing) lists 3
 ## Verification and launch check
 
 Run `npm run lint`, `npx tsc --noEmit`, `npm run build`, `node --experimental-strip-types scripts/test-interview-scoring.mjs`, and `npm run test:interviews:db`.
+For dashboard date calculations, recommendations, validation and database access tests, also run `npm run test:interviews:dashboard`.
 
 After applying SQL, use two separate signed-in test accounts: create/join a group, compare a saved Why medicine? personal best, start a shared room, contribute answers, and confirm non-members cannot open it. Complete a free interview, view its private report, opt into the leaderboard, and opt out again. Verify a free account cannot start paid circuits. A local PostgreSQL test suite covers permissions, quota/retry logic and group flows; a real hosted two-account pass is still needed after the migration.
