@@ -2,6 +2,8 @@
 
 ## Run the SQL
 
+**Unsure which older scripts you ran?** Use `supabase/RUN_ALL_PHLOEMAI_SETUP.sql` instead. Paste the entire file into Supabase SQL Editor and run once using the normal privileged role. It includes original account, UCAT practice and Stripe tables plus all interview migrations, in order and in one transaction. It preserves existing plans and used diagnostic credits, and creates missing profiles for existing accounts. You do not need to run any other SQL file afterwards. Unlike the original practice script, this catch-up file deliberately does not reset free diagnostic credits.
+
 **Single-paste option for the existing project:** open `supabase/RUN_ALL_INTERVIEW_SETUP.sql`, copy its complete contents into a new Supabase SQL Editor query, and run it once. It includes the security patch, question-bank progress, interview platform, groups and dashboard scripts in dependency order, inside one transaction. You do not also need to run the individual files below. The base `public.profiles` account table must already exist; for a new database follow the initial setup instructions below first.
 
 For the existing PhloemAI Supabase project, open **SQL Editor**, run each complete file separately, and wait for success before the next file:
