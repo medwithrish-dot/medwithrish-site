@@ -1,6 +1,7 @@
 ﻿import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
+import { AIInterviewLanding } from "../_components/AIInterviewLanding";
 import { InterviewQuestionBankDashboard } from "../_components/InterviewQuestionBankDashboard";
 import { InterviewShell } from "../_components/InterviewShell";
 import { AIInterviewRunner } from "../_components/AIInterviewRunner";
@@ -10,7 +11,7 @@ import { InterviewPreparationViews } from "../_components/InterviewPreparationVi
 import { InterviewGuides } from "../_components/InterviewGuides";
 
 const pages: Record<string, { title: string; subtitle: string; activeLabel: string }> = {
-  "ai-interviews": { title: "Your next conversation starts here.", subtitle: "Practise aloud or type your answer. Get thoughtful feedback, one station at a time.", activeLabel: "AI Interviews" },
+  "ai-interviews": { title: "Start AI Interview Practice", subtitle: "Choose the free station, a university preset, or a focused interview topic.", activeLabel: "AI Interviews" },
   "question-bank": { title: "Question Bank", subtitle: "Explore interview questions and practise your answers.", activeLabel: "Question Bank" },
   groups: { title: "Better practice, together.", subtitle: "Bring your friends into a study group and build your confidence as a team.", activeLabel: "Groups" },
   leaderboard: { title: "A little friendly competition.", subtitle: "The free Why medicine? challenge. Real attempts, personal bests, shared progress.", activeLabel: "Leaderboard" },
@@ -36,7 +37,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     return <InterviewQuestionBankDashboard showPremiumCard={!isPremium} initialCategoryTitle={single(search.category)} initialSubcategoryIndex={subcategory === undefined ? undefined : Number(subcategory)} initialQuestionId={single(search.question)} />;
   }
   return <InterviewShell {...config}>
-    {section === "ai-interviews" ? <AIInterviewRunner initialUniversitySlug={single(search.university)} initialStationSlug={single(search.station)} />
+    {section === "ai-interviews" ? (single(search.attempt) || single(search.university) || single(search.station)
+      ? <AIInterviewRunner initialUniversitySlug={single(search.university)} initialStationSlug={single(search.station)} />
+      : <AIInterviewLanding />)
       : section === "groups" ? <InterviewGroups />
       : section === "leaderboard" ? <InterviewLeaderboard />
       : section === "guides" ? <InterviewGuides />

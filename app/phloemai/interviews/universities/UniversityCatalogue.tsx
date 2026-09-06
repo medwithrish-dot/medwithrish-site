@@ -5,9 +5,12 @@ import Link from "next/link";
 import { ArrowRight, Search } from "lucide-react";
 import { interviewUniversities, universityTimingSummary, UNIVERSITY_SOURCES_CHECKED } from "../_data/universities";
 
-export function UniversityCatalogue() {
+type UniversityCatalogueMode = "practice" | "reference";
+
+export function UniversityCatalogue({ mode = "reference" }: { mode?: UniversityCatalogueMode }) {
   const [query, setQuery] = useState("");
   const [format, setFormat] = useState("All");
+  const practiceMode = mode === "practice";
   const normalized = query.trim().toLowerCase().replace(/[’']/g, "");
   const visible = interviewUniversities.filter((entry) => {
     const searchable = `${entry.name} ${entry.slug} ${entry.timingNote}`.toLowerCase().replace(/[’']/g, "");
@@ -56,8 +59,17 @@ export function UniversityCatalogue() {
               </p>
               <p className="mt-3 flex-1 text-xs leading-5 text-[#4a6370]">{entry.timingNote}</p>
               <div className="mt-5 flex flex-wrap items-center gap-4 border-t border-[#edf1f2] pt-4">
-                <Link href={`/phloemai/interviews/ai-interviews?university=${entry.slug}`} className="inline-flex items-center gap-2 rounded-lg bg-[#08787b] px-3 py-2 text-sm font-bold text-white hover:bg-[#065f61]">Practise <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
-                <Link href={`/phloemai/interviews/universities/${entry.slug}`} className="text-xs font-bold text-[#08787b]">Format &amp; sources</Link>
+                {practiceMode ? (
+                  <>
+                    <Link href={`/phloemai/interviews/ai-interviews?university=${entry.slug}`} className="inline-flex items-center gap-2 rounded-lg bg-[#08787b] px-3 py-2 text-sm font-bold text-white hover:bg-[#065f61]">Start AI interview <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+                    <Link href={`/phloemai/interviews/universities/${entry.slug}`} className="text-xs font-bold text-[#08787b]">Format &amp; sources</Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href={`/phloemai/interviews/universities/${entry.slug}`} className="inline-flex items-center gap-2 rounded-lg bg-[#08787b] px-3 py-2 text-sm font-bold text-white hover:bg-[#065f61]">View details <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+                    <Link href={`/phloemai/interviews/ai-interviews?university=${entry.slug}`} className="text-xs font-bold text-[#08787b]">Practise</Link>
+                  </>
+                )}
               </div>
             </article>
           ))}
