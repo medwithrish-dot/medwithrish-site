@@ -53,9 +53,9 @@ export async function InterviewShell({
           <section id="interview-content" className="mx-auto w-full max-w-[1600px] px-5 py-7 sm:px-7 lg:px-9 lg:py-9">
             <header className={`flex flex-col gap-5 sm:flex-row sm:justify-between ${heroHeader ? "sm:items-center" : "border-b border-[#d3dfe1] pb-7 sm:items-start"}`}>
               <div className="min-w-0">
-                <Link href="/phloemai/interviews" className="inline-flex items-center gap-2 text-xs font-bold text-[#08787b] hover:text-[#042724]">
+                {activeLabel !== "Dashboard" && <Link href="/phloemai/interviews" className="inline-flex items-center gap-2 text-xs font-bold text-[#08787b] hover:text-[#042724]">
                   <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Interview dashboard
-                </Link>
+                </Link>}
                 {!heroHeader && <>
                 <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#08787b]">{eyebrow}</p>
                 <h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight text-[#042724] sm:text-4xl">{title}</h1>
