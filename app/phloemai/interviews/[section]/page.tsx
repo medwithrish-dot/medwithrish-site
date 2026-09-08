@@ -17,7 +17,7 @@ const pages: Record<string, { title: string; subtitle: string; activeLabel: stri
   leaderboard: { title: "The free AI interview challenge", subtitle: "Try the Why Medicine? station and beat Medwithrish’s score of 96%.", activeLabel: "Leaderboard" },
   guides: { title: "Interview guide library", subtitle: "Search explanations, station techniques and hot topics. Start with a featured guide or explore a subject.", activeLabel: "Guides" },
   progress: { title: "See how far you have come.", subtitle: "Your saved interview feedback, brought together. Practice scores are capped at 99%.", activeLabel: "Progress" },
-  plan: { title: "One station at a time.", subtitle: "A focused route through five core interview themes.", activeLabel: "Plan" },
+  plan: { title: "One station at a time.", subtitle: "Master seven core stations with guides and practice questions, then move on to mock interviews.", activeLabel: "Plan" },
   notifications: { title: "Your interview updates.", subtitle: "Pick up a station or explore your latest feedback.", activeLabel: "Dashboard" },
 };
 type Search = Record<string, string | string[] | undefined>;
@@ -38,7 +38,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   }
   return <InterviewShell {...config} heroHeader={section === "ai-interviews"}>
     {section === "ai-interviews" ? (single(search.attempt) || single(search.university) || single(search.station) || single(search.setup)
-      ? <AIInterviewRunner initialUniversitySlug={single(search.university)} initialStationSlug={single(search.station)} />
+      ? <AIInterviewRunner initialUniversitySlug={single(search.university)} initialStationSlug={single(search.station)} initialMockCircuit={single(search.setup) === "mock"} />
       : <AIInterviewLanding />)
       : section === "groups" ? <InterviewGroups />
       : section === "leaderboard" ? <InterviewLeaderboard />

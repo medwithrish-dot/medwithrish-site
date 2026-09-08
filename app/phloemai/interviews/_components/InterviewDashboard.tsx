@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, CalendarDays, CheckCircle2, ChevronRight, GraduationCap, Mic, Settings2, Sparkles, TrendingUp } from "lucide-react";
 import type { getInterviewDashboardData } from "@/utils/interviews/dashboard-data";
-import { InterviewPlanChecklist } from "./InterviewPlanChecklist";
+import { INTERVIEW_PATHWAY } from "@/utils/interviews/pathway";
 import { InterviewPreparationSetup } from "./InterviewPreparationSetup";
 import { AnimatedDisclosure } from "./AnimatedDisclosure";
 
@@ -21,7 +21,6 @@ function practiceDuration(minutes: number) {
 export function InterviewDashboard({ data }: { data: DashboardData }) {
   const { analytics, profile, signedIn, available, message } = data;
   const { stats, nextAction, targets, recentPerformance, weeklyInsight } = analytics;
-  const completedToday = analytics.todayPlan.filter((task) => task.completed).length;
   const targetProgress = stats.weeklyTarget > 0 ? Math.min(100, stats.weekCompleted / stats.weeklyTarget * 100) : 0;
   const latest = recentPerformance[0];
 
@@ -58,13 +57,13 @@ export function InterviewDashboard({ data }: { data: DashboardData }) {
     {data.historyLimited && <p className="px-1 text-[10px] leading-5 text-[#718788]">Recent suggestions use your latest 500 stations.</p>}
 
     <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(300px,.65fr)]">
-      <section className={`${panel} p-5 sm:p-6`} aria-labelledby="today-title">
+      <section className={`${panel} p-5 sm:p-6`} aria-labelledby="pathway-preview-title">
         <div className="flex items-start justify-between gap-4">
-          <div><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#08787b]">Today</p><h2 id="today-title" className="mt-2 text-lg font-bold text-[#173d3d]">Your practice plan</h2><p className="mt-1 text-xs text-[#687d80]">Finish these in any order. Keep it manageable.</p></div>
-          <span className="rounded-full bg-[#e9f5ef] px-3 py-1.5 text-[10px] font-bold text-[#08735b]">{completedToday}/{analytics.todayPlan.length} done</span>
+          <div><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#08787b]">Your pathway</p><h2 id="pathway-preview-title" className="mt-2 text-lg font-bold text-[#173d3d]">Build confidence, station by station</h2><p className="mt-2 text-xs leading-6 text-[#687d80]">Read the guides, practise the questions and check your readiness before moving on. Your progress carries over each day.</p></div>
         </div>
-        <div className="mt-5"><InterviewPlanChecklist tasks={analytics.todayPlan} compact available={available && signedIn} /></div>
-        <Link href={`${base}/plan`} className="mt-5 inline-flex items-center gap-2 border-t border-[#e6edec] pt-4 text-xs font-bold text-[#08787b]">View your full plan <ArrowRight className="h-3.5 w-3.5" /></Link>
+        <ol className="mt-5 divide-y divide-[#e6edec]">{INTERVIEW_PATHWAY.map((station, index) => <li key={station.id} className="flex items-center gap-3 py-3 text-xs"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#edf5f1] text-[10px] font-bold text-[#638478]">{index + 1}</span><span className="font-semibold text-[#34584e]">{station.title}</span></li>)}</ol>
+        <p className="mt-4 text-xs text-[#687d80]">Then bring it all together in mock interviews.</p>
+        <Link href={`${base}/plan`} className="mt-5 inline-flex items-center gap-2 border-t border-[#e6edec] pt-4 text-xs font-bold text-[#08787b]">Continue your pathway <ArrowRight className="h-3.5 w-3.5" /></Link>
       </section>
 
       <div className="space-y-5">

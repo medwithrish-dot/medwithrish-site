@@ -47,7 +47,7 @@ async function requestSession(path: string, method = "GET", body?: unknown, sign
 const draftKey = (id: string) => `phloem-interview-draft:${id}`;
 const planKey = (id: string) => `phloem-interview-plan:${id}`;
 
-export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug }: { initialUniversitySlug?: string; initialStationSlug?: string }) {
+export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, initialMockCircuit = false }: { initialUniversitySlug?: string; initialStationSlug?: string; initialMockCircuit?: boolean }) {
   const [attempt, setAttempt] = useState<InterviewAttempt | null>(null);
   const [answers, setAnswers] = useState<InterviewAnswer[]>([]);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -420,7 +420,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug }:
     </div>}
     {!configured && !preview && <p role="status" className={styles.previewBanner}>AI feedback is temporarily unavailable. Saved transcripts and timed practice still work; return later to request feedback.</p>}
     {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your interview space ready…</div> : !attempt ? <AIInterviewSetup
-      initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan}
+      initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan} initialMockCircuit={initialMockCircuit}
       devices={devices} readAloud={readAloud} setReadAloud={setVoiceEnabled} voiceRate={voiceRate} setVoiceRate={setVoiceRate}
       voiceSupported={speech.voiceSupported} speaking={speech.speaking} onStopVoice={speech.stopSpeaking} onTestVoice={() => { devices.stopMicCheck(); if (speech.speaking) speech.stopSpeaking(); else void speech.speak("Welcome to your Phloem interview. Take a breath, and tell me a little about what brought you to medicine."); }}
       microphoneConsent={microphoneConsent} setMicrophoneConsent={setMicrophoneConsent} speechSupported={speech.supported}

@@ -1,27 +1,23 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays, CheckCircle2, Clock3, Target, TrendingUp } from "lucide-react";
+import { ArrowRight, CalendarDays, CheckCircle2, Clock3, TrendingUp } from "lucide-react";
 import { getInterviewDashboardData } from "@/utils/interviews/dashboard-data";
-import { InterviewPlanChecklist } from "./InterviewPlanChecklist";
+import { getInterviewPathwayData } from "@/utils/interviews/pathway-data";
+import { getInterviewPathwayStations } from "../_data/interview-pathway";
+import { InterviewStationPathway } from "./InterviewStationPathway";
 import { InterviewPreparationSetup } from "./InterviewPreparationSetup";
 
 export async function InterviewPreparationViews({ view }: { view: "plan" | "progress" | "notifications" }) {
+  if (view === "plan") {
+    const pathway = await getInterviewPathwayData();
+    return <InterviewStationPathway key={pathway.userId ?? "guest"} stations={getInterviewPathwayStations()} userId={pathway.userId} initialCompleted={pathway.completedTaskIds} available={pathway.available} isPremium={pathway.isPremium} />;
+  }
   const { analytics, profile, signedIn, available, message, historyLimited } = await getInterviewDashboardData();
   const { stats, weeklyInsight } = analytics;
   const due = analytics.targets.filter((target) => target.daysUntil !== null && target.daysUntil >= 0 && target.daysUntil <= 14);
   return <div className="space-y-6">
     {message && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">{message}{!signedIn && <> <Link href="/phloemai/account" className="font-bold underline">Sign in</Link></>}</p>}
 
-    {view === "plan" ? <>
-      <section className="rounded-3xl bg-[#042724] p-7 text-white sm:p-9">
-        <Target className="text-[#b9f4db]" size={28} />
-        <h2 className="mt-4 text-3xl font-bold">A plan that fits your next step.</h2>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-teal-50/75">Your selected focus areas and saved practice help shape this plan. Interview tasks complete when feedback is saved; mark reading and review tasks when you have done them.</p>
-        <div className="mt-6 flex flex-wrap gap-5 text-sm"><span>{analytics.todayPlan.filter((task) => task.completed).length} / {analytics.todayPlan.length} tasks completed today</span><span className="text-[#b9f4db]">{stats.weekCompleted} / {stats.weeklyTarget} stations in the last 7 days</span></div>
-      </section>
-      <InterviewPlanChecklist tasks={analytics.todayPlan} available={signedIn && available} />
-      <p className="text-xs leading-6 text-[#62777e]">Today follows the UK calendar. Completed tasks reset on a new day. Your weekly target counts completed interviews in the last seven days, not reading tasks.</p>
-      <InterviewPreparationSetup initialProfile={profile} signedIn={signedIn} available={available} variant="compact" />
-    </> : view === "progress" ? <>
+    {view === "progress" ? <>
       <div className="grid gap-4 sm:grid-cols-3">
         {[
           { title: "Completed stations", value: String(stats.completedCount), note: "Saved completed interviews" },

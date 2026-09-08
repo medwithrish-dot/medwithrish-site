@@ -9,6 +9,7 @@ import type { InterviewMode } from "../_lib/interview-types";
 import type { useInterviewDevices } from "../_lib/useInterviewDevices";
 import { InterviewDevicePreview } from "./InterviewDevicePreview";
 import { AnimatedDisclosure } from "./AnimatedDisclosure";
+import { INTERVIEW_PATHWAY } from "@/utils/interviews/pathway";
 import styles from "./AIInterviewRoom.module.css";
 
 export type InterviewRoomPlan = {
@@ -23,6 +24,7 @@ export type InterviewRoomPlan = {
 type Props = {
   initialUniversitySlug?: string;
   initialStationSlug?: string;
+  initialMockCircuit?: boolean;
   initialPlan?: InterviewRoomPlan | null;
   devices: ReturnType<typeof useInterviewDevices>;
   readAloud: boolean;
@@ -43,9 +45,9 @@ type Props = {
 
 export function AIInterviewSetup(props: Props) {
   const initialStation = findInterviewStation(props.initialStationSlug ?? "why-medicine");
-  const [preset, setPreset] = useState<"free" | "custom" | "university">(props.initialPlan ? props.initialPlan.mode === "university" ? "university" : props.initialPlan.mode === "free" ? "free" : "custom" : props.initialUniversitySlug ? "university" : initialStation?.slug !== "why-medicine" ? "custom" : "free");
+  const [preset, setPreset] = useState<"free" | "custom" | "university">(props.initialPlan ? props.initialPlan.mode === "university" ? "university" : props.initialPlan.mode === "free" ? "free" : "custom" : props.initialMockCircuit ? "custom" : props.initialUniversitySlug ? "university" : initialStation?.slug !== "why-medicine" ? "custom" : "free");
   const [universitySlug, setUniversitySlug] = useState(props.initialPlan?.universitySlug ?? props.initialUniversitySlug ?? interviewUniversities[0].slug);
-  const [selected, setSelected] = useState<string[]>(props.initialPlan?.stationSlugs ?? (props.initialUniversitySlug ? interviewStations.slice(0, Math.min(9, interviewUniversities.find((item) => item.slug === props.initialUniversitySlug)?.stationCount ?? 5)).map((item) => item.slug) : [initialStation?.slug ?? "why-medicine"]));
+  const [selected, setSelected] = useState<string[]>(props.initialPlan?.stationSlugs ?? (props.initialMockCircuit ? INTERVIEW_PATHWAY.map((station) => station.mockStation) : props.initialUniversitySlug ? interviewStations.slice(0, Math.min(9, interviewUniversities.find((item) => item.slug === props.initialUniversitySlug)?.stationCount ?? 5)).map((item) => item.slug) : [initialStation?.slug ?? "why-medicine"]));
   const university = interviewUniversities.find((item) => item.slug === universitySlug) ?? interviewUniversities[0];
   const stationSlugs = interviewStations.filter((item) => selected.includes(item.slug)).map((item) => item.slug);
   const plan: InterviewRoomPlan = {

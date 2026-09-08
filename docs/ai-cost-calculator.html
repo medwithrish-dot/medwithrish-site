@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Phloem AI cost planner · Internal</title>
+  <style>
+    :root { color-scheme: light; --ink: #183d35; --muted: #52685f; --line: #dbe5de; --paper: #fff; --green: #245b48; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f4f6f1; color: var(--ink); font: 16px/1.55 system-ui, sans-serif; }
+    main { max-width: 1120px; margin: 0 auto; padding: 44px 24px 64px; }
+    h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.2; letter-spacing: -.04em; margin: 8px 0 14px; }
+    h2 { font-size: 1.1rem; margin: 0 0 18px; }
+    p { margin: 0 0 14px; }
+    a { color: var(--green); text-underline-offset: 3px; }
+    .eyebrow { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .intro { max-width: 760px; color: var(--muted); }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; margin-top: 28px; align-items: start; }
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+    fieldset { border: 0; padding: 0; margin: 0 0 24px; min-width: 0; }
+    legend { font-weight: 650; padding: 0; margin-bottom: 14px; }
+    .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    label { display: block; font-size: .87rem; font-weight: 550; margin-bottom: 6px; }
+    input, select, button { font: inherit; }
+    input, select { width: 100%; min-height: 44px; padding: 9px 11px; border: 1px solid #abbfb2; border-radius: 8px; background: #fff; color: var(--ink); }
+    input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #739d80; outline-offset: 3px; }
+    .wide { grid-column: 1 / -1; }
+    .help { display: block; margin-top: 5px; font-size: .78rem; color: var(--muted); font-weight: 400; }
+    .model-rate { margin-top: 7px; font-size: .8rem; color: var(--muted); }
+    button { border: 1px solid #abbfb2; border-radius: 8px; color: var(--ink); background: #fff; padding: 10px 14px; cursor: pointer; }
+    button:hover { background: #edf3eb; }
+    .total { background: #eaf1e7; border: 1px solid #d0dfcb; border-radius: 12px; padding: 22px; margin-bottom: 20px; }
+    .total-value { display: block; font-size: clamp(2rem, 5vw, 2.8rem); letter-spacing: -.045em; line-height: 1.25; font-weight: 650; margin: 5px 0; overflow-wrap: anywhere; }
+    .subtle { color: var(--muted); font-size: .87rem; }
+    dl { margin: 0; }
+    .row { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+    dt { font-size: .88rem; }
+    dd { margin: 0; font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; overflow-wrap: anywhere; }
+    .breakdown { margin: 22px 0; }
+    .credit { padding-top: 4px; }
+    .credit h2 { margin-bottom: 5px; }
+    .credit-value { font-size: 1.55rem; font-weight: 650; }
+    .notes { margin-top: 24px; padding: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
+    .notes h2 { color: var(--ink); margin-bottom: 10px; }
+    .sources { display: flex; flex-wrap: wrap; gap: 10px 20px; padding: 0; margin: 0; list-style: none; }
+    #validation { color: #923b2e; margin-top: 12px; font-size: .86rem; }
+    [hidden] { display: none !important; }
+    @media (max-width: 780px) { .layout { grid-template-columns: 1fr; } .results { position: static; } main { padding: 28px 16px; } }
+    @media (max-width: 430px) { .fields { grid-template-columns: 1fr; } .panel { padding: 18px; } .notes { padding: 20px 0; } }
+    @media print { body { background: #fff; } main { padding: 0; } .results { position: static; } button { display: none; } .panel, .total { break-inside: avoid; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="eyebrow">Internal planning · 8 September 2026</span>
+    <h1>What would AI cost to run?</h1>
+    <p class="intro">Adjust usage, model choices and hosting allowance to estimate a monthly budget. This file works locally, with no accounts, network requests or tracking.</p>
+  </header>
+
+  <div class="layout">
+    <form class="panel" id="calculator">
+      <fieldset>
+        <legend>Audience and feedback</legend>
+        <div class="fields">
+          <div class="wide">
+            <label for="users">Monthly active users</label>
+            <input id="users" type="number" min="1" max="100000000" step="1" value="1000" required>
+          </div>
+          <div>
+            <label for="feedback">Interview feedback / user / month</label>
+            <input id="feedback" type="number" min="0" max="1000000" step="1" value="20" required aria-describedby="feedback-tokens">
+            <span class="help" id="feedback-tokens">3,000 input + 1,000 output tokens per feedback.</span>
+          </div>
+          <div>
+            <label for="diagnostics">Diagnostic reports / user / month</label>
+            <input id="diagnostics" type="number" min="0" max="1000000" step="1" value="8" required aria-describedby="diagnostic-tokens">
+            <span class="help" id="diagnostic-tokens">4,000 input + 1,200 output tokens per report.</span>
+          </div>
+          <div class="wide">
+            <label for="feedback-model">Interview feedback model</label>
+            <select id="feedback-model" aria-describedby="feedback-rate">
+              <option value="gemini35">Gemini 3.5 Flash-Lite</option>
+              <option value="gemini25">Gemini 2.5 Flash-Lite</option>
+              <option value="luna">OpenAI GPT-5.6 Luna</option>
+              <option value="haiku">Claude Haiku 4.5</option>
+            </select>
+            <div class="model-rate" id="feedback-rate"></div>
+          </div>
+          <div class="wide">
+            <label for="diagnostic-model">Diagnostic report model</label>
+            <select id="diagnostic-model" aria-describedby="diagnostic-rate">
+              <option value="gemini35">Gemini 3.5 Flash-Lite</option>
+              <option value="gemini25">Gemini 2.5 Flash-Lite</option>
+              <option value="luna">OpenAI GPT-5.6 Luna</option>
+              <option value="haiku" selected>Claude Haiku 4.5</option>
+            </select>
+            <div class="model-rate" id="diagnostic-rate"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Transcription and voice</legend>
+        <div class="fields">
+          <div>
+            <label for="transcription">Final transcription minutes / user</label>
+            <input id="transcription" type="number" min="0" max="1000000" step="1" value="120" required>
+          </div>
+          <div>
+            <label for="transcription-rate">Transcription cost ($ / minute)</label>
+            <input id="transcription-rate" type="number" min="0" max="100" step="0.001" value="0.003" required aria-describedby="transcription-help">
+            <span class="help" id="transcription-help">OpenAI gpt-4o-mini-transcribe estimate.</span>
+          </div>
+          <div>
+            <label for="voice">New voice generation minutes / user</label>
+            <input id="voice" type="number" min="0" max="1000000" step="1" value="0" required aria-describedby="voice-help">
+            <span class="help" id="voice-help">Monthly usage. Existing cached question audio needs no new generation.</span>
+          </div>
+          <div>
+            <label for="voice-rate">Voice planning cost ($ / minute)</label>
+            <input id="voice-rate" type="number" min="0" max="100" step="0.001" value="0.020" required aria-describedby="voice-rate-help">
+            <span class="help" id="voice-rate-help">Editable allowance, not a provider quote.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Budget assumptions</legend>
+        <div class="fields">
+          <div>
+            <label for="infrastructure">Monthly infrastructure allowance (£)</label>
+            <input id="infrastructure" type="number" min="0" max="1000000000" step="1" value="150" required aria-describedby="infra-help">
+            <span class="help" id="infra-help">Hosting, database, storage and monitoring estimate.</span>
+          </div>
+          <div>
+            <label for="exchange">GBP per US dollar (£ / $)</label>
+            <input id="exchange" type="number" min="0.001" max="1000" step="0.001" value="0.750" required aria-describedby="exchange-help">
+            <span class="help" id="exchange-help">Planning assumption; not a live exchange rate.</span>
+          </div>
+          <div class="wide">
+            <label for="overhead">AI contingency (%)</label>
+            <input id="overhead" type="number" min="0" max="1000" step="1" value="20" required aria-describedby="overhead-help">
+            <span class="help" id="overhead-help">Added to AI costs for retries and usage variation. Infrastructure is added separately.</span>
+          </div>
+        </div>
+      </fieldset>
+      <button type="reset">Reset assumptions</button>
+      <p id="validation" role="status" hidden>Enter a valid number in each field to update the estimate. The last valid estimate is still shown.</p>
+    </form>
+
+    <section class="panel results" aria-labelledby="results-heading">
+      <h2 id="results-heading">Estimated monthly budget</h2>
+      <div id="results" aria-live="polite" aria-atomic="true">
+        <div class="total">
+          <span class="subtle">AI + infrastructure, across all active users</span>
+          <output class="total-value" id="total">£607.20</output>
+          <span class="subtle"><output id="total-per-user">£0.6072</output> per active user / month</span>
+        </div>
+        <dl>
+          <div class="row"><dt>Variable AI / user, with contingency</dt><dd><output id="ai-per-user">£0.4572</output></dd></div>
+          <div class="row"><dt>AI for all active users</dt><dd><output id="fleet-ai">£457.20</output></dd></div>
+          <div class="row"><dt>Infrastructure allowance</dt><dd><output id="infra-total">£150.00</output></dd></div>
+        </dl>
+
+        <div class="breakdown">
+          <h2>AI cost per user, before contingency</h2>
+          <dl>
+            <div class="row"><dt>Interview feedback</dt><dd><output id="feedback-cost">£0.0510</output></dd></div>
+            <div class="row"><dt>Diagnostic reports</dt><dd><output id="diagnostic-cost">£0.0600</output></dd></div>
+            <div class="row"><dt>Final transcription</dt><dd><output id="transcription-cost">£0.2700</output></dd></div>
+            <div class="row"><dt>New voice generation</dt><dd><output id="voice-cost">£0.0000</output></dd></div>
+            <div class="row"><dt>Contingency per user</dt><dd><output id="contingency-cost">£0.0762</output></dd></div>
+          </dl>
+        </div>
+
+        <div class="credit">
+          <h2>One free feedback credit</h2>
+          <p class="subtle">One feedback report + six minutes of final transcription, including AI contingency.</p>
+          <p class="credit-value"><output id="free-credit">£0.0193</output></p>
+          <p class="subtle">Text only: <output id="text-credit">£0.0031</output>. A credit is a platform usage allowance, not a single model token. Both estimates use the selected interview model and exclude shared infrastructure.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <aside class="notes" aria-labelledby="notes-heading">
+    <h2 id="notes-heading">Read the assumptions with the numbers</h2>
+    <p>These are scenarios, not measured production usage or quotes. Output-token allowances must include all billable reasoning tokens; a long thinking response will cost more. Final transcription is billed once per recording in this scenario. Live conversational voice, streaming transcription, dynamic interview follow-up text, batch/cache discounts and one-time library narration are not included. For an adaptive interview, increase the feedback count or model its additional calls separately.</p>
+    <p>The infrastructure allowance must be reviewed as traffic and retained recordings grow. Cached playback still uses storage and bandwidth. Tax, payment fees, support, content work, marketing and other business costs are excluded. No quality ranking is implied by model prices; compare feedback with human marking before switching.</p>
+    <p>Formula: monthly AI = users × (feedback + diagnostics + transcription + new voice costs per user) × exchange rate × (1 + contingency). Total = monthly AI + infrastructure. Published provider prices were checked on 8 September 2026; recheck them before budgeting.</p>
+    <ul class="sources" aria-label="Official pricing sources">
+      <li><a href="https://ai.google.dev/gemini-api/docs/pricing?hl=en">Gemini API pricing</a></li>
+      <li><a href="https://platform.claude.com/docs/en/about-claude/pricing">Claude API pricing</a></li>
+      <li><a href="https://developers.openai.com/api/docs/models/gpt-5.6-luna">GPT-5.6 Luna</a></li>
+      <li><a href="https://developers.openai.com/api/docs/pricing">OpenAI audio pricing</a></li>
+    </ul>
+  </aside>
+  <noscript><p>This calculator needs JavaScript to update. The displayed default scenario is £607.20/month for 1,000 active users.</p></noscript>
+</main>
+<script>
+  'use strict';
+  const models = {
+    gemini35: { input: 0.30, output: 2.50 },
+    gemini25: { input: 0.10, output: 0.40 },
+    luna: { input: 0.20, output: 1.20 },
+    haiku: { input: 1.00, output: 5.00 }
+  };
+  const form = document.getElementById('calculator');
+  const element = (id) => document.getElementById(id);
+  const number = (id) => element(id).valueAsNumber;
+  const money = (value, digits = 2) => new Intl.NumberFormat('en-GB', {
+    style: 'currency', currency: 'GBP', minimumFractionDigits: digits, maximumFractionDigits: digits
+  }).format(value);
+  const write = (id, value, digits = 2) => { element(id).textContent = money(value, digits); };
+  const requestCost = (model, input, output) => (model.input * input + model.output * output) / 1_000_000;
+
+  function update() {
+    const valid = Array.from(form.querySelectorAll('input')).every((input) => input.validity.valid && Number.isFinite(input.valueAsNumber));
+    element('validation').hidden = valid;
+    if (!valid) return;
+
+    const feedbackModel = models[element('feedback-model').value];
+    const diagnosticModel = models[element('diagnostic-model').value];
+    const fx = number('exchange');
+    const users = number('users');
+    const multiplier = 1 + number('overhead') / 100;
+    const feedbackUnit = requestCost(feedbackModel, 3000, 1000);
+    const diagnosticUnit = requestCost(diagnosticModel, 4000, 1200);
+    const feedback = number('feedback') * feedbackUnit * fx;
+    const diagnostics = number('diagnostics') * diagnosticUnit * fx;
+    const transcription = number('transcription') * number('transcription-rate') * fx;
+    const voice = number('voice') * number('voice-rate') * fx;
+    const subtotal = feedback + diagnostics + transcription + voice;
+    const variable = subtotal * multiplier;
+    const fleet = variable * users;
+    const total = fleet + number('infrastructure');
+
+    [['feedback-rate', feedbackModel], ['diagnostic-rate', diagnosticModel]].forEach(([id, model]) => {
+      element(id).textContent = `$${model.input.toFixed(2)} input / $${model.output.toFixed(2)} output per million tokens.`;
+    });
+    write('total', total);
+    write('total-per-user', total / users, 4);
+    write('ai-per-user', variable, 4);
+    write('fleet-ai', fleet);
+    write('infra-total', number('infrastructure'));
+    write('feedback-cost', feedback, 4);
+    write('diagnostic-cost', diagnostics, 4);
+    write('transcription-cost', transcription, 4);
+    write('voice-cost', voice, 4);
+    write('contingency-cost', subtotal * (multiplier - 1), 4);
+    write('free-credit', (feedbackUnit + 6 * number('transcription-rate')) * fx * multiplier, 4);
+    write('text-credit', feedbackUnit * fx * multiplier, 4);
+  }
+
+  form.addEventListener('input', update);
+  form.addEventListener('change', update);
+  form.addEventListener('submit', (event) => event.preventDefault());
+  form.addEventListener('reset', () => setTimeout(update, 0));
+  update();
+</script>
+</body>
+</html>
