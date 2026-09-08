@@ -142,16 +142,18 @@ test("customisation retains the completion, break and membership checks", async 
 
 // Exercise the actual room callbacks against delayed saves. Browser, device and
 // hook lifecycle boundaries are substituted; all save scheduling stays production code.
-async function autosaveRoom() {
+async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true } = {}) {
   const cells = [];
   let cursor = 0;
   let effects = [];
   const intervals = new Map();
   const storage = new Map();
   const requests = [];
+  let microphoneRequests = 0;
+  let recognitionStarts = 0;
   const attempt = {
-    id: circuitId, circuitId, status: "in_progress", mode: "free", stationSlug: "why-medicine",
-    title: "Why medicine?", startedAt: new Date().toISOString(), preparationSeconds: 0,
+    id: circuitId, circuitId, status, mode: "free", stationSlug: "why-medicine",
+    title: "Why medicine?", startedAt: new Date().toISOString(), preparationSeconds,
     stationSeconds: 480, breakSeconds: 0, questions: ["Why medicine?"], answers: [],
     stationIndex: 0, stationCount: 1, feedback: null, nextAvailableAt: null,
   };
@@ -174,8 +176,11 @@ async function autosaveRoom() {
     useCallback: (callback, dependencies) => memo(() => callback, dependencies),
     useEffect: (effect, dependencies) => memo(() => { effects.push(effect); }, dependencies),
   };
-  const speech = { stop: async () => {}, stopSpeaking() {}, speak: async () => {}, voiceSupported: false };
-  const devices = { stopCamera() {}, stopMicCheck() {} };
+  const speech = { stop: async () => {}, stopSpeaking() {}, speak: async () => {}, voiceSupported: false, supported: true, start: () => { recognitionStarts += 1; } };
+  const devices = {
+    stopCamera() {}, stopMicCheck() {}, cancelMicrophoneRequest() {}, microphonePermission: "idle",
+    requestMicrophone: async () => { microphoneRequests += 1; devices.microphonePermission = "granted"; return true; },
+  };
   const source = readFileSync(resolve(root, "app/phloemai/interviews/_components/AIInterviewRunner.tsx"), "utf8");
   const output = ts.transpileModule(source, { compilerOptions: {
     module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.ReactJSX,
@@ -200,7 +205,7 @@ async function autosaveRoom() {
       clearInterval: id => intervals.delete(id), addEventListener() {}, removeEventListener() {},
     },
     fetch: (_path, options) => {
-      if (options.method === "GET") return Promise.resolve(Response.json({ attempt }));
+      if (options.method === "GET") return Promise.resolve(Response.json({ attempt: hasAttempt ? attempt : null }));
       assert.equal(options.method, "PATCH");
       const body = JSON.parse(options.body);
       return new Promise((resolve, reject) => requests.push({
@@ -225,9 +230,36 @@ async function autosaveRoom() {
     return node.type === "interview-call" ? node.props : findCall(node.props?.children);
   };
   const call = findCall(tree);
-  assert.ok(call);
-  return { requests, flush, edit: text => call.onAnswer(text), save: () => intervals.get(15_000)() };
+  if (hasAttempt) assert.ok(call);
+  return {
+    requests, flush, render, call,
+    get microphoneRequests() { return microphoneRequests; },
+    get recognitionStarts() { return recognitionStarts; },
+    edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(),
+  };
 }
+
+test("loading an interview asks for microphone access once, including reading time", async () => {
+  for (const preparationSeconds of [0, 60]) {
+    const room = await autosaveRoom({ preparationSeconds });
+    assert.equal(room.microphoneRequests, 1);
+    assert.equal(room.recognitionStarts, 0, "Allowing microphone access does not interrupt the interviewer's question");
+    room.render(); room.render();
+    assert.equal(room.microphoneRequests, 1, "Timer and transcript renders must not repeat the prompt");
+  }
+});
+
+test("the lobby and completed attempts do not automatically ask for microphone access", async () => {
+  assert.equal((await autosaveRoom({ hasAttempt: false })).microphoneRequests, 0);
+  assert.equal((await autosaveRoom({ status: "completed" })).microphoneRequests, 0);
+});
+
+test("the room microphone works after browser permission without a consent checkbox", async () => {
+  const room = await autosaveRoom();
+  room.call.onToggleMicrophone();
+  assert.equal(room.recognitionStarts, 1);
+  assert.equal(room.microphoneRequests, 1, "A granted microphone can start without another device check");
+});
 
 test("multiple queued autosaves never overlap or replace the newest transcript", async () => {
   const room = await autosaveRoom();
@@ -345,4 +377,125 @@ test("recorder construction failures release the newly granted microphone", asyn
   await room.grant();
   assert.equal(room.trackStops, 1);
   room.unmount();
+});
+
+// Exercise device permission lifecycle with delayed native browser responses.
+function microphoneDevices({ supported = true } = {}) {
+  const cells = [];
+  const effects = [];
+  const requests = [];
+  let cursor = 0;
+  let stateWrites = 0;
+  let cleanups = [];
+  const memo = (factory, dependencies) => {
+    const index = cursor++;
+    const prior = cells[index];
+    if (!prior || dependencies.some((value, i) => !Object.is(value, prior.dependencies[i]))) cells[index] = { value: factory(), dependencies };
+    return cells[index].value;
+  };
+  const react = {
+    useState(initial) {
+      const index = cursor++;
+      if (!(index in cells)) cells[index] = initial;
+      return [cells[index], value => { stateWrites += 1; cells[index] = typeof value === "function" ? value(cells[index]) : value; }];
+    },
+    useRef: current => memo(() => ({ current }), []),
+    useCallback: (callback, dependencies) => memo(() => callback, dependencies),
+    useEffect: (effect, dependencies) => memo(() => { effects.push(effect); }, dependencies),
+  };
+  const loaded = { exports: {} };
+  runInNewContext(ts.transpileModule(readFileSync(resolve(root, "app/phloemai/interviews/_lib/useInterviewDevices.ts"), "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
+  }).outputText, {
+    module: loaded, exports: loaded.exports,
+    require: name => { assert.equal(name, "react"); return react; },
+    navigator: { mediaDevices: supported ? {
+      getUserMedia: constraints => new Promise((resolve, reject) => {
+        const request = {
+          constraints, stoppedTracks: 0,
+          grant: () => resolve({ getTracks: () => [{ stop: () => { request.stoppedTracks += 1; } }] }),
+          deny: () => reject({ name: "NotAllowedError" }),
+        };
+        requests.push(request);
+      }),
+    } : undefined },
+  });
+  const render = () => { cursor = 0; return loaded.exports.useInterviewDevices(); };
+  const initial = render();
+  const mount = () => { cleanups = effects.map(effect => effect()).filter(Boolean); };
+  const unmount = () => { cleanups.forEach(cleanup => cleanup()); cleanups = []; };
+  mount();
+  return { initial, render, requests, unmount, replayEffects: () => { unmount(); mount(); }, get stateWrites() { return stateWrites; } };
+}
+
+test("native interview microphone permission requests audio only and immediately releases granted tracks", async () => {
+  const browser = microphoneDevices();
+  const pending = browser.initial.requestMicrophone();
+  assert.equal(browser.render().microphonePermission, "requesting");
+  assert.equal(browser.requests[0].constraints.audio, true);
+  assert.equal(browser.requests[0].constraints.video, false);
+  browser.requests[0].grant();
+  assert.equal(await pending, true);
+  assert.equal(browser.render().microphonePermission, "granted");
+  assert.equal(browser.requests[0].stoppedTracks, 1);
+  browser.unmount();
+});
+
+test("denied microphone access stays off without a prompt loop and supports an explicit retry", async () => {
+  const browser = microphoneDevices();
+  const denied = browser.initial.requestMicrophone();
+  browser.requests[0].deny();
+  assert.equal(await denied, false);
+  assert.equal(browser.render().microphonePermission, "denied");
+  assert.match(browser.render().microphoneError, /type your answer/);
+  assert.equal(browser.requests.length, 1);
+  const retry = browser.render().requestMicrophone();
+  browser.requests[1].grant();
+  assert.equal(await retry, true);
+  assert.equal(browser.render().microphoneError, "");
+  browser.unmount();
+});
+
+test("cancelling pending permission prevents activation and releases a late grant", async () => {
+  const browser = microphoneDevices();
+  const pending = browser.initial.requestMicrophone();
+  browser.initial.cancelMicrophoneRequest();
+  browser.requests[0].grant();
+  assert.equal(await pending, false);
+  assert.equal(browser.render().microphonePermission, "idle");
+  assert.equal(browser.requests[0].stoppedTracks, 1);
+  browser.unmount();
+});
+
+test("unmounting releases late microphone permission without changing component state", async () => {
+  const browser = microphoneDevices();
+  const pending = browser.initial.requestMicrophone();
+  browser.unmount();
+  const stateWrites = browser.stateWrites;
+  browser.requests[0].grant();
+  assert.equal(await pending, false);
+  assert.equal(browser.requests[0].stoppedTracks, 1);
+  assert.equal(browser.stateWrites, stateWrites);
+});
+
+test("React effect replay reuses the pending native microphone prompt", async () => {
+  const browser = microphoneDevices();
+  const previous = browser.initial.requestMicrophone();
+  browser.replayEffects();
+  const current = browser.render().requestMicrophone();
+  assert.equal(browser.requests.length, 1);
+  browser.requests[0].grant();
+  assert.equal(await previous, false);
+  assert.equal(await current, true);
+  assert.equal(browser.requests[0].stoppedTracks, 1);
+  browser.unmount();
+});
+
+test("unavailable browser microphone APIs preserve a typed-answer fallback", async () => {
+  const browser = microphoneDevices({ supported: false });
+  assert.equal(await browser.initial.requestMicrophone(), false);
+  assert.equal(browser.render().microphonePermission, "unavailable");
+  assert.match(browser.render().microphoneError, /Type your answer/);
+  assert.equal(browser.requests.length, 0);
+  browser.unmount();
 });

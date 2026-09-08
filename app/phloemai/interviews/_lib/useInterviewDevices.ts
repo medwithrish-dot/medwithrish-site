@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+type MicrophonePermission = "idle" | "requesting" | "granted" | "denied" | "unavailable";
+type MicrophoneResult = { permission: "granted" | "denied" | "unavailable"; error: string };
+
 /** Device checks and self-view stay in this browser; no recording is created. */
 export function useInterviewDevices() {
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -11,12 +14,52 @@ export function useInterviewDevices() {
   const [micChecked, setMicChecked] = useState(false);
   const [micLevel, setMicLevel] = useState(0);
   const [micError, setMicError] = useState("");
+  const [microphonePermission, setMicrophonePermission] = useState<MicrophonePermission>("idle");
+  const [microphoneError, setMicrophoneError] = useState("");
   const cameraRef = useRef<MediaStream | null>(null);
   const cameraRequest = useRef(0);
   const micRequest = useRef(0);
   const cameraBusy = useRef(false);
   const micCleanup = useRef<(() => void) | null>(null);
+  const permissionRequest = useRef(0);
+  // Native permission prompts cannot be cancelled. Reuse a pending browser
+  // request across effect replays, and release its stream even after leaving.
+  const permissionPromise = useRef<Promise<MicrophoneResult> | null>(null);
   const mounted = useRef(true);
+
+  const cancelMicrophoneRequest = useCallback(() => {
+    permissionRequest.current += 1;
+    if (mounted.current) setMicrophonePermission((current) => current === "requesting" ? "idle" : current);
+  }, []);
+
+  const requestMicrophone = useCallback(async (): Promise<boolean> => {
+    if (!mounted.current) return false;
+    const request = ++permissionRequest.current;
+    setMicrophonePermission("requesting");
+    setMicrophoneError("");
+    const pending = permissionPromise.current ?? (async (): Promise<MicrophoneResult> => {
+      let media: MediaStream | null = null;
+      try {
+        if (!navigator.mediaDevices?.getUserMedia) return { permission: "unavailable", error: "Microphone access is unavailable in this browser. Type your answer to continue." };
+        media = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        return { permission: "granted", error: "" };
+      } catch (failure) {
+        const name = failure && typeof failure === "object" && "name" in failure ? failure.name : "";
+        return name === "NotAllowedError" || name === "SecurityError"
+          ? { permission: "denied", error: "Microphone access is off. Allow it in your browser's site permissions, then select Start mic, or type your answer." }
+          : { permission: "unavailable", error: "Your microphone could not connect. Check your device and select Start mic to retry, or type your answer." };
+      } finally {
+        media?.getTracks().forEach((track) => track.stop());
+      }
+    })();
+    permissionPromise.current = pending;
+    const result = await pending;
+    if (permissionPromise.current === pending) permissionPromise.current = null;
+    if (!mounted.current || request !== permissionRequest.current) return false;
+    setMicrophonePermission(result.permission);
+    setMicrophoneError(result.error);
+    return result.permission === "granted";
+  }, []);
 
   const stopCamera = useCallback(() => {
     cameraRequest.current += 1;
@@ -106,8 +149,8 @@ export function useInterviewDevices() {
 
   useEffect(() => {
     mounted.current = true;
-    return () => { mounted.current = false; stopCamera(); stopMicCheck(); };
-  }, [stopCamera, stopMicCheck]);
+    return () => { mounted.current = false; cancelMicrophoneRequest(); stopCamera(); stopMicCheck(); };
+  }, [cancelMicrophoneRequest, stopCamera, stopMicCheck]);
 
-  return { stream, cameraEnabled: Boolean(stream), cameraPending, cameraError, toggleCamera, stopCamera, micChecking, micChecked, micLevel, micError, startMicCheck, stopMicCheck };
+  return { stream, cameraEnabled: Boolean(stream), cameraPending, cameraError, toggleCamera, stopCamera, micChecking, micChecked, micLevel, micError, startMicCheck, stopMicCheck, microphonePermission, microphoneError, requestMicrophone, cancelMicrophoneRequest };
 }

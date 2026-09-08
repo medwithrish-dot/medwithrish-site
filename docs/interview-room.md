@@ -5,8 +5,8 @@ Open **AI Interviews → Build your interview**, or `/phloemai/interviews/ai-int
 ## Experience
 
 - **Lobby:** choose a free station, a custom circuit, or university practice timings. Include or skip topics; selected stations run in catalogue order. The summary includes preparation, station time and breaks. Scored practice starts only after joining.
-- **Devices:** camera is off by default. Turning it on requests video only and displays a muted, mirrored self-view. The eight-second microphone test measures real input volume and releases its audio stream afterwards. Spoken answers require a separate opt-in. Read-aloud has three speaking paces and a test phrase.
-- **Interview:** an original Phloem call layout shows an illustrative interviewer avatar, question captions, a side transcript, private scratchpad, question navigation, focus view and microphone/camera/voice controls. Small screens stack the transcript beneath the call and keep call controls sticky. Existing server timers, draft recovery, autosave and scoring are retained.
+- **Devices:** camera is off by default. Turning it on requests video only and displays a muted, mirrored self-view. The optional eight-second microphone test measures real input volume and releases its audio stream afterwards. Entering a new, resumed or preview interview automatically requests browser microphone access, including during reading time. The browser may remember a previous Allow or Block decision. The permission-check stream is released immediately; select Start mic when ready to speak. Blocked or unavailable microphones leave typed answers available, and Start mic retries access. Read-aloud has three speaking paces and a test phrase.
+- **Interview:** the room fills the interview workspace with a restrained charcoal, grey and muted teal palette. Separate participant cards show your camera or placeholder and the PhloemAI interviewer. A prompt card keeps question navigation together, while the sidebar pairs the live transcript with private Notes. Microphone, camera, voice and finish controls sit beneath the participants; focus view remains available. Small screens stack the transcript beneath the call and pin call controls to the bottom of the viewport. Existing server timers, draft recovery, autosave and scoring are retained.
 - **Feedback:** score, summary, strengths, next steps, criterion breakdown, submitted transcript and a downloadable text report. Camera, accent, movement and eye contact are not assessed. Real feedback comes from the existing feedback endpoint.
 - **Preview:** an explicitly labelled, in-memory walkthrough with sample feedback. It never creates, saves or grades an account attempt, and can skip reading time. Answer replay and attempt comparison are clearly labelled forthcoming features.
 
@@ -18,7 +18,7 @@ The remaining topic plan is kept in browser storage under the returned circuit I
 
 ## Data and placeholders
 
-Device checks do not record or upload media. Camera tracks and calibration audio tracks are released when stopped, when submitting or leaving, and on unmount. The browser's speech-recognition service may process spoken audio; Phloem persists text transcripts only. Notes stay on the current call screen and are neither saved nor marked. In preview, feedback is illustrative regardless of the entered answer.
+Device checks do not record or upload media. Camera tracks and calibration audio tracks are released when stopped, when submitting or leaving, and on unmount. Native microphone prompts cannot be dismissed by the app; a grant arriving after cancellation or unmount releases all tracks and cannot start speech. Pending prompts are reused across React effect replay. The browser's speech-recognition service may process spoken audio; Phloem persists text transcripts only. Notes stay on the current call screen and are neither saved nor marked. In preview, feedback is illustrative regardless of the entered answer.
 
 ## Verification
 
@@ -32,6 +32,6 @@ Delivery coaching below the question-bank End section uses approximate words in 
 
 `scripts/test-interview-speech.mjs` covers marker formatting, natural gaps, delayed recognition, pace thresholds and conditional coaching. Browser verification with a synthetic microphone confirmed final audio playback, a single transcript, replay highlighting, and animated/inert markscheme collapse. The AI room was checked at desktop and mobile widths for overflow, keyboard navigation and answer preservation.
 
-`npm run test:interviews:room` exercises the session route with substituted account/database services, validates scoring, and checks that queued read-aloud cancels on Voice off, superseding requests and unmount. It does not require credentials or call an AI provider.
+`npm run test:interviews:room` exercises the session route with substituted account/database services, validates scoring, and checks that queued read-aloud cancels on Voice off, superseding requests and unmount. Microphone regressions cover entry during reading time, avoiding prompts in the lobby or feedback, permission success and denial/retry, late grants, effect replay, and unavailable APIs. It does not require credentials or call an AI provider.
 
 Browser checks should cover station inclusion/exclusion, zero-selection validation, camera permissions, microphone test completion, typed-answer recovery, mobile overflow, question navigation, preview isolation, sample feedback, and next-station selection. Real provider speech recognition and AI grading depend on browser support and account/provider configuration.

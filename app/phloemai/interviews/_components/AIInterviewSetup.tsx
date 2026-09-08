@@ -35,8 +35,6 @@ type Props = {
   speaking: boolean;
   onTestVoice: () => void;
   onStopVoice: () => void;
-  microphoneConsent: boolean;
-  setMicrophoneConsent: (enabled: boolean) => void;
   speechSupported: boolean;
   isPremium: boolean;
   busy: boolean;
@@ -92,7 +90,7 @@ export function AIInterviewSetup(props: Props) {
         {device.cameraError && <p role="status" className={styles.deviceError}>{device.cameraError}</p>}
         <div className={styles.deviceSection}><div className={styles.rowBetween}><h3><Mic size={16} /> Microphone check</h3>{device.micChecked && <span className={styles.successLabel}><CheckCircle2 size={13} /> Input detected</span>}</div><p>Say: “I’m ready to practise my interview.”</p><div className={styles.micCheck}><div className={styles.levelMeter} role="meter" aria-label="Microphone input level" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(device.micLevel * 100)}>{Array.from({ length: 24 }, (_, i) => <span key={i} style={{ background: device.micLevel * 24 > i ? "#178c78" : undefined }} />)}</div><button type="button" className={styles.textButton} onClick={() => { props.onStopVoice(); if (device.micChecking) device.stopMicCheck(); else void device.startMicCheck(); }}>{device.micChecking ? "Stop test" : device.micChecked ? "Test again" : "Test mic"}</button></div><p className={styles.smallNote}>{device.micChecking ? "Listening for 8 seconds… this check isn’t recorded." : "Checks input volume. You can always type instead."}</p>{device.micError && <p role="status" className={styles.deviceError}>{device.micError}</p>}</div>
         <div className={styles.deviceSection}><div className={styles.rowBetween}><h3><AudioLines size={16} /> Interviewer voice</h3><button type="button" role="switch" aria-checked={props.readAloud} aria-label="Read questions aloud" className={styles.toggle} onClick={() => props.setReadAloud(!props.readAloud)}><span /></button></div><p>Questions stay on screen as they’re read aloud.</p><div className={styles.voiceControls}><label>Speaking pace<select value={props.voiceRate} onChange={(event) => props.setVoiceRate(Number(event.target.value))}><option value={0.8}>Relaxed</option><option value={0.95}>Natural</option><option value={1.1}>Brisk</option></select></label><button type="button" className={styles.secondaryButton} disabled={!props.voiceSupported} onClick={props.onTestVoice}><Volume2 size={15} />{props.speaking ? "Stop voice" : "Try voice"}</button></div>{!props.voiceSupported && <p className={styles.smallNote}>Read-aloud is unavailable here. All questions remain on screen.</p>}</div>
-        <label className={styles.consent}><input type="checkbox" checked={props.microphoneConsent} disabled={!props.speechSupported} onChange={(event) => props.setMicrophoneConsent(event.target.checked)} /><span>Enable spoken answers<span>Your browser’s speech service may process audio. Phloem saves your transcript, never an audio or video recording.</span></span></label>
+        <p className={styles.smallNote}>Your browser will ask for microphone access when you enter the room. Allow it, then select Start mic when you’re ready to answer. You can also type. Your browser’s speech service may process audio; Phloem saves only the transcript.</p>
         {!props.speechSupported && <p className={styles.smallNote}>Speech recognition isn’t supported in this browser. Typed answers work throughout.</p>}
       </section>
     </div>
