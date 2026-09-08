@@ -10,6 +10,11 @@ const source = readFileSync(new URL("../app/phloemai/interviews/_lib/useIntervie
 const compiled = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
 }).outputText;
+const deliveryModule = { exports: {} };
+new Function("module", "exports", ts.transpileModule(readFileSync(new URL("../app/phloemai/interviews/_lib/speech-delivery.ts", import.meta.url), "utf8"), {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+}).outputText)(deliveryModule, deliveryModule.exports);
+const { createSpeechBoundaryTracker, normalizeSpeechTranscript, getTranscriptHints, getSpeechDelivery } = deliveryModule.exports;
 
 // Exercise the production hook with a delayed browser recognition service.
 // Each harness has isolated browser globals; no microphone or real timers run.
@@ -20,6 +25,7 @@ function speechHarness() {
   const transcripts = [];
   const recognitions = [];
   let cancellations = 0;
+  let now = 0;
   const react = {
     useCallback: callback => callback,
     useEffect: effect => effects.push(effect),
@@ -41,10 +47,12 @@ function speechHarness() {
   runInNewContext(compiled, {
     module: loaded, exports: loaded.exports,
     require: name => {
+      if (name === "./speech-delivery") return deliveryModule.exports;
       assert.equal(name, "react", "Only the React hook lifecycle is substituted");
       return react;
     },
     SpeechSynthesisUtterance: Utterance,
+    Date: class extends Date { static now() { return now; } },
     window: {
       SpeechRecognition: Recognition,
       setTimeout: callback => { timers.push(callback); return timers.length; },
@@ -61,6 +69,7 @@ function speechHarness() {
   let unmounted = false;
   return {
     speech, played, recognitions, transcripts,
+    advanceTime: milliseconds => { now += milliseconds; },
     get cancellations() { return cancellations; },
     finishStopTimeouts() {
       for (let index = 0; index < timers.length; index += 1) {
@@ -93,6 +102,91 @@ test("leaving the room cancels read-aloud waiting for recognition to stop", asyn
   assert.ok(room.recognitions[0].abortCalls > 0, "Leaving releases speech recognition");
   assert.ok(room.cancellations > cancellationsBeforeLeaving, "Leaving cancels existing playback");
   assert.deepEqual(room.played, [], "A pending question must not start after leaving");
+});
+
+test("compact pauses and audible fillers are normalized without rewriting slang", () => {
+  assert.equal(normalizeSpeechTranscript("uhhh I'm gonna [4 seconds pause] um [uhhh] I-I wanted to"), "[uhhh] I'm gonna [4s pause] [um] [uhhh] I-I wanted to");
+  assert.equal(normalizeSpeechTranscript("[3s pause] [uhhh]"), "[3s pause] [uhhh]");
+  assert.equal(getTranscriptHints("one [3s pause] two [4 seconds pause]").wordCount, 2);
+  assert.equal(getTranscriptHints("gonna wanna innit").slangCount, 3);
+  assert.equal(getTranscriptHints("w-w-wanted to help").repetitionCount, 1, "One repeated-sound event is not counted twice");
+});
+
+test("recognition inserts a compact gap between committed speech and preserves audible fillers", t => {
+  const room = speechHarness();
+  t.after(() => room.unmount());
+  room.speech.start();
+  const recognition = room.recognitions[0];
+  recognition.onspeechstart();
+  room.advanceTime(2000);
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "First thought." } }] });
+  recognition.onspeechend();
+  room.advanceTime(4000);
+  recognition.onspeechstart();
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "uhhh I'm gonna explain." } }] });
+  assert.deepEqual(room.transcripts, ["First thought.", "[4s pause]", "[uhhh] I'm gonna explain."]);
+});
+
+test("delayed recognition cannot move a pause before the words that preceded it", t => {
+  const room = speechHarness();
+  t.after(() => room.unmount());
+  room.speech.start();
+  const recognition = room.recognitions[0];
+  recognition.onspeechstart();
+  room.advanceTime(2000);
+  recognition.onspeechend();
+  room.advanceTime(4000);
+  recognition.onspeechstart();
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "Words the service delivered late." } }] });
+  assert.deepEqual(room.transcripts, ["Words the service delivered late."]);
+});
+
+test("unmount does not deliver pending interim speech into a room being left", async () => {
+  const room = speechHarness();
+  room.speech.start();
+  room.recognitions[0].onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "Still pending" } }] });
+  const stopping = room.speech.stop();
+  room.unmount();
+  await stopping;
+  assert.deepEqual(room.transcripts, []);
+});
+
+test("speech gaps ignore natural sentence stops, opening silence and deliberate breaks", () => {
+  const boundaries = createSpeechBoundaryTracker();
+  assert.equal(boundaries.start(10), null, "Waiting before the answer is not a pause");
+  boundaries.commit();
+  boundaries.end(12);
+  assert.equal(boundaries.start(14.9), null, "Natural sentence pauses shorter than 3s are ignored");
+  boundaries.commit();
+  boundaries.end(18);
+  assert.equal(boundaries.start(21).text, "[3s pause]");
+  boundaries.commit();
+  boundaries.end(25);
+  assert.equal(boundaries.start(29).text, "[4s pause]");
+  boundaries.end(32);
+  boundaries.reset();
+  assert.equal(boundaries.start(90), null, "Pausing the microphone resets the gap detector");
+  boundaries.end(92);
+  assert.equal(boundaries.start(97), null, "Delayed recognition cannot put a gap before its preceding words");
+});
+
+test("seven-second pace uses measured timing, excludes trailing silence and waits for a full window", () => {
+  const sample = (words, endSeconds = 7) => ({ kind: "speech", text: Array(words).fill("word").join(" "), startSeconds: 0, endSeconds });
+  const speed = (words, elapsedSeconds = 7, end = 7) => getSpeechDelivery({ transcript: "", segments: [sample(words, end)], elapsedSeconds }).speed;
+  assert.equal(speed(8), "slow");
+  assert.equal(speed(17), "medium");
+  assert.equal(speed(27), "fast");
+  assert.equal(speed(27, 60), "fast", "Time waiting to submit cannot lower pace");
+  assert.equal(speed(10, 3, 3), null, "No confident pace claim for a short answer");
+});
+
+test("speech coaching flags only supported concerns, never mistakes missing confidence for errors", () => {
+  const base = { transcript: "A thoughtful answer.", segments: [], elapsedSeconds: 10 };
+  assert.equal(getSpeechDelivery({ ...base, confidence: [{ words: 20, confidence: 0 }] }).manyTranscriptionErrors, false);
+  assert.equal(getSpeechDelivery({ ...base, confidence: [{ words: 20, confidence: 0.4 }] }).manyTranscriptionErrors, true);
+  assert.equal(getSpeechDelivery({ ...base, confidence: [{ words: 3, confidence: 0.2 }] }).manyTranscriptionErrors, false);
+  assert.equal(getSpeechDelivery({ ...base, transcript: "Hello [3s pause] again [4s pause] today" }).manyPausesOrRepetitions, false);
+  assert.equal(getSpeechDelivery({ ...base, transcript: "Hello [3s pause] again [4s pause] today [3s pause] yes" }).manyPausesOrRepetitions, true);
 });
 
 test("Voice off prevents pending read-aloud after the microphone finishes", async t => {

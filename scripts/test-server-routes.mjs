@@ -228,3 +228,40 @@ test("proxy only refreshes authentication for account pages and authenticated AP
     assert.equal(doesProxyMatch({ config, nextConfig: {}, url }), true, url);
   }
 });
+
+test("leaderboard handlers reject offensive names before writing and mask legacy names on read", async () => {
+  let signedIn = true;
+  const writes = [];
+  const query = (table) => ({
+    select() { return this; }, eq() { return this; }, order() { return this; }, limit() { return this; },
+    maybeSingle: async () => ({ error: null, data: table === "profiles" ? { current_plan: "free" }
+      : table === "interview_preferences" ? { display_name: "f.u.c.k", leaderboard_opt_in: true } : { score: 88.5 } }),
+    upsert: async (value) => { writes.push(value); return { error: null }; },
+  });
+  const { PATCH, GET } = load("app/api/interviews/leaderboard/route.ts", {
+    "server-only": {},
+    "@/utils/supabase/admin": { createAdminClient: () => ({ from: query }) },
+    "@/utils/supabase/server": { createClient: async () => ({
+      auth: { getUser: async () => ({ data: { user: signedIn ? { id: "account-123" } : null } }) },
+      rpc: async () => ({ data: [
+        { rank: 1, display_name: "shit", score: 88.5, is_you: true },
+        { rank: 2, display_name: "Hassan", score: 80, is_you: false },
+      ], error: null }),
+    }) },
+  });
+  for (const displayName of ["fuck", "sh1t", "f.u.c.k", "fuсk", "a55hole", "fuuuck", "A".repeat(33)]) {
+    assert.equal((await PATCH(jsonRequest({ displayName, optIn: true }))).status, 400, displayName);
+  }
+  assert.equal(writes.length, 0);
+  assert.equal((await PATCH(jsonRequest({ displayName: "  Shital Shah  ", optIn: true, userId: "someone-else" }))).status, 200);
+  assert.equal(writes[0].user_id, "account-123");
+  assert.equal(writes[0].display_name, "Shital Shah");
+  const board = await (await GET()).json();
+  assert.equal(board.entries[0].display_name, "Candidate");
+  assert.equal(board.entries[0].score, 88.5);
+  assert.equal(board.entries[1].display_name, "Hassan");
+  assert.equal(board.preference.display_name, "Candidate accoun");
+  signedIn = false;
+  assert.equal((await PATCH(jsonRequest({ displayName: "Hassan", optIn: true }))).status, 401);
+  assert.equal(writes.length, 1);
+});

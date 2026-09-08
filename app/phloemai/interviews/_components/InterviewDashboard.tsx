@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, CalendarDays, CheckCircle2, ChevronRight, Gra
 import type { getInterviewDashboardData } from "@/utils/interviews/dashboard-data";
 import { InterviewPlanChecklist } from "./InterviewPlanChecklist";
 import { InterviewPreparationSetup } from "./InterviewPreparationSetup";
+import { AnimatedDisclosure } from "./AnimatedDisclosure";
 
 type DashboardData = Awaited<ReturnType<typeof getInterviewDashboardData>>;
 const base = "/phloemai/interviews";
@@ -82,13 +83,9 @@ export function InterviewDashboard({ data }: { data: DashboardData }) {
     </div>
 
     <section className="rounded-2xl border border-[#d7e3e1] bg-[#f7faf9]" id="preparation-settings">
-      <details>
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 marker:hidden sm:px-6">
-          <span className="flex items-center gap-3"><span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-[#08787b]"><Settings2 className="h-4 w-4" /></span><span><strong className="block text-xs text-[#294e4c]">Preparation settings</strong><span className="mt-1 block text-[10px] text-[#718486]">Universities, interview dates, focus areas and weekly target</span></span></span>
-          <span className="text-[10px] font-bold text-[#08787b]">Open settings</span>
-        </summary>
+      <AnimatedDisclosure className="px-5 sm:px-6" title={<span className="flex items-center gap-3 py-4"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#08787b]"><Settings2 className="h-4 w-4" /></span><span><strong className="block text-xs text-[#294e4c]">Preparation settings</strong><span className="mt-1 block text-[10px] text-[#718486]">Universities, interview dates, focus areas and weekly target</span></span></span>}>
         <div className="border-t border-[#dfe8e6] p-3"><InterviewPreparationSetup key={profile?.updatedAt ?? "new"} initialProfile={profile} signedIn={signedIn} available={available} variant="compact" /></div>
-      </details>
+      </AnimatedDisclosure>
     </section>
 
     <nav aria-label="Interview shortcuts" className="flex flex-wrap gap-x-6 gap-y-3 px-1 text-xs font-semibold text-[#617a79]">

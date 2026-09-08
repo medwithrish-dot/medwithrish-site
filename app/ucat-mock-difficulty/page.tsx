@@ -9,9 +9,9 @@ const FORM_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLScvWGoTQcElu1U8R1O_EqMHlyRuZ3T7gzXYrXhBsWj3AUyZPw/viewform?usp=header";
 
 export const metadata: Metadata = {
-  title: "Medify Mock Difficulty Spreadsheet | MedWithRish",
+  title: "UCAT Mock Difficulty Spreadsheet | MedWithRish",
   description:
-    "Open the MedWithRish Medify UCAT mock difficulty spreadsheet and submit your own scores.",
+    "Open the MedWithRish UCAT mock difficulty spreadsheet and submit your own scores.",
   alternates: {
     canonical: "/ucat-mock-difficulty",
   },
@@ -40,11 +40,11 @@ export default function UCATMockDifficultyPage() {
             </p>
 
             <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">
-              Medify Mock Difficulty Spreadsheet
+              UCAT Mock Difficulty Spreadsheet
             </h1>
 
             <p className="mt-4 text-base leading-7 text-slate-600">
-              Open the shared spreadsheet to compare Medify mock difficulty,
+              Open the shared spreadsheet to compare UCAT practice mock difficulty,
               average VR, DM and QR scores, total score averages, and available
               SJT band data. It is designed as a quick reference while deciding
               which mocks felt easier or harder for other students.
@@ -80,7 +80,7 @@ export default function UCATMockDifficultyPage() {
 
             <div className="mt-3 space-y-3 text-sm leading-6 text-slate-700">
               <p>
-                The sheet lists each Medify mock alongside a difficulty label,
+                The sheet lists each UCAT practice mock alongside a difficulty label,
                 average section scores, average total score and any available
                 SJT band information.
               </p>

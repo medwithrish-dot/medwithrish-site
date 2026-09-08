@@ -1,4 +1,5 @@
 import { databaseError, InterviewError, interviewContext, interviewFailure, interviewJson, readInterviewBody } from "@/utils/interviews/server";
+import { publicNameError, safePublicName } from "@/utils/interviews/public-name";
 
 export async function GET() {
   try {
@@ -11,7 +12,12 @@ export async function GET() {
     if (board.error) databaseError(board.error);
     if (preference.error) databaseError(preference.error);
     if (best.error) databaseError(best.error);
-    return interviewJson({ entries: board.data ?? [], preference: preference.data ?? { display_name: `Candidate ${user.id.slice(0, 6)}`, leaderboard_opt_in: false }, bestScore: best.data?.score ?? null });
+    const savedPreference = preference.data ?? { display_name: `Candidate ${user.id.slice(0, 6)}`, leaderboard_opt_in: false };
+    return interviewJson({
+      entries: (board.data ?? []).map((entry: { display_name: string }) => ({ ...entry, display_name: safePublicName(entry.display_name) })),
+      preference: { ...savedPreference, display_name: safePublicName(savedPreference.display_name, `Candidate ${user.id.slice(0, 6)}`) },
+      bestScore: best.data?.score ?? null,
+    });
   } catch (error) { return interviewFailure(error); }
 }
 
@@ -21,8 +27,10 @@ export async function PATCH(request: Request) {
     const { user, admin } = await interviewContext();
     if (typeof body.displayName !== "string" || typeof body.optIn !== "boolean") throw new InterviewError("Enter a leaderboard name and sharing preference");
     const name = body.displayName.trim();
-    if (name.length < 2 || name.length > 32 || !/^[\p{L}\p{N} ._-]+$/u.test(name)) throw new InterviewError("Use 2–32 letters, numbers, spaces, dots, hyphens or underscores for your public name.");
+    const nameError = publicNameError(name);
+    if (nameError) throw new InterviewError(nameError);
     const { error } = await admin.from("interview_preferences").upsert({ user_id: user.id, display_name: name, leaderboard_opt_in: body.optIn, updated_at: new Date().toISOString() });
+    if (error?.code === "23514") throw new InterviewError("Choose a nickname without profanity or offensive language.");
     if (error) databaseError(error);
     return interviewJson({ saved: true });
   } catch (error) { return interviewFailure(error); }

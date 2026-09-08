@@ -12,6 +12,7 @@ For the existing PhloemAI Supabase project, open **SQL Editor**, run each comple
 2. `supabase/phloemai_interview_platform.sql` — private attempts, scores, opt-in leaderboard, durable usage limits and grading locks.
 3. `supabase/phloemai_interview_groups.sql` — study groups, membership, invitations and shared station rooms.
 4. `supabase/phloemai_interview_dashboard.sql` — university choices/dates, preparation goals, task completion and precise practice-time tracking. If steps 1–3 are already installed, only this new file is needed for dashboard personalisation.
+5. `supabase/phloemai_interview_name_moderation.sql` — blocks offensive public leaderboard nicknames, including common letter/number and separator disguises. Existing offensive nicknames become a neutral Candidate nickname; scores and sharing preferences are preserved. If the platform is already installed, run this new file once. Both single-paste setup files also include it.
 
 If the question bank's existing account progress has never been set up, also run `supabase/phloemai_interview_question_progress.sql`. The interview scripts do not replace that feature.
 
@@ -54,6 +55,8 @@ Create a group and share its invitation yourself. No email or message is sent by
 The group owner creates and starts a shared eight-minute station. Members contribute their own responses and a text discussion. The room timer is shared and authoritative; polling slows when idle and pauses when hidden. There are no video calls or continuous AI charges. **Group assessment scores remain “Awaiting scoring rules”**, ready for the owner's future scoring design. The displayed Why medicine? personal best is labelled separately.
 
 The overall leaderboard includes only opted-in, completed free Why medicine? attempts under rubric `why-medicine-v1`. It shows a nickname, score and rank, never email, user IDs or transcripts. One best attempt per person is ranked; equal scores use earliest completion. Members can withdraw their score or change their nickname.
+
+Public nickname validation runs in the browser and authenticated API. The moderation migration adds a database constraint and a guard on the leaderboard RPC, so direct calls cannot bypass it. The API also replaces unsafe legacy names when reading before the migration has been installed. The application and SQL normalization rules are checked against the same profanity/evasion and legitimate-name examples by `node --test scripts/test-interview-public-names.mjs`.
 
 ## Personal dashboard
 

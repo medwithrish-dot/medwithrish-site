@@ -95,7 +95,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug }:
     persistLocal(nextAnswers);
   }, [persistLocal]);
 
-  const speech = useInterviewSpeech({ rate: voiceRate, onTranscript: (text) => {
+  const speech = useInterviewSpeech({ rate: voiceRate, answerKey: `${attempt?.id ?? "preview"}:${questionIndex}`, onTranscript: (text) => {
     const current = attemptRef.current;
     if (!current || current.status !== "in_progress") return;
     const index = questionIndexRef.current;

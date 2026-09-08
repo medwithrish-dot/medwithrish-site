@@ -26,11 +26,11 @@ const keyIdeas = [
 const prepStages = [
   {
     title: "Weeks 1 + 2 - Learn the question types",
-    text: "Use free resources (like passmedicine) first to understand what each section looks like. The goal is not speed yet. The goal is familiarity.",
+    text: "Use free UCAT practice resources first to understand what each section looks like. The goal is not speed yet. The goal is familiarity.",
   },
   {
     title: "Weeks 3 + 4 - Learn techniques",
-    text: "Move to a question bank such as Medify or MedEntry. Learn methods for each question type and test which method is fastest for you.",
+    text: "Move to a question bank with a range of UCAT question types. Learn methods for each question type and test which method is fastest for you.",
   },
   {
     title: "Final 30 days - Mock exams and weak areas",

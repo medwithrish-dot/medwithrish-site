@@ -52,6 +52,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
   const uniqueId = useId();
   const editorId = `${uniqueId}-editor`;
   const searchRef = useRef<HTMLInputElement>(null);
+  const editorToggleRef = useRef<HTMLButtonElement>(null);
   const savingRef = useRef(false);
   const [expanded, setExpanded] = useState(!initialProfile && variant === "full");
   const [savedProfile, setSavedProfile] = useState(initialProfile);
@@ -82,6 +83,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
     setQuery("");
     setExpanded(false);
     setError("");
+    editorToggleRef.current?.focus();
   }
 
   function addUniversity(universitySlug: string) {
@@ -137,6 +139,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
       setSavedProfile(result.profile);
       setDraft(copyProfile(result.profile));
       setExpanded(false);
+      editorToggleRef.current?.focus();
       setNotice("Your preparation plan is saved. Your dashboard is updating.");
       startRefresh(() => router.refresh());
     } catch (cause) {
@@ -162,8 +165,8 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
           </div>}
         </div>
       </div>
-      {signedIn && <button type="button" aria-expanded={expanded} aria-controls={editorId} disabled={saving} onClick={() => expanded ? cancelEditing() : openEditor()} className="inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-xl border border-[#cdded8] bg-white px-4 py-2.5 text-xs font-bold text-[#08787b] hover:bg-[#edf7f3] disabled:opacity-50">
-        {expanded ? (savedProfile ? "Cancel editing" : "Set up later") : savedProfile ? "Edit plan" : "Set up my plan"}<ChevronDown size={15} className={expanded ? "rotate-180" : ""} aria-hidden="true" />
+      {signedIn && <button ref={editorToggleRef} type="button" aria-expanded={expanded} aria-controls={editorId} disabled={saving} onClick={() => expanded ? cancelEditing() : openEditor()} className="inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-xl border border-[#cdded8] bg-white px-4 py-2.5 text-xs font-bold text-[#08787b] hover:bg-[#edf7f3] disabled:opacity-50">
+        {expanded ? (savedProfile ? "Cancel editing" : "Set up later") : savedProfile ? "Edit plan" : "Set up my plan"}<ChevronDown size={15} className={`transition-transform duration-200 motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`} aria-hidden="true" />
       </button>}
     </div>
 
@@ -179,7 +182,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
       </button>)}
     </div>}
 
-    {expanded && signedIn && <form id={editorId} onSubmit={save} className="border-t border-[#deebe5]">
+    {signedIn && <div id={editorId} className="grid transition-[grid-template-rows,opacity] duration-200 motion-reduce:transition-none" style={{ gridTemplateRows: expanded ? "1fr" : "0fr", opacity: expanded ? 1 : 0 }} inert={!expanded} aria-hidden={!expanded}><div className="min-h-0 overflow-hidden"><form onSubmit={save} className="border-t border-[#deebe5]">
       <fieldset disabled={saving || !canSave} className="min-w-0 space-y-7 px-5 py-6 sm:px-6">
         <legend className="sr-only">Your interview preparation preferences</legend>
         <div>
@@ -214,7 +217,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
         </div>
       </fieldset>
       <div className="flex flex-col-reverse gap-3 border-t border-[#deebe5] bg-white/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"><div><p className="text-[11px] leading-5 text-[#738882]">{savedProfile ? `${savedExperience?.label || "Your plan"} · Changes save to your account.` : "Optional setup. You can practise now and return to this later."}</p><button type="button" disabled={saving} onClick={cancelEditing} className="mt-1 text-[11px] font-semibold text-[#58736b] underline disabled:opacity-50">{savedProfile ? "Cancel changes" : "Skip for now"}</button></div><button type="submit" disabled={saving || !canSave} className={primary}>{saving ? <Loader2 size={15} className="animate-spin" aria-hidden="true" /> : <Check size={15} aria-hidden="true" />}{saving ? "Saving your plan…" : "Save my preparation plan"}</button></div>
-    </form>}
+    </form></div></div>}
   </section>;
 }
 

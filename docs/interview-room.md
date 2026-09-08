@@ -22,6 +22,16 @@ Device checks do not record or upload media. Camera tracks and calibration audio
 
 ## Verification
 
+### Speech and answer review
+
+Question-bank recording stays available after Finish & Review until the user leaves or retries the question. The saved-response prop update must not discard the MediaRecorder's pending final blob. Review uses one transcript; playback highlights an estimated word within each timed recognition chunk. If typed text or edits no longer match that timeline, show the complete answer without claiming word alignment. Audio is local to the current screen and is not uploaded or restored with saved text.
+
+Both speech flows preserve recognised slang and repetitions, wrap audible fillers as `[uhhh]` or `[um]`, and normalise legacy pause notation to `[3s pause]`. Only speech-boundary events with a preceding committed transcript can place a gap marker. Gaps shorter than three seconds, opening/trailing silence, recognition latency, and deliberate microphone breaks do not create markers. Browsers may omit fillers or speech-boundary events; missing evidence is never reconstructed from result latency.
+
+Delivery coaching below the question-bank End section uses approximate words in the latest seven-second window ending in speech: under 13 is slow, 13–21 medium, above 21 fast. A complete seven-second span is required. Confidence warnings need at least 12 words with nonzero confidence and at least 35% below 0.65. Repeated-pause/sound coaching appears only for three long gaps, or at least three fillers/repetitions in 20+ words with an 8% rate. These are configurable coaching heuristics, not clinical assessments or scoring inputs.
+
+`scripts/test-interview-speech.mjs` covers marker formatting, natural gaps, delayed recognition, pace thresholds and conditional coaching. Browser verification with a synthetic microphone confirmed final audio playback, a single transcript, replay highlighting, and animated/inert markscheme collapse. The AI room was checked at desktop and mobile widths for overflow, keyboard navigation and answer preservation.
+
 `npm run test:interviews:room` exercises the session route with substituted account/database services, validates scoring, and checks that queued read-aloud cancels on Voice off, superseding requests and unmount. It does not require credentials or call an AI provider.
 
 Browser checks should cover station inclusion/exclusion, zero-selection validation, camera permissions, microphone test completion, typed-answer recovery, mobile overflow, question navigation, preview isolation, sample feedback, and next-station selection. Real provider speech recognition and AI grading depend on browser support and account/provider configuration.

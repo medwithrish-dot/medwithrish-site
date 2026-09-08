@@ -20,7 +20,7 @@ const popularResources = [
     description: "A structured plan for when to start and how to prepare effectively.",
   },
   {
-    title: "Medify Mock Difficulty Spreadsheet",
+    title: "UCAT Mock Difficulty Spreadsheet",
     href: "/ucat-mock-difficulty",
     description: "Compare mock difficulty, average section scores, totals, and SJT bands.",
   },
@@ -63,7 +63,7 @@ const stages = [
     resources: [
       { title: "UCAT Prep Timeline", href: "/ucat-timeline" },
       { title: "UCAT Tutoring", href: "/ucat-tutoring" },
-      { title: "Medify Mock Difficulty Spreadsheet", href: "/ucat-mock-difficulty" },
+      { title: "UCAT Mock Difficulty Spreadsheet", href: "/ucat-mock-difficulty" },
       { title: "UCAT Notes", href: "https://payhip.com/Medwithrish", external: true },
     ],
   },

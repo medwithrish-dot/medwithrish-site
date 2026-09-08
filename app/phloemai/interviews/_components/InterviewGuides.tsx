@@ -1,13 +1,79 @@
-import Link from "next/link";
-import { ArrowRight, BookOpen } from "lucide-react";
+"use client";
 
-const guides = [
-  { title: "Build your Why medicine? answer", tag: "MOTIVATION", paragraphs: ["Start with your own reasons for wanting to become a doctor. Connect them to an experience you can describe honestly, then explain what you learnt and how it shaped your understanding of the role.", "Explore both the appeal and the challenges. Explain why medicine fits you while respecting other healthcare careers. A thoughtful answer sounds like your experience, rather than a script you have memorised."], station: "why-medicine" },
-  { title: "Reflect on work experience", tag: "REFLECTION", paragraphs: ["Choose one moment: what happened, what you noticed, and why it mattered. Reflection is more useful than listing activities or clinical procedures.", "Describe what you would carry into future learning. Use anonymised examples and avoid identifying patients or sharing private details. Experiences in caring, volunteering or everyday teamwork can also offer useful reflection."], station: "work-experience" },
-  { title: "Approach an ethical discussion", tag: "REASONING", paragraphs: ["Clarify the situation and acknowledge what you do not know. Identify who is affected, consider different perspectives, and explain the tradeoffs before proposing your next step.", "Avoid assuming that a person's disability determines their abilities or needs. Discuss people as individuals and ask what support, adjustments or further information could make participation fair. Recognise the limits of your role and when to seek guidance."], station: "disability-in-medicine" },
-  { title: "Discuss a hot topic with balance", tag: "HOT TOPICS", paragraphs: ["Separate what you know from what you would need to check. Explore the effects on patients, staff and the health service, and consider both potential benefits and concerns.", "For medicines, verify current evidence and official guidance before asserting indications, risks or availability. You are explaining how you think about an issue, rather than advising a patient on treatment."], station: "ozempic" },
-  { title: "Make the station clock work for you", tag: "TECHNIQUE", paragraphs: ["Use reading time to identify the question and organise two or three points. During your answer, make a point, illustrate it, then explain why it matters. Leave room for follow-up questions.", "If you lose your thread, pause and return to the question. Use practice feedback to choose one specific improvement for your next attempt. Speech observations are optional coaching cues and do not determine your score."], station: "why-medicine" },
-];
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowRight, BookOpen, Search, X } from "lucide-react";
+import { interviewGuideCategories, interviewGuides, searchInterviewGuides } from "../_data/interviewGuides";
+
 export function InterviewGuides() {
-  return <div className="space-y-6"><section className="rounded-3xl bg-[#042724] p-8 text-white"><BookOpen size={30} className="text-[#b9f4db]" /><h2 className="mt-5 text-3xl font-bold">Give your thinking a little structure.</h2><p className="mt-3 max-w-xl text-sm leading-7 text-teal-50/75">Short guides you can read, try, and return to after a station.</p></section><div className="grid gap-5 lg:grid-cols-2">{guides.map((guide) => <article key={guide.title} className="rounded-2xl border border-[#dce6e5] bg-white p-7"><p className="text-[10px] font-bold tracking-widest text-[#08787b]">{guide.tag}</p><h2 className="mt-3 text-xl font-bold">{guide.title}</h2>{guide.paragraphs.map((p) => <p key={p} className="mt-4 text-sm leading-7 text-[#526b72]">{p}</p>)}<Link href={`/phloemai/interviews/ai-interviews?station=${guide.station}`} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#08787b]">Put it into practice <ArrowRight size={16} /></Link></article>)}</div></div>;
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("All topics");
+  const results = searchInterviewGuides(query, category);
+  const filtering = query.trim().length > 0 || category !== "All topics";
+
+  function clearFilters() {
+    setQuery("");
+    setCategory("All topics");
+  }
+
+  return (
+    <div className="space-y-8">
+      <section aria-label="Search the guide library" className="rounded-2xl border border-[#d7e3e2] bg-white p-5 sm:p-6">
+        <div className="grid items-end gap-4 md:grid-cols-[1fr_260px]">
+          <div>
+            <label htmlFor="interview-guide-search" className="mb-2 block text-sm font-semibold text-[#244b48]">Find a guide</label>
+            <div className="relative">
+              <Search size={18} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-3.5 text-[#64807e]" />
+              <input id="interview-guide-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Why Medicine, Bawa-Garba, consent or AI…" className="w-full rounded-xl border border-[#ccdcda] bg-[#f7faf9] py-3 pl-11 pr-4 text-sm outline-none transition-colors focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15" />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="interview-guide-category" className="mb-2 block text-sm font-semibold text-[#244b48]">Topic</label>
+            <select id="interview-guide-category" value={category} onChange={(event) => setCategory(event.target.value)} className="w-full rounded-xl border border-[#ccdcda] bg-white px-3 py-3 text-sm outline-none focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15">
+              <option>All topics</option>
+              {interviewGuideCategories.map((item) => <option key={item}>{item}</option>)}
+            </select>
+          </div>
+        </div>
+        <div className="mt-3 flex min-h-6 items-center justify-between gap-3 text-xs text-[#58716f]">
+          <p role="status" aria-live="polite">{filtering ? `${results.length} ${results.length === 1 ? "guide" : "guides"} found` : `${interviewGuides.length} guides across every question-bank topic`}</p>
+          {filtering && <button type="button" onClick={clearFilters} className="inline-flex items-center gap-1 rounded px-2 py-1 font-semibold text-[#08787b] hover:bg-[#eef7f5]"><X size={13} aria-hidden="true" /> Clear filters</button>}
+        </div>
+      </section>
+
+      {!filtering && <section aria-labelledby="featured-guides-heading">
+        <div className="mb-4 flex items-center gap-2"><BookOpen size={18} aria-hidden="true" className="text-[#08787b]" /><h2 id="featured-guides-heading" className="text-lg font-bold text-[#183d39]">Featured guides</h2></div>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {interviewGuides.filter((item) => item.featured).map((item) => (
+            <Link key={item.slug} href={`/phloemai/interviews/guides/${item.slug}`} className="group flex flex-col rounded-2xl border border-[#cfe0d9] bg-[#f3f8f2] p-5 transition-colors hover:border-[#74a49c] hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#08787b]">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#587a69]">{item.category.split(" & ")[0]}</p>
+              <h3 className="mt-3 text-base font-bold leading-6 text-[#143b32]">{item.title}</h3>
+              <p className="mb-5 mt-2 text-sm leading-6 text-[#526e64]">{item.summary}</p>
+              <span className="mt-auto inline-flex items-center gap-2 text-xs font-bold text-[#08787b]">Read guide <ArrowRight size={14} aria-hidden="true" /></span>
+            </Link>
+          ))}
+        </div>
+      </section>}
+
+      <section aria-labelledby="all-guides-heading">
+        <h2 id="all-guides-heading" className="mb-4 text-lg font-bold text-[#183d39]">{filtering ? "Search results" : "Explore the library"}</h2>
+        {results.length ? <div className="grid gap-3 lg:grid-cols-2">
+          {results.map((item) => (
+            <Link key={item.slug} href={`/phloemai/interviews/guides/${item.slug}`} className="group flex items-center justify-between gap-4 rounded-xl border border-[#dce6e5] bg-white p-5 transition-colors hover:border-[#8bb8b1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#08787b]">
+              <div className="min-w-0">
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-[#64817d]">{item.category}</p>
+                <h3 className="mt-1.5 text-base font-bold text-[#183d39] group-hover:text-[#08787b]">{item.title}</h3>
+                <p className="mt-1.5 text-sm leading-6 text-[#5a706f]">{item.summary}</p>
+              </div>
+              <ArrowRight size={17} aria-hidden="true" className="shrink-0 text-[#648c86]" />
+            </Link>
+          ))}
+        </div> : <div className="rounded-2xl border border-dashed border-[#b8d0cb] bg-white px-6 py-12 text-center">
+          <h3 className="font-semibold text-[#244b48]">No guides match those filters</h3>
+          <p className="mt-2 text-sm text-[#58716f]">Try a shorter search, such as “ethics”, or explore all topics.</p>
+          <button type="button" onClick={clearFilters} className="mt-5 rounded-lg bg-[#08787b] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#06666a]">Show all guides</button>
+        </div>}
+      </section>
+    </div>
+  );
 }

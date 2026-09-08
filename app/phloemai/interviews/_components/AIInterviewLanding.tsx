@@ -9,12 +9,12 @@ export function AIInterviewLanding() {
       <section className={styles.hero} aria-labelledby="practice-title">
         <div className={styles.freeVisual} aria-hidden="true"><span><AudioLines size={34} /></span></div>
         <div className={styles.freeCopy}>
-          <p className={styles.eyebrow}>Free MMI interview</p>
-          <h1 id="practice-title">Why medicine?</h1>
-          <p className={styles.description}>Practise a classic opening station in the interview room, then get feedback you can use in your next answer.</p>
+          <p className={styles.eyebrow}>Try your AI interview for free</p>
+          <h1 id="practice-title">Beat Medwithrish’s score of 96%</h1>
+          <p className={styles.description}>Take the “Why medicine?” challenge. Meet your AI interviewer and get personalised feedback on your answer.</p>
           <div className={styles.freeMeta}><span><ShieldCheck size={14} /> No subscription needed</span><span>8 minutes</span><span>AI feedback included</span></div>
         </div>
-        <Link href="/phloemai/interviews/ai-interviews?station=why-medicine" className={styles.primaryAction}><Mic size={18} aria-hidden="true" /> Start free MMI <ArrowRight size={18} aria-hidden="true" /></Link>
+        <Link href="/phloemai/interviews/ai-interviews?station=why-medicine" className={styles.primaryAction}><Mic size={18} aria-hidden="true" /> Try the free interview <ArrowRight size={18} aria-hidden="true" /></Link>
       </section>
       <UniversityCatalogue mode="practice" />
     </div>

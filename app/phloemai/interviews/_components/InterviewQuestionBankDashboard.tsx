@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -46,6 +46,8 @@ import {
 } from "../_data/interviewQuestionBank";
 import { InterviewSidebar } from "./InterviewSidebar";
 import { InterviewMobileNav } from "./InterviewMobileNav";
+import { SpeechDeliveryHints } from "./SpeechDeliveryHints";
+import { createSpeechBoundaryTracker, getSpeechDelivery, normalizeSpeechTranscript, stripSpeechPauseMarkers, type RecognitionConfidence } from "../_lib/speech-delivery";
 import {
   createClient as createSupabaseClient,
   hasSupabaseConfig,
@@ -322,6 +324,7 @@ type SpeechRecognitionResultLike = {
   isFinal: boolean;
   0: {
     transcript: string;
+    confidence?: number;
   };
 };
 
@@ -340,6 +343,8 @@ type SpeechRecognitionLike = {
   onend: (() => void) | null;
   onerror: ((event: { error?: string }) => void) | null;
   onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onspeechstart: (() => void) | null;
+  onspeechend: (() => void) | null;
   start: () => void;
   stop: () => void;
 };
@@ -349,6 +354,12 @@ type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
 type SpeechRecognitionWindow = Window & {
   SpeechRecognition?: SpeechRecognitionConstructor;
   webkitSpeechRecognition?: SpeechRecognitionConstructor;
+};
+const subscribeSpeechSupport = () => () => {};
+const serverSpeechSupport = () => false;
+const browserSpeechSupport = () => {
+  const speechWindow = window as SpeechRecognitionWindow;
+  return Boolean(speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition);
 };
 
 const questionBankPath = "/phloemai/interviews/question-bank";
@@ -659,20 +670,6 @@ function formatTimer(totalSeconds: number) {
   const seconds = totalSeconds % 60;
 
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
-}
-
-const longSpeechPauseThresholdSeconds = 2.5;
-const speechPauseMarkerPattern = /\[\s*\d+\s+seconds?\s+pause\s*\]/gi;
-
-function stripSpeechPauseMarkers(value: string) {
-  return value.replace(speechPauseMarkerPattern, " ");
-}
-
-function formatSpeechPauseMarker(durationSeconds: number) {
-  const roundedSeconds = Math.max(1, Math.round(durationSeconds));
-  const unit = roundedSeconds === 1 ? "second" : "seconds";
-
-  return `[${roundedSeconds} ${unit} pause]`;
 }
 
 function getWordCount(value: string) {
@@ -1567,17 +1564,10 @@ function QuestionPracticeView({
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [practiceMode, setPracticeMode] = useState<QuestionPracticeMode>("text");
   const [isListening, setIsListening] = useState(false);
-  const [speechSupported, setSpeechSupported] = useState(() => {
-    if (typeof window === "undefined") return false;
-
-    const speechWindow = window as SpeechRecognitionWindow;
-
-    return Boolean(
-      speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition
-    );
-  });
+  const speechSupported = useSyncExternalStore(subscribeSpeechSupport, browserSpeechSupport, serverSpeechSupport);
   const [speechError, setSpeechError] = useState<string | null>(null);
   const [interimTranscript, setInterimTranscript] = useState("");
+  const [interimTiming, setInterimTiming] = useState({ startSeconds: 0, endSeconds: 0 });
   const [checkedItems, setCheckedItems] = useState<Set<string>>(() => new Set());
   const [openMarkSchemeSections, setOpenMarkSchemeSections] = useState<
     Set<MarkSchemeSection["title"]>
@@ -1589,6 +1579,8 @@ function QuestionPracticeView({
   const [recordingError, setRecordingError] = useState<string | null>(null);
   const [recordingElapsedSeconds, setRecordingElapsedSeconds] = useState(0);
   const [playbackSeconds, setPlaybackSeconds] = useState(0);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [recognitionConfidence, setRecognitionConfidence] = useState<RecognitionConfidence[]>([]);
   const [transcriptSegments, setTranscriptSegments] = useState<
     TranscriptSegment[]
   >(() => []);
@@ -1607,6 +1599,9 @@ function QuestionPracticeView({
   const interimTranscriptRef = useRef("");
   const transcriptSegmentsRef = useRef<TranscriptSegment[]>([]);
   const transcriptSegmentCounterRef = useRef(0);
+  const speechBoundaryRef = useRef(createSpeechBoundaryTracker());
+  const restoredResponseRef = useRef<string | null>(null);
+  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
   const timeRemainingRef = useRef(suggestedSeconds);
   const attemptPhaseRef = useRef<QuestionAttemptPhase>("idle");
   const wordCount = getWordCount(answer);
@@ -1641,11 +1636,17 @@ function QuestionPracticeView({
     icon: LucideIcon;
   }[];
   const activePlaybackSegmentId =
-    transcriptSegments.find(
+    (isPlayingAudio || playbackSeconds > 0 ? transcriptSegments.find(
       (segment) =>
         playbackSeconds >= segment.startSeconds &&
         playbackSeconds <= segment.endSeconds
-    )?.id ?? null;
+    )?.id : null) ?? null;
+  const deliveryHints = getSpeechDelivery({
+    transcript: draftAnswer,
+    segments: interimTranscript ? [...transcriptSegments, { kind: "speech", text: interimTranscript, ...interimTiming }] : transcriptSegments,
+    elapsedSeconds: recordingElapsedSeconds,
+    confidence: recognitionConfidence,
+  });
 
   const beginAttempt = useCallback(() => {
     if (
@@ -1746,6 +1747,7 @@ function QuestionPracticeView({
   }, [getRecordingElapsedMs, stopRecordingTicker]);
 
   const pauseAudioRecording = useCallback(() => {
+    speechBoundaryRef.current.reset();
     audioRecordingRequestRef.current += 1;
     const recorder = mediaRecorderRef.current;
 
@@ -1843,10 +1845,15 @@ function QuestionPracticeView({
     setPlaybackSeconds(0);
     setTranscriptSegments([]);
     setRecordingError(null);
+    setRecognitionConfidence([]);
+    speechBoundaryRef.current.reset();
+    setIsPlayingAudio(false);
     revokeRecordingUrl();
   }, [finalizeAudioRecording, revokeRecordingUrl]);
 
   const startAudioRecording = useCallback(async () => {
+    audioPlayerRef.current?.pause();
+    setIsPlayingAudio(false);
     if (
       typeof window === "undefined" ||
       typeof navigator === "undefined" ||
@@ -1975,60 +1982,17 @@ function QuestionPracticeView({
     []
   );
 
-  const addPauseMarkerUntil = useCallback(
-    (endSeconds: number) => {
-      const previousEndSeconds =
-        transcriptSegmentsRef.current.at(-1)?.endSeconds ?? 0;
-      const normalizedEndSeconds = Math.max(previousEndSeconds, endSeconds);
-      const pauseDurationSeconds = normalizedEndSeconds - previousEndSeconds;
-
-      if (pauseDurationSeconds < longSpeechPauseThresholdSeconds) {
-        return answerRef.current;
-      }
-
-      const pauseMarker = formatSpeechPauseMarker(pauseDurationSeconds);
-      const nextAnswer = appendTranscript(answerRef.current, pauseMarker);
-
-      answerRef.current = nextAnswer;
-      setAnswer(nextAnswer);
-      appendTranscriptSegment({
-        kind: "pause",
-        text: pauseMarker,
-        startSeconds: previousEndSeconds,
-        endSeconds: normalizedEndSeconds,
-      });
-
-      return nextAnswer;
-    },
-    [appendTranscriptSegment]
-  );
-
   const commitTranscript = useCallback(
     (transcript: string) => {
-      const cleanTranscript = transcript.trim();
+      const cleanTranscript = normalizeSpeechTranscript(transcript.trim());
 
       if (!cleanTranscript) return answerRef.current;
+      speechBoundaryRef.current.commit();
 
-      const endSeconds = Math.max(0.4, getRecordingElapsedMs() / 1000);
-      const spokenWordCount = getWordCount(cleanTranscript);
-      const estimatedDuration = Math.max(0.8, spokenWordCount / 2.6);
+      const nowSeconds = Math.max(0.05, getRecordingElapsedMs() / 1000);
       const previousEndSeconds =
         transcriptSegmentsRef.current.at(-1)?.endSeconds ?? 0;
-      const estimatedStartSeconds = Math.max(0, endSeconds - estimatedDuration);
-
-      if (
-        estimatedStartSeconds - previousEndSeconds >=
-        longSpeechPauseThresholdSeconds
-      ) {
-        addPauseMarkerUntil(estimatedStartSeconds);
-      }
-
-      const effectivePreviousEndSeconds =
-        transcriptSegmentsRef.current.at(-1)?.endSeconds ?? 0;
-      const startSeconds = Math.max(
-        effectivePreviousEndSeconds,
-        estimatedStartSeconds
-      );
+      const { startSeconds, endSeconds } = speechBoundaryRef.current.timing(previousEndSeconds, nowSeconds);
       const nextAnswer = appendTranscript(answerRef.current, cleanTranscript);
 
       answerRef.current = nextAnswer;
@@ -2042,7 +2006,7 @@ function QuestionPracticeView({
 
       return nextAnswer;
     },
-    [addPauseMarkerUntil, appendTranscriptSegment, getRecordingElapsedMs]
+    [appendTranscriptSegment, getRecordingElapsedMs]
   );
 
   const commitInterimTranscript = useCallback(() => {
@@ -2071,6 +2035,8 @@ function QuestionPracticeView({
         recognition.onend = null;
         recognition.onerror = null;
         recognition.onresult = null;
+        recognition.onspeechstart = null;
+        recognition.onspeechend = null;
 
         try {
           recognition.stop();
@@ -2099,14 +2065,15 @@ function QuestionPracticeView({
 
       if (hasFinalInterimTranscript) {
         commitInterimTranscript();
-      } else {
-        addPauseMarkerUntil(Math.max(0, getRecordingElapsedMs() / 1000));
       }
 
       const finalAnswer = answerRef.current;
       const remainingSeconds =
         completionReason === "timer" ? 0 : timeRemainingRef.current;
       const completedAt = new Date().toISOString();
+      // Saving updates the parent prop. Do not treat that update as opening an old
+      // response: doing so discards the recorder while its final blob is arriving.
+      restoredResponseRef.current = `${question.id}:${completedAt}`;
       const response: SavedQuestionResponse = {
         questionId: question.id,
         answer: finalAnswer,
@@ -2138,10 +2105,8 @@ function QuestionPracticeView({
       scrollToTop();
     },
     [
-      addPauseMarkerUntil,
       commitInterimTranscript,
       finalizeAudioRecording,
-      getRecordingElapsedMs,
       onQuestionResponseSaved,
       practiceMode,
       question.id,
@@ -2164,7 +2129,6 @@ function QuestionPracticeView({
       speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      setSpeechSupported(false);
       setSpeechError("Voice transcription is not available in this browser.");
       return;
     }
@@ -2172,7 +2136,6 @@ function QuestionPracticeView({
     if (recognitionRef.current) {
       stopListening({ commitInterim: true });
     }
-    setSpeechSupported(true);
     setSpeechError(null);
     setPracticeMode("voice");
 
@@ -2180,6 +2143,19 @@ function QuestionPracticeView({
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = "en-GB";
+    speechBoundaryRef.current.reset();
+    recognition.onspeechstart = () => {
+      if (recognitionRef.current !== recognition || attemptPhaseRef.current === "review") return;
+      const pause = speechBoundaryRef.current.start(getRecordingElapsedMs() / 1000);
+      // A still-pending result may contain speech from both sides of a gap.
+      // Avoid inserting a marker at a position the browser cannot establish.
+      if (pause && !interimTranscriptRef.current.trim()) {
+        answerRef.current = appendTranscript(answerRef.current, pause.text);
+        setAnswer(answerRef.current);
+        appendTranscriptSegment(pause);
+      }
+    };
+    recognition.onspeechend = () => speechBoundaryRef.current.end(getRecordingElapsedMs() / 1000);
     recognition.onresult = (event) => {
       if (
         recognitionRef.current !== recognition ||
@@ -2196,9 +2172,10 @@ function QuestionPracticeView({
         const transcript = result[0]?.transcript ?? "";
 
         if (result.isFinal) {
-          finalTranscript += transcript;
+          finalTranscript += ` ${transcript}`;
+          setRecognitionConfidence((samples) => [...samples, { words: getWordCount(transcript), confidence: result[0]?.confidence ?? 0 }]);
         } else {
-          interim += transcript;
+          interim += ` ${transcript}`;
         }
       }
 
@@ -2207,8 +2184,9 @@ function QuestionPracticeView({
         setSavedResponse(null);
       }
 
-      interimTranscriptRef.current = interim.trim();
-      setInterimTranscript(interim.trim());
+      interimTranscriptRef.current = normalizeSpeechTranscript(interim.trim());
+      setInterimTranscript(interimTranscriptRef.current);
+      setInterimTiming(speechBoundaryRef.current.timing(transcriptSegmentsRef.current.at(-1)?.endSeconds ?? 0, getRecordingElapsedMs() / 1000));
     };
     recognition.onerror = (event) => {
       if (recognitionRef.current !== recognition) return;
@@ -2226,7 +2204,6 @@ function QuestionPracticeView({
       setIsListening(false);
       setIsTimerRunning(false);
       pauseAudioRecording();
-      addPauseMarkerUntil(Math.max(0, getRecordingElapsedMs() / 1000));
     };
     recognition.onend = () => {
       if (recognitionRef.current !== recognition) return;
@@ -2236,7 +2213,6 @@ function QuestionPracticeView({
       setIsListening(false);
       setIsTimerRunning(false);
       pauseAudioRecording();
-      addPauseMarkerUntil(Math.max(0, getRecordingElapsedMs() / 1000));
     };
 
     recognitionRef.current = recognition;
@@ -2252,7 +2228,7 @@ function QuestionPracticeView({
       setIsListening(false);
     }
   }, [
-    addPauseMarkerUntil,
+    appendTranscriptSegment,
     beginAttempt,
     commitInterimTranscript,
     commitTranscript,
@@ -2266,10 +2242,7 @@ function QuestionPracticeView({
     setIsTimerRunning(false);
     stopListening({ commitInterim: true });
     pauseAudioRecording();
-    addPauseMarkerUntil(Math.max(0, getRecordingElapsedMs() / 1000));
   }, [
-    addPauseMarkerUntil,
-    getRecordingElapsedMs,
     pauseAudioRecording,
     stopListening,
   ]);
@@ -2350,7 +2323,6 @@ function QuestionPracticeView({
     setSpeechError(null);
     stopListening({ commitInterim: true });
     pauseAudioRecording();
-    addPauseMarkerUntil(Math.max(0, getRecordingElapsedMs() / 1000));
   };
 
   const toggleVoiceMode = () => {
@@ -2383,17 +2355,20 @@ function QuestionPracticeView({
       const saved = initialSavedResponse;
 
       if (!saved) return;
+      const responseKey = `${question.id}:${saved.completedAt}`;
+      if (restoredResponseRef.current === responseKey) return;
+      restoredResponseRef.current = responseKey;
 
       const remainingSeconds = Math.max(
         0,
         suggestedSeconds - Math.min(saved.elapsedSeconds, suggestedSeconds)
       );
 
-      answerRef.current = saved.answer;
+      answerRef.current = normalizeSpeechTranscript(saved.answer);
       interimTranscriptRef.current = "";
       timeRemainingRef.current = remainingSeconds;
       attemptPhaseRef.current = "review";
-      setAnswer(saved.answer);
+      setAnswer(answerRef.current);
       setInterimTranscript("");
       setSavedResponse(saved);
       setTimeRemaining(remainingSeconds);
@@ -2506,7 +2481,9 @@ function QuestionPracticeView({
   };
 
   const renderTranscriptText = () => {
-    const hasSegments = transcriptSegments.length > 0;
+    // Typed openings and later edits have no audio timestamps. Keep the complete
+    // answer visible and only highlight when the timeline matches that answer.
+    const hasSegments = transcriptSegments.length > 0 && transcriptSegments.map((segment) => segment.text).join(" ").replace(/\s+/g, " ").trim() === answer.replace(/\s+/g, " ").trim();
     const hasAnswer = Boolean(answer.trim());
     const hasInterim = Boolean(interimTranscript.trim());
 
@@ -2524,19 +2501,21 @@ function QuestionPracticeView({
           {transcriptSegments.map((segment) => {
             const isPlaybackActive = segment.id === activePlaybackSegmentId;
             const isPauseMarker = segment.kind === "pause";
+            const tokens = segment.text.match(/\[[^\]]+\]|\S+/g) ?? [];
+            const wordIndex = Math.min(tokens.length - 1, Math.floor(Math.max(0, playbackSeconds - segment.startSeconds) / Math.max(0.05, segment.endSeconds - segment.startSeconds) * tokens.length));
 
             return (
               <span
                 key={segment.id}
                 className={`rounded px-0.5 transition-colors ${
-                  isPlaybackActive
+                  isPlaybackActive && isPauseMarker
                     ? "bg-[#dff7ef] text-[#056d57] ring-1 ring-[#9ad8c7]"
                     : isPauseMarker
                       ? "bg-[#eef3f4] font-semibold text-[#4a6370] ring-1 ring-[#d8e0e6]"
                     : "text-[#071923]"
                 }`}
               >
-                {segment.text}{" "}
+                {isPauseMarker ? `${segment.text} ` : tokens.map((word, index) => <span key={index} className={isPlaybackActive && index === wordIndex ? "rounded bg-[#dff7ef] text-[#056d57] ring-1 ring-[#9ad8c7]" : undefined}>{word}{" "}</span>)}
               </span>
             );
           })}
@@ -2580,18 +2559,13 @@ function QuestionPracticeView({
               }`}
               aria-hidden="true"
             />
-            {isRecordingAudio ? "Recording" : isListening ? "Listening" : "Voice ready"}
+            {isRecordingAudio ? "Recording" : isListening ? "Listening" : isReviewing ? "Your recording" : "Voice paused"}
           </span>
           <span className="text-sm font-black text-[#071923]">
             {formatTimer(recordingElapsedSeconds)}
           </span>
         </div>
-        <div className="flex items-center gap-2 text-xs font-black text-[#4a6370]">
-          <span className="h-2.5 w-2.5 rounded-sm bg-[#071923]" aria-hidden="true" />
-          Confirmed
-          <span className="ml-3 h-2.5 w-2.5 rounded-sm bg-[#0f9b7d]" aria-hidden="true" />
-          Live
-        </div>
+        <span className="text-xs text-[#62777e]">{isListening ? "Live transcript" : recordingUrl ? "Replay to follow your words" : "Transcript"}</span>
       </div>
 
       {recordingError && (
@@ -2600,17 +2574,22 @@ function QuestionPracticeView({
         </p>
       )}
 
-      {recordingUrl && (
+      {recordingUrl && !isRecordingAudio && (
         <audio
+          ref={audioPlayerRef}
           controls
+          aria-label="Play back your answer recording"
           src={recordingUrl}
+          onPlay={() => setIsPlayingAudio(true)}
+          onPause={() => setIsPlayingAudio(false)}
           onTimeUpdate={(event) =>
             setPlaybackSeconds(event.currentTarget.currentTime)
           }
           onSeeked={(event) =>
             setPlaybackSeconds(event.currentTarget.currentTime)
           }
-          onEnded={() => setPlaybackSeconds(0)}
+          onEnded={() => { setIsPlayingAudio(false); setPlaybackSeconds(0); }}
+          onError={() => setRecordingError("This recording could not play. Try recording the answer again.")}
           className="mt-4 w-full"
         />
       )}
@@ -2618,6 +2597,7 @@ function QuestionPracticeView({
       <div className="mt-4 min-h-[104px] rounded-xl border border-[#d8e0e6] bg-white p-4 text-base font-medium leading-7 text-[#071923]">
         {renderTranscriptText()}
       </div>
+      <p className="mt-3 text-[11px] leading-5 text-[#62777e]">{isReviewing && !recordingUrl && !recordingError ? "Preparing your recording… " : ""}Audio is available for this attempt while you stay on this screen. Word highlighting is approximate.</p>
     </div>
   );
 
@@ -2691,8 +2671,8 @@ function QuestionPracticeView({
               </span>
             </button>
 
-            {isOpen && (
-              <div id={panelId} className="mt-4 space-y-3">
+            <div id={panelId} aria-hidden={!isOpen} inert={!isOpen} className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+              <div className="min-h-0 overflow-hidden"><div className="space-y-3 pt-4">
                 {group.items.map((item) => {
                   const id = `${group.title}-${item}`;
 
@@ -2706,11 +2686,12 @@ function QuestionPracticeView({
                     />
                   );
                 })}
-              </div>
-            )}
+              </div></div>
+            </div>
           </section>
         );
       })}
+      <SpeechDeliveryHints hints={deliveryHints} />
     </aside>
   );
 
@@ -2828,12 +2809,9 @@ function QuestionPracticeView({
                         </button>
                       </div>
                     </div>
-                    <div className="mt-5 min-h-[240px] whitespace-pre-wrap rounded-xl border border-[#b9dcda] bg-white p-4 text-base font-medium leading-7 text-[#071923]">
-                      {savedAnswer.trim() ||
-                        "No response was captured before the timer ended."}
-                    </div>
-                    {(recordingUrl || transcriptSegments.length > 0) &&
-                      renderVoiceRecorderPanel()}
+                    {(recordingUrl || transcriptSegments.length > 0 || recordingError) ? renderVoiceRecorderPanel() : <div className="mt-5 min-h-[180px] whitespace-pre-wrap rounded-xl border border-[#b9dcda] bg-white p-4 text-base font-medium leading-7 text-[#071923]">
+                      {normalizeSpeechTranscript(savedAnswer.trim()) || "No response was captured before the timer ended."}
+                    </div>}
                   </section>
 
                   <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">

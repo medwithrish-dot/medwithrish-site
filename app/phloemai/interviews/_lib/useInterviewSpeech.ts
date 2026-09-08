@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createSpeechBoundaryTracker, getSpeechDelivery, getTranscriptHints, normalizeSpeechTranscript, type RecognitionConfidence, type TimedSpeech } from "./speech-delivery";
+export { getTranscriptHints } from "./speech-delivery";
 
-type RecognitionResult = { isFinal: boolean; 0: { transcript: string } };
+type RecognitionResult = { isFinal: boolean; 0: { transcript: string; confidence?: number } };
 type Recognition = {
   lang: string;
   continuous: boolean;
@@ -10,6 +12,8 @@ type Recognition = {
   onresult: ((event: { resultIndex: number; results: ArrayLike<RecognitionResult> }) => void) | null;
   onerror: ((event: { error: string }) => void) | null;
   onend: (() => void) | null;
+  onspeechstart: (() => void) | null;
+  onspeechend: (() => void) | null;
   start: () => void;
   stop: () => void;
   abort: () => void;
@@ -27,21 +31,19 @@ const recognitionAvailable = () => {
 };
 const synthesisAvailable = () => "speechSynthesis" in window;
 
-/** Transcript hints are approximate and never diagnose stuttering or affect the score. */
-export function getTranscriptHints(transcript: string) {
-  const words = transcript.toLowerCase().match(/\b[\p{L}\p{N}']+\b/gu) ?? [];
-  const fillerCount = (transcript.match(/\b(?:um+|uh+|erm+|er+|you know|sort of|kind of)\b/gi) ?? []).length;
-  const repetitionCount = words.reduce((count, word, index) => count + Number(index > 0 && word === words[index - 1]), 0);
-  return { wordCount: words.length, fillerCount, repetitionCount };
-}
-
-export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript: (text: string) => void; rate?: number }) {
+export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "answer" }: { onTranscript: (text: string) => void; rate?: number; answerKey?: string }) {
   const supported = useSyncExternalStore(subscribe, recognitionAvailable, serverUnsupported);
   const voiceSupported = useSyncExternalStore(subscribe, synthesisAvailable, serverUnsupported);
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState("");
   const [error, setError] = useState("");
+  const [deliveryHints, setDeliveryHints] = useState(() => getSpeechDelivery({ transcript: "", segments: [], elapsedSeconds: 0 }));
+  const [deliveryKey, setDeliveryKey] = useState(answerKey);
+  const deliveryRef = useRef<{ text: string; segments: TimedSpeech[]; confidence: RecognitionConfidence[] }>({ text: "", segments: [], confidence: [] });
+  const deliveryKeyRef = useRef("");
+  const boundaryRef = useRef(createSpeechBoundaryTracker());
+  const interimRef = useRef("");
   const recognitionRef = useRef<Recognition | null>(null);
   const onTranscriptRef = useRef(onTranscript);
   const finishRef = useRef<(() => void) | null>(null);
@@ -65,6 +67,9 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript
         recognition.onresult = null;
         recognition.onend = null;
         recognition.onerror = null;
+        recognition.onspeechstart = null;
+        recognition.onspeechend = null;
+        if (mountedRef.current && interimRef.current) { onTranscriptRef.current(interimRef.current); interimRef.current = ""; }
         if (recognitionRef.current === recognition) {
           recognitionRef.current = null;
           try { recognition.abort(); } catch { /* Already stopped. */ }
@@ -102,19 +107,54 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript
     stopSpeaking();
     setError("");
     setInterimTranscript("");
+    interimRef.current = "";
+    boundaryRef.current.reset();
+    if (deliveryKeyRef.current !== answerKey) {
+      deliveryKeyRef.current = answerKey;
+      setDeliveryKey(answerKey);
+      deliveryRef.current = { text: "", segments: [], confidence: [] };
+      setDeliveryHints(getSpeechDelivery({ transcript: "", segments: [], elapsedSeconds: 0 }));
+    }
+    const started = Date.now();
+    const previousElapsed = deliveryRef.current.segments.at(-1)?.endSeconds ?? 0;
+    const elapsed = () => previousElapsed + (Date.now() - started) / 1000;
     const recognition = new Constructor();
     recognition.lang = "en-GB";
     recognition.continuous = true;
     recognition.interimResults = true;
+    recognition.onspeechstart = () => {
+      if (recognitionRef.current !== recognition || finishRef.current) return;
+      const pause = boundaryRef.current.start(elapsed());
+      if (pause) {
+        // Do not place a gap before words that are still awaiting recognition.
+        if (interimRef.current) return;
+        onTranscriptRef.current(pause.text);
+        deliveryRef.current.text += ` ${pause.text}`;
+        deliveryRef.current.segments.push(pause);
+      }
+    };
+    recognition.onspeechend = () => boundaryRef.current.end(elapsed());
     recognition.onresult = (event) => {
       let interim = "";
       for (let index = event.resultIndex; index < event.results.length; index += 1) {
         const result = event.results[index];
-        const text = result[0].transcript.trim();
-        if (result.isFinal && text) onTranscriptRef.current(text);
+        const text = normalizeSpeechTranscript(result[0].transcript.trim());
+        if (result.isFinal && text) {
+          boundaryRef.current.commit();
+          onTranscriptRef.current(text);
+          interimRef.current = "";
+          const delivery = deliveryRef.current;
+          delivery.text += ` ${text}`;
+          delivery.segments.push({ kind: "speech", text, ...boundaryRef.current.timing(delivery.segments.at(-1)?.endSeconds ?? 0, elapsed()) });
+          delivery.confidence.push({ words: getTranscriptHints(text).wordCount, confidence: result[0].confidence ?? 0 });
+        }
         else interim += `${text} `;
       }
+      interimRef.current = interim.trim();
       setInterimTranscript(interim.trim());
+      const delivery = deliveryRef.current;
+      const liveSegments = interim.trim() ? [...delivery.segments, { kind: "speech" as const, text: interim, ...boundaryRef.current.timing(delivery.segments.at(-1)?.endSeconds ?? 0, elapsed()) }] : delivery.segments;
+      setDeliveryHints(getSpeechDelivery({ transcript: `${delivery.text} ${interim}`, segments: liveSegments, elapsedSeconds: elapsed(), confidence: delivery.confidence }));
     };
     recognition.onerror = (event) => {
       if (event.error === "aborted") return;
@@ -130,10 +170,13 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript
     recognition.onend = () => {
       if (recognitionRef.current !== recognition) return;
       if (finishRef.current) { finishRef.current(); return; }
+      if (interimRef.current) { onTranscriptRef.current(interimRef.current); interimRef.current = ""; }
       recognitionRef.current = null;
       recognition.onresult = null;
       recognition.onerror = null;
       recognition.onend = null;
+      recognition.onspeechstart = null;
+      recognition.onspeechend = null;
       setListening(false);
       setInterimTranscript("");
     };
@@ -145,7 +188,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript
       recognitionRef.current = null;
       setError("The microphone could not start. Try again or type your answer.");
     }
-  }, [stopSpeaking]);
+  }, [stopSpeaking, answerKey]);
 
   const speak = useCallback(async (text: string) => {
     const request = ++speechRequestRef.current;
@@ -181,6 +224,8 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript
         recognition.onresult = null;
         recognition.onerror = null;
         recognition.onend = null;
+        recognition.onspeechstart = null;
+        recognition.onspeechend = null;
         try { recognition.abort(); } catch { /* Already stopped. */ }
       }
       recognitionRef.current = null;
@@ -189,5 +234,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95 }: { onTranscript
     };
   }, []);
 
-  return { supported, voiceSupported, listening, speaking, interimTranscript, error, start, stop, speak, stopSpeaking };
+  return { supported, voiceSupported, listening, speaking, interimTranscript,
+    deliveryHints: deliveryKey === answerKey ? deliveryHints : getSpeechDelivery({ transcript: "", segments: [], elapsedSeconds: 0 }),
+    error, start, stop, speak, stopSpeaking };
 }

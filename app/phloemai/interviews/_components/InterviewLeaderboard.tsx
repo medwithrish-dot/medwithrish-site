@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { ArrowRight, Award, Check, Loader2, Trophy, Users } from "lucide-react";
+import { publicNameError } from "@/utils/interviews/public-name";
 
 type Entry = { rank: number; display_name: string; score: number; completed_at: string; is_you: boolean };
 type Board = { entries: Entry[]; preference: { display_name: string; leaderboard_opt_in: boolean }; bestScore: number | null };
@@ -38,6 +39,8 @@ export function InterviewLeaderboard() {
   }, [applyBoard]);
 
   async function save() {
+    const nameError = publicNameError(name);
+    if (nameError) { setError(nameError); setSaved(false); return; }
     setSaving(true); setSaved(false); setError("");
     try {
       const response = await fetch("/api/interviews/leaderboard", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ displayName: name, optIn }) });
@@ -49,13 +52,12 @@ export function InterviewLeaderboard() {
   }
 
   return <div className="space-y-6">
-    <section className="relative overflow-hidden rounded-3xl bg-[#042724] p-7 text-white sm:p-9">
-      <div className="absolute -right-12 -top-16 h-64 w-64 rounded-full border-[40px] border-white/5" aria-hidden="true" />
-      <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div><span className="inline-flex items-center gap-2 rounded-full bg-[#1aa0a5]/20 px-3 py-1 text-xs font-bold text-[#9ce8dd]"><Trophy size={14} /> THE WHY MEDICINE? CHALLENGE</span>
-          <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl">Find your voice.<br />See how you grow.</h2>
-          <p className="mt-4 max-w-lg text-sm leading-7 text-teal-50/75">One free station. The same questions and scoring rules for everyone. Your best completed attempt earns your place.</p>
-          <Link href="/phloemai/interviews/ai-interviews" className="mt-6 inline-flex items-center gap-3 rounded-xl bg-[#b9f4db] px-5 py-3 text-sm font-bold text-[#042724] hover:bg-white">Take the free station <ArrowRight size={17} /></Link>
+    <section className="rounded-2xl bg-[#042724] p-6 text-white sm:p-8">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div><p className="text-xs font-semibold text-[#9ce8dd]">Try the AI interview for free</p>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">Beat Medwithrish’s score of 96%</h2>
+          <p className="mt-3 max-w-lg text-sm leading-6 text-teal-50/75">Answer the Why Medicine? station, get personal AI feedback and see how you compare.</p>
+          <Link href="/phloemai/interviews/ai-interviews?station=why-medicine" className="mt-5 inline-flex items-center gap-3 rounded-xl bg-[#b9f4db] px-5 py-3 text-sm font-bold text-[#042724] hover:bg-white">Try the free AI interview <ArrowRight size={17} /></Link>
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:min-w-48"><Award className="mb-4 text-[#b9f4db]" size={30} /><p className="text-xs font-semibold uppercase tracking-wider text-teal-100/70">Your personal best</p><p className="mt-2 text-5xl font-bold tabular-nums">{board?.bestScore != null ? `${board.bestScore}%` : "—"}</p><p className="mt-3 text-xs text-teal-100/70">{board?.bestScore != null ? "Free Why medicine? station" : "Your first attempt starts here"}</p></div>
       </div>

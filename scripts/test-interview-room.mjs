@@ -279,10 +279,16 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
   runInNewContext(`${output}\nexports.testPracticeView = QuestionPracticeView;`, {
     module: loaded, exports: loaded.exports, MediaRecorder: Recorder,
     require(name) {
+      if (name.endsWith("speech-delivery")) {
+        const delivery = { exports: {} };
+        new Function("module", "exports", ts.transpileModule(readFileSync(resolve(root, "app/phloemai/interviews/_lib/speech-delivery.ts"), "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText)(delivery, delivery.exports);
+        return delivery.exports;
+      }
       if (name === "react") return {
         useState: initial => [typeof initial === "function" ? initial() : initial, () => {}],
         useRef: current => ({ current }), useCallback: callback => callback,
         useEffect: effect => effects.push(effect), useMemo: callback => callback(),
+        useSyncExternalStore: (_subscribe, snapshot) => snapshot(),
       };
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       return {};
