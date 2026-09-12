@@ -131,7 +131,7 @@ export function InterviewSidebar({
   showPremiumCard: boolean;
 }) {
   return (
-    <aside className="hidden border-r border-[#093f3a] bg-[#042724] px-4 py-5 text-slate-100 lg:block">
+    <aside className="hidden border-r border-[#093f3a] bg-[#042724] px-4 py-5 text-slate-100 lg:sticky lg:top-0 lg:block lg:h-[100dvh] lg:overflow-y-auto">
       <InterviewAreaSwitcher />
 
       <nav className="mt-8 space-y-2">
