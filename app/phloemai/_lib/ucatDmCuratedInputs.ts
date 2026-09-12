@@ -379,8 +379,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "No hospitals in Region 1 possess an advanced neonatal intensive care unit (NICU).",
-"All medical facilities that have an advanced NICU are designated as Level 3 Trauma Centers.",
-"Some designated Level 3 Trauma Centers receive annual research grants."
+"All medical facilities that have an advanced NICU are designated as Level 3 Trauma Centres.",
+"Some designated Level 3 Trauma Centres receive annual research grants."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -391,11 +391,11 @@ categories: [
 categoryItems: [
 { id: "dm-syl-01-02-a", text: "No medical facility with an advanced NICU is located in Region 1.", answerCategory: "yes" },
 { id: "dm-syl-01-02-b", text: "Some medical facilities that receive annual research grants are not in Region 1.", answerCategory: "no" },
-{ id: "dm-syl-01-02-c", text: "Every designated Level 3 Trauma Center possesses an advanced NICU.", answerCategory: "no" },
-{ id: "dm-syl-01-02-d", text: "No hospital in Region 1 is a designated Level 3 Trauma Center.", answerCategory: "no" },
-{ id: "dm-syl-01-02-e", text: "Some designated Level 3 Trauma Centers are not located in Region 1.", answerCategory: "yes" }
+{ id: "dm-syl-01-02-c", text: "Every designated Level 3 Trauma Centre possesses an advanced NICU.", answerCategory: "no" },
+{ id: "dm-syl-01-02-d", text: "No hospital in Region 1 is a designated Level 3 Trauma Centre.", answerCategory: "no" },
+{ id: "dm-syl-01-02-e", text: "Some designated Level 3 Trauma Centres are not located in Region 1.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Since no hospital in Region 1 has an advanced NICU, it completely follows that no facility with an advanced NICU can be in Region 1.\nB — NO: The research grant facilities could potentially be Level 3 Trauma Centers that are located in Region 1 (since Region 1 hospitals can be Level 3 Trauma Centers as long as they don't have an advanced NICU).\nC — NO: All advanced NICUs are Level 3 centers, but this does not mean all Level 3 centers must have an advanced NICU (an asymmetric A-type proposition).\nD — NO: A Region 1 hospital cannot have an advanced NICU, but it could still be a Level 3 Trauma Center via other criteria not mentioned.\nE — YES: All facilities with an advanced NICU are Level 3 Trauma Centers, and none of them are in Region 1. Therefore, those Level 3 Trauma Centers with advanced NICUs are definitely not in Region 1."
+explanation: "A — YES: Since no hospital in Region 1 has an advanced NICU, it completely follows that no facility with an advanced NICU can be in Region 1.\nB — NO: The research grant facilities could potentially be Level 3 Trauma Centres that are located in Region 1 (since Region 1 hospitals can be Level 3 Trauma Centres as long as they don't have an advanced NICU).\nC — NO: All advanced NICUs are Level 3 centres, but this does not mean all Level 3 centres must have an advanced NICU (an asymmetric A-type proposition).\nD — NO: A Region 1 hospital cannot have an advanced NICU, but it could still be a Level 3 Trauma Centre via other criteria not mentioned.\nE — YES: All facilities with an advanced NICU are Level 3 Trauma Centres, and none of them are in Region 1. Therefore, those Level 3 Trauma Centres with advanced NICUs are definitely not in Region 1."
 },
 {
 kind: "drag-category",
@@ -404,7 +404,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All Class-A medical devices require a quarterly engineering calibration.",
 "No device requiring a quarterly engineering calibration is approved for at-home patient use.",
-"Many devices approved for at-home patient use utilize Bluetooth telemetry."
+"Many devices approved for at-home patient use utilise Bluetooth telemetry."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -414,10 +414,10 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-01-03-a", text: "No Class-A medical devices are approved for at-home patient use.", answerCategory: "yes" },
-{ id: "dm-syl-01-03-b", text: "Some medical devices utilizing Bluetooth telemetry are not Class-A medical devices.", answerCategory: "yes" },
-{ id: "dm-syl-01-03-c", text: "No device utilizing Bluetooth telemetry requires a quarterly engineering calibration.", answerCategory: "no" },
-{ id: "dm-syl-01-03-d", text: "All devices requiring a quarterly engineering calibration utilize Bluetooth telemetry.", answerCategory: "no" },
-{ id: "dm-syl-01-03-e", text: "Some Class-A medical devices utilize Bluetooth telemetry.", answerCategory: "no" }
+{ id: "dm-syl-01-03-b", text: "Some medical devices utilising Bluetooth telemetry are not Class-A medical devices.", answerCategory: "yes" },
+{ id: "dm-syl-01-03-c", text: "No device utilising Bluetooth telemetry requires a quarterly engineering calibration.", answerCategory: "no" },
+{ id: "dm-syl-01-03-d", text: "All devices requiring a quarterly engineering calibration utilise Bluetooth telemetry.", answerCategory: "no" },
+{ id: "dm-syl-01-03-e", text: "Some Class-A medical devices utilise Bluetooth telemetry.", answerCategory: "no" }
 ],
 explanation: "A — YES: All Class-A devices require calibration, and zero calibrated devices are approved for home use. Thus, no Class-A device is approved for home use.\nB — YES: Many (some) home-use devices use Bluetooth. None of these home-use devices can require quarterly calibration, and since all Class-A devices require calibration, these Bluetooth home-use devices cannot be Class-A.\nC — NO: We know some Bluetooth devices are approved for home use (and thus don't require calibration), but other Bluetooth devices could exist outside home use that do require calibration.\nD — NO: There is no link establishing that calibrated devices must have Bluetooth telemetry.\nE — NO: Class-A devices are strictly barred from being home-use items. Because the Bluetooth devices we know of are home-use, they cannot overlap with Class-A. No other link exists to prove Class-A devices use Bluetooth."
 },
@@ -450,8 +450,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every medical practitioner specializing in rheumatology can interpret musculoskeletal ultrasounds.",
-"Some medical practitioners specializing in rheumatology operate private infusion clinics.",
+"Every medical practitioner specialising in rheumatology can interpret musculoskeletal ultrasounds.",
+"Some medical practitioners specialising in rheumatology operate private infusion clinics.",
 "All individuals who operate private infusion clinics are registered with the National Health Registry."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -462,12 +462,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-01-05-a", text: "Some individuals registered with the National Health Registry can interpret musculoskeletal ultrasounds.", answerCategory: "yes" },
-{ id: "dm-syl-01-05-b", text: "All individuals registered with the National Health Registry specialize in rheumatology.", answerCategory: "no" },
+{ id: "dm-syl-01-05-b", text: "All individuals registered with the National Health Registry specialise in rheumatology.", answerCategory: "no" },
 { id: "dm-syl-01-05-c", text: "Some medical practitioners who can interpret musculoskeletal ultrasounds operate private infusion clinics.", answerCategory: "yes" },
-{ id: "dm-syl-01-05-d", text: "Every medical practitioner who operates a private infusion clinic specializes in rheumatology.", answerCategory: "no" },
+{ id: "dm-syl-01-05-d", text: "Every medical practitioner who operates a private infusion clinic specialises in rheumatology.", answerCategory: "no" },
 { id: "dm-syl-01-05-e", text: "No individual registered with the National Health Registry can interpret musculoskeletal ultrasounds.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some rheumatologists operate private infusion clinics. All who operate these clinics are registered. Since all rheumatologists can interpret these ultrasounds, those specific registered clinic operators can definitely interpret ultrasounds.\nB — NO: The National Health Registry could easily contain thousands of other healthcare professionals who do not specialize in rheumatology.\nC — YES: Since some rheumatologists operate private infusion clinics, and every single rheumatologist can interpret these ultrasounds, it follows that this intersecting group can do both.\nD — NO: The premise only says 'some' rheumatologists operate these clinics. It does not state that rheumatologists are the *only* people operating them.\nE — NO: Completely false, as established by conclusion A which proves a mandatory positive intersection."
+explanation: "A — YES: Some rheumatologists operate private infusion clinics. All who operate these clinics are registered. Since all rheumatologists can interpret these ultrasounds, those specific registered clinic operators can definitely interpret ultrasounds.\nB — NO: The National Health Registry could easily contain thousands of other healthcare professionals who do not specialise in rheumatology.\nC — YES: Since some rheumatologists operate private infusion clinics, and every single rheumatologist can interpret these ultrasounds, it follows that this intersecting group can do both.\nD — NO: The premise only says 'some' rheumatologists operate these clinics. It does not state that rheumatologists are the *only* people operating them.\nE — NO: Completely false, as established by conclusion A which proves a mandatory positive intersection."
 },
 {
 kind: "drag-category",
@@ -622,8 +622,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All medical devices utilizing high-intensity focused ultrasound (HIFU) must undergo Class-III biocompatibility testing.",
-"Some medical devices utilizing HIFU are intended for non-invasive cosmetic ablation.",
+"All medical devices utilising high-intensity focused ultrasound (HIFU) must undergo Class-III biocompatibility testing.",
+"Some medical devices utilising HIFU are intended for non-invasive cosmetic ablation.",
 "No device intended for non-invasive cosmetic ablation is approved for emergency room protocols."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -634,7 +634,7 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-01-12-a", text: "Some medical devices that must undergo Class-III biocompatibility testing are not approved for emergency room protocols.", answerCategory: "yes" },
-{ id: "dm-syl-01-12-b", text: "No medical device utilizing HIFU is approved for emergency room protocols.", answerCategory: "no" },
+{ id: "dm-syl-01-12-b", text: "No medical device utilising HIFU is approved for emergency room protocols.", answerCategory: "no" },
 { id: "dm-syl-01-12-c", text: "All medical devices approved for emergency room protocols must undergo Class-III biocompatibility testing.", answerCategory: "no" },
 { id: "dm-syl-01-12-d", text: "Some medical devices intended for non-invasive cosmetic ablation must undergo Class-III biocompatibility testing.", answerCategory: "yes" },
 { id: "dm-syl-01-12-e", text: "Every device requiring Class-III biocompatibility testing is intended for non-invasive cosmetic ablation.", answerCategory: "no" }
@@ -663,15 +663,15 @@ categoryItems: [
 { id: "dm-syl-01-13-d", text: "Every clinic monitored by the Regional Surgical Audit is an accredited bariatric clinic.", answerCategory: "no" },
 { id: "dm-syl-01-13-e", text: "No clinic employing a full-time certified dietary counselor is monitored by the Regional Surgical Audit.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some bariatric clinics offer outpatient sleeve gastrectomies, meaning they are monitored by the Audit. Because all accredited bariatric clinics employ a full-time certified dietary counselor, these specific monitored clinics do too.\nB — NO: Certified dietary counselors could be employed by general nutrition clinics, diabetes management centers, or fitness hubs completely separate from bariatric networks.\nC — YES: This is established directly because a subset of accredited bariatric clinics offer outpatient sleeve gastrectomies, making them subject to the Audit.\nD — NO: The Regional Surgical Audit might monitor orthopedic, cardiac, or general surgical centers that have nothing to do with bariatric accreditation.\nE — NO: Completely false, as shown by conclusion A which identifies a guaranteed positive overlap between these groups."
+explanation: "A — YES: Some bariatric clinics offer outpatient sleeve gastrectomies, meaning they are monitored by the Audit. Because all accredited bariatric clinics employ a full-time certified dietary counselor, these specific monitored clinics do too.\nB — NO: Certified dietary counselors could be employed by general nutrition clinics, diabetes management centres, or fitness hubs completely separate from bariatric networks.\nC — YES: This is established directly because a subset of accredited bariatric clinics offer outpatient sleeve gastrectomies, making them subject to the Audit.\nD — NO: The Regional Surgical Audit might monitor orthopedic, cardiac, or general surgical centres that have nothing to do with bariatric accreditation.\nE — NO: Completely false, as shown by conclusion A which identifies a guaranteed positive overlap between these groups."
 },
 {
 kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"No diagnostic assays targeting Hormone W utilize gold-conjugate lateral flow strips.",
-"All rapid fertility test kits utilize gold-conjugate lateral flow strips.",
+"No diagnostic assays targeting Hormone W utilise gold-conjugate lateral flow strips.",
+"All rapid fertility test kits utilise gold-conjugate lateral flow strips.",
 "Some rapid fertility test kits are manufactured under ISO-9001 quality standards."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -684,10 +684,10 @@ categoryItems: [
 { id: "dm-syl-01-14-a", text: "No rapid fertility test kit is a diagnostic assay targeting Hormone W.", answerCategory: "yes" },
 { id: "dm-syl-01-14-b", text: "Some items manufactured under ISO-9001 quality standards are not diagnostic assays targeting Hormone W.", answerCategory: "yes" },
 { id: "dm-syl-01-14-c", text: "All diagnostic assays targeting Hormone W are manufactured under ISO-9001 quality standards.", answerCategory: "no" },
-{ id: "dm-syl-01-14-d", text: "Some diagnostic assays targeting Hormone W utilize rapid fertility test kits.", answerCategory: "no" },
-{ id: "dm-syl-01-14-e", text: "No item manufactured under ISO-9001 quality standards utilizes gold-conjugate lateral flow strips.", answerCategory: "no" }
+{ id: "dm-syl-01-14-d", text: "Some diagnostic assays targeting Hormone W utilise rapid fertility test kits.", answerCategory: "no" },
+{ id: "dm-syl-01-14-e", text: "No item manufactured under ISO-9001 quality standards utilises gold-conjugate lateral flow strips.", answerCategory: "no" }
 ],
-explanation: "A — YES: All rapid fertility kits use gold-conjugate strips. No Hormone W assay uses gold-conjugate strips. Therefore, no rapid fertility kit can be a Hormone W assay.\nB — YES: Some rapid fertility kits are made under ISO-9001. Since no rapid fertility kit can be a Hormone W assay (established in A), these specific ISO-9001 products are definitely not Hormone W assays.\nC — NO: The premises give no info regarding the manufacturing standards of Hormone W assays; they could be ISO-9001 compliant or not.\nD — NO: This directly violates the absolute exclusion proved between rapid fertility kits and Hormone W assays.\nE — NO: Contradicts the third premise, which explicitly states that some rapid fertility test kits (which *do* utilize gold-conjugate lateral flow strips) are made under ISO-9001 standards."
+explanation: "A — YES: All rapid fertility kits use gold-conjugate strips. No Hormone W assay uses gold-conjugate strips. Therefore, no rapid fertility kit can be a Hormone W assay.\nB — YES: Some rapid fertility kits are made under ISO-9001. Since no rapid fertility kit can be a Hormone W assay (established in A), these specific ISO-9001 products are definitely not Hormone W assays.\nC — NO: The premises give no info regarding the manufacturing standards of Hormone W assays; they could be ISO-9001 compliant or not.\nD — NO: This directly violates the absolute exclusion proved between rapid fertility kits and Hormone W assays.\nE — NO: Contradicts the third premise, which explicitly states that some rapid fertility test kits (which *do* utilise gold-conjugate lateral flow strips) are made under ISO-9001 standards."
 },
 {
 kind: "drag-category",
@@ -818,8 +818,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every medical institution utilizing automated dispensing cabinets has implemented a barcoded medication administration (BCMA) workflow.",
-"Some medical institutions utilizing automated dispensing cabinets operate rural satellite clinics.",
+"Every medical institution utilising automated dispensing cabinets has implemented a barcoded medication administration (BCMA) workflow.",
+"Some medical institutions utilising automated dispensing cabinets operate rural satellite clinics.",
 "All institutions operating rural satellite clinics receive federal tele-health subsidies."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -831,11 +831,11 @@ categories: [
 categoryItems: [
 { id: "dm-syl-01-20-a", text: "Some institutions receiving federal tele-health subsidies have implemented a BCMA workflow.", answerCategory: "yes" },
 { id: "dm-syl-01-20-b", text: "All institutions that have implemented a BCMA workflow operate rural satellite clinics.", answerCategory: "no" },
-{ id: "dm-syl-01-20-c", text: "Some medical institutions utilizing automated dispensing cabinets receive federal tele-health subsidies.", answerCategory: "yes" },
-{ id: "dm-syl-01-20-d", text: "Every institution receiving federal tele-health subsidies utilizes automated dispensing cabinets.", answerCategory: "no" },
+{ id: "dm-syl-01-20-c", text: "Some medical institutions utilising automated dispensing cabinets receive federal tele-health subsidies.", answerCategory: "yes" },
+{ id: "dm-syl-01-20-d", text: "Every institution receiving federal tele-health subsidies utilises automated dispensing cabinets.", answerCategory: "no" },
 { id: "dm-syl-01-20-e", text: "No institution that has implemented a BCMA workflow receives federal tele-health subsidies.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some institutions using automated dispensing cabinets operate rural clinics (and thus get federal subsidies). Because all institutions using these cabinets have implemented BCMA workflows, these specific subsidized institutions must have implemented BCMA workflows.\nB — NO: Implementing BCMA workflows is required for all automated dispensing cabinet users, but they might all be large metropolitan hospitals without any rural satellite footprint.\nC — YES: This follows directly because a subset of institutions using automated dispensing cabinets operate rural satellite clinics, making them recipients of federal subsidies.\nD — NO: Federal tele-health subsidies could be awarded to remote nursing facilities or independent community practices that do not utilize automated dispensing cabinets.\nE — NO: Directly contradicted by conclusion A, which demonstrates a mandatory positive intersection between BCMA implementation and tele-health subsidies."
+explanation: "A — YES: Some institutions using automated dispensing cabinets operate rural clinics (and thus get federal subsidies). Because all institutions using these cabinets have implemented BCMA workflows, these specific subsidized institutions must have implemented BCMA workflows.\nB — NO: Implementing BCMA workflows is required for all automated dispensing cabinet users, but they might all be large metropolitan hospitals without any rural satellite footprint.\nC — YES: This follows directly because a subset of institutions using automated dispensing cabinets operate rural satellite clinics, making them recipients of federal subsidies.\nD — NO: Federal tele-health subsidies could be awarded to remote nursing facilities or independent community practices that do not utilise automated dispensing cabinets.\nE — NO: Directly contradicted by conclusion A, which demonstrates a mandatory positive intersection between BCMA implementation and tele-health subsidies."
 },
 {
 kind: "drag-category",
@@ -867,8 +867,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "All patients diagnosed with acute pancreatitis exhibit elevated serum amylase levels.",
-"Some patients with elevated serum amylase levels exhibit localized pancreatic necrosis.",
-"All patients exhibiting localized pancreatic necrosis require immediate surgical debridement."
+"Some patients with elevated serum amylase levels exhibit localised pancreatic necrosis.",
+"All patients exhibiting localised pancreatic necrosis require immediate surgical debridement."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -1108,7 +1108,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All active galactic nuclei (AGN) powered by supermassive black holes produce intense synchrotron radiation emissions.",
 "Some active galactic nuclei (AGN) powered by supermassive black holes are classified as blazars.",
-"All blazars exhibit high-amplitude relativistic beaming directed toward Earth."
+"All blazars exhibit high-amplitude relativistic beaming directed towards Earth."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -1117,10 +1117,10 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-14-8-a", text: "Some objects that exhibit high-amplitude relativistic beaming directed toward Earth produce intense synchrotron radiation emissions.", answerCategory: "yes" },
+{ id: "dm-syl-14-8-a", text: "Some objects that exhibit high-amplitude relativistic beaming directed towards Earth produce intense synchrotron radiation emissions.", answerCategory: "yes" },
 { id: "dm-syl-14-8-b", text: "All AGN that produce intense synchrotron radiation emissions are classified as blazars.", answerCategory: "no" },
 { id: "dm-syl-14-8-c", text: "Some blazars produce intense synchrotron radiation emissions.", answerCategory: "yes" },
-{ id: "dm-syl-14-8-d", text: "No object exhibiting high-amplitude relativistic beaming directed toward Earth is an AGN powered by a supermassive black hole.", answerCategory: "no" },
+{ id: "dm-syl-14-8-d", text: "No object exhibiting high-amplitude relativistic beaming directed towards Earth is an AGN powered by a supermassive black hole.", answerCategory: "no" },
 { id: "dm-syl-14-8-e", text: "All blazars are powered by supermassive black holes.", answerCategory: "no" }
 ],
 explanation: "A — YES: Blazars exhibit relativistic beaming, and since some blazars are AGN powered by supermassive black holes (which produce synchrotron radiation), those specific beaming objects produce synchrotron emissions.\nB — NO: Only 'some' AGN powered by supermassive black holes are blazars, meaning some synchrotron-emitting AGN may not be blazars.\nC — YES: Since some blazars are AGN powered by supermassive black holes, and all such AGN produce synchrotron emissions, it follows that these blazars produce synchrotron radiation.\nD — NO: On the contrary, all blazars exhibit this beaming, and some blazars are explicitly AGN powered by supermassive black holes.\nE — NO: The premises state that 'some AGN... are classified as blazars', which leaves open the possibility that there are other blazars not powered by supermassive black holes."
@@ -1130,7 +1130,7 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All infrared space telescopes must maintain their primary mirrors below 10 Kelvin to minimize thermal background noise.",
+"All infrared space telescopes must maintain their primary mirrors below 10 Kelvin to minimise thermal background noise.",
 "No space telescope that maintains its primary mirror below 10 Kelvin relies entirely on passive radiative cooling loops.",
 "Some space telescopes currently operating in orbit around the Sun-Earth L2 point are infrared space telescopes."
 ],
@@ -1298,7 +1298,7 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All radio telescopes operating in the Very Long Baseline Interferometry (VLBI) network utilize atomic hydrogen maser clocks.",
+"All radio telescopes operating in the Very Long Baseline Interferometry (VLBI) network utilise atomic hydrogen maser clocks.",
 "Some radio telescopes operating in the Very Long Baseline Interferometry (VLBI) network are located in the Southern Hemisphere.",
 "All radio telescopes located in the Southern Hemisphere participate in international geodetic survey campaigns."
 ],
@@ -1309,13 +1309,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-14-16-a", text: "Some radio telescopes participating in international geodetic survey campaigns utilize atomic hydrogen maser clocks.", answerCategory: "yes" },
-{ id: "dm-syl-14-16-b", text: "All radio telescopes utilizing atomic hydrogen maser clocks are located in the Southern Hemisphere.", answerCategory: "no" },
+{ id: "dm-syl-14-16-a", text: "Some radio telescopes participating in international geodetic survey campaigns utilise atomic hydrogen maser clocks.", answerCategory: "yes" },
+{ id: "dm-syl-14-16-b", text: "All radio telescopes utilising atomic hydrogen maser clocks are located in the Southern Hemisphere.", answerCategory: "no" },
 { id: "dm-syl-14-16-c", text: "Some radio telescopes operating in the VLBI network participate in international geodetic survey campaigns.", answerCategory: "yes" },
 { id: "dm-syl-14-16-d", text: "No radio telescope operating in the VLBI network participates in international geodetic survey campaigns.", answerCategory: "no" },
 { id: "dm-syl-14-16-e", text: "All radio telescopes participating in international geodetic survey campaigns operate in the VLBI network.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some Southern Hemisphere telescopes are VLBI telescopes (which use maser clocks). Since all Southern Hemisphere telescopes participate in geodetic campaigns, these specific telescopes participate in campaigns and use maser clocks.\nB — NO: There are VLBI telescopes in the Northern Hemisphere that also utilize atomic hydrogen maser clocks.\nC — YES: Since some VLBI telescopes are in the Southern Hemisphere, and all Southern Hemisphere telescopes participate in these campaigns, it follows that these specific VLBI telescopes participate in the campaigns.\nD — NO: This directly contradicts the established overlap that some VLBI telescopes are in the Southern Hemisphere and thus participate in the campaigns.\nE — NO: There could be non-VLBI telescopes in the Southern Hemisphere that participate in international geodetic survey campaigns."
+explanation: "A — YES: Some Southern Hemisphere telescopes are VLBI telescopes (which use maser clocks). Since all Southern Hemisphere telescopes participate in geodetic campaigns, these specific telescopes participate in campaigns and use maser clocks.\nB — NO: There are VLBI telescopes in the Northern Hemisphere that also utilise atomic hydrogen maser clocks.\nC — YES: Since some VLBI telescopes are in the Southern Hemisphere, and all Southern Hemisphere telescopes participate in these campaigns, it follows that these specific VLBI telescopes participate in the campaigns.\nD — NO: This directly contradicts the established overlap that some VLBI telescopes are in the Southern Hemisphere and thus participate in the campaigns.\nE — NO: There could be non-VLBI telescopes in the Southern Hemisphere that participate in international geodetic survey campaigns."
 },
 {
 kind: "drag-category",
@@ -1370,8 +1370,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every deep-space telescope utilizing a deployable sunshield requires a multi-stage cryogenic cooler assembly.",
-"Some orbital observatories tracking near-Earth asteroids are deep-space telescopes utilizing a deployable sunshield.",
+"Every deep-space telescope utilising a deployable sunshield requires a multi-stage cryogenic cooler assembly.",
+"Some orbital observatories tracking near-Earth asteroids are deep-space telescopes utilising a deployable sunshield.",
 "All orbital observatories tracking near-Earth asteroids are funded by international space agency coalitions."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -1384,7 +1384,7 @@ categoryItems: [
 { id: "dm-syl-14-19-a", text: "Some assets funded by international space agency coalitions require a multi-stage cryogenic cooler assembly.", answerCategory: "yes" },
 { id: "dm-syl-14-19-b", text: "Every asset requiring a multi-stage cryogenic cooler assembly is funded by international space agency coalitions.", answerCategory: "no" },
 { id: "dm-syl-14-19-c", text: "Some orbital observatories tracking near-Earth asteroids require a multi-stage cryogenic cooler assembly.", answerCategory: "yes" },
-{ id: "dm-syl-14-19-d", text: "No deep-space telescope utilizing a deployable sunshield is funded by international space agency coalitions.", answerCategory: "no" },
+{ id: "dm-syl-14-19-d", text: "No deep-space telescope utilising a deployable sunshield is funded by international space agency coalitions.", answerCategory: "no" },
 { id: "dm-syl-14-19-e", text: "All assets funded by international space agency coalitions track near-Earth asteroids.", answerCategory: "no" }
 ],
 explanation: "A — YES: Some asteroid-tracking observatories use a sunshield (and thus need a cooler assembly). Since all asteroid-tracking observatories are funded by international coalitions, these specific funded assets require a cooler assembly.\nB — NO: Other cryogenic cooler assemblies might be used in military satellites, laboratory equipment, or non-coalition projects.\nC — YES: Since some asteroid-tracking observatories use a sunshield, and all sunshield telescopes require a cryogenic cooler assembly, it follows that these specific observatories require one.\nD — NO: On the contrary, some of these sunshield-deploying telescopes track near-Earth asteroids, meaning they *are* funded by international coalitions.\nE — NO: International coalitions fund many space assets, such as communications satellites or planetary rovers, which do not track near-Earth asteroids."
@@ -1587,7 +1587,7 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All diagnostic imaging modalities that use ionizing radiation require specialized lead-lined shielding.",
+"All diagnostic imaging modalities that use ionizing radiation require specialised lead-lined shielding.",
 "Computed Tomography (CT) scans always use ionizing radiation.",
 "Some diagnostic imaging modalities that use ionizing radiation are mobile units."
 ],
@@ -1598,13 +1598,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-20-4-a", text: "All CT scans require specialized lead-lined shielding.", answerCategory: "yes" },
-{ id: "dm-syl-20-4-b", text: "Some mobile units require specialized lead-lined shielding.", answerCategory: "yes" },
-{ id: "dm-syl-20-4-c", text: "All diagnostic imaging modalities requiring specialized lead-lined shielding are CT scans.", answerCategory: "no" },
+{ id: "dm-syl-20-4-a", text: "All CT scans require specialised lead-lined shielding.", answerCategory: "yes" },
+{ id: "dm-syl-20-4-b", text: "Some mobile units require specialised lead-lined shielding.", answerCategory: "yes" },
+{ id: "dm-syl-20-4-c", text: "All diagnostic imaging modalities requiring specialised lead-lined shielding are CT scans.", answerCategory: "no" },
 { id: "dm-syl-20-4-d", text: "Some mobile units are CT scans.", answerCategory: "no" },
-{ id: "dm-syl-20-4-e", text: "Some diagnostic imaging modalities that require specialized lead-lined shielding are mobile units.", answerCategory: "yes" }
+{ id: "dm-syl-20-4-e", text: "Some diagnostic imaging modalities that require specialised lead-lined shielding are mobile units.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Since CT scans always use ionizing radiation, and all modalities using ionizing radiation require shielding, CT scans must require shielding.\nB — YES: Some modalities using ionizing radiation are mobile units, and since all such modalities require shielding, those specific mobile units require it.\nC — NO: Shielding is required for all ionizing radiation modalities, which may include things other than CT scans (e.g., standard X-rays).\nD — NO: The premises state that some radiation modalities are mobile units, and CT scans use radiation, but there is no mandatory overlap established between CT scans and mobile units.\nE — YES: This is a direct conversion of the valid finding that the mobile units utilizing ionizing radiation require lead-lined shielding."
+explanation: "A — YES: Since CT scans always use ionizing radiation, and all modalities using ionizing radiation require shielding, CT scans must require shielding.\nB — YES: Some modalities using ionizing radiation are mobile units, and since all such modalities require shielding, those specific mobile units require it.\nC — NO: Shielding is required for all ionizing radiation modalities, which may include things other than CT scans (e.g., standard X-rays).\nD — NO: The premises state that some radiation modalities are mobile units, and CT scans use radiation, but there is no mandatory overlap established between CT scans and mobile units.\nE — YES: This is a direct conversion of the valid finding that the mobile units utilising ionizing radiation require lead-lined shielding."
 },
 {
 kind: "drag-category",
@@ -1612,7 +1612,7 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "No auto-immune condition is curable with standard first-line antibiotic courses.",
-"All conditions that cause localized acute joint inflammation are curable with standard first-line antibiotic courses.",
+"All conditions that cause localised acute joint inflammation are curable with standard first-line antibiotic courses.",
 "Some auto-immune conditions present with severe chronic fatigue."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -1622,11 +1622,11 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-20-5-a", text: "No condition that causes localized acute joint inflammation is an auto-immune condition.", answerCategory: "yes" },
+{ id: "dm-syl-20-5-a", text: "No condition that causes localised acute joint inflammation is an auto-immune condition.", answerCategory: "yes" },
 { id: "dm-syl-20-5-b", text: "Some conditions that present with severe chronic fatigue are not curable with standard first-line antibiotic courses.", answerCategory: "yes" },
-{ id: "dm-syl-20-5-c", text: "Some conditions that cause localized acute joint inflammation present with severe chronic fatigue.", answerCategory: "no" },
+{ id: "dm-syl-20-5-c", text: "Some conditions that cause localised acute joint inflammation present with severe chronic fatigue.", answerCategory: "no" },
 { id: "dm-syl-20-5-d", text: "All conditions that are not curable with standard first-line antibiotic courses are auto-immune conditions.", answerCategory: "no" },
-{ id: "dm-syl-20-5-e", text: "No auto-immune condition causes localized acute joint inflammation.", answerCategory: "yes" }
+{ id: "dm-syl-20-5-e", text: "No auto-immune condition causes localised acute joint inflammation.", answerCategory: "yes" }
 ],
 explanation: "A — YES: Because auto-immune conditions are never curable with these antibiotics, and all acute joint inflammation conditions are, there can be absolutely no overlap between the two sets.\nB — YES: The auto-immune conditions that present with chronic fatigue cannot be cured with standard first-line antibiotics.\nC — NO: Since acute joint inflammation conditions and auto-immune conditions are completely mutually exclusive, and chronic fatigue is only tied to auto-immune conditions here, we cannot infer this overlap.\nD — NO: There could be many other diseases (e.g., viral infections) that are not curable with antibiotics but are not auto-immune.\nE — YES: Since the two sets are completely mutually exclusive based on their antibiotic responsiveness, no member of one can be a member of the other."
 },
@@ -1636,8 +1636,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "All medical residents working in the intensive care unit (ICU) must complete an advanced airway management certification.",
-"Some medical residents working in the ICU are pediatric specialists.",
-"No pediatric specialist is permitted to work consecutive 24-hour shifts."
+"Some medical residents working in the ICU are paediatric specialists.",
+"No paediatric specialist is permitted to work consecutive 24-hour shifts."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -1647,12 +1647,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-20-6-a", text: "Some medical residents who have completed an advanced airway management certification are not permitted to work consecutive 24-hour shifts.", answerCategory: "yes" },
-{ id: "dm-syl-20-6-b", text: "Some pediatric specialists must complete an advanced airway management certification.", answerCategory: "yes" },
+{ id: "dm-syl-20-6-b", text: "Some paediatric specialists must complete an advanced airway management certification.", answerCategory: "yes" },
 { id: "dm-syl-20-6-c", text: "No medical resident working in the ICU is permitted to work consecutive 24-hour shifts.", answerCategory: "no" },
 { id: "dm-syl-20-6-d", text: "All individuals permitted to work consecutive 24-hour shifts are medical residents working in the ICU.", answerCategory: "no" },
 { id: "dm-syl-20-6-e", text: "Some medical residents working in the ICU are not permitted to work consecutive 24-hour shifts.", answerCategory: "yes" }
 ],
-explanation: "A — YES: The ICU medical residents who are pediatric specialists must complete the certification, and because they are pediatric specialists, they cannot work consecutive 24-hour shifts.\nB — YES: The pediatric specialists who are working as medical residents in the ICU must complete this certification.\nC — NO: The ban on consecutive 24-hour shifts explicitly applies to pediatric specialists. Other ICU residents might still be allowed to work them.\nD — NO: There is no basis to conclude that everyone permitted to work these shifts is an ICU resident; in fact, pediatric specialists are explicitly barred from it.\nE — YES: The subset of ICU medical residents who are pediatric specialists are banned from working consecutive 24-hour shifts."
+explanation: "A — YES: The ICU medical residents who are paediatric specialists must complete the certification, and because they are paediatric specialists, they cannot work consecutive 24-hour shifts.\nB — YES: The paediatric specialists who are working as medical residents in the ICU must complete this certification.\nC — NO: The ban on consecutive 24-hour shifts explicitly applies to paediatric specialists. Other ICU residents might still be allowed to work them.\nD — NO: There is no basis to conclude that everyone permitted to work these shifts is an ICU resident; in fact, paediatric specialists are explicitly barred from it.\nE — YES: The subset of ICU medical residents who are paediatric specialists are banned from working consecutive 24-hour shifts."
 },
 {
 kind: "drag-category",
@@ -1685,7 +1685,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "No Class-I medical device is subjected to mandatory human clinical trial registration.",
 "All active implantable cardiac pacemakers are subjected to mandatory human clinical trial registration.",
-"Some active implantable cardiac pacemakers utilize wireless telemetry systems."
+"Some active implantable cardiac pacemakers utilise wireless telemetry systems."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -1695,12 +1695,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-20-8-a", text: "No active implantable cardiac pacemaker is a Class-I medical device.", answerCategory: "yes" },
-{ id: "dm-syl-20-8-b", text: "Some devices that utilize wireless telemetry systems are subjected to mandatory human clinical trial registration.", answerCategory: "yes" },
-{ id: "dm-syl-20-8-c", text: "Some devices that utilize wireless telemetry systems are Class-I medical devices.", answerCategory: "no" },
-{ id: "dm-syl-20-8-d", text: "No Class-I medical device utilizes wireless telemetry systems.", answerCategory: "no" },
-{ id: "dm-syl-20-8-e", text: "Some devices subjected to mandatory human clinical trial registration utilize wireless telemetry systems.", answerCategory: "yes" }
+{ id: "dm-syl-20-8-b", text: "Some devices that utilise wireless telemetry systems are subjected to mandatory human clinical trial registration.", answerCategory: "yes" },
+{ id: "dm-syl-20-8-c", text: "Some devices that utilise wireless telemetry systems are Class-I medical devices.", answerCategory: "no" },
+{ id: "dm-syl-20-8-d", text: "No Class-I medical device utilises wireless telemetry systems.", answerCategory: "no" },
+{ id: "dm-syl-20-8-e", text: "Some devices subjected to mandatory human clinical trial registration utilise wireless telemetry systems.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Pacemakers must be registered, while Class-I devices are never registered, making the two categories entirely mutually exclusive.\nB — YES: The pacemakers that use wireless telemetry systems require mandatory human clinical trial registration.\nC — NO: While wireless telemetry is found in some pacemakers, there is no information linking or preventing wireless telemetry from being in Class-I devices.\nD — NO: There is no restriction listed in the premises preventing a Class-I medical device from utilizing a wireless telemetry system.\nE — YES: This is a direct restatement of the overlap established between pacemakers using wireless telemetry and the mandatory registration requirement."
+explanation: "A — YES: Pacemakers must be registered, while Class-I devices are never registered, making the two categories entirely mutually exclusive.\nB — YES: The pacemakers that use wireless telemetry systems require mandatory human clinical trial registration.\nC — NO: While wireless telemetry is found in some pacemakers, there is no information linking or preventing wireless telemetry from being in Class-I devices.\nD — NO: There is no restriction listed in the premises preventing a Class-I medical device from utilising a wireless telemetry system.\nE — YES: This is a direct restatement of the overlap established between pacemakers using wireless telemetry and the mandatory registration requirement."
 },
 
 // BATCH 2: Legal and Professional Roles (Questions 9-16)
@@ -1733,8 +1733,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All retainers for capital defense cases require written authorization from the public defender's oversight committee.",
-"Some retainers for capital defense cases involve multi-jurisdictional homicide charges.",
+"All retainers for capital defence cases require written authorization from the public defender's oversight committee.",
+"Some retainers for capital defence cases involve multi-jurisdictional homicide charges.",
 "No retainer involving multi-jurisdictional homicide charges is eligible for standard flat-fee billing structures."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -1747,10 +1747,10 @@ categoryItems: [
 { id: "dm-syl-20-10-a", text: "Some retainers that require written authorization from the public defender's oversight committee involve multi-jurisdictional homicide charges.", answerCategory: "yes" },
 { id: "dm-syl-20-10-b", text: "No retainer involving multi-jurisdictional homicide charges requires written authorization from the public defender's oversight committee.", answerCategory: "no" },
 { id: "dm-syl-20-10-c", text: "Some retainers that require written authorization from the public defender's oversight committee are not eligible for standard flat-fee billing structures.", answerCategory: "yes" },
-{ id: "dm-syl-20-10-d", text: "All retainers ineligible for standard flat-fee billing structures are retainers for capital defense cases.", answerCategory: "no" },
-{ id: "dm-syl-20-10-e", text: "Some retainers for capital defense cases are not eligible for standard flat-fee billing structures.", answerCategory: "yes" }
+{ id: "dm-syl-20-10-d", text: "All retainers ineligible for standard flat-fee billing structures are retainers for capital defence cases.", answerCategory: "no" },
+{ id: "dm-syl-20-10-e", text: "Some retainers for capital defence cases are not eligible for standard flat-fee billing structures.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Since some capital defense retainers involve multi-jurisdictional homicides, and all capital defense retainers require this authorization, those specific multi-jurisdictional retainers require authorization.\nB — NO: This completely contradicts the overlapping relationship established by the first two premises.\nC — YES: The capital defense retainers that involve multi-jurisdictional homicides require committee authorization and are simultaneously ineligible for standard flat fees.\nD — NO: Other unrelated types of legal retainers might also be ineligible for flat-fee billing structures for different reasons.\nE — YES: The specific subset of capital defense retainers that involve multi-jurisdictional homicide charges cannot use standard flat-fee billing structures."
+explanation: "A — YES: Since some capital defence retainers involve multi-jurisdictional homicides, and all capital defence retainers require this authorization, those specific multi-jurisdictional retainers require authorization.\nB — NO: This completely contradicts the overlapping relationship established by the first two premises.\nC — YES: The capital defence retainers that involve multi-jurisdictional homicides require committee authorization and are simultaneously ineligible for standard flat fees.\nD — NO: Other unrelated types of legal retainers might also be ineligible for flat-fee billing structures for different reasons.\nE — YES: The specific subset of capital defence retainers that involve multi-jurisdictional homicide charges cannot use standard flat-fee billing structures."
 },
 {
 kind: "drag-category",
@@ -1829,8 +1829,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All public defense attorneys representing capital defendants must complete an advanced capital litigation certification.",
-"Some public defense attorneys representing capital defendants are board-certified appellate advocates.",
+"All public defence attorneys representing capital defendants must complete an advanced capital litigation certification.",
+"Some public defence attorneys representing capital defendants are board-certified appellate advocates.",
 "No board-certified appellate advocate is permitted to handle expedited misdemeanor appeals."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -1842,11 +1842,11 @@ categories: [
 categoryItems: [
 { id: "dm-syl-20-14-a", text: "Some attorneys who have completed an advanced capital litigation certification are not permitted to handle expedited misdemeanor appeals.", answerCategory: "yes" },
 { id: "dm-syl-20-14-b", text: "Some board-certified appellate advocates must complete an advanced capital litigation certification.", answerCategory: "yes" },
-{ id: "dm-syl-20-14-c", text: "No public defense attorney representing capital defendants is permitted to handle expedited misdemeanor appeals.", answerCategory: "no" },
-{ id: "dm-syl-20-14-d", text: "All individuals permitted to handle expedited misdemeanor appeals are public defense attorneys representing capital defendants.", answerCategory: "no" },
-{ id: "dm-syl-20-14-e", text: "Some public defense attorneys representing capital defendants are not permitted to handle expedited misdemeanor appeals.", answerCategory: "yes" }
+{ id: "dm-syl-20-14-c", text: "No public defence attorney representing capital defendants is permitted to handle expedited misdemeanor appeals.", answerCategory: "no" },
+{ id: "dm-syl-20-14-d", text: "All individuals permitted to handle expedited misdemeanor appeals are public defence attorneys representing capital defendants.", answerCategory: "no" },
+{ id: "dm-syl-20-14-e", text: "Some public defence attorneys representing capital defendants are not permitted to handle expedited misdemeanor appeals.", answerCategory: "yes" }
 ],
-explanation: "A — YES: The capital defense attorneys who are board-certified appellate advocates must complete the certification, and because they are board-certified appellate advocates, they are barred from handling misdemeanor appeals.\nB — YES: The board-certified appellate advocates who are currently representing capital defendants are obligated to complete this certification.\nC — NO: The restriction on misdemeanor appeals applies to board-certified appellate advocates. Capital defense attorneys who lack that specific certification might still handle them.\nD — NO: There is no basis to claim that everyone handling misdemeanor appeals must be a capital defense attorney; in fact, board-certified appellate advocates are banned from it.\nE — YES: The specific group of capital defense attorneys who are also board-certified appellate advocates are prohibited from handling expedited misdemeanor appeals."
+explanation: "A — YES: The capital defence attorneys who are board-certified appellate advocates must complete the certification, and because they are board-certified appellate advocates, they are barred from handling misdemeanor appeals.\nB — YES: The board-certified appellate advocates who are currently representing capital defendants are obligated to complete this certification.\nC — NO: The restriction on misdemeanor appeals applies to board-certified appellate advocates. Capital defence attorneys who lack that specific certification might still handle them.\nD — NO: There is no basis to claim that everyone handling misdemeanor appeals must be a capital defence attorney; in fact, board-certified appellate advocates are banned from it.\nE — YES: The specific group of capital defence attorneys who are also board-certified appellate advocates are prohibited from handling expedited misdemeanor appeals."
 },
 {
 kind: "drag-category",
@@ -1854,8 +1854,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "All patent infringement litigation involves multi-jurisdictional discovery procedures.",
-"Any legal dispute involving multi-jurisdictional discovery procedures requires a specialized forensic data escrow agent.",
-"Some legal disputes that require a specialized forensic data escrow agent are settled completely within thirty days of filing."
+"Any legal dispute involving multi-jurisdictional discovery procedures requires a specialised forensic data escrow agent.",
+"Some legal disputes that require a specialised forensic data escrow agent are settled completely within thirty days of filing."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -1864,11 +1864,11 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-20-15-a", text: "All patent infringement litigation requires a specialized forensic data escrow agent.", answerCategory: "yes" },
+{ id: "dm-syl-20-15-a", text: "All patent infringement litigation requires a specialised forensic data escrow agent.", answerCategory: "yes" },
 { id: "dm-syl-20-15-b", text: "Some patent infringement litigation is settled completely within thirty days of filing.", answerCategory: "no" },
-{ id: "dm-syl-20-15-c", text: "Some disputes requiring a specialized forensic data escrow agent involve multi-jurisdictional discovery procedures.", answerCategory: "yes" },
+{ id: "dm-syl-20-15-c", text: "Some disputes requiring a specialised forensic data escrow agent involve multi-jurisdictional discovery procedures.", answerCategory: "yes" },
 { id: "dm-syl-20-15-d", text: "No legal dispute that is settled completely within thirty days of filing involves multi-jurisdictional discovery procedures.", answerCategory: "no" },
-{ id: "dm-syl-20-15-e", text: "Every legal dispute that requires a specialized forensic data escrow agent is a patent infringement litigation case.", answerCategory: "no" }
+{ id: "dm-syl-20-15-e", text: "Every legal dispute that requires a specialised forensic data escrow agent is a patent infringement litigation case.", answerCategory: "no" }
 ],
 explanation: "A — YES: Since patent litigation always involves multi-jurisdictional discovery, and all multi-jurisdictional discovery requires a forensic escrow agent, patent litigation must require one.\nB — NO: The premises note that some disputes requiring an escrow agent settle in 30 days, but we cannot assume this characteristic extends to the patent litigation group.\nC — YES: Because all disputes with multi-jurisdictional discovery require an escrow agent, these disputes constitute a subset of those requiring an escrow agent.\nD — NO: We cannot rule out an overlap between 30-day settlements and multi-jurisdictional discovery, as the statements do not completely separate them.\nE — NO: Patent infringement litigation is merely one type of legal dispute within the broader set of cases requiring an escrow agent."
 },
@@ -1878,8 +1878,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "No high-security correctional facility is exempted from mandatory independent human rights audits.",
-"All privately-administered juvenile detention centers are exempted from mandatory independent human rights audits.",
-"Some privately-administered juvenile detention centers utilize automated biometric locks."
+"All privately-administered juvenile detention centres are exempted from mandatory independent human rights audits.",
+"Some privately-administered juvenile detention centres utilise automated biometric locks."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -1888,13 +1888,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-20-16-a", text: "No privately-administered juvenile detention center is a high-security correctional facility.", answerCategory: "yes" },
-{ id: "dm-syl-20-16-b", text: "Some facilities that utilize automated biometric locks are exempted from mandatory independent human rights audits.", answerCategory: "yes" },
-{ id: "dm-syl-20-16-c", text: "Some facilities that utilize automated biometric locks are high-security correctional facilities.", answerCategory: "no" },
-{ id: "dm-syl-20-16-d", text: "No high-security correctional facility utilizes automated biometric locks.", answerCategory: "no" },
-{ id: "dm-syl-20-16-e", text: "Some facilities exempted from mandatory independent human rights audits utilize automated biometric locks.", answerCategory: "yes" }
+{ id: "dm-syl-20-16-a", text: "No privately-administered juvenile detention centre is a high-security correctional facility.", answerCategory: "yes" },
+{ id: "dm-syl-20-16-b", text: "Some facilities that utilise automated biometric locks are exempted from mandatory independent human rights audits.", answerCategory: "yes" },
+{ id: "dm-syl-20-16-c", text: "Some facilities that utilise automated biometric locks are high-security correctional facilities.", answerCategory: "no" },
+{ id: "dm-syl-20-16-d", text: "No high-security correctional facility utilises automated biometric locks.", answerCategory: "no" },
+{ id: "dm-syl-20-16-e", text: "Some facilities exempted from mandatory independent human rights audits utilise automated biometric locks.", answerCategory: "yes" }
 ],
-explanation: "A — YES: High-security facilities are never exempt from audits, while privately-administered juvenile centers are always exempt, meaning they are completely exclusive sets.\nB — YES: The privately-administered juvenile detention centers that use automated biometric locks are exempted from these audits.\nC — NO: While biometric locks are used in some juvenile centers, there is no statement preventing or guaranteeing their use in high-security correctional facilities.\nD — NO: The premises do not contain any rule restricting high-security correctional facilities from adopting automated biometric locks.\nE — YES: This directly reflects the overlap between centers that are exempt from audits and those that use automated biometric locks."
+explanation: "A — YES: High-security facilities are never exempt from audits, while privately-administered juvenile centres are always exempt, meaning they are completely exclusive sets.\nB — YES: The privately-administered juvenile detention centres that use automated biometric locks are exempted from these audits.\nC — NO: While biometric locks are used in some juvenile centres, there is no statement preventing or guaranteeing their use in high-security correctional facilities.\nD — NO: The premises do not contain any rule restricting high-security correctional facilities from adopting automated biometric locks.\nE — YES: This directly reflects the overlap between centres that are exempt from audits and those that use automated biometric locks."
 },
 
 // BATCH 3: Biology and Zoology (Questions 17-24)
@@ -1903,8 +1903,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All apex marine predators possess highly specialized electroreceptors.",
-"No organism possessing highly specialized electroreceptors is capable of surviving in purely hypersaline inland lakes.",
+"All apex marine predators possess highly specialised electroreceptors.",
+"No organism possessing highly specialised electroreceptors is capable of surviving in purely hypersaline inland lakes.",
 "Some apex marine predators possess cartilaginous skeletal frameworks."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -1916,11 +1916,11 @@ categories: [
 categoryItems: [
 { id: "dm-syl-20-17-a", text: "Some organisms possessing cartilaginous skeletal frameworks are capable of surviving in purely hypersaline inland lakes.", answerCategory: "no" },
 { id: "dm-syl-20-17-b", text: "All apex marine predators are incapable of surviving in purely hypersaline inland lakes.", answerCategory: "yes" },
-{ id: "dm-syl-20-17-c", text: "Some organisms possessing cartilaginous skeletal frameworks possess highly specialized electroreceptors.", answerCategory: "yes" },
+{ id: "dm-syl-20-17-c", text: "Some organisms possessing cartilaginous skeletal frameworks possess highly specialised electroreceptors.", answerCategory: "yes" },
 { id: "dm-syl-20-17-d", text: "No organism capable of surviving in purely hypersaline inland lakes is an apex marine predator.", answerCategory: "yes" },
-{ id: "dm-syl-20-17-e", text: "Every organism possessing highly specialized electroreceptors is an apex marine predator.", answerCategory: "no" }
+{ id: "dm-syl-20-17-e", text: "Every organism possessing highly specialised electroreceptors is an apex marine predator.", answerCategory: "no" }
 ],
-explanation: "A — NO: The apex marine predators with cartilaginous skeletons have electroreceptors, which absolutely prevents them from surviving in hypersaline inland lakes.\nB — YES: All apex marine predators have electroreceptors, and none of those can survive in hypersaline lakes, meaning all apex marine predators cannot survive there.\nC — YES: The apex marine predators that have cartilaginous skeletal frameworks must, by definition, possess highly specialized electroreceptors.\nD — YES: Since every apex marine predator cannot survive in hypersaline inland lakes, no organism that can survive there can be an apex marine predator.\nE — NO: Highly specialized electroreceptors might be found in organisms that are not apex marine predators."
+explanation: "A — NO: The apex marine predators with cartilaginous skeletons have electroreceptors, which absolutely prevents them from surviving in hypersaline inland lakes.\nB — YES: All apex marine predators have electroreceptors, and none of those can survive in hypersaline lakes, meaning all apex marine predators cannot survive there.\nC — YES: The apex marine predators that have cartilaginous skeletal frameworks must, by definition, possess highly specialised electroreceptors.\nD — YES: Since every apex marine predator cannot survive in hypersaline inland lakes, no organism that can survive there can be an apex marine predator.\nE — NO: Highly specialised electroreceptors might be found in organisms that are not apex marine predators."
 },
 {
 kind: "drag-category",
@@ -1953,7 +1953,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "Every species of bat must possess a modified wing membrane.",
 "Some species of bat are fruit-eating canopy foragers.",
-"Any fruit-eating canopy forager must have specialized high-acuity color vision."
+"Any fruit-eating canopy forager must have specialised high-acuity colour vision."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -1962,13 +1962,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-20-19-a", text: "Some organisms that exhibit specialized high-acuity color vision possess a modified wing membrane.", answerCategory: "yes" },
-{ id: "dm-syl-20-19-b", text: "All organisms that possess a modified wing membrane exhibit specialized high-acuity color vision.", answerCategory: "no" },
-{ id: "dm-syl-20-19-c", text: "Some species of bat exhibit specialized high-acuity color vision.", answerCategory: "yes" },
-{ id: "dm-syl-20-19-d", text: "No organism exhibiting specialized high-acuity color vision is a species of bat.", answerCategory: "no" },
+{ id: "dm-syl-20-19-a", text: "Some organisms that exhibit specialised high-acuity colour vision possess a modified wing membrane.", answerCategory: "yes" },
+{ id: "dm-syl-20-19-b", text: "All organisms that possess a modified wing membrane exhibit specialised high-acuity colour vision.", answerCategory: "no" },
+{ id: "dm-syl-20-19-c", text: "Some species of bat exhibit specialised high-acuity colour vision.", answerCategory: "yes" },
+{ id: "dm-syl-20-19-d", text: "No organism exhibiting specialised high-acuity colour vision is a species of bat.", answerCategory: "no" },
 { id: "dm-syl-20-19-e", text: "Every species of bat that is a fruit-eating canopy forager possesses a modified wing membrane.", answerCategory: "yes" }
 ],
-explanation: "A — YES: The bat species that are fruit-eating foragers exhibit high-acuity color vision, and because they are bats, they possess a modified wing membrane.\nB — NO: We only know that fruit-eating canopy foragers must have high-acuity color vision; other bat species might lack it.\nC — YES: The specific bat species that operate as fruit-eating canopy foragers are required to have specialized high-acuity color vision.\nD — NO: This contradicts the clear overlap between bat species, canopy foraging behavior, and high-acuity color vision.\nE — YES: Because all bat species possess a modified wing membrane, this applies unconditionally to the fruit-eating subset."
+explanation: "A — YES: The bat species that are fruit-eating foragers exhibit high-acuity colour vision, and because they are bats, they possess a modified wing membrane.\nB — NO: We only know that fruit-eating canopy foragers must have high-acuity colour vision; other bat species might lack it.\nC — YES: The specific bat species that operate as fruit-eating canopy foragers are required to have specialised high-acuity colour vision.\nD — NO: This contradicts the clear overlap between bat species, canopy foraging behaviour, and high-acuity colour vision.\nE — YES: Because all bat species possess a modified wing membrane, this applies unconditionally to the fruit-eating subset."
 },
 {
 kind: "drag-category",
@@ -2610,9 +2610,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Some hedge funds utilize high-frequency algorithmic execution.",
-"All funds that utilize high-frequency algorithmic execution are co-located at the exchange's data center.",
-"All funds co-located at the exchange's data center pay premium infrastructure fees."
+"Some hedge funds utilise high-frequency algorithmic execution.",
+"All funds that utilise high-frequency algorithmic execution are co-located at the exchange's data centre.",
+"All funds co-located at the exchange's data centre pay premium infrastructure fees."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -2623,8 +2623,8 @@ categories: [
 categoryItems: [
 { id: "dm-syl-19-22-a", text: "All hedge funds pay premium infrastructure fees.", answerCategory: "no" },
 { id: "dm-syl-19-22-b", text: "Some hedge funds pay premium infrastructure fees.", answerCategory: "yes" },
-{ id: "dm-syl-19-22-c", text: "All funds that utilize high-frequency algorithmic execution pay premium infrastructure fees.", answerCategory: "yes" },
-{ id: "dm-syl-19-22-d", text: "No fund that pays premium infrastructure fees utilizes high-frequency algorithmic execution.", answerCategory: "no" },
+{ id: "dm-syl-19-22-c", text: "All funds that utilise high-frequency algorithmic execution pay premium infrastructure fees.", answerCategory: "yes" },
+{ id: "dm-syl-19-22-d", text: "No fund that pays premium infrastructure fees utilises high-frequency algorithmic execution.", answerCategory: "no" },
 { id: "dm-syl-19-22-e", text: "Some funds that pay premium infrastructure fees are hedge funds.", answerCategory: "yes" }
 ],
 explanation: "A — NO: Only the hedge funds using high-frequency algorithms are proven to pay premium fees.\nB — YES: The hedge funds using high-frequency algorithms must be co-located and therefore must pay premium fees.\nC — YES: All high-frequency funds are co-located, and all co-located funds pay premium fees.\nD — NO: This completely contradicts conclusion C.\nE — YES: The hedge funds that pay premium fees due to co-location prove this overlap."
@@ -2683,8 +2683,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All white-collar crimes that involve embezzling corporate funds of over one million dollars are automatically classified as federal offenses.",
-"No federal offenses are eligible for immediate local bail or summary dismissal.",
+"All white-collar crimes that involve embezzling corporate funds of over one million dollars are automatically classified as federal offences.",
+"No federal offences are eligible for immediate local bail or summary dismissal.",
 "Some investigations initiated by the Financial Fraud Division target white-collar crimes involving embezzling corporate funds of over one million dollars."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -2694,13 +2694,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-18-1-a", text: "Some investigations initiated by the Financial Fraud Division target offenses that are not eligible for immediate local bail.", answerCategory: "yes" },
-{ id: "dm-syl-18-1-b", text: "All corporate embezzlement cases are automatically classified as federal offenses.", answerCategory: "no" },
-{ id: "dm-syl-18-1-c", text: "Some federal offenses are investigated by the Financial Fraud Division.", answerCategory: "yes" },
+{ id: "dm-syl-18-1-a", text: "Some investigations initiated by the Financial Fraud Division target offences that are not eligible for immediate local bail.", answerCategory: "yes" },
+{ id: "dm-syl-18-1-b", text: "All corporate embezzlement cases are automatically classified as federal offences.", answerCategory: "no" },
+{ id: "dm-syl-18-1-c", text: "Some federal offences are investigated by the Financial Fraud Division.", answerCategory: "yes" },
 { id: "dm-syl-18-1-d", text: "No crimes eligible for immediate local bail are targeted by the Financial Fraud Division.", answerCategory: "no" },
-{ id: "dm-syl-18-1-e", text: "Some offenses that are not eligible for immediate local bail are federal offenses.", answerCategory: "yes" }
+{ id: "dm-syl-18-1-e", text: "Some offences that are not eligible for immediate local bail are federal offences.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Some Financial Fraud Division investigations target crimes that are federal offenses, and no federal offenses are eligible for immediate local bail, so these targeted offenses are not eligible.\nB — NO: The premises only specify this for embezzlement exceeding one million dollars, not all corporate embezzlement.\nC — YES: Since some Financial Fraud Division investigations target crimes that are classified as federal offenses, it follows that some federal offenses are investigated by them.\nD — NO: We only know that some targeted crimes are not eligible; we cannot conclude that no eligible crimes are targeted.\nE — YES: Since all federal offenses are not eligible for immediate local bail, any federal offense constitutes an offense that is not eligible for immediate local bail."
+explanation: "A — YES: Some Financial Fraud Division investigations target crimes that are federal offences, and no federal offences are eligible for immediate local bail, so these targeted offences are not eligible.\nB — NO: The premises only specify this for embezzlement exceeding one million dollars, not all corporate embezzlement.\nC — YES: Since some Financial Fraud Division investigations target crimes that are classified as federal offences, it follows that some federal offences are investigated by them.\nD — NO: We only know that some targeted crimes are not eligible; we cannot conclude that no eligible crimes are targeted.\nE — YES: Since all federal offences are not eligible for immediate local bail, any federal offence constitutes an offence that is not eligible for immediate local bail."
 },
 {
 kind: "drag-category",
@@ -2709,7 +2709,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All compliance officers who discover insider trading must report the violation directly to the Securities Regulatory Panel.",
 "Some compliance officers at retail banks are also certified forensic accountants.",
-"No professional who reports violations directly to the Securities Regulatory Panel is permitted to consult for private defense attorneys concurrently."
+"No professional who reports violations directly to the Securities Regulatory Panel is permitted to consult for private defence attorneys concurrently."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -2718,13 +2718,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-18-2-a", text: "No compliance officer who discovers insider trading is permitted to consult for private defense attorneys concurrently.", answerCategory: "yes" },
+{ id: "dm-syl-18-2-a", text: "No compliance officer who discovers insider trading is permitted to consult for private defence attorneys concurrently.", answerCategory: "yes" },
 { id: "dm-syl-18-2-b", text: "Some certified forensic accountants are compliance officers at retail banks.", answerCategory: "yes" },
 { id: "dm-syl-18-2-c", text: "All compliance officers who are certified forensic accountants have discovered insider trading.", answerCategory: "no" },
-{ id: "dm-syl-18-2-d", text: "Some professionals permitted to consult for private defense attorneys concurrently are compliance officers who have discovered insider trading.", answerCategory: "no" },
-{ id: "dm-syl-18-2-e", text: "Any professional who is permitted to consult for private defense attorneys concurrently does not report insider trading violations directly to the Securities Regulatory Panel.", answerCategory: "yes" }
+{ id: "dm-syl-18-2-d", text: "Some professionals permitted to consult for private defence attorneys concurrently are compliance officers who have discovered insider trading.", answerCategory: "no" },
+{ id: "dm-syl-18-2-e", text: "Any professional who is permitted to consult for private defence attorneys concurrently does not report insider trading violations directly to the Securities Regulatory Panel.", answerCategory: "yes" }
 ],
-explanation: "A — YES: All compliance officers who discover insider trading must report to the Panel, and no one who reports to the Panel can consult for private defense attorneys.\nB — YES: This is a direct logical conversion of 'Some compliance officers at retail banks are certified forensic accountants'.\nC — NO: The premises do not state that being a certified forensic accountant implies having discovered insider trading.\nD — NO: No compliance officer who discovers insider trading can consult for private defense attorneys, so none can be permitted to do so concurrently.\nE — YES: Because no professional who reports to the Panel is permitted to consult concurrently, any professional who is permitted to consult cannot be someone who reports to the Panel."
+explanation: "A — YES: All compliance officers who discover insider trading must report to the Panel, and no one who reports to the Panel can consult for private defence attorneys.\nB — YES: This is a direct logical conversion of 'Some compliance officers at retail banks are certified forensic accountants'.\nC — NO: The premises do not state that being a certified forensic accountant implies having discovered insider trading.\nD — NO: No compliance officer who discovers insider trading can consult for private defence attorneys, so none can be permitted to do so concurrently.\nE — YES: Because no professional who reports to the Panel is permitted to consult concurrently, any professional who is permitted to consult cannot be someone who reports to the Panel."
 },
 {
 kind: "drag-category",
@@ -2820,7 +2820,7 @@ categoryItems: [
 { id: "dm-syl-18-6-d", text: "Some individuals who face a mandatory minimum sentence are former high-ranking executives.", answerCategory: "yes" },
 { id: "dm-syl-18-6-e", text: "Every former high-ranking executive faces a mandatory minimum sentence.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some former high-ranking executives are convicted of bribery, meaning they face a mandatory minimum sentence, which makes them ineligible for early release.\nB — NO: Other offenses could also cause an individual to be ineligible for early release.\nC — YES: Every individual convicted of bribery faces a mandatory minimum sentence, and none of those individuals are eligible for early release.\nD — YES: Some executives are convicted of bribery, and all such individuals face a mandatory minimum sentence.\nE — NO: The premises only establish this for those former executives who are convicted of bribery."
+explanation: "A — YES: Some former high-ranking executives are convicted of bribery, meaning they face a mandatory minimum sentence, which makes them ineligible for early release.\nB — NO: Other offences could also cause an individual to be ineligible for early release.\nC — YES: Every individual convicted of bribery faces a mandatory minimum sentence, and none of those individuals are eligible for early release.\nD — YES: Some executives are convicted of bribery, and all such individuals face a mandatory minimum sentence.\nE — NO: The premises only establish this for those former executives who are convicted of bribery."
 },
 {
 kind: "drag-category",
@@ -2901,9 +2901,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every digital forensics file encrypted with Triple-DES algorithm must be decrypted using a localized hardware security module.",
+"Every digital forensics file encrypted with Triple-DES algorithm must be decrypted using a localised hardware security module.",
 "Some digital forensics files encrypted with Triple-DES algorithm are associated with cyber-extortion syndicates.",
-"No file that must be decrypted using a localized hardware security module can be transferred over open cloud networks."
+"No file that must be decrypted using a localised hardware security module can be transferred over open cloud networks."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -2912,13 +2912,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-18-11-a", text: "Some files associated with cyber-extortion syndicates must be decrypted using a localized hardware security module.", answerCategory: "yes" },
+{ id: "dm-syl-18-11-a", text: "Some files associated with cyber-extortion syndicates must be decrypted using a localised hardware security module.", answerCategory: "yes" },
 { id: "dm-syl-18-11-b", text: "No digital forensics file encrypted with Triple-DES algorithm can be transferred over open cloud networks.", answerCategory: "yes" },
 { id: "dm-syl-18-11-c", text: "Some files that cannot be transferred over open cloud networks are associated with cyber-extortion syndicates.", answerCategory: "yes" },
 { id: "dm-syl-18-11-d", text: "All files associated with cyber-extortion syndicates are encrypted with Triple-DES algorithm.", answerCategory: "no" },
 { id: "dm-syl-18-11-e", text: "Any file that can be transferred over open cloud networks is encrypted with Triple-DES algorithm.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some Triple-DES files are linked to cyber-extortion syndicates, and all Triple-DES files require the localized hardware security module.\nB — YES: All Triple-DES files require the localized module, and no file requiring that module can be transferred over open cloud networks.\nC — YES: The Triple-DES files associated with cyber-extortion syndicates require the localized module, preventing them from being transferred over open cloud networks.\nD — NO: Cyber-extortion syndicates might use other encryption algorithms or no encryption at all on some files.\nE — NO: Files that can be transferred over open cloud networks cannot require the localized module, meaning they cannot be encrypted with Triple-DES."
+explanation: "A — YES: Some Triple-DES files are linked to cyber-extortion syndicates, and all Triple-DES files require the localised hardware security module.\nB — YES: All Triple-DES files require the localised module, and no file requiring that module can be transferred over open cloud networks.\nC — YES: The Triple-DES files associated with cyber-extortion syndicates require the localised module, preventing them from being transferred over open cloud networks.\nD — NO: Cyber-extortion syndicates might use other encryption algorithms or no encryption at all on some files.\nE — NO: Files that can be transferred over open cloud networks cannot require the localised module, meaning they cannot be encrypted with Triple-DES."
 },
 {
 kind: "drag-category",
@@ -3071,8 +3071,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All capital offenses adjudicated in the Supreme Court require a full twelve-member jury pool.",
-"Some capital offenses adjudicated in the Supreme Court involve multi-jurisdictional conspiracies.",
+"All capital offences adjudicated in the Supreme Court require a full twelve-member jury pool.",
+"Some capital offences adjudicated in the Supreme Court involve multi-jurisdictional conspiracies.",
 "No legal proceeding requiring a full twelve-member jury pool is eligible for expedited appellate review."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -3082,13 +3082,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-18-18-a", text: "Some capital offenses adjudicated in the Supreme Court are not eligible for expedited appellate review.", answerCategory: "yes" },
-{ id: "dm-syl-18-18-b", text: "No capital offenses adjudicated in the Supreme Court are eligible for expedited appellate review.", answerCategory: "yes" },
+{ id: "dm-syl-18-18-a", text: "Some capital offences adjudicated in the Supreme Court are not eligible for expedited appellate review.", answerCategory: "yes" },
+{ id: "dm-syl-18-18-b", text: "No capital offences adjudicated in the Supreme Court are eligible for expedited appellate review.", answerCategory: "yes" },
 { id: "dm-syl-18-18-c", text: "Some legal proceedings involving multi-jurisdictional conspiracies require a full twelve-member jury pool.", answerCategory: "yes" },
-{ id: "dm-syl-18-18-d", text: "All legal proceedings that are not eligible for expedited appellate review are capital offenses adjudicated in the Supreme Court.", answerCategory: "no" },
+{ id: "dm-syl-18-18-d", text: "All legal proceedings that are not eligible for expedited appellate review are capital offences adjudicated in the Supreme Court.", answerCategory: "no" },
 { id: "dm-syl-18-18-e", text: "Some legal proceedings involving multi-jurisdictional conspiracies are eligible for expedited appellate review.", answerCategory: "no" }
 ],
-explanation: "A — YES: Since *no* such offense is eligible (Conclusion B), it is also true that *some* are not eligible.\nB — YES: All capital offenses adjudicated there require a 12-member jury, and no proceeding requiring such a jury is eligible for expedited review.\nC — YES: Some capital offenses involve multi-jurisdictional conspiracies, and all these capital offenses require a 12-member jury.\nD — NO: Other types of legal proceedings could also be ineligible for expedited appellate review.\nE — NO: The premises do not provide enough information to guarantee that any multi-jurisdictional conspiracy case is eligible for expedited review."
+explanation: "A — YES: Since *no* such offence is eligible (Conclusion B), it is also true that *some* are not eligible.\nB — YES: All capital offences adjudicated there require a 12-member jury, and no proceeding requiring such a jury is eligible for expedited review.\nC — YES: Some capital offences involve multi-jurisdictional conspiracies, and all these capital offences require a 12-member jury.\nD — NO: Other types of legal proceedings could also be ineligible for expedited appellate review.\nE — NO: The premises do not provide enough information to guarantee that any multi-jurisdictional conspiracy case is eligible for expedited review."
 },
 {
 kind: "drag-category",
@@ -3119,9 +3119,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"No misdemeanor offense that carries a statutory fine under five hundred dollars triggers a mandatory driver's license suspension.",
-"All traffic infractions involving blood-alcohol levels above the legal limit trigger a mandatory driver's license suspension.",
-"Some traffic infractions involving blood-alcohol levels above the legal limit are classified as misdemeanor offenses."
+"No misdemeanor offence that carries a statutory fine under five hundred dollars triggers a mandatory driver's licence suspension.",
+"All traffic infractions involving blood-alcohol levels above the legal limit trigger a mandatory driver's licence suspension.",
+"Some traffic infractions involving blood-alcohol levels above the legal limit are classified as misdemeanor offences."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -3132,11 +3132,11 @@ categories: [
 categoryItems: [
 { id: "dm-syl-18-20-a", text: "No traffic infraction involving blood-alcohol levels above the legal limit carries a statutory fine under five hundred dollars.", answerCategory: "no" },
 { id: "dm-syl-18-20-b", text: "Some traffic infractions involving blood-alcohol levels above the legal limit do not carry a statutory fine under five hundred dollars.", answerCategory: "no" },
-{ id: "dm-syl-18-20-c", text: "Some misdemeanor offenses do not carry a statutory fine under five hundred dollars.", answerCategory: "yes" },
-{ id: "dm-syl-18-20-d", text: "All misdemeanor offenses that trigger a mandatory driver's license suspension carry a statutory fine under five hundred dollars.", answerCategory: "no" },
-{ id: "dm-syl-18-20-e", text: "Some misdemeanor offenses trigger a mandatory driver's license suspension.", answerCategory: "yes" }
+{ id: "dm-syl-18-20-c", text: "Some misdemeanor offences do not carry a statutory fine under five hundred dollars.", answerCategory: "yes" },
+{ id: "dm-syl-18-20-d", text: "All misdemeanor offences that trigger a mandatory driver's licence suspension carry a statutory fine under five hundred dollars.", answerCategory: "no" },
+{ id: "dm-syl-18-20-e", text: "Some misdemeanor offences trigger a mandatory driver's licence suspension.", answerCategory: "yes" }
 ],
-explanation: "A — NO: The premises only rule out statutory fines under $500 for misdemeanors that *do not* trigger suspension. Traffic infractions with high blood-alcohol levels *do* trigger suspension, so they are not bound by this restriction; they could have fines under or over $500.\nB — NO: Following the same logic, we cannot definitively say anything about the statutory fine amount for these traffic infractions from the given premises.\nC — YES: Some high-blood-alcohol infractions are misdemeanors, and because they trigger a mandatory suspension, they *cannot* be part of the group of misdemeanors that carry a fine under $500. Thus, they must carry a fine of $500 or more.\nD — NO: Misdemeanors that trigger suspension cannot carry a statutory fine under $500; they must carry a fine equal to or greater than $500.\nE — YES: Some high-blood-alcohol traffic infractions are misdemeanors, and all such infractions trigger a mandatory driver's license suspension."
+explanation: "A — NO: The premises only rule out statutory fines under $500 for misdemeanors that *do not* trigger suspension. Traffic infractions with high blood-alcohol levels *do* trigger suspension, so they are not bound by this restriction; they could have fines under or over $500.\nB — NO: Following the same logic, we cannot definitively say anything about the statutory fine amount for these traffic infractions from the given premises.\nC — YES: Some high-blood-alcohol infractions are misdemeanors, and because they trigger a mandatory suspension, they *cannot* be part of the group of misdemeanors that carry a fine under $500. Thus, they must carry a fine of $500 or more.\nD — NO: Misdemeanors that trigger suspension cannot carry a statutory fine under $500; they must carry a fine equal to or greater than $500.\nE — YES: Some high-blood-alcohol traffic infractions are misdemeanors, and all such infractions trigger a mandatory driver's licence suspension."
 },
 {
 kind: "drag-category",
@@ -3215,8 +3215,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every state extradition request involving non-violent offenses must be signed by the Governor.",
-"Some state extradition requests involving non-violent offenses are fast-tracked under the Interstate Compact.",
+"Every state extradition request involving non-violent offences must be signed by the Governor.",
+"Some state extradition requests involving non-violent offences are fast-tracked under the Interstate Compact.",
 "No request signed by the Governor can be overridden by a county magistrate."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -3227,12 +3227,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-18-24-a", text: "Some extradition requests fast-tracked under the Interstate Compact must be signed by the Governor.", answerCategory: "yes" },
-{ id: "dm-syl-18-24-b", text: "No state extradition request involving non-violent offenses can be overridden by a county magistrate.", answerCategory: "yes" },
+{ id: "dm-syl-18-24-b", text: "No state extradition request involving non-violent offences can be overridden by a county magistrate.", answerCategory: "yes" },
 { id: "dm-syl-18-24-c", text: "Some extradition requests fast-tracked under the Interstate Compact cannot be overridden by a county magistrate.", answerCategory: "yes" },
-{ id: "dm-syl-18-24-d", text: "All extradition requests signed by the Governor involve non-violent offenses.", answerCategory: "no" },
-{ id: "dm-syl-18-24-e", text: "All extradition requests fast-tracked under the Interstate Compact involve non-violent offenses.", answerCategory: "no" }
+{ id: "dm-syl-18-24-d", text: "All extradition requests signed by the Governor involve non-violent offences.", answerCategory: "no" },
+{ id: "dm-syl-18-24-e", text: "All extradition requests fast-tracked under the Interstate Compact involve non-violent offences.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some non-violent extradition requests are fast-tracked, and all non-violent requests must be signed by the Governor.\nB — YES: All non-violent requests are signed by the Governor, and no request signed by the Governor can be overridden by a county magistrate.\nC — YES: The fast-tracked non-violent requests must be signed by the Governor, meaning they cannot be overridden by a county magistrate.\nD — NO: The Governor might sign extradition requests for violent offenses as well.\nE — NO: Extradition requests for violent offenses could also potentially be fast-tracked under the Interstate Compact."
+explanation: "A — YES: Some non-violent extradition requests are fast-tracked, and all non-violent requests must be signed by the Governor.\nB — YES: All non-violent requests are signed by the Governor, and no request signed by the Governor can be overridden by a county magistrate.\nC — YES: The fast-tracked non-violent requests must be signed by the Governor, meaning they cannot be overridden by a county magistrate.\nD — NO: The Governor might sign extradition requests for violent offences as well.\nE — NO: Extradition requests for violent offences could also potentially be fast-tracked under the Interstate Compact."
 },
 // ==========================================
 // BATCH 1: Topic 17 - Visual Arts & Museums (Questions 1-8)
@@ -3463,8 +3463,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "All mainstage theatrical plays require a licensed stage manager.",
-"Most mainstage theatrical plays utilize automated revolving sets.",
-"Any production utilizing automated revolving sets must pass an independent electrical safety inspection."
+"Most mainstage theatrical plays utilise automated revolving sets.",
+"Any production utilising automated revolving sets must pass an independent electrical safety inspection."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -3476,7 +3476,7 @@ categoryItems: [
 { id: "dm-syl-17-10-a", text: "Some productions requiring a licensed stage manager must pass an independent electrical safety inspection.", answerCategory: "yes" },
 { id: "dm-syl-17-10-b", text: "All productions that must pass an independent electrical safety inspection are mainstage theatrical plays.", answerCategory: "no" },
 { id: "dm-syl-17-10-c", text: "Some productions that must pass an independent electrical safety inspection require a licensed stage manager.", answerCategory: "yes" },
-{ id: "dm-syl-17-10-d", text: "Most productions requiring a licensed stage manager utilize automated revolving sets.", answerCategory: "no" },
+{ id: "dm-syl-17-10-d", text: "Most productions requiring a licensed stage manager utilise automated revolving sets.", answerCategory: "no" },
 { id: "dm-syl-17-10-e", text: "No mainstage theatrical play avoids an independent electrical safety inspection.", answerCategory: "no" }
 ],
 explanation: "A — YES: Most mainstage plays use automated sets (requiring inspection) and all mainstage plays require a licensed stage manager, proving the overlap.\nB — NO: Concerts or theme park attractions with automated sets might also require electrical safety inspections.\nC — YES: This is the valid converse of statement A, confirming the intersection contains items satisfying both conditions.\nD — NO: We know most *mainstage plays* use revolving sets, but mainstage plays might be a tiny fraction of all productions requiring a licensed stage manager.\nE — NO: Only 'most' mainstage plays use revolving sets, so the remaining mainstage plays might not require the electrical safety inspection."
@@ -3511,8 +3511,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "Any operatic performance sung in German is categorized as a Wagnerian tradition work.",
-"Some Wagnerian tradition works require a dramatic soprano with a specialized vocal range.",
-"All performances requiring a dramatic soprano with a specialized vocal range demand a double orchestra pit."
+"Some Wagnerian tradition works require a dramatic soprano with a specialised vocal range.",
+"All performances requiring a dramatic soprano with a specialised vocal range demand a double orchestra pit."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -3524,7 +3524,7 @@ categoryItems: [
 { id: "dm-syl-17-12-a", text: "Some Wagnerian tradition works demand a double orchestra pit.", answerCategory: "yes" },
 { id: "dm-syl-17-12-b", text: "All operatic performances sung in German demand a double orchestra pit.", answerCategory: "no" },
 { id: "dm-syl-17-12-c", text: "Some performances demanding a double orchestra pit are Wagnerian tradition works.", answerCategory: "yes" },
-{ id: "dm-syl-17-12-d", text: "No operatic performance sung in German requires a dramatic soprano with a specialized vocal range.", answerCategory: "no" },
+{ id: "dm-syl-17-12-d", text: "No operatic performance sung in German requires a dramatic soprano with a specialised vocal range.", answerCategory: "no" },
 { id: "dm-syl-17-12-e", text: "Every performance demanding a double orchestra pit is categorized as a Wagnerian tradition work.", answerCategory: "no" }
 ],
 explanation: "A — YES: Some Wagnerian works require a dramatic soprano, and all performances requiring such a soprano demand a double orchestra pit.\nB — NO: We only know German-sung operas are Wagnerian works, but we don't know if any of those specific German-sung operas require a dramatic soprano.\nC — YES: The Wagnerian works that require a dramatic soprano also demand a double orchestra pit, proving this intersection.\nD — NO: There is no rule stating German-sung performances cannot require a dramatic soprano.\nE — NO: Massive Italian or contemporary operas might demand a double orchestra pit without being Wagnerian tradition works."
@@ -3583,7 +3583,7 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "Every improvisational comedy show at the Main Street Playhouse relies entirely on audience suggestions.",
-"No show relying entirely on audience suggestions utilizes a pre-written musical score.",
+"No show relying entirely on audience suggestions utilises a pre-written musical score.",
 "Some improvisational comedy shows at the Main Street Playhouse feature award-winning cast members."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -3593,13 +3593,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-17-15-a", text: "No improvisational comedy show at the Main Street Playhouse utilizes a pre-written musical score.", answerCategory: "yes" },
-{ id: "dm-syl-17-15-b", text: "Some shows featuring award-winning cast members do not utilize a pre-written musical score.", answerCategory: "yes" },
+{ id: "dm-syl-17-15-a", text: "No improvisational comedy show at the Main Street Playhouse utilises a pre-written musical score.", answerCategory: "yes" },
+{ id: "dm-syl-17-15-b", text: "Some shows featuring award-winning cast members do not utilise a pre-written musical score.", answerCategory: "yes" },
 { id: "dm-syl-17-15-c", text: "All shows featuring award-winning cast members are improvisational comedy shows.", answerCategory: "no" },
-{ id: "dm-syl-17-15-d", text: "Some shows utilizing a pre-written musical score feature award-winning cast members.", answerCategory: "no" },
+{ id: "dm-syl-17-15-d", text: "Some shows utilising a pre-written musical score feature award-winning cast members.", answerCategory: "no" },
 { id: "dm-syl-17-15-e", text: "Every show relying entirely on audience suggestions features award-winning cast members.", answerCategory: "no" }
 ],
-explanation: "A — YES: All Main Street improv shows rely on audience suggestions, and no show relying on suggestions utilizes a pre-written musical score.\nB — YES: Some Main Street improv shows feature award-winning cast members. Because these shows rely on suggestions, they cannot utilize a pre-written musical score.\nC — NO: Award-winning cast members could perform in scripted dramas or musical revues anywhere.\nD — NO: The specific shows with award-winning cast members mentioned in the premises explicitly *cannot* use pre-written scores; we cannot deduce if other scored shows feature them.\nE — NO: Only *some* of the Main Street improv shows feature award-winning cast members."
+explanation: "A — YES: All Main Street improv shows rely on audience suggestions, and no show relying on suggestions utilises a pre-written musical score.\nB — YES: Some Main Street improv shows feature award-winning cast members. Because these shows rely on suggestions, they cannot utilise a pre-written musical score.\nC — NO: Award-winning cast members could perform in scripted dramas or musical revues anywhere.\nD — NO: The specific shows with award-winning cast members mentioned in the premises explicitly *cannot* use pre-written scores; we cannot deduce if other scored shows feature them.\nE — NO: Only *some* of the Main Street improv shows feature award-winning cast members."
 },
 {
 kind: "drag-category",
@@ -3651,7 +3651,7 @@ categoryItems: [
 { id: "dm-syl-17-17-d", text: "All songs using electronic amplification were recorded after 1970.", answerCategory: "no" },
 { id: "dm-syl-17-17-e", text: "Every acoustic folk song recorded before 1970 features a five-string banjo.", answerCategory: "no" }
 ],
-explanation: "A — YES: The mainstage folk songs recorded before 1970 feature a five-string banjo (since all mainstage folk songs do) and do not use electronic amplification.\nB — NO: Banjo songs recorded after 1970 or performed on other stages could easily use electronic amplification.\nC — YES: The mainstage folk songs recorded before 1970 cannot use electronic amplification, guaranteeing that some mainstage folk songs do not.\nD — NO: We only know songs recorded *before* 1970 do not use amplification. Songs recorded exactly *in* 1970 or elsewhere aren't defined by the premises.\nE — NO: The premises state only that 'some' acoustic folk songs on the mainstage were recorded before 1970; it doesn't characterize *all* pre-1970 folk songs."
+explanation: "A — YES: The mainstage folk songs recorded before 1970 feature a five-string banjo (since all mainstage folk songs do) and do not use electronic amplification.\nB — NO: Banjo songs recorded after 1970 or performed on other stages could easily use electronic amplification.\nC — YES: The mainstage folk songs recorded before 1970 cannot use electronic amplification, guaranteeing that some mainstage folk songs do not.\nD — NO: We only know songs recorded *before* 1970 do not use amplification. Songs recorded exactly *in* 1970 or elsewhere aren't defined by the premises.\nE — NO: The premises state only that 'some' acoustic folk songs on the mainstage were recorded before 1970; it doesn't characterise *all* pre-1970 folk songs."
 },
 {
 kind: "drag-category",
@@ -3682,8 +3682,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every vinyl record released by the indie label is pressed on heavyweight colored wax.",
-"No album pressed on heavyweight colored wax is distributed via major streaming platforms.",
+"Every vinyl record released by the indie label is pressed on heavyweight coloured wax.",
+"No album pressed on heavyweight coloured wax is distributed via major streaming platforms.",
 "Some albums distributed via major streaming platforms are lo-fi hip-hop compilations."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -3694,12 +3694,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-17-19-a", text: "No vinyl record released by the indie label is distributed via major streaming platforms.", answerCategory: "yes" },
-{ id: "dm-syl-17-19-b", text: "Some lo-fi hip-hop compilations are not pressed on heavyweight colored wax.", answerCategory: "yes" },
+{ id: "dm-syl-17-19-b", text: "Some lo-fi hip-hop compilations are not pressed on heavyweight coloured wax.", answerCategory: "yes" },
 { id: "dm-syl-17-19-c", text: "No lo-fi hip-hop compilation was released by the indie label.", answerCategory: "no" },
 { id: "dm-syl-17-19-d", text: "Some vinyl records released by the indie label are lo-fi hip-hop compilations.", answerCategory: "no" },
-{ id: "dm-syl-17-19-e", text: "All albums pressed on heavyweight colored wax are vinyl records released by the indie label.", answerCategory: "no" }
+{ id: "dm-syl-17-19-e", text: "All albums pressed on heavyweight coloured wax are vinyl records released by the indie label.", answerCategory: "no" }
 ],
-explanation: "A — YES: All indie label vinyls are on heavyweight wax, and no heavyweight wax album is on streaming platforms.\nB — YES: Some lo-fi compilations are on streaming platforms. Since no heavyweight wax album is on streaming platforms, these specific compilations cannot be on heavyweight wax.\nC — NO: A lo-fi compilation could be released by the indie label as long as it wasn't distributed on streaming platforms.\nD — NO: There is no data given to establish a link between the indie label's vinyl records and lo-fi hip-hop compilations.\nE — NO: Other labels could press their albums on heavyweight colored wax as well."
+explanation: "A — YES: All indie label vinyls are on heavyweight wax, and no heavyweight wax album is on streaming platforms.\nB — YES: Some lo-fi compilations are on streaming platforms. Since no heavyweight wax album is on streaming platforms, these specific compilations cannot be on heavyweight wax.\nC — NO: A lo-fi compilation could be released by the indie label as long as it wasn't distributed on streaming platforms.\nD — NO: There is no data given to establish a link between the indie label's vinyl records and lo-fi hip-hop compilations.\nE — NO: Other labels could press their albums on heavyweight coloured wax as well."
 },
 {
 kind: "drag-category",
@@ -3732,7 +3732,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All orchestral symphonies composed by Maestro Rossi require a pipe organ.",
 "No musical piece requiring a pipe organ can be performed in an outdoor amphitheater.",
-"Some orchestral symphonies composed by Maestro Rossi utilize a youth choir."
+"Some orchestral symphonies composed by Maestro Rossi utilise a youth choir."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -3742,12 +3742,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-17-21-a", text: "No orchestral symphony composed by Maestro Rossi can be performed in an outdoor amphitheater.", answerCategory: "yes" },
-{ id: "dm-syl-17-21-b", text: "Some musical pieces utilizing a youth choir cannot be performed in an outdoor amphitheater.", answerCategory: "yes" },
-{ id: "dm-syl-17-21-c", text: "All musical pieces utilizing a youth choir are orchestral symphonies composed by Maestro Rossi.", answerCategory: "no" },
-{ id: "dm-syl-17-21-d", text: "Some musical pieces that can be performed in an outdoor amphitheater utilize a youth choir.", answerCategory: "no" },
-{ id: "dm-syl-17-21-e", text: "No musical piece utilizing a youth choir requires a pipe organ.", answerCategory: "no" }
+{ id: "dm-syl-17-21-b", text: "Some musical pieces utilising a youth choir cannot be performed in an outdoor amphitheater.", answerCategory: "yes" },
+{ id: "dm-syl-17-21-c", text: "All musical pieces utilising a youth choir are orchestral symphonies composed by Maestro Rossi.", answerCategory: "no" },
+{ id: "dm-syl-17-21-d", text: "Some musical pieces that can be performed in an outdoor amphitheater utilise a youth choir.", answerCategory: "no" },
+{ id: "dm-syl-17-21-e", text: "No musical piece utilising a youth choir requires a pipe organ.", answerCategory: "no" }
 ],
-explanation: "A — YES: All Rossi symphonies require a pipe organ, and no piece requiring a pipe organ can be played in an outdoor amphitheater.\nB — YES: Some Rossi symphonies utilize a youth choir. Since all Rossi symphonies require a pipe organ, they cannot be performed in an outdoor amphitheater.\nC — NO: Youth choirs can sing in pop concerts, church services, or other composers' works.\nD — NO: The youth-choir pieces composed by Rossi explicitly cannot be performed outdoors; we cannot verify if other youth-choir pieces can.\nE — NO: We know from the premises that the Rossi symphonies utilize a youth choir *and* require a pipe organ."
+explanation: "A — YES: All Rossi symphonies require a pipe organ, and no piece requiring a pipe organ can be played in an outdoor amphitheater.\nB — YES: Some Rossi symphonies utilise a youth choir. Since all Rossi symphonies require a pipe organ, they cannot be performed in an outdoor amphitheater.\nC — NO: Youth choirs can sing in pop concerts, church services, or other composers' works.\nD — NO: The youth-choir pieces composed by Rossi explicitly cannot be performed outdoors; we cannot verify if other youth-choir pieces can.\nE — NO: We know from the premises that the Rossi symphonies utilise a youth choir *and* require a pipe organ."
 },
 {
 kind: "drag-category",
@@ -3803,8 +3803,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "All progressive rock albums with complex time signatures feature a Moog synthesizer solo.",
-"Most progressive rock albums with complex time signatures are concept albums centered on sci-fi themes.",
-"No concept album centered on sci-fi themes is considered Radio-Friendly mainstream music."
+"Most progressive rock albums with complex time signatures are concept albums centred on sci-fi themes.",
+"No concept album centred on sci-fi themes is considered Radio-Friendly mainstream music."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -3816,7 +3816,7 @@ categoryItems: [
 { id: "dm-syl-17-24-a", text: "Some albums featuring a Moog synthesizer solo are not considered Radio-Friendly mainstream music.", answerCategory: "yes" },
 { id: "dm-syl-17-24-b", text: "No progressive rock album with a complex time signature is considered Radio-Friendly mainstream music.", answerCategory: "no" },
 { id: "dm-syl-17-24-c", text: "Some albums that are not considered Radio-Friendly mainstream music feature a Moog synthesizer solo.", answerCategory: "yes" },
-{ id: "dm-syl-17-24-d", text: "All albums featuring a Moog synthesizer solo are concept albums centered on sci-fi themes.", answerCategory: "no" },
+{ id: "dm-syl-17-24-d", text: "All albums featuring a Moog synthesizer solo are concept albums centred on sci-fi themes.", answerCategory: "no" },
 { id: "dm-syl-17-24-e", text: "Most albums considered Radio-Friendly mainstream music are progressive rock albums.", answerCategory: "no" }
 ],
 explanation: "A — YES: Most progressive rock albums with complex signatures are sci-fi concept albums (banned from being radio-friendly) and all feature a Moog solo, meaning some Moog solo albums are not radio-friendly.\nB — NO: Only *most* progressive rock albums with complex signatures are sci-fi concept albums. The remaining ones might be considered radio-friendly.\nC — YES: This is the logically equivalent converse of statement A, confirming the existence of non-radio-friendly music featuring a Moog solo.\nD — NO: Pop or funk albums might feature a Moog synthesizer solo without being complex sci-fi concept albums.\nE — NO: Radio-friendly mainstream music explicitly excludes sci-fi concept albums, so it is highly unlikely to be mostly composed of these progressive rock albums."
@@ -4141,8 +4141,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every student exhibiting high extrinsic motivation prioritises standardized letter grades.",
-"Some students who prioritise standardized letter grades experience frequent test-related anxiety.",
+"Every student exhibiting high extrinsic motivation prioritises standardised letter grades.",
+"Some students who prioritise standardised letter grades experience frequent test-related anxiety.",
 "All students who experience frequent test-related anxiety practice deep-breathing exercises."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -4152,13 +4152,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-15-14-a", text: "Some students who prioritise standardized letter grades practice deep-breathing exercises.", answerCategory: "yes" },
+{ id: "dm-syl-15-14-a", text: "Some students who prioritise standardised letter grades practice deep-breathing exercises.", answerCategory: "yes" },
 { id: "dm-syl-15-14-b", text: "All students exhibiting high extrinsic motivation practice deep-breathing exercises.", answerCategory: "no" },
 { id: "dm-syl-15-14-c", text: "Some students who practice deep-breathing exercises exhibit high extrinsic motivation.", answerCategory: "no" },
 { id: "dm-syl-15-14-d", text: "No student who practices deep-breathing exercises experiences frequent test-related anxiety.", answerCategory: "no" },
-{ id: "dm-syl-15-14-e", text: "Some students who experience frequent test-related anxiety prioritise standardized letter grades.", answerCategory: "yes" }
+{ id: "dm-syl-15-14-e", text: "Some students who experience frequent test-related anxiety prioritise standardised letter grades.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Some grade prioritizers have anxiety, and all anxious students practice deep breathing, making an explicit overlap between grade prioritizers and deep breathing.\nB — NO: High extrinsic motivation guarantees prioritising grades, but does not guarantee falling into the 'some' category that experiences test-related anxiety.\nC — NO: We cannot definitively link deep-breathing practitioners to high extrinsic motivation due to the partial 'some' path.\nD — NO: This directly contradicts the third premise stating all anxious students practice deep-breathing.\nE — YES: Because some grade prioritizers experience anxiety, it is logically necessary that some anxious students prioritise standardized letter grades."
+explanation: "A — YES: Some grade prioritizers have anxiety, and all anxious students practice deep breathing, making an explicit overlap between grade prioritizers and deep breathing.\nB — NO: High extrinsic motivation guarantees prioritising grades, but does not guarantee falling into the 'some' category that experiences test-related anxiety.\nC — NO: We cannot definitively link deep-breathing practitioners to high extrinsic motivation due to the partial 'some' path.\nD — NO: This directly contradicts the third premise stating all anxious students practice deep-breathing.\nE — YES: Because some grade prioritizers experience anxiety, it is logically necessary that some anxious students prioritise standardised letter grades."
 },
 {
 kind: "drag-category",
@@ -4239,7 +4239,7 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every negotiator utilizing principled negotiation strategies focuses on underlying objective interests.",
+"Every negotiator utilising principled negotiation strategies focuses on underlying objective interests.",
 "No negotiator who focuses on underlying objective interests issues ultimatum deadlines.",
 "Some negotiators who issue ultimatum deadlines secure short-term financial concessions."
 ],
@@ -4250,10 +4250,10 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-15-18-a", text: "No negotiator utilizing principled negotiation strategies issues ultimatum deadlines.", answerCategory: "yes" },
+{ id: "dm-syl-15-18-a", text: "No negotiator utilising principled negotiation strategies issues ultimatum deadlines.", answerCategory: "yes" },
 { id: "dm-syl-15-18-b", text: "Some negotiators who secure short-term financial concessions do not focus on underlying objective interests.", answerCategory: "yes" },
 { id: "dm-syl-15-18-c", text: "All negotiators who secure short-term financial concessions issue ultimatum deadlines.", answerCategory: "no" },
-{ id: "dm-syl-15-18-d", text: "No negotiator utilizing principled negotiation strategies secures short-term financial concessions.", answerCategory: "no" },
+{ id: "dm-syl-15-18-d", text: "No negotiator utilising principled negotiation strategies secures short-term financial concessions.", answerCategory: "no" },
 { id: "dm-syl-15-18-e", text: "Some negotiators who focus on underlying objective interests secure short-term financial concessions.", answerCategory: "no" }
 ],
 explanation: "A — YES: Since all principled negotiators focus on objective interests, and no objective-interest focused negotiator issues ultimatums, no principled negotiator issues ultimatums.\nB — YES: Some negotiators securing concessions issue ultimatums. Since no one who issues ultimatums focuses on objective interests, these specific concession-securing negotiators do not focus on objective interests.\nC — NO: Premise 3 states that only 'some' negotiators who secure short-term concessions issue ultimatum deadlines.\nD — NO: Principled negotiators do not issue ultimatums, but they might still secure concessions via other collaborative methods.\nE — NO: Focusing on objective interests completely excludes issuing ultimatums, and concession-securing negotiators overlap with ultimatum issuers, making an overlap between objective interest focusers and concession-securers unprovable."
@@ -4313,7 +4313,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All subjects showing high social desirability bias alter self-reported survey answers.",
 "No subject who alters self-reported survey answers provides high-fidelity laboratory data.",
-"Some researchers who collect high-fidelity laboratory data utilize automated tracking software."
+"Some researchers who collect high-fidelity laboratory data utilise automated tracking software."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -4323,12 +4323,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-15-21-a", text: "No subject showing high social desirability bias provides high-fidelity laboratory data.", answerCategory: "yes" },
-{ id: "dm-syl-15-21-b", text: "Some researchers who utilize automated tracking software do not collect data from subjects who alter self-reported survey answers.", answerCategory: "yes" },
-{ id: "dm-syl-15-21-c", text: "All researchers who utilize automated tracking software collect high-fidelity laboratory data.", answerCategory: "no" },
-{ id: "dm-syl-15-21-d", text: "No subject showing high social desirability bias is tracked by researchers utilizing automated tracking software.", answerCategory: "no" },
-{ id: "dm-syl-15-21-e", text: "Some subjects who alter self-reported survey answers are tracked by researchers utilizing automated tracking software.", answerCategory: "no" }
+{ id: "dm-syl-15-21-b", text: "Some researchers who utilise automated tracking software do not collect data from subjects who alter self-reported survey answers.", answerCategory: "yes" },
+{ id: "dm-syl-15-21-c", text: "All researchers who utilise automated tracking software collect high-fidelity laboratory data.", answerCategory: "no" },
+{ id: "dm-syl-15-21-d", text: "No subject showing high social desirability bias is tracked by researchers utilising automated tracking software.", answerCategory: "no" },
+{ id: "dm-syl-15-21-e", text: "Some subjects who alter self-reported survey answers are tracked by researchers utilising automated tracking software.", answerCategory: "no" }
 ],
-explanation: "A — YES: Since all socially desirable bias subjects alter answers, and no one who alters answers provides high-fidelity data, no socially desirable biased subject provides high-fidelity data.\nB — YES: Some researchers utilizing software collect high-fidelity data. Since no one providing high-fidelity data alters self-reported answers, these researchers are collecting data from people who do not alter answers.\nC — NO: Premise 3 states that only 'some' researchers utilizing automated tracking software collect high-fidelity laboratory data.\nD — NO: A subject with social desirability bias could still be tracked by automated tracking software, provided their high-fidelity laboratory data is not required.\nE — NO: Since high-fidelity data collection completely excludes altering survey answers, we cannot assert that answer alterers overlap with researchers utilizing automated tracking software."
+explanation: "A — YES: Since all socially desirable bias subjects alter answers, and no one who alters answers provides high-fidelity data, no socially desirable biased subject provides high-fidelity data.\nB — YES: Some researchers utilising software collect high-fidelity data. Since no one providing high-fidelity data alters self-reported answers, these researchers are collecting data from people who do not alter answers.\nC — NO: Premise 3 states that only 'some' researchers utilising automated tracking software collect high-fidelity laboratory data.\nD — NO: A subject with social desirability bias could still be tracked by automated tracking software, provided their high-fidelity laboratory data is not required.\nE — NO: Since high-fidelity data collection completely excludes altering survey answers, we cannot assert that answer alterers overlap with researchers utilising automated tracking software."
 },
 {
 kind: "drag-category",
@@ -4361,7 +4361,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All children displaying learned helplessness give up quickly on difficult puzzles.",
 "Some children who give up quickly on difficult puzzles lack positive verbal reinforcement.",
-"No child who lacks positive verbal reinforcement develops high generalized self-efficacy."
+"No child who lacks positive verbal reinforcement develops high generalised self-efficacy."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -4370,10 +4370,10 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-15-23-a", text: "Some children who give up quickly on difficult puzzles do not develop high generalized self-efficacy.", answerCategory: "yes" },
-{ id: "dm-syl-15-23-b", text: "No child displaying learned helplessness develops high generalized self-efficacy.", answerCategory: "no" },
+{ id: "dm-syl-15-23-a", text: "Some children who give up quickly on difficult puzzles do not develop high generalised self-efficacy.", answerCategory: "yes" },
+{ id: "dm-syl-15-23-b", text: "No child displaying learned helplessness develops high generalised self-efficacy.", answerCategory: "no" },
 { id: "dm-syl-15-23-c", text: "All children who give up quickly on difficult puzzles lack positive verbal reinforcement.", answerCategory: "no" },
-{ id: "dm-syl-15-23-d", text: "Any child who develops high generalized self-efficacy does not lack positive verbal reinforcement.", answerCategory: "yes" },
+{ id: "dm-syl-15-23-d", text: "Any child who develops high generalised self-efficacy does not lack positive verbal reinforcement.", answerCategory: "yes" },
 { id: "dm-syl-15-23-e", text: "Some children displaying learned helplessness lack positive verbal reinforcement.", answerCategory: "no" }
 ],
 explanation: "A — YES: Some puzzle-quitters lack positive reinforcement, and none of those children develop high self-efficacy, meaning these specific puzzle-quitters do not develop it.\nB — NO: There is no definitive complete overlap established between learned helplessness and a lack of positive reinforcement.\nC — NO: Premise 2 specifies that only 'some' children who give up quickly lack positive verbal reinforcement.\nD — YES: This is the logically necessary contrapositive of the third premise.\nE — NO: The premises do not provide sufficient information to confirm a direct intersection between learned helplessness and a lack of positive reinforcement."
@@ -4784,7 +4784,7 @@ categoryItems: [
 { id: "dm-syl-13-16-d", text: "All government departments that are not awarded the 'Top National Employer' distinction undergo a structural reorganisation.", answerCategory: "no" },
 { id: "dm-syl-13-16-e", text: "Some organisations that are not awarded the 'Top National Employer' distinction experience an immediate decrease in employee morale.", answerCategory: "yes" }
 ],
-explanation: "A — YES: All reorganising departments must publish the framework, and most (some) reorganising departments experience decreased morale. Thus, there is an overlap.\nB — NO: Only 'most' reorganising departments experience decreased morale and lose the distinction. The remaining reorganising departments might maintain morale and win it.\nC — YES: Reorganising departments must publish the framework, and most experience decreased morale (barring them from the distinction). Those specific departments publish frameworks and don't win the distinction.\nD — NO: Organizations can miss out on the 'Top National Employer' distinction for entirely different reasons separate from reorganisation.\nE — YES: Since no organisation with decreased morale wins the distinction, any organisation with decreased morale (like the departments noted in the premise) is an example of a non-winner."
+explanation: "A — YES: All reorganising departments must publish the framework, and most (some) reorganising departments experience decreased morale. Thus, there is an overlap.\nB — NO: Only 'most' reorganising departments experience decreased morale and lose the distinction. The remaining reorganising departments might maintain morale and win it.\nC — YES: Reorganising departments must publish the framework, and most experience decreased morale (barring them from the distinction). Those specific departments publish frameworks and don't win the distinction.\nD — NO: Organisations can miss out on the 'Top National Employer' distinction for entirely different reasons separate from reorganisation.\nE — YES: Since no organisation with decreased morale wins the distinction, any organisation with decreased morale (like the departments noted in the premise) is an example of a non-winner."
 },
 {
 kind: "drag-category",
@@ -4815,7 +4815,7 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every intelligence officer who successfully completed the advanced cryptography module was assigned to the cyber-defense unit.",
+"Every intelligence officer who successfully completed the advanced cryptography module was assigned to the cyber-defence unit.",
 "Some intelligence officers who successfully completed the advanced cryptography module possess a master's degree in mathematics.",
 "No intelligence officer who possesses a master's degree in mathematics failed the high-level security clearance check."
 ],
@@ -4826,13 +4826,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-13-18-a", text: "Some intelligence officers assigned to the cyber-defense unit possess a master's degree in mathematics.", answerCategory: "yes" },
-{ id: "dm-syl-13-18-b", text: "Some intelligence officers who did not fail the high-level security clearance check were assigned to the cyber-defense unit.", answerCategory: "yes" },
-{ id: "dm-syl-13-18-c", text: "No intelligence officer assigned to the cyber-defense unit failed the high-level security clearance check.", answerCategory: "no" },
+{ id: "dm-syl-13-18-a", text: "Some intelligence officers assigned to the cyber-defence unit possess a master's degree in mathematics.", answerCategory: "yes" },
+{ id: "dm-syl-13-18-b", text: "Some intelligence officers who did not fail the high-level security clearance check were assigned to the cyber-defence unit.", answerCategory: "yes" },
+{ id: "dm-syl-13-18-c", text: "No intelligence officer assigned to the cyber-defence unit failed the high-level security clearance check.", answerCategory: "no" },
 { id: "dm-syl-13-18-d", text: "All intelligence officers who did not fail the high-level security clearance check completed the advanced cryptography module.", answerCategory: "no" },
-{ id: "dm-syl-13-18-e", text: "Some intelligence officers who possess a master's degree in mathematics were not assigned to the cyber-defense unit.", answerCategory: "no" }
+{ id: "dm-syl-13-18-e", text: "Some intelligence officers who possess a master's degree in mathematics were not assigned to the cyber-defence unit.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some crypto module completers have a math degree, and all crypto module completers are assigned to the cyber-defense unit. Therefore, those math degree holders are in the unit.\nB — YES: Math degree holders didn't fail the clearance check, and some of them are crypto module completers assigned to the cyber-defense unit, establishing a shared group.\nC — NO: Only the math-degree holders in the unit are guaranteed to have passed the clearance check. Other unit members might have failed or not taken it.\nD — NO: Passing the clearance check doesn't mean you took or completed the cryptography module.\nE — NO: We know some math degree holders are assigned to the unit via the cryptography module connection, but we can't assert that any *were not* assigned."
+explanation: "A — YES: Some crypto module completers have a math degree, and all crypto module completers are assigned to the cyber-defence unit. Therefore, those math degree holders are in the unit.\nB — YES: Math degree holders didn't fail the clearance check, and some of them are crypto module completers assigned to the cyber-defence unit, establishing a shared group.\nC — NO: Only the math-degree holders in the unit are guaranteed to have passed the clearance check. Other unit members might have failed or not taken it.\nD — NO: Passing the clearance check doesn't mean you took or completed the cryptography module.\nE — NO: We know some math degree holders are assigned to the unit via the cryptography module connection, but we can't assert that any *were not* assigned."
 },
 {
 kind: "drag-category",
@@ -4887,9 +4887,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All non-governmental organizations that received the humanitarian relief grant established a field office in the conflict zone.",
-"No non-governmental organization that established a field office in the conflict zone operates without a neutral mandate.",
-"Some non-governmental organizations that operate without a neutral mandate receive direct funding from sovereign states."
+"All non-governmental organisations that received the humanitarian relief grant established a field office in the conflict zone.",
+"No non-governmental organisation that established a field office in the conflict zone operates without a neutral mandate.",
+"Some non-governmental organisations that operate without a neutral mandate receive direct funding from sovereign states."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -4898,21 +4898,21 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-13-21-a", text: "No non-governmental organization that received the humanitarian relief grant operates without a neutral mandate.", answerCategory: "yes" },
-{ id: "dm-syl-13-21-b", text: "Some non-governmental organizations that receive direct funding from sovereign states did not receive the humanitarian relief grant.", answerCategory: "yes" },
-{ id: "dm-syl-13-21-c", text: "All non-governmental organizations that operate with a neutral mandate received the humanitarian relief grant.", answerCategory: "no" },
-{ id: "dm-syl-13-21-d", text: "Some non-governmental organizations that established a field office in the conflict zone receive direct funding from sovereign states.", answerCategory: "no" },
-{ id: "dm-syl-13-21-e", text: "No non-governmental organization that operates without a neutral mandate received the humanitarian relief grant.", answerCategory: "yes" }
+{ id: "dm-syl-13-21-a", text: "No non-governmental organisation that received the humanitarian relief grant operates without a neutral mandate.", answerCategory: "yes" },
+{ id: "dm-syl-13-21-b", text: "Some non-governmental organisations that receive direct funding from sovereign states did not receive the humanitarian relief grant.", answerCategory: "yes" },
+{ id: "dm-syl-13-21-c", text: "All non-governmental organisations that operate with a neutral mandate received the humanitarian relief grant.", answerCategory: "no" },
+{ id: "dm-syl-13-21-d", text: "Some non-governmental organisations that established a field office in the conflict zone receive direct funding from sovereign states.", answerCategory: "no" },
+{ id: "dm-syl-13-21-e", text: "No non-governmental organisation that operates without a neutral mandate received the humanitarian relief grant.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Grant recipients established field offices, and no field office organizations lack a neutral mandate. Thus, no grant recipient lacks a neutral mandate.\nB — YES: State-funded organizations include some that lack a neutral mandate. Since grant recipients cannot lack a neutral mandate, those state-funded organizations did not get the grant.\nC — NO: Operating with a neutral mandate is a requirement for field offices and grants, but many neutral organizations might not apply for or receive this grant.\nD — NO: Field office organizations must have a neutral mandate, whereas state funding overlaps with non-neutral organizations. We have no guaranteed overlap.\nE — YES: This is the contrapositive of conclusion A. Since grant recipients never lack a neutral mandate, organizations that do lack a neutral mandate could not have received the grant."
+explanation: "A — YES: Grant recipients established field offices, and no field office organisations lack a neutral mandate. Thus, no grant recipient lacks a neutral mandate.\nB — YES: State-funded organisations include some that lack a neutral mandate. Since grant recipients cannot lack a neutral mandate, those state-funded organisations did not get the grant.\nC — NO: Operating with a neutral mandate is a requirement for field offices and grants, but many neutral organisations might not apply for or receive this grant.\nD — NO: Field office organisations must have a neutral mandate, whereas state funding overlaps with non-neutral organisations. We have no guaranteed overlap.\nE — YES: This is the contrapositive of conclusion A. Since grant recipients never lack a neutral mandate, organisations that do lack a neutral mandate could not have received the grant."
 },
 {
 kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every constituency that voted in favor of the decentralization referendum experienced a shift in local administrative boundaries.",
-"Some constituencies that voted in favor of the decentralization referendum are located within the northern economic corridor.",
+"Every constituency that voted in favour of the decentralization referendum experienced a shift in local administrative boundaries.",
+"Some constituencies that voted in favour of the decentralization referendum are located within the northern economic corridor.",
 "All constituencies located within the northern economic corridor qualify for targeted regional development subsidies."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -4924,7 +4924,7 @@ categories: [
 categoryItems: [
 { id: "dm-syl-13-22-a", text: "Some constituencies that qualify for targeted regional development subsidies experienced a shift in local administrative boundaries.", answerCategory: "yes" },
 { id: "dm-syl-13-22-b", text: "Every constituency that experienced a shift in local administrative boundaries is located within the northern economic corridor.", answerCategory: "no" },
-{ id: "dm-syl-13-22-c", text: "Some constituencies that qualify for targeted regional development subsidies voted in favor of the decentralization referendum.", answerCategory: "yes" },
+{ id: "dm-syl-13-22-c", text: "Some constituencies that qualify for targeted regional development subsidies voted in favour of the decentralization referendum.", answerCategory: "yes" },
 { id: "dm-syl-13-22-d", text: "All constituencies that qualify for targeted regional development subsidies experienced a shift in local administrative boundaries.", answerCategory: "no" },
 { id: "dm-syl-13-22-e", text: "Some constituencies that experienced a shift in local administrative boundaries are located within the northern economic corridor.", answerCategory: "yes" }
 ],
@@ -4935,8 +4935,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"No federal policy advisor who owns shares in a defense manufacturing corporation was permitted to draft the defense spending review.",
-"All federal policy advisors permitted to draft the defense spending review hold a Top Secret clearance level.",
+"No federal policy advisor who owns shares in a defence manufacturing corporation was permitted to draft the defence spending review.",
+"All federal policy advisors permitted to draft the defence spending review hold a Top Secret clearance level.",
 "Some federal policy advisors who hold a Top Secret clearance level are active consultants for private security firms."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -4946,13 +4946,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-13-23-a", text: "Some federal policy advisors who hold a Top Secret clearance level do not own shares in a defense manufacturing corporation.", answerCategory: "yes" },
-{ id: "dm-syl-13-23-b", text: "No federal policy advisor who owns shares in a defense manufacturing corporation holds a Top Secret clearance level.", answerCategory: "no" },
-{ id: "dm-syl-13-23-c", text: "Some federal policy advisors who are active consultants for private security firms were permitted to draft the defense spending review.", answerCategory: "no" },
-{ id: "dm-syl-13-23-d", text: "All federal policy advisors who do not own shares in a defense manufacturing corporation hold a Top Secret clearance level.", answerCategory: "no" },
-{ id: "dm-syl-13-23-e", text: "Any federal policy advisor permitted to draft the defense spending review does not own shares in a defense manufacturing corporation.", answerCategory: "yes" }
+{ id: "dm-syl-13-23-a", text: "Some federal policy advisors who hold a Top Secret clearance level do not own shares in a defence manufacturing corporation.", answerCategory: "yes" },
+{ id: "dm-syl-13-23-b", text: "No federal policy advisor who owns shares in a defence manufacturing corporation holds a Top Secret clearance level.", answerCategory: "no" },
+{ id: "dm-syl-13-23-c", text: "Some federal policy advisors who are active consultants for private security firms were permitted to draft the defence spending review.", answerCategory: "no" },
+{ id: "dm-syl-13-23-d", text: "All federal policy advisors who do not own shares in a defence manufacturing corporation hold a Top Secret clearance level.", answerCategory: "no" },
+{ id: "dm-syl-13-23-e", text: "Any federal policy advisor permitted to draft the defence spending review does not own shares in a defence manufacturing corporation.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Advisors permitted to draft the review must hold Top Secret clearance, and they are prohibited from owning defense shares. Thus, these cleared advisors do not own shares.\nB — NO: Share-owning advisors are excluded from drafting the review, but they could still hold Top Secret clearance for other duties.\nC — NO: Consultants for private firms overlap with Top Secret clearance holders, but we cannot assume they overlap with the specific group permitted to draft the review.\nD — NO: Not owning shares is a prerequisite to draft the review, but it doesn't automatically mean an advisor has a Top Secret clearance or is drafting reviews.\nE — YES: Because shareowners are barred from drafting the review, anyone who *is* permitted to draft it cannot be a shareowner."
+explanation: "A — YES: Advisors permitted to draft the review must hold Top Secret clearance, and they are prohibited from owning defence shares. Thus, these cleared advisors do not own shares.\nB — NO: Share-owning advisors are excluded from drafting the review, but they could still hold Top Secret clearance for other duties.\nC — NO: Consultants for private firms overlap with Top Secret clearance holders, but we cannot assume they overlap with the specific group permitted to draft the review.\nD — NO: Not owning shares is a prerequisite to draft the review, but it doesn't automatically mean an advisor has a Top Secret clearance or is drafting reviews.\nE — YES: Because shareowners are barred from drafting the review, anyone who *is* permitted to draft it cannot be a shareowner."
 },
 {
 kind: "drag-category",
@@ -5011,8 +5011,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "Every swimmer who qualified for the national finals has mastered the underwater dolphin kick.",
-"Some swimmers who have mastered the underwater dolphin kick train at the Elite Aquatic Center.",
-"Most swimmers training at the Elite Aquatic Center consume more than 4,500 calories daily."
+"Some swimmers who have mastered the underwater dolphin kick train at the Elite Aquatic Centre.",
+"Most swimmers training at the Elite Aquatic Centre consume more than 4,500 calories daily."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -5021,13 +5021,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-11-2-a", text: "There is at least one swimmer training at the Elite Aquatic Center who has mastered the underwater dolphin kick.", answerCategory: "yes" },
-{ id: "dm-syl-11-2-b", text: "Some swimmers who qualified for the national finals train at the Elite Aquatic Center.", answerCategory: "no" },
-{ id: "dm-syl-11-2-c", text: "At least some swimmers who consume more than 4,500 calories daily train at the Elite Aquatic Center.", answerCategory: "yes" },
+{ id: "dm-syl-11-2-a", text: "There is at least one swimmer training at the Elite Aquatic Centre who has mastered the underwater dolphin kick.", answerCategory: "yes" },
+{ id: "dm-syl-11-2-b", text: "Some swimmers who qualified for the national finals train at the Elite Aquatic Centre.", answerCategory: "no" },
+{ id: "dm-syl-11-2-c", text: "At least some swimmers who consume more than 4,500 calories daily train at the Elite Aquatic Centre.", answerCategory: "yes" },
 { id: "dm-syl-11-2-d", text: "All swimmers who have mastered the underwater dolphin kick qualified for the national finals.", answerCategory: "no" },
 { id: "dm-syl-11-2-e", text: "Most swimmers who qualified for the national finals consume more than 4,500 calories daily.", answerCategory: "no" }
 ],
-explanation: "A — YES: 'Some swimmers who have mastered the kick train at the Elite Aquatic Center' directly implies that there is at least one such swimmer there.\nB — NO: The premises establish that some master-kickers train there, but we do not know if those specific individuals are the ones who qualified for the finals.\nC — YES: Since 'most' (which implies at least some) swimmers training there consume this calorie amount, it follows that some people who consume this amount train there.\nD — NO: The premise states 'All finals qualifiers have mastered the kick', which is a one-way implication. There can be master-kickers who didn't qualify.\nE — NO: There is no linked evidence provided to connect the calorie intake of national finalists to the Elite Aquatic Center statistics."
+explanation: "A — YES: 'Some swimmers who have mastered the kick train at the Elite Aquatic Centre' directly implies that there is at least one such swimmer there.\nB — NO: The premises establish that some master-kickers train there, but we do not know if those specific individuals are the ones who qualified for the finals.\nC — YES: Since 'most' (which implies at least some) swimmers training there consume this calorie amount, it follows that some people who consume this amount train there.\nD — NO: The premise states 'All finals qualifiers have mastered the kick', which is a one-way implication. There can be master-kickers who didn't qualify.\nE — NO: There is no linked evidence provided to connect the calorie intake of national finalists to the Elite Aquatic Centre statistics."
 },
 {
 kind: "drag-category",
@@ -5130,8 +5130,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All rowers who utilize the custom carbon-fiber oars train at least five days a week.",
-"Most rowers who utilize the custom carbon-fiber oars have won an international regatta.",
+"All rowers who utilise the custom carbon-fiber oars train at least five days a week.",
+"Most rowers who utilise the custom carbon-fiber oars have won an international regatta.",
 "No rower who trains at least five days a week consumes less than 150 grams of protein daily."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -5142,8 +5142,8 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-11-7-a", text: "Some rowers who have won an international regatta do not consume less than 150 grams of protein daily.", answerCategory: "yes" },
-{ id: "dm-syl-11-7-b", text: "All rowers who consume at least 150 grams of protein daily utilize custom carbon-fiber oars.", answerCategory: "no" },
-{ id: "dm-syl-11-7-c", text: "No rower utilizing the custom carbon-fiber oars consumes less than 150 grams of protein daily.", answerCategory: "yes" },
+{ id: "dm-syl-11-7-b", text: "All rowers who consume at least 150 grams of protein daily utilise custom carbon-fiber oars.", answerCategory: "no" },
+{ id: "dm-syl-11-7-c", text: "No rower utilising the custom carbon-fiber oars consumes less than 150 grams of protein daily.", answerCategory: "yes" },
 { id: "dm-syl-11-7-d", text: "Most rowers who train at least five days a week have won an international regatta.", answerCategory: "no" },
 { id: "dm-syl-11-7-e", text: "Some rowers who consume less than 150 grams of protein daily train at least five days a week.", answerCategory: "no" }
 ],
@@ -5403,8 +5403,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "No badminton player sponsored by VoltX lacks a sponsorship bonus clause for reaching the quarter-finals.",
-"All badminton players who have a sponsorship bonus clause for reaching the quarter-finals train at the National Performance Center.",
-"Some badminton players training at the National Performance Center utilize customized aerodynamic rackets."
+"All badminton players who have a sponsorship bonus clause for reaching the quarter-finals train at the National Performance Centre.",
+"Some badminton players training at the National Performance Centre utilise customized aerodynamic rackets."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -5413,13 +5413,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-11-18-a", text: "Every badminton player sponsored by VoltX trains at the National Performance Center.", answerCategory: "yes" },
-{ id: "dm-syl-11-18-b", text: "Some players who utilize customized aerodynamic rackets are sponsored by VoltX.", answerCategory: "no" },
-{ id: "dm-syl-11-18-c", text: "No badminton player training at the National Performance Center is sponsored by VoltX.", answerCategory: "no" },
-{ id: "dm-syl-11-18-d", text: "Some badminton players training at the National Performance Center have a sponsorship bonus clause for reaching the quarter-finals.", answerCategory: "yes" },
+{ id: "dm-syl-11-18-a", text: "Every badminton player sponsored by VoltX trains at the National Performance Centre.", answerCategory: "yes" },
+{ id: "dm-syl-11-18-b", text: "Some players who utilise customized aerodynamic rackets are sponsored by VoltX.", answerCategory: "no" },
+{ id: "dm-syl-11-18-c", text: "No badminton player training at the National Performance Centre is sponsored by VoltX.", answerCategory: "no" },
+{ id: "dm-syl-11-18-d", text: "Some badminton players training at the National Performance Centre have a sponsorship bonus clause for reaching the quarter-finals.", answerCategory: "yes" },
 { id: "dm-syl-11-18-e", text: "All players with a sponsorship bonus clause for reaching the quarter-finals are sponsored by VoltX.", answerCategory: "no" }
 ],
-explanation: "A — YES: No VoltX player lacks the bonus clause (meaning all VoltX players have it). All players with the clause train at the National Performance Center. Thus, all VoltX players train there.\nB — NO: Aerodynamic racket users overlap with Center trainers, but we cannot trace them directly back to being VoltX-sponsored.\nC — NO: We established that *all* VoltX players train at the Center, so this negative statement is completely false.\nD — YES: Since all players with the bonus clause train at the National Performance Center, those individuals themselves form a part of the Center's population.\nE — NO: Having a clause requires training at the Center, but the clause could come from brands other than VoltX."
+explanation: "A — YES: No VoltX player lacks the bonus clause (meaning all VoltX players have it). All players with the clause train at the National Performance Centre. Thus, all VoltX players train there.\nB — NO: Aerodynamic racket users overlap with Centre trainers, but we cannot trace them directly back to being VoltX-sponsored.\nC — NO: We established that *all* VoltX players train at the Centre, so this negative statement is completely false.\nD — YES: Since all players with the bonus clause train at the National Performance Centre, those individuals themselves form a part of the Centre's population.\nE — NO: Having a clause requires training at the Centre, but the clause could come from brands other than VoltX."
 },
 {
 kind: "drag-category",
@@ -5474,8 +5474,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All professional fencers specializing in epee use a pistol grip weapon.",
-"Most professional fencers specializing in epee have represented their country at the World Championships.",
+"All professional fencers specialising in epee use a pistol grip weapon.",
+"Most professional fencers specialising in epee have represented their country at the World Championships.",
 "No fencer using a pistol grip weapon has a reaction time slower than 180 milliseconds."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -5485,9 +5485,9 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-11-21-a", text: "No professional fencer specializing in epee has a reaction time slower than 180 milliseconds.", answerCategory: "yes" },
+{ id: "dm-syl-11-21-a", text: "No professional fencer specialising in epee has a reaction time slower than 180 milliseconds.", answerCategory: "yes" },
 { id: "dm-syl-11-21-b", text: "Some fencers who have represented their country at the World Championships do not have a reaction time slower than 180 milliseconds.", answerCategory: "yes" },
-{ id: "dm-syl-11-21-c", text: "All fencers with a reaction time of 180 milliseconds or faster specialize in epee.", answerCategory: "no" },
+{ id: "dm-syl-11-21-c", text: "All fencers with a reaction time of 180 milliseconds or faster specialise in epee.", answerCategory: "no" },
 { id: "dm-syl-11-21-d", text: "Some fencers who have represented their country at the World Championships use a traditional French grip weapon.", answerCategory: "no" },
 { id: "dm-syl-11-21-e", text: "Most fencers with a reaction time of 180 milliseconds or faster have competed at the World Championships.", answerCategory: "no" }
 ],
@@ -5546,9 +5546,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All professional squash players with a national ranking inside the top 10 utilize custom-molded protective eyewear.",
+"All professional squash players with a national ranking inside the top 10 utilise custom-molded protective eyewear.",
 "Some professional squash players with a national ranking inside the top 10 are contracted as brand ambassadors for Dunlop.",
-"No individual who utilizes custom-molded protective eyewear has a visual acuity score below 20/20."
+"No individual who utilises custom-molded protective eyewear has a visual acuity score below 20/20."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -5644,8 +5644,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"No food items containing synthetic coloring are awarded the 'A-Grade Health Seal'.",
-"All snacks produced by NutriCorp contain synthetic coloring.",
+"No food items containing synthetic colouring are awarded the 'A-Grade Health Seal'.",
+"All snacks produced by NutriCorp contain synthetic colouring.",
 "Some snacks produced by NutriCorp are gluten-free cereal bars."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -5657,11 +5657,11 @@ categories: [
 categoryItems: [
 { id: "dm-syl-10-4-a", text: "No snacks produced by NutriCorp are awarded the 'A-Grade Health Seal'.", answerCategory: "yes" },
 { id: "dm-syl-10-4-b", text: "Some gluten-free cereal bars are not awarded the 'A-Grade Health Seal'.", answerCategory: "yes" },
-{ id: "dm-syl-10-4-c", text: "All gluten-free cereal bars contain synthetic coloring.", answerCategory: "no" },
+{ id: "dm-syl-10-4-c", text: "All gluten-free cereal bars contain synthetic colouring.", answerCategory: "no" },
 { id: "dm-syl-10-4-d", text: "Some products awarded the 'A-Grade Health Seal' are produced by NutriCorp.", answerCategory: "no" },
 { id: "dm-syl-10-4-e", text: "No gluten-free cereal bars are awarded the 'A-Grade Health Seal'.", answerCategory: "no" }
 ],
-explanation: "A — YES: All NutriCorp snacks contain synthetic coloring, and no items with synthetic coloring get the seal. Thus, no NutriCorp snacks get the seal.\nB — YES: Some NutriCorp snacks are gluten-free cereal bars. Since no NutriCorp snacks get the seal, those specific gluten-free cereal bars do not get the seal.\nC — NO: We only know that *some* gluten-free cereal bars are made by NutriCorp (and contain synthetic coloring). Other gluten-free cereal bars made by different companies might not contain synthetic coloring.\nD — NO: Since no NutriCorp products can receive the seal, it is impossible for some sealed products to be from NutriCorp.\nE — NO: Only the gluten-free cereal bars made by NutriCorp are confirmed to contain synthetic coloring and lose the seal; other gluten-free cereal bars could theoretically receive it."
+explanation: "A — YES: All NutriCorp snacks contain synthetic colouring, and no items with synthetic colouring get the seal. Thus, no NutriCorp snacks get the seal.\nB — YES: Some NutriCorp snacks are gluten-free cereal bars. Since no NutriCorp snacks get the seal, those specific gluten-free cereal bars do not get the seal.\nC — NO: We only know that *some* gluten-free cereal bars are made by NutriCorp (and contain synthetic colouring). Other gluten-free cereal bars made by different companies might not contain synthetic colouring.\nD — NO: Since no NutriCorp products can receive the seal, it is impossible for some sealed products to be from NutriCorp.\nE — NO: Only the gluten-free cereal bars made by NutriCorp are confirmed to contain synthetic colouring and lose the seal; other gluten-free cereal bars could theoretically receive it."
 },
 {
 kind: "drag-category",
@@ -5790,9 +5790,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every sustainable farm utilizes nitrogen-fixing cover crops during winter.",
-"Most farms in the valley utilize nitrogen-fixing cover crops during winter.",
-"No operations utilizing nitrogen-fixing cover crops during winter apply synthetic chemical fertilizers."
+"Every sustainable farm utilises nitrogen-fixing cover crops during winter.",
+"Most farms in the valley utilise nitrogen-fixing cover crops during winter.",
+"No operations utilising nitrogen-fixing cover crops during winter apply synthetic chemical fertilizers."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -5984,9 +5984,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every cold-storage transit vessel transporting perishable dairy must utilize real-time temperature loggers.",
+"Every cold-storage transit vessel transporting perishable dairy must utilise real-time temperature loggers.",
 "Most commercial ships owned by AtlantiCargo are cold-storage transit vessels transporting perishable dairy.",
-"No vessels utilizing real-time temperature loggers are permitted to bypass port health screenings."
+"No vessels utilising real-time temperature loggers are permitted to bypass port health screenings."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -5998,10 +5998,10 @@ categoryItems: [
 { id: "dm-syl-10-18-a", text: "No cold-storage transit vessels transporting perishable dairy are permitted to bypass port health screenings.", answerCategory: "yes" },
 { id: "dm-syl-10-18-b", text: "Most commercial ships owned by AtlantiCargo are not permitted to bypass port health screenings.", answerCategory: "yes" },
 { id: "dm-syl-10-18-c", text: "All vessels required to undergo port health screenings are owned by AtlantiCargo.", answerCategory: "no" },
-{ id: "dm-syl-10-18-d", text: "Some vessels permitted to bypass port health screenings utilize real-time temperature loggers.", answerCategory: "no" },
+{ id: "dm-syl-10-18-d", text: "Some vessels permitted to bypass port health screenings utilise real-time temperature loggers.", answerCategory: "no" },
 { id: "dm-syl-10-18-e", text: "Every vessel owned by AtlantiCargo transports perishable dairy.", answerCategory: "no" }
 ],
-explanation: "A — YES: All dairy transit vessels use temperature loggers, and no log-bearing vessels bypass health screenings. Thus, no dairy transit vessels can bypass screenings.\nB — YES: Most AtlantiCargo ships are dairy transit vessels. Since no dairy transit vessels can bypass screenings, most AtlantiCargo ships are barred from bypassing screenings.\nC — NO: Many ships from other global shipping lines must also undergo port health screenings.\nD — NO: The third premise says *no* vessels utilizing real-time loggers can bypass screenings.\nE — NO: AtlantiCargo owns other ships, as 'most' implies a majority, but not necessarily all."
+explanation: "A — YES: All dairy transit vessels use temperature loggers, and no log-bearing vessels bypass health screenings. Thus, no dairy transit vessels can bypass screenings.\nB — YES: Most AtlantiCargo ships are dairy transit vessels. Since no dairy transit vessels can bypass screenings, most AtlantiCargo ships are barred from bypassing screenings.\nC — NO: Many ships from other global shipping lines must also undergo port health screenings.\nD — NO: The third premise says *no* vessels utilising real-time loggers can bypass screenings.\nE — NO: AtlantiCargo owns other ships, as 'most' implies a majority, but not necessarily all."
 },
 {
 kind: "drag-category",
@@ -6121,7 +6121,7 @@ categoryItems: [
 { id: "dm-syl-10-23-d", text: "No facility operated by Apex Foods Group is subject to unexpected municipal engineering audits.", answerCategory: "no" },
 { id: "dm-syl-10-23-e", text: "Every facility maintaining an on-site wastewater neutralization system handles raw poultry.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some raw poultry facilities are run by Apex Foods. Since all raw poultry facilities require wastewater systems, and all wastewater systems trigger audits, these specific Apex facilities are subject to audits.\nB — NO: Other types of infrastructure, like industrial dye factories or chemical bottling plants, might also trigger municipal engineering audits.\nC — YES: Since all food facilities handling raw poultry must maintain a wastewater system, and all such systems require audits, it follows that some poultry facilities are subject to unexpected audits.\nD — NO: The premises explicitly establish that the Apex facilities processing poultry are indeed subject to unexpected municipal engineering audits.\nE — NO: Large scale commercial laundromats or beverage plants might also utilize wastewater neutralization systems without handling raw poultry."
+explanation: "A — YES: Some raw poultry facilities are run by Apex Foods. Since all raw poultry facilities require wastewater systems, and all wastewater systems trigger audits, these specific Apex facilities are subject to audits.\nB — NO: Other types of infrastructure, like industrial dye factories or chemical bottling plants, might also trigger municipal engineering audits.\nC — YES: Since all food facilities handling raw poultry must maintain a wastewater system, and all such systems require audits, it follows that some poultry facilities are subject to unexpected audits.\nD — NO: The premises explicitly establish that the Apex facilities processing poultry are indeed subject to unexpected municipal engineering audits.\nE — NO: Large scale commercial laundromats or beverage plants might also utilise wastewater neutralization systems without handling raw poultry."
 },
 {
 kind: "drag-category",
@@ -6201,7 +6201,7 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All transshipment hubs handling over one million TEU annually utilize automated guided vehicles (AGVs) for internal container movement.",
+"All transshipment hubs handling over one million TEU annually utilise automated guided vehicles (AGVs) for internal container movement.",
 "Many transshipment hubs handling over one million TEU annually face severe berth congestion during peak seasons.",
 "No maritime port facing severe berth congestion during peak seasons qualifies for preferred-carrier insurance discounts."
 ],
@@ -6212,13 +6212,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-09-03-a", text: "Some maritime hubs utilizing automated guided vehicles (AGVs) for internal container movement do not qualify for preferred-carrier insurance discounts.", answerCategory: "yes" },
+{ id: "dm-syl-09-03-a", text: "Some maritime hubs utilising automated guided vehicles (AGVs) for internal container movement do not qualify for preferred-carrier insurance discounts.", answerCategory: "yes" },
 { id: "dm-syl-09-03-b", text: "No transshipment hub handling over one million TEU annually qualifies for preferred-carrier insurance discounts.", answerCategory: "no" },
-{ id: "dm-syl-09-03-c", text: "Some transshipment hubs utilizing automated guided vehicles (AGVs) qualify for preferred-carrier insurance discounts.", answerCategory: "no" },
+{ id: "dm-syl-09-03-c", text: "Some transshipment hubs utilising automated guided vehicles (AGVs) qualify for preferred-carrier insurance discounts.", answerCategory: "no" },
 { id: "dm-syl-09-03-d", text: "Some transshipment hubs handling over one million TEU annually do not qualify for preferred-carrier insurance discounts.", answerCategory: "yes" },
-{ id: "dm-syl-09-03-e", text: "All maritime hubs that fail to qualify for preferred-carrier insurance discounts utilize automated guided vehicles (AGVs).", answerCategory: "no" }
+{ id: "dm-syl-09-03-e", text: "All maritime hubs that fail to qualify for preferred-carrier insurance discounts utilise automated guided vehicles (AGVs).", answerCategory: "no" }
 ],
-explanation: "A — YES: The hubs handling >1M TEU that face congestion use AGVs (by Premise 1) and cannot qualify for discounts (by Premise 3). Thus, there are AGV-utilizing hubs that do not qualify.\nB — NO: Only 'many' (some) of these high-volume hubs face congestion. The ones that do not face congestion might still qualify for the insurance discounts.\nC — NO: While it is possible that some do, we cannot prove it beyond a reasonable doubt from the given information.\nD — YES: Since 'many' (meaning at least some) high-volume hubs face congestion, and no congested port qualifies, those specific high-volume hubs definitely do not qualify.\nE — NO: This reverses the logic; other factors or completely different ports could also cause a failure to qualify for discounts."
+explanation: "A — YES: The hubs handling >1M TEU that face congestion use AGVs (by Premise 1) and cannot qualify for discounts (by Premise 3). Thus, there are AGV-utilising hubs that do not qualify.\nB — NO: Only 'many' (some) of these high-volume hubs face congestion. The ones that do not face congestion might still qualify for the insurance discounts.\nC — NO: While it is possible that some do, we cannot prove it beyond a reasonable doubt from the given information.\nD — YES: Since 'many' (meaning at least some) high-volume hubs face congestion, and no congested port qualifies, those specific high-volume hubs definitely do not qualify.\nE — NO: This reverses the logic; other factors or completely different ports could also cause a failure to qualify for discounts."
 },
 {
 kind: "drag-category",
@@ -6249,8 +6249,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"No roll-on/roll-off (RoRo) ferry built before 2010 possesses an optimized hydrodynamic hull design.",
-"All ferries that possess an optimized hydrodynamic hull design comply with Tier III NOx emission standards.",
+"No roll-on/roll-off (RoRo) ferry built before 2010 possesses an optimised hydrodynamic hull design.",
+"All ferries that possess an optimised hydrodynamic hull design comply with Tier III NOx emission standards.",
 "Some RoRo ferries built before 2010 are deployed on short-sea shipping routes."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -6260,13 +6260,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-09-05-a", text: "Some RoRo ferries deployed on short-sea shipping routes do not possess an optimized hydrodynamic hull design.", answerCategory: "yes" },
+{ id: "dm-syl-09-05-a", text: "Some RoRo ferries deployed on short-sea shipping routes do not possess an optimised hydrodynamic hull design.", answerCategory: "yes" },
 { id: "dm-syl-09-05-b", text: "No ferry that complies with Tier III NOx emission standards was built before 2010.", answerCategory: "no" },
 { id: "dm-syl-09-05-c", text: "Some ferries deployed on short-sea shipping routes do not comply with Tier III NOx emission standards.", answerCategory: "no" },
 { id: "dm-syl-09-05-d", text: "No roll-on/roll-off (RoRo) ferry built before 2010 complies with Tier III NOx emission standards.", answerCategory: "no" },
-{ id: "dm-syl-09-05-e", text: "Some ferries that do not possess an optimized hydrodynamic hull design are deployed on short-sea shipping routes.", answerCategory: "yes" }
+{ id: "dm-syl-09-05-e", text: "Some ferries that do not possess an optimised hydrodynamic hull design are deployed on short-sea shipping routes.", answerCategory: "yes" }
 ],
-explanation: "A — YES: The pre-2010 RoRo ferries on short-sea routes do not possess optimized hulls because no pre-2010 RoRo ferry does.\nB — NO: All optimized hull vessels comply with Tier III, but vessels built before 2010 without optimized hulls might comply with Tier III through other means (e.g., catalysts).\nC — NO: Although these short-sea ferries lack optimized hulls, they might still comply with Tier III standards through alternative technology.\nD — NO: Lacking an optimized hull does not automatically guarantee failure to comply with Tier III standards.\nE — YES: The pre-2010 RoRo ferries on short-sea routes provide a verified example of ferries lacking optimized hulls that are deployed on short-sea shipping routes."
+explanation: "A — YES: The pre-2010 RoRo ferries on short-sea routes do not possess optimised hulls because no pre-2010 RoRo ferry does.\nB — NO: All optimised hull vessels comply with Tier III, but vessels built before 2010 without optimised hulls might comply with Tier III through other means (e.g., catalysts).\nC — NO: Although these short-sea ferries lack optimised hulls, they might still comply with Tier III standards through alternative technology.\nD — NO: Lacking an optimised hull does not automatically guarantee failure to comply with Tier III standards.\nE — YES: The pre-2010 RoRo ferries on short-sea routes provide a verified example of ferries lacking optimised hulls that are deployed on short-sea shipping routes."
 },
 {
 kind: "drag-category",
@@ -6299,7 +6299,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "Every maritime canal with a lock system restricting beam width to under 32 meters imposes a strict mandatory tugboat escort policy.",
 "Some maritime canals with lock systems restricting beam width to under 32 meters operate 24 hours a day.",
-"All waterways imposing a strict mandatory tugboat escort policy require specialized local pilotage licensure."
+"All waterways imposing a strict mandatory tugboat escort policy require specialised local pilotage licensure."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -6308,13 +6308,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-09-07-a", text: "All maritime canals with a lock system restricting beam width to under 32 meters require specialized local pilotage licensure.", answerCategory: "yes" },
-{ id: "dm-syl-09-07-b", text: "Some waterways that operate 24 hours a day require specialized local pilotage licensure.", answerCategory: "yes" },
-{ id: "dm-syl-09-07-c", text: "No waterway requiring specialized local pilotage licensure operates 24 hours a day.", answerCategory: "no" },
-{ id: "dm-syl-09-07-d", text: "All waterways requiring specialized local pilotage licensure have lock systems restricting beam width to under 32 meters.", answerCategory: "no" },
+{ id: "dm-syl-09-07-a", text: "All maritime canals with a lock system restricting beam width to under 32 meters require specialised local pilotage licensure.", answerCategory: "yes" },
+{ id: "dm-syl-09-07-b", text: "Some waterways that operate 24 hours a day require specialised local pilotage licensure.", answerCategory: "yes" },
+{ id: "dm-syl-09-07-c", text: "No waterway requiring specialised local pilotage licensure operates 24 hours a day.", answerCategory: "no" },
+{ id: "dm-syl-09-07-d", text: "All waterways requiring specialised local pilotage licensure have lock systems restricting beam width to under 32 meters.", answerCategory: "no" },
 { id: "dm-syl-09-07-e", text: "Some canals that do not operate 24 hours a day do not require mandatory tugboat escorts.", answerCategory: "no" }
 ],
-explanation: "A — YES: Every such canal imposes the escort policy, and all waterways with that policy require specialized licensure, so all these canals require the licensure.\nB — YES: The restricted canals that operate 24 hours a day impose the escort policy and therefore require specialized local pilotage licensure.\nC — NO: This directly contradicts conclusion B, which proves an overlap exists.\nD — NO: The requirement for specialized local licensure applies to all escort-policy waterways, but those policies could exist on waterways with wider locks or no locks at all.\nE — NO: We cannot determine the escort policy status of canals that do not operate 24 hours a day from the premises."
+explanation: "A — YES: Every such canal imposes the escort policy, and all waterways with that policy require specialised licensure, so all these canals require the licensure.\nB — YES: The restricted canals that operate 24 hours a day impose the escort policy and therefore require specialised local pilotage licensure.\nC — NO: This directly contradicts conclusion B, which proves an overlap exists.\nD — NO: The requirement for specialised local licensure applies to all escort-policy waterways, but those policies could exist on waterways with wider locks or no locks at all.\nE — NO: We cannot determine the escort policy status of canals that do not operate 24 hours a day from the premises."
 },
 {
 kind: "drag-category",
@@ -6322,8 +6322,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "No liquefied natural gas (LNG) terminal located within five kilometers of a residential zone is authorized for simultaneous operations (SIMOPS).",
-"All LNG terminals authorized for simultaneous operations (SIMOPS) utilize high-integrity pressure protection systems (HIPPS).",
-"Some LNG terminals utilizing high-integrity pressure protection systems (HIPPS) are owned by public-private consortiums."
+"All LNG terminals authorized for simultaneous operations (SIMOPS) utilise high-integrity pressure protection systems (HIPPS).",
+"Some LNG terminals utilising high-integrity pressure protection systems (HIPPS) are owned by public-private consortiums."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -6332,13 +6332,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-09-08-a", text: "No LNG terminal located within five kilometers of a residential zone utilizes high-integrity pressure protection systems (HIPPS).", answerCategory: "no" },
-{ id: "dm-syl-09-08-b", text: "Some LNG terminals utilizing high-integrity pressure protection systems (HIPPS) are not located within five kilometers of a residential zone.", answerCategory: "yes" },
+{ id: "dm-syl-09-08-a", text: "No LNG terminal located within five kilometers of a residential zone utilises high-integrity pressure protection systems (HIPPS).", answerCategory: "no" },
+{ id: "dm-syl-09-08-b", text: "Some LNG terminals utilising high-integrity pressure protection systems (HIPPS) are not located within five kilometers of a residential zone.", answerCategory: "yes" },
 { id: "dm-syl-09-08-c", text: "Some LNG terminals owned by public-private consortiums are authorized for simultaneous operations (SIMOPS).", answerCategory: "no" },
 { id: "dm-syl-09-08-d", text: "All LNG terminals authorized for simultaneous operations (SIMOPS) are owned by public-private consortiums.", answerCategory: "no" },
-{ id: "dm-syl-09-08-e", text: "Any LNG terminal that does not utilize a high-integrity pressure protection system (HIPPS) is not authorized for simultaneous operations (SIMOPS).", answerCategory: "yes" }
+{ id: "dm-syl-09-08-e", text: "Any LNG terminal that does not utilise a high-integrity pressure protection system (HIPPS) is not authorized for simultaneous operations (SIMOPS).", answerCategory: "yes" }
 ],
-explanation: "A — NO: Terminals within 5km cannot have SIMOPS, but they might still utilize HIPPS for general safety unrelated to SIMOPS.\nB — YES: Terminals authorized for SIMOPS utilize HIPPS and cannot be within 5km of a residential zone. Thus, those SIMOPS terminals represent HIPPS-utilizing terminals not within 5km.\nC — NO: The premises show that public-private consortiums overlap with HIPPS terminals, but we do not know if they overlap with the specific subset authorized for SIMOPS.\nD — NO: There is no basis to conclude that all SIMOPS-authorized terminals belong to public-private consortiums.\nE — YES: Since all SIMOPS-authorized terminals must utilize HIPPS, any terminal lacking HIPPS cannot possibly be authorized for SIMOPS."
+explanation: "A — NO: Terminals within 5km cannot have SIMOPS, but they might still utilise HIPPS for general safety unrelated to SIMOPS.\nB — YES: Terminals authorized for SIMOPS utilise HIPPS and cannot be within 5km of a residential zone. Thus, those SIMOPS terminals represent HIPPS-utilising terminals not within 5km.\nC — NO: The premises show that public-private consortiums overlap with HIPPS terminals, but we do not know if they overlap with the specific subset authorized for SIMOPS.\nD — NO: There is no basis to conclude that all SIMOPS-authorized terminals belong to public-private consortiums.\nE — YES: Since all SIMOPS-authorized terminals must utilise HIPPS, any terminal lacking HIPPS cannot possibly be authorized for SIMOPS."
 },
 
 // BATCH 2: Transport & Logistics - Topic 09 (Rail Freight and Intermodal Supply Chains)
@@ -6347,8 +6347,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All class-1 freight railroads operating cross-border corridors utilize distributed power locomotives.",
-"No railroad utilizing distributed power locomotives relies on mechanical hand-brakes for primary yard switching staging.",
+"All class-1 freight railroads operating cross-border corridors utilise distributed power locomotives.",
+"No railroad utilising distributed power locomotives relies on mechanical hand-brakes for primary yard switching staging.",
 "Some regional short-line railroads rely on mechanical hand-brakes for primary yard switching staging."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -6360,11 +6360,11 @@ categories: [
 categoryItems: [
 { id: "dm-syl-09-09-a", text: "No class-1 freight railroad operating cross-border corridors relies on mechanical hand-brakes for primary yard switching staging.", answerCategory: "yes" },
 { id: "dm-syl-09-09-b", text: "Some regional short-line railroads are class-1 freight railroads operating cross-border corridors.", answerCategory: "no" },
-{ id: "dm-syl-09-09-c", text: "Some railroads that do not rely on mechanical hand-brakes for primary yard switching staging utilize distributed power locomotives.", answerCategory: "yes" },
-{ id: "dm-syl-09-09-d", text: "Some regional short-line railroads do not utilize distributed power locomotives.", answerCategory: "yes" },
-{ id: "dm-syl-09-09-e", text: "All railroads that utilize distributed power locomotives are class-1 freight railroads operating cross-border corridors.", answerCategory: "no" }
+{ id: "dm-syl-09-09-c", text: "Some railroads that do not rely on mechanical hand-brakes for primary yard switching staging utilise distributed power locomotives.", answerCategory: "yes" },
+{ id: "dm-syl-09-09-d", text: "Some regional short-line railroads do not utilise distributed power locomotives.", answerCategory: "yes" },
+{ id: "dm-syl-09-09-e", text: "All railroads that utilise distributed power locomotives are class-1 freight railroads operating cross-border corridors.", answerCategory: "no" }
 ],
-explanation: "A — YES: All cross-border class-1 railroads use distributed power, and none of those use mechanical hand-brakes, making this conclusion completely certain.\nB — NO: Cross-border class-1 railroads have zero overlap with mechanical hand-brakes, whereas these short-line railroads use them, meaning they cannot be cross-border class-1 railroads.\nC — YES: Any railroad utilizing distributed power locomotives serves as a valid example because none of them rely on mechanical hand-brakes.\nD — YES: The regional short-line railroads that rely on mechanical hand-brakes cannot use distributed power locomotives because no railroad using distributed power relies on mechanical hand-brakes.\nE — NO: Distributed power locomotives could be utilized by domestic class-1 railroads or other industrial lines not operating cross-border corridors."
+explanation: "A — YES: All cross-border class-1 railroads use distributed power, and none of those use mechanical hand-brakes, making this conclusion completely certain.\nB — NO: Cross-border class-1 railroads have zero overlap with mechanical hand-brakes, whereas these short-line railroads use them, meaning they cannot be cross-border class-1 railroads.\nC — YES: Any railroad utilising distributed power locomotives serves as a valid example because none of them rely on mechanical hand-brakes.\nD — YES: The regional short-line railroads that rely on mechanical hand-brakes cannot use distributed power locomotives because no railroad using distributed power relies on mechanical hand-brakes.\nE — NO: Distributed power locomotives could be utilised by domestic class-1 railroads or other industrial lines not operating cross-border corridors."
 },
 {
 kind: "drag-category",
@@ -6412,15 +6412,15 @@ categoryItems: [
 { id: "dm-syl-09-11-d", text: "All rail cars that can safely navigate old municipal brick tunnels are permitted on routes with Clearance Plate B constraints.", answerCategory: "no" },
 { id: "dm-syl-09-11-e", text: "Some double-stack well cars configured for 53-foot domestic containers are not permitted on routes with Clearance Plate B constraints.", answerCategory: "yes" }
 ],
-explanation: "A — NO: Not being allowed on Plate B routes does not mean they cannot navigate brick tunnels, though they are excluded from Plate B routes.\nB — NO: We know that leasing syndicates own some 53-foot well cars (which are banned from Plate B routes), but we don't know if they own other cars that are permitted.\nC — YES: The 53-foot well cars owned by leasing syndicates are not permitted on Plate B routes due to Premise 1.\nD — NO: This is an illicit conversion of Premise 2; other types of small or specialized cars might navigate tunnels safely without meeting Plate B clearances.\nE — YES: Since *no* such well cars are permitted on these routes, it logically follows that *some* (any subset) of them are not permitted."
+explanation: "A — NO: Not being allowed on Plate B routes does not mean they cannot navigate brick tunnels, though they are excluded from Plate B routes.\nB — NO: We know that leasing syndicates own some 53-foot well cars (which are banned from Plate B routes), but we don't know if they own other cars that are permitted.\nC — YES: The 53-foot well cars owned by leasing syndicates are not permitted on Plate B routes due to Premise 1.\nD — NO: This is an illicit conversion of Premise 2; other types of small or specialised cars might navigate tunnels safely without meeting Plate B clearances.\nE — YES: Since *no* such well cars are permitted on these routes, it logically follows that *some* (any subset) of them are not permitted."
 },
 {
 kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All hump yards utilizing computerized retarder systems require constant calibration of distance-to-coupling radar.",
-"Some hump yards utilizing computerized retarder systems experience significant operational delays during sub-zero blizzards.",
+"All hump yards utilising computerized retarder systems require constant calibration of distance-to-coupling radar.",
+"Some hump yards utilising computerized retarder systems experience significant operational delays during sub-zero blizzards.",
 "All facilities requiring constant calibration of distance-to-coupling radar are exempt from local noise ordinances."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -6430,13 +6430,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-09-12-a", text: "All hump yards utilizing computerized retarder systems are exempt from local noise ordinances.", answerCategory: "yes" },
+{ id: "dm-syl-09-12-a", text: "All hump yards utilising computerized retarder systems are exempt from local noise ordinances.", answerCategory: "yes" },
 { id: "dm-syl-09-12-b", text: "Some facilities that experience significant operational delays during sub-zero blizzards are exempt from local noise ordinances.", answerCategory: "yes" },
 { id: "dm-syl-09-12-c", text: "No facility exempt from local noise ordinances experiences significant operational delays during sub-zero blizzards.", answerCategory: "no" },
-{ id: "dm-syl-09-12-d", text: "Every facility exempt from local noise ordinances is a hump yard utilizing a computerized retarder system.", answerCategory: "no" },
-{ id: "dm-syl-09-12-e", text: "Some facilities that do not require constant calibration of distance-to-coupling radar are hump yards utilizing computerized retarder systems.", answerCategory: "no" }
+{ id: "dm-syl-09-12-d", text: "Every facility exempt from local noise ordinances is a hump yard utilising a computerized retarder system.", answerCategory: "no" },
+{ id: "dm-syl-09-12-e", text: "Some facilities that do not require constant calibration of distance-to-coupling radar are hump yards utilising computerized retarder systems.", answerCategory: "no" }
 ],
-explanation: "A — YES: All computerized retarder hump yards require radar calibration, and all such calibrated facilities are exempt from noise ordinances. Thus, all these hump yards are exempt.\nB — YES: The computerized retarder hump yards that experience delays during blizzards require calibration and are therefore exempt from noise ordinances.\nC — NO: Conclusion B explicitly demonstrates that there is an overlap between these two groups.\nD — NO: Other types of industrial facilities or completely different transport hubs could be exempt from local noise ordinances.\nE — NO: This directly contradicts Premise 1, which states that *all* hump yards utilizing computerized retarder systems require this calibration."
+explanation: "A — YES: All computerized retarder hump yards require radar calibration, and all such calibrated facilities are exempt from noise ordinances. Thus, all these hump yards are exempt.\nB — YES: The computerized retarder hump yards that experience delays during blizzards require calibration and are therefore exempt from noise ordinances.\nC — NO: Conclusion B explicitly demonstrates that there is an overlap between these two groups.\nD — NO: Other types of industrial facilities or completely different transport hubs could be exempt from local noise ordinances.\nE — NO: This directly contradicts Premise 1, which states that *all* hump yards utilising computerized retarder systems require this calibration."
 },
 {
 kind: "drag-category",
@@ -6543,7 +6543,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All electric last-mile delivery vans with a payload capacity under 1.5 tons are restricted to urban low-emission zones.",
 "No delivery vehicle restricted to urban low-emission zones is permitted to operate on interprovincial highways.",
-"Some electric last-mile delivery vans with a payload capacity under 1.5 tons are deployed by e-commerce fulfillment giants."
+"Some electric last-mile delivery vans with a payload capacity under 1.5 tons are deployed by e-commerce fulfilment giants."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -6553,9 +6553,9 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-09-17-a", text: "No electric last-mile delivery van with a payload capacity under 1.5 tons is permitted to operate on interprovincial highways.", answerCategory: "yes" },
-{ id: "dm-syl-09-17-b", text: "Some delivery vehicles deployed by e-commerce fulfillment giants are not permitted to operate on interprovincial highways.", answerCategory: "yes" },
+{ id: "dm-syl-09-17-b", text: "Some delivery vehicles deployed by e-commerce fulfilment giants are not permitted to operate on interprovincial highways.", answerCategory: "yes" },
 { id: "dm-syl-09-17-c", text: "Some vehicles permitted to operate on interprovincial highways are restricted to urban low-emission zones.", answerCategory: "no" },
-{ id: "dm-syl-09-17-d", text: "All delivery vehicles deployed by e-commerce fulfillment giants are restricted to urban low-emission zones.", answerCategory: "no" },
+{ id: "dm-syl-09-17-d", text: "All delivery vehicles deployed by e-commerce fulfilment giants are restricted to urban low-emission zones.", answerCategory: "no" },
 { id: "dm-syl-09-17-e", text: "Some electric last-mile delivery vans with a payload capacity under 1.5 tons are not restricted to urban low-emission zones.", answerCategory: "no" }
 ],
 explanation: "A — YES: All such vans are restricted to low-emission zones, and no vehicle restricted to those zones can operate on interprovincial highways. Therefore, none of these vans can operate on highways.\nB — YES: The vans under 1.5 tons deployed by e-commerce giants are restricted to urban zones and cannot operate on interprovincial highways.\nC — NO: This directly contradicts Premise 2, which states there is zero overlap between highway-permitted vehicles and low-emission zone restricted vehicles.\nD — NO: E-commerce giants use many types of vehicles, including large heavy trucks, which would not be restricted in this manner.\nE — NO: This contradicts Premise 1, which explicitly states that *all* such vans are restricted to urban low-emission zones."
@@ -6567,7 +6567,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "Every automated parcel locker network located in a high-density transit hub requires a multi-factor user authentication protocol.",
 "Some automated parcel locker networks located in high-density transit hubs operate entirely on off-grid solar arrays.",
-"All delivery infrastructure requiring a multi-factor user authentication protocol must be integrated with a centralized logistics API."
+"All delivery infrastructure requiring a multi-factor user authentication protocol must be integrated with a centralised logistics API."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -6576,10 +6576,10 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-09-18-a", text: "All automated parcel locker networks located in high-density transit hubs are integrated with a centralized logistics API.", answerCategory: "yes" },
-{ id: "dm-syl-09-18-b", text: "Some locker networks operating entirely on off-grid solar arrays are integrated with a centralized logistics API.", answerCategory: "yes" },
-{ id: "dm-syl-09-18-c", text: "No locker network operating entirely on off-grid solar arrays is integrated with a centralized logistics API.", answerCategory: "no" },
-{ id: "dm-syl-09-18-d", text: "Every system integrated with a centralized logistics API is located in a high-density transit hub.", answerCategory: "no" },
+{ id: "dm-syl-09-18-a", text: "All automated parcel locker networks located in high-density transit hubs are integrated with a centralised logistics API.", answerCategory: "yes" },
+{ id: "dm-syl-09-18-b", text: "Some locker networks operating entirely on off-grid solar arrays are integrated with a centralised logistics API.", answerCategory: "yes" },
+{ id: "dm-syl-09-18-c", text: "No locker network operating entirely on off-grid solar arrays is integrated with a centralised logistics API.", answerCategory: "no" },
+{ id: "dm-syl-09-18-d", text: "Every system integrated with a centralised logistics API is located in a high-density transit hub.", answerCategory: "no" },
 { id: "dm-syl-09-18-e", text: "Some automated parcel locker networks located in high-density transit hubs do not require a multi-factor user authentication protocol.", answerCategory: "no" }
 ],
 explanation: "A — YES: Every high-density locker network requires multi-factor authentication, and everything requiring that protocol must be integrated with the API, making this absolute.\nB — YES: The transit hub locker networks that run on solar power require multi-factor authentication and are therefore integrated with the logistics API.\nC — NO: This is false because conclusion B demonstrates a proven overlap between solar-powered networks and API integration.\nD — NO: Warehouse management tools, tracking sensors, or residential drop boxes could all be integrated with the API without being in transit hubs.\nE — NO: This contradicts Premise 1, which states that *every* single one of these transit hub locker networks requires the protocol."
@@ -6589,9 +6589,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"No autonomous delivery rover utilizing micro-mobility lanes is permitted to operate during peak pedestrian commuting hours.",
+"No autonomous delivery rover utilising micro-mobility lanes is permitted to operate during peak pedestrian commuting hours.",
 "All delivery assets permitted to operate during peak pedestrian commuting hours are equipped with real-time remote operator overrides.",
-"Some autonomous delivery rovers utilizing micro-mobility lanes are owned by independent local restaurants."
+"Some autonomous delivery rovers utilising micro-mobility lanes are owned by independent local restaurants."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -6600,22 +6600,22 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-09-19-a", text: "No autonomous delivery rover utilizing micro-mobility lanes is equipped with real-time remote operator overrides.", answerCategory: "no" },
+{ id: "dm-syl-09-19-a", text: "No autonomous delivery rover utilising micro-mobility lanes is equipped with real-time remote operator overrides.", answerCategory: "no" },
 { id: "dm-syl-09-19-b", text: "Some delivery assets owned by independent local restaurants are not permitted to operate during peak pedestrian commuting hours.", answerCategory: "yes" },
 { id: "dm-syl-09-19-c", text: "Some delivery assets equipped with real-time remote operator overrides are owned by independent local restaurants.", answerCategory: "no" },
 { id: "dm-syl-09-19-d", text: "All delivery assets equipped with real-time remote operator overrides are permitted to operate during peak pedestrian commuting hours.", answerCategory: "no" },
-{ id: "dm-syl-09-19-e", text: "Some autonomous delivery rovers utilizing micro-mobility lanes are not permitted to operate during peak pedestrian commuting hours.", answerCategory: "yes" }
+{ id: "dm-syl-09-19-e", text: "Some autonomous delivery rovers utilising micro-mobility lanes are not permitted to operate during peak pedestrian commuting hours.", answerCategory: "yes" }
 ],
-explanation: "A — NO: Rovers cannot operate during peak hours, but they might still be equipped with remote overrides for safety during the non-peak hours when they do operate.\nB — YES: The rovers owned by independent local restaurants utilize micro-mobility lanes and thus are banned from operating during peak pedestrian commuting hours.\nC — NO: While possible, the premises do not establish an overlap between remote override assets and local restaurant assets.\nD — NO: This is an illicit conversion of Premise 2; assets might have overrides but still be banned during peak hours for entirely separate regulatory reasons.\nE — YES: Since *no* such rovers are permitted to operate during peak hours, it logically follows that *some* (any subset) of them are not permitted."
+explanation: "A — NO: Rovers cannot operate during peak hours, but they might still be equipped with remote overrides for safety during the non-peak hours when they do operate.\nB — YES: The rovers owned by independent local restaurants utilise micro-mobility lanes and thus are banned from operating during peak pedestrian commuting hours.\nC — NO: While possible, the premises do not establish an overlap between remote override assets and local restaurant assets.\nD — NO: This is an illicit conversion of Premise 2; assets might have overrides but still be banned during peak hours for entirely separate regulatory reasons.\nE — YES: Since *no* such rovers are permitted to operate during peak hours, it logically follows that *some* (any subset) of them are not permitted."
 },
 {
 kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All urban micro-fulfillment centers situated in subterranean parking garages utilize automated vertical lift modules.",
-"Some urban micro-fulfillment centers situated in subterranean parking garages handle perishable cold-chain groceries.",
-"All distribution nodes utilizing automated vertical lift modules are subject to weekly fire suppression system audits."
+"All urban micro-fulfilment centres situated in subterranean parking garages utilise automated vertical lift modules.",
+"Some urban micro-fulfilment centres situated in subterranean parking garages handle perishable cold-chain groceries.",
+"All distribution nodes utilising automated vertical lift modules are subject to weekly fire suppression system audits."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -6624,13 +6624,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-09-20-a", text: "All urban micro-fulfillment centers situated in subterranean parking garages are subject to weekly fire suppression system audits.", answerCategory: "yes" },
+{ id: "dm-syl-09-20-a", text: "All urban micro-fulfilment centres situated in subterranean parking garages are subject to weekly fire suppression system audits.", answerCategory: "yes" },
 { id: "dm-syl-09-20-b", text: "Some facilities handling perishable cold-chain groceries are subject to weekly fire suppression system audits.", answerCategory: "yes" },
 { id: "dm-syl-09-20-c", text: "No facility subject to weekly fire suppression system audits handles perishable cold-chain groceries.", answerCategory: "no" },
 { id: "dm-syl-09-20-d", text: "Every facility subject to weekly fire suppression system audits is situated in a subterranean parking garage.", answerCategory: "no" },
-{ id: "dm-syl-09-20-e", text: "Some micro-fulfillment centers utilizing automated vertical lift modules do not handle perishable cold-chain groceries.", answerCategory: "no" }
+{ id: "dm-syl-09-20-e", text: "Some micro-fulfilment centres utilising automated vertical lift modules do not handle perishable cold-chain groceries.", answerCategory: "no" }
 ],
-explanation: "A — YES: All subterranean garage centers use vertical lift modules, and all vertical lift nodes are audited weekly. Therefore, all subterranean garage centers are audited.\nB — YES: The subterranean centers handling cold-chain groceries use vertical lift modules and must undergo these weekly audits.\nC — NO: This directly contradicts conclusion B, which shows a verified overlap between these categories.\nD — NO: Above-ground warehouses or large industrial hubs using vertical lift modules would also undergo these fire audits.\nE — NO: We know some subterranean centers handle cold-chain items, but we cannot prove that some *do not*; all vertical lift centers could theoretically handle cold-chain groceries."
+explanation: "A — YES: All subterranean garage centres use vertical lift modules, and all vertical lift nodes are audited weekly. Therefore, all subterranean garage centres are audited.\nB — YES: The subterranean centres handling cold-chain groceries use vertical lift modules and must undergo these weekly audits.\nC — NO: This directly contradicts conclusion B, which shows a verified overlap between these categories.\nD — NO: Above-ground warehouses or large industrial hubs using vertical lift modules would also undergo these fire audits.\nE — NO: We know some subterranean centres handle cold-chain items, but we cannot prove that some *do not*; all vertical lift centres could theoretically handle cold-chain groceries."
 },
 {
 kind: "drag-category",
@@ -6663,7 +6663,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All commercial cargo e-bikes with integrated hydraulic disc brakes are approved for heavy-duty hills with gradients over 12 percent.",
 "No vehicle approved for heavy-duty hills with gradients over 12 percent is restricted by municipal winter thermal battery caps.",
-"Some commercial cargo e-bikes with integrated hydraulic disc brakes are utilized for temperature-controlled medical delivery."
+"Some commercial cargo e-bikes with integrated hydraulic disc brakes are utilised for temperature-controlled medical delivery."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -6672,7 +6672,7 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-09-22-a", text: "Some e-bikes utilized for temperature-controlled medical delivery are not restricted by municipal winter thermal battery caps.", answerCategory: "yes" },
+{ id: "dm-syl-09-22-a", text: "Some e-bikes utilised for temperature-controlled medical delivery are not restricted by municipal winter thermal battery caps.", answerCategory: "yes" },
 { id: "dm-syl-09-22-b", text: "No commercial cargo e-bike with integrated hydraulic disc brakes is restricted by municipal winter thermal battery caps.", answerCategory: "yes" },
 { id: "dm-syl-09-22-c", text: "All vehicles not restricted by municipal winter thermal battery caps are approved for gradients over 12 percent.", answerCategory: "no" },
 { id: "dm-syl-09-22-d", text: "Some vehicles restricted by municipal winter thermal battery caps have integrated hydraulic disc brakes.", answerCategory: "no" },
@@ -6709,7 +6709,7 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"No night-time logistics hub operating within city limits utilizes loud pneumatic container-sorting impact wrenches.",
+"No night-time logistics hub operating within city limits utilises loud pneumatic container-sorting impact wrenches.",
 "All night-time logistics hubs operating within city limits deploy high-frequency sound-baffling acoustic perimeter panels.",
 "Some logistics complexes deploying high-frequency sound-baffling acoustic perimeter panels are owned by multinational retail conglomerates."
 ],
@@ -6720,9 +6720,9 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-09-24-a", text: "Some logistics complexes deploying high-frequency sound-baffling acoustic perimeter panels do not utilize loud pneumatic container-sorting impact wrenches.", answerCategory: "yes" },
-{ id: "dm-syl-09-24-b", text: "Some logistics complexes owned by multinational retail conglomerates utilize loud pneumatic container-sorting impact wrenches.", answerCategory: "no" },
-{ id: "dm-syl-09-24-c", text: "No logistics complex utilizing loud pneumatic container-sorting impact wrenches deploys high-frequency sound-baffling acoustic perimeter panels.", answerCategory: "no" },
+{ id: "dm-syl-09-24-a", text: "Some logistics complexes deploying high-frequency sound-baffling acoustic perimeter panels do not utilise loud pneumatic container-sorting impact wrenches.", answerCategory: "yes" },
+{ id: "dm-syl-09-24-b", text: "Some logistics complexes owned by multinational retail conglomerates utilise loud pneumatic container-sorting impact wrenches.", answerCategory: "no" },
+{ id: "dm-syl-09-24-c", text: "No logistics complex utilising loud pneumatic container-sorting impact wrenches deploys high-frequency sound-baffling acoustic perimeter panels.", answerCategory: "no" },
 { id: "dm-syl-09-24-d", text: "All night-time logistics hubs operating within city limits are owned by multinational retail conglomerates.", answerCategory: "no" },
 { id: "dm-syl-09-24-e", text: "Some logistics complexes deploying high-frequency sound-baffling acoustic perimeter panels are night-time logistics hubs operating within city limits.", answerCategory: "yes" }
 ],
@@ -6928,7 +6928,7 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All luxury brands that utilize genuine silk fabrics source their materials from Lyon.",
+"All luxury brands that utilise genuine silk fabrics source their materials from Lyon.",
 "No brand sourcing materials from Lyon offers end-of-season clearance discounts.",
 "Some brands that offer end-of-season clearance discounts use digital marketing strategies."
 ],
@@ -6939,11 +6939,11 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-07-09-a", text: "No luxury brand that utilizes genuine silk fabrics offers end-of-season clearance discounts.", answerCategory: "yes" },
+{ id: "dm-syl-07-09-a", text: "No luxury brand that utilises genuine silk fabrics offers end-of-season clearance discounts.", answerCategory: "yes" },
 { id: "dm-syl-07-09-b", text: "Some brands using digital marketing strategies do not source their materials from Lyon.", answerCategory: "yes" },
-{ id: "dm-syl-07-09-c", text: "All brands that do not offer end-of-season clearance discounts are luxury brands that utilize genuine silk fabrics.", answerCategory: "no" },
-{ id: "dm-syl-07-09-d", text: "Some brands using digital marketing strategies are luxury brands that utilize genuine silk fabrics.", answerCategory: "no" },
-{ id: "dm-syl-07-09-e", text: "Any brand offering end-of-season clearance discounts does not utilize genuine silk fabrics as a luxury brand.", answerCategory: "yes" }
+{ id: "dm-syl-07-09-c", text: "All brands that do not offer end-of-season clearance discounts are luxury brands that utilise genuine silk fabrics.", answerCategory: "no" },
+{ id: "dm-syl-07-09-d", text: "Some brands using digital marketing strategies are luxury brands that utilise genuine silk fabrics.", answerCategory: "no" },
+{ id: "dm-syl-07-09-e", text: "Any brand offering end-of-season clearance discounts does not utilise genuine silk fabrics as a luxury brand.", answerCategory: "yes" }
 ],
 explanation: "A — YES: Genuine silk luxury brands source from Lyon, and Lyon-sourcing brands do not offer discounts, so genuine silk luxury brands do not offer discounts.\nB — YES: Some digital marketing brands offer discounts. Since Lyon-sourcing brands never offer discounts, these specific digital marketing brands cannot be sourcing from Lyon.\nC — NO: Just because Lyon-sourcing brands don't offer discounts doesn't mean *only* genuine silk luxury brands avoid discounts.\nD — NO: The digital marketing brands we know about offer discounts, which means they cannot source from Lyon, and thus cannot be genuine silk luxury brands.\nE — YES: Because genuine silk luxury brands never offer these discounts, any brand that does offer them cannot be one of those luxury brands."
 },
@@ -6976,8 +6976,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All fast-moving consumer goods (FMCG) corporations utilize automated inventory tracking.",
-"Some corporations that utilize automated inventory tracking operate under a decentralised management model.",
+"All fast-moving consumer goods (FMCG) corporations utilise automated inventory tracking.",
+"Some corporations that utilise automated inventory tracking operate under a decentralised management model.",
 "Every corporation operating under a decentralised management model has eliminated paper-based invoicing."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -6987,9 +6987,9 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-07-11-a", text: "Some corporations that utilize automated inventory tracking have eliminated paper-based invoicing.", answerCategory: "yes" },
+{ id: "dm-syl-07-11-a", text: "Some corporations that utilise automated inventory tracking have eliminated paper-based invoicing.", answerCategory: "yes" },
 { id: "dm-syl-07-11-b", text: "All FMCG corporations have eliminated paper-based invoicing.", answerCategory: "no" },
-{ id: "dm-syl-07-11-c", text: "Some corporations that have eliminated paper-based invoicing utilize automated inventory tracking.", answerCategory: "yes" },
+{ id: "dm-syl-07-11-c", text: "Some corporations that have eliminated paper-based invoicing utilise automated inventory tracking.", answerCategory: "yes" },
 { id: "dm-syl-07-11-d", text: "Any corporation that has not eliminated paper-based invoicing is not an FMCG corporation.", answerCategory: "no" },
 { id: "dm-syl-07-11-e", text: "Some corporations operating under a decentralised management model are FMCG corporations.", answerCategory: "no" }
 ],
@@ -7171,8 +7171,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "All commercial agricultural producers exporting to the EU must adhere to zero-deforestation standards.",
-"Some producers that adhere to zero-deforestation standards utilize satellite-based crop monitoring.",
-"Every producer utilizing satellite-based crop monitoring is eligible for organic certification."
+"Some producers that adhere to zero-deforestation standards utilise satellite-based crop monitoring.",
+"Every producer utilising satellite-based crop monitoring is eligible for organic certification."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -7185,7 +7185,7 @@ categoryItems: [
 { id: "dm-syl-07-19-b", text: "All agricultural producers exporting to the EU are eligible for organic certification.", answerCategory: "no" },
 { id: "dm-syl-07-19-c", text: "Some producers eligible for organic certification adhere to zero-deforestation standards.", answerCategory: "yes" },
 { id: "dm-syl-07-19-d", text: "Any producer ineligible for organic certification is not an agricultural producer exporting to the EU.", answerCategory: "no" },
-{ id: "dm-syl-07-19-e", text: "Some producers utilizing satellite-based crop monitoring are agricultural producers exporting to the EU.", answerCategory: "no" }
+{ id: "dm-syl-07-19-e", text: "Some producers utilising satellite-based crop monitoring are agricultural producers exporting to the EU.", answerCategory: "no" }
 ],
 explanation: "A — YES: Some zero-deforestation producers use satellite monitoring, and all satellite monitoring users are eligible for organic certification. Thus, those zero-deforestation producers are eligible.\nB — NO: EU exporters must adhere to zero-deforestation standards, but we only know that *some* zero-deforestation producers use satellite monitoring and are organic-eligible. We can't say *all* EU exporters are organic-eligible.\nC — YES: This is the conversion of conclusion A. Since there is an overlap between zero-deforestation producers and organic eligibility, some organic-eligible producers adhere to zero-deforestation.\nD — NO: We don't know if EU exporters are definitely organic-eligible, so being ineligible does not rule out being an EU exporter.\nE — NO: While satellite users overlap with zero-deforestation, the premises do not guarantee that they specifically overlap with the subset of EU exporters."
 },
@@ -7404,7 +7404,7 @@ categoryItems: [
 { id: "dm-syl-05-04-d", text: "Some reef systems that lack high biodiversity do not have high structural complexity.", answerCategory: "yes" },
 { id: "dm-syl-05-04-e", text: "All reef systems in the Indo-Pacific region have low structural complexity.", answerCategory: "no" }
 ],
-explanation: "A — YES: If an Indo-Pacific reef had high structural complexity, it would mandatory exhibit high biodiversity. Since some lack high biodiversity, they cannot have high structural complexity.\nB — NO: The premises give no information about the Indo-Pacific reefs that *do* have biodiversity, nor do they guarantee that any reef in that region supports apex predators.\nC — NO: It is possible for a reef to lack biodiversity but still support apex predators through other means, as the premises only link high complexity to apex predators, not biodiversity directly to apex predators.\nD — YES: Since all reefs with high structural complexity must have high biodiversity, any reef lacking high biodiversity cannot have high structural complexity. This validates that 'some' (or indeed all) such low-biodiversity reefs fit this description.\nE — NO: We only know that *some* Indo-Pacific reefs lack biodiversity and thus lack complexity; we cannot generalize this to *all* Indo-Pacific reefs."
+explanation: "A — YES: If an Indo-Pacific reef had high structural complexity, it would mandatory exhibit high biodiversity. Since some lack high biodiversity, they cannot have high structural complexity.\nB — NO: The premises give no information about the Indo-Pacific reefs that *do* have biodiversity, nor do they guarantee that any reef in that region supports apex predators.\nC — NO: It is possible for a reef to lack biodiversity but still support apex predators through other means, as the premises only link high complexity to apex predators, not biodiversity directly to apex predators.\nD — YES: Since all reefs with high structural complexity must have high biodiversity, any reef lacking high biodiversity cannot have high structural complexity. This validates that 'some' (or indeed all) such low-biodiversity reefs fit this description.\nE — NO: We only know that *some* Indo-Pacific reefs lack biodiversity and thus lack complexity; we cannot generalise this to *all* Indo-Pacific reefs."
 },
 {
 kind: "drag-category",
@@ -7558,8 +7558,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "Any plant species native to the chaparral biome is drought-resistant.",
-"All drought-resistant plants possess specialized sclerophyllous leaves.",
-"Some high-altitude shrubs do not possess specialized sclerophyllous leaves."
+"All drought-resistant plants possess specialised sclerophyllous leaves.",
+"Some high-altitude shrubs do not possess specialised sclerophyllous leaves."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -7571,7 +7571,7 @@ categoryItems: [
 { id: "dm-syl-05-11-a", text: "Some high-altitude shrubs are not native to the chaparral biome.", answerCategory: "yes" },
 { id: "dm-syl-05-11-b", text: "No plant species native to the chaparral biome is a high-altitude shrub.", answerCategory: "no" },
 { id: "dm-syl-05-11-c", text: "Some high-altitude shrubs are drought-resistant.", answerCategory: "no" },
-{ id: "dm-syl-05-11-d", text: "No plant that lacks specialized sclerophyllous leaves is native to the chaparral biome.", answerCategory: "yes" },
+{ id: "dm-syl-05-11-d", text: "No plant that lacks specialised sclerophyllous leaves is native to the chaparral biome.", answerCategory: "yes" },
 { id: "dm-syl-05-11-e", text: "All drought-resistant plants are native to the chaparral biome.", answerCategory: "no" }
 ],
 explanation: "A — YES: High-altitude shrubs lacking sclerophyllous leaves cannot be drought-resistant. Because all chaparral-native plants are drought-resistant, these specific shrubs cannot be native to the chaparral.\nB — NO: Some high-altitude shrubs might possess sclerophyllous leaves and be native to the chaparral biome; the premises only exclude the ones that lack those leaves.\nC — NO: We only have information about high-altitude shrubs that lack sclerophyllous leaves (which are not drought-resistant). We have no information to claim other high-altitude shrubs are drought-resistant.\nD — YES: Chaparral native -> drought resistant -> sclerophyllous leaves. Therefore, lacking sclerophyllous leaves means the plant cannot be native to the chaparral.\nE — NO: Sclerophyllous/drought-resistant traits are required for chaparral plants, but drought-resistant plants could also exist in other biomes like deserts."
@@ -7703,9 +7703,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All weather systems characterized by rapid barometric pressure drops trigger severe wind warnings.",
+"All weather systems characterised by rapid barometric pressure drops trigger severe wind warnings.",
 "No weather system that triggers severe wind warnings is classified as a stable air mass.",
-"Some mid-latitude cyclones are weather systems characterized by rapid barometric pressure drops."
+"Some mid-latitude cyclones are weather systems characterised by rapid barometric pressure drops."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -7864,7 +7864,7 @@ categoryItems: [
 { id: "dm-syl-05-23-d", text: "Most events that cause temporary global cooling disrupt regional monsoon cycles.", answerCategory: "no" },
 { id: "dm-syl-05-23-e", text: "Some atmospheric events that do not benefit local agricultural yields do not cause temporary global cooling.", answerCategory: "no" }
 ],
-explanation: "A — YES: Most eruptions ejecting stratospheric aerosols disrupt monsoons and don't benefit agriculture. Since all such eruptions cause temporary global cooling, the ones disrupting monsoons represent cooling events that don't benefit agriculture.\nB — NO: Only *most* stratospheric aerosol eruptions disrupt monsoons and lose agricultural benefits; the remaining cooling eruptions might not disrupt monsoons and could benefit yields.\nC — YES: This is the contrapositive of the third premise. If disrupting monsoons means zero agricultural benefit, then any event with agricultural benefit cannot be disrupting monsoons.\nD — NO: We know most *stratospheric aerosol eruptions* cause monsoon disruptions, but these eruptions are only a subset of all possible events that cause global cooling, so 'most' cannot be generalized to the larger group.\nE — NO: The premises don't give information about other events that fail to benefit agriculture, so we cannot confirm if any exist outside of global cooling events."
+explanation: "A — YES: Most eruptions ejecting stratospheric aerosols disrupt monsoons and don't benefit agriculture. Since all such eruptions cause temporary global cooling, the ones disrupting monsoons represent cooling events that don't benefit agriculture.\nB — NO: Only *most* stratospheric aerosol eruptions disrupt monsoons and lose agricultural benefits; the remaining cooling eruptions might not disrupt monsoons and could benefit yields.\nC — YES: This is the contrapositive of the third premise. If disrupting monsoons means zero agricultural benefit, then any event with agricultural benefit cannot be disrupting monsoons.\nD — NO: We know most *stratospheric aerosol eruptions* cause monsoon disruptions, but these eruptions are only a subset of all possible events that cause global cooling, so 'most' cannot be generalised to the larger group.\nE — NO: The premises don't give information about other events that fail to benefit agriculture, so we cannot confirm if any exist outside of global cooling events."
 },
 {
 kind: "drag-category",
@@ -7946,7 +7946,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All nickel-based superalloys exhibit exceptional creep resistance.",
 "No material that exhibits exceptional creep resistance undergoes significant thermal expansion.",
-"Some materials that undergo significant thermal expansion are utilized in low-temperature aerospace valves."
+"Some materials that undergo significant thermal expansion are utilised in low-temperature aerospace valves."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -7956,10 +7956,10 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-04-3-a", text: "No nickel-based superalloy undergoes significant thermal expansion.", answerCategory: "yes" },
-{ id: "dm-syl-04-3-b", text: "Some materials utilized in low-temperature aerospace valves are not nickel-based superalloys.", answerCategory: "yes" },
-{ id: "dm-syl-04-3-c", text: "Some materials that exhibit exceptional creep resistance are utilized in low-temperature aerospace valves.", answerCategory: "no" },
+{ id: "dm-syl-04-3-b", text: "Some materials utilised in low-temperature aerospace valves are not nickel-based superalloys.", answerCategory: "yes" },
+{ id: "dm-syl-04-3-c", text: "Some materials that exhibit exceptional creep resistance are utilised in low-temperature aerospace valves.", answerCategory: "no" },
 { id: "dm-syl-04-3-d", text: "All materials that do not undergo significant thermal expansion are nickel-based superalloys.", answerCategory: "no" },
-{ id: "dm-syl-04-3-e", text: "No material utilized in low-temperature aerospace valves is a nickel-based superalloy.", answerCategory: "no" }
+{ id: "dm-syl-04-3-e", text: "No material utilised in low-temperature aerospace valves is a nickel-based superalloy.", answerCategory: "no" }
 ],
 explanation: "A — YES: All nickel-based superalloys have exceptional creep resistance, and no material with exceptional creep resistance undergoes significant thermal expansion, so no nickel-based superalloy does.\nB — YES: Some low-temperature aerospace valve materials undergo significant thermal expansion. Since no nickel-based superalloy undergoes significant thermal expansion, these specific valve materials cannot be nickel-based superalloys.\nC — NO: Materials with exceptional creep resistance do not undergo significant thermal expansion, whereas the valve materials mentioned do undergo it. They cannot overlap.\nD — NO: This improperly flips the scope; just because nickel-based superalloys don't expand significantly doesn't mean they are the only materials that don't.\nE — NO: The premises only prove that 'some' valve materials (those that expand) are not nickel-based superalloys, leaving open the possibility that other valve materials could be."
 },
@@ -8018,7 +8018,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All intermetallic compounds possess long-range ordered crystal structures.",
 "Some materials possessing long-range ordered crystal structures exhibit high room-temperature brittleness.",
-"No material exhibiting high room-temperature brittleness is utilized in structural framing components."
+"No material exhibiting high room-temperature brittleness is utilised in structural framing components."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -8027,11 +8027,11 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-04-6-a", text: "Some materials possessing long-range ordered crystal structures are not utilized in structural framing components.", answerCategory: "yes" },
-{ id: "dm-syl-04-6-b", text: "No intermetallic compound is utilized in structural framing components.", answerCategory: "no" },
+{ id: "dm-syl-04-6-a", text: "Some materials possessing long-range ordered crystal structures are not utilised in structural framing components.", answerCategory: "yes" },
+{ id: "dm-syl-04-6-b", text: "No intermetallic compound is utilised in structural framing components.", answerCategory: "no" },
 { id: "dm-syl-04-6-c", text: "All intermetallic compounds exhibit high room-temperature brittleness.", answerCategory: "no" },
-{ id: "dm-syl-04-6-d", text: "Some materials that are not utilized in structural framing components possess long-range ordered crystal structures.", answerCategory: "yes" },
-{ id: "dm-syl-04-6-e", text: "Every material that is not utilized in structural framing components exhibits high room-temperature brittleness.", answerCategory: "no" }
+{ id: "dm-syl-04-6-d", text: "Some materials that are not utilised in structural framing components possess long-range ordered crystal structures.", answerCategory: "yes" },
+{ id: "dm-syl-04-6-e", text: "Every material that is not utilised in structural framing components exhibits high room-temperature brittleness.", answerCategory: "no" }
 ],
 explanation: "A — YES: Some materials with ordered structures exhibit high brittleness, and no highly brittle material is used in structural framing. Thus, those brittle, ordered materials are not used in structural framing.\nB — NO: We cannot determine this because the overlap between intermetallics and high brittleness is unknown; we only know 'some' ordered materials are brittle.\nC — NO: The premises only state that 'some' ordered materials are brittle, not necessarily all intermetallic compounds.\nD — YES: This is the direct conversion of the valid deduction in A.\nE — NO: This assumes that brittleness is the only reason a material would not be used in structural framing components, which is unsupported."
 },
@@ -8284,8 +8284,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All molecules with a center of inversion are Raman-active.",
-"No molecule with a center of inversion displays an infrared-allowed fundamental vibration.",
+"All molecules with a centre of inversion are Raman-active.",
+"No molecule with a centre of inversion displays an infrared-allowed fundamental vibration.",
 "Some molecules that display an infrared-allowed fundamental vibration contain heteronuclear polar bonds."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -8296,12 +8296,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-04-17-a", text: "No Raman-active molecule displays an infrared-allowed fundamental vibration.", answerCategory: "no" },
-{ id: "dm-syl-04-17-b", text: "Some molecules containing heteronuclear polar bonds do not have a center of inversion.", answerCategory: "yes" },
+{ id: "dm-syl-04-17-b", text: "Some molecules containing heteronuclear polar bonds do not have a centre of inversion.", answerCategory: "yes" },
 { id: "dm-syl-04-17-c", text: "Some molecules that display an infrared-allowed fundamental vibration are Raman-active.", answerCategory: "no" },
-{ id: "dm-syl-04-17-d", text: "All molecules without a center of inversion display an infrared-allowed fundamental vibration.", answerCategory: "no" },
-{ id: "dm-syl-04-17-e", text: "Some molecules that do not have a center of inversion contain heteronuclear polar bonds.", answerCategory: "yes" }
+{ id: "dm-syl-04-17-d", text: "All molecules without a centre of inversion display an infrared-allowed fundamental vibration.", answerCategory: "no" },
+{ id: "dm-syl-04-17-e", text: "Some molecules that do not have a centre of inversion contain heteronuclear polar bonds.", answerCategory: "yes" }
 ],
-explanation: "A — YES: The premises state molecules *with a center of inversion* are Raman-active and don't display infrared vibrations, but other Raman-active molecules might.\nB — YES: Some molecules with infrared vibrations contain heteronuclear polar bonds. Because no molecule with a center of inversion has infrared vibrations, these specific polar-bonded molecules cannot have a center of inversion.\nC — NO: Infrared-allowed vibrations exclude molecules with a center of inversion, which are the ones guaranteed to be Raman-active. They cannot be shown to overlap.\nD — NO: Not having a center of inversion doesn't automatically mean it must display an infrared-allowed vibration.\nE — YES: This is a direct conversion of conclusion B; the same subset proves both statements."
+explanation: "A — YES: The premises state molecules *with a centre of inversion* are Raman-active and don't display infrared vibrations, but other Raman-active molecules might.\nB — YES: Some molecules with infrared vibrations contain heteronuclear polar bonds. Because no molecule with a centre of inversion has infrared vibrations, these specific polar-bonded molecules cannot have a centre of inversion.\nC — NO: Infrared-allowed vibrations exclude molecules with a centre of inversion, which are the ones guaranteed to be Raman-active. They cannot be shown to overlap.\nD — NO: Not having a centre of inversion doesn't automatically mean it must display an infrared-allowed vibration.\nE — YES: This is a direct conversion of conclusion B; the same subset proves both statements."
 },
 {
 kind: "drag-category",
@@ -8445,7 +8445,7 @@ categoryItems: [
 { id: "dm-syl-04-23-d", text: "Some complexes not suitable for high-speed digital displays exhibit a long-lived triplet excited state.", answerCategory: "yes" },
 { id: "dm-syl-04-23-e", text: "Every complex that is not suitable for high-speed digital displays undergoes efficient thermal upconversion.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some triplet-state complexes undergo thermal upconversion. Since no complex undergoing thermal upconversion is suitable for high-speed displays, these specific triplet-state complexes are not suitable.\nB — NO: We cannot definitively determine if phosphorescent complexes overlap with the specific subset that undergoes efficient thermal upconversion.\nC — NO: The premises state only that 'some' triplet-state complexes undergo thermal upconversion, not all phosphorescent ones.\nD — YES: This is the direct conversion of the valid deduction found in A.\nE — NO: A complex could be unsuitable for high-speed digital displays for other reasons entirely, such as slow overall response times or wrong emission color."
+explanation: "A — YES: Some triplet-state complexes undergo thermal upconversion. Since no complex undergoing thermal upconversion is suitable for high-speed displays, these specific triplet-state complexes are not suitable.\nB — NO: We cannot definitively determine if phosphorescent complexes overlap with the specific subset that undergoes efficient thermal upconversion.\nC — NO: The premises state only that 'some' triplet-state complexes undergo thermal upconversion, not all phosphorescent ones.\nD — YES: This is the direct conversion of the valid deduction found in A.\nE — NO: A complex could be unsuitable for high-speed digital displays for other reasons entirely, such as slow overall response times or wrong emission colour."
 },
 {
 kind: "drag-category",
@@ -8480,8 +8480,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "All legacy servers that run Cobol architecture must undergo a security audit.",
-"Some legacy servers that run Cobol architecture are located in the secondary data center.",
-"No system located in the secondary data center is connected to the public cloud."
+"Some legacy servers that run Cobol architecture are located in the secondary data centre.",
+"No system located in the secondary data centre is connected to the public cloud."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -8491,19 +8491,19 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-08-01-a", text: "Some systems that must undergo a security audit are not connected to the public cloud.", answerCategory: "yes" },
-{ id: "dm-syl-08-01-b", text: "All systems that are located in the secondary data center must undergo a security audit.", answerCategory: "no" },
+{ id: "dm-syl-08-01-b", text: "All systems that are located in the secondary data centre must undergo a security audit.", answerCategory: "no" },
 { id: "dm-syl-08-01-c", text: "No legacy server running Cobol architecture is connected to the public cloud.", answerCategory: "no" },
 { id: "dm-syl-08-01-d", text: "Some legacy servers that run Cobol architecture are not connected to the public cloud.", answerCategory: "yes" },
 { id: "dm-syl-08-01-e", text: "Every system connected to the public cloud is free from undergoing a security audit.", answerCategory: "no" }
 ],
-explanation: "A — YES: The Cobol servers in the secondary data center must undergo an audit and cannot be connected to the public cloud, so these audited systems are not connected to the public cloud.\nB — NO: We only know about legacy Cobol servers in that center; other systems there might not need an audit.\nC — NO: Only some Cobol servers are in the secondary data center and restricted; others might be elsewhere and connected.\nD — YES: The overlap of Cobol servers in the secondary center cannot be connected to the public cloud.\nE — NO: Systems outside the secondary center could connect to the cloud and still require security audits."
+explanation: "A — YES: The Cobol servers in the secondary data centre must undergo an audit and cannot be connected to the public cloud, so these audited systems are not connected to the public cloud.\nB — NO: We only know about legacy Cobol servers in that centre; other systems there might not need an audit.\nC — NO: Only some Cobol servers are in the secondary data centre and restricted; others might be elsewhere and connected.\nD — YES: The overlap of Cobol servers in the secondary centre cannot be connected to the public cloud.\nE — NO: Systems outside the secondary centre could connect to the cloud and still require security audits."
 },
 {
 kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All applications utilizing the Lambda compiler must be written in standard Python.",
+"All applications utilising the Lambda compiler must be written in standard Python.",
 "Most applications written in standard Python feature asynchronous execution loops.",
 "No application featuring asynchronous execution loops is compatible with old mainframe hardware."
 ],
@@ -8515,10 +8515,10 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-08-02-a", text: "Some applications written in standard Python are not compatible with old mainframe hardware.", answerCategory: "yes" },
-{ id: "dm-syl-08-02-b", text: "No application utilizing the Lambda compiler is compatible with old mainframe hardware.", answerCategory: "no" },
-{ id: "dm-syl-08-02-c", text: "Some applications featuring asynchronous execution loops utilize the Lambda compiler.", answerCategory: "no" },
+{ id: "dm-syl-08-02-b", text: "No application utilising the Lambda compiler is compatible with old mainframe hardware.", answerCategory: "no" },
+{ id: "dm-syl-08-02-c", text: "Some applications featuring asynchronous execution loops utilise the Lambda compiler.", answerCategory: "no" },
 { id: "dm-syl-08-02-d", text: "All applications that are compatible with old mainframe hardware lack asynchronous execution loops.", answerCategory: "yes" },
-{ id: "dm-syl-08-02-e", text: "Most applications utilizing the Lambda compiler are compatible with old mainframe hardware.", answerCategory: "no" }
+{ id: "dm-syl-08-02-e", text: "Most applications utilising the Lambda compiler are compatible with old mainframe hardware.", answerCategory: "no" }
 ],
 explanation: "A — YES: Most Python applications have asynchronous loops, and since no loop application is compatible with old mainframes, these Python applications are incompatible.\nB — NO: We know Lambda apps are Python, but we don't know if any Lambda apps fall into the 'most' that have asynchronous loops.\nC — NO: It is possible but not guaranteed that Lambda applications overlap with the asynchronous loop applications.\nD — YES: Since no asynchronous application is compatible, it follows that any compatible application must not have asynchronous loops.\nE — NO: There is no established connection regarding the exact proportion of Lambda apps compatible with old mainframes."
 },
@@ -8553,8 +8553,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "Any microservice running on the Apex framework consumes less than 50MB of RAM.",
-"Many microservices running on the Apex framework utilize Redis caching.",
-"All microservices that utilize Redis caching are deployed across multiple geographical zones."
+"Many microservices running on the Apex framework utilise Redis caching.",
+"All microservices that utilise Redis caching are deployed across multiple geographical zones."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -8564,12 +8564,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-08-04-a", text: "Some microservices deployed across multiple geographical zones consume less than 50MB of RAM.", answerCategory: "yes" },
-{ id: "dm-syl-08-04-b", text: "All microservices that consume less than 50MB of RAM utilize Redis caching.", answerCategory: "no" },
-{ id: "dm-syl-08-04-c", text: "Some microservices utilizing Redis caching do not run on the Apex framework.", answerCategory: "no" },
+{ id: "dm-syl-08-04-b", text: "All microservices that consume less than 50MB of RAM utilise Redis caching.", answerCategory: "no" },
+{ id: "dm-syl-08-04-c", text: "Some microservices utilising Redis caching do not run on the Apex framework.", answerCategory: "no" },
 { id: "dm-syl-08-04-d", text: "Many microservices deployed across multiple geographical zones run on the Apex framework.", answerCategory: "yes" },
-{ id: "dm-syl-08-04-e", text: "No microservice consuming more than 50MB of RAM utilizes Redis caching.", answerCategory: "no" }
+{ id: "dm-syl-08-04-e", text: "No microservice consuming more than 50MB of RAM utilises Redis caching.", answerCategory: "no" }
 ],
-explanation: "A — YES: The Apex services that use Redis are deployed across multiple zones and must consume less than 50MB of RAM.\nB — NO: We only know Apex services using Redis consume less than 50MB; other low-RAM services might not use Redis.\nC — NO: We know Apex services use Redis, but we don't know if non-Apex services use Redis.\nD — YES: 'Many Apex services utilize Redis' and all those are multi-zone, meaning many multi-zone services are on Apex.\nE — NO: Non-Apex services could consume more than 50MB of RAM and still utilize Redis caching."
+explanation: "A — YES: The Apex services that use Redis are deployed across multiple zones and must consume less than 50MB of RAM.\nB — NO: We only know Apex services using Redis consume less than 50MB; other low-RAM services might not use Redis.\nC — NO: We know Apex services use Redis, but we don't know if non-Apex services use Redis.\nD — YES: 'Many Apex services utilise Redis' and all those are multi-zone, meaning many multi-zone services are on Apex.\nE — NO: Non-Apex services could consume more than 50MB of RAM and still utilise Redis caching."
 },
 {
 kind: "drag-category",
@@ -8676,8 +8676,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All hardware routers operating on the IPv6 protocol utilize dynamic packet routing.",
-"No device utilizing dynamic packet routing experiences hard token packet collision.",
+"All hardware routers operating on the IPv6 protocol utilise dynamic packet routing.",
+"No device utilising dynamic packet routing experiences hard token packet collision.",
 "Some devices experiencing hard token packet collision are enterprise-grade switches."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -8688,12 +8688,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-08-09-a", text: "No hardware router operating on the IPv6 protocol experiences hard token packet collision.", answerCategory: "yes" },
-{ id: "dm-syl-08-09-b", text: "Some enterprise-grade switches do not utilize dynamic packet routing.", answerCategory: "yes" },
-{ id: "dm-syl-08-09-c", text: "All enterprise-grade switches utilize dynamic packet routing.", answerCategory: "no" },
+{ id: "dm-syl-08-09-b", text: "Some enterprise-grade switches do not utilise dynamic packet routing.", answerCategory: "yes" },
+{ id: "dm-syl-08-09-c", text: "All enterprise-grade switches utilise dynamic packet routing.", answerCategory: "no" },
 { id: "dm-syl-08-09-d", text: "Some hardware routers operating on the IPv6 protocol are enterprise-grade switches.", answerCategory: "no" },
 { id: "dm-syl-08-09-e", text: "Any device that does not experience hard token packet collision is an IPv6 hardware router.", answerCategory: "no" }
 ],
-explanation: "A — YES: All IPv6 routers use dynamic packet routing, and no dynamic routing device experiences hard token collisions.\nB — YES: The enterprise-grade switches that experience hard token collisions cannot be utilizing dynamic packet routing.\nC — NO: Directly contradicted by conclusion B.\nD — NO: No connection is established between IPv6 hardware routers and enterprise-grade switches.\nE — NO: Reverses the logic; other devices could avoid hard token collisions without being IPv6 routers."
+explanation: "A — YES: All IPv6 routers use dynamic packet routing, and no dynamic routing device experiences hard token collisions.\nB — YES: The enterprise-grade switches that experience hard token collisions cannot be utilising dynamic packet routing.\nC — NO: Directly contradicted by conclusion B.\nD — NO: No connection is established between IPv6 hardware routers and enterprise-grade switches.\nE — NO: Reverses the logic; other devices could avoid hard token collisions without being IPv6 routers."
 },
 {
 kind: "drag-category",
@@ -8772,8 +8772,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All hypervisors managing bare-metal virtualization utilize direct hardware passthrough.",
-"No tool utilizing direct hardware passthrough can run on consumer operating systems.",
+"All hypervisors managing bare-metal virtualization utilise direct hardware passthrough.",
+"No tool utilising direct hardware passthrough can run on consumer operating systems.",
 "Some software packages running on consumer operating systems are sandbox environments."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -8784,8 +8784,8 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-08-13-a", text: "No hypervisor managing bare-metal virtualization can run on consumer operating systems.", answerCategory: "yes" },
-{ id: "dm-syl-08-13-b", text: "Some sandbox environments do not utilize direct hardware passthrough.", answerCategory: "yes" },
-{ id: "dm-syl-08-13-c", text: "All sandbox environments utilize direct hardware passthrough.", answerCategory: "no" },
+{ id: "dm-syl-08-13-b", text: "Some sandbox environments do not utilise direct hardware passthrough.", answerCategory: "yes" },
+{ id: "dm-syl-08-13-c", text: "All sandbox environments utilise direct hardware passthrough.", answerCategory: "no" },
 { id: "dm-syl-08-13-d", text: "Some hypervisors managing bare-metal virtualization are sandbox environments.", answerCategory: "no" },
 { id: "dm-syl-08-13-e", text: "Any tool that cannot run on consumer operating systems is a hypervisor managing bare-metal virtualization.", answerCategory: "no" }
 ],
@@ -8820,9 +8820,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every content delivery network (CDN) node utilizing edge-computing script capabilities caches dynamic assets.",
+"Every content delivery network (CDN) node utilising edge-computing script capabilities caches dynamic assets.",
 "No node that caches dynamic assets uses spinning hard disk drives.",
-"Most nodes using spinning hard disk drives are located in regional backup centers."
+"Most nodes using spinning hard disk drives are located in regional backup centres."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -8831,13 +8831,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-08-15-a", text: "No content delivery network (CDN) node utilizing edge-computing script capabilities uses spinning hard disk drives.", answerCategory: "yes" },
-{ id: "dm-syl-08-15-b", text: "Some nodes located in regional backup centers do not cache dynamic assets.", answerCategory: "yes" },
-{ id: "dm-syl-08-15-c", text: "All nodes located in regional backup centers lack edge-computing script capabilities.", answerCategory: "no" },
-{ id: "dm-syl-08-15-d", text: "Most nodes that cache dynamic assets are located in regional backup centers.", answerCategory: "no" },
-{ id: "dm-syl-08-15-e", text: "Some nodes utilizing edge-computing script capabilities are located in regional backup centers.", answerCategory: "no" }
+{ id: "dm-syl-08-15-a", text: "No content delivery network (CDN) node utilising edge-computing script capabilities uses spinning hard disk drives.", answerCategory: "yes" },
+{ id: "dm-syl-08-15-b", text: "Some nodes located in regional backup centres do not cache dynamic assets.", answerCategory: "yes" },
+{ id: "dm-syl-08-15-c", text: "All nodes located in regional backup centres lack edge-computing script capabilities.", answerCategory: "no" },
+{ id: "dm-syl-08-15-d", text: "Most nodes that cache dynamic assets are located in regional backup centres.", answerCategory: "no" },
+{ id: "dm-syl-08-15-e", text: "Some nodes utilising edge-computing script capabilities are located in regional backup centres.", answerCategory: "no" }
 ],
-explanation: "A — YES: Edge CDNs cache dynamic assets, and no node caching dynamic assets uses spinning drives.\nB — YES: The 'most' nodes in regional backup centers that use spinning drives cannot be caching dynamic assets.\nC — NO: Nodes in regional backup centers that do *not* use spinning drives could theoretically use edge-computing script capabilities.\nD — NO: Nodes caching dynamic assets are explicitly prohibited from using spinning drives, which makes their presence in regional backup centers unsupported by the text.\nE — NO: There is no overlap guaranteed between edge-computing nodes and regional backup center nodes."
+explanation: "A — YES: Edge CDNs cache dynamic assets, and no node caching dynamic assets uses spinning drives.\nB — YES: The 'most' nodes in regional backup centres that use spinning drives cannot be caching dynamic assets.\nC — NO: Nodes in regional backup centres that do *not* use spinning drives could theoretically use edge-computing script capabilities.\nD — NO: Nodes caching dynamic assets are explicitly prohibited from using spinning drives, which makes their presence in regional backup centres unsupported by the text.\nE — NO: There is no overlap guaranteed between edge-computing nodes and regional backup centre nodes."
 },
 {
 kind: "drag-category",
@@ -8913,7 +8913,7 @@ categoryItems: [
 { id: "dm-syl-08-18-d", text: "All models that generate deterministic outputs lack hyper-dimensional vectors.", answerCategory: "no" },
 { id: "dm-syl-08-18-e", text: "Most predictive models trained on quantum processing units generate deterministic outputs.", answerCategory: "no" }
 ],
-explanation: "A — YES: Quantum-trained models using non-linear kernels exhibit hyper-dimensional vectors and do not generate deterministic outputs.\nB — NO: We only know 'most' quantum-trained models use non-linear kernels; the remainder might avoid them and generate deterministic outputs.\nC — YES: The 'most' quantum-trained models that use non-linear kernels also exhibit hyper-dimensional vectors.\nD — NO: Models outside quantum computing could generate deterministic outputs while still having hyper-dimensional vectors via other paths.\nE — NO: Directly contradicts the premise path, since 'most' utilize non-linear kernels and are thus non-deterministic."
+explanation: "A — YES: Quantum-trained models using non-linear kernels exhibit hyper-dimensional vectors and do not generate deterministic outputs.\nB — NO: We only know 'most' quantum-trained models use non-linear kernels; the remainder might avoid them and generate deterministic outputs.\nC — YES: The 'most' quantum-trained models that use non-linear kernels also exhibit hyper-dimensional vectors.\nD — NO: Models outside quantum computing could generate deterministic outputs while still having hyper-dimensional vectors via other paths.\nE — NO: Directly contradicts the premise path, since 'most' utilise non-linear kernels and are thus non-deterministic."
 },
 {
 kind: "drag-category",
@@ -8937,15 +8937,15 @@ categoryItems: [
 { id: "dm-syl-08-19-d", text: "Some processing units in smart thermostats use static memory allocation.", answerCategory: "yes" },
 { id: "dm-syl-08-19-e", text: "Any system allowing runtime dependency injections is not an embedded microcontroller running RTOS architecture.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Thermostat microcontrollers run RTOS, use static memory, and therefore do not allow runtime dependency injections.\nB — NO: Smart thermostats could contain other auxiliary processing units that allow dependency injections.\nC — NO: Reverses the conditional premise; static memory allocation could be utilized by non-RTOS systems.\nD — YES: The RTOS microcontrollers inside the smart thermostats must use static memory allocation.\nE — YES: Because RTOS microcontrollers require static memory allocation, which completely bars runtime dependency injection, any system allowing it cannot be an RTOS microcontroller."
+explanation: "A — YES: Thermostat microcontrollers run RTOS, use static memory, and therefore do not allow runtime dependency injections.\nB — NO: Smart thermostats could contain other auxiliary processing units that allow dependency injections.\nC — NO: Reverses the conditional premise; static memory allocation could be utilised by non-RTOS systems.\nD — YES: The RTOS microcontrollers inside the smart thermostats must use static memory allocation.\nE — YES: Because RTOS microcontrollers require static memory allocation, which completely bars runtime dependency injection, any system allowing it cannot be an RTOS microcontroller."
 },
 {
 kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Any application interface utilizing GraphQL protocols requires strict schema declarations.",
-"Many application interfaces utilizing GraphQL protocols support subscription-based web sockets.",
+"Any application interface utilising GraphQL protocols requires strict schema declarations.",
+"Many application interfaces utilising GraphQL protocols support subscription-based web sockets.",
 "All systems supporting subscription-based web sockets require stateful connection persistence."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -8957,11 +8957,11 @@ categories: [
 categoryItems: [
 { id: "dm-syl-08-20-a", text: "Some systems requiring stateful connection persistence require strict schema declarations.", answerCategory: "yes" },
 { id: "dm-syl-08-20-b", text: "All systems requiring strict schema declarations require stateful connection persistence.", answerCategory: "no" },
-{ id: "dm-syl-08-20-c", text: "Many systems requiring stateful connection persistence utilize GraphQL protocols.", answerCategory: "yes" },
-{ id: "dm-syl-08-20-d", text: "No system utilizing GraphQL protocols is free from stateful connection persistence.", answerCategory: "no" },
+{ id: "dm-syl-08-20-c", text: "Many systems requiring stateful connection persistence utilise GraphQL protocols.", answerCategory: "yes" },
+{ id: "dm-syl-08-20-d", text: "No system utilising GraphQL protocols is free from stateful connection persistence.", answerCategory: "no" },
 { id: "dm-syl-08-20-e", text: "All systems requiring stateful connection persistence support subscription-based web sockets.", answerCategory: "no" }
 ],
-explanation: "A — YES: The GraphQL interfaces that support web sockets require stateful persistence and strict schema declarations.\nB — NO: Non-GraphQL systems might require strict schemas without needing stateful connection persistence.\nC — YES: Since 'many' GraphQL interfaces support web sockets, and all those need stateful persistence, many stateful persistent systems utilize GraphQL.\nD — NO: GraphQL interfaces that do *not* support web sockets might not require stateful connection persistence.\nE — NO: Reverses the conditional premise; other stateful systems might not support subscription-based web sockets."
+explanation: "A — YES: The GraphQL interfaces that support web sockets require stateful persistence and strict schema declarations.\nB — NO: Non-GraphQL systems might require strict schemas without needing stateful connection persistence.\nC — YES: Since 'many' GraphQL interfaces support web sockets, and all those need stateful persistence, many stateful persistent systems utilise GraphQL.\nD — NO: GraphQL interfaces that do *not* support web sockets might not require stateful connection persistence.\nE — NO: Reverses the conditional premise; other stateful systems might not support subscription-based web sockets."
 },
 {
 kind: "drag-category",
@@ -8969,8 +8969,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "No graphics processing unit built on the Turing chip architecture features unified memory pools.",
-"All units featuring unified memory pools utilize hardware-accelerated ray tracing.",
-"Some units utilizing hardware-accelerated ray tracing are manufactured by SilicoCorp."
+"All units featuring unified memory pools utilise hardware-accelerated ray tracing.",
+"Some units utilising hardware-accelerated ray tracing are manufactured by SilicoCorp."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -8979,9 +8979,9 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-08-21-a", text: "No graphics processing unit built on the Turing chip architecture utilizes hardware-accelerated ray tracing.", answerCategory: "no" },
+{ id: "dm-syl-08-21-a", text: "No graphics processing unit built on the Turing chip architecture utilises hardware-accelerated ray tracing.", answerCategory: "no" },
 { id: "dm-syl-08-21-b", text: "Some units manufactured by SilicoCorp do not feature unified memory pools.", answerCategory: "no" },
-{ id: "dm-syl-08-21-c", text: "All units utilizing hardware-accelerated ray tracing feature unified memory pools.", answerCategory: "no" },
+{ id: "dm-syl-08-21-c", text: "All units utilising hardware-accelerated ray tracing feature unified memory pools.", answerCategory: "no" },
 { id: "dm-syl-08-21-d", text: "Some units manufactured by SilicoCorp are not built on the Turing chip architecture.", answerCategory: "no" },
 { id: "dm-syl-08-21-e", text: "Any unit featuring unified memory pools is not built on the Turing chip architecture.", answerCategory: "yes" }
 ],
@@ -8992,8 +8992,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All classification algorithms utilizing decision-tree ensembles are prone to overfitting.",
-"Some classification algorithms utilizing decision-tree ensembles are used in credit scoring.",
+"All classification algorithms utilising decision-tree ensembles are prone to overfitting.",
+"Some classification algorithms utilising decision-tree ensembles are used in credit scoring.",
 "All algorithms used in credit scoring require regulatory transparency reports."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -9009,7 +9009,7 @@ categoryItems: [
 { id: "dm-syl-08-22-d", text: "No algorithm requiring regulatory transparency reports is prone to overfitting.", answerCategory: "no" },
 { id: "dm-syl-08-22-e", text: "All algorithms requiring regulatory transparency reports are used in credit scoring.", answerCategory: "no" }
 ],
-explanation: "A — YES: Decision-tree algorithms used in credit scoring are prone to overfitting and require regulatory transparency reports.\nB — NO: Other over-fitting algorithms (e.g., image recognition models) might not require credit-related regulatory reports.\nC — YES: The decision-tree algorithms that are utilized in credit scoring are inherently prone to overfitting.\nD — NO: Directly contradicted by conclusion A.\nE — NO: Reverses the final premise; other fields might require regulatory transparency reports for their algorithms."
+explanation: "A — YES: Decision-tree algorithms used in credit scoring are prone to overfitting and require regulatory transparency reports.\nB — NO: Other over-fitting algorithms (e.g., image recognition models) might not require credit-related regulatory reports.\nC — YES: The decision-tree algorithms that are utilised in credit scoring are inherently prone to overfitting.\nD — NO: Directly contradicted by conclusion A.\nE — NO: Reverses the final premise; other fields might require regulatory transparency reports for their algorithms."
 },
 {
 kind: "drag-category",
@@ -9040,7 +9040,7 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All multi-threaded compiler engines optimize loop unrolling natively.",
+"All multi-threaded compiler engines optimise loop unrolling natively.",
 "Some multi-threaded compiler engines execute intermediate representation passes.",
 "All engines executing intermediate representation passes generate detailed dependency graphs."
 ],
@@ -9051,13 +9051,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-08-24-a", text: "Some engines that generate detailed dependency graphs optimize loop unrolling natively.", answerCategory: "yes" },
-{ id: "dm-syl-08-24-b", text: "All engines that optimize loop unrolling natively execute intermediate representation passes.", answerCategory: "no" },
+{ id: "dm-syl-08-24-a", text: "Some engines that generate detailed dependency graphs optimise loop unrolling natively.", answerCategory: "yes" },
+{ id: "dm-syl-08-24-b", text: "All engines that optimise loop unrolling natively execute intermediate representation passes.", answerCategory: "no" },
 { id: "dm-syl-08-24-c", text: "Some engines executing intermediate representation passes are multi-threaded compiler engines.", answerCategory: "yes" },
 { id: "dm-syl-08-24-d", text: "No engine generating detailed dependency graphs optimizes loop unrolling natively.", answerCategory: "no" },
 { id: "dm-syl-08-24-e", text: "All engines generating detailed dependency graphs are multi-threaded compiler engines.", answerCategory: "no" }
 ],
-explanation: "A — YES: The multi-threaded engines executing intermediate passes optimize loop unrolling and generate detailed dependency graphs.\nB — NO: Other multi-threaded engines might optimize loop unrolling without executing intermediate representation passes.\nC — YES: Follows directly from the premise that some multi-threaded compiler engines execute these intermediate passes.\nD — NO: Contradicted by conclusion A.\nE — NO: Single-threaded engines or entirely different compilation systems could execute intermediate passes and generate dependency graphs."
+explanation: "A — YES: The multi-threaded engines executing intermediate passes optimise loop unrolling and generate detailed dependency graphs.\nB — NO: Other multi-threaded engines might optimise loop unrolling without executing intermediate representation passes.\nC — YES: Follows directly from the premise that some multi-threaded compiler engines execute these intermediate passes.\nD — NO: Contradicted by conclusion A.\nE — NO: Single-threaded engines or entirely different compilation systems could execute intermediate passes and generate dependency graphs."
 },
 // BATCH 1: Topic 06 - Higher Education & University Administration
 {
@@ -9478,8 +9478,8 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "All flight-simulator training modules require an advanced navigation certificate.",
-"Most flight-simulator training modules utilize virtual reality headsets.",
-"No training module that utilizes virtual reality headsets is suitable for individuals prone to motion sickness."
+"Most flight-simulator training modules utilise virtual reality headsets.",
+"No training module that utilises virtual reality headsets is suitable for individuals prone to motion sickness."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -9489,12 +9489,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-06-18-a", text: "Some modules that require an advanced navigation certificate are not suitable for individuals prone to motion sickness.", answerCategory: "yes" },
-{ id: "dm-syl-06-18-b", text: "All modules suitable for individuals prone to motion sickness do not utilize virtual reality headsets.", answerCategory: "yes" },
+{ id: "dm-syl-06-18-b", text: "All modules suitable for individuals prone to motion sickness do not utilise virtual reality headsets.", answerCategory: "yes" },
 { id: "dm-syl-06-18-c", text: "No flight-simulator training module is suitable for individuals prone to motion sickness.", answerCategory: "no" },
-{ id: "dm-syl-06-18-d", text: "Some flight-simulator training modules utilize virtual reality headsets.", answerCategory: "yes" },
-{ id: "dm-syl-06-18-e", text: "All training modules requiring an advanced navigation certificate utilize virtual reality headsets.", answerCategory: "no" }
+{ id: "dm-syl-06-18-d", text: "Some flight-simulator training modules utilise virtual reality headsets.", answerCategory: "yes" },
+{ id: "dm-syl-06-18-e", text: "All training modules requiring an advanced navigation certificate utilise virtual reality headsets.", answerCategory: "no" }
 ],
-explanation: "A — YES: Most flight-simulator modules use VR headsets and are thus unsuitable for motion sickness. Since all flight-simulator modules require the certificate, those VR-using modules require the certificate and are unsuitable.\nB — YES: Since no VR-utilizing module is suitable for motion sickness, any module that is suitable must not use a VR headset.\nC — NO: Only 'most' flight-simulator modules use VR; the remaining ones might not use VR and might be suitable.\nD — YES: 'Most' implies at least some, so if most flight-simulator modules use VR headsets, it's true that some do.\nE — NO: This is an illicit reversal; flight-simulator modules require the certificate, but other certificate-requiring modules might not use VR headsets."
+explanation: "A — YES: Most flight-simulator modules use VR headsets and are thus unsuitable for motion sickness. Since all flight-simulator modules require the certificate, those VR-using modules require the certificate and are unsuitable.\nB — YES: Since no VR-utilising module is suitable for motion sickness, any module that is suitable must not use a VR headset.\nC — NO: Only 'most' flight-simulator modules use VR; the remaining ones might not use VR and might be suitable.\nD — YES: 'Most' implies at least some, so if most flight-simulator modules use VR headsets, it's true that some do.\nE — NO: This is an illicit reversal; flight-simulator modules require the certificate, but other certificate-requiring modules might not use VR headsets."
 },
 {
 kind: "drag-category",
@@ -9742,9 +9742,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All odontocetes (toothed whales) utilize echolocation clicks to map their dark surroundings.",
+"All odontocetes (toothed whales) utilise echolocation clicks to map their dark surroundings.",
 "Most odontocetes live in tightly knit social matriarchies.",
-"No animal that utilizes echolocation clicks has poorly developed auditory processing centers."
+"No animal that utilises echolocation clicks has poorly developed auditory processing centres."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -9753,13 +9753,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-03-05-a", text: "No odontocete has poorly developed auditory processing centers.", answerCategory: "yes" },
-{ id: "dm-syl-03-05-b", text: "Some animals living in tightly knit social matriarchies do not have poorly developed auditory processing centers.", answerCategory: "yes" },
-{ id: "dm-syl-03-05-c", text: "All animals that utilize echolocation clicks are odontocetes.", answerCategory: "no" },
-{ id: "dm-syl-03-05-d", text: "Most animals with well-developed auditory processing centers live in tightly knit social matriarchies.", answerCategory: "no" },
-{ id: "dm-syl-03-05-e", text: "Some animals that do not have poorly developed auditory processing centers utilize echolocation clicks.", answerCategory: "yes" }
+{ id: "dm-syl-03-05-a", text: "No odontocete has poorly developed auditory processing centres.", answerCategory: "yes" },
+{ id: "dm-syl-03-05-b", text: "Some animals living in tightly knit social matriarchies do not have poorly developed auditory processing centres.", answerCategory: "yes" },
+{ id: "dm-syl-03-05-c", text: "All animals that utilise echolocation clicks are odontocetes.", answerCategory: "no" },
+{ id: "dm-syl-03-05-d", text: "Most animals with well-developed auditory processing centres live in tightly knit social matriarchies.", answerCategory: "no" },
+{ id: "dm-syl-03-05-e", text: "Some animals that do not have poorly developed auditory processing centres utilise echolocation clicks.", answerCategory: "yes" }
 ],
-explanation: "A — YES: All odontocetes use echolocation, and no animal using echolocation has poorly developed auditory centers.\nB — YES: Most odontocetes live in social matriarchies, and since all odontocetes use echolocation and lack poorly developed auditory centers, these matriarchal odontocetes provide the positive overlap.\nC — NO: Other animals (like bats) might use echolocation clicks but are not odontocetes.\nD — NO: We know most odontocetes live in matriarchies, but we cannot generalise this to the entire population of animals with well-developed auditory centers.\nE — YES: All animals using echolocation clicks lack poorly developed auditory centers, meaning they serve as examples of animals that do not have poorly developed auditory centers and use echolocation."
+explanation: "A — YES: All odontocetes use echolocation, and no animal using echolocation has poorly developed auditory centres.\nB — YES: Most odontocetes live in social matriarchies, and since all odontocetes use echolocation and lack poorly developed auditory centres, these matriarchal odontocetes provide the positive overlap.\nC — NO: Other animals (like bats) might use echolocation clicks but are not odontocetes.\nD — NO: We know most odontocetes live in matriarchies, but we cannot generalise this to the entire population of animals with well-developed auditory centres.\nE — YES: All animals using echolocation clicks lack poorly developed auditory centres, meaning they serve as examples of animals that do not have poorly developed auditory centres and use echolocation."
 },
 {
 kind: "drag-category",
@@ -9841,7 +9841,7 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "All vascular plants that survive in arid deserts possess CAM (Crassulacean Acid Metabolism) pathways.",
-"No plant possessing CAM pathways lacks specialized water-storing vacuoles.",
+"No plant possessing CAM pathways lacks specialised water-storing vacuoles.",
 "Some succulent flora native to Baja are vascular plants that survive in arid deserts."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -9851,13 +9851,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-03-09-a", text: "Some succulent flora native to Baja possess specialized water-storing vacuoles.", answerCategory: "yes" },
-{ id: "dm-syl-03-09-b", text: "All plants possessing specialized water-storing vacuoles survive in arid deserts.", answerCategory: "no" },
-{ id: "dm-syl-03-09-c", text: "No vascular plant that survives in arid deserts lacks specialized water-storing vacuoles.", answerCategory: "yes" },
+{ id: "dm-syl-03-09-a", text: "Some succulent flora native to Baja possess specialised water-storing vacuoles.", answerCategory: "yes" },
+{ id: "dm-syl-03-09-b", text: "All plants possessing specialised water-storing vacuoles survive in arid deserts.", answerCategory: "no" },
+{ id: "dm-syl-03-09-c", text: "No vascular plant that survives in arid deserts lacks specialised water-storing vacuoles.", answerCategory: "yes" },
 { id: "dm-syl-03-09-d", text: "Some succulent flora native to Baja lack CAM pathways.", answerCategory: "no" },
-{ id: "dm-syl-03-09-e", text: "Any plant lacking specialized water-storing vacuoles does not possess CAM pathways.", answerCategory: "yes" }
+{ id: "dm-syl-03-09-e", text: "Any plant lacking specialised water-storing vacuoles does not possess CAM pathways.", answerCategory: "yes" }
 ],
-explanation: "A — YES: Some Baja succulent flora are desert vascular plants, which must possess CAM pathways, and all CAM plants have specialized water-storing vacuoles.\nB — NO: Plants in other environments might have water-storing vacuoles without living in arid deserts.\nC — YES: All desert vascular plants have CAM pathways, and no CAM plant lacks these vacuoles, meaning no desert vascular plant lacks them.\nD — NO: The premises indicate that some Baja succulent flora definitely *do* have CAM pathways; they don't prove that any lack them.\nE — YES: Since no plant possessing CAM pathways lacks these vacuoles, it follows logically that any plant lacking the vacuoles cannot possess CAM pathways."
+explanation: "A — YES: Some Baja succulent flora are desert vascular plants, which must possess CAM pathways, and all CAM plants have specialised water-storing vacuoles.\nB — NO: Plants in other environments might have water-storing vacuoles without living in arid deserts.\nC — YES: All desert vascular plants have CAM pathways, and no CAM plant lacks these vacuoles, meaning no desert vascular plant lacks them.\nD — NO: The premises indicate that some Baja succulent flora definitely *do* have CAM pathways; they don't prove that any lack them.\nE — YES: Since no plant possessing CAM pathways lacks these vacuoles, it follows logically that any plant lacking the vacuoles cannot possess CAM pathways."
 },
 {
 kind: "drag-category",
@@ -9866,7 +9866,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "Every angiosperm that relies on bat pollination opens its blossoms exclusively at night.",
 "Some angiosperms that rely on bat pollination emit a strong, musky odor.",
-"Plants that open their blossoms exclusively at night never rely on visual color cues to attract primary pollinators."
+"Plants that open their blossoms exclusively at night never rely on visual colour cues to attract primary pollinators."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -9875,13 +9875,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-03-10-a", text: "All angiosperms that rely on bat pollination never rely on visual color cues to attract primary pollinators.", answerCategory: "yes" },
-{ id: "dm-syl-03-10-b", text: "Some plants that emit a strong, musky odor never rely on visual color cues to attract primary pollinators.", answerCategory: "yes" },
+{ id: "dm-syl-03-10-a", text: "All angiosperms that rely on bat pollination never rely on visual colour cues to attract primary pollinators.", answerCategory: "yes" },
+{ id: "dm-syl-03-10-b", text: "Some plants that emit a strong, musky odor never rely on visual colour cues to attract primary pollinators.", answerCategory: "yes" },
 { id: "dm-syl-03-10-b2", text: "All plants that open their blossoms exclusively at night rely on bat pollination.", answerCategory: "no" },
-{ id: "dm-syl-03-10-c", text: "Some plants that rely on visual color cues to attract primary pollinators emit a strong, musky odor.", answerCategory: "no" },
-{ id: "dm-syl-03-10-d", text: "No angiosperm that relies on bat pollination relies on visual color cues to attract primary pollinators.", answerCategory: "yes" }
+{ id: "dm-syl-03-10-c", text: "Some plants that rely on visual colour cues to attract primary pollinators emit a strong, musky odor.", answerCategory: "no" },
+{ id: "dm-syl-03-10-d", text: "No angiosperm that relies on bat pollination relies on visual colour cues to attract primary pollinators.", answerCategory: "yes" }
 ],
-explanation: "A — YES: All bat-pollinated angiosperms open at night, and night-opening plants never rely on visual color cues.\nB — YES: Some bat-pollinated angiosperms emit a musky odor. Since all bat-pollinated angiosperms open at night and thus never rely on visual color cues, these musky plants share that trait.\nB2 £ NO: Night-opening plants could be pollinated by moths, wind, or other mechanisms.\nC — NO: Plants that rely on visual color cues cannot open exclusively at night, but we don't know if they can or cannot emit a musky odor.\nD — YES: Because all bat-pollinated angiosperms open at night, and night-openers never rely on visual color cues, no bat-pollinated angiosperm relies on these cues."
+explanation: "A — YES: All bat-pollinated angiosperms open at night, and night-opening plants never rely on visual colour cues.\nB — YES: Some bat-pollinated angiosperms emit a musky odor. Since all bat-pollinated angiosperms open at night and thus never rely on visual colour cues, these musky plants share that trait.\nB2 £ NO: Night-opening plants could be pollinated by moths, wind, or other mechanisms.\nC — NO: Plants that rely on visual colour cues cannot open exclusively at night, but we don't know if they can or cannot emit a musky odor.\nD — YES: Because all bat-pollinated angiosperms open at night, and night-openers never rely on visual colour cues, no bat-pollinated angiosperm relies on these cues."
 },
 {
 kind: "drag-category",
@@ -9960,9 +9960,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Every bryophyte that lacks a specialized vascular system relies entirely on capillary action for water transport.",
+"Every bryophyte that lacks a specialised vascular system relies entirely on capillary action for water transport.",
 "No plant relying entirely on capillary action for water transport can grow taller than thirty centimeters.",
-"The common haircap moss is a bryophyte that lacks a specialized vascular system."
+"The common haircap moss is a bryophyte that lacks a specialised vascular system."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -9972,7 +9972,7 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-03-14-a", text: "The common haircap moss cannot grow taller than thirty centimeters.", answerCategory: "yes" },
-{ id: "dm-syl-03-14-b", text: "No plant that can grow taller than thirty centimeters is a bryophyte lacking a specialized vascular system.", answerCategory: "yes" },
+{ id: "dm-syl-03-14-b", text: "No plant that can grow taller than thirty centimeters is a bryophyte lacking a specialised vascular system.", answerCategory: "yes" },
 { id: "dm-syl-03-14-c", text: "All plants relying entirely on capillary action for water transport are bryophytes.", answerCategory: "no" },
 { id: "dm-syl-03-14-d", text: "Some plants that can grow taller than thirty centimeters rely entirely on capillary action.", answerCategory: "no" },
 { id: "dm-syl-03-14-e", text: "The common haircap moss relies entirely on capillary action for water transport.", answerCategory: "yes" }
@@ -9984,9 +9984,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All halophytic plants that thrive in coastal salt marshes actively excrete salt through specialized leaf glands.",
-"Some halophytic plants that thrive in coastal salt marshes are utilized in coastal erosion control projects.",
-"No plant that actively excretes salt through specialized leaf glands is sensitive to high soil salinity."
+"All halophytic plants that thrive in coastal salt marshes actively excrete salt through specialised leaf glands.",
+"Some halophytic plants that thrive in coastal salt marshes are utilised in coastal erosion control projects.",
+"No plant that actively excretes salt through specialised leaf glands is sensitive to high soil salinity."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -9995,11 +9995,11 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-03-15-a", text: "Some plants utilized in coastal erosion control projects are not sensitive to high soil salinity.", answerCategory: "yes" },
-{ id: "dm-syl-03-15-b", text: "All plants utilized in coastal erosion control projects actively excrete salt through specialized leaf glands.", answerCategory: "no" },
-{ id: "dm-syl-03-15-c", text: "Some plants not sensitive to high soil salinity are not utilized in coastal erosion control projects.", answerCategory: "no" },
+{ id: "dm-syl-03-15-a", text: "Some plants utilised in coastal erosion control projects are not sensitive to high soil salinity.", answerCategory: "yes" },
+{ id: "dm-syl-03-15-b", text: "All plants utilised in coastal erosion control projects actively excrete salt through specialised leaf glands.", answerCategory: "no" },
+{ id: "dm-syl-03-15-c", text: "Some plants not sensitive to high soil salinity are not utilised in coastal erosion control projects.", answerCategory: "no" },
 { id: "dm-syl-03-15-d", text: "No halophytic plant that thrives in coastal salt marshes is sensitive to high soil salinity.", answerCategory: "yes" },
-{ id: "dm-syl-03-15-e", text: "Every plant sensitive to high soil salinity does not actively excrete salt through specialized leaf glands.", answerCategory: "yes" }
+{ id: "dm-syl-03-15-e", text: "Every plant sensitive to high soil salinity does not actively excrete salt through specialised leaf glands.", answerCategory: "yes" }
 ],
 explanation: "A — YES: Some erosion control plants are salt-marsh halophytes. All such halophytes excrete salt and are not sensitive to high soil salinity.\nB — NO: Other types of plants (like deep-rooted grasses) might be used in erosion control without being salt-excreting halophytes.\nC — NO: While some salt-tolerant plants are used in erosion control, the premises do not guarantee that there are others left out.\nD — YES: All salt-marsh halophytes excrete salt through leaf glands, and none of those are sensitive to high soil salinity.\nE — YES: Since no plant excreting salt through leaf glands is sensitive to high soil salinity, it follows that any plant sensitive to high soil salinity cannot possess these active leaf glands."
 },
@@ -10034,8 +10034,8 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"All eusocial insects that construct subterranean colonies utilize pheromone trails for foraging.",
-"No insect utilizing pheromone trails for foraging is disoriented by localized changes in polarized sunlight.",
+"All eusocial insects that construct subterranean colonies utilise pheromone trails for foraging.",
+"No insect utilising pheromone trails for foraging is disoriented by localised changes in polarized sunlight.",
 "Some subterranean-nesting ants are eusocial insects that construct subterranean colonies."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -10045,11 +10045,11 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-03-17-a", text: "Some subterranean-nesting ants utilize pheromone trails for foraging.", answerCategory: "yes" },
-{ id: "dm-syl-03-17-b", text: "All insects disoriented by localized changes in polarized sunlight utilize pheromone trails for foraging.", answerCategory: "no" },
-{ id: "dm-syl-03-17-c", text: "No eusocial insect that constructs subterranean colonies is disoriented by localized changes in polarized sunlight.", answerCategory: "yes" },
-{ id: "dm-syl-03-17-d", text: "Some subterranean-nesting ants are disoriented by localized changes in polarized sunlight.", answerCategory: "no" },
-{ id: "dm-syl-03-17-e", text: "Any insect disoriented by localized changes in polarized sunlight is not an insect utilizing pheromone trails for foraging.", answerCategory: "yes" }
+{ id: "dm-syl-03-17-a", text: "Some subterranean-nesting ants utilise pheromone trails for foraging.", answerCategory: "yes" },
+{ id: "dm-syl-03-17-b", text: "All insects disoriented by localised changes in polarized sunlight utilise pheromone trails for foraging.", answerCategory: "no" },
+{ id: "dm-syl-03-17-c", text: "No eusocial insect that constructs subterranean colonies is disoriented by localised changes in polarized sunlight.", answerCategory: "yes" },
+{ id: "dm-syl-03-17-d", text: "Some subterranean-nesting ants are disoriented by localised changes in polarized sunlight.", answerCategory: "no" },
+{ id: "dm-syl-03-17-e", text: "Any insect disoriented by localised changes in polarized sunlight is not an insect utilising pheromone trails for foraging.", answerCategory: "yes" }
 ],
 explanation: "A — YES: Some subterranean-nesting ants are eusocial subterranean-colony builders, meaning they must use pheromone trails for foraging.\nB — NO: Insects disoriented by polarized sunlight cannot use pheromone trails, as established by the negative relation.\nC — YES: All eusocial subterranean-colony builders use pheromone trails, and none of those are disoriented by polarized sunlight.\nD — NO: The ants that are eusocial subterranean builders use pheromones and are explicitly *not* disoriented by polarized sunlight.\nE — YES: Since no insect using pheromone trails is disoriented by polarized sunlight, any insect that *is* disoriented cannot be using pheromone trails."
 },
@@ -10108,7 +10108,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All hemipteran bugs with piercing-sucking mouthparts feed primarily on plant sap.",
 "Some hemipteran bugs with piercing-sucking mouthparts are vectors for agricultural viral diseases.",
-"No insect that feeds primarily on plant sap possesses a mandible optimized for chewing solid leaves."
+"No insect that feeds primarily on plant sap possesses a mandible optimised for chewing solid leaves."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -10117,11 +10117,11 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-03-20-a", text: "Some vectors for agricultural viral diseases do not possess a mandible optimized for chewing solid leaves.", answerCategory: "yes" },
+{ id: "dm-syl-03-20-a", text: "Some vectors for agricultural viral diseases do not possess a mandible optimised for chewing solid leaves.", answerCategory: "yes" },
 { id: "dm-syl-03-20-b", text: "All vectors for agricultural viral diseases feed primarily on plant sap.", answerCategory: "no" },
-{ id: "dm-syl-03-20-c", text: "No hemipteran bug with piercing-sucking mouthparts possesses a mandible optimized for chewing solid leaves.", answerCategory: "yes" },
-{ id: "dm-syl-03-20-d", text: "Some insects possessing a mandible optimized for chewing solid leaves are hemipteran bugs.", answerCategory: "no" },
-{ id: "dm-syl-03-20-e", text: "Every insect that does not possess a mandible optimized for chewing solid leaves feeds primarily on plant sap.", answerCategory: "no" }
+{ id: "dm-syl-03-20-c", text: "No hemipteran bug with piercing-sucking mouthparts possesses a mandible optimised for chewing solid leaves.", answerCategory: "yes" },
+{ id: "dm-syl-03-20-d", text: "Some insects possessing a mandible optimised for chewing solid leaves are hemipteran bugs.", answerCategory: "no" },
+{ id: "dm-syl-03-20-e", text: "Every insect that does not possess a mandible optimised for chewing solid leaves feeds primarily on plant sap.", answerCategory: "no" }
 ],
 explanation: "A — YES: Some disease vectors are hemipterans with piercing-sucking mouthparts. All such hemipterans feed on sap, and none of those possess leaf-chewing mandibles.\nB — NO: Other insects, like beetles or thrips with different mouthparts, could also act as viral vectors.\nC — YES: All hemipterans with these mouthparts feed on plant sap, and no sap-feeding insect has chewing mandibles.\nD — NO: Hemipterans with piercing-sucking mouthparts explicitly do not have chewing mandibles. The premises do not support other hemipterans having them.\nE — NO: Many insects (like predatory wasps or nectar-feeding butterflies) lack leaf-chewing mandibles but do not feed on plant sap."
 },
@@ -10147,7 +10147,7 @@ categoryItems: [
 { id: "dm-syl-03-21-d", text: "Most insects vulnerable to degradation by standard solar ultraviolet light are tropical canopy dwellers.", answerCategory: "no" },
 { id: "dm-syl-03-21-e", text: "Some insects that are not vulnerable to degradation by standard solar ultraviolet light possess microscopic chitinous layers.", answerCategory: "yes" }
 ],
-explanation: "A — YES: All metallic-colored beetles possess the reflective chitinous layers, and no insect with these layers is vulnerable to solar UV degradation.\nB — YES: Most metallic beetles are tropical canopy dwellers. Since all metallic beetles possess these layers and are invulnerable to UV degradation, these specific canopy dwellers share that invulnerability.\nC — NO: Other insects might be resistant to UV light through pigments, thick cuticles, or nocturnal habits rather than metallic structural coloration.\nD — NO: Highly vulnerable insects are unlikely to be canopy dwellers with these protective traits, and the premises don't suggest they comprise a majority there.\nE — YES: All insects with these reflective layers are invulnerable to UV degradation, providing a clear group of invulnerable insects that possess these layers."
+explanation: "A — YES: All metallic-coloured beetles possess the reflective chitinous layers, and no insect with these layers is vulnerable to solar UV degradation.\nB — YES: Most metallic beetles are tropical canopy dwellers. Since all metallic beetles possess these layers and are invulnerable to UV degradation, these specific canopy dwellers share that invulnerability.\nC — NO: Other insects might be resistant to UV light through pigments, thick cuticles, or nocturnal habits rather than metallic structural coloration.\nD — NO: Highly vulnerable insects are unlikely to be canopy dwellers with these protective traits, and the premises don't suggest they comprise a majority there.\nE — YES: All insects with these reflective layers are invulnerable to UV degradation, providing a clear group of invulnerable insects that possess these layers."
 },
 {
 kind: "drag-category",
@@ -10275,7 +10275,7 @@ subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
 "Any barrister who accepts a pro bono case must register with the legal aid coordinator.",
-"Most defense barristers in the chamber accept pro bono cases.",
+"Most defence barristers in the chamber accept pro bono cases.",
 "No barrister who registers with the legal aid coordinator is permitted to take a private retainer in the same month."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
@@ -10285,13 +10285,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-02-03-a", text: "Some defense barristers in the chamber are not permitted to take a private retainer in the same month.", answerCategory: "yes" },
+{ id: "dm-syl-02-03-a", text: "Some defence barristers in the chamber are not permitted to take a private retainer in the same month.", answerCategory: "yes" },
 { id: "dm-syl-02-03-b", text: "Some barristers who register with the legal aid coordinator accept pro bono cases.", answerCategory: "yes" },
-{ id: "dm-syl-02-03-c", text: "No defense barrister in the chamber is permitted to take a private retainer.", answerCategory: "no" },
+{ id: "dm-syl-02-03-c", text: "No defence barrister in the chamber is permitted to take a private retainer.", answerCategory: "no" },
 { id: "dm-syl-02-03-d", text: "All barristers who do not accept pro bono cases are permitted to take a private retainer.", answerCategory: "no" },
-{ id: "dm-syl-02-03-e", text: "Most defense barristers in the chamber take a private retainer.", answerCategory: "no" }
+{ id: "dm-syl-02-03-e", text: "Most defence barristers in the chamber take a private retainer.", answerCategory: "no" }
 ],
-explanation: "A — YES: Most defense barristers accept pro bono cases, meaning they must register, which in turn prohibits them from taking a private retainer that month.\nB — YES: Any barrister accepting a pro bono case must register, so those who do accept them make up at least some of the registered group.\nC — NO: The restriction only applies to those who accept pro bono cases; we cannot assume it applies to all defense barristers in the chamber.\nD — NO: Barristers who do not accept pro bono cases might still be restricted from private retainers for other reasons not mentioned.\nE — NO: In fact, most defense barristers accept pro bono cases and are explicitly barred from taking a private retainer that month."
+explanation: "A — YES: Most defence barristers accept pro bono cases, meaning they must register, which in turn prohibits them from taking a private retainer that month.\nB — YES: Any barrister accepting a pro bono case must register, so those who do accept them make up at least some of the registered group.\nC — NO: The restriction only applies to those who accept pro bono cases; we cannot assume it applies to all defence barristers in the chamber.\nD — NO: Barristers who do not accept pro bono cases might still be restricted from private retainers for other reasons not mentioned.\nE — NO: In fact, most defence barristers accept pro bono cases and are explicitly barred from taking a private retainer that month."
 },
 {
 kind: "drag-category",
@@ -10418,9 +10418,9 @@ kind: "drag-category",
 subtype: "dm-syllogisms",
 leftTitle: "Syllogisms",
 stimulus: [
-"Most chartered accountants audit public sector organizations.",
-"All professionals who audit public sector organizations use specialized risk software.",
-"No intern uses specialized risk software."
+"Most chartered accountants audit public sector organisations.",
+"All professionals who audit public sector organisations use specialised risk software.",
+"No intern uses specialised risk software."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -10429,13 +10429,13 @@ categories: [
 { id: "no", label: "No" }
 ],
 categoryItems: [
-{ id: "dm-syl-02-09-a", text: "Some chartered accountants use specialized risk software.", answerCategory: "yes" },
-{ id: "dm-syl-02-09-b", text: "No intern audits public sector organizations.", answerCategory: "yes" },
+{ id: "dm-syl-02-09-a", text: "Some chartered accountants use specialised risk software.", answerCategory: "yes" },
+{ id: "dm-syl-02-09-b", text: "No intern audits public sector organisations.", answerCategory: "yes" },
 { id: "dm-syl-02-09-c", text: "Some chartered accountants are interns.", answerCategory: "no" },
-{ id: "dm-syl-02-09-d", text: "All professionals who use specialized risk software are chartered accountants.", answerCategory: "no" },
+{ id: "dm-syl-02-09-d", text: "All professionals who use specialised risk software are chartered accountants.", answerCategory: "no" },
 { id: "dm-syl-02-09-e", text: "No chartered accountant is an intern.", answerCategory: "no" }
 ],
-explanation: "A — YES: Most chartered accountants audit public sector organizations, and all such auditors use specialized risk software, so some chartered accountants use it.\nB — YES: Anyone who audits public sector organizations must use the software, but interns do not use it, so no intern does this auditing.\nC — NO: Chartered accountants who audit public organizations use the software, meaning they cannot be interns. Even for the remaining accountants, there is no evidence suggesting they are interns.\nD — NO: Anyone auditing public sector organizations uses the software, but these professionals could belong to other accounting designations, not just chartered accountants.\nE — NO: Only the chartered accountants who audit public sector organizations (the 'most') are proven to use the software and therefore cannot be interns. The remaining chartered accountants are not shown to use the software, so nothing rules out them being interns."
+explanation: "A — YES: Most chartered accountants audit public sector organisations, and all such auditors use specialised risk software, so some chartered accountants use it.\nB — YES: Anyone who audits public sector organisations must use the software, but interns do not use it, so no intern does this auditing.\nC — NO: Chartered accountants who audit public organisations use the software, meaning they cannot be interns. Even for the remaining accountants, there is no evidence suggesting they are interns.\nD — NO: Anyone auditing public sector organisations uses the software, but these professionals could belong to other accounting designations, not just chartered accountants.\nE — NO: Only the chartered accountants who audit public sector organisations (the 'most') are proven to use the software and therefore cannot be interns. The remaining chartered accountants are not shown to use the software, so nothing rules out them being interns."
 },
 {
 kind: "drag-category",
@@ -10444,7 +10444,7 @@ leftTitle: "Syllogisms",
 stimulus: [
 "All certified financial planners are authorized to give investment advice.",
 "Some tax consultants are certified financial planners.",
-"No professional authorized to give investment advice is permitted to manage discretionary trusts without a secondary license."
+"No professional authorized to give investment advice is permitted to manage discretionary trusts without a secondary licence."
 ],
 question: "Assuming the statements above are true, which of the following conclusions follow beyond reasonable doubt?",
 instruction: "Drag each conclusion to the appropriate category.",
@@ -10454,12 +10454,12 @@ categories: [
 ],
 categoryItems: [
 { id: "dm-syl-02-10-a", text: "Some tax consultants are authorized to give investment advice.", answerCategory: "yes" },
-{ id: "dm-syl-02-10-b", text: "Some tax consultants are not permitted to manage discretionary trusts without a secondary license.", answerCategory: "yes" },
-{ id: "dm-syl-02-10-c", text: "No certified financial planner is permitted to manage discretionary trusts without a secondary license.", answerCategory: "yes" },
+{ id: "dm-syl-02-10-b", text: "Some tax consultants are not permitted to manage discretionary trusts without a secondary licence.", answerCategory: "yes" },
+{ id: "dm-syl-02-10-c", text: "No certified financial planner is permitted to manage discretionary trusts without a secondary licence.", answerCategory: "yes" },
 { id: "dm-syl-02-10-d", text: "All professionals authorized to give investment advice are certified financial planners.", answerCategory: "no" },
 { id: "dm-syl-02-10-e", text: "All tax consultants are certified financial planners.", answerCategory: "no" }
 ],
-explanation: "A — YES: The tax consultants who are certified financial planners are authorized to give investment advice.\nB — YES: Tax consultants who are certified financial planners are authorized to give advice, which subjects them to the discretionary trust restriction.\nC — YES: All certified financial planners are authorized to give investment advice, and no one authorized to give advice can manage discretionary trusts without a secondary license.\nD — NO: Certified financial planners are authorized, but other categories of professionals might also be authorized to give investment advice.\nE — NO: The premises only state that *some* tax consultants are certified financial planners, not all."
+explanation: "A — YES: The tax consultants who are certified financial planners are authorized to give investment advice.\nB — YES: Tax consultants who are certified financial planners are authorized to give advice, which subjects them to the discretionary trust restriction.\nC — YES: All certified financial planners are authorized to give investment advice, and no one authorized to give advice can manage discretionary trusts without a secondary licence.\nD — NO: Certified financial planners are authorized, but other categories of professionals might also be authorized to give investment advice.\nE — NO: The premises only state that *some* tax consultants are certified financial planners, not all."
 },
 {
 kind: "drag-category",
@@ -10795,7 +10795,7 @@ categoryItems: [
 { id: "dm-syl-02-24-d", text: "All people licensed to inspect high-rise scaffolds are registered structural engineers.", answerCategory: "no" },
 { id: "dm-syl-02-24-e", text: "Some apprentice bricklayers are directors of municipal planning boards.", answerCategory: "no" }
 ],
-explanation: "A — YES: Some board directors are structural engineers, and all registered structural engineers are licensed to inspect high-rise scaffolds.\nB — YES: Structural engineers are licensed to inspect scaffolds, but apprentice bricklayers are not, meaning no apprentice bricklayer is a structural engineer.\nC — NO: While structural engineers who are directors cannot be apprentice bricklayers, other board directors could potentially be apprentice bricklayers.\nD — NO: Structural engineers are licensed, but other inspection specialists (e.g., specialized safety officers) might also hold scaffold licenses.\nE — NO: There is no data linking apprentice bricklayers to positions as directors of municipal planning boards."
+explanation: "A — YES: Some board directors are structural engineers, and all registered structural engineers are licensed to inspect high-rise scaffolds.\nB — YES: Structural engineers are licensed to inspect scaffolds, but apprentice bricklayers are not, meaning no apprentice bricklayer is a structural engineer.\nC — NO: While structural engineers who are directors cannot be apprentice bricklayers, other board directors could potentially be apprentice bricklayers.\nD — NO: Structural engineers are licensed, but other inspection specialists (e.g., specialised safety officers) might also hold scaffold licences.\nE — NO: There is no data linking apprentice bricklayers to positions as directors of municipal planning boards."
 },
 {
 kind: "drag-category",
@@ -11242,7 +11242,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Pediatric vaccination sites should be cleaned with an alcohol swab and allowed to dry completely.",
+"Paediatric vaccination sites should be cleaned with an alcohol swab and allowed to dry completely.",
 "The vaccine should be administered into the deltoid or vastus lateralis muscle.",
 "If the child has a fever above 38 degrees Celsius, the vaccination should be postponed."
 ],
@@ -11364,7 +11364,7 @@ leftTitle: "Passage",
 stimulus: [
 "A full 7-day course of Antibiotic Z must be completed to prevent resistance.",
 "Skipping a dose necessitates restarting the entire 7-day course.",
-"Antibiotic Z should be taken with food to minimize stomach upset."
+"Antibiotic Z should be taken with food to minimise stomach upset."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -11375,7 +11375,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-01-11-d", text: "Completing the course prevents resistance.", answer: "Yes" },
 { id: "dm-yn-inf-01-11-e", text: "The course can be shortened to 3 days if side effects occur.", answer: "No" }
 ],
-explanation: "A — NO: Must complete 7 days.\nB — YES: Explicitly stated.\nC — YES: States it minimizes upset.\nD — YES: Explicitly stated.\nE — NO: No exception mentioned for side effects."
+explanation: "A — NO: Must complete 7 days.\nB — YES: Explicitly stated.\nC — YES: States it minimises upset.\nD — YES: Explicitly stated.\nE — NO: No exception mentioned for side effects."
 },
 {
 kind: "yes-no",
@@ -11523,19 +11523,19 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Elective surgery scheduling is based on clinical priority and time on the waiting list.",
-"Patients with cancer are prioritized over all non-cancer elective cases.",
+"Patients with cancer are prioritised over all non-cancer elective cases.",
 "Routine procedures are scheduled last."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-01-19-a", text: "Cancer cases are prioritized over non-cancer cases.", answer: "Yes" },
+{ id: "dm-yn-inf-01-19-a", text: "Cancer cases are prioritised over non-cancer cases.", answer: "Yes" },
 { id: "dm-yn-inf-01-19-b", text: "Waiting list time is the only factor in scheduling.", answer: "No" },
-{ id: "dm-yn-inf-01-19-c", text: "Routine procedures are prioritized over cancer cases.", answer: "No" },
+{ id: "dm-yn-inf-01-19-c", text: "Routine procedures are prioritised over cancer cases.", answer: "No" },
 { id: "dm-yn-inf-01-19-d", text: "Clinical priority is a factor in scheduling.", answer: "Yes" },
 { id: "dm-yn-inf-01-19-e", text: "Cancer cases are scheduled after routine cases.", answer: "No" }
 ],
-explanation: "A — YES: Directly stated.\nB — NO: Clinical priority is also used.\nC — NO: Cancer cases are prioritized over non-cancer.\nD — YES: Directly stated.\nE — NO: Cancer is prioritized."
+explanation: "A — YES: Directly stated.\nB — NO: Clinical priority is also used.\nC — NO: Cancer cases are prioritised over non-cancer.\nD — YES: Directly stated.\nE — NO: Cancer is prioritised."
 },
 {
 kind: "yes-no",
@@ -11650,7 +11650,7 @@ instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-03-q01-a", text: "P16INK4a upregulation is a characteristic of the senescent cells observed.", answer: "Yes" },
 { id: "dm-yn-inf-03-q01-b", text: "The removal of senescent cells caused an increase in adipose tissue.", answer: "No" },
-{ id: "dm-yn-inf-03-q01-c", text: "The study utilized genetically modified organisms.", answer: "Yes" },
+{ id: "dm-yn-inf-03-q01-c", text: "The study utilised genetically modified organisms.", answer: "Yes" },
 { id: "dm-yn-inf-03-q01-d", text: "All senescent cells were successfully eliminated in the experiment.", answer: "No" },
 { id: "dm-yn-inf-03-q01-e", text: "P16INK4a is a gene.", answer: "Yes" }
 ],
@@ -11890,7 +11890,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Laser-induced plasma generated in an argon atmosphere shows a higher electron density compared to a nitrogen atmosphere.",
-"The emission intensity of the plasma is positively correlated with the electron density in the localized spot."
+"The emission intensity of the plasma is positively correlated with the electron density in the localised spot."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -11946,7 +11946,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Arctic migratory birds utilize the Earth's magnetic field for orientation during long-distance flight.",
+"Arctic migratory birds utilise the Earth's magnetic field for orientation during long-distance flight.",
 "Solar flares have been shown to disrupt this navigation, leading to deviations in arrival times at nesting sites."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -11965,7 +11965,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"When faced with incomplete information, individuals frequently rely on the availability heuristic, favoring information that is easily recalled.",
+"When faced with incomplete information, individuals frequently rely on the availability heuristic, favouring information that is easily recalled.",
 "This often leads to the overestimation of the probability of dramatic but rare events."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -11973,7 +11973,7 @@ instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-03-q18-a", text: "The availability heuristic helps people make accurate probability assessments.", answer: "No" },
 { id: "dm-yn-inf-03-q18-b", text: "Rare events are often perceived as more likely than they are.", answer: "Yes" },
-{ id: "dm-yn-inf-03-q18-c", text: "Easy recall influences judgment.", answer: "Yes" },
+{ id: "dm-yn-inf-03-q18-c", text: "Easy recall influences judgement.", answer: "Yes" },
 { id: "dm-yn-inf-03-q18-d", text: "Complete information negates the availability heuristic.", answer: "No" },
 { id: "dm-yn-inf-03-q18-e", text: "The heuristic is used primarily when information is complete.", answer: "No" }
 ],
@@ -12023,7 +12023,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Invasive species often dominate new environments because they lack natural predators.",
-"This competitive advantage allows them to out-compete native species for localized resources."
+"This competitive advantage allows them to out-compete native species for localised resources."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -12079,8 +12079,8 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Altruistic behavior is more frequently observed in groups with high social cohesion.",
-"This behavior is often costly to the individual but benefits the group survival."
+"Altruistic behaviour is more frequently observed in groups with high social cohesion.",
+"This behaviour is often costly to the individual but benefits the group survival."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -12089,7 +12089,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-03-q24-b", text: "Cohesive groups show more altruism.", answer: "Yes" },
 { id: "dm-yn-inf-03-q24-c", text: "Altruism benefits the individual.", answer: "No" },
 { id: "dm-yn-inf-03-q24-d", text: "Altruism aids group survival.", answer: "Yes" },
-{ id: "dm-yn-inf-03-q24-e", text: "Social cohesion is unrelated to behavior.", answer: "No" }
+{ id: "dm-yn-inf-03-q24-e", text: "Social cohesion is unrelated to behaviour.", answer: "No" }
 ],
 explanation: "A — NO: Costly to the individual.\nB — YES: Stated.\nC — NO: Benefits the group.\nD — YES: Stated.\nE — NO: It is related."
 },
@@ -12171,7 +12171,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-18-04-d", text: "Dormant phase pruning is a requirement for maximum summer yield.", answer: "Yes" },
 { id: "dm-yn-inf-18-04-e", text: "Mist systems fail to prevent frost damage if the temperature drops to -4 degrees Celsius.", answer: "Yes" }
 ],
-explanation: "A — NO: The text says winter pruning maximizes yield, but doesn't make a claim about summer pruning.\nB — NO: They are only effective above -3 degrees.\nC — YES: They trigger premature flowering which makes them vulnerable.\nD — YES: The text establishes this as a requirement.\nE — YES: If the limit is -3, -4 is outside the range of effectiveness."
+explanation: "A — NO: The text says winter pruning maximises yield, but doesn't make a claim about summer pruning.\nB — NO: They are only effective above -3 degrees.\nC — YES: They trigger premature flowering which makes them vulnerable.\nD — YES: The text establishes this as a requirement.\nE — YES: If the limit is -3, -4 is outside the range of effectiveness."
 },
 {
 kind: "yes-no",
@@ -12378,7 +12378,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"The optimal calving window is defined as a six-week period during the early spring to maximize calf survival rates.",
+"The optimal calving window is defined as a six-week period during the early spring to maximise calf survival rates.",
 "Cows that calve outside this window require additional veterinary monitoring, which increases overhead costs.",
 "Farm Z has 70% of its cows calving during the six-week window, while the remaining 30% calve in the late spring."
 ],
@@ -12391,7 +12391,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-18-15-d", text: "Calving in the six-week window guarantees survival.", answer: "No" },
 { id: "dm-yn-inf-18-15-e", text: "Farm Z has 100% of its cows calving outside the window.", answer: "No" }
 ],
-explanation: "A — NO: It says it maximizes survival, not that only those survive.\nB — YES: 30% calve late, and late calving requires additional monitoring.\nC — YES: The window is defined as optimal, implying others are less optimal.\nD — NO: It says it maximizes survival, not guarantees it.\nE — NO: 70% calve during the window."
+explanation: "A — NO: It says it maximises survival, not that only those survive.\nB — YES: 30% calve late, and late calving requires additional monitoring.\nC — YES: The window is defined as optimal, implying others are less optimal.\nD — NO: It says it maximises survival, not guarantees it.\nE — NO: 70% calve during the window."
 },
 {
 kind: "yes-no",
@@ -13018,7 +13018,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Utilitarian ethics prioritizes actions that produce the greatest happiness for the greatest number.",
+"Utilitarian ethics prioritises actions that produce the greatest happiness for the greatest number.",
 "The proposed plan benefits 90% of the population but harms the other 10%.",
 "Deontological ethics forbids any action that harms individuals, even for the greater good."
 ],
@@ -13031,7 +13031,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-20-23-d", text: "The proposed plan harms some people.", answer: "Yes" },
 { id: "dm-yn-inf-20-23-e", text: "Utilitarianism requires benefits for everyone.", answer: "No" }
 ],
-explanation: "A — YES: It benefits the majority. B — NO: It harms 10%, which they forbid. C — NO: Contradictory approaches shown here. D — YES: Harms 10%. E — NO: Prioritizes 'greatest number', not 'everyone'."
+explanation: "A — YES: It benefits the majority. B — NO: It harms 10%, which they forbid. C — NO: Contradictory approaches shown here. D — YES: Harms 10%. E — NO: Prioritises 'greatest number', not 'everyone'."
 },
 {
 kind: "yes-no",
@@ -13159,13 +13159,13 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Integration programs for newcomers in Metropolitan City require at least 100 hours of language training.",
-"Successful completion of these courses is a prerequisite for local professional license applications.",
+"Successful completion of these courses is a prerequisite for local professional licence applications.",
 "Surveys show that 80% of applicants complete the training within six months of arrival."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-17-06-a", text: "It is impossible to get a professional license without 100 hours of training.", answer: "Yes" },
+{ id: "dm-yn-inf-17-06-a", text: "It is impossible to get a professional licence without 100 hours of training.", answer: "Yes" },
 { id: "dm-yn-inf-17-06-b", text: "Most newcomers complete their language training within the first half-year.", answer: "Yes" },
 { id: "dm-yn-inf-17-06-c", text: "Language training is the only requirement for professional licensing.", answer: "No" },
 { id: "dm-yn-inf-17-06-d", text: "All applicants must pass a proficiency test to complete the program.", answer: "No" },
@@ -13199,7 +13199,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Historical records of the port town show that migration patterns fluctuated significantly during the construction of the Great Bridge.",
-"Following the bridge's completion, the population stabilized as businesses relocated to the area to utilize the improved logistics.",
+"Following the bridge's completion, the population stabilized as businesses relocated to the area to utilise the improved logistics.",
 "Current demographic reports indicate the town's population is now heavily concentrated in the industrial sector."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -13211,7 +13211,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-17-08-d", text: "Businesses relocated to the port town solely because of the Great Bridge.", answer: "No" },
 { id: "dm-yn-inf-17-08-e", text: "The Great Bridge construction caused a permanent decline in population.", answer: "No" }
 ],
-explanation: "A — YES: The passage notes that after completion, population stabilized.\nB — YES: The passage notes fluctuations during construction and stability after, implying instability during/before.\nC — YES: 'Heavily concentrated' implies the majority.\nD — NO: It says they relocated to utilize the logistics, which might be a primary reason, but we cannot say 'solely'.\nE — NO: The passage states it stabilized, not that it declined permanently."
+explanation: "A — YES: The passage notes that after completion, population stabilized.\nB — YES: The passage notes fluctuations during construction and stability after, implying instability during/before.\nC — YES: 'Heavily concentrated' implies the majority.\nD — NO: It says they relocated to utilise the logistics, which might be a primary reason, but we cannot say 'solely'.\nE — NO: The passage states it stabilized, not that it declined permanently."
 },
 {
 kind: "yes-no",
@@ -13338,7 +13338,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Longevity is shifting retirement policy discussions toward increasing the statutory retirement age by 2 years.",
+"Longevity is shifting retirement policy discussions towards increasing the statutory retirement age by 2 years.",
 "Data shows that people are now healthier at age 65 than they were two decades ago.",
 "Public unions are divided on the proposal, citing different impacts on physically demanding roles."
 ],
@@ -13351,7 +13351,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-17-15-d", text: "The proposal will be implemented in the next two years.", answer: "No" },
 { id: "dm-yn-inf-17-15-e", text: "Union members agree that an increase is necessary.", answer: "No" }
 ],
-explanation: "A — YES: The passage says discussions are toward increasing by 2 years.\nB — YES: 'healthier at age 65 than they were two decades ago' confirms this.\nC — NO: It says unions cite different impacts on them, not that they are the only ones affected.\nD — NO: There is no timeline mentioned.\nE — NO: It says they are 'divided,' which means they do not agree."
+explanation: "A — YES: The passage says discussions are towards increasing by 2 years.\nB — YES: 'healthier at age 65 than they were two decades ago' confirms this.\nC — NO: It says unions cite different impacts on them, not that they are the only ones affected.\nD — NO: There is no timeline mentioned.\nE — NO: It says they are 'divided,' which means they do not agree."
 },
 {
 kind: "yes-no",
@@ -13378,9 +13378,9 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Skilled worker visas have been adjusted to prioritize applicants with backgrounds in renewable energy and engineering.",
+"Skilled worker visas have been adjusted to prioritise applicants with backgrounds in renewable energy and engineering.",
 "This change has led to a 12% rise in foreign investment in local clean-tech companies.",
-"Critics argue that this policy unfairly favors specialized professionals over general laborers."
+"Critics argue that this policy unfairly favours specialised professionals over general laborers."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -13388,10 +13388,10 @@ yesNoStatements: [
 { id: "dm-yn-inf-17-17-a", text: "The visa policy change is linked to the rise in clean-tech investment.", answer: "Yes" },
 { id: "dm-yn-inf-17-17-b", text: "The policy is universally supported by the public.", answer: "No" },
 { id: "dm-yn-inf-17-17-c", text: "General laborers are no longer eligible for visas.", answer: "No" },
-{ id: "dm-yn-inf-17-17-d", text: "Specialized professionals are prioritized over general laborers.", answer: "Yes" },
+{ id: "dm-yn-inf-17-17-d", text: "Specialised professionals are prioritised over general laborers.", answer: "Yes" },
 { id: "dm-yn-inf-17-17-e", text: "Renewable energy companies are the main beneficiaries of this investment.", answer: "Yes" }
 ],
-explanation: "A — YES: The passage states the change led to the rise in investment.\nB — NO: It mentions 'critics,' so it is not universally supported.\nC — NO: It says they are prioritized, not that others are ineligible.\nD — YES: The passage confirms this as the core of the criticism.\nE — YES: Investment is in clean-tech, which is synonymous with renewable energy in this context."
+explanation: "A — YES: The passage states the change led to the rise in investment.\nB — NO: It mentions 'critics,' so it is not universally supported.\nC — NO: It says they are prioritised, not that others are ineligible.\nD — YES: The passage confirms this as the core of the criticism.\nE — YES: Investment is in clean-tech, which is synonymous with renewable energy in this context."
 },
 {
 kind: "yes-no",
@@ -13486,7 +13486,7 @@ question: "For each of the following statements, select 'Yes' if it follows from
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-17-22-a", text: "Remittances are a significant portion of the home nation's economy.", answer: "Yes" },
-{ id: "dm-yn-inf-17-22-b", text: "The government wants to shift remittance usage toward infrastructure.", answer: "Yes" },
+{ id: "dm-yn-inf-17-22-b", text: "The government wants to shift remittance usage towards infrastructure.", answer: "Yes" },
 { id: "dm-yn-inf-17-22-c", text: "All remittances are spent on household consumption.", answer: "No" },
 { id: "dm-yn-inf-17-22-d", text: "The diaspora currently invests heavily in home-nation infrastructure.", answer: "No" },
 { id: "dm-yn-inf-17-22-e", text: "GDP in the home nation would be 15% lower without remittances.", answer: "No" }
@@ -13598,7 +13598,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Spectroscopy allows astronomers to analyze the light passing through a planet's atmosphere to identify chemical markers.",
+"Spectroscopy allows astronomers to analyse the light passing through a planet's atmosphere to identify chemical markers.",
 "Oxygen and methane are considered primary biosignatures, though they can also be produced by geological processes.",
 "Therefore, the detection of these gases is suggestive but not conclusive evidence of alien life."
 ],
@@ -13638,7 +13638,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Binary star systems, where two stars orbit a common center, present complex orbital dynamics for potential planets.",
+"Binary star systems, where two stars orbit a common centre, present complex orbital dynamics for potential planets.",
 "A planet in a 'circumbinary' orbit circles both stars, while 'S-type' orbits circle only one of the two stars.",
 "In S-type systems, the gravitational influence of the second star can destabilize orbits if the planet wanders too far from its host."
 ],
@@ -13700,7 +13700,7 @@ leftTitle: "Passage",
 stimulus: [
 "Oxygen generation on the Moon requires the electrolysis of water harvested from polar ice caps.",
 "This process consumes significant electrical energy, necessitating either a nuclear reactor or large-scale solar arrays.",
-"Since solar arrays are useless during the 14-day lunar night, batteries or a nuclear source must be utilized for continuous operation."
+"Since solar arrays are useless during the 14-day lunar night, batteries or a nuclear source must be utilised for continuous operation."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -14057,7 +14057,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "A study on juvenile rehabilitation found that vocational training programs reduced re-offending by 20% over five years. However, the study also noted that only 30% of eligible juveniles complete these programs, largely due to transportation barriers.",
-"Local authorities have proposed increasing bus routes to training centers to improve completion rates."
+"Local authorities have proposed increasing bus routes to training centres to improve completion rates."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -14113,16 +14113,16 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Youth detention centers are now required to offer 20 hours of education per week. Facilities that cannot meet this requirement must outsource education to local community colleges.",
-"Currently, three state centers have requested an exemption because they lack classroom space, despite having enough qualified teachers."
+"Youth detention centres are now required to offer 20 hours of education per week. Facilities that cannot meet this requirement must outsource education to local community colleges.",
+"Currently, three state centres have requested an exemption because they lack classroom space, despite having enough qualified teachers."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-16-06-a", text: "All facilities must have qualified teachers to meet the requirement.", answer: "No" },
-{ id: "dm-yn-inf-16-06-b", text: "The three state centers are unable to provide 20 hours of education internally.", answer: "Yes" },
+{ id: "dm-yn-inf-16-06-b", text: "The three state centres are unable to provide 20 hours of education internally.", answer: "Yes" },
 { id: "dm-yn-inf-16-06-c", text: "Community colleges are the only approved outsourcing option.", answer: "No" },
-{ id: "dm-yn-inf-16-06-d", text: "Lack of space is preventing some centers from meeting the education requirement.", answer: "Yes" },
+{ id: "dm-yn-inf-16-06-d", text: "Lack of space is preventing some centres from meeting the education requirement.", answer: "Yes" },
 { id: "dm-yn-inf-16-06-e", text: "Outsourcing is mandatory for facilities without enough teachers.", answer: "No" }
 ],
 explanation: "A — NO: Not explicitly stated that they must have their own teachers, just that they must meet the hour requirement. B — YES: They requested an exemption, implying they cannot meet it. C — NO: The text mentions them as an option, not the only one. D — YES: 'Lack classroom space'. E — NO: It says facilities that 'cannot meet this requirement' must outsource, but doesn't limit the reason to only teacher shortage."
@@ -14151,19 +14151,19 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"To qualify for the Youth Diversion program, an offender must have no prior convictions and have committed a non-violent offense. Statistics show that 50% of applicants are rejected because they do not meet the non-violent offense criteria.",
+"To qualify for the Youth Diversion program, an offender must have no prior convictions and have committed a non-violent offence. Statistics show that 50% of applicants are rejected because they do not meet the non-violent offence criteria.",
 "Applicants who are rejected can appeal the decision within 30 days."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-16-08-a", text: "All rejected applicants have prior convictions.", answer: "No" },
-{ id: "dm-yn-inf-16-08-b", text: "Offenders with violent offenses cannot qualify for the program.", answer: "Yes" },
-{ id: "dm-yn-inf-16-08-c", text: "The program requires both no prior convictions and a non-violent offense.", answer: "Yes" },
-{ id: "dm-yn-inf-16-08-d", text: "Half of all applicants have committed violent offenses.", answer: "Yes" },
-{ id: "dm-yn-inf-16-08-e", text: "Appeals are only available for those with non-violent offenses.", answer: "No" }
+{ id: "dm-yn-inf-16-08-b", text: "Offenders with violent offences cannot qualify for the program.", answer: "Yes" },
+{ id: "dm-yn-inf-16-08-c", text: "The program requires both no prior convictions and a non-violent offence.", answer: "Yes" },
+{ id: "dm-yn-inf-16-08-d", text: "Half of all applicants have committed violent offences.", answer: "Yes" },
+{ id: "dm-yn-inf-16-08-e", text: "Appeals are only available for those with non-violent offences.", answer: "No" }
 ],
-explanation: "A — NO: 50% are rejected due to violent offenses, not necessarily all due to prior convictions. B — YES: The requirement is non-violent; violent offenders are excluded. C — YES: Both are required. D — YES: 50% are rejected for violent offenses. E — NO: There is no such restriction mentioned for appeals."
+explanation: "A — NO: 50% are rejected due to violent offences, not necessarily all due to prior convictions. B — YES: The requirement is non-violent; violent offenders are excluded. C — YES: Both are required. D — YES: 50% are rejected for violent offences. E — NO: There is no such restriction mentioned for appeals."
 },
 {
 kind: "yes-no",
@@ -14534,7 +14534,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"The municipal authorities have announced that all new asphalt roads must include a base layer of recycled construction waste to minimize landfill usage.",
+"The municipal authorities have announced that all new asphalt roads must include a base layer of recycled construction waste to minimise landfill usage.",
 "The initial trial of this method on Fourth Avenue resulted in a 10% reduction in paving material costs compared to traditional methods.",
 "However, the road surface durability on Fourth Avenue was found to be lower than standard asphalt, requiring more frequent maintenance."
 ],
@@ -14554,7 +14554,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Lighting upgrades for the harbor piers were delayed due to a supply chain shortage of specialized marine-grade LED bulbs.",
+"Lighting upgrades for the harbor piers were delayed due to a supply chain shortage of specialised marine-grade LED bulbs.",
 "The project board decided to proceed with installing standard lighting while waiting for the shipment of LED bulbs.",
 "Replacing the standard bulbs with the specified LEDs will require a secondary installation contract, increasing the total project cost by $50,000."
 ],
@@ -14695,7 +14695,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "The rail depot construction project includes a dedicated facility for wheel maintenance.",
-"The maintenance facility requires a specialized hydraulic lift capable of lifting 100 tonnes.",
+"The maintenance facility requires a specialised hydraulic lift capable of lifting 100 tonnes.",
 "Currently, the only available lifts on the market are rated for 80 tonnes, necessitating a custom-built solution."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -14776,7 +14776,7 @@ leftTitle: "Passage",
 stimulus: [
 "The rail project's budget allocation for rolling stock has been reduced by 10%.",
 "This reduction was prompted by an unexpected surge in the cost of steel required for track construction.",
-"The board has prioritized infrastructure development over the procurement of new train cars."
+"The board has prioritised infrastructure development over the procurement of new train cars."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -14787,14 +14787,14 @@ yesNoStatements: [
 { id: "dm-yn-inf-15-16-d", text: "The cost of steel has stayed the same.", answer: "No" },
 { id: "dm-yn-inf-15-16-e", text: "The project will now require fewer train cars.", answer: "No" }
 ],
-explanation: "A — NO: The budget was *reallocated*, not necessarily decreased overall. B — YES: It prioritized one over the other. C — YES: The text states infrastructure was prioritized over procurement. D — NO: There was a 'surge in the cost'. E — NO: Reducing the budget for rolling stock does not mean they need fewer cars, just that they have less money for them."
+explanation: "A — NO: The budget was *reallocated*, not necessarily decreased overall. B — YES: It prioritised one over the other. C — YES: The text states infrastructure was prioritised over procurement. D — NO: There was a 'surge in the cost'. E — NO: Reducing the budget for rolling stock does not mean they need fewer cars, just that they have less money for them."
 },
 {
 kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"The Smart Grid Modernization project involves replacing analog meters with digital smart meters in all 50,000 households.",
+"The Smart Grid Modernisation project involves replacing analog meters with digital smart meters in all 50,000 households.",
 "The digital meters communicate usage data via cellular networks to the utility company.",
 "In areas with poor cellular coverage, the utility must install mesh-network signal repeaters."
 ],
@@ -14874,7 +14874,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Smart grid load balancing software automatically reroutes power to minimize transformer overheating.",
+"Smart grid load balancing software automatically reroutes power to minimise transformer overheating.",
 "Overheating occurs when local demand exceeds the transformer's rated capacity by more than 20%.",
 "Recent logs show that the software activated 15 times during the last heatwave, preventing multiple outages."
 ],
@@ -14934,7 +14934,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"The National Power Grid modernization program includes a training component for current electrical engineers.",
+"The National Power Grid modernisation program includes a training component for current electrical engineers.",
 "The training covers new smart-grid management protocols that will replace the outdated manual control methods.",
 "Participation in the training is mandatory for all engineers currently working on the grid control system."
 ],
@@ -14975,7 +14975,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Scombroid poisoning, a foodborne illness, occurs when fish is improperly stored at temperatures above 15 degrees Celsius for an extended period.",
-"The local fish market has reported that all their tuna shipments are stored in specialized refrigerated units maintaining a constant temperature of 5 degrees Celsius.",
+"The local fish market has reported that all their tuna shipments are stored in specialised refrigerated units maintaining a constant temperature of 5 degrees Celsius.",
 "However, a recent inspection found that the delivery van used to transport the fish from the harbor to the market was broken down for six hours yesterday."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -15255,7 +15255,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "High sodium intake is a well-established risk factor for hypertension.",
-"The World Health Organization recommends limiting daily sodium intake to less than 2,000 mg.",
+"The World Health Organisation recommends limiting daily sodium intake to less than 2,000 mg.",
 "A dietary survey found that 85% of processed foods consumed by participants contained sodium levels exceeding daily recommended limits per serving."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -15461,7 +15461,7 @@ stimulus: [
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-14-02-a", text: "Highly competent individuals always recognize their superiority.", answer: "No" },
+{ id: "dm-yn-inf-14-02-a", text: "Highly competent individuals always recognise their superiority.", answer: "No" },
 { id: "dm-yn-inf-14-02-b", text: "Low ability in a task is associated with lower self-confidence in this model.", answer: "No" },
 { id: "dm-yn-inf-14-02-c", text: "Competent people may struggle to gauge the difficulty of tasks for others.", answer: "Yes" },
 { id: "dm-yn-inf-14-02-d", text: "Confidence is an accurate indicator of actual performance according to this effect.", answer: "No" },
@@ -15474,8 +15474,8 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Cognitive dissonance theory posits that individuals experience mental discomfort when holding two conflicting beliefs or when their behavior contradicts their values.",
-"To resolve this tension, people often change their attitudes or justify their actions to align with their behavior.",
+"Cognitive dissonance theory posits that individuals experience mental discomfort when holding two conflicting beliefs or when their behaviour contradicts their values.",
+"To resolve this tension, people often change their attitudes or justify their actions to align with their behaviour.",
 "This process often occurs subconsciously, ensuring the individual maintains a consistent self-image."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -15484,7 +15484,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-14-03-a", text: "Cognitive dissonance is the state of mental harmony.", answer: "No" },
 { id: "dm-yn-inf-14-03-b", text: "People may alter their beliefs to reduce internal conflict.", answer: "Yes" },
 { id: "dm-yn-inf-14-03-c", text: "Dissonance resolution is always a conscious, deliberate process.", answer: "No" },
-{ id: "dm-yn-inf-14-03-d", text: "Behavior that contradicts personal values can cause psychological tension.", answer: "Yes" },
+{ id: "dm-yn-inf-14-03-d", text: "Behaviour that contradicts personal values can cause psychological tension.", answer: "Yes" },
 { id: "dm-yn-inf-14-03-e", text: "Maintaining a consistent self-image is a motive for attitude change.", answer: "Yes" }
 ],
 explanation: "A — NO: It is mental discomfort from conflict.\nB — YES: Changing attitudes is a resolution method.\nC — NO: The passage states it often occurs subconsciously.\nD — YES: The passage explicitly lists this as a cause.\nE — YES: It helps maintain a consistent self-image."
@@ -15494,8 +15494,8 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"The fundamental attribution error describes the tendency for people to overemphasize internal, dispositional factors when explaining the behavior of others.",
-"Simultaneously, when explaining their own behavior, individuals often attribute their actions to external, situational factors.",
+"The fundamental attribution error describes the tendency for people to overemphasize internal, dispositional factors when explaining the behaviour of others.",
+"Simultaneously, when explaining their own behaviour, individuals often attribute their actions to external, situational factors.",
 "This cognitive bias significantly impacts how people judge the character of others while excusing their own failures."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -15523,7 +15523,7 @@ instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-14-05-a", text: "Framing does not influence decision-making processes.", answer: "No" },
 { id: "dm-yn-inf-14-05-b", text: "People prefer risk when the choice is framed as a gain.", answer: "No" },
-{ id: "dm-yn-inf-14-05-c", text: "Loss-framed choices encourage risk-taking behavior.", answer: "Yes" },
+{ id: "dm-yn-inf-14-05-c", text: "Loss-framed choices encourage risk-taking behaviour.", answer: "Yes" },
 { id: "dm-yn-inf-14-05-d", text: "The framing effect applies regardless of the content of the information.", answer: "Yes" },
 { id: "dm-yn-inf-14-05-e", text: "Individuals are consistently risk-seeking in all scenarios.", answer: "No" }
 ],
@@ -15536,7 +15536,7 @@ leftTitle: "Passage",
 stimulus: [
 "Anchoring bias is a cognitive bias where an individual relies too heavily on an initial piece of information offered (the 'anchor') when making decisions.",
 "Once an anchor is set, subsequent judgments are made by adjusting away from that anchor.",
-"These adjustments are typically insufficient, meaning that the final decision remains biased toward the starting point."
+"These adjustments are typically insufficient, meaning that the final decision remains biased towards the starting point."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -15545,9 +15545,9 @@ yesNoStatements: [
 { id: "dm-yn-inf-14-06-b", text: "People adjust their decisions significantly far from the anchor.", answer: "No" },
 { id: "dm-yn-inf-14-06-c", text: "Initial information can influence future judgments.", answer: "Yes" },
 { id: "dm-yn-inf-14-06-d", text: "Anchoring bias occurs when we ignore all prior information.", answer: "No" },
-{ id: "dm-yn-inf-14-06-e", text: "Final decisions are often pulled toward the initial anchor.", answer: "Yes" }
+{ id: "dm-yn-inf-14-06-e", text: "Final decisions are often pulled towards the initial anchor.", answer: "Yes" }
 ],
-explanation: "A — NO: It is the starting point, not the result.\nB — NO: Adjustments are typically insufficient.\nC — YES: That is the definition of the bias.\nD — NO: It relies too heavily on the initial info.\nE — YES: Decisions remain biased toward the starting point."
+explanation: "A — NO: It is the starting point, not the result.\nB — NO: Adjustments are typically insufficient.\nC — YES: That is the definition of the bias.\nD — NO: It relies too heavily on the initial info.\nE — YES: Decisions remain biased towards the starting point."
 },
 {
 kind: "yes-no",
@@ -15574,7 +15574,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Confirmation bias is the tendency to search for, interpret, and favor information that confirms one's pre-existing beliefs.",
+"Confirmation bias is the tendency to search for, interpret, and favour information that confirms one's pre-existing beliefs.",
 "It also involves ignoring or devaluing evidence that contradicts these beliefs.",
 "This bias can lead to poor decision-making because people fail to consider all available data objectively."
 ],
@@ -15584,7 +15584,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-14-08-a", text: "Confirmation bias promotes the objective analysis of all data.", answer: "No" },
 { id: "dm-yn-inf-14-08-b", text: "Contradictory evidence is often downplayed in this bias.", answer: "Yes" },
 { id: "dm-yn-inf-14-08-c", text: "This bias only affects people with strong political beliefs.", answer: "No" },
-{ id: "dm-yn-inf-14-08-d", text: "Favoring confirming information is a key aspect of this bias.", answer: "Yes" },
+{ id: "dm-yn-inf-14-08-d", text: "Favouring confirming information is a key aspect of this bias.", answer: "Yes" },
 { id: "dm-yn-inf-14-08-e", text: "Confirmation bias improves decision-making speed.", answer: "No" }
 ],
 explanation: "A — NO: It leads to poor decision-making by failing to be objective.\nB — YES: The passage says people devalue contradicting evidence.\nC — NO: The passage does not specify this limit.\nD — YES: It is explicitly defined as such.\nE — NO: The passage states it leads to poor decision-making."
@@ -15596,7 +15596,7 @@ leftTitle: "Passage",
 stimulus: [
 "Asch's conformity experiments demonstrated that individuals often yield to group pressure, even when the group's opinion is clearly incorrect.",
 "In the study, participants were shown lines of different lengths and asked to match them, but confederates provided intentionally wrong answers.",
-"A significant portion of participants conformed to the incorrect group consensus, highlighting the power of social pressure on individual judgment."
+"A significant portion of participants conformed to the incorrect group consensus, highlighting the power of social pressure on individual judgement."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -15622,7 +15622,7 @@ question: "For each of the following statements, select 'Yes' if it follows from
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-14-10-a", text: "Participants administered shocks only when the learner answered correctly.", answer: "No" },
-{ id: "dm-yn-inf-14-10-b", text: "Authority figures influenced the behavior of participants.", answer: "Yes" },
+{ id: "dm-yn-inf-14-10-b", text: "Authority figures influenced the behaviour of participants.", answer: "Yes" },
 { id: "dm-yn-inf-14-10-c", text: "All participants refused to follow orders.", answer: "No" },
 { id: "dm-yn-inf-14-10-d", text: "Participants were willing to act against their conscience due to orders.", answer: "Yes" },
 { id: "dm-yn-inf-14-10-e", text: "The electric shocks were proven to be harmless.", answer: "No" }
@@ -15634,20 +15634,20 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"The Stanford Prison Experiment, conducted by Zimbardo, examined the effects of situational roles on behavior.",
+"The Stanford Prison Experiment, conducted by Zimbardo, examined the effects of situational roles on behaviour.",
 "Participants were randomly assigned to roles of either 'prisoner' or 'guard' in a simulated prison environment.",
-"The study was terminated early because guards engaged in abusive behaviors and prisoners exhibited signs of extreme distress."
+"The study was terminated early because guards engaged in abusive behaviours and prisoners exhibited signs of extreme distress."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-14-11-a", text: "The roles were assigned based on participant personalities.", answer: "No" },
 { id: "dm-yn-inf-14-11-b", text: "The study continued until the planned end date.", answer: "No" },
-{ id: "dm-yn-inf-14-11-c", text: "Roles within the simulation influenced participant behavior.", answer: "Yes" },
+{ id: "dm-yn-inf-14-11-c", text: "Roles within the simulation influenced participant behaviour.", answer: "Yes" },
 { id: "dm-yn-inf-14-11-d", text: "Prisoners showed signs of distress.", answer: "Yes" },
 { id: "dm-yn-inf-14-11-e", text: "Guards were generally kind to prisoners.", answer: "No" }
 ],
-explanation: "A — NO: They were randomly assigned.\nB — NO: Terminated early.\nC — YES: That was the point of the experiment.\nD — YES: The passage explicitly states this.\nE — NO: The passage states they engaged in abusive behaviors."
+explanation: "A — NO: They were randomly assigned.\nB — NO: Terminated early.\nC — YES: That was the point of the experiment.\nD — YES: The passage explicitly states this.\nE — NO: The passage states they engaged in abusive behaviours."
 },
 {
 kind: "yes-no",
@@ -15716,7 +15716,7 @@ leftTitle: "Passage",
 stimulus: [
 "Deindividuation is a process where individuals in a group lose their sense of self-awareness and personal responsibility.",
 "This happens because the group environment makes them feel anonymous, reducing the fear of accountability.",
-"This state can lead to impulsive, often antisocial behavior that the individual would not perform alone."
+"This state can lead to impulsive, often antisocial behaviour that the individual would not perform alone."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -15734,7 +15734,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Compliance techniques, such as the 'foot-in-the-door' method, utilize consistency principles to influence behavior.",
+"Compliance techniques, such as the 'foot-in-the-door' method, utilise consistency principles to influence behaviour.",
 "This technique involves making a small, easy-to-agree-to request before making a larger, target request.",
 "Once an individual complies with the small request, they are more likely to comply with the larger one to appear consistent with their previous action."
 ],
@@ -15747,7 +15747,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-14-16-d", text: "Compliance techniques influence how people behave.", answer: "Yes" },
 { id: "dm-yn-inf-14-16-e", text: "The small request is the primary goal of the technique.", answer: "No" }
 ],
-explanation: "A — NO: It starts with a small request.\nB — YES: It uses consistency principles.\nC — NO: It makes further compliance *more* likely.\nD — YES: The passage explicitly says they influence behavior.\nE — NO: The target request is the larger one."
+explanation: "A — NO: It starts with a small request.\nB — YES: It uses consistency principles.\nC — NO: It makes further compliance *more* likely.\nD — YES: The passage explicitly says they influence behaviour.\nE — NO: The target request is the larger one."
 },
 {
 kind: "yes-no",
@@ -15775,7 +15775,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Vygotsky's Zone of Proximal Development (ZPD) defines the gap between what a learner can do independently and what they can do with guidance.",
-"Learning is maximized when tasks fall within this zone, providing enough challenge to stimulate growth without causing frustration.",
+"Learning is maximised when tasks fall within this zone, providing enough challenge to stimulate growth without causing frustration.",
 "Social interaction and scaffolding are crucial methods for helping the learner progress through the ZPD."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -15787,7 +15787,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-14-18-d", text: "The ZPD gap is where learning potential is highest.", answer: "Yes" },
 { id: "dm-yn-inf-14-18-e", text: "Guidance is irrelevant to navigating the ZPD.", answer: "No" }
 ],
-explanation: "A — NO: It is the gap between independent ability and guided ability.\nB — YES: The passage lists it as a crucial method.\nC — NO: The passage says learning is maximized *within* this zone.\nD — YES: The passage says learning is maximized when tasks fall within this zone.\nE — NO: Guidance is a central component."
+explanation: "A — NO: It is the gap between independent ability and guided ability.\nB — YES: The passage lists it as a crucial method.\nC — NO: The passage says learning is maximised *within* this zone.\nD — YES: The passage says learning is maximised when tasks fall within this zone.\nE — NO: Guidance is a central component."
 },
 {
 kind: "yes-no",
@@ -15834,29 +15834,29 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Operant conditioning relies on reinforcements and punishments to modify behavior.",
-"Positive reinforcement involves adding a rewarding stimulus to increase the likelihood of a behavior repeating.",
-"Punishment involves applying an aversive stimulus to decrease the frequency of a specific behavior."
+"Operant conditioning relies on reinforcements and punishments to modify behaviour.",
+"Positive reinforcement involves adding a rewarding stimulus to increase the likelihood of a behaviour repeating.",
+"Punishment involves applying an aversive stimulus to decrease the frequency of a specific behaviour."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-14-21-a", text: "Operant conditioning aims to increase all behaviors.", answer: "No" },
-{ id: "dm-yn-inf-14-21-b", text: "Punishment is used to decrease the frequency of a behavior.", answer: "Yes" },
+{ id: "dm-yn-inf-14-21-a", text: "Operant conditioning aims to increase all behaviours.", answer: "No" },
+{ id: "dm-yn-inf-14-21-b", text: "Punishment is used to decrease the frequency of a behaviour.", answer: "Yes" },
 { id: "dm-yn-inf-14-21-c", text: "Positive reinforcement uses aversive stimuli.", answer: "No" },
-{ id: "dm-yn-inf-14-21-d", text: "Behavior modification is a goal of operant conditioning.", answer: "Yes" },
-{ id: "dm-yn-inf-14-21-e", text: "Adding a reward makes a behavior less likely to recur.", answer: "No" }
+{ id: "dm-yn-inf-14-21-d", text: "Behaviour modification is a goal of operant conditioning.", answer: "Yes" },
+{ id: "dm-yn-inf-14-21-e", text: "Adding a reward makes a behaviour less likely to recur.", answer: "No" }
 ],
-explanation: "A — NO: It uses both reinforcement and punishment to modify (increase/decrease) behaviors.\nB — YES: Correct according to the passage.\nC — NO: It uses a rewarding stimulus.\nD — YES: The passage says it modifies behavior.\nE — NO: It increases the likelihood."
+explanation: "A — NO: It uses both reinforcement and punishment to modify (increase/decrease) behaviours.\nB — YES: Correct according to the passage.\nC — NO: It uses a rewarding stimulus.\nD — YES: The passage says it modifies behaviour.\nE — NO: It increases the likelihood."
 },
 {
 kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Social learning theory, proposed by Bandura, emphasizes that individuals learn behavior by observing others.",
+"Social learning theory, proposed by Bandura, emphasizes that individuals learn behaviour by observing others.",
 "Learning can occur without direct experience, through modeling and imitation.",
-"However, for imitation to occur, the observer must pay attention to the model and be motivated to perform the behavior."
+"However, for imitation to occur, the observer must pay attention to the model and be motivated to perform the behaviour."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -15924,7 +15924,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-13-01-a", text: "An athlete who rests for 40 hours between sprint sessions cannot qualify.", answer: "Yes" },
 { id: "dm-yn-inf-13-01-b", text: "If an athlete eats protein 70 minutes after training, they are ineligible.", answer: "Yes" },
 { id: "dm-yn-inf-13-01-c", text: "Meeting only the rest requirement guarantees championship qualification.", answer: "No" },
-{ id: "dm-yn-inf-13-01-d", text: "Resting for 50 hours fulfills the minimum recovery requirement.", answer: "Yes" },
+{ id: "dm-yn-inf-13-01-d", text: "Resting for 50 hours fulfils the minimum recovery requirement.", answer: "Yes" },
 { id: "dm-yn-inf-13-01-e", text: "Qualification is determined solely by the timing of post-workout nutrition.", answer: "No" }
 ],
 explanation: "A — YES: The protocol requires 48 hours; 40 hours is less, so they do not meet the condition.\nB — YES: The rule specifies within 60 minutes; 70 minutes fails this constraint.\nC — NO: The passage implies both conditions must be met for eligibility.\nD — YES: 50 hours satisfies the minimum requirement of 48 hours.\nE — NO: The passage lists both rest and nutrition as necessary conditions."
@@ -16415,7 +16415,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "During signal failures, trains must proceed at a maximum speed of 20 km/h until the next operational signal is reached.",
-"Communication with the control center is mandatory before entering a failure zone.",
+"Communication with the control centre is mandatory before entering a failure zone.",
 "If the communication radio is faulty, the train must remain stationary until a maintenance crew arrives."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -16424,7 +16424,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-11-02-a", text: "A train can enter a failure zone at 25 km/h if it has established radio contact.", answer: "No" },
 { id: "dm-yn-inf-11-02-b", text: "If the radio is faulty, the driver is permitted to proceed at 20 km/h without maintenance assistance.", answer: "No" },
 { id: "dm-yn-inf-11-02-c", text: "The speed limit of 20 km/h applies specifically to signal failure zones.", answer: "Yes" },
-{ id: "dm-yn-inf-11-02-d", text: "Trains must communicate with the center even if the signals are working correctly.", answer: "No" },
+{ id: "dm-yn-inf-11-02-d", text: "Trains must communicate with the centre even if the signals are working correctly.", answer: "No" },
 { id: "dm-yn-inf-11-02-e", text: "Maintenance crews are required to fix the radio before a train can move again in the event of a fault.", answer: "Yes" }
 ],
 explanation: "A — NO: The limit is 20 km/h; 25 km/h violates this.\nB — NO: The passage explicitly states the train must remain stationary.\nC — YES: The first sentence links the 20 km/h limit to signal failures.\nD — NO: The rule refers to 'during signal failures'.\nE — YES: If the radio is faulty, the train must wait for maintenance crews to arrive."
@@ -16476,7 +16476,7 @@ leftTitle: "Passage",
 stimulus: [
 "During peak hours, carriages are limited to a maximum occupancy of 150 passengers for safety reasons.",
 "If a carriage exceeds this limit, the conductor must prevent further passengers from boarding.",
-"Children under the age of five do not count toward the occupancy limit."
+"Children under the age of five do not count towards the occupancy limit."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -16694,7 +16694,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Ground crew must communicate with the pilot using standardized hand signals during aircraft docking.",
+"Ground crew must communicate with the pilot using standardised hand signals during aircraft docking.",
 "The pilot must bring the aircraft to a complete stop before the ground crew approaches.",
 "If the ground crew loses visual contact with the pilot, they must immediately signal to stop the operation."
 ],
@@ -16705,7 +16705,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-11-16-b", text: "Ground crew must use hand signals, not radio, for docking communication.", answer: "No" },
 { id: "dm-yn-inf-11-16-c", text: "If the crew cannot see the pilot, they must stop the operation.", answer: "Yes" },
 { id: "dm-yn-inf-11-16-d", text: "The pilot is responsible for stopping the aircraft before crew arrival.", answer: "Yes" },
-{ id: "dm-yn-inf-11-16-e", text: "Standardized hand signals are required for all ground crew tasks.", answer: "No" }
+{ id: "dm-yn-inf-11-16-e", text: "Standardised hand signals are required for all ground crew tasks.", answer: "No" }
 ],
 explanation: "A — NO: Must be a complete stop.\nB — NO: Doesn't say they can't use radio, just that they *must* use hand signals.\nC — YES: Stated clearly.\nD — YES: The passage implies the pilot controls the aircraft stop.\nE — NO: Only mentions docking."
 },
@@ -17014,18 +17014,18 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"To graduate with honors, a student must have a cumulative GPA of 3.75 or higher.",
+"To graduate with honours, a student must have a cumulative GPA of 3.75 or higher.",
 "The student must have also completed a senior capstone project with a grade of A.",
-"Honors are not awarded to students who have violated the university's code of academic integrity."
+"Honours are not awarded to students who have violated the university's code of academic integrity."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-10-08-a", text: "A student with a 3.8 GPA and a B in their capstone project will graduate with honors.", answer: "No" },
-{ id: "dm-yn-inf-10-08-b", text: "An academic integrity violation disqualifies a student from honors even with a 4.0 GPA.", answer: "Yes" },
-{ id: "dm-yn-inf-10-08-c", text: "A student with a 3.74 GPA cannot graduate with honors.", answer: "Yes" },
+{ id: "dm-yn-inf-10-08-a", text: "A student with a 3.8 GPA and a B in their capstone project will graduate with honours.", answer: "No" },
+{ id: "dm-yn-inf-10-08-b", text: "An academic integrity violation disqualifies a student from honours even with a 4.0 GPA.", answer: "Yes" },
+{ id: "dm-yn-inf-10-08-c", text: "A student with a 3.74 GPA cannot graduate with honours.", answer: "Yes" },
 { id: "dm-yn-inf-10-08-d", text: "The capstone project grade must be at least an A.", answer: "Yes" },
-{ id: "dm-yn-inf-10-08-e", text: "Graduating with honors is purely based on GPA.", answer: "No" }
+{ id: "dm-yn-inf-10-08-e", text: "Graduating with honours is purely based on GPA.", answer: "No" }
 ],
 explanation: "A — NO: They need an A in the capstone project.\nB — YES: Integrity violations disqualify students regardless of GPA.\nC — YES: 3.75 is the minimum required.\nD — YES: The requirement is an A.\nE — NO: It requires both a specific GPA and a specific project grade."
 },
@@ -17042,7 +17042,7 @@ question: "For each of the following statements, select 'Yes' if it follows from
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-10-09-a", text: "A teacher completing 60 hours in pedagogy with no subject-specific hours cannot renew their certification.", answer: "Yes" },
-{ id: "dm-yn-inf-10-09-b", text: "A teacher can fulfill all 50 hours with online workshops.", answer: "Yes" },
+{ id: "dm-yn-inf-10-09-b", text: "A teacher can fulfil all 50 hours with online workshops.", answer: "Yes" },
 { id: "dm-yn-inf-10-09-c", text: "Certification must be renewed every three years.", answer: "No" },
 { id: "dm-yn-inf-10-09-d", text: "Subject-specific training must account for at least 40% of the total required hours.", answer: "Yes" },
 { id: "dm-yn-inf-10-09-e", text: "Unaccredited online workshops are valid for renewal.", answer: "No" }
@@ -17055,19 +17055,19 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Special education funding is allocated to schools based on the number of students with IEPs.",
-"Schools must submit enrollment data by September 1st to receive funding for the academic year.",
+"Schools must submit enrolment data by September 1st to receive funding for the academic year.",
 "Late submissions result in a 10% reduction in allocated funding."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-10-10-a", text: "Funding is based solely on student enrollment counts.", answer: "No" },
+{ id: "dm-yn-inf-10-10-a", text: "Funding is based solely on student enrolment counts.", answer: "No" },
 { id: "dm-yn-inf-10-10-b", text: "Submitting data on August 30th ensures no reduction in funding.", answer: "Yes" },
 { id: "dm-yn-inf-10-10-c", text: "A school that submits data on September 15th will receive a funding reduction.", answer: "Yes" },
 { id: "dm-yn-inf-10-10-d", text: "Funding is entirely withheld if the deadline is missed.", answer: "No" },
 { id: "dm-yn-inf-10-10-e", text: "Funding depends on the number of students with IEPs.", answer: "Yes" }
 ],
-explanation: "A — NO: It is based on the number of students with IEPs (Individualized Education Programs).\nB — YES: September 1st is the deadline; August 30th is before that.\nC — YES: September 15th is after the deadline.\nD — NO: It is only a 10% reduction, not withheld entirely.\nE — YES: The passage confirms funding is allocated based on students with IEPs."
+explanation: "A — NO: It is based on the number of students with IEPs (Individualised Education Programs).\nB — YES: September 1st is the deadline; August 30th is before that.\nC — YES: September 15th is after the deadline.\nD — NO: It is only a 10% reduction, not withheld entirely.\nE — YES: The passage confirms funding is allocated based on students with IEPs."
 },
 {
 kind: "yes-no",
@@ -17075,17 +17075,17 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "District policy mandates that student assessments occur at the end of every quarter.",
-"Standardized testing must be administered twice per year: in November and in May.",
+"Standardised testing must be administered twice per year: in November and in May.",
 "Teachers are encouraged, but not required, to conduct formative assessments on a weekly basis."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-10-11-a", text: "Teachers are mandated to perform weekly assessments.", answer: "No" },
-{ id: "dm-yn-inf-10-11-b", text: "Standardized tests occur in November and May.", answer: "Yes" },
+{ id: "dm-yn-inf-10-11-b", text: "Standardised tests occur in November and May.", answer: "Yes" },
 { id: "dm-yn-inf-10-11-c", text: "There are four mandatory assessment periods per year corresponding to the quarters.", answer: "Yes" },
 { id: "dm-yn-inf-10-11-d", text: "Teachers must perform at least one assessment per quarter.", answer: "Yes" },
-{ id: "dm-yn-inf-10-11-e", text: "Standardized testing happens three times a year.", answer: "No" }
+{ id: "dm-yn-inf-10-11-e", text: "Standardised testing happens three times a year.", answer: "No" }
 ],
 explanation: "A — NO: It says encouraged, but not required.\nB — YES: The passage confirms November and May.\nC — YES: Assessments are mandated at the end of every quarter.\nD — YES: Since assessments are mandated for every quarter, there must be at least one.\nE — NO: The passage specifies twice per year."
 },
@@ -17136,7 +17136,7 @@ leftTitle: "Passage",
 stimulus: [
 "Students must attend at least 80% of scheduled extracurricular activities to represent the school in competitions.",
 "Exceptions to this rule are granted only for medical reasons with a doctor's note.",
-"Participation in school-wide assemblies is not counted toward the extracurricular attendance requirement."
+"Participation in school-wide assemblies is not counted towards the extracurricular attendance requirement."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -17855,14 +17855,14 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Network throughput on the Fiber-X backbone is limited to 10Gbps when encrypted traffic exceeds 40% of the total bandwidth.",
-"Unencrypted traffic is prioritized by the load balancer unless the latency exceeds 50 milliseconds.",
+"Unencrypted traffic is prioritised by the load balancer unless the latency exceeds 50 milliseconds.",
 "If latency exceeds 50ms, the load balancer shifts all traffic to the secondary standby node."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-08-02-a", text: "The network speed is capped at 10Gbps if 50% of traffic is encrypted.", answer: "Yes" },
-{ id: "dm-yn-inf-08-02-b", text: "The load balancer always prioritizes unencrypted traffic.", answer: "No" },
+{ id: "dm-yn-inf-08-02-b", text: "The load balancer always prioritises unencrypted traffic.", answer: "No" },
 { id: "dm-yn-inf-08-02-c", text: "Traffic is moved to the secondary node if latency is exactly 50ms.", answer: "No" },
 { id: "dm-yn-inf-08-02-d", text: "Encrypted traffic below 40% allows for throughput higher than 10Gbps.", answer: "Yes" },
 { id: "dm-yn-inf-08-02-e", text: "Secondary node shifting happens when latency drops below 50ms.", answer: "No" }
@@ -17914,7 +17914,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"The data center cooling system activates when ambient temperature reaches 28°C.",
+"The data centre cooling system activates when ambient temperature reaches 28°C.",
 "Cooling continues until the temperature drops to 22°C, at which point the system enters standby mode.",
 "In the event of a sensor failure, the system stays in the last active state indefinitely."
 ],
@@ -18067,7 +18067,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-08-12-d", text: "The adapter is designed for DC input only.", answer: "No" },
 { id: "dm-yn-inf-08-12-e", text: "The fuse blows if input voltage is exactly 240V.", answer: "No" }
 ],
-explanation: "A — YES: 110V is within range (100-240V).\nB — YES: Exceeds 240V.\nC — NO: Only 100V-240V specified; behavior outside range isn't stated (only fuse blow condition at >240V).\nD — NO: Accepts AC input.\nE — NO: Fuse blows if input *exceeds* 240V."
+explanation: "A — YES: 110V is within range (100-240V).\nB — YES: Exceeds 240V.\nC — NO: Only 100V-240V specified; behaviour outside range isn't stated (only fuse blow condition at >240V).\nD — NO: Accepts AC input.\nE — NO: Fuse blows if input *exceeds* 240V."
 },
 {
 kind: "yes-no",
@@ -18174,7 +18174,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"The CyberGuard heuristic engine detects malware by analyzing file entropy.",
+"The CyberGuard heuristic engine detects malware by analysing file entropy.",
 "Files with entropy scores above 7.5 are flagged as suspicious.",
 "The engine excludes files digitally signed by the company from being scanned."
 ],
@@ -18355,7 +18355,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Urban green space policy requires that new residential developments must allocate at least 15% of total land area to public parks.",
-"Private gardens do not count toward this 15% requirement.",
+"Private gardens do not count towards this 15% requirement.",
 "Developers can trade this requirement for an off-site contribution, provided the off-site project is within a 2-kilometer radius of the development."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -18396,7 +18396,7 @@ leftTitle: "Passage",
 stimulus: [
 "Under the new noise pollution policy, construction work in residential areas is prohibited between 8:00 PM and 7:00 AM.",
 "Emergency repairs are exempt from these time restrictions.",
-"Contractors who violate these hours will receive a formal warning for the first offense and a £5,000 fine for subsequent offenses."
+"Contractors who violate these hours will receive a formal warning for the first offence and a £5,000 fine for subsequent offences."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -18407,7 +18407,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-05-01-05-d", text: "The first violation of the noise policy results in a £5,000 fine.", answer: "No" },
 { id: "dm-yn-inf-05-01-05-e", text: "Residential area construction is permitted during the day between 7:00 AM and 8:00 PM.", answer: "Yes" }
 ],
-explanation: "A — YES: 9:00 PM is within the prohibited 8:00 PM to 7:00 AM window.\nB — YES: It is a subsequent offense after the first.\nC — YES: They are exempt from the time restrictions.\nD — NO: The first violation is only a formal warning.\nE — YES: The restriction is specifically the 8:00 PM to 7:00 AM window."
+explanation: "A — YES: 9:00 PM is within the prohibited 8:00 PM to 7:00 AM window.\nB — YES: It is a subsequent offence after the first.\nC — YES: They are exempt from the time restrictions.\nD — NO: The first violation is only a formal warning.\nE — YES: The restriction is specifically the 8:00 PM to 7:00 AM window."
 },
 {
 kind: "yes-no",
@@ -18474,7 +18474,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Marine conservation policy stipulates that all trawling vessels must utilize 'turtle-excluder' devices in protected coastal waters.",
+"Marine conservation policy stipulates that all trawling vessels must utilise 'turtle-excluder' devices in protected coastal waters.",
 "Vessels found without these devices are subject to immediate confiscation of their catch.",
 "Exemptions are granted to artisanal fishers who use nets smaller than 5 meters in width."
 ],
@@ -18895,7 +18895,7 @@ stimulus: [
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-06-06-a", text: "The city center's air quality was safe for most of last year.", answer: "No" },
+{ id: "dm-yn-inf-06-06-a", text: "The city centre's air quality was safe for most of last year.", answer: "No" },
 { id: "dm-yn-inf-06-06-b", text: "All vehicles will be banned from the city centre during peak hours.", answer: "No" },
 { id: "dm-yn-inf-06-06-c", text: "The council believes restricting cars will improve air quality.", answer: "Yes" },
 { id: "dm-yn-inf-06-06-d", text: "Particulate matter was the only pollutant measured in the city centre.", answer: "No" },
@@ -19086,7 +19086,7 @@ question: "For each of the following statements, select 'Yes' if it follows from
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-06-16-a", text: "The reduction in budget caused the drop in cleanliness scores.", answer: "No" },
-{ id: "dm-yn-inf-06-16-b", text: "Management blames both staff cuts and passenger behavior for the decline.", answer: "Yes" },
+{ id: "dm-yn-inf-06-16-b", text: "Management blames both staff cuts and passenger behaviour for the decline.", answer: "Yes" },
 { id: "dm-yn-inf-06-16-c", text: "Cleanliness scores would have stayed the same without the budget cut.", answer: "No" },
 { id: "dm-yn-inf-06-16-d", text: "Passenger littering is higher than it was before the budget cut.", answer: "Yes" },
 { id: "dm-yn-inf-06-16-e", text: "Staff cuts were the primary cause of the cleanliness drop.", answer: "No" }
@@ -19193,26 +19193,26 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Community center funding has been cut by 10% across the board.",
-"Centers that run after-school programs are now prioritizing these activities, leading to a reduction in evening classes for adults."
+"Community centre funding has been cut by 10% across the board.",
+"Centres that run after-school programs are now prioritising these activities, leading to a reduction in evening classes for adults."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
-{ id: "dm-yn-inf-06-22-a", text: "All community centers are receiving 10% less funding.", answer: "Yes" },
+{ id: "dm-yn-inf-06-22-a", text: "All community centres are receiving 10% less funding.", answer: "Yes" },
 { id: "dm-yn-inf-06-22-b", text: "After-school programs have been cut.", answer: "No" },
 { id: "dm-yn-inf-06-22-c", text: "Adult evening classes were reduced due to funding cuts.", answer: "Yes" },
-{ id: "dm-yn-inf-06-22-d", text: "Centers without after-school programs were spared the funding cuts.", answer: "No" },
-{ id: "dm-yn-inf-06-22-e", text: "Prioritizing after-school activities caused the reduction in adult classes.", answer: "Yes" }
+{ id: "dm-yn-inf-06-22-d", text: "Centres without after-school programs were spared the funding cuts.", answer: "No" },
+{ id: "dm-yn-inf-06-22-e", text: "Prioritising after-school activities caused the reduction in adult classes.", answer: "Yes" }
 ],
-explanation: "A — YES: The cut is 'across the board'.\nB — NO: Centers are prioritizing them.\nC — YES: The passage links the prioritization to the reduction.\nD — NO: 'Across the board' means all centers were cut.\nE — YES: The passage states prioritizing these activities led to the reduction."
+explanation: "A — YES: The cut is 'across the board'.\nB — NO: Centres are prioritising them.\nC — YES: The passage links the prioritization to the reduction.\nD — NO: 'Across the board' means all centres were cut.\nE — YES: The passage states prioritising these activities led to the reduction."
 },
 {
 kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"The Youth Support Network has launched a new mentorship scheme in high-crime areas to reduce antisocial behavior.",
+"The Youth Support Network has launched a new mentorship scheme in high-crime areas to reduce antisocial behaviour.",
 "Early data indicates that participants have a 40% lower likelihood of being involved in criminal incidents than non-participants."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -19224,7 +19224,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-06-23-d", text: "Participants are less likely to be involved in criminal incidents.", answer: "Yes" },
 { id: "dm-yn-inf-06-23-e", text: "The scheme aims to increase mentorship opportunities.", answer: "No" }
 ],
-explanation: "A — NO: The scheme was launched in high-crime areas, but the passage does not say it is active only in those areas.\nB — NO: It reduces likelihood, but does not guarantee anything.\nC — NO: Being 40% lower for participants does not mean non-participants are 40% more likely than participants.\nD — YES: Participants have a 40% lower likelihood of criminal incidents.\nE — NO: The stated aim is to reduce antisocial behavior."
+explanation: "A — NO: The scheme was launched in high-crime areas, but the passage does not say it is active only in those areas.\nB — NO: It reduces likelihood, but does not guarantee anything.\nC — NO: Being 40% lower for participants does not mean non-participants are 40% more likely than participants.\nD — YES: Participants have a 40% lower likelihood of criminal incidents.\nE — NO: The stated aim is to reduce antisocial behaviour."
 },
 {
 kind: "yes-no",
@@ -19271,19 +19271,19 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Retail chain 'Apex Mart' reported that all stores located in suburban areas achieved profit targets this year.",
-"However, only 40% of their city-center locations met these same targets.",
-"The CEO stated that unless city-center profitability improves by next year, these specific locations will face permanent closure."
+"However, only 40% of their city-centre locations met these same targets.",
+"The CEO stated that unless city-centre profitability improves by next year, these specific locations will face permanent closure."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-04-02-a", text: "Some Apex Mart locations were profitable.", answer: "Yes" },
-{ id: "dm-yn-inf-04-02-b", text: "City-center locations are guaranteed to close if profits do not increase.", answer: "No" },
-{ id: "dm-yn-inf-04-02-c", text: "Suburban stores are more profitable than city-center stores on average.", answer: "No" },
-{ id: "dm-yn-inf-04-02-d", text: "More than half of the city-center locations failed to meet profit targets.", answer: "Yes" },
+{ id: "dm-yn-inf-04-02-b", text: "City-centre locations are guaranteed to close if profits do not increase.", answer: "No" },
+{ id: "dm-yn-inf-04-02-c", text: "Suburban stores are more profitable than city-centre stores on average.", answer: "No" },
+{ id: "dm-yn-inf-04-02-d", text: "More than half of the city-centre locations failed to meet profit targets.", answer: "Yes" },
 { id: "dm-yn-inf-04-02-e", text: "All Apex Mart locations are currently open.", answer: "Yes" }
 ],
-explanation: "A — YES: Suburban locations hit profit targets, so at least some locations were profitable. B — NO: The CEO said city-center locations will face permanent closure, which indicates risk or consideration, not a guaranteed closure outcome. C — NO: We know target achievement rates, not average profit values. D — YES: If 40% met targets, 60% did not. E — YES: The passage discusses future closure of these locations, implying they are currently operating."
+explanation: "A — YES: Suburban locations hit profit targets, so at least some locations were profitable. B — NO: The CEO said city-centre locations will face permanent closure, which indicates risk or consideration, not a guaranteed closure outcome. C — NO: We know target achievement rates, not average profit values. D — YES: If 40% met targets, 60% did not. E — YES: The passage discusses future closure of these locations, implying they are currently operating."
 },
 {
 kind: "yes-no",
@@ -19450,7 +19450,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"A cybersecurity audit of the data center found that 5% of servers have outdated firmware.",
+"A cybersecurity audit of the data centre found that 5% of servers have outdated firmware.",
 "All servers with outdated firmware are scheduled for an update this coming weekend.",
 "The IT director stated that no data breaches have occurred despite the firmware vulnerability."
 ],
@@ -19458,12 +19458,12 @@ question: "For each of the following statements, select 'Yes' if it follows from
 instruction: "Select Yes or No for each statement.",
 yesNoStatements: [
 { id: "dm-yn-inf-04-11-a", text: "At least some servers currently have secure firmware.", answer: "Yes" },
-{ id: "dm-yn-inf-04-11-b", text: "Data centers are immune to breaches if firmware is updated.", answer: "No" },
+{ id: "dm-yn-inf-04-11-b", text: "Data centres are immune to breaches if firmware is updated.", answer: "No" },
 { id: "dm-yn-inf-04-11-c", text: "The firmware updates will be completed within a week.", answer: "Yes" },
-{ id: "dm-yn-inf-04-11-d", text: "The data center is currently vulnerable to a breach.", answer: "Yes" },
+{ id: "dm-yn-inf-04-11-d", text: "The data centre is currently vulnerable to a breach.", answer: "Yes" },
 { id: "dm-yn-inf-04-11-e", text: "The audit was conducted on every server in the company.", answer: "No" }
 ],
-explanation: "A — YES: If 5% are outdated, 95% are (presumably) not. B — NO: The text doesn't say updates make them immune. C — YES: They are scheduled for the 'coming weekend'. D — YES: 5% of servers have an outdated firmware vulnerability. E — NO: It says the audit was of the 'data center', not the whole company."
+explanation: "A — YES: If 5% are outdated, 95% are (presumably) not. B — NO: The text doesn't say updates make them immune. C — YES: They are scheduled for the 'coming weekend'. D — YES: 5% of servers have an outdated firmware vulnerability. E — NO: It says the audit was of the 'data centre', not the whole company."
 },
 {
 kind: "yes-no",
@@ -19891,7 +19891,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "The burden of proof in criminal trials lies entirely with the prosecution to prove the defendant's guilt beyond a reasonable doubt.",
-"The defense is not required to prove innocence; they only need to create reasonable doubt in the minds of the jurors.",
+"The defence is not required to prove innocence; they only need to create reasonable doubt in the minds of the jurors.",
 "If the jury finds any evidence that could support an alternative explanation consistent with innocence, they must acquit the defendant."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -19900,10 +19900,10 @@ yesNoStatements: [
 { id: "dm-yn-inf-02-09-a", text: "The defendant must provide evidence to prove they did not commit the crime.", answer: "No" },
 { id: "dm-yn-inf-02-09-b", text: "A 'reasonable doubt' exists if the jury identifies an alternative, innocent explanation.", answer: "Yes" },
 { id: "dm-yn-inf-02-09-c", text: "The prosecution must be 100% certain to secure a conviction.", answer: "No" },
-{ id: "dm-yn-inf-02-09-d", text: "The burden of proof is shared equally between the prosecution and the defense.", answer: "No" },
+{ id: "dm-yn-inf-02-09-d", text: "The burden of proof is shared equally between the prosecution and the defence.", answer: "No" },
 { id: "dm-yn-inf-02-09-e", text: "An acquittal is mandatory if an alternative consistent explanation exists.", answer: "Yes" }
 ],
-explanation: "A — NO: Defense is not required to prove innocence.\nB — YES: Supported by the instruction on alternative explanations.\nC — NO: 'Beyond a reasonable doubt' does not equate to absolute mathematical certainty.\nD — NO: Burden lies 'entirely' with the prosecution.\nE — YES: If evidence supports an alternative, they must acquit."
+explanation: "A — NO: Defence is not required to prove innocence.\nB — YES: Supported by the instruction on alternative explanations.\nC — NO: 'Beyond a reasonable doubt' does not equate to absolute mathematical certainty.\nD — NO: Burden lies 'entirely' with the prosecution.\nE — YES: If evidence supports an alternative, they must acquit."
 },
 {
 kind: "yes-no",
@@ -19930,9 +19930,9 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"The principle of double jeopardy prevents a person from being prosecuted twice for the same offense after a valid acquittal or conviction.",
-"New, compelling evidence of guilt can occasionally bypass this rule in very serious offenses under specific legislative changes.",
-"This principle serves as a safeguard against the state utilizing its resources to repeatedly try an individual for a single incident."
+"The principle of double jeopardy prevents a person from being prosecuted twice for the same offence after a valid acquittal or conviction.",
+"New, compelling evidence of guilt can occasionally bypass this rule in very serious offences under specific legislative changes.",
+"This principle serves as a safeguard against the state utilising its resources to repeatedly try an individual for a single incident."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -19941,9 +19941,9 @@ yesNoStatements: [
 { id: "dm-yn-inf-02-11-b", text: "Legislative changes can allow retrials for serious crimes given new evidence.", answer: "Yes" },
 { id: "dm-yn-inf-02-11-c", text: "Double jeopardy prevents the state from abusing power.", answer: "Yes" },
 { id: "dm-yn-inf-02-11-d", text: "A defendant can be retried if they were previously convicted, regardless of circumstances.", answer: "No" },
-{ id: "dm-yn-inf-02-11-e", text: "The rule applies to all types of legal offenses equally without exception.", answer: "No" }
+{ id: "dm-yn-inf-02-11-e", text: "The rule applies to all types of legal offences equally without exception.", answer: "No" }
 ],
-explanation: "A — NO: Exceptions exist for serious offenses.\nB — YES: Passage mentions this as a possibility.\nC — YES: It acts as a safeguard against state resource abuse.\nD — NO: Retrials are for very specific cases of serious offenses, not 'regardless of circumstances'.\nE — NO: Passage specifies exceptions for 'serious offenses'."
+explanation: "A — NO: Exceptions exist for serious offences.\nB — YES: Passage mentions this as a possibility.\nC — YES: It acts as a safeguard against state resource abuse.\nD — NO: Retrials are for very specific cases of serious offences, not 'regardless of circumstances'.\nE — NO: Passage specifies exceptions for 'serious offences'."
 },
 {
 kind: "yes-no",
@@ -19952,7 +19952,7 @@ leftTitle: "Passage",
 stimulus: [
 "Sentencing in criminal law involves a judge determining a penalty within the parameters set by the legislature.",
 "Factors influencing the sentence include the severity of the crime, the defendant's previous criminal record, and any mitigating circumstances.",
-"The sentence must be proportionate to the offense and aim to serve the interests of justice and rehabilitation."
+"The sentence must be proportionate to the offence and aim to serve the interests of justice and rehabilitation."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
 instruction: "Select Yes or No for each statement.",
@@ -19971,7 +19971,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "In remand, a defendant is held in custody while awaiting trial, based on the risk of fleeing or interfering with witnesses.",
-"Access to legal counsel is a fundamental right during remand to ensure the preparation of a defense.",
+"Access to legal counsel is a fundamental right during remand to ensure the preparation of a defence.",
 "Bail is a conditional release that can be granted if the risks associated with custody are deemed manageable through specific restrictions."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -20010,7 +20010,7 @@ kind: "yes-no",
 subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
-"Prosecutors have a duty to disclose all material evidence to the defense, including evidence that may undermine the prosecution's case.",
+"Prosecutors have a duty to disclose all material evidence to the defence, including evidence that may undermine the prosecution's case.",
 "Failure to disclose such material can be deemed a procedural irregularity that undermines the fairness of the trial.",
 "This duty applies throughout the entire duration of the proceedings, not just at the initial disclosure stage."
 ],
@@ -20020,7 +20020,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-02-15-a", text: "Prosecutors are only required to disclose evidence that supports their own case.", answer: "No" },
 { id: "dm-yn-inf-02-15-b", text: "Nondisclosure of relevant material can threaten the trial's fairness.", answer: "Yes" },
 { id: "dm-yn-inf-02-15-c", text: "The duty of disclosure ends once the trial officially commences.", answer: "No" },
-{ id: "dm-yn-inf-02-15-d", text: "Exculpatory evidence must be disclosed to the defense.", answer: "Yes" },
+{ id: "dm-yn-inf-02-15-d", text: "Exculpatory evidence must be disclosed to the defence.", answer: "Yes" },
 { id: "dm-yn-inf-02-15-e", text: "Disclosure is a one-time process at the start of proceedings.", answer: "No" }
 ],
 explanation: "A — NO: Must disclose evidence that undermines the prosecution.\nB — YES: Stated as undermining fairness.\nC — NO: Duty applies throughout the entire duration.\nD — YES: Evidence that undermines the case is exculpatory.\nE — NO: Duty applies throughout the duration."
@@ -20031,7 +20031,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "Jury selection involves a process of vetting potential jurors for bias, known as 'voir dire'.",
-"During this process, lawyers may challenge jurors if they believe they cannot provide an impartial judgment.",
+"During this process, lawyers may challenge jurors if they believe they cannot provide an impartial judgement.",
 "The final panel of jurors must be selected from the pool and represent the community to ensure justice."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -20191,7 +20191,7 @@ subtype: "dm-yes-no",
 leftTitle: "Passage",
 stimulus: [
 "International arbitration awards are enforceable in many countries under specific international conventions.",
-"The enforcement process requires the domestic court to recognize the validity of the foreign award.",
+"The enforcement process requires the domestic court to recognise the validity of the foreign award.",
 "Courts may refuse to enforce an award if it violates public policy in the jurisdiction where enforcement is sought."
 ],
 question: "For each of the following statements, select 'Yes' if it follows from the passage, or 'No' if it does not.",
@@ -20203,7 +20203,7 @@ yesNoStatements: [
 { id: "dm-yn-inf-02-24-d", text: "Enforcement is facilitated by international conventions.", answer: "Yes" },
 { id: "dm-yn-inf-02-24-e", text: "An award that contradicts local public policy will always be enforced.", answer: "No" }
 ],
-explanation: "A — NO: Domestic courts must recognize validity.\nB — YES: 'Courts may refuse to enforce... if it violates public policy'.\nC — NO: Domestic court must recognize validity.\nD — YES: Stated in the first sentence.\nE — NO: Courts may refuse to enforce it."
+explanation: "A — NO: Domestic courts must recognise validity.\nB — YES: 'Courts may refuse to enforce... if it violates public policy'.\nC — NO: Domestic court must recognise validity.\nD — YES: Stated in the first sentence.\nE — NO: Courts may refuse to enforce it."
 },
 // ==========================================
 // BATCH 1: MEDICAL PRACTICE ROTATIONS (01. Scheduling)
@@ -20266,27 +20266,27 @@ distractors: [
 "Dr. Cruz delivers her lecture on Wednesday.",
 "Dr. Bell delivers his lecture on Tuesday."
 ],
-explanation: "Let's analyze the constraints for the days M, T, W, Th, F. The consultants are A, B, C, D, E. We have the block EC (E immediately before C). A is on M or T. D is not on F. There is at least one day between B and D.\nCase 1: A is on Monday. Slots left: T, W, Th, F. The EC block can go in (T, W), (W, Th), or (Th, F).\n- Subcase 1a: EC on Th, F. Then E=Th, C=F. Slots left for B and D are T and W. But B and D must have at least one day between them, which is impossible if they occupy T and W. Invalid.\n- Subcase 1b: EC on W, Th. Then E=W, C=Th. Slots left for B and D are T and F. Since D cannot be on F, D must be on T, and B must be on F. There is one day (W) between them, satisfying the condition. Valid arrangement: [A, D, E, C, B].\n- Subcase 1c: EC on T, W. Then E=T, C=W. Slots left for B and D are Th and F. Since D cannot be on F, D must be on Th, and B must be on F. But then there are no days between Th and F, violating the condition that there must be at least one day between B and D. Invalid.\nCase 2: A is on Tuesday. Slots left: M, W, Th, F. The EC block must occupy consecutive available slots, which can only be (W, Th) or (Th, F) since M is isolated.\n- Subcase 2a: EC on Th, F. Then E=Th, C=F. Slots left for B and D are M and W. There is one day (T) between M and W, satisfying the condition. Since D cannot be on F, D can be on M or W. If D=M, B=W. If D=W, B=M. Both are valid. Arrangements: [D, A, B, E, C] and [B, A, D, E, C].\n- Subcase 2b: EC on W, Th. Then E=W, C=Th. Slots left for B and D are M and F. Since D cannot be on F, D must be on M, and B must be on F. There are two days (T, W) between M and F, which satisfies the condition. Valid arrangement: [D, A, E, C, B].\n\nIn all valid arrangements ([A, D, E, C, B], [D, A, B, E, C], [B, A, D, E, C], [D, A, E, C, B]), where is Dr. Evans scheduled? He is scheduled on Wednesday or Thursday. Thus, Dr. Evans never delivers his lecture on Friday, making this statement absolutely true. Let's check the distractors: Dr. Adams can be on Tuesday (disproving 'must be Monday'); Dr. Cruz can be on Thursday or Friday (disproving 'must be Wednesday'); Dr. Bell can be on Monday, Wednesday, or Friday (disproving 'must be Tuesday')."
+explanation: "Let's analyse the constraints for the days M, T, W, Th, F. The consultants are A, B, C, D, E. We have the block EC (E immediately before C). A is on M or T. D is not on F. There is at least one day between B and D.\nCase 1: A is on Monday. Slots left: T, W, Th, F. The EC block can go in (T, W), (W, Th), or (Th, F).\n- Subcase 1a: EC on Th, F. Then E=Th, C=F. Slots left for B and D are T and W. But B and D must have at least one day between them, which is impossible if they occupy T and W. Invalid.\n- Subcase 1b: EC on W, Th. Then E=W, C=Th. Slots left for B and D are T and F. Since D cannot be on F, D must be on T, and B must be on F. There is one day (W) between them, satisfying the condition. Valid arrangement: [A, D, E, C, B].\n- Subcase 1c: EC on T, W. Then E=T, C=W. Slots left for B and D are Th and F. Since D cannot be on F, D must be on Th, and B must be on F. But then there are no days between Th and F, violating the condition that there must be at least one day between B and D. Invalid.\nCase 2: A is on Tuesday. Slots left: M, W, Th, F. The EC block must occupy consecutive available slots, which can only be (W, Th) or (Th, F) since M is isolated.\n- Subcase 2a: EC on Th, F. Then E=Th, C=F. Slots left for B and D are M and W. There is one day (T) between M and W, satisfying the condition. Since D cannot be on F, D can be on M or W. If D=M, B=W. If D=W, B=M. Both are valid. Arrangements: [D, A, B, E, C] and [B, A, D, E, C].\n- Subcase 2b: EC on W, Th. Then E=W, C=Th. Slots left for B and D are M and F. Since D cannot be on F, D must be on M, and B must be on F. There are two days (T, W) between M and F, which satisfies the condition. Valid arrangement: [D, A, E, C, B].\n\nIn all valid arrangements ([A, D, E, C, B], [D, A, B, E, C], [B, A, D, E, C], [D, A, E, C, B]), where is Dr. Evans scheduled? He is scheduled on Wednesday or Thursday. Thus, Dr. Evans never delivers his lecture on Friday, making this statement absolutely true. Let's check the distractors: Dr. Adams can be on Tuesday (disproving 'must be Monday'); Dr. Cruz can be on Thursday or Friday (disproving 'must be Wednesday'); Dr. Bell can be on Monday, Wednesday, or Friday (disproving 'must be Tuesday')."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Five wards in a hospital—Pediatrics, Orthopedics, Cardiology, Oncology, and Radiology—are undergoing deep cleaning next week, from Monday to Friday, one ward per day.",
-"• Pediatrics must be cleaned on a day somewhere before Radiology.",
+"Five wards in a hospital—Paediatrics, Orthopedics, Cardiology, Oncology, and Radiology—are undergoing deep cleaning next week, from Monday to Friday, one ward per day.",
+"• Paediatrics must be cleaned on a day somewhere before Radiology.",
 "• Oncology must be cleaned on the day immediately after Cardiology.",
 "• Orthopedics cannot be cleaned on Thursday.",
-"• There must be exactly two days scheduled between the cleaning of Pediatrics and Orthopedics."
+"• There must be exactly two days scheduled between the cleaning of Paediatrics and Orthopedics."
 ],
 question: "Which of the following must be true?",
 correct: "Cardiology is cleaned on Tuesday.",
 distractors: [
-"Pediatrics is cleaned on Monday.",
+"Paediatrics is cleaned on Monday.",
 "Orthopedics is cleaned on Tuesday.",
 "Oncology is cleaned on Thursday."
 ],
-explanation: "Let the days from Monday to Friday be M, T, W, Th, F. The five hospital wards are P, Orth, C, Onco, and R. From the conditions: 1) P is before R. 2) C and Onco form a consecutive CO block. 3) Orth cannot be on Th. 4) There are exactly two days between P and Orth, meaning they must occupy positions (M, Th) or (T, F).\n\nLet's evaluate the configurations:\n- If they occupy (T, F): If P = T and Orth = F, the remaining slots are M, W, Th. The CO block must occupy (W, Th), leaving M for R. This violates P before R (since T is not before M). If Orth = T and P = F, it is impossible for R to be after P. Thus, the (T, F) configuration is entirely invalid.\n- If they occupy (M, Th): Since Orth cannot be on Th, Orth must be on M and P must be on Th. To satisfy P before R, R must be on F. This leaves T and W open, which perfectly fits the consecutive CO block, meaning C = T and Onco = W.\n\nThis leaves us with exactly one unique valid arrangement for the week: [Monday: Orthopedics, Tuesday: Cardiology, Wednesday: Oncology, Thursday: Pediatrics, Friday: Radiology]. Therefore, it must be true that Cardiology is cleaned on Tuesday."
+explanation: "Let the days from Monday to Friday be M, T, W, Th, F. The five hospital wards are P, Orth, C, Onco, and R. From the conditions: 1) P is before R. 2) C and Onco form a consecutive CO block. 3) Orth cannot be on Th. 4) There are exactly two days between P and Orth, meaning they must occupy positions (M, Th) or (T, F).\n\nLet's evaluate the configurations:\n- If they occupy (T, F): If P = T and Orth = F, the remaining slots are M, W, Th. The CO block must occupy (W, Th), leaving M for R. This violates P before R (since T is not before M). If Orth = T and P = F, it is impossible for R to be after P. Thus, the (T, F) configuration is entirely invalid.\n- If they occupy (M, Th): Since Orth cannot be on Th, Orth must be on M and P must be on Th. To satisfy P before R, R must be on F. This leaves T and W open, which perfectly fits the consecutive CO block, meaning C = T and Onco = W.\n\nThis leaves us with exactly one unique valid arrangement for the week: [Monday: Orthopedics, Tuesday: Cardiology, Wednesday: Oncology, Thursday: Paediatrics, Friday: Radiology]. Therefore, it must be true that Cardiology is cleaned on Tuesday."
 },
 {
 kind: "single",
@@ -20493,7 +20493,7 @@ distractors: [
 "Quinton's audit is in Week 3.",
 "Sana's audit is in Week 3."
 ],
-explanation: "Let's analyze the weeks 1, 2, 3, 4, 5. Tuan is fixed in Week 5, leaving Weeks 1, 2, 3, and 4 open. Riya and Quinton must form a consecutive RQ block. This block can sit in three possible locations:\n- If the RQ block is in Weeks 1 and 2 (R=1, Q=2): Weeks 3 and 4 remain for Pavel and Sana. Since Pavel must be before Sana, Pavel is in Week 3 and Sana is in Week 4. However, this violates the condition that Sana cannot be in Week 4. Thus, this is invalid.\n- If the RQ block is in Weeks 2 and 3 (R=2, Q=3): Weeks 1 and 4 remain for Pavel and Sana. Since Pavel must be before Sana, Pavel is in Week 1 and Sana is in Week 4. This again violates the condition that Sana cannot be in Week 4. Thus, this is invalid.\n- If the RQ block is in Weeks 3 and 4 (R=3, Q=4): Weeks 1 and 2 remain for Pavel and Sana. Since Pavel must be before Sana, Pavel is in Week 1 and Sana is in Week 2. This satisfies all conditions: Pavel is not in Week 2, and Sana is not in Week 4.\n\nThis leaves us with exactly one unique valid arrangement: Week 1: Pavel, Week 2: Sana, Week 3: Riya, Week 4: Quinton, Week 5: Tuan. Therefore, it must be true that Pavel's audit is in Week 1."
+explanation: "Let's analyse the weeks 1, 2, 3, 4, 5. Tuan is fixed in Week 5, leaving Weeks 1, 2, 3, and 4 open. Riya and Quinton must form a consecutive RQ block. This block can sit in three possible locations:\n- If the RQ block is in Weeks 1 and 2 (R=1, Q=2): Weeks 3 and 4 remain for Pavel and Sana. Since Pavel must be before Sana, Pavel is in Week 3 and Sana is in Week 4. However, this violates the condition that Sana cannot be in Week 4. Thus, this is invalid.\n- If the RQ block is in Weeks 2 and 3 (R=2, Q=3): Weeks 1 and 4 remain for Pavel and Sana. Since Pavel must be before Sana, Pavel is in Week 1 and Sana is in Week 4. This again violates the condition that Sana cannot be in Week 4. Thus, this is invalid.\n- If the RQ block is in Weeks 3 and 4 (R=3, Q=4): Weeks 1 and 2 remain for Pavel and Sana. Since Pavel must be before Sana, Pavel is in Week 1 and Sana is in Week 2. This satisfies all conditions: Pavel is not in Week 2, and Sana is not in Week 4.\n\nThis leaves us with exactly one unique valid arrangement: Week 1: Pavel, Week 2: Sana, Week 3: Riya, Week 4: Quinton, Week 5: Tuan. Therefore, it must be true that Pavel's audit is in Week 1."
 },
 
 // ==========================================
@@ -20564,20 +20564,20 @@ kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Five genetic sequences—G1, G2, G3, G4, and G5—are analyzed by a molecular sequencer from Monday to Friday, one sequence per day.",
-"• G1 must be analyzed on a day somewhere before G5.",
-"• G4 must be analyzed on the day immediately after G3.",
-"• G2 cannot be analyzed on Thursday.",
+"Five genetic sequences—G1, G2, G3, G4, and G5—are analysed by a molecular sequencer from Monday to Friday, one sequence per day.",
+"• G1 must be analysed on a day somewhere before G5.",
+"• G4 must be analysed on the day immediately after G3.",
+"• G2 cannot be analysed on Thursday.",
 "• There must be exactly two days scheduled between G1's analysis and G2's analysis."
 ],
 question: "Which of the following must be true?",
-correct: "G3 is analyzed on Tuesday.",
+correct: "G3 is analysed on Tuesday.",
 distractors: [
-"G1 is analyzed on Monday.",
-"G2 is analyzed on Tuesday.",
-"G4 is analyzed on Thursday."
+"G1 is analysed on Monday.",
+"G2 is analysed on Tuesday.",
+"G4 is analysed on Thursday."
 ],
-explanation: "Let the days be M, T, W, Th, F. The sequences are G1, G2, G3, G4, G5. We have a G3-G4 block (G4 immediately after G3). G2 cannot be on Th. Exactly two days separate G1 and G2, so their positions must be (M, Th) or (T, F).\nCase 1: G1 and G2 occupy M and Th. Since G2 cannot be on Th, G2 must be on M and G1 must be on Th. But condition 1 states G1 must be analyzed somewhere before G5. If G1 is on Th, G5 must be on F. The remaining slots are T and W. The G3-G4 block can fit perfectly here, so G3 is on T and G4 is on W. Let's check this arrangement: [G2, G3, G4, G1, G5]. Rules check: G1 < G5 (Th < F) - True; G3-G4 consecutive (T, W) - True; G2 not Th (M) - True; 2 days between G1 and G2 (T, W) - True. This is a valid arrangement.\nCase 2: G1 and G2 occupy T and F. \n- Subcase 2a: G1 is on T, G2 is on F. Then remaining slots are M, W, Th. The G3-G4 block needs two consecutive slots, which can only be (W, Th). So G3 is on W and G4 is on Th. The remaining slot M must be G5. But this violates G1 < G5, because G1 is on T and G5 is on M. Invalid.\n- Subcase 2b: G2 is on T, G1 is on F. This violates G1 < G5 because no day is after Friday for G5 to occupy. Invalid.\nThus, Case 1 is the single unique valid arrangement: Monday = G2, Tuesday = G3, Wednesday = G4, Thursday = G1, Friday = G5. Evaluating the options: 'G3 is analyzed on Tuesday' must be true. Let's check the distractors: 'G1 is analyzed on Monday' is false (G1 is on Thursday); 'G2 is analyzed on Tuesday' is false (G2 is on Monday); 'G4 is analyzed on Thursday' is false (G4 is on Wednesday)."
+explanation: "Let the days be M, T, W, Th, F. The sequences are G1, G2, G3, G4, G5. We have a G3-G4 block (G4 immediately after G3). G2 cannot be on Th. Exactly two days separate G1 and G2, so their positions must be (M, Th) or (T, F).\nCase 1: G1 and G2 occupy M and Th. Since G2 cannot be on Th, G2 must be on M and G1 must be on Th. But condition 1 states G1 must be analysed somewhere before G5. If G1 is on Th, G5 must be on F. The remaining slots are T and W. The G3-G4 block can fit perfectly here, so G3 is on T and G4 is on W. Let's check this arrangement: [G2, G3, G4, G1, G5]. Rules check: G1 < G5 (Th < F) - True; G3-G4 consecutive (T, W) - True; G2 not Th (M) - True; 2 days between G1 and G2 (T, W) - True. This is a valid arrangement.\nCase 2: G1 and G2 occupy T and F. \n- Subcase 2a: G1 is on T, G2 is on F. Then remaining slots are M, W, Th. The G3-G4 block needs two consecutive slots, which can only be (W, Th). So G3 is on W and G4 is on Th. The remaining slot M must be G5. But this violates G1 < G5, because G1 is on T and G5 is on M. Invalid.\n- Subcase 2b: G2 is on T, G1 is on F. This violates G1 < G5 because no day is after Friday for G5 to occupy. Invalid.\nThus, Case 1 is the single unique valid arrangement: Monday = G2, Tuesday = G3, Wednesday = G4, Thursday = G1, Friday = G5. Evaluating the options: 'G3 is analysed on Tuesday' must be true. Let's check the distractors: 'G1 is analysed on Monday' is false (G1 is on Thursday); 'G2 is analysed on Tuesday' is false (G2 is on Monday); 'G4 is analysed on Thursday' is false (G4 is on Wednesday)."
 },
 {
 kind: "single",
@@ -20701,7 +20701,7 @@ distractors: [
 "Sam is selected.",
 "Tanya is not selected."
 ],
-explanation: "Let's perform an exhaustive analysis. The team requires 4 members out of 6 candidates. Condition 3 states that exactly one of Rachel (R) or Victor (V) must be selected. This leaves exactly 3 positions on the team that must be filled by the remaining 4 candidates: Paul (P), Quentin (Q), Sam (S), and Tanya (T). We can analyze this by determining which single candidate from {P, Q, S, T} is excluded from the team: Case 1: Exclude P. The remaining three {Q, S, T} must be selected. However, Condition 2 states that Quentin and Sam cannot both be selected, so this combination is invalid. Case 2: Exclude Q. The remaining three {P, S, T} must be selected. However, Condition 4 states that if Sam is selected, Paul must not be selected, so this combination is invalid. Case 3: Exclude T. The remaining three {P, Q, S} must be selected. However, Condition 1 states that if Paul is selected, Tanya must also be selected, so this combination is invalid. Case 4: Exclude S. The remaining three {P, Q, T} must be selected. Let's check all conditions for this group: Condition 1 (P implies T) is satisfied. Condition 2 (Q and S not both selected) is satisfied since S is out. Condition 4 (S implies no P) is satisfied. Condition 5 (T implies Q) is satisfied since both T and Q are selected. This leaves two perfectly valid final team compositions: {P, Q, T, R} and {P, Q, T, V}. In all valid team compositions, Quentin is always selected. Therefore, 'Quentin is selected' must be true."
+explanation: "Let's perform an exhaustive analysis. The team requires 4 members out of 6 candidates. Condition 3 states that exactly one of Rachel (R) or Victor (V) must be selected. This leaves exactly 3 positions on the team that must be filled by the remaining 4 candidates: Paul (P), Quentin (Q), Sam (S), and Tanya (T). We can analyse this by determining which single candidate from {P, Q, S, T} is excluded from the team: Case 1: Exclude P. The remaining three {Q, S, T} must be selected. However, Condition 2 states that Quentin and Sam cannot both be selected, so this combination is invalid. Case 2: Exclude Q. The remaining three {P, S, T} must be selected. However, Condition 4 states that if Sam is selected, Paul must not be selected, so this combination is invalid. Case 3: Exclude T. The remaining three {P, Q, S} must be selected. However, Condition 1 states that if Paul is selected, Tanya must also be selected, so this combination is invalid. Case 4: Exclude S. The remaining three {P, Q, T} must be selected. Let's check all conditions for this group: Condition 1 (P implies T) is satisfied. Condition 2 (Q and S not both selected) is satisfied since S is out. Condition 4 (S implies no P) is satisfied. Condition 5 (T implies Q) is satisfied since both T and Q are selected. This leaves two perfectly valid final team compositions: {P, Q, T, R} and {P, Q, T, V}. In all valid team compositions, Quentin is always selected. Therefore, 'Quentin is selected' must be true."
 },
 {
 kind: "single",
@@ -20743,7 +20743,7 @@ distractors: [
 "The porcelain doll is in Room 102.",
 "The crystal vase is in Room 105."
 ],
-explanation: "Let's perform an exhaustive case analysis for Rooms 101 to 105. Condition 4 fixes the bronze statue (BS) in Room 104. Condition 2 states the antique clock (AC) must be in Room 101 or Room 105. Let's analyze these two possibilities: Case 1: AC is in Room 101. The occupied rooms are 101 (AC) and 104 (BS). The remaining empty rooms are 102, 103, and 105. Condition 3 states the porcelain doll (PD) and crystal vase (CV) must be in immediately consecutive rooms, as a [PD, CV] block. The only consecutive empty rooms left are 102 and 103. Therefore, PD must be in 102 and CV must be in 103. However, Condition 5 explicitly states that the crystal vase is not in Room 103. Thus, Case 1 leads to a contradiction and is invalid. Case 2: AC is in Room 105. The occupied rooms are 104 (BS) and 105 (AC). The remaining empty rooms are 101, 102, and 103. To place the [PD, CV] block in consecutive rooms, they must occupy either (101, 102) or (102, 103). If they occupy (102, 103), CV would be in Room 103, which violates Condition 5. Therefore, they must occupy Rooms 101 and 102, meaning PD is in 101 and CV is in 102. This leaves Room 103 as the only available slot for the silver tray (ST). Let's verify Condition 1: ST (103) is in a lower-numbered room than BS (104), which is true. This yields a single, unique valid arrangement: 101: Porcelain doll, 102: Crystal vase, 103: Silver tray, 104: Bronze statue, 105: Antique clock. In this arrangement, the silver tray must be in Room 103."
+explanation: "Let's perform an exhaustive case analysis for Rooms 101 to 105. Condition 4 fixes the bronze statue (BS) in Room 104. Condition 2 states the antique clock (AC) must be in Room 101 or Room 105. Let's analyse these two possibilities: Case 1: AC is in Room 101. The occupied rooms are 101 (AC) and 104 (BS). The remaining empty rooms are 102, 103, and 105. Condition 3 states the porcelain doll (PD) and crystal vase (CV) must be in immediately consecutive rooms, as a [PD, CV] block. The only consecutive empty rooms left are 102 and 103. Therefore, PD must be in 102 and CV must be in 103. However, Condition 5 explicitly states that the crystal vase is not in Room 103. Thus, Case 1 leads to a contradiction and is invalid. Case 2: AC is in Room 105. The occupied rooms are 104 (BS) and 105 (AC). The remaining empty rooms are 101, 102, and 103. To place the [PD, CV] block in consecutive rooms, they must occupy either (101, 102) or (102, 103). If they occupy (102, 103), CV would be in Room 103, which violates Condition 5. Therefore, they must occupy Rooms 101 and 102, meaning PD is in 101 and CV is in 102. This leaves Room 103 as the only available slot for the silver tray (ST). Let's verify Condition 1: ST (103) is in a lower-numbered room than BS (104), which is true. This yields a single, unique valid arrangement: 101: Porcelain doll, 102: Crystal vase, 103: Silver tray, 104: Bronze statue, 105: Antique clock. In this arrangement, the silver tray must be in Room 103."
 },
 {
 kind: "single",
@@ -20771,7 +20771,7 @@ kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Five laptops (A, B, C, D, and E) are lined up on a display shelf from left to right (positions 1 to 5). Each laptop has a different colored lid: Red, Blue, Green, Silver, or Black.",
+"Five laptops (A, B, C, D, and E) are lined up on a display shelf from left to right (positions 1 to 5). Each laptop has a different coloured lid: Red, Blue, Green, Silver, or Black.",
 "• The Black laptop is at position 3.",
 "• Laptop A is immediately to the left of the Silver laptop.",
 "• Laptop D is Green and is positioned somewhere to the right of the Red laptop.",
@@ -20785,7 +20785,7 @@ distractors: [
 "The Silver laptop is at position 2.",
 "Laptop D is at position 2."
 ],
-explanation: "Let's perform an exhaustive case analysis on positions 1 to 5 from left to right. Condition 1 fixes position 3 as Black. Condition 4 fixes Laptop B at position 1. Condition 2 states Laptop A is immediately to the left of the Silver laptop, meaning the Silver laptop is exactly one position to the right of Laptop A. Let's determine the position of the Silver laptop: It cannot be position 1 (occupied by B). It cannot be position 2, because that would require Laptop A to be at position 1 (occupied by B). It cannot be position 3 (fixed as Black). Thus, the Silver laptop must be at position 4 or position 5. Case 1: The Silver laptop is at position 5. This requires Laptop A to be at position 4. The remaining positions for laptops are 2 and 3. Since position 3 is Black, and Condition 5 states Laptop C is Blue, Laptop C cannot be at position 3, so Laptop C must be at position 2. This leaves position 3 for Laptop D. However, Condition 3 states Laptop D is Green, which contradicts position 3 being Black. Thus, Case 1 is invalid. Case 2: The Silver laptop is at position 4. This requires Laptop A to be at position 3 (which is Black). The remaining positions for laptops are 2 and 5. Condition 3 states Laptop D is Green, so it cannot be at position 3 (Black) or 4 (Silver). Thus, Laptop D must be at position 5. Laptop C (Blue) must then occupy position 2. The remaining laptop, Laptop E, must occupy position 4. The only remaining color, Red, must belong to Laptop B at position 1. This perfectly satisfies Condition 3, as Laptop D (position 5, Green) is to the right of the Red laptop (position 1). The unique valid arrangement is: 1: Laptop B (Red), 2: Laptop C (Blue), 3: Laptop A (Black), 4: Laptop E (Silver), 5: Laptop D (Green). Therefore, Laptop A is Black."
+explanation: "Let's perform an exhaustive case analysis on positions 1 to 5 from left to right. Condition 1 fixes position 3 as Black. Condition 4 fixes Laptop B at position 1. Condition 2 states Laptop A is immediately to the left of the Silver laptop, meaning the Silver laptop is exactly one position to the right of Laptop A. Let's determine the position of the Silver laptop: It cannot be position 1 (occupied by B). It cannot be position 2, because that would require Laptop A to be at position 1 (occupied by B). It cannot be position 3 (fixed as Black). Thus, the Silver laptop must be at position 4 or position 5. Case 1: The Silver laptop is at position 5. This requires Laptop A to be at position 4. The remaining positions for laptops are 2 and 3. Since position 3 is Black, and Condition 5 states Laptop C is Blue, Laptop C cannot be at position 3, so Laptop C must be at position 2. This leaves position 3 for Laptop D. However, Condition 3 states Laptop D is Green, which contradicts position 3 being Black. Thus, Case 1 is invalid. Case 2: The Silver laptop is at position 4. This requires Laptop A to be at position 3 (which is Black). The remaining positions for laptops are 2 and 5. Condition 3 states Laptop D is Green, so it cannot be at position 3 (Black) or 4 (Silver). Thus, Laptop D must be at position 5. Laptop C (Blue) must then occupy position 2. The remaining laptop, Laptop E, must occupy position 4. The only remaining colour, Red, must belong to Laptop B at position 1. This perfectly satisfies Condition 3, as Laptop D (position 5, Green) is to the right of the Red laptop (position 1). The unique valid arrangement is: 1: Laptop B (Red), 2: Laptop C (Blue), 3: Laptop A (Black), 4: Laptop E (Silver), 5: Laptop D (Green). Therefore, Laptop A is Black."
 },
 {
 kind: "single",
@@ -21082,7 +21082,7 @@ distractors: [
 "Olivia takes her leave in Week 5.",
 "Kevin takes his leave in Week 3."
 ],
-explanation: "Let's analyze the slots: Week 1, 2, 3, 4, 5. Laura is fixed in Week 2 (* , Laura , _ , _ , *). Mona cannot be in Week 5. Nigel must be before Mona (Nigel < Mona). Since Laura is in Week 2, Nigel can be in Week 1, 3, or 4. But Nigel must be before Mona, and Mona cannot be in 5. If Nigel is in 3, Mona must be in 4. Then remaining slots are 1 and 5 for Kevin and Olivia. Kevin and Olivia must be adjacent, but 1 and 5 are not adjacent, so Nigel cannot be in Week 3. If Nigel is in Week 4, Mona has no place before Week 5, which is impossible. Thus, Nigel must be in Week 1. This leaves Weeks 3, 4, and 5 for Mona, Kevin, and Olivia. Since Nigel is in Week 1 and there must be at least one week between Nigel and Olivia, Olivia cannot be in Week 2 (occupied anyway) or Week 3 (since the gap between 1 and 3 is only 1 week, which is allowed as 'at least one week'). Let's check if Olivia can be in Week 3: gap between 1 and 3 is exactly 1 week (Week 2), which satisfies 'at least one week'. If Olivia is in Week 3, Kevin must be adjacent to her, so Kevin could be in Week 4. Then Mona would be in Week 5, which violates the rule that Mona cannot be in Week 5. If Olivia is in Week 3 and Kevin is in Week 2, that's impossible because Laura is in Week 2. Thus, Olivia cannot be in Week 3. Therefore, Olivia must be in Week 4 or Week 5. Since Kevin and Olivia must be adjacent, they must occupy Weeks 4 and 5. This leaves Week 3 for Mona. Let's check if Mona in Week 3 is valid: Nigel (1) < Mona (3), which is true. Mona is not in Week 5, true. Now, Kevin and Olivia occupy 4 and 5. Olivia can be in 4 and Kevin in 5, or Olivia in 5 and Kevin in 4. Let's check the gap between Nigel (1) and Olivia: if Olivia is in 4, gap is 2 weeks; if Olivia is in 5, gap is 3 weeks. Both satisfy 'at least one week'. Thus, both arrangements [Nigel, Laura, Mona, Olivia, Kevin] and [Nigel, Laura, Mona, Kevin, Olivia] are completely valid. In both valid cases, Nigel is in Week 1. Therefore, 'Nigel takes his leave in Week 1' must be true."
+explanation: "Let's analyse the slots: Week 1, 2, 3, 4, 5. Laura is fixed in Week 2 (* , Laura , _ , _ , *). Mona cannot be in Week 5. Nigel must be before Mona (Nigel < Mona). Since Laura is in Week 2, Nigel can be in Week 1, 3, or 4. But Nigel must be before Mona, and Mona cannot be in 5. If Nigel is in 3, Mona must be in 4. Then remaining slots are 1 and 5 for Kevin and Olivia. Kevin and Olivia must be adjacent, but 1 and 5 are not adjacent, so Nigel cannot be in Week 3. If Nigel is in Week 4, Mona has no place before Week 5, which is impossible. Thus, Nigel must be in Week 1. This leaves Weeks 3, 4, and 5 for Mona, Kevin, and Olivia. Since Nigel is in Week 1 and there must be at least one week between Nigel and Olivia, Olivia cannot be in Week 2 (occupied anyway) or Week 3 (since the gap between 1 and 3 is only 1 week, which is allowed as 'at least one week'). Let's check if Olivia can be in Week 3: gap between 1 and 3 is exactly 1 week (Week 2), which satisfies 'at least one week'. If Olivia is in Week 3, Kevin must be adjacent to her, so Kevin could be in Week 4. Then Mona would be in Week 5, which violates the rule that Mona cannot be in Week 5. If Olivia is in Week 3 and Kevin is in Week 2, that's impossible because Laura is in Week 2. Thus, Olivia cannot be in Week 3. Therefore, Olivia must be in Week 4 or Week 5. Since Kevin and Olivia must be adjacent, they must occupy Weeks 4 and 5. This leaves Week 3 for Mona. Let's check if Mona in Week 3 is valid: Nigel (1) < Mona (3), which is true. Mona is not in Week 5, true. Now, Kevin and Olivia occupy 4 and 5. Olivia can be in 4 and Kevin in 5, or Olivia in 5 and Kevin in 4. Let's check the gap between Nigel (1) and Olivia: if Olivia is in 4, gap is 2 weeks; if Olivia is in 5, gap is 3 weeks. Both satisfy 'at least one week'. Thus, both arrangements [Nigel, Laura, Mona, Olivia, Kevin] and [Nigel, Laura, Mona, Kevin, Olivia] are completely valid. In both valid cases, Nigel is in Week 1. Therefore, 'Nigel takes his leave in Week 1' must be true."
 },
 {
 kind: "single",
@@ -21124,7 +21124,7 @@ distractors: [
 "Oscar takes his holiday in Week 2.",
 "Leo takes his holiday in Week 4."
 ],
-explanation: "Let's analyze the weeks: 1, 2, 3, 4, 5. Maya is fixed in Week 5 (* , _ , _ , _ , Maya). There is exactly one week between Karl and Maya (5), which means Karl must be in Week 3 (* , _ , Karl , _ , Maya). Karl must be before Nora (Karl < Nora), so Nora must be in Week 4 since Week 5 is taken by Maya. This leaves Weeks 1 and 2 for Oscar and Leo. Since Oscar and Leo must be adjacent, they occupy Weeks 1 and 2. Let's check Karl's restriction: 'Karl cannot take his holiday in Week 2'—Karl is in Week 3, so this is satisfied. The valid configurations are [Oscar, Leo, Karl, Nora, Maya] and [Leo, Oscar, Karl, Nora, Maya]. In both configurations, Karl is always in Week 3 and Nora is always in Week 4. Thus, 'Karl takes his holiday in Week 3' must be true."
+explanation: "Let's analyse the weeks: 1, 2, 3, 4, 5. Maya is fixed in Week 5 (* , _ , _ , _ , Maya). There is exactly one week between Karl and Maya (5), which means Karl must be in Week 3 (* , _ , Karl , _ , Maya). Karl must be before Nora (Karl < Nora), so Nora must be in Week 4 since Week 5 is taken by Maya. This leaves Weeks 1 and 2 for Oscar and Leo. Since Oscar and Leo must be adjacent, they occupy Weeks 1 and 2. Let's check Karl's restriction: 'Karl cannot take his holiday in Week 2'—Karl is in Week 3, so this is satisfied. The valid configurations are [Oscar, Leo, Karl, Nora, Maya] and [Leo, Oscar, Karl, Nora, Maya]. In both configurations, Karl is always in Week 3 and Nora is always in Week 4. Thus, 'Karl takes his holiday in Week 3' must be true."
 },
 
 // ==========================================
@@ -21191,7 +21191,7 @@ distractors: [
 "Jenna takes her leave in February.",
 "Gavin takes his leave in April."
 ],
-explanation: "Let's analyze the months: Jan, Feb, Mar, Apr, May. Hazel is fixed in May (* , _ , _ , _ , Hazel). There is exactly one month between Hazel (5) and Ian, which means Ian must be in March (* , _ , Ian , _ , Hazel). Ian and Kira must be adjacent, so Kira can be in February or April. Case 1: Kira is in April. Then the remaining slots are January and February for Jenna and Gavin. Since Gavin must be after Jenna (Jenna < Gavin), Jenna must be in January and Gavin must be in February. Let's check Gavin's restriction: 'Gavin cannot take his leave in March'—Gavin is in February, so this is valid. Case 2: Kira is in February. Then the remaining slots are January and April for Jenna and Gavin. Since Jenna < Gavin, Jenna must be in January and Gavin must be in April. Let's check Gavin's restriction: 'Gavin cannot take his leave in March'—Gavin is in April, so this is valid. In both valid cases, Ian is always in March. Therefore, 'Ian takes his leave in March' must be true."
+explanation: "Let's analyse the months: Jan, Feb, Mar, Apr, May. Hazel is fixed in May (* , _ , _ , _ , Hazel). There is exactly one month between Hazel (5) and Ian, which means Ian must be in March (* , _ , Ian , _ , Hazel). Ian and Kira must be adjacent, so Kira can be in February or April. Case 1: Kira is in April. Then the remaining slots are January and February for Jenna and Gavin. Since Gavin must be after Jenna (Jenna < Gavin), Jenna must be in January and Gavin must be in February. Let's check Gavin's restriction: 'Gavin cannot take his leave in March'—Gavin is in February, so this is valid. Case 2: Kira is in February. Then the remaining slots are January and April for Jenna and Gavin. Since Jenna < Gavin, Jenna must be in January and Gavin must be in April. Let's check Gavin's restriction: 'Gavin cannot take his leave in March'—Gavin is in April, so this is valid. In both valid cases, Ian is always in March. Therefore, 'Ian takes his leave in March' must be true."
 },
 
 // ==========================================
@@ -21279,7 +21279,7 @@ distractors: [
 "Walt takes leave in Term 4.",
 "Sian takes leave in Term 4."
 ],
-explanation: "Let's analyze the slots: 1, 2, 3, 4, 5. Vidya is in Term 1 (Vidya, _ , _ , _ , *). Exactly one term between Vidya (1) and Walt means Walt must be in Term 3 (Vidya, _ , Walt , _ , *). Walt and Sian are adjacent, so Sian can be in Term 2 or Term 4. Case 1: Sian is in Term 2. The remaining slots are Term 4 and Term 5 for Umesh and Xander. Since Umesh must be before Xander (Umesh < Xander), Umesh is in Term 4 and Xander is in Term 5. Check Umesh's restriction: 'Umesh cannot take leave in Term 2'—he is in 4, so valid. Case 2: Sian is in Term 4. The remaining slots are Term 2 and Term 5 for Umesh and Xander. Since Umesh < Xander, Umesh is in Term 2 and Xander is in Term 5. But Umesh cannot take leave in Term 2! So Case 2 is invalid. Thus, Case 1 is the unique valid configuration: Term 1: Vidya, Term 2: Sian, Term 3: Walt, Term 4: Umesh, Term 5: Xander. Therefore, 'Xander takes leave in Term 5' must be true."
+explanation: "Let's analyse the slots: 1, 2, 3, 4, 5. Vidya is in Term 1 (Vidya, _ , _ , _ , *). Exactly one term between Vidya (1) and Walt means Walt must be in Term 3 (Vidya, _ , Walt , _ , *). Walt and Sian are adjacent, so Sian can be in Term 2 or Term 4. Case 1: Sian is in Term 2. The remaining slots are Term 4 and Term 5 for Umesh and Xander. Since Umesh must be before Xander (Umesh < Xander), Umesh is in Term 4 and Xander is in Term 5. Check Umesh's restriction: 'Umesh cannot take leave in Term 2'—he is in 4, so valid. Case 2: Sian is in Term 4. The remaining slots are Term 2 and Term 5 for Umesh and Xander. Since Umesh < Xander, Umesh is in Term 2 and Xander is in Term 5. But Umesh cannot take leave in Term 2! So Case 2 is invalid. Thus, Case 1 is the unique valid configuration: Term 1: Vidya, Term 2: Sian, Term 3: Walt, Term 4: Umesh, Term 5: Xander. Therefore, 'Xander takes leave in Term 5' must be true."
 },
 {
 kind: "single",
@@ -21300,7 +21300,7 @@ distractors: [
 "Colin takes his sabbatical in Term 4.",
 "Elena takes her sabbatical in Term 3."
 ],
-explanation: "Let's analyze the terms: 1, 2, 3, 4, 5. Brenda is fixed in Term 5 (* , _ , _ , _ , Brenda). There is exactly one term between Brenda (5) and Colin, so Colin must be in Term 3 (* , _ , Colin , _ , Brenda). Colin immediately precedes Elena, so Elena must be in Term 4 (_ , _ , Colin , Elena , Brenda). The remaining terms are Term 1 and Term 2 for Alan and Delia. Alan must be after Delia (Delia < Alan), so Delia must be in Term 1 and Alan must be in Term 2. Let's check Alan's restriction: 'Alan cannot take his sabbatical in Term 4'—Alan is in Term 2, so this condition is fully satisfied. This results in a single unique valid arrangement: Term 1: Delia, Term 2: Alan, Term 3: Colin, Term 4: Elena, Term 5: Brenda. Therefore, Delia takes her sabbatical in Term 1 is absolutely true."
+explanation: "Let's analyse the terms: 1, 2, 3, 4, 5. Brenda is fixed in Term 5 (* , _ , _ , _ , Brenda). There is exactly one term between Brenda (5) and Colin, so Colin must be in Term 3 (* , _ , Colin , _ , Brenda). Colin immediately precedes Elena, so Elena must be in Term 4 (_ , _ , Colin , Elena , Brenda). The remaining terms are Term 1 and Term 2 for Alan and Delia. Alan must be after Delia (Delia < Alan), so Delia must be in Term 1 and Alan must be in Term 2. Let's check Alan's restriction: 'Alan cannot take his sabbatical in Term 4'—Alan is in Term 2, so this condition is fully satisfied. This results in a single unique valid arrangement: Term 1: Delia, Term 2: Alan, Term 3: Colin, Term 4: Elena, Term 5: Brenda. Therefore, Delia takes her sabbatical in Term 1 is absolutely true."
 },
 {
 kind: "single",
@@ -21499,27 +21499,27 @@ distractors: [
 "Foster is chosen.",
 "Chloe is chosen."
 ],
-explanation: "We need exactly 4 members from {A, B, C, D, E, F}. Condition 4 states Alan (A) must be chosen. Condition 1 states if A is chosen, Chloe (C) cannot be chosen, so C is excluded. We now have A included, C excluded, leaving 3 spots to fill from {B, D, E, F}. Condition 2 states B and E are either both in or both out. Let's analyze the two cases. Case 1: Both B and E are out. Then we only have D and F left to fill the 3 remaining spots, which is impossible. Thus, Case 1 is invalid. Case 2: Both B and E are chosen. This adds 2 more members, bringing our total to 3 (A, B, E). We need exactly 1 more member from the remaining pool {D, F}. Condition 3 states if F is chosen, D must be chosen. If we chose F, we would have to choose D as well, which would give us 5 members total (A, B, E, F, D), violating the requirement of exactly 4. Therefore, F cannot be chosen, and the final member must be D. The unique valid team is {A, B, E, D}. Therefore, Beatrice must be chosen."
+explanation: "We need exactly 4 members from {A, B, C, D, E, F}. Condition 4 states Alan (A) must be chosen. Condition 1 states if A is chosen, Chloe (C) cannot be chosen, so C is excluded. We now have A included, C excluded, leaving 3 spots to fill from {B, D, E, F}. Condition 2 states B and E are either both in or both out. Let's analyse the two cases. Case 1: Both B and E are out. Then we only have D and F left to fill the 3 remaining spots, which is impossible. Thus, Case 1 is invalid. Case 2: Both B and E are chosen. This adds 2 more members, bringing our total to 3 (A, B, E). We need exactly 1 more member from the remaining pool {D, F}. Condition 3 states if F is chosen, D must be chosen. If we chose F, we would have to choose D as well, which would give us 5 members total (A, B, E, F, D), violating the requirement of exactly 4. Therefore, F cannot be chosen, and the final member must be D. The unique valid team is {A, B, E, D}. Therefore, Beatrice must be chosen."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"A committee must select four focus areas for a medical trial from six options: Cardiology, Neurology, Oncology, Pediatrics, Dermatology, and Psychiatry.",
+"A committee must select four focus areas for a medical trial from six options: Cardiology, Neurology, Oncology, Paediatrics, Dermatology, and Psychiatry.",
 "• Cardiology and Neurology cannot both be selected.",
-"• If Oncology is selected, Pediatrics must also be selected.",
+"• If Oncology is selected, Paediatrics must also be selected.",
 "• If Dermatology is selected, Cardiology must also be selected.",
 "• Psychiatry must be selected."
 ],
 question: "Which of the following focus areas must be selected?",
-correct: "Pediatrics",
+correct: "Paediatrics",
 distractors: [
 "Cardiology",
 "Neurology",
 "Oncology"
 ],
-explanation: "We must select exactly 4 focus areas from {C, N, O, P, D, Ps}. Condition 4 states Psychiatry (Ps) must be selected. We need 3 more areas from {C, N, O, P, D}. Condition 1 states C and N cannot both be selected, so at most one of {C, N} is chosen. Let's test the scenarios based on Oncology (O). Case 1: O is selected. Then by Condition 2, P must also be selected. This gives us 3 areas so far: Ps, O, P. We need exactly 1 more area from {C, N, D}. Can we select D? If we select D, then by Condition 3, C must be selected, which would exceed our 4-area limit. So D cannot be selected. We can choose either C or N to complete the team, resulting in {Ps, O, P, C} or {Ps, O, P, N}. In both sub-cases, P is selected. Case 2: O is not selected. Then we must choose 3 areas from the remaining set {C, N, P, D}. Since at most one of {C, N} can be chosen, we must choose both P and D, plus exactly one of {C, N}. If we choose D, Condition 3 states C must be selected, so the pair from {C, N} must be C. This gives the team {Ps, P, D, C}. Let's check all conditions for this team: 1. C and N not both chosen - True. 2. If O chosen... (O is not chosen) - True. 3. If D chosen, C chosen - True. 4. Ps chosen - True. This team has exactly 4 members. Notice that in all valid teams across Case 1 and Case 2 ({Ps, O, P, C}, {Ps, O, P, N}, and {Ps, P, D, C}), Pediatrics (P) is always included. Therefore, Pediatrics must be selected."
+explanation: "We must select exactly 4 focus areas from {C, N, O, P, D, Ps}. Condition 4 states Psychiatry (Ps) must be selected. We need 3 more areas from {C, N, O, P, D}. Condition 1 states C and N cannot both be selected, so at most one of {C, N} is chosen. Let's test the scenarios based on Oncology (O). Case 1: O is selected. Then by Condition 2, P must also be selected. This gives us 3 areas so far: Ps, O, P. We need exactly 1 more area from {C, N, D}. Can we select D? If we select D, then by Condition 3, C must be selected, which would exceed our 4-area limit. So D cannot be selected. We can choose either C or N to complete the team, resulting in {Ps, O, P, C} or {Ps, O, P, N}. In both sub-cases, P is selected. Case 2: O is not selected. Then we must choose 3 areas from the remaining set {C, N, P, D}. Since at most one of {C, N} can be chosen, we must choose both P and D, plus exactly one of {C, N}. If we choose D, Condition 3 states C must be selected, so the pair from {C, N} must be C. This gives the team {Ps, P, D, C}. Let's check all conditions for this team: 1. C and N not both chosen - True. 2. If O chosen... (O is not chosen) - True. 3. If D chosen, C chosen - True. 4. Ps chosen - True. This team has exactly 4 members. Notice that in all valid teams across Case 1 and Case 2 ({Ps, O, P, C}, {Ps, O, P, N}, and {Ps, P, D, C}), Paediatrics (P) is always included. Therefore, Paediatrics must be selected."
 },
 {
 kind: "single",
@@ -21599,7 +21599,7 @@ distractors: [
 "Oximeter",
 "Barometer"
 ],
-explanation: "We need exactly 4 devices from {T, O, B, S, G, E}. Condition 4 fixes EEG (E) as selected. We need 3 more from {T, O, B, S, G}. Condition 1 states T and O cannot both be selected, so at most one of {T, O} is chosen. Let's analyze based on Barometer (B). Case 1: B is selected. Then by Condition 2, S must be selected. This gives 3 devices: E, B, S. We need 1 more from {T, O, G}. If we choose G, Condition 3 requires T to be chosen, which would exceed our 4-device limit. So G cannot be chosen. We can choose either T or O, giving combinations {E, B, S, T} or {E, B, S, O}. In both sub-cases, S is selected. Case 2: B is not selected. We must choose 3 devices from {T, O, S, G}. Since at most one of {T, O} can be chosen, we must choose both S and G. If we choose G, Condition 3 states T must be selected, so the chosen pair from {T, O} must be T. This gives the combination {E, S, G, T}. Let's check all conditions for {E, S, G, T}: 1. T and O not both chosen - True. 2. If B chosen... (B is not chosen) - True. 3. If G chosen, T chosen - True. 4. E chosen - True. This combination has exactly 4 devices. Across all valid combinations ({E, B, S, T}, {E, B, S, O}, and {E, S, G, T}), Spirometer (S) is always selected."
+explanation: "We need exactly 4 devices from {T, O, B, S, G, E}. Condition 4 fixes EEG (E) as selected. We need 3 more from {T, O, B, S, G}. Condition 1 states T and O cannot both be selected, so at most one of {T, O} is chosen. Let's analyse based on Barometer (B). Case 1: B is selected. Then by Condition 2, S must be selected. This gives 3 devices: E, B, S. We need 1 more from {T, O, G}. If we choose G, Condition 3 requires T to be chosen, which would exceed our 4-device limit. So G cannot be chosen. We can choose either T or O, giving combinations {E, B, S, T} or {E, B, S, O}. In both sub-cases, S is selected. Case 2: B is not selected. We must choose 3 devices from {T, O, S, G}. Since at most one of {T, O} can be chosen, we must choose both S and G. If we choose G, Condition 3 states T must be selected, so the chosen pair from {T, O} must be T. This gives the combination {E, S, G, T}. Let's check all conditions for {E, S, G, T}: 1. T and O not both chosen - True. 2. If B chosen... (B is not chosen) - True. 3. If G chosen, T chosen - True. 4. E chosen - True. This combination has exactly 4 devices. Across all valid combinations ({E, B, S, T}, {E, B, S, O}, and {E, S, G, T}), Spirometer (S) is always selected."
 },
 // ==========================================
 // BATCH 1: CORPORATE REPORTING HIERARCHIES
@@ -21630,7 +21630,7 @@ kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"An organization has six seniority ranks, from Rank 1 (highest) to Rank 6 (lowest). Six employees—Umar, Val, Siobhan, Tamara, Xavier, and Yasmin—each hold a distinct rank.",
+"An organisation has six seniority ranks, from Rank 1 (highest) to Rank 6 (lowest). Six employees—Umar, Val, Siobhan, Tamara, Xavier, and Yasmin—each hold a distinct rank.",
 "• Umar is exactly one rank senior to Val.",
 "• Siobhan is junior to Tamara.",
 "• Xavier is at Rank 3.",
@@ -21727,7 +21727,7 @@ distractors: [
 "Major C is at Rank 5.",
 "Captain D is at Rank 6."
 ],
-explanation: "Let's analyze the positions step-by-step. Lieutenant E is at Rank 4, and Corporal G is at Rank 7. General A is senior to Major C by exactly 4 ranks, so C = A + 4. Let's find valid slots for (A, C):\n- If A = 1, then C = 5. The remaining ranks are 2, 3, and 6. The remaining officers to place are Colonel B, Captain D, and Sergeant F. We know Colonel B is senior to Captain D (B < D) and Sergeant F is junior to Colonel B (B < F). Thus, Colonel B must take the highest available rank of the three, which is Rank 2. Captain D and Sergeant F can fluctuate between Ranks 3 and 6.\n- If A = 2, then C = 6. The remaining ranks are 1, 3, and 5. The remaining officers to place are B, D, and F with B < D and B < F. Thus, Colonel B must take Rank 1. Captain D and Sergeant F can fluctuate between Ranks 3 and 5.\n- If A = 3, then C = 7, which is impossible because Corporal G is at Rank 7.\nThus, General A can only be at Rank 1 or Rank 2. This means 'General A is at Rank 1 or Rank 2' must be true. Let's check the distractors: Distractor 1 (Colonel B is at Rank 2) is false when A = 2, because B is at Rank 1. Distractor 2 (Major C is at Rank 5) is false when A = 2, because C is at Rank 6. Distractor 3 (Captain D is at Rank 6) is false when D takes Rank 3 or Rank 5."
+explanation: "Let's analyse the positions step-by-step. Lieutenant E is at Rank 4, and Corporal G is at Rank 7. General A is senior to Major C by exactly 4 ranks, so C = A + 4. Let's find valid slots for (A, C):\n- If A = 1, then C = 5. The remaining ranks are 2, 3, and 6. The remaining officers to place are Colonel B, Captain D, and Sergeant F. We know Colonel B is senior to Captain D (B < D) and Sergeant F is junior to Colonel B (B < F). Thus, Colonel B must take the highest available rank of the three, which is Rank 2. Captain D and Sergeant F can fluctuate between Ranks 3 and 6.\n- If A = 2, then C = 6. The remaining ranks are 1, 3, and 5. The remaining officers to place are B, D, and F with B < D and B < F. Thus, Colonel B must take Rank 1. Captain D and Sergeant F can fluctuate between Ranks 3 and 5.\n- If A = 3, then C = 7, which is impossible because Corporal G is at Rank 7.\nThus, General A can only be at Rank 1 or Rank 2. This means 'General A is at Rank 1 or Rank 2' must be true. Let's check the distractors: Distractor 1 (Colonel B is at Rank 2) is false when A = 2, because B is at Rank 1. Distractor 2 (Major C is at Rank 5) is false when A = 2, because C is at Rank 6. Distractor 3 (Captain D is at Rank 6) is false when D takes Rank 3 or Rank 5."
 },
 
 // ==========================================
@@ -21738,7 +21738,7 @@ kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"A government ministry organizes its policy division into seven grades, from Grade 1 (highest) to Grade 7 (lowest). Seven directors—Hassan, Ian, Julia, Karen, Leo, Mona, and Natalie—occupy these grades.",
+"A government ministry organises its policy division into seven grades, from Grade 1 (highest) to Grade 7 (lowest). Seven directors—Hassan, Ian, Julia, Karen, Leo, Mona, and Natalie—occupy these grades.",
 "• Hassan is higher than Ian by exactly three grades (Ian's grade minus Hassan's grade equals 3).",
 "• Karen is higher than Leo.",
 "• Mona is at Grade 2.",
@@ -21773,7 +21773,7 @@ distractors: [
 "Rachel is at Tier 4.",
 "Peter is at Tier 3."
 ],
-explanation: "Let's analyze the constraints. Sam is fixed at Tier 5. Ophelia is senior to Peter, and Tanya is junior to Peter, establishing a chain: O > P > T. Quinton is exactly one tier senior to Rachel, forming a block [Q, R] where R = Q + 1.\nLet's locate the valid spots for [Q, R] given Tier 5 is taken by Sam:\n- Case 1: [Q, R] occupy Tiers 1 and 2. The remaining tiers are 3, 4, and 6. The chain O > P > T must occupy these, forcing O = 3, P = 4, and T = 6. This is a valid arrangement.\n- Case 2: [Q, R] occupy Tiers 2 and 3. The remaining tiers are 1, 4, and 6. The chain O > P > T forces O = 1, P = 4, and T = 6. This is a valid arrangement.\n- Case 3: [Q, R] occupy Tiers 3 and 4. The remaining tiers are 1, 2, and 6. The chain O > P > T forces O = 1, P = 2, and T = 6. This is a valid arrangement.\nLet's check the correct option: 'Sam is more junior than Ophelia'. In Case 1, O=3, Sam=5 (True). In Case 2, O=1, Sam=5 (True). In Case 3, O=1, Sam=5 (True). In all cases, Ophelia holds Tier 1 or Tier 3, meaning she is always more senior than Sam (Tier 5). Thus, Sam is always more junior than Ophelia. Distractor 1 is false in Cases 2 and 3. Distractor 2 is false in Cases 1 and 2. Distractor 3 is false in Cases 1 and 3."
+explanation: "Let's analyse the constraints. Sam is fixed at Tier 5. Ophelia is senior to Peter, and Tanya is junior to Peter, establishing a chain: O > P > T. Quinton is exactly one tier senior to Rachel, forming a block [Q, R] where R = Q + 1.\nLet's locate the valid spots for [Q, R] given Tier 5 is taken by Sam:\n- Case 1: [Q, R] occupy Tiers 1 and 2. The remaining tiers are 3, 4, and 6. The chain O > P > T must occupy these, forcing O = 3, P = 4, and T = 6. This is a valid arrangement.\n- Case 2: [Q, R] occupy Tiers 2 and 3. The remaining tiers are 1, 4, and 6. The chain O > P > T forces O = 1, P = 4, and T = 6. This is a valid arrangement.\n- Case 3: [Q, R] occupy Tiers 3 and 4. The remaining tiers are 1, 2, and 6. The chain O > P > T forces O = 1, P = 2, and T = 6. This is a valid arrangement.\nLet's check the correct option: 'Sam is more junior than Ophelia'. In Case 1, O=3, Sam=5 (True). In Case 2, O=1, Sam=5 (True). In Case 3, O=1, Sam=5 (True). In all cases, Ophelia holds Tier 1 or Tier 3, meaning she is always more senior than Sam (Tier 5). Thus, Sam is always more junior than Ophelia. Distractor 1 is false in Cases 2 and 3. Distractor 2 is false in Cases 1 and 2. Distractor 3 is false in Cases 1 and 3."
 },
 {
 kind: "single",
@@ -21794,7 +21794,7 @@ distractors: [
 "Cedric is at Rank 4.",
 "Diana is at Rank 5."
 ],
-explanation: "Let's analyze the positions step-by-step. Evan is at Rank 3 and George is at Rank 6. Cedric is two ranks senior to Diana (D = C + 2). Fiona is junior to Diana (F > D). Let's test positions for Cedric and Diana:\n- If C = 1, then D = 3 (Invalid, Evan is at Rank 3).\n- If C = 2, then D = 4. Fiona must be junior to Diana, so F > 4. The available ranks greater than 4 are 5 and 7 (since Rank 6 is occupied by George).\n  - Sub-case A: Fiona = 5. The remaining ranks are 1 and 7. Alice must be senior to Brian (A < B), so Alice = 1 and Brian = 7.\n  - Sub-case B: Fiona = 7. The remaining ranks are 1 and 5. Alice must be senior to Brian (A < B), so Alice = 1 and Brian = 5.\n- If C = 4, then D = 6 (Invalid, George is at Rank 6).\n- If C = 5, then D = 7. Fiona must be junior to Diana (F > 7), which is impossible.\nThus, Cedric must be at Rank 2 and Diana must be at Rank 4. In both valid sub-cases, Alice is uniquely assigned to Rank 1. Distractor 1 is false in both sub-cases (Brian is 5 or 7). Distractor 2 is false (Cedric is 2). Distractor 3 is false (Diana is 4)."
+explanation: "Let's analyse the positions step-by-step. Evan is at Rank 3 and George is at Rank 6. Cedric is two ranks senior to Diana (D = C + 2). Fiona is junior to Diana (F > D). Let's test positions for Cedric and Diana:\n- If C = 1, then D = 3 (Invalid, Evan is at Rank 3).\n- If C = 2, then D = 4. Fiona must be junior to Diana, so F > 4. The available ranks greater than 4 are 5 and 7 (since Rank 6 is occupied by George).\n  - Sub-case A: Fiona = 5. The remaining ranks are 1 and 7. Alice must be senior to Brian (A < B), so Alice = 1 and Brian = 7.\n  - Sub-case B: Fiona = 7. The remaining ranks are 1 and 5. Alice must be senior to Brian (A < B), so Alice = 1 and Brian = 5.\n- If C = 4, then D = 6 (Invalid, George is at Rank 6).\n- If C = 5, then D = 7. Fiona must be junior to Diana (F > 7), which is impossible.\nThus, Cedric must be at Rank 2 and Diana must be at Rank 4. In both valid sub-cases, Alice is uniquely assigned to Rank 1. Distractor 1 is false in both sub-cases (Brian is 5 or 7). Distractor 2 is false (Cedric is 2). Distractor 3 is false (Diana is 4)."
 },
 {
 kind: "single",
@@ -21889,7 +21889,7 @@ kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"A logistics center categorizes its seven delivery command levels from Level 1 (highest) to Level 7 (lowest). Seven supervisors—Sanjay, Teresa, Umi, Vance, Wassim, Xin, and Yana—occupy these levels.",
+"A logistics centre categorizes its seven delivery command levels from Level 1 (highest) to Level 7 (lowest). Seven supervisors—Sanjay, Teresa, Umi, Vance, Wassim, Xin, and Yana—occupy these levels.",
 "• Sanjay is senior to Teresa.",
 "• Umi is exactly two levels senior to Vance.",
 "• Wassim is at Level 4.",
@@ -21956,10 +21956,10 @@ kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Five medical seminars—Cardiology, Dermatology, Neurology, Oncology, and Pediatrics—are allocated to Rooms 1 to 5, arranged in a straight corridor from left to right.",
+"Five medical seminars—Cardiology, Dermatology, Neurology, Oncology, and Paediatrics—are allocated to Rooms 1 to 5, arranged in a straight corridor from left to right.",
 "• Cardiology is in a room to the immediate left of Dermatology.",
 "• Oncology is not in Room 1 or Room 5.",
-"• Pediatrics is in a room somewhere to the right of Neurology.",
+"• Paediatrics is in a room somewhere to the right of Neurology.",
 "• There are exactly two rooms between Neurology and Oncology.",
 "• Dermatology is not in Room 5."
 ],
@@ -21968,9 +21968,9 @@ correct: "Neurology is in Room 1.",
 distractors: [
 "Cardiology is in Room 4.",
 "Oncology is in Room 3.",
-"Pediatrics is in Room 2."
+"Paediatrics is in Room 2."
 ],
-explanation: "Let's analyze the positions of Neurology (N) and Oncology (O). There are exactly two rooms between them, so they can be in (Room 1, Room 4) or (Room 2, Room 5). Since O cannot be in Room 5, if they are in Rooms 2 and 5, N must be in Room 5 and O must be in Room 2. However, Pediatrics (P) must be to the right of N. If N is in Room 5, there is no room to its right for P. Thus, N and O cannot be in Rooms 2 and 5. Therefore, N and O must be in Rooms 1 and 4. Since O cannot be in Room 1, N must be in Room 1 and O must be in Room 4. Now we have: Room 1 = N, Room 4 = O. The remaining rooms are 2, 3, and 5. Cardiology (C) is immediately to the left of Dermatology (D), so C and D must occupy adjacent rooms. The only adjacent rooms available are Rooms 2 and 3. Thus, C is in Room 2 and D is in Room 3. This leaves Room 5 for P. Checking all conditions: P (Room 5) is to the right of N (Room 1). D (Room 3) is not in Room 5. All conditions are perfectly satisfied. Thus, N must be in Room 1."
+explanation: "Let's analyse the positions of Neurology (N) and Oncology (O). There are exactly two rooms between them, so they can be in (Room 1, Room 4) or (Room 2, Room 5). Since O cannot be in Room 5, if they are in Rooms 2 and 5, N must be in Room 5 and O must be in Room 2. However, Paediatrics (P) must be to the right of N. If N is in Room 5, there is no room to its right for P. Thus, N and O cannot be in Rooms 2 and 5. Therefore, N and O must be in Rooms 1 and 4. Since O cannot be in Room 1, N must be in Room 1 and O must be in Room 4. Now we have: Room 1 = N, Room 4 = O. The remaining rooms are 2, 3, and 5. Cardiology (C) is immediately to the left of Dermatology (D), so C and D must occupy adjacent rooms. The only adjacent rooms available are Rooms 2 and 3. Thus, C is in Room 2 and D is in Room 3. This leaves Room 5 for P. Checking all conditions: P (Room 5) is to the right of N (Room 1). D (Room 3) is not in Room 5. All conditions are perfectly satisfied. Thus, N must be in Room 1."
 },
 {
 kind: "single",
@@ -22082,7 +22082,7 @@ distractors: [
 "Operations is scheduled at 10:00 AM.",
 "HR is scheduled in Room 1."
 ],
-explanation: "Let's analyze the grid. Marketing and HR are in the same room. Since HR is at 10:00 AM, Marketing must be at 9:00 AM (as they cannot be in the same room at the same time). Since Marketing is at 9:00 AM and HR is at 10:00 AM, they occupy the same room across both slots. Let's see which room: Operations is in Room 2. If Marketing and HR are in Room 2, then Room 2 is completely full for both slots (9:00 AM and 10:00 AM). Then Operations (which must be in Room 2) would have no slot available. Thus, Marketing and HR must be in Room 1. So, Room 1 at 9:00 AM is Marketing, and Room 1 at 10:00 AM is HR. Finance is at 9:00 AM, so it must be in Room 2. This leaves Room 2 at 10:00 AM for Operations. Let's check all conditions: Finance at 9:00 AM (Room 2) - true; Operations in Room 2 (10:00 AM) - true; Marketing and HR in the same room (Room 1) - true; HR at 10:00 AM (Room 1) - true. The unique layout is perfectly determined. Thus, Marketing must be scheduled at 9:00 AM."
+explanation: "Let's analyse the grid. Marketing and HR are in the same room. Since HR is at 10:00 AM, Marketing must be at 9:00 AM (as they cannot be in the same room at the same time). Since Marketing is at 9:00 AM and HR is at 10:00 AM, they occupy the same room across both slots. Let's see which room: Operations is in Room 2. If Marketing and HR are in Room 2, then Room 2 is completely full for both slots (9:00 AM and 10:00 AM). Then Operations (which must be in Room 2) would have no slot available. Thus, Marketing and HR must be in Room 1. So, Room 1 at 9:00 AM is Marketing, and Room 1 at 10:00 AM is HR. Finance is at 9:00 AM, so it must be in Room 2. This leaves Room 2 at 10:00 AM for Operations. Let's check all conditions: Finance at 9:00 AM (Room 2) - true; Operations in Room 2 (10:00 AM) - true; Marketing and HR in the same room (Room 1) - true; HR at 10:00 AM (Room 1) - true. The unique layout is perfectly determined. Thus, Marketing must be scheduled at 9:00 AM."
 },
 {
 kind: "single",
@@ -22142,7 +22142,7 @@ distractors: [
 "Broadcasting is scheduled at 1:00 PM.",
 "Streaming is scheduled in Studio 2."
 ],
-explanation: "Podcasting and Streaming are in the same studio. Since Streaming is at 2:00 PM, Podcasting must be at 1:00 PM. They occupy this studio for both slots. Broadcasting is in Studio 2. If Podcasting and Streaming were in Studio 2, there would be no space for Broadcasting. Thus, Podcasting and Streaming must be in Studio 1. This leaves Studio 2 for Journalism and Broadcasting. Since Journalism is at 1:00 PM, Broadcasting must be at 2:00 PM. The final layout is: Studio 1: Podcasting (1:00 PM), Streaming (2:00 PM). Studio 2: Journalism (1:00 PM), Broadcasting (2:00 PM). This perfectly fulfills all conditions. Therefore, Podcasting must be scheduled at 1:00 PM."
+explanation: "Podcasting and Streaming are in the same studio. Since Streaming is at 2:00 PM, Podcasting must be at 1:00 PM. They occupy this studio for both slots. Broadcasting is in Studio 2. If Podcasting and Streaming were in Studio 2, there would be no space for Broadcasting. Thus, Podcasting and Streaming must be in Studio 1. This leaves Studio 2 for Journalism and Broadcasting. Since Journalism is at 1:00 PM, Broadcasting must be at 2:00 PM. The final layout is: Studio 1: Podcasting (1:00 PM), Streaming (2:00 PM). Studio 2: Journalism (1:00 PM), Broadcasting (2:00 PM). This perfectly fulfils all conditions. Therefore, Podcasting must be scheduled at 1:00 PM."
 },
 {
 kind: "single",
@@ -22267,7 +22267,7 @@ distractors: [
 "Laura is assigned to the Technical track.",
 "Ian is assigned to the Operations track."
 ],
-explanation: "Let's analyze all possibilities based on the constraints:\n1. Exactly three employees are in Leadership. George is one of them, leaving two spots.\n2. If Julia were assigned to the Technical track, Ian would also have to be assigned to the Technical track. Let's see if this is possible: if Julia and Ian are Technical, and George is Leadership, the remaining employees are Hannah, Kevin, and Laura. Since Hannah and Kevin must be in the same track, they could be in Operations or Leadership. If they are Operations, then Leadership only has George and Laura (2 people), which violates the requirement of exactly 3 people in Leadership. If Hannah and Kevin are Leadership, then Leadership has George, Hannah, Kevin (3 people), which means Laura must be Technical. But then Operations would be left with no employees, violating the rule that each track has at least one employee. Thus, Julia can never be assigned to the Technical track.\n3. Let's look at the distractors using valid arrangements:\n- Arrangement A: Leadership = {George, Hannah, Kevin}, Technical = {Laura, Ian}, Operations = {Julia}. This disproves 'Laura is assigned to the Technical track' and 'Ian is assigned to the Operations track'.\n- Arrangement B: Leadership = {George, Laura, Ian}, Technical = {Hannah, Kevin}, Operations = {Julia}. This disproves 'Hannah is assigned to the Leadership track'."
+explanation: "Let's analyse all possibilities based on the constraints:\n1. Exactly three employees are in Leadership. George is one of them, leaving two spots.\n2. If Julia were assigned to the Technical track, Ian would also have to be assigned to the Technical track. Let's see if this is possible: if Julia and Ian are Technical, and George is Leadership, the remaining employees are Hannah, Kevin, and Laura. Since Hannah and Kevin must be in the same track, they could be in Operations or Leadership. If they are Operations, then Leadership only has George and Laura (2 people), which violates the requirement of exactly 3 people in Leadership. If Hannah and Kevin are Leadership, then Leadership has George, Hannah, Kevin (3 people), which means Laura must be Technical. But then Operations would be left with no employees, violating the rule that each track has at least one employee. Thus, Julia can never be assigned to the Technical track.\n3. Let's look at the distractors using valid arrangements:\n- Arrangement A: Leadership = {George, Hannah, Kevin}, Technical = {Laura, Ian}, Operations = {Julia}. This disproves 'Laura is assigned to the Technical track' and 'Ian is assigned to the Operations track'.\n- Arrangement B: Leadership = {George, Laura, Ian}, Technical = {Hannah, Kevin}, Operations = {Julia}. This disproves 'Hannah is assigned to the Leadership track'."
 },
 {
 kind: "single",
@@ -22719,7 +22719,7 @@ distractors: [
 "User Acceptance (U) occurs immediately after Security Scan (S).",
 "Performance Profiling (P) is the very first stage of the sequence."
 ],
-explanation: "Let's analyze the constraints on the 6 slots (1 to 6). R and S are adjacent as [R, S]. P is before R, so P comes before [R, S]. Thus we have a block where P is before [R, S]. Also, D is after U. P and U have >= 2 stages between them. I is not 1 or 6. \nCase 1: If P is 1. Then [R, S] can be [2, 3], [3, 4], or [4, 5]. \n- Subcase 1a: P=1, R=2, S=3. Remaining slots for I, U, D are 4, 5, 6. Since P=1 and there are >=2 stages between P and U, U can be 4, 5, or 6. But D is after U, so U cannot be 6. If U=4, distance between P(1) and U(4) is 2 slots (2,3), which is valid. Then remaining are I and D for 5 and 6. Since I cannot be 6, I=5 and D=6. This yields arrangement: [P, R, S, U, I, D]. If U=5, remaining are I and D for 4 and 6. Since I cannot be 6, I=4 and D=6. This yields arrangement: [P, R, S, I, U, D]. Distance between P(1) and U(5) is 3 slots, which is >=2.\n- Subcase 1b: P=1, R=3, S=4. Slots left: 2, 5, 6. I cannot be 1 or 6, so I must be 2 or 5. U must be at least 4, so U can be 5 (if I=2, then D=6) -> [P, I, R, S, U, D]. Check distance P(1) and U(5) = 3 (valid). What if U=2? Invalid because distance between P(1) and U(2) is 0, which violates the >=2 condition.\n- Subcase 1c: P=1, R=4, S=5. Slots left: 2, 3, 6. Since I cannot be 6, and D must be after U, D must be 6. U must be >=4, but 4 and 5 are taken, so U cannot be placed after P with >=2 slots because slot 6 is D. Thus this subcase fails.\nCase 2: If P is 2. Then [R, S] must be after P, so [3, 4] or [4, 5]. \n- Subcase 2a: P=2, R=3, S=4. Slots left: 1, 5, 6. U must have >=2 slots from P(2), so U can only be 5 or 6. Since D is after U, U=5 and D=6. Then remaining slot 1 must be I, but I cannot be the first stage. Invalid.\n- Subcase 2b: P=2, R=4, S=5. Slots left: 1, 3, 6. U must be >= 5, but 5 is taken, so U must be 6, which leaves no room for D after U. Invalid.\nCase 3: If P is 3. [R, S] must be [4, 5]. Slots left: 1, 2, 6. U must be >= 6, so U=6, leaving no room for D. Invalid.\nIn all valid permutations ([P, R, S, U, I, D], [P, R, S, I, U, D], [P, I, R, S, U, D]), stage 6 is always D. Therefore, Production Deployment (D) must be the final stage. Distractor 1 is false in [P, R, S, U, I, D]. Distractor 2 is false in [P, R, S, I, U, D]. Distractor 3 is false if we look for configurations where P is not 1, but here all valid cases have P=1; however, I being second is false in some, U immediately after S is false in some."
+explanation: "Let's analyse the constraints on the 6 slots (1 to 6). R and S are adjacent as [R, S]. P is before R, so P comes before [R, S]. Thus we have a block where P is before [R, S]. Also, D is after U. P and U have >= 2 stages between them. I is not 1 or 6. \nCase 1: If P is 1. Then [R, S] can be [2, 3], [3, 4], or [4, 5]. \n- Subcase 1a: P=1, R=2, S=3. Remaining slots for I, U, D are 4, 5, 6. Since P=1 and there are >=2 stages between P and U, U can be 4, 5, or 6. But D is after U, so U cannot be 6. If U=4, distance between P(1) and U(4) is 2 slots (2,3), which is valid. Then remaining are I and D for 5 and 6. Since I cannot be 6, I=5 and D=6. This yields arrangement: [P, R, S, U, I, D]. If U=5, remaining are I and D for 4 and 6. Since I cannot be 6, I=4 and D=6. This yields arrangement: [P, R, S, I, U, D]. Distance between P(1) and U(5) is 3 slots, which is >=2.\n- Subcase 1b: P=1, R=3, S=4. Slots left: 2, 5, 6. I cannot be 1 or 6, so I must be 2 or 5. U must be at least 4, so U can be 5 (if I=2, then D=6) -> [P, I, R, S, U, D]. Check distance P(1) and U(5) = 3 (valid). What if U=2? Invalid because distance between P(1) and U(2) is 0, which violates the >=2 condition.\n- Subcase 1c: P=1, R=4, S=5. Slots left: 2, 3, 6. Since I cannot be 6, and D must be after U, D must be 6. U must be >=4, but 4 and 5 are taken, so U cannot be placed after P with >=2 slots because slot 6 is D. Thus this subcase fails.\nCase 2: If P is 2. Then [R, S] must be after P, so [3, 4] or [4, 5]. \n- Subcase 2a: P=2, R=3, S=4. Slots left: 1, 5, 6. U must have >=2 slots from P(2), so U can only be 5 or 6. Since D is after U, U=5 and D=6. Then remaining slot 1 must be I, but I cannot be the first stage. Invalid.\n- Subcase 2b: P=2, R=4, S=5. Slots left: 1, 3, 6. U must be >= 5, but 5 is taken, so U must be 6, which leaves no room for D after U. Invalid.\nCase 3: If P is 3. [R, S] must be [4, 5]. Slots left: 1, 2, 6. U must be >= 6, so U=6, leaving no room for D. Invalid.\nIn all valid permutations ([P, R, S, U, I, D], [P, R, S, I, U, D], [P, I, R, S, U, D]), stage 6 is always D. Therefore, Production Deployment (D) must be the final stage. Distractor 1 is false in [P, R, S, U, I, D]. Distractor 2 is false in [P, R, S, I, U, D]. Distractor 3 is false if we look for configurations where P is not 1, but here all valid cases have P=1; however, I being second is false in some, U immediately after S is false in some."
 },
 {
 kind: "single",
@@ -22761,7 +22761,7 @@ distractors: [
 "Sanding (S) is the first station in the sequence.",
 "Inspection (I) is the final station in the sequence."
 ],
-explanation: "Let's analyze the slots 1 to 6. B < C. [P, I] is linked. S is 1 or 2. C and D have exactly two stations between them, so their positions are separated by 3 indices (e.g., 1 and 4, 2 and 5, 3 and 6). D < P. Since D < P and P is followed immediately by I, D cannot be the final slots. Let's analyze the possible positions for the {C, D} pair:\nCase 1: {C, D} are at slots 1 and 4.\n- Subcase 1a: D=1, C=4. Since S must be 1 or 2, and 1 is taken by D, S must be 2. This leaves slots 3, 5, 6. We need to fit [P, I] adjacent. The only available adjacent pair from {3, 5, 6} is [5, 6], so P=5, I=6. This leaves slot 3 for B. Let's check the arrangement: [D, S, B, C, P, I]. Let's verify constraints: B(3) < C(4) - Yes. [P, I] is adjacent (5, 6) - Yes. S is 2 - Yes. C and D separated by two stations (2 and 3) - Yes. D(1) < P(5) - Yes. This is a valid arrangement.\n- Subcase 1b: C=1, D=4. Since B must be before C, and C is 1, there is no slot before C for B. Thus, this subcase is invalid.\nCase 2: {C, D} are at slots 2 and 5.\n- Subcase 2a: D=2, C=5. S must be 1 or 2, so S=1. This leaves slots 3, 4, 6. No adjacent slots left for [P, I] because 3 and 4 are adjacent, but if [P, I] = [3, 4], slot 6 is left for B, which means B(6) > C(5), violating B < C. If we try to put B in 3 or 4, say B=3, then [P, I] has no room. Thus, invalid.\n- Subcase 2b: C=2, D=5. B must be before C(2), so B=1. This leaves slots 3, 4, 6. S must be 1 or 2, but both are taken by B and C. Thus, invalid.\nCase 3: {C, D} are at slots 3 and 6.\n- Subcase 3a: D=3, C=6. S must be 1 or 2. D < P, but C=6, so P cannot be after D because the only slots left would be 1, 2, 4, 5. If [P, I] are 4 and 5, then S and B must be 1 and 2. Let's test: S=1, B=2, D=3, P=4, I=5, C=6. Let's verify: B(2) < C(6) (Yes); [P, I] = [4, 5] (Yes); S=1 (Yes); C and D are 6 and 3 (separated by 4 and 5, which is 2 slots - Yes); D(3) < P(4) (Yes). This arrangement [S, B, D, P, I, C] is valid.\n- Subcase 3b: C=3, D=6. Since D < P, and D=6, there is no slot for P after D. Invalid.\nThus, we have two valid arrangements: \n1) [D, S, B, C, P, I]\n2) [S, B, D, P, I, C]\nLet's evaluate the choices: 'Baking (B) is performed before Polishing (P).' In arrangement 1, B is 3 and P is 5 (True). In arrangement 2, B is 2 and P is 4 (True). This must be true. Let's check the distractors: Distractor 1 (C is 3) is false in both (C is 4 or 6). Distractor 2 (S is 1) is false in arrangement 1 (S is 2). Distractor 3 (I is final) is false in arrangement 2 (C is final)."
+explanation: "Let's analyse the slots 1 to 6. B < C. [P, I] is linked. S is 1 or 2. C and D have exactly two stations between them, so their positions are separated by 3 indices (e.g., 1 and 4, 2 and 5, 3 and 6). D < P. Since D < P and P is followed immediately by I, D cannot be the final slots. Let's analyse the possible positions for the {C, D} pair:\nCase 1: {C, D} are at slots 1 and 4.\n- Subcase 1a: D=1, C=4. Since S must be 1 or 2, and 1 is taken by D, S must be 2. This leaves slots 3, 5, 6. We need to fit [P, I] adjacent. The only available adjacent pair from {3, 5, 6} is [5, 6], so P=5, I=6. This leaves slot 3 for B. Let's check the arrangement: [D, S, B, C, P, I]. Let's verify constraints: B(3) < C(4) - Yes. [P, I] is adjacent (5, 6) - Yes. S is 2 - Yes. C and D separated by two stations (2 and 3) - Yes. D(1) < P(5) - Yes. This is a valid arrangement.\n- Subcase 1b: C=1, D=4. Since B must be before C, and C is 1, there is no slot before C for B. Thus, this subcase is invalid.\nCase 2: {C, D} are at slots 2 and 5.\n- Subcase 2a: D=2, C=5. S must be 1 or 2, so S=1. This leaves slots 3, 4, 6. No adjacent slots left for [P, I] because 3 and 4 are adjacent, but if [P, I] = [3, 4], slot 6 is left for B, which means B(6) > C(5), violating B < C. If we try to put B in 3 or 4, say B=3, then [P, I] has no room. Thus, invalid.\n- Subcase 2b: C=2, D=5. B must be before C(2), so B=1. This leaves slots 3, 4, 6. S must be 1 or 2, but both are taken by B and C. Thus, invalid.\nCase 3: {C, D} are at slots 3 and 6.\n- Subcase 3a: D=3, C=6. S must be 1 or 2. D < P, but C=6, so P cannot be after D because the only slots left would be 1, 2, 4, 5. If [P, I] are 4 and 5, then S and B must be 1 and 2. Let's test: S=1, B=2, D=3, P=4, I=5, C=6. Let's verify: B(2) < C(6) (Yes); [P, I] = [4, 5] (Yes); S=1 (Yes); C and D are 6 and 3 (separated by 4 and 5, which is 2 slots - Yes); D(3) < P(4) (Yes). This arrangement [S, B, D, P, I, C] is valid.\n- Subcase 3b: C=3, D=6. Since D < P, and D=6, there is no slot for P after D. Invalid.\nThus, we have two valid arrangements: \n1) [D, S, B, C, P, I]\n2) [S, B, D, P, I, C]\nLet's evaluate the choices: 'Baking (B) is performed before Polishing (P).' In arrangement 1, B is 3 and P is 5 (True). In arrangement 2, B is 2 and P is 4 (True). This must be true. Let's check the distractors: Distractor 1 (C is 3) is false in both (C is 4 or 6). Distractor 2 (S is 1) is false in arrangement 1 (S is 2). Distractor 3 (I is final) is false in arrangement 2 (C is final)."
 },
 {
 kind: "single",
@@ -22782,7 +22782,7 @@ distractors: [
 "Intro (N) is compiled as the second scene of the film.",
 "Battle (B) is compiled as the fourth scene of the film."
 ],
-explanation: "Let's analyze the slots 1 to 6. Montage (M) is fixed at slot 1. There are exactly two scenes between Intro (N) and Battle (B), and Intro (N) must occur after Battle (B). This means the only possible slot configurations for (B, N) are (2, 5) or (3, 6). \nCase 1: If B = 2 and N = 5. Slots 1, 2, and 5 are filled. The remaining open slots are 3, 4, and 6. The constraint requires that Chase (C) occurs after Intro (N=5), which uniquely forces C into slot 6. This leaves slots 3 and 4 open for the adjacent block [D, E], meaning D = 3 and E = 4. The resulting sequence is [M, B, D, E, N, C]. Let's verify all constraints: M is 1; B and N are separated by exactly 2 scenes (3 and 4); C(6) is after N(5); N(5) is after B(2); [D, E] is a block. All conditions are fully satisfied.\nCase 2: If B = 3 and N = 6. Slots 1, 3, and 6 are filled. The constraint requires Chase (C) to occur after Intro (N=6), but no slots exist after slot 6. Thus, this case is completely impossible.\nTherefore, the only valid sequence is [M, B, D, E, N, C]. In this sequence, Chase (C) is definitively the final scene. Distractor 1 is false (D is third). Distractor 2 is false (N is fifth). Distractor 3 is false (B is second)."
+explanation: "Let's analyse the slots 1 to 6. Montage (M) is fixed at slot 1. There are exactly two scenes between Intro (N) and Battle (B), and Intro (N) must occur after Battle (B). This means the only possible slot configurations for (B, N) are (2, 5) or (3, 6). \nCase 1: If B = 2 and N = 5. Slots 1, 2, and 5 are filled. The remaining open slots are 3, 4, and 6. The constraint requires that Chase (C) occurs after Intro (N=5), which uniquely forces C into slot 6. This leaves slots 3 and 4 open for the adjacent block [D, E], meaning D = 3 and E = 4. The resulting sequence is [M, B, D, E, N, C]. Let's verify all constraints: M is 1; B and N are separated by exactly 2 scenes (3 and 4); C(6) is after N(5); N(5) is after B(2); [D, E] is a block. All conditions are fully satisfied.\nCase 2: If B = 3 and N = 6. Slots 1, 3, and 6 are filled. The constraint requires Chase (C) to occur after Intro (N=6), but no slots exist after slot 6. Thus, this case is completely impossible.\nTherefore, the only valid sequence is [M, B, D, E, N, C]. In this sequence, Chase (C) is definitively the final scene. Distractor 1 is false (D is third). Distractor 2 is false (N is fifth). Distractor 3 is false (B is second)."
 },
 {
 kind: "single",
@@ -22872,7 +22872,7 @@ distractors: [
 "Manifest Check (M) is cleared as the fourth checkpoint in the sequence.",
 "Inspection (I) is cleared immediately before Manifest Check (M)."
 ],
-explanation: "Let's analyze the constraints on slots 1 to 6. Tariff Assessment (T) is fixed at slot 6. Manifest Check (M) and Customs Declaration (D) form a block [M, D]. Quarantine (Q) must occur before M, and Q cannot be the first checkpoint (slot 1). There must be exactly two checkpoints between Inspection (I) and Quarantine (Q), meaning their slot positions differ by 3. Verification (V) cannot be at slot 2.\nLet's test possible positions for [M, D]:\n- If [M, D] is at [2, 3], M is 2, so Q must be 1, which violates the constraint that Q cannot be the first checkpoint.\n- If [M, D] is at [4, 5], M is 4, so Q can be 2 or 3. If Q = 2, I must be 5 (occupied by D). If Q = 3, I must be 6 (occupied by T). Thus, [4, 5] is impossible.\n- If [M, D] is at [3, 4], M is 3, so Q must be 2 (since Q cannot be 1). Since Q = 2, and there are exactly two checkpoints between I and Q, I must be 5 (slots 3 and 4 are between them). This leaves slot 1 open, which must be assigned to Verification (V). Let's check V: V is at slot 1, which satisfies the condition that V cannot be at slot 2. This results in a single unique valid sequence: [V, Q, M, D, I, T].\nIn this unique sequence, Verification (V) is always the first checkpoint. Distractor 1 is false (Q is second). Distractor 2 is false (M is third). Distractor 3 is false (Q is before M)."
+explanation: "Let's analyse the constraints on slots 1 to 6. Tariff Assessment (T) is fixed at slot 6. Manifest Check (M) and Customs Declaration (D) form a block [M, D]. Quarantine (Q) must occur before M, and Q cannot be the first checkpoint (slot 1). There must be exactly two checkpoints between Inspection (I) and Quarantine (Q), meaning their slot positions differ by 3. Verification (V) cannot be at slot 2.\nLet's test possible positions for [M, D]:\n- If [M, D] is at [2, 3], M is 2, so Q must be 1, which violates the constraint that Q cannot be the first checkpoint.\n- If [M, D] is at [4, 5], M is 4, so Q can be 2 or 3. If Q = 2, I must be 5 (occupied by D). If Q = 3, I must be 6 (occupied by T). Thus, [4, 5] is impossible.\n- If [M, D] is at [3, 4], M is 3, so Q must be 2 (since Q cannot be 1). Since Q = 2, and there are exactly two checkpoints between I and Q, I must be 5 (slots 3 and 4 are between them). This leaves slot 1 open, which must be assigned to Verification (V). Let's check V: V is at slot 1, which satisfies the condition that V cannot be at slot 2. This results in a single unique valid sequence: [V, Q, M, D, I, T].\nIn this unique sequence, Verification (V) is always the first checkpoint. Distractor 1 is false (Q is second). Distractor 2 is false (M is third). Distractor 3 is false (Q is before M)."
 },
 {
 kind: "single",
@@ -22894,7 +22894,7 @@ distractors: [
 "Settlement (S) is performed as the third stage in the sequence.",
 "Fraud Check (F) is performed immediately after Vaulting (V)."
 ],
-explanation: "Let's re-analyze the slots 1 to 6. V is fixed at slot 2. [F, L] is a block. A and S have exactly one stage between them (slots differ by 2). R is after S. F is after S. F cannot be 5.\nLet's test the possible positions for the {A, S} pair from the remaining slots {1, 3, 4, 5, 6}:\n- If {A, S} are 1 and 3:\n  - If S = 1, A = 3. Slots left: 4, 5, 6. F must be after S(1). Since F cannot be 5, the block [F, L] can be [3, 4] (but 3 is taken by A) or [4, 5] (F=4, L=5) or [5, 6] (violates F cannot be 5). If [F, L] = [4, 5], then R must be 6. Sequence: [S, V, A, F, L, R]. Let's check: F(4) is after S(1) - Yes. R(6) is after S(1) - Yes. F is not 5 - Yes. This is a valid sequence.\n  - If A = 1, S = 3. Slots left: 4, 5, 6. F must be after S(3). Since F cannot be 5, [F, L] can only be [4, 5] (F=4, L=5) or [5, 6] (invalid). If [F, L] = [4, 5], then R must be 6. Sequence: [A, V, S, F, L, R]. Let's check: F(4) is after S(3) - Yes. R(6) is after S(3) - Yes. Valid.\n- If {A, S} are 3 and 5:\n  - If S = 3, A = 5. Slots left: 1, 4, 6. [F, L] requires adjacent slots, so no room since 1, 4, 6 are isolated. Invalid.\n  - If A = 3, S = 5. Slots left: 1, 4, 6. No adjacent slots for [F, L]. Invalid.\nLet's check if there are any other configurations. What if {A, S} are 4 and 6? If S=4, A=6, slots left: 1, 3, 5. No adjacent slots for [F, L]. \nSo we have two valid sequences:\n1) [S, V, A, F, L, R]\n2) [A, V, S, F, L, R]\nIn both valid sequences, Reconciliation (R) is uniquely forced into slot 6, which is the final stage. Distractor 1 is false in sequence 1 (S is 1st). Distractor 2 is false in sequence 1 (S is 1st). Distractor 3 is false in both (F is 4th)."
+explanation: "Let's re-analyse the slots 1 to 6. V is fixed at slot 2. [F, L] is a block. A and S have exactly one stage between them (slots differ by 2). R is after S. F is after S. F cannot be 5.\nLet's test the possible positions for the {A, S} pair from the remaining slots {1, 3, 4, 5, 6}:\n- If {A, S} are 1 and 3:\n  - If S = 1, A = 3. Slots left: 4, 5, 6. F must be after S(1). Since F cannot be 5, the block [F, L] can be [3, 4] (but 3 is taken by A) or [4, 5] (F=4, L=5) or [5, 6] (violates F cannot be 5). If [F, L] = [4, 5], then R must be 6. Sequence: [S, V, A, F, L, R]. Let's check: F(4) is after S(1) - Yes. R(6) is after S(1) - Yes. F is not 5 - Yes. This is a valid sequence.\n  - If A = 1, S = 3. Slots left: 4, 5, 6. F must be after S(3). Since F cannot be 5, [F, L] can only be [4, 5] (F=4, L=5) or [5, 6] (invalid). If [F, L] = [4, 5], then R must be 6. Sequence: [A, V, S, F, L, R]. Let's check: F(4) is after S(3) - Yes. R(6) is after S(3) - Yes. Valid.\n- If {A, S} are 3 and 5:\n  - If S = 3, A = 5. Slots left: 1, 4, 6. [F, L] requires adjacent slots, so no room since 1, 4, 6 are isolated. Invalid.\n  - If A = 3, S = 5. Slots left: 1, 4, 6. No adjacent slots for [F, L]. Invalid.\nLet's check if there are any other configurations. What if {A, S} are 4 and 6? If S=4, A=6, slots left: 1, 3, 5. No adjacent slots for [F, L]. \nSo we have two valid sequences:\n1) [S, V, A, F, L, R]\n2) [A, V, S, F, L, R]\nIn both valid sequences, Reconciliation (R) is uniquely forced into slot 6, which is the final stage. Distractor 1 is false in sequence 1 (S is 1st). Distractor 2 is false in sequence 1 (S is 1st). Distractor 3 is false in both (F is 4th)."
 },
 {
 kind: "single",
@@ -22915,50 +22915,50 @@ distractors: [
 "Fact-checker (F) is the fourth professional to work on the manuscript.",
 "Illustrator (I) is the second professional to work on the manuscript."
 ],
-explanation: "Let's analyze the slots 1 to 6. Ghostwriter (G) is fixed at slot 1. Editor (E) and Fact-checker (F) have exactly two professionals between them, meaning their positions differ by 3. Since E must work before F, the only possible slot pairs for (E, F) are (2, 5) or (3, 6). \nCase 1: If E = 2 and F = 5. Slots 1, 2, and 5 are filled by G, E, and F respectively. The remaining open slots are 3, 4, and 6. The block [I, M] requires two adjacent slots, which uniquely forces I = 3 and M = 4. This leaves slot 6 open for Proofreader (P). Testing the final constraint, P(6) occurs after E(2), which is valid. This gives the sequence [G, E, I, M, F, P].\nCase 2: If E = 3 and F = 6. Slots 1, 3, and 6 are filled. The remaining open slots are 2, 4, and 5. The block [I, M] uniquely forces into slots 4 and 5. This leaves slot 2 for P. However, P(2) must occur after E(3), which is a violation. Thus, Case 2 is impossible.\nTherefore, the unique sequence is [G, E, I, M, F, P], proving that Proofreader (P) must be the final professional. Distractor 1 is false (E is 2nd). Distractor 2 is false (F is 5th). Distractor 3 is false (I is 3rd)."
+explanation: "Let's analyse the slots 1 to 6. Ghostwriter (G) is fixed at slot 1. Editor (E) and Fact-checker (F) have exactly two professionals between them, meaning their positions differ by 3. Since E must work before F, the only possible slot pairs for (E, F) are (2, 5) or (3, 6). \nCase 1: If E = 2 and F = 5. Slots 1, 2, and 5 are filled by G, E, and F respectively. The remaining open slots are 3, 4, and 6. The block [I, M] requires two adjacent slots, which uniquely forces I = 3 and M = 4. This leaves slot 6 open for Proofreader (P). Testing the final constraint, P(6) occurs after E(2), which is valid. This gives the sequence [G, E, I, M, F, P].\nCase 2: If E = 3 and F = 6. Slots 1, 3, and 6 are filled. The remaining open slots are 2, 4, and 5. The block [I, M] uniquely forces into slots 4 and 5. This leaves slot 2 for P. However, P(2) must occur after E(3), which is a violation. Thus, Case 2 is impossible.\nTherefore, the unique sequence is [G, E, I, M, F, P], proving that Proofreader (P) must be the final professional. Distractor 1 is false (E is 2nd). Distractor 2 is false (F is 5th). Distractor 3 is false (I is 3rd)."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"A film canister is transferred sequentially through six restoration steps: Audio Sync (A), Color Grading (C), Dirt Removal (D), Exposure Fix (E), Frame Alignment (F), and Grain Stabilization (G), exactly once each.",
+"A film canister is transferred sequentially through six restoration steps: Audio Sync (A), Colour Grading (C), Dirt Removal (D), Exposure Fix (E), Frame Alignment (F), and Grain Stabilization (G), exactly once each.",
 "• Dirt Removal (D) must be performed immediately before Exposure Fix (E) as a block [D, E].",
-"• There must be exactly one step performed between Audio Sync (A) and Color Grading (C).",
+"• There must be exactly one step performed between Audio Sync (A) and Colour Grading (C).",
 "• Frame Alignment (F) must be the second step performed in the sequence.",
-"• Grain Stabilization (G) must occur at some point after Color Grading (C).",
-"• Audio Sync (A) must occur earlier in the sequence than Color Grading (C)."
+"• Grain Stabilization (G) must occur at some point after Colour Grading (C).",
+"• Audio Sync (A) must occur earlier in the sequence than Colour Grading (C)."
 ],
 question: "Which of the following must be true?",
 correct: "Audio Sync (A) is the first step performed in the sequence.",
 distractors: [
 "Dirt Removal (D) is the first step performed in the sequence.",
 "Audio Sync (A) is the third step performed in the sequence.",
-"Color Grading (C) is the fifth step performed in the sequence."
+"Colour Grading (C) is the fifth step performed in the sequence."
 ],
-explanation: "Frame Alignment is fixed second. Audio Sync must occur before Color Grading with exactly one step between them. If Audio Sync were third or fourth, there would be no adjacent space left for the Dirt Removal-Exposure Fix block. Therefore Audio Sync must be first and Color Grading third. The final three slots can be arranged as either Dirt Removal, Exposure Fix, Grain Stabilization or Grain Stabilization, Dirt Removal, Exposure Fix, so Grain Stabilization is not necessarily final."
+explanation: "Frame Alignment is fixed second. Audio Sync must occur before Colour Grading with exactly one step between them. If Audio Sync were third or fourth, there would be no adjacent space left for the Dirt Removal-Exposure Fix block. Therefore Audio Sync must be first and Colour Grading third. The final three slots can be arranged as either Dirt Removal, Exposure Fix, Grain Stabilization or Grain Stabilization, Dirt Removal, Exposure Fix, so Grain Stabilization is not necessarily final."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"A film canister is transferred sequentially through six restoration steps: Audio Sync (A), Color Grading (C), Dirt Removal (D), Exposure Fix (E), Frame Alignment (F), and Grain Stabilization (G), exactly once each.",
+"A film canister is transferred sequentially through six restoration steps: Audio Sync (A), Colour Grading (C), Dirt Removal (D), Exposure Fix (E), Frame Alignment (F), and Grain Stabilization (G), exactly once each.",
 "• Dirt Removal (D) must be performed immediately before Exposure Fix (E) as a block [D, E].",
-"• There must be exactly one step performed between Audio Sync (A) and Color Grading (C).",
+"• There must be exactly one step performed between Audio Sync (A) and Colour Grading (C).",
 "• Frame Alignment (F) must be the second step performed in the sequence.",
-"• Grain Stabilization (G) must occur at some point after Color Grading (C).",
+"• Grain Stabilization (G) must occur at some point after Colour Grading (C).",
 "• Exposure Fix (E) cannot be the final step performed in the sequence.",
-"• Audio Sync (A) must occur earlier in the sequence than Color Grading (C)."
+"• Audio Sync (A) must occur earlier in the sequence than Colour Grading (C)."
 ],
 question: "Which of the following must be true?",
 correct: "Grain Stabilization (G) is the final step performed in the sequence.",
 distractors: [
 "Dirt Removal (D) is the third step performed in the sequence.",
 "Audio Sync (A) is the third step performed in the sequence.",
-"Color Grading (C) is the fifth step performed in the sequence."
+"Colour Grading (C) is the fifth step performed in the sequence."
 ],
-explanation: "Let's analyze the constraints on slots 1 to 6. Frame Alignment (F) is fixed at slot 2. Dirt Removal (D) and Exposure Fix (E) form a block [D, E]. Audio Sync (A) and Color Grading (C) have exactly one step between them, and A comes before C. Grain Stabilization (G) occurs after C. E cannot be the final step (slot 6).\nLet's test possible positions for the [A, _, C] combination:\n- If A = 3, then C = 5. Slots 2, 3, 5 are filled, leaving 1, 4, 6 open. No two adjacent slots are open for [D, E].\n- If A = 4, then C = 6. Slots 2, 4, 6 are filled, leaving 1, 3, 5 open. No two adjacent slots are open for [D, E].\n- If A = 1, then C = 3 (with F at slot 2 being the step between them). Slots 1, 2, and 3 are filled. Open slots are 4, 5, and 6. The block [D, E] can be placed at [4, 5] or [5, 6]. If [D, E] is at [5, 6], E would be at slot 6, which violates the constraint that E cannot be final. Thus, [D, E] must be at [4, 5], meaning D = 4 and E = 5. This leaves slot 6 open for Grain Stabilization (G). Let's check G: G is at slot 6, which is after C(3), satisfying the constraint. This gives a single unique valid sequence: [A, F, C, D, E, G].\nIn this unique sequence, Grain Stabilization (G) is always the final step. Distractor 1 is false (D is 4th). Distractor 2 is false (A is 1st). Distractor 3 is false (C is 3rd)."
+explanation: "Let's analyse the constraints on slots 1 to 6. Frame Alignment (F) is fixed at slot 2. Dirt Removal (D) and Exposure Fix (E) form a block [D, E]. Audio Sync (A) and Colour Grading (C) have exactly one step between them, and A comes before C. Grain Stabilization (G) occurs after C. E cannot be the final step (slot 6).\nLet's test possible positions for the [A, _, C] combination:\n- If A = 3, then C = 5. Slots 2, 3, 5 are filled, leaving 1, 4, 6 open. No two adjacent slots are open for [D, E].\n- If A = 4, then C = 6. Slots 2, 4, 6 are filled, leaving 1, 3, 5 open. No two adjacent slots are open for [D, E].\n- If A = 1, then C = 3 (with F at slot 2 being the step between them). Slots 1, 2, and 3 are filled. Open slots are 4, 5, and 6. The block [D, E] can be placed at [4, 5] or [5, 6]. If [D, E] is at [5, 6], E would be at slot 6, which violates the constraint that E cannot be final. Thus, [D, E] must be at [4, 5], meaning D = 4 and E = 5. This leaves slot 6 open for Grain Stabilization (G). Let's check G: G is at slot 6, which is after C(3), satisfying the constraint. This gives a single unique valid sequence: [A, F, C, D, E, G].\nIn this unique sequence, Grain Stabilization (G) is always the final step. Distractor 1 is false (D is 4th). Distractor 2 is false (A is 1st). Distractor 3 is false (C is 3rd)."
 },
 
 // ==========================================
@@ -22983,7 +22983,7 @@ distractors: [
 "Design (D) is the third department to receive the file.",
 "Finance (F) is the fourth department to receive the file."
 ],
-explanation: "Let's analyze the slots 1 to 6. R is fixed at slot 1. [D, E] is a block. C and L have exactly two departments between them, so their slots differ by 3. Since slot 1 is taken, the only available pairs for (C, L) are (2, 5) or (3, 6). \nCase 1: C = 2 and L = 5. Slots filled: 1: R, 2: C, 5: L. Open slots: 3, 4, 6. We know Finance (F) must be after L(5), so F must be at slot 6. This leaves slots 3 and 4 open for the adjacent block [D, E], so D = 3 and E = 4. Let's check this sequence: [R, C, D, E, L, F]. Let's verify all constraints: R is 1 (Yes); C and L are 2 and 5 (two departments, 3 and 4, between them - Yes); [D, E] is adjacent at 3 and 4 (Yes); F is after L (6 > 5 - Yes); C is before L (2 < 5 - Yes). This is a completely valid sequence.\nCase 2: C = 3 and L = 6. Slots filled: 1: R, 3: C, 6: L. Open slots: 2, 4, 5. F must be after L(6), which is impossible since L is the last slot. Thus, Case 2 is completely invalid.\nTherefore, the only valid sequence is [R, C, D, E, L, F]. In this sequence, Legal (L) is definitively the fifth department. Distractor 1 is false (C is second). Distractor 2 is false (D is third). Distractor 3 is false (F is sixth)."
+explanation: "Let's analyse the slots 1 to 6. R is fixed at slot 1. [D, E] is a block. C and L have exactly two departments between them, so their slots differ by 3. Since slot 1 is taken, the only available pairs for (C, L) are (2, 5) or (3, 6). \nCase 1: C = 2 and L = 5. Slots filled: 1: R, 2: C, 5: L. Open slots: 3, 4, 6. We know Finance (F) must be after L(5), so F must be at slot 6. This leaves slots 3 and 4 open for the adjacent block [D, E], so D = 3 and E = 4. Let's check this sequence: [R, C, D, E, L, F]. Let's verify all constraints: R is 1 (Yes); C and L are 2 and 5 (two departments, 3 and 4, between them - Yes); [D, E] is adjacent at 3 and 4 (Yes); F is after L (6 > 5 - Yes); C is before L (2 < 5 - Yes). This is a completely valid sequence.\nCase 2: C = 3 and L = 6. Slots filled: 1: R, 3: C, 6: L. Open slots: 2, 4, 5. F must be after L(6), which is impossible since L is the last slot. Thus, Case 2 is completely invalid.\nTherefore, the only valid sequence is [R, C, D, E, L, F]. In this sequence, Legal (L) is definitively the fifth department. Distractor 1 is false (C is second). Distractor 2 is false (D is third). Distractor 3 is false (F is sixth)."
 },
 {
 kind: "single",
@@ -23004,7 +23004,7 @@ distractors: [
 "Plating (P) is recorded as the fourth task in the sequence.",
 "Searing (S) is recorded as the fourth task in the sequence."
 ],
-explanation: "Let's analyze the slots 1 to 6. Marinating (M) is fixed at slot 2. There are exactly three tasks recorded between Whisking (W) and Searing (S), which means their positions are 4 slots apart (indices 1 and 5, or 2 and 6). Since slot 2 is occupied by M, they must occupy slots 1 and 5. Since Whisking (W) must occur before Searing (S), we must have W = 1 and S = 5. Slots 1, 2, and 5 are now filled. The remaining open slots are 3, 4, and 6. The constraint requires that Chopping (C) occurs after Searing (S=5), which uniquely forces C into slot 6. This leaves slots 3 and 4 open for the adjacent block [P, G], meaning P = 3 and G = 4. This gives the single unique valid sequence: [W, M, P, G, S, C].\nIn this unique sequence, Chopping (C) is always the final task. Distractor 1 is false (W is 1st). Distractor 2 is false (P is 3rd). Distractor 3 is false (S is 5th)."
+explanation: "Let's analyse the slots 1 to 6. Marinating (M) is fixed at slot 2. There are exactly three tasks recorded between Whisking (W) and Searing (S), which means their positions are 4 slots apart (indices 1 and 5, or 2 and 6). Since slot 2 is occupied by M, they must occupy slots 1 and 5. Since Whisking (W) must occur before Searing (S), we must have W = 1 and S = 5. Slots 1, 2, and 5 are now filled. The remaining open slots are 3, 4, and 6. The constraint requires that Chopping (C) occurs after Searing (S=5), which uniquely forces C into slot 6. This leaves slots 3 and 4 open for the adjacent block [P, G], meaning P = 3 and G = 4. This gives the single unique valid sequence: [W, M, P, G, S, C].\nIn this unique sequence, Chopping (C) is always the final task. Distractor 1 is false (W is 1st). Distractor 2 is false (P is 3rd). Distractor 3 is false (S is 5th)."
 },
 {
 kind: "single",
@@ -23026,7 +23026,7 @@ distractors: [
 "Outro (O) is drafted as the fifth segment in the sequence.",
 "Intro (I) is drafted as the third segment in the sequence."
 ],
-explanation: "Let's analyze the constraints on slots 1 to 6. Sponsor Ad (S) is fixed at slot 2. Music Break (M) and Guest Chat (G) form a block [M, G]. Intro (I) and Outro (O) have exactly one segment between them, and I comes before O. Bloopers (B) is drafted after O. G cannot be the final segment (slot 6).\nLet's test the possible positions for the (I, O) pair:\n- If I = 3 and O = 5, slots 2, 3, 5 are filled, leaving 1, 4, 6 open (no adjacent slots for [M, G]).\n- If I = 4 and O = 6, slots 2, 4, 6 are filled, leaving 1, 3, 5 open (no adjacent slots for [M, G]).\n- If I = 1 and O = 3, slots 1, 2, and 3 are filled. Open slots are 4, 5, and 6. The block [M, G] must occupy two adjacent slots, which can be [4, 5] or [5, 6]. If [M, G] is at [5, 6], G is at slot 6, which violates the constraint that G cannot be final. Thus, [M, G] must be at [4, 5], meaning M = 4 and G = 5. This leaves slot 6 open for Bloopers (B). Let's check B: B is at slot 6, which is after O(3), satisfying the constraint. This results in a single unique valid sequence: [I, S, O, M, G, B].\nIn this unique sequence, Bloopers (B) is always the final segment. Distractor 1 is false (M is 4th). Distractor 2 is false (O is 3rd). Distractor 3 is false (I is 1st)."
+explanation: "Let's analyse the constraints on slots 1 to 6. Sponsor Ad (S) is fixed at slot 2. Music Break (M) and Guest Chat (G) form a block [M, G]. Intro (I) and Outro (O) have exactly one segment between them, and I comes before O. Bloopers (B) is drafted after O. G cannot be the final segment (slot 6).\nLet's test the possible positions for the (I, O) pair:\n- If I = 3 and O = 5, slots 2, 3, 5 are filled, leaving 1, 4, 6 open (no adjacent slots for [M, G]).\n- If I = 4 and O = 6, slots 2, 4, 6 are filled, leaving 1, 3, 5 open (no adjacent slots for [M, G]).\n- If I = 1 and O = 3, slots 1, 2, and 3 are filled. Open slots are 4, 5, and 6. The block [M, G] must occupy two adjacent slots, which can be [4, 5] or [5, 6]. If [M, G] is at [5, 6], G is at slot 6, which violates the constraint that G cannot be final. Thus, [M, G] must be at [4, 5], meaning M = 4 and G = 5. This leaves slot 6 open for Bloopers (B). Let's check B: B is at slot 6, which is after O(3), satisfying the constraint. This results in a single unique valid sequence: [I, S, O, M, G, B].\nIn this unique sequence, Bloopers (B) is always the final segment. Distractor 1 is false (M is 4th). Distractor 2 is false (O is 3rd). Distractor 3 is false (I is 1st)."
 },
 // ==========================================
 // BATCH 1: URBAN COURIER ROUTE SEQUENCING (Stops 1 to 5)
@@ -23088,7 +23088,7 @@ distractors: [
 "Area 4 is visited fifth.",
 "Area 1 is visited fourth."
 ],
-explanation: "Positions are 1, 2, 3, 4, 5. Condition 3 fixes Area 2 = 2. Condition 2 states Area 1 is visited exactly two choices after Area 5, which means Area 5 is at position n and Area 1 is at position n+2. The possible pairs for (Area 5, Area 1) given position 2 is taken are: (1, 3) or (3, 5). Let's analyze both cases. Case 1: Area 5 = 1, Area 1 = 3. The remaining slots are 4 and 5. Condition 1 states Area 3 is visited immediately before Area 4, forming the block [Area 3, Area 4]. This block must occupy positions 4 and 5, so Area 3 = 4 and Area 4 = 5. This arrangement is perfectly valid: 1:Area 5, 2:Area 2, 3:Area 1, 4:Area 3, 5:Area 4. Case 2: Area 5 = 3, Area 1 = 5. The remaining slots are 1 and 4. The block [Area 3, Area 4] must fit into consecutive slots, but the remaining slots 1 and 4 are not consecutive. Thus, Case 2 is invalid. The unique valid arrangement is Case 1, where Area 5 is visited first."
+explanation: "Positions are 1, 2, 3, 4, 5. Condition 3 fixes Area 2 = 2. Condition 2 states Area 1 is visited exactly two choices after Area 5, which means Area 5 is at position n and Area 1 is at position n+2. The possible pairs for (Area 5, Area 1) given position 2 is taken are: (1, 3) or (3, 5). Let's analyse both cases. Case 1: Area 5 = 1, Area 1 = 3. The remaining slots are 4 and 5. Condition 1 states Area 3 is visited immediately before Area 4, forming the block [Area 3, Area 4]. This block must occupy positions 4 and 5, so Area 3 = 4 and Area 4 = 5. This arrangement is perfectly valid: 1:Area 5, 2:Area 2, 3:Area 1, 4:Area 3, 5:Area 4. Case 2: Area 5 = 3, Area 1 = 5. The remaining slots are 1 and 4. The block [Area 3, Area 4] must fit into consecutive slots, but the remaining slots 1 and 4 are not consecutive. Thus, Case 2 is invalid. The unique valid arrangement is Case 1, where Area 5 is visited first."
 },
 {
 kind: "single",
@@ -23420,7 +23420,7 @@ distractors: [
 "Chidi must be selected for the committee.",
 "Aris cannot be selected for the committee."
 ],
-explanation: "Let's analyze all valid combinations systematically:\nHumanities requires exactly 2 members from {Diane, Ethan}. Since there are only two available, both Diane and Ethan must be selected in all valid arrangements.\nBusiness requires exactly 1 member from {Fiona, George}.\nScience requires exactly 2 members from {Aris, Brenda, Chidi}.\n- Case 1: Fiona (Business) is selected. \n  - Condition 5 states if Fiona is selected, Chidi must be selected.\n  - Condition 4 states if Aris is selected, Fiona cannot be selected, meaning since Fiona is selected, Aris cannot be selected.\n  - Therefore, the two Science members must be Brenda and Chidi. This gives exactly one valid committee: {Brenda, Chidi, Diane, Ethan, Fiona}.\n- Case 2: George (Business) is selected.\n  - Condition 6 states George cannot be selected unless Ethan is selected, which is satisfied since Ethan is always selected.\n  - There are no further restrictions on the Science members, so we can choose any 2 from {Aris, Brenda, Chidi}.\n  - This gives three valid committees: {Aris, Brenda, Diane, Ethan, George}, {Aris, Chidi, Diane, Ethan, George}, and {Brenda, Chidi, Diane, Ethan, George}.\nLet's evaluate the choices:\n- 'If Fiona is selected, Brenda must be selected': In Case 1 (the only case where Fiona is selected), Brenda is selected. This must be true.\n- 'If George is selected, Aris cannot be selected': False, because in Case 2, {Aris, Brenda, Diane, Ethan, George} is a valid committee where George and Aris are both selected.\n- 'Chidi must be selected for the committee': False, because {Aris, Brenda, Diane, Ethan, George} is a valid arrangement without Chidi.\n- 'Aris cannot be selected for the committee': False, as shown in Case 2."
+explanation: "Let's analyse all valid combinations systematically:\nHumanities requires exactly 2 members from {Diane, Ethan}. Since there are only two available, both Diane and Ethan must be selected in all valid arrangements.\nBusiness requires exactly 1 member from {Fiona, George}.\nScience requires exactly 2 members from {Aris, Brenda, Chidi}.\n- Case 1: Fiona (Business) is selected. \n  - Condition 5 states if Fiona is selected, Chidi must be selected.\n  - Condition 4 states if Aris is selected, Fiona cannot be selected, meaning since Fiona is selected, Aris cannot be selected.\n  - Therefore, the two Science members must be Brenda and Chidi. This gives exactly one valid committee: {Brenda, Chidi, Diane, Ethan, Fiona}.\n- Case 2: George (Business) is selected.\n  - Condition 6 states George cannot be selected unless Ethan is selected, which is satisfied since Ethan is always selected.\n  - There are no further restrictions on the Science members, so we can choose any 2 from {Aris, Brenda, Chidi}.\n  - This gives three valid committees: {Aris, Brenda, Diane, Ethan, George}, {Aris, Chidi, Diane, Ethan, George}, and {Brenda, Chidi, Diane, Ethan, George}.\nLet's evaluate the choices:\n- 'If Fiona is selected, Brenda must be selected': In Case 1 (the only case where Fiona is selected), Brenda is selected. This must be true.\n- 'If George is selected, Aris cannot be selected': False, because in Case 2, {Aris, Brenda, Diane, Ethan, George} is a valid committee where George and Aris are both selected.\n- 'Chidi must be selected for the committee': False, because {Aris, Brenda, Diane, Ethan, George} is a valid arrangement without Chidi.\n- 'Aris cannot be selected for the committee': False, as shown in Case 2."
 },
 {
 kind: "single",
@@ -23441,7 +23441,7 @@ distractors: [
 "Aris cannot be selected.",
 "Brenda cannot be selected."
 ],
-explanation: "We are given that Chidi is not selected.\n- Humanities requires exactly 2 members, so Diane and Ethan must be selected.\n- Science requires exactly 2 members from {Aris, Brenda, Chidi}. Since Chidi is not selected, both Aris and Brenda must be selected.\n- Since Aris is selected, Condition 4 dictates that Fiona cannot be selected.\n- Since Fiona is excluded, the Business slot must be filled by George.\n- Condition 6 requires that if George is selected, Ethan must be selected, which is true.\n- Condition 5 states if George is selected, Chidi cannot be selected, which matches our premise.\nThus, if Chidi is not selected, the unique valid committee configuration is {Aris, Brenda, Diane, Ethan, George}.\nLet's check the choices:\n- 'George must be selected': This is true as shown above.\n- 'Fiona must be selected': False, Fiona is explicitly excluded.\n- 'Aris cannot be selected': False, Aris must be selected to fulfill the Science quota.\n- 'Brenda cannot be selected': False, Brenda must be selected to fulfill the Science quota."
+explanation: "We are given that Chidi is not selected.\n- Humanities requires exactly 2 members, so Diane and Ethan must be selected.\n- Science requires exactly 2 members from {Aris, Brenda, Chidi}. Since Chidi is not selected, both Aris and Brenda must be selected.\n- Since Aris is selected, Condition 4 dictates that Fiona cannot be selected.\n- Since Fiona is excluded, the Business slot must be filled by George.\n- Condition 6 requires that if George is selected, Ethan must be selected, which is true.\n- Condition 5 states if George is selected, Chidi cannot be selected, which matches our premise.\nThus, if Chidi is not selected, the unique valid committee configuration is {Aris, Brenda, Diane, Ethan, George}.\nLet's check the choices:\n- 'George must be selected': This is true as shown above.\n- 'Fiona must be selected': False, Fiona is explicitly excluded.\n- 'Aris cannot be selected': False, Aris must be selected to fulfil the Science quota.\n- 'Brenda cannot be selected': False, Brenda must be selected to fulfil the Science quota."
 },
 {
 kind: "single",
@@ -23525,7 +23525,7 @@ distractors: [
 "Chidi, Diane, Ethan, Fiona, George",
 "Aris, Brenda, Chidi, Diane, Ethan"
 ],
-explanation: "We analyze the scenario where Aris is not selected:\n- Humanities requires Diane and Ethan (2 slots, 2 candidates).\n- Business requires either Fiona or George. However, as previously established, George can never be selected because selecting George forces Aris to be selected, creating a contradiction. Thus, Fiona must be selected.\n- Science requires 2 members from {Aris, Brenda, Chidi}. Since Aris is not selected, the two slots must be filled by Brenda and Chidi.\n- Combining these gives the unique valid committee: {Brenda, Chidi, Diane, Ethan, Fiona}.\nLet's evaluate the distractors:\n- 'Brenda, Chidi, Diane, Ethan, George' is invalid because George cannot be selected.\n- 'Chidi, Diane, Ethan, Fiona, George' contains 6 members and includes George.\n- 'Aris, Brenda, Chidi, Diane, Ethan' includes Aris and lacks a Business representative."
+explanation: "We analyse the scenario where Aris is not selected:\n- Humanities requires Diane and Ethan (2 slots, 2 candidates).\n- Business requires either Fiona or George. However, as previously established, George can never be selected because selecting George forces Aris to be selected, creating a contradiction. Thus, Fiona must be selected.\n- Science requires 2 members from {Aris, Brenda, Chidi}. Since Aris is not selected, the two slots must be filled by Brenda and Chidi.\n- Combining these gives the unique valid committee: {Brenda, Chidi, Diane, Ethan, Fiona}.\nLet's evaluate the distractors:\n- 'Brenda, Chidi, Diane, Ethan, George' is invalid because George cannot be selected.\n- 'Chidi, Diane, Ethan, Fiona, George' contains 6 members and includes George.\n- 'Aris, Brenda, Chidi, Diane, Ethan' includes Aris and lacks a Business representative."
 },
 
 // ==========================================
@@ -23613,7 +23613,7 @@ distractors: [
 "3",
 "0"
 ],
-explanation: "Let's analyze the configuration when Naomi is appointed:\n- Naomi is from Operations.\n- Condition 4 states that if Kaelen is appointed, Naomi cannot be appointed. By contrapositive, since Naomi is appointed, Kaelen cannot be appointed.\n- Since Kaelen is excluded, Linnea is the only available representative for the Finance division. Since the committee must have at least one Finance representative, Linnea must be appointed.\n- Condition 5 states that Linnea and Oscar cannot both be appointed. Since Linnea is appointed, Oscar is excluded.\n- Out of our original 6 directors, Kaelen and Oscar are excluded, and Naomi and Linnea are appointed. This leaves exactly two directors remaining: Min-Jun and Priya. Since we need a four-member committee and already have two, both Min-Jun and Priya must be appointed.\n- We check Condition 6: If Priya is appointed, Min-Jun must be appointed. Both are appointed, so this is satisfied.\n- This results in exactly one unique valid configuration: {Linnea, Min-Jun, Naomi, Priya}.\nTherefore, there is exactly 1 valid configuration."
+explanation: "Let's analyse the configuration when Naomi is appointed:\n- Naomi is from Operations.\n- Condition 4 states that if Kaelen is appointed, Naomi cannot be appointed. By contrapositive, since Naomi is appointed, Kaelen cannot be appointed.\n- Since Kaelen is excluded, Linnea is the only available representative for the Finance division. Since the committee must have at least one Finance representative, Linnea must be appointed.\n- Condition 5 states that Linnea and Oscar cannot both be appointed. Since Linnea is appointed, Oscar is excluded.\n- Out of our original 6 directors, Kaelen and Oscar are excluded, and Naomi and Linnea are appointed. This leaves exactly two directors remaining: Min-Jun and Priya. Since we need a four-member committee and already have two, both Min-Jun and Priya must be appointed.\n- We check Condition 6: If Priya is appointed, Min-Jun must be appointed. Both are appointed, so this is satisfied.\n- This results in exactly one unique valid configuration: {Linnea, Min-Jun, Naomi, Priya}.\nTherefore, there is exactly 1 valid configuration."
 },
 {
 kind: "single",
@@ -23634,7 +23634,7 @@ distractors: [
 "Kaelen cannot be appointed.",
 "Priya cannot be appointed."
 ],
-explanation: "Let's analyze the scenario where Linnea is not appointed:\n- Referencing our three valid committee configurations:\n  1. {Kaelen, Min-Jun, Oscar, Priya}\n  2. {Kaelen, Linnea, Min-Jun, Priya}\n  3. {Linnea, Min-Jun, Naomi, Priya}\n- The only valid configuration that does not contain Linnea is configuration 1: {Kaelen, Min-Jun, Oscar, Priya}.\n- In this unique configuration, Oscar is appointed, so 'Oscar must be appointed' is the correct answer.\nLet's evaluate the distractors:\n- 'Naomi must be appointed': False, Naomi is absent from configuration 1.\n- 'Kaelen cannot be appointed': False, Kaelen is appointed in configuration 1.\n- 'Priya cannot be appointed': False, Priya is appointed in configuration 1."
+explanation: "Let's analyse the scenario where Linnea is not appointed:\n- Referencing our three valid committee configurations:\n  1. {Kaelen, Min-Jun, Oscar, Priya}\n  2. {Kaelen, Linnea, Min-Jun, Priya}\n  3. {Linnea, Min-Jun, Naomi, Priya}\n- The only valid configuration that does not contain Linnea is configuration 1: {Kaelen, Min-Jun, Oscar, Priya}.\n- In this unique configuration, Oscar is appointed, so 'Oscar must be appointed' is the correct answer.\nLet's evaluate the distractors:\n- 'Naomi must be appointed': False, Naomi is absent from configuration 1.\n- 'Kaelen cannot be appointed': False, Kaelen is appointed in configuration 1.\n- 'Priya cannot be appointed': False, Priya is appointed in configuration 1."
 },
 {
 kind: "single",
@@ -23764,7 +23764,7 @@ distractors: [
 "3",
 "0"
 ],
-explanation: "Let's analyze the configuration when Dr. Bennett is selected:\n- Since Dr. Bennett is a Surgeon, he occupies one Surgeon slot.\n- Condition 5 states that if Dr. Bennett is selected, Dr. Farooq must be selected. This fills the single Cardiologist slot, meaning Dr. Garcia is excluded.\n- Condition 4 states that if Dr. Al-Asif is selected, Dr. Farooq cannot be selected. Since Dr. Farooq is selected, Dr. Al-Asif cannot be selected.\n- Since Dr. Al-Asif is excluded, and we need a second Surgeon to accompany Dr. Bennett, that slot must be filled by Dr. Chen.\n- The two Paediatrician slots must be filled by the only two available options: Dr. Desai and Dr. Edwards.\n- This leads to exactly one unique valid combination: {Dr. Bennett, Dr. Chen, Dr. Desai, Dr. Edwards, Dr. Farooq}.\nTherefore, there is exactly 1 valid panel configuration."
+explanation: "Let's analyse the configuration when Dr. Bennett is selected:\n- Since Dr. Bennett is a Surgeon, he occupies one Surgeon slot.\n- Condition 5 states that if Dr. Bennett is selected, Dr. Farooq must be selected. This fills the single Cardiologist slot, meaning Dr. Garcia is excluded.\n- Condition 4 states that if Dr. Al-Asif is selected, Dr. Farooq cannot be selected. Since Dr. Farooq is selected, Dr. Al-Asif cannot be selected.\n- Since Dr. Al-Asif is excluded, and we need a second Surgeon to accompany Dr. Bennett, that slot must be filled by Dr. Chen.\n- The two Paediatrician slots must be filled by the only two available options: Dr. Desai and Dr. Edwards.\n- This leads to exactly one unique valid combination: {Dr. Bennett, Dr. Chen, Dr. Desai, Dr. Edwards, Dr. Farooq}.\nTherefore, there is exactly 1 valid panel configuration."
 },
 {
 kind: "single",
@@ -23785,7 +23785,7 @@ distractors: [
 "Dr. Chen cannot be selected.",
 "Dr. Garcia cannot be selected."
 ],
-explanation: "We analyze the scenario where Dr. Farooq is not selected:\n- Since there are only two Cardiologists (Dr. Farooq and Dr. Garcia) and one must be selected, excluding Dr. Farooq means Dr. Garcia must be selected.\n- From our exhaustive analysis, the only valid configuration that includes Dr. Garcia is configuration 1:\n  {Dr. Al-Asif, Dr. Chen, Dr. Desai, Dr. Edwards, Dr. Garcia}\n- In this unique configuration, Dr. Al-Asif is selected, so 'Dr. Al-Asif must be selected' is the correct answer.\nLet's evaluate the distractors:\n- 'Dr. Bennett must be selected': False, Dr. Bennett is excluded from configuration 1.\n- 'Dr. Chen cannot be selected': False, Dr. Chen is selected in configuration 1.\n- 'Dr. Garcia cannot be selected': False, Dr. Garcia must be selected."
+explanation: "We analyse the scenario where Dr. Farooq is not selected:\n- Since there are only two Cardiologists (Dr. Farooq and Dr. Garcia) and one must be selected, excluding Dr. Farooq means Dr. Garcia must be selected.\n- From our exhaustive analysis, the only valid configuration that includes Dr. Garcia is configuration 1:\n  {Dr. Al-Asif, Dr. Chen, Dr. Desai, Dr. Edwards, Dr. Garcia}\n- In this unique configuration, Dr. Al-Asif is selected, so 'Dr. Al-Asif must be selected' is the correct answer.\nLet's evaluate the distractors:\n- 'Dr. Bennett must be selected': False, Dr. Bennett is excluded from configuration 1.\n- 'Dr. Chen cannot be selected': False, Dr. Chen is selected in configuration 1.\n- 'Dr. Garcia cannot be selected': False, Dr. Garcia must be selected."
 },
 {
 kind: "single",
@@ -24482,7 +24482,7 @@ distractors: [
 "P5 is executed third.",
 "P6 is executed first."
 ],
-explanation: "P2 = 4. P4 can be 1 or 6. Let's analyze both cases. Case 1: P4 = 1. Condition 5 states there are exactly two protocols between P5 and P4(1), which means P5 must be 4. But P2 = 4, so this causes a conflict. Thus, Case 1 is impossible. Case 2: P4 = 6. Exactly two protocols between P5 and P4(6) means P5 must be 3. Condition 1 says P1 is immediately before P5, so P1 = 2. Remaining slots are 1 and 5 for P3 and P6. Condition 2 says P3 is executed after P6, so P6 = 1 and P3 = 5. This forms a unique valid layout: P6=1, P1=2, P5=3, P2=4, P3=5, P4=6. Therefore, P4 is executed sixth is the absolute truth."
+explanation: "P2 = 4. P4 can be 1 or 6. Let's analyse both cases. Case 1: P4 = 1. Condition 5 states there are exactly two protocols between P5 and P4(1), which means P5 must be 4. But P2 = 4, so this causes a conflict. Thus, Case 1 is impossible. Case 2: P4 = 6. Exactly two protocols between P5 and P4(6) means P5 must be 3. Condition 1 says P1 is immediately before P5, so P1 = 2. Remaining slots are 1 and 5 for P3 and P6. Condition 2 says P3 is executed after P6, so P6 = 1 and P3 = 5. This forms a unique valid layout: P6=1, P1=2, P5=3, P2=4, P3=5, P4=6. Therefore, P4 is executed sixth is the absolute truth."
 },
 {
 kind: "single",
@@ -24503,7 +24503,7 @@ distractors: [
 "T6 is scheduled third.",
 "T4 is scheduled fifth."
 ],
-explanation: "T3 = 2. T5 can be 1 or 5. Let's analyze both. Case 1: T5 = 1. Exactly two tests between T6 and T5(1) means T6 must be 4. Condition 1 says T1 is immediately before T6, so T1 = 3. Remaining slots are 5 and 6 for T2 and T4. Condition 2 says T4 is after T2, so T2 = 5 and T4 = 6. Let's check all conditions: T5=1, T3=2, T1=3, T6=4, T2=5, T4=6. This is valid. Case 2: T5 = 5. Exactly two tests between T6 and T5(5) means T6 must be 2. But T3 = 2, so this causes a conflict. Thus, Case 2 is impossible. Therefore, Case 1 is the unique valid arrangement: T5=1, T3=2, T1=3, T6=4, T2=5, T4=6. This means 'T5 is scheduled first' is true."
+explanation: "T3 = 2. T5 can be 1 or 5. Let's analyse both. Case 1: T5 = 1. Exactly two tests between T6 and T5(1) means T6 must be 4. Condition 1 says T1 is immediately before T6, so T1 = 3. Remaining slots are 5 and 6 for T2 and T4. Condition 2 says T4 is after T2, so T2 = 5 and T4 = 6. Let's check all conditions: T5=1, T3=2, T1=3, T6=4, T2=5, T4=6. This is valid. Case 2: T5 = 5. Exactly two tests between T6 and T5(5) means T6 must be 2. But T3 = 2, so this causes a conflict. Thus, Case 2 is impossible. Therefore, Case 1 is the unique valid arrangement: T5=1, T3=2, T1=3, T6=4, T2=5, T4=6. This means 'T5 is scheduled first' is true."
 },
 {
 kind: "single",
@@ -24661,7 +24661,7 @@ explanation: "P6 = 4. P2 is two slots before P5 (P2 = n, P5 = n+2). Since P6 = 4
     subtype: "dm-logic",
     leftTitle: "Puzzle",
     stimulus: [
-      "A bookstore owner is organizing a window display featuring five award-winning novels—Biophilia, Chronos, Darkmatter, Entropy, and Futurebound—on five tiered shelves arranged vertically from 1 (highest) to 5 (lowest).",
+      "A bookstore owner is organising a window display featuring five award-winning novels—Biophilia, Chronos, Darkmatter, Entropy, and Futurebound—on five tiered shelves arranged vertically from 1 (highest) to 5 (lowest).",
       "• Chronos must be placed on a shelf immediately below Darkmatter.",
       "• Futurebound cannot be placed on shelf 3 or shelf 5.",
       "• There must be exactly two shelves between Biophilia and Entropy.",
@@ -24730,7 +24730,7 @@ explanation: "P6 = 4. P2 is two slots before P5 (P2 = n, P5 = n+2). Since P6 = 4
     subtype: "dm-logic",
     leftTitle: "Puzzle",
     stimulus: [
-      "A homeowner organizes five tools—Hammer, Mallet, Saw, Wrench, and Pliers—on a horizontal tool rack with five slots numbered 1 (left) to 5 (right).",
+      "A homeowner organises five tools—Hammer, Mallet, Saw, Wrench, and Pliers—on a horizontal tool rack with five slots numbered 1 (left) to 5 (right).",
       "• The Hammer must be placed in a slot immediately to the left of the Mallet.",
       "• The Pliers must be placed in an odd-numbered slot.",
       "• There must be exactly two tools between the Saw and the Wrench.",
@@ -24798,7 +24798,7 @@ explanation: "P6 = 4. P2 is two slots before P5 (P2 = n, P5 = n+2). Since P6 = 4
     subtype: "dm-logic",
     leftTitle: "Puzzle",
     stimulus: [
-      "A chef organizes five pantry ingredients—Flour, Honey, Icing, Jam, and Lentils—on a pantry shelf with five linear slots numbered 1 (left) to 5 (right).",
+      "A chef organises five pantry ingredients—Flour, Honey, Icing, Jam, and Lentils—on a pantry shelf with five linear slots numbered 1 (left) to 5 (right).",
       "• The Flour jar must be placed in a slot immediately to the left of the Honey jar.",
       "• The Lentils jar must be placed in an odd-numbered slot.",
       "• There must be exactly two slots between the Icing jar and the Jam jar.",
@@ -24864,7 +24864,7 @@ explanation: "P6 = 4. P2 is two slots before P5 (P2 = n, P5 = n+2). Since P6 = 4
     subtype: "dm-logic",
     leftTitle: "Puzzle",
     stimulus: [
-      "An archivist is organizing five historical document files—Tax records, Treaties, Maps, Charters, and Blueprints—on five designated shelves numbered 1 (top) to 5 (bottom).",
+      "An archivist is organising five historical document files—Tax records, Treaties, Maps, Charters, and Blueprints—on five designated shelves numbered 1 (top) to 5 (bottom).",
       "• The Tax records file must be placed on a shelf immediately below the Maps file.",
       "• The Charters file must be placed on a shelf higher than the Treaties file.",
       "• There must be exactly two shelves between the Treaties file and the Blueprints file.",
@@ -24900,7 +24900,7 @@ distractors: [
 "Dan defeated Hugh in the Semi-finals.",
 "Fox won the entire tournament."
 ],
-explanation: "Let's analyze the tournament structure step-by-step. In Quarter-final 1, Amir defeats Ben, so Amir advances to Semi-final 1. In Quarter-final 2, Dan wins against Cole, advancing to Semi-final 1. Therefore, Semi-final 1 is Amir vs. Dan. We are told Dan wins his Semi-final match, which means Dan defeats Amir and advances to the Final. In Quarter-final 4, Hugh defeats Guy, so Hugh advances to Semi-final 2. In Quarter-final 3, Eli plays Fox. We are told Fox reaches the Final, which means Fox must win Semi-final 2. To get to Semi-final 2, Fox must have won Quarter-final 3 against Eli. Therefore, Eli must have lost his Quarter-final match to Fox. Let's verify the options: 1) 'Eli lost his Quarter-final match' must be true. 2) 'Amir won his Semi-final match' is false; Dan defeated Amir. 3) 'Dan defeated Hugh in the Semi-finals' is false; Dan played Amir in the Semi-finals. 4) 'Fox won the entire tournament' is possible but not certain, as the Final between Dan and Fox has an unstated outcome."
+explanation: "Let's analyse the tournament structure step-by-step. In Quarter-final 1, Amir defeats Ben, so Amir advances to Semi-final 1. In Quarter-final 2, Dan wins against Cole, advancing to Semi-final 1. Therefore, Semi-final 1 is Amir vs. Dan. We are told Dan wins his Semi-final match, which means Dan defeats Amir and advances to the Final. In Quarter-final 4, Hugh defeats Guy, so Hugh advances to Semi-final 2. In Quarter-final 3, Eli plays Fox. We are told Fox reaches the Final, which means Fox must win Semi-final 2. To get to Semi-final 2, Fox must have won Quarter-final 3 against Eli. Therefore, Eli must have lost his Quarter-final match to Fox. Let's verify the options: 1) 'Eli lost his Quarter-final match' must be true. 2) 'Amir won his Semi-final match' is false; Dan defeated Amir. 3) 'Dan defeated Hugh in the Semi-finals' is false; Dan played Amir in the Semi-finals. 4) 'Fox won the entire tournament' is possible but not certain, as the Final between Dan and Fox has an unstated outcome."
 },
 {
 kind: "single",
@@ -24963,7 +24963,7 @@ distractors: [
 "Guy won the entire tournament.",
 "Hank reached the Semi-finals."
 ],
-explanation: "Let's analyze Semi-final 1. The participants are the winner of QF1 (Alex) and the winner of QF3 (Echo). We are told that Alex does not reach the Final. Since Semi-final 1 is strictly between Alex and Echo, and Alex loses, Echo must win Semi-final 1 and advance to the Final. Therefore, Echo defeated Alex in Semi-final 1. Now let's check the other side of the bracket: the winner of the tournament is either Dex or Guy, meaning the ultimate champion comes from the right side of the bracket (Semi-final 2), meaning Echo loses in the Final to either Dex or Guy. However, we cannot definitively say whether Dex or Cael won QF2, or whether Guy or Hank won QF4 based on the final winner constraint alone (e.g., if Guy won the tournament, Hank could have lost QF4 or SF2). Thus, 'Echo defeated Alex in Semi-final 1' is the only absolute certainty."
+explanation: "Let's analyse Semi-final 1. The participants are the winner of QF1 (Alex) and the winner of QF3 (Echo). We are told that Alex does not reach the Final. Since Semi-final 1 is strictly between Alex and Echo, and Alex loses, Echo must win Semi-final 1 and advance to the Final. Therefore, Echo defeated Alex in Semi-final 1. Now let's check the other side of the bracket: the winner of the tournament is either Dex or Guy, meaning the ultimate champion comes from the right side of the bracket (Semi-final 2), meaning Echo loses in the Final to either Dex or Guy. However, we cannot definitively say whether Dex or Cael won QF2, or whether Guy or Hank won QF4 based on the final winner constraint alone (e.g., if Guy won the tournament, Hank could have lost QF4 or SF2). Thus, 'Echo defeated Alex in Semi-final 1' is the only absolute certainty."
 },
 {
 kind: "single",
@@ -25048,7 +25048,7 @@ distractors: [
 "Condors finished with 4 points.",
 "Eagles finished with 6 points."
 ],
-explanation: "Let's break down the points. Hawks finish with 0 points, meaning Hawks lost all 3 of their matches (to Falcons, Eagles, and Condors). Therefore, Falcons, Eagles, and Condors all gained 3 points from defeating Hawks. Falcons finished with 7 points. The only way to get 7 points in 3 games is 2 wins and 1 draw (3+3+1). Since Falcons beat Hawks, their other two matches (against Eagles and Condors) must consist of 1 win and 1 draw. This means Falcons did not lose any games. The total points awarded in the tournament can be analyzed by looking at the remaining matches. Eagles and Condors both beat Hawks. The match between Falcons and Eagles, Falcons and Condors, and Eagles and Condors remain. Since Hawks lost to everyone, let's check the condition 'Eagles finish with more points than Condors'. Since Eagles beat Hawks, Eagles have at least 3 points. Since Eagles must beat Hawks, option 1 'Eagles defeated Hawks' is directly given by Hawks having 0 points. It must be true in all scenarios."
+explanation: "Let's break down the points. Hawks finish with 0 points, meaning Hawks lost all 3 of their matches (to Falcons, Eagles, and Condors). Therefore, Falcons, Eagles, and Condors all gained 3 points from defeating Hawks. Falcons finished with 7 points. The only way to get 7 points in 3 games is 2 wins and 1 draw (3+3+1). Since Falcons beat Hawks, their other two matches (against Eagles and Condors) must consist of 1 win and 1 draw. This means Falcons did not lose any games. The total points awarded in the tournament can be analysed by looking at the remaining matches. Eagles and Condors both beat Hawks. The match between Falcons and Eagles, Falcons and Condors, and Eagles and Condors remain. Since Hawks lost to everyone, let's check the condition 'Eagles finish with more points than Condors'. Since Eagles beat Hawks, Eagles have at least 3 points. Since Eagles must beat Hawks, option 1 'Eagles defeated Hawks' is directly given by Hawks having 0 points. It must be true in all scenarios."
 },
 {
 kind: "single",
@@ -25129,7 +25129,7 @@ distractors: [
 "Oak finished with 7 points.",
 "Cedar defeated Ash."
 ],
-explanation: "Let's analyze how a team can finish with exactly 1 point in 3 matches. The only way is to have 1 draw and 2 losses (1+0+0). Therefore, Ash, Beech, and Cedar each had exactly 1 draw and 2 losses. Since they each lost 2 matches, let's look at Oak. Oak played Ash, Beech, and Cedar. Since Ash, Beech, and Cedar only drew against each other (if any of them drew with Oak, Oak would have a draw, and that team would have its 1 draw), let's see: if a team drew with Oak, Oak would drop points. But let's look at the losses: Ash has 2 losses, Beech has 2 losses, Cedar has 2 losses. Total losses across these three teams is 6. Who did they lose to? They could only lose to each other or to Oak. Since a match loss corresponds to another team's win, Oak must have won all 3 of its matches to inflict those losses, giving Oak 9 points, and meaning Ash, Beech, and Cedar drew in a three-way cycle or simple pairings among themselves while all losing to Oak. Thus, Oak must have won all three of its matches."
+explanation: "Let's analyse how a team can finish with exactly 1 point in 3 matches. The only way is to have 1 draw and 2 losses (1+0+0). Therefore, Ash, Beech, and Cedar each had exactly 1 draw and 2 losses. Since they each lost 2 matches, let's look at Oak. Oak played Ash, Beech, and Cedar. Since Ash, Beech, and Cedar only drew against each other (if any of them drew with Oak, Oak would have a draw, and that team would have its 1 draw), let's see: if a team drew with Oak, Oak would drop points. But let's look at the losses: Ash has 2 losses, Beech has 2 losses, Cedar has 2 losses. Total losses across these three teams is 6. Who did they lose to? They could only lose to each other or to Oak. Since a match loss corresponds to another team's win, Oak must have won all 3 of its matches to inflict those losses, giving Oak 9 points, and meaning Ash, Beech, and Cedar drew in a three-way cycle or simple pairings among themselves while all losing to Oak. Thus, Oak must have won all three of its matches."
 },
 {
 kind: "single",
@@ -25149,7 +25149,7 @@ distractors: [
 "P defeated S.",
 "S won at least two matches."
 ],
-explanation: "Let's analyze the possibilities for a team to get 4 points in 3 games. The options are: 1 win, 1 draw, 1 loss (3+1+0=4). Since P, Q, and R each have 4 points, they must each have exactly 1 win, 1 draw, and 1 loss. Let's count the total wins, draws, and losses currently accounted for by P, Q, and R: Total wins = 3, Total draws = 3, Total losses = 3. In any tournament, the total number of wins must equal the total number of losses. For S, let's see what its record must be. Since each of the 6 matches produces either (1 win, 1 loss) or (2 draws), let's see what happens if S also has 1 win, 1 draw, and 1 loss. Then total wins = 4, total losses = 4, total draws = 4. Since 4 draws means 2 matches were draws, and 4 wins means 4 matches ended in a win, 2 + 4 = 6 matches total, which fits perfectly. Can S have any other score? If S had 0 points (3 losses), total losses would be 6, but total wins from P,Q,R is only 3, which is impossible since total wins must equal total losses. By testing all combinations, S must have 1 win, 1 draw, and 1 loss to balance the tournament equations, meaning S must finish with exactly 4 points."
+explanation: "Let's analyse the possibilities for a team to get 4 points in 3 games. The options are: 1 win, 1 draw, 1 loss (3+1+0=4). Since P, Q, and R each have 4 points, they must each have exactly 1 win, 1 draw, and 1 loss. Let's count the total wins, draws, and losses currently accounted for by P, Q, and R: Total wins = 3, Total draws = 3, Total losses = 3. In any tournament, the total number of wins must equal the total number of losses. For S, let's see what its record must be. Since each of the 6 matches produces either (1 win, 1 loss) or (2 draws), let's see what happens if S also has 1 win, 1 draw, and 1 loss. Then total wins = 4, total losses = 4, total draws = 4. Since 4 draws means 2 matches were draws, and 4 wins means 4 matches ended in a win, 2 + 4 = 6 matches total, which fits perfectly. Can S have any other score? If S had 0 points (3 losses), total losses would be 6, but total wins from P,Q,R is only 3, which is impossible since total wins must equal total losses. By testing all combinations, S must have 1 win, 1 draw, and 1 loss to balance the tournament equations, meaning S must finish with exactly 4 points."
 },
 {
 kind: "single",
@@ -25361,7 +25361,7 @@ distractors: [
 "Volume H is bound in blue.",
 "Volume J is bound in brown."
 ],
-explanation: "Let's analyze the distribution. Volume G is black. Volume L is either yellow or brown. Case 1: L is yellow. Then K must be red (Condition 4). This leaves blue, green, and brown for H, I, and J. Since H must be blue or green, brown must be allocated to either I or J. If I is yellow, J is brown, but here L is yellow, so I cannot be yellow anyway. Case 2: L is brown. If L is brown, then K is not red (Condition 4). Since L is brown, J cannot be brown. If J is not brown, Volume I cannot be yellow (contrapositive of Condition 3). In both possible cases for L, Volume I cannot be yellow. Thus, Volume I is not bound in yellow is absolutely true. Distractors can fail: L could be brown, making K something else, or H could switch between blue and green depending on remaining allocations."
+explanation: "Let's analyse the distribution. Volume G is black. Volume L is either yellow or brown. Case 1: L is yellow. Then K must be red (Condition 4). This leaves blue, green, and brown for H, I, and J. Since H must be blue or green, brown must be allocated to either I or J. If I is yellow, J is brown, but here L is yellow, so I cannot be yellow anyway. Case 2: L is brown. If L is brown, then K is not red (Condition 4). Since L is brown, J cannot be brown. If J is not brown, Volume I cannot be yellow (contrapositive of Condition 3). In both possible cases for L, Volume I cannot be yellow. Thus, Volume I is not bound in yellow is absolutely true. Distractors can fail: L could be brown, making K something else, or H could switch between blue and green depending on remaining allocations."
 },
 {
 kind: "single",
@@ -25456,8 +25456,8 @@ kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Six prototype smartphones—Alpha, Beta, Gamma, Delta, Epsilon, and Zeta—each feature a different metallic finish: Silver, Space Gray, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
-"• Alpha is finished in either Silver or Space Gray.",
+"Six prototype smartphones—Alpha, Beta, Gamma, Delta, Epsilon, and Zeta—each feature a different metallic finish: Silver, Space Grey, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
+"• Alpha is finished in either Silver or Space Grey.",
 "• Beta is finished in Satin Blue.",
 "• Gamma is finished in Rose Gold if and only if Delta is finished in Matte Black.",
 "• Epsilon is finished in Matte Black.",
@@ -25466,19 +25466,19 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "Zeta is not finished in Emerald Green.",
 distractors: [
-"Alpha is finished in Space Gray.",
+"Alpha is finished in Space Grey.",
 "Gamma is finished in Silver.",
-"Delta is finished in Space Gray."
+"Delta is finished in Space Grey."
 ],
-explanation: "Fixed positions: Beta is Satin Blue, Epsilon is Matte Black. This means Delta cannot be Matte Black. Condition 3 states: 'Gamma is Rose Gold if and only if Delta is Matte Black.' Since Delta is not Matte Black, Gamma cannot be Rose Gold. Condition 5 states: 'If Zeta is Emerald Green, then Gamma is Rose Gold.' Since Gamma cannot be Rose Gold, Zeta cannot be Emerald Green. Therefore, 'Zeta is not finished in Emerald Green' must be true. The remaining colours (Silver, Space Gray, Emerald Green, Rose Gold) can be distributed among Alpha, Gamma, Delta, and Zeta in multiple valid configurations, making all distractors false in at least one scenario."
+explanation: "Fixed positions: Beta is Satin Blue, Epsilon is Matte Black. This means Delta cannot be Matte Black. Condition 3 states: 'Gamma is Rose Gold if and only if Delta is Matte Black.' Since Delta is not Matte Black, Gamma cannot be Rose Gold. Condition 5 states: 'If Zeta is Emerald Green, then Gamma is Rose Gold.' Since Gamma cannot be Rose Gold, Zeta cannot be Emerald Green. Therefore, 'Zeta is not finished in Emerald Green' must be true. The remaining colours (Silver, Space Grey, Emerald Green, Rose Gold) can be distributed among Alpha, Gamma, Delta, and Zeta in multiple valid configurations, making all distractors false in at least one scenario."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Six smartwatches—Gen1, Gen2, Gen3, Gen4, Gen5, and Gen6—are finished in Silver, Space Gray, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
-"• Gen1 is finished in Space Gray.",
+"Six smartwatches—Gen1, Gen2, Gen3, Gen4, Gen5, and Gen6—are finished in Silver, Space Grey, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
+"• Gen1 is finished in Space Grey.",
 "• Gen2 is finished in Rose Gold.",
 "• Gen3 is finished in Silver if and only if Gen4 is finished in Satin Blue.",
 "• Gen5 is finished in Satin Blue.",
@@ -25491,39 +25491,39 @@ distractors: [
 "Gen4 is finished in Silver.",
 "Gen3 is finished in Emerald Green."
 ],
-explanation: "Fixed positions: Gen1 is Space Gray, Gen2 is Rose Gold, Gen5 is Satin Blue. Since Gen5 is Satin Blue, Gen4 cannot be Satin Blue. Condition 3 states: 'Gen3 is Silver if and only if Gen4 is Satin Blue.' Since Gen4 is not Satin Blue, Gen3 cannot be Silver. Condition 5 states: 'If Gen6 is Emerald Green, then Gen3 is Silver.' Since Gen3 cannot be Silver, Gen6 cannot be Emerald Green. Thus, 'Gen6 is not finished in Emerald Green' must be true. Remaining finishes (Silver, Matte Black, Emerald Green) are split between Gen3, Gen4, and Gen6, allowing alternative arrangements that disprove the distractors."
+explanation: "Fixed positions: Gen1 is Space Grey, Gen2 is Rose Gold, Gen5 is Satin Blue. Since Gen5 is Satin Blue, Gen4 cannot be Satin Blue. Condition 3 states: 'Gen3 is Silver if and only if Gen4 is Satin Blue.' Since Gen4 is not Satin Blue, Gen3 cannot be Silver. Condition 5 states: 'If Gen6 is Emerald Green, then Gen3 is Silver.' Since Gen3 cannot be Silver, Gen6 cannot be Emerald Green. Thus, 'Gen6 is not finished in Emerald Green' must be true. Remaining finishes (Silver, Matte Black, Emerald Green) are split between Gen3, Gen4, and Gen6, allowing alternative arrangements that disprove the distractors."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Six tablets—TabA, TabB, TabC, TabD, TabE, and TabF—are finished in Silver, Space Gray, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
+"Six tablets—TabA, TabB, TabC, TabD, TabE, and TabF—are finished in Silver, Space Grey, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
 "• TabA is finished in Emerald Green.",
 "• TabB is finished in Matte Black.",
-"• TabC is finished in Space Gray if and only if TabD is finished in Rose Gold.",
+"• TabC is finished in Space Grey if and only if TabD is finished in Rose Gold.",
 "• TabE is finished in Rose Gold.",
-"• If TabF is finished in Satin Blue, then TabC is finished in Space Gray."
+"• If TabF is finished in Satin Blue, then TabC is finished in Space Grey."
 ],
 question: "Which of the following must be true?",
 correct: "TabF is not finished in Satin Blue.",
 distractors: [
 "TabC is finished in Silver.",
-"TabD is finished in Space Gray.",
+"TabD is finished in Space Grey.",
 "TabF is finished in Silver."
 ],
-explanation: "Fixed positions: TabA is Emerald Green, TabB is Matte Black, TabE is Rose Gold. Since TabE is Rose Gold, TabD cannot be Rose Gold. Condition 3 states: 'TabC is Space Gray if and only if TabD is Rose Gold.' Because TabD is not Rose Gold, TabC cannot be Space Gray. Condition 5 states: 'If TabF is Satin Blue, then TabC is Space Gray.' Since TabC cannot be Space Gray, TabF cannot be Satin Blue. Therefore, 'TabF is not finished in Satin Blue' must be true. The remaining finishes (Silver, Space Gray, Satin Blue) go to TabC, TabD, and TabF, yielding multiple valid permutations that falsify the distractors."
+explanation: "Fixed positions: TabA is Emerald Green, TabB is Matte Black, TabE is Rose Gold. Since TabE is Rose Gold, TabD cannot be Rose Gold. Condition 3 states: 'TabC is Space Grey if and only if TabD is Rose Gold.' Because TabD is not Rose Gold, TabC cannot be Space Grey. Condition 5 states: 'If TabF is Satin Blue, then TabC is Space Grey.' Since TabC cannot be Space Grey, TabF cannot be Satin Blue. Therefore, 'TabF is not finished in Satin Blue' must be true. The remaining finishes (Silver, Space Grey, Satin Blue) go to TabC, TabD, and TabF, yielding multiple valid permutations that falsify the distractors."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Six laptops—Lap1, Lap2, Lap3, Lap4, Lap5, and Lap6—are finished in Silver, Space Gray, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
+"Six laptops—Lap1, Lap2, Lap3, Lap4, Lap5, and Lap6—are finished in Silver, Space Grey, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
 "• Lap1 is finished in Silver.",
 "• Lap2 is finished in Emerald Green.",
-"• Lap3 is finished in Satin Blue if and only if Lap4 is finished in Space Gray.",
-"• Lap5 is finished in Space Gray.",
+"• Lap3 is finished in Satin Blue if and only if Lap4 is finished in Space Grey.",
+"• Lap5 is finished in Space Grey.",
 "• If Lap6 is finished in Matte Black, then Lap3 is finished in Satin Blue."
 ],
 question: "Which of the following must be true?",
@@ -25533,18 +25533,18 @@ distractors: [
 "Lap4 is finished in Matte Black.",
 "Lap3 is finished in Matte Black."
 ],
-explanation: "Fixed positions: Lap1 is Silver, Lap2 is Emerald Green, Lap5 is Space Gray. Since Lap5 is Space Gray, Lap4 cannot be Space Gray. Condition 3 states: 'Lap3 is Satin Blue if and only if Lap4 is Space Gray.' Since Lap4 is not Space Gray, Lap3 cannot be Satin Blue. Condition 5 states: 'If Lap6 is Matte Black, then Lap3 is Satin Blue.' Since Lap3 cannot be Satin Blue, Lap6 cannot be Matte Black. Thus, 'Lap6 is not finished in Matte Black' must be true. The remaining finishes (Rose Gold, Matte Black, Satin Blue) are allocated to Lap3, Lap4, and Lap6, showing that none of the distractors are universally true."
+explanation: "Fixed positions: Lap1 is Silver, Lap2 is Emerald Green, Lap5 is Space Grey. Since Lap5 is Space Grey, Lap4 cannot be Space Grey. Condition 3 states: 'Lap3 is Satin Blue if and only if Lap4 is Space Grey.' Since Lap4 is not Space Grey, Lap3 cannot be Satin Blue. Condition 5 states: 'If Lap6 is Matte Black, then Lap3 is Satin Blue.' Since Lap3 cannot be Satin Blue, Lap6 cannot be Matte Black. Thus, 'Lap6 is not finished in Matte Black' must be true. The remaining finishes (Rose Gold, Matte Black, Satin Blue) are allocated to Lap3, Lap4, and Lap6, showing that none of the distractors are universally true."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Six wireless earbuds—BudA, BudB, BudC, BudD, BudE, and BudF—are finished in Silver, Space Gray, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
+"Six wireless earbuds—BudA, BudB, BudC, BudD, BudE, and BudF—are finished in Silver, Space Grey, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
 "• BudA is finished in Matte Black.",
 "• BudB is finished in Silver.",
-"• BudC is finished in Emerald Green if and only if BudD is finished in Space Gray.",
-"• BudE is finished in Space Gray.",
+"• BudC is finished in Emerald Green if and only if BudD is finished in Space Grey.",
+"• BudE is finished in Space Grey.",
 "• If BudF is finished in Rose Gold, then BudC is finished in Emerald Green."
 ],
 question: "Which of the following must be true?",
@@ -25554,35 +25554,35 @@ distractors: [
 "BudD is finished in Rose Gold.",
 "BudC is finished in Rose Gold."
 ],
-explanation: "Fixed positions: BudA is Matte Black, BudB is Silver, BudE is Space Gray. Since BudE is Space Gray, BudD cannot be Space Gray. Condition 3 states: 'BudC is Emerald Green if and only if BudD is Space Gray.' Because BudD is not Space Gray, BudC cannot be Emerald Green. Condition 5 states: 'If BudF is Rose Gold, then BudC is Emerald Green.' Since BudC cannot be Emerald Green, BudF cannot be Rose Gold. Therefore, 'BudF is not finished in Rose Gold' must be true. Remaining finishes (Rose Gold, Satin Blue, Emerald Green) are distributed among BudC, BudD, and BudF, meaning the distractors do not hold in all scenarios."
+explanation: "Fixed positions: BudA is Matte Black, BudB is Silver, BudE is Space Grey. Since BudE is Space Grey, BudD cannot be Space Grey. Condition 3 states: 'BudC is Emerald Green if and only if BudD is Space Grey.' Because BudD is not Space Grey, BudC cannot be Emerald Green. Condition 5 states: 'If BudF is Rose Gold, then BudC is Emerald Green.' Since BudC cannot be Emerald Green, BudF cannot be Rose Gold. Therefore, 'BudF is not finished in Rose Gold' must be true. Remaining finishes (Rose Gold, Satin Blue, Emerald Green) are distributed among BudC, BudD, and BudF, meaning the distractors do not hold in all scenarios."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Six e-readers—Read1, Read2, Read3, Read4, Read5, and Read6—are finished in Silver, Space Gray, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
+"Six e-readers—Read1, Read2, Read3, Read4, Read5, and Read6—are finished in Silver, Space Grey, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
 "• Read1 is finished in Rose Gold.",
 "• Read2 is finished in Matte Black.",
 "• Read3 is finished in Emerald Green if and only if Read4 is finished in Silver.",
 "• Read5 is finished in Silver.",
-"• If Read6 is finished in Space Gray, then Read3 is finished in Emerald Green."
+"• If Read6 is finished in Space Grey, then Read3 is finished in Emerald Green."
 ],
 question: "Which of the following must be true?",
-correct: "Read6 is not finished in Space Gray.",
+correct: "Read6 is not finished in Space Grey.",
 distractors: [
 "Read3 is finished in Satin Blue.",
-"Read4 is finished in Space Gray.",
-"Read3 is finished in Space Gray."
+"Read4 is finished in Space Grey.",
+"Read3 is finished in Space Grey."
 ],
-explanation: "Fixed positions: Read1 is Rose Gold, Read2 is Matte Black, Read5 is Silver. Since Read5 is Silver, Read4 cannot be Silver. Condition 3 states: 'Read3 is Emerald Green if and only if Read4 is Silver.' Since Read4 is not Silver, Read3 cannot be Emerald Green. Condition 5 states: 'If Read6 is Space Gray, then Read3 is Emerald Green.' Since Read3 cannot be Emerald Green, Read6 cannot be Space Gray. Thus, 'Read6 is not finished in Space Gray' must be true. The remaining finishes (Space Gray, Satin Blue, Emerald Green) are shared among Read3, Read4, and Read6, creating multiple valid configurations that disprove the distractors."
+explanation: "Fixed positions: Read1 is Rose Gold, Read2 is Matte Black, Read5 is Silver. Since Read5 is Silver, Read4 cannot be Silver. Condition 3 states: 'Read3 is Emerald Green if and only if Read4 is Silver.' Since Read4 is not Silver, Read3 cannot be Emerald Green. Condition 5 states: 'If Read6 is Space Grey, then Read3 is Emerald Green.' Since Read3 cannot be Emerald Green, Read6 cannot be Space Grey. Thus, 'Read6 is not finished in Space Grey' must be true. The remaining finishes (Space Grey, Satin Blue, Emerald Green) are shared among Read3, Read4, and Read6, creating multiple valid configurations that disprove the distractors."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Six VR headsets—HeadA, HeadB, HeadC, HeadD, HeadE, and HeadF—are finished in Silver, Space Gray, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
+"Six VR headsets—HeadA, HeadB, HeadC, HeadD, HeadE, and HeadF—are finished in Silver, Space Grey, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
 "• HeadA is finished in Satin Blue.",
 "• HeadB is finished in Rose Gold.",
 "• HeadC is finished in Matte Black if and only if HeadD is finished in Emerald Green.",
@@ -25592,19 +25592,19 @@ stimulus: [
 question: "Which of the following must be true?",
 correct: "HeadF is not finished in Silver.",
 distractors: [
-"HeadC is finished in Space Gray.",
+"HeadC is finished in Space Grey.",
 "HeadD is finished in Silver.",
 "HeadC is finished in Silver."
 ],
-explanation: "Fixed positions: HeadA is Satin Blue, HeadB is Rose Gold, HeadE is Emerald Green. Since HeadE is Emerald Green, HeadD cannot be Emerald Green. Condition 3 states: 'HeadC is Matte Black if and only if HeadD is Emerald Green.' Since HeadD is not Emerald Green, HeadC cannot be Matte Black. Condition 5 states: 'If HeadF is Silver, then HeadC is Matte Black.' Since HeadC cannot be Matte Black, HeadF cannot be Silver. Therefore, 'HeadF is not finished in Silver' must be true. Remaining finishes (Silver, Space Gray, Matte Black) go to HeadC, HeadD, and HeadF, proving that none of the distractors must be true."
+explanation: "Fixed positions: HeadA is Satin Blue, HeadB is Rose Gold, HeadE is Emerald Green. Since HeadE is Emerald Green, HeadD cannot be Emerald Green. Condition 3 states: 'HeadC is Matte Black if and only if HeadD is Emerald Green.' Since HeadD is not Emerald Green, HeadC cannot be Matte Black. Condition 5 states: 'If HeadF is Silver, then HeadC is Matte Black.' Since HeadC cannot be Matte Black, HeadF cannot be Silver. Therefore, 'HeadF is not finished in Silver' must be true. Remaining finishes (Silver, Space Grey, Matte Black) go to HeadC, HeadD, and HeadF, proving that none of the distractors must be true."
 },
 {
 kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Six drones—Drone1, Drone2, Drone3, Drone4, Drone5, and Drone6—are finished in Silver, Space Gray, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
-"• Drone1 is finished in Space Gray.",
+"Six drones—Drone1, Drone2, Drone3, Drone4, Drone5, and Drone6—are finished in Silver, Space Grey, Rose Gold, Matte Black, Satin Blue, or Emerald Green.",
+"• Drone1 is finished in Space Grey.",
 "• Drone2 is finished in Satin Blue.",
 "• Drone3 is finished in Silver if and only if Drone4 is finished in Rose Gold.",
 "• Drone5 is finished in Rose Gold.",
@@ -25617,7 +25617,7 @@ distractors: [
 "Drone4 is finished in Matte Black.",
 "Drone3 is finished in Matte Black."
 ],
-explanation: "Fixed positions: Drone1 is Space Gray, Drone2 is Satin Blue, Drone5 is Rose Gold. Since Drone5 is Rose Gold, Drone4 cannot be Rose Gold. Condition 3 states: 'Drone3 is Silver if and only if Drone4 is Rose Gold.' Because Drone4 is not Rose Gold, Drone3 cannot be Silver. Condition 5 states: 'If Drone6 is Matte Black, then Drone3 is Silver.' Since Drone3 cannot be Silver, Drone6 cannot be Matte Black. Thus, 'Drone6 is not finished in Matte Black' must be true. Remaining finishes (Silver, Matte Black, Emerald Green) are distributed among Drone3, Drone4, and Drone6, allowing alternative valid variations where the distractors fail."
+explanation: "Fixed positions: Drone1 is Space Grey, Drone2 is Satin Blue, Drone5 is Rose Gold. Since Drone5 is Rose Gold, Drone4 cannot be Rose Gold. Condition 3 states: 'Drone3 is Silver if and only if Drone4 is Rose Gold.' Because Drone4 is not Rose Gold, Drone3 cannot be Silver. Condition 5 states: 'If Drone6 is Matte Black, then Drone3 is Silver.' Since Drone3 cannot be Silver, Drone6 cannot be Matte Black. Thus, 'Drone6 is not finished in Matte Black' must be true. Remaining finishes (Silver, Matte Black, Emerald Green) are distributed among Drone3, Drone4, and Drone6, allowing alternative valid variations where the distractors fail."
 },
 
 // ==========================================
@@ -25811,7 +25811,7 @@ distractors: [
 "Beatrice works on Monday.",
 "Damien works on Wednesday."
 ],
-explanation: "Let's analyze the schedules. Chloe is 2 days after Amir, so the pairs can be (M, W) or (Tu, Th) or (W, F). Case 1: Amir=M, Chloe=W. Beatrice must be Tu (since M is taken). This leaves Th and F for Damien and Ethan. Since Damien cannot be on F, Damien=Th and Ethan=F. This satisfies Ethan adjacent to Damien. Valid schedule 1: Amir, Beatrice, Chloe, Damien, Ethan. Case 2: Amir=Tu, Chloe=Th. Beatrice must be M. This leaves W and F for Damien and Ethan. Since Damien cannot be F, Damien=W and Ethan=F. This satisfies Ethan adjacent to Damien. Valid schedule 2: Beatrice, Amir, Damien, Chloe, Ethan. Case 3: Amir=W, Chloe=F. Beatrice must be M or Tu. If Beatrice=M, remaining are Tu and Th for Damien/Ethan. If Damien=Tu, Ethan=Th (not adjacent, invalid). If Damien=Th, Ethan=Tu (not adjacent, invalid). If Beatrice=Tu, remaining are M and Th (not adjacent, invalid). Thus, Case 3 yields no valid schedules. In all valid schedules (1 and 2), Ethan works on Friday. Distractor counterexamples: Amir works on Tuesday is false in Case 1. Beatrice works on Monday is false in Case 1. Damien works on Wednesday is false in Case 1."
+explanation: "Let's analyse the schedules. Chloe is 2 days after Amir, so the pairs can be (M, W) or (Tu, Th) or (W, F). Case 1: Amir=M, Chloe=W. Beatrice must be Tu (since M is taken). This leaves Th and F for Damien and Ethan. Since Damien cannot be on F, Damien=Th and Ethan=F. This satisfies Ethan adjacent to Damien. Valid schedule 1: Amir, Beatrice, Chloe, Damien, Ethan. Case 2: Amir=Tu, Chloe=Th. Beatrice must be M. This leaves W and F for Damien and Ethan. Since Damien cannot be F, Damien=W and Ethan=F. This satisfies Ethan adjacent to Damien. Valid schedule 2: Beatrice, Amir, Damien, Chloe, Ethan. Case 3: Amir=W, Chloe=F. Beatrice must be M or Tu. If Beatrice=M, remaining are Tu and Th for Damien/Ethan. If Damien=Tu, Ethan=Th (not adjacent, invalid). If Damien=Th, Ethan=Tu (not adjacent, invalid). If Beatrice=Tu, remaining are M and Th (not adjacent, invalid). Thus, Case 3 yields no valid schedules. In all valid schedules (1 and 2), Ethan works on Friday. Distractor counterexamples: Amir works on Tuesday is false in Case 1. Beatrice works on Monday is false in Case 1. Damien works on Wednesday is false in Case 1."
 },
 {
 kind: "single",
@@ -26289,11 +26289,11 @@ kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"Seven professors (Dr. Adams, Dr. Baker, Dr. Clark, Dr. Davis, Dr. Evans, Dr. Foster, Dr. Gray) are ranked 1st to 7th by research citations.",
+"Seven professors (Dr. Adams, Dr. Baker, Dr. Clark, Dr. Davis, Dr. Evans, Dr. Foster, Dr. Grey) are ranked 1st to 7th by research citations.",
 "• Dr. Adams has more citations than Dr. Baker.",
 "• Dr. Clark has exactly two places fewer citations than Dr. Davis.",
 "• Dr. Evans has more citations than Dr. Foster.",
-"• Dr. Gray is ranked 4th.",
+"• Dr. Grey is ranked 4th.",
 "• Dr. Baker has more citations than Dr. Davis."
 ],
 question: "Which of the following must be true?",
@@ -26303,7 +26303,7 @@ distractors: [
 "Dr. Davis is ranked 3rd.",
 "Dr. Evans is ranked 2nd."
 ],
-explanation: "We know Dr. Gray = 4th. The citation chain is Adams > Baker > Davis > Clark (since Clark has two places fewer than Davis, Clark = Davis + 2). This means Davis and Clark form a block: Davis, [blank], Clark. Since Gray is 4th, let's see where this block can fit. Davis must be before Clark, and Baker and Adams must be before Davis. This means Davis must be at least 3rd. If Davis is 3rd, Clark is 5th. Then Adams and Baker can be 1st and 2nd. This leaves 6th and 7th for Evans and Foster (Evans = 6th, Foster = 7th). Let's check if Davis can be 5th: if Davis is 5th, Clark is 7th. Then Adams and Baker must be before 5th. Since Gray is 4th, Adams and Baker must be 1st, 2nd, or 3rd. This is also perfectly valid. In both valid cases, Clark is either 5th or 7th. Let's see if there is an absolute constraint: Dr. Baker is always ranked higher than Dr. Gray? In Case 1 (Davis=3), Baker is 2nd, Gray is 4th (True). In Case 2 (Davis=5), Baker is 2nd or 3rd, Gray is 4th (True). Thus, Dr. Baker is always ranked higher than Dr. Gray."
+explanation: "We know Dr. Grey = 4th. The citation chain is Adams > Baker > Davis > Clark (since Clark has two places fewer than Davis, Clark = Davis + 2). This means Davis and Clark form a block: Davis, [blank], Clark. Since Grey is 4th, let's see where this block can fit. Davis must be before Clark, and Baker and Adams must be before Davis. This means Davis must be at least 3rd. If Davis is 3rd, Clark is 5th. Then Adams and Baker can be 1st and 2nd. This leaves 6th and 7th for Evans and Foster (Evans = 6th, Foster = 7th). Let's check if Davis can be 5th: if Davis is 5th, Clark is 7th. Then Adams and Baker must be before 5th. Since Grey is 4th, Adams and Baker must be 1st, 2nd, or 3rd. This is also perfectly valid. In both valid cases, Clark is either 5th or 7th. Let's see if there is an absolute constraint: Dr. Baker is always ranked higher than Dr. Grey? In Case 1 (Davis=3), Baker is 2nd, Grey is 4th (True). In Case 2 (Davis=5), Baker is 2nd or 3rd, Grey is 4th (True). Thus, Dr. Baker is always ranked higher than Dr. Grey."
 },
 {
 kind: "single",
@@ -26377,11 +26377,11 @@ kind: "single",
 subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
-"A medical research institute is forming a 4-member committee from a pool of seven scientists: three senior doctors (Dr. Adams, Dr. Baker, Dr. Carter) and four junior researchers (Dr. Davis, Dr. Evans, Dr. Foster, Dr. Gray).",
+"A medical research institute is forming a 4-member committee from a pool of seven scientists: three senior doctors (Dr. Adams, Dr. Baker, Dr. Carter) and four junior researchers (Dr. Davis, Dr. Evans, Dr. Foster, Dr. Grey).",
 "• The committee must contain exactly two senior doctors and exactly two junior researchers.",
 "• If Dr. Adams is selected, Dr. Evans cannot be selected.",
 "• If Dr. Baker is selected, Dr. Foster must be selected.",
-"• Dr. Carter and Dr. Gray cannot both be selected.",
+"• Dr. Carter and Dr. Grey cannot both be selected.",
 "• Dr. Davis will only join the committee if Dr. Evans joins as well."
 ],
 question: "Which of the following must be true?",
@@ -26391,7 +26391,7 @@ distractors: [
 "Dr. Carter is selected.",
 "Dr. Evans is selected."
 ],
-explanation: "Let's analyze the valid combinations. The team needs 2 seniors from {A, B, C} and 2 juniors from {D, E, F, G}. Rule 5 states D requires E. Thus, junior pairs could be: {D, E}, or pairs without D: {E, F}, {E, G}, {F, G}.\nCase 1: Junior pair is {D, E}. If E is selected, Rule 2 states A cannot be selected. So seniors must be {B, C}. But if B is selected, Rule 3 states F must be selected. Since our junior pair is {D, E}, F is not selected. This is a contradiction. Thus, {D, E} is impossible, meaning D can never be selected.\nCase 2: Junior pair is {E, F}. Since E is selected, A cannot be selected (Rule 2). Thus, seniors must be {B, C}. Rule 3 requires F, which matches our junior pair. Rule 4 states C and G cannot both be selected; since G is not selected, this is fine. Valid combination 1: {B, C, E, F}.\nCase 3: Junior pair is {E, G}. Since E is selected, A cannot be selected. Seniors must be {B, C}. Rule 3 requires F, but our junior pair is {E, G}. Contradiction.\nCase 4: Junior pair is {F, G}. Since E and D are not selected, Rule 2 and Rule 5 are satisfied. Since G is selected, Rule 4 states C cannot be selected. Thus, seniors must be {A, B}. Rule 3 requires F, which matches our junior pair. Valid combination 2: {A, B, F, G}.\nComparing all valid combinations ({B, C, E, F} and {A, B, F, G}), Dr. Foster (F) is present in both. Therefore, Dr. Foster must be selected. Dr. Baker, Dr. Carter, and Dr. Evans are not present in all valid combinations."
+explanation: "Let's analyse the valid combinations. The team needs 2 seniors from {A, B, C} and 2 juniors from {D, E, F, G}. Rule 5 states D requires E. Thus, junior pairs could be: {D, E}, or pairs without D: {E, F}, {E, G}, {F, G}.\nCase 1: Junior pair is {D, E}. If E is selected, Rule 2 states A cannot be selected. So seniors must be {B, C}. But if B is selected, Rule 3 states F must be selected. Since our junior pair is {D, E}, F is not selected. This is a contradiction. Thus, {D, E} is impossible, meaning D can never be selected.\nCase 2: Junior pair is {E, F}. Since E is selected, A cannot be selected (Rule 2). Thus, seniors must be {B, C}. Rule 3 requires F, which matches our junior pair. Rule 4 states C and G cannot both be selected; since G is not selected, this is fine. Valid combination 1: {B, C, E, F}.\nCase 3: Junior pair is {E, G}. Since E is selected, A cannot be selected. Seniors must be {B, C}. Rule 3 requires F, but our junior pair is {E, G}. Contradiction.\nCase 4: Junior pair is {F, G}. Since E and D are not selected, Rule 2 and Rule 5 are satisfied. Since G is selected, Rule 4 states C cannot be selected. Thus, seniors must be {A, B}. Rule 3 requires F, which matches our junior pair. Valid combination 2: {A, B, F, G}.\nComparing all valid combinations ({B, C, E, F} and {A, B, F, G}), Dr. Foster (F) is present in both. Therefore, Dr. Foster must be selected. Dr. Baker, Dr. Carter, and Dr. Evans are not present in all valid combinations."
 },
 {
 kind: "single",
@@ -26412,7 +26412,7 @@ distractors: [
 "V3 is always selected if I2 is selected.",
 "The panel must contain exactly two immunologists."
 ],
-explanation: "Let's analyze what happens if I1 is selected. If I1 is selected, V1 must be selected (Rule 2). If V1 is selected, I2 must be selected (Rule 5). So if I1 is selected, we automatically have {I1, V1, I2}. This is 3 members (2 immunologists, 1 virologist). We need exactly 1 more member to make a 4-member panel.\nLet's test if V2 can be the 4th member: Rule 3 states if V2 is selected, I2 cannot be selected. But I2 is already selected! Therefore, V2 cannot be selected if I1 is selected. This proves that I1 and V2 cannot both be selected, making the correct answer always true.\nLet's check the remaining options for the 4th member when I1 is selected: The remaining candidates are I3 and V3. Rule 4 states I3 and V3 cannot be selected together, which is fine since we only need one. If we pick I3, the panel is {I1, I2, I3, V1}, which violates no rules. If we pick V3, the panel is {I1, I2, V1, V3}, which also violates no rules. Since {I1, I2, V1, V3} is a valid panel, I3 does not have to be selected when I1 is selected (disproving Distractor 1)."
+explanation: "Let's analyse what happens if I1 is selected. If I1 is selected, V1 must be selected (Rule 2). If V1 is selected, I2 must be selected (Rule 5). So if I1 is selected, we automatically have {I1, V1, I2}. This is 3 members (2 immunologists, 1 virologist). We need exactly 1 more member to make a 4-member panel.\nLet's test if V2 can be the 4th member: Rule 3 states if V2 is selected, I2 cannot be selected. But I2 is already selected! Therefore, V2 cannot be selected if I1 is selected. This proves that I1 and V2 cannot both be selected, making the correct answer always true.\nLet's check the remaining options for the 4th member when I1 is selected: The remaining candidates are I3 and V3. Rule 4 states I3 and V3 cannot be selected together, which is fine since we only need one. If we pick I3, the panel is {I1, I2, I3, V1}, which violates no rules. If we pick V3, the panel is {I1, I2, V1, V3}, which also violates no rules. Since {I1, I2, V1, V3} is a valid panel, I3 does not have to be selected when I1 is selected (disproving Distractor 1)."
 },
 {
 kind: "single",
@@ -26454,7 +26454,7 @@ distractors: [
 "T3 is always selected if P1 is selected.",
 "P4 and P3 can be selected together with T2."
 ],
-explanation: "Let's analyze what happens if P4 is selected. \nRule 5 states that if P4 is selected, T1 must be selected. \nRule 2 states that if T1 is selected, P1 must be selected. \nSo if P4 is selected, we must select {P4, T1, P1}. This gives us 2 pharmacologists ({P1, P4}) and 1 toxicologist ({T1}). Since we need exactly two pharmacologists, no other pharmacologists can be selected. Therefore, P2 and P3 cannot be selected. This directly proves that if P4 is selected, P2 cannot be selected.\nLet's complete the arrangement to ensure it's valid: we need one more toxicologist from {T2, T3}. If we pick T2, let's check Rule 3: if P2 is selected, T2 cannot be selected. Since P2 is not selected, this is fine. Rule 4: T3 and P3 cannot both be selected (neither is selected, fine). So {P1, P4, T1, T2} is a fully valid selection. Thus, the condition holds perfectly and all distractors can be falsified."
+explanation: "Let's analyse what happens if P4 is selected. \nRule 5 states that if P4 is selected, T1 must be selected. \nRule 2 states that if T1 is selected, P1 must be selected. \nSo if P4 is selected, we must select {P4, T1, P1}. This gives us 2 pharmacologists ({P1, P4}) and 1 toxicologist ({T1}). Since we need exactly two pharmacologists, no other pharmacologists can be selected. Therefore, P2 and P3 cannot be selected. This directly proves that if P4 is selected, P2 cannot be selected.\nLet's complete the arrangement to ensure it's valid: we need one more toxicologist from {T2, T3}. If we pick T2, let's check Rule 3: if P2 is selected, T2 cannot be selected. Since P2 is not selected, this is fine. Rule 4: T3 and P3 cannot both be selected (neither is selected, fine). So {P1, P4, T1, T2} is a fully valid selection. Thus, the condition holds perfectly and all distractors can be falsified."
 },
 {
 kind: "single",
@@ -26475,7 +26475,7 @@ distractors: [
 "If G2 is selected, B3 cannot be selected.",
 "B1 and B3 can be selected together."
 ],
-explanation: "Let's analyze what happens if B1 is selected. We need 2 geneticists and 2 bioinformaticians.\nRule 5 states that if B1 is selected, G3 must be selected.\nRule 2 states that if G1 is selected, B1 cannot be selected. Since B1 IS selected, G1 cannot be selected.\nSince G1 cannot be selected, and we need exactly two geneticists from {G1, G2, G3}, and G3 is already selected, the second geneticist must be G2. So we have {B1, G3, G2}.\nNow we need one more bioinformatician from {B2, B3}. Rule 4 states that G3 and B3 cannot both be selected. Since G3 is selected, B3 cannot be selected. Therefore, the remaining bioinformatician must be B2. \nThus, if B1 is selected, B2 must be selected to avoid breaking any rules. The complete unique team is {B1, B2, G2, G3}."
+explanation: "Let's analyse what happens if B1 is selected. We need 2 geneticists and 2 bioinformaticians.\nRule 5 states that if B1 is selected, G3 must be selected.\nRule 2 states that if G1 is selected, B1 cannot be selected. Since B1 IS selected, G1 cannot be selected.\nSince G1 cannot be selected, and we need exactly two geneticists from {G1, G2, G3}, and G3 is already selected, the second geneticist must be G2. So we have {B1, G3, G2}.\nNow we need one more bioinformatician from {B2, B3}. Rule 4 states that G3 and B3 cannot both be selected. Since G3 is selected, B3 cannot be selected. Therefore, the remaining bioinformatician must be B2. \nThus, if B1 is selected, B2 must be selected to avoid breaking any rules. The complete unique team is {B1, B2, G2, G3}."
 },
 
 // ==========================================
@@ -26500,7 +26500,7 @@ distractors: [
 "Specialist C is selected.",
 "Engineer W is selected."
 ],
-explanation: "Let's analyze the requirements for the structural engineers. We need exactly 2 from {W, X, Y, Z}. Rule 4 states Y and Z cannot both be selected. Thus, we can never have the pair {Y, Z}. The possible pairs of structural engineers must contain either W or X, or both. Let's list the possible pairs of structural engineers:\n1. {W, X}\n2. {W, Y}\n3. {W, Z}\n4. {X, Y}\n5. {X, Z}\nNotice that the only pair without X is {W, Y} and {W, Z}. Let's test if a structural pair without X can work. Suppose the structural pair is {W, Y} or {W, Z}. In both cases, W is selected and X is not selected.\nSince X is not selected, Rule 3 states Specialist B cannot be selected (since B requires X). Thus, the propulsion specialists must be chosen from {A, C}. Since we need exactly 2 propulsion specialists, we must select both A and C. \nHowever, Rule 2 states if A is selected, W cannot be selected. But our assumption was that W is selected! This is a direct contradiction. \nTherefore, any pair of structural engineers that does not include X results in an impossible contradiction. Thus, Engineer X must be selected in every single valid team configuration. (Valid configurations include {B, C, W, X} and {A, B, X, Y}, etc.)"
+explanation: "Let's analyse the requirements for the structural engineers. We need exactly 2 from {W, X, Y, Z}. Rule 4 states Y and Z cannot both be selected. Thus, we can never have the pair {Y, Z}. The possible pairs of structural engineers must contain either W or X, or both. Let's list the possible pairs of structural engineers:\n1. {W, X}\n2. {W, Y}\n3. {W, Z}\n4. {X, Y}\n5. {X, Z}\nNotice that the only pair without X is {W, Y} and {W, Z}. Let's test if a structural pair without X can work. Suppose the structural pair is {W, Y} or {W, Z}. In both cases, W is selected and X is not selected.\nSince X is not selected, Rule 3 states Specialist B cannot be selected (since B requires X). Thus, the propulsion specialists must be chosen from {A, C}. Since we need exactly 2 propulsion specialists, we must select both A and C. \nHowever, Rule 2 states if A is selected, W cannot be selected. But our assumption was that W is selected! This is a direct contradiction. \nTherefore, any pair of structural engineers that does not include X results in an impossible contradiction. Thus, Engineer X must be selected in every single valid team configuration. (Valid configurations include {B, C, W, X} and {A, B, X, Y}, etc.)"
 },
 {
 kind: "single",
@@ -26542,7 +26542,7 @@ distractors: [
 "If H2 is selected, S3 cannot be selected.",
 "S1 and S3 can be selected together."
 ],
-explanation: "Let's analyze what happens if S1 is selected. We need 2 hardware engineers and 2 software developers.\nRule 5 states that if S1 is selected, H3 must be selected.\nRule 2 states that if H1 is selected, S1 cannot be selected. Since S1 IS selected, H1 cannot be selected.\nSince H1 cannot be selected, and we need exactly two hardware engineers from {H1, H2, H3}, and H3 is already selected, the second hardware engineer must be H2. So we currently have {S1, H3, H2}.\nNow we need one more software developer from {S2, S3}. Rule 4 states that H3 and S3 cannot both be selected. Since H3 is selected, S3 cannot be selected. Therefore, the remaining software developer must be S2.\nThus, if S1 is selected, S2 must be selected to satisfy all rules. The unique valid team containing S1 is {S1, S2, H2, H3}."
+explanation: "Let's analyse what happens if S1 is selected. We need 2 hardware engineers and 2 software developers.\nRule 5 states that if S1 is selected, H3 must be selected.\nRule 2 states that if H1 is selected, S1 cannot be selected. Since S1 IS selected, H1 cannot be selected.\nSince H1 cannot be selected, and we need exactly two hardware engineers from {H1, H2, H3}, and H3 is already selected, the second hardware engineer must be H2. So we currently have {S1, H3, H2}.\nNow we need one more software developer from {S2, S3}. Rule 4 states that H3 and S3 cannot both be selected. Since H3 is selected, S3 cannot be selected. Therefore, the remaining software developer must be S2.\nThus, if S1 is selected, S2 must be selected to satisfy all rules. The unique valid team containing S1 is {S1, S2, H2, H3}."
 },
 {
 kind: "single",
@@ -26584,7 +26584,7 @@ distractors: [
 "If T2 is selected, F3 cannot be selected.",
 "F1 and F3 can be selected together."
 ],
-explanation: "Let's analyze what happens if F1 is selected. We need 2 thermal engineers and 2 fluid dynamics experts.\nRule 5 states that if F1 is selected, T3 must be selected.\nRule 2 states that if T1 is selected, F1 cannot be selected. Since F1 IS selected, T1 cannot be selected.\nSince T1 cannot be selected, and we need exactly two thermal engineers from {T1, T2, T3}, and T3 is already selected, the second thermal engineer must be T2. \nTherefore, if F1 is selected, T2 must be selected to avoid breaking any rules. The complete unique team containing F1 is {F1, F2, T2, T3} because Rule 4 prevents F3 from joining alongside T3."
+explanation: "Let's analyse what happens if F1 is selected. We need 2 thermal engineers and 2 fluid dynamics experts.\nRule 5 states that if F1 is selected, T3 must be selected.\nRule 2 states that if T1 is selected, F1 cannot be selected. Since F1 IS selected, T1 cannot be selected.\nSince T1 cannot be selected, and we need exactly two thermal engineers from {T1, T2, T3}, and T3 is already selected, the second thermal engineer must be T2. \nTherefore, if F1 is selected, T2 must be selected to avoid breaking any rules. The complete unique team containing F1 is {F1, F2, T2, T3} because Rule 4 prevents F3 from joining alongside T3."
 },
 {
 kind: "single",
@@ -26626,7 +26626,7 @@ distractors: [
 "If M2 is selected, A3 cannot be selected.",
 "A1 and A3 can be selected together."
 ],
-explanation: "Let's analyze what happens if A1 is selected. We need 2 mathematicians and 2 astrophysicists.\nRule 5 states that if A1 is selected, M3 must be selected.\nRule 2 states that if M1 is selected, A1 cannot be selected. Since A1 IS selected, M1 cannot be selected.\nSince M1 cannot be selected, and we need exactly two mathematicians from {M1, M2, M3}, and M3 is already selected, the second mathematician must be M2. So we have {A1, M3, M2}.\nNow we need one more astrophysicist from {A2, A3}. Rule 4 states that M3 and A3 cannot both be selected. Since M3 is selected, A3 cannot be selected. Therefore, the remaining astrophysicist must be A2.\nThus, if A1 is selected, A2 must be selected. The unique valid group is {A1, A2, M2, M3}."
+explanation: "Let's analyse what happens if A1 is selected. We need 2 mathematicians and 2 astrophysicists.\nRule 5 states that if A1 is selected, M3 must be selected.\nRule 2 states that if M1 is selected, A1 cannot be selected. Since A1 IS selected, M1 cannot be selected.\nSince M1 cannot be selected, and we need exactly two mathematicians from {M1, M2, M3}, and M3 is already selected, the second mathematician must be M2. So we have {A1, M3, M2}.\nNow we need one more astrophysicist from {A2, A3}. Rule 4 states that M3 and A3 cannot both be selected. Since M3 is selected, A3 cannot be selected. Therefore, the remaining astrophysicist must be A2.\nThus, if A1 is selected, A2 must be selected. The unique valid group is {A1, A2, M2, M3}."
 },
 
 // ==========================================
@@ -26714,7 +26714,7 @@ distractors: [
 "D3 is always selected if E1 is selected.",
 "E4 and E3 can be selected together."
 ],
-explanation: "Let's analyze what happens if E4 is selected. \nRule 5 states that if E4 is selected, D1 must be selected. \nRule 2 states that if D1 is selected, E1 cannot be selected. \nTherefore, if E4 is selected, E1 cannot be selected under any circumstances, establishing a clear and absolute conditional constraint."
+explanation: "Let's analyse what happens if E4 is selected. \nRule 5 states that if E4 is selected, D1 must be selected. \nRule 2 states that if D1 is selected, E1 cannot be selected. \nTherefore, if E4 is selected, E1 cannot be selected under any circumstances, establishing a clear and absolute conditional constraint."
 },
 {
 kind: "single",
@@ -26756,7 +26756,7 @@ distractors: [
 "If P2 is selected, U3 cannot be selected.",
 "U1 and U3 can be selected together."
 ],
-explanation: "Let's analyze what happens if U1 is selected. We need 2 product designers and 2 user researchers.\nRule 5 states that if U1 is selected, P3 must be selected.\nRule 2 states that if P1 is selected, U1 cannot be selected. Since U1 IS selected, P1 cannot be selected.\nSince P1 cannot be selected, and we need exactly two product designers from {P1, P2, P3}, and P3 is already selected, the second product designer must be P2. \nTherefore, if U1 is selected, P2 must be selected. The unique valid committee containing U1 is {U1, U2, P2, P3}."
+explanation: "Let's analyse what happens if U1 is selected. We need 2 product designers and 2 user researchers.\nRule 5 states that if U1 is selected, P3 must be selected.\nRule 2 states that if P1 is selected, U1 cannot be selected. Since U1 IS selected, P1 cannot be selected.\nSince P1 cannot be selected, and we need exactly two product designers from {P1, P2, P3}, and P3 is already selected, the second product designer must be P2. \nTherefore, if U1 is selected, P2 must be selected. The unique valid committee containing U1 is {U1, U2, P2, P3}."
 },
 {
 kind: "single",
@@ -26777,7 +26777,7 @@ distractors: [
 "A3 is always selected if M1 is selected.",
 "M4 and M3 can be selected together with A2."
 ],
-explanation: "Let's analyze what happens if M4 is selected. \nRule 5 states that if M4 is selected, A1 must be selected. \nRule 2 states that if A1 is selected, M1 must be selected. \nThis results in manual testers M4 and M1 being selected. Since the squad must contain exactly two manual testers, no other manual testers can be chosen. Therefore, M2 cannot be selected, confirming the statement."
+explanation: "Let's analyse what happens if M4 is selected. \nRule 5 states that if M4 is selected, A1 must be selected. \nRule 2 states that if A1 is selected, M1 must be selected. \nThis results in manual testers M4 and M1 being selected. Since the squad must contain exactly two manual testers, no other manual testers can be chosen. Therefore, M2 cannot be selected, confirming the statement."
 },
 {
 kind: "single",
@@ -26798,7 +26798,7 @@ distractors: [
 "If S2 is selected, P3 cannot be selected.",
 "P1 and P3 can be selected together."
 ],
-explanation: "Let's analyze what happens if P1 is selected. We need 2 scrum masters and 2 product owners.\nRule 5 states that if P1 is selected, S3 must be selected.\nRule 2 states that if S1 is selected, P1 cannot be selected. Since P1 IS selected, S1 cannot be selected.\nSince S1 cannot be selected, and we need exactly two scrum masters from {S1, S2, S3}, and S3 is already selected, the second scrum master must be S2. So we have {P1, S3, S2}.\nNow we need one more product owner from {P2, P3}. Rule 4 states that S3 and P3 cannot both be selected. Since S3 is selected, P3 cannot be selected. Therefore, the remaining product owner must be P2.\nThus, if P1 is selected, P2 must be selected. The unique valid group is {P1, P2, S2, S3}."
+explanation: "Let's analyse what happens if P1 is selected. We need 2 scrum masters and 2 product owners.\nRule 5 states that if P1 is selected, S3 must be selected.\nRule 2 states that if S1 is selected, P1 cannot be selected. Since P1 IS selected, S1 cannot be selected.\nSince S1 cannot be selected, and we need exactly two scrum masters from {S1, S2, S3}, and S3 is already selected, the second scrum master must be S2. So we have {P1, S3, S2}.\nNow we need one more product owner from {P2, P3}. Rule 4 states that S3 and P3 cannot both be selected. Since S3 is selected, P3 cannot be selected. Therefore, the remaining product owner must be P2.\nThus, if P1 is selected, P2 must be selected. The unique valid group is {P1, P2, S2, S3}."
 },
 // ==========================================
 // BATCH 1: SEATING ARRANGEMENTS (ROW-BASED)
@@ -26822,7 +26822,7 @@ distractors: [
 "Quinn sits in seat 4.",
 "Ronan sits in seat 1."
 ],
-explanation: "Let's analyze the positions 1, 2, 3, 4, 5. Quinn cannot be at 1 or 5, so Quinn is at 2, 3, or 4. There is exactly one seat between Quinn and Ronan, so the pairs for (Quinn, Ronan) can be (2, 4), (4, 2), (3, 1), or (3, 5). Ronan and Sarah are adjacent, so Sarah must be next to Ronan. Paula is not at 1, and Omer is to the right of Paula (P ... O). Let's test the possibilities for Quinn and Ronan: Case 1: Quinn = 2, Ronan = 4. Sarah must be adjacent to Ronan, so Sarah can be at 3 or 5. Subcase 1a: Sarah = 3. Seats filled: Q=2, S=3, R=4. Seats 1 and 5 are open. Paula and Omer must fill them. Since Paula is not at 1, Paula must be at 5 and Omer at 1. But Omer must be to the right of Paula (P ... O), which means Paula(5) and Omer(1) is invalid. Subcase 1b: Sarah = 5. Seats filled: Q=2, R=4, S=5. Seats 1 and 3 are open. Paula and Omer must fill them. Since Paula is not at 1, Paula must be at 3 and Omer at 1. But Omer must be to the right of Paula, so Omer(1) and Paula(3) is invalid. Thus, Quinn=2, Ronan=4 is impossible. Case 2: Quinn = 4, Ronan = 2. Sarah must be adjacent to Ronan, so Sarah can be at 1 or 3. Subcase 2a: Sarah = 1. Seats filled: S=1, R=2, Q=4. Seats 3 and 5 are open for Paula and Omer. Since Omer must be to the right of Paula, Paula must be at 3 and Omer at 5. This satisfies all conditions: Paula is not at 1, Omer(5) is right of Paula(3). Valid arrangement: S(1), R(2), P(3), Q(4), O(5). Subcase 2b: Sarah = 3. Seats filled: R=2, S=3, Q=4. Seats 1 and 5 are open for Paula and Omer. Paula cannot be at 1, so Paula must be at 5 and Omer at 1, which violates P...O. Invalid. Case 3: Quinn = 3, Ronan = 1. Sarah must be adjacent to Ronan, so Sarah = 2. Seats filled: R=1, S=2, Q=3. Seats 4 and 5 are open for Paula and Omer. Since Omer is right of Paula, Paula = 4 and Omer = 5. Check conditions: Paula is not at 1 (true, 4). Omer is right of Paula (true). Valid arrangement: R(1), S(2), Q(3), P(4), O(5). Case 4: Quinn = 3, Ronan = 5. Sarah must be adjacent to Ronan, so Sarah = 4. Seats filled: Q=3, S=4, R=5. Seats 1 and 2 are open for Paula and Omer. Since Paula cannot be at 1, Paula = 2 and Omer = 1. But Omer must be right of Paula, so this is invalid. Conclusion: There are only two valid arrangements: [S, R, P, Q, O] and [R, S, Q, P, O]. In both arrangements, Omer is in seat 5. Therefore, 'Omer sits in seat 5' must be true. Distractor 1: Paula sits in seat 2 (false, Paula is at 3 or 4). Distractor 2: Quinn sits in seat 4 (false, Quinn can be at 3). Distractor 3: Ronan sits in seat 1 (false, Ronan can be at 2)."
+explanation: "Let's analyse the positions 1, 2, 3, 4, 5. Quinn cannot be at 1 or 5, so Quinn is at 2, 3, or 4. There is exactly one seat between Quinn and Ronan, so the pairs for (Quinn, Ronan) can be (2, 4), (4, 2), (3, 1), or (3, 5). Ronan and Sarah are adjacent, so Sarah must be next to Ronan. Paula is not at 1, and Omer is to the right of Paula (P ... O). Let's test the possibilities for Quinn and Ronan: Case 1: Quinn = 2, Ronan = 4. Sarah must be adjacent to Ronan, so Sarah can be at 3 or 5. Subcase 1a: Sarah = 3. Seats filled: Q=2, S=3, R=4. Seats 1 and 5 are open. Paula and Omer must fill them. Since Paula is not at 1, Paula must be at 5 and Omer at 1. But Omer must be to the right of Paula (P ... O), which means Paula(5) and Omer(1) is invalid. Subcase 1b: Sarah = 5. Seats filled: Q=2, R=4, S=5. Seats 1 and 3 are open. Paula and Omer must fill them. Since Paula is not at 1, Paula must be at 3 and Omer at 1. But Omer must be to the right of Paula, so Omer(1) and Paula(3) is invalid. Thus, Quinn=2, Ronan=4 is impossible. Case 2: Quinn = 4, Ronan = 2. Sarah must be adjacent to Ronan, so Sarah can be at 1 or 3. Subcase 2a: Sarah = 1. Seats filled: S=1, R=2, Q=4. Seats 3 and 5 are open for Paula and Omer. Since Omer must be to the right of Paula, Paula must be at 3 and Omer at 5. This satisfies all conditions: Paula is not at 1, Omer(5) is right of Paula(3). Valid arrangement: S(1), R(2), P(3), Q(4), O(5). Subcase 2b: Sarah = 3. Seats filled: R=2, S=3, Q=4. Seats 1 and 5 are open for Paula and Omer. Paula cannot be at 1, so Paula must be at 5 and Omer at 1, which violates P...O. Invalid. Case 3: Quinn = 3, Ronan = 1. Sarah must be adjacent to Ronan, so Sarah = 2. Seats filled: R=1, S=2, Q=3. Seats 4 and 5 are open for Paula and Omer. Since Omer is right of Paula, Paula = 4 and Omer = 5. Check conditions: Paula is not at 1 (true, 4). Omer is right of Paula (true). Valid arrangement: R(1), S(2), Q(3), P(4), O(5). Case 4: Quinn = 3, Ronan = 5. Sarah must be adjacent to Ronan, so Sarah = 4. Seats filled: Q=3, S=4, R=5. Seats 1 and 2 are open for Paula and Omer. Since Paula cannot be at 1, Paula = 2 and Omer = 1. But Omer must be right of Paula, so this is invalid. Conclusion: There are only two valid arrangements: [S, R, P, Q, O] and [R, S, Q, P, O]. In both arrangements, Omer is in seat 5. Therefore, 'Omer sits in seat 5' must be true. Distractor 1: Paula sits in seat 2 (false, Paula is at 3 or 4). Distractor 2: Quinn sits in seat 4 (false, Quinn can be at 3). Distractor 3: Ronan sits in seat 1 (false, Ronan can be at 2)."
 },
 {
 kind: "single",
@@ -27022,7 +27022,7 @@ subtype: "dm-logic",
 leftTitle: "Puzzle",
 stimulus: [
 "Six performers—Oli, Pia, Qiu, Rya, Sio, and Tye—are standing in two facing lines of three (Line 1 faces East, Line 2 faces West).",
-"• Oli is in the center position of Line 1.",
+"• Oli is in the centre position of Line 1.",
 "• Pia stands directly opposite Tye.",
 "• Rya stands in Line 2.",
 "• Sio stands immediately to the left of Tye.",
@@ -27033,9 +27033,9 @@ correct: "Qiu stands in Line 1.",
 distractors: [
 "Rya stands in Line 1.",
 "Sio stands directly opposite Oli.",
-"Pia stands in the center position."
+"Pia stands in the centre position."
 ],
-explanation: "Tye is in the right position of Line 2. Sio is immediately to Tye's left, so Sio is in the center position of Line 2. Rya is also in Line 2, so Rya takes the remaining left position. Pia stands directly opposite Tye, placing Pia in Line 1. With Oli fixed in the center of Line 1, the only remaining Line 1 position belongs to Qiu. Therefore Qiu must stand in Line 1."
+explanation: "Tye is in the right position of Line 2. Sio is immediately to Tye's left, so Sio is in the centre position of Line 2. Rya is also in Line 2, so Rya takes the remaining left position. Pia stands directly opposite Tye, placing Pia in Line 1. With Oli fixed in the centre of Line 1, the only remaining Line 1 position belongs to Qiu. Therefore Qiu must stand in Line 1."
 },
 {
 kind: "single",
@@ -27056,7 +27056,7 @@ distractors: [
 "Wes sits in chair 4 of Row 1.",
 "Yar sits in chair 1 of Row 2."
 ],
-explanation: "Let's analyze the seating. Row 2 has Val at chair 1 and Ben at chair 4. This leaves chairs 2 and 3 of Row 2 empty. Yar and Abe must also be in Row 2 because they are opposite Xao and Ugo (who are in Row 1). Thus, Row 2 is completely occupied by Val(1), Ben(4), Yar, and Abe. This means Yar and Abe must occupy chairs 2 and 3 of Row 2. Since Yar sits directly opposite Xao, Xao must occupy either chair 2 or chair 3 of Row 1. Therefore, 'Xao sits in chair 2 or chair 3 of Row 1' must be true. Distractor 1: 'Ugo sits in chair 1 of Row 1' is false because Abe is at 2 or 3, so Ugo (opposite Abe) must be at 2 or 3. Distractor 2: 'Wes sits in chair 4 of Row 1' is not necessarily true. Distractor 3: 'Yar sits in chair 1 of Row 2' is false because Val is in chair 1."
+explanation: "Let's analyse the seating. Row 2 has Val at chair 1 and Ben at chair 4. This leaves chairs 2 and 3 of Row 2 empty. Yar and Abe must also be in Row 2 because they are opposite Xao and Ugo (who are in Row 1). Thus, Row 2 is completely occupied by Val(1), Ben(4), Yar, and Abe. This means Yar and Abe must occupy chairs 2 and 3 of Row 2. Since Yar sits directly opposite Xao, Xao must occupy either chair 2 or chair 3 of Row 1. Therefore, 'Xao sits in chair 2 or chair 3 of Row 1' must be true. Distractor 1: 'Ugo sits in chair 1 of Row 1' is false because Abe is at 2 or 3, so Ugo (opposite Abe) must be at 2 or 3. Distractor 2: 'Wes sits in chair 4 of Row 1' is not necessarily true. Distractor 3: 'Yar sits in chair 1 of Row 2' is false because Val is in chair 1."
 },
 {
 kind: "single",
@@ -27098,7 +27098,7 @@ distractors: [
 "Neo sits in seat 4 of the North side.",
 "Ria sits in seat 1 of the South side."
 ],
-explanation: "Let's analyze the South side: Leo is at seat 1 (leftmost) and Via is at seat 4 (rightmost). This leaves seats 2 and 3 of the South side empty. The remaining people on the South side must be Pia and Ria (since they are opposite Ada and Teo who are on the North side). Thus, Pia and Ria must occupy seats 2 and 3 of the South side. Since Ria is directly opposite Teo, Teo must occupy either seat 2 or seat 3 of the North side. Therefore, 'Teo sits in seat 2 or seat 3 of the North side' must be true. Distractors are false because seat 1 and seat 4 of the South side are occupied by Leo and Via, so their opposites cannot be occupied by anyone except the remaining North side diners (Ada, Neo, etc., but Ada is opposite Pia who is at 2 or 3)."
+explanation: "Let's analyse the South side: Leo is at seat 1 (leftmost) and Via is at seat 4 (rightmost). This leaves seats 2 and 3 of the South side empty. The remaining people on the South side must be Pia and Ria (since they are opposite Ada and Teo who are on the North side). Thus, Pia and Ria must occupy seats 2 and 3 of the South side. Since Ria is directly opposite Teo, Teo must occupy either seat 2 or seat 3 of the North side. Therefore, 'Teo sits in seat 2 or seat 3 of the North side' must be true. Distractors are false because seat 1 and seat 4 of the South side are occupied by Leo and Via, so their opposites cannot be occupied by anyone except the remaining North side diners (Ada, Neo, etc., but Ada is opposite Pia who is at 2 or 3)."
 },
 {
 kind: "single",
@@ -27148,7 +27148,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should all major cities mandate a 24-hour public transport system to boost night-time economies?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because it would significantly increase the revenue of hospitality businesses by ensuring staff and patrons have reliable, affordable access to city centers throughout the night.",
+correct: "Yes, because it would significantly increase the revenue of hospitality businesses by ensuring staff and patrons have reliable, affordable access to city centres throughout the night.",
 distractors: [
 "Yes, because nocturnal transportation is essential for a city that never sleeps.",
 "No, because some people prefer walking to their destinations.",
@@ -27179,7 +27179,7 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would prevent the systemic bias of publication, allowing researchers to avoid repeating failed experimental pathways and accelerating the discovery of effective treatments.",
 distractors: [
 "Yes, because transparency is a good value for society.",
-"No, because it takes a lot of time to organize data files.",
+"No, because it takes a lot of time to organise data files.",
 "No, because pharmaceutical companies are businesses and businesses need to protect their interests."
 ],
 explanation: "The correct answer is strongest because it addresses the research efficiency and patient outcomes with a specific consequence. Distractor 1 is weak: 'transparency' is a goal, not an argument for the efficacy of the proposal. Distractor 2 is weak: administrative burden is not a strong reason to block scientific advancement. Distractor 3 is weak: marketing spend is distinct from the ethics and utility of trial data disclosure."
@@ -27258,7 +27258,7 @@ explanation: "The correct answer is strongest because it links the technology to
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should cities impose a high congestion charge on private vehicles entering the city center during weekdays?'],
+stimulus: ['Should cities impose a high congestion charge on private vehicles entering the city centre during weekdays?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would significantly reduce peak-hour traffic density, which decreases idling times and improves the efficiency of public transit schedules.",
 distractors: [
@@ -27370,7 +27370,7 @@ explanation: "The correct answer is strongest because it clearly articulates the
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should plastic food packaging be banned in favor of biodegradable alternatives?'],
+stimulus: ['Should plastic food packaging be banned in favour of biodegradable alternatives?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because current plastic waste persists in the environment for centuries, creating long-term microplastic pollution that enters the food chain and threatens marine biodiversity.",
 distractors: [
@@ -27386,7 +27386,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should all large corporations be required to disclose their carbon footprint annually?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because standardized reporting forces companies to identify their most emission-intensive processes, which creates a competitive incentive for them to adopt cleaner, more efficient technologies.",
+correct: "Yes, because standardised reporting forces companies to identify their most emission-intensive processes, which creates a competitive incentive for them to adopt cleaner, more efficient technologies.",
 distractors: [
 "Yes, because climate change is a very serious problem for the world.",
 "No, because some companies might find it difficult to calculate their footprint.",
@@ -27456,7 +27456,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should all public museums offer free admission to all visitors?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because removing the financial barrier increases equitable access for marginalized communities, thereby fulfilling the public mandate to preserve and share collective cultural history.",
+correct: "Yes, because removing the financial barrier increases equitable access for marginalised communities, thereby fulfilling the public mandate to preserve and share collective cultural history.",
 distractors: [
 "Yes, because museums are filled with interesting things to see.",
 "No, because museums need money to pay for security and electricity.",
@@ -27476,7 +27476,7 @@ distractors: [
 "No, because the office might feel empty if everyone comes in at different times.",
 "No, because flexible working hours are a form of working, and if employers provide them, then employees will be working flexibly."
 ],
-explanation: "The correct answer is strongest because it links the policy to tangible organizational metrics like turnover and satisfaction. Distractor 1 is weak: 'better time' is subjective and lacks a professional context. Distractor 2 is weak: office atmosphere is a minor concern compared to employee retention. Distractor 3 is weak: current adoption rates by some companies do not justify a universal mandate."
+explanation: "The correct answer is strongest because it links the policy to tangible organisational metrics like turnover and satisfaction. Distractor 1 is weak: 'better time' is subjective and lacks a professional context. Distractor 2 is weak: office atmosphere is a minor concern compared to employee retention. Distractor 3 is weak: current adoption rates by some companies do not justify a universal mandate."
 },
 {
 kind: "single",
@@ -27498,7 +27498,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should pet owners be legally required to pass a mandatory competency test before owning a dog?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because mandatory testing ensures that owners understand the specific needs and behavioral requirements of different breeds, significantly reducing the rates of animal abandonment and neglect.",
+correct: "Yes, because mandatory testing ensures that owners understand the specific needs and behavioural requirements of different breeds, significantly reducing the rates of animal abandonment and neglect.",
 distractors: [
 "Yes, because people who own dogs are often seen in public parks walking them on leashes.",
 "No, because some people believe that owning a dog is a fundamental right that should not be restricted by the government.",
@@ -27552,7 +27552,7 @@ explanation: "The correct answer is strongest because it details the direct, sev
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should all animal shelters be required to operate under a "no-kill" policy regardless of the animal’s health or behavior?'],
+stimulus: ['Should all animal shelters be required to operate under a "no-kill" policy regardless of the animal’s health or behaviour?'],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because forcing shelters to keep terminally ill or dangerously aggressive animals can lead to prolonged suffering for the animal and puts shelter staff and the public at significant risk.",
 distractors: [
@@ -27568,7 +27568,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should the use of animals in circuses be banned globally?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because the constant travel, training methods, and unnatural performance environments prevent animals from engaging in their natural social and physical behaviors, causing chronic stress and repetitive abnormal behaviors.",
+correct: "Yes, because the constant travel, training methods, and unnatural performance environments prevent animals from engaging in their natural social and physical behaviours, causing chronic stress and repetitive abnormal behaviours.",
 distractors: [
 "No, because many people have fond memories of going to the circus as a child.",
 "Yes, because circuses have been around for a very long time and should be updated.",
@@ -27784,7 +27784,7 @@ distractors: [
 "Yes, because the voting age should be sixteen.",
 "No, because some 16-year-olds are still in high school."
 ],
-explanation: "The correct answer is strongest because it centers on the principles of democratic representation for those affected by policy. Distractor 1 is weak: 'not knowing enough' is a broad, subjective claim. Distractor 2 is weak: it merely restates the change. Distractor 3 is weak: being a student has no bearing on one's capacity to vote."
+explanation: "The correct answer is strongest because it centres on the principles of democratic representation for those affected by policy. Distractor 1 is weak: 'not knowing enough' is a broad, subjective claim. Distractor 2 is weak: it merely restates the change. Distractor 3 is weak: being a student has no bearing on one's capacity to vote."
 },
 {
 kind: "single",
@@ -27844,7 +27844,7 @@ distractors: [
 "No, because retailers would lose potential revenue if they cannot sell these products to younger customers.",
 "No, because coffee also contains caffeine and people still drink that."
 ],
-explanation: "The correct answer is strongest because it links the policy directly to concrete health benefits for the target population. Distractor 1 is weak: It makes an unfalsifiable claim about student behavior. Distractor 2 is weak: It introduces an economic argument into a public health debate. Distractor 3 is weak: The existence of other caffeine sources does not negate the specific impact of high-caffeine energy drinks on minors."
+explanation: "The correct answer is strongest because it links the policy directly to concrete health benefits for the target population. Distractor 1 is weak: It makes an unfalsifiable claim about student behaviour. Distractor 2 is weak: It introduces an economic argument into a public health debate. Distractor 3 is weak: The existence of other caffeine sources does not negate the specific impact of high-caffeine energy drinks on minors."
 },
 {
 kind: "single",
@@ -27860,7 +27860,7 @@ distractors: [
 "No, because some people prefer to drink water regardless of the price of soft drinks.",
 "No, because taxes are a common mechanism used by governments to generate revenue."
 ],
-explanation: "The correct answer is strongest because it provides a clear causal chain between the tax, consumer behavior, and the public health goal. Distractor 1 is weak: While true, dental health is a secondary concern compared to the main goal of obesity reduction. Distractor 2 is weak: Individual preferences for water do not address the aggregate effect on population health. Distractor 3 is weak: The revenue-generating potential of taxes is unrelated to the efficacy of this specific health policy."
+explanation: "The correct answer is strongest because it provides a clear causal chain between the tax, consumer behaviour, and the public health goal. Distractor 1 is weak: While true, dental health is a secondary concern compared to the main goal of obesity reduction. Distractor 2 is weak: Individual preferences for water do not address the aggregate effect on population health. Distractor 3 is weak: The revenue-generating potential of taxes is unrelated to the efficacy of this specific health policy."
 },
 {
 kind: "single",
@@ -27940,7 +27940,7 @@ distractors: [
 "No, because supermarkets have a right to advertise their current deals to all customers.",
 "No, because parents should be the primary influence on their children's diets."
 ],
-explanation: "The correct answer is strongest because it links the restriction of advertising to a specific behavioral mechanism that impacts child obesity. Distractor 1 is weak: This is an observation of a trend, not an argument for the ban's effectiveness. Distractor 2 is weak: The rights of businesses do not address the public health impact. Distractor 3 is weak: It makes an abstract point about parenting rather than evaluating the effect of the proposed policy."
+explanation: "The correct answer is strongest because it links the restriction of advertising to a specific behavioural mechanism that impacts child obesity. Distractor 1 is weak: This is an observation of a trend, not an argument for the ban's effectiveness. Distractor 2 is weak: The rights of businesses do not address the public health impact. Distractor 3 is weak: It makes an abstract point about parenting rather than evaluating the effect of the proposed policy."
 },
 {
 kind: "single",
@@ -27972,7 +27972,7 @@ distractors: [
 "Yes, because social media companies are very profitable and can afford the technology.",
 "No, because it would be a huge task for companies to check millions of IDs."
 ],
-explanation: "The correct answer is strongest because it addresses the core issue (harassment) by pointing out both the negative impact on safety and the likely ineffectiveness against determined users. Distractor 1 is weak: It relies on a generalization about human behavior that is difficult to prove. Distractor 2 is weak: The financial status of companies does not justify the policy. Distractor 3 is weak: Technical difficulty is a procedural hurdle, not an argument against the fundamental premise."
+explanation: "The correct answer is strongest because it addresses the core issue (harassment) by pointing out both the negative impact on safety and the likely ineffectiveness against determined users. Distractor 1 is weak: It relies on a generalization about human behaviour that is difficult to prove. Distractor 2 is weak: The financial status of companies does not justify the policy. Distractor 3 is weak: Technical difficulty is a procedural hurdle, not an argument against the fundamental premise."
 },
 {
 kind: "single",
@@ -28020,7 +28020,7 @@ distractors: [
 "No, because libraries are already crowded with people reading books.",
 "No, because the government should focus on other things instead."
 ],
-explanation: "The correct answer is strongest because it directly addresses the social and economic purpose of bridging the inequality gap. Distractor 1 is weak: While true, it doesn't address why *libraries* must provide the training for *children*. Distractor 2 is weak: The current use of library space is not a reason to reject an educational program. Distractor 3 is weak: An appeal to prioritize 'other things' is too general to be useful."
+explanation: "The correct answer is strongest because it directly addresses the social and economic purpose of bridging the inequality gap. Distractor 1 is weak: While true, it doesn't address why *libraries* must provide the training for *children*. Distractor 2 is weak: The current use of library space is not a reason to reject an educational program. Distractor 3 is weak: An appeal to prioritise 'other things' is too general to be useful."
 },
 {
 kind: "single",
@@ -28132,7 +28132,7 @@ distractors: [
 "No, because some people might not like the look of wind farms in their neighborhood.",
 "No, because the government should focus on developing new technologies in other sectors first."
 ],
-explanation: "The correct answer is strongest because it links the policy to the urgent, direct goal of climate change mitigation. Distractor 1 is weak: The power of nature is a poetic observation, not an argument for energy policy. Distractor 2 is weak: NIMBYism (Not In My Backyard) is a minor aesthetic concern compared to the global climate crisis. Distractor 3 is weak: The suggestion to prioritize other sectors is a vague argument without justification."
+explanation: "The correct answer is strongest because it links the policy to the urgent, direct goal of climate change mitigation. Distractor 1 is weak: The power of nature is a poetic observation, not an argument for energy policy. Distractor 2 is weak: NIMBYism (Not In My Backyard) is a minor aesthetic concern compared to the global climate crisis. Distractor 3 is weak: The suggestion to prioritise other sectors is a vague argument without justification."
 },
 {
 kind: "single",
@@ -28171,10 +28171,10 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should the government ban all public funding for arts organizations that do not meet specific accessibility quotas for disabled audiences?"
+"Should the government ban all public funding for arts organisations that do not meet specific accessibility quotas for disabled audiences?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because tying funding to accessibility mandates forces organizations to prioritize the inclusion of disabled audience members, ensuring that cultural participation is a right for all citizens.",
+correct: "Yes, because tying funding to accessibility mandates forces organisations to prioritise the inclusion of disabled audience members, ensuring that cultural participation is a right for all citizens.",
 distractors: [
 "Yes, because arts and culture are very important parts of our society.",
 "No, because it might be difficult for small, older theaters to renovate their buildings.",
@@ -28302,13 +28302,13 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ["Should the use of wild animals in circuses be banned nationwide?"],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because the nomadic nature of circuses prevents animals from having access to adequate living environments, leading to abnormal, stress-induced behaviors such as pacing and self-mutilation.",
+correct: "Yes, because the nomadic nature of circuses prevents animals from having access to adequate living environments, leading to abnormal, stress-induced behaviours such as pacing and self-mutilation.",
 distractors: [
 "No, because children enjoy seeing animals perform tricks.",
 "Yes, because it is a bad thing to have animals in circuses.",
 "No, because the circus has been a form of entertainment for centuries."
 ],
-explanation: "The correct answer is strongest because it identifies the specific environmental mismatch causing behavioral harm. Distractor 1 is weak: public enjoyment is outweighed by welfare concerns. Distractor 2 is weak: it offers no evidence. Distractor 3 is weak: tradition does not address welfare."
+explanation: "The correct answer is strongest because it identifies the specific environmental mismatch causing behavioural harm. Distractor 1 is weak: public enjoyment is outweighed by welfare concerns. Distractor 2 is weak: it offers no evidence. Distractor 3 is weak: tradition does not address welfare."
 },
 {
 kind: "single",
@@ -28316,7 +28316,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ["Should all puppy farms be shut down and replaced with rescue-only adoption models?"],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because current puppy farm regulations fail to prevent mass-breeding conditions where mothers are kept in confined, unsanitary isolation, leading to widespread behavioral issues in litters.",
+correct: "Yes, because current puppy farm regulations fail to prevent mass-breeding conditions where mothers are kept in confined, unsanitary isolation, leading to widespread behavioural issues in litters.",
 distractors: [
 "No, because some families prefer to buy specific purebred puppies from a breeder.",
 "No, because it would create too much paperwork for local councils.",
@@ -28392,7 +28392,7 @@ distractors: [
 "Yes, because it is better to be nice to dogs than mean to them.",
 "No, because some dog trainers believe it is the only way to stop a dog from running into a road."
 ],
-explanation: "The correct answer is strongest because it cites the behavioral consequences of the training method. Distractor 1 is weak: intensity control is not the issue. Distractor 2 is weak: the explanation is overly simplistic. Distractor 3 is weak: narrow usage does not justify the broader harm."
+explanation: "The correct answer is strongest because it cites the behavioural consequences of the training method. Distractor 1 is weak: intensity control is not the issue. Distractor 2 is weak: the explanation is overly simplistic. Distractor 3 is weak: narrow usage does not justify the broader harm."
 },
 {
 kind: "single",
@@ -28406,7 +28406,7 @@ distractors: [
 "Yes, because it is generally better for there to be rules about animals.",
 "No, because the pet store would have to reorganize their display tanks."
 ],
-explanation: "The correct answer is strongest because it links the biological nature of the animal to the physical outcome of forced interaction. Distractor 1 is weak: appearance is not a welfare factor. Distractor 2 is weak: the argument is too broad. Distractor 3 is weak: minor operational issues are not a valid defense."
+explanation: "The correct answer is strongest because it links the biological nature of the animal to the physical outcome of forced interaction. Distractor 1 is weak: appearance is not a welfare factor. Distractor 2 is weak: the argument is too broad. Distractor 3 is weak: minor operational issues are not a valid defence."
 },
 {
 kind: "single",
@@ -28420,7 +28420,7 @@ distractors: [
 "Yes, because consumers like to read labels while shopping.",
 "No, because the government has many other important things to talk about."
 ],
-explanation: "The correct answer is strongest because it identifies the mechanism of 'consumer power' and market-driven improvements. Distractor 1 is weak: design constraints are not a policy issue. Distractor 2 is weak: consumer behavior doesn't address the ethical goal. Distractor 3 is weak: prioritization doesn't invalidate this policy."
+explanation: "The correct answer is strongest because it identifies the mechanism of 'consumer power' and market-driven improvements. Distractor 1 is weak: design constraints are not a policy issue. Distractor 2 is weak: consumer behaviour doesn't address the ethical goal. Distractor 3 is weak: prioritization doesn't invalidate this policy."
 },
 {
 kind: "single",
@@ -28434,7 +28434,7 @@ distractors: [
 "Yes, because it is gross to see a stuck mouse.",
 "No, because other methods of killing mice are also a bit unpleasant."
 ],
-explanation: "The correct answer is strongest because it highlights the specific, inhumane suffering caused by the mechanism of the trap. Distractor 1 is weak: the need for pest control is distinct from the method. Distractor 2 is weak: personal disgust is not a policy factor. Distractor 3 is weak: comparing to other bad methods doesn't provide a defense."
+explanation: "The correct answer is strongest because it highlights the specific, inhumane suffering caused by the mechanism of the trap. Distractor 1 is weak: the need for pest control is distinct from the method. Distractor 2 is weak: personal disgust is not a policy factor. Distractor 3 is weak: comparing to other bad methods doesn't provide a defence."
 },
 {
 kind: "single",
@@ -28442,13 +28442,13 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ["Should all zoos be mandated to have a minimum percentage of their annual budget spent on animal enrichment programs?"],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because animals in captivity require constant mental and physical stimulation to prevent the development of repetitive, stereotyped behaviors associated with cognitive decline.",
+correct: "Yes, because animals in captivity require constant mental and physical stimulation to prevent the development of repetitive, stereotyped behaviours associated with cognitive decline.",
 distractors: [
 "No, because the zoo might want to spend that money on a new ticket booth.",
 "Yes, because it would make the zoo look more modern.",
 "No, because it is hard for a zoo to know exactly how much to spend."
 ],
-explanation: "The correct answer is strongest because it directly links enrichment spending to the prevention of cognitive decline. Distractor 1 is weak: spending preferences don't outweigh welfare. Distractor 2 is weak: modernization is not a welfare metric. Distractor 3 is weak: difficulty of calculation is not an excuse for neglect."
+explanation: "The correct answer is strongest because it directly links enrichment spending to the prevention of cognitive decline. Distractor 1 is weak: spending preferences don't outweigh welfare. Distractor 2 is weak: modernisation is not a welfare metric. Distractor 3 is weak: difficulty of calculation is not an excuse for neglect."
 },
 {
 kind: "single",
@@ -28462,7 +28462,7 @@ distractors: [
 "Yes, because the public wants to know how many animals are used in labs.",
 "No, because the research is for a good cause."
 ],
-explanation: "The correct answer is strongest because it establishes a causal link between transparency and institutional behavior. Distractor 1 is weak: administrative burden is minor. Distractor 2 is weak: it lacks a specific improvement mechanism. Distractor 3 is weak: the 'good cause' doesn't address the need for transparency."
+explanation: "The correct answer is strongest because it establishes a causal link between transparency and institutional behaviour. Distractor 1 is weak: administrative burden is minor. Distractor 2 is weak: it lacks a specific improvement mechanism. Distractor 3 is weak: the 'good cause' doesn't address the need for transparency."
 },
 {
 kind: "single",
@@ -28470,7 +28470,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ["Should the law prohibit the keeping of primates as household pets?"],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because primates are highly social, complex creatures whose psychological needs for group interaction and climbing space cannot be met in a private domestic environment, leading to severe behavioral pathology.",
+correct: "Yes, because primates are highly social, complex creatures whose psychological needs for group interaction and climbing space cannot be met in a private domestic environment, leading to severe behavioural pathology.",
 distractors: [
 "No, because some people think baby monkeys are very funny to watch.",
 "Yes, because it is generally a good idea to protect exotic animals.",
@@ -28526,7 +28526,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ["Should all pet shops be required to house animals in cages that are double the current minimum size requirements?"],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because current size standards are based on basic survival rather than animal welfare, and larger cages provide the necessary space for natural movement and behaviors that reduce stress-related diseases.",
+correct: "Yes, because current size standards are based on basic survival rather than animal welfare, and larger cages provide the necessary space for natural movement and behaviours that reduce stress-related diseases.",
 distractors: [
 "No, because the store would need to buy more expensive cages.",
 "Yes, because animals should have space to move.",
@@ -28539,7 +28539,7 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should the government implement a points-based system that prioritizes high-skilled workers for permanent residency?"
+"Should the government implement a points-based system that prioritises high-skilled workers for permanent residency?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it ensures that incoming migrants fill critical economic gaps, directly increasing the tax base and fostering innovation in key sectors.",
@@ -28689,10 +28689,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "No, because it disproportionately subjects a specific group to constant monitoring, potentially leading to social stigmatization and increased discrimination.",
 distractors: [
 "Yes, because it would create a list of names.",
-"Yes, because some people think that lists are very organized.",
+"Yes, because some people think that lists are very organised.",
 "No, because some people do not like having their names written down."
 ],
-explanation: "The correct answer is strongest because it highlights the negative social and ethical consequences. Distractor 1 is weak: it defines a registry. Distractor 2 is weak: preference for organization is irrelevant. Distractor 3 is weak: personal dislikes are not policy concerns."
+explanation: "The correct answer is strongest because it highlights the negative social and ethical consequences. Distractor 1 is weak: it defines a registry. Distractor 2 is weak: preference for organisation is irrelevant. Distractor 3 is weak: personal dislikes are not policy concerns."
 },
 {
 kind: "single",
@@ -28830,11 +28830,11 @@ stimulus: [
 "Should the government outsource the processing of visa applications to private companies?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because private companies prioritize profit over consistent administrative standards, leading to increased risk of corruption and reduced public accountability.",
+correct: "No, because private companies prioritise profit over consistent administrative standards, leading to increased risk of corruption and reduced public accountability.",
 distractors: [
 "Yes, because private companies are businesses that operate privately.",
 "Yes, because some government offices have very uncomfortable chairs.",
-"No, because some people do not like the color of private business signs."
+"No, because some people do not like the colour of private business signs."
 ],
 explanation: "The correct answer is strongest because it identifies the risk to accountability and standards. Distractor 1 is weak: it provides no reasoning. Distractor 2 is weak: comfort of furniture is not a policy consideration. Distractor 3 is weak: personal dislike of signs is irrelevant."
 },
@@ -28868,7 +28868,7 @@ distractors: [
 "Yes, because international students might eat too much food.",
 "No, because some people have never been to university."
 ],
-explanation: "The correct answer is strongest because it links international student enrollment to financial stability for the institution and local students. Distractor 1 is weak: it assumes the conclusion. Distractor 2 is weak: dietary habits are unrelated to university finance. Distractor 3 is weak: personal experience is irrelevant."
+explanation: "The correct answer is strongest because it links international student enrolment to financial stability for the institution and local students. Distractor 1 is weak: it assumes the conclusion. Distractor 2 is weak: dietary habits are unrelated to university finance. Distractor 3 is weak: personal experience is irrelevant."
 },
 {
 kind: "single",
@@ -28891,14 +28891,14 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should the government prioritize immigrants who demonstrate exceptional talent in arts and sports?"
+"Should the government prioritise immigrants who demonstrate exceptional talent in arts and sports?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because these individuals boost the nation’s international profile and cultural influence, generating intangible economic benefits through increased tourism and prestige.",
 distractors: [
 "Yes, because arts and sports are things that people do.",
 "No, because some artists like to paint in blue.",
-"No, because prioritizing immigrants based on talent is a decision that involves making decisions about which immigrants to prioritize."
+"No, because prioritising immigrants based on talent is a decision that involves making decisions about which immigrants to prioritise."
 ],
 explanation: "The correct answer is strongest because it addresses the national interest in prestige and cultural influence. Distractor 1 is weak: it defines the activity. Distractor 2 is weak: personal preference is irrelevant. Distractor 3 is weak: it lacks specific argumentation."
 },
@@ -28966,7 +28966,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should the government mandate that all companies publish their internal pay scales for every role?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because radical pay transparency allows employees to identify and challenge discriminatory pay gaps, forcing firms to normalize salaries based on objective criteria.",
+correct: "Yes, because radical pay transparency allows employees to identify and challenge discriminatory pay gaps, forcing firms to normalise salaries based on objective criteria.",
 distractors: [
 "Yes, because transparency is generally considered a good value in democratic societies.",
 "No, because some employees might feel embarrassed if they find out they earn less than their peers.",
@@ -29026,7 +29026,7 @@ correct: "Yes, because constant, automated surveillance creates a high-pressure 
 distractors: [
 "Yes, because computers are not always very good at understanding human emotions.",
 "No, because technology is constantly evolving and we cannot stop it.",
-"No, because the office should also be painted in brighter colors to improve mood."
+"No, because the office should also be painted in brighter colours to improve mood."
 ],
 explanation: "The correct answer is strongest because it links surveillance to a specific, measurable health outcome. Distractor 1 is weak: stating that computers are imperfect is a minor point. Distractor 2 is weak: it speaks to technological inevitability rather than the specific policy issue. Distractor 3 is weak: office decor has no connection to algorithmic management."
 },
@@ -29064,7 +29064,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should companies be prohibited from asking about past salaries during job interviews?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because basing new salaries on past pay perpetuates existing wage disparities for marginalized groups, preventing them from negotiating based on current market value.",
+correct: "Yes, because basing new salaries on past pay perpetuates existing wage disparities for marginalised groups, preventing them from negotiating based on current market value.",
 distractors: [
 "Yes, because it is uncomfortable to talk about money in a job interview.",
 "No, because recruiters need all the information they can get to make decisions.",
@@ -29084,7 +29084,7 @@ distractors: [
 "No, because it might be boring to sit through another training seminar.",
 "No, because employees should be responsible for their own mental health."
 ],
-explanation: "The correct answer is strongest because it links managerial behavior to measurable business outcomes like absenteeism. Distractor 1 is weak: it makes a broad claim without addressing the specific policy goal. Distractor 2 is weak: personal feelings about training are irrelevant to the goal of the policy. Distractor 3 is weak: it avoids the duty of care by shifting responsibility back to the individual."
+explanation: "The correct answer is strongest because it links managerial behaviour to measurable business outcomes like absenteeism. Distractor 1 is weak: it makes a broad claim without addressing the specific policy goal. Distractor 2 is weak: personal feelings about training are irrelevant to the goal of the policy. Distractor 3 is weak: it avoids the duty of care by shifting responsibility back to the individual."
 },
 {
 kind: "single",
@@ -29176,13 +29176,13 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should companies be required to provide training on unconscious bias for all staff?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because unconscious bias training provides a baseline awareness that helps employees recognize discriminatory patterns, which is a necessary first step toward institutional culture change.",
+correct: "Yes, because unconscious bias training provides a baseline awareness that helps employees recognise discriminatory patterns, which is a necessary first step towards institutional culture change.",
 distractors: [
 "Yes, because the trainers often have really good presentation skills.",
 "No, because some people think that such training is not effective.",
 "No, because the company should spend money on new coffee machines instead."
 ],
-explanation: "The correct answer is strongest because it positions the policy as a foundational step toward broader cultural improvement. Distractor 1 is weak: presentation skills of trainers are irrelevant. Distractor 2 is weak: it cites unspecified opinions without evaluating the training itself. Distractor 3 is weak: coffee machines are irrelevant to HR policy."
+explanation: "The correct answer is strongest because it positions the policy as a foundational step towards broader cultural improvement. Distractor 1 is weak: presentation skills of trainers are irrelevant. Distractor 2 is weak: it cites unspecified opinions without evaluating the training itself. Distractor 3 is weak: coffee machines are irrelevant to HR policy."
 },
 {
 kind: "single",
@@ -29358,7 +29358,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should the government implement a system where citizens can vote on every single law via a national app?'],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because the average citizen lacks the time and specialized expertise to thoroughly research the complex, far-reaching impacts of individual pieces of legislation.",
+correct: "No, because the average citizen lacks the time and specialised expertise to thoroughly research the complex, far-reaching impacts of individual pieces of legislation.",
 distractors: [
 "Yes, because using an app is a very popular way to communicate in the modern world.",
 "Yes, because every citizen would be able to vote on every law.",
@@ -29406,7 +29406,7 @@ distractors: [
 "No, because manufacturing is something that involves building things in factories.",
 "No, because some people find industrial sites to be loud and unattractive."
 ],
-explanation: "The correct answer is strongest because it describes the economic mechanism by which the tax drives corporate behavior toward the goal of lower emissions. Distractor 1 is weak: the purpose of the tax is environmental, not just revenue collection. Distractor 2 is weak: it defines manufacturing. Distractor 3 is weak: noise and appearance are not central to the policy goal."
+explanation: "The correct answer is strongest because it describes the economic mechanism by which the tax drives corporate behaviour towards the goal of lower emissions. Distractor 1 is weak: the purpose of the tax is environmental, not just revenue collection. Distractor 2 is weak: it defines manufacturing. Distractor 3 is weak: noise and appearance are not central to the policy goal."
 },
 {
 kind: "single",
@@ -29546,7 +29546,7 @@ distractors: [
 "No, because schools are places where students go to learn.",
 "No, because teachers often have a lot of paperwork to complete."
 ],
-explanation: "The correct answer is strongest because it focuses on the pedagogical and psychological benefits for students. Distractor 1 is weak: comparing the number of days is irrelevant. Distractor 2 is weak: it defines schools. Distractor 3 is weak: teacher workload is secondary to the student-centered purpose of the policy."
+explanation: "The correct answer is strongest because it focuses on the pedagogical and psychological benefits for students. Distractor 1 is weak: comparing the number of days is irrelevant. Distractor 2 is weak: it defines schools. Distractor 3 is weak: teacher workload is secondary to the student-centred purpose of the policy."
 },
 {
 kind: "single",
@@ -29758,7 +29758,7 @@ stimulus: [
 "Should research into artificial intelligence be restricted to institutions that have an internal diversity committee?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because diverse teams are better equipped to identify and mitigate biases in machine learning algorithms that could otherwise have discriminatory effects on marginalized groups.",
+correct: "Yes, because diverse teams are better equipped to identify and mitigate biases in machine learning algorithms that could otherwise have discriminatory effects on marginalised groups.",
 distractors: [
 "Yes, because it is important for universities to have many committees.",
 "No, because some researchers prefer working alone.",
@@ -29787,10 +29787,10 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should agricultural research focusing on genetically modified crops be banned in regions that prioritize organic farming?"
+"Should agricultural research focusing on genetically modified crops be banned in regions that prioritise organic farming?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because prohibiting such research limits the region's ability to develop crops resistant to localized pests and climate shifts, undermining food security.",
+correct: "No, because prohibiting such research limits the region's ability to develop crops resistant to localised pests and climate shifts, undermining food security.",
 distractors: [
 "Yes, because organic farming is seen as more natural.",
 "No, because farmers like to wake up early.",
@@ -29806,7 +29806,7 @@ stimulus: [
 "Should university research budgets be determined entirely by the number of citations a professor receives?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because citation counts favor mainstream or trending topics, which would lead to the neglect of foundational, niche, or high-risk research that often drives long-term scientific progress.",
+correct: "No, because citation counts favour mainstream or trending topics, which would lead to the neglect of foundational, niche, or high-risk research that often drives long-term scientific progress.",
 distractors: [
 "Yes, because numbers are very easy to calculate.",
 "No, because professors usually work in offices.",
@@ -29854,7 +29854,7 @@ stimulus: [
 "Should governments mandate that pharmaceutical companies share patents for essential medicines during global pandemics?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because it enables rapid, localized mass production of life-saving drugs, ensuring equitable access that saves millions of lives in underserved regions.",
+correct: "Yes, because it enables rapid, localised mass production of life-saving drugs, ensuring equitable access that saves millions of lives in underserved regions.",
 distractors: [
 "Yes, because pandemics are very serious events.",
 "No, because the buildings used by pharmaceutical companies are large.",
@@ -29867,14 +29867,14 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should university research on defense technology be classified by default?"
+"Should university research on defence technology be classified by default?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because excessive classification prevents academic peer review, which is essential for identifying technical flaws that could lead to system failure in real-world military operations.",
 distractors: [
 "Yes, because it keeps the technology secret.",
 "No, because universities have many students.",
-"Yes, because some defense technologies are quite dangerous."
+"Yes, because some defence technologies are quite dangerous."
 ],
 explanation: "The correct answer is strongest because it identifies the safety risk inherent in avoiding peer review for technical systems. Distractor 1 is weak: restates the purpose of classification. Distractor 2 is weak: student population is irrelevant. Distractor 3 is weak: danger is a reason for caution, not a reason for default classification."
 },
@@ -29931,10 +29931,10 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should research funding be prioritized for projects that demonstrate immediate commercial applicability?"
+"Should research funding be prioritised for projects that demonstrate immediate commercial applicability?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because long-term breakthroughs, such as in basic physics or genomics, often take decades to yield commercial benefits, and prioritizing short-term gains would cause a collapse in fundamental scientific discovery.",
+correct: "No, because long-term breakthroughs, such as in basic physics or genomics, often take decades to yield commercial benefits, and prioritising short-term gains would cause a collapse in fundamental scientific discovery.",
 distractors: [
 "Yes, because money is used to buy things.",
 "No, because many researchers like working in labs.",
@@ -30059,16 +30059,16 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should the government ban the advertising of high-sugar energy drinks to minors to protect their long-term mental and behavioral health?"
+"Should the government ban the advertising of high-sugar energy drinks to minors to protect their long-term mental and behavioural health?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because reducing exposure to these stimulants directly decreases the prevalence of sleep deprivation and subsequent behavioral issues in school-age children.",
+correct: "Yes, because reducing exposure to these stimulants directly decreases the prevalence of sleep deprivation and subsequent behavioural issues in school-age children.",
 distractors: [
-"Yes, because sugary drinks are often bright colors.",
+"Yes, because sugary drinks are often bright colours.",
 "No, because parents should be responsible for what their children drink instead.",
 "No, because advertising is a very big industry in the world."
 ],
-explanation: "The correct answer is strongest because it connects the ban to a concrete physiological and behavioral improvement. Distractor 1 is weak: color is not the issue. Distractor 2 is weak: it restates the item name. Distractor 3 is weak: the size of the industry does not address the impact on minors."
+explanation: "The correct answer is strongest because it connects the ban to a concrete physiological and behavioural improvement. Distractor 1 is weak: colour is not the issue. Distractor 2 is weak: it restates the item name. Distractor 3 is weak: the size of the industry does not address the impact on minors."
 },
 {
 kind: "single",
@@ -30148,7 +30148,7 @@ distractors: [
 "No, because the internet has existed for several decades.",
 "No, because people who post lifestyle content on social media are just expressing themselves, and if we start labeling their posts then we're basically labeling all self-expression which seems like it could be a slippery slope to labeling other things."
 ],
-explanation: "The correct answer is strongest because it directly connects content consumption to recognized psychological harm. Distractor 1 is weak: it defines what a label is. Distractor 2 is weak: the history of the internet is not the issue. Distractor 3 is weak: it is not a reasoned justification."
+explanation: "The correct answer is strongest because it directly connects content consumption to recognised psychological harm. Distractor 1 is weak: it defines what a label is. Distractor 2 is weak: the history of the internet is not the issue. Distractor 3 is weak: it is not a reasoned justification."
 },
 {
 kind: "single",
@@ -30224,11 +30224,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because providing the elderly with digital access to family and community networks significantly mitigates the health risks associated with social isolation.",
 distractors: [
-"Yes, because computers are often silver or black in color.",
+"Yes, because computers are often silver or black in colour.",
 "No, because digital literacy training is a form of training, and training requires effort, which some people might not want to do.",
 "No, because the internet is a large place."
 ],
-explanation: "The correct answer is strongest because it connects digital access to the specific outcome of reducing isolation. Distractor 1 is weak: computer color is irrelevant. Distractor 2 is weak: it defines the term. Distractor 3 is weak: the size of the internet is not the policy consideration."
+explanation: "The correct answer is strongest because it connects digital access to the specific outcome of reducing isolation. Distractor 1 is weak: computer colour is irrelevant. Distractor 2 is weak: it defines the term. Distractor 3 is weak: the size of the internet is not the policy consideration."
 },
 {
 kind: "single",
@@ -30305,10 +30305,10 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because early exposure to emotional literacy allows children to identify and articulate feelings, which acts as a protective factor against future mental health disorders.",
 distractors: [
 "Yes, because five-year-olds are very young children.",
-"No, because some school buildings are painted bright colors.",
+"No, because some school buildings are painted bright colours.",
 "No, because mental health is something that people have always dealt with, so there is no real reason to change what we are already doing."
 ],
-explanation: "The correct answer is strongest because it links early emotional education to long-term preventative health outcomes. Distractor 1 is weak: age identification is not an argument. Distractor 2 is weak: wall color is irrelevant. Distractor 3 is weak: it defines the concept."
+explanation: "The correct answer is strongest because it links early emotional education to long-term preventative health outcomes. Distractor 1 is weak: age identification is not an argument. Distractor 2 is weak: wall colour is irrelevant. Distractor 3 is weak: it defines the concept."
 },
 {
 kind: "single",
@@ -30334,13 +30334,13 @@ stimulus: [
 "Should social media platforms be required to delete all accounts of users who exhibit signs of cyberbullying to prevent victim mental health crises?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because immediate account deletion without due process could be misused to silence opposing views, and it fails to address the underlying behavioral issue of the bully.",
+correct: "No, because immediate account deletion without due process could be misused to silence opposing views, and it fails to address the underlying behavioural issue of the bully.",
 distractors: [
 "Yes, because bullying is mean to do.",
 "Yes, because accounts are where people have their profile.",
 "No, because some people have very large follower counts."
 ],
-explanation: "The correct answer is strongest because it highlights risks of procedural injustice and failure to solve the root problem. Distractor 1 is weak: it is a moral judgment, not a policy analysis. Distractor 2 is weak: it defines an account. Distractor 3 is weak: follower count is not a safety issue."
+explanation: "The correct answer is strongest because it highlights risks of procedural injustice and failure to solve the root problem. Distractor 1 is weak: it is a moral judgement, not a policy analysis. Distractor 2 is weak: it defines an account. Distractor 3 is weak: follower count is not a safety issue."
 },
 {
 kind: "single",
@@ -30379,7 +30379,7 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should major tennis tournaments eliminate line judges in favor of fully automated electronic calling systems?"
+"Should major tennis tournaments eliminate line judges in favour of fully automated electronic calling systems?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it removes human error from critical points, ensuring the final match outcomes are determined entirely by player skill rather than officiating mistakes.",
@@ -30468,7 +30468,7 @@ distractors: [
 "No, because stadiums are large buildings that require a lot of electricity to operate anyway.",
 "No, because they would have to start doing these projects if the rule were passed."
 ],
-explanation: "The correct answer is strongest because it balances the negative environmental impact of stadiums with a targeted, localized solution. Distractor 1 is weak: it does not address the policy mechanism. Distractor 2 is weak: existing energy usage does not excuse future impact. Distractor 3 is weak: it restates that the proposal creates an obligation."
+explanation: "The correct answer is strongest because it balances the negative environmental impact of stadiums with a targeted, localised solution. Distractor 1 is weak: it does not address the policy mechanism. Distractor 2 is weak: existing energy usage does not excuse future impact. Distractor 3 is weak: it restates that the proposal creates an obligation."
 },
 {
 kind: "single",
@@ -30510,7 +30510,7 @@ stimulus: [
 "Should universities ban all political campaign advertisements on campus to preserve an environment of neutral academic inquiry?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because removing partisan imagery minimizes environmental pressure on students, allowing for more objective critical discourse and academic freedom within the campus setting.",
+correct: "Yes, because removing partisan imagery minimises environmental pressure on students, allowing for more objective critical discourse and academic freedom within the campus setting.",
 distractors: [
 "Yes, because advertisements are often bright and distracting when you are trying to study.",
 "No, because students often enjoy discussing politics with their friends during their free time.",
@@ -30571,16 +30571,16 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should the government replace all standardized testing in schools with holistic project-based assessments?"
+"Should the government replace all standardised testing in schools with holistic project-based assessments?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because standardized testing provides the only objective metric to compare educational standards across different regions and socio-economic backgrounds, ensuring accountability.",
+correct: "No, because standardised testing provides the only objective metric to compare educational standards across different regions and socio-economic backgrounds, ensuring accountability.",
 distractors: [
 "Yes, because some students find taking tests to be very stressful and difficult.",
 "Yes, because a change in assessment methods would mean that students would be tested differently.",
 "No, because teachers are already very busy with their daily tasks in the classroom."
 ],
-explanation: "The correct answer is strongest because it addresses the necessity of standardized metrics for system-wide accountability. Distractor 1 is weak: student stress does not address the need for objective assessment. Distractor 2 is weak: restating that the assessment method would change is not an argument. Distractor 3 is weak: teacher workload is a separate issue from assessment validity."
+explanation: "The correct answer is strongest because it addresses the necessity of standardised metrics for system-wide accountability. Distractor 1 is weak: student stress does not address the need for objective assessment. Distractor 2 is weak: restating that the assessment method would change is not an argument. Distractor 3 is weak: teacher workload is a separate issue from assessment validity."
 },
 {
 kind: "single",
@@ -30635,7 +30635,7 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should mandatory jury service be abolished in favor of professional, permanent jurors?"
+"Should mandatory jury service be abolished in favour of professional, permanent jurors?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a jury of one's peers ensures that judicial decisions reflect the common standards and values of the community, which is essential for a legitimate justice system.",
@@ -30718,7 +30718,7 @@ stimulus: [
 "Should social media platforms be legally required to verify the age of all users?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because it protects minors from exposure to age-inappropriate content and predatory behavior, which these platforms are currently unable to effectively police.",
+correct: "Yes, because it protects minors from exposure to age-inappropriate content and predatory behaviour, which these platforms are currently unable to effectively police.",
 distractors: [
 "Yes, because it is important for young people to be safe when they are on the internet.",
 "No, because some people like to use social media anonymously without giving away their details.",
@@ -30776,7 +30776,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should local councils be given the power to seize empty, privately-owned residential properties to house those on waiting lists?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because it utilizes existing, vacant stock to meet immediate humanitarian needs without the environmental and time costs associated with new construction.",
+correct: "Yes, because it utilises existing, vacant stock to meet immediate humanitarian needs without the environmental and time costs associated with new construction.",
 distractors: [
 "Yes, because seizing property sounds like a very proactive thing for a council to do.",
 "No, because empty properties have always been empty and that is just how things are.",
@@ -30816,7 +30816,7 @@ explanation: "The correct answer is strongest because it identifies the direct e
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should the state prioritize housing the chronically homeless over those temporarily displaced by economic hardship?'],
+stimulus: ['Should the state prioritise housing the chronically homeless over those temporarily displaced by economic hardship?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because the chronically homeless face the highest risk of mortality and severe health degradation, requiring immediate intervention to prevent irreversible systemic collapse.",
 distractors: [
@@ -30830,7 +30830,7 @@ explanation: "The correct answer is strongest because it focuses on the urgency 
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should building height restrictions in city centers be scrapped to facilitate high-density social housing?'],
+stimulus: ['Should building height restrictions in city centres be scrapped to facilitate high-density social housing?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because increasing vertical density allows for more housing units to be built within existing infrastructure, reducing urban sprawl and commuting requirements.",
 distractors: [
@@ -30846,13 +30846,13 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should developers be required to build on brownfield sites before being granted permission to build on greenbelt land?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because prioritizing brownfield development prevents the destruction of vital ecosystems and farmland, while encouraging the regeneration of neglected urban spaces.",
+correct: "Yes, because prioritising brownfield development prevents the destruction of vital ecosystems and farmland, while encouraging the regeneration of neglected urban spaces.",
 distractors: [
 "Yes, because brownfield sites are sites that are brown.",
 "No, because greenbelts are important and developers should be able to build where they want.",
     "No, because requiring brownfield development first would delay project timelines and slow the overall delivery of new homes."
 ],
-explanation: "The correct answer is strongest because it balances environmental protection with urban regeneration. Distractor 1 is weak: it is a literal misinterpretation of the term. Distractor 2 is weak: personal color preference has nothing to do with greenbelt land. Distractor 3 is weak: project scheduling is not the primary justification for land use policy."
+explanation: "The correct answer is strongest because it balances environmental protection with urban regeneration. Distractor 1 is weak: it is a literal misinterpretation of the term. Distractor 2 is weak: personal colour preference has nothing to do with greenbelt land. Distractor 3 is weak: project scheduling is not the primary justification for land use policy."
 },
 {
 kind: "single",
@@ -30894,7 +30894,7 @@ distractors: [
 "No, because people who want to eat ultra-processed foods will eat them regardless of what the labels say.",
     "No, because the government has already implemented many food safety measures, so adding further labelling regulation may not be necessary."
 ],
-explanation: "The correct answer is strongest because it directly connects information provision to behavior change and improved health outcomes. Distractor 1 is weak: it defines what a label is. Distractor 2 is weak: individual reading habits don’t undermine the logic of providing information. Distractor 3 is weak: it is a general statement that doesn’t explain why the mandate is effective."
+explanation: "The correct answer is strongest because it directly connects information provision to behaviour change and improved health outcomes. Distractor 1 is weak: it defines what a label is. Distractor 2 is weak: individual reading habits don’t undermine the logic of providing information. Distractor 3 is weak: it is a general statement that doesn’t explain why the mandate is effective."
 },
 {
 kind: "single",
@@ -30908,7 +30908,7 @@ distractors: [
 "No, because if we introduce this tax, people might not like it very much.",
     "No, because the content of a school curriculum should not be determined by how taxes are collected from the drinks industry."
 ],
-explanation: "The correct answer is strongest because it addresses both the reduction of negative behavior and the positive reinforcement of exercise. Distractor 1 is weak: it is a basic fact about sugar. Distractor 2 is weak: it explains how taxes work. Distractor 3 is weak: school curriculum content is unrelated to the tax funding mechanism."
+explanation: "The correct answer is strongest because it addresses both the reduction of negative behaviour and the positive reinforcement of exercise. Distractor 1 is weak: it is a basic fact about sugar. Distractor 2 is weak: it explains how taxes work. Distractor 3 is weak: school curriculum content is unrelated to the tax funding mechanism."
 },
 {
 kind: "single",
@@ -30944,7 +30944,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should the government invest in a national campaign to promote plant-based diets for better public health outcomes?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because a shift toward plant-based diets is proven to lower rates of heart disease and type 2 diabetes, reducing the long-term strain on national healthcare services.",
+correct: "Yes, because a shift towards plant-based diets is proven to lower rates of heart disease and type 2 diabetes, reducing the long-term strain on national healthcare services.",
 distractors: [
 "Yes, because plants are living organisms that grow in the ground.",
 "No, because people have always eaten what they want to eat, and changing what people eat would be different from how things are now.",
@@ -30970,7 +30970,7 @@ explanation: "The correct answer is strongest because it highlights the vulnerab
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should all high-speed rail projects be halted to prioritize the expansion of local bus networks?'],
+stimulus: ['Should all high-speed rail projects be halted to prioritise the expansion of local bus networks?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because local bus networks provide essential daily connectivity for the majority of citizens, whereas high-speed rail often benefits only a small, wealthy minority at a high public cost.",
 distractors: [
@@ -30978,7 +30978,7 @@ distractors: [
 "No, because high-speed rail projects are important and stopping them would not be a good idea.",
     "No, because public transport of all kinds is very important to society, and both buses and high-speed rail serve essential purposes."
 ],
-explanation: "The correct answer is strongest because it contrasts the breadth of utility and social equity of buses against the elitism and high cost of high-speed rail. Distractor 1 is weak: it explains the name of the rail. Distractor 2 is weak: the color of buses has no bearing on transport policy. Distractor 3 is weak: stating that transport is important does not justify favoring one mode over another."
+explanation: "The correct answer is strongest because it contrasts the breadth of utility and social equity of buses against the elitism and high cost of high-speed rail. Distractor 1 is weak: it explains the name of the rail. Distractor 2 is weak: the colour of buses has no bearing on transport policy. Distractor 3 is weak: stating that transport is important does not justify favouring one mode over another."
 },
 {
 kind: "single",
@@ -31006,7 +31006,7 @@ distractors: [
 "No, because tax incentives are a form of government policy that involves money.",
     "No, because many employees personally enjoy the routine of a five-day working week and would prefer not to have their schedule changed."
 ],
-explanation: "The correct answer is strongest because it presents a clear business and fiscal case for the policy. Distractor 1 is weak: it defines an employee but offers no justification. Distractor 2 is weak: it defines the mechanism using its own name. Distractor 3 is weak: it appeals to personal preference rather than organizational benefits."
+explanation: "The correct answer is strongest because it presents a clear business and fiscal case for the policy. Distractor 1 is weak: it defines an employee but offers no justification. Distractor 2 is weak: it defines the mechanism using its own name. Distractor 3 is weak: it appeals to personal preference rather than organisational benefits."
 },
 {
 kind: "single",
@@ -31014,7 +31014,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should local communities be granted the right to veto new telecommunications masts in their area?'],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because allowing localized vetoes would lead to a fragmented and patchy network, effectively preventing the national deployment of high-speed connectivity required for economic growth.",
+correct: "No, because allowing localised vetoes would lead to a fragmented and patchy network, effectively preventing the national deployment of high-speed connectivity required for economic growth.",
 distractors: [
 "No, because masts are tall structures made of metal.",
 "Yes, because communities should have a say in things that affect their communities.",
@@ -31054,12 +31054,12 @@ explanation: "The correct answer is strongest because it identifies the preventa
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should the government implement a total ban on the use of personal cars in historic city centers?'],
+stimulus: ['Should the government implement a total ban on the use of personal cars in historic city centres?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it dramatically improves air quality and reduces traffic congestion, creating a safer and more pedestrian-friendly environment that preserves the integrity of historic sites.",
 distractors: [
 "Yes, because cars are vehicles with wheels.",
-"No, because people have always driven cars in city centers and changing this would be different from how things currently are.",
+"No, because people have always driven cars in city centres and changing this would be different from how things currently are.",
     "No, because many historic city centres have accommodated vehicle traffic for decades without any significant problems arising from it."
 ],
 explanation: "The correct answer is strongest because it details the direct benefits to health, safety, and cultural preservation. Distractor 1 is weak: it is a basic fact about cars. Distractor 2 is weak: it defines a ban. Distractor 3 is weak: the age of a city is irrelevant to the efficacy of the car ban."
@@ -31084,13 +31084,13 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should governments implement a mandatory national tax on all ultra-processed foods to combat obesity?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because such a tax would reduce the affordability of nutritionally deficient products, thereby encouraging consumers to shift their purchasing power toward healthier, whole-food alternatives.",
+correct: "Yes, because such a tax would reduce the affordability of nutritionally deficient products, thereby encouraging consumers to shift their purchasing power towards healthier, whole-food alternatives.",
 distractors: [
 "Yes, because it is important for the government to do something about the health of the nation.",
 "No, because taxes on things are not always the best way to solve problems that exist in society.",
 "No, because many people enjoy the taste of processed snacks and would be unhappy about the price increase."
 ],
-explanation: "The correct answer is strongest because it directly addresses the mechanism of consumer behavior change and its specific impact on diet. Distractor 1 is weak: it fails to provide a concrete mechanism for change. Distractor 2 is weak: it merely restates that the food is considered bad without providing an argument. Distractor 3 is weak: consumer preference is a minor concern compared to the public health objective."
+explanation: "The correct answer is strongest because it directly addresses the mechanism of consumer behaviour change and its specific impact on diet. Distractor 1 is weak: it fails to provide a concrete mechanism for change. Distractor 2 is weak: it merely restates that the food is considered bad without providing an argument. Distractor 3 is weak: consumer preference is a minor concern compared to the public health objective."
 },
 {
 kind: "single",
@@ -31118,7 +31118,7 @@ distractors: [
 "No, because sugar-sweetened beverages are popular drinks that many people enjoy drinking.",
 "No, because the government should not interfere with how private companies operate in the market."
 ],
-explanation: "The correct answer is strongest because it links marketing exposure to behavioral psychology and health outcomes. Distractor 1 is weak: the financial model of TV is not the target of the proposal. Distractor 2 is weak: the ubiquity of sugar is a general fact, not an argument for or against the ban. Distractor 3 is weak: it relies on an ideological stance without addressing the specific health impact."
+explanation: "The correct answer is strongest because it links marketing exposure to behavioural psychology and health outcomes. Distractor 1 is weak: the financial model of TV is not the target of the proposal. Distractor 2 is weak: the ubiquity of sugar is a general fact, not an argument for or against the ban. Distractor 3 is weak: it relies on an ideological stance without addressing the specific health impact."
 },
 {
 kind: "single",
@@ -31138,7 +31138,7 @@ explanation: "The correct answer is strongest because it highlights the function
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should international trade agreements strictly forbid the importation of agricultural products that utilize high levels of pesticides?'],
+stimulus: ['Should international trade agreements strictly forbid the importation of agricultural products that utilise high levels of pesticides?'],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because such a blanket prohibition would disproportionately harm developing nations that rely on these exports for economic stability, potentially driving them into extreme poverty.",
 distractors: [
@@ -31230,7 +31230,7 @@ distractors: [
 "Yes, because if we give people money, then they will have money, which is what universal basic income is supposed to do.",
 "Yes, because it would be nice for everyone to have enough money to buy things."
 ],
-explanation: "The correct answer is strongest because it maps the policy to the causal chain of fiscal, economic, and employment consequences. Distractor 1 is weak: it relies on an abstract moral judgment. Distractor 2 is weak: saying it is expensive is just describing the policy. Distractor 3 is weak: the fact that having money is nice is not a policy justification."
+explanation: "The correct answer is strongest because it maps the policy to the causal chain of fiscal, economic, and employment consequences. Distractor 1 is weak: it relies on an abstract moral judgement. Distractor 2 is weak: saying it is expensive is just describing the policy. Distractor 3 is weak: the fact that having money is nice is not a policy justification."
 },
 {
 kind: "single",
@@ -31805,7 +31805,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should the government mandate that all social media platforms implement age-verification technology to restrict access for children under 16?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because it would significantly reduce children's exposure to harmful content and predatory behavior by enforcing age restrictions at the software level.",
+correct: "Yes, because it would significantly reduce children's exposure to harmful content and predatory behaviour by enforcing age restrictions at the software level.",
 distractors: [
 "Yes, because it is important to consider the online safety of minors.",
 "No, because social media platforms already exist in the world today.",
@@ -31861,13 +31861,13 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should software companies be held legally liable for security vulnerabilities in their products that lead to major data breaches?'],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because legal liability would create a powerful financial incentive for companies to prioritize rigorous security testing throughout the software development lifecycle.",
+correct: "Yes, because legal liability would create a powerful financial incentive for companies to prioritise rigorous security testing throughout the software development lifecycle.",
 distractors: [
 "Yes, because data breaches are unfortunate events.",
 "No, because security vulnerabilities are just part of how software works and it's not really fair to hold companies responsible for things that happen in the digital world.",
 "No, because some programmers like to drink coffee."
 ],
-explanation: "The correct answer is strongest because it links legal pressure to a change in corporate behavior (security testing). Distractor 1 is weak: calling a breach an 'unfortunate event' does not provide a reasoned argument. Distractor 2 is weak: describing the nature of code does not inform liability policy. Distractor 3 is weak: caffeine preferences have no impact on software security."
+explanation: "The correct answer is strongest because it links legal pressure to a change in corporate behaviour (security testing). Distractor 1 is weak: calling a breach an 'unfortunate event' does not provide a reasoned argument. Distractor 2 is weak: describing the nature of code does not inform liability policy. Distractor 3 is weak: caffeine preferences have no impact on software security."
 },
 {
 kind: "single",
@@ -31875,7 +31875,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should governments impose a tax on companies that replace human roles with automated AI systems?'],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because it would penalize firms for adopting productivity-enhancing technologies, effectively slowing national economic growth and technological innovation.",
+correct: "No, because it would penalise firms for adopting productivity-enhancing technologies, effectively slowing national economic growth and technological innovation.",
 distractors: [
 "No, because taxes are often collected by governments.",
 "Yes, because automation is something that happens in the modern world.",
@@ -31901,15 +31901,15 @@ explanation: "The correct answer is strongest because it directly addresses the 
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should search engines be prohibited from prioritizing their own subsidiary products in search results?'],
+stimulus: ['Should search engines be prohibited from prioritising their own subsidiary products in search results?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because self-preferencing limits fair competition by artificially directing traffic away from independent businesses, which stifles market diversity.",
 distractors: [
 "Yes, because search engines have many users.",
 "No, because search engines are companies that provide services to people who use the internet.",
-"No, because some colors are blue."
+"No, because some colours are blue."
 ],
-explanation: "The correct answer is strongest because it articulates the harm to market competition and independent entities. Distractor 1 is weak: the number of users is not a basis for antitrust concerns. Distractor 2 is weak: it just states that a prohibition is a rule. Distractor 3 is weak: colors have no relation to search engine algorithms."
+explanation: "The correct answer is strongest because it articulates the harm to market competition and independent entities. Distractor 1 is weak: the number of users is not a basis for antitrust concerns. Distractor 2 is weak: it just states that a prohibition is a rule. Distractor 3 is weak: colours have no relation to search engine algorithms."
 },
 {
 kind: "single",
@@ -31917,13 +31917,13 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should the government establish a state-run encrypted email service for all citizens to ensure secure communication?'],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because a centralized government service would create a single point of failure that could be targeted by state-sponsored hackers to monitor all citizen communication.",
+correct: "No, because a centralised government service would create a single point of failure that could be targeted by state-sponsored hackers to monitor all citizen communication.",
 distractors: [
 "No, because people already have many email addresses.",
 "Yes, because having an encrypted email service would mean people could send emails securely, which is what encryption does.",
 "Yes, because secure communication is generally considered good."
 ],
-explanation: "The correct answer is strongest because it highlights a critical security flaw (the 'honeypot' effect) inherent in centralized systems. Distractor 1 is weak: existing email usage does not address the security proposal. Distractor 2 is weak: the cost of hardware is a secondary issue compared to systemic security. Distractor 3 is weak: it agrees with the premise without addressing the risks or mechanisms of the proposal."
+explanation: "The correct answer is strongest because it highlights a critical security flaw (the 'honeypot' effect) inherent in centralised systems. Distractor 1 is weak: existing email usage does not address the security proposal. Distractor 2 is weak: the cost of hardware is a secondary issue compared to systemic security. Distractor 3 is weak: it agrees with the premise without addressing the risks or mechanisms of the proposal."
 },
 {
 kind: "single",
@@ -31937,7 +31937,7 @@ distractors: [
 "Yes, because if misinformation isn't removed quickly, more people might see it.",
 "Yes, because misinformation is bad for society."
 ],
-explanation: "The correct answer is strongest because it identifies the consequence of the policy on speech and platform moderation behavior. Distractor 1 is weak: the humor of misinformation is not a policy concern. Distractor 2 is weak: employee work schedules are irrelevant to content policy. Distractor 3 is weak: stating misinformation is bad is a general truth that fails to address the practical concerns of implementing the 24-hour rule."
+explanation: "The correct answer is strongest because it identifies the consequence of the policy on speech and platform moderation behaviour. Distractor 1 is weak: the humor of misinformation is not a policy concern. Distractor 2 is weak: employee work schedules are irrelevant to content policy. Distractor 3 is weak: stating misinformation is bad is a general truth that fails to address the practical concerns of implementing the 24-hour rule."
 },
 {
 kind: "single",
@@ -31947,7 +31947,7 @@ stimulus: ['Should governments mandate that all smart city sensors be open-sourc
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because open-source requirements allow cities to switch service providers easily, fostering competitive pricing and preventing reliance on a single proprietary supplier.",
 distractors: [
-"Yes, because open-source is a type of software license.",
+"Yes, because open-source is a type of software licence.",
 "No, because smart city sensors are an important part of modern infrastructure and we should be careful about making changes to important things.",
 "No, because cities have a lot of traffic."
 ],
@@ -31979,7 +31979,7 @@ distractors: [
 "Yes, because digital identity programs are something that other countries have, and having things that other countries have is generally beneficial.",
 "Yes, because it would be a very modern system."
 ],
-explanation: "The correct answer is strongest because it identifies the existential security and privacy risks of a centralized national database. Distractor 1 is weak: hobbies have no bearing on security policy. Distractor 2 is weak: being 'new' is not a substantive argument. Distractor 3 is weak: 'modern' is not a sufficient justification for a risky policy."
+explanation: "The correct answer is strongest because it identifies the existential security and privacy risks of a centralised national database. Distractor 1 is weak: hobbies have no bearing on security policy. Distractor 2 is weak: being 'new' is not a substantive argument. Distractor 3 is weak: 'modern' is not a sufficient justification for a risky policy."
 },
 {
 kind: "single",
@@ -32021,7 +32021,7 @@ distractors: [
 "No, because other countries might develop lethal autonomous weapons systems anyway, so we should too.",
 "No, because some soldiers enjoy eating sandwiches."
 ],
-explanation: "The correct answer is strongest because it identifies the lack of accountability and moral judgment as a lethal risk. Distractor 1 is weak: weapons are inherently dangerous, so this is a truism. Distractor 2 is weak: it just states the sequence of events. Distractor 3 is weak: soldier meal habits are irrelevant."
+explanation: "The correct answer is strongest because it identifies the lack of accountability and moral judgement as a lethal risk. Distractor 1 is weak: weapons are inherently dangerous, so this is a truism. Distractor 2 is weak: it just states the sequence of events. Distractor 3 is weak: soldier meal habits are irrelevant."
 },
 {
 kind: "single",
@@ -32035,7 +32035,7 @@ distractors: [
 "No, because 5G infrastructure rollout is something that involves the government doing something, and government doing things is generally not always the best approach.",
 "No, because some cars are red."
 ],
-explanation: "The correct answer is strongest because it links the infrastructure to its functional enabling capacity (telemedicine, autonomous transport). Distractor 1 is weak: speed is a minor technical detail that doesn't capture the societal impact. Distractor 2 is weak: the existence of a budget doesn't justify a specific policy. Distractor 3 is weak: car color is irrelevant."
+explanation: "The correct answer is strongest because it links the infrastructure to its functional enabling capacity (telemedicine, autonomous transport). Distractor 1 is weak: speed is a minor technical detail that doesn't capture the societal impact. Distractor 2 is weak: the existence of a budget doesn't justify a specific policy. Distractor 3 is weak: car colour is irrelevant."
 },
 {
 kind: "single",
@@ -32049,7 +32049,7 @@ distractors: [
 "No, because facial recognition technology is a technology and technologies are things that exist in modern society.",
 "No, because some people have blonde hair."
 ],
-explanation: "The correct answer is strongest because it identifies a clear constitutional harm (chilling effect on civil liberties). Distractor 1 is weak: the prevalence of cameras is a fact, not an argument. Distractor 2 is weak: 'new technology' is not a reason for banning it. Distractor 3 is weak: hair color has no bearing on surveillance policy."
+explanation: "The correct answer is strongest because it identifies a clear constitutional harm (chilling effect on civil liberties). Distractor 1 is weak: the prevalence of cameras is a fact, not an argument. Distractor 2 is weak: 'new technology' is not a reason for banning it. Distractor 3 is weak: hair colour has no bearing on surveillance policy."
 },
 {
 kind: "single",
@@ -32077,7 +32077,7 @@ distractors: [
 "No, because packaging is used to protect products, which is important.",
 "No, because some clouds are white."
 ],
-explanation: "The correct answer is strongest because it links a policy mandate to an environmental necessity (microplastics). Distractor 1 is weak: defines recycling as a process. Distractor 2 is weak: states it affects companies but doesn't explain why that is good or bad. Distractor 3 is weak: cloud color is irrelevant."
+explanation: "The correct answer is strongest because it links a policy mandate to an environmental necessity (microplastics). Distractor 1 is weak: defines recycling as a process. Distractor 2 is weak: states it affects companies but doesn't explain why that is good or bad. Distractor 3 is weak: cloud colour is irrelevant."
 },
 {
 kind: "single",
@@ -32099,7 +32099,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should the government enforce a "digital sunset" policy that mandates devices automatically turn off non-essential notifications after 9:00 PM?'],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because government-mandated device behavior is a significant overreach that undermines individual autonomy and the ability of users to manage their own digital habits.",
+correct: "No, because government-mandated device behaviour is a significant overreach that undermines individual autonomy and the ability of users to manage their own digital habits.",
 distractors: [
 "No, because people have different sleep schedules.",
 "Yes, because many people use their phones before bed and this policy would help with that.",
@@ -32111,7 +32111,7 @@ explanation: "The correct answer is strongest because it highlights the conflict
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should the government provide free, high-speed public Wi-Fi in all urban centers?'],
+stimulus: ['Should the government provide free, high-speed public Wi-Fi in all urban centres?'],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it bridges the digital divide, providing low-income citizens with access to essential online job applications, government services, and educational resources.",
 distractors: [
@@ -32143,7 +32143,7 @@ stimulus: [
 "Should the government implement a permanent universal basic income for all citizens?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because it would likely necessitate unsustainable tax hikes or drastic cuts to other essential public services, destabilizing the national economy.",
+correct: "No, because it would likely necessitate unsustainable tax hikes or drastic cuts to other essential public services, destabilising the national economy.",
 distractors: [
 "Yes, because people deserve to have money in their pockets to spend.",
 "Yes, because a universal basic income is a form of income that is basic and universal.",
@@ -32163,9 +32163,9 @@ correct: "No, because it would likely trigger severe inflation and reduce the pu
 distractors: [
 "Yes, because interest rates are a primary tool used by banks to influence money flow.",
 "Yes, because zero percent is a very low number that makes borrowing cheaper for everyone.",
-"No, because many people dislike the color of the current currency notes."
+"No, because many people dislike the colour of the current currency notes."
 ],
-explanation: "The correct answer is strongest because it highlights a specific, significant risk (inflation/purchasing power) directly caused by the proposed rate. Distractor 1 is weak: it defines a function without analyzing the policy impact. Distractor 2 is weak: it ignores the wider economic dangers of extreme rate setting. Distractor 3 is weak: it introduces an entirely unrelated factor."
+explanation: "The correct answer is strongest because it highlights a specific, significant risk (inflation/purchasing power) directly caused by the proposed rate. Distractor 1 is weak: it defines a function without analysing the policy impact. Distractor 2 is weak: it ignores the wider economic dangers of extreme rate setting. Distractor 3 is weak: it introduces an entirely unrelated factor."
 },
 {
 kind: "single",
@@ -32193,11 +32193,11 @@ stimulus: [
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because market competition would incentivize private operators to innovate and reduce operational inefficiencies, ultimately lowering costs for consumers.",
 distractors: [
-"Yes, because privatization is a common trend seen in many countries throughout history.",
-"No, because some people believe that the color green is associated with energy.",
+"Yes, because privatisation is a common trend seen in many countries throughout history.",
+"No, because some people believe that the colour green is associated with energy.",
 "No, because it is not ideal to have infrastructure that is managed by private entities rather than the state."
 ],
-explanation: "The correct answer is strongest because it links privatization to a clear economic outcome (efficiency/consumer cost). Distractor 1 is weak: it confuses a trend with evidence of success. Distractor 2 is weak: it introduces an irrelevant color association. Distractor 3 is weak: it restates the premise as the conclusion."
+explanation: "The correct answer is strongest because it links privatisation to a clear economic outcome (efficiency/consumer cost). Distractor 1 is weak: it confuses a trend with evidence of success. Distractor 2 is weak: it introduces an irrelevant colour association. Distractor 3 is weak: it restates the premise as the conclusion."
 },
 {
 kind: "single",
@@ -32239,11 +32239,11 @@ stimulus: [
 "Should the government enforce a maximum wage ratio between the highest and lowest-paid employees in a company?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because it would curb extreme wealth inequality within organizations, improving employee morale and reducing high turnover costs associated with worker dissatisfaction.",
+correct: "Yes, because it would curb extreme wealth inequality within organisations, improving employee morale and reducing high turnover costs associated with worker dissatisfaction.",
 distractors: [
 "Yes, because ratios are used in mathematics to compare numbers.",
 "No, because it would be a form of wage control which involves controlling wages.",
-"No, because some companies prefer to have offices located in the city center."
+"No, because some companies prefer to have offices located in the city centre."
 ],
 explanation: "The correct answer is strongest because it directly addresses the social and economic benefits of the proposal. Distractor 1 is weak: it defines a math term. Distractor 2 is weak: it provides no reasoning. Distractor 3 is weak: it focuses on a choice unrelated to the policy."
 },
@@ -32309,14 +32309,14 @@ distractors: [
 "No, because industry is a very important part of our society.",
 "No, because some people think that the weather is unpredictable."
 ],
-explanation: "The correct answer is strongest because it explains the specific incentive structure and subsequent industrial behavior. Distractor 1 is weak: it ignores the economic mechanism. Distractor 2 is weak: it is a truism that ignores the argument. Distractor 3 is weak: it relates to weather, not industrial emissions."
+explanation: "The correct answer is strongest because it explains the specific incentive structure and subsequent industrial behaviour. Distractor 1 is weak: it ignores the economic mechanism. Distractor 2 is weak: it is a truism that ignores the argument. Distractor 3 is weak: it relates to weather, not industrial emissions."
 },
 {
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should cities impose a mandatory car-free day once per week in the city center?"
+"Should cities impose a mandatory car-free day once per week in the city centre?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it would significantly improve local air quality and reduce noise pollution, creating a healthier and more accessible environment for pedestrians and cyclists.",
@@ -32357,7 +32357,7 @@ distractors: [
 "No, because some schools have very large playgrounds.",
 "No, because students might forget their homework sometimes."
 ],
-explanation: "The correct answer is strongest because it addresses both the waste reduction impact and the educational benefit of the proposal. Distractor 1 is weak: it defines composting. Distractor 2 is weak: it introduces irrelevant physical attributes of schools. Distractor 3 is weak: it introduces a random student behavior."
+explanation: "The correct answer is strongest because it addresses both the waste reduction impact and the educational benefit of the proposal. Distractor 1 is weak: it defines composting. Distractor 2 is weak: it introduces irrelevant physical attributes of schools. Distractor 3 is weak: it introduces a random student behaviour."
 },
 {
 kind: "single",
@@ -32387,7 +32387,7 @@ correct: "Yes, because it would revitalize neglected urban areas, reducing the '
 distractors: [
 "Yes, because public parks are areas where people go for recreation.",
 "No, because some people like to stay indoors to watch television.",
-"No, because it might be hard to choose which color of paint to use for park benches."
+"No, because it might be hard to choose which colour of paint to use for park benches."
 ],
 explanation: "The correct answer is strongest because it provides multiple, significant benefits (heat island reduction, health). Distractor 1 is weak: it defines the outcome. Distractor 2 is weak: it focuses on individual choice. Distractor 3 is weak: it introduces a trivial aesthetic detail."
 },
@@ -32403,7 +32403,7 @@ correct: "No, because it would create an unprecedented risk of mass surveillance
 distractors: [
 "Yes, because having an identity card is a way to prove who you are.",
 "Yes, because identity cards are cards that identify people.",
-"No, because some people think that blue is a nicer color than red."
+"No, because some people think that blue is a nicer colour than red."
 ],
 explanation: "The correct answer is strongest because it highlights the specific societal risk of privacy and surveillance. Distractor 1 is weak: it states a function that is obvious. Distractor 2 is weak: it provides no further logic. Distractor 3 is weak: it introduces a random aesthetic preference."
 },
@@ -32419,7 +32419,7 @@ correct: "Yes, because it would increase civic engagement among young people, en
 distractors: [
 "Yes, because 16 is a lower number than 18.",
 "No, because it is a proposal to change the age at which one can vote.",
-"No, because some 16-year-olds do not have a driving license yet."
+"No, because some 16-year-olds do not have a driving licence yet."
 ],
 explanation: "The correct answer is strongest because it addresses political representation and long-term consequences. Distractor 1 is weak: it is a simple fact. Distractor 2 is weak: it adds no value. Distractor 3 is weak: it links voting to driving without cause."
 },
@@ -32437,7 +32437,7 @@ distractors: [
 "No, because some people have very busy schedules and do not want to fill out paperwork.",
 "No, because office stationery is often quite expensive."
 ],
-explanation: "The correct answer is strongest because it explains the deterrent effect and its impact on public trust. Distractor 1 is weak: it defines the term. Distractor 2 is weak: it prioritizes convenience over governance. Distractor 3 is weak: it introduces a random operational cost."
+explanation: "The correct answer is strongest because it explains the deterrent effect and its impact on public trust. Distractor 1 is weak: it defines the term. Distractor 2 is weak: it prioritises convenience over governance. Distractor 3 is weak: it introduces a random operational cost."
 },
 {
 kind: "single",
@@ -32604,7 +32604,7 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should all plastic packaging be banned in favor of biodegradable alternatives to reduce ocean waste?"
+"Should all plastic packaging be banned in favour of biodegradable alternatives to reduce ocean waste?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because current biodegradable alternatives are significantly more expensive and energy-intensive to produce, which could increase consumer costs and negate the environmental benefits through increased manufacturing emissions.",
@@ -32684,7 +32684,7 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should agricultural policies prioritize lab-grown meat over livestock farming to reduce methane emissions?"
+"Should agricultural policies prioritise lab-grown meat over livestock farming to reduce methane emissions?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because the energy consumption and manufacturing costs required for lab-grown meat production at scale are currently too high to be a sustainable or affordable alternative to conventional farming.",
@@ -32700,12 +32700,12 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should cities ban all non-emergency private vehicle traffic in city centers to improve air quality?"
+"Should cities ban all non-emergency private vehicle traffic in city centres to improve air quality?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because significantly reducing internal combustion engines in high-density areas directly lowers localized nitrogen dioxide concentrations, leading to immediate respiratory health benefits for residents.",
+correct: "Yes, because significantly reducing internal combustion engines in high-density areas directly lowers localised nitrogen dioxide concentrations, leading to immediate respiratory health benefits for residents.",
 distractors: [
-"Yes, because it would make the city centers much quieter for everyone.",
+"Yes, because it would make the city centres much quieter for everyone.",
 "No, because people should be able to do what they want with their own cars.",
     "No, because improving air quality in cities is an important goal, and banning private vehicles is just one of many possible approaches to achieving it."
 ],
@@ -32741,7 +32741,7 @@ distractors: [
 "No, because taxes are a form of government intervention that affects the economy.",
     "No, because a tax on single-use electronics is essentially just the government collecting money from consumers, which does not directly fix the underlying e-waste problem."
 ],
-explanation: "The correct answer is strongest because it links the tax to a change in manufacturer behavior that directly reduces waste volume. Distractor 1 is weak: it acknowledges the problem but not the solution. Distractor 2 is weak: consumer preference is secondary to environmental management. Distractor 3 is weak: it defines what a tax is."
+explanation: "The correct answer is strongest because it links the tax to a change in manufacturer behaviour that directly reduces waste volume. Distractor 1 is weak: it acknowledges the problem but not the solution. Distractor 2 is weak: consumer preference is secondary to environmental management. Distractor 3 is weak: it defines what a tax is."
 },
 {
 kind: "single",
@@ -32812,7 +32812,7 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should all regional governments mandate the installation of smart meters in every home to optimize energy grid efficiency?"
+"Should all regional governments mandate the installation of smart meters in every home to optimise energy grid efficiency?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because smart meters provide real-time data on energy consumption, which allows utilities to balance demand fluctuations and reduce the need for carbon-heavy emergency power generation.",
@@ -32863,7 +32863,7 @@ stimulus: [
 "Should all airlines be required to disclose the carbon footprint of every individual flight on booking platforms?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because increased transparency allows consumers to make informed choices, which creates market pressure for airlines to optimize routes and aircraft efficiency to remain competitive.",
+correct: "Yes, because increased transparency allows consumers to make informed choices, which creates market pressure for airlines to optimise routes and aircraft efficiency to remain competitive.",
 distractors: [
 "Yes, because it is nice to know how much carbon a plane uses.",
 "No, because airlines already do things and adding more requirements would just be another thing they have to do.",
@@ -32883,7 +32883,7 @@ correct: "No, because the cost of retrofitting existing, older commercial buildi
 distractors: [
 "No, because 2040 is quite a long time away.",
 "Yes, because having net-zero energy use would mean that commercial properties would use zero net energy, which is good for the environment.",
-    "Yes, because reaching net-zero energy use is an important environmental goal, and requiring commercial properties to meet this standard is a reasonable step toward achieving it."
+    "Yes, because reaching net-zero energy use is an important environmental goal, and requiring commercial properties to meet this standard is a reasonable step towards achieving it."
 ],
 explanation: "The correct answer is strongest because it identifies an economic barrier (cost/closures) that fundamentally threatens the viability of the proposal. Distractor 1 is weak: the timeframe is not the argument. Distractor 2 is weak: material is not a policy factor. Distractor 3 is weak: it lacks a specific logical basis."
 },
@@ -32895,7 +32895,7 @@ stimulus: [
 "Should the government implement a nationwide ban on the sale of new gas-powered lawn mowers to reduce local noise and air pollution?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because gas-powered lawn mowers are highly inefficient and emit significant levels of greenhouse gases and pollutants per hour of use, meaning a transition to electric alternatives would offer immediate localized health benefits.",
+correct: "Yes, because gas-powered lawn mowers are highly inefficient and emit significant levels of greenhouse gases and pollutants per hour of use, meaning a transition to electric alternatives would offer immediate localised health benefits.",
 distractors: [
 "Yes, because people are bothered by the loud noise of mowers.",
 "No, because lawn mowers have been around for a long time and people are used to them.",
@@ -32951,7 +32951,7 @@ subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: ['Should primary schools strictly ban the use of tablets and screens in the classroom?'],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because digital tools allow for adaptive learning software that can provide personalized feedback and support for students with different learning speeds.",
+correct: "No, because digital tools allow for adaptive learning software that can provide personalised feedback and support for students with different learning speeds.",
 distractors: [
 "No, because the screen manufacturers would lose a significant amount of money.",
 "Yes, because it is better to have no screens than to have some screens.",
@@ -33089,7 +33089,7 @@ explanation: "The correct answer is strongest because it identifies the major ed
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
-stimulus: ['Should schools abolish the use of competitive sports in favor of non-competitive physical activities?'],
+stimulus: ['Should schools abolish the use of competitive sports in favour of non-competitive physical activities?'],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because competitive sports help students develop resilience, teamwork, and the ability to manage success and failure, which are essential psychological life skills.",
 distractors: [
@@ -33153,7 +33153,7 @@ distractors: [
 "No, because some people like to watch political debates on television.",
 "No, because political parties have always existed and removing them from school board elections would be different from how things currently work."
 ],
-explanation: "The correct answer is strongest because it identifies the primary benefit: prioritizing local educational needs over partisan noise. Distractor 1 is weak: it offers no reasoning. Distractor 2 is weak: viewing habits are irrelevant. Distractor 3 is weak: it is a definition."
+explanation: "The correct answer is strongest because it identifies the primary benefit: prioritising local educational needs over partisan noise. Distractor 1 is weak: it offers no reasoning. Distractor 2 is weak: viewing habits are irrelevant. Distractor 3 is weak: it is a definition."
 },
 {
 kind: "single",
@@ -33244,7 +33244,7 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should all jurisdictions abolish mandatory minimum sentencing for non-violent drug offenses?"
+"Should all jurisdictions abolish mandatory minimum sentencing for non-violent drug offences?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it allows judges to consider individual mitigating circumstances, leading to more proportionate sentences that reduce prison overcrowding.",
@@ -33292,7 +33292,7 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should private prisons be banned in favor of state-run facilities?"
+"Should private prisons be banned in favour of state-run facilities?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because removing the profit motive eliminates the incentive to cut corners on rehabilitation programs and staffing levels to save costs.",
@@ -33347,7 +33347,7 @@ correct: "No, because the irreversible risk of executing an innocent person is a
 distractors: [
 "Yes, because heinous crimes are really bad and deserve a response.",
 "Yes, because capital punishment is a punishment that happens to the capital.",
-"No, because prisoners often have to wear standardized uniforms."
+"No, because prisoners often have to wear standardised uniforms."
 ],
 explanation: "The correct answer is strongest because it identifies the ultimate, fatal risk of the policy. Distractor 1 is weak: it does not explain how the policy prevents the crime. Distractor 2 is weak: it tries to define the term. Distractor 3 is weak: prison uniforms are unrelated to the morality or efficacy of capital punishment."
 },
@@ -33378,17 +33378,17 @@ question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it significantly reduces the volume of non-biodegradable waste entering landfills and oceans, mitigating long-term ecological damage.",
 distractors: [
 "Yes, because single-use plastics are plastics that are used once.",
-"No, because my favorite color is blue.",
+"No, because my favourite colour is blue.",
 "No, because the policy is quite broad and could lead to various changes."
 ],
-explanation: "The correct answer is strongest because it points to the concrete environmental impact. Distractor 1 is weak: it merely restates the term. Distractor 2 is weak: personal preference for color is irrelevant. Distractor 3 is weak: it fails to specify the actual consequence."
+explanation: "The correct answer is strongest because it points to the concrete environmental impact. Distractor 1 is weak: it merely restates the term. Distractor 2 is weak: personal preference for colour is irrelevant. Distractor 3 is weak: it fails to specify the actual consequence."
 },
 {
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should urban areas implement a mandatory tax on all private vehicles entering the city center?"
+"Should urban areas implement a mandatory tax on all private vehicles entering the city centre?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "Yes, because it disincentivizes car travel, thereby reducing traffic congestion and improving air quality for city residents.",
@@ -33397,7 +33397,7 @@ distractors: [
 "No, because some people prefer to listen to the radio while driving.",
 "No, because taxes are sometimes difficult to calculate."
 ],
-explanation: "The correct answer is strongest because it explains the mechanism of behavioral change and the result. Distractor 1 is weak: it defines traffic. Distractor 2 is weak: radio habits are irrelevant. Distractor 3 is weak: administrative difficulty is not a reason to reject a policy of this scale."
+explanation: "The correct answer is strongest because it explains the mechanism of behavioural change and the result. Distractor 1 is weak: it defines traffic. Distractor 2 is weak: radio habits are irrelevant. Distractor 3 is weak: administrative difficulty is not a reason to reject a policy of this scale."
 },
 {
 kind: "single",
@@ -33455,7 +33455,7 @@ stimulus: [
 "Should coal-fired power plants be mandated to close within five years?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because it forces a shift toward cleaner energy sources, directly lowering carbon emissions and addressing the core drivers of climate change.",
+correct: "Yes, because it forces a shift towards cleaner energy sources, directly lowering carbon emissions and addressing the core drivers of climate change.",
 distractors: [
 "Yes, because coal is a fuel that is burned in plants.",
 "No, because some people might find the sound of power plants comforting.",
@@ -33701,14 +33701,14 @@ distractors: [
 "No, because taxes are something that governments have used for a long time, so implementing another tax is just more of the same thing.",
 "No, because people like the taste of sweet food and do not want to stop eating it."
 ],
-explanation: "The correct answer is strongest because it links the tax to a health outcome (reduced obesity) that directly impacts hospital demand. Distractor 1 is weak: it suggests a revenue use without considering the intended behavior-change effect. Distractor 2 is weak: it is a moral judgment rather than a policy analysis. Distractor 3 is weak: it addresses personal preference rather than systemic policy effects."
+explanation: "The correct answer is strongest because it links the tax to a health outcome (reduced obesity) that directly impacts hospital demand. Distractor 1 is weak: it suggests a revenue use without considering the intended behaviour-change effect. Distractor 2 is weak: it is a moral judgement rather than a policy analysis. Distractor 3 is weak: it addresses personal preference rather than systemic policy effects."
 },
 {
 kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should primary care physicians be penalized financially if their patients fail to attend scheduled check-ups?"
+"Should primary care physicians be penalised financially if their patients fail to attend scheduled check-ups?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because attendance is largely outside a physician's control, meaning such penalties would discourage doctors from working in areas with high patient non-attendance.",
@@ -33727,13 +33727,13 @@ stimulus: [
 "Should the government mandate AI diagnostic tools in all rural clinics to ensure equity of care?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because AI tools can standardize diagnostic accuracy across regions where specialized medical personnel are in short supply, reducing misdiagnosis rates.",
+correct: "Yes, because AI tools can standardise diagnostic accuracy across regions where specialised medical personnel are in short supply, reducing misdiagnosis rates.",
 distractors: [
 "Yes, because computers are becoming much more common in hospitals these days.",
 "No, because mandating things in clinics might not be good since mandates can sometimes involve requirements.",
 "No, because rural areas have different cultures than big cities."
 ],
-explanation: "The correct answer is strongest because it identifies the gap (specialist shortage) and the solution (AI standardization) to improve outcomes. Distractor 1 is weak: it focuses on technology adoption trends rather than medical efficacy. Distractor 2 is weak: it makes a broad, unproven claim about technology. Distractor 3 is weak: it introduces cultural factors irrelevant to clinical diagnostic tools."
+explanation: "The correct answer is strongest because it identifies the gap (specialist shortage) and the solution (AI standardisation) to improve outcomes. Distractor 1 is weak: it focuses on technology adoption trends rather than medical efficacy. Distractor 2 is weak: it makes a broad, unproven claim about technology. Distractor 3 is weak: it introduces cultural factors irrelevant to clinical diagnostic tools."
 },
 {
 kind: "single",
@@ -33765,7 +33765,7 @@ distractors: [
 "No, because 16-year-olds often have difficulty choosing what to wear in the morning.",
 "No, because if we lower the voting age to 16, then more young people will vote, which means we will have changed who is voting, and this could affect the outcomes of elections."
 ],
-explanation: "The correct answer is strongest because it identifies the principle of representation for those affected by policy. Distractor 1 is weak: age energy levels do not correlate with political participation. Distractor 2 is weak: a minor behavioral observation is used to generalize about civic capacity. Distractor 3 is weak: it restates the proposal."
+explanation: "The correct answer is strongest because it identifies the principle of representation for those affected by policy. Distractor 1 is weak: age energy levels do not correlate with political participation. Distractor 2 is weak: a minor behavioural observation is used to generalise about civic capacity. Distractor 3 is weak: it restates the proposal."
 },
 {
 kind: "single",
@@ -33804,10 +33804,10 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should rehabilitation be prioritized over incarceration for all non-violent drug offenses?"
+"Should rehabilitation be prioritised over incarceration for all non-violent drug offences?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "Yes, because evidence shows that focusing on treatment significantly lowers recidivism rates, whereas prison time often reinforces criminal behavior.",
+correct: "Yes, because evidence shows that focusing on treatment significantly lowers recidivism rates, whereas prison time often reinforces criminal behaviour.",
 distractors: [
 "Yes, because it is better to be healthy than to be in a cell.",
 "No, because it is important that people are punished for breaking the law.",
@@ -33887,7 +33887,7 @@ stimulus: [
 "Should all public schools be required to implement a zero-tolerance policy for any student found with a mobile phone?"
 ],
 question: "Select the strongest argument from the statements below.",
-correct: "No, because zero-tolerance policies disproportionately punish students for minor infractions, often removing them from the learning environment for behavior that does not harm others.",
+correct: "No, because zero-tolerance policies disproportionately punish students for minor infractions, often removing them from the learning environment for behaviour that does not harm others.",
 distractors: [
 "Yes, because students should be focusing on their books and not their screens.",
 "No, because mobile phones are very expensive and students might lose them.",
@@ -33900,7 +33900,7 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should university curricula be mandated to prioritize STEM subjects over humanities to improve national economic competitiveness?"
+"Should university curricula be mandated to prioritise STEM subjects over humanities to improve national economic competitiveness?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because a narrow focus on STEM overlooks the critical thinking and communication skills fostered by the humanities, which are essential for long-term innovation and complex problem-solving.",
@@ -33996,7 +33996,7 @@ kind: "single",
 subtype: "dm-arguments",
 leftTitle: "Argument",
 stimulus: [
-"Should teachers be evaluated based on the standardized test scores of their students?"
+"Should teachers be evaluated based on the standardised test scores of their students?"
 ],
 question: "Select the strongest argument from the statements below.",
 correct: "No, because test scores are heavily influenced by factors outside the classroom, leading to an inaccurate measure of teacher performance and incentivizing 'teaching to the test'.",
@@ -34005,7 +34005,7 @@ distractors: [
 "No, because teachers have a very hard job and deserve more respect.",
 "Yes, because it is important to have a way to know if teachers are doing their jobs."
 ],
-explanation: "The correct answer is strongest because it points out the flaw in the measurement method and the negative behavioral incentive. Distractor 1 is weak: it assumes a direct causal link. Distractor 2 is weak: it focuses on respect rather than the assessment policy. Distractor 3 is weak: it mentions the need for assessment without justifying this specific method."
+explanation: "The correct answer is strongest because it points out the flaw in the measurement method and the negative behavioural incentive. Distractor 1 is weak: it assumes a direct causal link. Distractor 2 is weak: it focuses on respect rather than the assessment policy. Distractor 3 is weak: it mentions the need for assessment without justifying this specific method."
 },
 
 {
@@ -34030,7 +34030,7 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A bag holds 10 colored beads: 4 red, 3 blue, and 3 green.",
+"A bag holds 10 coloured beads: 4 red, 3 blue, and 3 green.",
 "Two beads are picked out at the same time."
 ],
 question: "What is the probability that both beads are red?",
@@ -34133,14 +34133,14 @@ stimulus: [
 "A jar contains 4 blue marbles and 6 white marbles.",
 "Two are picked without replacement."
 ],
-question: "What is the probability the marbles are the same color?",
+question: "What is the probability the marbles are the same colour?",
 correct: "7/15",
 distractors: [
 "2/5",
 "8/15",
 "1/2"
 ],
-explanation: "Same color means either both blue or both white. Probability of both blue is (4/10 * 3/9) = 12/90. Probability of both white is (6/10 * 5/9) = 30/90. Adding 12/90 + 30/90 = 42/90, which simplifies to 7/15. If you got 8/15, you likely calculated the probability of them being different colors."
+explanation: "Same colour means either both blue or both white. Probability of both blue is (4/10 * 3/9) = 12/90. Probability of both white is (6/10 * 5/9) = 30/90. Adding 12/90 + 30/90 = 42/90, which simplifies to 7/15. If you got 8/15, you likely calculated the probability of them being different colours."
 },
 {
 kind: "single",
@@ -34246,14 +34246,14 @@ leftTitle: "Probability",
 stimulus: [
 "Bag: 5 R, 5 B. Draw 2."
 ],
-question: "P(Different colors)?",
+question: "P(Different colours)?",
 correct: "5/9",
 distractors: [
 "4/9",
 "1/2",
 "1/3"
 ],
-explanation: "If you draw two, you can get RB or BR. Probability of RB is 5/10 * 5/9 = 25/90. Probability of BR is 5/10 * 5/9 = 25/90. Total is 50/90, which is 5/9. Picking 4/9 means you calculated the chance of them being the same color."
+explanation: "If you draw two, you can get RB or BR. Probability of RB is 5/10 * 5/9 = 25/90. Probability of BR is 5/10 * 5/9 = 25/90. Total is 50/90, which is 5/9. Picking 4/9 means you calculated the chance of them being the same colour."
 },
 {
 kind: "single",
@@ -34347,14 +34347,14 @@ stimulus: [
 "A bag contains 5 red, 3 blue, and 2 green marbles.",
 "You draw 3 marbles at once."
 ],
-question: "What is the probability that you draw one of each color?",
+question: "What is the probability that you draw one of each colour?",
 correct: "1/4",
 distractors: [
 "3/10",
 "1/5",
 "2/5"
 ],
-explanation: "We are picking 3 marbles out of 10, so the total number of combinations is 10C3 = 120. To get exactly one of each color, we must pick 1 red (5C1 = 5 ways), 1 blue (3C1 = 3 ways), and 1 green (2C1 = 2 ways). Multiplying these choices (5 * 3 * 2) gives 30 successful combinations. Dividing 30 by 120 results in 1/4."
+explanation: "We are picking 3 marbles out of 10, so the total number of combinations is 10C3 = 120. To get exactly one of each colour, we must pick 1 red (5C1 = 5 ways), 1 blue (3C1 = 3 ways), and 1 green (2C1 = 2 ways). Multiplying these choices (5 * 3 * 2) gives 30 successful combinations. Dividing 30 by 120 results in 1/4."
 },
 {
 kind: "single",
@@ -34398,14 +34398,14 @@ stimulus: [
 "A box has 6 red pens and 4 blue pens.",
 "You pick 2 pens without replacement."
 ],
-question: "What is the probability the pens are the same color?",
+question: "What is the probability the pens are the same colour?",
 correct: "7/15",
 distractors: [
 "8/15",
 "1/2",
 "2/5"
 ],
-explanation: "To get the same color, you either get two reds or two blues. Red pairs: (6/10) * (5/9) = 30/90. Blue pairs: (4/10) * (3/9) = 12/90. Adding these together (30/90 + 12/90) gives 42/90, which simplifies to 7/15."
+explanation: "To get the same colour, you either get two reds or two blues. Red pairs: (6/10) * (5/9) = 30/90. Blue pairs: (4/10) * (3/9) = 12/90. Adding these together (30/90 + 12/90) gives 42/90, which simplifies to 7/15."
 },
 {
 kind: "single",
@@ -34754,7 +34754,7 @@ subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
 "A study of a specific bacterial infection shows that 12% of patients treated with Standard Therapy (ST) experience recurrence",
-"A new therapy, Novel Therapy (NT), is being trialed against ST",
+"A new therapy, Novel Therapy (NT), is being trialled against ST",
 "In a trial of 500 patients, 250 received ST and 250 received NT",
 "In the NT group, only 15 patients experienced recurrence."
 ],
@@ -34861,7 +34861,7 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A randomized controlled trial (RCT) (a study where participants are randomly assigned to receive different treatments to compare their effects) compares two anti-arrhythmic medications, Drug Alpha and Drug Beta.",
+"A randomised controlled trial (RCT) (a study where participants are randomly assigned to receive different treatments to compare their effects) compares two anti-arrhythmic medications, Drug Alpha and Drug Beta.",
 "In the Alpha group (n=400), 20 patients experienced a secondary arrhythmia.",
 "In the Beta group (n=400), 40 patients experienced a secondary arrhythmia."
 ],
@@ -34952,7 +34952,7 @@ kind: "single",
 subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
-"A randomized trial investigates a new anticoagulant.",
+"A randomised trial investigates a new anticoagulant.",
 "In the treatment group (n=500), 10 patients suffer a major bleed.",
 "In the control group (n=500), 25 patients suffer a major bleed."
 ],
@@ -35699,7 +35699,7 @@ subtype: "dm-probability-data",
 leftTitle: "Probability",
 stimulus: [
 "A new antibiotic reduces infection recurrence from 12% to 5% compared to standard therapy.",
-"A trial enrolls 200 patients: 100 per arm."
+"A trial enrols 200 patients: 100 per arm."
 ],
 question: "How many patients would need to be treated with the new antibiotic instead of standard therapy for one additional patient to avoid infection recurrence? (This is called the Number Needed to Treat.)",
 correct: "14.3",

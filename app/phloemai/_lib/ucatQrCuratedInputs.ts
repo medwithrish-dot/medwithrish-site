@@ -17194,13 +17194,13 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
 
   {
     kind: "set",
-    setId: "research-trial-enrollment-by-site",
+    setId: "research-trial-enrolment-by-site",
     stimulus: [
-      "A multicentre clinical trial recorded participant enrollment by treatment arm across four sites. The data is shown in the table below.",
+      "A multicentre clinical trial recorded participant enrolment by treatment arm across four sites. The data is shown in the table below.",
     ],
     visual: {
       type: "table",
-      title: "Trial Enrollment by Site and Treatment Arm",
+      title: "Trial Enrolment by Site and Treatment Arm",
       headers: ["Site", "Arm A (experimental)", "Arm B (control)", "Total"],
       rows: [
         ["Site 1", "120", "80", "200"],
@@ -17214,7 +17214,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
       {
         subtype: "qr-rates-ratios",
         tags: ["easy", "data-display", "set-based"],
-        question: "What is the ratio of Arm A to Arm B enrollment at Site 1?",
+        question: "What is the ratio of Arm A to Arm B enrolment at Site 1?",
         correct: "3:2",
         distractors: ["2:3", "2:1", "5:3"],
         explanation:
@@ -17232,7 +17232,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
       {
         subtype: "qr-averages",
         tags: ["medium", "multi-step", "data-display", "set-based"],
-        question: "What was the mean total enrollment per site?",
+        question: "What was the mean total enrolment per site?",
         correct: "100",
         distractors: ["200", "20", "80"],
         explanation:
@@ -17241,7 +17241,7 @@ export const USER_CURATED_QR_INPUTS: QrCuratedInput[] = [
       {
         subtype: "qr-percentages",
         tags: ["hard", "multi-step", "calculator-heavy", "data-display", "set-based"],
-        question: "Arm A enrollment exceeded Arm B enrollment by what percentage?",
+        question: "Arm A enrolment exceeded Arm B enrolment by what percentage?",
         correct: "66.7%",
         distractors: ["166.7%", "40%", "25%"],
         explanation:

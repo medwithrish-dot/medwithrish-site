@@ -10618,12 +10618,12 @@ function UCATQuestionBankSection({
     ? pendingExit.kind === "mock"
       ? {
           title: "Exit mock?",
-          body: "You haven't completed this UCAT mock yet. If you exit now, your progress will be saved, but unanswered questions won't count toward your score until you finish.",
+          body: "You haven't completed this UCAT mock yet. If you exit now, your progress will be saved, but unanswered questions won't count towards your score until you finish.",
           continueLabel: "Continue mock",
         }
       : {
           title: "Exit question set?",
-          body: "You haven't completed this UCAT set yet. If you exit now, your progress will be saved, but unanswered questions won't count toward your score until you finish.",
+          body: "You haven't completed this UCAT set yet. If you exit now, your progress will be saved, but unanswered questions won't count towards your score until you finish.",
           continueLabel: "Continue set",
         }
     : null;

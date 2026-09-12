@@ -984,7 +984,7 @@ export const USER_CURATED_SJT_INPUTS: SjtCuratedInput[] = [
           "Refuse to write anything but do not help the midwife find the correct late-entry process.",
         answer: "C",
         explanation:
-          "Refusing to falsify the chart is right, but giving no support is incomplete teamwork. The safer response is to direct the issue toward transparent late documentation.",
+          "Refusing to falsify the chart is right, but giving no support is incomplete teamwork. The safer response is to direct the issue towards transparent late documentation.",
       },
       {
         subtype: "sjt-importance",
@@ -5533,7 +5533,7 @@ explanation: "This is a very important factor because explicit consent is the pr
 id: "sjt-25-mental-health-police-investigation",
 title: "Police Inquiring About Assault Patient",
 setting: "ward",
-stem: "A patient admitted to an inpatient psychiatric ward is suspected by the police of committing an assault in the local community the previous evening. Two police officers arrive at the ward reception and ask an FY1 doctor to confirm whether the patient was present on the ward during the time of the alleged offense. The patient is currently asleep and cannot be consulted.",
+stem: "A patient admitted to an inpatient psychiatric ward is suspected by the police of committing an assault in the local community the previous evening. Two police officers arrive at the ward reception and ask an FY1 doctor to confirm whether the patient was present on the ward during the time of the alleged offence. The patient is currently asleep and cannot be consulted.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -5575,7 +5575,7 @@ explanation: "While respecting autonomy is important, blindly agreeing to non-di
 },
 {
 subtype: "sjt-importance",
-question: "Whether the patient's past relapses have involved violent or aggressive behavior towards their partner.",
+question: "Whether the patient's past relapses have involved violent or aggressive behaviour towards their partner.",
 answer: "A",
 explanation: "This is a very important factor because a history of violence during relapse directly escalates the public interest threshold for breaching confidentiality to protect an identifiable third party from harm."
 },
@@ -5741,7 +5741,7 @@ explanation: "This is a very important factor because patient consent is require
 },
 {
 subtype: "sjt-appropriateness",
-question: "Modify or heavily generalize the patient's demographic and occupational data so that the core clinical message remains without identifying features.",
+question: "Modify or heavily generalise the patient's demographic and occupational data so that the core clinical message remains without identifying features.",
 answer: "A",
 explanation: "This is highly appropriate if explicit consent cannot be obtained. De-identifying or fictionalizing non-essential contextual details protects patient anonymity while preserving the educational value of the case presentation."
 },
@@ -5749,7 +5749,7 @@ explanation: "This is highly appropriate if explicit consent cannot be obtained.
 subtype: "sjt-importance",
 question: "The educational value of providing exact, unaltered historical details to the medical students.",
 answer: "C",
-explanation: "While clinical precision is helpful, it is of minor importance compared to safeguarding patient privacy. Educational goals can easily be achieved using generalized or slightly altered non-clinical details."
+explanation: "While clinical precision is helpful, it is of minor importance compared to safeguarding patient privacy. Educational goals can easily be achieved using generalised or slightly altered non-clinical details."
 }
 ]
 },
@@ -5859,7 +5859,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Maintain confidentiality to encourage the patient to keep exploring these feelings during future therapy sessions.",
 answer: "D",
-explanation: "This is highly inappropriate and dangerous. When there is an explicit, credible threat of serious violence toward an identifiable third party, the public interest and the duty to protect life immediately override patient confidentiality."
+explanation: "This is highly inappropriate and dangerous. When there is an explicit, credible threat of serious violence towards an identifiable third party, the public interest and the duty to protect life immediately override patient confidentiality."
 },
 {
 subtype: "sjt-importance",
@@ -5923,13 +5923,13 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Give the father a general overview of the treatment plan to defuse his anger and prevent a formal complaint.",
 answer: "D",
-explanation: "This is highly inappropriate. Giving in to a relative's threats violates the patient's explicit instructions and constitutes an unauthorized breach of confidentiality. Prioritizing avoiding a complaint over patient safety is unacceptable."
+explanation: "This is highly inappropriate. Giving in to a relative's threats violates the patient's explicit instructions and constitutes an unauthorized breach of confidentiality. Prioritising avoiding a complaint over patient safety is unacceptable."
 },
 {
 subtype: "sjt-importance",
 question: "The patient's explicit instruction to withhold all medical information from their father.",
 answer: "A",
-explanation: "This is a very important factor. An adult patient with capacity has the absolute right to control who sees their medical data. Their explicit refusal to involve a relative must be strictly honored."
+explanation: "This is a very important factor. An adult patient with capacity has the absolute right to control who sees their medical data. Their explicit refusal to involve a relative must be strictly honoured."
 },
 {
 subtype: "sjt-appropriateness",
@@ -5955,7 +5955,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Ignore the background noise and complete the standard clinical checklist for anxiety symptoms.",
 answer: "C",
-explanation: "Ignoring clear signs of distress and potential environmental threat during a sensitive mental health consultation is inappropriate. It fails to recognize situational vulnerability and potential safeguarding risks."
+explanation: "Ignoring clear signs of distress and potential environmental threat during a sensitive mental health consultation is inappropriate. It fails to recognise situational vulnerability and potential safeguarding risks."
 },
 {
 subtype: "sjt-importance",
@@ -6013,7 +6013,7 @@ explanation: "Speculation about whether information may already be in the public
 id: "sjt-25-mental-health-discharged-patient-contact",
 title: "Contacting Discharged Patient Socially",
 setting: "community pharmacy",
-stem: "An FY1 doctor completed a rotation in psychiatry three weeks ago. They recognize a former vulnerable patient from the ward at a local community pharmacy. The patient looks well and smiles at the doctor. The doctor, finding the patient attractive, considers sending them a message on a personal social media platform to ask how they are recovering and invite them for a coffee.",
+stem: "An FY1 doctor completed a rotation in psychiatry three weeks ago. They recognise a former vulnerable patient from the ward at a local community pharmacy. The patient looks well and smiles at the doctor. The doctor, finding the patient attractive, considers sending them a message on a personal social media platform to ask how they are recovering and invite them for a coffee.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -6063,7 +6063,7 @@ explanation: "This is a very important factor because a judge's order is a legal
 subtype: "sjt-appropriateness",
 question: "Present the court order immediately to the trust's legal department and the consultant psychiatrist to arrange a structured, lawful disclosure.",
 answer: "A",
-explanation: "This is the most appropriate action. It ensures compliance with the legal order while involving experts who can minimize unnecessary disclosure and provide appropriate psychological support to the patient."
+explanation: "This is the most appropriate action. It ensures compliance with the legal order while involving experts who can minimise unnecessary disclosure and provide appropriate psychological support to the patient."
 },
 {
 subtype: "sjt-importance",
@@ -6160,7 +6160,7 @@ explanation: "The high workload of the department must never compromise the imme
 subtype: "sjt-appropriateness",
 question: "Allow Marcus to leave the department immediately since he is an adult expressing an autonomous choice.",
 answer: "D",
-explanation: "Allowing a patient who has taken a potentially fatal overdose to walk out without a capacity assessment or psychiatric evaluation is negligence. It violates the duty of care, as his judgment may be significantly impaired by the ingestion and acute crisis."
+explanation: "Allowing a patient who has taken a potentially fatal overdose to walk out without a capacity assessment or psychiatric evaluation is negligence. It violates the duty of care, as his judgement may be significantly impaired by the ingestion and acute crisis."
 },
 {
 subtype: "sjt-importance",
@@ -6180,7 +6180,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Speak to Sophie calmly and empathetically, asking her to place the razor blade down in a neutral space rather than forcing it from her hand.",
 answer: "A",
-explanation: "Calm, non-confrontational communication minimizes the risk of escalating agitation or causing physical harm. Asking her to set it down preserves her dignity while prioritizing immediate physical safety."
+explanation: "Calm, non-confrontational communication minimises the risk of escalating agitation or causing physical harm. Asking her to set it down preserves her dignity while prioritising immediate physical safety."
 },
 {
 subtype: "sjt-appropriateness",
@@ -6196,7 +6196,7 @@ explanation: "While immediate physical safety and securing the environment take 
 },
 {
 subtype: "sjt-importance",
-question: "How important is the factor: Preventing other patients on the ward from witnessing the distress or self-harm behavior.",
+question: "How important is the factor: Preventing other patients on the ward from witnessing the distress or self-harm behaviour.",
 answer: "B",
 explanation: "Maintaining the privacy and dignity of the distressed patient, as well as protecting other vulnerable inpatients from distress, is an important operational and compassionate consideration on an open medical ward."
 }
@@ -6276,7 +6276,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Reassure Liam that experiencing a mental health crisis will not automatically result in expulsion, and offer to help him contact occupational health or a student counseling service.",
 answer: "A",
-explanation: "Addressing his misconceptions about professional consequences helps reduce stigma and anxiety, encouraging compliance with support services while proactively guiding him toward professional help."
+explanation: "Addressing his misconceptions about professional consequences helps reduce stigma and anxiety, encouraging compliance with support services while proactively guiding him towards professional help."
 },
 {
 subtype: "sjt-importance",
@@ -6340,7 +6340,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Invite the customer into the private consultation room immediately to offer support and assess their safety, delegating the front counter to a pharmacy technician.",
 answer: "A",
-explanation: "Prioritizing a patient expressing acute suicidal distress by moving them to a private, safe space is vital. Delegating routine tasks allows the pharmacist to manage this high-stakes scenario appropriately."
+explanation: "Prioritising a patient expressing acute suicidal distress by moving them to a private, safe space is vital. Delegating routine tasks allows the pharmacist to manage this high-stakes scenario appropriately."
 },
 {
 subtype: "sjt-appropriateness",
@@ -6372,7 +6372,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Assess Arthur from a safe physical distance and check his charts for potential underlying physical triggers, such as an acute urinary tract infection or pain.",
 answer: "A",
-explanation: "Looking for physical causes like infection or acute pain is critical when a dementia patient presents with sudden behavioral changes. Maintaining a safe distance protects the practitioner while allowing initial evaluation."
+explanation: "Looking for physical causes like infection or acute pain is critical when a dementia patient presents with sudden behavioural changes. Maintaining a safe distance protects the practitioner while allowing initial evaluation."
 },
 {
 subtype: "sjt-appropriateness",
@@ -6382,7 +6382,7 @@ explanation: "Forcible physical restraint of an elderly, highly agitated patient
 },
 {
 subtype: "sjt-importance",
-question: "How important is the factor: The sudden onset of Arthur's behavioral changes compared to his baseline.",
+question: "How important is the factor: The sudden onset of Arthur's behavioural changes compared to his baseline.",
 answer: "A",
 explanation: "A sudden change from baseline strongly indicates an acute underlying medical issue, such as delirium caused by an infection or drug adverse effect, requiring urgent diagnostic investigation."
 },
@@ -6404,7 +6404,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Arrange an urgent assessment by the local crisis resolution and home treatment team or a Mental Health Act assessment.",
 answer: "A",
-explanation: "Thomas is demonstrating severe manic symptoms with high-risk behavior and lack of insight. An urgent psychiatric assessment is necessary to protect him and his family, potentially requiring involuntary admission if he refuses help."
+explanation: "Thomas is demonstrating severe manic symptoms with high-risk behaviour and lack of insight. An urgent psychiatric assessment is necessary to protect him and his family, potentially requiring involuntary admission if he refuses help."
 },
 {
 subtype: "sjt-importance",
@@ -6562,7 +6562,7 @@ stem: "An FY2 doctor is called to the medical ward at midnight. A 48-year-old pa
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Ensure Gary is physically moved away from the window immediately, utilize staff to maintain physical safety, and prescribe urgent intravenous or oral benzodiazepines as per trust alcohol withdrawal guidelines.",
+question: "Ensure Gary is physically moved away from the window immediately, utilise staff to maintain physical safety, and prescribe urgent intravenous or oral benzodiazepines as per trust alcohol withdrawal guidelines.",
 answer: "A",
 explanation: "This addresses the acute threat to life (falling from a window) and treats the underlying medical cause (delirium tremens) with standard protocol-driven medication to reduce agitation and seizure risk."
 },
@@ -6614,7 +6614,7 @@ explanation: "Deferring action for several hours when someone has posted a farew
 subtype: "sjt-importance",
 question: "How important is the factor: Informing the medical school administration after ensuring emergency services are en route.",
 answer: "B",
-explanation: "Informing the medical school is important for organizing long-term pastoral, academic, and occupational health support for Tom, but it should happen after addressing the immediate physical crisis."
+explanation: "Informing the medical school is important for organising long-term pastoral, academic, and occupational health support for Tom, but it should happen after addressing the immediate physical crisis."
 }
 ]
 },
@@ -6658,7 +6658,7 @@ stem: "A 40-year-old woman, Fiona, is brought to the Emergency Department by pol
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Utilize legal frameworks such as a temporary hold under mental health legislation (or equivalent emergency powers) to prevent her from leaving while an urgent psychiatric assessment is arranged.",
+question: "Utilise legal frameworks such as a temporary hold under mental health legislation (or equivalent emergency powers) to prevent her from leaving while an urgent psychiatric assessment is arranged.",
 answer: "A",
 explanation: "Fiona's safety is in immediate danger given her history of wandering into traffic due to active psychosis. Using lawful emergency restraint or hold frameworks is necessary and legally mandated to protect her life."
 },
@@ -6678,7 +6678,7 @@ explanation: "Allowing an acutely psychotic patient who was just rescued from tr
 subtype: "sjt-importance",
 question: "How important is the factor: Explaining your safety actions to Fiona in a simple, reassuring, and non-confrontational manner.",
 answer: "B",
-explanation: "While she may not fully comprehend or accept the explanations due to her severe paranoia, communicating calmly and transparently is important to minimize her terror and prevent physical escalation."
+explanation: "While she may not fully comprehend or accept the explanations due to her severe paranoia, communicating calmly and transparently is important to minimise her terror and prevent physical escalation."
 }
 ]
 },
@@ -6734,7 +6734,7 @@ explanation: "This delay is highly critical because toxic ingestions (like parac
 },
 {
 subtype: "sjt-appropriateness",
-question: "Gently challenge the nurse privately later regarding the delay in reporting, emphasizing the clinical importance of immediate escalation for suspected overdoses.",
+question: "Gently challenge the nurse privately later regarding the delay in reporting, emphasising the clinical importance of immediate escalation for suspected overdoses.",
 answer: "B",
 explanation: "Providing constructive feedback to colleagues about safety delays is appropriate and necessary for professional development, but it must be done privately and professionally after the patient is secured."
 },
@@ -6769,7 +6769,7 @@ explanation: "Identifying whether children live in an environment with active do
 subtype: "sjt-appropriateness",
 question: "Offer Mrs Evans a private leaflet containing helplines for domestic abuse support services, ensuring her husband cannot see it being given.",
 answer: "A",
-explanation: "Providing discrete, practical resources directly empowers the patient to seek specialized help safely without escalating the immediate risk. This respects her autonomy while offering a safe pathway to support outside the clinic."
+explanation: "Providing discrete, practical resources directly empowers the patient to seek specialised help safely without escalating the immediate risk. This respects her autonomy while offering a safe pathway to support outside the clinic."
 },
 {
 subtype: "sjt-importance",
@@ -6789,7 +6789,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Explain to the patient that non-physical control is still a form of domestic abuse and offer to explore safe support options with her.",
 answer: "A",
-explanation: "Validating the patient's experience of coercive control helps her understand her situation while keeping communication open. This response prioritizes patient education and collaborative care without forcing immediate, unwanted escalation."
+explanation: "Validating the patient's experience of coercive control helps her understand her situation while keeping communication open. This response prioritises patient education and collaborative care without forcing immediate, unwanted escalation."
 },
 {
 subtype: "sjt-importance",
@@ -6871,7 +6871,7 @@ explanation: "Ignoring clear clinical red flags, such as multiple hospital prese
 subtype: "sjt-importance",
 question: "How important is the pattern of attending multiple different emergency departments?",
 answer: "A",
-explanation: "A history of using multiple different hospitals is a highly significant red flag indicating potential 'hospital shopping' to avoid detection of recurrent domestic abuse injuries. Recognizing this pattern is critical for accurate risk assessment."
+explanation: "A history of using multiple different hospitals is a highly significant red flag indicating potential 'hospital shopping' to avoid detection of recurrent domestic abuse injuries. Recognising this pattern is critical for accurate risk assessment."
 }
 ]
 },
@@ -6891,13 +6891,13 @@ explanation: "Competent adult patients cannot be legally detained on a medical w
 subtype: "sjt-importance",
 question: "How important is Maya's right to autonomy regarding her discharge decision, assuming she has full mental capacity?",
 answer: "A",
-explanation: "Autonomy is a fundamental principle in medical ethics; a competent patient has the right to make decisions that doctors consider unwise. The team must work within this legal constraint while maximizing safety planning."
+explanation: "Autonomy is a fundamental principle in medical ethics; a competent patient has the right to make decisions that doctors consider unwise. The team must work within this legal constraint while maximising safety planning."
 },
 {
 subtype: "sjt-appropriateness",
-question: "Express your concerns gently in private, share details of specialized domestic abuse support, and offer to delay discharge to arrange safe housing.",
+question: "Express your concerns gently in private, share details of specialised domestic abuse support, and offer to delay discharge to arrange safe housing.",
 answer: "A",
-explanation: "This response balances respect for autonomy with proactive care by providing non-judgmental validation and tangible support options. It maximizes the chance that the patient might accept help without crossing professional or legal boundaries."
+explanation: "This response balances respect for autonomy with proactive care by providing non-judgmental validation and tangible support options. It maximises the chance that the patient might accept help without crossing professional or legal boundaries."
 },
 {
 subtype: "sjt-importance",
@@ -6979,7 +6979,7 @@ stem: "You are a foundation doctor on an obstetrics ward. A patient who is 32 we
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Politely but firmly request that the partner wait in the day room for 15 minutes to allow for a specialized obstetric assessment that requires privacy.",
+question: "Politely but firmly request that the partner wait in the day room for 15 minutes to allow for a specialised obstetric assessment that requires privacy.",
 answer: "A",
 explanation: "Enforcing standard ward protocols for private clinical assessments allows the team to separate the patient from the suspected abuser safely. This provides a critical window to assess safeguarding needs without causing an immediate scene."
 },
@@ -7077,11 +7077,11 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Provide the emergency contraception, gently challenge the idea that total surveillance equals love, and offer her information on healthy relationships.",
 answer: "A",
-explanation: "This response safely combines the immediate clinical need with essential pastoral education. Gently reframing controlling behavior as unhealthy helps young adults recognize coercive control without causing defensive withdrawal."
+explanation: "This response safely combines the immediate clinical need with essential pastoral education. Gently reframing controlling behaviour as unhealthy helps young adults recognise coercive control without causing defensive withdrawal."
 },
 {
 subtype: "sjt-importance",
-question: "How important is the patient's perception that her boyfriend's behavior is motivated by love?",
+question: "How important is the patient's perception that her boyfriend's behaviour is motivated by love?",
 answer: "B",
 explanation: "Understanding the patient's perspective is important because it dictates how receptive she will be to intervention. Directly attacking her relationship might cause her to reject medical help entirely, so understanding her framing is key."
 },
@@ -7145,7 +7145,7 @@ explanation: "Relying on a suspected abuser to translate critical medical inform
 },
 {
 subtype: "sjt-importance",
-question: "How important is it to utilize an independent, professional interpreter for this consultation?",
+question: "How important is it to utilise an independent, professional interpreter for this consultation?",
 answer: "A",
 explanation: "An independent professional interpreter is essential to ensure accurate communication, maintain confidentiality, and give the patient a voice free from her husband's control or censorship."
 },
@@ -7157,9 +7157,9 @@ explanation: "This is a highly appropriate strategy. It safely bypasses the husb
 },
 {
 subtype: "sjt-importance",
-question: "How important is the husband's polite demeanor toward you when balancing your clinical suspicions?",
+question: "How important is the husband's polite demeanor towards you when balancing your clinical suspicions?",
 answer: "D",
-explanation: "Perpertrators of domestic abuse often display charismatic or polite behavior toward external professionals to deflect suspicion. A pleasant exterior should never override clear non-verbal indicators of fear and control in the patient."
+explanation: "Perpertrators of domestic abuse often display charismatic or polite behaviour towards external professionals to deflect suspicion. A pleasant exterior should never override clear non-verbal indicators of fear and control in the patient."
 }
 ]
 },
@@ -7191,7 +7191,7 @@ explanation: "Dismissing her valid fears by simply stating that rules exist offe
 subtype: "sjt-importance",
 question: "How important is it to report this potential threat to the husband's specific practice manager immediately?",
 answer: "C",
-explanation: "While his employer may eventually need to audit his access, doing so precipitously without safety planning might alert him that Elena has flagged his behavior, potentially escalating her immediate physical danger."
+explanation: "While his employer may eventually need to audit his access, doing so precipitously without safety planning might alert him that Elena has flagged his behaviour, potentially escalating her immediate physical danger."
 }
 ]
 },
@@ -7205,7 +7205,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Allow Kelly to wait in the private consultation room and call a local domestic abuse crisis line or the police on her behalf immediately.",
 answer: "A",
-explanation: "Providing immediate sanctuary in a private room and facilitating contact with emergency services or specialist support directly fulfills the duty of care for a patient in acute danger who has explicitly requested intervention."
+explanation: "Providing immediate sanctuary in a private room and facilitating contact with emergency services or specialist support directly fulfils the duty of care for a patient in acute danger who has explicitly requested intervention."
 },
 {
 subtype: "sjt-importance",
@@ -7217,13 +7217,13 @@ explanation: "The forced diversion of controlled drugs introduces extreme medica
 subtype: "sjt-appropriateness",
 question: "Refuse to dispense her methadone today because she admits that she cannot secure her controlled medication at home.",
 answer: "D",
-explanation: "Punishing the victim of abuse by withholding her essential addiction treatment is cruel and clinically destabilizing. It increases her vulnerability, induces acute withdrawal, and breaks her trust in healthcare providers entirely."
+explanation: "Punishing the victim of abuse by withholding her essential addiction treatment is cruel and clinically destabilising. It increases her vulnerability, induces acute withdrawal, and breaks her trust in healthcare providers entirely."
 },
 {
 subtype: "sjt-importance",
 question: "How important is the presence of the partner outside the shop window?",
 answer: "B",
-explanation: "His close physical presence indicates imminent surveillance and a high risk of immediate confrontation if he suspects she is seeking help. It dictates that staff must act discretely and prioritize building security."
+explanation: "His close physical presence indicates imminent surveillance and a high risk of immediate confrontation if he suspects she is seeking help. It dictates that staff must act discretely and prioritise building security."
 }
 ]
 },
@@ -7237,7 +7237,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Reassure her that arranged marriages are a common cultural tradition and advise her to speak openly with her family to resolve the misunderstanding.",
 answer: "D",
-explanation: "Conflating forced marriage and honour-based violence with acceptable cultural traditions is a dangerous failure to recognize serious abuse and criminal behavior. Telling her to confront her family directly puts her at risk of extreme harm or abduction."
+explanation: "Conflating forced marriage and honour-based violence with acceptable cultural traditions is a dangerous failure to recognise serious abuse and criminal behaviour. Telling her to confront her family directly puts her at risk of extreme harm or abduction."
 },
 {
 subtype: "sjt-importance",
@@ -7343,9 +7343,9 @@ explanation: "Managing her severe anxiety and panic attacks is the primary clini
 },
 {
 subtype: "sjt-appropriateness",
-question: "Refer her to a specialized domestic abuse charity (such as Refuge or Women's Aid) that provides tech-safety advocacy to help secure her digital devices safely.",
+question: "Refer her to a specialised domestic abuse charity (such as Refuge or Women's Aid) that provides tech-safety advocacy to help secure her digital devices safely.",
 answer: "A",
-explanation: "Directing the patient to specialized tech-safety advocates ensures her digital stalking risks are managed by experts who understand spyware, while preserving the clinician's role for medical and emotional support."
+explanation: "Directing the patient to specialised tech-safety advocates ensures her digital stalking risks are managed by experts who understand spyware, while preserving the clinician's role for medical and emotional support."
 },
 {
 subtype: "sjt-importance",
@@ -7365,7 +7365,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Refuse to insert the implant because providing a hidden contraceptive would mean deceiving her husband, which undermines family unity.",
 answer: "D",
-explanation: "Prioritizing the husband's desires or 'family unity' over a competent patient's autonomy and protection from reproductive coercion is a severe violation of professional medical ethics. The patient has an absolute right to confidential contraceptive care."
+explanation: "Prioritising the husband's desires or 'family unity' over a competent patient's autonomy and protection from reproductive coercion is a severe violation of professional medical ethics. The patient has an absolute right to confidential contraceptive care."
 },
 {
 subtype: "sjt-importance",
@@ -7416,7 +7416,7 @@ explanation: "This is a very inappropriate response as making direct, hostile ac
 subtype: "sjt-importance",
 question: "The risk of upsetting the care home staff by questioning the accuracy of their documentation or care practices.",
 answer: "D",
-explanation: "This is not important at all because patient safety and safeguarding vulnerable adults must always take absolute precedence over the comfort or feelings of staff members. Fear of causing offense or friction is never a valid reason to hesitate when identifying a potential safeguarding issue."
+explanation: "This is not important at all because patient safety and safeguarding vulnerable adults must always take absolute precedence over the comfort or feelings of staff members. Fear of causing offence or friction is never a valid reason to hesitate when identifying a potential safeguarding issue."
 }
 ]
 },
@@ -7442,7 +7442,7 @@ explanation: "This is very important because the safety of a vulnerable adult ex
 subtype: "sjt-appropriateness",
 question: "Accept the nephew's explanation at face value and advise Arthur to set up a direct debit to ensure his prescriptions are paid automatically.",
 answer: "D",
-explanation: "This is a very inappropriate response as it completely ignores clear behavioral and verbal red flags of potential financial abuse and coercion. Failing to investigate further leaves a vulnerable patient in a potentially hazardous and abusive situation, breaching the doctor's duty of care."
+explanation: "This is a very inappropriate response as it completely ignores clear behavioural and verbal red flags of potential financial abuse and coercion. Failing to investigate further leaves a vulnerable patient in a potentially hazardous and abusive situation, breaching the doctor's duty of care."
 },
 {
 subtype: "sjt-importance",
@@ -7462,7 +7462,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Arrange an urgent multidisciplinary team (MDT) meeting, including the ward sister and occupational therapist, to assess Ronald’s safety at home and discuss a safeguarding self-neglect referral.",
 answer: "A",
-explanation: "This is a very appropriate response as it utilizes the expertise of the wider team to assess a vulnerable adult's functional abilities and safety. Addressing clear signs of self-neglect through a coordinated approach ensures that a safe discharge plan can be developed while respecting legal frameworks."
+explanation: "This is a very appropriate response as it utilises the expertise of the wider team to assess a vulnerable adult's functional abilities and safety. Addressing clear signs of self-neglect through a coordinated approach ensures that a safe discharge plan can be developed while respecting legal frameworks."
 },
 {
 subtype: "sjt-importance",
@@ -7472,7 +7472,7 @@ explanation: "This is very important because under UK law, an adult with capacit
 },
 {
 subtype: "sjt-appropriateness",
-question: "Sign the discharge paperwork immediately to honor Ronald's autonomy, since he is medically fit and wishes to leave.",
+question: "Sign the discharge paperwork immediately to honour Ronald's autonomy, since he is medically fit and wishes to leave.",
 answer: "C",
 explanation: "This is inappropriate because discharging a vulnerable patient who shows severe signs of self-neglect without assessing capacity or exploring community support risks a rapid, unsafe relapse. While autonomy is valued, the clinical team has a duty to ensure discharge is reasonably safe."
 },
@@ -7488,7 +7488,7 @@ explanation: "This is not important at all when balanced against the safety of a
 id: "sjt-22-vulnerable-adults-oversedation-concern",
 title: "Suspected overmedication of a vulnerable resident",
 setting: "outpatient clinic",
-stem: "Dr Green, a specialist registrar in geriatric medicine, is reviewing 81-year-old Beatrice, who lives in a private residential home. Beatrice is brought in by her daughter, who expresses deep concern that her mother has become profoundly lethargic, confused, and unsteady on her feet over the past month. On checking Beatrice's medication administration record, Dr Green notes that she is being prescribed PRN (as required) haloperidol for 'agitation'. The record shows that care home staff have been administering this antipsychotic medication daily, right before their evening shift handovers, despite no documented escalation of behavioral issues.",
+stem: "Dr Green, a specialist registrar in geriatric medicine, is reviewing 81-year-old Beatrice, who lives in a private residential home. Beatrice is brought in by her daughter, who expresses deep concern that her mother has become profoundly lethargic, confused, and unsteady on her feet over the past month. On checking Beatrice's medication administration record, Dr Green notes that she is being prescribed PRN (as required) haloperidol for 'agitation'. The record shows that care home staff have been administering this antipsychotic medication daily, right before their evening shift handovers, despite no documented escalation of behavioural issues.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -7550,7 +7550,7 @@ explanation: "This is important for the safeguarding investigation to determine 
 },
 {
 id: "sjt-22-vulnerable-adults-coercive-carer",
-title: "Aggressive behavior from a formal carer",
+title: "Aggressive behaviour from a formal carer",
 setting: "ward",
 stem: "An FY1 doctor, Dr Khan, is on a medical ward when she witnesses a private agency carer assisting a 68-year-old vulnerable patient with learning disabilities, Gary. Gary is resisting getting out of bed, crying softly. Dr Khan hears the carer snap harshly, 'If you don't get up right now, I won't bring you any lunch, and I'll leave you in your wet sheets all day.' The carer then roughly pulls Gary by his wrists to force him into a chair. When the carer notices Dr Khan watching, they immediately stop and smile nervously.",
 questions: [
@@ -7562,7 +7562,7 @@ explanation: "This is a very appropriate action as it provides immediate protect
 },
 {
 subtype: "sjt-importance",
-question: "The risk that the carer may treat other vulnerable patients in a similar abusive manner if their behavior is not reported.",
+question: "The risk that the carer may treat other vulnerable patients in a similar abusive manner if their behaviour is not reported.",
 answer: "A",
 explanation: "This is very important as safeguarding responsibilities include preventing wider harm within the healthcare setting. Reporting institutional abuse protects both the individual patient and the wider community of vulnerable individuals under that agency's or ward's care."
 },
@@ -7570,7 +7570,7 @@ explanation: "This is very important as safeguarding responsibilities include pr
 subtype: "sjt-appropriateness",
 question: "Wait until the end of the shift to write a brief note in Gary's medical chart about the carer being 'a bit firm' with him.",
 answer: "D",
-explanation: "This is a very inappropriate response because minimizing clear physical and verbal abuse as being 'a bit firm' downplays a serious safeguarding violation. Delaying action and failing to report it verbally to leadership leaves the patient unprotected against ongoing abusive behavior."
+explanation: "This is a very inappropriate response because minimising clear physical and verbal abuse as being 'a bit firm' downplays a serious safeguarding violation. Delaying action and failing to report it verbally to leadership leaves the patient unprotected against ongoing abusive behaviour."
 },
 {
 subtype: "sjt-importance",
@@ -7648,7 +7648,7 @@ explanation: "This is not important at all. Commercial convenience or retail tra
 id: "sjt-22-vulnerable-adults-learning-disability-consent",
 title: "Unexplained trauma in an adult with severe learning disabilities",
 setting: "emergency department",
-stem: "An FY2 doctor, Dr Miller, evaluates a 34-year-old woman, Chloe, who has severe autism and a profound learning disability, making her entirely non-verbal. Chloe lives in a specialized residential facility and has been brought to the emergency department by a care home manager due to a laceration on her forehead. While examining her, Dr Miller notes multiple circular burn marks on her inner thighs that look highly suspicious of cigarette burns. The care home manager claims Chloe must have burned herself accidentally while cooking, though Chloe is known to require 24/7 supervision and is not permitted near appliances.",
+stem: "An FY2 doctor, Dr Miller, evaluates a 34-year-old woman, Chloe, who has severe autism and a profound learning disability, making her entirely non-verbal. Chloe lives in a specialised residential facility and has been brought to the emergency department by a care home manager due to a laceration on her forehead. While examining her, Dr Miller notes multiple circular burn marks on her inner thighs that look highly suspicious of cigarette burns. The care home manager claims Chloe must have burned herself accidentally while cooking, though Chloe is known to require 24/7 supervision and is not permitted near appliances.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -7672,7 +7672,7 @@ explanation: "This is a very inappropriate action as it returns an extremely vul
 subtype: "sjt-importance",
 question: "The possibility that Chloe might become distressed or agitated during a more extensive physical or forensic examination.",
 answer: "B",
-explanation: "This is important because clinical procedures must be conducted with care, dignity, and appropriate support to minimize trauma for a vulnerable patient. However, her potential distress does not mean the examination or safeguarding investigation should be abandoned."
+explanation: "This is important because clinical procedures must be conducted with care, dignity, and appropriate support to minimise trauma for a vulnerable patient. However, her potential distress does not mean the examination or safeguarding investigation should be abandoned."
 }
 ]
 },
@@ -7704,7 +7704,7 @@ explanation: "This is inappropriate because discharging a vulnerable adult with 
 subtype: "sjt-importance",
 question: "The department's standard target to discharge or transfer all patients within four hours of arrival.",
 answer: "D",
-explanation: "This is not important at all when considering the safety of a highly vulnerable patient. Reaching administrative time targets must never undermine clinical judgment or result in throwing a vulnerable adult into an unsafe environment."
+explanation: "This is not important at all when considering the safety of a highly vulnerable patient. Reaching administrative time targets must never undermine clinical judgement or result in throwing a vulnerable adult into an unsafe environment."
 }
 ]
 },
@@ -7786,7 +7786,7 @@ explanation: "This is a very appropriate action as it provides immediate clinica
 },
 {
 subtype: "sjt-importance",
-question: "The partner's admission that they use critical medical treatments as a behavioral control mechanism rather than as prescribed.",
+question: "The partner's admission that they use critical medical treatments as a behavioural control mechanism rather than as prescribed.",
 answer: "A",
 explanation: "This is very important because using prescription medications as a weapon or emotional control tool constitutes serious abuse and medication mismanagement, elevating the necessity for urgent, structured protective intervention."
 },
@@ -7818,7 +7818,7 @@ explanation: "This is a very appropriate response. Finding acute, unexplained tr
 },
 {
 subtype: "sjt-importance",
-question: "The fact that Thomas displayed clear fear and avoidance behaviors when the injured area was approached.",
+question: "The fact that Thomas displayed clear fear and avoidance behaviours when the injured area was approached.",
 answer: "A",
 explanation: "This is very important because psychological indicators of trauma or fear in a non-verbal patient reinforce the clinical suspicion of active harm or abuse, highlighting that the injury is likely non-accidental."
 },
@@ -7846,7 +7846,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Pause the discharge immediately, assure Brenda that she is safe, document her statements in detail, and make an urgent referral to the hospital safeguarding team and domestic abuse advocates.",
 answer: "A",
-explanation: "This is a very appropriate response as it prioritizes immediate patient safety by halting an unsafe discharge to an abusive environment. Providing instant reassurance and involving domestic abuse specialists respects Brenda's disclosure and follows statutory guidelines."
+explanation: "This is a very appropriate response as it prioritises immediate patient safety by halting an unsafe discharge to an abusive environment. Providing instant reassurance and involving domestic abuse specialists respects Brenda's disclosure and follows statutory guidelines."
 },
 {
 subtype: "sjt-importance",
@@ -7864,7 +7864,7 @@ explanation: "This is a very inappropriate response because sending a vulnerable
 subtype: "sjt-importance",
 question: "The husband's perspective on how stressful it is to care for someone with chronic illness.",
 answer: "D",
-explanation: "This is not important at all in this context. While caregiver stress is a known social issue, it can never justify, excuse, or minimize physical violence, and should never dilute the urgent focus on protecting the victim from harm."
+explanation: "This is not important at all in this context. While caregiver stress is a known social issue, it can never justify, excuse, or minimise physical violence, and should never dilute the urgent focus on protecting the victim from harm."
 }
 ]
 },
@@ -7904,7 +7904,7 @@ explanation: "This is not important at all. Protecting a colleague's professiona
 id: "sjt-22-vulnerable-adults-unauthorized-deprivation-liberty",
 title: "Unauthorized restraint of a confused patient",
 setting: "care home",
-stem: "Dr Patel, a GP, is conducting a medical review at a residential care facility for a 85-year-old resident, Beatrice, who has advanced multi-infarct dementia. Dr Patel observes that Beatrice is secured into her armchair using a makeshift cloth sheet tied tightly around her waist, preventing her from standing up. When asked, the senior carer explains that they tied her down because they are short-staffed today and Beatrice keeps wandering toward the exit doors, which triggers the security alarm.",
+stem: "Dr Patel, a GP, is conducting a medical review at a residential care facility for a 85-year-old resident, Beatrice, who has advanced multi-infarct dementia. Dr Patel observes that Beatrice is secured into her armchair using a makeshift cloth sheet tied tightly around her waist, preventing her from standing up. When asked, the senior carer explains that they tied her down because they are short-staffed today and Beatrice keeps wandering towards the exit doors, which triggers the security alarm.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -7922,13 +7922,13 @@ explanation: "This is of minor importance. While institutional challenges explai
 subtype: "sjt-appropriateness",
 question: "Advise the care home staff to continue using the sheet but to ensure it is hidden from view when visitors or family members arrive.",
 answer: "D",
-explanation: "This is a very inappropriate response because it actively colludes with abuse and encourages a cover-up of illegal practices. It prioritizes institutional deception over the physical safety, dignity, and rights of a vulnerable adult."
+explanation: "This is a very inappropriate response because it actively colludes with abuse and encourages a cover-up of illegal practices. It prioritises institutional deception over the physical safety, dignity, and rights of a vulnerable adult."
 },
 {
 subtype: "sjt-importance",
 question: "The risk of physical injury or muscle deconditioning caused by keeping an elderly resident tied to a chair for prolonged periods.",
 answer: "A",
-explanation: "This is very important because physical restraint carries high risks of pressure ulcers, deep vein thrombosis, and psychological trauma. Recognizing these direct clinical dangers underscores the urgency of stopping the practice immediately."
+explanation: "This is very important because physical restraint carries high risks of pressure ulcers, deep vein thrombosis, and psychological trauma. Recognising these direct clinical dangers underscores the urgency of stopping the practice immediately."
 }
 ]
 },
@@ -8024,7 +8024,7 @@ explanation: "This is a very inappropriate response. Returning a starving, negle
 subtype: "sjt-importance",
 question: "The risk that a formal CQC report might damage the care home's commercial reputation and lead to closure.",
 answer: "D",
-explanation: "This is not important at all. The financial viability or commercial reputation of a healthcare facility must never be prioritized over the safety, survival, and fundamental human rights of the vulnerable residents in its care."
+explanation: "This is not important at all. The financial viability or commercial reputation of a healthcare facility must never be prioritised over the safety, survival, and fundamental human rights of the vulnerable residents in its care."
 }
 ]
 },
@@ -8147,7 +8147,7 @@ explanation: "A changing history for an injury in a non-ambulatory infant is a p
 subtype: "sjt-appropriateness",
 question: "Instigate an immediate emergency medical evaluation, inform the senior ED registrar or consultant of the safeguarding concern, and ensure the infant is not discharged.",
 answer: "A",
-explanation: "This action prioritizes immediate clinical stabilization, prevents an unsafe discharge, and appropriately escalates a major safeguarding concern."
+explanation: "This action prioritises immediate clinical stabilization, prevents an unsafe discharge, and appropriately escalates a major safeguarding concern."
 },
 {
 subtype: "sjt-importance",
@@ -8167,17 +8167,17 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Respect Jessica's refusal to elaborate and drop the subject completely to avoid causing her further emotional distress.",
 answer: "C",
-explanation: "While forcing an immediate disclosure is counterproductive, entirely dropping a clear behavioral and verbal red flag fails to protect a vulnerable child."
+explanation: "While forcing an immediate disclosure is counterproductive, entirely dropping a clear behavioural and verbal red flag fails to protect a vulnerable child."
 },
 {
 subtype: "sjt-importance",
 question: "The noticeable change in Jessica's demeanor, eye contact, and personal hygiene.",
 answer: "A",
-explanation: "Sudden behavioral changes and a decline in hygiene are significant indicators of potential abuse, neglect, or psychological distress."
+explanation: "Sudden behavioural changes and a decline in hygiene are significant indicators of potential abuse, neglect, or psychological distress."
 },
 {
 subtype: "sjt-appropriateness",
-question: "Reassure Jessica kindly, document her exact words and behavior in the notes, and discuss the case with the practice safeguarding lead to plan an appropriate, multi-agency response.",
+question: "Reassure Jessica kindly, document her exact words and behaviour in the notes, and discuss the case with the practice safeguarding lead to plan an appropriate, multi-agency response.",
 answer: "A",
 explanation: "This provides compassionate, immediate patient care while ensuring proper documentation and collaborative escalation through the correct clinical channels."
 },
@@ -8193,7 +8193,7 @@ explanation: "Administrative time limits must never take precedence over investi
 id: "sjt-21-safeguarding-medication-sharing-child",
 title: "Parent administering adult medication to a child",
 setting: "community pharmacy",
-stem: "A mother visits a community pharmacy asking to purchase a strong over-the-counter cough sedative for her 5-year-old son. While speaking to the pharmacist, she casually mentions that when her son gets hyperactive or 'unruly' at night, she gives him half of her own prescribed 10mg diazepam tablets to 'help him calm down and sleep.' She states this is the only way she can cope with his behavior.",
+stem: "A mother visits a community pharmacy asking to purchase a strong over-the-counter cough sedative for her 5-year-old son. While speaking to the pharmacist, she casually mentions that when her son gets hyperactive or 'unruly' at night, she gives him half of her own prescribed 10mg diazepam tablets to 'help him calm down and sleep.' She states this is the only way she can cope with his behaviour.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -8217,7 +8217,7 @@ explanation: "This immediately stops further dangerous medication administration
 subtype: "sjt-importance",
 question: "Whether the mother feels judged or insulted by the pharmacist's concern.",
 answer: "C",
-explanation: "Maintaining a non-judgmental approach helps communication, but avoiding offense is far less important than ensuring a child is safe from poisoning."
+explanation: "Maintaining a non-judgmental approach helps communication, but avoiding offence is far less important than ensuring a child is safe from poisoning."
 }
 ]
 },
@@ -8237,7 +8237,7 @@ explanation: "This shows a fundamental misunderstanding of safeguarding; witness
 subtype: "sjt-importance",
 question: "The psychological and emotional impact on Lily from witnessing severe physical violence between her parents.",
 answer: "A",
-explanation: "Witnessing domestic abuse is explicitly recognized as a major safeguarding risk that causes long-term emotional and developmental harm to children."
+explanation: "Witnessing domestic abuse is explicitly recognised as a major safeguarding risk that causes long-term emotional and developmental harm to children."
 },
 {
 subtype: "sjt-appropriateness",
@@ -8255,13 +8255,13 @@ explanation: "A parent's claimed affection does not mitigate or excuse the sever
 },
 {
 id: "sjt-21-safeguarding-sexualised-behavior-primary",
-title: "Inappropriate sexualised behavior in primary school",
+title: "Inappropriate sexualised behaviour in primary school",
 setting: "GP surgery",
-stem: "A primary school nurse contacts the GP surgery to discuss an 8-year-old pupil, Oliver. The nurse notes that Oliver has been demonstrating highly explicit, age-inappropriate sexualized behavior and language toward other pupils on the playground. When questioned gently by school staff, Oliver said he was just acting out games he plays with an older teenager who lives in his neighborhood. The school nurse is seeking the GP's input on how to manage the family.",
+stem: "A primary school nurse contacts the GP surgery to discuss an 8-year-old pupil, Oliver. The nurse notes that Oliver has been demonstrating highly explicit, age-inappropriate sexualized behaviour and language towards other pupils on the playground. When questioned gently by school staff, Oliver said he was just acting out games he plays with an older teenager who lives in his neighborhood. The school nurse is seeking the GP's input on how to manage the family.",
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Advise the school nurse to wait another term to see if Oliver outgrows this behavioral phase before involving external agencies.",
+question: "Advise the school nurse to wait another term to see if Oliver outgrows this behavioural phase before involving external agencies.",
 answer: "D",
 explanation: "Delaying intervention when there is an explicit disclosure of potential child sexual exploitation places Oliver and other children at ongoing risk."
 },
@@ -8313,7 +8313,7 @@ explanation: "This combines immediate pragmatic harm-reduction with the necessar
 subtype: "sjt-importance",
 question: "The mother's embarrassment if social services arrive while she is intoxicated.",
 answer: "D",
-explanation: "A parent's feelings or embarrassment can never be prioritized over the basic safety and survival needs of a neglected toddler."
+explanation: "A parent's feelings or embarrassment can never be prioritised over the basic safety and survival needs of a neglected toddler."
 }
 ]
 },
@@ -8369,7 +8369,7 @@ explanation: "Delay in seeking necessary medical treatment for a serious injury 
 },
 {
 subtype: "sjt-appropriateness",
-question: "Admit the child for urgent clinical treatment of the burns, document all physical and behavioral signs, and make an immediate phone referral to children's social services.",
+question: "Admit the child for urgent clinical treatment of the burns, document all physical and behavioural signs, and make an immediate phone referral to children's social services.",
 answer: "A",
 explanation: "This addresses the urgent clinical need by admitting the patient, while taking immediate action to engage child protection services."
 },
@@ -8407,7 +8407,7 @@ explanation: "This ensures her immediate clinical needs are met and keeps her ph
 },
 {
 subtype: "sjt-importance",
-question: "Honoring Chloe's wish to not contact her mother.",
+question: "Honouring Chloe's wish to not contact her mother.",
 answer: "B",
 explanation: "It is important to respect this wish by avoiding contacting the mother directly, as the mother's partner is the alleged abuser, making a direct social services escalation safer."
 }
@@ -8467,7 +8467,7 @@ explanation: "The physical presentation of non-accidental injuries is the core d
 subtype: "sjt-appropriateness",
 question: "Document the physical findings thoroughly with diagrams, state clearly that the clinical picture is inconsistent with the history, and contact the child protection team immediately.",
 answer: "A",
-explanation: "This response ensures meticulous forensic clinical documentation and instant activation of safeguarding channels, prioritizing the child's safety."
+explanation: "This response ensures meticulous forensic clinical documentation and instant activation of safeguarding channels, prioritising the child's safety."
 },
 {
 subtype: "sjt-importance",
@@ -8513,7 +8513,7 @@ explanation: "Logistical details are minor; if the family lacks transport or pos
 id: "sjt-21-safeguarding-disabled-child-neglect",
 title: "Neglect of a non-verbal disabled child",
 setting: "care home",
-stem: "A community paediatric nurse visits a specialized residential facility to review an 11-year-old non-verbal boy with severe cerebral palsy. The nurse finds the child left alone in a cold bedroom, saturated in urine, with severe, broken-down skin pressure ulcers on his sacrum that look completely untreated. The staff member on duty states they are short-staffed and that 'he doesn't feel pain like we do anyway, so it's not urgent.'",
+stem: "A community paediatric nurse visits a specialised residential facility to review an 11-year-old non-verbal boy with severe cerebral palsy. The nurse finds the child left alone in a cold bedroom, saturated in urine, with severe, broken-down skin pressure ulcers on his sacrum that look completely untreated. The staff member on duty states they are short-staffed and that 'he doesn't feel pain like we do anyway, so it's not urgent.'",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -8531,7 +8531,7 @@ explanation: "Untreated deep pressure ulcers cause immense physiological distres
 subtype: "sjt-appropriateness",
 question: "Provide immediate nursing care to clean and dress the wounds, document the severe neglect clearly, and escalate to both the facility management and local authority safeguarding board.",
 answer: "A",
-explanation: "This directly addresses the acute clinical distress while properly utilizing institutional and statutory safeguarding pathways to report the neglect."
+explanation: "This directly addresses the acute clinical distress while properly utilising institutional and statutory safeguarding pathways to report the neglect."
 },
 {
 subtype: "sjt-importance",
@@ -8551,7 +8551,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Respect the mother's cultural traditions and wish them a safe flight and a pleasant family holiday.",
 answer: "D",
-explanation: "Female Genital Mutilation (FGM) is a severe form of child abuse and a criminal offense; treating it as a protected cultural tradition is entirely illegal and unsafe."
+explanation: "Female Genital Mutilation (FGM) is a severe form of child abuse and a criminal offence; treating it as a protected cultural tradition is entirely illegal and unsafe."
 },
 {
 subtype: "sjt-importance",
@@ -8589,7 +8589,7 @@ explanation: "This actively facilitates potential criminal exploitation by handi
 subtype: "sjt-importance",
 question: "The signs suggesting Leo is a victim of criminal exploitation or 'county lines' drug trafficking.",
 answer: "A",
-explanation: "Recognizing modern slavery and criminal exploitation of minors is a critical safeguarding responsibility to protect vulnerable adolescents from extreme violence."
+explanation: "Recognising modern slavery and criminal exploitation of minors is a critical safeguarding responsibility to protect vulnerable adolescents from extreme violence."
 },
 {
 subtype: "sjt-appropriateness",
@@ -8663,9 +8663,9 @@ explanation: "This ensures the baby is evaluated rapidly by specialists on the s
 },
 {
 subtype: "sjt-importance",
-question: "Maintaining a polite and warm relationship with the mother to avoid causing her offense.",
+question: "Maintaining a polite and warm relationship with the mother to avoid causing her offence.",
 answer: "C",
-explanation: "While remaining professional is helpful, avoiding parental offense is of minor importance compared to the mandatory requirement to protect an infant's life."
+explanation: "While remaining professional is helpful, avoiding parental offence is of minor importance compared to the mandatory requirement to protect an infant's life."
 }
 ]
 },
@@ -8712,7 +8712,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Delete the post immediately after a fellow student points out that it might violate professionalism standards.",
 answer: "A",
-explanation: "Deleting the post immediately minimizes further professional risk and exposure of the public to derogatory remarks about healthcare teams. Publicly undermining colleagues reduces public trust in the profession, even on private accounts. Acting swiftly to correct a lapse in judgement is highly appropriate."
+explanation: "Deleting the post immediately minimises further professional risk and exposure of the public to derogatory remarks about healthcare teams. Publicly undermining colleagues reduces public trust in the profession, even on private accounts. Acting swiftly to correct a lapse in judgement is highly appropriate."
 },
 {
 subtype: "sjt-appropriateness",
@@ -8846,19 +8846,19 @@ explanation: "Medical professionals and students have a right to engage in polit
 subtype: "sjt-appropriateness",
 question: "Defend the video to the medical school administration, arguing that free speech laws protect her right to express political opinions outside of her clinical placements.",
 answer: "D",
-explanation: "Arguing that personal accounts are exempt from professional standards ignores the clear guidance that medical students must uphold the reputation of the profession at all times. Using aggressive and insulting language publicly compromises the perceived objectivity and civility expected of future doctors. Refusing to recognize this boundary is very inappropriate."
+explanation: "Arguing that personal accounts are exempt from professional standards ignores the clear guidance that medical students must uphold the reputation of the profession at all times. Using aggressive and insulting language publicly compromises the perceived objectivity and civility expected of future doctors. Refusing to recognise this boundary is very inappropriate."
 },
 {
 subtype: "sjt-importance",
 question: "How important is the fact that Amina's profile publicly identifies her medical school and her status as a future doctor?",
 answer: "A",
-explanation: "By linking her profile directly to her identity as a medical student, her public behavior reflects directly on her university and the medical profession. This significantly increases the risk of bringing the profession into disrepute. It is a critical factor in evaluating the impact of her social media conduct."
+explanation: "By linking her profile directly to her identity as a medical student, her public behaviour reflects directly on her university and the medical profession. This significantly increases the risk of bringing the profession into disrepute. It is a critical factor in evaluating the impact of her social media conduct."
 },
 {
 subtype: "sjt-importance",
 question: "How important is it to protect a medical professional's right to participate in public debates about healthcare policy?",
 answer: "B",
-explanation: "Doctors and medical students are valuable contributors to healthcare policy debates, and public advocacy is encouraged. However, this right does not excuse the use of abusive, derogatory, or unprofessional language. It is important as a principle, but it must be balanced against professional behavioral standards."
+explanation: "Doctors and medical students are valuable contributors to healthcare policy debates, and public advocacy is encouraged. However, this right does not excuse the use of abusive, derogatory, or unprofessional language. It is important as a principle, but it must be balanced against professional behavioural standards."
 }
 ]
 },
@@ -8898,7 +8898,7 @@ explanation: "Empathy and a desire to help a patient in a desperate situation ar
 id: "sjt-20-social-media-dating-app-colleague-swipe",
 title: "Encountering a patient on a dating application",
 setting: "GP surgery",
-stem: "Dr Jessica is an FY2 doctor working in a general practice surgery. While using a location-based dating application (such as Tinder) at home, she matches with a user whose profile indicates they live locally. Upon reviewing their profile pictures and details, Jessica realizes that the user is a patient she consulted with earlier that week for a highly sensitive mental health review. The patient has sent an initial message saying: 'Hey, I thought I recognized you from the surgery! How are you?'",
+stem: "Dr Jessica is an FY2 doctor working in a general practice surgery. While using a location-based dating application (such as Tinder) at home, she matches with a user whose profile indicates they live locally. Upon reviewing their profile pictures and details, Jessica realizes that the user is a patient she consulted with earlier that week for a highly sensitive mental health review. The patient has sent an initial message saying: 'Hey, I thought I recognised you from the surgery! How are you?'",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -8980,7 +8980,7 @@ explanation: "This response corrects the unprofessional public attack while acti
 subtype: "sjt-importance",
 question: "How important is the fact that Dr Rebecca had already attempted to resolve the issues through internal management channels before posting?",
 answer: "B",
-explanation: "The failure of initial internal escalation explains her frustration and highlights a systemic issue that must be addressed. However, it does not justify bypassing formal whistleblowing procedures in favour of personalized public social media attacks. It is important context for her actions, but does not alter her professional obligations."
+explanation: "The failure of initial internal escalation explains her frustration and highlights a systemic issue that must be addressed. However, it does not justify bypassing formal whistleblowing procedures in favour of personalised public social media attacks. It is important context for her actions, but does not alter her professional obligations."
 },
 {
 subtype: "sjt-importance",
@@ -9000,7 +9000,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Publish the post, as using an initial ('Mr G') completely anonymises the patient and respects his medical privacy.",
 answer: "C",
-explanation: "Using a single initial alongside specific contextual details (a local pharmacy regular who discussed football weekly) does not guarantee anonymity, especially in a local community setting where friends or family might easily recognize him. Publicly disclosing that someone was a patient and has died breaches confidentiality. It is inappropriate, despite the benign intentions."
+explanation: "Using a single initial alongside specific contextual details (a local pharmacy regular who discussed football weekly) does not guarantee anonymity, especially in a local community setting where friends or family might easily recognise him. Publicly disclosing that someone was a patient and has died breaches confidentiality. It is inappropriate, despite the benign intentions."
 },
 {
 subtype: "sjt-appropriateness",
@@ -9050,7 +9050,7 @@ explanation: "Preventing inadvertent data breaches is a paramount ethical and le
 subtype: "sjt-importance",
 question: "How important is the fact that the video is entirely non-profit and intended solely for medical student education?",
 answer: "C",
-explanation: "The altruistic intent of the video does not exempt the practitioner from adhering to hospital recording policies, employment contracts, and professional guidelines. While it shows he lacks malicious intent, it is only of minor importance relative to the necessity of securing proper organizational consent."
+explanation: "The altruistic intent of the video does not exempt the practitioner from adhering to hospital recording policies, employment contracts, and professional guidelines. While it shows he lacks malicious intent, it is only of minor importance relative to the necessity of securing proper organisational consent."
 }
 ]
 },
@@ -9064,13 +9064,13 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Take a screenshot of the Instagram Stories and email them directly to the medical school's professionalism panel immediately.",
 answer: "B",
-explanation: "Escalating to the university ensures accountability for a major safety and professionalism breach. However, direct immediate escalation without checking if Chloe is actively impaired or driving, or addressing the immediate safety risk, is slightly sub-optimal compared to combining it with direct intervention. It remains appropriate because of the severity of the behavior."
+explanation: "Escalating to the university ensures accountability for a major safety and professionalism breach. However, direct immediate escalation without checking if Chloe is actively impaired or driving, or addressing the immediate safety risk, is slightly sub-optimal compared to combining it with direct intervention. It remains appropriate because of the severity of the behaviour."
 },
 {
 subtype: "sjt-appropriateness",
 question: "Call Chloe immediately to find out if she is actually consuming alcohol while on-call, demand she take down the posts, and ensure she does not participate in any patient care or simulation activities that night.",
 answer: "A",
-explanation: "This response prioritises immediate safety and risk mitigation by verifying the situation and actively preventing an impaired student from engaging in clinical duties. It also addresses the urgent reputational damage of the active post. This direct intervention is highly appropriate as a first line of defense."
+explanation: "This response prioritises immediate safety and risk mitigation by verifying the situation and actively preventing an impaired student from engaging in clinical duties. It also addresses the urgent reputational damage of the active post. This direct intervention is highly appropriate as a first line of defence."
 },
 {
 subtype: "sjt-importance",
@@ -9080,7 +9080,7 @@ explanation: "Publicly broadcasting that one is consuming alcohol while responsi
 },
 {
 subtype: "sjt-importance",
-question: "How important is Chloe's defense that the 'on-call' shift was just a simulation and not a real clinical duty involving live patients?",
+question: "How important is Chloe's defence that the 'on-call' shift was just a simulation and not a real clinical duty involving live patients?",
 answer: "C",
 explanation: "Even if the shift was a simulation, advertising to the public that junior doctors drink while on-call damages the profession's reputation. Furthermore, students must treat simulations with professional seriousness. It is of minor importance because it doesn't excuse the severe digital misconduct."
 }
@@ -9100,7 +9100,7 @@ explanation: "Publicly disclosing specific clinical details or a patient's medic
 },
 {
 subtype: "sjt-appropriateness",
-question: "Reply publicly with a standardized, neutral response inviting the user to contact the practice's practice manager directly to discuss their concerns through the formal, private complaints procedure.",
+question: "Reply publicly with a standardised, neutral response inviting the user to contact the practice's practice manager directly to discuss their concerns through the formal, private complaints procedure.",
 answer: "A",
 explanation: "This response protects patient confidentiality by not acknowledging any specific clinical details online, while demonstrating a professional, constructive willingness to address dissatisfaction through proper, private practice channels. It is the gold standard for responding to public reviews."
 },
@@ -9134,11 +9134,11 @@ explanation: "Publicly sharing content that jokes about violating patient autono
 subtype: "sjt-appropriateness",
 question: "Delete the post immediately and review her social media accounts to ensure no other content could be perceived as making light of serious clinical issues or patient care.",
 answer: "A",
-explanation: "Removing the offensive material immediately minimizes public harm and reputational damage. Undertaking a comprehensive review of her online presence demonstrates a mature, reflective understanding of digital professionalism and public perception. This is the most appropriate corrective action."
+explanation: "Removing the offensive material immediately minimises public harm and reputational damage. Undertaking a comprehensive review of her online presence demonstrates a mature, reflective understanding of digital professionalism and public perception. This is the most appropriate corrective action."
 },
 {
 subtype: "sjt-importance",
-question: "How important is the fact that dark humor is a recognized psychological coping mechanism for healthcare staff working in high-stress environments?",
+question: "How important is the fact that dark humor is a recognised psychological coping mechanism for healthcare staff working in high-stress environments?",
 answer: "C",
 explanation: "While coping mechanisms are important for well-being, dark humor must remain strictly confined to private, appropriate staff discussions and must never be broadcast to the public on social media. The public context entirely overrides the personal utility of the humor, making this factor of minor importance in justifying the post."
 },
@@ -9166,7 +9166,7 @@ explanation: "Disclosing a patient's identity and clinical status to a group of 
 subtype: "sjt-appropriateness",
 question: "If another doctor in the group chat, Dr Priya, notices the message, she should privately message Luke advising him to delete the comment and remind him of confidentiality rules.",
 answer: "A",
-explanation: "Intervening immediately to have the message removed protects the patient's privacy from further exposure within the chat and prompts the colleague to correct their behavior. A private reminder is effective and professional for a first-line peer response. This is highly appropriate."
+explanation: "Intervening immediately to have the message removed protects the patient's privacy from further exposure within the chat and prompts the colleague to correct their behaviour. A private reminder is effective and professional for a first-line peer response. This is highly appropriate."
 },
 {
 subtype: "sjt-importance",
@@ -9224,7 +9224,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Join the group and actively post answers to individual members' specific queries about their personal medication dosages and symptoms.",
 answer: "D",
-explanation: "Providing individualized medical advice or managing specific symptoms within a public or group social media setting is unsafe and violates professional boundaries. It creates an unregulated clinical dynamic without access to official medical records. This action is highly inappropriate."
+explanation: "Providing individualised medical advice or managing specific symptoms within a public or group social media setting is unsafe and violates professional boundaries. It creates an unregulated clinical dynamic without access to official medical records. This action is highly inappropriate."
 },
 {
 subtype: "sjt-appropriateness",
@@ -9397,7 +9397,7 @@ explanation: "The vulnerability of the patient and the specialty involved (psych
 subtype: "sjt-appropriateness",
 question: "Reply politely to her message, stating that as her former doctor, it would be unprofessional for him to enter into a personal relationship with her, and decline the invitation.",
 answer: "A",
-explanation: "This is a highly appropriate response that maintains firm professional boundaries while remaining respectful. It protects the patient's well-being and clear ethical guidelines without causing unnecessary offense."
+explanation: "This is a highly appropriate response that maintains firm professional boundaries while remaining respectful. It protects the patient's well-being and clear ethical guidelines without causing unnecessary offence."
 },
 {
 subtype: "sjt-importance",
@@ -9455,7 +9455,7 @@ explanation: "Prescribing for family members, especially controlled drugs, is st
 subtype: "sjt-importance",
 question: "The availability of local alternative healthcare services, such as NHS 111 or an urgent care centre, which can safely verify and issue emergency prescriptions.",
 answer: "A",
-explanation: "It is crucial to recognize that safe, alternative pathways exist for out-of-hours medication supplies. Bypassing professional regulations is entirely unnecessary when structured emergency services are designed for this exact purpose."
+explanation: "It is crucial to recognise that safe, alternative pathways exist for out-of-hours medication supplies. Bypassing professional regulations is entirely unnecessary when structured emergency services are designed for this exact purpose."
 },
 {
 subtype: "sjt-appropriateness",
@@ -9627,7 +9627,7 @@ explanation: "This is an excellent response. It declines the gift gently but fir
 subtype: "sjt-importance",
 question: "The fact that Mrs. Gable compared Maya to her own daughter.",
 answer: "B",
-explanation: "This detail is important because it highlights an intense emotional attachment and a potential blur of professional boundaries. Recognizing this degree of attachment emphasizes why accepting a valuable gift would be inappropriate."
+explanation: "This detail is important because it highlights an intense emotional attachment and a potential blur of professional boundaries. Recognising this degree of attachment emphasizes why accepting a valuable gift would be inappropriate."
 }
 ]
 },
@@ -9653,13 +9653,13 @@ explanation: "The primary clinical consideration must always be the patient's we
 subtype: "sjt-appropriateness",
 question: "Decline the personal financial recruitment bonus from the sponsor, ensuring any trial recruitment is based strictly on patient eligibility and objective clinical need.",
 answer: "A",
-explanation: "This response upholds core ethical principles of integrity and probity. Eliminating personal financial rewards ensures that patient enrollment in clinical trials remains entirely objective, safe, and transparent."
+explanation: "This response upholds core ethical principles of integrity and probity. Eliminating personal financial rewards ensures that patient enrolment in clinical trials remains entirely objective, safe, and transparent."
 },
 {
 subtype: "sjt-importance",
 question: "The deadline set by the pharmaceutical sponsor for completing trial recruitment.",
 answer: "D",
-explanation: "Commercial deadlines set by external sponsors should have no bearing on clinical judgment, patient selection, or ethical boundary management."
+explanation: "Commercial deadlines set by external sponsors should have no bearing on clinical judgement, patient selection, or ethical boundary management."
 }
 ]
 },
@@ -9807,7 +9807,7 @@ explanation: "Using official prescription materials or a professional consultati
 subtype: "sjt-importance",
 question: "The fact that Sophia is a current user of the pharmacy services and Oliver is her regular healthcare provider.",
 answer: "A",
-explanation: "The ongoing professional relationship is the defining factor here. Professional codes of conduct strictly regulate personal advances toward current patients to prevent exploitation and protect professional integrity."
+explanation: "The ongoing professional relationship is the defining factor here. Professional codes of conduct strictly regulate personal advances towards current patients to prevent exploitation and protect professional integrity."
 },
 {
 subtype: "sjt-appropriateness",
@@ -9903,7 +9903,7 @@ explanation: "Failing to disclose a direct commercial financial relationship wit
 subtype: "sjt-importance",
 question: "The availability of free, clinically effective hearing aids provided directly via the NHS pathway for this patient.",
 answer: "A",
-explanation: "It is crucial to inform patients about free NHS options before pushing commercial alternatives. Suppressing free options to direct business toward a company that pays you is financially predatory and unethical."
+explanation: "It is crucial to inform patients about free NHS options before pushing commercial alternatives. Suppressing free options to direct business towards a company that pays you is financially predatory and unethical."
 },
 {
 subtype: "sjt-appropriateness",
@@ -10149,7 +10149,7 @@ explanation: "This is a primary concern. Treating friends lacks objectivity, and
 id: "sjt-18-boundary-patient-business-proposal",
 title: "Patient Offering a Business Partnership to a Clinician",
 setting: "outpatient clinic",
-stem: "Dr Taylor is a consultant dermatologist who runs a specialized acne clinic. A patient he has been treating for severe scarring, Mr Zhang, is a successful commercial property developer. Impressed by Dr Taylor’s clinical insight and professional demeanor, Mr Zhang proposes establishing a private skincare clinic together, where Mr Zhang provides the capital funding and Dr Taylor manages the clinical operations, splits the profits 50/50.",
+stem: "Dr Taylor is a consultant dermatologist who runs a specialised acne clinic. A patient he has been treating for severe scarring, Mr Zhang, is a successful commercial property developer. Impressed by Dr Taylor’s clinical insight and professional demeanor, Mr Zhang proposes establishing a private skincare clinic together, where Mr Zhang provides the capital funding and Dr Taylor manages the clinical operations, splits the profits 50/50.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -10173,7 +10173,7 @@ explanation: "Personal financial gain or career advancement is completely irrele
 subtype: "sjt-importance",
 question: "The need to maintain objectivity and prevent financial interests from influencing clinical decisions regarding Mr Zhang's care.",
 answer: "A",
-explanation: "This is a vital consideration. Financial entanglements can easily warp clinical judgment, leading to over-treatment, under-treatment, or compromised patient safety."
+explanation: "This is a vital consideration. Financial entanglements can easily warp clinical judgement, leading to over-treatment, under-treatment, or compromised patient safety."
 }
 ]
 },
@@ -10181,7 +10181,7 @@ explanation: "This is a vital consideration. Financial entanglements can easily 
 id: "sjt-18-boundary-home-visit-socialising",
 title: "Socializing During a Community Nurse Home Visit",
 setting: "community pharmacy",
-stem: "Chloe is a community nurse conducting a routine home visit for Mr Thompson, an isolated elderly gentleman recovering from a stroke. After checking his vitals and organizing his medication, Mr Thompson tells Chloe he is incredibly lonely and begs her to stay for an hour to have tea, cake, and watch a television show with him, mentioning that she is his only visitor this week. Chloe has three more patient visits scheduled on her afternoon route.",
+stem: "Chloe is a community nurse conducting a routine home visit for Mr Thompson, an isolated elderly gentleman recovering from a stroke. After checking his vitals and organising his medication, Mr Thompson tells Chloe he is incredibly lonely and begs her to stay for an hour to have tea, cake, and watch a television show with him, mentioning that she is his only visitor this week. Chloe has three more patient visits scheduled on her afternoon route.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -10219,7 +10219,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Accept the tin of cookies graciously, thank Mrs Berry warmly, and share them with the reception and nursing staff in the common breakroom.",
 answer: "A",
-explanation: "This is a highly appropriate response. Low-value, symbolic tokens of appreciation like home-baked goods do not compromise professional boundaries and rejecting them bluntly would cause unnecessary offense and harm rapport."
+explanation: "This is a highly appropriate response. Low-value, symbolic tokens of appreciation like home-baked goods do not compromise professional boundaries and rejecting them bluntly would cause unnecessary offence and harm rapport."
 },
 {
 subtype: "sjt-appropriateness",
@@ -10295,7 +10295,7 @@ explanation: "This is very appropriate. Providing immediate first-aid is a basic
 subtype: "sjt-importance",
 question: "The lack of clinical objectivity when managing the medical care of immediate family members.",
 answer: "A",
-explanation: "This is an essential factor. Personal relationships obscure objective judgment, which can lead to inadequate assessment, incomplete records, or inappropriate prescribing."
+explanation: "This is an essential factor. Personal relationships obscure objective judgement, which can lead to inadequate assessment, incomplete records, or inappropriate prescribing."
 },
 {
 subtype: "sjt-importance",
@@ -10321,7 +10321,7 @@ explanation: "This is highly appropriate. It re-establishes the professional bou
 subtype: "sjt-appropriateness",
 question: "Laugh off the comment as a joke, flirt back slightly to keep the atmosphere relaxed, and finish the consultation quickly.",
 answer: "D",
-explanation: "This is very inappropriate. Flirting back or treating a boundary transgression lightly encourages the behavior, compromises professional status, and fails to establish the necessary safety and distance."
+explanation: "This is very inappropriate. Flirting back or treating a boundary transgression lightly encourages the behaviour, compromises professional status, and fails to establish the necessary safety and distance."
 },
 {
 subtype: "sjt-importance",
@@ -10347,13 +10347,13 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Share the extensive details of her own personal termination and subsequent depression to build a deep, personal bond with Sarah.",
 answer: "C",
-explanation: "This is inappropriate because extensive self-disclosure shifts the clinical focus onto the nurse's own trauma. It burdens an already distressed patient and breaches the professional boundary of keeping care patient-centered."
+explanation: "This is inappropriate because extensive self-disclosure shifts the clinical focus onto the nurse's own trauma. It burdens an already distressed patient and breaches the professional boundary of keeping care patient-centred."
 },
 {
 subtype: "sjt-appropriateness",
 question: "Offer empathetic verbal reassurance, listen actively to Sarah's grief, and keep the focus entirely on Sarah's feelings and available support services.",
 answer: "A",
-explanation: "This is highly appropriate. It delivers high-quality, compassionate, patient-centered emotional care while preserving the objective professional boundary required to safely support the patient."
+explanation: "This is highly appropriate. It delivers high-quality, compassionate, patient-centred emotional care while preserving the objective professional boundary required to safely support the patient."
 },
 {
 subtype: "sjt-importance",
@@ -10373,7 +10373,7 @@ explanation: "This is an important consideration for staff well-being and occupa
 id: "sjt-18-boundary-hiring-patient-for-home-repairs",
 title: "Hiring a Patient's Trade Business for Personal Use",
 setting: "GP surgery",
-stem: "Dr Khan needs extensive roofing repairs on his personal home and has struggled to find a reliable contractor. During a consultation for hypertension, a patient named Mr Boyle mentions he runs a highly successful local roofing company and offers Dr Khan a 'substantial mates-rates discount' if he hires his crew to do the work, promising top-tier service because Dr Khan is his favorite GP.",
+stem: "Dr Khan needs extensive roofing repairs on his personal home and has struggled to find a reliable contractor. During a consultation for hypertension, a patient named Mr Boyle mentions he runs a highly successful local roofing company and offers Dr Khan a 'substantial mates-rates discount' if he hires his crew to do the work, promising top-tier service because Dr Khan is his favourite GP.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -10461,7 +10461,7 @@ explanation: "This is a critical consideration. Excessive or luxury hospitality 
 subtype: "sjt-importance",
 question: "Whether other consultants from neighboring hospitals are planning to attend the resort.",
 answer: "D",
-explanation: "The behavior of peers does not alter an individual's ethical obligations. A breach of professional probity standards remains unacceptable regardless of widespread practice."
+explanation: "The behaviour of peers does not alter an individual's ethical obligations. A breach of professional probity standards remains unacceptable regardless of widespread practice."
 }
 ]
 },
@@ -10493,7 +10493,7 @@ explanation: "This is an important consideration. Dual relationships can create 
 subtype: "sjt-importance",
 question: "Whether Dr Foster pays the standard fee or receives a discount for the fitness class.",
 answer: "B",
-explanation: "This is important because accepting discounts would introduce a financial boundary violation, whereas paying full price minimizes the ethical risk, though the dual relationship issue remains."
+explanation: "This is important because accepting discounts would introduce a financial boundary violation, whereas paying full price minimises the ethical risk, though the dual relationship issue remains."
 }
 ]
 },
@@ -10844,7 +10844,7 @@ explanation: "Lying about the nature of a major surgical procedure is a gross vi
 },
 {
 subtype: "sjt-importance",
-question: "The brand name of the surgical saw that will be utilized during the amputation procedure.",
+question: "The brand name of the surgical saw that will be utilised during the amputation procedure.",
 answer: "D",
 explanation: "The specific manufacturing brand of the surgical equipment used in the theatre holds no relevance to the clinical discussion, consent process, or psychological support required by the patient during this conversation."
 }
@@ -10898,7 +10898,7 @@ explanation: "It is essential to provide comprehensive information about all pat
 subtype: "sjt-importance",
 question: "Mr. Khan's previously expressed preferences regarding his quality of life and aversion to life-prolonging machinery.",
 answer: "A",
-explanation: "A patient's values and previously stated wishes are critical when discussing treatments that significantly alter lifestyle and comfort. Honoring these preferences ensures person-centered care and protects the patient's right to refuse invasive treatments."
+explanation: "A patient's values and previously stated wishes are critical when discussing treatments that significantly alter lifestyle and comfort. Honouring these preferences ensures person-centred care and protects the patient's right to refuse invasive treatments."
 },
 {
 subtype: "sjt-appropriateness",
@@ -10994,7 +10994,7 @@ explanation: "Delivering life-changing news regarding permanent disability requi
 subtype: "sjt-importance",
 question: "Mr. Jenkins' profession as a pianist and how the loss of hand function impacts his core identity.",
 answer: "A",
-explanation: "This is highly important because the clinical prognosis directly threatens his livelihood and psychological identity. Understanding this allows the clinician to anticipate severe grief and ensure early involvement of neuro-psychology and specialized occupational therapy."
+explanation: "This is highly important because the clinical prognosis directly threatens his livelihood and psychological identity. Understanding this allows the clinician to anticipate severe grief and ensure early involvement of neuro-psychology and specialised occupational therapy."
 },
 {
 subtype: "sjt-appropriateness",
@@ -11014,13 +11014,13 @@ explanation: "The specific repertoire or piece of music he was working on is irr
 id: "sjt-16-bad-news-pediatric-oncology-parents",
 title: "Breaking news of leukemia to a child's parents",
 setting: "outpatient clinic",
-stem: "Dr. Kelly, a Consultant Pediatric Oncologist, is meeting with the parents of 4-year-old Leo. Leo's bone marrow aspirate has confirmed Acute Lymphoblastic Leukemia (ALL). The parents are exhausted and highly defensive, stating that they are certain Leo just has a persistent viral infection from preschool and want to take him home today.",
+stem: "Dr. Kelly, a Consultant Paediatric Oncologist, is meeting with the parents of 4-year-old Leo. Leo's bone marrow aspirate has confirmed Acute Lymphoblastic Leukemia (ALL). The parents are exhausted and highly defensive, stating that they are certain Leo just has a persistent viral infection from preschool and want to take him home today.",
 questions: [
 {
 subtype: "sjt-appropriateness",
 question: "Acknowledge their exhaustion, deliver the definitive diagnosis of leukemia clearly, and outline the immediate, highly effective treatment protocols available.",
 answer: "A",
-explanation: "Breaking a pediatric cancer diagnosis requires direct clarity combined with an immediate framework of management and hope, as ALL has established treatments. This addresses the gravity of the situation while preventing total despair for the parents."
+explanation: "Breaking a paediatric cancer diagnosis requires direct clarity combined with an immediate framework of management and hope, as ALL has established treatments. This addresses the gravity of the situation while preventing total despair for the parents."
 },
 {
 subtype: "sjt-importance",
@@ -11058,7 +11058,7 @@ explanation: "A competent patient has a legal and ethical right to know their di
 subtype: "sjt-importance",
 question: "Mrs. Gable's right to know her own diagnosis versus her family's desire to protect her from emotional distress.",
 answer: "A",
-explanation: "This ethical conflict is very important to resolve. Under GMC guidelines, the competent patient's autonomy takes absolute precedence over the family's protective instincts, making it essential to prioritize the patient's right to honest disclosure."
+explanation: "This ethical conflict is very important to resolve. Under GMC guidelines, the competent patient's autonomy takes absolute precedence over the family's protective instincts, making it essential to prioritise the patient's right to honest disclosure."
 },
 {
 subtype: "sjt-appropriateness",
@@ -11090,7 +11090,7 @@ explanation: "Honest communication about the limitations of active treatments in
 subtype: "sjt-importance",
 question: "Mr. Ross's frequent recent hospital admissions as an indicator of a terminal disease trajectory.",
 answer: "A",
-explanation: "Frequent admissions for decompensated heart failure indicate an advanced stage of disease with a poor prognosis. Recognizing this is critical for the clinician to pivot from purely curative intents to robust supportive and palliative care conversations."
+explanation: "Frequent admissions for decompensated heart failure indicate an advanced stage of disease with a poor prognosis. Recognising this is critical for the clinician to pivot from purely curative intents to robust supportive and palliative care conversations."
 },
 {
 subtype: "sjt-appropriateness",
@@ -11132,9 +11132,9 @@ explanation: "Lying about the reversibility of blindness is an extreme breach of
 },
 {
 subtype: "sjt-importance",
-question: "The specific color of the frame of Mr. Fletcher's dark glasses.",
+question: "The specific colour of the frame of Mr. Fletcher's dark glasses.",
 answer: "D",
-explanation: "The aesthetic appearance or color of the patient's protective eyewear has absolutely no relevance to the clinical reality of permanent vision loss or the ethical requirements of the consultation."
+explanation: "The aesthetic appearance or colour of the patient's protective eyewear has absolutely no relevance to the clinical reality of permanent vision loss or the ethical requirements of the consultation."
 }
 ]
 },
@@ -11154,7 +11154,7 @@ explanation: "When results are missing, apologizing for the administrative failu
 subtype: "sjt-importance",
 question: "Mrs. Boyd's history of severe panic disorders and vulnerability to prolonged diagnostic uncertainty.",
 answer: "A",
-explanation: "This is a critical factor because clinical uncertainty can exacerbate psychiatric vulnerabilities. Recognizing this allows the doctor to provide extra communication clarity, offer immediate support contacts, and fast-track the lab report to minimize trauma."
+explanation: "This is a critical factor because clinical uncertainty can exacerbate psychiatric vulnerabilities. Recognising this allows the doctor to provide extra communication clarity, offer immediate support contacts, and fast-track the lab report to minimise trauma."
 },
 {
 subtype: "sjt-appropriateness",
@@ -11174,7 +11174,7 @@ explanation: "Blaming individual administrative staff or knowing their name does
 id: "sjt-16-bad-news-metastatic-recurrence-gp",
 title: "Breaking news of cancer recurrence in general practice",
 setting: "GP surgery",
-stem: "Mr. Davies, a 55-year-old teacher, visits his GP, Dr. West, complaining of worsening back pain. He was treated for localized prostate cancer two years ago. Dr. West received an urgent spinal MRI report this morning showing extensive, osteolytic blastic lesions throughout the lumbar spine, representing metastatic recurrence. Mr. Davies believes he has just strained his back gardening.",
+stem: "Mr. Davies, a 55-year-old teacher, visits his GP, Dr. West, complaining of worsening back pain. He was treated for localised prostate cancer two years ago. Dr. West received an urgent spinal MRI report this morning showing extensive, osteolytic blastic lesions throughout the lumbar spine, representing metastatic recurrence. Mr. Davies believes he has just strained his back gardening.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -11206,7 +11206,7 @@ explanation: "The botanical details of the patient's gardening habits are comple
 id: "sjt-16-bad-news-terminal-discharge-care-home",
 title: "Informing a resident of a transition to end-of-life care",
 setting: "care home",
-stem: "Dr. Henderson, a GP specializing in care home medicine, is reviewing Mrs. Thorne, an 88-year-old resident with advanced heart and renal failure. Hospital teams have confirmed that further interventions are futile, and she has been discharged for terminal end-of-life care. Mrs. Thorne is comfortable but asks Dr. Henderson, 'Am I getting better now that I am back in my own room?'",
+stem: "Dr. Henderson, a GP specialising in care home medicine, is reviewing Mrs. Thorne, an 88-year-old resident with advanced heart and renal failure. Hospital teams have confirmed that further interventions are futile, and she has been discharged for terminal end-of-life care. Mrs. Thorne is comfortable but asks Dr. Henderson, 'Am I getting better now that I am back in my own room?'",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -11222,7 +11222,7 @@ explanation: "This is of paramount importance in end-of-life care. Ensuring symp
 },
 {
 subtype: "sjt-appropriateness",
-question: "Tell her that she is completely cured and will be running marathons within a week to maximize her short-term happiness.",
+question: "Tell her that she is completely cured and will be running marathons within a week to maximise her short-term happiness.",
 answer: "D",
 explanation: "Providing absurd, completely ungrounded false reassurances is unprofessional, disrespectful, and highly inappropriate. It destroys clinical trust and prevents the patient or her care team from managing her actual terminal decline with dignity."
 },
@@ -11335,7 +11335,7 @@ explanation: "Understanding their legal status helps clarify their role in the d
 id: "sjt-15-telephone-update-anxious-parent",
 title: "Telephone Update to Anxious Parent",
 setting: "ward",
-stem: "You are an FY1 doctor in pediatrics. A 5-year-old child was admitted overnight with suspected meningitis and is currently stable on intravenous antibiotics. The child's father is at the bedside, but the mother, who is at home looking after their other children, calls the ward telephone. She is highly anxious, crying, and demanding an immediate, comprehensive update on her child's lumbar puncture results and overall prognosis.",
+stem: "You are an FY1 doctor in paediatrics. A 5-year-old child was admitted overnight with suspected meningitis and is currently stable on intravenous antibiotics. The child's father is at the bedside, but the mother, who is at home looking after their other children, calls the ward telephone. She is highly anxious, crying, and demanding an immediate, comprehensive update on her child's lumbar puncture results and overall prognosis.",
 questions: [
 {
 subtype: "sjt-importance",
@@ -11367,7 +11367,7 @@ explanation: "The specific number of other children does not impact the clinical
 id: "sjt-15-relative-demanding-discharge",
 title: "Relative Demanding Premature Discharge",
 setting: "ward",
-stem: "You are working on a surgical ward. A patient who underwent an emergency appendectomy yesterday is recovering well but requires another 24 hours of intravenous antibiotics to treat localized peritonitis. The patient's husband arrives on the ward and insists on taking her home immediately, stating that they have a family event they cannot miss. The patient appears hesitant but seems to be agreeing with her husband out of pressure.",
+stem: "You are working on a surgical ward. A patient who underwent an emergency appendectomy yesterday is recovering well but requires another 24 hours of intravenous antibiotics to treat localised peritonitis. The patient's husband arrives on the ward and insists on taking her home immediately, stating that they have a family event they cannot miss. The patient appears hesitant but seems to be agreeing with her husband out of pressure.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -11443,7 +11443,7 @@ explanation: "This provides a structured framework that gives the relative predi
 subtype: "sjt-appropriateness",
 question: "Tell her firmly that she is disrupting ward work and instruct the receptionist to block her calls to the nursing station.",
 answer: "D",
-explanation: "This is completely uncompassionate, punitive, and fails to recognize the extreme psychological distress of a relative whose partner is dying. It damages the therapeutic relationship and professional standards."
+explanation: "This is completely uncompassionate, punitive, and fails to recognise the extreme psychological distress of a relative whose partner is dying. It damages the therapeutic relationship and professional standards."
 },
 {
 subtype: "sjt-importance",
@@ -11475,7 +11475,7 @@ explanation: "Legal parental responsibility dictates who has the right to access
 subtype: "sjt-appropriateness",
 question: "Provide the biological father with the necessary clinical update, while keeping discussions focused entirely on the patient's health and avoiding family disputes.",
 answer: "A",
-explanation: "This fulfills the legal and professional obligations to a parent with parental responsibility while maintaining strict professional boundaries and refusing to get drawn into interpersonal family politics."
+explanation: "This fulfils the legal and professional obligations to a parent with parental responsibility while maintaining strict professional boundaries and refusing to get drawn into interpersonal family politics."
 },
 {
 subtype: "sjt-appropriateness",
@@ -11527,7 +11527,7 @@ explanation: "The family's support is important for long-term care management, s
 id: "sjt-15-care-home-relative-complaint",
 title: "Daughter Objecting to Care Home Sedation",
 setting: "care home",
-stem: "You are a GP conducting a routine visit to a nursing home. The staff report that an elderly resident with advanced Alzheimer's disease has become increasingly agitated and aggressive toward staff during washing. They suggest starting a regular antipsychotic medication. Later that day, the patient's daughter calls you, furious that the staff are trying to 'chemically restraint' her mother, and demands that no sedatives be prescribed.",
+stem: "You are a GP conducting a routine visit to a nursing home. The staff report that an elderly resident with advanced Alzheimer's disease has become increasingly agitated and aggressive towards staff during washing. They suggest starting a regular antipsychotic medication. Later that day, the patient's daughter calls you, furious that the staff are trying to 'chemically restraint' her mother, and demands that no sedatives be prescribed.",
 questions: [
 {
 subtype: "sjt-importance",
@@ -11629,7 +11629,7 @@ questions: [
 subtype: "sjt-importance",
 question: "The partner's continuous attempts to dominate the conversation and prevent the patient from speaking independently.",
 answer: "A",
-explanation: "This behaviour is a classic warning sign of potential coercive control or domestic abuse. Recognizing these behavioral indicators is vital for safeguarding vulnerable patients from ongoing harm."
+explanation: "This behaviour is a classic warning sign of potential coercive control or domestic abuse. Recognising these behavioural indicators is vital for safeguarding vulnerable patients from ongoing harm."
 },
 {
 subtype: "sjt-appropriateness",
@@ -11775,7 +11775,7 @@ explanation: "This perfectly balances the absolute duty of medical confidentiali
 subtype: "sjt-importance",
 question: "The mother's intense feelings of shock and betrayal regarding her daughter's hidden choices.",
 answer: "C",
-explanation: "While parental emotions are understandable, they can never justify a breach of a competent minor's legal right to privacy. The doctor must prioritize confidentiality over parental distress."
+explanation: "While parental emotions are understandable, they can never justify a breach of a competent minor's legal right to privacy. The doctor must prioritise confidentiality over parental distress."
 }
 ]
 },
@@ -11821,7 +11821,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Politely thank the sister for her input, but state that you need to hear directly from the patient herself to accurately evaluate her personal experience and symptoms.",
 answer: "A",
-explanation: "This professionally re-establishes appropriate consultation boundaries, ensuring the patient's voice is centered while remaining respectful to the accompanying family member."
+explanation: "This professionally re-establishes appropriate consultation boundaries, ensuring the patient's voice is centred while remaining respectful to the accompanying family member."
 },
 {
 subtype: "sjt-importance",
@@ -11859,7 +11859,7 @@ explanation: "Administering placebos intentionally to deceive a patient undermin
 subtype: "sjt-appropriateness",
 question: "Explain to the daughter that prescribing placebos is unethical and deceptive, and discuss alternative strategies like distraction techniques or a clear medication calendar.",
 answer: "A",
-explanation: "This response upholds strict ethical guidelines regarding honesty while validating the daughter's desire to minimize chemical overload by offering practical, honest non-pharmacological alternatives."
+explanation: "This response upholds strict ethical guidelines regarding honesty while validating the daughter's desire to minimise chemical overload by offering practical, honest non-pharmacological alternatives."
 },
 {
 subtype: "sjt-appropriateness",
@@ -11871,7 +11871,7 @@ explanation: "This is a severe breach of professional integrity and probity. Fal
 subtype: "sjt-importance",
 question: "The daughter's desire to reduce the total amount of medication her mother consumes.",
 answer: "B",
-explanation: "Minimizing polypharmacy and side effects in the elderly is a valid and important therapeutic goal, but it must be achieved through open, legal, and medically sound adjustments, not through fraud."
+explanation: "Minimising polypharmacy and side effects in the elderly is a valid and important therapeutic goal, but it must be achieved through open, legal, and medically sound adjustments, not through fraud."
 }
 ]
 },
@@ -11936,7 +11936,7 @@ explanation: "This is a very important consideration because sensitive patient d
 subtype: "sjt-importance",
 question: "Whether the daughter's aggressive tone constitutes a physical threat to staff safety.",
 answer: "B",
-explanation: "It is important to assess safety risks continuously, though her current behavior appears born out of frustration rather than intent to harm, meaning immediate security escalation is not yet required but vigilance is necessary."
+explanation: "It is important to assess safety risks continuously, though her current behaviour appears born out of frustration rather than intent to harm, meaning immediate security escalation is not yet required but vigilance is necessary."
 }
 ]
 },
@@ -11944,7 +11944,7 @@ explanation: "It is important to assess safety risks continuously, though her cu
 id: "sjt-14-distressed-parent-lumbar-puncture",
 title: "Distressed parent regarding an invasive procedure",
 setting: "ward",
-stem: "You are a pediatric FY1 doctor. A 10-month-old infant requires a lumbar puncture to rule out meningitis. The infant’s mother is extremely distressed, crying hysterically, and saying she cannot bear to see her child in pain. She is hesitant to sign the consent form, even though she understands the clinical necessity of the test. The registrar needs to perform the procedure shortly.",
+stem: "You are a paediatric FY1 doctor. A 10-month-old infant requires a lumbar puncture to rule out meningitis. The infant’s mother is extremely distressed, crying hysterically, and saying she cannot bear to see her child in pain. She is hesitant to sign the consent form, even though she understands the clinical necessity of the test. The registrar needs to perform the procedure shortly.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -11982,7 +11982,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Explore his phobia, offer strategies such as performing the test lying down with a butterfly needle, and discuss applying a topical anaesthetic cream beforehand.",
 answer: "A",
-explanation: "This response demonstrates patient-centered care by addressing the root of the anxiety with practical, clinical solutions. It actively works to facilitate necessary healthcare while respecting the patient's psychological vulnerability."
+explanation: "This response demonstrates patient-centred care by addressing the root of the anxiety with practical, clinical solutions. It actively works to facilitate necessary healthcare while respecting the patient's psychological vulnerability."
 },
 {
 subtype: "sjt-appropriateness",
@@ -12084,7 +12084,7 @@ explanation: "This approach combines empathy for the patient's suffering with fi
 subtype: "sjt-appropriateness",
 question: "Issue a short one-week supply of tramadol just to de-escalate his anger and get him out of the room safely.",
 answer: "C",
-explanation: "Yielding to aggressive demands by prescribing potentially harmful medication against clinical judgment is inappropriate and undermines safety. It is not fully inappropriate (D) only if there was a credible immediate physical threat, but for verbal anger, it establishes an unsafe precedent."
+explanation: "Yielding to aggressive demands by prescribing potentially harmful medication against clinical judgement is inappropriate and undermines safety. It is not fully inappropriate (D) only if there was a credible immediate physical threat, but for verbal anger, it establishes an unsafe precedent."
 },
 {
 subtype: "sjt-importance",
@@ -12142,7 +12142,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Request assistance from a nurse she is familiar with to sit with her, use verbal reassurance to orientate her, and check if her family can be contacted by phone to calm her.",
 answer: "A",
-explanation: "This response prioritizes patient safety and dignity by using non-pharmacological, familiar de-escalation techniques tailored to a patient with cognitive impairment facing acute distress."
+explanation: "This response prioritises patient safety and dignity by using non-pharmacological, familiar de-escalation techniques tailored to a patient with cognitive impairment facing acute distress."
 },
 {
 subtype: "sjt-importance",
@@ -12172,7 +12172,7 @@ stem: "You are an FY1 doctor in an outpatient clinic. A patient comes in for a r
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Acknowledge that the bruising looks uncomfortable, apologise for his negative experience, explain that bruising is a recognized complication of blood draws, and provide information on the formal complaints procedure (PALS) if he wishes to take it further.",
+question: "Acknowledge that the bruising looks uncomfortable, apologise for his negative experience, explain that bruising is a recognised complication of blood draws, and provide information on the formal complaints procedure (PALS) if he wishes to take it further.",
 answer: "A",
 explanation: "This response demonstrates professional communication by validating the discomfort, providing objective clinical education without blaming staff, and directing the patient to appropriate official channels for his grievance."
 },
@@ -12206,13 +12206,13 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Provide an empathetic space for her to cry, explain clearly that you will arrange an urgent referral to the Early Pregnancy Assessment Unit (EPAU) for a scan, and ensure she is moved to a private cubicle.",
 answer: "A",
-explanation: "This response combines emotional empathy with an organized, safe clinical plan. Moving her to a private space protects her dignity during an intensely distressing and personal emergency."
+explanation: "This response combines emotional empathy with an organised, safe clinical plan. Moving her to a private space protects her dignity during an intensely distressing and personal emergency."
 },
 {
 subtype: "sjt-importance",
 question: "The busy state of the Emergency Department and the absence of the registrar.",
 answer: "C",
-explanation: "While department operational pressure affects workflow, it is of minor importance regarding how you choose to behave towards this individual patient; compassion and private space must still be prioritized."
+explanation: "While department operational pressure affects workflow, it is of minor importance regarding how you choose to behave towards this individual patient; compassion and private space must still be prioritised."
 },
 {
 subtype: "sjt-appropriateness",
@@ -12254,7 +12254,7 @@ explanation: "This is a very important consideration that justifies enforcing vi
 },
 {
 subtype: "sjt-importance",
-question: "The emotional impact of severe stress and grief on the relative's behavior.",
+question: "The emotional impact of severe stress and grief on the relative's behaviour.",
 answer: "B",
 explanation: "It is important to understand that his aggression stems from acute emotional trauma rather than malice, which should guide staff to respond with firmness tempered by empathy rather than pure hostility."
 }
@@ -12364,7 +12364,7 @@ stem: "You are an FY1 doctor on a surgical ward. Mr Shah is sitting in the day r
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Apologise for the long delay, explain that you will personally call the pharmacy immediately to check on the progress of his prescription, and emphasize the safety importance of taking his medications.",
+question: "Apologise for the long delay, explain that you will personally call the pharmacy immediately to check on the progress of his prescription, and emphasise the safety importance of taking his medications.",
 answer: "A",
 explanation: "This response de-escalates the situation effectively by taking personal responsibility to investigate the delay, while reinforcing the critical clinical need for his medication to prevent post-op complications."
 },
@@ -12408,9 +12408,9 @@ explanation: "This is a very important professional consideration; prescribing a
 },
 {
 subtype: "sjt-appropriateness",
-question: "Agree to refer the child to the local pediatric assessment unit just to calm the mother down and conclude the consultation.",
+question: "Agree to refer the child to the local paediatric assessment unit just to calm the mother down and conclude the consultation.",
 answer: "C",
-explanation: "Unnecessarily referring a clinically stable child utilizes limited hospital resources inappropriately and may worsen the mother's anxiety by implying something is seriously wrong, though it guarantees medical surveillance."
+explanation: "Unnecessarily referring a clinically stable child utilises limited hospital resources inappropriately and may worsen the mother's anxiety by implying something is seriously wrong, though it guarantees medical surveillance."
 },
 {
 subtype: "sjt-importance",
@@ -12430,7 +12430,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Gently explain that having a chaperone is standard practice for the protection of both patient and doctor, and offer the option of rescheduling with a female doctor if she would prefer.",
 answer: "A",
-explanation: "This approach maintains professional boundaries and safety guidelines regarding intimate examinations while offering a supportive, patient-centered alternative that respects her comfort levels."
+explanation: "This approach maintains professional boundaries and safety guidelines regarding intimate examinations while offering a supportive, patient-centred alternative that respects her comfort levels."
 },
 {
 subtype: "sjt-appropriateness",
@@ -12462,7 +12462,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Apologise unreservedly for the error, check his current clinical status, arrange for the missing dose to be reviewed and administered safely, and report the incident on the hospital's electronic system (e.g. Datix).",
 answer: "A",
-explanation: "This response fulfills the duty of candour by admitting the mistake, addresses the immediate clinical impact on the patient, and utilizes official reporting systems to ensure institutional learning."
+explanation: "This response fulfils the duty of candour by admitting the mistake, addresses the immediate clinical impact on the patient, and utilises official reporting systems to ensure institutional learning."
 },
 {
 subtype: "sjt-appropriateness",
@@ -12559,7 +12559,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Write down a concise, structured paper handover using the SBAR framework for the unstable patients and deliver it verbally to the night team.",
 answer: "A",
-explanation: "This is highly appropriate as it utilizes a recognized communication framework to ensure continuity of care and patient safety during a system failure. Verbal communication combined with a physical note ensures key details are not lost."
+explanation: "This is highly appropriate as it utilises a recognised communication framework to ensure continuity of care and patient safety during a system failure. Verbal communication combined with a physical note ensures key details are not lost."
 },
 {
 subtype: "sjt-appropriateness",
@@ -12569,7 +12569,7 @@ explanation: "This is highly inappropriate and unsafe because waiting four hours
 },
 {
 subtype: "sjt-importance",
-question: "The risk of outstanding tasks being missed by the night team due to the lack of a centralized digital list.",
+question: "The risk of outstanding tasks being missed by the night team due to the lack of a centralised digital list.",
 answer: "A",
 explanation: "This is a paramount consideration because the primary purpose of a handover is to prevent clinical tasks from slipping through the cracks. Identifying this risk allows the doctor to tailor their verbal handover to focus on high-priority actions."
 },
@@ -12591,7 +12591,7 @@ questions: [
 subtype: "sjt-importance",
 question: "The lack of specific clinical criteria or parameters provided in the initial verbal handover.",
 answer: "A",
-explanation: "This is a critical factor because vague handovers prevent the cross-cover doctor from knowing what signs of deterioration to look out for. Recognizing this deficiency highlights the need for immediate, comprehensive clinical reassessment."
+explanation: "This is a critical factor because vague handovers prevent the cross-cover doctor from knowing what signs of deterioration to look out for. Recognising this deficiency highlights the need for immediate, comprehensive clinical reassessment."
 },
 {
 subtype: "sjt-appropriateness",
@@ -12751,7 +12751,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Access the regional electronic lab repository to look up the patient's recent bloods and call the GP surgery immediately to request the missing clinical history.",
 answer: "A",
-explanation: "This is highly appropriate as it actively fills the critical information gaps in the handover. Utilizing available digital records and contacting the referrer ensures the outpatient consultation can proceed safely and effectively."
+explanation: "This is highly appropriate as it actively fills the critical information gaps in the handover. Utilising available digital records and contacting the referrer ensures the outpatient consultation can proceed safely and effectively."
 },
 {
 subtype: "sjt-importance",
@@ -12839,9 +12839,9 @@ explanation: "A colleague's personal preference for brevity does not override th
 },
 {
 id: "sjt-13-handover-pediatric-safeguarding-alert",
-title: "Missing Safeguarding Alert in Pediatric Handover",
+title: "Missing Safeguarding Alert in Paediatric Handover",
 setting: "ward",
-stem: "You are an FY1 doctor on a pediatric ward starting your day shift. During the morning handover, a colleague mentions a toddler admitted overnight for asthma. Your colleague leaves out any mention of social issues. However, while reading the computer records 30 minutes later, you notice a prominent, active 'Safeguarding Alert' on the child's profile, detailing ongoing investigations into non-accidental injury. The child's parents are currently at the bedside alone.",
+stem: "You are an FY1 doctor on a paediatric ward starting your day shift. During the morning handover, a colleague mentions a toddler admitted overnight for asthma. Your colleague leaves out any mention of social issues. However, while reading the computer records 30 minutes later, you notice a prominent, active 'Safeguarding Alert' on the child's profile, detailing ongoing investigations into non-accidental injury. The child's parents are currently at the bedside alone.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -12853,7 +12853,7 @@ explanation: "This is the most appropriate step. Safeguarding information is cri
 subtype: "sjt-importance",
 question: "The need to protect the child from potential immediate harm or unmonitored parental interactions if a safeguarding concern is active.",
 answer: "A",
-explanation: "This is of absolute importance. The primary duty of care in pediatrics includes ensuring child safety; a failure to hand over a safeguarding alert directly compromises the team's ability to protect the patient."
+explanation: "This is of absolute importance. The primary duty of care in paediatrics includes ensuring child safety; a failure to hand over a safeguarding alert directly compromises the team's ability to protect the patient."
 },
 {
 subtype: "sjt-appropriateness",
@@ -12879,7 +12879,7 @@ questions: [
 subtype: "sjt-importance",
 question: "The risk of an acute, life-threatening gastrointestinal hemorrhage developing rapidly in a patient with melaena.",
 answer: "A",
-explanation: "This is a critical factor. Structuring handovers by bed numbers rather than acuity can obscure severe pathology. Recognizing that melaena represents an active bleed highlights the need to re-prioritize this patient immediately."
+explanation: "This is a critical factor. Structuring handovers by bed numbers rather than acuity can obscure severe pathology. Recognising that melaena represents an active bleed highlights the need to re-prioritise this patient immediately."
 },
 {
 subtype: "sjt-appropriateness",
@@ -12891,7 +12891,7 @@ explanation: "This is highly appropriate. Proactively clarifying physiological s
 subtype: "sjt-appropriateness",
 question: "Accept the handover sequence exactly as presented and plan to see the patients strictly in the order of their bed numbers.",
 answer: "D",
-explanation: "This is very inappropriate. Blindly following an unprioritized task list without applying clinical judgment or triaging by acuity violates core safety principles and can result in severe delays for unstable patients."
+explanation: "This is very inappropriate. Blindly following an unprioritized task list without applying clinical judgement or triaging by acuity violates core safety principles and can result in severe delays for unstable patients."
 },
 {
 subtype: "sjt-importance",
@@ -12943,7 +12943,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Spend extra time providing a highly structured, printed SBAR handover and briefly show the locum doctor how to access key patient alerts on the local computer system.",
 answer: "A",
-explanation: "This is highly appropriate. Recognizing the systemic risks associated with temporary or external staff and actively providing support protects patient safety and ensures continuity of care across the institution."
+explanation: "This is highly appropriate. Recognising the systemic risks associated with temporary or external staff and actively providing support protects patient safety and ensures continuity of care across the institution."
 },
 {
 subtype: "sjt-importance",
@@ -12987,11 +12987,11 @@ explanation: "This is a critical factor. Postpartum psychosis carries profound r
 subtype: "sjt-appropriateness",
 question: "File the discharge summary away and wait for the patient to book an appointment themselves if they feel their medication needs checking.",
 answer: "D",
-explanation: "This is highly inappropriate and passive. Expecting a patient recovering from a severe psychotic episode to navigate complex tracking systems and organize their own monitoring ignores clinical vulnerability and safety protocols."
+explanation: "This is highly inappropriate and passive. Expecting a patient recovering from a severe psychotic episode to navigate complex tracking systems and organise their own monitoring ignores clinical vulnerability and safety protocols."
 },
 {
 subtype: "sjt-importance",
-question: "The administrative convenience of assuming secondary care has organized everything perfectly without checking.",
+question: "The administrative convenience of assuming secondary care has organised everything perfectly without checking.",
 answer: "D",
 explanation: "Assuming that another tier of healthcare has managed a transition seamlessly when the written evidence is explicitly ambiguous is a dangerous practice that compromises safety for convenience."
 }
@@ -13007,7 +13007,7 @@ questions: [
 subtype: "sjt-importance",
 question: "The risk of 'diagnostic shadowing', where a psychiatric diagnosis causes clinicians to attribute physical symptoms to mental health issues incorrectly.",
 answer: "A",
-explanation: "This is a critical consideration. Handover language that dismisses physical signs due to psychiatric history is a profound safety hazard. Recognizing this bias is essential to prevent severe missed diagnoses like peritonitis."
+explanation: "This is a critical consideration. Handover language that dismisses physical signs due to psychiatric history is a profound safety hazard. Recognising this bias is essential to prevent severe missed diagnoses like peritonitis."
 },
 {
 subtype: "sjt-appropriateness",
@@ -13141,7 +13141,7 @@ explanation: "This is the most appropriate action. Verbal communication alone is
 subtype: "sjt-importance",
 question: "Your colleague's confidence in their own memory capacity.",
 answer: "D",
-explanation: "Personal confidence is subjective and does not replace standardized clinical systems designed to minimize cognitive errors. Standard handover structures exist precisely because human memory is fallible under pressure."
+explanation: "Personal confidence is subjective and does not replace standardised clinical systems designed to minimise cognitive errors. Standard handover structures exist precisely because human memory is fallible under pressure."
 },
 {
 subtype: "sjt-appropriateness",
@@ -13151,9 +13151,9 @@ explanation: "This is inappropriate because it introduces unnecessary risk into 
 },
 {
 subtype: "sjt-importance",
-question: "The necessity of maintaining standardized, professional communication methods within the healthcare team.",
+question: "The necessity of maintaining standardised, professional communication methods within the healthcare team.",
 answer: "A",
-explanation: "This is highly important. Standardized communication (like written, shared lists) is a proven mechanism for reducing medical errors, making adherence to these systems a key component of professional accountability."
+explanation: "This is highly important. Standardised communication (like written, shared lists) is a proven mechanism for reducing medical errors, making adherence to these systems a key component of professional accountability."
 }
 ]
 },
@@ -13206,7 +13206,7 @@ explanation: "This response inappropriately dismisses the pharmacist's expertise
 subtype: "sjt-appropriateness",
 question: "Thank the pharmacist for the check, look up the interaction details, and contact the registrar to double-check the safety of the combination.",
 answer: "A",
-explanation: "This is the safest and most appropriate action. It utilizes the multi-disciplinary team's expertise to prevent a medication error and escalates appropriately to clarify the senior clinical plan."
+explanation: "This is the safest and most appropriate action. It utilises the multi-disciplinary team's expertise to prevent a medication error and escalates appropriately to clarify the senior clinical plan."
 },
 {
 subtype: "sjt-importance",
@@ -13216,9 +13216,9 @@ explanation: "While efficient flow is important in a hospital, it is of minor im
 },
 {
 subtype: "sjt-importance",
-question: "The specialized expertise of the pharmacist regarding drug-drug interactions and patient safety.",
+question: "The specialised expertise of the pharmacist regarding drug-drug interactions and patient safety.",
 answer: "A",
-explanation: "Pharmacists possess vital specialist knowledge that protects patients from prescribing errors. Recognizing and valuing this expertise is critical for effective and safe teamwork."
+explanation: "Pharmacists possess vital specialist knowledge that protects patients from prescribing errors. Recognising and valuing this expertise is critical for effective and safe teamwork."
 }
 ]
 },
@@ -13232,7 +13232,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Defer to the midwife's extensive experience and alter the clinical note to state that the trace is reassuring.",
 answer: "D",
-explanation: "Falsifying clinical records or ignoring one's own clinical judgment on an important safety issue simply due to intimidation is highly dangerous and unprofessional."
+explanation: "Falsifying clinical records or ignoring one's own clinical judgement on an important safety issue simply due to intimidation is highly dangerous and unprofessional."
 },
 {
 subtype: "sjt-appropriateness",
@@ -13250,7 +13250,7 @@ explanation: "While experience should be respected, it does not override the obj
 subtype: "sjt-importance",
 question: "The need to obtain an objective, definitive assessment of a potentially compromised fetal heart rate trace.",
 answer: "A",
-explanation: "Ensuring patient safety is paramount. Identifying and resolving a potential clinical risk to the fetus is the most critical factor in this scenario."
+explanation: "Ensuring patient safety is paramount. Identifying and resolving a potential clinical risk to the foetus is the most critical factor in this scenario."
 }
 ]
 },
@@ -13290,7 +13290,7 @@ explanation: "Operational pressures and bed availability are important factors i
 id: "sjt-12-interprofessional-radiographer-request-rejection",
 title: "Confrontation with radiographer over rejected scan request",
 setting: "emergency department",
-stem: "Dr. Alvarez, an FY2 doctor in the Emergency Department, submits an urgent request for a CT brain scan for a patient with a head injury. The senior radiographer on duty rejects the electronic request, stating that the clinical indications provided do not fulfill the local NICE guideline criteria for an urgent scan. Dr. Alvarez feels frustrated, believing the radiographer is being obstructive during a hectic shift, and considers walking down to the imaging department to demand the scan.",
+stem: "Dr. Alvarez, an FY2 doctor in the Emergency Department, submits an urgent request for a CT brain scan for a patient with a head injury. The senior radiographer on duty rejects the electronic request, stating that the clinical indications provided do not fulfil the local NICE guideline criteria for an urgent scan. Dr. Alvarez feels frustrated, believing the radiographer is being obstructive during a hectic shift, and considers walking down to the imaging department to demand the scan.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -13302,7 +13302,7 @@ explanation: "Confronting a colleague aggressively and publicly undermines profe
 subtype: "sjt-appropriateness",
 question: "Call the radiographer to discuss the clinical nuances of the case, clarify any missing information, or seek senior radiology advice if a disagreement persists.",
 answer: "A",
-explanation: "This is a highly appropriate, collaborative response. It addresses the communication gap, respects the radiographer’s role as a gatekeeper of radiation safety, and utilizes professional escalation if required."
+explanation: "This is a highly appropriate, collaborative response. It addresses the communication gap, respects the radiographer’s role as a gatekeeper of radiation safety, and utilises professional escalation if required."
 },
 {
 subtype: "sjt-importance",
@@ -13322,13 +13322,13 @@ explanation: "Personal feelings of frustration or stress are entirely irrelevant
 id: "sjt-12-interprofessional-gp-nurse-wound-care-argument",
 title: "Disagreement with practice nurse regarding wound management",
 setting: "GP surgery",
-stem: "Dr. Finch, a GP Specialty Trainee (GPST1), is reviewing a patient with a chronic leg ulcer. Dr. Finch suggests changing the patient's dressing regimen to a new product he recently read about. The experienced practice nurse, who has managed this patient’s wound care for several months, strongly disagrees. She states that the proposed dressing will macerate the surrounding skin and that the current protocol is working well. Dr. Finch feels his clinical knowledge is being minimized.",
+stem: "Dr. Finch, a GP Specialty Trainee (GPST1), is reviewing a patient with a chronic leg ulcer. Dr. Finch suggests changing the patient's dressing regimen to a new product he recently read about. The experienced practice nurse, who has managed this patient’s wound care for several months, strongly disagrees. She states that the proposed dressing will macerate the surrounding skin and that the current protocol is working well. Dr. Finch feels his clinical knowledge is being minimised.",
 questions: [
 {
 subtype: "sjt-appropriateness",
 question: "Tell the patient that the doctor knows best and instruct the nurse to apply the new dressing regardless of her view.",
 answer: "D",
-explanation: "This is highly inappropriate. It involves the patient in an unprofessional power struggle, undermines a colleague, and ignores the specialized wound-care experience of the practice nurse."
+explanation: "This is highly inappropriate. It involves the patient in an unprofessional power struggle, undermines a colleague, and ignores the specialised wound-care experience of the practice nurse."
 },
 {
 subtype: "sjt-appropriateness",
@@ -13338,7 +13338,7 @@ explanation: "This is the most appropriate action, fostering mutual respect and 
 },
 {
 subtype: "sjt-importance",
-question: "The long-term continuity and specialized practical experience the practice nurse has with this specific patient's wound.",
+question: "The long-term continuity and specialised practical experience the practice nurse has with this specific patient's wound.",
 answer: "A",
 explanation: "In primary care, practice nurses often hold superior practical expertise in wound management. Their clinical insights are highly important for effective care."
 },
@@ -13378,7 +13378,7 @@ explanation: "Feedback regarding performance should always be confidential and p
 subtype: "sjt-importance",
 question: "The urgent need for the blood results before the consultant ward round begins.",
 answer: "B",
-explanation: "The urgency of clinical data is an important factor for patient management, but it never justifies abusive or unprofessional behavior toward colleagues."
+explanation: "The urgency of clinical data is an important factor for patient management, but it never justifies abusive or unprofessional behaviour towards colleagues."
 }
 ]
 },
@@ -13450,19 +13450,19 @@ explanation: "While the communication style was inappropriate and requires addre
 id: "sjt-12-interprofessional-dietitian-ng-tube-disagreement",
 title: "Disagreement with dietitian regarding nasogastric feeding regimen",
 setting: "ward",
-stem: "Dr. Chen, an FY1 doctor, is managing a stroke patient with dysphagia. The specialist dietitian has detailed a precise, gradual up-titration schedule for nasogastric tube (NGT) feeding. However, the medical registrar on the morning round tells Dr. Chen to increase the feed rate immediately to improve the patient's nutritional status rapidly. When Dr. Chen informs the dietitian, she becomes upset, stating that the medical team constantly ignores her specialized plans and risks refeeding syndrome.",
+stem: "Dr. Chen, an FY1 doctor, is managing a stroke patient with dysphagia. The specialist dietitian has detailed a precise, gradual up-titration schedule for nasogastric tube (NGT) feeding. However, the medical registrar on the morning round tells Dr. Chen to increase the feed rate immediately to improve the patient's nutritional status rapidly. When Dr. Chen informs the dietitian, she becomes upset, stating that the medical team constantly ignores her specialised plans and risks refeeding syndrome.",
 questions: [
 {
 subtype: "sjt-appropriateness",
 question: "Implement the registrar's plan immediately and tell the dietitian that medical decisions always override dietary plans.",
 answer: "D",
-explanation: "This response is highly inappropriate. It dismisses a valid warning about refeeding syndrome and displays a disrespectful attitude toward an allied health professional's expertise."
+explanation: "This response is highly inappropriate. It dismisses a valid warning about refeeding syndrome and displays a disrespectful attitude towards an allied health professional's expertise."
 },
 {
 subtype: "sjt-appropriateness",
 question: "Propose a brief discussion between the medical registrar, the dietitian, and yourself to review the feeding protocol safely.",
 answer: "A",
-explanation: "This is the best approach. It facilitates collaborative decision-making, respects the specialized knowledge of the dietitian, and addresses the clinical risk of refeeding syndrome safely."
+explanation: "This is the best approach. It facilitates collaborative decision-making, respects the specialised knowledge of the dietitian, and addresses the clinical risk of refeeding syndrome safely."
 },
 {
 subtype: "sjt-importance",
@@ -13482,7 +13482,7 @@ explanation: "Maintaining effective interprofessional relationships is crucial f
 id: "sjt-12-interprofessional-occupational-therapist-equipment-delay",
 title: "Frustration with occupational therapist over delayed equipment",
 setting: "ward",
-stem: "Dr. Jallow is an FY2 doctor attempting to coordinate the discharge of a patient who requires a specialized hospital bed at home. The Occupational Therapist (OT) explains that the delivery company has delayed the drop-off by forty-eight hours. Dr. Jallow, feeling the intense pressure of ward targets, accuses the OT of failing to organize the logistics early enough, causing a severe logjam on the medical ward.",
+stem: "Dr. Jallow is an FY2 doctor attempting to coordinate the discharge of a patient who requires a specialised hospital bed at home. The Occupational Therapist (OT) explains that the delivery company has delayed the drop-off by forty-eight hours. Dr. Jallow, feeling the intense pressure of ward targets, accuses the OT of failing to organise the logistics early enough, causing a severe logjam on the medical ward.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -13492,7 +13492,7 @@ explanation: "This is a very professional action. It corrects a misplaced emotio
 },
 {
 subtype: "sjt-appropriateness",
-question: "Escalate the OT to their department head to complain about their poor organization delaying discharges.",
+question: "Escalate the OT to their department head to complain about their poor organisation delaying discharges.",
 answer: "D",
 explanation: "Escalating a complaint over an external delivery delay is highly inappropriate and punitive. It damages professional relationships and misattributes blame."
 },
@@ -13500,7 +13500,7 @@ explanation: "Escalating a complaint over an external delivery delay is highly i
 subtype: "sjt-importance",
 question: "The external logistics delay which was completely beyond the personal control of the OT.",
 answer: "A",
-explanation: "Recognizing that a colleague is not personally responsible for external factors is highly important for maintaining fair and professional workplace relationships."
+explanation: "Recognising that a colleague is not personally responsible for external factors is highly important for maintaining fair and professional workplace relationships."
 },
 {
 subtype: "sjt-importance",
@@ -13532,7 +13532,7 @@ explanation: "This is an optimal, collaborative approach. It respects the midwif
 subtype: "sjt-importance",
 question: "The risk of causing uterine hyperstimulation and subsequent fetal hypoxia.",
 answer: "A",
-explanation: "Uterine hyperstimulation is a severe clinical complication that threatens the safety of the fetus. Avoiding this risk is of paramount importance."
+explanation: "Uterine hyperstimulation is a severe clinical complication that threatens the safety of the foetus. Avoiding this risk is of paramount importance."
 },
 {
 subtype: "sjt-importance",
@@ -13616,7 +13616,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Delay the discharge until tomorrow morning to allow the podiatrist to safely adjust the offloading boot.",
 answer: "A",
-explanation: "This is the most appropriate action. It prioritizes tissue viability and prevents a rapid deterioration of a diabetic foot ulcer, respecting the specialist's explicit advice."
+explanation: "This is the most appropriate action. It prioritises tissue viability and prevents a rapid deterioration of a diabetic foot ulcer, respecting the specialist's explicit advice."
 },
 {
 subtype: "sjt-appropriateness",
@@ -13626,7 +13626,7 @@ explanation: "This is inappropriate and unrealistic. Expecting a patient to rema
 },
 {
 subtype: "sjt-importance",
-question: "The specialized assessment of the podiatrist regarding immediate risks of foot ulcer deterioration.",
+question: "The specialised assessment of the podiatrist regarding immediate risks of foot ulcer deterioration.",
 answer: "A",
 explanation: "Diabetic foot complications carry a high risk of rapid progression to osteomyelitis or amputation. The podiatrist's expert input is highly important."
 },
@@ -13652,13 +13652,13 @@ explanation: "Hanging up on a safety query is highly unprofessional and dangerou
 },
 {
 subtype: "sjt-appropriateness",
-question: "Take a deep breath, apologise for the sharp tone, and carefully review the pediatric dosage guidelines together to confirm accuracy.",
+question: "Take a deep breath, apologise for the sharp tone, and carefully review the paediatric dosage guidelines together to confirm accuracy.",
 answer: "A",
-explanation: "This is an exemplary response. It corrects the unprofessional behavior immediately, validates the pharmacist’s critical safety check, and ensures the child’s safety is verified."
+explanation: "This is an exemplary response. It corrects the unprofessional behaviour immediately, validates the pharmacist’s critical safety check, and ensures the child’s safety is verified."
 },
 {
 subtype: "sjt-importance",
-question: "The absolute need to verify medication safety and correct dosing for a pediatric patient.",
+question: "The absolute need to verify medication safety and correct dosing for a paediatric patient.",
 answer: "A",
 explanation: "Children are highly vulnerable to prescribing errors and toxicity. Verifying dosage parameters is of paramount importance for clinical safety."
 },
@@ -13776,7 +13776,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Order the nurse to turn off the electronic monitors so you can focus completely on the biopsy procedure.",
 answer: "D",
-explanation: "Deactivating standardized safety monitoring during a sedated procedure is highly inappropriate and exposes the patient to an unmonitored risk of respiratory depression."
+explanation: "Deactivating standardised safety monitoring during a sedated procedure is highly inappropriate and exposes the patient to an unmonitored risk of respiratory depression."
 },
 {
 subtype: "sjt-appropriateness",
@@ -13923,7 +13923,7 @@ explanation: "This is highly inappropriate because a dismissive, authoritarian a
 subtype: "sjt-importance",
 question: "The potential risk of fetal distress if the CTG trace continues to deteriorate over the next 30 minutes.",
 answer: "A",
-explanation: "This is a critical factor of high importance because the primary clinical goal is to protect the health of the fetus, necessitating careful, continuous evaluation of all risk factors."
+explanation: "This is a critical factor of high importance because the primary clinical goal is to protect the health of the foetus, necessitating careful, continuous evaluation of all risk factors."
 }
 ]
 },
@@ -13931,7 +13931,7 @@ explanation: "This is a critical factor of high importance because the primary c
 id: "sjt-11-teamwork-dietitian-ng-tube",
 title: "Disrupting established multidisciplinary plans",
 setting: "ward",
-stem: "You are an FY1 doctor on a stroke rehabilitation ward. A specialist dietitian spent significant time evaluating a patient with severe dysphagia and documented a strict nutrition plan utilizing a nasogastric (NG) tube. Later that afternoon, the patient's family expresses concern to you that the tube looks uncomfortable. The patient is confused and cannot voice an opinion. Without consulting the dietitian, you decide to pause the NG feeds and try oral pureed food because you want to make the patient more comfortable.",
+stem: "You are an FY1 doctor on a stroke rehabilitation ward. A specialist dietitian spent significant time evaluating a patient with severe dysphagia and documented a strict nutrition plan utilising a nasogastric (NG) tube. Later that afternoon, the patient's family expresses concern to you that the tube looks uncomfortable. The patient is confused and cannot voice an opinion. Without consulting the dietitian, you decide to pause the NG feeds and try oral pureed food because you want to make the patient more comfortable.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -13963,7 +13963,7 @@ explanation: "This is of maximum importance because aspiration can lead to sever
 id: "sjt-11-teamwork-radiographer-contrast",
 title: "Handling disagreement over imaging protocols",
 setting: "outpatient clinic",
-stem: "You are a clinical fellow in oncology. You request an urgent contrast-enhanced CT scan for a patient. A senior radiographer calls you to cancel the scan, pointing out that the patient's latest renal function test from last week shows an estimated glomerular filtration rate (eGFR) of 28 mL/min/1.73m², which is below the safe threshold for contrast administration at their center. You believe the scan is urgently needed to check for spinal cord compression, which could cause permanent paralysis if missed.",
+stem: "You are a clinical fellow in oncology. You request an urgent contrast-enhanced CT scan for a patient. A senior radiographer calls you to cancel the scan, pointing out that the patient's latest renal function test from last week shows an estimated glomerular filtration rate (eGFR) of 28 mL/min/1.73m², which is below the safe threshold for contrast administration at their centre. You believe the scan is urgently needed to check for spinal cord compression, which could cause permanent paralysis if missed.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -14001,13 +14001,13 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Perform the observations yourself immediately to ensure patient safety, then speak calmly with the HCA later about how to manage uncompleted tasks.",
 answer: "A",
-explanation: "This is the most appropriate action because it prioritizes immediate patient safety while handling the interpersonal conflict constructively and privately after the clinical need is met."
+explanation: "This is the most appropriate action because it prioritises immediate patient safety while handling the interpersonal conflict constructively and privately after the clinical need is met."
 },
 {
 subtype: "sjt-importance",
 question: "The HCA's high workload and stress levels during that particular shift.",
 answer: "B",
-explanation: "This is important to consider to remain empathetic and understand the root cause of the breakdown in teamwork, though it does not excuse neglecting vital signs or rude behavior."
+explanation: "This is important to consider to remain empathetic and understand the root cause of the breakdown in teamwork, though it does not excuse neglecting vital signs or rude behaviour."
 },
 {
 subtype: "sjt-appropriateness",
@@ -14059,13 +14059,13 @@ explanation: "Avoiding discomfort is not important at all; professional disagree
 id: "sjt-11-teamwork-ward-clerk-notes",
 title: "Managing administrative friction in a crisis",
 setting: "ward",
-stem: "You are an FY1 doctor trying to prepare a discharge summary for a patient who needs to leave within the hour to catch a specialized medical transport vehicle. You need the physical medical notes folder, which the ward clerk is currently using to audit administrative files. When you ask for the folder, the ward clerk refuses to hand it over, stating that her audit has a strict deadline today and she cannot stop her work every time a doctor changes their mind about discharge timings.",
+stem: "You are an FY1 doctor trying to prepare a discharge summary for a patient who needs to leave within the hour to catch a specialised medical transport vehicle. You need the physical medical notes folder, which the ward clerk is currently using to audit administrative files. When you ask for the folder, the ward clerk refuses to hand it over, stating that her audit has a strict deadline today and she cannot stop her work every time a doctor changes their mind about discharge timings.",
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Explain the urgent situation regarding the patient's specialized transport and offer to return the files to her the moment you finish the summary.",
+question: "Explain the urgent situation regarding the patient's specialised transport and offer to return the files to her the moment you finish the summary.",
 answer: "A",
-explanation: "This is a very appropriate response as it clearly communicates the patient-centered reason for the urgency and offers a practical compromise that respects the clerk's workload."
+explanation: "This is a very appropriate response as it clearly communicates the patient-centred reason for the urgency and offers a practical compromise that respects the clerk's workload."
 },
 {
 subtype: "sjt-importance",
@@ -14077,13 +14077,13 @@ explanation: "This is important because administrative audits are necessary for 
 subtype: "sjt-appropriateness",
 question: "Snatch the medical folder from the ward clerk's desk, stating that patient care always overrides paperwork.",
 answer: "D",
-explanation: "This is highly inappropriate because aggressive physical actions and unprofessional behavior destroy professional relationships, breach workplace conduct rules, and worsen teamwork."
+explanation: "This is highly inappropriate because aggressive physical actions and unprofessional behaviour destroy professional relationships, breach workplace conduct rules, and worsen teamwork."
 },
 {
 subtype: "sjt-importance",
-question: "The risk of the patient missing a specialized medical transport vehicle if the summary is delayed.",
+question: "The risk of the patient missing a specialised medical transport vehicle if the summary is delayed.",
 answer: "A",
-explanation: "This is of maximum importance because missing specialized transport directly impacts the patient's welfare, continuity of care, and hospital discharge efficiency."
+explanation: "This is of maximum importance because missing specialised transport directly impacts the patient's welfare, continuity of care, and hospital discharge efficiency."
 }
 ]
 },
@@ -14115,7 +14115,7 @@ explanation: "This is very inappropriate and dangerous because encouraging an un
 subtype: "sjt-importance",
 question: "The autonomous wishes and rehabilitation potential of the resident.",
 answer: "A",
-explanation: "This is extremely important because healthcare should be patient-centered, and promoting mobility and independence is vital for the long-term health and dignity of elderly residents."
+explanation: "This is extremely important because healthcare should be patient-centred, and promoting mobility and independence is vital for the long-term health and dignity of elderly residents."
 }
 ]
 },
@@ -14161,7 +14161,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Thank the pharmacist for catching the omission, immediately review the records, and correct the discharge letter to include the medication.",
 answer: "A",
-explanation: "This is the most appropriate action. It prioritizes patient safety, accepts valuable input from an allied professional gracefully, and corrects an error before harm occurs."
+explanation: "This is the most appropriate action. It prioritises patient safety, accepts valuable input from an allied professional gracefully, and corrects an error before harm occurs."
 },
 {
 subtype: "sjt-importance",
@@ -14179,7 +14179,7 @@ explanation: "This is very inappropriate. It is dismissive, legally unsafe as ph
 subtype: "sjt-importance",
 question: "The serious medical risk of a breakthrough seizure if the anti-epileptic medication is missed.",
 answer: "A",
-explanation: "This clinical consequence is of maximum importance and must dictate your immediate behavior, overriding personal fatigue or professional defensiveness."
+explanation: "This clinical consequence is of maximum importance and must dictate your immediate behaviour, overriding personal fatigue or professional defensiveness."
 }
 ]
 },
@@ -14199,17 +14199,17 @@ explanation: "This is highly appropriate because an OT's assessment in the home 
 subtype: "sjt-importance",
 question: "The patient's aesthetic preference regarding avoiding 'ugly' home equipment modifications.",
 answer: "C",
-explanation: "While patient preferences and dignity matter, aesthetic objections to safety equipment are of minor importance compared to minimizing severe fall risks."
+explanation: "While patient preferences and dignity matter, aesthetic objections to safety equipment are of minor importance compared to minimising severe fall risks."
 },
 {
 subtype: "sjt-appropriateness",
 question: "Override the OT's report and sign off the patient as fully independent, documenting that you found their mobility adequate in clinic.",
 answer: "C",
-explanation: "This is inappropriate because it dismisses specialized, contextual allied health assessments based purely on a brief, low-stress clinic room interaction, increasing patient risk."
+explanation: "This is inappropriate because it dismisses specialised, contextual allied health assessments based purely on a brief, low-stress clinic room interaction, increasing patient risk."
 },
 {
 subtype: "sjt-importance",
-question: "The accuracy and specialized nature of an occupational therapy home-environment assessment.",
+question: "The accuracy and specialised nature of an occupational therapy home-environment assessment.",
 answer: "A",
 explanation: "This is very important because OTs are specifically trained to evaluate practical functional capacity in a patient's unique living space, which often reveals hidden dangers."
 }
@@ -14225,7 +14225,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Clearly reiterate the signs of potential sepsis, state that a 45-minute delay is clinically unacceptable, and inform them you will contact the consultant if they cannot attend immediately.",
 answer: "A",
-explanation: "This is a very appropriate and necessary escalation action. It firmly advocates for patient safety, uses objective clinical risks, and utilizes the professional hierarchy appropriately."
+explanation: "This is a very appropriate and necessary escalation action. It firmly advocates for patient safety, uses objective clinical risks, and utilises the professional hierarchy appropriately."
 },
 {
 subtype: "sjt-importance",
@@ -14257,7 +14257,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Politely inform the nurse that you are currently assisting a registrar with an aseptic procedure, and ask if she can perform the cannulation since she is certified.",
 answer: "A",
-explanation: "This is highly appropriate as it communicates your current critical task clearly, utilizes the nurse's verified skill set, and promotes efficient division of labor."
+explanation: "This is highly appropriate as it communicates your current critical task clearly, utilises the nurse's verified skill set, and promotes efficient division of labor."
 },
 {
 subtype: "sjt-importance",
@@ -14357,9 +14357,9 @@ explanation: "This is highly appropriate. It shares vital, newly discovered clin
 },
 {
 subtype: "sjt-importance",
-question: "The psychiatric liaison nurse's specialized expertise in performing mental health risk assessments.",
+question: "The psychiatric liaison nurse's specialised expertise in performing mental health risk assessments.",
 answer: "B",
-explanation: "The nurse's specialized expertise is important and should be respected, but it must be combined with all available factual collateral information to be accurate."
+explanation: "The nurse's specialised expertise is important and should be respected, but it must be combined with all available factual collateral information to be accurate."
 },
 {
 subtype: "sjt-appropriateness",
@@ -14377,7 +14377,7 @@ explanation: "This is a critical factor of the highest importance because access
 },
 {
 id: "sjt-11-teamwork-speech-language-therapist",
-title: "Respecting specialized safety feeding plans",
+title: "Respecting specialised safety feeding plans",
 setting: "care home",
 stem: "You are a newly qualified staff nurse at a care home. A speech and language therapist (SLT) has placed a strict directive in a resident's care plan stating they must only receive thickened fluids and pureed food due to an extreme choking risk. During lunchtime, a senior health care assistant tries to feed the resident normal soup and crackers, telling you, 'He hates the pureed stuff, and a little bit of normal food makes him happy. I've been doing this for years.'",
 questions: [
@@ -14385,7 +14385,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Intervene immediately to stop the healthcare assistant, remind them of the strict SLT guidance, and explain the acute risk of choking or silent aspiration.",
 answer: "A",
-explanation: "This is highly appropriate because it steps in immediately to prevent acute clinical harm and upholds a specialized multi-professional safety mandate."
+explanation: "This is highly appropriate because it steps in immediately to prevent acute clinical harm and upholds a specialised multi-professional safety mandate."
 },
 {
 subtype: "sjt-importance",
@@ -14417,7 +14417,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Acknowledge the pharmacist's point, review the hospital's pre-procedure protocol together, and discuss the case with the registrar to clarify the intention.",
 answer: "A",
-explanation: "This is highly appropriate. It utilizes the pharmacist's specialized safety check, consults established safety protocols, and loops in the senior prescriber to resolve the ambiguity."
+explanation: "This is highly appropriate. It utilises the pharmacist's specialised safety check, consults established safety protocols, and loops in the senior prescriber to resolve the ambiguity."
 },
 {
 subtype: "sjt-importance",
@@ -14456,13 +14456,13 @@ explanation: "De-escalating the situation by moving to a private area maintains 
 subtype: "sjt-importance",
 question: "The fact that Nurse Reynolds spoke sharply to you in front of other healthcare staff on the ward.",
 answer: "C",
-explanation: "While unprofessional behavior is regrettable, immediate focus must remain on resolving the clinical disagreement and ensuring patient safety. Professional etiquette can be addressed later, making this factor of minor importance during an acute situation."
+explanation: "While unprofessional behaviour is regrettable, immediate focus must remain on resolving the clinical disagreement and ensuring patient safety. Professional etiquette can be addressed later, making this factor of minor importance during an acute situation."
 },
 {
 subtype: "sjt-appropriateness",
 question: "Confront Nurse Reynolds immediately in front of the team, stating that your clinical assessment as a doctor takes precedence over her opinion.",
 answer: "D",
-explanation: "Publicly arguing and asserting professional hierarchy is highly inappropriate as it damages team working relations and disrupts the clinical environment. It prioritizes personal ego over patient care and constructive communication."
+explanation: "Publicly arguing and asserting professional hierarchy is highly inappropriate as it damages team working relations and disrupts the clinical environment. It prioritises personal ego over patient care and constructive communication."
 },
 {
 subtype: "sjt-importance",
@@ -14474,7 +14474,7 @@ explanation: "This is very important because nursing staff observe patients cont
 },
 {
 id: "sjt-12-conflict-registrar-surgical-theatre",
-title: "Undermining behavior from a surgical registrar",
+title: "Undermining behaviour from a surgical registrar",
 setting: "operating theatre",
 stem: "You are an FY1 doctor assisting a surgical registrar in the operating theatre. During a complex procedure, you make a minor technical error while holding the surgical retractor. The registrar sighs loudly and says, 'A first-year medical student could do a better job than this. Why are FY1s so useless these days?' The scrub nurse and anaesthetist both look uncomfortable but remain silent. You feel humiliated and deeply anxious about continuing to assist with the remainder of the operation.",
 questions: [
@@ -14514,7 +14514,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Thank the pharmacist for catching the mistake, confirm you will issue an amended prescription immediately, and update the patient's record.",
 answer: "A",
-explanation: "This is the most appropriate response as it prioritizes patient safety and shows professional humility. It fosters a good working relationship with pharmacy colleagues who act as an essential safety net."
+explanation: "This is the most appropriate response as it prioritises patient safety and shows professional humility. It fosters a good working relationship with pharmacy colleagues who act as an essential safety net."
 },
 {
 subtype: "sjt-importance",
@@ -14556,7 +14556,7 @@ explanation: "While maintaining confidentiality and avoiding unnecessary gossip 
 },
 {
 subtype: "sjt-appropriateness",
-question: "Ignore the smell and behavior, reasoning that it is not your place as a junior doctor to question the physical fitness of a senior colleague.",
+question: "Ignore the smell and behaviour, reasoning that it is not your place as a junior doctor to question the physical fitness of a senior colleague.",
 answer: "D",
 explanation: "Ignoring clear signs of impairment in a colleague performing procedures is dangerous and violates the GMC requirement to protect patients from risk. Every doctor has a duty to act if they believe safety is compromised."
 },
@@ -14610,7 +14610,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Remain professional and decline to join in with the laughter, changing the conversation back to the patient's clinical management plan.",
 answer: "A",
-explanation: "This is an effective and professional way for a student to handle the situation in the moment, signaling non-participation in unprofessional behavior without creating a confrontational scene with a supervisor."
+explanation: "This is an effective and professional way for a student to handle the situation in the moment, signaling non-participation in unprofessional behaviour without creating a confrontational scene with a supervisor."
 },
 {
 subtype: "sjt-importance",
@@ -14622,13 +14622,13 @@ explanation: "This is very important as comments overheard by patients or relati
 subtype: "sjt-appropriateness",
 question: "Laugh along with the consultant to maintain a good impression and ensure you receive a positive feedback report for your placement.",
 answer: "D",
-explanation: "Participating in derogatory behavior directed at a vulnerable patient is a breach of professionalism and empathy. Prioritizing personal gain or feedback scores over professional values is unacceptable."
+explanation: "Participating in derogatory behaviour directed at a vulnerable patient is a breach of professionalism and empathy. Prioritising personal gain or feedback scores over professional values is unacceptable."
 },
 {
 subtype: "sjt-importance",
 question: "Whether the consultant has a history of making similar jokes about other patients.",
 answer: "B",
-explanation: "This is important because a pattern of behavior indicates a wider cultural or behavioral issue that might need to be raised formally with the medical school or clinical lead, rather than an isolated lapse in judgment."
+explanation: "This is important because a pattern of behaviour indicates a wider cultural or behavioural issue that might need to be raised formally with the medical school or clinical lead, rather than an isolated lapse in judgement."
 }
 ]
 },
@@ -14642,7 +14642,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Explain your specific physiological concerns regarding the patient's cardiac history and suggest consulting the obstetrics registrar together.",
 answer: "A",
-explanation: "This response is highly appropriate as it focuses objectively on patient safety and clinical justification while utilizing escalation to a senior colleague to resolve a clinical deadlock constructively."
+explanation: "This response is highly appropriate as it focuses objectively on patient safety and clinical justification while utilising escalation to a senior colleague to resolve a clinical deadlock constructively."
 },
 {
 subtype: "sjt-importance",
@@ -14698,13 +14698,13 @@ explanation: "While your physical and mental well-being is important, personal f
 },
 {
 id: "sjt-12-conflict-ward-clerk-notes-organization",
-title: "Dispute over medical records organization",
+title: "Dispute over medical records organisation",
 setting: "ward",
 stem: "You are an FY1 doctor urgently trying to find a patient's historical medical paper notes to check a past operative report. The ward clerk is currently filing documents into several charts and looks busy. When you ask where the specific notes are, she snaps that she is sick of doctors misplacing files and tells you to wait until she finishes her filing in an hour. You need the information within the next fifteen minutes to prepare for a consultant review.",
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Apologize for interrupting her, explain the clinical urgency regarding the upcoming consultant review, and ask if she could point you toward the correct trolley so you can find it yourself.",
+question: "Apologize for interrupting her, explain the clinical urgency regarding the upcoming consultant review, and ask if she could point you towards the correct trolley so you can find it yourself.",
 answer: "A",
 explanation: "This response acknowledges her workload, de-escalates her frustration, communicates the objective clinical need, and proposes a collaborative solution that does not add to her tasks."
 },
@@ -14712,7 +14712,7 @@ explanation: "This response acknowledges her workload, de-escalates her frustrat
 subtype: "sjt-importance",
 question: "The ward clerk's frustration regarding past instances of doctors misplacing notes.",
 answer: "B",
-explanation: "This is important context because it explains her defensive behavior and highlights systemic issues in note-keeping that affect administrative staff, allowing you to approach her with empathy."
+explanation: "This is important context because it explains her defensive behaviour and highlights systemic issues in note-keeping that affect administrative staff, allowing you to approach her with empathy."
 },
 {
 subtype: "sjt-appropriateness",
@@ -14738,7 +14738,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Advise the patient to wait for assistance as per the physiotherapist's assessment, and contact the physiotherapist to discuss if a re-review is appropriate.",
 answer: "A",
-explanation: "This demonstrates excellent interprofessional teamwork and respect for specialist assessments. It prioritizes patient safety by preventing falls while opening a dialogue for reassessment."
+explanation: "This demonstrates excellent interprofessional teamwork and respect for specialist assessments. It prioritises patient safety by preventing falls while opening a dialogue for reassessment."
 },
 {
 subtype: "sjt-importance",
@@ -14754,7 +14754,7 @@ explanation: "Overriding a specialist allied health professional's safety assess
 },
 {
 subtype: "sjt-importance",
-question: "The specialized clinical expertise of the physiotherapist in conducting mobility and balance assessments.",
+question: "The specialised clinical expertise of the physiotherapist in conducting mobility and balance assessments.",
 answer: "A",
 explanation: "This is very important because physiotherapists possess specific training in evaluating gait, balance, and fall risks that exceeds general medical training, making their documented assessments highly authoritative in this context."
 }
@@ -14768,7 +14768,7 @@ stem: "You are an FY1 doctor caring for a stroke patient with persistent dysphag
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Organize a brief multidisciplinary meeting with both the dietitian and the SLT to discuss their findings and agree on a unified consensus plan.",
+question: "Organise a brief multidisciplinary meeting with both the dietitian and the SLT to discuss their findings and agree on a unified consensus plan.",
 answer: "A",
 explanation: "Bringing conflicting parties together to reach a consensus is the most professional and effective way to resolve contradictory specialist advice, ensuring clear communication and a safe, unified plan for the patient."
 },
@@ -14904,13 +14904,13 @@ explanation: "This is highly appropriate as it maintains empathy for a colleague
 subtype: "sjt-importance",
 question: "The fact that the patient was reportedly rude to the phlebotomist previously.",
 answer: "B",
-explanation: "This is important because staff have a right to work without facing abuse, and repetitive behavioral issues may need management or a specific approach to ensure staff safety and dignity."
+explanation: "This is important because staff have a right to work without facing abuse, and repetitive behavioural issues may need management or a specific approach to ensure staff safety and dignity."
 },
 {
 subtype: "sjt-appropriateness",
 question: "Order the phlebotomist to go back and try again, stating that they are paid to bleed patients and cannot refuse their assigned duties.",
 answer: "D",
-explanation: "Adopting an authoritarian and dismissive tone toward an allied colleague is highly inappropriate. It destroys teamwork and ignores a reported issue regarding patient behavior and technical difficulty."
+explanation: "Adopting an authoritarian and dismissive tone towards an allied colleague is highly inappropriate. It destroys teamwork and ignores a reported issue regarding patient behaviour and technical difficulty."
 },
 {
 subtype: "sjt-importance",
@@ -14930,7 +14930,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Speak to your university placement tutor or undergraduate medical education coordinator to report the lack of engagement and seek a reassignment or intervention.",
 answer: "A",
-explanation: "Escalating to the university or education center is highly appropriate because they are responsible for quality-assuring placements and can advocate for the student when clinical teams fail to teach."
+explanation: "Escalating to the university or education centre is highly appropriate because they are responsible for quality-assuring placements and can advocate for the student when clinical teams fail to teach."
 },
 {
 subtype: "sjt-importance",
@@ -15453,9 +15453,9 @@ explanation: "This is very important. In legal reviews or complex clinical situa
 },
 {
 subtype: "sjt-appropriateness",
-question: "Continue writing in the spaces within the nurse's entry, as long as the handwriting is in a different colored ink to distinguish the authors.",
+question: "Continue writing in the spaces within the nurse's entry, as long as the handwriting is in a different coloured ink to distinguish the authors.",
 answer: "C",
-explanation: "This is inappropriate because ink color does not sufficiently mitigate the confusion caused by mixing two different clinical accounts within a single block of text, compromising document integrity."
+explanation: "This is inappropriate because ink colour does not sufficiently mitigate the confusion caused by mixing two different clinical accounts within a single block of text, compromising document integrity."
 },
 {
 subtype: "sjt-importance",
@@ -15525,7 +15525,7 @@ explanation: "This is inappropriate. While documentation must be honest, it must
 subtype: "sjt-importance",
 question: "The pressure from management to clear hospital beds quickly.",
 answer: "C",
-explanation: "This is of minor importance. Operational pressures exist, but they are a secondary administrative factor that can never override clinical judgment or the duty to ensure an individual patient is safe to leave."
+explanation: "This is of minor importance. Operational pressures exist, but they are a secondary administrative factor that can never override clinical judgement or the duty to ensure an individual patient is safe to leave."
 }
 ]
 },
@@ -15711,7 +15711,7 @@ explanation: "This is very important. Overlooking a documented finding of a susp
 subtype: "sjt-appropriateness",
 question: "Follow the verbal handover advice and take no action, assuming the day team spoke to the radiologist directly and had better context.",
 answer: "D",
-explanation: "This is very inappropriate. Verbal communications are prone to error and misunderstandings. Ignoring a formal, written specialist report in favor of unverified hearsay is a major failure of safe practice."
+explanation: "This is very inappropriate. Verbal communications are prone to error and misunderstandings. Ignoring a formal, written specialist report in favour of unverified hearsay is a major failure of safe practice."
 },
 {
 subtype: "sjt-importance",
@@ -15750,7 +15750,7 @@ explanation: "This is very inappropriate because it internalises discrimination 
 subtype: "sjt-importance",
 question: "The potential impact of Dr Jones's rapid pace on Amara's learning opportunities and sense of belonging within the medical team.",
 answer: "A",
-explanation: "This is a critical consideration. Ensuring that all students have equitable access to learning and are treated with dignity and respect is a core tenet of inclusive education and professional behavior."
+explanation: "This is a critical consideration. Ensuring that all students have equitable access to learning and are treated with dignity and respect is a core tenet of inclusive education and professional behaviour."
 }
 ]
 },
@@ -15782,7 +15782,7 @@ explanation: "This is highly important. Dignified and respectful communication i
 subtype: "sjt-importance",
 question: "Whether the nurse's actions were intentional or an accidental oversight due to outdated information in the paper records.",
 answer: "B",
-explanation: "This is important for deciding how to address the issue with the nurse later (e.g., training versus disciplinary action), but it does not change the immediate need to support the patient and correct the behavior."
+explanation: "This is important for deciding how to address the issue with the nurse later (e.g., training versus disciplinary action), but it does not change the immediate need to support the patient and correct the behaviour."
 }
 ]
 },
@@ -15800,7 +15800,7 @@ explanation: "This is highly inappropriate. Family members should not be used fo
 },
 {
 subtype: "sjt-appropriateness",
-question: "Delay the procedure slightly to utilize the official telephone translation service to ensure Mrs Begum fully understands the risks and benefits herself.",
+question: "Delay the procedure slightly to utilise the official telephone translation service to ensure Mrs Begum fully understands the risks and benefits herself.",
 answer: "A",
 explanation: "This is the most appropriate action. Using a certified professional interpreter ensures valid informed consent and protects the patient's autonomy, which outweighs a minor non-critical scheduling delay."
 },
@@ -15834,19 +15834,19 @@ explanation: "This is highly appropriate. It sets a firm professional boundary a
 subtype: "sjt-appropriateness",
 question: "Immediately swap Tariq for a white medical student to avoid escalating the patient's anger and keep the department running smoothly.",
 answer: "D",
-explanation: "This is very inappropriate. Accommodating overt racism undermines staff dignity, validates discriminatory behavior, and fails in the duty of care and protection owed to the medical student."
+explanation: "This is very inappropriate. Accommodating overt racism undermines staff dignity, validates discriminatory behaviour, and fails in the duty of care and protection owed to the medical student."
 },
 {
 subtype: "sjt-importance",
 question: "The need to protect medical students and staff from racial harassment and maintain a safe, supportive working environment.",
 answer: "A",
-explanation: "This is of paramount importance. Organizations have a legal and moral duty to protect their workforce from discrimination and abuse, which takes precedence over indulging prejudiced patient preferences."
+explanation: "This is of paramount importance. Organisations have a legal and moral duty to protect their workforce from discrimination and abuse, which takes precedence over indulging prejudiced patient preferences."
 },
 {
 subtype: "sjt-importance",
 question: "Whether the patient's underlying acute medical condition could be contributing to altered mental state or agitation.",
 answer: "B",
-explanation: "This is important because clinical context matters; if a patient has delirium or dementia, their behavior requires a different clinical management strategy compared to a fully capacitous patient expressing prejudice."
+explanation: "This is important because clinical context matters; if a patient has delirium or dementia, their behaviour requires a different clinical management strategy compared to a fully capacitous patient expressing prejudice."
 }
 ]
 },
@@ -15892,7 +15892,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "The supervisor reprimands the registrar for the comment and schedules a meeting with Chloe to discuss how to implement her requested adjustments effectively.",
 answer: "A",
-explanation: "This is highly appropriate. It addresses the unprofessional behavior immediately and takes active steps to provide reasonable adjustments for a neurodivergent colleague, which enhances safety and inclusivity."
+explanation: "This is highly appropriate. It addresses the unprofessional behaviour immediately and takes active steps to provide reasonable adjustments for a neurodivergent colleague, which enhances safety and inclusivity."
 },
 {
 subtype: "sjt-appropriateness",
@@ -16006,7 +16006,7 @@ explanation: "An individual staff member's personal or outdated definitions of f
 subtype: "sjt-importance",
 question: "The patient's prior designation of Sarah as her next-of-kin and primary support person.",
 answer: "A",
-explanation: "This is of fundamental importance. Honoring the patient's wishes and identifying her chosen next-of-kin is central to patient-centered, respectful, and lawful care."
+explanation: "This is of fundamental importance. Honouring the patient's wishes and identifying her chosen next-of-kin is central to patient-centred, respectful, and lawful care."
 }
 ]
 },
@@ -16026,7 +16026,7 @@ explanation: "This is highly appropriate. When a local supervisor fails to respe
 subtype: "sjt-appropriateness",
 question: "The supervisor ignores the occupational health report and schedules Dr Green for standard shifts regardless, to ensure fairness to other trainees.",
 answer: "D",
-explanation: "This is very inappropriate and illegal. Disregarding occupational health adjustments for pregnancy breaches safety laws, puts the trainee and fetus at risk, and constitutes pregnancy discrimination."
+explanation: "This is very inappropriate and illegal. Disregarding occupational health adjustments for pregnancy breaches safety laws, puts the trainee and foetus at risk, and constitutes pregnancy discrimination."
 },
 {
 subtype: "sjt-importance",
@@ -16056,7 +16056,7 @@ explanation: "This is highly appropriate. Weight bias that leads to diagnostic o
 },
 {
 subtype: "sjt-appropriateness",
-question: "The GP justifies his action by stating that weight loss is an effective treatment for general breathlessness and should always be prioritized.",
+question: "The GP justifies his action by stating that weight loss is an effective treatment for general breathlessness and should always be prioritised.",
 answer: "D",
 explanation: "This is very inappropriate. Using weight to dismiss acute, severe respiratory symptoms without an examination is dangerous practice that breaches fundamental diagnostic standards."
 },
@@ -16090,7 +16090,7 @@ explanation: "This is inappropriate. BSL has a completely different grammar from
 subtype: "sjt-appropriateness",
 question: "The GP apologises for the administrative oversight, contacts a remote video BSL interpreting service immediately, or reschedules the appointment for later that day with a live interpreter.",
 answer: "A",
-explanation: "This is the most appropriate response. It utilizes modern digital accessibility options or proper rescheduling to ensure the patient receives information in his native language, upholding equality standards."
+explanation: "This is the most appropriate response. It utilises modern digital accessibility options or proper rescheduling to ensure the patient receives information in his native language, upholding equality standards."
 },
 {
 subtype: "sjt-importance",
@@ -16142,7 +16142,7 @@ explanation: "This is not important at all. Individual irrational fears or preju
 id: "sjt-26-equality-mental-health-diagnostic-overshadowing",
 title: "Preventing discrimination based on mental health history",
 setting: "emergency department",
-stem: "A 22-year-old woman with a documented history of Borderline Personality Disorder (BPD) presents to the emergency department with severe, localized abdominal pain and tachycardia. The triage doctor glances at her notes and tells the team, 'This is just her usual personality-disorder-related attention-seeking behavior; put her in the quiet room to calm down.' No physical examination or blood tests are performed.",
+stem: "A 22-year-old woman with a documented history of Borderline Personality Disorder (BPD) presents to the emergency department with severe, localised abdominal pain and tachycardia. The triage doctor glances at her notes and tells the team, 'This is just her usual personality-disorder-related attention-seeking behaviour; put her in the quiet room to calm down.' No physical examination or blood tests are performed.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -16184,7 +16184,7 @@ explanation: "This is highly appropriate. NHS primary care guidelines explicitly
 },
 {
 subtype: "sjt-appropriateness",
-question: "The practice manager supports the receptionist's decision to minimize the administrative burden of handling non-paying patients.",
+question: "The practice manager supports the receptionist's decision to minimise the administrative burden of handling non-paying patients.",
 answer: "D",
 explanation: "This is very inappropriate. It violates clear national healthcare access policies, denies essential care based on citizenship assumptions, and promotes systemic health inequalities."
 },
@@ -16192,7 +16192,7 @@ explanation: "This is very inappropriate. It violates clear national healthcare 
 subtype: "sjt-importance",
 question: "The official NHS guidelines stating that lack of identification or proof of address is not a barrier to GP registration.",
 answer: "A",
-explanation: "This is highly important. Knowledge of and compliance with regulatory frameworks governing healthcare access ensures that marginalized groups are not unlawfully excluded from care."
+explanation: "This is highly important. Knowledge of and compliance with regulatory frameworks governing healthcare access ensures that marginalised groups are not unlawfully excluded from care."
 },
 {
 subtype: "sjt-importance",
@@ -16218,7 +16218,7 @@ explanation: "This is highly inappropriate. Performing irreversible, non-emergen
 subtype: "sjt-appropriateness",
 question: "The consultant meets with the parents to sensitively explain that there are no medical risks, provide psychological support, and advocate for delaying non-essential surgeries until the child can participate in the decision.",
 answer: "A",
-explanation: "This is the most appropriate response. It prioritizes the child's long-term autonomy and safety, while addressing the parents' anxiety with empathy, education, and specialist support structures."
+explanation: "This is the most appropriate response. It prioritises the child's long-term autonomy and safety, while addressing the parents' anxiety with empathy, education, and specialist support structures."
 },
 {
 subtype: "sjt-importance",
@@ -16256,7 +16256,7 @@ explanation: "This is very inappropriate. Abandoning a patient because they choo
 subtype: "sjt-importance",
 question: "The deep religious and personal significance that fasting during Ramadan holds for Mrs Malik.",
 answer: "A",
-explanation: "This is highly important. Recognizing what matters to the patient allows for shared decision-making, which is essential for maintaining therapeutic trust and safe care."
+explanation: "This is highly important. Recognising what matters to the patient allows for shared decision-making, which is essential for maintaining therapeutic trust and safe care."
 },
 {
 subtype: "sjt-importance",
@@ -16318,7 +16318,7 @@ explanation: "This is very inappropriate. It violates fundamental principles of 
 },
 {
 subtype: "sjt-importance",
-question: "The patronizing language ('grandad') used by the junior doctor toward an elderly patient.",
+question: "The patronizing language ('grandad') used by the junior doctor towards an elderly patient.",
 answer: "A",
 explanation: "This is highly important. Using infantilizing or disrespectful terms demeans patients, compromises professionalism, and breaches the GMC requirement to treat patients as individuals with respect."
 },
@@ -16334,13 +16334,13 @@ explanation: "Time-saving considerations can never justify dehumanizing a patien
 id: "sjt-26-equality-institutional-racism-reporting",
 title: "Addressing discriminatory remarks within the medical team",
 setting: "medical school",
-stem: "During a small-group seminar on health inequalities, a fellow medical student remarks, 'Certain ethnic minority groups just have poorer health because of their lifestyle choices and culture, it's not our job to fix their social problems.' Several students of color in the group look visibly uncomfortable and distressed by the generalization, but the seminar tutor does not intervene and moves quickly to the next slide.",
+stem: "During a small-group seminar on health inequalities, a fellow medical student remarks, 'Certain ethnic minority groups just have poorer health because of their lifestyle choices and culture, it's not our job to fix their social problems.' Several students of colour in the group look visibly uncomfortable and distressed by the generalization, but the seminar tutor does not intervene and moves quickly to the next slide.",
 questions: [
 {
 subtype: "sjt-appropriateness",
 question: "A student in the group politely challenges the statement during the seminar by citing evidence regarding systemic structural inequalities, racism, and socioeconomic barriers in healthcare.",
 answer: "A",
-explanation: "This is highly appropriate. Constructively challenging reductive, discriminatory generalizations in an academic setting promotes an inclusive environment and supports peers who feel marginalized."
+explanation: "This is highly appropriate. Constructively challenging reductive, discriminatory generalizations in an academic setting promotes an inclusive environment and supports peers who feel marginalised."
 },
 {
 subtype: "sjt-appropriateness",
@@ -16385,12 +16385,12 @@ explanation: "This is a very important factor to consider because it dictates ho
 subtype: "sjt-appropriateness",
 question: "Wait another 30 minutes to see if the intravenous fluid bolus you prescribed improves the patient's hemodynamic parameters before contacting any senior.",
 answer: "D",
-explanation: "This is a very inappropriate response because a patient in early shock who is not responding to initial fluid resuscitation requires prompt escalation to prevent further decline. Delaying senior involvement for 30 minutes exposes the patient to an unacceptable risk of tissue hypoperfusion and organ damage. Waiting passively fails to recognize the urgency of the clinical situation."
+explanation: "This is a very inappropriate response because a patient in early shock who is not responding to initial fluid resuscitation requires prompt escalation to prevent further decline. Delaying senior involvement for 30 minutes exposes the patient to an unacceptable risk of tissue hypoperfusion and organ damage. Waiting passively fails to recognise the urgency of the clinical situation."
 },
 {
 subtype: "sjt-importance",
 question: "The risk that escalating the issue might make the registrar think you are incapable of managing basic ward duties.",
-explanation: "This consideration is not important at all because personal professional pride or fear of judgment must never take precedence over patient safety. A deteriorating patient requires senior support, and a junior doctor must escalate within their competence limits. Worrying about personal perception in an acute situation is unprofessional and dangerous.",
+explanation: "This consideration is not important at all because personal professional pride or fear of judgement must never take precedence over patient safety. A deteriorating patient requires senior support, and a junior doctor must escalate within their competence limits. Worrying about personal perception in an acute situation is unprofessional and dangerous.",
 answer: "D"
 }
 ]
@@ -16411,7 +16411,7 @@ explanation: "This is a very appropriate action because a high NEWS2 score and s
 subtype: "sjt-appropriateness",
 question: "Ask the senior staff nurse to prescribe and administer the first dose of antibiotics while you finish the discharge summaries.",
 answer: "D",
-explanation: "This is a very inappropriate action because prescribing is a legal and professional responsibility that falls outside the independent scope of a standard staff nurse, and delegating it without clinical assessment is unsafe. An FY1 cannot ask a nurse to perform medical prescribing duties to prioritize administrative tasks. It compromises patient safety and violates professional boundaries."
+explanation: "This is a very inappropriate action because prescribing is a legal and professional responsibility that falls outside the independent scope of a standard staff nurse, and delegating it without clinical assessment is unsafe. An FY1 cannot ask a nurse to perform medical prescribing duties to prioritise administrative tasks. It compromises patient safety and violates professional boundaries."
 },
 {
 subtype: "sjt-importance",
@@ -16421,7 +16421,7 @@ explanation: "This factor is of minor importance when contrasted with an acute, 
 },
 {
 subtype: "sjt-importance",
-question: "The experience and clinical judgment of the senior staff nurse who raised the concern.",
+question: "The experience and clinical judgement of the senior staff nurse who raised the concern.",
 answer: "A",
 explanation: "This is a very important consideration because senior nursing staff have significant clinical experience, and a high NEWS2 score validated by their concern strongly indicates severe illness. Effective teamwork relies on respecting and acting upon safety concerns raised by multidisciplinary colleagues. Dismissing their input increases the risk of missing critical clinical deterioration."
 }
@@ -16449,7 +16449,7 @@ explanation: "This is a very inappropriate action because delaying the managemen
 subtype: "sjt-importance",
 question: "The fact that the medical registrar is visibly exhausted and under high stress.",
 answer: "B",
-explanation: "This is an important factor to consider because it explains the registrar's compromised judgment, reminding the FY1 that they must act as a safety check. However, it should not deter the FY1 from escalating the issue; rather, it highlights the need to be clear and firm about the clinical risk. Understanding a colleague's stress helps guide how to communicate effectively, but does not lessen the urgency."
+explanation: "This is an important factor to consider because it explains the registrar's compromised judgement, reminding the FY1 that they must act as a safety check. However, it should not deter the FY1 from escalating the issue; rather, it highlights the need to be clear and firm about the clinical risk. Understanding a colleague's stress helps guide how to communicate effectively, but does not lessen the urgency."
 },
 {
 subtype: "sjt-importance",
@@ -16475,7 +16475,7 @@ explanation: "This is a very appropriate course of action because it addresses t
 subtype: "sjt-appropriateness",
 question: "Follow the consultant's discharge plan because they are the senior clinician responsible for the shift, but document in the notes that it was their decision.",
 answer: "D",
-explanation: "This is a very inappropriate response because documenting an unsafe decision does not absolve a doctor of their duty to protect the patient from harm. Following instructions from an obviously impaired senior puts the patient at immediate risk of a missed myocardial infarction. Hierarchy must never be prioritized over basic patient safety."
+explanation: "This is a very inappropriate response because documenting an unsafe decision does not absolve a doctor of their duty to protect the patient from harm. Following instructions from an obviously impaired senior puts the patient at immediate risk of a missed myocardial infarction. Hierarchy must never be prioritised over basic patient safety."
 },
 {
 subtype: "sjt-importance",
@@ -16533,7 +16533,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Contact the patient immediately to arrange an urgent appointment, explain the situation honestly, and initiate the fast-track CT referral pathway.",
 answer: "A",
-explanation: "This is a very appropriate response because a delayed diagnosis of suspected lung cancer requires immediate corrective action to protect patient safety. Being open and transparent with the patient about the administrative oversight fulfills the duty of candour. Taking swift ownership of the clinical management minimises further harm from the delay."
+explanation: "This is a very appropriate response because a delayed diagnosis of suspected lung cancer requires immediate corrective action to protect patient safety. Being open and transparent with the patient about the administrative oversight fulfils the duty of candour. Taking swift ownership of the clinical management minimises further harm from the delay."
 },
 {
 subtype: "sjt-appropriateness",
@@ -16565,7 +16565,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Refuse to sign the discharge summary, perform a full clinical review of the patient, and call your registrar to discuss her new symptoms.",
 answer: "A",
-explanation: "This is a very appropriate action because the patient has developed new symptoms and physiological instability that contradict the consultant's conditional discharge plan. Junior doctors must prioritize patient clinical safety over administrative bed pressures. Checking the patient and escalating to a senior ensures that an unsafe discharge is prevented."
+explanation: "This is a very appropriate action because the patient has developed new symptoms and physiological instability that contradict the consultant's conditional discharge plan. Junior doctors must prioritise patient clinical safety over administrative bed pressures. Checking the patient and escalating to a senior ensures that an unsafe discharge is prevented."
 },
 {
 subtype: "sjt-appropriateness",
@@ -16603,13 +16603,13 @@ explanation: "This is a very appropriate response because local DKA guidelines a
 subtype: "sjt-appropriateness",
 question: "Follow the nurse's advice and reduce the insulin infusion rate below the protocol guideline to avoid a potential conflict on the shift.",
 answer: "D",
-explanation: "This is a very inappropriate response because deviating from an established medical protocol for a life-threatening condition like DKA solely to avoid interpersonal friction is unsafe. It compromises patient safety by prioritizing personal convenience and harmony over clinical standards. The junior doctor remains responsible for the prescription."
+explanation: "This is a very inappropriate response because deviating from an established medical protocol for a life-threatening condition like DKA solely to avoid interpersonal friction is unsafe. It compromises patient safety by prioritising personal convenience and harmony over clinical standards. The junior doctor remains responsible for the prescription."
 },
 {
 subtype: "sjt-importance",
 question: "The fact that the nurse has worked in the Emergency Department for ten years.",
 answer: "C",
-explanation: "This factor is of minor importance because clinical seniority or years of experience do not justify deviating from formal, evidence-based hospital protocols without clear medical indications. While nursing expertise is valuable, it cannot override standardized medical guidelines for DKA management. Safety protocols exist to ensure uniformity of care regardless of individual opinions."
+explanation: "This factor is of minor importance because clinical seniority or years of experience do not justify deviating from formal, evidence-based hospital protocols without clear medical indications. While nursing expertise is valuable, it cannot override standardised medical guidelines for DKA management. Safety protocols exist to ensure uniformity of care regardless of individual opinions."
 },
 {
 subtype: "sjt-importance",
@@ -16635,13 +16635,13 @@ explanation: "This is a very appropriate response because safeguarding a vulnera
 subtype: "sjt-appropriateness",
 question: "Accept the mother's explanation to avoid damaging the doctor-patient relationship, but schedule another appointment in two weeks to see if new bruises appear.",
 answer: "D",
-explanation: "This is a very inappropriate action because delaying a safeguarding investigation when an infant shows highly suspicious bruising places the child at immediate risk of further severe harm or death. Prioritizing rapport over a child's physical safety is a fundamental failure of professional duty. Safeguarding concerns require proactive escalation, not passive monitoring."
+explanation: "This is a very inappropriate action because delaying a safeguarding investigation when an infant shows highly suspicious bruising places the child at immediate risk of further severe harm or death. Prioritising rapport over a child's physical safety is a fundamental failure of professional duty. Safeguarding concerns require proactive escalation, not passive monitoring."
 },
 {
 subtype: "sjt-importance",
 question: "The biological plausibility of the mother's explanation given the child's developmental age.",
 answer: "A",
-explanation: "This is a very important factor because the mismatch between the mother's account (rolling over) and the infant's actual developmental capabilities (six weeks old) is a key clinical red flag for non-accidental injury. Recognizing this discrepancy provides the objective justification for escalating the case to safeguarding teams. It forms the basis of clinical suspicion."
+explanation: "This is a very important factor because the mismatch between the mother's account (rolling over) and the infant's actual developmental capabilities (six weeks old) is a key clinical red flag for non-accidental injury. Recognising this discrepancy provides the objective justification for escalating the case to safeguarding teams. It forms the basis of clinical suspicion."
 },
 {
 subtype: "sjt-importance",
@@ -16673,7 +16673,7 @@ explanation: "This is a very inappropriate response because you cannot accept a 
 subtype: "sjt-importance",
 question: "The presence of acute confusion and hallucinations suggesting a diagnosis of delirium.",
 answer: "A",
-explanation: "This is a very important consideration because delirium is a temporary, treatable cause of fluctuating cognitive impairment that heavily impacts a patient's capacity to make complex medical decisions. Recognizing this underlying condition justifies performing a formal capacity assessment and taking protective action. It alters the clinical approach from accepting a refusal to actively treating an illness."
+explanation: "This is a very important consideration because delirium is a temporary, treatable cause of fluctuating cognitive impairment that heavily impacts a patient's capacity to make complex medical decisions. Recognising this underlying condition justifies performing a formal capacity assessment and taking protective action. It alters the clinical approach from accepting a refusal to actively treating an illness."
 },
 {
 subtype: "sjt-importance",
@@ -16731,7 +16731,7 @@ explanation: "This is a very appropriate response because using a contaminated i
 subtype: "sjt-appropriateness",
 question: "Apologize for bringing it up and remain silent for the rest of the operation to preserve your working relationship with the registrar.",
 answer: "D",
-explanation: "This is a very inappropriate response because staying silent allows an unsterile procedure to continue, exposing the patient to a severe risk of post-operative sepsis or infection. Prioritizing personal comfort or relationship dynamics over preventing direct harm to a patient is a breach of professional ethics. Juniors are safety checkers on the team."
+explanation: "This is a very inappropriate response because staying silent allows an unsterile procedure to continue, exposing the patient to a severe risk of post-operative sepsis or infection. Prioritising personal comfort or relationship dynamics over preventing direct harm to a patient is a breach of professional ethics. Juniors are safety checkers on the team."
 },
 {
 subtype: "sjt-importance",
@@ -16743,7 +16743,7 @@ explanation: "This is a very important consideration because avoiding preventabl
 subtype: "sjt-importance",
 question: "The registrar's seniority and their claim that they have used this technique for years without incident.",
 answer: "D",
-explanation: "This consideration is not important at all because anecdotal practice or seniority cannot override absolute, evidence-based guidelines regarding surgical sterility. An unsterile instrument is contaminated regardless of who is wielding it or what their past experiences claim to be. Standardized safety rules apply equally to all ranks."
+explanation: "This consideration is not important at all because anecdotal practice or seniority cannot override absolute, evidence-based guidelines regarding surgical sterility. An unsterile instrument is contaminated regardless of who is wielding it or what their past experiences claim to be. Standardised safety rules apply equally to all ranks."
 }
 ]
 },
@@ -16763,7 +16763,7 @@ explanation: "This is a very appropriate response because it stops the immediate
 subtype: "sjt-appropriateness",
 question: "Leave the pump running as it is, and search the ward to find the specific nurse who programmed it so she can correct her own mistake.",
 answer: "D",
-explanation: "This is a very inappropriate response because walking away from an active, harmful medication overdose allows further injury to occur while the patient's blood pressure drops. Prioritizing professional protocol over halting an immediate poisoning or drug error is negligent. A doctor must intervene to stop harm as soon as it is detected."
+explanation: "This is a very inappropriate response because walking away from an active, harmful medication overdose allows further injury to occur while the patient's blood pressure drops. Prioritising professional protocol over halting an immediate poisoning or drug error is negligent. A doctor must intervene to stop harm as soon as it is detected."
 },
 {
 subtype: "sjt-importance",
@@ -16795,7 +16795,7 @@ explanation: "This is a very appropriate response because sending a vulnerable p
 subtype: "sjt-appropriateness",
 question: "Allow the discharge to proceed as scheduled to avoid delaying hospital throughput, but give the patient the phone number for social services to call when he gets home.",
 answer: "D",
-explanation: "This is a very inappropriate response because discharging a patient who cannot safely access their home environment due to missing mandatory mobility aids is unsafe. Shifting the burden of organizing basic safety equipment onto an unassisted, post-stroke patient at home is an abdication of medical responsibility. It prioritizes bed turnover over human safety."
+explanation: "This is a very inappropriate response because discharging a patient who cannot safely access their home environment due to missing mandatory mobility aids is unsafe. Shifting the burden of organising basic safety equipment onto an unassisted, post-stroke patient at home is an abdication of medical responsibility. It prioritises bed turnover over human safety."
 },
 {
 subtype: "sjt-importance",
@@ -16807,7 +16807,7 @@ explanation: "This is a very important factor because a mismatch between a patie
 subtype: "sjt-importance",
 question: "The fact that the discharge coordinator has already finalized all administrative booking tasks.",
 answer: "C",
-explanation: "This factor is of minor importance because administrative finalization is secondary to clinical and physical safety. While canceling completed bookings causes extra administrative work and impacts ward metrics, these inconveniences can never justify exposing a vulnerable patient to an unsafe environment. Paperwork can always be rewritten."
+explanation: "This factor is of minor importance because administrative finalization is secondary to clinical and physical safety. While cancelling completed bookings causes extra administrative work and impacts ward metrics, these inconveniences can never justify exposing a vulnerable patient to an unsafe environment. Paperwork can always be rewritten."
 }
 ]
 },
@@ -16821,7 +16821,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Encourage your colleague privately but firmly to report the incident immediately to Occupational Health, explaining the vital importance of early post-exposure prophylaxis.",
 answer: "A",
-explanation: "This is a very appropriate action because it addresses the colleague's health risk directly through peer support, emphasizing the medical necessity of timely treatment for Hepatitis C exposure. Encouraging professional compliance privately is a constructive first step. It respects the colleague while strongly advocating for the correct clinical safety protocol."
+explanation: "This is a very appropriate action because it addresses the colleague's health risk directly through peer support, emphasising the medical necessity of timely treatment for Hepatitis C exposure. Encouraging professional compliance privately is a constructive first step. It respects the colleague while strongly advocating for the correct clinical safety protocol."
 },
 {
 subtype: "sjt-appropriateness",
@@ -16865,7 +16865,7 @@ explanation: "This is a very important factor because a history of anaphylaxis i
 subtype: "sjt-appropriateness",
 question: "Instruct the nurse to give the medication anyway but stay by the bedside with an adrenaline autoinjector in case a reaction occurs, to avoid altering the primary team's plan.",
 answer: "D",
-explanation: "This is a very inappropriate and dangerous response. Giving a drug known to cause anaphylaxis deliberately is negligence and directly violates prescribing safety guidelines. Anticipating an emergency does not justify intentionally triggering it, and junior doctors must alter unsafe orders to preserve life. It is an extreme failure of safety judgment."
+explanation: "This is a very inappropriate and dangerous response. Giving a drug known to cause anaphylaxis deliberately is negligence and directly violates prescribing safety guidelines. Anticipating an emergency does not justify intentionally triggering it, and junior doctors must alter unsafe orders to preserve life. It is an extreme failure of safety judgement."
 },
 {
 subtype: "sjt-importance",
@@ -16885,7 +16885,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Review the patient's clinical signs immediately, and contact the hospital's palliative care team or the on-call medical registrar for advice on safely adjusting the analgesia.",
 answer: "A",
-explanation: "This is a very appropriate course of action because it addresses the patient's distressing pain promptly while operating safely within your limits of clinical competence by seeking expert guidance. Ensuring comfort is a core duty in end-of-life care. Escalating to specialized seniors guarantees safe and effective symptom management."
+explanation: "This is a very appropriate course of action because it addresses the patient's distressing pain promptly while operating safely within your limits of clinical competence by seeking expert guidance. Ensuring comfort is a core duty in end-of-life care. Escalating to specialised seniors guarantees safe and effective symptom management."
 },
 {
 subtype: "sjt-appropriateness",
@@ -16897,13 +16897,13 @@ explanation: "This is a very inappropriate response because leaving a terminal p
 subtype: "sjt-importance",
 question: "Your personal level of comfort and experience with complex palliative prescribing.",
 answer: "B",
-explanation: "This is an important consideration because recognizing your own clinical limitations is key to safe practice and prevents prescribing errors. It should not cause you to deny care, but rather serves as the reason why you must actively seek senior support. It dictates the need for safe escalation rather than independent action."
+explanation: "This is an important consideration because recognising your own clinical limitations is key to safe practice and prevents prescribing errors. It should not cause you to deny care, but rather serves as the reason why you must actively seek senior support. It dictates the need for safe escalation rather than independent action."
 },
 {
 subtype: "sjt-importance",
 question: "The risk of the patient developing an addiction to the opioid medication.",
 answer: "D",
-explanation: "This consideration is not important at all because the patient is on an established end-of-life pathway with terminal disease, where the sole clinical objective is maximizing comfort and relieving distress. Concerns about long-term opioid dependence are completely irrelevant in terminal, palliative care. Focusing on addiction in this context represents a fundamental misunderstanding of clinical priorities."
+explanation: "This consideration is not important at all because the patient is on an established end-of-life pathway with terminal disease, where the sole clinical objective is maximising comfort and relieving distress. Concerns about long-term opioid dependence are completely irrelevant in terminal, palliative care. Focusing on addiction in this context represents a fundamental misunderstanding of clinical priorities."
 }
 ]
 },
@@ -16955,13 +16955,13 @@ explanation: "This is a very appropriate response because the locum's poor techn
 subtype: "sjt-appropriateness",
 question: "Walk away and focus on your own patients, as intervening would challenge the authority of a senior registrar and disrupt department hierarchy.",
 answer: "D",
-explanation: "This is a very inappropriate action because ignoring an ongoing, dangerous clinical procedure that is causing harm violates a doctor's core obligation to protect patients. Hierarchical boundaries must never be prioritized over preventing active procedural trauma or severe infection risk. Passivity in the face of obvious incompetence makes you complicit in the harm."
+explanation: "This is a very inappropriate action because ignoring an ongoing, dangerous clinical procedure that is causing harm violates a doctor's core obligation to protect patients. Hierarchical boundaries must never be prioritised over preventing active procedural trauma or severe infection risk. Passivity in the face of obvious incompetence makes you complicit in the harm."
 },
 {
 subtype: "sjt-importance",
 question: "The active risk of procedural complications and infection to the trauma patient.",
 answer: "A",
-explanation: "This is a very important consideration because central line insertions carry significant risks, which are highly magnified by poor sterile technique and anatomical disorientation. Minimizing immediate procedural harm is the primary driver for intervening. It represents the urgent clinical rationale for interrupting the colleague."
+explanation: "This is a very important consideration because central line insertions carry significant risks, which are highly magnified by poor sterile technique and anatomical disorientation. Minimising immediate procedural harm is the primary driver for intervening. It represents the urgent clinical rationale for interrupting the colleague."
 },
 {
 subtype: "sjt-importance",
@@ -16975,7 +16975,7 @@ explanation: "This factor is of minor importance; unsafe practice must be stoppe
 id: "sjt-05-safety-escalation-psychiatric-patient-absconding-risk",
 title: "An unaddressed absconding risk in an involuntary patient",
 setting: "ward",
-stem: "You are an FY1 doctor on an acute medical ward. A 34-year-old patient admitted with a severe drug overdose is detained under an emergency section of the Mental Health Act due to an active, ongoing suicide risk. The ward doors are currently unlocked due to maintenance, and you notice the patient walking quickly toward the exit while looking around suspiciously. No nursing staff or security guards are near the entrance.",
+stem: "You are an FY1 doctor on an acute medical ward. A 34-year-old patient admitted with a severe drug overdose is detained under an emergency section of the Mental Health Act due to an active, ongoing suicide risk. The ward doors are currently unlocked due to maintenance, and you notice the patient walking quickly towards the exit while looking around suspiciously. No nursing staff or security guards are near the entrance.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -16987,7 +16987,7 @@ explanation: "This is a very appropriate action because a legally detained patie
 subtype: "sjt-appropriateness",
 question: "Return to your desk to write a formal incident report about the unlocked maintenance doors before taking any physical action to locate the patient.",
 answer: "D",
-explanation: "This is a very inappropriate response because prioritizing administrative reporting while a high-risk, suicidal patient actively escapes is a failure of basic crisis management. The patient could come to immediate harm while you are typing. Incident reports are designed for retrospective system analysis, not active emergency responses."
+explanation: "This is a very inappropriate response because prioritising administrative reporting while a high-risk, suicidal patient actively escapes is a failure of basic crisis management. The patient could come to immediate harm while you are typing. Incident reports are designed for retrospective system analysis, not active emergency responses."
 },
 {
 subtype: "sjt-importance",
@@ -17020,7 +17020,7 @@ explanation: "The patient is showing clear signs of severe sepsis with a high NE
 subtype: "sjt-importance",
 question: "The fact that the medical registrar is currently occupied with a cardiac arrest in another part of the hospital.",
 answer: "A",
-explanation: "This is very important because it dictates how you escalate care. Recognizing that your immediate senior is unavailable means you must initiate life-saving treatment independently and contact alternative senior support, such as the medical medical outreach team or the on-call medical consultant."
+explanation: "This is very important because it dictates how you escalate care. Recognising that your immediate senior is unavailable means you must initiate life-saving treatment independently and contact alternative senior support, such as the medical medical outreach team or the on-call medical consultant."
 },
 {
 subtype: "sjt-appropriateness",
@@ -17046,7 +17046,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Move the patient immediately to the resuscitation area and request an urgent review from the emergency medicine senior registrar.",
 answer: "A",
-explanation: "The patient exhibits features of life-threatening asthma, which requires immediate medical intervention in an appropriate high-dependency setting. Prioritizing clinical urgency over waiting times is fundamental to patient safety."
+explanation: "The patient exhibits features of life-threatening asthma, which requires immediate medical intervention in an appropriate high-dependency setting. Prioritising clinical urgency over waiting times is fundamental to patient safety."
 },
 {
 subtype: "sjt-importance",
@@ -17064,7 +17064,7 @@ explanation: "This action compromises patient safety by delaying life-saving tre
 subtype: "sjt-importance",
 question: "The patient's inability to complete sentences in a single breath.",
 answer: "A",
-explanation: "This is a key clinical sign of severe or life-threatening asthma according to national guidelines. Recognizing this indicator is critical for correct risk-stratification and immediate escalation."
+explanation: "This is a key clinical sign of severe or life-threatening asthma according to national guidelines. Recognising this indicator is critical for correct risk-stratification and immediate escalation."
 }
 ]
 },
@@ -17250,7 +17250,7 @@ explanation: "This is very important because active haematemesis in a patient wi
 subtype: "sjt-appropriateness",
 question: "Reassure the nurses that the patient is likely fine, and order a routine outpatient abdominal ultrasound to be scheduled for next week.",
 answer: "D",
-explanation: "This response completely fails to recognize an acute, life-threatening medical emergency. Delaying care with an inappropriate routine outpatient investigation for an unstable patient constitutes severe medical negligence."
+explanation: "This response completely fails to recognise an acute, life-threatening medical emergency. Delaying care with an inappropriate routine outpatient investigation for an unstable patient constitutes severe medical negligence."
 },
 {
 subtype: "sjt-importance",
@@ -17288,7 +17288,7 @@ explanation: "In the presence of a non-blanching rash and clinical deterioration
 subtype: "sjt-importance",
 question: "Informing the university authorities about a potential outbreak before treating the patient.",
 answer: "D",
-explanation: "While public health notification is mandatory for meningococcal disease, it is done after the patient is stabilized and treated. Prioritizing administrative reporting over immediate resuscitation is inappropriate."
+explanation: "While public health notification is mandatory for meningococcal disease, it is done after the patient is stabilized and treated. Prioritising administrative reporting over immediate resuscitation is inappropriate."
 }
 ]
 },
@@ -17372,7 +17372,7 @@ explanation: "The clinical signs point to a tension pneumothorax, an immediately
 subtype: "sjt-importance",
 question: "The presence of tracheal deviation and absent unilateral breath sounds.",
 answer: "A",
-explanation: "These clinical hallmarks distinguish a tension pneumothorax from other causes of respiratory failure. Recognizing them is critical because it justifies immediate invasive decompression before cardiac arrest occurs."
+explanation: "These clinical hallmarks distinguish a tension pneumothorax from other causes of respiratory failure. Recognising them is critical because it justifies immediate invasive decompression before cardiac arrest occurs."
 },
 {
 subtype: "sjt-appropriateness",
@@ -17422,9 +17422,9 @@ explanation: "The patient is suffering from a life-threatening metabolic crisis 
 },
 {
 id: "sjt-06-status-epilepticus-airway-protection",
-title: "Prolonged Generalized Tonic-Clonic Seizure",
+title: "Prolonged Generalised Tonic-Clonic Seizure",
 setting: "ward",
-stem: "You are an FY1 doctor covering a medical ward. A 40-year-old patient with known epilepsy begins having a generalized tonic-clonic seizure. You attend immediately and ensure the environment is safe. The seizure has now continued uninterrupted for seven minutes. The patient is cyanosed around the lips, and snoring heavily between convulsions.",
+stem: "You are an FY1 doctor covering a medical ward. A 40-year-old patient with known epilepsy begins having a generalised tonic-clonic seizure. You attend immediately and ensure the environment is safe. The seizure has now continued uninterrupted for seven minutes. The patient is cyanosed around the lips, and snoring heavily between convulsions.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -17436,7 +17436,7 @@ explanation: "A seizure lasting longer than five minutes is classified as status
 subtype: "sjt-importance",
 question: "The exact duration of the continuous seizure activity.",
 answer: "A",
-explanation: "This is critically important because the risk of irreversible neurological damage and systemic complications increases significantly if generalized convulsive status epilepticus persists beyond 5–10 minutes, necessitating rapid intervention."
+explanation: "This is critically important because the risk of irreversible neurological damage and systemic complications increases significantly if generalised convulsive status epilepticus persists beyond 5–10 minutes, necessitating rapid intervention."
 },
 {
 subtype: "sjt-appropriateness",
@@ -17628,7 +17628,7 @@ explanation: "The patient is showing signs of Cushing's triad (bradycardia and h
 subtype: "sjt-importance",
 question: "The presentation of bradycardia combined with systemic hypertension following a head injury.",
 answer: "A",
-explanation: "This combination (Cushing's triad) is a critical physiological warning sign of life-threatening intracranial hypertension. Recognizing this factor is essential to drive immediate emergency decompression interventions."
+explanation: "This combination (Cushing's triad) is a critical physiological warning sign of life-threatening intracranial hypertension. Recognising this factor is essential to drive immediate emergency decompression interventions."
 },
 {
 subtype: "sjt-appropriateness",
@@ -17655,7 +17655,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Arrange for an emergency 999 ambulance transfer to the nearest emergency department immediately without waiting for the GP partner.",
 answer: "A",
-explanation: "Patient safety is paramount, and the clinical features strongly point toward sepsis, which is a medical emergency. Delaying care to wait for a GP supervisor when a patient is critically deteriorating is inappropriate and unsafe."
+explanation: "Patient safety is paramount, and the clinical features strongly point towards sepsis, which is a medical emergency. Delaying care to wait for a GP supervisor when a patient is critically deteriorating is inappropriate and unsafe."
 },
 {
 subtype: "sjt-importance",
@@ -17687,7 +17687,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Contact the consultant in charge of the surgical team to explain the patient's parameters and the lack of improvement.",
 answer: "A",
-explanation: "When a direct supervisor fails to respond to a clinical escalation regarding an unstable patient, it is essential to escalate further up the chain of command. Involving the consultant ensures patient safety is prioritized over hierarchy."
+explanation: "When a direct supervisor fails to respond to a clinical escalation regarding an unstable patient, it is essential to escalate further up the chain of command. Involving the consultant ensures patient safety is prioritised over hierarchy."
 },
 {
 subtype: "sjt-appropriateness",
@@ -17705,7 +17705,7 @@ explanation: "An objective assessment of objective physiological parameters take
 subtype: "sjt-importance",
 question: "The persistent hemodynamic instability of the patient after initial fluid resuscitation.",
 answer: "A",
-explanation: "This is the core clinical indicator that the patient is actively deteriorating and requires advanced intervention. Recognizing this factor is vital because it mandates immediate escalation to prevent further harm."
+explanation: "This is the core clinical indicator that the patient is actively deteriorating and requires advanced intervention. Recognising this factor is vital because it mandates immediate escalation to prevent further harm."
 }
 ]
 },
@@ -17769,7 +17769,7 @@ explanation: "This geographical isolation is highly critical because it impacts 
 subtype: "sjt-importance",
 question: "The completion of the routine eczema review that the patient originally attended the clinic for.",
 answer: "D",
-explanation: "The patient's life-threatening acute cardiac symptoms completely supersede any routine chronic dermatological issues. Focusing on the eczema during an acute emergency shows a failure to prioritize patient safety."
+explanation: "The patient's life-threatening acute cardiac symptoms completely supersede any routine chronic dermatological issues. Focusing on the eczema during an acute emergency shows a failure to prioritise patient safety."
 }
 ]
 },
@@ -17795,7 +17795,7 @@ explanation: "The registrar's decision was made without the benefit of this new,
 subtype: "sjt-importance",
 question: "The arrival of the patient's hospital transport and the administrative inconvenience of cancelling it.",
 answer: "D",
-explanation: "Logistical and administrative inconveniences are entirely trivial compared to the risk of cardiac arrest from untreated hyperkalaemia. Prioritizing transport efficiency over clinical safety is completely unacceptable."
+explanation: "Logistical and administrative inconveniences are entirely trivial compared to the risk of cardiac arrest from untreated hyperkalaemia. Prioritising transport efficiency over clinical safety is completely unacceptable."
 },
 {
 subtype: "sjt-appropriateness",
@@ -17827,7 +17827,7 @@ explanation: "While staff well-being and shift boundaries are important in gener
 subtype: "sjt-importance",
 question: "The discrepancies between the verbal handover and the recorded nursing vitals.",
 answer: "A",
-explanation: "Recognizing this mismatch is crucial because it alerts the clinician that the patient's condition has changed or was miscommunicated. Investigating this prevents an incorrect management plan from being followed."
+explanation: "Recognising this mismatch is crucial because it alerts the clinician that the patient's condition has changed or was miscommunicated. Investigating this prevents an incorrect management plan from being followed."
 },
 {
 subtype: "sjt-appropriateness",
@@ -17847,7 +17847,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Politely decline to perform the procedure unsupervised and request that a competent senior supervises or takes over.",
 answer: "A",
-explanation: "GMC guidelines state that doctors must recognize the limits of their competence and not practice without adequate training or supervision. Declining protects the patient from procedural complications and maintains safety."
+explanation: "GMC guidelines state that doctors must recognise the limits of their competence and not practice without adequate training or supervision. Declining protects the patient from procedural complications and maintains safety."
 },
 {
 subtype: "sjt-appropriateness",
@@ -17877,9 +17877,9 @@ stem: "A GP trainee is conducting a home visit for an 84-year-old woman who live
 questions: [
 {
 subtype: "sjt-importance",
-question: "The presence of finger-shaped bruising and the patient's anxious behavior around her son.",
+question: "The presence of finger-shaped bruising and the patient's anxious behaviour around her son.",
 answer: "A",
-explanation: "These are significant red flags for potential physical and psychological elder abuse. Recognizing these indicators is crucial to initiating appropriate safeguarding actions and protecting a vulnerable adult."
+explanation: "These are significant red flags for potential physical and psychological elder abuse. Recognising these indicators is crucial to initiating appropriate safeguarding actions and protecting a vulnerable adult."
 },
 {
 subtype: "sjt-appropriateness",
@@ -17923,7 +17923,7 @@ explanation: "Seniority does not exempt any practitioner from established safety
 subtype: "sjt-appropriateness",
 question: "Remain silent to avoid undermining the consultant's authority in front of the theatre nursing staff.",
 answer: "D",
-explanation: "Prioritizing hierarchy or preventing minor social awkwardness over verifying patient identity and surgical site is a significant failure of professionalism. Silence makes the junior doctor complicit in an unsafe practice."
+explanation: "Prioritising hierarchy or preventing minor social awkwardness over verifying patient identity and surgical site is a significant failure of professionalism. Silence makes the junior doctor complicit in an unsafe practice."
 },
 {
 subtype: "sjt-importance",
@@ -17993,7 +17993,7 @@ explanation: "When a patient lacks capacity and requires urgent life-saving trea
 subtype: "sjt-importance",
 question: "The high number of minor injury patients currently waiting in the emergency department.",
 answer: "D",
-explanation: "Departmental crowding and administrative wait times for minor cases have absolutely no relevance when managing an acute, life-threatening overdose where capacity is compromised. Patient safety must be prioritized over throughput."
+explanation: "Departmental crowding and administrative wait times for minor cases have absolutely no relevance when managing an acute, life-threatening overdose where capacity is compromised. Patient safety must be prioritised over throughput."
 }
 ]
 },
@@ -18025,7 +18025,7 @@ explanation: "Delegating monitoring to a qualified nurse is appropriate, but it 
 subtype: "sjt-importance",
 question: "The risk of the patient developing severe hypoglycaemia while asleep.",
 answer: "A",
-explanation: "Hypoglycaemia can lead to seizures, coma, or permanent neurological damage if unnoticed while a patient is asleep. Recognizing this risk is vital to guiding immediate preventative action."
+explanation: "Hypoglycaemia can lead to seizures, coma, or permanent neurological damage if unnoticed while a patient is asleep. Recognising this risk is vital to guiding immediate preventative action."
 }
 ]
 },
@@ -18083,7 +18083,7 @@ explanation: "While empathy for a colleague's personal problems is humane, it ca
 subtype: "sjt-importance",
 question: "The risk of clinical errors being made by an impaired doctor handling patients and equipment.",
 answer: "A",
-explanation: "An impaired clinician represents a severe, immediate threat to patient safety across the entire ward. Recognizing this risk is critical to understanding why immediate intervention is mandatory."
+explanation: "An impaired clinician represents a severe, immediate threat to patient safety across the entire ward. Recognising this risk is critical to understanding why immediate intervention is mandatory."
 },
 {
 subtype: "sjt-appropriateness",
@@ -18103,13 +18103,13 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Tell the patient to stop taking the medication immediately and advise them to attend the emergency department for monitoring and antidote evaluation.",
 answer: "A",
-explanation: "Methotrexate overdoses carry extreme risks of bone marrow suppression and organ toxicity. Halting intake immediately and directing the patient to acute medical care prioritizes patient safety above all else."
+explanation: "Methotrexate overdoses carry extreme risks of bone marrow suppression and organ toxicity. Halting intake immediately and directing the patient to acute medical care prioritises patient safety above all else."
 },
 {
 subtype: "sjt-importance",
 question: "The potential reputation damage to the community pharmacy if the error is reported.",
 answer: "D",
-explanation: "Commercial or reputational concerns are completely irrelevant when dealing with a life-threatening clinical error. Prioritizing business interests over patient safety violates fundamental healthcare ethics."
+explanation: "Commercial or reputational concerns are completely irrelevant when dealing with a life-threatening clinical error. Prioritising business interests over patient safety violates fundamental healthcare ethics."
 },
 {
 subtype: "sjt-importance",
@@ -18133,13 +18133,13 @@ stem: "An FY2 doctor is assessing a 14-month-old child brought to the emergency 
 questions: [
 {
 subtype: "sjt-importance",
-question: "The mother's persistent assertion that the child's behavior is fundamentally different from their baseline.",
+question: "The mother's persistent assertion that the child's behaviour is fundamentally different from their baseline.",
 answer: "A",
-explanation: "Parental concern is a recognized risk factor for serious illness in paediatrics, as parents know their child's normal baseline best. Taking this seriously is essential to avoiding a missed diagnosis of rapid deterioration."
+explanation: "Parental concern is a recognised risk factor for serious illness in paediatrics, as parents know their child's normal baseline best. Taking this seriously is essential to avoiding a missed diagnosis of rapid deterioration."
 },
 {
 subtype: "sjt-appropriateness",
-question: "Re-examine the child thoroughly, perform a full set of pediatric warning scores (PEWS), and discuss the case with a senior paediatrician before discharge.",
+question: "Re-examine the child thoroughly, perform a full set of paediatric warning scores (PEWS), and discuss the case with a senior paediatrician before discharge.",
 answer: "A",
 explanation: "Re-evaluating a patient when clinical history or parental concern conflicts with initial impressions ensures safety. Involving a specialist colleague before making a final discharge decision protects a vulnerable patient."
 },
@@ -18153,7 +18153,7 @@ explanation: "Dismissing parental insight by labeling it purely as anxiety is in
 subtype: "sjt-importance",
 question: "The crowded nature of the emergency department and the need to free up assessment cubicles.",
 answer: "D",
-explanation: "Bed pressure and service throughput should never dictate clinical decisions regarding vulnerable patients who may be deteriorating. Prioritizing space over safety compromises patient care."
+explanation: "Bed pressure and service throughput should never dictate clinical decisions regarding vulnerable patients who may be deteriorating. Prioritising space over safety compromises patient care."
 }
 ]
 },
@@ -18161,7 +18161,7 @@ explanation: "Bed pressure and service throughput should never dictate clinical 
 id: "sjt-05-safety-psychiatric-ward-absconding-risk",
 title: "Escalation of Absconding Risk in Psychiatric Unit",
 setting: "ward",
-stem: "An FY2 is covering a secure psychiatric ward over a weekend. A patient admitted under a section of the Mental Health Act for severe psychosis tells the FY2 during a brief conversation that they have found a way to bypass the ward's courtyard security doors and plan to 'leave tonight to escape the voices'. The patient has a history of high-risk self-harm when unstable. The ward nursing staff are currently busy managing an acute behavioral disturbance with another patient in the main lounge.",
+stem: "An FY2 is covering a secure psychiatric ward over a weekend. A patient admitted under a section of the Mental Health Act for severe psychosis tells the FY2 during a brief conversation that they have found a way to bypass the ward's courtyard security doors and plan to 'leave tonight to escape the voices'. The patient has a history of high-risk self-harm when unstable. The ward nursing staff are currently busy managing an acute behavioural disturbance with another patient in the main lounge.",
 questions: [
 {
 subtype: "sjt-appropriateness",
@@ -18183,7 +18183,7 @@ explanation: "Delaying communication of an explicit threat to escape 'tonight' u
 },
 {
 subtype: "sjt-importance",
-question: "The current preoccupation of the nursing staff with the other patient's behavioral disturbance.",
+question: "The current preoccupation of the nursing staff with the other patient's behavioural disturbance.",
 answer: "B",
 explanation: "This is important to note because it means nursing resources are already stretched, making a collaborative strategy and rapid notification even more vital to prevent an overlooked safety breach."
 }
@@ -18217,7 +18217,7 @@ explanation: "Altering surgical markings yourself without the operating surgeon'
 subtype: "sjt-importance",
 question: "The possibility of delaying the theatre list by raising a query about the mark.",
 answer: "D",
-explanation: "Avoiding a surgical delay is completely trivial when compared to preventing a wrong-site surgical operation. Prioritizing efficiency over a definitive safety check shows poor professional judgement."
+explanation: "Avoiding a surgical delay is completely trivial when compared to preventing a wrong-site surgical operation. Prioritising efficiency over a definitive safety check shows poor professional judgement."
 }
 ]
 },
@@ -18243,7 +18243,7 @@ explanation: "Anticoagulation significantly increases the severity and speed of 
 subtype: "sjt-appropriateness",
 question: "Accept the HCA's account of the fall and document that no head injury occurred based on their eyewitness testimony.",
 answer: "D",
-explanation: "Ignoring objective physical signs (occipital swelling) and patient symptoms in favor of a colleague's incorrect account is unsafe. It represents a failure to perform an independent clinical assessment and puts the patient at extreme risk."
+explanation: "Ignoring objective physical signs (occipital swelling) and patient symptoms in favour of a colleague's incorrect account is unsafe. It represents a failure to perform an independent clinical assessment and puts the patient at extreme risk."
 },
 {
 subtype: "sjt-importance",
@@ -18275,7 +18275,7 @@ explanation: "While this complicates direct validation, alternative seniors or s
 subtype: "sjt-importance",
 question: "The risk of severe respiratory depression in an elderly, opioid-naive patient.",
 answer: "A",
-explanation: "This clinical risk represents the direct mechanism of potential severe harm or death from the error. Recognizing this vulnerability dictates that the prescription must be blocked until it is fully corrected."
+explanation: "This clinical risk represents the direct mechanism of potential severe harm or death from the error. Recognising this vulnerability dictates that the prescription must be blocked until it is fully corrected."
 },
 {
 subtype: "sjt-appropriateness",
@@ -18424,7 +18424,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Stop the procedure immediately, comfort the patient, and discuss implementing reasonable adjustments such as topical numbing cream or a visual schedule for another day.",
 answer: "A",
-explanation: "This approach respects the patient's immediate distress and seeks to maximize his autonomy and comfort through reasonable adjustments. It avoids unnecessary physical force for a routine procedure and aligns with inclusive practice."
+explanation: "This approach respects the patient's immediate distress and seeks to maximise his autonomy and comfort through reasonable adjustments. It avoids unnecessary physical force for a routine procedure and aligns with inclusive practice."
 },
 {
 subtype: "sjt-importance",
@@ -18456,7 +18456,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Utilise distraction techniques, such as offering her tea or engaging her in a simple activity, and sit her close to the nursing station.",
 answer: "A",
-explanation: "This is a non-restrictive, supportive, and safe strategy to manage wandering behavior in a patient lacking capacity. It prioritises dignity and patient safety while avoiding unnecessary restraint or conflict."
+explanation: "This is a non-restrictive, supportive, and safe strategy to manage wandering behaviour in a patient lacking capacity. It prioritises dignity and patient safety while avoiding unnecessary restraint or conflict."
 },
 {
 subtype: "sjt-importance",
@@ -18472,7 +18472,7 @@ explanation: "Locking down a whole area or using punitive, threatening language 
 },
 {
 subtype: "sjt-importance",
-question: "The potential impact of the patient's wandering behavior on the convenience of the ward staff's workflow.",
+question: "The potential impact of the patient's wandering behaviour on the convenience of the ward staff's workflow.",
 answer: "D",
 explanation: "Staff convenience should never be a factor when determining how to manage a vulnerable patient who lacks capacity. The focus must remain entirely on patient safety, dignity, and lawful practice."
 }
@@ -18584,7 +18584,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Schedule all of his future medical appointments explicitly for the first slot in the morning.",
 answer: "A",
-explanation: "This is an excellent example of making a reasonable, proactive adjustment to optimize a patient's capacity and comfort. Scheduling when he is most coherent supports autonomous decision-making and reduces distress."
+explanation: "This is an excellent example of making a reasonable, proactive adjustment to optimise a patient's capacity and comfort. Scheduling when he is most coherent supports autonomous decision-making and reduces distress."
 },
 {
 subtype: "sjt-importance",
@@ -18602,7 +18602,7 @@ explanation: "Knowingly scheduling an appointment when a patient is vulnerable t
 subtype: "sjt-importance",
 question: "Maximising the patient's opportunity to actively participate in and consent to his own healthcare decisions.",
 answer: "A",
-explanation: "This is a core principle of the Mental Capacity Act. Every effort must be made to maximize a person's ability to make their own decisions before concluding they lack capacity, making this factor very important."
+explanation: "This is a core principle of the Mental Capacity Act. Every effort must be made to maximise a person's ability to make their own decisions before concluding they lack capacity, making this factor very important."
 }
 ]
 },
@@ -18654,7 +18654,7 @@ explanation: "Assessing capacity for long-term decisions during an episode of ac
 subtype: "sjt-importance",
 question: "The impact of environmental noise and acute illness on the patient's temporary cognitive performance.",
 answer: "A",
-explanation: "Environmental factors and reversible physical illnesses significantly affect cognitive function. Recognizing these factors is crucial to avoid incorrectly labelling a patient as permanently lacking capacity."
+explanation: "Environmental factors and reversible physical illnesses significantly affect cognitive function. Recognising these factors is crucial to avoid incorrectly labelling a patient as permanently lacking capacity."
 },
 {
 subtype: "sjt-appropriateness",
@@ -18664,7 +18664,7 @@ explanation: "Rushing a life-changing capacity assessment under poor conditions 
 },
 {
 subtype: "sjt-importance",
-question: "The hospital's target metrics regarding minimizing the length of patient stays.",
+question: "The hospital's target metrics regarding minimising the length of patient stays.",
 answer: "D",
 explanation: "Administrative targets or hospital discharge metrics should never influence the timing or integrity of a clinical capacity assessment for a vulnerable individual."
 }
@@ -18981,7 +18981,7 @@ explanation: "This is highly important because consent must be obtained from the
 subtype: "sjt-appropriateness",
 question: "Arrange to return in the early afternoon to reassess her capacity and attempt to obtain informed consent when she is more lucid.",
 answer: "A",
-explanation: "This is the most appropriate action because it respects the patient's autonomy and maximizes her chance to participate in her own healthcare decisions. It aligns perfectly with the principles of the Mental Capacity Act regarding fluctuating capacity."
+explanation: "This is the most appropriate action because it respects the patient's autonomy and maximises her chance to participate in her own healthcare decisions. It aligns perfectly with the principles of the Mental Capacity Act regarding fluctuating capacity."
 },
 {
 subtype: "sjt-importance",
@@ -19077,7 +19077,7 @@ explanation: "This is crucial under the Fraser guidelines to establish Gillick c
 subtype: "sjt-appropriateness",
 question: "Assess her maturity and understanding of the risks, encourage her to discuss it with her parents, but respect her confidentiality and provide the treatment if she is competent and refuses to involve them.",
 answer: "A",
-explanation: "This perfectly follows the UK legal and clinical framework for managing minors seeking contraceptive advice. It prioritizes her health, assesses competence, attempts to encourage parental involvement, but protects her confidentiality and autonomy if appropriate."
+explanation: "This perfectly follows the UK legal and clinical framework for managing minors seeking contraceptive advice. It prioritises her health, assesses competence, attempts to encourage parental involvement, but protects her confidentiality and autonomy if appropriate."
 },
 {
 subtype: "sjt-importance",
@@ -19173,13 +19173,13 @@ explanation: "This is highly important. For cosmetic and elective procedures, un
 subtype: "sjt-appropriateness",
 question: "Explain the realistic limitations of the physical surgery, defer booking the procedure, and suggest a referral for psychological support or counseling.",
 answer: "A",
-explanation: "This is very appropriate. It ensures the patient is protected from undergoing an invasive procedure that will not achieve her desired psychosocial goals, while directing her toward more suitable support."
+explanation: "This is very appropriate. It ensures the patient is protected from undergoing an invasive procedure that will not achieve her desired psychosocial goals, while directing her towards more suitable support."
 },
 {
 subtype: "sjt-importance",
 question: "The clinic's financial profit margin for performing elective aesthetic surgeries.",
 answer: "D",
-explanation: "Commercial interest or financial profit should never influence clinical judgment, patient selection, or ethical consent practices."
+explanation: "Commercial interest or financial profit should never influence clinical judgement, patient selection, or ethical consent practices."
 }
 ]
 },
@@ -19209,7 +19209,7 @@ explanation: "This is the most appropriate initial course of action. It focuses 
 },
 {
 subtype: "sjt-importance",
-question: "The annoyance of other patients in the waiting room caused by Liam's loud behavior.",
+question: "The annoyance of other patients in the waiting room caused by Liam's loud behaviour.",
 answer: "C",
 explanation: "While managing the environment is helpful for ward atmosphere, it is of minor importance compared to the primary duty of ensuring the clinical safety and legal assessment of the acute patient."
 }
@@ -19219,23 +19219,23 @@ explanation: "While managing the environment is helpful for ward atmosphere, it 
 id: "sjt-03-consent-research-incapacitated-icu-patient",
 title: "Consent for Research in Intensive Care",
 setting: "ward",
-stem: "You are an FY1 doctor working in the Intensive Care Unit (ICU). A research nurse approaches you regarding a clinical study investigating a new mechanical ventilation protocol. They want to enroll Mr. Thompson, a patient who is currently intubated, heavily sedated, and completely lacks capacity. The research nurse tells you that because the trial has a strict entry window, they should just enroll him now and ask his wife for consent whenever she visits tomorrow.",
+stem: "You are an FY1 doctor working in the Intensive Care Unit (ICU). A research nurse approaches you regarding a clinical study investigating a new mechanical ventilation protocol. They want to enrol Mr. Thompson, a patient who is currently intubated, heavily sedated, and completely lacks capacity. The research nurse tells you that because the trial has a strict entry window, they should just enrol him now and ask his wife for consent whenever she visits tomorrow.",
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Enroll the patient immediately to ensure he does not miss out on the potentially beneficial trial window.",
+question: "Enrol the patient immediately to ensure he does not miss out on the potentially beneficial trial window.",
 answer: "D",
 explanation: "Enrolling an incapacitated patient into a research study without prior ethical approval or consultation with a legal representative or next-of-kin violates established research governance, international ethical standards, and law."
 },
 {
 subtype: "sjt-importance",
-question: "The strict enrollment timeline specified by the research trial's protocol.",
+question: "The strict enrolment timeline specified by the research trial's protocol.",
 answer: "C",
 explanation: "While trial windows are important for data collection, they are minor compared to the absolute ethical requirement to protect vulnerable, incapacitated patients from unauthorized research interventions."
 },
 {
 subtype: "sjt-appropriateness",
-question: "Refuse to enroll the patient until an urgent consultation with his legal representative or next-of-kin can be held, or an independent advisor can review it as per research regulations.",
+question: "Refuse to enrol the patient until an urgent consultation with his legal representative or next-of-kin can be held, or an independent advisor can review it as per research regulations.",
 answer: "A",
 explanation: "This is highly appropriate. It protects patient safety and human rights, adhering strictly to research legislation governing individuals who lack the capacity to consent for themselves."
 },
@@ -19263,7 +19263,7 @@ explanation: "GMC guidance strongly advises offering a chaperone for all intimat
 subtype: "sjt-importance",
 question: "The patient's personal preference to complete the examination quickly without waiting for a chaperone.",
 answer: "B",
-explanation: "The patient's preference and convenience are important factors in delivering patient-centred care, but they must be balanced against professional safety guidelines and standardized safeguarding practices."
+explanation: "The patient's preference and convenience are important factors in delivering patient-centred care, but they must be balanced against professional safety guidelines and standardised safeguarding practices."
 },
 {
 subtype: "sjt-appropriateness",
@@ -19327,13 +19327,13 @@ explanation: "Using untrained staff or housekeepers for complex medical consent 
 subtype: "sjt-importance",
 question: "The risk of miscommunication regarding clinical complications like anaphylaxis when using an untrained interpreter.",
 answer: "A",
-explanation: "This is highly important. Accurate communication of medical risks is essential for informed consent, and utilizing non-professional translators increases the danger of clinical errors or misunderstandings."
+explanation: "This is highly important. Accurate communication of medical risks is essential for informed consent, and utilising non-professional translators increases the danger of clinical errors or misunderstandings."
 },
 {
 subtype: "sjt-appropriateness",
 question: "Decline the housekeeper's offer, locate the official telephone interpretation service, and conduct the consent process properly via a professional medical interpreter.",
 answer: "A",
-explanation: "This is the best course of action. It prioritizes patient safety, proper legal consent, and ensures the patient fully understands the procedure through a qualified professional, despite the busy ward environment."
+explanation: "This is the best course of action. It prioritises patient safety, proper legal consent, and ensures the patient fully understands the procedure through a qualified professional, despite the busy ward environment."
 },
 {
 subtype: "sjt-importance",
@@ -19391,7 +19391,7 @@ explanation: "Although verbal consent is legally valid in some scenarios, failin
 subtype: "sjt-importance",
 question: "The specific local trust policy requiring written documentation for invasive clinical procedures.",
 answer: "B",
-explanation: "Adhering to hospital guidelines is important for clinical governance, standardized care, and legal documentation, ensuring that all risks have been formally acknowledged in writing."
+explanation: "Adhering to hospital guidelines is important for clinical governance, standardised care, and legal documentation, ensuring that all risks have been formally acknowledged in writing."
 },
 {
 subtype: "sjt-appropriateness",
@@ -19447,7 +19447,7 @@ stem: "You are an FY1 observing an open abdominal operation. The patient gave in
 questions: [
 {
 subtype: "sjt-appropriateness",
-question: "Agree with the consultant and assist them in removing the cyst to optimize operating theatre efficiency.",
+question: "Agree with the consultant and assist them in removing the cyst to optimise operating theatre efficiency.",
 answer: "D",
 explanation: "Performing additional elective procedures that were not consented to while a patient is anesthetized is unethical and legally impermissible unless there is an immediate, life-threatening emergency. It violates bodily autonomy."
 },
@@ -19487,7 +19487,7 @@ explanation: "Taking clinical photographs, especially on personal devices and fo
 subtype: "sjt-importance",
 question: "The use of a personal smartphone to capture and store confidential patient clinical imagery.",
 answer: "A",
-explanation: "This is highly important. Utilizing personal unencrypted devices for clinical imagery presents severe information governance risks and violates NHS trust policies and GMC guidance regarding patient confidentiality."
+explanation: "This is highly important. Utilising personal unencrypted devices for clinical imagery presents severe information governance risks and violates NHS trust policies and GMC guidance regarding patient confidentiality."
 },
 {
 subtype: "sjt-appropriateness",
@@ -19525,7 +19525,7 @@ explanation: "This is the most critical factor. The withdrawal of consent instan
 subtype: "sjt-appropriateness",
 question: "Stop the procedure immediately, ensure the area is safe and dressed, comfort the patient, and discuss their options or alternatives.",
 answer: "A",
-explanation: "This is the required professional response. It respects the withdrawal of consent immediately, prioritizes patient comfort and autonomy, and allows for a safe, uncoerced discussion about how to proceed clinically."
+explanation: "This is the required professional response. It respects the withdrawal of consent immediately, prioritises patient comfort and autonomy, and allows for a safe, uncoerced discussion about how to proceed clinically."
 },
 {
 subtype: "sjt-importance",
@@ -19834,7 +19834,7 @@ questions: [
 subtype: "sjt-appropriateness",
 question: "Ignore the post since the individual is deceased and cannot suffer any emotional or psychological harm.",
 answer: "D",
-explanation: "Ignoring this behavior is inappropriate because cadavers must be treated with the utmost respect and dignity. Medical students are bound by professional standards from the start of their training, and treating human remains derisively is a severe violation of ethics."
+explanation: "Ignoring this behaviour is inappropriate because cadavers must be treated with the utmost respect and dignity. Medical students are bound by professional standards from the start of their training, and treating human remains derisively is a severe violation of ethics."
 },
 {
 subtype: "sjt-importance",
@@ -19942,7 +19942,7 @@ explanation: "This is critically important. Honesty and probity are core pillars
 subtype: "sjt-appropriateness",
 question: "Speak to Sarah privately, highlighting that her profile description is misleading and advising her to correct it to accurately reflect her role.",
 answer: "A",
-explanation: "This is the most appropriate initial response. It challenges the dishonest behavior directly and provides Sarah with an immediate chance to rectify the error and uphold probity standards without formal escalation."
+explanation: "This is the most appropriate initial response. It challenges the dishonest behaviour directly and provides Sarah with an immediate chance to rectify the error and uphold probity standards without formal escalation."
 },
 {
 subtype: "sjt-importance",
@@ -19974,13 +19974,13 @@ explanation: "This is very important. Disclaimers manage public expectations, mi
 subtype: "sjt-appropriateness",
 question: "Provide general educational information about common childhood rashes, list warning symptoms, and urge them to see a local GP or call NHS 111.",
 answer: "A",
-explanation: "This response is highly appropriate as it utilizes medical expertise safely to educate the public while correctly directing the worried parent to secure, formal healthcare channels for actual assessment."
+explanation: "This response is highly appropriate as it utilises medical expertise safely to educate the public while correctly directing the worried parent to secure, formal healthcare channels for actual assessment."
 },
 {
 subtype: "sjt-importance",
 question: "How important is it to respond rapidly to maintain the forum's high engagement metrics?",
 answer: "D",
-explanation: "This is not important at all. Commercial or digital engagement metrics should never influence clinical judgment, safety, or professional communication standards."
+explanation: "This is not important at all. Commercial or digital engagement metrics should never influence clinical judgement, safety, or professional communication standards."
 }
 ]
 },
@@ -20036,7 +20036,7 @@ explanation: "This is important for mental well-being and clinical safety, but o
 },
 {
 subtype: "sjt-appropriateness",
-question: "Apologise to the group chat for sharing inappropriate workplace details and utilize formal hospital wellbeing services to debrief the shift.",
+question: "Apologise to the group chat for sharing inappropriate workplace details and utilise formal hospital wellbeing services to debrief the shift.",
 answer: "A",
 explanation: "This is a very appropriate response. It acknowledges the lapse in professionalism, stops further discussion in an unsecure forum, and redirects the doctor to appropriate, confidential support structures."
 },
@@ -20074,7 +20074,7 @@ explanation: "This is the most professional route. It confirms the patient's con
 },
 {
 subtype: "sjt-importance",
-question: "How important is maximizing social media engagement for the commercial survival of private clinical practices?",
+question: "How important is maximising social media engagement for the commercial survival of private clinical practices?",
 answer: "C",
 explanation: "This is of minor importance when weighed against ethical duties. Commercial success is valid but must always remain strictly secondary to medical ethics, patient dignity, and regulatory advertising codes."
 }
@@ -20204,7 +20204,7 @@ explanation: "This is the most appropriate stance. It protects the integrity of 
 subtype: "sjt-importance",
 question: "How important is it to consider that social media comments can be traced back to Dr. Foster's own employing NHS Trust?",
 answer: "B",
-explanation: "This is important because unprofessional online behavior can damage the reputation of the doctor's employer, potentially violating employment contracts and trust policies regarding digital conduct."
+explanation: "This is important because unprofessional online behaviour can damage the reputation of the doctor's employer, potentially violating employment contracts and trust policies regarding digital conduct."
 }
 ]
 }
