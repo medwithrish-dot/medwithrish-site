@@ -136,25 +136,27 @@
 .stageIcon { display: grid; flex-shrink: 0; width: 35px; height: 35px; place-items: center; border: 1px solid #ffffff0c; border-radius: 8px; color: #a9bdd4; background: #ffffff03; }
 .stageIcon:hover { color: #edf4fc; background: #ffffff0b; }
 .callLayout { display: grid; flex: 1; min-height: 0; grid-template-columns: minmax(0, 1fr) minmax(330px, 39%); }
-.stageColumn { display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 0 30px; }
-.conversationStage { display: flex; flex: 1; flex-direction: column; align-items: center; min-height: 0; gap: 20px; overflow-y: auto; padding: 28px 0 20px; scrollbar-width: thin; scrollbar-color: #3a5169 transparent; }
-.currentPrompt { width: 100%; max-width: 650px; flex-shrink: 0; margin-top: auto; padding: 23px 25px; border: 1px solid #9cb9cd1b; border-radius: 14px; background: #1b2c3d; box-shadow: 0 6px 24px #08132014; }
-.promptEyebrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #9db4c8; font-size: 10px; line-height: 1.5; }
-.promptEyebrow > span:first-child { display: flex; align-items: center; gap: 7px; color: #9bc9bd; }
-.currentPrompt h2 { max-height: 26dvh; overflow-y: auto; margin: 21px 0 14px; font-size: clamp(22px, 2.1vw, 30px); line-height: 1.4; font-weight: 500; letter-spacing: -.65px; text-wrap: pretty; scrollbar-width: thin; }
-.currentPrompt > p { margin: 0; font-size: 11px; line-height: 1.8; color: #9aafc2; }
-.participantGrid { display: grid; flex-shrink: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); width: 100%; max-width: 650px; gap: 14px; }
-.participantCard { position: relative; width: 100%; min-width: 0; height: clamp(124px, 21dvh, 182px); overflow: hidden; border: 1px solid #99b3d029; border-radius: 12px; background: radial-gradient(ellipse at 30% 0, #7289a418, transparent 80%), #203147; transition: border-color .2s, box-shadow .2s; }
-.aiParticipant { border-color: #99c5c32e; background: radial-gradient(ellipse at 25% 0, #79aca520, transparent 85%), #1c3540; }
-.participantActive { border-color: #80c3b7; box-shadow: inset 0 1px #ddfff126, 0 0 0 2px #80c3b70e, 0 14px 30px #050b1433; }
+.stageColumn { display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 0 30px; background: radial-gradient(ellipse at 72% 12%, #16465338, transparent 58%), radial-gradient(ellipse at 20% 68%, #1a345229, transparent 60%), #0d1a2b; }
+.conversationStage { display: flex; flex: 0 1 auto; flex-direction: column; align-items: center; min-height: 0; gap: 22px; margin-top: auto; overflow-y: auto; padding: 28px 10px 0; scrollbar-width: thin; scrollbar-color: #3a5169 transparent; }
+.participantGrid { display: grid; flex-shrink: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); width: 100%; max-width: 670px; gap: 20px; padding: 8px 0; }
+.participantCard { position: relative; isolation: isolate; width: 100%; min-width: 0; height: clamp(200px, 31dvh, 290px); overflow: hidden; border: 1px solid #719ed34d; border-radius: 15px; background: radial-gradient(ellipse at 0 0, #416a9a80, transparent 76%), linear-gradient(145deg, #192b45, #0d192b); box-shadow: inset 0 1px 0 #bad7ff16, 0 10px 28px #050e1b24; transition: border-color .2s, box-shadow .2s; }
+.aiParticipant { border-color: #43c4c68f; background: radial-gradient(ellipse at 0 0, #247d8778, transparent 74%), linear-gradient(145deg, #123749, #0b2835); box-shadow: inset 0 0 0 1px #50d1ca12, inset 0 1px 0 #9ff9ed24, 0 0 24px #1faea614; }
+.participantWaves { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; fill: #527eb00c; }
+.participantWaves > path + path { fill: #16355038; }
+.aiParticipant .participantWaves { fill: #27989812; }
+.aiParticipant .participantWaves > path + path { fill: #257b8617; }
+.participantActive { border-color: #7ae2d8; box-shadow: inset 0 1px #ddfff126, 0 0 0 1px #80c3b714, 0 0 30px #26b9b01f; }
 .participantPortrait { position: absolute; inset: 0 0 25px; display: grid; place-items: center; }
-.youAvatar { display: grid; place-items: center; width: 56px; height: 56px; border: 1px solid #d1e4fb24; border-radius: 50%; color: #dce9f6; background: #3d5671; }
-.interviewerOrb { position: relative; display: grid; width: 58px; height: 58px; place-items: center; }
-.interviewerOrb > span { position: absolute; inset: -6px; border: 1px solid #97cbbd14; border-radius: 50%; }
-.interviewerOrb > div { display: grid; place-items: center; width: 100%; height: 100%; border: 1px solid #b6e3d62b; border-radius: 50%; color: #d6eee7; background: linear-gradient(145deg, #427b76, #2c5955); }
+.youAvatar { display: grid; place-items: center; width: clamp(88px, 10vw, 116px); height: clamp(88px, 10vw, 116px); border: 1px solid #b4d2f51a; border-radius: 50%; color: #e0edfc; background: linear-gradient(140deg, #45668e, #213a5a); box-shadow: inset 0 1px #dbeaff17, 0 8px 24px #08122224; }
+.youAvatar > svg { width: 46px; height: 46px; filter: drop-shadow(0 0 3px #b4daef29); }
+.interviewerOrb { position: relative; display: grid; width: clamp(86px, 10vw, 112px); height: clamp(86px, 10vw, 112px); place-items: center; }
+.interviewerOrb > span { position: absolute; inset: -9px; border: 1px solid #73c6c01c; border-radius: 50%; background: #368f9511; }
+.interviewerOrb > div { position: relative; display: grid; place-items: center; width: 100%; height: 100%; border: 1px solid #a0e9de21; border-radius: 50%; color: #cbfff0; background: radial-gradient(ellipse at 37% 28%, #429f94a1, transparent 66%), linear-gradient(140deg, #287c7b, #17505b); box-shadow: inset 0 1px #d2fff31c, 0 0 22px #47d4bc12; }
+.interviewerOrb > div > svg { filter: drop-shadow(0 0 4px #7affd88c); }
+.aiParticipant .participantName > .greenDot { width: 7px; height: 7px; background: #52e4cf; box-shadow: 0 0 9px #52e4cf3d; }
 .orbSpeaking > span { border-color: #8acabd70; animation: speaking 2s ease-out infinite; }
 @keyframes speaking { 0%, 100% { transform: scale(1); opacity: .35; } 50% { transform: scale(1.07); opacity: 1; } }
-.participantName { position: absolute; inset: auto 0 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 15px 14px 12px; color: #eaf1f8; background: linear-gradient(transparent, #0b152350); }
+.participantName { position: absolute; inset: auto 0 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 22px 19px 18px; color: #eaf1f8; background: linear-gradient(transparent, #0b152350); }
 .participantName > div { display: grid; gap: 3px; }
 .participantName strong { font-size: 12px; font-weight: 550; line-height: 1.25; }
 .participantName > div > span { font-size: 10px; color: #9eb3c9; line-height: 1.3; }
@@ -163,18 +165,19 @@
 .participantVideo .selfPreview { height: 100%; border-radius: 0; }
 .participantVideo .previewLabel, .participantVideo .previewIcon { display: none; }
 .compactPreview { min-height: 100px; }
-.stationHint { flex-shrink: 0; margin-bottom: auto; text-align: center; color: #a2b6c9; font-size: 11px; line-height: 1.6; }
+.stationHint { flex-shrink: 0; text-align: center; color: #8ca6bd; font-size: 10px; line-height: 1.6; }
 .stageStatus { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 0; }
 .stationHint .textButton { color: #91c8c0; margin-top: 3px; font-size: 10px; }
-.callControls { display: flex; flex-shrink: 0; flex-direction: column; align-items: center; justify-content: center; gap: 11px; padding: 18px 0 21px; border-top: 1px solid var(--room-line); }
-.deviceControls { display: flex; align-items: center; justify-content: center; gap: 9px; }
-.deviceControls button { position: relative; display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 94px; min-height: 44px; padding: 10px 14px; border: 1px solid #b9cce21f; border-radius: 9px; color: #dce8f5; background: #2c4057; }
-.deviceControls button:hover:enabled { background: #3a536e; }
-.deviceControls button > svg { width: 19px; height: 19px; }
-.deviceControls button > span { white-space: nowrap; font-size: 11px; font-weight: 550; }
-.deviceControls button.controlActive { border-color: #8ebca04d; background: #2b6558; color: #eefaf6; }
-.deviceControls .endCallButton { min-width: 82px; margin-left: 5px; border-color: #cf8e9430; background: #773943; color: #ffe6e8; }
-.deviceControls .endCallButton:hover:enabled { background: #914651; }
+.callControls { display: flex; flex-shrink: 0; flex-direction: column; align-items: center; justify-content: center; gap: 21px; margin-bottom: auto; padding: 27px 0 32px; }
+.deviceControls { display: flex; align-items: center; justify-content: center; gap: 26px; padding: 12px 25px; border: 1px solid #427c9933; border-radius: 999px; background: linear-gradient(140deg, #0b1c2de6, #142a38e6); box-shadow: inset 0 1px #b9e2f105, 0 12px 30px #030b162b; }
+.deviceControls button { position: relative; display: grid; flex-shrink: 0; place-items: center; width: 50px; height: 50px; min-width: 0; min-height: 44px; padding: 0; border: 1px solid #80addb29; border-radius: 50%; color: #c0d4e9; background: linear-gradient(145deg, #2c4868, #142b43); box-shadow: inset 0 1px #c9e5ff17, 0 3px 9px #030c1521; }
+.deviceControls button:hover:enabled { background: linear-gradient(145deg, #3c5b7c, #203c57); border-color: #a2c6ec66; }
+.deviceControls button > svg { width: 21px; height: 21px; }
+.deviceControls button > span { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.deviceControls button.controlActive { border-color: #8ee2cb69; background: linear-gradient(145deg, #32766b, #164b49); color: #eefaf6; }
+.deviceControls .endCallButton { border-color: #ffb2c02b; background: linear-gradient(145deg, #f1627c, #ca344f); color: #fff3f5; box-shadow: inset 0 1px #ffdde536, 0 4px 16px #c72c4924; }
+.deviceControls .endCallButton > svg { transform: rotate(135deg); width: 19px; height: 19px; }
+.deviceControls .endCallButton:hover:enabled { background: linear-gradient(145deg, #ff778f, #df405b); border-color: #ffc2cd66; }
 .controlHint { margin: 0; color: #91a8c1; text-align: center; font-size: 10px; line-height: 1.5; }
 .callNotice { max-width: 500px; margin: 0; color: #d3c1a8; text-align: center; font-size: 10px; line-height: 1.6; }
 .transcriptPanel { display: flex; flex-direction: column; min-width: 0; min-height: 0; overflow: hidden; border-left: 1px solid #9fb8d321; background: #1b2b3e; color: #dce7f4; }
@@ -294,8 +297,6 @@
   .headerActions { gap: 10px; }
   .sessionBadge { display: none; }
   .stageColumn { padding-inline: 20px; }
-  .currentPrompt { padding: 20px; }
-  .currentPrompt h2 { font-size: 24px; }
   .participantGrid { gap: 13px; }
   .transcriptTabs { gap: 18px; padding-inline: 15px; }
   .transcriptScroll, .notesPanel { padding: 15px; }
@@ -303,15 +304,14 @@
 }
 @media (min-width: 768px) and (max-height: 650px) {
   .roomHeader { min-height: 58px; padding-block: 8px; }
-  .currentPrompt { padding: 15px 18px; }
-  .currentPrompt h2 { max-height: 18dvh; margin: 12px 0 0; font-size: 21px; }
-  .currentPrompt > p { display: none; }
-  .participantCard { height: 108px; }
+  .participantCard { height: clamp(136px, 29dvh, 185px); }
   .participantPortrait { bottom: 23px; }
-  .youAvatar { width: 43px; height: 43px; }
-  .interviewerOrb { width: 50px; height: 50px; }
+  .youAvatar { width: 70px; height: 70px; }
+  .youAvatar > svg { width: 34px; height: 34px; }
+  .interviewerOrb { width: 68px; height: 68px; }
+  .interviewerOrb > div > svg { width: 34px; height: 34px; }
   .conversationStage { padding-block: 12px; gap: 12px; }
-  .callControls { padding-bottom: 10px; gap: 6px; }
+  .callControls { padding: 12px 0 16px; gap: 10px; }
   .transcriptTabs { min-height: 46px; }
   .transcriptFooter { padding-block: 7px; }
   .answerHeading { margin-top: 15px; }
@@ -349,9 +349,8 @@
   .stageIcon { width: 28px; height: 30px; }
   .callLayout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; }
   .stageColumn { display: contents; }
-  .conversationStage { grid-row: 1; gap: 9px; padding: 12px 13px 10px; }
-  .currentPrompt { display: none; }
-  .participantGrid { max-width: 500px; gap: 10px; }
+  .conversationStage { grid-row: 1; gap: 9px; margin-top: 0; padding: 10px 13px 10px; background: radial-gradient(ellipse at 85% 0, #16465338, transparent 75%), #0d1a2b; }
+  .participantGrid { max-width: 500px; gap: 10px; padding: 4px 0; }
   .participantCard { height: clamp(84px, 12dvh, 112px); border-radius: 10px; }
   .participantPortrait { bottom: 23px; }
   .youAvatar { width: 43px; height: 43px; }
@@ -365,11 +364,9 @@
   .participantName > svg { width: 12px; height: 12px; }
   .stationHint { font-size: 9px; }
   .stationHint .textButton { min-height: 24px; margin-top: 0; font-size: 9px; }
-  .callControls { grid-row: 3; gap: 7px; padding: 10px 13px calc(10px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--room-line); background: #172638; }
-  .deviceControls { gap: 8px; }
-  .deviceControls button { min-width: 94px; min-height: 44px; padding: 9px 11px; border-radius: 9px; }
-  .deviceControls button > span { font-size: 10px; }
-  .deviceControls .endCallButton { min-width: 80px; margin-left: 2px; }
+  .callControls { grid-row: 3; gap: 8px; margin-bottom: 0; padding: 8px 13px calc(8px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--room-line); background: #0d1a2b; }
+  .deviceControls { gap: 23px; padding: 8px 19px; }
+  .deviceControls button { width: 44px; height: 44px; }
   .controlHint { font-size: 8px; }
   .callNotice { font-size: 9px; line-height: 1.4; }
   .transcriptPanel { grid-row: 2; border-left: 0; border-top: 1px solid #9fb8d321; }

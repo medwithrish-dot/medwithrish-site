@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, AudioLines, Check, Clock3, FileText, Loader2, LockKeyhole, Maximize2, MessageSquareText, Mic, MicOff, Minimize2, PhoneOff, Sparkles, UserRound, Video, VideoOff, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, AudioLines, Check, Clock3, FileText, Loader2, LockKeyhole, Maximize2, MessageSquareText, Mic, MicOff, Minimize2, Phone, Sparkles, UserRound, Video, VideoOff, Volume2, VolumeX, X } from "lucide-react";
 import type { InterviewAnswer, InterviewAttempt } from "../_lib/interview-types";
 import type { useInterviewDevices } from "../_lib/useInterviewDevices";
 import type { useInterviewSpeech } from "../_lib/useInterviewSpeech";
@@ -21,6 +21,13 @@ type Props = {
   wordCount: number; onSkipPreparation: () => void;
   followUpAvailable: boolean; followUpBusy: boolean; followUpNotice: string; onFollowUp: () => void;
 };
+
+function ParticipantWaves() {
+  return <svg className={styles.participantWaves} viewBox="0 0 320 280" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 132C52 90 75 210 139 182S234 67 320 127V280H0Z" />
+    <path d="M0 177C67 105 99 238 169 214S257 117 320 166V280H0Z" />
+  </svg>;
+}
 
 export function AIInterviewCall(props: Props) {
   const [tab, setTab] = useState<"transcript" | "notes">("transcript");
@@ -66,18 +73,15 @@ export function AIInterviewCall(props: Props) {
     <div className={styles.callLayout}>
       <div className={styles.stageColumn}>
         <div className={styles.conversationStage}>
-          <section className={styles.currentPrompt} aria-label="Current interview question">
-            <div className={styles.promptEyebrow}><span><span className={styles.greenDot} />{preparing ? "Reading time" : "Your interview"}</span><span>Question {questionIndex + 1} / {attempt.questions.length}</span></div>
-            <h2>{question}</h2>
-            <p>{preparing ? "Take a breath. Use this time to organise your thoughts." : expired ? "Your time is up. Finish the station when you’re ready." : "Take your time. We’re interested in how you think."}</p>
-          </section>
           <div className={styles.participantGrid}>
             <section className={`${styles.participantCard} ${speech.listening ? styles.participantActive : ""}`} aria-label="Your participant tile">
-              {devices.cameraEnabled ? <div className={styles.participantVideo}><InterviewDevicePreview stream={devices.stream} compact /></div> : <div className={styles.participantPortrait}><span className={styles.youAvatar} aria-hidden="true"><UserRound size={28} strokeWidth={1.5} /></span></div>}
+              <ParticipantWaves />
+              {devices.cameraEnabled ? <div className={styles.participantVideo}><InterviewDevicePreview stream={devices.stream} compact /></div> : <div className={styles.participantPortrait}><span className={styles.youAvatar} aria-hidden="true"><UserRound size={46} strokeWidth={1.4} /></span></div>}
               <div className={styles.participantName}><div><strong>You</strong><span>{devices.cameraEnabled ? "Local camera preview" : "Camera off"}</span></div>{speech.listening ? <AudioLines size={15} aria-label="Microphone on" /> : <MicOff size={14} aria-label="Microphone off" />}</div>
             </section>
             <section className={`${styles.participantCard} ${styles.aiParticipant} ${speech.speaking ? styles.participantActive : ""}`} aria-label="AI interviewer participant tile">
-              <div className={styles.participantPortrait}><div className={`${styles.interviewerOrb} ${speech.speaking ? styles.orbSpeaking : ""}`} aria-hidden="true"><span /><div><AudioLines size={30} strokeWidth={1.4} /></div></div></div>
+              <ParticipantWaves />
+              <div className={styles.participantPortrait}><div className={`${styles.interviewerOrb} ${speech.speaking ? styles.orbSpeaking : ""}`} aria-hidden="true"><span /><div><AudioLines size={46} strokeWidth={1.6} /></div></div></div>
               <div className={styles.participantName}><div><strong>AI interviewer</strong><span>{speech.speaking ? "Speaking" : "PhloemAI"}</span></div>{speech.speaking ? <AudioLines size={15} aria-label="Reading the question" /> : <span className={styles.greenDot} />}</div>
             </section>
           </div>
@@ -87,9 +91,9 @@ export function AIInterviewCall(props: Props) {
           <div className={styles.deviceControls}>
             <button type="button" disabled={!active || microphonePending || !speech.supported} aria-label={microphoneLabel} title={microphoneLabel} aria-pressed={speech.listening} className={speech.listening ? styles.controlActive : ""} onClick={props.onToggleMicrophone}>{microphonePending ? <Loader2 size={21} className="animate-spin" /> : speech.listening ? <Mic size={21} /> : <MicOff size={21} />}<span>{speech.listening ? "Stop mic" : "Start mic"}</span></button>
             <button type="button" aria-label={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} title={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} aria-pressed={devices.cameraEnabled} disabled={devices.cameraPending || Boolean(busy)} onClick={() => void devices.toggleCamera()}>{devices.cameraPending ? <Loader2 size={21} className="animate-spin" /> : devices.cameraEnabled ? <Video size={21} /> : <VideoOff size={21} />}<span>{devices.cameraEnabled ? "Camera on" : "Camera off"}</span></button>
-            <button ref={finishButton} type="button" className={styles.endCallButton} aria-label="Finish station" title="Finish station" disabled={Boolean(busy)} onClick={() => setEndDialog(true)}><PhoneOff size={21} /><span>Finish</span></button>
+            <button ref={finishButton} type="button" className={styles.endCallButton} aria-label="Finish station" title="Finish station" disabled={Boolean(busy)} onClick={() => setEndDialog(true)}><Phone size={21} fill="currentColor" /><span>Finish</span></button>
           </div>
-          {microphonePending ? <p role="status" className={styles.callNotice}>Choose Allow or Block in your browser’s microphone prompt. You can also type your answer.</p> : (devices.microphoneError || speech.error) ? <p role="status" className={styles.callNotice}>{devices.microphoneError || speech.error}</p> : <p className={styles.controlHint}>{speech.listening ? "Listening · your words appear in the transcript." : preparing ? "Your microphone will be ready after reading time." : "Click the mic to speak, or type in the transcript."}</p>}
+          {microphonePending ? <p role="status" className={styles.callNotice}>Choose Allow or Block in your browser’s microphone prompt. You can also type your answer.</p> : (devices.microphoneError || speech.error) ? <p role="status" className={styles.callNotice}>{devices.microphoneError || speech.error}</p> : <p className={styles.controlHint}>{speech.listening ? "Listening · your words appear in the transcript." : preparing ? "Your microphone will be ready after reading time." : "Speak naturally, or type your answer in the transcript panel."}</p>}
           {devices.cameraError && <p role="status" className={styles.callNotice}>{devices.cameraError}</p>}
           {!speech.supported && <p className={styles.callNotice}>Speech recognition is unavailable in this browser. Type your answer to continue.</p>}
         </footer>
