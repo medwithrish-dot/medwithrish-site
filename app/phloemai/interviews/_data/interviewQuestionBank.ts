@@ -301,7 +301,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-01-014-role-of-a-doctor",
-    text: "Why do you think someone might qualify as a doctor and later decide to leave medicine?",
+    text: "What might lead someone to leave medical practice after qualifying, and what does this tell you about the demands of the career?",
     category: "NHS & Healthcare",
     subcategory: "Role of a Doctor",
     sourceSection: 1,
@@ -318,7 +318,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-01-015-role-of-a-doctor",
-    text: "How is being a doctor today different from being a doctor 100 years ago?",
+    text: "Compare a doctor's working life now with medical practice a century ago. Which changes have most affected the role?",
     category: "NHS & Healthcare",
     subcategory: "Role of a Doctor",
     sourceSection: 1,
@@ -488,7 +488,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-01-025-role-of-a-doctor",
-    text: "To what extent is most healthcare delivered in hospitals, or does the community play a larger role than people realise?",
+    text: "How do hospital services and community care each contribute to meeting patients' needs? Discuss where healthcare takes place.",
     category: "NHS & Healthcare",
     subcategory: "Role of a Doctor",
     sourceSection: 1,
@@ -555,7 +555,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-01-029-motivation-for-medicine",
-    text: "Which factors can cause anger, aggression or stress in healthcare environments?",
+    text: "What could make a healthcare setting stressful for patients or staff, and how might that stress develop into anger or aggression?",
     category: "Personal & Motivation",
     subcategory: "Motivation for Medicine",
     sourceSection: 1,
@@ -604,7 +604,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-02-002-communication-and-empathy",
-    text: "To what extent is clinical knowledge more important than communication skills, or are both equally important?",
+    text: "A clinician has excellent medical knowledge but struggles to explain decisions. How would you weigh communication against clinical expertise when judging their care?",
     category: "Communication & Teamwork",
     subcategory: "Communication & Empathy",
     sourceSection: 2,
@@ -655,7 +655,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-02-005-role-of-a-doctor",
-    text: "To what extent can a doctor be too empathetic?",
+    text: "Can empathy ever make a doctor's work more difficult? Discuss how to remain compassionate while making sound clinical decisions.",
     category: "NHS & Healthcare",
     subcategory: "Role of a Doctor",
     sourceSection: 2,
@@ -689,7 +689,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-02-007-role-of-a-doctor",
-    text: "Which responsibilities does a doctor have beyond the individual patient sitting in front of them?",
+    text: "Think about the responsibilities attached to a doctor's role beyond a single consultation. Who else is affected by their decisions?",
     category: "NHS & Healthcare",
     subcategory: "Role of a Doctor",
     sourceSection: 2,
@@ -757,7 +757,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-02-011-role-of-a-doctor",
-    text: "Why do you think lifelong learning particularly is important in medicine?",
+    text: "Why does a doctor need to keep learning throughout their career?",
     category: "NHS & Healthcare",
     subcategory: "Role of a Doctor",
     sourceSection: 2,
@@ -808,7 +808,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-02-014-public-health",
-    text: "To what extent should doctors be expected to act as role models for healthy behaviour?",
+    text: "Should expectations about healthy behaviour apply to doctors outside work? Explain how you would balance their example to patients with their private lives.",
     category: "NHS & Healthcare",
     subcategory: "Public Health",
     sourceSection: 2,
@@ -978,7 +978,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-03-004-medical-school-and-course",
-    text: "To what extent is there anything about this medical school or course that appeals to you less?",
+    text: "Which aspects of this course would suit you least, and why?",
     category: "Personal & Motivation",
     subcategory: "Medical School & Course",
     sourceSection: 3,
@@ -1250,7 +1250,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-03-020-strengths-weaknesses-and-resilience",
-    text: "What would you do next if your academic performance dropped significantly after starting medical school?",
+    text: "After starting medical school, you find that your marks are well below your previous standard. How would you work out what is going wrong and decide what to do?",
     category: "Personal & Motivation",
     subcategory: "Strengths, Weaknesses & Resilience",
     sourceSection: 3,
@@ -1412,7 +1412,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-04-010-communication-and-empathy",
-    text: "Why do you think listening sometimes more is important than speaking?",
+    text: "When might listening carefully achieve more than giving advice or explanations?",
     category: "Communication & Teamwork",
     subcategory: "Communication & Empathy",
     sourceSection: 4,
@@ -1477,7 +1477,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-04-014-communication-and-empathy",
-    text: "How could your approach differ when speaking with an elderly patient?",
+    text: "How would you adapt a consultation to an older patient's individual communication needs?",
     category: "Communication & Teamwork",
     subcategory: "Communication & Empathy",
     sourceSection: 4,
@@ -1493,7 +1493,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-04-015-communication-and-empathy",
-    text: "How might you handle a situation where a patient misunderstood what you had said?",
+    text: "A patient comes away from a conversation with a different understanding from the one you intended. How would you find out what they understood and put the misunderstanding right?",
     category: "Communication & Teamwork",
     subcategory: "Communication & Empathy",
     sourceSection: 4,
@@ -1574,7 +1574,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-04-020-conflict-and-difficult-conversations",
-    text: "How can cause a doctor-patient relationship to break down?",
+    text: "What can damage trust between a doctor and a patient, and how might their relationship deteriorate?",
     category: "Communication & Teamwork",
     subcategory: "Conflict & Difficult Conversations",
     sourceSection: 4,
@@ -1829,7 +1829,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-05-015-leadership",
-    text: "To what extent is a good leader always the person who speaks the most?",
+    text: "Someone speaks frequently in a group but rarely helps others contribute. What else would you look for before calling them a good leader?",
     category: "Communication & Teamwork",
     subcategory: "Leadership",
     sourceSection: 5,
@@ -1914,7 +1914,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-05-020-working-in-healthcare-teams",
-    text: "Why do you think teamwork particularly is important in healthcare?",
+    text: "Why does effective teamwork matter in healthcare?",
     category: "Communication & Teamwork",
     subcategory: "Working in Healthcare Teams",
     sourceSection: 5,
@@ -2101,7 +2101,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-06-011-personal-insight",
-    text: "How would you think your friends would describe you?",
+    text: "How do you think your friends would describe you?",
     category: "Personal & Motivation",
     subcategory: "Personal Insight",
     sourceSection: 6,
@@ -2220,7 +2220,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-06-018-personal-insight",
-    text: "Who has most had a significant influence on the person you are today?",
+    text: "Who has had the greatest influence on the person you are today?",
     category: "Personal & Motivation",
     subcategory: "Personal Insight",
     sourceSection: 6,
@@ -2390,7 +2390,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-06-028-strengths-weaknesses-and-resilience",
-    text: "Medical training is demanding and lengthy. Why are you confident you could cope with it?",
+    text: "What evidence from your experience suggests you can sustain your effort and wellbeing through a long medical training programme?",
     category: "Personal & Motivation",
     subcategory: "Strengths, Weaknesses & Resilience",
     sourceSection: 6,
@@ -2492,7 +2492,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-06-034-strengths-weaknesses-and-resilience",
-    text: "To what extent is resilience simply about coping with pressure, or can it also involve asking for help?",
+    text: "How does asking for support fit with your understanding of resilience? Discuss whether coping independently is always the best response to pressure.",
     category: "Personal & Motivation",
     subcategory: "Strengths, Weaknesses & Resilience",
     sourceSection: 6,
@@ -2781,7 +2781,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-07-016-nhs-structure-and-challenges",
-    text: "How can doctors do to reduce health inequalities?",
+    text: "What practical steps could doctors take to reduce health inequalities?",
     category: "NHS & Healthcare",
     subcategory: "NHS Structure & Challenges",
     sourceSection: 7,
@@ -2832,7 +2832,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-07-019-nhs-structure-and-challenges",
-    text: "To what extent should the NHS fund procedures that are considered non-essential?",
+    text: "How should the NHS approach funding a procedure that some people describe as non-essential? Explain what you would want to understand before reaching a view.",
     category: "NHS & Healthcare",
     subcategory: "NHS Structure & Challenges",
     sourceSection: 7,
@@ -2866,7 +2866,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-07-021-healthcare-resources-and-priorities",
-    text: "To what extent is treating the greatest number of patients always the fairest use of NHS resources?",
+    text: "Imagine an NHS funding decision where one option would reach more patients than another. Is the number of people treated enough to decide which option is fairest?",
     category: "NHS & Healthcare",
     subcategory: "Healthcare Resources & Priorities",
     sourceSection: 7,
@@ -3121,7 +3121,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-08-006-core-medical-ethics",
-    text: "To what extent can the four ethical principles ever conflict?",
+    text: "Describe how two of the four ethical principles could pull a clinical decision in different directions. How would you examine that tension?",
     category: "Ethics & Professionalism",
     subcategory: "Core Medical Ethics",
     sourceSection: 8,
@@ -3138,7 +3138,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-08-007-core-medical-ethics",
-    text: "How might you approach an ethical scenario where there was no perfect solution?",
+    text: "You have considered the available options in an ethical dilemma, but each has a significant drawback. How would you decide what to do and justify your choice?",
     category: "Ethics & Professionalism",
     subcategory: "Core Medical Ethics",
     sourceSection: 8,
@@ -3155,7 +3155,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-08-008-consent-capacity-and-confidentiality",
-    text: "To what extent should a competent adult be allowed to refuse life-saving treatment?",
+    text: "An adult with capacity refuses life-saving treatment. How should a doctor respond to that decision?",
     category: "Ethics & Professionalism",
     subcategory: "Consent, Capacity & Confidentiality",
     sourceSection: 8,
@@ -3206,7 +3206,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-08-011-consent-capacity-and-confidentiality",
-    text: "To what extent should family members be allowed to make decisions on behalf of a patient?",
+    text: "A patient's relatives want to decide which care the patient receives. What would you need to establish before deciding whether they should make that decision?",
     category: "Ethics & Professionalism",
     subcategory: "Consent, Capacity & Confidentiality",
     sourceSection: 8,
@@ -3291,7 +3291,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-08-016-organ-donation-and-resource-allocati",
-    text: "Should a doctor have the same duty of care towards a patient whose illness is partly linked to their lifestyle?",
+    text: "A patient's lifestyle may have contributed to their illness. Discuss whether this should change the doctor's duty of care towards them.",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 8,
@@ -3325,7 +3325,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-08-018-organ-donation-and-resource-allocati",
-    text: "To what extent should smokers and non-smokers have equal access to treatment?",
+    text: "When deciding who receives treatment, should smoking history count against a patient? Explain how you would compare access for smokers and non-smokers.",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 8,
@@ -3342,7 +3342,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-08-019-organ-donation-and-resource-allocati",
-    text: "To what extent should people with alcohol dependence have the same access to transplantation as other patients?",
+    text: "Discuss how transplant services should consider patients with alcohol dependence. How would you assess whether their access is fair compared with other patients?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 8,
@@ -3427,7 +3427,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-08-024-organ-donation-and-resource-allocati",
-    text: "Who do you think should decide whether an expensive treatment represents good value for the NHS?",
+    text: "An expensive treatment is being considered for NHS funding. Whose judgement should determine whether it offers good value, and why?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 8,
@@ -3444,7 +3444,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-08-025-core-medical-ethics",
-    text: "To what extent is it ethical to spend a very large amount of money treating one person when the same money could help many others?",
+    text: "A healthcare budget could fund costly care for one person or help a larger number of people. Explain how you would weigh the ethical arguments for each use of the money.",
     category: "Ethics & Professionalism",
     subcategory: "Core Medical Ethics",
     sourceSection: 8,
@@ -3461,7 +3461,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-001-ethical-and-professional-scenarios",
-    text: "A competent adult refuses a blood transfusion for religious reasons even though refusing it could result in death. How might you approach the situation?",
+    text: "An adult who has capacity declines a blood transfusion on religious grounds. They understand that they could die without it. Talk through how you would respond to their decision.",
     category: "Ethics & Professionalism",
     subcategory: "Ethical & Professional Scenarios",
     sourceSection: 9,
@@ -3477,7 +3477,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-002-consent-capacity-and-confidentiality",
-    text: "An unconscious patient needs an urgent blood transfusion, but their records indicate that they may refuse blood products for religious reasons. Which factors would you consider?",
+    text: "An unconscious patient urgently needs a transfusion. Their records suggest they may reject blood products on religious grounds. What would you clarify before acting?",
     category: "Ethics & Professionalism",
     subcategory: "Consent, Capacity & Confidentiality",
     sourceSection: 9,
@@ -3494,7 +3494,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-003-ethical-and-professional-scenarios",
-    text: "Parents refuse a potentially life-saving blood transfusion for their child because of their beliefs. How could the healthcare team respond?",
+    text: "Parents oppose a potentially life-saving blood transfusion for their child because of their beliefs. Explain the team's priorities in addressing this disagreement.",
     category: "Ethics & Professionalism",
     subcategory: "Ethical & Professional Scenarios",
     sourceSection: 9,
@@ -3510,7 +3510,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-004-organ-donation-and-resource-allocati",
-    text: "Only one donor organ is available and two patients have a similar level of clinical need. How could the decision be made?",
+    text: "Two people awaiting transplantation have comparable clinical need, and a donor organ is available for only one of them. What would a fair allocation process need to consider?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 9,
@@ -3527,7 +3527,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-005-ethical-and-professional-scenarios",
-    text: "A patient demands surgery even though their current health means the procedure is very likely to fail. How might you respond?",
+    text: "A patient wants surgery despite a very low chance of success because of their current health. How would you discuss the disagreement with them?",
     category: "Ethics & Professionalism",
     subcategory: "Ethical & Professional Scenarios",
     sourceSection: 9,
@@ -3543,7 +3543,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-006-organ-donation-and-resource-allocati",
-    text: "An expensive new treatment might substantially improve a patient's life, but the same money could treat many other people. How might you approach the decision?",
+    text: "A new treatment could greatly improve one patient's life but use funds that could treat many others. How would you weigh this funding decision?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 9,
@@ -3560,7 +3560,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-007-ethical-and-professional-scenarios",
-    text: "A young teenager requests advice about terminating a pregnancy. Which ethical, legal and communication issues should be considered?",
+    text: "A young teenager comes to the service seeking advice about ending a pregnancy. Talk through the communication, ethical and legal questions that would guide your response.",
     category: "Ethics & Professionalism",
     subcategory: "Ethical & Professional Scenarios",
     sourceSection: 9,
@@ -3576,7 +3576,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-008-ethical-and-professional-scenarios",
-    text: "A patient with serious heart disease refuses medication despite understanding that refusing it may shorten their life. Their spouse wants you to persuade them. What should you do next?",
+    text: "The spouse of a patient with serious heart disease asks you to convince their partner to take medication. The patient understands that refusing it could shorten their life and still declines. How would you respond to both people?",
     category: "Ethics & Professionalism",
     subcategory: "Ethical & Professional Scenarios",
     sourceSection: 9,
@@ -3592,7 +3592,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-009-ethical-and-professional-scenarios",
-    text: "A patient asks your opinion about an alternative treatment they discovered online. How might you respond?",
+    text: "A patient shows you an alternative treatment they found online. How would you explore their interest and discuss whether to try it?",
     category: "Ethics & Professionalism",
     subcategory: "Ethical & Professional Scenarios",
     sourceSection: 9,
@@ -3608,7 +3608,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-010-consent-capacity-and-confidentiality",
-    text: "A patient asks for an HIV test. Which issues should be considered before, during and after testing?",
+    text: "A patient would like an HIV test. Talk through the issues you would address when discussing the test, arranging it and following up the result.",
     category: "Ethics & Professionalism",
     subcategory: "Consent, Capacity & Confidentiality",
     sourceSection: 9,
@@ -3625,7 +3625,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-011-consent-capacity-and-confidentiality",
-    text: "A patient living with HIV refuses to tell their sexual partner about the diagnosis. How might you approach the situation?",
+    text: "Someone you are caring for has HIV and tells you they will not disclose this to their sexual partner. What would guide your next steps and your discussion with the patient?",
     category: "Ethics & Professionalism",
     subcategory: "Consent, Capacity & Confidentiality",
     sourceSection: 9,
@@ -3658,7 +3658,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-013-ethical-and-professional-scenarios",
-    text: "What ethical issues arise when conceiving a child partly in the hope that they could provide treatment for an existing sibling?",
+    text: "A family hopes that having another child could help provide treatment for a child they already have. Discuss the ethical considerations for the family and for each child.",
     category: "Ethics & Professionalism",
     subcategory: "Ethical & Professional Scenarios",
     sourceSection: 9,
@@ -3674,7 +3674,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-014-professionalism-and-professional-bou",
-    text: "You notice that a senior doctor appears to be under the influence of alcohol immediately before seeing patients. What would you do next?",
+    text: "A senior doctor is about to see patients, but you suspect they have been drinking alcohol. Talk through how you would handle your concern.",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 9,
@@ -3691,7 +3691,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-015-professionalism-and-professional-bou",
-    text: "A colleague asks you to prescribe medication for them informally. How might you respond?",
+    text: "A colleague wants you to write them a prescription outside the usual consultation process. How would you handle the request and explain your response?",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 9,
@@ -3708,7 +3708,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-016-ethical-and-professional-scenarios",
-    text: "You discover that a colleague is accessing illegal or seriously inappropriate material on a work computer. What should you do next?",
+    text: "You discover a colleague using a workplace computer to access material that is illegal or seriously inappropriate. Talk through how you would decide what action to take.",
     category: "Ethics & Professionalism",
     subcategory: "Ethical & Professional Scenarios",
     sourceSection: 9,
@@ -3740,7 +3740,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-018-safeguarding-and-duty-of-candour",
-    text: "A colleague makes a mistake but asks you not to tell anybody. How might you respond?",
+    text: "A colleague tells you about a mistake they have made and asks you to keep it to yourself. What would you say to them, and what would you do next?",
     category: "Ethics & Professionalism",
     subcategory: "Safeguarding & Duty of Candour",
     sourceSection: 9,
@@ -3757,7 +3757,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-019-safeguarding-and-duty-of-candour",
-    text: "You realise that you have made a mistake in a patient's care. What should you do next?",
+    text: "You recognise that something you did in a patient's care was a mistake. Explain your immediate priorities and how you would follow the matter through.",
     category: "Ethics & Professionalism",
     subcategory: "Safeguarding & Duty of Candour",
     sourceSection: 9,
@@ -3808,7 +3808,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-022-professionalism-and-professional-bou",
-    text: "One patient gives you an expensive gift after treatment. Would you accept it?",
+    text: "After receiving treatment, a patient offers you a gift of substantial value. Explain how you would decide whether to accept it and what you would say to the patient.",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 9,
@@ -3825,7 +3825,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-023-professionalism-and-professional-bou",
-    text: "Would your answer change if the gift were a small box of chocolates or a thank-you card?",
+    text: "Compare being offered an expensive patient gift with being given a small box of chocolates or a thank-you card. Would the value or nature of the gift change your response?",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 9,
@@ -3875,7 +3875,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-026-ethical-and-professional-scenarios",
-    text: "A patient requests antibiotics even though you believe they are unnecessary. How might you handle the conversation?",
+    text: "You do not think antibiotics are needed, but the patient asks you to prescribe them. Talk through how you would discuss their request and reach a plan.",
     category: "Ethics & Professionalism",
     subcategory: "Ethical & Professional Scenarios",
     sourceSection: 9,
@@ -3891,7 +3891,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-027-ethical-and-professional-scenarios",
-    text: "A patient insists on a scan that you believe is not clinically indicated. What would you do next?",
+    text: "A patient is pressing for a scan that you do not believe is clinically indicated. Explain how you would explore their concerns and respond to the request.",
     category: "Ethics & Professionalism",
     subcategory: "Ethical & Professional Scenarios",
     sourceSection: 9,
@@ -3907,7 +3907,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-028-consent-capacity-and-confidentiality",
-    text: "A patient's relative demands confidential information that the patient has asked you not to share. How might you respond?",
+    text: "A relative presses you for details of a patient's care. The patient has expressly refused permission to share them. How would you respond?",
     category: "Ethics & Professionalism",
     subcategory: "Consent, Capacity & Confidentiality",
     sourceSection: 9,
@@ -3924,7 +3924,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-029-consent-capacity-and-confidentiality",
-    text: "A medical student posts information about an interesting patient encounter on social media without naming the patient. Would that be acceptable?",
+    text: "A student posts about a memorable patient encounter on social media without naming the patient. How would you assess whether the post is appropriate?",
     category: "Ethics & Professionalism",
     subcategory: "Consent, Capacity & Confidentiality",
     sourceSection: 9,
@@ -3941,7 +3941,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-09-030-professionalism-and-professional-bou",
-    text: "A doctor publicly expresses a controversial political opinion while identifying themselves as a doctor. Which professionalism issues might arise?",
+    text: "A doctor uses their professional identity while sharing a controversial political view publicly. Discuss the professional considerations raised by doing so.",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 9,
@@ -4077,7 +4077,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-008-critical-thinking",
-    text: "To what extent should individuals be expected to take greater financial responsibility for their own health?",
+    text: "Should people pay a greater share of the costs associated with their own health? Discuss how you would set limits on personal financial responsibility.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Critical Thinking",
     sourceSection: 10,
@@ -4111,7 +4111,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-010-critical-thinking",
-    text: "To what extent should the NHS fund complementary therapies if the evidence for them is limited?",
+    text: "The evidence supporting a complementary therapy is limited. How would you assess whether the NHS should pay for patients to receive it?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Critical Thinking",
     sourceSection: 10,
@@ -4145,7 +4145,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-012-critical-thinking",
-    text: "In what situations researching an unfamiliar topic, how would you decide which information to trust?",
+    text: "You are researching a topic you know little about and encounter several sources. How would you decide which information deserves your trust?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Critical Thinking",
     sourceSection: 10,
@@ -4230,7 +4230,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-017-professionalism-and-professional-bou",
-    text: "In what ways have expectations around doctors' appearance and professional dress changed?",
+    text: "Discuss how views about doctors' clothing and appearance have developed over time. What might explain changes in expectations of professional dress?",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 10,
@@ -4281,7 +4281,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-020-health-inequalities",
-    text: "Which barriers might a person with a significant disability encounter when training as a doctor?",
+    text: "Consider the route through medical training for someone with a significant disability. Where might they encounter barriers, and why?",
     category: "NHS & Healthcare",
     subcategory: "Health Inequalities",
     sourceSection: 10,
@@ -4332,7 +4332,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-023-healthcare-policy-and-funding",
-    text: "Could there be risks in relying too heavily on charities to provide essential health services?",
+    text: "Imagine that essential local health services depend heavily on charitable support. What difficulties could that dependence create?",
     category: "NHS & Healthcare",
     subcategory: "Healthcare Policy & Funding",
     sourceSection: 10,
@@ -4400,7 +4400,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-027-healthcare-policy-and-funding",
-    text: "To what extent should doctors be involved in regulating high-risk sports such as boxing?",
+    text: "Consider a high-risk sport such as boxing. What part, if any, should doctors play in setting or enforcing the rules around participation?",
     category: "NHS & Healthcare",
     subcategory: "Healthcare Policy & Funding",
     sourceSection: 10,
@@ -4434,7 +4434,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-029-health-inequalities",
-    text: "Medicine has historically struggled with unequal representation. Why do you think diversity within the medical workforce matters?",
+    text: "Why does representation within the medical workforce matter? Discuss the value of diversity in a profession that has not always offered equal representation.",
     category: "NHS & Healthcare",
     subcategory: "Health Inequalities",
     sourceSection: 10,
@@ -4451,7 +4451,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-030-professionalism-and-professional-bou",
-    text: "Which benefits and challenges come with expanding the responsibilities of nurses and other healthcare professionals?",
+    text: "A service is considering giving nurses and other healthcare professionals a wider range of responsibilities. What benefits and difficulties would you want it to examine?",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 10,
@@ -4502,7 +4502,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-033-critical-thinking",
-    text: "Which question would you ask if you were interviewing somebody for medical school, and why?",
+    text: "Design one question you would use to interview a medical-school applicant. Explain what you would hope to learn from their answer.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Critical Thinking",
     sourceSection: 10,
@@ -4536,7 +4536,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-035-professionalism-and-professional-bou",
-    text: "How might you balance doctors' employment rights against their responsibilities to patients?",
+    text: "Doctors have obligations to their patients as well as employment rights. How would you approach a situation in which these pull in different directions?",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 10,
@@ -4553,7 +4553,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-036-healthcare-policy-and-funding",
-    text: "To what extent should healthcare always prioritise saving life above improving quality of life?",
+    text: "When saving life and improving quality of life lead to different healthcare priorities, how should the competing goals be weighed?",
     category: "NHS & Healthcare",
     subcategory: "Healthcare Policy & Funding",
     sourceSection: 10,
@@ -4570,7 +4570,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-037-healthcare-policy-and-funding",
-    text: "To what extent should prevention receive more NHS funding even if that means reducing spending on treatment?",
+    text: "Consider a proposal to move part of the NHS treatment budget into prevention. What would determine whether that change was justified?",
     category: "NHS & Healthcare",
     subcategory: "Healthcare Policy & Funding",
     sourceSection: 10,
@@ -4587,7 +4587,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-038-critical-thinking",
-    text: "To what extent is there a limit to how much society should spend to extend someone's life?",
+    text: "How should society decide what it can spend on treatments that extend life? Discuss whether any spending limit can be justified.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Critical Thinking",
     sourceSection: 10,
@@ -4604,7 +4604,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-10-039-healthcare-policy-and-funding",
-    text: "How could the NHS balance individual patient choice with population-level needs?",
+    text: "A patient's preferred option may compete with the wider population's healthcare needs. How should the NHS weigh individual choice against those needs?",
     category: "NHS & Healthcare",
     subcategory: "Healthcare Policy & Funding",
     sourceSection: 10,
@@ -4655,7 +4655,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-11-002-research-and-evidence",
-    text: "If you were given substantial funding to establish a research institute, which area would you choose to investigate and why?",
+    text: "You can establish a new medical research institute with substantial funding. Set out the research area you would focus on and explain why it deserves that investment.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Research & Evidence",
     sourceSection: 11,
@@ -4672,7 +4672,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-11-003-research-and-evidence",
-    text: "Which medical discovery has had the greatest impact over roughly the last century?",
+    text: "Choose a medical discovery from approximately the past hundred years that you consider especially influential. Make the case for its impact compared with other discoveries.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Research & Evidence",
     sourceSection: 11,
@@ -4706,7 +4706,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-11-005-research-and-evidence",
-    text: "Which public-health advance do you think has been one of the most important of the modern era?",
+    text: "Select a public-health advance from the modern era that you regard as particularly important. Explain what makes its contribution stand out.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Research & Evidence",
     sourceSection: 11,
@@ -4978,7 +4978,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-001-new-treatments-and-innovation",
-    text: "Weight-management injections such as semaglutide and tirzepatide have received enormous public attention. Which opportunities and challenges do they create?",
+    text: "Consider weight-management injections such as semaglutide and tirzepatide. How would you weigh the opportunities they offer against the challenges of using them in healthcare?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -5016,7 +5016,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-003-new-treatments-and-innovation",
-    text: "How could the NHS decide which patients receive expensive weight-management medicines first?",
+    text: "If NHS access to expensive weight-management medicines is limited, what should determine which patients are offered them first?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -5035,7 +5035,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-004-new-treatments-and-innovation",
-    text: "To what extent is obesity primarily an individual responsibility, a medical condition, a societal issue, or a combination of these?",
+    text: "Discuss how individual choices, medical factors and wider social conditions contribute to obesity. How should these perspectives shape where responsibility is placed?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -5054,7 +5054,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-005-new-treatments-and-innovation",
-    text: "In what ways could widespread use of weight-loss medication change the way society views obesity?",
+    text: "Imagine weight-loss medication becoming widely used. What effects might this have on public attitudes towards obesity?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -5073,7 +5073,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-006-new-treatments-and-innovation",
-    text: "Which ethical issues arise when people obtain prescription weight-loss medicines privately?",
+    text: "Compare the ethical considerations involved when prescription weight-loss medicines are obtained privately rather than through public healthcare. Which concerns would you examine?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -5092,7 +5092,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-007-new-treatments-and-innovation",
-    text: "How could doctors respond to patients requesting these drugs mainly for cosmetic weight loss?",
+    text: "A patient asks for a prescription weight-loss medicine chiefly to change their appearance. How would you explore the request and discuss your response?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -5130,7 +5130,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-009-new-treatments-and-innovation",
-    text: "In what ways could weight-loss medications reduce long-term NHS expenditure?",
+    text: "What would determine whether spending on weight-loss medication leads to lower NHS costs over the longer term?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -5149,7 +5149,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-010-new-treatments-and-innovation",
-    text: "Which risks arise when a highly publicised medicine becomes extremely popular before the public fully understands its benefits and side effects?",
+    text: "A medicine attracts intense publicity and demand, while public understanding of its benefits and side effects remains limited. What problems could follow from this mismatch?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -5206,7 +5206,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-013-public-health-debates",
-    text: "To what extent should pandemic preparedness receive substantial funding even when no major outbreak is occurring?",
+    text: "During a period without a major outbreak, a government must decide how much to invest in pandemic preparedness. How would you assess the case for substantial ongoing funding?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -5339,7 +5339,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-020-public-health-debates",
-    text: "How could doctors approach a condition such as long COVID when symptoms can be complex and vary considerably between patients?",
+    text: "Patients with long COVID may describe different combinations of complex symptoms. How would you approach care when experiences vary substantially from one person to another?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -5358,7 +5358,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-021-public-health-debates",
-    text: "To what extent should cOVID vaccination continue to be targeted towards groups at greatest risk rather than offered routinely to everybody?",
+    text: "Compare a COVID vaccination programme focused on people at greatest risk with one routinely offered to everyone. What should determine the choice between these approaches?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -5377,7 +5377,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-022-public-health-debates",
-    text: "How could governments communicate uncertainty during an evolving public-health emergency without losing public trust?",
+    text: "A public-health emergency is developing and the evidence keeps changing. How could a government explain what remains uncertain while maintaining public trust?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -5434,7 +5434,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-025-technology-ai-and-digital-health",
-    text: "To what extent should a doctor be allowed to rely on an AI system when making a clinical decision?",
+    text: "An AI system recommends a clinical course of action. How much weight should a doctor give that recommendation when making their decision?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Technology, AI & Digital Health",
     sourceSection: 12,
@@ -5453,7 +5453,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-026-technology-ai-and-digital-health",
-    text: "Who do you think should be responsible if an AI system contributes to a harmful medical decision?",
+    text: "A patient is harmed by a medical decision in which an AI system played a part. How would you think through who should be held responsible?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Technology, AI & Digital Health",
     sourceSection: 12,
@@ -5472,7 +5472,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-027-technology-ai-and-digital-health",
-    text: "In what ways could aI ever replace doctors?",
+    text: "Could AI take over the role of a doctor? Discuss which parts of the role might be replaceable and where the limits could lie.",
     category: "Hot Topics & Current Affairs",
     subcategory: "Technology, AI & Digital Health",
     sourceSection: 12,
@@ -5510,7 +5510,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-029-technology-ai-and-digital-health",
-    text: "In what ways could aI improve healthcare access and reduce waiting times?",
+    text: "Where might AI help people access healthcare sooner, and how could it affect waiting times?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Technology, AI & Digital Health",
     sourceSection: 12,
@@ -5529,7 +5529,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-030-technology-ai-and-digital-health",
-    text: "In what ways could aI increase existing health inequalities?",
+    text: "How might introducing AI into healthcare widen health inequalities that already exist?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Technology, AI & Digital Health",
     sourceSection: 12,
@@ -5586,7 +5586,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-033-technology-ai-and-digital-health",
-    text: "To what extent should patients always be told when AI has contributed to their diagnosis or treatment?",
+    text: "Discuss what patients should be told when AI helps shape their diagnosis or treatment. Should disclosure be required in every case?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Technology, AI & Digital Health",
     sourceSection: 12,
@@ -5605,7 +5605,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-034-technology-ai-and-digital-health",
-    text: "In what ways could aI make doctors better communicators by reducing administrative work?",
+    text: "If AI reduces the time doctors spend on administration, how might that affect their communication with patients?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Technology, AI & Digital Health",
     sourceSection: 12,
@@ -5624,7 +5624,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-035-technology-ai-and-digital-health",
-    text: "In what ways could excessive reliance on AI weaken doctors' clinical skills?",
+    text: "Consider a clinical team that becomes heavily dependent on AI tools. What effects could that reliance have on doctors' own clinical skills?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Technology, AI & Digital Health",
     sourceSection: 12,
@@ -5662,7 +5662,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-037-current-nhs-issues",
-    text: "Why do you think waiting times such an are important healthcare issue?",
+    text: "Why do waiting times matter for patients and for healthcare services?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Current NHS Issues",
     sourceSection: 12,
@@ -5700,7 +5700,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-039-current-nhs-issues",
-    text: "To what extent should clinical urgency always be the main consideration?",
+    text: "When deciding the order in which patients on a waiting list are seen, should clinical urgency outweigh every other consideration? Explain your reasoning.",
     category: "Hot Topics & Current Affairs",
     subcategory: "Current NHS Issues",
     sourceSection: 12,
@@ -5738,7 +5738,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-041-current-nhs-issues",
-    text: "To what extent should patients be offered treatment in the private sector if the NHS cannot treat them quickly enough?",
+    text: "An NHS patient cannot be treated within an acceptable timeframe. Discuss whether arranging their treatment in the private sector is an appropriate response.",
     category: "Hot Topics & Current Affairs",
     subcategory: "Current NHS Issues",
     sourceSection: 12,
@@ -5871,7 +5871,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-048-workforce-issues",
-    text: "To what extent should patients always know whether they are being treated by a doctor, physician associate or another healthcare professional?",
+    text: "How should patients be told whether they are seeing a doctor, physician associate or another professional? Should this always be made explicit?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Workforce Issues",
     sourceSection: 12,
@@ -5909,7 +5909,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-050-workforce-issues",
-    text: "How could doctors respond when another healthcare professional appears to be working beyond their competence?",
+    text: "You are concerned that a healthcare professional is taking on work beyond their competence. How should a doctor address the concern?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Workforce Issues",
     sourceSection: 12,
@@ -6099,7 +6099,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-060-ethics-in-the-news",
-    text: "To what extent should healthcare professionals publicly challenge celebrities or influencers who spread inaccurate medical claims?",
+    text: "An influencer or celebrity spreads an inaccurate medical claim. When should a healthcare professional challenge it publicly, and what should guide their approach?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Ethics in the News",
     sourceSection: 12,
@@ -6137,7 +6137,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-062-public-health-debates",
-    text: "Why do you think unnecessary antibiotic prescribing contributes to the problem?",
+    text: "Explain the link between unnecessary antibiotic prescribing and antimicrobial resistance.",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -6156,7 +6156,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-063-public-health-debates",
-    text: "How might you respond to a patient who strongly demanded antibiotics for a likely viral infection?",
+    text: "You think a patient's illness is probably caused by a virus, but they are insistent that they need antibiotics. How would you handle the consultation?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -6175,7 +6175,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-064-public-health-debates",
-    text: "To what extent should doctors ever prescribe antibiotics mainly to maintain a good relationship with a patient?",
+    text: "A doctor considers prescribing antibiotics mainly to avoid upsetting a patient. How would you assess the justification for that decision?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -6232,7 +6232,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-067-public-health-debates",
-    text: "To what extent should pharmaceutical companies receive greater incentives to develop new antibiotics?",
+    text: "Consider a proposal to give pharmaceutical companies stronger incentives to develop new antibiotics. What would guide your view on whether the proposal is justified?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -6289,7 +6289,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-070-public-health-debates",
-    text: "How could public-health policy balance the potential role of vaping in smoking cessation against concern about uptake among young people?",
+    text: "Vaping policy must consider both its possible use in helping people stop smoking and concerns about young people taking it up. How would you weigh those two considerations?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -6460,7 +6460,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-079-public-health-debates",
-    text: "Why do you think mental-health difficulties particularly are important among children and young people?",
+    text: "What makes mental-health difficulties during childhood and adolescence an important healthcare concern?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -6517,7 +6517,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-082-public-health-debates",
-    text: "To what extent can encouraging resilience sometimes unintentionally discourage people from asking for help?",
+    text: "Encouraging resilience is often intended to support people. How could that message nevertheless make someone less willing to seek help?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -6631,7 +6631,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-088-new-treatments-and-innovation",
-    text: "To what extent should parents be able to have newborn babies genetically screened for a large number of conditions?",
+    text: "A newborn screening programme could check for many genetic conditions. What should parents consider before deciding whether to take part?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -6650,7 +6650,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-089-new-treatments-and-innovation",
-    text: "What do you think should happen if genomic testing reveals a serious condition for which there is currently no treatment?",
+    text: "Genomic testing identifies a serious condition that cannot currently be treated. How should that finding be handled with the person tested?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -6669,7 +6669,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-090-new-treatments-and-innovation",
-    text: "Should a patient tell relatives about a genetic risk that may affect them?",
+    text: "A genetic test result may matter to a patient's relatives as well as the patient. How would you approach the question of sharing that information?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -6688,7 +6688,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-091-new-treatments-and-innovation",
-    text: "In what ways could personalised medicine widen health inequalities if new treatments are expensive?",
+    text: "If personalised treatments are costly, what might determine who can benefit from them, and how could this affect health inequalities?",
     category: "Hot Topics & Current Affairs",
     subcategory: "New Treatments & Innovation",
     sourceSection: 12,
@@ -6707,7 +6707,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-092-health-inequalities",
-    text: "Why do you think two people living only a few miles apart can experience very different health outcomes?",
+    text: "Neighbouring communities can have markedly different health outcomes. Which local circumstances would you explore to understand that difference?",
     category: "NHS & Healthcare",
     subcategory: "Health Inequalities",
     sourceSection: 12,
@@ -6725,7 +6725,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-093-health-inequalities",
-    text: "To what extent should the NHS spend more resources on disadvantaged communities?",
+    text: "When allocating NHS resources, how much weight should be given to the disadvantage experienced by a community?",
     category: "NHS & Healthcare",
     subcategory: "Health Inequalities",
     sourceSection: 12,
@@ -6815,7 +6815,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-098-health-inequalities",
-    text: "How can doctors realistically do about social problems that affect their patients' health?",
+    text: "What practical steps can doctors take when a patient's health is affected by social circumstances beyond the consultation?",
     category: "NHS & Healthcare",
     subcategory: "Health Inequalities",
     sourceSection: 12,
@@ -6888,7 +6888,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-102-end-of-life-care-and-assisted-dying",
-    text: "Which arguments are commonly made against it?",
+    text: "What objections are raised to assisted dying, and how would you assess them?",
     category: "Ethics & Professionalism",
     subcategory: "End-of-Life Care & Assisted Dying",
     sourceSection: 12,
@@ -6924,7 +6924,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-104-end-of-life-care-and-assisted-dying",
-    text: "How might vulnerable patients be protected?",
+    text: "If assisted dying were permitted, what safeguards would you consider for people who might face pressure or coercion?",
     category: "Ethics & Professionalism",
     subcategory: "End-of-Life Care & Assisted Dying",
     sourceSection: 12,
@@ -6942,7 +6942,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-105-end-of-life-care-and-assisted-dying",
-    text: "To what extent should doctors be required to participate if assisted dying were legally available?",
+    text: "If assisted dying were legally available, how should the wishes of patients be balanced with doctors' objections to participating?",
     category: "Ethics & Professionalism",
     subcategory: "End-of-Life Care & Assisted Dying",
     sourceSection: 12,
@@ -6960,7 +6960,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-106-end-of-life-care-and-assisted-dying",
-    text: "In what ways does high-quality palliative care influence this debate?",
+    text: "How does access to good palliative care shape the arguments about assisted dying?",
     category: "Ethics & Professionalism",
     subcategory: "End-of-Life Care & Assisted Dying",
     sourceSection: 12,
@@ -6978,7 +6978,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-107-end-of-life-care-and-assisted-dying",
-    text: "How could autonomy be balanced against the principle of preserving life?",
+    text: "In a discussion of assisted dying, how would you weigh personal autonomy alongside the duty to preserve life?",
     category: "Ethics & Professionalism",
     subcategory: "End-of-Life Care & Assisted Dying",
     sourceSection: 12,
@@ -7015,7 +7015,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-109-public-health-debates",
-    text: "Which responsibility does the NHS have to reduce its environmental impact?",
+    text: "What responsibility should the NHS take for its environmental impact?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -7053,7 +7053,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-111-public-health-debates",
-    text: "How could hospitals reduce waste without compromising infection control or patient safety?",
+    text: "A hospital wants to cut waste. How would you evaluate changes while protecting infection control and patient safety?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Public Health Debates",
     sourceSection: 12,
@@ -7167,7 +7167,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-117-technology-ai-and-digital-health",
-    text: "To what extent should anonymised NHS patient data be used for research without individual consent?",
+    text: "Researchers seek access to anonymised NHS patient records without asking each person for consent. What should govern that decision?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Technology, AI & Digital Health",
     sourceSection: 12,
@@ -7205,7 +7205,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-12-119-technology-ai-and-digital-health",
-    text: "What do you see as the risks of commercial companies accessing health data?",
+    text: "What concerns would you examine before allowing a commercial organisation to use health data?",
     category: "Hot Topics & Current Affairs",
     subcategory: "Technology, AI & Digital Health",
     sourceSection: 12,
@@ -7311,7 +7311,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-13-005-public-health",
-    text: "To what extent should advertising unhealthy foods to children be restricted?",
+    text: "What would you consider when deciding whether to limit advertising of unhealthy foods aimed at children?",
     category: "NHS & Healthcare",
     subcategory: "Public Health",
     sourceSection: 13,
@@ -7379,7 +7379,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-13-009-public-health",
-    text: "Could treating drug use primarily as a health issue rather than a criminal issue improve outcomes?",
+    text: "What might change if drug policy focused primarily on health needs rather than criminal penalties? How would you judge the results?",
     category: "NHS & Healthcare",
     subcategory: "Public Health",
     sourceSection: 13,
@@ -7498,7 +7498,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-13-016-public-health",
-    text: "To what extent should public-health campaigns use fear to change behaviour?",
+    text: "A public-health campaign proposes using frightening messages to change behaviour. How would you assess that approach?",
     category: "NHS & Healthcare",
     subcategory: "Public Health",
     sourceSection: 13,
@@ -7549,7 +7549,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-001-situational-judgement",
-    text: "A fellow medical student regularly misses teaching and has become socially withdrawn. What would concern you, and how would you respond?",
+    text: "You have noticed a medical student missing classes and avoiding social contact. How would you check in with them and decide whether further help is needed?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7565,7 +7565,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-002-situational-judgement",
-    text: "A friend tells you they intend to leave university but are terrified of telling their family. How might you support them?",
+    text: "A friend wants to withdraw from university but fears their family's reaction. How would you help them think through the conversation?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7581,7 +7581,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-003-situational-judgement",
-    text: "A colleague repeatedly arrives late, increasing everybody else's workload. How might you handle it?",
+    text: "Your team keeps having to cover for a colleague who arrives late. How would you address the pattern with them?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7597,7 +7597,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-004-situational-judgement",
-    text: "You notice a student copying another student's work. What would you do next?",
+    text: "You see one student copying another's work. Talk through how you would handle what you have observed.",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7613,7 +7613,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-005-situational-judgement",
-    text: "A friend asks you to share answers for an assessed assignment. How might you respond?",
+    text: "A friend wants your answers to an assignment that will be marked. How would you respond to the request?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7629,7 +7629,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-006-situational-judgement",
-    text: "You hear another student making an offensive remark about a patient. What would you do next?",
+    text: "Another student makes a disrespectful remark about a patient within your hearing. How would you address it?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7645,7 +7645,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-007-situational-judgement",
-    text: "A patient becomes verbally aggressive towards you. How might you manage the situation?",
+    text: "During a conversation, a patient starts shouting insults at you. How would you respond while keeping everyone safe?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7661,7 +7661,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-008-situational-judgement",
-    text: "A relative becomes angry because their family member has been waiting for several hours. How might you respond?",
+    text: "After a long wait, a patient's relative angrily asks you why nothing is happening. How would you begin that conversation?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7677,7 +7677,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-009-situational-judgement",
-    text: "You are running late but an anxious patient clearly needs more time. What would you do next?",
+    text: "You are already behind schedule when you meet a patient who is anxious and needs more time. How would you balance those demands?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7693,7 +7693,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-010-situational-judgement",
-    text: "You receive several urgent tasks at once. How might you prioritise them?",
+    text: "Several urgent requests arrive together. Explain how you would decide what needs your attention first.",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7709,7 +7709,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-011-situational-judgement",
-    text: "You realise another healthcare professional may have misunderstood an important instruction. What would you do next?",
+    text: "You suspect an important instruction has been misunderstood by another healthcare professional. How would you check and resolve this?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7725,7 +7725,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-012-situational-judgement",
-    text: "A senior colleague tells you to do something you believe may be unsafe. How might you respond?",
+    text: "A senior member of staff asks you to take an action that you think could put a patient at risk. What would you say and do?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7741,7 +7741,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-013-situational-judgement",
-    text: "You notice confidential patient information visible on an unattended computer screen. What would you do next?",
+    text: "An unattended computer is displaying confidential patient details. How would you deal with the immediate issue and any further concerns?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7757,7 +7757,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-014-situational-judgement",
-    text: "You accidentally send information to the wrong person. What do you think should happen next?",
+    text: "You discover that you have sent information to an unintended recipient. How would you respond to the mistake?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7773,7 +7773,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-015-situational-judgement",
-    text: "One patient asks you a question and you genuinely do not know the answer. What would you say?",
+    text: "A patient asks something you cannot answer confidently. How would you respond without misleading them?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7789,7 +7789,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-016-situational-judgement",
-    text: "A patient asks for your personal phone number so they can contact you later. How might you respond?",
+    text: "A patient would like your personal mobile number for future questions. How would you respond and discuss ways to obtain help?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7805,7 +7805,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-017-situational-judgement",
-    text: "You see a colleague post something unprofessional about work on social media. What would you do next?",
+    text: "A colleague's public social-media post about work strikes you as unprofessional. How would you decide what action to take?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7821,7 +7821,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-018-situational-judgement",
-    text: "A team member is visibly upset immediately before an important task. How might you approach them?",
+    text: "Just before an important team task, you notice that a colleague is distressed. How would you check what support they need?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7837,7 +7837,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-019-situational-judgement",
-    text: "You believe a colleague is experiencing burnout but they insist that everything is fine. What would you do next?",
+    text: "A colleague says they are coping, although you have noticed signs that make you worry about burnout. How would you approach the conversation?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7853,7 +7853,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-14-020-situational-judgement",
-    text: "One patient makes a discriminatory comment towards a member of staff. How should the team respond?",
+    text: "A staff member is targeted by a discriminatory remark from a patient. What response would you expect from the rest of the team?",
     category: "Ethics & Professionalism",
     subcategory: "Situational Judgement",
     sourceSection: 14,
@@ -7869,7 +7869,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-15-001-organ-donation-and-resource-allocati",
-    text: "You control a limited healthcare budget. Would you prioritise a treatment that substantially reduces chronic pain for many patients or a life-saving procedure for fewer critically ill patients? Explain your thinking.",
+    text: "A healthcare budget can fund either substantial relief from chronic pain for a large group or life-saving procedures for a smaller, critically ill group. How would you weigh the options?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 15,
@@ -7886,7 +7886,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-15-002-organ-donation-and-resource-allocati",
-    text: "Two patients need the same organ but only one organ is available. Which principles should guide the decision?",
+    text: "One donated organ could help either of two patients who need it. What would a fair process for deciding between them involve?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 15,
@@ -7903,7 +7903,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-15-003-organ-donation-and-resource-allocati",
-    text: "A new cancer treatment extends life by several months but is extremely expensive. Do you think the NHS should fund it?",
+    text: "The NHS is considering a costly cancer medicine that offers a few extra months of life. What should be weighed when deciding whether to fund it?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 15,
@@ -7920,7 +7920,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-15-004-organ-donation-and-resource-allocati",
-    text: "A treatment is highly effective for a small number of people but provides no benefit to most patients. How could funding decisions be made?",
+    text: "Only a small group of patients benefits from a treatment, but the benefit for that group is large. How would you approach a funding decision?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 15,
@@ -7937,7 +7937,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-15-005-organ-donation-and-resource-allocati",
-    text: "To what extent should rare-disease treatments be funded even when their cost per patient is extremely high?",
+    text: "How would you assess funding for a rare-disease treatment whose cost per patient is very high?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 15,
@@ -7971,7 +7971,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-15-007-organ-donation-and-resource-allocati",
-    text: "To what extent should patients who have already waited a long time receive priority over newly referred patients with greater clinical need?",
+    text: "A service must balance long waits against the greater clinical needs of newly referred patients. How should it set priorities?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 15,
@@ -7988,7 +7988,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-15-008-organ-donation-and-resource-allocati",
-    text: "To what extent should preventive programmes receive funding if their benefits may not become apparent for decades?",
+    text: "A prevention programme may take decades to show its full benefit. How would you judge its claim on funding needed for care today?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 15,
@@ -8005,7 +8005,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-15-009-organ-donation-and-resource-allocati",
-    text: "In what situations resources are limited, should healthcare prioritise length of life or quality of life?",
+    text: "With limited healthcare resources, how would you weigh improving quality of life against extending life?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 15,
@@ -8022,7 +8022,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-15-010-organ-donation-and-resource-allocati",
-    text: "Who do you think should ultimately make NHS resource-allocation decisions: doctors, politicians, economists, patients or independent organisations?",
+    text: "How should clinicians, elected representatives, economists, patients and independent bodies contribute to NHS funding decisions, and who should be accountable for the final choice?",
     category: "Ethics & Professionalism",
     subcategory: "Organ Donation & Resource Allocation",
     sourceSection: 15,
@@ -8107,7 +8107,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-16-005-professionalism-and-professional-bou",
-    text: "To what extent is it ever appropriate for doctors to discuss patients online if identifying details are removed?",
+    text: "A doctor wants to discuss a patient online after removing identifying details. What should they consider before posting?",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 16,
@@ -8158,7 +8158,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-16-008-professionalism-and-professional-bou",
-    text: "To what extent should doctors accept friend requests from patients on social media?",
+    text: "A patient sends their doctor a social-media friend request. How should the doctor decide how to respond?",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 16,
@@ -8260,7 +8260,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-16-014-professionalism-and-professional-bou",
-    text: "Why do you think trust particularly is important in the medical profession?",
+    text: "Why is trust especially important in the relationship between doctors and patients?",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 16,
@@ -8277,7 +8277,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-16-015-professionalism-and-professional-bou",
-    text: "What would you do next if protecting a colleague conflicted with protecting a patient?",
+    text: "How would you respond if loyalty to a colleague came into conflict with protecting a patient?",
     category: "Ethics & Professionalism",
     subcategory: "Professionalism & Professional Boundaries",
     sourceSection: 16,
@@ -8294,7 +8294,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-001-role-play",
-    text: "Role-play speaking with a student who has repeatedly missed teaching sessions.",
+    text: "Speak with a fellow student whose attendance at teaching has dropped. Explore what is happening and what support they might need.",
     category: "Practical MMI & Role Play",
     subcategory: "Role Play",
     sourceSection: 17,
@@ -8311,7 +8311,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-002-role-play",
-    text: "Role-play speaking with a friend who has failed an important examination.",
+    text: "A friend has just failed an exam that mattered to them. Show how you would begin a supportive conversation.",
     category: "Practical MMI & Role Play",
     subcategory: "Role Play",
     sourceSection: 17,
@@ -8328,7 +8328,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-003-communication-tasks",
-    text: "Role-play explaining to somebody that an event they were looking forward to has been cancelled.",
+    text: "Tell someone that an event they were excited about has been cancelled, and respond to their reaction.",
     category: "Practical MMI & Role Play",
     subcategory: "Communication Tasks",
     sourceSection: 17,
@@ -8345,7 +8345,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-004-role-play",
-    text: "Role-play speaking with an angry customer who believes they have been treated unfairly.",
+    text: "A customer feels they have been treated unfairly and is angry. Demonstrate how you would listen and respond.",
     category: "Practical MMI & Role Play",
     subcategory: "Role Play",
     sourceSection: 17,
@@ -8396,7 +8396,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-007-communication-tasks",
-    text: "Role-play reassuring someone who is anxious before a medical procedure.",
+    text: "Speak with someone who is worried about an upcoming medical procedure. Explore their concerns and offer appropriate support.",
     category: "Practical MMI & Role Play",
     subcategory: "Communication Tasks",
     sourceSection: 17,
@@ -8413,7 +8413,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-008-role-play",
-    text: "Role-play speaking with a relative who is frustrated by a long hospital wait.",
+    text: "Talk with a patient's relative who is frustrated about the length of the hospital wait.",
     category: "Practical MMI & Role Play",
     subcategory: "Role Play",
     sourceSection: 17,
@@ -8430,7 +8430,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-009-role-play",
-    text: "Role-play encouraging someone to consider a healthy lifestyle change without lecturing them.",
+    text: "Help someone explore a possible change to their lifestyle, giving them room to make their own decision.",
     category: "Practical MMI & Role Play",
     subcategory: "Role Play",
     sourceSection: 17,
@@ -8447,7 +8447,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-010-role-play",
-    text: "Role-play speaking with somebody who is hesitant about vaccination.",
+    text: "Have a conversation with someone who is unsure about vaccination. Find out what matters to them before responding.",
     category: "Practical MMI & Role Play",
     subcategory: "Role Play",
     sourceSection: 17,
@@ -8464,7 +8464,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-011-role-play",
-    text: "Role-play responding to someone who has received upsetting news.",
+    text: "Show how you would support someone who has just heard upsetting news.",
     category: "Practical MMI & Role Play",
     subcategory: "Role Play",
     sourceSection: 17,
@@ -8498,7 +8498,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-013-role-play",
-    text: "Role-play speaking with a colleague whose behaviour is affecting the team.",
+    text: "Discuss a concern with a colleague whose behaviour has been causing difficulties for the team.",
     category: "Practical MMI & Role Play",
     subcategory: "Role Play",
     sourceSection: 17,
@@ -8515,7 +8515,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-014-role-play",
-    text: "Role-play apologising after making a mistake.",
+    text: "You have made a mistake that affects someone else. Demonstrate how you would apologise and discuss what happens next.",
     category: "Practical MMI & Role Play",
     subcategory: "Role Play",
     sourceSection: 17,
@@ -8532,7 +8532,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-015-giving-and-receiving-feedback",
-    text: "Role-play giving constructive feedback to somebody who has performed poorly.",
+    text: "Give feedback to someone whose recent performance fell short, keeping the conversation constructive.",
     category: "Communication & Teamwork",
     subcategory: "Giving & Receiving Feedback",
     sourceSection: 17,
@@ -8549,7 +8549,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-016-giving-and-receiving-feedback",
-    text: "Role-play receiving critical feedback from somebody else and responding appropriately.",
+    text: "Someone raises concerns about your performance. Demonstrate how you would listen, respond and decide what to do next.",
     category: "Communication & Teamwork",
     subcategory: "Giving & Receiving Feedback",
     sourceSection: 17,
@@ -8566,7 +8566,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-017-role-play",
-    text: "Role-play resolving a disagreement between two members of a group.",
+    text: "Help two people in a group talk through a disagreement and work towards a way forward.",
     category: "Practical MMI & Role Play",
     subcategory: "Role Play",
     sourceSection: 17,
@@ -8583,7 +8583,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-17-018-communication-tasks",
-    text: "Explain clearly a complicated set of instructions in a clear and structured way.",
+    text: "Talk someone through a complicated set of instructions so they can follow each step.",
     category: "Practical MMI & Role Play",
     subcategory: "Communication Tasks",
     sourceSection: 17,
@@ -8889,7 +8889,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-19-003-group-tasks",
-    text: "Explain how you would decide which items should be taken on a survival exercise.",
+    text: "Your group must choose equipment for a survival exercise. Explain how you would compare suggestions and reach agreement.",
     category: "Practical MMI & Role Play",
     subcategory: "Group Tasks",
     sourceSection: 19,
@@ -8923,7 +8923,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-19-005-group-tasks",
-    text: "Design a simple a strategy to reduce missed hospital appointments.",
+    text: "Work with a group to propose a practical way of reducing missed hospital appointments.",
     category: "Practical MMI & Role Play",
     subcategory: "Group Tasks",
     sourceSection: 19,
@@ -8957,7 +8957,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-19-007-group-tasks",
-    text: "Explain how you would decide how a hospital could reduce its environmental impact.",
+    text: "Help a group choose practical steps to reduce a hospital's environmental impact.",
     category: "Practical MMI & Role Play",
     subcategory: "Group Tasks",
     sourceSection: 19,
@@ -8991,7 +8991,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-19-009-group-tasks",
-    text: "Create a brief a solution for reducing pressure on an emergency department.",
+    text: "Propose a focused change that could ease pressure on an emergency department, and discuss it with your group.",
     category: "Practical MMI & Role Play",
     subcategory: "Group Tasks",
     sourceSection: 19,
@@ -9008,7 +9008,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-19-010-group-discussion",
-    text: "Design a simple a health education programme for teenagers.",
+    text: "Plan a short health-education programme for teenagers with your group.",
     category: "Practical MMI & Role Play",
     subcategory: "Group Discussion",
     sourceSection: 19,
@@ -9025,7 +9025,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-001-prioritisation-stations",
-    text: "Explain how you would rank several patients according to urgency and explain your reasoning.",
+    text: "How would you decide which patients need attention most urgently, and communicate your reasoning?",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9041,7 +9041,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-002-prioritisation-stations",
-    text: "Imagine you have five tasks and only enough time to complete three immediately. Decide what you would do first.",
+    text: "Five tasks need attention, but you can deal with only three straight away. Explain how you would choose what to do now and what can wait.",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9073,7 +9073,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-004-prioritisation-stations",
-    text: "Explain how you would decide how to allocate a limited healthcare budget between different services.",
+    text: "Several services are competing for a limited healthcare budget. How would you decide their relative priority?",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9105,7 +9105,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-006-prioritisation-stations",
-    text: "Explain how you would decide which pieces of information are most important when assessing a situation.",
+    text: "When faced with an unfamiliar situation, how would you identify the information you need most urgently?",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9185,7 +9185,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-21-001-hypotheticals",
-    text: "Imagine healthcare 200 years in the future. Which parts of a doctor's job might no longer exist?",
+    text: "Looking two centuries ahead, which responsibilities of doctors might have disappeared, and what might have taken their place?",
     category: "Curveballs & Quick-Fire",
     subcategory: "Hypotheticals",
     sourceSection: 21,
@@ -9202,7 +9202,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-21-002-creative-questions",
-    text: "You are organising a medicine-themed event. How might you make it memorable?",
+    text: "Design a memorable event about medicine. What would people take part in, and what would you want them to take away?",
     category: "Curveballs & Quick-Fire",
     subcategory: "Creative Questions",
     sourceSection: 21,
@@ -9219,7 +9219,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-21-003-creative-questions",
-    text: "List as many alternative uses as possible for a phone charger.",
+    text: "Think of uses for a phone charger that have nothing to do with charging a phone.",
     category: "Curveballs & Quick-Fire",
     subcategory: "Creative Questions",
     sourceSection: 21,
@@ -9236,7 +9236,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-21-004-unexpected-questions",
-    text: "You have six months completely free, enough money to support yourself and no academic obligations. How might you spend the time in an imaginative, non-medical way?",
+    text: "You have six months free from study, with your living costs covered. Describe a creative project or experience unrelated to medicine that you would pursue.",
     category: "Curveballs & Quick-Fire",
     subcategory: "Unexpected Questions",
     sourceSection: 21,
@@ -9253,7 +9253,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-21-005-hypotheticals",
-    text: "Imagine you are stranded on an island, but food, water and shelter are already provided. Which three additional items would you choose and why?",
+    text: "Food, drinking water and shelter are available on an isolated island where you must stay. You can bring three more items. What would you choose, and why?",
     category: "Curveballs & Quick-Fire",
     subcategory: "Hypotheticals",
     sourceSection: 21,
@@ -9270,7 +9270,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-21-006-opinion-questions",
-    text: "Do you think sending humans to the Moon was a worthwhile use of money?",
+    text: "How would you assess whether the money spent taking people to the Moon was justified?",
     category: "Curveballs & Quick-Fire",
     subcategory: "Opinion Questions",
     sourceSection: 21,
@@ -9338,7 +9338,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-21-010-creative-questions",
-    text: "Give me five less obvious unusual uses for a paperclip.",
+    text: "Suggest five inventive uses for a paperclip beyond holding papers together.",
     category: "Curveballs & Quick-Fire",
     subcategory: "Creative Questions",
     sourceSection: 21,
@@ -9355,7 +9355,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-21-011-hypotheticals",
-    text: "If you could remove one modern technology from society, what would you choose?",
+    text: "You can choose one modern technology for society to stop using. Which would you pick, and what might the consequences be?",
     category: "Curveballs & Quick-Fire",
     subcategory: "Hypotheticals",
     sourceSection: 21,
@@ -9372,7 +9372,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-21-012-unexpected-questions",
-    text: "If you had 10 million pounds to improve your local community, how would you spend it?",
+    text: "Your community receives a fund of ten million pounds. What would you spend it on, and how would you justify those priorities?",
     category: "Curveballs & Quick-Fire",
     subcategory: "Unexpected Questions",
     sourceSection: 21,
