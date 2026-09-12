@@ -18,9 +18,10 @@ const { createSpeechBoundaryTracker, normalizeSpeechTranscript, getTranscriptHin
 
 // Exercise the production hook with a delayed browser recognition service.
 // Each harness has isolated browser globals; no microphone or real timers run.
-function speechHarness() {
+function speechHarness(options = {}) {
   const effects = [];
   const timers = [];
+  const delays = [];
   const played = [];
   const transcripts = [];
   const recognitions = [];
@@ -55,22 +56,23 @@ function speechHarness() {
     Date: class extends Date { static now() { return now; } },
     window: {
       SpeechRecognition: Recognition,
-      setTimeout: callback => { timers.push(callback); return timers.length; },
+      setTimeout: (callback, delay) => { timers.push(callback); delays.push(delay); return timers.length; },
       clearTimeout: id => { if (id !== undefined) timers[id - 1] = null; },
       speechSynthesis: {
         cancel: () => { cancellations += 1; },
         getVoices: () => [],
-        speak: utterance => played.push(utterance.text),
+        speak: utterance => { if (options.synthesisThrows) throw new Error("Playback unavailable"); played.push(utterance.text); },
       },
     },
   });
-  const speech = loaded.exports.useInterviewSpeech({ onTranscript: text => transcripts.push(text) });
+  const speech = loaded.exports.useInterviewSpeech({ ...options, onTranscript: text => transcripts.push(text) });
   const cleanups = effects.map(effect => effect()).filter(Boolean);
   let unmounted = false;
   return {
     speech, played, recognitions, transcripts,
     advanceTime: milliseconds => { now += milliseconds; },
     get cancellations() { return cancellations; },
+    fireSilenceTimers() { timers.forEach((callback, index) => { if (delays[index] === 8000) { timers[index] = null; callback?.(); } }); },
     finishStopTimeouts() {
       for (let index = 0; index < timers.length; index += 1) {
         const callback = timers[index];
@@ -299,4 +301,35 @@ test("ending listening before microphone permission resolves releases the late s
   assert.equal(mic.stoppedTracks, 1);
   assert.equal(mic.closedContexts, 0);
   assert.deepEqual(mic.events, []);
+});
+
+
+test("answer silence uses eight seconds, cancels on speech and never fires after manual stop", async t => {
+  let prompts = 0;
+  const room = speechHarness({ silenceMs: 8000, onSilence: () => prompts++ });
+  t.after(() => room.unmount());
+  room.speech.start();
+  const recognition = room.recognitions[0];
+  room.fireSilenceTimers();
+  assert.equal(prompts, 0, "No prompt during opening silence");
+  recognition.onspeechstart(); recognition.onspeechend();
+  recognition.onspeechstart();
+  room.fireSilenceTimers();
+  assert.equal(prompts, 0, "Continuing speech cancels the pending prompt");
+  recognition.onspeechend();
+  room.fireSilenceTimers(); room.fireSilenceTimers();
+  assert.equal(prompts, 1, "One confirmation per gap");
+  recognition.onspeechstart(); recognition.onspeechend();
+  const pending = room.speech.stop();
+  room.fireSilenceTimers(); room.finishStopTimeouts(); await pending;
+  assert.equal(prompts, 1, "A deliberate mic stop never asks for confirmation");
+});
+
+
+test("synchronous voice playback failure releases the prompt so listening can resume", async t => {
+  const room = speechHarness({ synthesisThrows: true });
+  t.after(() => room.unmount());
+  let completed = 0;
+  await room.speech.speak("Done? Answer yes or no.", () => completed++);
+  assert.equal(completed, 1);
 });

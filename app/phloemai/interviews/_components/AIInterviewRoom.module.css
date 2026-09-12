@@ -422,3 +422,11 @@
   .answerHeading { margin-top: 10px; }
 }
 @media (prefers-reduced-motion: reduce) { .experience *, .experience *::before, .experience *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+.donePrompt, .answerProgress { margin-top: 12px; border: 1px solid #367477; border-radius: 9px; padding: 12px; background: #173a43; color: #e1efed; }
+.donePrompt p { font-size: 14px; font-weight: 700; }
+.donePrompt span, .answerProgress span { display: block; font-size: 12px; line-height: 1.6; color: #b8cecc; }
+.donePrompt > div { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.donePrompt button, .answerProgress button { border: 1px solid #72bcb6; border-radius: 6px; padding: 8px 12px; font-size: 12px; font-weight: 650; background: #245b59; color: white; cursor: pointer; }
+.answerProgress button { margin-top: 8px; }
+.donePrompt button:disabled, .answerProgress button:disabled { opacity: .5; cursor: not-allowed; }

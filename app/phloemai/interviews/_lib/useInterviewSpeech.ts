@@ -31,7 +31,7 @@ const recognitionAvailable = () => {
 };
 const synthesisAvailable = () => "speechSynthesis" in window;
 
-export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "answer" }: { onTranscript: (text: string) => void; rate?: number; answerKey?: string }) {
+export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "answer", onSilence, silenceMs = 8_000 }: { onTranscript: (text: string) => void; rate?: number; answerKey?: string; onSilence?: () => void; silenceMs?: number }) {
   const supported = useSyncExternalStore(subscribe, recognitionAvailable, serverUnsupported);
   const voiceSupported = useSyncExternalStore(subscribe, synthesisAvailable, serverUnsupported);
   const [listening, setListening] = useState(false);
@@ -51,10 +51,15 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   const stoppingRef = useRef<Promise<void> | null>(null);
   const mountedRef = useRef(true);
   const speechRequestRef = useRef(0);
+  const silenceTimerRef = useRef<number | null>(null);
+  const onSilenceRef = useRef(onSilence);
+  useEffect(() => { onSilenceRef.current = onSilence; }, [onSilence]);
+  const clearSilence = useCallback(() => { if (silenceTimerRef.current !== null) window.clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null; }, []);
 
   useEffect(() => { onTranscriptRef.current = onTranscript; }, [onTranscript]);
 
   const stop = useCallback((): Promise<void> => {
+    clearSilence();
     if (stoppingRef.current) return stoppingRef.current;
     const recognition = recognitionRef.current;
     if (!recognition) return Promise.resolve();
@@ -91,7 +96,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     stoppingRef.current = pending;
     void pending.then(() => { if (stoppingRef.current === pending) stoppingRef.current = null; });
     return pending;
-  }, []);
+  }, [clearSilence]);
 
   const stopSpeaking = useCallback(() => {
     speechRequestRef.current += 1;
@@ -113,6 +118,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     interimRef.current = "";
     boundaryRef.current.reset();
     if (deliveryKeyRef.current !== answerKey) {
+      clearSilence();
       deliveryKeyRef.current = answerKey;
       setDeliveryKey(answerKey);
       deliveryRef.current = { text: "", segments: [], confidence: [] };
@@ -127,6 +133,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     recognition.interimResults = true;
     recognition.onspeechstart = () => {
       if (recognitionRef.current !== recognition || finishRef.current) return;
+      clearSilence();
       const pause = boundaryRef.current.start(elapsed());
       if (pause) {
         // Do not place a gap before words that are still awaiting recognition.
@@ -136,7 +143,14 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
         deliveryRef.current.segments.push(pause);
       }
     };
-    recognition.onspeechend = () => boundaryRef.current.end(elapsed());
+    recognition.onspeechend = () => {
+      boundaryRef.current.end(elapsed());
+      clearSilence();
+      silenceTimerRef.current = window.setTimeout(() => {
+        silenceTimerRef.current = null;
+        if (mountedRef.current && !finishRef.current) onSilenceRef.current?.();
+      }, silenceMs);
+    };
     recognition.onresult = (event) => {
       let interim = "";
       for (let index = event.resultIndex; index < event.results.length; index += 1) {
@@ -160,14 +174,12 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       setDeliveryHints(getSpeechDelivery({ transcript: `${delivery.text} ${interim}`, segments: liveSegments, elapsedSeconds: elapsed(), confidence: delivery.confidence }));
     };
     recognition.onerror = (event) => {
-      if (event.error === "aborted") return;
+      if (event.error === "aborted" || event.error === "no-speech") return;
       const message = event.error === "not-allowed" || event.error === "service-not-allowed"
         ? "Microphone access was not allowed. You can enable it in your browser or type your answer."
         : event.error === "audio-capture"
           ? "No microphone was found. Connect one or type your answer."
-          : event.error === "no-speech"
-            ? "No speech was detected. Restart the microphone when ready, or type your answer."
-            : "Speech recognition stopped. Your transcript is kept; restart the microphone or type to continue.";
+          : "Speech recognition stopped. Your transcript is kept; restart the microphone or type to continue.";
       setError(message);
       void stop();
     };
@@ -197,14 +209,15 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       recognitionRef.current = null;
       setError("The microphone could not start. Try again or type your answer.");
     }
-  }, [stopSpeaking, stop, answerKey]);
+  }, [stopSpeaking, stop, answerKey, clearSilence, silenceMs]);
 
-  const speak = useCallback(async (text: string) => {
+  const speak = useCallback(async (text: string, onComplete?: () => void) => {
     const request = ++speechRequestRef.current;
     await stop();
     if (!mountedRef.current || request !== speechRequestRef.current) return;
     if (!("speechSynthesis" in window)) {
       setError("Read-aloud is unavailable in this browser. The question is displayed on screen.");
+      onComplete?.();
       return;
     }
     window.speechSynthesis.cancel();
@@ -213,20 +226,26 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     utterance.rate = rate;
     const voice = window.speechSynthesis.getVoices().find((candidate) => candidate.lang === "en-GB");
     if (voice) utterance.voice = voice;
-    utterance.onend = () => { if (mountedRef.current && request === speechRequestRef.current) setSpeaking(false); };
+    utterance.onend = () => { if (mountedRef.current && request === speechRequestRef.current) { setSpeaking(false); onComplete?.(); } };
     utterance.onerror = (event) => {
       if (!mountedRef.current || request !== speechRequestRef.current) return;
       setSpeaking(false);
+      onComplete?.();
       if (event.error !== "canceled" && event.error !== "interrupted") setError("Read-aloud could not play. You can read the question on screen.");
     };
     setSpeaking(true);
-    window.speechSynthesis.speak(utterance);
+    try { window.speechSynthesis.speak(utterance); } catch {
+      setSpeaking(false);
+      setError("Read-aloud could not play. You can read the question on screen.");
+      onComplete?.();
+    }
   }, [stop, rate]);
 
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      clearSilence();
       speechRequestRef.current += 1;
       const recognition = recognitionRef.current;
       if (recognition) {
@@ -243,7 +262,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       finishRef.current?.();
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     };
-  }, []);
+  }, [clearSilence]);
 
   return { supported, voiceSupported, listening, speaking, interimTranscript,
     deliveryHints: deliveryKey === answerKey ? deliveryHints : getSpeechDelivery({ transcript: "", segments: [], elapsedSeconds: 0 }),

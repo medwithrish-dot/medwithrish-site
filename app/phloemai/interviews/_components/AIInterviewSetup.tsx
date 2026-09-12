@@ -52,7 +52,7 @@ export function AIInterviewSetup(props: Props) {
     mode: preset === "free" ? "free" : preset === "university" ? "university" : stationSlugs.length === 1 ? (stationSlugs[0] === "why-medicine" ? "free" : "station") : "reference",
     universitySlug: preset === "university" ? universitySlug : undefined,
     stationSlugs,
-    preparationSeconds: preset === "university" ? university.preparationSeconds : stationSlugs.length > 1 ? 0 : 60,
+    preparationSeconds: 0,
     stationSeconds: preset === "university" ? university.stationSeconds : 480,
     breakSeconds: preset === "university" ? university.breakSeconds : stationSlugs.length > 1 ? 120 : 0,
   };

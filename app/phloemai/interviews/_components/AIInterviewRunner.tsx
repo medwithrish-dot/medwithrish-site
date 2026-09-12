@@ -7,6 +7,7 @@ import { findInterviewStation, interviewStations } from "../_data/interview-stat
 import { previewInterviewFeedback } from "../_data/interview-preview";
 import type { InterviewAnswer, InterviewAttempt, InterviewMode } from "../_lib/interview-types";
 import { getTranscriptHints, useInterviewSpeech } from "../_lib/useInterviewSpeech";
+import { ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled, parseDoneReply } from "../_lib/station-flow";
 import { useInterviewDevices } from "../_lib/useInterviewDevices";
 import { AIInterviewSetup, type InterviewRoomPlan } from "./AIInterviewSetup";
 import { AIInterviewCall } from "./AIInterviewCall";
@@ -59,6 +60,16 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const [saved, setSaved] = useState(false);
   const [followUpBusy, setFollowUpBusy] = useState(false);
   const [followUpNotice, setFollowUpNotice] = useState("");
+  const [awaitingDone, setAwaitingDone] = useState(false);
+  const [micWanted, setMicWanted] = useState(false);
+  const [entryReady, setEntryReady] = useState("");
+  const [prompting, setPrompting] = useState(false);
+  const awaitingDoneRef = useRef(false);
+  const promptingRef = useRef(false);
+  const completionLockRef = useRef(false);
+  const confirmationPendingRef = useRef(false);
+  const onSilenceRef = useRef<() => void>(() => {});
+  const completeAnswerRef = useRef<() => void>(() => {});
   const [configured, setConfigured] = useState(true);
   const [isPremium, setIsPremium] = useState(false);
   const [now, setNow] = useState(0);
@@ -69,6 +80,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const [continuationSlug, setContinuationSlug] = useState("");
   const [reviewRequested, setReviewRequested] = useState(false);
   const previewRef = useRef(false);
+  const mountedRef = useRef(true);
+  useEffect(() => { mountedRef.current = true; return () => { mountedRef.current = false; }; }, []);
   const planRef = useRef<InterviewRoomPlan | null>(null);
   const devices = useInterviewDevices();
   const { stopCamera, stopMicCheck, requestMicrophone, cancelMicrophoneRequest } = devices;
@@ -100,15 +113,23 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     persistLocal(nextAnswers);
   }, [persistLocal]);
 
-  const speech = useInterviewSpeech({ rate: voiceRate, answerKey: `${attempt?.id ?? "preview"}:${questionIndex}`, onTranscript: (text) => {
+  const speech = useInterviewSpeech({ rate: voiceRate, answerKey: `${attempt?.id ?? "preview"}:${questionIndex}`, silenceMs: ANSWER_SILENCE_MS, onSilence: () => onSilenceRef.current(), onTranscript: (text) => {
     const current = attemptRef.current;
     if (!current || current.status !== "in_progress") return;
+    if (awaitingDoneRef.current) {
+      const reply = parseDoneReply(text);
+      awaitingDoneRef.current = false;
+      setAwaitingDone(false);
+      if (reply.done) { completeAnswerRef.current(); return; }
+      text = reply.continuation;
+      if (!text) return;
+    }
     const index = questionIndexRef.current;
     replaceAnswers(answersRef.current.map((answer, answerIndex) => answerIndex === index
       ? { ...answer, answer: `${answer.answer}${answer.answer ? " " : ""}${text}`.slice(0, 6_000) }
       : answer));
   } });
-  const { stop: stopListening, stopSpeaking, speak, voiceSupported } = speech;
+  const { start: startListening, stop: stopListening, stopSpeaking, speak, voiceSupported } = speech;
 
   const applyResponse = useCallback((response: SessionResponse, restore = false) => {
     if (response.serverNow) clockOffsetRef.current = Date.parse(response.serverNow) - Date.now();
@@ -178,6 +199,10 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       }
       expirySubmittedRef.current = null;
       spokenQuestionRef.current = "";
+      awaitingDoneRef.current = false;
+      setAwaitingDone(false);
+      promptingRef.current = false;
+      setPrompting(false);
       setFollowUpNotice("");
     }
     if (next.status !== "in_progress" && !previewRef.current) {
@@ -253,6 +278,9 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     const handleVisibility = () => {
       setNow(Date.now() + clockOffsetRef.current);
       if (document.hidden) {
+        setMicWanted(false);
+        promptingRef.current = false;
+        setPrompting(false);
         cancelMicrophoneRequest();
         stopSpeaking();
         void stopListening().then(() => saveDraft()).catch(() => setSaveWarning("Your browser draft is kept. Retry account saving when you return to this tab."));
@@ -270,6 +298,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     const current = attemptRef.current;
     if (!current || submitLockRef.current || actionLockRef.current) return;
     submitLockRef.current = true;
+    setMicWanted(false);
     followUpRequestRef.current?.abort();
     setBusy("Saving your station?");
     setReviewRequested(true);
@@ -340,21 +369,27 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const question = attempt?.questions[questionIndex] ?? "";
   const originalQuestions: readonly string[] = attempt ? findInterviewStation(attempt.stationSlug)?.questions ?? [] : [];
   const followingQuestion = attempt?.questions[questionIndex + 1];
-  const followUpAvailable = !preview && originalQuestions.includes(question)
+  const followUpAvailable = !preview && Boolean(attempt && followUpsEnabled(attempt.stationSlug)) && originalQuestions.includes(question)
     && (!followingQuestion || originalQuestions.includes(followingQuestion));
   const microphoneRoomId = !loading && attempt?.status === "in_progress" && !reviewing ? attempt.id : null;
 
   useEffect(() => {
     if (!microphoneRoomId) return;
-    // Ask on entry, including preparation and resumed stations. The browser
-    // remembers Allow/Block; spoken answers begin with the room's mic control.
-    void requestMicrophone();
-    return cancelMicrophoneRequest;
+    let cancelled = false;
+    const permission = devices.microphonePermission === "granted" ? Promise.resolve(true) : requestMicrophone();
+    void permission.then((permitted) => {
+      if (cancelled || document.hidden || attemptRef.current?.id !== microphoneRoomId) return;
+      setEntryReady(microphoneRoomId);
+      setMicWanted(permitted);
+    });
+    return () => { cancelled = true; cancelMicrophoneRequest(); };
+    // Permission changes belong to this single entry request, not a new prompt.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [microphoneRoomId, requestMicrophone, cancelMicrophoneRequest]);
 
   const toggleMicrophone = async () => {
     if (!active || actionLockRef.current || submitLockRef.current || !speech.supported) return;
-    if (speech.listening) { await stopListening(); return; }
+    if ((micWanted && !speech.error) || speech.listening) { setMicWanted(false); await stopListening(); return; }
     const current = attemptRef.current;
     const index = questionIndexRef.current;
     if (!current) return;
@@ -363,6 +398,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     if (!permitted || attemptRef.current?.id !== current.id || attemptRef.current.status !== "in_progress"
       || questionIndexRef.current !== index || actionLockRef.current || submitLockRef.current || document.hidden
       || Date.now() + clockOffsetRef.current >= deadline) return;
+    setMicWanted(true);
     speech.start();
   };
 
@@ -373,12 +409,24 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   }, [attempt, expired, now, finishStation]);
 
   useEffect(() => {
-    if (!attempt || !active || !readAloud || !voiceSupported || !question) return;
+    if (!attempt || !active || entryReady !== attempt.id || !question) return;
     const key = `${attempt.id}:${questionIndex}`;
     if (spokenQuestionRef.current === key) return;
     spokenQuestionRef.current = key;
-    void speak(question);
-  }, [attempt, active, question, questionIndex, readAloud, speak, voiceSupported]);
+    if (!readAloud || !voiceSupported) return;
+    promptingRef.current = true;
+    void speak(question, () => {
+      if (spokenQuestionRef.current !== key) return;
+      promptingRef.current = false;
+      setPrompting(false);
+    });
+  }, [attempt, active, entryReady, question, questionIndex, readAloud, speak, voiceSupported]);
+
+  useEffect(() => {
+    if (!active || !micWanted || promptingRef.current || confirmationPendingRef.current || speech.speaking || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
+      || actionLockRef.current || submitLockRef.current || completionLockRef.current || spokenQuestionRef.current !== `${attempt?.id}:${questionIndex}`) return;
+    startListening();
+  }, [active, micWanted, prompting, speech.speaking, speech.listening, speech.error, startListening, questionIndex, attempt?.id, awaitingDone]);
 
   const startAttempt = async (options: StartOptions, asPreview = previewRef.current, plan = planRef.current) => {
     if (actionLockRef.current || submitLockRef.current) return;
@@ -392,6 +440,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       await speech.stop();
       speech.stopSpeaking();
       stopMicCheck();
+      await requestMicrophone();
+      if (!mountedRef.current || document.hidden) return;
       previewRef.current = asPreview;
       setPreview(asPreview);
       if (asPreview && plan) {
@@ -402,7 +452,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         applyResponse({ attempt: {
           id: `preview-${crypto.randomUUID()}`, mode: plan.mode, universitySlug: plan.universitySlug ?? null,
           stationSlug: station.slug, title: station.title, status: "in_progress", startedAt: new Date().toISOString(), completedAt: null,
-          preparationSeconds: plan.preparationSeconds, stationSeconds: plan.stationSeconds, breakSeconds: 0,
+          preparationSeconds: 0, stationSeconds: plan.stationSeconds, breakSeconds: 0,
           stationIndex: options.stationIndex ?? 0, stationCount: plan.stationSlugs.length,
           questions: [...station.questions], answers: [], feedback: null, metrics: {}, nextAvailableAt: null,
           circuitId: options.circuitId ?? `preview-${crypto.randomUUID()}`,
@@ -430,7 +480,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   };
 
   const moveQuestion = async (index: number) => {
-    if (!active || actionLockRef.current || !attempt || index < 0 || index >= attempt.questions.length) return;
+    if (!active || actionLockRef.current || !attempt || index !== questionIndexRef.current + 1 || index >= attempt.questions.length) return;
     actionLockRef.current = true;
     try {
       speech.stopSpeaking();
@@ -459,10 +509,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       stopSpeaking();
       await stopListening();
       const answer = answersRef.current.find((item) => item.question === sourceQuestion)?.answer ?? "";
-      if (getTranscriptHints(answer).wordCount < 20) {
-        setFollowUpNotice("Add at least 20 words so the interviewer has something specific to explore.");
-        return;
-      }
+      if (getTranscriptHints(answer).wordCount < 20) return false;
       await saveDraft();
       if (controller.signal.aborted) return;
       const response = await requestSession("/api/interviews/follow-up", "POST", { attemptId: current.id, question: sourceQuestion }, controller.signal);
@@ -476,7 +523,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       }
       setFollowUpNotice(response.source === "practice"
         ? "AI is unavailable, so this is a guided practice follow-up. Your answer has been saved."
-        : "Explore this follow-up, then continue to the next question when you're ready.");
+        : "A follow-up on your answer.");
+      return index >= 0;
     } catch (failure) {
       if (!controller.signal.aborted) setFollowUpNotice(failure instanceof Error ? failure.message : "A follow-up could not be prepared. You can continue with the station questions.");
     } finally {
@@ -486,6 +534,50 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       }
     }
   };
+
+  const requestDone = async () => {
+    if (!active || awaitingDoneRef.current || confirmationPendingRef.current || completionLockRef.current || promptingRef.current || document.hidden) return;
+    const currentId = attemptRef.current?.id;
+    const index = questionIndexRef.current;
+    confirmationPendingRef.current = true;
+    try {
+      await stopListening(); // Flush the answer before interpreting any yes/no reply.
+      if (submitLockRef.current || attemptRef.current?.id !== currentId || attemptRef.current?.status !== "in_progress" || questionIndexRef.current !== index) return;
+      if (!answersRef.current[index]?.answer.trim()) return;
+      awaitingDoneRef.current = true;
+      setAwaitingDone(true);
+      if (readAloud && voiceSupported) {
+        promptingRef.current = true;
+        setPrompting(true);
+        void speak(DONE_PROMPT, () => { promptingRef.current = false; setPrompting(false); });
+      }
+    } finally { confirmationPendingRef.current = false; }
+  };
+
+  const completeAnswer = async () => {
+    if (!active || completionLockRef.current || actionLockRef.current || submitLockRef.current) return;
+    completionLockRef.current = true;
+    awaitingDoneRef.current = false;
+    setAwaitingDone(false);
+    promptingRef.current = false;
+    setPrompting(false);
+    try {
+      stopSpeaking();
+      await stopListening();
+      if (await askFollowUp()) return;
+      if (questionIndexRef.current + 1 < (attemptRef.current?.questions.length ?? 0)) await moveQuestion(questionIndexRef.current + 1);
+      else await finishStation();
+    } finally { completionLockRef.current = false; }
+  };
+
+  const keepAnswering = () => {
+    awaitingDoneRef.current = false;
+    setAwaitingDone(false);
+    stopSpeaking();
+    promptingRef.current = false;
+    setPrompting(false);
+  };
+  useEffect(() => { onSilenceRef.current = () => { if (micWanted) void requestDone(); }; completeAnswerRef.current = () => { void completeAnswer(); }; });
 
   const leaveAttempt = async () => {
     if (!attempt || actionLockRef.current || submitLockRef.current) return;
@@ -519,7 +611,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const hints = useMemo(() => getTranscriptHints(answers.map((answer) => answer.answer).join(" ")), [answers]);
   const setVoiceEnabled = (enabled: boolean) => {
     setReadAloud(enabled);
-    if (!enabled) speech.stopSpeaking();
+    if (!enabled) { speech.stopSpeaking(); promptingRef.current = false; setPrompting(false); }
     else spokenQuestionRef.current = "";
   };
   const beginRoom = (plan: InterviewRoomPlan, asPreview: boolean) => {
@@ -557,7 +649,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       {errorStatus === 401 && <Link href="/phloemai/account" className="mt-2 inline-block font-bold underline">Sign in to start your scored interview</Link>}
       {errorStatus === 403 && <Link href="/phloemai/pricing" className="mt-2 inline-block font-bold underline">View membership options</Link>}
     </div>}
-    {!configured && !preview && !reviewing && <p role="status" className={styles.previewBanner}>AI is paused. Timed practice, saved answers and built-in follow-ups are available.</p>}
+    {!configured && !preview && !reviewing && <p role="status" className={styles.previewBanner}>AI feedback is paused. Timed practice and saved answers are available.</p>}
     {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your interview space ready…</div> : !attempt ? <AIInterviewSetup
       initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan} initialMockCircuit={initialMockCircuit}
       devices={devices} readAloud={readAloud} setReadAloud={setVoiceEnabled} voiceRate={voiceRate} setVoiceRate={setVoiceRate}
@@ -574,9 +666,11 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         preparing={preparing} expired={expired} active={Boolean(active)} secondsRemaining={secondsRemaining}
         speech={speech} devices={devices} saved={saved} busy={busy} preview={preview} readAloud={readAloud}
         onToggleMicrophone={() => void toggleMicrophone()} setReadAloud={setVoiceEnabled}
-        followUpAvailable={followUpAvailable} followUpBusy={followUpBusy} followUpNotice={followUpNotice} onFollowUp={() => void askFollowUp()}
+        followUpBusy={followUpBusy} followUpNotice={followUpNotice} awaitingDone={awaitingDone} prompting={prompting || speech.speaking} micWanted={micWanted}
+        onReadQuestion={() => { if (speech.speaking) { stopSpeaking(); promptingRef.current = false; setPrompting(false); } else { promptingRef.current = true; setPrompting(true); void speak(question, () => { promptingRef.current = false; setPrompting(false); }); } }}
+        onDone={() => void requestDone()} onConfirmDone={() => void completeAnswer()} onKeepAnswering={keepAnswering}
         onAnswer={(value) => replaceAnswers(answersRef.current.map((answer, index) => index === questionIndex ? { ...answer, answer: value } : answer))}
-        onQuestion={(index) => void moveQuestion(index)} onSubmit={() => void finishStation()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}
+        onSubmit={() => void finishStation()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}
         onSkipPreparation={() => { if (preview) applyResponse({ attempt: { ...attempt, startedAt: new Date(Date.now() - attempt.preparationSeconds * 1000).toISOString() } }); }}
       />
     </>}

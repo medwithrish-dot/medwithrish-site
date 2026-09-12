@@ -73,7 +73,6 @@
 @media (max-width: 800px) { .workspace { grid-template-columns: minmax(0,1fr); } .context > span:last-child { margin-left: 0; } .toolbar { gap: 18px; } .toolbar > div { width: 100%; } .toolbar > div > button { flex: 1; } .heading h1 { letter-spacing: -.8px; } .assessment { padding: 16px; } .assessment > header { align-items: start; } .score { min-width: 100px; padding: 16px 12px; } .takeaways { grid-template-columns: minmax(0,1fr); gap: 23px; } }
 @media (max-width: 450px) { .context { gap: 12px; padding: 16px; } .context > span { width: 100%; } .assessment > header { flex-direction: column; } .score { text-align: left; width: 100%; } .nextSteps > div:last-child { width: 100%; } .nextSteps > div:last-child > * { flex: 1; } .answer { margin-left: 23px; padding-left: 13px; } }
 
-.review [data-speech-summary] { margin: 0 14px 12px; }
 @media (min-width: 1024px) {
   :global([data-interview-shell-grid]):has(.review) { grid-template-columns: 200px minmax(0,1fr); }
   :global(#interview-content):has(.review) { padding-top: 16px; padding-bottom: 20px; }

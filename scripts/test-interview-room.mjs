@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT } from "../app/phloemai/interviews/_lib/station-flow.ts";
 import { test } from "node:test";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -160,7 +161,7 @@ test("an older tab's autosave preserves a probe answer it has not seen", async (
 
 // Exercise the actual room callbacks against delayed saves. Browser, device and
 // hook lifecycle boundaries are substituted; all save scheduling stays production code.
-async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, configured = true, questions = ["Why medicine?"], initialDraft } = {}) {
+async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, configured = true, followUps = false, permission = true, speechError = "", questions = ["Why medicine?"], initialDraft } = {}) {
   const cells = [];
   let cursor = 0;
   let effects = [];
@@ -183,7 +184,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const memo = (factory, dependencies) => {
     const index = cursor++;
     const prior = cells[index];
-    if (!prior || dependencies.some((value, i) => !Object.is(value, prior.dependencies[i]))) {
+    if (!prior || !dependencies || dependencies.some((value, i) => !Object.is(value, prior.dependencies[i]))) {
       cells[index] = { value: factory(), dependencies };
     }
     return cells[index].value;
@@ -199,12 +200,13 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     useCallback: (callback, dependencies) => memo(() => callback, dependencies),
     useEffect: (effect, dependencies) => memo(() => { effects.push(effect); }, dependencies),
   };
-  const speech = { stop: async () => {
+  const speech = { listening: false, error: speechError, stop: async () => {
+    speech.listening = false;
     if (pendingSpeech) { const finalText = pendingSpeech; pendingSpeech = ""; speechOptions.onTranscript(finalText); }
-  }, stopSpeaking() {}, speak: async () => {}, voiceSupported: false, supported: true, start: () => { recognitionStarts += 1; } };
+  }, stopSpeaking() {}, speak: async () => {}, voiceSupported: false, supported: true, start: () => { speech.listening = true; recognitionStarts += 1; } };
   const devices = {
     stopCamera() {}, stopMicCheck() {}, cancelMicrophoneRequest() {}, microphonePermission: "idle",
-    requestMicrophone: async () => { microphoneRequests += 1; devices.microphonePermission = "granted"; return true; },
+    requestMicrophone: async () => { microphoneRequests += 1; devices.microphonePermission = permission ? "granted" : "denied"; return permission; },
   };
   const source = readFileSync(resolve(root, "app/phloemai/interviews/_components/AIInterviewRunner.tsx"), "utf8");
   const output = ts.transpileModule(source, { compilerOptions: {
@@ -218,6 +220,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: options => { speechOptions = options; return speech; }, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
       if (name.endsWith("useInterviewDevices")) return { useInterviewDevices: () => devices };
+      if (name.endsWith("station-flow")) return { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled: () => followUps };
       if (name.endsWith("interview-stations")) return { findInterviewStation: () => ({ questions }), interviewStations: [] };
       if (name === "./AIInterviewCall") return { AIInterviewCall: "interview-call" };
       if (name === "./AIInterviewReview") return { AIInterviewReview: "interview-review" };
@@ -285,17 +288,28 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     get recognitionStarts() { return recognitionStarts; },
     edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(), finish: () => call.onSubmit(),
     finalSpeech: text => { pendingSpeech = text; },
+    say: text => speechOptions.onTranscript(text), silence: () => speechOptions.onSilence(),
   };
 }
 
-test("loading an interview asks for microphone access once, including reading time", async () => {
+test("permission approval automatically starts the mic once and legacy reading time is respected", async () => {
   for (const preparationSeconds of [0, 60]) {
     const room = await autosaveRoom({ preparationSeconds });
+    await room.flush(); room.render(); room.render();
     assert.equal(room.microphoneRequests, 1);
-    assert.equal(room.recognitionStarts, 0, "Allowing microphone access does not interrupt the interviewer's question");
+    assert.equal(room.recognitionStarts, preparationSeconds ? 0 : 1);
     room.render(); room.render();
-    assert.equal(room.microphoneRequests, 1, "Timer and transcript renders must not repeat the prompt");
+    assert.equal(room.microphoneRequests, 1);
+    assert.equal(room.recognitionStarts, preparationSeconds ? 0 : 1);
   }
+});
+
+test("denied microphone access leaves a usable typed station", async () => {
+  const room = await autosaveRoom({ permission: false });
+  await room.flush(); room.render();
+  assert.equal(room.recognitionStarts, 0);
+  room.edit("A typed answer");
+  assert.equal(room.latestCall().answers[0].answer, "A typed answer");
 });
 
 test("the lobby and completed attempts do not automatically ask for microphone access", async () => {
@@ -303,11 +317,13 @@ test("the lobby and completed attempts do not automatically ask for microphone a
   assert.equal((await autosaveRoom({ status: "completed" })).microphoneRequests, 0);
 });
 
-test("the room microphone works after browser permission without a consent checkbox", async () => {
+test("manual microphone off stays off after subsequent room renders", async () => {
   const room = await autosaveRoom();
-  room.call.onToggleMicrophone();
+  await room.flush(); room.render();
+  room.latestCall().onToggleMicrophone();
+  await room.flush(); room.render(); room.render();
   assert.equal(room.recognitionStarts, 1);
-  assert.equal(room.microphoneRequests, 1, "A granted microphone can start without another device check");
+  assert.equal(room.latestCall().speech.listening, false);
 });
 
 test("multiple queued autosaves never overlap or replace the newest transcript", async () => {
@@ -425,13 +441,13 @@ test("a failed finish keeps the transcript in review and retains the recoverable
 });
 
 test("a follow-up saves the answer first, inserts the probe, and preserves later answers", async () => {
-  const room = await autosaveRoom({ questions: ["Why medicine?", "Why this role?"], initialDraft: {
+  const room = await autosaveRoom({ followUps: true, questions: ["Why medicine?", "Why this role?"], initialDraft: {
     answers: [{ question: "Why medicine?", answer: "" }, { question: "Why this role?", answer: "An existing answer to preserve" }], questionIndex: 0,
   } });
   const answer = "Volunteering in a care home showed me how listening carefully and working together can help people feel understood and supported when they are worried.";
   room.edit(answer);
-  room.latestCall().onFollowUp();
-  room.latestCall().onFollowUp();
+  room.latestCall().onConfirmDone();
+  room.latestCall().onConfirmDone();
   await room.flush();
   assert.equal(room.requests.length, 1);
   assert.equal(room.followUpRequests.length, 0, "Generation waits for the saved answer");
@@ -445,7 +461,7 @@ test("a follow-up saves the answer first, inserts the probe, and preserves later
   assert.equal(call.answers[0].answer, answer);
   assert.equal(call.answers[1].answer, "");
   assert.equal(call.answers[2].answer, "An existing answer to preserve");
-  assert.equal(call.followUpAvailable, false, "Generated probes cannot recursively request more probes");
+  assert.equal(call.onFollowUp, undefined, "Follow-ups have no manual trigger");
   assert.match(call.followUpNotice, /guided practice/);
   assert.equal(call.followUpBusy, false);
 });
@@ -563,7 +579,7 @@ function microphoneDevices({ supported = true } = {}) {
   const memo = (factory, dependencies) => {
     const index = cursor++;
     const prior = cells[index];
-    if (!prior || dependencies.some((value, i) => !Object.is(value, prior.dependencies[i]))) cells[index] = { value: factory(), dependencies };
+    if (!prior || !dependencies || dependencies.some((value, i) => !Object.is(value, prior.dependencies[i]))) cells[index] = { value: factory(), dependencies };
     return cells[index].value;
   };
   const react = {
@@ -671,4 +687,47 @@ test("unavailable browser microphone APIs preserve a typed-answer fallback", asy
   assert.match(browser.render().microphoneError, /Type your answer/);
   assert.equal(browser.requests.length, 0);
   browser.unmount();
+});
+
+
+test("silence asks once, no and continued speech keep the same answer, yes moves only forward", async () => {
+  const room = await autosaveRoom({ questions: ["Why medicine?", "What did you learn?"] });
+  await room.flush(); room.render();
+  room.say("Listening taught me to understand each patient."); room.render();
+  room.silence(); room.silence(); await room.flush();
+  assert.equal(room.latestCall().awaitingDone, true);
+  room.say("No."); room.render();
+  assert.equal(room.latestCall().awaitingDone, false);
+  assert.equal(room.latestCall().questionIndex, 0);
+  room.silence(); await room.flush(); room.render();
+  room.say("I also learned to ask for support."); room.render();
+  assert.match(room.latestCall().answers[0].answer, /ask for support/);
+  room.silence(); await room.flush(); room.render();
+  room.say("Yes."); await room.flush();
+  const call = room.latestCall();
+  assert.equal(call.questionIndex, 1);
+  assert.doesNotMatch(call.answers[0].answer, /\b(?:yes|no)\b/i);
+  assert.equal(call.answers[1].answer, "");
+  assert.equal(call.onQuestion, undefined);
+  assert.equal(room.followUpRequests.length, 0, "Disabled stations never ask for a follow-up");
+});
+
+test("a final yes finishes the station and is excluded from the saved answer", async () => {
+  const room = await autosaveRoom();
+  await room.flush(); room.render();
+  room.say("I learned to listen."); room.render();
+  room.silence(); await room.flush(); room.render();
+  room.say("Yes."); await room.flush();
+  assert.equal(room.requests.length, 1);
+  assert.equal(room.requests[0].body.finish, true);
+  assert.equal(room.requests[0].body.answers[0].answer, "I learned to listen.");
+  room.requests[0].complete(); await room.flush();
+  assert.equal(room.latestReview().attempt.status, "submitted");
+});
+
+
+test("a read-aloud failure does not block the approved microphone", async () => {
+  const room = await autosaveRoom({ speechError: "Read-aloud could not play. You can read the question on screen." });
+  await room.flush(); room.render();
+  assert.equal(room.recognitionStarts, 1);
 });

@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     const payload = {
       mode, university_slug: mode === "university" ? university!.slug : null, station_slug: station.slug,
       title: station.title, circuit_id: circuitId, station_index: index, station_count: count,
-      preparation_seconds: mode === "university" ? university!.preparationSeconds : mode === "reference" ? 0 : 60,
+      preparation_seconds: 0,
       station_seconds: mode === "university" ? university!.stationSeconds : 480,
       break_seconds: circuitMode ? (mode === "university" ? university!.breakSeconds : 120) : 0,
       questions: [...station.questions],

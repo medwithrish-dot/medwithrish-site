@@ -48,7 +48,7 @@ const words = "During my care home volunteering I listened to residents and help
 const probe = "What changed in your understanding of listening when you worked with those residents?";
 const request = (body) => new Request("https://example.test/api/interviews/follow-up", { method: "POST", headers: { "Content-Type": "application/json", Origin: "https://example.test" }, body: JSON.stringify(body) });
 
-function harness({ generate = async () => probe, configured = true, user = "user-1", overrides = {} } = {}) {
+function harness({ generate = async () => probe, configured = true, enabled = true, user = "user-1", overrides = {} } = {}) {
   const state = { row: {
     id: attemptId, user_id: "user-1", station_slug: "why-medicine", title: "Why medicine?", status: "in_progress",
     started_at: new Date(Date.now() - 120_000).toISOString(), preparation_seconds: 60, station_seconds: 480,
@@ -71,6 +71,7 @@ function harness({ generate = async () => probe, configured = true, user = "user
   }
   const admin = { from: (table) => new Query(table) };
   const { POST } = load("app/api/interviews/follow-up/route.ts", {
+    ...(enabled ? { "@/app/phloemai/interviews/_lib/station-flow": { followUpsEnabled: () => true } } : {}),
     "@/utils/supabase/server": { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: user ? { id: user } : null } }) } }) },
     "@/utils/supabase/admin": { createAdminClient: () => admin },
     "@/utils/interviews/gemini": { interviewAiConfigured: () => configured, generateInterviewFollowUp: async (context) => { state.providerCalls += 1; return generate(context, state); } },
@@ -260,4 +261,14 @@ test("paid-only overrides, provider errors and incomplete responses never trigge
       assert.equal(requests, 2);
     });
   } finally { globalThis.fetch = originalFetch; }
+});
+
+
+test("the real owner allowlist rejects disabled stations before any provider call or claim", async () => {
+  const { post, state } = harness({ enabled: false });
+  const response = await post(originals[0], { followUpsEnabled: true });
+  assert.equal(response.status, 403);
+  assert.equal(state.providerCalls, 0);
+  assert.equal(state.row.last_error, null);
+  assert.deepEqual(state.row.questions, originals);
 });

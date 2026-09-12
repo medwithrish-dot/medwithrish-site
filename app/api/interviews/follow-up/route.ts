@@ -1,3 +1,4 @@
+import { followUpsEnabled } from "@/app/phloemai/interviews/_lib/station-flow";
 import { findInterviewStation } from "@/app/phloemai/interviews/_data/interview-stations";
 import { generateInterviewFollowUp, interviewAiConfigured } from "@/utils/interviews/gemini";
 import { existingFollowUp, followUpClaimMask, practiceFollowUp } from "@/utils/interviews/follow-up";
@@ -20,6 +21,7 @@ export async function POST(request: Request) {
     let row = await loadAttempt();
     const station = findInterviewStation(row.station_slug);
     if (!station) throw new InterviewError("Station not found", 404);
+    if (!followUpsEnabled(station.slug)) throw new InterviewError("Follow-ups are not enabled for this station.", 403);
     const originals: readonly string[] = station.questions;
     const questionNumber = originals.indexOf(body.question);
     if (questionNumber < 0 || !row.questions.includes(body.question)) throw new InterviewError("Follow-ups are available once for each main question");

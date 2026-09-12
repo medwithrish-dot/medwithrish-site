@@ -8,7 +8,6 @@ import { getStationReviewGuidance } from "../_lib/station-review";
 import { findInterviewUniversity } from "../_data/universities";
 import { StationMarkScheme } from "./InterviewMarkScheme";
 import { getTranscriptHints, normalizeSpeechTranscript } from "../_lib/speech-delivery";
-import { TranscriptSpeechSummary } from "./TranscriptSpeechSummary";
 import styles from "./AIInterviewReview.module.css";
 
 type Props = {
@@ -72,7 +71,6 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
           <div className={styles.question}><span className={styles.number}>{String(index + 1).padStart(2, "0")}</span><div><span className={styles.speaker}>Interviewer</span><h3>{item.question}</h3></div></div>
           <div className={styles.answer}><span className={styles.speaker}>Your answer</span><p className={item.answer ? undefined : styles.empty}>{item.answer || "No answer saved for this prompt."}</p></div>
         </li>)}</ol>
-        <TranscriptSpeechSummary transcript={transcript.map((item) => item.answer).join(" ")} />
         <p className={styles.privacy}>Your transcript is private. Camera and microphone recordings are not saved.</p>
       </section>
 
