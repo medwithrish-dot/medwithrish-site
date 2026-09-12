@@ -52,14 +52,14 @@ export async function InterviewWorkspacePage({
   const { isPremium } = await getPhloemEntitlements();
 
   return (
-    <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923]">
-      <div className="grid min-h-screen lg:grid-cols-[230px_1fr]">
+    <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923] lg:h-[100dvh] lg:overflow-hidden">
+      <div className="grid min-h-screen lg:h-[100dvh] lg:min-h-0 lg:grid-cols-[230px_1fr]">
         <InterviewSidebar
           activeLabel={activeLabel}
           showPremiumCard={!isPremium}
         />
 
-        <section className="min-w-0 px-5 py-7 sm:px-6 lg:px-8">
+        <section className="min-w-0 px-5 py-7 sm:px-6 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:px-8">
           <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
               <Link
