@@ -5,6 +5,7 @@ export const previewInterviewFeedback: InterviewFeedback = {
   score: 76,
   summary: "An example of a thoughtful answer with clear motivation and a personal perspective. The next opportunity is to connect each experience to what it taught you about the realities of medicine.",
   strengths: ["Grounding your motivation in a specific experience makes it easier to understand your perspective.", "Recognising the contribution of the wider healthcare team shows a realistic view of patient care.", "Reflecting on a challenge helps explain how your understanding has developed."],
+  weaknesses: ["The example describes an experience without fully explaining the change in understanding.", "The link to the specific responsibilities of a doctor could be clearer."],
   improvements: ["Choose one experience and finish with exactly what you learned and what you would do differently.", "Connect your example to the responsibilities of a doctor, including the difficult parts of the role.", "Give your answer a clear closing sentence that returns to the question."],
   rubric: [
     { criterion: "Relevance and motivation", score: 85, reason: "Example: a clear reason for pursuing medicine, with room to explain why the doctor's role is the right fit." },

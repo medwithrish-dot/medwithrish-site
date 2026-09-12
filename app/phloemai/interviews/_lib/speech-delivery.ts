@@ -89,3 +89,67 @@ export function createSpeechBoundaryTracker() {
     reset() { lastEnd = null; start = null; end = null; committed = false; },
   };
 }
+
+/** Local microphone activity supplements browsers that omit continuous speech boundaries.
+ * Energy is an estimate (background noise can affect it), never evidence of a stutter.
+ * Audio is neither retained nor uploaded by this monitor. Recognition remains the fallback.
+ */
+export function monitorSpeechActivity(recognition: {
+  onspeechstart: (() => void) | null;
+  onspeechend: (() => void) | null;
+}) {
+  let stopped = false;
+  let ready = false;
+  let stream: MediaStream | null = null;
+  let context: AudioContext | null = null;
+  let animation = 0;
+  const start = recognition.onspeechstart;
+  const end = recognition.onspeechend;
+  const stop = () => {
+    stopped = true;
+    ready = false;
+    if (animation) cancelAnimationFrame(animation);
+    stream?.getTracks().forEach((track) => track.stop());
+    if (context && context.state !== "closed") void context.close().catch(() => {});
+  };
+  if (typeof window === "undefined" || !window.AudioContext || typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) return stop;
+  recognition.onspeechstart = () => { if (!ready && !stopped) start?.(); };
+  recognition.onspeechend = () => { if (!ready && !stopped) end?.(); };
+  void (async () => {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      if (stopped) { stream.getTracks().forEach((track) => track.stop()); return; }
+      context = new window.AudioContext();
+      const source = context.createMediaStreamSource(stream);
+      const analyser = context.createAnalyser();
+      analyser.fftSize = 256;
+      source.connect(analyser);
+      const samples = new Uint8Array(analyser.fftSize);
+      await context.resume();
+      if (stopped) return;
+      ready = true;
+      let active = false;
+      let quietSince: number | null = null;
+      const meter = () => {
+        if (stopped) return;
+        analyser.getByteTimeDomainData(samples);
+        const rms = Math.sqrt(samples.reduce((sum, value) => sum + ((value - 128) / 128) ** 2, 0) / samples.length);
+        if (rms > 0.015) {
+          quietSince = null;
+          if (!active) { active = true; start?.(); }
+        } else if (active) {
+          quietSince ??= performance.now();
+          if (performance.now() - quietSince >= 250) { active = false; end?.(); }
+        }
+        animation = requestAnimationFrame(meter);
+      };
+      meter();
+    } catch {
+      // Keep native speech boundaries when permission or Web Audio is unavailable.
+      stream?.getTracks().forEach((track) => track.stop());
+      if (context && context.state !== "closed") void context.close().catch(() => {});
+      ready = false;
+    }
+  })();
+  return stop;
+}

@@ -17,7 +17,7 @@ The session POST accepts an optional `stationSlug` and numeric `stationCount` (1
 
 The remaining topic plan is kept in browser storage under the returned circuit ID. First joins send an explicit new circuit ID; if the database resumes a different active attempt, its existing plan is restored instead of being overwritten. If the plan is unavailable on another device, the review screen offers a topic chooser to continue the same circuit one station at a time. No database migration is required.
 
-Saved Interviews supports station or university text search, a university filter, and feedback-status filters. Ended attempts open the same review; only an unexpired active attempt resumes the call. The answer framework and General/Start/Middle/End rubric reuse the question-bank guidance.
+Saved Interviews supports station or university text search, a university filter, and feedback-status filters. Ended attempts open the same review; only an unexpired active attempt resumes the call. The compact review uses the question bank's shared `InterviewMarkScheme` component: General, Start, Middle and End, with collapsible sections, tickable points, coverage progress and the existing rubric PDF. Self-marking ticks are local to the displayed review and reset on retry. New AI feedback and transcript downloads use Strengths, Weaknesses and Fixes. Legacy improvements appear under Fixes; old reports without weaknesses say so rather than inventing them. Feedback remains JSON in the existing column; no SQL change is needed.
 
 ## Saved review lifecycle
 
@@ -48,3 +48,8 @@ Delivery coaching below the question-bank End section uses approximate words in 
 `scripts/test-interview-review.mjs` covers finishing without AI, short/empty answers, idempotent locked snapshots, expired-answer recovery, concurrent saves, ownership and validation, ungraded circuit continuation, university retry settings, and keeping the original finish time through optional feedback success or failure.
 
 Browser checks should cover station inclusion/exclusion, zero-selection validation, camera permissions, microphone test completion, typed-answer recovery, mobile overflow, question navigation, preview isolation, sample feedback, and next-station selection. Real provider speech recognition and AI grading depend on browser support and account/provider configuration.
+
+
+Both speech flows use the same normalization, speech-boundary tracker and local microphone activity monitor. The monitor supplements missing native speech boundaries; recognition events remain the fallback when Web Audio or microphone access is unavailable. Silence markers require a 3-second gap between speech boundaries and committed preceding words. Opening silence, deliberate microphone breaks, and recognition/network delays do not create markers. Gaps with unresolved interim text are omitted rather than placed before the wrong words. Microphone energy is approximate and background noise can affect detection. Monitor tracks and AudioContext are released on stop, errors, unmount, and late permission grants.
+
+The AI room now displays the same delivery coaching as question practice, plus transcript counts for pauses, captured fillers and repeated words/sounds. Browser recognition may omit fillers and repetitions before returning text; these cannot be reconstructed reliably. Counts are not a clinical stutter assessment and do not affect scoring. Tests cover native boundary fallback, delayed results, local activity, brief energy dips, duplicate boundaries and late microphone cleanup.

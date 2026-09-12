@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { createSpeechBoundaryTracker, getSpeechDelivery, getTranscriptHints, normalizeSpeechTranscript, type RecognitionConfidence, type TimedSpeech } from "./speech-delivery";
+import { monitorSpeechActivity, createSpeechBoundaryTracker, getSpeechDelivery, getTranscriptHints, normalizeSpeechTranscript, type RecognitionConfidence, type TimedSpeech } from "./speech-delivery";
 export { getTranscriptHints } from "./speech-delivery";
 
 type RecognitionResult = { isFinal: boolean; 0: { transcript: string; confidence?: number } };
@@ -44,6 +44,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   const deliveryKeyRef = useRef("");
   const boundaryRef = useRef(createSpeechBoundaryTracker());
   const interimRef = useRef("");
+  const activityStopRef = useRef<(() => void) | null>(null);
   const recognitionRef = useRef<Recognition | null>(null);
   const onTranscriptRef = useRef(onTranscript);
   const finishRef = useRef<(() => void) | null>(null);
@@ -71,6 +72,8 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
         recognition.onspeechend = null;
         if (mountedRef.current && interimRef.current) { onTranscriptRef.current(interimRef.current); interimRef.current = ""; }
         if (recognitionRef.current === recognition) {
+          activityStopRef.current?.();
+          activityStopRef.current = null;
           recognitionRef.current = null;
           try { recognition.abort(); } catch { /* Already stopped. */ }
         }
@@ -166,11 +169,14 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
             ? "No speech was detected. Restart the microphone when ready, or type your answer."
             : "Speech recognition stopped. Your transcript is kept; restart the microphone or type to continue.";
       setError(message);
+      void stop();
     };
     recognition.onend = () => {
       if (recognitionRef.current !== recognition) return;
       if (finishRef.current) { finishRef.current(); return; }
       if (interimRef.current) { onTranscriptRef.current(interimRef.current); interimRef.current = ""; }
+      activityStopRef.current?.();
+      activityStopRef.current = null;
       recognitionRef.current = null;
       recognition.onresult = null;
       recognition.onerror = null;
@@ -183,12 +189,15 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     recognitionRef.current = recognition;
     try {
       recognition.start();
+      activityStopRef.current = monitorSpeechActivity(recognition);
       setListening(true);
     } catch {
+      activityStopRef.current?.();
+      activityStopRef.current = null;
       recognitionRef.current = null;
       setError("The microphone could not start. Try again or type your answer.");
     }
-  }, [stopSpeaking, answerKey]);
+  }, [stopSpeaking, stop, answerKey]);
 
   const speak = useCallback(async (text: string) => {
     const request = ++speechRequestRef.current;
@@ -228,6 +237,8 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
         recognition.onspeechend = null;
         try { recognition.abort(); } catch { /* Already stopped. */ }
       }
+      activityStopRef.current?.();
+      activityStopRef.current = null;
       recognitionRef.current = null;
       finishRef.current?.();
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();

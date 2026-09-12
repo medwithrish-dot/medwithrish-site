@@ -47,8 +47,8 @@ import {
 import { getQuestionMarkScheme, type MarkSchemeSection } from "../_lib/question-review";
 import { InterviewSidebar } from "./InterviewSidebar";
 import { InterviewMobileNav } from "./InterviewMobileNav";
-import { SpeechDeliveryHints } from "./SpeechDeliveryHints";
-import { createSpeechBoundaryTracker, getSpeechDelivery, normalizeSpeechTranscript, stripSpeechPauseMarkers, type RecognitionConfidence } from "../_lib/speech-delivery";
+import { InterviewMarkScheme } from "./InterviewMarkScheme";
+import { monitorSpeechActivity, createSpeechBoundaryTracker, getSpeechDelivery, normalizeSpeechTranscript, stripSpeechPauseMarkers, type RecognitionConfidence } from "../_lib/speech-delivery";
 import {
   createClient as createSupabaseClient,
   hasSupabaseConfig,
@@ -1201,40 +1201,6 @@ function StatusIcon({ status }: { status: QuestionStatus }) {
   );
 }
 
-function ChecklistToggle({
-  id,
-  label,
-  isChecked,
-  onToggle,
-}: {
-  id: string;
-  label: string;
-  isChecked: boolean;
-  onToggle: (id: string) => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={() => onToggle(id)}
-      aria-pressed={isChecked}
-      className={`grid w-full grid-cols-[24px_minmax(0,1fr)] items-start gap-3 rounded-lg border px-3 py-3 text-left transition-colors ${
-        isChecked
-          ? "border-[#b9dcda] bg-[#f1fbfa]"
-          : "border-[#d8e0e6] bg-white hover:border-[#b9dcda] hover:bg-[#f8fbfb]"
-      }`}
-    >
-      {isChecked ? (
-        <CheckCircle2 className="mt-0.5 h-5 w-5 text-[#0f9b7d]" strokeWidth={2.2} />
-      ) : (
-        <Circle className="mt-1 h-4 w-4 text-[#b8c3ca]" fill="#b8c3ca" strokeWidth={0} />
-      )}
-      <span className="text-sm font-medium leading-5 text-[#314956]">
-        {label}
-      </span>
-    </button>
-  );
-}
-
 function QuestionPracticeView({
   category,
   selectedSubcategory,
@@ -1288,6 +1254,7 @@ function QuestionPracticeView({
   const [transcriptSegments, setTranscriptSegments] = useState<
     TranscriptSegment[]
   >(() => []);
+  const activityStopRef = useRef<(() => void) | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -1312,12 +1279,7 @@ function QuestionPracticeView({
   const elapsedSeconds = Math.max(0, suggestedSeconds - timeRemaining);
   const timerPercent = getPercent(elapsedSeconds, suggestedSeconds);
   const rubricGroups = getQuestionMarkScheme(question);
-  const totalChecklistItems = rubricGroups.reduce(
-    (total, group) => total + group.items.length,
-    0
-  );
-  const checkedCount = checkedItems.size;
-  const checklistPercent = getPercent(checkedCount, totalChecklistItems);
+
   const draftAnswer = appendTranscript(answer, interimTranscript);
   const canFinish = Boolean(draftAnswer.trim());
   const isReviewing = attemptPhase === "review";
@@ -1734,6 +1696,8 @@ function QuestionPracticeView({
 
       const recognition = recognitionRef.current;
 
+      activityStopRef.current?.();
+      activityStopRef.current = null;
       recognitionRef.current = null;
       if (recognition) {
         recognition.onend = null;
@@ -1896,6 +1860,8 @@ function QuestionPracticeView({
       if (recognitionRef.current !== recognition) return;
 
       commitInterimTranscript();
+      activityStopRef.current?.();
+      activityStopRef.current = null;
       recognitionRef.current = null;
       recognition.onend = null;
       recognition.onerror = null;
@@ -1913,6 +1879,8 @@ function QuestionPracticeView({
       if (recognitionRef.current !== recognition) return;
 
       commitInterimTranscript();
+      activityStopRef.current?.();
+      activityStopRef.current = null;
       recognitionRef.current = null;
       setIsListening(false);
       setIsTimerRunning(false);
@@ -1923,10 +1891,13 @@ function QuestionPracticeView({
 
     try {
       recognition.start();
+      activityStopRef.current = monitorSpeechActivity(recognition);
       void startAudioRecording();
       setIsListening(true);
       beginAttempt();
     } catch {
+      activityStopRef.current?.();
+      activityStopRef.current = null;
       recognitionRef.current = null;
       setSpeechError("Voice transcription could not start.");
       setIsListening(false);
@@ -2098,6 +2069,8 @@ function QuestionPracticeView({
       const recognition = recognitionRef.current;
       const recorder = mediaRecorderRef.current;
 
+      activityStopRef.current?.();
+      activityStopRef.current = null;
       recognitionRef.current = null;
       if (recognition) {
         recognition.onend = null;
@@ -2305,99 +2278,6 @@ function QuestionPracticeView({
     </div>
   );
 
-  const renderMarkScheme = () => (
-    <aside className="space-y-5">
-      <section className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]">
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="text-base font-black text-[#071923]">
-            Mark Scheme
-          </h2>
-          <span className="text-sm font-black text-[#08787b]">
-            {checklistPercent}%
-          </span>
-        </div>
-        <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#dfe8ea]">
-          <div
-            className="h-full rounded-full bg-[#159a9d]"
-            style={{ width: `${checklistPercent}%` }}
-          />
-        </div>
-        <p className="mt-3 text-sm font-medium text-[#4a6370]">
-          {checkedCount} / {totalChecklistItems} covered
-        </p>
-        <a
-          href="/phloemai/interview-question-markscheme-rubrics.pdf"
-          target="_blank"
-          rel="noreferrer"
-          className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#b8c8cf] bg-white px-4 text-sm font-black text-[#071923] shadow-sm transition-colors hover:border-[#08787b] hover:text-[#08787b]"
-        >
-          <FileText className="h-4 w-4" aria-hidden="true" />
-          Rubric PDF
-        </a>
-      </section>
-
-      {rubricGroups.map((group) => {
-        const isOpen = openMarkSchemeSections.has(group.title);
-        const panelId = `mark-scheme-${group.title.toLowerCase()}`;
-        const checkedInGroup = group.items.reduce((total, item) => {
-          const id = `${group.title}-${item}`;
-
-          return total + (checkedItems.has(id) ? 1 : 0);
-        }, 0);
-
-        return (
-          <section
-            key={group.title}
-            className="rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-[0_1px_3px_rgba(7,25,35,0.05)]"
-          >
-            <button
-              type="button"
-              aria-expanded={isOpen}
-              aria-controls={panelId}
-              onClick={() => toggleMarkSchemeSection(group.title)}
-              className="flex w-full items-center justify-between gap-3 text-left"
-            >
-              <span className="min-w-0">
-                <span className="block text-sm font-black text-[#08787b]">
-                  {group.title}
-                </span>
-                <span className="mt-1 block text-xs font-bold text-[#5d7280]">
-                  {checkedInGroup} / {group.items.length}
-                </span>
-              </span>
-              <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#d8e0e6] bg-[#f7fafb] text-[#4a6370] transition-colors hover:border-[#08787b] hover:text-[#08787b]">
-                <ChevronRight
-                  className={`h-4 w-4 transition-transform ${
-                    isOpen ? "rotate-90" : ""
-                  }`}
-                  aria-hidden="true"
-                />
-              </span>
-            </button>
-
-            <div id={panelId} aria-hidden={!isOpen} inert={!isOpen} className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
-              <div className="min-h-0 overflow-hidden"><div className="space-y-3 pt-4">
-                {group.items.map((item) => {
-                  const id = `${group.title}-${item}`;
-
-                  return (
-                    <ChecklistToggle
-                      key={id}
-                      id={id}
-                      label={item}
-                      isChecked={checkedItems.has(id)}
-                      onToggle={toggleChecklistItem}
-                    />
-                  );
-                })}
-              </div></div>
-            </div>
-          </section>
-        );
-      })}
-      <SpeechDeliveryHints hints={deliveryHints} />
-    </aside>
-  );
 
   return (
     <main className="phloem-dashboard-compact min-h-screen bg-[#eef1f3] text-[#071923] lg:h-[100dvh] lg:overflow-hidden">
@@ -2556,7 +2436,7 @@ function QuestionPracticeView({
                   </section>
                 </div>
 
-                {renderMarkScheme()}
+                <InterviewMarkScheme rubricGroups={rubricGroups} checkedItems={checkedItems} openMarkSchemeSections={openMarkSchemeSections} toggleChecklistItem={toggleChecklistItem} toggleMarkSchemeSection={toggleMarkSchemeSection} deliveryHints={deliveryHints} />
               </section>
             ) : (
               <section className="mt-5 max-w-5xl">

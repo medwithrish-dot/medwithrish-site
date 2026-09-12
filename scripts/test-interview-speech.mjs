@@ -242,3 +242,61 @@ test("concurrent microphone stops preserve the final transcript and share one sh
   room.finishStopTimeouts();
   assert.equal(nextRecognition.abortCalls, 0, "An old fallback cannot stop the next answer");
 });
+
+
+function activityHarness({ pending = false } = {}) {
+  let now = 0, loud = false, nextFrame, stoppedTracks = 0, closedContexts = 0, grant;
+  const events = [];
+  const stream = { getTracks: () => [{ stop: () => stoppedTracks++ }] };
+  const recognition = { onspeechstart: () => events.push("start"), onspeechend: () => events.push("end") };
+  const activityModule = { exports: {} };
+  class AudioContext {
+    state = "running";
+    createMediaStreamSource() { return { connect() {} }; }
+    createAnalyser() { return { fftSize: 256, getByteTimeDomainData(samples) { samples.fill(loud ? 136 : 128); } }; }
+    async resume() {}
+    async close() { this.state = "closed"; closedContexts++; }
+  }
+  runInNewContext(ts.transpileModule(readFileSync(new URL("../app/phloemai/interviews/_lib/speech-delivery.ts", import.meta.url), "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+  }).outputText, {
+    module: activityModule, exports: activityModule.exports, window: { AudioContext },
+    navigator: { mediaDevices: { getUserMedia: () => pending ? new Promise(resolve => { grant = () => resolve(stream); }) : Promise.resolve(stream) } },
+    requestAnimationFrame: callback => { nextFrame = callback; return 1; },
+    cancelAnimationFrame: () => { nextFrame = undefined; },
+    performance: { now: () => now },
+  });
+  const stop = activityModule.exports.monitorSpeechActivity(recognition);
+  return { events, recognition, stop, grant: () => grant(), get stoppedTracks() { return stoppedTracks; }, get closedContexts() { return closedContexts; },
+    frame(milliseconds, speech) { now += milliseconds; loud = speech; const callback = nextFrame; nextFrame = undefined; callback?.(); },
+  };
+}
+
+test("local microphone activity detects boundaries, ignores brief dips and replaces duplicate native events", async () => {
+  const mic = activityHarness();
+  await new Promise(resolve => setImmediate(resolve));
+  mic.frame(100, true);
+  mic.recognition.onspeechstart();
+  mic.frame(100, false);
+  mic.frame(100, true);
+  assert.deepEqual(mic.events, ["start"]);
+  mic.frame(100, false);
+  mic.frame(300, false);
+  mic.recognition.onspeechend();
+  mic.frame(4000, true);
+  assert.deepEqual(mic.events, ["start", "end", "start"]);
+  mic.stop();
+  mic.frame(4000, false);
+  assert.equal(mic.stoppedTracks, 1);
+  assert.equal(mic.closedContexts, 1);
+  assert.deepEqual(mic.events, ["start", "end", "start"]);
+});
+
+test("ending listening before microphone permission resolves releases the late stream", async () => {
+  const mic = activityHarness({ pending: true });
+  mic.stop(); mic.grant();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(mic.stoppedTracks, 1);
+  assert.equal(mic.closedContexts, 0);
+  assert.deepEqual(mic.events, []);
+});

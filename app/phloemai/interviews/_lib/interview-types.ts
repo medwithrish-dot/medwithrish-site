@@ -5,6 +5,8 @@ export type InterviewFeedback = {
   summary: string;
   strengths: string[];
   improvements: string[];
+  weaknesses?: string[];
+  fixes?: string[];
   rubric: { criterion: string; score: number; reason: string }[];
 };
 export type InterviewAttempt = {

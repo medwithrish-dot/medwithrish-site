@@ -39,3 +39,18 @@ test("invalid or truncated provider output cannot become a leaderboard score", (
     assert.throws(() => validateFeedback(value));
   }
 });
+
+
+test("new feedback preserves distinct strengths, weaknesses and fixes alongside legacy reports", () => {
+  const legacy = validateFeedback(valid());
+  assert.deepEqual(legacy.improvements, valid().improvements);
+  const base = valid();
+  delete base.improvements;
+  const report = validateFeedback({ ...base, weaknesses: ["No reflection on challenges."], fixes: ["Explain one challenge you observed and what you learnt."] });
+  assert.deepEqual(report.weaknesses, ["No reflection on challenges."]);
+  assert.deepEqual(report.fixes, report.improvements);
+  assert.equal(report.score, legacy.score);
+  for (const fields of [{ weaknesses: ["A gap"] }, { fixes: ["An action"] }, { weaknesses: [], fixes: ["An action"] }, { weaknesses: ["A gap"], fixes: [12] }]) {
+    assert.throws(() => validateFeedback({ ...base, ...fields }));
+  }
+});

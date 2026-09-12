@@ -7,6 +7,8 @@ import type { useInterviewDevices } from "../_lib/useInterviewDevices";
 import type { useInterviewSpeech } from "../_lib/useInterviewSpeech";
 import { InterviewDevicePreview } from "./InterviewDevicePreview";
 import { AnimatedDisclosure } from "./AnimatedDisclosure";
+import { SpeechDeliveryHints } from "./SpeechDeliveryHints";
+import { TranscriptSpeechSummary } from "./TranscriptSpeechSummary";
 import styles from "./AIInterviewRoom.module.css";
 
 export const formatRoomTime = (seconds: number) => `${Math.floor(Math.max(0, seconds) / 60)}:${String(Math.max(0, seconds) % 60).padStart(2, "0")}`;
@@ -108,6 +110,8 @@ export function AIInterviewCall(props: Props) {
             <label className={styles.answerLabel} htmlFor="interview-answer">{speech.listening ? "Listening · stop the mic to edit" : preparing ? "Your answer opens after reading time" : "Speak or type your answer"}</label>
             <textarea ref={answerInput} id="interview-answer" aria-describedby="current-interview-question" value={liveAnswer} readOnly={!active || speech.listening} maxLength={6000} onChange={(event) => props.onAnswer(event.target.value)} placeholder={preparing ? "Your thinking time starts here…" : "Your words will appear here. You can type, too…"} className={styles.answerInput} />
             <p className={styles.characterCount}><span>{answerWordCount ? `${answerWordCount} words` : "Your answer, in your own words"}</span><span>{answer.length.toLocaleString()} / 6,000</span></p>
+            <TranscriptSpeechSummary transcript={liveAnswer} />
+            <SpeechDeliveryHints hints={speech.deliveryHints} />
             {props.followUpAvailable && <div className={styles.followUpAction}><button type="button" disabled={!active || Boolean(busy) || props.followUpBusy || answerWordCount < 20} onClick={props.onFollowUp}>{props.followUpBusy ? <Loader2 size={16} className="animate-spin" /> : <MessageSquareText size={16} />}{props.followUpBusy ? "Preparing your follow-up…" : "Follow up on my answer"}<ArrowRight size={15} /></button><p>{answerWordCount < 20 ? "Add at least 20 words to explore your answer further." : "Explore a point from your answer, just like in an interview."}</p></div>}
             {props.followUpNotice && <p role="status" className={styles.followUpNotice}>{props.followUpNotice}</p>}
             {questionIndex > 0 && <AnimatedDisclosure title="Earlier answers" className={styles.previousAnswer}>{answers.slice(0, questionIndex).map((previous, index) => <div key={previous.question}><strong>{index + 1}. {previous.question}</strong><p>{previous.answer || "No answer added."}</p><button type="button" className={styles.textButton} disabled={!active} onClick={() => goToQuestion(index)}>Return to question {index + 1} <ArrowRight size={13} /></button></div>)}</AnimatedDisclosure>}
