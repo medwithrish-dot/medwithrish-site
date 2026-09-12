@@ -177,6 +177,16 @@ try {
     await db.query("update public.interview_attempts set status='failed' where id=$1", [gradeId]);
     await assert.rejects(claim(ids.claims, gradeId), /retry limit reached/);
   });
+  await check("saved ungraded reviews can request feedback with the existing database schema", async () => {
+    const saved = await attempt(ids.claims, { status: "failed" });
+    await db.query("update public.interview_attempts set last_error='awaiting_feedback' where id=$1", [saved]);
+    const first = await claim(ids.claims, saved);
+    assert.equal(first.status, "grading");
+    assert.equal(first.grading_tries, 1);
+    assert.equal(first.last_error, null);
+    assert.equal(first.answers[0].answer, transcript);
+    assert.equal(first.completed_at, "2026-01-02T10:00:00+00:00");
+  });
   await check("abandoned attempts cannot be graded, completed attempts never regrade", async () => {
     const abandoned = await attempt(ids.claims, { status: "failed" });
     await db.query("update public.interview_attempts set last_error='abandoned' where id=$1", [abandoned]);

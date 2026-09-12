@@ -10,10 +10,10 @@ import { getTranscriptHints, useInterviewSpeech } from "../_lib/useInterviewSpee
 import { useInterviewDevices } from "../_lib/useInterviewDevices";
 import { AIInterviewSetup, type InterviewRoomPlan } from "./AIInterviewSetup";
 import { AIInterviewCall } from "./AIInterviewCall";
-import { AIInterviewFeedback } from "./AIInterviewFeedback";
+import { AIInterviewReview } from "./AIInterviewReview";
 import styles from "./AIInterviewRoom.module.css";
 
-type SessionResponse = { attempt: InterviewAttempt | null; serverNow?: string; configured?: boolean; isPremium?: boolean; followUp?: string; questionIndex?: number; source?: "ai" | "practice" | "saved" };
+type SessionResponse = { attempt: InterviewAttempt | null; serverNow?: string; configured?: boolean; isPremium?: boolean; usedSavedAnswers?: boolean; followUp?: string; questionIndex?: number; source?: "ai" | "practice" | "saved" };
 type StartOptions = { mode: InterviewMode; universitySlug?: string; stationSlug?: string; circuitId?: string; stationIndex?: number; stationCount?: number };
 type LocalDraft = { answers: InterviewAnswer[]; questionIndex: number };
 
@@ -67,6 +67,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const [preview, setPreview] = useState(false);
   const [roomPlan, setRoomPlan] = useState<InterviewRoomPlan | null>(null);
   const [continuationSlug, setContinuationSlug] = useState("");
+  const [reviewRequested, setReviewRequested] = useState(false);
   const previewRef = useRef(false);
   const planRef = useRef<InterviewRoomPlan | null>(null);
   const devices = useInterviewDevices();
@@ -121,6 +122,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     attemptRef.current = next;
     setAttempt(next);
     if (!next) return;
+    if (!previewRef.current) window.history?.replaceState(null, "", `/phloemai/interviews/ai-interviews?attempt=${next.id}`);
     if (questionsChanged && !restore) {
       // Match by question text: inserting a probe must never shift a candidate's
       // answer onto a different question, including an unsaved typed answer.
@@ -178,7 +180,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       spokenQuestionRef.current = "";
       setFollowUpNotice("");
     }
-    if (next.status === "completed" && !previewRef.current) {
+    if (next.status !== "in_progress" && !previewRef.current) {
       try { localStorage.removeItem(draftKey(next.id)); } catch { /* Optional browser storage. */ }
     }
   }, []);
@@ -264,12 +266,13 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     };
   }, [attempt?.status, saveDraft, stopListening, stopSpeaking, cancelMicrophoneRequest]);
 
-  const submit = useCallback(async () => {
+  const finishStation = useCallback(async () => {
     const current = attemptRef.current;
     if (!current || submitLockRef.current || actionLockRef.current) return;
     submitLockRef.current = true;
     followUpRequestRef.current?.abort();
-    setBusy("Saving answers and preparing feedback…");
+    setBusy("Saving your station?");
+    setReviewRequested(true);
     setError("");
     setErrorStatus(0);
     try {
@@ -279,43 +282,59 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       stopCamera();
       stopMicCheck();
       if (previewRef.current) {
-        applyResponse({ attempt: { ...current, status: "completed", completedAt: new Date().toISOString(), answers: answersRef.current, feedback: previewInterviewFeedback, nextAvailableAt: null } });
+        applyResponse({ attempt: { ...current, status: "submitted", completedAt: new Date().toISOString(), answers: answersRef.current, feedback: null, nextAvailableAt: null } });
         return;
       }
-      if (getTranscriptHints(answersRef.current.map((answer) => answer.answer).join(" ")).wordCount < 20) throw new Error("Feedback needs at least 20 words. Add more while the station is open, or start another station if time has ended.");
-      try { await saveDraft(); }
-      catch (saveError) {
-        const deadlinePassed = Date.now() + clockOffsetRef.current >= Date.parse(current.startedAt) + (current.preparationSeconds + current.stationSeconds) * 1000;
-        if (!(saveError instanceof InterviewRequestError) || saveError.status !== 409 || !deadlinePassed) throw saveError;
-        const latest = await requestSession(`/api/interviews/session?attempt=${encodeURIComponent(current.id)}`);
-        if (!latest.attempt) throw saveError;
-        applyResponse(latest);
-        answersRef.current = latest.attempt.answers;
-        setAnswers(latest.attempt.answers);
-        savedSignatureRef.current = JSON.stringify(latest.attempt.answers);
-        setSaveWarning("The answer window had closed. Feedback uses the last answers saved to your account.");
-      }
-      const response = await requestSession("/api/interviews/feedback", "POST", { attemptId: current.id });
-      applyResponse(response);
-      if (response.attempt?.status === "grading") setError("Feedback is still being prepared. Use Check feedback in a moment.");
+      while (savePromiseRef.current) await savePromiseRef.current.catch(() => {});
+      const response = await requestSession("/api/interviews/session", "PATCH", {
+        attemptId: current.id, answers: answersRef.current, finish: true,
+        metrics: getTranscriptHints(answersRef.current.map((answer) => answer.answer).join(" ")),
+      });
+      applyResponse(response, true);
+      setSaveWarning(response.usedSavedAnswers ? "The answer window had closed. This review shows the last answers saved to your account." : "");
     } catch (failure) {
       showError(failure);
-      // A timed-out response may still have completed, or the provider may have
-      // marked the saved attempt as retryable. Reconcile once; never poll the AI.
+      // A timed-out finish may still have saved. Keep the browser draft unless
+      // the server confirms that the attempt is locked and ready to review.
+      try {
+        const latest = await requestSession(`/api/interviews/session?attempt=${encodeURIComponent(current.id)}`);
+        if (latest.attempt && latest.attempt.status !== "in_progress") {
+          applyResponse(latest, true);
+          setError("");
+        }
+      } catch { /* Keep the local transcript available so the user can retry saving. */ }
+    } finally { submitLockRef.current = false; setBusy(""); }
+  }, [applyResponse, showError, stopListening, stopSpeaking, stopCamera, stopMicCheck, cancelMicrophoneRequest]);
+
+  const generateFeedback = async () => {
+    const current = attemptRef.current;
+    if (!current || current.status === "in_progress" || actionLockRef.current || submitLockRef.current) return;
+    submitLockRef.current = true;
+    setBusy("Preparing your feedback?");
+    setError("");
+    setErrorStatus(0);
+    try {
+      if (previewRef.current) {
+        applyResponse({ attempt: { ...current, status: "completed", feedback: previewInterviewFeedback } });
+        return;
+      }
+      applyResponse(await requestSession("/api/interviews/feedback", "POST", { attemptId: current.id }));
+    } catch (failure) {
+      showError(failure);
       try {
         const latest = await requestSession(`/api/interviews/session?attempt=${encodeURIComponent(current.id)}`);
         applyResponse(latest);
-        if (latest.attempt?.status === "completed") setError("");
-      } catch { /* Keep the original error and transcript so the user can retry. */ }
-    }
-    finally { submitLockRef.current = false; setBusy(""); }
-  }, [applyResponse, saveDraft, showError, stopListening, stopSpeaking, stopCamera, stopMicCheck, cancelMicrophoneRequest]);
+        if (latest.attempt?.feedback) setError("");
+      } catch { /* The review stays available if feedback cannot be loaded. */ }
+    } finally { submitLockRef.current = false; setBusy(""); }
+  };
 
   const preparationEnd = attempt ? Date.parse(attempt.startedAt) + attempt.preparationSeconds * 1000 : 0;
   const stationEnd = preparationEnd + (attempt?.stationSeconds ?? 0) * 1000;
   const preparing = Boolean(attempt?.status === "in_progress" && now < preparationEnd);
   const expired = Boolean(attempt && now >= stationEnd);
-  const active = attempt?.status === "in_progress" && !preparing && !expired && !busy && !followUpBusy;
+  const reviewing = Boolean(attempt && (reviewRequested || attempt.status !== "in_progress" || expired));
+  const active = attempt?.status === "in_progress" && !reviewing && !preparing && !expired && !busy && !followUpBusy;
   const secondsRemaining = Math.max(0, Math.ceil(((preparing ? preparationEnd : stationEnd) - now) / 1000));
   const breakRemaining = attempt?.nextAvailableAt ? Math.max(0, Math.ceil((Date.parse(attempt.nextAvailableAt) - now) / 1000)) : 0;
   const question = attempt?.questions[questionIndex] ?? "";
@@ -323,7 +342,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const followingQuestion = attempt?.questions[questionIndex + 1];
   const followUpAvailable = !preview && originalQuestions.includes(question)
     && (!followingQuestion || originalQuestions.includes(followingQuestion));
-  const microphoneRoomId = !loading && attempt?.status === "in_progress" && !expired ? attempt.id : null;
+  const microphoneRoomId = !loading && attempt?.status === "in_progress" && !reviewing ? attempt.id : null;
 
   useEffect(() => {
     if (!microphoneRoomId) return;
@@ -350,8 +369,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   useEffect(() => {
     if (!attempt || attempt.status !== "in_progress" || !expired || expirySubmittedRef.current === attempt.id || submitLockRef.current || actionLockRef.current) return;
     expirySubmittedRef.current = attempt.id;
-    void submit();
-  }, [attempt, expired, now, submit]);
+    void finishStation();
+  }, [attempt, expired, now, finishStation]);
 
   useEffect(() => {
     if (!attempt || !active || !readAloud || !voiceSupported || !question) return;
@@ -376,6 +395,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       previewRef.current = asPreview;
       setPreview(asPreview);
       if (asPreview && plan) {
+        planRef.current = plan;
+        setRoomPlan(plan);
         clockOffsetRef.current = 0;
         const station = findInterviewStation(options.stationSlug ?? plan.stationSlugs[0])!;
         applyResponse({ attempt: {
@@ -386,11 +407,14 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
           questions: [...station.questions], answers: [], feedback: null, metrics: {}, nextAvailableAt: null,
           circuitId: options.circuitId ?? `preview-${crypto.randomUUID()}`,
         } }, true);
+        setReviewRequested(false);
       } else {
         const response = await requestSession("/api/interviews/session", "POST", options);
         const resumed = response.attempt;
         const matchesPlan = resumed && plan && resumed.circuitId === options.circuitId && resumed.stationSlug === options.stationSlug && resumed.stationCount === plan.stationSlugs.length && resumed.mode === plan.mode && resumed.universitySlug === (plan.universitySlug ?? null);
         if (resumed && matchesPlan) {
+          planRef.current = plan;
+          setRoomPlan(plan);
           try { localStorage.setItem(planKey(resumed.circuitId), JSON.stringify(plan)); }
           catch { setSaveWarning("Your station selection is kept for this visit. Browser storage is unavailable, so return to setup if you reload before the next station."); }
         } else if (resumed && plan) {
@@ -399,6 +423,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
           setSaveWarning("You already had an active interview, so we’ve resumed it with its saved settings.");
         }
         applyResponse(response, true);
+        setReviewRequested(false);
       }
     } catch (failure) { showError(failure); }
     finally { actionLockRef.current = false; setBusy(""); setNow(Date.now() + clockOffsetRef.current); }
@@ -480,6 +505,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       }
       attemptRef.current = null;
       setAttempt(null);
+      setReviewRequested(false);
       setError("");
       setErrorStatus(0);
       setSaveWarning("");
@@ -508,7 +534,17 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     void startAttempt({ mode: attempt.mode, universitySlug: attempt.universitySlug ?? undefined, circuitId: attempt.circuitId, stationIndex: attempt.stationIndex + 1, stationSlug, stationCount: roomPlan?.stationSlugs.length });
     setContinuationSlug("");
   };
-  const step = !attempt ? 0 : attempt.status === "completed" ? 2 : 1;
+  const retryStation = () => {
+    if (!attempt || attempt.status === "in_progress" || actionLockRef.current || submitLockRef.current) return;
+    const plan: InterviewRoomPlan = {
+      mode: attempt.mode, universitySlug: attempt.universitySlug ?? undefined,
+      stationSlugs: [attempt.stationSlug], preparationSeconds: attempt.preparationSeconds,
+      stationSeconds: attempt.stationSeconds, breakSeconds: attempt.breakSeconds,
+    };
+    // Keep the current circuit plan intact if opening the retry fails.
+    void startAttempt({ mode: plan.mode, universitySlug: plan.universitySlug, stationSlug: attempt.stationSlug, stationCount: 1, circuitId: crypto.randomUUID() }, previewRef.current, plan);
+  };
+  const step = !attempt ? 0 : reviewing ? 2 : 1;
 
   return <div className={styles.experience}>
     <nav aria-label="Interview steps" className={styles.steps}>
@@ -521,16 +557,16 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       {errorStatus === 401 && <Link href="/phloemai/account" className="mt-2 inline-block font-bold underline">Sign in to start your scored interview</Link>}
       {errorStatus === 403 && <Link href="/phloemai/pricing" className="mt-2 inline-block font-bold underline">View membership options</Link>}
     </div>}
-    {!configured && !preview && <p role="status" className={styles.previewBanner}>AI is paused. Timed practice, saved answers and built-in follow-ups are available.</p>}
+    {!configured && !preview && !reviewing && <p role="status" className={styles.previewBanner}>AI is paused. Timed practice, saved answers and built-in follow-ups are available.</p>}
     {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your interview space ready…</div> : !attempt ? <AIInterviewSetup
       initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan} initialMockCircuit={initialMockCircuit}
       devices={devices} readAloud={readAloud} setReadAloud={setVoiceEnabled} voiceRate={voiceRate} setVoiceRate={setVoiceRate}
       voiceSupported={speech.voiceSupported} speaking={speech.speaking} onStopVoice={speech.stopSpeaking} onTestVoice={() => { devices.stopMicCheck(); if (speech.speaking) speech.stopSpeaking(); else void speech.speak("Welcome to your Phloem interview. Take a breath, and tell me a little about what brought you to medicine."); }}
       speechSupported={speech.supported}
       isPremium={isPremium} busy={Boolean(busy)} onStart={beginRoom}
-    /> : attempt.status === "completed" && attempt.feedback ? <AIInterviewFeedback key={attempt.id}
-      attempt={attempt} preview={preview} onRetry={() => void leaveAttempt()}
-      onNext={attempt.stationIndex + 1 < attempt.stationCount && roomPlan ? nextStation : undefined}
+    /> : reviewing ? <AIInterviewReview key={attempt.id}
+      attempt={{ ...attempt, answers }} preview={preview} configured={configured} onRetry={retryStation} onGenerate={() => void generateFeedback()}
+      onNext={attempt.stationIndex + 1 < attempt.stationCount && roomPlan && attempt.completedAt ? nextStation : undefined}
       breakRemaining={breakRemaining} busy={Boolean(busy)}
     /> : <>
       {preview && <div className={styles.previewBanner}><Sparkles size={16} /><span><strong>You’re in preview.</strong> Explore the room and sample feedback. This won’t use an attempt or save anything to your account.</span></div>}
@@ -540,14 +576,12 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         onToggleMicrophone={() => void toggleMicrophone()} setReadAloud={setVoiceEnabled}
         followUpAvailable={followUpAvailable} followUpBusy={followUpBusy} followUpNotice={followUpNotice} onFollowUp={() => void askFollowUp()}
         onAnswer={(value) => replaceAnswers(answersRef.current.map((answer, index) => index === questionIndex ? { ...answer, answer: value } : answer))}
-        onQuestion={(index) => void moveQuestion(index)} onSubmit={() => void submit()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}
+        onQuestion={(index) => void moveQuestion(index)} onSubmit={() => void finishStation()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}
         onSkipPreparation={() => { if (preview) applyResponse({ attempt: { ...attempt, startedAt: new Date(Date.now() - attempt.preparationSeconds * 1000).toISOString() } }); }}
       />
-      {(attempt.status === "grading" || attempt.status === "failed" || expired) && <div className={styles.statusCard}>
-        <div><strong>{attempt.status === "grading" ? "Your feedback is being prepared." : "Your station has ended."}</strong><p>{hints.wordCount < 20 ? "There wasn’t enough answer text to mark this station. You can return to setup and try again." : "Your transcript is kept. Check or retry your feedback when you’re ready."}</p><div className="mt-3 flex flex-wrap gap-3"><button type="button" disabled={Boolean(busy) || hints.wordCount < 20} className={styles.primaryButton} onClick={() => void submit()}>{attempt.status === "grading" ? "Check feedback" : "Retry feedback"}<ArrowRight size={15} /></button><button type="button" className={styles.secondaryButton} disabled={Boolean(busy)} onClick={() => void leaveAttempt()}>Back to setup</button></div></div>
-      </div>}
     </>}
-    {attempt?.status === "completed" && attempt.stationIndex + 1 < attempt.stationCount && !roomPlan && <section className={styles.joinBar}><div><strong>Continue your circuit</strong><p>Your remaining topic choices aren’t available on this device. Choose a topic for your next station.</p><label className={styles.universityChoice}>Next station<select aria-label="Next station topic" value={continuationSlug || interviewStations[(attempt.stationIndex + 1) % interviewStations.length].slug} onChange={(event) => setContinuationSlug(event.target.value)}>{interviewStations.map((station) => <option key={station.slug} value={station.slug}>{station.title}</option>)}</select></label></div><button type="button" className={styles.primaryButton} disabled={Boolean(busy) || breakRemaining > 0} onClick={nextStation}>{breakRemaining > 0 ? "Your break is still running" : "Continue to next station"}<ArrowRight size={16} /></button></section>}
+    {reviewing && attempt?.completedAt && attempt.stationIndex + 1 < attempt.stationCount && !roomPlan && <section className={styles.joinBar}><div><strong>Continue your circuit</strong><p>Your remaining topic choices aren’t available on this device. Choose a topic for your next station.</p><label className={styles.universityChoice}>Next station<select aria-label="Next station topic" value={continuationSlug || interviewStations[(attempt.stationIndex + 1) % interviewStations.length].slug} onChange={(event) => setContinuationSlug(event.target.value)}>{interviewStations.map((station) => <option key={station.slug} value={station.slug}>{station.title}</option>)}</select></label></div><button type="button" className={styles.primaryButton} disabled={Boolean(busy) || breakRemaining > 0} onClick={nextStation}>{breakRemaining > 0 ? "Your break is still running" : "Continue to next station"}<ArrowRight size={16} /></button></section>}
+    {reviewing && attempt?.status === "in_progress" && !busy && <div role="status" className={styles.statusCard}><div><strong>Your transcript is still in this browser.</strong><p>Save the finished station before retrying or leaving this page.</p><button type="button" className={styles.primaryButton} onClick={() => void finishStation()}>Retry saving station</button></div></div>}
     {saveWarning && <div role="status" className={styles.previewBanner}><span>{saveWarning}</span>{attempt?.status === "in_progress" && <button type="button" disabled={Boolean(busy)} onClick={() => void saveDraft().catch(showError)}>Retry save</button>}</div>}
     {busy && <div role="status" className={styles.statusCard}><Loader2 size={18} className="animate-spin" />{busy}</div>}
     {!attempt && speech.error && <p role="status" className={styles.deviceError}>{speech.error}</p>}

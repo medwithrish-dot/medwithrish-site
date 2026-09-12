@@ -13,7 +13,7 @@ export type InterviewAttempt = {
   universitySlug: string | null;
   stationSlug: string;
   title: string;
-  status: "in_progress" | "grading" | "completed" | "failed";
+  status: "in_progress" | "submitted" | "grading" | "completed" | "failed";
   startedAt: string;
   completedAt: string | null;
   answerSubmittedAt?: string | null;

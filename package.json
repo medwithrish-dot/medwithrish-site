@@ -9,9 +9,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "npm run test:unit && npm run test:interviews:db && node scripts/test-interview-dashboard-db.mjs && node --test scripts/test-profile-security.mjs",
-    "test:unit": "node --test scripts/test-interview-room.mjs scripts/test-interview-follow-up.mjs scripts/test-interview-speech.mjs scripts/test-interview-scoring.mjs scripts/test-interview-dashboard.mjs scripts/test-interview-preparation.mjs scripts/test-interview-pathway.mjs scripts/test-interview-public-names.mjs scripts/test-interview-guides.mjs scripts/test-server-routes.mjs scripts/test-ucat-attention.mjs scripts/test-ucat-quality.mjs scripts/test-ucat-account.mjs",
+    "test:unit": "node --test scripts/test-interview-review.mjs scripts/test-station-review-guidance.mjs scripts/test-saved-interviews.mjs scripts/test-saved-interview-review.mjs scripts/test-interview-room.mjs scripts/test-interview-follow-up.mjs scripts/test-interview-speech.mjs scripts/test-interview-scoring.mjs scripts/test-interview-dashboard.mjs scripts/test-interview-preparation.mjs scripts/test-interview-pathway.mjs scripts/test-interview-public-names.mjs scripts/test-interview-guides.mjs scripts/test-server-routes.mjs scripts/test-ucat-attention.mjs scripts/test-ucat-quality.mjs scripts/test-ucat-account.mjs",
     "test:interviews:db": "node scripts/test-interview-platform.mjs",
-    "test:interviews:room": "node --test scripts/test-interview-room.mjs scripts/test-interview-follow-up.mjs scripts/test-interview-speech.mjs scripts/test-interview-scoring.mjs",
+    "test:interviews:room": "node --test scripts/test-interview-review.mjs scripts/test-station-review-guidance.mjs scripts/test-saved-interviews.mjs scripts/test-saved-interview-review.mjs scripts/test-interview-room.mjs scripts/test-interview-follow-up.mjs scripts/test-interview-speech.mjs scripts/test-interview-scoring.mjs",
     "test:interviews:dashboard": "node --test scripts/test-interview-dashboard.mjs scripts/test-interview-preparation.mjs && node scripts/test-interview-dashboard-db.mjs",
     "audit:ucat-questions": "node scripts/auditUcatQuestionBank.cjs",
     "review:ucat-generated": "node scripts/reviewGeneratedUcatQuestions.cjs"

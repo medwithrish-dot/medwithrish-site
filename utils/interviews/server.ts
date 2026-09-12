@@ -60,7 +60,10 @@ export function toInterviewAttempt(row: Record<string, unknown>): InterviewAttem
   const completedAt = row.completed_at as string | null;
   return {
     id: row.id as string, mode: row.mode as InterviewAttempt["mode"], universitySlug: row.university_slug as string | null,
-    stationSlug: row.station_slug as string, title: row.title as string, status: row.status as InterviewAttempt["status"],
+    stationSlug: row.station_slug as string, title: row.title as string,
+    // Keep the existing database status constraint and grading RPC compatible:
+    // this retryable row is a saved, ungraded station in the application.
+    status: row.status === "failed" && row.last_error === "awaiting_feedback" ? "submitted" : row.status as InterviewAttempt["status"],
     startedAt: row.started_at as string, completedAt, answerSubmittedAt: row.answer_submitted_at as string | null | undefined, preparationSeconds: Number(row.preparation_seconds), stationSeconds: Number(row.station_seconds),
     breakSeconds: Number(row.break_seconds), stationIndex: Number(row.station_index), stationCount: Number(row.station_count),
     questions: row.questions as string[], answers: row.answers as InterviewAttempt["answers"], metrics: (row.metrics ?? {}) as Record<string, number>,

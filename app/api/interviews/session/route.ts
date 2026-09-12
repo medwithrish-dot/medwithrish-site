@@ -47,7 +47,9 @@ export async function POST(request: Request) {
       if (!body.circuitId) throw new InterviewError("Start your circuit with the first station");
       const { data: previous, error } = await admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("circuit_id", circuitId).eq("station_index", index - 1).maybeSingle();
       if (error) databaseError(error);
-      if (!previous || previous.status !== "completed" || previous.mode !== mode || previous.university_slug !== (mode === "university" ? university!.slug : null)) throw new InterviewError("Complete the previous station first", 409);
+      const stationEnded = previous && (previous.status === "completed" ||
+        (["failed", "grading"].includes(previous.status) && previous.completed_at && previous.answer_submitted_at && previous.last_error !== "abandoned"));
+      if (!stationEnded || previous.mode !== mode || previous.university_slug !== (mode === "university" ? university!.slug : null)) throw new InterviewError("Complete the previous station first", 409);
       count = previous.station_count;
       if (body.stationCount !== undefined && body.stationCount !== count) throw new InterviewError("The number of stations cannot change during a circuit", 409);
       if (Date.now() < Date.parse(previous.completed_at) + previous.break_seconds * 1000) throw new InterviewError("Your break is still running. The next station will be ready shortly.", 409);
@@ -81,12 +83,20 @@ export async function PATCH(request: Request) {
     const { data: row, error } = await admin.from("interview_attempts").select("*").eq("user_id", user.id).eq("id", body.attemptId).maybeSingle();
     if (error) databaseError(error);
     if (!row) throw new InterviewError("Interview not found", 404);
-    if (row.status !== "in_progress") throw new InterviewError("This station is already submitted. Your saved answers are locked.", 409);
+    const finish = body.finish === true;
+    if (row.status !== "in_progress") {
+      if (finish && row.last_error !== "abandoned") return interviewJson({ attempt: toInterviewAttempt(row) });
+      throw new InterviewError("This station is already submitted. Your saved answers are locked.", 409);
+    }
     // Short transport grace allows an in-flight final autosave, never extra practice time.
-    if (Date.now() > Date.parse(row.started_at) + (row.preparation_seconds + row.station_seconds + 30) * 1000) throw new InterviewError("The answer window has closed. Submit your last saved answers for feedback.", 409);
-    if (body.answers.length > row.questions.length) throw new InterviewError("Too many answers");
+    const answerWindowClosed = Date.now() > Date.parse(row.started_at) + (row.preparation_seconds + row.station_seconds + 30) * 1000;
+    if (answerWindowClosed && !finish) throw new InterviewError("The answer window has closed. Finish the station to review your last saved answers.", 409);
+    // A resumed, expired station can always reach review. Once the answer window
+    // closes, only its account snapshot is submitted; late text cannot extend it.
+    const suppliedAnswers = answerWindowClosed ? [] : body.answers;
+    if (suppliedAnswers.length > row.questions.length) throw new InterviewError("Too many answers");
     const seen = new Set<string>();
-    const incomingAnswers = body.answers.map((value: unknown) => {
+    const incomingAnswers = suppliedAnswers.map((value: unknown) => {
       if (!value || typeof value !== "object") throw new InterviewError("Invalid answer");
       const answer = value as Record<string, unknown>;
       if (typeof answer.question !== "string" || !row.questions.includes(answer.question) || seen.has(answer.question) || typeof answer.answer !== "string" || answer.answer.length > 8000) throw new InterviewError("Invalid answer or answer too long");
@@ -99,17 +109,20 @@ export async function PATCH(request: Request) {
     const answers = (row.questions as string[]).map((question) => incomingAnswers.find((answer) => answer.question === question)
       ?? savedAnswers.find((answer) => answer.question === question) ?? { question, answer: "" });
     if (answers.reduce((sum, answer) => sum + answer.answer.length, 0) > 18000) throw new InterviewError("Please keep the station transcript under 18,000 characters");
-    const metrics: Record<string, number> = {};
-    if (body.metrics && typeof body.metrics === "object") {
+    const metrics: Record<string, number> = answerWindowClosed ? toInterviewAttempt(row).metrics : {};
+    if (!answerWindowClosed && body.metrics && typeof body.metrics === "object") {
       for (const key of ["wordCount", "fillerCount", "repetitionCount"]) {
         const value = (body.metrics as Record<string, unknown>)[key];
         if (typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 10000) metrics[key] = value;
       }
     }
-    const { data, error: saveError } = await admin.from("interview_attempts").update({ answers, metrics }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("answers", JSON.stringify(row.answers)).select().maybeSingle();
+    const finishedAt = new Date().toISOString();
+    const { data, error: saveError } = await admin.from("interview_attempts").update({ answers, metrics,
+      ...(finish ? { status: "failed", last_error: "awaiting_feedback", completed_at: row.completed_at ?? finishedAt, answer_submitted_at: row.answer_submitted_at ?? finishedAt } : {}),
+    }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("answers", JSON.stringify(row.answers)).select().maybeSingle();
     if (saveError) databaseError(saveError);
     if (!data) throw new InterviewError("Your interview changed while saving. Please retry to keep the latest answers.", 409);
-    return interviewJson({ attempt: toInterviewAttempt(data) });
+    return interviewJson({ attempt: toInterviewAttempt(data), ...(finish && answerWindowClosed ? { usedSavedAnswers: true } : {}) });
   } catch (error) { return interviewFailure(error); }
 }
 

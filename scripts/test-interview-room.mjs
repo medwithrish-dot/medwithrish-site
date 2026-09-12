@@ -160,7 +160,7 @@ test("an older tab's autosave preserves a probe answer it has not seen", async (
 
 // Exercise the actual room callbacks against delayed saves. Browser, device and
 // hook lifecycle boundaries are substituted; all save scheduling stays production code.
-async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, questions = ["Why medicine?"], initialDraft } = {}) {
+async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, configured = true, questions = ["Why medicine?"], initialDraft } = {}) {
   const cells = [];
   let cursor = 0;
   let effects = [];
@@ -168,11 +168,14 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const storage = new Map();
   const requests = [];
   const followUpRequests = [];
+  const feedbackRequests = [];
   let microphoneRequests = 0;
   let recognitionStarts = 0;
+  let speechOptions;
+  let pendingSpeech = "";
   const attempt = {
     id: circuitId, circuitId, status, mode: "free", stationSlug: "why-medicine",
-    title: "Why medicine?", startedAt: new Date().toISOString(), preparationSeconds,
+    title: "Why medicine?", startedAt: new Date().toISOString(), completedAt: null, preparationSeconds,
     stationSeconds: 480, breakSeconds: 0, questions, answers: [],
     stationIndex: 0, stationCount: 1, feedback: null, nextAvailableAt: null,
   };
@@ -196,7 +199,9 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     useCallback: (callback, dependencies) => memo(() => callback, dependencies),
     useEffect: (effect, dependencies) => memo(() => { effects.push(effect); }, dependencies),
   };
-  const speech = { stop: async () => {}, stopSpeaking() {}, speak: async () => {}, voiceSupported: false, supported: true, start: () => { recognitionStarts += 1; } };
+  const speech = { stop: async () => {
+    if (pendingSpeech) { const finalText = pendingSpeech; pendingSpeech = ""; speechOptions.onTranscript(finalText); }
+  }, stopSpeaking() {}, speak: async () => {}, voiceSupported: false, supported: true, start: () => { recognitionStarts += 1; } };
   const devices = {
     stopCamera() {}, stopMicCheck() {}, cancelMicrophoneRequest() {}, microphonePermission: "idle",
     requestMicrophone: async () => { microphoneRequests += 1; devices.microphonePermission = "granted"; return true; },
@@ -211,10 +216,11 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     require(name) {
       if (name === "react") return react;
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
-      if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: () => speech, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
+      if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: options => { speechOptions = options; return speech; }, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
       if (name.endsWith("useInterviewDevices")) return { useInterviewDevices: () => devices };
       if (name.endsWith("interview-stations")) return { findInterviewStation: () => ({ questions }), interviewStations: [] };
       if (name === "./AIInterviewCall") return { AIInterviewCall: "interview-call" };
+      if (name === "./AIInterviewReview") return { AIInterviewReview: "interview-review" };
       if (name.endsWith(".module.css")) return { default: {} };
       return {};
     },
@@ -226,7 +232,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
       clearInterval: id => intervals.delete(id), addEventListener() {}, removeEventListener() {},
     },
     fetch: (_path, options) => {
-      if (options.method === "GET") return Promise.resolve(Response.json({ attempt: hasAttempt ? attempt : null }));
+      if (options.method === "GET") return Promise.resolve(Response.json({ attempt: hasAttempt ? attempt : null, configured }));
       if (_path === "/api/interviews/follow-up") {
         return new Promise(resolve => followUpRequests.push({ body: JSON.parse(options.body), complete: (followUp, source = "ai") => {
           const index = attempt.questions.indexOf(JSON.parse(options.body).question) + 1;
@@ -235,10 +241,21 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
           resolve(Response.json({ attempt: { ...attempt }, followUp, questionIndex: index, source }));
         } }));
       }
+      if (_path === "/api/interviews/feedback") {
+        assert.equal(options.method, "POST");
+        return new Promise(resolve => feedbackRequests.push({ body: JSON.parse(options.body), complete: feedback => {
+          Object.assign(attempt, { status: "completed", feedback });
+          resolve(Response.json({ attempt: { ...attempt } }));
+        } }));
+      }
       assert.equal(options.method, "PATCH");
       const body = JSON.parse(options.body);
       return new Promise((resolve, reject) => requests.push({
-        body, reject, complete: () => { attempt.answers = body.answers; resolve(Response.json({ attempt: { ...attempt } })); },
+        body, reject, complete: () => {
+          attempt.answers = body.answers;
+          if (body.finish) Object.assign(attempt, { status: "submitted", completedAt: new Date().toISOString() });
+          resolve(Response.json({ attempt: { ...attempt } }));
+        },
       }));
     },
   });
@@ -253,18 +270,21 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   render();
   await flush();
   const tree = render();
-  const findCall = node => {
-    if (Array.isArray(node)) return node.map(findCall).find(Boolean);
+  const findComponent = (node, type) => {
+    if (Array.isArray(node)) return node.map(child => findComponent(child, type)).find(Boolean) ?? null;
     if (!node || typeof node !== "object") return null;
-    return node.type === "interview-call" ? node.props : findCall(node.props?.children);
+    return node.type === type ? node.props : findComponent(node.props?.children, type);
   };
+  const findCall = node => findComponent(node, "interview-call");
+  const findReview = node => findComponent(node, "interview-review");
   const call = findCall(tree);
-  if (hasAttempt) assert.ok(call);
+  if (hasAttempt) assert.ok(call || findReview(tree));
   return {
-    requests, followUpRequests, flush, render, call, latestCall: () => findCall(render()), storage,
+    requests, followUpRequests, feedbackRequests, flush, render, call, latestCall: () => findCall(render()), latestReview: () => findReview(render()), storage,
     get microphoneRequests() { return microphoneRequests; },
     get recognitionStarts() { return recognitionStarts; },
-    edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(),
+    edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(), finish: () => call.onSubmit(),
+    finalSpeech: text => { pendingSpeech = text; },
   };
 }
 
@@ -314,6 +334,94 @@ test("a queued autosave retries the latest transcript after an earlier request f
   assert.equal(room.requests[1].body.answers[0].answer, "Latest answer to preserve");
   room.requests[1].complete();
   await room.flush();
+});
+
+test("finishing empty or short answers opens a saved review without generating feedback", async () => {
+  for (const answer of ["", "I enjoy caring for others."]) {
+    const room = await autosaveRoom({ configured: false });
+    room.edit(answer);
+    room.finish(); room.finish();
+    await room.flush();
+    assert.equal(room.requests.length, 1, "Repeated finish clicks cannot submit twice");
+    assert.equal(room.requests[0].body.finish, true);
+    assert.equal(room.requests[0].body.answers[0].answer, answer);
+    assert.equal(room.feedbackRequests.length, 0);
+    room.requests[0].complete();
+    await room.flush();
+    const review = room.latestReview();
+    assert.equal(room.latestCall(), null, "The call room is replaced after finishing");
+    assert.equal(review.attempt.status, "submitted");
+    assert.equal(review.attempt.answers[0].answer, answer);
+    assert.ok(review.attempt.completedAt);
+    assert.equal(review.attempt.feedback, null);
+    assert.equal(review.configured, false);
+    assert.equal(review.busy, false);
+    assert.equal(room.storage.has(`phloem-interview-draft:${circuitId}`), false, "Remove the browser draft only after the server confirms saving");
+    assert.equal(room.feedbackRequests.length, 0);
+  }
+});
+
+test("finishing waits for queued autosaves and includes the final speech in the review", async () => {
+  const room = await autosaveRoom();
+  room.edit("Earlier answer"); room.save();
+  room.edit("My latest reflection"); room.save();
+  room.finalSpeech("changed how I listen to patients.");
+  room.finish();
+  await room.flush();
+  assert.equal(room.requests.length, 1, "Finishing must wait for the outstanding autosave");
+  room.requests[0].complete();
+  await room.flush();
+  assert.equal(room.requests.length, 2);
+  assert.equal(room.requests[1].body.finish, undefined, "The existing queued autosave finishes first");
+  room.requests[1].complete();
+  await room.flush();
+  assert.equal(room.requests.length, 3);
+  const finalText = "My latest reflection changed how I listen to patients.";
+  assert.equal(room.requests[2].body.finish, true);
+  assert.equal(room.requests[2].body.answers[0].answer, finalText);
+  room.requests[2].complete();
+  await room.flush();
+  assert.equal(room.latestReview().attempt.answers[0].answer, finalText);
+  assert.equal(room.latestReview().attempt.status, "submitted");
+  assert.equal(room.feedbackRequests.length, 0);
+});
+
+test("feedback is requested explicitly from review and does not resubmit the transcript", async () => {
+  const room = await autosaveRoom();
+  room.edit("I learnt to listen carefully and reflect on each person's needs.");
+  room.finish();
+  await room.flush();
+  room.requests[0].complete();
+  await room.flush();
+  const review = room.latestReview();
+  assert.equal(room.feedbackRequests.length, 0);
+  review.onGenerate(); review.onGenerate();
+  await room.flush();
+  assert.equal(room.feedbackRequests.length, 1, "Repeated clicks cannot request multiple assessments");
+  assert.equal(room.feedbackRequests[0].body.attemptId, circuitId);
+  assert.equal(room.requests.length, 1, "Feedback uses the already saved attempt");
+  const feedback = { score: 76, summary: "Clear reflection", strengths: ["Listening"], improvements: ["More detail"], rubric: [] };
+  room.feedbackRequests[0].complete(feedback);
+  await room.flush();
+  assert.deepEqual(room.latestReview().attempt.feedback, feedback);
+  assert.equal(room.latestReview().attempt.status, "completed");
+  assert.equal(room.latestCall(), null);
+});
+
+test("a failed finish keeps the transcript in review and retains the recoverable browser draft", async () => {
+  const room = await autosaveRoom();
+  room.edit("Keep this final answer safe.");
+  room.finish();
+  await room.flush();
+  room.requests[0].reject(new Error("Temporary connection failure"));
+  await room.flush();
+  const review = room.latestReview();
+  assert.equal(review.attempt.answers[0].answer, "Keep this final answer safe.");
+  assert.equal(review.attempt.status, "in_progress");
+  assert.equal(review.busy, false);
+  const draft = JSON.parse(room.storage.get(`phloem-interview-draft:${circuitId}`));
+  assert.equal(draft.answers[0].answer, "Keep this final answer safe.");
+  assert.equal(room.feedbackRequests.length, 0);
 });
 
 test("a follow-up saves the answer first, inserts the probe, and preserves later answers", async () => {
@@ -376,9 +484,9 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
   runInNewContext(`${output}\nexports.testPracticeView = QuestionPracticeView;`, {
     module: loaded, exports: loaded.exports, MediaRecorder: Recorder,
     require(name) {
-      if (name.endsWith("speech-delivery")) {
+      if (name.endsWith("speech-delivery") || name.endsWith("question-review")) {
         const delivery = { exports: {} };
-        new Function("module", "exports", ts.transpileModule(readFileSync(resolve(root, "app/phloemai/interviews/_lib/speech-delivery.ts"), "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText)(delivery, delivery.exports);
+        new Function("module", "exports", ts.transpileModule(readFileSync(resolve(root, `app/phloemai/interviews/_lib/${name.split("/").at(-1)}.ts`), "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText)(delivery, delivery.exports);
         return delivery.exports;
       }
       if (name === "react") return {
