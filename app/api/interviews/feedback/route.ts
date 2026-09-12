@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { assessInterview } from "@/utils/interviews/gemini";
+import { assessInterview, interviewAiConfigured } from "@/utils/interviews/gemini";
 import { databaseError, InterviewError, interviewContext, interviewFailure, interviewJson, readInterviewBody, toInterviewAttempt, validId } from "@/utils/interviews/server";
 
 export const maxDuration = 45;
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     if (error) databaseError(error);
     if (!row) throw new InterviewError("Interview not found", 404);
     if (row.status === "completed") return interviewJson({ attempt: toInterviewAttempt(row) });
-    if (!process.env.GEMINI_API_KEY) throw new InterviewError("AI feedback is not configured yet. Your answers are saved.", 503);
+    if (!interviewAiConfigured()) throw new InterviewError("Free AI feedback is not enabled yet. Your answers are saved.", 503);
     const attempt = toInterviewAttempt(row);
     if (attempt.answers.map((a) => a.answer).join(" ").trim().split(/\s+/).filter(Boolean).length < 20) throw new InterviewError("Save at least 20 words before requesting feedback.");
     if (Date.now() < Date.parse(attempt.startedAt) + attempt.preparationSeconds * 1000) throw new InterviewError("Preparation is still running.", 409);

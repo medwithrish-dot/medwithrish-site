@@ -13,7 +13,7 @@ import { AIInterviewCall } from "./AIInterviewCall";
 import { AIInterviewFeedback } from "./AIInterviewFeedback";
 import styles from "./AIInterviewRoom.module.css";
 
-type SessionResponse = { attempt: InterviewAttempt | null; serverNow?: string; configured?: boolean; isPremium?: boolean };
+type SessionResponse = { attempt: InterviewAttempt | null; serverNow?: string; configured?: boolean; isPremium?: boolean; followUp?: string; questionIndex?: number; source?: "ai" | "practice" | "saved" };
 type StartOptions = { mode: InterviewMode; universitySlug?: string; stationSlug?: string; circuitId?: string; stationIndex?: number; stationCount?: number };
 type LocalDraft = { answers: InterviewAnswer[]; questionIndex: number };
 
@@ -57,6 +57,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const [errorStatus, setErrorStatus] = useState(0);
   const [saveWarning, setSaveWarning] = useState("");
   const [saved, setSaved] = useState(false);
+  const [followUpBusy, setFollowUpBusy] = useState(false);
+  const [followUpNotice, setFollowUpNotice] = useState("");
   const [configured, setConfigured] = useState(true);
   const [isPremium, setIsPremium] = useState(false);
   const [now, setNow] = useState(0);
@@ -79,6 +81,9 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const actionLockRef = useRef(false);
   const expirySubmittedRef = useRef<string | null>(null);
   const spokenQuestionRef = useRef("");
+  const followUpRequestRef = useRef<AbortController | null>(null);
+
+  useEffect(() => () => followUpRequestRef.current?.abort(), []);
 
   const persistLocal = useCallback((nextAnswers: InterviewAnswer[], index = questionIndexRef.current) => {
     const current = attemptRef.current;
@@ -110,10 +115,31 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     if (response.configured !== undefined) setConfigured(response.configured);
     if (response.isPremium !== undefined) setIsPremium(response.isPremium);
     const next = response.attempt;
-    const changed = next?.id !== attemptRef.current?.id;
+    const previous = attemptRef.current;
+    const changed = next?.id !== previous?.id;
+    const questionsChanged = Boolean(next && !changed && JSON.stringify(next.questions) !== JSON.stringify(previous?.questions));
     attemptRef.current = next;
     setAttempt(next);
     if (!next) return;
+    if (questionsChanged && !restore) {
+      // Match by question text: inserting a probe must never shift a candidate's
+      // answer onto a different question, including an unsaved typed answer.
+      const currentQuestion = previous?.questions[questionIndexRef.current];
+      const merged = next.questions.map((question) => ({ question,
+        answer: answersRef.current.find((item) => item.question === question)?.answer
+          ?? next.answers.find((item) => item.question === question)?.answer ?? "",
+      }));
+      const index = Math.max(0, next.questions.indexOf(currentQuestion ?? ""));
+      answersRef.current = merged;
+      questionIndexRef.current = index;
+      setAnswers(merged);
+      setQuestionIndex(index);
+      setSaved(false);
+      if (!previewRef.current) {
+        try { localStorage.setItem(draftKey(next.id), JSON.stringify({ answers: merged, questionIndex: index })); }
+        catch { /* Account autosave remains available. */ }
+      }
+    }
     if (changed || restore) {
       let restoredAnswers = next.questions.map((question) => ({ question, answer: next.answers.find((item) => item.question === question)?.answer ?? "" }));
       let restoredIndex = 0;
@@ -123,11 +149,13 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
           const stored = previewRef.current ? null : localStorage.getItem(draftKey(next.id));
           const draft = stored ? JSON.parse(stored) as LocalDraft : null;
           if (draft && Array.isArray(draft.answers)) {
-            restoredAnswers = next.questions.map((question, index) => ({ question,
-              answer: typeof draft.answers[index]?.answer === "string" && draft.answers[index].question === question
-                ? draft.answers[index].answer.slice(0, 6_000) : restoredAnswers[index].answer,
-            }));
-            restoredIndex = Number.isInteger(draft.questionIndex) ? Math.min(Math.max(0, draft.questionIndex), next.questions.length - 1) : 0;
+            restoredAnswers = next.questions.map((question, index) => {
+              const localAnswer = draft.answers.find((item) => item?.question === question);
+              return { question, answer: typeof localAnswer?.answer === "string"
+                ? localAnswer.answer.slice(0, 6_000) : restoredAnswers[index].answer };
+            });
+            const localQuestion = Number.isInteger(draft.questionIndex) ? draft.answers[draft.questionIndex]?.question : undefined;
+            restoredIndex = Math.max(0, next.questions.indexOf(localQuestion ?? ""));
           }
         } catch { /* Recover the saved account transcript if the local draft is unavailable. */ }
       }
@@ -148,6 +176,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       }
       expirySubmittedRef.current = null;
       spokenQuestionRef.current = "";
+      setFollowUpNotice("");
     }
     if (next.status === "completed" && !previewRef.current) {
       try { localStorage.removeItem(draftKey(next.id)); } catch { /* Optional browser storage. */ }
@@ -210,7 +239,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   useEffect(() => {
     if (attempt?.status !== "in_progress" || preview) return;
     const timer = window.setInterval(() => {
-      if (submitLockRef.current || actionLockRef.current) return;
+      if (submitLockRef.current || actionLockRef.current || followUpRequestRef.current) return;
       void saveDraft().catch(() => setSaveWarning("Account autosave is temporarily unavailable. Keep this page open and retry saving; a browser draft is also kept where storage is available."));
     }, 15_000);
     return () => window.clearInterval(timer);
@@ -239,6 +268,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     const current = attemptRef.current;
     if (!current || submitLockRef.current || actionLockRef.current) return;
     submitLockRef.current = true;
+    followUpRequestRef.current?.abort();
     setBusy("Saving answers and preparing feedback…");
     setError("");
     setErrorStatus(0);
@@ -285,10 +315,14 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const stationEnd = preparationEnd + (attempt?.stationSeconds ?? 0) * 1000;
   const preparing = Boolean(attempt?.status === "in_progress" && now < preparationEnd);
   const expired = Boolean(attempt && now >= stationEnd);
-  const active = attempt?.status === "in_progress" && !preparing && !expired && !busy;
+  const active = attempt?.status === "in_progress" && !preparing && !expired && !busy && !followUpBusy;
   const secondsRemaining = Math.max(0, Math.ceil(((preparing ? preparationEnd : stationEnd) - now) / 1000));
   const breakRemaining = attempt?.nextAvailableAt ? Math.max(0, Math.ceil((Date.parse(attempt.nextAvailableAt) - now) / 1000)) : 0;
   const question = attempt?.questions[questionIndex] ?? "";
+  const originalQuestions: readonly string[] = attempt ? findInterviewStation(attempt.stationSlug)?.questions ?? [] : [];
+  const followingQuestion = attempt?.questions[questionIndex + 1];
+  const followUpAvailable = !preview && originalQuestions.includes(question)
+    && (!followingQuestion || originalQuestions.includes(followingQuestion));
   const microphoneRoomId = !loading && attempt?.status === "in_progress" && !expired ? attempt.id : null;
 
   useEffect(() => {
@@ -367,7 +401,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         applyResponse(response, true);
       }
     } catch (failure) { showError(failure); }
-    finally { actionLockRef.current = false; setBusy(""); }
+    finally { actionLockRef.current = false; setBusy(""); setNow(Date.now() + clockOffsetRef.current); }
   };
 
   const moveQuestion = async (index: number) => {
@@ -378,17 +412,60 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       await speech.stop();
       questionIndexRef.current = index;
       setQuestionIndex(index);
+      setFollowUpNotice("");
       persistLocal(answersRef.current, index);
       // The next answer and station deadline stay responsive while the previous
       // transcript is saved. saveDraft serialises writes before final grading.
       void saveDraft().catch(() => setSaveWarning("Your answer is kept in this browser. Account autosave will retry shortly."));
     } catch { setSaveWarning("Your answer is kept in this browser. Account autosave will retry shortly."); }
-    finally { actionLockRef.current = false; }
+    finally { actionLockRef.current = false; setNow(Date.now() + clockOffsetRef.current); }
+  };
+
+  const askFollowUp = async () => {
+    const current = attemptRef.current;
+    if (!current || !active || !followUpAvailable || followUpRequestRef.current || actionLockRef.current || submitLockRef.current) return;
+    const sourceQuestion = current.questions[questionIndexRef.current];
+    const controller = new AbortController();
+    followUpRequestRef.current = controller;
+    setFollowUpBusy(true);
+    setFollowUpNotice("");
+    try {
+      cancelMicrophoneRequest();
+      stopSpeaking();
+      await stopListening();
+      const answer = answersRef.current.find((item) => item.question === sourceQuestion)?.answer ?? "";
+      if (getTranscriptHints(answer).wordCount < 20) {
+        setFollowUpNotice("Add at least 20 words so the interviewer has something specific to explore.");
+        return;
+      }
+      await saveDraft();
+      if (controller.signal.aborted) return;
+      const response = await requestSession("/api/interviews/follow-up", "POST", { attemptId: current.id, question: sourceQuestion }, controller.signal);
+      if (controller.signal.aborted || attemptRef.current?.id !== current.id || attemptRef.current.status !== "in_progress" || submitLockRef.current) return;
+      applyResponse(response);
+      const index = response.attempt?.questions.indexOf(response.followUp ?? "") ?? -1;
+      if (index >= 0) {
+        questionIndexRef.current = index;
+        setQuestionIndex(index);
+        persistLocal(answersRef.current, index);
+      }
+      setFollowUpNotice(response.source === "practice"
+        ? "AI is unavailable, so this is a guided practice follow-up. Your answer has been saved."
+        : "Explore this follow-up, then continue to the next question when you're ready.");
+    } catch (failure) {
+      if (!controller.signal.aborted) setFollowUpNotice(failure instanceof Error ? failure.message : "A follow-up could not be prepared. You can continue with the station questions.");
+    } finally {
+      if (followUpRequestRef.current === controller) {
+        followUpRequestRef.current = null;
+        setFollowUpBusy(false);
+      }
+    }
   };
 
   const leaveAttempt = async () => {
     if (!attempt || actionLockRef.current || submitLockRef.current) return;
     actionLockRef.current = true;
+    followUpRequestRef.current?.abort();
     setBusy("Closing this station…");
     try {
       cancelMicrophoneRequest();
@@ -444,7 +521,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       {errorStatus === 401 && <Link href="/phloemai/account" className="mt-2 inline-block font-bold underline">Sign in to start your scored interview</Link>}
       {errorStatus === 403 && <Link href="/phloemai/pricing" className="mt-2 inline-block font-bold underline">View membership options</Link>}
     </div>}
-    {!configured && !preview && <p role="status" className={styles.previewBanner}>AI feedback is temporarily unavailable. Saved transcripts and timed practice still work; return later to request feedback.</p>}
+    {!configured && !preview && <p role="status" className={styles.previewBanner}>AI is paused. Timed practice, saved answers and built-in follow-ups are available.</p>}
     {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your interview space ready…</div> : !attempt ? <AIInterviewSetup
       initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan} initialMockCircuit={initialMockCircuit}
       devices={devices} readAloud={readAloud} setReadAloud={setVoiceEnabled} voiceRate={voiceRate} setVoiceRate={setVoiceRate}
@@ -461,6 +538,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         preparing={preparing} expired={expired} active={Boolean(active)} secondsRemaining={secondsRemaining}
         speech={speech} devices={devices} saved={saved} busy={busy} preview={preview} readAloud={readAloud}
         onToggleMicrophone={() => void toggleMicrophone()} setReadAloud={setVoiceEnabled}
+        followUpAvailable={followUpAvailable} followUpBusy={followUpBusy} followUpNotice={followUpNotice} onFollowUp={() => void askFollowUp()}
         onAnswer={(value) => replaceAnswers(answersRef.current.map((answer, index) => index === questionIndex ? { ...answer, answer: value } : answer))}
         onQuestion={(index) => void moveQuestion(index)} onSubmit={() => void submit()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}
         onSkipPreparation={() => { if (preview) applyResponse({ attempt: { ...attempt, startedAt: new Date(Date.now() - attempt.preparationSeconds * 1000).toISOString() } }); }}

@@ -26,25 +26,27 @@ Keep the existing Supabase URL, publishable/anonymous key and `SUPABASE_SERVICE_
 
 | Variable | Default / use |
 | --- | --- |
-| `GEMINI_API_KEY` | Required for feedback; already present locally. Ensure it is also present in the hosting environment. |
+| `GEMINI_API_KEY` | Required for feedback and generated follow-ups. Configure it separately in development and hosting. |
+| `INTERVIEW_GEMINI_FREE_TIER_CONFIRMED` | Off by default. Set to `true` only after checking the key's project is Free Tier with no billing linked. |
 | `INTERVIEW_GEMINI_MODEL` | `gemini-3.5-flash-lite` |
+| `INTERVIEW_FOLLOWUP_GEMINI_MODEL` | `gemini-3.5-flash-lite` |
 | `INTERVIEW_FREE_DAILY_LIMIT` | `2` station starts per rolling 24 hours |
 | `INTERVIEW_FREE_MONTHLY_LIMIT` | `30` station starts per rolling 30 days |
 | `INTERVIEW_PREMIUM_DAILY_LIMIT` | `20` station starts per rolling 24 hours |
 | `INTERVIEW_PREMIUM_MONTHLY_LIMIT` | `300` station starts per rolling 30 days |
 
-These are adjustable initial cost controls, not a promised unlimited plan. All station starts count, including ended attempts. Premium limits cover free and premium stations together. A university circuit uses one allowance per station. Set provider billing limits/alerts appropriate to your launch size. Keep the model stable within a leaderboard rubric version; changing assessment behaviour should get a new version and deliberate leaderboard reset/migration.
+These are adjustable initial cost controls, not a promised unlimited plan. All station starts count, including ended attempts. Premium limits cover free and premium stations together. A university circuit uses one allowance per station. The owner confirmed Free Tier and Gemini is enabled in the ignored local environment file. Hosted environments require their own matching key and confirmation flag; without those, built-in follow-ups and saved practice remain available. For personal free AI, keep the API key's project on Free Tier with no linked billing account. Keep the model stable within a leaderboard rubric version; changing assessment behaviour should get a new version and deliberate leaderboard reset/migration. See [interview AI setup](interview-ai-setup.md) for activation steps, follow-up prices, and considerations before a wider rollout.
 
 The existing preview-access gate remains active. For local preview use the existing `/phloemai/access` screen with `PHLOEMAI_PREVIEW_PASSWORD` configured for the local server. The platform is not made publicly accessible by this change. Existing Stripe billing is retained; **this work does not change the Stripe price to £15**. Configure that product/price when you choose to launch the £15 subscription.
 
 ## How the interview works
 
-- Free **Why medicine?** appears first. It uses one minute of preparation, eight minutes of answering, and three original prompts/follow-ups. Voice and typed answers use identical questions and scoring.
+- Free **Why medicine?** appears first. It uses one minute of preparation, eight minutes of answering, and three original questions with optional follow-up probes. Voice and typed answers use identical questions and scoring.
 - All 42 requested university/awarding entries can launch a practice circuit. Formats, source links and uncertainties are in `docs/interview-university-sources.md`. A practice preset is not a claim that a university uses our questions or exact schedule. Panel/group assessments are clearly marked as adaptations.
 - The explicit five-station reference circuit is motivation, work experience, disability/access, equality/diversity/inclusion, and Ozempic. Each station is eight minutes with two-minute gaps. Manchester's sourced preset matches that overall timing.
-- The interviewer reads structured prompts with browser speech synthesis. Optional browser speech recognition transcribes the candidate's answer; the candidate can use the text box if their browser lacks it. The browser's speech service may process microphone audio outside the device, which the consent text explains. The platform sends saved text to Gemini only when feedback is requested. No audio/video is uploaded to this application's server.
-- Questions are curated; the AI assesses the complete station once, rather than opening an expensive always-on voice connection or calling an LLM on every sentence. The user advances through the follow-ups within the station clock.
-- No webcam, gaze, fidgeting, face tracking or MediaPipe is used by the interview runner. Optional filler/repeated-word hints are computed from text. These are not reliable stutter detection and never reduce the candidate's score. No disability, accent or speech difference is scored.
+- The interviewer reads prompts with browser speech synthesis. Optional browser speech recognition transcribes the candidate's answer; the candidate can use the text box if their browser lacks it. The browser's speech service may process microphone audio outside the device, which the consent text explains. Saved text is sent to Gemini for requested follow-ups and feedback. No audio/video is uploaded to this application's server.
+- Original questions are curated. A completed answer can receive one short AI-generated probe grounded in that answer, up to three per attempt; the AI assesses the complete station separately. The user advances within the station clock. Generated follow-ups use a specialised interviewing prompt, not a fine-tuned model or a continuous voice connection.
+- The optional camera preview stays on the device. The interview runner does not assess gaze, fidgeting or faces. Optional filler/repeated-word hints are computed from text. These are not reliable stutter detection and never reduce the candidate's score. No disability, accent or speech difference is scored.
 - Timer timestamps come from the server. Dirty transcripts save at most every 15 seconds plus transitions/submission. A local draft helps recover interrupted work. A 30-second transport grace accepts the final in-flight save; the interface still stops answers at the actual deadline.
 - A database claim prevents concurrent feedback calls. Calls time out after 25 seconds, output is schema-validated, and a station allows at most three feedback tries. Completed results are returned without generating another charge. Invalid/provider-failed output never receives a placeholder score.
 
@@ -82,7 +84,7 @@ This fixed logarithmic scale requires increasing rubric evidence for each extra 
 
 ## Cost illustration
 
-Google's [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing) lists 3.5 Flash-Lite standard input at $0.30 and output at $2.50 per million tokens, checked 6 September 2026. At an illustrative 6,000 input tokens plus the configured 1,800 output-token ceiling, one assessment is about **$0.0063**, or **$1.89 for 300 assessments**. This is a model-only estimate, not a guaranteed bill; actual tokenisation, retries, hosting, Supabase, payment fees and taxes add costs. Browser speech avoids this application's per-minute transcription/TTS API costs. The design leaves room within a £15 monthly price, subject to real usage and infrastructure measurements. A live check returned valid structured feedback from the configured Gemini key. The older 2.5 Flash-Lite model rejected generation for new users of that model, so the supported replacement is the default.
+Google's [Gemini pricing](https://ai.google.dev/gemini-api/docs/pricing) lists free developer quota for 3.5 Flash-Lite and paid standard input at $0.30 and output at $2.50 per million tokens, checked 12 September 2026. Keep the key's project unbilled for the current personal free setup. For a future paid setup, an illustrative 6,000 input tokens plus the configured 1,800 output-token ceiling is about **$0.0063** per assessment, or **$1.89 for 300 assessments** before probes, retries and infrastructure. Browser speech avoids this application's per-minute transcription/TTS API costs. The 12 September generation check succeeded with the configured key on 3.5 Flash-Lite; 2.5 Flash-Lite rejected generation as unavailable to new users despite appearing in the model list. Model access does not verify billing status. See [personal free configuration and cost details](interview-ai-setup.md).
 
 ## Verification and launch check
 

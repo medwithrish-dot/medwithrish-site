@@ -2,6 +2,8 @@ AI operating and cost plan · 8 September 2026
 
 The practical launch approach is inexpensive text grading, polished question recordings served from a cache, and browser recording/playback. Add dependable paid transcription where needed. Choose the marking model by testing it against human-marked answers. Provider brands alone cannot establish which model gives the most useful, consistent interview feedback.
 
+**12 September update:** the owner confirmed Free Tier, and personal Gemini 3.5 Flash-Lite feedback and answer-specific probes are enabled in the ignored local environment file. Other environments remain disabled until their matching key and `INTERVIEW_GEMINI_FREE_TIER_CONFIRMED=true` are configured. 3.5 has free developer quota and passed a generation check; the cheaper 2.5 model rejected this key as unavailable to new users. Keep the key's project unlinked from billing; there is no automatic paid fallback. The inventory and cost estimates below are a historical 8 September snapshot and exclude the new probes. See [interview AI setup and follow-up costs](interview-ai-setup.md) for activation, tier verification and a current comparison.
+
 This document is a proposal and cost model. The accompanying practice-pathway work changes the learning plan; it does not switch providers, add paid speech, install a queue, change allowances or establish production capacity. The figures are estimates, not measured bills. The [interactive calculator](ai-cost-calculator.html) lets you change usage and prices.
 
 **What currently uses AI**
@@ -10,7 +12,7 @@ This document is a proposal and cost model. The accompanying practice-pathway wo
 | --- | --- | --- |
 | AI interview feedback | Server-side Gemini `gemini-3.5-flash-lite`, configurable through an environment variable; one assessment after a station | Yes |
 | UCAT diagnostic report | Server-side `claude-haiku-4-5-20251001`; can combine sections from a saved mock | Yes |
-| Interview questions and follow-ups | A predefined catalogue; the call is not presently a live conversational LLM | No |
+| Interview questions and follow-ups | A predefined catalogue at this snapshot; see the 12 September update for generated probes | No at this snapshot |
 | Interview question-bank marking | Manual checklist; the AI Feedback button is currently disabled | No |
 | Guides and seven-stage learning pathway | Curated content and deterministic progression | No |
 | Recording, playback, mic meter and speech hints | Browser APIs and local heuristics | No paid model integration |

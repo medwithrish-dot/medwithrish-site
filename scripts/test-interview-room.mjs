@@ -16,12 +16,14 @@ const circuitId = "12345678-1234-4234-8234-123456789012";
 function sessionRoute({ premium = true, previous = null } = {}) {
   const reservations = [];
   const filters = [];
+  const mutations = [];
   class InterviewError extends Error {
     constructor(message, status = 400) { super(message); this.status = status; }
   }
   const query = {
     select() { return this; },
     eq(key, value) { filters.push([key, value]); return this; },
+    update(value) { mutations.push(value); return this; },
     async maybeSingle() { return { data: previous, error: null }; },
   };
   const server = {
@@ -44,6 +46,7 @@ function sessionRoute({ premium = true, previous = null } = {}) {
     const output = ts.transpileModule(readFileSync(filename, "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText;
     const compiled = { exports: {} }; modules.set(filename, compiled);
     const localRequire = specifier => {
+      if (specifier === "server-only") return {};
       if (specifier === "@/utils/interviews/server") return server;
       if (specifier.startsWith("@/")) return load(resolve(root, specifier.slice(2)));
       if (specifier.startsWith(".")) return load(resolve(dirname(filename), specifier));
@@ -54,8 +57,9 @@ function sessionRoute({ premium = true, previous = null } = {}) {
   }
   const route = load(resolve(root, "app/api/interviews/session/route.ts"));
   return {
-    reservations, filters,
+    reservations, filters, mutations,
     post: body => route.POST(new Request("http://localhost/api/interviews/session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })),
+    patch: body => route.PATCH(new Request("http://localhost/api/interviews/session", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })),
   };
 }
 
@@ -140,23 +144,39 @@ test("customisation retains the completion, break and membership checks", async 
   assert.equal((await api.post({ mode: "free", stationCount: 1 })).status, 200);
 });
 
+test("an older tab's autosave preserves a probe answer it has not seen", async () => {
+  const previous = { id: circuitId, status: "in_progress", started_at: new Date().toISOString(), preparation_seconds: 0, station_seconds: 480,
+    questions: ["Why medicine?", "What did you learn?"],
+    answers: [{ question: "Why medicine?", answer: "Original answer" }, { question: "What did you learn?", answer: "A saved reflection from another tab" }],
+  };
+  const api = sessionRoute({ previous });
+  assert.equal((await api.patch({ attemptId: circuitId, answers: [{ question: "Why medicine?", answer: "An updated main answer" }] })).status, 200);
+  assert.equal(api.mutations[0].answers[1].answer, "A saved reflection from another tab");
+  assert.ok(api.filters.some(([field, value]) => field === "answers" && value === JSON.stringify(previous.answers)), "The save cannot overwrite an answer that changed after reading");
+  const clear = sessionRoute({ previous });
+  assert.equal((await clear.patch({ attemptId: circuitId, answers: [{ question: "What did you learn?", answer: "" }] })).status, 200);
+  assert.equal(clear.mutations[0].answers[1].answer, "", "Explicitly clearing an answer still works");
+});
+
 // Exercise the actual room callbacks against delayed saves. Browser, device and
 // hook lifecycle boundaries are substituted; all save scheduling stays production code.
-async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true } = {}) {
+async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, questions = ["Why medicine?"], initialDraft } = {}) {
   const cells = [];
   let cursor = 0;
   let effects = [];
   const intervals = new Map();
   const storage = new Map();
   const requests = [];
+  const followUpRequests = [];
   let microphoneRequests = 0;
   let recognitionStarts = 0;
   const attempt = {
     id: circuitId, circuitId, status, mode: "free", stationSlug: "why-medicine",
     title: "Why medicine?", startedAt: new Date().toISOString(), preparationSeconds,
-    stationSeconds: 480, breakSeconds: 0, questions: ["Why medicine?"], answers: [],
+    stationSeconds: 480, breakSeconds: 0, questions, answers: [],
     stationIndex: 0, stationCount: 1, feedback: null, nextAvailableAt: null,
   };
+  if (initialDraft) storage.set(`phloem-interview-draft:${circuitId}`, JSON.stringify(initialDraft));
   const memo = (factory, dependencies) => {
     const index = cursor++;
     const prior = cells[index];
@@ -193,6 +213,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: () => speech, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
       if (name.endsWith("useInterviewDevices")) return { useInterviewDevices: () => devices };
+      if (name.endsWith("interview-stations")) return { findInterviewStation: () => ({ questions }), interviewStations: [] };
       if (name === "./AIInterviewCall") return { AIInterviewCall: "interview-call" };
       if (name.endsWith(".module.css")) return { default: {} };
       return {};
@@ -206,10 +227,18 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     },
     fetch: (_path, options) => {
       if (options.method === "GET") return Promise.resolve(Response.json({ attempt: hasAttempt ? attempt : null }));
+      if (_path === "/api/interviews/follow-up") {
+        return new Promise(resolve => followUpRequests.push({ body: JSON.parse(options.body), complete: (followUp, source = "ai") => {
+          const index = attempt.questions.indexOf(JSON.parse(options.body).question) + 1;
+          const nextQuestions = [...attempt.questions]; nextQuestions.splice(index, 0, followUp);
+          attempt.questions = nextQuestions;
+          resolve(Response.json({ attempt: { ...attempt }, followUp, questionIndex: index, source }));
+        } }));
+      }
       assert.equal(options.method, "PATCH");
       const body = JSON.parse(options.body);
       return new Promise((resolve, reject) => requests.push({
-        body, reject, complete: () => resolve(Response.json({ attempt: { ...attempt, answers: body.answers } })),
+        body, reject, complete: () => { attempt.answers = body.answers; resolve(Response.json({ attempt: { ...attempt } })); },
       }));
     },
   });
@@ -232,7 +261,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const call = findCall(tree);
   if (hasAttempt) assert.ok(call);
   return {
-    requests, flush, render, call,
+    requests, followUpRequests, flush, render, call, latestCall: () => findCall(render()), storage,
     get microphoneRequests() { return microphoneRequests; },
     get recognitionStarts() { return recognitionStarts; },
     edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(),
@@ -285,6 +314,42 @@ test("a queued autosave retries the latest transcript after an earlier request f
   assert.equal(room.requests[1].body.answers[0].answer, "Latest answer to preserve");
   room.requests[1].complete();
   await room.flush();
+});
+
+test("a follow-up saves the answer first, inserts the probe, and preserves later answers", async () => {
+  const room = await autosaveRoom({ questions: ["Why medicine?", "Why this role?"], initialDraft: {
+    answers: [{ question: "Why medicine?", answer: "" }, { question: "Why this role?", answer: "An existing answer to preserve" }], questionIndex: 0,
+  } });
+  const answer = "Volunteering in a care home showed me how listening carefully and working together can help people feel understood and supported when they are worried.";
+  room.edit(answer);
+  room.latestCall().onFollowUp();
+  room.latestCall().onFollowUp();
+  await room.flush();
+  assert.equal(room.requests.length, 1);
+  assert.equal(room.followUpRequests.length, 0, "Generation waits for the saved answer");
+  room.requests[0].complete();
+  await room.flush();
+  assert.equal(room.followUpRequests.length, 1, "Double clicks cannot spend extra quota");
+  room.followUpRequests[0].complete("How did you adapt your listening?", "practice");
+  await room.flush();
+  const call = room.latestCall();
+  assert.equal(call.questionIndex, 1);
+  assert.equal(call.answers[0].answer, answer);
+  assert.equal(call.answers[1].answer, "");
+  assert.equal(call.answers[2].answer, "An existing answer to preserve");
+  assert.equal(call.followUpAvailable, false, "Generated probes cannot recursively request more probes");
+  assert.match(call.followUpNotice, /guided practice/);
+  assert.equal(call.followUpBusy, false);
+});
+
+test("draft recovery matches questions after a probe was inserted on the server", async () => {
+  const room = await autosaveRoom({ questions: ["Why medicine?", "What did you learn?", "Why this role?"], initialDraft: {
+    answers: [{ question: "Why medicine?", answer: "First draft" }, { question: "Why this role?", answer: "Later draft" }], questionIndex: 1,
+  } });
+  assert.equal(room.call.questionIndex, 2);
+  assert.equal(room.call.answers[0].answer, "First draft");
+  assert.equal(room.call.answers[1].answer, "");
+  assert.equal(room.call.answers[2].answer, "Later draft");
 });
 
 function questionRecordingRoom({ recorderFails = false } = {}) {

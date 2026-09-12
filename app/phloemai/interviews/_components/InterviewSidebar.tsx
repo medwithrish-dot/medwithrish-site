@@ -79,6 +79,7 @@ function SidebarLink({
 }) {
   return (
     <Link
+      data-interview-sidebar-link
       href={href}
       aria-current={active ? "page" : undefined}
       className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
@@ -95,7 +96,7 @@ function SidebarLink({
 
 function LegalLinks({ className = "mt-5" }: { className?: string }) {
   return (
-    <div className={`${className} rounded-xl bg-white/[0.04] p-4`}>
+    <div data-interview-sidebar-legal className={`${className} rounded-xl bg-white/[0.04] p-4`}>
       <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
         Legal
       </p>
@@ -143,10 +144,10 @@ export function InterviewSidebar({
         />
       </nav>
 
-      <div className="mt-8 space-y-8">
+      <div data-interview-sidebar-sections className="mt-8 space-y-8">
         {sidebarSections.map((section) => (
           <div key={section.label}>
-            <p className="px-4 text-xs font-bold uppercase tracking-wide text-slate-500">
+            <p data-interview-sidebar-heading className="px-4 text-xs font-bold uppercase tracking-wide text-slate-500">
               {section.label}
             </p>
             <div className="mt-3 space-y-2">
@@ -165,7 +166,7 @@ export function InterviewSidebar({
       </div>
 
       {showPremiumCard && (
-        <div className="mt-8 rounded-xl bg-white/[0.04] p-4">
+        <div data-interview-sidebar-upgrade className="mt-8 rounded-xl bg-white/[0.04] p-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f3b] text-[#8be5df]">
             <BadgeCheck className="h-6 w-6" aria-hidden="true" />
           </div>

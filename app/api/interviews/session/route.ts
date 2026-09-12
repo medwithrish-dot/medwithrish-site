@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { interviewAiConfigured } from "@/utils/interviews/gemini";
 import { findInterviewUniversity } from "@/app/phloemai/interviews/_data/universities";
 import { findInterviewStation, interviewStations } from "@/app/phloemai/interviews/_data/interview-stations";
 import { databaseError, InterviewError, interviewContext, interviewFailure, interviewJson, readInterviewBody, toInterviewAttempt, validId } from "@/utils/interviews/server";
@@ -13,7 +14,7 @@ export async function GET(request: Request) {
     const { data, error } = await query.maybeSingle();
     if (error) databaseError(error);
     if (id && !data) throw new InterviewError("Interview not found", 404);
-    return interviewJson({ attempt: data ? toInterviewAttempt(data) : null, configured: Boolean(process.env.GEMINI_API_KEY), isPremium });
+    return interviewJson({ attempt: data ? toInterviewAttempt(data) : null, configured: interviewAiConfigured(), isPremium });
   } catch (error) { return interviewFailure(error); }
 }
 
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
       p_monthly: isPremium ? configuredLimit("INTERVIEW_PREMIUM_MONTHLY_LIMIT", 300) : configuredLimit("INTERVIEW_FREE_MONTHLY_LIMIT", 30),
     });
     if (error) databaseError(error);
-    return interviewJson({ attempt: toInterviewAttempt(data), isPremium, configured: Boolean(process.env.GEMINI_API_KEY) });
+    return interviewJson({ attempt: toInterviewAttempt(data), isPremium, configured: interviewAiConfigured() });
   } catch (error) { return interviewFailure(error); }
 }
 
@@ -85,13 +86,18 @@ export async function PATCH(request: Request) {
     if (Date.now() > Date.parse(row.started_at) + (row.preparation_seconds + row.station_seconds + 30) * 1000) throw new InterviewError("The answer window has closed. Submit your last saved answers for feedback.", 409);
     if (body.answers.length > row.questions.length) throw new InterviewError("Too many answers");
     const seen = new Set<string>();
-    const answers = body.answers.map((value: unknown) => {
+    const incomingAnswers = body.answers.map((value: unknown) => {
       if (!value || typeof value !== "object") throw new InterviewError("Invalid answer");
       const answer = value as Record<string, unknown>;
       if (typeof answer.question !== "string" || !row.questions.includes(answer.question) || seen.has(answer.question) || typeof answer.answer !== "string" || answer.answer.length > 8000) throw new InterviewError("Invalid answer or answer too long");
       seen.add(answer.question);
       return { question: answer.question, answer: answer.answer.trim() };
     });
+    // An older tab may not know about a probe added elsewhere. Omission must not
+    // erase its saved answer; an explicitly submitted empty answer can still clear it.
+    const savedAnswers = toInterviewAttempt(row).answers;
+    const answers = (row.questions as string[]).map((question) => incomingAnswers.find((answer) => answer.question === question)
+      ?? savedAnswers.find((answer) => answer.question === question) ?? { question, answer: "" });
     if (answers.reduce((sum, answer) => sum + answer.answer.length, 0) > 18000) throw new InterviewError("Please keep the station transcript under 18,000 characters");
     const metrics: Record<string, number> = {};
     if (body.metrics && typeof body.metrics === "object") {
@@ -100,9 +106,9 @@ export async function PATCH(request: Request) {
         if (typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 10000) metrics[key] = value;
       }
     }
-    const { data, error: saveError } = await admin.from("interview_attempts").update({ answers, metrics }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").select().maybeSingle();
+    const { data, error: saveError } = await admin.from("interview_attempts").update({ answers, metrics }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("answers", JSON.stringify(row.answers)).select().maybeSingle();
     if (saveError) databaseError(saveError);
-    if (!data) throw new InterviewError("Feedback has started; answers are now locked.", 409);
+    if (!data) throw new InterviewError("Your interview changed while saving. Please retry to keep the latest answers.", 409);
     return interviewJson({ attempt: toInterviewAttempt(data) });
   } catch (error) { return interviewFailure(error); }
 }
