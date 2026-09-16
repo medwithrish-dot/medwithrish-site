@@ -77,7 +77,6 @@ export async function POST(request: Request) {
       if (!stationEnded || previous.mode !== mode || previous.university_slug !== (mode === "university" ? university!.slug : null)) throw new InterviewError("Complete the previous station first", 409);
       count = previous.station_count;
       if (body.stationCount !== undefined && body.stationCount !== count) throw new InterviewError("The number of stations cannot change during a circuit", 409);
-      if (Date.now() < Date.parse(previous.completed_at) + previous.break_seconds * 1000) throw new InterviewError("Your break is still running. The next station will be ready shortly.", 409);
     }
     if (index >= count) throw new InterviewError("This circuit has no more stations", 409);
     const station = mode === "free" ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : interviewStations[index % interviewStations.length];

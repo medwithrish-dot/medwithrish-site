@@ -147,12 +147,15 @@ test("an older university circuit can continue beyond the custom topic limit", a
   assert.equal(api.reservations[0].p_payload.station_index, 10);
 });
 
-test("customisation retains the completion, break and membership checks", async () => {
-  for (const previous of [null, previousStation({ status: "in_progress" }), previousStation({ completed_at: new Date().toISOString() }), previousStation({ mode: "university" })]) {
+test("customisation retains the completion and membership checks", async () => {
+  for (const previous of [null, previousStation({ status: "in_progress" }), previousStation({ mode: "university" })]) {
     const api = sessionRoute({ previous });
     assert.equal((await api.post({ mode: "reference", circuitId, stationIndex: 1, stationSlug: "data-analysis" })).status, 409);
     assert.equal(api.reservations.length, 0);
   }
+  const optionalBreak = sessionRoute({ previous: previousStation({ completed_at: new Date().toISOString() }) });
+  assert.equal((await optionalBreak.post({ mode: "reference", circuitId, stationIndex: 1, stationSlug: "data-analysis" })).status, 200);
+  assert.equal(optionalBreak.reservations[0].p_payload.station_slug, "data-analysis");
   const api = sessionRoute({ premium: false });
   assert.equal((await api.post({ mode: "reference", stationCount: 2 })).status, 403);
   assert.equal(api.reservations.length, 0);
