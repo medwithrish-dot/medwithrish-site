@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Clock3, Mic, Search } from "lucide-react";
 import styles from "../_components/AIInterviewLanding.module.css";
 import { interviewUniversities, universityTimingSummary, UNIVERSITY_SOURCES_CHECKED } from "../_data/universities";
+import { isAcademicInterview } from "../_data/university-stations";
 
 type UniversityCatalogueMode = "practice" | "reference";
 
@@ -14,6 +15,7 @@ export function UniversityCatalogue({ mode = "reference" }: { mode?: UniversityC
   const practiceMode = mode === "practice";
   const normalized = query.trim().toLowerCase().replace(/[’']/g, "");
   const visible = interviewUniversities.filter((entry) => {
+    if (isAcademicInterview(entry.slug)) return false;
     const searchable = `${entry.name} ${entry.slug} ${entry.timingNote}`.toLowerCase().replace(/[’']/g, "");
     return searchable.includes(normalized) && (format === "All" || entry.format === format);
   });

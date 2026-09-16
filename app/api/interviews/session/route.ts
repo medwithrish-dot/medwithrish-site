@@ -4,6 +4,9 @@ import { findInterviewUniversity } from "@/app/phloemai/interviews/_data/univers
 import { findInterviewStation, interviewStations } from "@/app/phloemai/interviews/_data/interview-stations";
 import { databaseError, InterviewError, interviewContext, interviewFailure, interviewJson, readInterviewBody, toInterviewAttempt, validId } from "@/utils/interviews/server";
 import { selectStationQuestions } from "@/utils/interviews/station-question-selection";
+import { questionEligible, readApplicant } from "@/utils/interviews/applicant-profile";
+import { interviewerSpeech } from "@/app/phloemai/interviews/_lib/interviewer-transcript";
+import { isAcademicInterview, universityStationSlugs } from "@/app/phloemai/interviews/_data/university-stations";
 
 async function completeQuestionBankProgress(
   admin: Awaited<ReturnType<typeof interviewContext>>["admin"],
@@ -57,9 +60,12 @@ export async function POST(request: Request) {
     if (mode !== "free" && !isPremium) throw new InterviewError("University circuits and additional stations require Premium. The Why medicine? station is free.", 403);
     const university = typeof body.universitySlug === "string" ? findInterviewUniversity(body.universitySlug) : undefined;
     if (mode === "university" && !university) throw new InterviewError("Choose a university");
+    if (mode === "university" && isAcademicInterview(university?.slug) && !body.stationIndex) throw new InterviewError("Oxford and Cambridge academic interviews are a separate format and are not available in this circuit.");
     const index = body.stationIndex === undefined ? 0 : Number(body.stationIndex);
     const circuitMode = mode === "university" || mode === "reference";
-    const defaultCount = mode === "university" ? Math.min(20, university!.stationCount) : mode === "reference" ? 5 : 1;
+    const presetStations = universityStationSlugs(university?.slug);
+    if (mode === "university" && !body.stationSlug && !presetStations.length) throw new InterviewError("Choose your practice topics before starting this university interview.");
+    const defaultCount = mode === "university" ? presetStations.length || 1 : mode === "reference" ? 5 : 1;
     let count = defaultCount;
     if (body.stationCount !== undefined) {
       if (typeof body.stationCount !== "number" || !Number.isInteger(body.stationCount) || body.stationCount < 1 || body.stationCount > interviewStations.length || (!circuitMode && body.stationCount !== 1)) throw new InterviewError("Choose between one and nine stations");
@@ -79,17 +85,19 @@ export async function POST(request: Request) {
       if (body.stationCount !== undefined && body.stationCount !== count) throw new InterviewError("The number of stations cannot change during a circuit", 409);
     }
     if (index >= count) throw new InterviewError("This circuit has no more stations", 409);
-    const station = mode === "free" ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : interviewStations[index % interviewStations.length];
+    const station = mode === "free" ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : mode === "university" ? findInterviewStation(presetStations[index % presetStations.length]) : interviewStations[index % interviewStations.length];
     if (!station) throw new InterviewError("Station not found", 404);
     const stationSeconds = mode === "university" ? university!.stationSeconds : 480;
-    const selectedQuestions = selectStationQuestions(station.slug, stationSeconds, `${circuitId}:${index}`);
+    const { data: preparation } = await admin.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle();
+    const applicant = readApplicant(preparation?.applicant);
+    const selectedQuestions = selectStationQuestions(station.slug, stationSeconds, `${circuitId}:${index}`, applicant);
     const payload = {
       mode, university_slug: mode === "university" ? university!.slug : null, station_slug: station.slug,
       title: station.lobbyTitle, circuit_id: circuitId, station_index: index, station_count: count,
       preparation_seconds: 0,
       station_seconds: stationSeconds,
       break_seconds: circuitMode ? (mode === "university" ? university!.breakSeconds : 120) : 0,
-      questions: selectedQuestions.length ? selectedQuestions.map((question) => question.text) : [...station.questions],
+      questions: selectedQuestions.length ? selectedQuestions.map((question) => question.text) : station.questions.filter((question) => questionEligible(question, applicant)),
     };
     const { data, error } = await admin.rpc("reserve_interview_attempt", {
       p_user: user.id, p_payload: payload,
@@ -131,7 +139,7 @@ export async function PATCH(request: Request) {
       const answer = value as Record<string, unknown>;
       if (typeof answer.question !== "string" || !row.questions.includes(answer.question) || seen.has(answer.question) || typeof answer.answer !== "string" || answer.answer.length > 8000) throw new InterviewError("Invalid answer or answer too long");
       seen.add(answer.question);
-      return { question: answer.question, answer: answer.answer.trim() };
+      return { question: answer.question, answer: answer.answer.trim(), ...interviewerSpeech(answer, toInterviewAttempt(row).answers.find((saved) => saved.question === answer.question)) };
     });
     // An older tab may not know about a probe added elsewhere. Omission must not
     // erase its saved answer; an explicitly submitted empty answer can still clear it.

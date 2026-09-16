@@ -1,8 +1,15 @@
 import { findInterviewUniversity } from "../../app/phloemai/interviews/_data/universities";
+import { emptyApplicant, readApplicant } from "./applicant-profile";
 
 export const PREPARATION_THEMES = ["motivation", "reflection", "ethics", "teamwork", "nhs", "hot-topics", "analysis"] as const;
 
 export function validatePreparation(value: Record<string, unknown>) {
+  if (value.applicant !== undefined) {
+    if (!value.applicant || typeof value.applicant !== "object" || Array.isArray(value.applicant)) throw new Error("Check your applicant details.");
+    for (const [key, entry] of Object.entries(value.applicant)) {
+      if (!Object.hasOwn(emptyApplicant, key) || (key === "entryRoute" ? ![null, "undergraduate", "graduate"].includes(entry as null | string) : entry !== null && typeof entry !== "boolean")) throw new Error("Check your applicant details.");
+    }
+  }
   if (!["starting", "practising", "polishing"].includes(String(value.experience))) {
     throw new Error("Choose where you are in your preparation.");
   }
@@ -31,6 +38,7 @@ export function validatePreparation(value: Record<string, unknown>) {
     return { universitySlug: target.universitySlug, interviewDate: date as string | null };
   });
   return {
+    applicant: readApplicant(value.applicant),
     experience: value.experience as "starting" | "practising" | "polishing",
     focusThemes: value.focusThemes as (typeof PREPARATION_THEMES)[number][],
     weeklyTarget: Number(value.weeklyTarget),

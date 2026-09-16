@@ -1,5 +1,6 @@
 import { INTERVIEW_QUESTIONS, type InterviewQuestion } from "@/app/phloemai/interviews/_data/interviewQuestionBank";
 import { stationQuestionCount } from "@/app/phloemai/interviews/_data/interview-stations";
+import { questionEligible, type ApplicantProfile } from "@/utils/interviews/applicant-profile";
 
 type StationQuestionRule = {
   sourceTopics?: readonly string[];
@@ -39,10 +40,11 @@ function matchingQuestions(stationSlug: string) {
  * Selects a coherent cluster from the question bank. Questions with a source
  * topic stay within that topic; older questions fall back to their subcategory.
  */
-export function selectStationQuestions(stationSlug: string, stationSeconds: number, seed: string) {
+export function selectStationQuestions(stationSlug: string, stationSeconds: number, seed: string, applicant?: ApplicantProfile) {
   const count = stationQuestionCount(stationSeconds);
   const groups = new Map<string, InterviewQuestion[]>();
   for (const question of matchingQuestions(stationSlug)) {
+    if (!questionEligible(question.text, applicant)) continue;
     const key = question.sourceTopic || question.subcategory;
     groups.set(key, [...(groups.get(key) ?? []), question]);
   }
@@ -54,7 +56,14 @@ export function selectStationQuestions(stationSlug: string, stationSeconds: numb
     .toSorted((a, b) => a.sourceQuestionNumber - b.sourceQuestionNumber || a.id.localeCompare(b.id));
   const take = Math.min(count, group.length);
   const start = Math.floor(numericSeed / Math.max(1, choices.length)) % group.length;
-  return Array.from({ length: take }, (_, index) => group[(start + index) % group.length]);
+  const selected = Array.from({ length: take }, (_, index) => group[(start + index) % group.length]);
+  // Filtering personal-history questions can shorten a cluster. Fill only from
+  // eligible questions in the same station, never restore excluded questions.
+  const stationQuestions = [...selected, ...[...groups.values()].flat().filter((question) => !selected.includes(question))];
+  if (stationSlug === "work-experience" && stationQuestions.length < count) {
+    stationQuestions.push(...questions.filter((question) => question.subcategory === "Personal Insight" && questionEligible(question.text, applicant)));
+  }
+  return stationQuestions.slice(0, count);
 }
 
 export function questionIdForText(text: string) {

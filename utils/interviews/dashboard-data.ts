@@ -4,10 +4,12 @@ import { createClient } from "@/utils/supabase/server";
 import { toInterviewAttempt } from "./server";
 import { deriveDashboard, londonDate, type PreparationProfile } from "./dashboard-analytics";
 import type { InterviewAttempt } from "@/app/phloemai/interviews/_lib/interview-types";
+import { readApplicant } from "./applicant-profile";
 
 export function preparationFromRow(row: Record<string, unknown> | null): PreparationProfile | null {
   if (!row) return null;
   return {
+    applicant: readApplicant(row.applicant),
     experience: row.experience as PreparationProfile["experience"],
     focusThemes: row.focus_themes as PreparationProfile["focusThemes"],
     weeklyTarget: Number(row.weekly_target),
@@ -26,6 +28,8 @@ export const getInterviewDashboardData = cache(async () => {
   let message: string | null = null;
   let completedTasks: string[] = [];
   let totals: Record<string, number | boolean | null> | null = null;
+  let dailyActivity: { practice_date: string; questions: number }[] = [];
+  let activityAvailable = false;
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -33,17 +37,20 @@ export const getInterviewDashboardData = cache(async () => {
       message = "Sign in to save your university choices, interview dates and preparation plan.";
     } else {
       signedIn = true;
-      const [settings, plan, tasks, allTime] = await Promise.all([
-        supabase.from("interview_preparation_profiles").select("experience,focus_themes,weekly_target,targets,updated_at").eq("user_id", user.id).maybeSingle(),
+      const [settings, plan, tasks, allTime, activity] = await Promise.all([
+        supabase.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("profiles").select("current_plan").eq("id", user.id).maybeSingle(),
         supabase.from("interview_dashboard_tasks").select("task_id").eq("user_id", user.id).eq("date", londonDate(now)),
         supabase.rpc("interview_dashboard_totals"),
+        supabase.rpc("interview_daily_activity"),
       ]);
       isPremium = plan.data?.current_plan === "premium";
       available = !settings.error && !tasks.error && !allTime.error;
       profile = preparationFromRow(settings.data);
       completedTasks = (tasks.data ?? []).map((task) => task.task_id);
       totals = allTime.data;
+      dailyActivity = activity.data ?? [];
+      activityAvailable = !activity.error;
       if (!available) message = "Your saved interview results are shown below. Personal plans and dates will be available once dashboard storage is ready.";
 
       // No answer text or microphone metrics are transferred for a dashboard view.
@@ -66,5 +73,5 @@ export const getInterviewDashboardData = cache(async () => {
     analytics.stats.practiceMinutes = Math.round(analytics.stats.practiceSeconds / 60);
     analytics.stats.practiceTimeEstimated = Boolean(totals.practiceTimeEstimated);
   }
-  return { attempts, profile, analytics, signedIn, isPremium, available, message, historyLimited: Number(totals?.attemptCount ?? 0) > 500 };
+  return { attempts, profile, analytics, signedIn, isPremium, available, message, dailyActivity, activityAvailable, today: londonDate(now), historyLimited: Number(totals?.attemptCount ?? 0) > 500 };
 });

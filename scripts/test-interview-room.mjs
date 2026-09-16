@@ -16,7 +16,7 @@ const circuitId = "12345678-1234-4234-8234-123456789012";
 
 // Run the real route and catalogue, substituting only account/database services.
 // No credentials, writes to a real account, or AI provider are needed.
-function sessionRoute({ premium = true, previous = null } = {}) {
+function sessionRoute({ premium = true, previous = null, applicant = null } = {}) {
   const reservations = [];
   const filters = [];
   const mutations = [];
@@ -33,7 +33,7 @@ function sessionRoute({ premium = true, previous = null } = {}) {
   const server = {
     InterviewError,
     interviewContext: async () => ({ user: { id: "test-user" }, isPremium: premium, admin: {
-      from: table => table === "interview_question_progress" ? { upsert: async rows => { questionProgress.push(...rows); return { error: null }; } } : query,
+      from: table => table === "interview_question_progress" ? { upsert: async rows => { questionProgress.push(...rows); return { error: null }; } } : table === "interview_preparation_profiles" ? { ...query, async maybeSingle() { return { data: { applicant }, error: null }; } } : query,
       rpc: async (name, args) => { reservations.push({ name, ...args }); return { data: args.p_payload, error: null }; },
     } }),
     readInterviewBody: async request => request.json(),
@@ -75,7 +75,7 @@ test("a custom circuit reserves the chosen first topic and count", async () => {
   assert.equal(payload.station_count, 3);
   assert.equal(payload.station_slug, "work-experience");
   assert.equal(payload.questions.length, 3);
-  assert.ok(payload.questions.every((text) => INTERVIEW_QUESTIONS.some((question) => question.text === text && question.subcategory === "Work Experience & Reflection")));
+  assert.ok(payload.questions.every((text) => INTERVIEW_QUESTIONS.some((question) => question.text === text && ["Work Experience & Reflection", "Personal Insight"].includes(question.subcategory))));
   assert.equal(payload.break_seconds, 120);
 });
 
@@ -100,8 +100,8 @@ test("university customisation preserves that university's practice timings", as
   assert.equal(payload.university_slug, "aberdeen");
 });
 
-test("legacy presets still use their original counts and topic order", async () => {
-  for (const [body, count] of [[{ mode: "reference" }, 5], [{ mode: "university", universitySlug: "aberdeen" }, 6], [{ mode: "free" }, 1]]) {
+test("presets use supported university topics and preserve custom/free defaults", async () => {
+  for (const [body, count] of [[{ mode: "reference" }, 5], [{ mode: "university", universitySlug: "manchester" }, 4], [{ mode: "free" }, 1]]) {
     const api = sessionRoute();
     assert.equal((await api.post(body)).status, 200);
     assert.equal(api.reservations[0].p_payload.station_count, count);
@@ -350,6 +350,15 @@ test("manual microphone off stays off after subsequent room renders", async () =
   await room.flush(); room.render(); room.render();
   assert.equal(room.recognitionStarts, 1);
   assert.equal(room.latestCall().speech.listening, false);
+});
+
+test("saving and older-tab autosaves preserve interviewer speech beside the correct answer", async () => {
+  const previous = { id: circuitId, status: "in_progress", started_at: new Date().toISOString(), preparation_seconds: 0, station_seconds: 480,
+    questions: ["What did you learn?"], answers: [{ question: "What did you learn?", answer: "I listened.", interviewerIntro: questionTransition(1) }],
+  };
+  const api = sessionRoute({ previous });
+  assert.equal((await api.patch({ attemptId: circuitId, answers: [{ question: previous.questions[0], answer: "I listened carefully." }] })).status, 200);
+  assert.equal(api.mutations[0].answers[0].interviewerIntro, questionTransition(1));
 });
 
 test("finishing a station marks each answered bank question completed", async () => {
@@ -835,4 +844,24 @@ test("spoken questions use varied transitions and late confirmation words cannot
   assert.equal(room.spoken.at(-1), `${questionTransition(1)} What did you learn?`);
   assert.notEqual(questionTransition(1), questionTransition(2));
   assert.notEqual(questionTransition(1), questionTransition(1, true));
+  assert.equal(room.latestCall().answers[1].interviewerIntro, questionTransition(1));
+  assert.equal(room.latestCall().answers[0].interviewerPrompts[0].text, DONE_PROMPT);
+});
+
+test("standard university circuits reject academic formats and unverified automatic topics", async () => {
+  for (const universitySlug of ["oxford", "cambridge", "aberdeen"]) {
+    const api = sessionRoute();
+    assert.equal((await api.post({ mode: "university", universitySlug })).status, 400);
+    assert.equal(api.reservations.length, 0);
+  }
+});
+
+test("session eligibility uses saved applicant facts, never caller-supplied confirmations", async () => {
+  const body = { mode: "station", stationSlug: "work-experience", applicant: { gapYear: true } };
+  const unknown = sessionRoute();
+  assert.equal((await unknown.post(body)).status, 200);
+  assert.ok(unknown.reservations[0].p_payload.questions.every((question) => !/gap year/i.test(question)));
+  const confirmed = sessionRoute({ applicant: { gapYear: true } });
+  assert.equal((await confirmed.post(body)).status, 200);
+  assert.ok(confirmed.reservations[0].p_payload.questions.some((question) => /gap year/i.test(question)));
 });

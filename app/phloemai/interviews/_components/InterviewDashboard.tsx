@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, CalendarDays, CheckCircle2, ChevronRight, GraduationCap, Mic, Settings2, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CalendarDays, CheckCircle2, ChevronRight, GraduationCap, Mic, Sparkles, TrendingUp } from "lucide-react";
 import type { getInterviewDashboardData } from "@/utils/interviews/dashboard-data";
 import { INTERVIEW_PATHWAY } from "@/utils/interviews/pathway";
 import { InterviewPreparationSetup } from "./InterviewPreparationSetup";
-import { AnimatedDisclosure } from "./AnimatedDisclosure";
+import { InterviewDailyActivity } from "./InterviewDailyActivity";
 
 type DashboardData = Awaited<ReturnType<typeof getInterviewDashboardData>>;
 const base = "/phloemai/interviews";
@@ -55,6 +55,10 @@ export function InterviewDashboard({ data }: { data: DashboardData }) {
       ].map(([label, value, detail]) => <div key={label} className="flex items-baseline justify-between gap-4 px-5 py-4 sm:block"><p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#708684]">{label}</p><p className="sm:mt-2"><strong className="text-xl font-bold tabular-nums text-[#153d3d]">{value}</strong><span className="ml-2 text-[10px] text-[#7a8d8c]">{detail}</span></p></div>)}
     </section>
     {data.historyLimited && <p className="px-1 text-[10px] leading-5 text-[#718788]">Recent suggestions use your latest 500 stations.</p>}
+    <InterviewDailyActivity rows={data.dailyActivity} today={data.today} available={data.activityAvailable} />
+    <div id="preparation-settings">
+      <InterviewPreparationSetup key={profile?.updatedAt ?? "new"} initialProfile={profile} signedIn={signedIn} available={available} />
+    </div>
 
     <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(300px,.65fr)]">
       <section className={`${panel} p-5 sm:p-6`} aria-labelledby="pathway-preview-title">
@@ -81,11 +85,6 @@ export function InterviewDashboard({ data }: { data: DashboardData }) {
       </div>
     </div>
 
-    <section className="rounded-2xl border border-[#d7e3e1] bg-[#f7faf9]" id="preparation-settings">
-      <AnimatedDisclosure className="px-5 sm:px-6" title={<span className="flex items-center gap-3 py-4"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#08787b]"><Settings2 className="h-4 w-4" /></span><span><strong className="block text-xs text-[#294e4c]">Preparation settings</strong><span className="mt-1 block text-[10px] text-[#718486]">Universities, interview dates, focus areas and weekly target</span></span></span>}>
-        <div className="border-t border-[#dfe8e6] p-3"><InterviewPreparationSetup key={profile?.updatedAt ?? "new"} initialProfile={profile} signedIn={signedIn} available={available} variant="compact" /></div>
-      </AnimatedDisclosure>
-    </section>
 
     <nav aria-label="Interview shortcuts" className="flex flex-wrap gap-x-6 gap-y-3 px-1 text-xs font-semibold text-[#617a79]">
       <Link href={`${base}/question-bank`} className="hover:text-[#08787b]">Question bank</Link>

@@ -149,6 +149,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       // answer onto a different question, including an unsaved typed answer.
       const currentQuestion = previous?.questions[questionIndexRef.current];
       const merged = next.questions.map((question) => ({ question,
+        ...(answersRef.current.find((item) => item.question === question) ?? next.answers.find((item) => item.question === question)),
         answer: answersRef.current.find((item) => item.question === question)?.answer
           ?? next.answers.find((item) => item.question === question)?.answer ?? "",
       }));
@@ -164,7 +165,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       }
     }
     if (changed || restore) {
-      let restoredAnswers = next.questions.map((question) => ({ question, answer: next.answers.find((item) => item.question === question)?.answer ?? "" }));
+      let restoredAnswers = next.questions.map((question) => ({ question, answer: "", ...next.answers.find((item) => item.question === question) }));
       let restoredIndex = 0;
       savedSignatureRef.current = JSON.stringify(restoredAnswers);
       if (next.status === "in_progress") {
@@ -174,7 +175,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
           if (draft && Array.isArray(draft.answers)) {
             restoredAnswers = next.questions.map((question, index) => {
               const localAnswer = draft.answers.find((item) => item?.question === question);
-              return { question, answer: typeof localAnswer?.answer === "string"
+              return { ...restoredAnswers[index], ...localAnswer, question, answer: typeof localAnswer?.answer === "string"
                 ? localAnswer.answer.slice(0, 6_000) : restoredAnswers[index].answer };
             });
             const localQuestion = Number.isInteger(draft.questionIndex) ? draft.answers[draft.questionIndex]?.question : undefined;
@@ -417,15 +418,16 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     const key = `${attempt.id}:${questionIndex}`;
     if (spokenQuestionRef.current === key) return;
     spokenQuestionRef.current = key;
+    const transition = questionTransition(questionIndex, !originalQuestions.includes(question));
+    if (transition) replaceAnswers(answersRef.current.map((answer) => answer.question === question ? { ...answer, interviewerIntro: transition } : answer));
     if (!readAloud || !voiceSupported) return;
     promptingRef.current = true;
-    const transition = questionTransition(questionIndex, !originalQuestions.includes(question));
     void speak([transition, question].filter(Boolean).join(" "), () => {
       if (spokenQuestionRef.current !== key) return;
       promptingRef.current = false;
       setPrompting(false);
     });
-  }, [attempt, active, entryReady, question, questionIndex, readAloud, speak, voiceSupported, originalQuestions]);
+  }, [attempt, active, entryReady, question, questionIndex, readAloud, speak, voiceSupported, originalQuestions, replaceAnswers]);
 
   useEffect(() => {
     if (!active || !micWanted || promptingRef.current || confirmationPendingRef.current || speech.speaking || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
@@ -557,6 +559,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       if (readAloud && voiceSupported) {
         promptingRef.current = true;
         setPrompting(true);
+        replaceAnswers(answersRef.current.map((answer, answerIndex) => answerIndex === index ? { ...answer, interviewerPrompts: [...(answer.interviewerPrompts ?? []), { text: DONE_PROMPT, answerOffset: answer.answer.length }].slice(0, 12) } : answer));
         void speak(DONE_PROMPT, () => { promptingRef.current = false; setPrompting(false); });
       }
     } finally { confirmationPendingRef.current = false; }

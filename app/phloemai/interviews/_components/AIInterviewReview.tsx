@@ -8,6 +8,7 @@ import { getStationReviewGuidance } from "../_lib/station-review";
 import { findInterviewUniversity } from "../_data/universities";
 import { StationMarkScheme } from "./InterviewMarkScheme";
 import { getTranscriptHints, normalizeSpeechTranscript } from "../_lib/speech-delivery";
+import { answerConversation } from "../_lib/interviewer-transcript";
 import styles from "./AIInterviewReview.module.css";
 
 type Props = {
@@ -36,7 +37,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   useEffect(() => { headingRef.current?.focus(); }, []);
   const guidance = getStationReviewGuidance(attempt.stationSlug);
   const university = attempt.universitySlug ? findInterviewUniversity(attempt.universitySlug) : null;
-  const transcript = attempt.questions.map((question) => ({ question, answer: normalizeSpeechTranscript(attempt.answers.find((item) => item.question === question)?.answer ?? "") }));
+  const transcript = attempt.questions.map((question) => ({ question, answer: "", ...attempt.answers.find((item) => item.question === question) }));
   const wordCount = transcript.reduce((total, item) => total + getTranscriptHints(item.answer).wordCount, 0);
   const answered = transcript.filter((item) => item.answer.trim()).length;
   const feedback = attempt.feedback;
@@ -64,7 +65,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   const download = () => {
     const text = [preview ? "PHLOEMAI PREVIEW — not saved to an account" : "PHLOEMAI STATION REVIEW", attempt.title,
       university?.name ?? "Independent station practice", "", "TRANSCRIPT",
-      ...transcript.map((item) => `Interviewer: ${item.question}\nYou: ${item.answer || "No answer saved."}`),
+      ...transcript.map((item) => `Interviewer: ${[item.interviewerIntro, item.question].filter(Boolean).join(" ")}\n${answerConversation(item).map((turn) => `${turn.speaker}: ${turn.text || "No answer saved."}`).join("\n")}`),
       ...(feedback ? ["", "AI FEEDBACK", `Practice score: ${feedback.score}%`, feedback.summary, ...feedbackSections.flatMap((section) => [section.title, ...section.items]), ...feedback.rubric.map((item) => `${item.criterion}: ${item.score}/100 — ${item.reason}`)] : []),
     ].join("\n\n");
     const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
@@ -92,14 +93,15 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
     </div>
     <nav className={styles.sectionLinks} aria-label="Review sections"><a href="#transcript-heading">Transcript</a><a href="#review-guide">Markscheme</a><a href="#ai-feedback-heading"><Sparkles size={14} /> AI feedback</a></nav>
     {preview && <p className={styles.notice} role="note">This preview is not saved. Any sample AI feedback is illustrative and does not assess your answers.</p>}
+    {!onNext && attempt.stationIndex + 1 >= attempt.stationCount && !needsSaving && <section className={styles.circuitCallout} aria-label="Interview complete"><div><p className={styles.eyebrow}>INTERVIEW COMPLETE</p><h2>All stations complete.</h2></div><Link className={styles.nextPrimary} href="/phloemai/interviews">End interview <ArrowRight size={18} /></Link></section>}
     {onNext && <section className={styles.circuitCallout} aria-label="Continue circuit"><div><p className={styles.eyebrow}>NEXT STATION READY</p><h2>Keep your circuit moving.</h2><p>{breakRemaining > 0 ? `Scheduled break: ${Math.floor(breakRemaining / 60)}:${String(breakRemaining % 60).padStart(2, "0")} remaining. You can continue now if you feel ready.` : "You can continue now, or take a moment to review first."}</p></div><div className={styles.calloutActions}><button type="button" className={styles.secondary} disabled={busy || needsSaving} onClick={onRetry}><RotateCcw size={16} /> Retry station</button><button type="button" className={styles.nextPrimary} disabled={busy || needsSaving} onClick={onNext}>Next station <ArrowRight size={18} /></button></div></section>}
 
     <div className={styles.workspace}>
       <section className={styles.transcript} aria-labelledby="transcript-heading">
         <div className={styles.panelHeading}><FileText size={20} /><div><h2 id="transcript-heading">Your transcript</h2><p>Your saved conversation.</p></div></div>
         <ol className={styles.conversation}>{transcript.map((item, index) => <li key={item.question}>
-          <div className={styles.question}><span className={styles.number}>{String(index + 1).padStart(2, "0")}</span><div><span className={styles.speaker}>Interviewer</span><h3>{item.question}</h3></div></div>
-          <div className={styles.answer}><span className={styles.speaker}>Your answer</span><p className={item.answer ? undefined : styles.empty}>{item.answer || "No answer saved for this prompt."}</p></div>
+          <div className={styles.question}><span className={styles.number}>{String(index + 1).padStart(2, "0")}</span><div><span className={styles.speaker}>Interviewer</span>{item.interviewerIntro && <p>{item.interviewerIntro}</p>}<h3>{item.question}</h3></div></div>
+          {answerConversation(item).map((turn, turnIndex) => <div key={turnIndex} className={styles.answer}><span className={styles.speaker}>{turn.speaker === "You" ? "Your answer" : "Interviewer"}</span><p className={turn.text ? undefined : styles.empty}>{normalizeSpeechTranscript(turn.text) || "No answer saved for this prompt."}</p></div>)}
         </li>)}</ol>
         <p className={styles.privacy}>Your transcript is private. Camera and microphone recordings are not saved.</p>
       </section>
@@ -126,7 +128,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       <details className={styles.breakdown}><summary>View the marking breakdown</summary><p>Each criterion is marked out of 100; the calibrated overall score is capped at 99%.</p>{feedback.rubric.map((item) => <div key={item.criterion}><h3>{item.criterion}<span>{item.score}/100</span></h3><p>{item.reason}</p></div>)}</details>
       <p className={styles.sourceNote}>Practice guidance, not an admissions prediction. Accent, camera use and eye contact are not scored.</p>
     </section>}
-    <footer className={styles.nextSteps}><div><h2>{onNext ? "Ready for the next one?" : "Put one improvement into practice"}</h2><p>{preview ? "Try the station again, or choose another topic." : "This attempt stays in saved interviews when you retry."}{onNext && breakRemaining > 0 && " The break timer is optional; continue whenever you feel ready."}</p></div><div><button type="button" className={styles.secondary} disabled={busy || needsSaving} onClick={onRetry}><RotateCcw size={16} /> Retry station</button>{onNext ? <button type="button" className={styles.primary} disabled={busy || needsSaving} onClick={onNext}>Next station <ArrowRight size={16} /></button> : needsSaving ? <button type="button" className={styles.primary} disabled>Choose another station <ArrowRight size={16} /></button> : <Link className={styles.primary} href="/phloemai/interviews/ai-interviews?setup=1">Choose another station <ArrowRight size={16} /></Link>}</div></footer>
+    <footer className={styles.nextSteps}><div><h2>{onNext ? "Ready for the next one?" : "Your interview review"}</h2><p>{preview ? "This preview is not saved." : "All saved stations are available in your interview history."}{onNext && breakRemaining > 0 && " The break timer is optional; continue whenever you feel ready."}</p></div><div><button type="button" className={styles.secondary} disabled={busy || needsSaving} onClick={onRetry}><RotateCcw size={16} /> Retry station</button>{onNext ? <button type="button" className={styles.primary} disabled={busy || needsSaving} onClick={onNext}>Next station <ArrowRight size={16} /></button> : needsSaving ? <button type="button" className={styles.primary} disabled>End interview <ArrowRight size={16} /></button> : <Link className={styles.primary} href="/phloemai/interviews">End interview <ArrowRight size={16} /></Link>}</div></footer>
     {upgradeOpen && <div className={styles.upgradeBackdrop} role="presentation" onClick={() => setUpgradeOpen(false)}><div role="dialog" aria-modal="true" aria-labelledby="upgrade-placeholder-title" className={styles.upgradeDialog} onClick={(event) => event.stopPropagation()}><button type="button" className={styles.closeUpgrade} aria-label="Close upgrade dialog" onClick={() => setUpgradeOpen(false)}><X size={17} /></button><p className={styles.eyebrow}>CREDITS PLACEHOLDER</p><h2 id="upgrade-placeholder-title">Upgrade for more AI feedback credits</h2><p>This is a placeholder popup for the credit upgrade flow. The real checkout or membership screen can be connected here.</p><div><Link className={styles.primary} href="/phloemai/pricing">View pricing <ArrowRight size={16} /></Link><button type="button" className={styles.secondary} onClick={() => setUpgradeOpen(false)}>Not now</button></div></div></div>}
   </div>;
 }

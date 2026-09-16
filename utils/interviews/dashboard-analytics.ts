@@ -1,4 +1,5 @@
 import type { InterviewAttempt } from "@/app/phloemai/interviews/_lib/interview-types";
+import type { ApplicantProfile } from "./applicant-profile";
 import { findInterviewStation, interviewStations } from "@/app/phloemai/interviews/_data/interview-stations";
 import { findInterviewUniversity } from "@/app/phloemai/interviews/_data/universities";
 
@@ -10,6 +11,7 @@ export const THEME_LABELS: Record<InterviewTheme, string> = {
 };
 
 export type PreparationProfile = {
+  applicant?: ApplicantProfile;
   experience: "starting" | "practising" | "polishing";
   focusThemes: InterviewTheme[];
   weeklyTarget: number;

@@ -10,7 +10,7 @@ const compiledModule = { exports: {} };
 new Function("module", "exports", ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2021 },
 }).outputText)(compiledModule, compiledModule.exports);
-const { filterSavedInterviews, canResumeSavedInterview, savedInterviewHref, savedInterviewStatus } = compiledModule.exports;
+const { filterSavedInterviews, groupSavedInterviews, canResumeSavedInterview, savedInterviewHref, savedInterviewStatus } = compiledModule.exports;
 
 function attempt(overrides = {}) {
   return {
@@ -19,6 +19,18 @@ function attempt(overrides = {}) {
     startedAtLabel: "12 Sept 2026, 10:30", ...overrides,
   };
 }
+
+test("complete interviews group stations in order and keep retries separate", () => {
+  const rows = [attempt({ id: "retry", circuitId: "retry", stationCount: 1 }), attempt({ id: "second", circuitId: "circuit", stationIndex: 1, stationCount: 2, title: "Ethics" }), attempt({ id: "first", circuitId: "circuit", stationIndex: 0, stationCount: 2 })];
+  const grouped = groupSavedInterviews(rows);
+  assert.equal(grouped.length, 2);
+  assert.equal(grouped[1].id, "first");
+  assert.deepEqual(grouped[1].stationTitles, ["Why medicine?", "Ethics"]);
+  assert.equal(filterSavedInterviews(grouped, "ethics", "all", "all")[0].id, "first");
+  const active = groupSavedInterviews([{ ...rows[1], canResume: true }, rows[2]])[0];
+  assert.equal(active.id, "second");
+  assert.equal(active.canResume, true);
+});
 
 test("university, word search and feedback filters combine without losing older retries", () => {
   const newest = attempt({ id: "newest" });

@@ -2,6 +2,7 @@ import { followUpsEnabled } from "@/app/phloemai/interviews/_lib/station-flow";
 import { findInterviewStation } from "@/app/phloemai/interviews/_data/interview-stations";
 import { generateInterviewFollowUp, interviewAiConfigured } from "@/utils/interviews/gemini";
 import { existingFollowUp, followUpClaimMask, practiceFollowUp } from "@/utils/interviews/follow-up";
+import { questionEligible, readApplicant } from "@/utils/interviews/applicant-profile";
 import { databaseError, InterviewError, interviewContext, interviewFailure, interviewJson, readInterviewBody, toInterviewAttempt, validId } from "@/utils/interviews/server";
 
 export const maxDuration = 25;
@@ -61,14 +62,21 @@ export async function POST(request: Request) {
 
     let source: "ai" | "practice" = "practice";
     let followUp = practiceFollowUp(answer, questionNumber);
+    const { data: preparation } = await admin.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle();
+    const applicant = readApplicant(preparation?.applicant);
     if (interviewAiConfigured()) {
       try {
-        followUp = await generateInterviewFollowUp({ title: station.lobbyTitle, theme: station.theme, question, answer, previousAnswers: snapshot.answers.filter((saved) => saved.question !== question), existingQuestions: snapshot.questions });
+        followUp = await generateInterviewFollowUp({ title: station.lobbyTitle, theme: station.theme, question, answer, previousAnswers: snapshot.answers.filter((saved) => saved.question !== question), existingQuestions: snapshot.questions, applicant });
         source = "ai";
       } catch {
         // No automatic provider/model retry, billing upgrade or second AI request.
         // The UI labels this local fallback as a practice prompt.
       }
+    }
+
+    if (!questionEligible(followUp, applicant)) {
+      followUp = practiceFollowUp(answer, questionNumber);
+      source = "practice";
     }
 
     // Merge independent follow-ups without overwriting other questions or answers.

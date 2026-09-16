@@ -48,7 +48,7 @@ const words = "During my care home volunteering I listened to residents and help
 const probe = "What changed in your understanding of listening when you worked with those residents?";
 const request = (body) => new Request("https://example.test/api/interviews/follow-up", { method: "POST", headers: { "Content-Type": "application/json", Origin: "https://example.test" }, body: JSON.stringify(body) });
 
-function harness({ generate = async () => probe, configured = true, enabled = true, user = "user-1", overrides = {} } = {}) {
+function harness({ generate = async () => probe, configured = true, enabled = true, user = "user-1", overrides = {}, applicant = {} } = {}) {
   const state = { row: {
     id: attemptId, user_id: "user-1", station_slug: "why-medicine", title: "Why medicine?", status: "in_progress",
     started_at: new Date(Date.now() - 120_000).toISOString(), preparation_seconds: 60, station_seconds: 480,
@@ -63,6 +63,7 @@ function harness({ generate = async () => probe, configured = true, enabled = tr
     update(value) { this.mutation = value; return this; }
     async maybeSingle() {
       if (this.table === "profiles") return { data: { current_plan: "premium" }, error: null };
+      if (this.table === "interview_preparation_profiles") return { data: { applicant }, error: null };
       const match = this.filters.every(([key, value]) => key === "questions" ? JSON.stringify(state.row.questions) === value : state.row[key] === value);
       if (!match) return { data: null, error: null };
       if (this.mutation) Object.assign(state.row, structuredClone(this.mutation));
@@ -78,6 +79,19 @@ function harness({ generate = async () => probe, configured = true, enabled = tr
   });
   return { state, post: (question = originals[0], extra = {}) => POST(request({ attemptId, question, ...extra })), POST };
 }
+
+test("generated personal-history probes require a saved applicant confirmation", async () => {
+  for (const applicant of [{}, { previousDegree: false }, { entryRoute: "graduate" }]) {
+    const api = harness({ applicant, generate: async () => "What did you learn from your previous degree?" });
+    const response = await api.post();
+    assert.equal(response.status, 200);
+    const result = await response.json();
+    assert.equal(result.source, "practice");
+    assert.doesNotMatch(result.followUp, /previous degree/);
+  }
+  const confirmed = harness({ applicant: { previousDegree: true }, generate: async () => "What did you learn from your previous degree?" });
+  assert.equal((await (await confirmed.post()).json()).source, "ai");
+});
 
 test("follow-ups use saved answers and persist between the main questions without losing autosaves", async () => {
   const { post, state } = harness({ generate: async (context, current) => {

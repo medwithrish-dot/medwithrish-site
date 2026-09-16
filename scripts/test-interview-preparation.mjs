@@ -46,5 +46,15 @@ test("goals and focus selections have enforced bounds", () => {
 
 test("caller-supplied identity and score fields cannot enter the saved profile", () => {
   const result = validatePreparation({ ...valid(), userId: "another-account", score: 99, current_plan: "premium", updatedAt: "2000-01-01" });
-  assert.deepEqual(Object.keys(result).sort(), ["experience", "focusThemes", "targets", "weeklyTarget"]);
+  assert.deepEqual(Object.keys(result).sort(), ["applicant", "experience", "focusThemes", "targets", "weeklyTarget"]);
+});
+
+test("applicant facts require explicit booleans and never infer a degree from graduate entry", () => {
+  const result = validatePreparation({ ...valid(), applicant: { entryRoute: "graduate", gapYear: false } });
+  assert.equal(result.applicant.entryRoute, "graduate");
+  assert.equal(result.applicant.previousDegree, null);
+  assert.equal(result.applicant.gapYear, false);
+  for (const applicant of [{ gapYear: "true" }, { previousDegree: 1 }, { entryRoute: "other" }, { arbitrary: true }, []]) {
+    assert.throws(() => validatePreparation({ ...valid(), applicant }));
+  }
 });

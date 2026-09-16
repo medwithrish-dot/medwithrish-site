@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, AudioLines, Check, CheckCircle2, Clock3, Headphones, Mic, MonitorPlay, ShieldCheck, SlidersHorizontal, Sparkles, Video, VideoOff, Volume2 } from "lucide-react";
-import { interviewUniversities } from "../_data/universities";
+import { standardInterviewUniversities as interviewUniversities, universityStationPresets, universityStationSlugs } from "../_data/university-stations";
 import { findInterviewStation, interviewStations, stationQuestionCount } from "../_data/interview-stations";
 import type { InterviewMode } from "../_lib/interview-types";
 import type { useInterviewDevices } from "../_lib/useInterviewDevices";
@@ -45,7 +45,7 @@ export function AIInterviewSetup(props: Props) {
   const initialStation = findInterviewStation(props.initialStationSlug ?? "why-medicine");
   const [preset, setPreset] = useState<"custom" | "university">(props.initialPlan?.mode === "university" || (!props.initialPlan && props.initialUniversitySlug) ? "university" : "custom");
   const [universitySlug, setUniversitySlug] = useState(props.initialPlan?.universitySlug ?? props.initialUniversitySlug ?? interviewUniversities[0].slug);
-  const [selected, setSelected] = useState<string[]>(props.initialPlan?.stationSlugs ?? (props.initialMockCircuit ? INTERVIEW_PATHWAY.map((station) => station.mockStation) : props.initialUniversitySlug ? interviewStations.slice(0, Math.min(9, interviewUniversities.find((item) => item.slug === props.initialUniversitySlug)?.stationCount ?? 5)).map((item) => item.slug) : [initialStation?.slug ?? "why-medicine"]));
+  const [selected, setSelected] = useState<string[]>(props.initialPlan?.stationSlugs ?? (props.initialMockCircuit ? INTERVIEW_PATHWAY.map((station) => station.mockStation) : props.initialUniversitySlug ? universityStationSlugs(props.initialUniversitySlug) : [initialStation?.slug ?? "why-medicine"]));
   const university = interviewUniversities.find((item) => item.slug === universitySlug) ?? interviewUniversities[0];
   const stationSlugs = interviewStations.filter((item) => selected.includes(item.slug)).map((item) => item.slug);
   const plan: InterviewRoomPlan = {
@@ -59,7 +59,7 @@ export function AIInterviewSetup(props: Props) {
   const duration = Math.ceil((stationSlugs.length * (plan.preparationSeconds + plan.stationSeconds) + Math.max(0, stationSlugs.length - 1) * plan.breakSeconds) / 60);
   const changePreset = (value: typeof preset) => {
     setPreset(value);
-    setSelected(interviewStations.slice(0, value === "university" ? Math.min(9, university.stationCount) : 5).map((item) => item.slug));
+    setSelected(value === "university" ? universityStationSlugs(university.slug) : ["why-medicine"]);
   };
   const device = props.devices;
 
@@ -69,7 +69,7 @@ export function AIInterviewSetup(props: Props) {
       <section className={styles.setupCard} aria-labelledby="stations-heading">
         <div className={styles.cardHeading}><span className={styles.sectionIcon}><SlidersHorizontal size={19} /></span><div><h2 id="stations-heading">Build your interview</h2><p>Keep what you need. Skip what you don’t.</p></div></div>
         <div className={styles.presetPicker} aria-label="Interview format">{([['custom', 'Custom MMI circuit'], ['university', 'University']] as const).map(([value, label]) => <button type="button" key={value} aria-pressed={preset === value} onClick={() => changePreset(value)}>{label}</button>)}</div>
-        {preset === "university" && <div className={styles.universityChoice}><label htmlFor="room-university">Your university</label><select id="room-university" value={universitySlug} onChange={(event) => { setUniversitySlug(event.target.value); const entry = interviewUniversities.find((item) => item.slug === event.target.value)!; setSelected(interviewStations.slice(0, Math.min(9, entry.stationCount)).map((item) => item.slug)); }}>{interviewUniversities.map((entry) => <option key={entry.slug} value={entry.slug}>{entry.name}</option>)}</select><p>{university.format} practice · {plan.stationSeconds / 60} min per station. You can customise the topics below.</p><AnimatedDisclosure title="About these practice timings"><p>{university.timingNote} Your selected topics form a custom rehearsal.</p><a href={university.sourceUrl} target="_blank" rel="noreferrer">Official admissions information ↗</a></AnimatedDisclosure></div>}
+        {preset === "university" && <div className={styles.universityChoice}><label htmlFor="room-university">Your university</label><select id="room-university" value={universitySlug} onChange={(event) => { setUniversitySlug(event.target.value); setSelected(universityStationSlugs(event.target.value)); }}>{interviewUniversities.map((entry) => <option key={entry.slug} value={entry.slug}>{entry.name}</option>)}</select><p>{university.format} practice · {plan.stationSeconds / 60} min per station.</p><p>{universityStationPresets[university.slug] ? "Selected practice topics reflect published assessment areas. Actual stations may differ." : "Specific station topics are not confirmed here. Choose the topics you want to practise."}</p><AnimatedDisclosure title="About these practice timings"><p>{university.timingNote} Your selected topics form a custom rehearsal.</p><a href={universityStationPresets[university.slug]?.source ?? university.sourceUrl} target="_blank" rel="noreferrer">Official admissions information ↗</a></AnimatedDisclosure></div>}
         <div className={styles.stationListHeading}><span>{selected.length} {selected.length === 1 ? "station" : "stations"} included</span><div><button type="button" onClick={() => setSelected(interviewStations.map((item) => item.slug))}>Select all</button><span>·</span><button type="button" onClick={() => setSelected([])}>Clear</button></div></div>
         <div className={styles.stationList}>{interviewStations.map((station, index) => {
           const included = selected.includes(station.slug);

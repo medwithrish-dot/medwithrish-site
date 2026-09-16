@@ -30,8 +30,8 @@ async function reviewRequest(path: string, method = "GET", body?: unknown): Prom
   } finally { window.clearTimeout(timeout); }
 }
 
-export function SavedInterviewReview({ initialAttempt, configured: initialConfigured, serverNow, abandoned = false }: {
-  initialAttempt: InterviewAttempt; configured: boolean; serverNow: string; abandoned?: boolean;
+export function SavedInterviewReview({ initialAttempt, configured: initialConfigured, serverNow, abandoned = false, hasLaterStation = false }: {
+  initialAttempt: InterviewAttempt; configured: boolean; serverNow: string; abandoned?: boolean; hasLaterStation?: boolean;
 }) {
   const router = useRouter();
   const [attempt, setAttempt] = useState(initialAttempt);
@@ -161,7 +161,7 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
     {active ? <section className="rounded-2xl border border-[#dce6e5] bg-white p-7"><p className="text-xs font-bold uppercase tracking-widest text-[#08787b]">Interview in progress</p><h1 className="mt-3 text-2xl font-bold text-[#042724]">{attempt.title}</h1><p className="mt-3 text-sm leading-7 text-[#526b72]">Your station is still running. Resume your interview to continue; your transcript and answer framework will be ready when it ends.</p><Link href={interviewHref} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#08787b] px-5 py-3 text-sm font-bold text-white">Resume station <ArrowRight size={16} /></Link></section> : <>
       {abandoned && <p className="mb-5 rounded-xl bg-white p-4 text-sm leading-6 text-[#526b72]">This older attempt was ended without submission. Your saved transcript and study guide are available, and you can retry the station.</p>}
       <AIInterviewReview attempt={attempt} configured={configured && !abandoned} busy={Boolean(busy)} onGenerate={() => void runAction("generate")} onRetry={() => void runAction("retry")} />
-      {!abandoned && attempt.completedAt && attempt.status !== "in_progress" && attempt.stationIndex + 1 < attempt.stationCount && <div className="mt-5 rounded-xl border border-[#cce2db] bg-[#edf7f2] p-5 text-sm leading-6 text-[#254f46]"><p>Your circuit has more stations. Return to the interview room to choose your next topic when the break ends.</p><Link href={interviewHref} className="mt-2 inline-flex items-center gap-2 font-bold underline">Continue this circuit <ArrowRight size={16} /></Link></div>}
+      {!hasLaterStation && !abandoned && attempt.completedAt && attempt.status !== "in_progress" && attempt.stationIndex + 1 < attempt.stationCount && <div className="mt-5 rounded-xl border border-[#cce2db] bg-[#edf7f2] p-5 text-sm leading-6 text-[#254f46]"><p>Your interview has more stations. Continue whenever you are ready.</p><Link href={interviewHref} className="mt-2 inline-flex items-center gap-2 font-bold underline">Continue this interview <ArrowRight size={16} /></Link></div>}
     </>}
   </>;
 }

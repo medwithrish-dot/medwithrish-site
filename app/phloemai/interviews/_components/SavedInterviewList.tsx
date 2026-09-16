@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, BookOpen, CheckCircle2, Clock3, Search, X } from "lucide-react";
-import { filterSavedInterviews, savedInterviewHref, savedInterviewStatus, type SavedInterviewStatus, type SavedInterviewSummary } from "../_lib/saved-interviews";
+import { filterSavedInterviews, groupSavedInterviews, savedInterviewHref, savedInterviewStatus, type SavedInterviewStatus, type SavedInterviewSummary } from "../_lib/saved-interviews";
 
 const PAGE_SIZE = 20;
 const fieldClass = "w-full rounded-xl border border-[#ccdcda] bg-white px-3 py-3 text-sm outline-none focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15";
@@ -13,7 +13,7 @@ export function SavedInterviewList({ attempts, showFilters = true }: { attempts:
   const [university, setUniversity] = useState("all");
   const [status, setStatus] = useState<SavedInterviewStatus>("all");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const filtered = filterSavedInterviews(attempts, query, university, status);
+  const filtered = filterSavedInterviews(groupSavedInterviews(attempts), query, university, status);
   const universities = Array.from(new Map(attempts.filter((attempt) => attempt.universitySlug).map((attempt) => [attempt.universitySlug!, attempt.universityName])).entries())
     .sort((a, b) => a[1].localeCompare(b[1], "en-GB"));
   const filtering = Boolean(query.trim()) || university !== "all" || status !== "all";
@@ -68,6 +68,7 @@ export function SavedInterviewList({ attempts, showFilters = true }: { attempts:
           <span className="min-w-0 flex-1">
             <span className="block text-[11px] font-semibold text-[#58716f]">{attempt.universityName}</span>
             <span className="mt-1 block font-semibold text-[#183d39] group-hover:text-[#08787b]">{attempt.title}</span>
+            {attempt.stationTitles && <span className="mt-1 block text-xs leading-5 text-[#526b72]">{attempt.stationTitles.join(" / ")}</span>}
             <span className="mt-1.5 block text-xs leading-5 text-[#62777e]">{savedInterviewStatus(attempt)}<span className="mx-1.5" aria-hidden="true">·</span>{attempt.startedAtLabel}</span>
           </span>
           <span className="flex shrink-0 flex-col items-end gap-1.5 text-[#08787b]">

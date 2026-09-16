@@ -5,7 +5,31 @@ export type SavedInterviewSummary = Pick<InterviewAttempt, "id" | "title" | "sta
   startedAtLabel: string;
   feedbackScore: number | null;
   canResume: boolean;
+  circuitId?: string;
+  stationIndex?: number;
+  stationCount?: number;
+  stationTitles?: string[];
 };
+
+export function groupSavedInterviews(attempts: SavedInterviewSummary[]) {
+  const circuits = new Map<string, SavedInterviewSummary[]>();
+  for (const attempt of attempts) {
+    const key = attempt.circuitId ?? attempt.id;
+    circuits.set(key, [...(circuits.get(key) ?? []), attempt]);
+  }
+  return [...circuits.values()].map((stations) => {
+    const ordered = stations.toSorted((a, b) => (a.stationIndex ?? 0) - (b.stationIndex ?? 0));
+    const first = ordered.find((station) => station.canResume) ?? ordered[0];
+    if ((first.stationCount ?? 1) === 1 && stations.length === 1) return first;
+    const scores = stations.flatMap((station) => station.feedbackScore === null ? [] : [station.feedbackScore]);
+    return {
+      ...first,
+      title: `Interview - ${stations.length} of ${first.stationCount ?? stations.length} stations saved`,
+      stationTitles: ordered.map((station) => station.title),
+      feedbackScore: scores.length ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : null,
+    };
+  });
+}
 
 export type SavedInterviewStatus = "all" | "feedback" | "saved" | "in_progress";
 
@@ -25,7 +49,7 @@ export function filterSavedInterviews(
 ) {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   return attempts.filter((attempt) => {
-    const searchable = `${attempt.title} ${attempt.stationSlug.replaceAll("-", " ")} ${attempt.universityName} ${attempt.universitySlug ?? ""} ${attempt.startedAtLabel}`.toLowerCase();
+    const searchable = `${attempt.title} ${attempt.stationTitles?.join(" ") ?? ""} ${attempt.stationSlug.replaceAll("-", " ")} ${attempt.universityName} ${attempt.universitySlug ?? ""} ${attempt.startedAtLabel}`.toLowerCase();
     const matchesUniversity = university === "all" || (university === "general" ? !attempt.universitySlug : attempt.universitySlug === university);
     const matchesStatus = status === "all"
       || (status === "feedback" && attempt.feedbackScore !== null)

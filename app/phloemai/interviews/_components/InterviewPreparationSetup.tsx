@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, CalendarDays, Check, ChevronDown, GraduationCap, Loader2, Plus, Search, Settings2, Target, X } from "lucide-react";
 import { interviewUniversities } from "../_data/universities";
 import { THEME_LABELS, type InterviewTheme, type PreparationProfile } from "@/utils/interviews/dashboard-analytics";
+import { readApplicant, type ApplicantProfile } from "@/utils/interviews/applicant-profile";
 
 export type InterviewPreparationSetupProps = {
   initialProfile: PreparationProfile | null;
@@ -30,7 +31,7 @@ function emptyProfile(): PreparationProfile {
 }
 
 function copyProfile(profile: PreparationProfile | null): PreparationProfile {
-  return profile ? { ...profile, focusThemes: [...profile.focusThemes], targets: profile.targets.map((target) => ({ ...target })) } : emptyProfile();
+  return profile ? { ...profile, applicant: readApplicant(profile.applicant), focusThemes: [...profile.focusThemes], targets: profile.targets.map((target) => ({ ...target })) } : emptyProfile();
 }
 
 function searchText(value: string) {
@@ -127,7 +128,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
         method: "PUT", cache: "no-store", signal: AbortSignal.timeout(15_000), headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           experience: draft.experience, focusThemes: draft.focusThemes,
-          weeklyTarget: draft.weeklyTarget, targets: draft.targets,
+          weeklyTarget: draft.weeklyTarget, targets: draft.targets, applicant: readApplicant(draft.applicant),
         }),
       });
       const result = await response.json().catch(() => null) as { profile?: PreparationProfile; error?: string } | null;
@@ -156,12 +157,15 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#cde5dc] bg-[#e6f3eb] text-[#08787b]" aria-hidden="true"><Settings2 size={21} /></span>
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#6e8a79]">Your preparation, your pace</p>
-          <h2 id={`${uniqueId}-title`} className="mt-1 text-lg font-bold tracking-tight text-[#123a3c]">{savedProfile ? "Your preparation plan" : "Make this dashboard yours."}</h2>
-          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-[#536d72]">{savedProfile ? "Keep your universities, interview dates and weekly routine up to date." : "Choose your universities and a routine that fits. You can add interview dates whenever you know them."}</p>
+          <h2 id={`${uniqueId}-title`} className="mt-1 text-lg font-bold tracking-tight text-[#123a3c]">Your interviews and applicant details</h2>
+          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-[#536d72]">Universities, interview dates, application route and personal experience.</p>
           {savedProfile && !expanded && <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-[#43625d]">
             <span className="inline-flex items-center gap-1.5"><GraduationCap size={14} aria-hidden="true" />{savedProfile.targets.length} {savedProfile.targets.length === 1 ? "university" : "universities"}</span>
             <span className="inline-flex items-center gap-1.5"><CalendarDays size={14} aria-hidden="true" />{knownDateCount ? `${knownDateCount} ${knownDateCount === 1 ? "date" : "dates"} added` : "Dates to be confirmed"}</span>
             <span className="inline-flex items-center gap-1.5"><Target size={14} aria-hidden="true" />{savedProfile.weeklyTarget} {savedProfile.weeklyTarget === 1 ? "station" : "stations"} / week</span>
+            <span>{savedProfile.applicant?.entryRoute === "graduate" ? "Graduate entry" : savedProfile.applicant?.entryRoute === "undergraduate" ? "Undergraduate entry" : "Application route not confirmed"}</span>
+            {savedProfile.applicant?.gapYear === true && <span>Gap year</span>}
+            {savedProfile.applicant?.previousDegree === true && <span>Previous degree</span>}
           </div>}
         </div>
       </div>
@@ -209,6 +213,29 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
           {experiences.map((experience) => <label key={experience.id} className={`relative cursor-pointer rounded-xl border p-3.5 transition has-focus-visible:ring-2 has-focus-visible:ring-[#08787b]/30 ${draft.experience === experience.id ? "border-[#83b49c] bg-[#eaf5ee]" : "border-[#dce5e1] bg-white hover:border-[#9cbaa8]"}`}><input type="radio" name={`${uniqueId}-experience`} value={experience.id} checked={draft.experience === experience.id} onChange={() => { setDraft((current) => ({ ...current, experience: experience.id })); setNotice(""); }} className="sr-only" /><span className="flex items-center justify-between gap-2 text-xs font-bold text-[#315b4e]">{experience.label}{draft.experience === experience.id && <Check size={14} aria-hidden="true" />}</span><span className="mt-1.5 block text-[11px] leading-5 text-[#738579]">{experience.description}</span></label>)}
         </div></fieldset>
 
+        <fieldset className="min-w-0 border-t border-[#dce8e2] pt-5">
+          <legend className="text-sm font-bold text-[#123a3c]">Your applicant details</legend>
+          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+            <label className="text-xs font-semibold text-[#315451]">Application route
+              <select className={`${field} mt-2`} value={draft.applicant?.entryRoute ?? ""} onChange={(event) => setDraft((current) => ({ ...current, applicant: { ...readApplicant(current.applicant), entryRoute: (event.target.value || null) as ApplicantProfile["entryRoute"] } }))}>
+                <option value="">Not confirmed</option><option value="undergraduate">Undergraduate medicine</option><option value="graduate">Graduate-entry medicine</option>
+              </select>
+            </label>
+            {([
+              ["gapYear", "Have you taken or are you taking a gap year?"],
+              ["previousDegree", "Have you completed a previous degree?"],
+              ["workExperience", "Have you done healthcare work experience?"],
+              ["volunteering", "Have you done volunteering?"],
+              ["reapplicant", "Are you reapplying to medicine?"],
+              ["international", "Are you an international applicant?"],
+              ["careerChanger", "Are you changing from another career?"],
+            ] as const).map(([key, label]) => <label key={key} className="text-xs font-semibold text-[#315451]">{label}
+              <select className={`${field} mt-2`} value={draft.applicant?.[key] == null ? "" : String(draft.applicant[key])} onChange={(event) => setDraft((current) => ({ ...current, applicant: { ...readApplicant(current.applicant), [key]: event.target.value === "" ? null : event.target.value === "true" } }))}>
+                <option value="">Not confirmed</option><option value="true">Yes</option><option value="false">No</option>
+              </select>
+            </label>)}
+          </div>
+        </fieldset>
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_220px]">
           <fieldset className="min-w-0"><legend className="text-sm font-bold text-[#123a3c]">What would you like to work on?</legend><p id={`${uniqueId}-theme-help`} className="mt-2 text-xs leading-5 text-[#6a8180]">Choose up to three areas, or leave this open for now.</p><div className="mt-3 flex flex-wrap gap-2" aria-describedby={`${uniqueId}-theme-help`}>
             {themes.map((theme) => { const chosen = draft.focusThemes.includes(theme); return <button key={theme} type="button" aria-pressed={chosen} disabled={!chosen && draft.focusThemes.length >= 3} onClick={() => toggleTheme(theme)} className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-2 text-[11px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 ${chosen ? "border-[#83b49c] bg-[#eaf5ee] text-[#315b4e]" : "border-[#dce5e1] bg-white text-[#637b70] hover:border-[#9cbaa8]"}`}>{chosen && <Check size={12} aria-hidden="true" />}{THEME_LABELS[theme]}</button>; })}

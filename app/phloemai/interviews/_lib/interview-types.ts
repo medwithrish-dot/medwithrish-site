@@ -1,5 +1,10 @@
 export type InterviewMode = "free" | "university" | "station" | "reference";
-export type InterviewAnswer = { question: string; answer: string };
+export type InterviewAnswer = {
+  question: string;
+  answer: string;
+  interviewerIntro?: string;
+  interviewerPrompts?: { text: string; answerOffset: number }[];
+};
 export type InterviewFeedback = {
   score: number;
   summary: string;

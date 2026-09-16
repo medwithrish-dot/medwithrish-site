@@ -14,7 +14,9 @@ For the existing PhloemAI Supabase project, open **SQL Editor**, run each comple
 4. `supabase/phloemai_interview_dashboard.sql` — university choices/dates, preparation goals, task completion and precise practice-time tracking. If steps 1–3 are already installed, only this new file is needed for dashboard personalisation.
 5. `supabase/phloemai_interview_name_moderation.sql` — blocks offensive public leaderboard nicknames, including common letter/number and separator disguises. Existing offensive nicknames become a neutral Candidate nickname; scores and sharing preferences are preserved. If the platform is already installed, run this new file once. Both single-paste setup files also include it.
 
-If the question bank's existing account progress has never been set up, also run `supabase/phloemai_interview_question_progress.sql`. The interview scripts do not replace that feature.
+6. `supabase/phloemai_interview_applicant_activity.sql` adds saved applicant confirmations and durable daily question activity. Run after both dashboard and question-progress setup. It is additive and rerunnable. Existing interviews and dates are preserved; applicant facts default to unconfirmed. The daily chart counts distinct completed bank questions per London day, including bank questions answered in interviews. Existing question-progress rows backfill their latest completion day; earlier overwritten bank completions cannot be reconstructed.
+
+If the question bank's existing account progress has never been set up, also run `supabase/phloemai_interview_question_progress.sql` before step 6. The interview scripts do not replace that feature.
 
 For a completely new database, first run `supabase/phloemai_setup.sql`, `supabase/phloemai_practice_setup.sql`, `supabase/phloemai_stripe_setup.sql`, and `supabase/phloemai_interview_question_progress.sql`, then the numbered steps above. Use the SQL Editor's normal privileged database role. The new tables and functions are additive and rerunnable; they do not overwrite accounts or existing practice history.
 

@@ -153,16 +153,17 @@ test("circuits can continue after ungraded submission and failed or pending opti
   }
 });
 
-test("ungraded circuit continuation still enforces completion, abandonment and breaks", async () => {
+test("ungraded circuit continuation enforces completion and abandonment with an optional break", async () => {
   for (const overrides of [
     { status: "failed", last_error: "awaiting_feedback", completed_at: null, answer_submitted_at: null },
     { status: "failed", last_error: "abandoned", completed_at: "2020-01-01T00:00:00Z", answer_submitted_at: "2020-01-01T00:00:00Z" },
-    { status: "failed", last_error: "awaiting_feedback", completed_at: new Date().toISOString(), answer_submitted_at: new Date().toISOString() },
   ]) {
     const api = harness({ overrides });
     assert.equal((await api.post({ mode: "reference", circuitId, stationIndex: 1, stationSlug: "data-analysis" })).status, 409);
     assert.equal(api.state.reservations.length, 0);
   }
+  const ready = harness({ overrides: { status: "failed", last_error: "awaiting_feedback", completed_at: new Date().toISOString(), answer_submitted_at: new Date().toISOString() } });
+  assert.equal((await ready.post({ mode: "reference", circuitId, stationIndex: 1, stationSlug: "data-analysis" })).status, 200);
 });
 
 test("a university station retry reserves a new circuit with the same university timing", async () => {

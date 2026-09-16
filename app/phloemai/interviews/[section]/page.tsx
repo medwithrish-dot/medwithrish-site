@@ -9,6 +9,7 @@ import { InterviewGroups } from "../_components/InterviewGroups";
 import { InterviewLeaderboard } from "../_components/InterviewLeaderboard";
 import { InterviewPreparationViews } from "../_components/InterviewPreparationViews";
 import { InterviewGuides } from "../_components/InterviewGuides";
+import { isAcademicInterview } from "../_data/university-stations";
 
 const pages: Record<string, { title: string; subtitle: string; activeLabel: string }> = {
   "ai-interviews": { title: "Start AI Interview Practice", subtitle: "Choose the free station, a university preset, or a focused interview topic.", activeLabel: "AI Interviews" },
@@ -31,6 +32,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   const config = pages[section];
   if (!config) notFound();
   const search = await searchParams;
+  if (section === "ai-interviews" && isAcademicInterview(single(search.university)) && !single(search.attempt)) {
+    return <InterviewShell {...config}><p className="mb-5 text-sm text-[#526b72]">Oxford and Cambridge academic interviews will have a separate interview format.</p><AIInterviewLanding /></InterviewShell>;
+  }
   if (section === "question-bank") {
     const { isPremium } = await getPhloemEntitlements();
     const subcategory = single(search.subcategory);

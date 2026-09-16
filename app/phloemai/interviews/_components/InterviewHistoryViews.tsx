@@ -13,7 +13,10 @@ async function savedInterviewHistory() {
   const loadedAt = Date.now();
   const savedAttempts = attempts.map((attempt) => ({
     id: attempt.id,
-    title: attempt.title,
+    circuitId: attempt.circuitId,
+    stationIndex: attempt.stationIndex,
+    stationCount: attempt.stationCount,
+    title: interviewStations.find((station) => station.slug === attempt.stationSlug)?.title ?? attempt.title,
     stationSlug: attempt.stationSlug,
     universitySlug: attempt.universitySlug,
     universityName: attempt.universitySlug ? universityNames.get(attempt.universitySlug) ?? attempt.universitySlug.replaceAll("-", " ") : "General practice",

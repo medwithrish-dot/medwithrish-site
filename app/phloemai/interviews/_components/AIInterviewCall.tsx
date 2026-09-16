@@ -7,6 +7,7 @@ import type { useInterviewDevices } from "../_lib/useInterviewDevices";
 import type { useInterviewSpeech } from "../_lib/useInterviewSpeech";
 import { InterviewDevicePreview } from "./InterviewDevicePreview";
 import { DONE_PROMPT, questionTransition } from "../_lib/station-flow";
+import { answerConversation } from "../_lib/interviewer-transcript";
 import { findInterviewStation } from "../_data/interview-stations";
 import { SpeechDeliveryHints } from "./SpeechDeliveryHints";
 import styles from "./AIInterviewRoom.module.css";
@@ -50,7 +51,9 @@ export function AIInterviewCall(props: Props) {
   const liveAnswer = [answer, speech.listening && !props.awaitingDone ? speech.interimTranscript : ""].filter(Boolean).join(" ");
   const microphonePending = devices.microphonePermission === "requesting";
   const microphoneLabel = microphonePending ? "Allow microphone in your browser" : props.micWanted && !speech.error ? "Stop mic" : "Start mic";
-  const mainQuestions: readonly string[] = findInterviewStation(attempt.stationSlug)?.questions ?? [];
+  const mainQuestions: readonly string[] = attempt.questionIds?.some(Boolean)
+    ? attempt.questions.filter((_, index) => Boolean(attempt.questionIds?.[index]))
+    : findInterviewStation(attempt.stationSlug)?.questions ?? [];
   const transition = (index: number) => questionTransition(index, !mainQuestions.includes(attempt.questions[index]));
   useEffect(() => {
     if (speech.listening && answerInput.current) answerInput.current.scrollTop = answerInput.current.scrollHeight;
@@ -161,9 +164,8 @@ export function AIInterviewCall(props: Props) {
           <div ref={transcriptScroll} className={styles.transcriptScroll}>
             {questionIndex > 0 && <ol className={styles.conversationHistory} aria-label="Conversation history">{attempt.questions.slice(0, questionIndex).map((previousQuestion, index) => <li key={`${index}:${previousQuestion}`}>
               {transition(index) && <p className={styles.questionTransition}>{transition(index)}</p>}
-              <div className={styles.transcriptQuestion}><span className={styles.miniInterviewer}><AudioLines size={19} /></span><div><strong>AI Interviewer · Question {index + 1}</strong><p>{previousQuestion}</p></div></div>
-              <div className={styles.answerHeading}><span className={styles.miniYou}><UserRound size={16} /></span><strong>You</strong></div>
-              <p className={styles.historyAnswer}>{answers.find((item) => item.question === previousQuestion)?.answer || "No answer added."}</p>
+              <div className={styles.transcriptQuestion}><span className={styles.miniInterviewer}><AudioLines size={19} /></span><div><strong>AI Interviewer · Question {index + 1}</strong>{answers.find((item) => item.question === previousQuestion)?.interviewerIntro && <p>{answers.find((item) => item.question === previousQuestion)?.interviewerIntro}</p>}<p>{previousQuestion}</p></div></div>
+              {answerConversation(answers.find((item) => item.question === previousQuestion) ?? { question: previousQuestion, answer: "" }).map((turn, turnIndex) => <div key={turnIndex}><div className={styles.answerHeading}><strong>{turn.speaker === "You" ? "You" : "AI Interviewer"}</strong></div><p className={styles.historyAnswer}>{turn.text || "No answer added."}</p></div>)}
             </li>)}</ol>}
             <div ref={currentTurn}>
               {transition(questionIndex) && <p className={styles.questionTransition}>{transition(questionIndex)}</p>}
