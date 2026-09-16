@@ -6,6 +6,8 @@ import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { runInNewContext } from "node:vm";
+import { INTERVIEW_QUESTIONS } from "../app/phloemai/interviews/_data/interviewQuestionBank.ts";
+import { stationQuestionCount } from "../app/phloemai/interviews/_data/interview-stations.ts";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
@@ -18,6 +20,7 @@ function sessionRoute({ premium = true, previous = null } = {}) {
   const reservations = [];
   const filters = [];
   const mutations = [];
+  const questionProgress = [];
   class InterviewError extends Error {
     constructor(message, status = 400) { super(message); this.status = status; }
   }
@@ -30,7 +33,7 @@ function sessionRoute({ premium = true, previous = null } = {}) {
   const server = {
     InterviewError,
     interviewContext: async () => ({ user: { id: "test-user" }, isPremium: premium, admin: {
-      from: () => query,
+      from: table => table === "interview_question_progress" ? { upsert: async rows => { questionProgress.push(...rows); return { error: null }; } } : query,
       rpc: async (name, args) => { reservations.push({ name, ...args }); return { data: args.p_payload, error: null }; },
     } }),
     readInterviewBody: async request => request.json(),
@@ -58,7 +61,7 @@ function sessionRoute({ premium = true, previous = null } = {}) {
   }
   const route = load(resolve(root, "app/api/interviews/session/route.ts"));
   return {
-    reservations, filters, mutations,
+    reservations, filters, mutations, questionProgress,
     post: body => route.POST(new Request("http://localhost/api/interviews/session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })),
     patch: body => route.PATCH(new Request("http://localhost/api/interviews/session", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })),
   };
@@ -71,8 +74,19 @@ test("a custom circuit reserves the chosen first topic and count", async () => {
   const payload = api.reservations[0].p_payload;
   assert.equal(payload.station_count, 3);
   assert.equal(payload.station_slug, "work-experience");
-  assert.match(payload.questions[0], /experience/);
+  assert.equal(payload.questions.length, 3);
+  assert.ok(payload.questions.every((text) => INTERVIEW_QUESTIONS.some((question) => question.text === text && question.subcategory === "Work Experience & Reflection")));
   assert.equal(payload.break_seconds, 120);
+});
+
+test("station timing and lobby labels do not preview the hidden topic", () => {
+  assert.equal(stationQuestionCount(480), 3);
+  assert.equal(stationQuestionCount(300), 2);
+  const lobby = readFileSync(resolve(root, "app/phloemai/interviews/_components/AIInterviewSetup.tsx"), "utf8");
+  assert.doesNotMatch(lobby, /Free AI challenge/);
+  assert.match(lobby, /Custom MMI circuit/);
+  assert.match(lobby, /station\.lobbyTitle/);
+  assert.doesNotMatch(lobby, /<strong>\{station\.title\}<\/strong>/);
 });
 
 test("university customisation preserves that university's practice timings", async () => {
@@ -333,6 +347,21 @@ test("manual microphone off stays off after subsequent room renders", async () =
   await room.flush(); room.render(); room.render();
   assert.equal(room.recognitionStarts, 1);
   assert.equal(room.latestCall().speech.listening, false);
+});
+
+test("finishing a station marks each answered bank question completed", async () => {
+  const bankQuestions = INTERVIEW_QUESTIONS.filter((question) => question.subcategory === "Motivation for Medicine").slice(0, 2);
+  const previous = {
+    id: circuitId, status: "in_progress", started_at: new Date().toISOString(), preparation_seconds: 0, station_seconds: 480,
+    stationSeconds: 480, questions: bankQuestions.map((question) => question.text), questionIds: bankQuestions.map((question) => question.id),
+    answers: [{ question: bankQuestions[0].text, answer: "A thoughtful answer with enough detail." }, { question: bankQuestions[1].text, answer: "" }],
+  };
+  const api = sessionRoute({ previous });
+  assert.equal((await api.patch({ attemptId: circuitId, answers: previous.answers, finish: true })).status, 200);
+  assert.equal(api.questionProgress.length, 1);
+  assert.equal(api.questionProgress[0].question_id, bankQuestions[0].id);
+  assert.equal(api.questionProgress[0].status, "completed");
+  assert.equal(api.questionProgress[0].suggested_seconds, 240);
 });
 
 test("microphone off then on during a spoken question waits for playback and preserves automatic confirmation", async () => {

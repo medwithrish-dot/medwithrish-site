@@ -22,7 +22,9 @@ export async function POST(request: Request) {
     const station = findInterviewStation(row.station_slug);
     if (!station) throw new InterviewError("Station not found", 404);
     if (!followUpsEnabled(station.slug)) throw new InterviewError("Follow-ups are not enabled for this station.", 403);
-    const originals: readonly string[] = station.questions;
+    const snapshot = toInterviewAttempt(row);
+    const bankOriginals = snapshot.questions.filter((_, index) => Boolean(snapshot.questionIds?.[index]));
+    const originals: readonly string[] = bankOriginals.length ? bankOriginals : station.questions;
     const questionNumber = originals.indexOf(body.question);
     if (questionNumber < 0 || !row.questions.includes(body.question)) throw new InterviewError("Follow-ups are available once for each main question");
     const question = body.question;
@@ -42,7 +44,6 @@ export async function POST(request: Request) {
     const existing = existingFollowUp(row.questions, question, originals);
     if (existing) return reply(row, existing, "saved");
 
-    const snapshot = toInterviewAttempt(row);
     const answer = snapshot.answers.find((saved) => saved.question === question)?.answer.trim() ?? "";
     if (answer.split(/\s+/).filter(Boolean).length < 20) throw new InterviewError("Save at least 20 words in this answer before asking a follow-up.");
     if (answer.length > 8000 || snapshot.answers.reduce((sum, saved) => sum + saved.answer.length, 0) > 18000) throw new InterviewError("Please shorten your answer before asking a follow-up.");
@@ -62,7 +63,7 @@ export async function POST(request: Request) {
     let followUp = practiceFollowUp(answer, questionNumber);
     if (interviewAiConfigured()) {
       try {
-        followUp = await generateInterviewFollowUp({ title: station.title, theme: station.theme, question, answer, previousAnswers: snapshot.answers.filter((saved) => saved.question !== question), existingQuestions: snapshot.questions });
+        followUp = await generateInterviewFollowUp({ title: station.lobbyTitle, theme: station.theme, question, answer, previousAnswers: snapshot.answers.filter((saved) => saved.question !== question), existingQuestions: snapshot.questions });
         source = "ai";
       } catch {
         // No automatic provider/model retry, billing upgrade or second AI request.

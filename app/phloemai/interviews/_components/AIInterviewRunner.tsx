@@ -367,7 +367,11 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const secondsRemaining = Math.max(0, Math.ceil(((preparing ? preparationEnd : stationEnd) - now) / 1000));
   const breakRemaining = attempt?.nextAvailableAt ? Math.max(0, Math.ceil((Date.parse(attempt.nextAvailableAt) - now) / 1000)) : 0;
   const question = attempt?.questions[questionIndex] ?? "";
-  const originalQuestions: readonly string[] = useMemo(() => attempt ? findInterviewStation(attempt.stationSlug)?.questions ?? [] : [], [attempt]);
+  const originalQuestions: readonly string[] = useMemo(() => attempt
+    ? attempt.questionIds?.some(Boolean)
+      ? attempt.questions.filter((_, index) => Boolean(attempt.questionIds?.[index]))
+      : findInterviewStation(attempt.stationSlug)?.questions ?? []
+    : [], [attempt]);
   const followingQuestion = attempt?.questions[questionIndex + 1];
   const followUpAvailable = !preview && Boolean(attempt && followUpsEnabled(attempt.stationSlug)) && originalQuestions.includes(question)
     && (!followingQuestion || originalQuestions.includes(followingQuestion));
@@ -455,7 +459,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         const station = findInterviewStation(options.stationSlug ?? plan.stationSlugs[0])!;
         applyResponse({ attempt: {
           id: `preview-${crypto.randomUUID()}`, mode: plan.mode, universitySlug: plan.universitySlug ?? null,
-          stationSlug: station.slug, title: station.title, status: "in_progress", startedAt: new Date().toISOString(), completedAt: null,
+          stationSlug: station.slug, title: station.lobbyTitle, status: "in_progress", startedAt: new Date().toISOString(), completedAt: null,
           preparationSeconds: 0, stationSeconds: plan.stationSeconds, breakSeconds: 0,
           stationIndex: options.stationIndex ?? 0, stationCount: plan.stationSlugs.length,
           questions: [...station.questions], answers: [], feedback: null, metrics: {}, nextAvailableAt: null,

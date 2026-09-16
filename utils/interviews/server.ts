@@ -2,6 +2,7 @@ import "server-only";
 import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import type { InterviewAttempt } from "@/app/phloemai/interviews/_lib/interview-types";
+import { questionIdForText } from "@/utils/interviews/station-question-selection";
 
 export class InterviewError extends Error {
   constructor(message: string, public status = 400) { super(message); }
@@ -66,7 +67,7 @@ export function toInterviewAttempt(row: Record<string, unknown>): InterviewAttem
     status: row.status === "failed" && row.last_error === "awaiting_feedback" ? "submitted" : row.status as InterviewAttempt["status"],
     startedAt: row.started_at as string, completedAt, answerSubmittedAt: row.answer_submitted_at as string | null | undefined, preparationSeconds: Number(row.preparation_seconds), stationSeconds: Number(row.station_seconds),
     breakSeconds: Number(row.break_seconds), stationIndex: Number(row.station_index), stationCount: Number(row.station_count),
-    questions: row.questions as string[], answers: row.answers as InterviewAttempt["answers"], metrics: (row.metrics ?? {}) as Record<string, number>,
+    questions: row.questions as string[], questionIds: (row.questions as string[]).map(questionIdForText), answers: row.answers as InterviewAttempt["answers"], metrics: (row.metrics ?? {}) as Record<string, number>,
     feedback: row.feedback as InterviewAttempt["feedback"], circuitId: row.circuit_id as string,
     nextAvailableAt: completedAt ? new Date(Date.parse(completedAt) + Number(row.break_seconds) * 1000).toISOString() : null,
   };

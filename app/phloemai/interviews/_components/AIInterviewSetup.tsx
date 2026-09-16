@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, AudioLines, Check, CheckCircle2, Clock3, Headphones, Mic, MonitorPlay, ShieldCheck, SlidersHorizontal, Sparkles, Video, VideoOff, Volume2 } from "lucide-react";
 import { interviewUniversities } from "../_data/universities";
-import { findInterviewStation, interviewStations } from "../_data/interview-stations";
+import { findInterviewStation, interviewStations, stationQuestionCount } from "../_data/interview-stations";
 import type { InterviewMode } from "../_lib/interview-types";
 import type { useInterviewDevices } from "../_lib/useInterviewDevices";
 import { InterviewDevicePreview } from "./InterviewDevicePreview";
@@ -43,13 +43,13 @@ type Props = {
 
 export function AIInterviewSetup(props: Props) {
   const initialStation = findInterviewStation(props.initialStationSlug ?? "why-medicine");
-  const [preset, setPreset] = useState<"free" | "custom" | "university">(props.initialPlan ? props.initialPlan.mode === "university" ? "university" : props.initialPlan.mode === "free" ? "free" : "custom" : props.initialMockCircuit ? "custom" : props.initialUniversitySlug ? "university" : initialStation?.slug !== "why-medicine" ? "custom" : "free");
+  const [preset, setPreset] = useState<"custom" | "university">(props.initialPlan?.mode === "university" || (!props.initialPlan && props.initialUniversitySlug) ? "university" : "custom");
   const [universitySlug, setUniversitySlug] = useState(props.initialPlan?.universitySlug ?? props.initialUniversitySlug ?? interviewUniversities[0].slug);
   const [selected, setSelected] = useState<string[]>(props.initialPlan?.stationSlugs ?? (props.initialMockCircuit ? INTERVIEW_PATHWAY.map((station) => station.mockStation) : props.initialUniversitySlug ? interviewStations.slice(0, Math.min(9, interviewUniversities.find((item) => item.slug === props.initialUniversitySlug)?.stationCount ?? 5)).map((item) => item.slug) : [initialStation?.slug ?? "why-medicine"]));
   const university = interviewUniversities.find((item) => item.slug === universitySlug) ?? interviewUniversities[0];
   const stationSlugs = interviewStations.filter((item) => selected.includes(item.slug)).map((item) => item.slug);
   const plan: InterviewRoomPlan = {
-    mode: preset === "free" ? "free" : preset === "university" ? "university" : stationSlugs.length === 1 ? (stationSlugs[0] === "why-medicine" ? "free" : "station") : "reference",
+    mode: preset === "university" ? "university" : stationSlugs.length === 1 ? (stationSlugs[0] === "why-medicine" ? "free" : "station") : "reference",
     universitySlug: preset === "university" ? universitySlug : undefined,
     stationSlugs,
     preparationSeconds: 0,
@@ -59,7 +59,7 @@ export function AIInterviewSetup(props: Props) {
   const duration = Math.ceil((stationSlugs.length * (plan.preparationSeconds + plan.stationSeconds) + Math.max(0, stationSlugs.length - 1) * plan.breakSeconds) / 60);
   const changePreset = (value: typeof preset) => {
     setPreset(value);
-    setSelected(value === "free" ? ["why-medicine"] : interviewStations.slice(0, value === "university" ? Math.min(9, university.stationCount) : 5).map((item) => item.slug));
+    setSelected(interviewStations.slice(0, value === "university" ? Math.min(9, university.stationCount) : 5).map((item) => item.slug));
   };
   const device = props.devices;
 
@@ -68,16 +68,14 @@ export function AIInterviewSetup(props: Props) {
     <div className={styles.setupGrid}>
       <section className={styles.setupCard} aria-labelledby="stations-heading">
         <div className={styles.cardHeading}><span className={styles.sectionIcon}><SlidersHorizontal size={19} /></span><div><h2 id="stations-heading">Build your interview</h2><p>Keep what you need. Skip what you don’t.</p></div></div>
-        <div className={styles.presetPicker} aria-label="Interview format">{([['free', 'Free AI challenge'], ['custom', 'Custom circuit'], ['university', 'University']] as const).map(([value, label]) => <button type="button" key={value} aria-pressed={preset === value} onClick={() => changePreset(value)}>{label}</button>)}</div>
-        {preset === "free" && <p className={styles.freeChallenge}><strong>Beat Medwithrish’s score of 96%</strong><span>Try the “Why medicine?” AI interview, with feedback included. No subscription needed.</span></p>}
+        <div className={styles.presetPicker} aria-label="Interview format">{([['custom', 'Custom MMI circuit'], ['university', 'University']] as const).map(([value, label]) => <button type="button" key={value} aria-pressed={preset === value} onClick={() => changePreset(value)}>{label}</button>)}</div>
         {preset === "university" && <div className={styles.universityChoice}><label htmlFor="room-university">Your university</label><select id="room-university" value={universitySlug} onChange={(event) => { setUniversitySlug(event.target.value); const entry = interviewUniversities.find((item) => item.slug === event.target.value)!; setSelected(interviewStations.slice(0, Math.min(9, entry.stationCount)).map((item) => item.slug)); }}>{interviewUniversities.map((entry) => <option key={entry.slug} value={entry.slug}>{entry.name}</option>)}</select><p>{university.format} practice · {plan.stationSeconds / 60} min per station. You can customise the topics below.</p><AnimatedDisclosure title="About these practice timings"><p>{university.timingNote} Your selected topics form a custom rehearsal.</p><a href={university.sourceUrl} target="_blank" rel="noreferrer">Official admissions information ↗</a></AnimatedDisclosure></div>}
-        <div className={styles.stationListHeading}><span>{selected.length} {selected.length === 1 ? "station" : "stations"} included</span>{preset !== "free" && <div><button type="button" onClick={() => setSelected(interviewStations.map((item) => item.slug))}>Select all</button><span>·</span><button type="button" onClick={() => setSelected([])}>Clear</button></div>}</div>
-        <div className={styles.stationList}>{(preset === "free" ? interviewStations.filter((station) => station.slug === "why-medicine") : interviewStations).map((station, index) => {
+        <div className={styles.stationListHeading}><span>{selected.length} {selected.length === 1 ? "station" : "stations"} included</span><div><button type="button" onClick={() => setSelected(interviewStations.map((item) => item.slug))}>Select all</button><span>·</span><button type="button" onClick={() => setSelected([])}>Clear</button></div></div>
+        <div className={styles.stationList}>{interviewStations.map((station, index) => {
           const included = selected.includes(station.slug);
-          const locked = preset === "free" && index !== 0;
-          return <label key={station.slug} className={`${styles.stationOption} ${included ? styles.stationSelected : ""} ${locked ? styles.stationLocked : ""}`}>
-            <input type="checkbox" checked={included} disabled={locked || preset === "free"} onChange={() => setSelected((current) => current.includes(station.slug) ? current.filter((slug) => slug !== station.slug) : [...current, station.slug])} />
-            <span className={styles.stationNumber}>{String(index + 1).padStart(2, "0")}</span><span className={styles.stationName}><strong>{station.title}</strong><span>{station.theme} <span>·</span> 3 prompts</span></span><span className={styles.stationState}>{included ? <Check size={15} /> : locked ? "Custom" : "Skip"}</span>
+          return <label key={station.slug} className={`${styles.stationOption} ${included ? styles.stationSelected : ""}`}>
+            <input type="checkbox" checked={included} onChange={() => setSelected((current) => current.includes(station.slug) ? current.filter((slug) => slug !== station.slug) : [...current, station.slug])} />
+            <span className={styles.stationNumber}>{String(index + 1).padStart(2, "0")}</span><span className={styles.stationName}><strong>{station.lobbyTitle}</strong><span>{station.theme} <span>·</span> {stationQuestionCount(plan.stationSeconds)} prompts</span></span><span className={styles.stationState}>{included ? <Check size={15} /> : "Skip"}</span>
           </label>;
         })}</div>
         <p className={styles.smallNote}><Sparkles size={14} /> Original practice questions. Feedback focuses on the content of your answers.</p>

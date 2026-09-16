@@ -25,6 +25,7 @@ export type InterviewAttempt = {
   stationIndex: number;
   stationCount: number;
   questions: string[];
+  questionIds?: (string | null)[];
   answers: InterviewAnswer[];
   feedback: InterviewFeedback | null;
   metrics: Record<string, number>;

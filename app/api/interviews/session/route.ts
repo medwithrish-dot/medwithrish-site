@@ -3,6 +3,31 @@ import { interviewAiConfigured } from "@/utils/interviews/gemini";
 import { findInterviewUniversity } from "@/app/phloemai/interviews/_data/universities";
 import { findInterviewStation, interviewStations } from "@/app/phloemai/interviews/_data/interview-stations";
 import { databaseError, InterviewError, interviewContext, interviewFailure, interviewJson, readInterviewBody, toInterviewAttempt, validId } from "@/utils/interviews/server";
+import { selectStationQuestions } from "@/utils/interviews/station-question-selection";
+
+async function completeQuestionBankProgress(
+  admin: Awaited<ReturnType<typeof interviewContext>>["admin"],
+  userId: string,
+  attempt: ReturnType<typeof toInterviewAttempt>,
+  completedAt: string,
+) {
+  const rows = attempt.answers.flatMap((answer) => {
+    if (!answer.answer.trim()) return [];
+    const index = attempt.questions.indexOf(answer.question);
+    const questionId = attempt.questionIds?.[index];
+    if (!questionId) return [];
+    return [{
+      user_id: userId, question_id: questionId, status: "completed", answer: answer.answer,
+      completed_at: completedAt, elapsed_seconds: 0,
+      suggested_seconds: Math.round(attempt.stationSeconds / Math.max(1, attempt.questionIds?.filter(Boolean).length ?? 1)),
+      mode: null, completion_reason: "manual",
+      word_count: answer.answer.trim().split(/\s+/).filter(Boolean).length,
+    }];
+  });
+  if (!rows.length) return;
+  const { error } = await admin.from("interview_question_progress").upsert(rows, { onConflict: "user_id,question_id" });
+  if (error) databaseError(error);
+}
 
 export async function GET(request: Request) {
   try {
@@ -57,13 +82,15 @@ export async function POST(request: Request) {
     if (index >= count) throw new InterviewError("This circuit has no more stations", 409);
     const station = mode === "free" ? interviewStations[0] : mode === "station" || (circuitMode && body.stationSlug !== undefined) ? findInterviewStation(String(body.stationSlug ?? "")) : interviewStations[index % interviewStations.length];
     if (!station) throw new InterviewError("Station not found", 404);
+    const stationSeconds = mode === "university" ? university!.stationSeconds : 480;
+    const selectedQuestions = selectStationQuestions(station.slug, stationSeconds, `${circuitId}:${index}`);
     const payload = {
       mode, university_slug: mode === "university" ? university!.slug : null, station_slug: station.slug,
-      title: station.title, circuit_id: circuitId, station_index: index, station_count: count,
+      title: station.lobbyTitle, circuit_id: circuitId, station_index: index, station_count: count,
       preparation_seconds: 0,
-      station_seconds: mode === "university" ? university!.stationSeconds : 480,
+      station_seconds: stationSeconds,
       break_seconds: circuitMode ? (mode === "university" ? university!.breakSeconds : 120) : 0,
-      questions: [...station.questions],
+      questions: selectedQuestions.length ? selectedQuestions.map((question) => question.text) : [...station.questions],
     };
     const { data, error } = await admin.rpc("reserve_interview_attempt", {
       p_user: user.id, p_payload: payload,
@@ -85,7 +112,11 @@ export async function PATCH(request: Request) {
     if (!row) throw new InterviewError("Interview not found", 404);
     const finish = body.finish === true;
     if (row.status !== "in_progress") {
-      if (finish && row.last_error !== "abandoned") return interviewJson({ attempt: toInterviewAttempt(row) });
+      if (finish && row.last_error !== "abandoned") {
+        const attempt = toInterviewAttempt(row);
+        await completeQuestionBankProgress(admin, user.id, attempt, attempt.completedAt ?? new Date().toISOString());
+        return interviewJson({ attempt });
+      }
       throw new InterviewError("This station is already submitted. Your saved answers are locked.", 409);
     }
     // Short transport grace allows an in-flight final autosave, never extra practice time.
@@ -122,7 +153,9 @@ export async function PATCH(request: Request) {
     }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress").eq("answers", JSON.stringify(row.answers)).select().maybeSingle();
     if (saveError) databaseError(saveError);
     if (!data) throw new InterviewError("Your interview changed while saving. Please retry to keep the latest answers.", 409);
-    return interviewJson({ attempt: toInterviewAttempt(data), ...(finish && answerWindowClosed ? { usedSavedAnswers: true } : {}) });
+    const attempt = toInterviewAttempt(data);
+    if (finish) await completeQuestionBankProgress(admin, user.id, attempt, attempt.completedAt ?? finishedAt);
+    return interviewJson({ attempt, ...(finish && answerWindowClosed ? { usedSavedAnswers: true } : {}) });
   } catch (error) { return interviewFailure(error); }
 }
 
