@@ -3,10 +3,18 @@
 .compact h2 { font-size: 14px; }
 .compact p, .compact a, .compact span { font-size: 12px; line-height: 1.5; }
 .compact section > p { margin-top: 6px; }
-.compact section > a { margin-top: 8px; height: 30px; padding: 4px 9px; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
+.actions > * { max-width: 100%; }
+.actions > a > svg { flex-shrink: 0; }
+.compact .actions { margin-top: 8px; }
+.compact .actions > a { min-height: 36px; padding: 6px 9px; }
 .compact > section:first-child > div:nth-child(2) { margin-top: 8px; height: 5px; }
 .compact button[aria-pressed] { grid-template-columns: 16px minmax(0, 1fr); padding: 7px 9px; gap: 8px; }
 .compact button[aria-pressed] svg { width: 15px; height: 15px; margin-top: 2px; }
 .compact button[aria-expanded] > span:last-child { width: 26px; height: 26px; }
 .compact [aria-hidden] > div > div { padding-top: 9px; }
 .compact [aria-hidden] button + button { margin-top: 6px; }
+@media (pointer: coarse) {
+  .actions > a, .actions > button, .compact .actions > a { min-height: 44px; }
+  .compact button[aria-pressed], .compact button[aria-expanded] { min-height: 44px; }
+}

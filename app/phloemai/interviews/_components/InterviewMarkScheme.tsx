@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { CheckCircle2, ChevronRight, Circle, FileText } from "lucide-react";
 import type { MarkSchemeSection } from "../_lib/question-review";
 import type { SpeechDelivery } from "../_lib/speech-delivery";
@@ -41,7 +41,7 @@ function ChecklistToggle({
   );
 }
 
-export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkSchemeSections, toggleChecklistItem, toggleMarkSchemeSection, deliveryHints, compact = false }: {
+export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkSchemeSections, toggleChecklistItem, toggleMarkSchemeSection, deliveryHints, compact = false, headerAction }: {
   rubricGroups: readonly MarkSchemeSection[];
   checkedItems: Set<string>;
   openMarkSchemeSections: Set<MarkSchemeSection["title"]>;
@@ -49,6 +49,7 @@ export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkScheme
   toggleMarkSchemeSection: (title: MarkSchemeSection["title"]) => void;
   deliveryHints?: SpeechDelivery;
   compact?: boolean;
+  headerAction?: ReactNode;
 }) {
   const panelPrefix = useId();
   const totalChecklistItems = rubricGroups.reduce((total, group) => total + group.items.length, 0);
@@ -74,15 +75,16 @@ export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkScheme
         <p className="mt-3 text-sm font-medium text-[#4a6370]">
           {checkedCount} / {totalChecklistItems} covered
         </p>
-        <a
+        <div className={styles.actions}><a
           href="/phloemai/interview-question-markscheme-rubrics.pdf"
           target="_blank"
           rel="noreferrer"
-          className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#b8c8cf] bg-white px-4 text-sm font-black text-[#071923] shadow-sm transition-colors hover:border-[#08787b] hover:text-[#08787b]"
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#b8c8cf] bg-white px-4 text-sm font-black text-[#071923] shadow-sm transition-colors hover:border-[#08787b] hover:text-[#08787b]"
         >
           <FileText className="h-4 w-4" aria-hidden="true" />
           Rubric PDF
         </a>
+        {headerAction}</div>
       </section>
 
       {rubricGroups.map((group) => {
@@ -149,10 +151,10 @@ export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkScheme
   );
 }
 
-export function StationMarkScheme({ rubricGroups }: { rubricGroups: readonly MarkSchemeSection[] }) {
+export function StationMarkScheme({ rubricGroups, headerAction }: { rubricGroups: readonly MarkSchemeSection[]; headerAction?: ReactNode }) {
   const [checkedItems, setCheckedItems] = useState<Set<string>>(() => new Set());
   const [openSections, setOpenSections] = useState<Set<MarkSchemeSection["title"]>>(() => new Set(["General", "Start", "Middle", "End"]));
-  return <InterviewMarkScheme compact rubricGroups={rubricGroups} checkedItems={checkedItems} openMarkSchemeSections={openSections}
+  return <InterviewMarkScheme compact rubricGroups={rubricGroups} headerAction={headerAction} checkedItems={checkedItems} openMarkSchemeSections={openSections}
     toggleChecklistItem={(id) => setCheckedItems((previous) => { const next = new Set(previous); if (next.has(id)) next.delete(id); else next.add(id); return next; })}
     toggleMarkSchemeSection={(title) => setOpenSections((previous) => { const next = new Set(previous); if (next.has(title)) next.delete(title); else next.add(title); return next; })} />;
 }

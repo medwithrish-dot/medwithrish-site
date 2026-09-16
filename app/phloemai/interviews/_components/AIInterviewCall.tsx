@@ -6,7 +6,8 @@ import type { InterviewAnswer, InterviewAttempt } from "../_lib/interview-types"
 import type { useInterviewDevices } from "../_lib/useInterviewDevices";
 import type { useInterviewSpeech } from "../_lib/useInterviewSpeech";
 import { InterviewDevicePreview } from "./InterviewDevicePreview";
-import { AnimatedDisclosure } from "./AnimatedDisclosure";
+import { DONE_PROMPT, questionTransition } from "../_lib/station-flow";
+import { findInterviewStation } from "../_data/interview-stations";
 import { SpeechDeliveryHints } from "./SpeechDeliveryHints";
 import styles from "./AIInterviewRoom.module.css";
 
@@ -38,6 +39,9 @@ export function AIInterviewCall(props: Props) {
   const [endDialog, setEndDialog] = useState(false);
   const answerInput = useRef<HTMLTextAreaElement>(null);
   const finishButton = useRef<HTMLButtonElement>(null);
+  const transcriptScroll = useRef<HTMLDivElement>(null);
+  const currentTurn = useRef<HTMLDivElement>(null);
+  const donePrompt = useRef<HTMLElement>(null);
   const { attempt, speech, devices, questionIndex, answers, preparing, expired, active, busy, preview } = props;
   const question = attempt.questions[questionIndex];
   const status = busy ? "One moment…" : preparing ? "Take a moment to think" : expired ? "Time to reflect" : speech.speaking ? "Reading your question" : speech.listening ? "Listening to you" : "Ready when you are";
@@ -46,9 +50,61 @@ export function AIInterviewCall(props: Props) {
   const liveAnswer = [answer, speech.listening && !props.awaitingDone ? speech.interimTranscript : ""].filter(Boolean).join(" ");
   const microphonePending = devices.microphonePermission === "requesting";
   const microphoneLabel = microphonePending ? "Allow microphone in your browser" : props.micWanted && !speech.error ? "Stop mic" : "Start mic";
+  const mainQuestions: readonly string[] = findInterviewStation(attempt.stationSlug)?.questions ?? [];
+  const transition = (index: number) => questionTransition(index, !mainQuestions.includes(attempt.questions[index]));
   useEffect(() => {
     if (speech.listening && answerInput.current) answerInput.current.scrollTop = answerInput.current.scrollHeight;
   }, [liveAnswer, speech.listening]);
+  useEffect(() => {
+    // Move only when a new question arrives or the transcript tab reopens.
+    // Reading older answers must not be interrupted by incoming speech.
+    const panel = transcriptScroll.current;
+    const turn = currentTurn.current;
+    if (panel && turn) panel.scrollTop += turn.getBoundingClientRect().top - panel.getBoundingClientRect().top - 14;
+  }, [questionIndex, tab]);
+  useEffect(() => {
+    const panel = transcriptScroll.current;
+    const prompt = donePrompt.current;
+    if (!props.awaitingDone || !panel || !prompt) return;
+    const panelBounds = panel.getBoundingClientRect();
+    const promptBounds = prompt.getBoundingClientRect();
+    if (promptBounds.bottom > panelBounds.bottom) panel.scrollTop += promptBounds.bottom - panelBounds.bottom + 14;
+    else if (promptBounds.top < panelBounds.top) panel.scrollTop += promptBounds.top - panelBounds.top - 14;
+  }, [props.awaitingDone, tab]);
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+    let resizeFrame: number | undefined;
+    const update = () => {
+      // Ignore pinch zoom; only adapt to an on-screen keyboard or browser bars.
+      if (viewport.scale !== 1) return;
+      document.documentElement.style.setProperty("--interview-viewport-height", `${viewport.height}px`);
+      const keyboardOpen = viewport.height < window.innerHeight * 0.75;
+      document.documentElement.toggleAttribute("data-interview-keyboard", keyboardOpen);
+      if (resizeFrame !== undefined) window.cancelAnimationFrame(resizeFrame);
+      if (keyboardOpen) resizeFrame = window.requestAnimationFrame(() => {
+        // Native focus scrolling can happen before the keyboard shrinks the
+        // panel. Keep the focused editor visible after the new layout settles.
+        const input = document.activeElement;
+        const panel = input?.id === "interview-answer" ? transcriptScroll.current
+          : input?.id === "interview-notes" ? input.parentElement : null;
+        if (!input || !panel) return;
+        const inputBounds = input.getBoundingClientRect();
+        const panelBounds = panel.getBoundingClientRect();
+        if (inputBounds.top < panelBounds.top || inputBounds.bottom > panelBounds.bottom) {
+          panel.scrollTop += inputBounds.top - panelBounds.top - 8;
+        }
+      });
+    };
+    update();
+    viewport.addEventListener("resize", update);
+    return () => {
+      viewport.removeEventListener("resize", update);
+      if (resizeFrame !== undefined) window.cancelAnimationFrame(resizeFrame);
+      document.documentElement.style.removeProperty("--interview-viewport-height");
+      document.documentElement.removeAttribute("data-interview-keyboard");
+    };
+  }, []);
   useEffect(() => {
     if (!focus || endDialog) return;
     const leaveFocus = (event: KeyboardEvent) => { if (event.key === "Escape") setFocus(false); };
@@ -102,22 +158,30 @@ export function AIInterviewCall(props: Props) {
       <aside className={styles.transcriptPanel} aria-label="Interview transcript and notes">
         <div className={styles.transcriptTabs}><button type="button" aria-pressed={tab === "transcript"} onClick={() => setTab("transcript")}><MessageSquareText size={21} />Live transcript<span className={styles.transcriptCount}>{questionIndex + 1}</span></button><button type="button" aria-pressed={tab === "notes"} onClick={() => setTab("notes")}><FileText size={18} />Notes{notes && <span className={styles.notesDot} aria-label="Notes added" />}</button></div>
         {tab === "transcript" ? <>
-          <div className={styles.transcriptScroll}>
-            <div className={styles.transcriptQuestion}><span className={styles.miniInterviewer}><AudioLines size={19} /></span><div><strong>AI Interviewer</strong><p id="current-interview-question">{question}</p></div></div>
+          <div ref={transcriptScroll} className={styles.transcriptScroll}>
+            {questionIndex > 0 && <ol className={styles.conversationHistory} aria-label="Conversation history">{attempt.questions.slice(0, questionIndex).map((previousQuestion, index) => <li key={`${index}:${previousQuestion}`}>
+              {transition(index) && <p className={styles.questionTransition}>{transition(index)}</p>}
+              <div className={styles.transcriptQuestion}><span className={styles.miniInterviewer}><AudioLines size={19} /></span><div><strong>AI Interviewer · Question {index + 1}</strong><p>{previousQuestion}</p></div></div>
+              <div className={styles.answerHeading}><span className={styles.miniYou}><UserRound size={16} /></span><strong>You</strong></div>
+              <p className={styles.historyAnswer}>{answers.find((item) => item.question === previousQuestion)?.answer || "No answer added."}</p>
+            </li>)}</ol>}
+            <div ref={currentTurn}>
+              {transition(questionIndex) && <p className={styles.questionTransition}>{transition(questionIndex)}</p>}
+              <div className={styles.transcriptQuestion}><span className={styles.miniInterviewer}><AudioLines size={19} /></span><div><strong>AI Interviewer</strong><p id="current-interview-question">{question}</p></div></div>
+            </div>
             <div className={styles.promptHeading}><span>Question {questionIndex + 1} of {attempt.questions.length}</span><button type="button" onClick={props.onReadQuestion} disabled={!speech.voiceSupported || Boolean(busy) || props.awaitingDone}>{speech.speaking ? <VolumeX size={14} /> : <Volume2 size={14} />}{speech.speaking ? "Stop reading" : "Hear question"}</button></div>
             <div className={styles.answerHeading}><span className={styles.miniYou}><UserRound size={16} /></span><strong>You</strong>{speech.listening && <span className={styles.transcribingLabel}><AudioLines size={13} />Transcribing</span>}</div>
             <label className={styles.answerLabel} htmlFor="interview-answer">{speech.listening ? "Listening · stop the mic to edit" : preparing ? "Your answer opens after reading time" : "Speak or type your answer"}</label>
             <textarea ref={answerInput} id="interview-answer" aria-describedby="current-interview-question" value={liveAnswer} readOnly={!active || speech.listening || props.awaitingDone} maxLength={6000} onChange={(event) => props.onAnswer(event.target.value)} placeholder={preparing ? "Your thinking time starts here…" : "Your words will appear here. You can type, too…"} className={styles.answerInput} />
             <p className={styles.characterCount}><span>{answerWordCount ? `${answerWordCount} words` : "Your answer, in your own words"}</span><span>{answer.length.toLocaleString()} / 6,000</span></p>
             <SpeechDeliveryHints hints={speech.deliveryHints} />
-            {props.followUpBusy && <p role="status" className={styles.followUpNotice}><Loader2 size={16} className="animate-spin" /> Preparing your next question?</p>}
-            {props.awaitingDone ? <section className={styles.donePrompt} aria-label="Answer confirmation">
-              <p role="status">Done? Answer yes or no.</p>
+            {props.followUpBusy && <p role="status" className={styles.followUpNotice}><Loader2 size={16} className="animate-spin" /> Preparing your next question…</p>}
+            {props.awaitingDone ? <section ref={donePrompt} className={styles.donePrompt} aria-label="Answer confirmation">
+              <p role="status">{DONE_PROMPT}</p>
               <span>Say yes to continue, or no to keep answering. You can also carry on speaking.</span>
-              <div><button type="button" onClick={props.onConfirmDone} disabled={!active}>Yes, I?m done</button><button type="button" onClick={props.onKeepAnswering} disabled={!active}>No, keep answering</button></div>
-            </section> : <div className={styles.answerProgress}><span>Listening to your answer. After a pause, I?ll check whether you?re done.</span><button type="button" onClick={props.onDone} disabled={!active || props.prompting || !liveAnswer.trim()}>Done answering</button></div>}
+              <div><button type="button" onClick={props.onConfirmDone} disabled={!active}>Yes, I&apos;m done</button><button type="button" onClick={props.onKeepAnswering} disabled={!active}>No, keep answering</button></div>
+            </section> : <div className={styles.answerProgress}><span>{speech.listening ? "After a short pause, I'll check whether you're done." : "Speak with the microphone on, or type and select Done answering."}</span><button type="button" onClick={props.onDone} disabled={!active || props.prompting || !liveAnswer.trim()}>Done answering</button></div>}
             {props.followUpNotice && <p role="status" className={styles.followUpNotice}>{props.followUpNotice}</p>}
-            {questionIndex > 0 && <AnimatedDisclosure title="Earlier answers" className={styles.previousAnswer}>{answers.slice(0, questionIndex).map((previous, index) => <div key={previous.question}><strong>{index + 1}. {previous.question}</strong><p>{previous.answer || "No answer added."}</p></div>)}</AnimatedDisclosure>}
           </div>
           <div className={styles.transcriptFooter}><span><Check size={14} />{preview ? "Preview · nothing saved to your account" : props.saved ? "Saved to your account" : "Autosaves every 15 seconds"}</span><p>Your browser’s speech service may process audio. PhloemAI saves only your transcript.</p></div>
         </> : <div className={styles.notesPanel}><h2>Station notes</h2><label htmlFor="interview-notes" className={styles.answerLabel}>Private notes · not marked</label><textarea id="interview-notes" value={notes} onChange={(event) => setNotes(event.target.value)} maxLength={5000} placeholder="Key points, examples, and reminders…" /><p><LockKeyhole size={13} />Notes stay on this screen and aren’t saved.</p></div>}

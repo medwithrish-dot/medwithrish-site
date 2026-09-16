@@ -19,24 +19,49 @@ const { createSpeechBoundaryTracker, normalizeSpeechTranscript, getTranscriptHin
 // Exercise the production hook with a delayed browser recognition service.
 // Each harness has isolated browser globals; no microphone or real timers run.
 function speechHarness(options = {}) {
+  const hooks = [];
   const effects = [];
+  let hookIndex = 0;
   const timers = [];
   const delays = [];
   const played = [];
   const transcripts = [];
   const recognitions = [];
+  let reportActivity;
   let cancellations = 0;
   let now = 0;
   const react = {
-    useCallback: callback => callback,
-    useEffect: effect => effects.push(effect),
-    useRef: current => ({ current }),
-    useState: initial => [initial, () => {}],
+    useCallback: (callback, dependencies) => {
+      const index = hookIndex++;
+      const previous = hooks[index];
+      if (previous && dependencies?.every((dependency, offset) => Object.is(dependency, previous.dependencies?.[offset]))) return previous.callback;
+      hooks[index] = { callback, dependencies };
+      return callback;
+    },
+    useEffect: (effect, dependencies) => {
+      const index = hookIndex++;
+      const previous = hooks[index];
+      if (previous && dependencies?.every((dependency, offset) => Object.is(dependency, previous.dependencies?.[offset]))) return;
+      effects.push(() => {
+        previous?.cleanup?.();
+        hooks[index] = { dependencies, cleanup: effect() };
+      });
+    },
+    useRef: current => {
+      const index = hookIndex++;
+      hooks[index] ??= { current };
+      return hooks[index];
+    },
+    useState: initial => {
+      const index = hookIndex++;
+      hooks[index] ??= { value: typeof initial === "function" ? initial() : initial };
+      return [hooks[index].value, value => { hooks[index].value = value; }];
+    },
     useSyncExternalStore: (_subscribe, snapshot) => snapshot(),
   };
   class Recognition {
-    constructor() { this.stopCalls = 0; this.abortCalls = 0; recognitions.push(this); }
-    start() {}
+    constructor() { this.startCalls = 0; this.stopCalls = 0; this.abortCalls = 0; recognitions.push(this); }
+    start() { this.startCalls += 1; }
     stop() { this.stopCalls += 1; }
     abort() { this.abortCalls += 1; }
     end() { this.onend?.(); }
@@ -48,7 +73,13 @@ function speechHarness(options = {}) {
   runInNewContext(compiled, {
     module: loaded, exports: loaded.exports,
     require: name => {
-      if (name === "./speech-delivery") return deliveryModule.exports;
+      if (name === "./speech-delivery") return options.measuredActivity ? {
+        ...deliveryModule.exports,
+        monitorSpeechActivity: (_recognition, onActivity) => {
+          reportActivity = onActivity;
+          return () => { reportActivity = undefined; };
+        },
+      } : deliveryModule.exports;
       assert.equal(name, "react", "Only the React hook lifecycle is substituted");
       return react;
     },
@@ -65,14 +96,22 @@ function speechHarness(options = {}) {
       },
     },
   });
-  const speech = loaded.exports.useInterviewSpeech({ ...options, onTranscript: text => transcripts.push(text) });
-  const cleanups = effects.map(effect => effect()).filter(Boolean);
+  let speech;
+  const render = (nextOptions = {}) => {
+    options = { ...options, ...nextOptions };
+    hookIndex = 0;
+    speech = loaded.exports.useInterviewSpeech({ ...options, onTranscript: text => transcripts.push(text) });
+    effects.splice(0).forEach(effect => effect());
+  };
+  render();
   let unmounted = false;
   return {
-    speech, played, recognitions, transcripts,
+    get speech() { return speech; }, render, played, recognitions, transcripts,
     advanceTime: milliseconds => { now += milliseconds; },
+    reportActivity: active => reportActivity?.(active),
     get cancellations() { return cancellations; },
-    fireSilenceTimers() { timers.forEach((callback, index) => { if (delays[index] === 8000) { timers[index] = null; callback?.(); } }); },
+    fireSilenceTimers() { timers.forEach((callback, index) => { if (delays[index] === (options.silenceMs ?? 4000)) { timers[index] = null; callback?.(); } }); },
+    fireRestartTimers() { timers.forEach((callback, index) => { if (delays[index] === 200) { timers[index] = null; callback?.(); } }); },
     finishStopTimeouts() {
       for (let index = 0; index < timers.length; index += 1) {
         const callback = timers[index];
@@ -83,7 +122,7 @@ function speechHarness(options = {}) {
     unmount() {
       if (unmounted) return;
       unmounted = true;
-      for (const cleanup of cleanups) cleanup();
+      for (const hook of hooks) hook?.cleanup?.();
     },
   };
 }
@@ -246,14 +285,14 @@ test("concurrent microphone stops preserve the final transcript and share one sh
 });
 
 
-function activityHarness({ pending = false } = {}) {
+function activityHarness({ pending = false, suspended = false } = {}) {
   let now = 0, loud = false, nextFrame, stoppedTracks = 0, closedContexts = 0, grant;
   const events = [];
   const stream = { getTracks: () => [{ stop: () => stoppedTracks++ }] };
   const recognition = { onspeechstart: () => events.push("start"), onspeechend: () => events.push("end") };
   const activityModule = { exports: {} };
   class AudioContext {
-    state = "running";
+    state = suspended ? "suspended" : "running";
     createMediaStreamSource() { return { connect() {} }; }
     createAnalyser() { return { fftSize: 256, getByteTimeDomainData(samples) { samples.fill(loud ? 136 : 128); } }; }
     async resume() {}
@@ -303,15 +342,30 @@ test("ending listening before microphone permission resolves releases the late s
   assert.deepEqual(mic.events, []);
 });
 
+test("a suspended mobile audio context retains native speech boundaries", async () => {
+  const mic = activityHarness({ suspended: true });
+  await new Promise(resolve => setImmediate(resolve));
+  mic.recognition.onspeechstart();
+  mic.recognition.onspeechend();
+  assert.deepEqual(mic.events, ["start", "end"]);
+  assert.equal(mic.stoppedTracks, 1, "An unusable audio meter releases its microphone stream");
+  assert.equal(mic.closedContexts, 1);
+  mic.stop();
+});
 
-test("answer silence uses eight seconds, cancels on speech and never fires after manual stop", async t => {
+
+test("answer silence uses four seconds, requires words and cancels on speech or manual stop", async t => {
   let prompts = 0;
-  const room = speechHarness({ silenceMs: 8000, onSilence: () => prompts++ });
+  const room = speechHarness({ onSilence: () => prompts++ });
   t.after(() => room.unmount());
   room.speech.start();
   const recognition = room.recognitions[0];
   room.fireSilenceTimers();
   assert.equal(prompts, 0, "No prompt during opening silence");
+  recognition.onspeechend();
+  room.fireSilenceTimers();
+  assert.equal(prompts, 0, "An empty speech boundary or background noise is not an answer");
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "My first answer." } }] });
   recognition.onspeechstart(); recognition.onspeechend();
   recognition.onspeechstart();
   room.fireSilenceTimers();
@@ -323,6 +377,89 @@ test("answer silence uses eight seconds, cancels on speech and never fires after
   const pending = room.speech.stop();
   room.fireSilenceTimers(); room.finishStopTimeouts(); await pending;
   assert.equal(prompts, 1, "A deliberate mic stop never asks for confirmation");
+});
+
+test("recognition results detect a pause when the browser omits speechend", t => {
+  let prompts = 0;
+  const room = speechHarness({ onSilence: () => prompts++ });
+  t.after(() => room.unmount());
+  room.speech.start();
+  room.recognitions[0].onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "My reflection on that experience" } }] });
+  room.fireSilenceTimers();
+  room.fireSilenceTimers();
+  assert.equal(prompts, 1);
+});
+
+test("measured ongoing voice prevents confirmation even when recognition delivers words late", t => {
+  let prompts = 0;
+  const room = speechHarness({ measuredActivity: true, onSilence: () => prompts++ });
+  t.after(() => room.unmount());
+  room.speech.start();
+  room.reportActivity(true);
+  room.recognitions[0].onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "I am still explaining my answer." } }] });
+  room.fireSilenceTimers();
+  assert.equal(prompts, 0);
+  room.reportActivity(false);
+  room.fireSilenceTimers();
+  assert.equal(prompts, 1, "A measured quiet gap starts the confirmation countdown");
+});
+
+test("natural recognition ends preserve words, restart listening and still detect the pause", async t => {
+  let prompts = 0;
+  const room = speechHarness({ onSilence: () => prompts++ });
+  t.after(() => room.unmount());
+  room.speech.start();
+  const recognition = room.recognitions[0];
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "Words before a browser timeout" } }] });
+  recognition.end();
+  room.fireRestartTimers();
+  assert.equal(recognition.startCalls, 2);
+  assert.deepEqual(room.transcripts, ["Words before a browser timeout"]);
+  room.fireSilenceTimers();
+  assert.equal(prompts, 1, "A browser restart cannot discard the pending pause");
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "And another thought." } }] });
+  assert.deepEqual(room.transcripts, ["Words before a browser timeout", "And another thought."]);
+  recognition.end();
+  const stopped = room.speech.stop();
+  room.fireRestartTimers();
+  assert.equal(recognition.startCalls, 2, "Explicit stop cancels a queued restart");
+  room.finishStopTimeouts();
+  await stopped;
+});
+
+test("read-aloud cancels a pending browser restart and releases final words before playback", async t => {
+  const room = speechHarness();
+  t.after(() => room.unmount());
+  room.speech.start();
+  const recognition = room.recognitions[0];
+  recognition.onresult({ resultIndex: 0, results: [{ isFinal: false, 0: { transcript: "An answer before the prompt" } }] });
+  recognition.end();
+  const speaking = room.speech.speak("Done? Say yes or no.");
+  room.fireRestartTimers();
+  room.finishStopTimeouts();
+  await speaking;
+  assert.equal(recognition.startCalls, 1);
+  assert.deepEqual(room.transcripts, ["An answer before the prompt"]);
+  assert.deepEqual(room.played, ["Done? Say yes or no."]);
+});
+
+test("changing questions rejects late results and cancels the previous question's restart", async t => {
+  const room = speechHarness({ answerKey: "question-1" });
+  t.after(() => room.unmount());
+  room.speech.start();
+  const first = room.recognitions[0];
+  first.onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "The first answer." } }] });
+  first.end();
+  room.render({ answerKey: "question-2" });
+  first.onresult?.({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "A late first-answer fragment." } }] });
+  room.fireRestartTimers();
+  room.finishStopTimeouts();
+  await Promise.resolve();
+  assert.equal(first.startCalls, 1, "A previous question cannot reopen the microphone");
+  assert.deepEqual(room.transcripts, ["The first answer."]);
+  room.speech.start();
+  room.recognitions[1].onresult({ resultIndex: 0, results: [{ isFinal: true, 0: { transcript: "The second answer." } }] });
+  assert.deepEqual(room.transcripts, ["The first answer.", "The second answer."]);
 });
 
 

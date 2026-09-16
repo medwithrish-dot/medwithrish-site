@@ -21,8 +21,17 @@ type Props = {
   breakRemaining?: number;
 };
 
+function revealFeedback(element: HTMLElement | null) {
+  if (!element) return;
+  element.focus({ preventScroll: true });
+  element.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
+}
+
 export function AIInterviewReview({ attempt, preview = false, configured, busy = false, onGenerate, onRetry, onNext, breakRemaining = 0 }: Props) {
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const feedbackRef = useRef<HTMLElement>(null);
+  const assessmentRef = useRef<HTMLElement>(null);
+  const feedbackRequestedRef = useRef(false);
   useEffect(() => { headingRef.current?.focus(); }, []);
   const guidance = getStationReviewGuidance(attempt.stationSlug);
   const university = attempt.universitySlug ? findInterviewUniversity(attempt.universitySlug) : null;
@@ -30,8 +39,26 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   const wordCount = transcript.reduce((total, item) => total + getTranscriptHints(item.answer).wordCount, 0);
   const answered = transcript.filter((item) => item.answer.trim()).length;
   const feedback = attempt.feedback;
+  useEffect(() => {
+    if (feedback && feedbackRequestedRef.current) {
+      feedbackRequestedRef.current = false;
+      revealFeedback(assessmentRef.current);
+    }
+  }, [feedback]);
   const feedbackSections = feedback ? [{ title: "Strengths", items: feedback.strengths }, { title: "Weaknesses", items: feedback.weaknesses ?? [] }, { title: "Fixes", items: feedback.fixes ?? feedback.improvements }] : [];
   const needsSaving = attempt.status === "in_progress";
+  const feedbackAction = <button type="button" className={styles.primary}
+    disabled={!feedback && (busy || needsSaving || (!preview && (!configured || wordCount < 20)))}
+    aria-controls={feedback ? "station-feedback" : "ai-feedback"}
+    onClick={() => {
+      if (feedback) { revealFeedback(assessmentRef.current); return; }
+      feedbackRequestedRef.current = true;
+      revealFeedback(feedbackRef.current);
+      onGenerate();
+    }}>
+    {busy && !feedback ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+    {feedback ? "View AI feedback" : busy ? "Generating feedback…" : preview ? "View sample AI feedback" : attempt.status === "grading" ? "Check AI feedback" : "Generate AI feedback"}
+  </button>;
   const download = () => {
     const text = [preview ? "PHLOEMAI PREVIEW — not saved to an account" : "PHLOEMAI STATION REVIEW", attempt.title,
       university?.name ?? "Independent station practice", "", "TRANSCRIPT",
@@ -76,21 +103,21 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
 
       <aside className={styles.studyColumn} aria-label="Station guidance and feedback">
         <section id="review-guide" aria-label="Station markscheme">
-          {guidance ? <StationMarkScheme key={attempt.id} rubricGroups={guidance.rubric} /> : <p>No markscheme is available for this saved station.</p>}
+          {guidance ? <StationMarkScheme key={attempt.id} rubricGroups={guidance.rubric} headerAction={feedbackAction} /> : <><p>No markscheme is available for this saved station.</p>{feedbackAction}</>}
         </section>
 
-        <section className={styles.feedback} aria-labelledby="ai-feedback-heading">
+        <section id="ai-feedback" ref={feedbackRef} tabIndex={-1} className={styles.feedback} aria-labelledby="ai-feedback-heading" aria-busy={busy && !feedback}>
           <div className={styles.panelHeading}><Sparkles size={20} /><div><h2 id="ai-feedback-heading">AI feedback</h2><p>{feedback ? "Your assessment is ready below." : "A second perspective, when you want it."}</p></div></div>
           <p>{feedback ? "Strengths, weaknesses and practical fixes." : "Generate a practice score and suggestions based on your saved answers."}</p>
           {feedback ? <a className={styles.feedbackLink} href="#station-feedback">Read your feedback <ArrowRight size={16} /></a> : <>
-            <button type="button" className={styles.primary} disabled={busy || needsSaving || (!preview && (!configured || wordCount < 20))} onClick={onGenerate}>{busy ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}{preview ? "View sample AI feedback" : attempt.status === "grading" ? "Check AI feedback" : "Generate AI feedback"}</button>
+            {busy && <p className={styles.feedbackStatus} role="status"><Loader2 size={16} className="animate-spin" /> Preparing your feedback. It will appear here when ready.</p>}
             {!configured && !preview ? <p className={styles.availability}>AI feedback is currently unavailable. Your transcript and study guide are ready to use.</p> : wordCount < 20 && !preview ? <p className={styles.availability}>AI feedback needs at least 20 words. You can still review this attempt or retry the station.</p> : <p className={styles.availability}>Feedback is optional. You can retry or move on without generating it.</p>}
           </>}
         </section>
       </aside>
     </div>
 
-    {feedback && <section className={styles.assessment} id="station-feedback" aria-labelledby="feedback-heading">
+    {feedback && <section className={styles.assessment} id="station-feedback" ref={assessmentRef} tabIndex={-1} aria-labelledby="feedback-heading">
       <header><div><p className={styles.eyebrow}>{preview ? "ILLUSTRATIVE SAMPLE" : "YOUR AI FEEDBACK"}</p><h2 id="feedback-heading">Your feedback</h2><p>{feedback.summary}</p></div><div className={styles.score}><strong>{feedback.score}<span>%</span></strong><span>{preview ? "Example score" : "Practice score"}</span></div></header>
       <div className={styles.takeaways}>{feedbackSections.map((group) => <section key={group.title}><h3>{group.title}</h3>{group.items.length ? <ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul> : <p className={styles.sourceNote}>This older report did not include a separate weaknesses section.</p>}</section>)}</div>
       <details className={styles.breakdown}><summary>View the marking breakdown</summary><p>Each criterion is marked out of 100; the calibrated overall score is capped at 99%.</p>{feedback.rubric.map((item) => <div key={item.criterion}><h3>{item.criterion}<span>{item.score}/100</span></h3><p>{item.reason}</p></div>)}</details>

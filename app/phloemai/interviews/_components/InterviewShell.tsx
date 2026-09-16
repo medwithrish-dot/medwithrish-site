@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { getPhloemEntitlements } from "@/utils/phloemai/premium-access";
 import { InterviewAccountControls } from "../InterviewAccountControls";
 import { InterviewSidebar } from "./InterviewSidebar";
+import { InterviewDeviceBanner } from "./InterviewDeviceBanner";
 
 const mobileLinks = [
   ["Dashboard", "/phloemai/interviews"],
@@ -43,6 +44,7 @@ export async function InterviewShell({
       <div data-interview-shell-grid className="grid min-h-[100dvh] lg:h-[100dvh] lg:min-h-0 lg:grid-cols-[230px_1fr]">
         <InterviewSidebar activeLabel={activeLabel} showPremiumCard={!isPremium} />
         <div data-interview-shell-main className="min-w-0 lg:h-full lg:min-h-0 lg:overflow-y-auto">
+          <InterviewDeviceBanner />
           <nav aria-label="Interview navigation" className="flex gap-2 overflow-x-auto border-b border-white/10 bg-[#042724] px-4 py-3 lg:hidden">
             {mobileLinks.map(([label, href]) => (
               <Link key={href} href={href} aria-current={activeLabel === label ? "page" : undefined} className={`shrink-0 rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${activeLabel === label ? "bg-[#159a9d] text-white" : "text-[#cde1df] hover:bg-white/10 hover:text-white"}`}>

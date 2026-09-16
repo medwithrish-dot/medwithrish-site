@@ -31,7 +31,7 @@ const recognitionAvailable = () => {
 };
 const synthesisAvailable = () => "speechSynthesis" in window;
 
-export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "answer", onSilence, silenceMs = 8_000 }: { onTranscript: (text: string) => void; rate?: number; answerKey?: string; onSilence?: () => void; silenceMs?: number }) {
+export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "answer", onSilence, silenceMs = 4_000 }: { onTranscript: (text: string) => void; rate?: number; answerKey?: string; onSilence?: () => void; silenceMs?: number }) {
   const supported = useSyncExternalStore(subscribe, recognitionAvailable, serverUnsupported);
   const voiceSupported = useSyncExternalStore(subscribe, synthesisAvailable, serverUnsupported);
   const [listening, setListening] = useState(false);
@@ -52,6 +52,10 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   const mountedRef = useRef(true);
   const speechRequestRef = useRef(0);
   const silenceTimerRef = useRef<number | null>(null);
+  const restartTimerRef = useRef<number | null>(null);
+  const listeningWantedRef = useRef(false);
+  const measuredActivityRef = useRef<boolean | null>(null);
+  const answerKeyRef = useRef(answerKey);
   const onSilenceRef = useRef(onSilence);
   useEffect(() => { onSilenceRef.current = onSilence; }, [onSilence]);
   const clearSilence = useCallback(() => { if (silenceTimerRef.current !== null) window.clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null; }, []);
@@ -59,7 +63,12 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   useEffect(() => { onTranscriptRef.current = onTranscript; }, [onTranscript]);
 
   const stop = useCallback((): Promise<void> => {
+    listeningWantedRef.current = false;
     clearSilence();
+    if (restartTimerRef.current !== null) window.clearTimeout(restartTimerRef.current);
+    restartTimerRef.current = null;
+    activityStopRef.current?.();
+    activityStopRef.current = null;
     if (stoppingRef.current) return stoppingRef.current;
     const recognition = recognitionRef.current;
     if (!recognition) return Promise.resolve();
@@ -75,7 +84,8 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
         recognition.onerror = null;
         recognition.onspeechstart = null;
         recognition.onspeechend = null;
-        if (mountedRef.current && interimRef.current) { onTranscriptRef.current(interimRef.current); interimRef.current = ""; }
+        if (mountedRef.current && deliveryKeyRef.current === answerKeyRef.current && interimRef.current) onTranscriptRef.current(interimRef.current);
+        interimRef.current = "";
         if (recognitionRef.current === recognition) {
           activityStopRef.current?.();
           activityStopRef.current = null;
@@ -97,6 +107,11 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     void pending.then(() => { if (stoppingRef.current === pending) stoppingRef.current = null; });
     return pending;
   }, [clearSilence]);
+
+  useEffect(() => {
+    answerKeyRef.current = answerKey;
+    if (recognitionRef.current && deliveryKeyRef.current !== answerKey) void stop();
+  }, [answerKey, stop]);
 
   const stopSpeaking = useCallback(() => {
     speechRequestRef.current += 1;
@@ -128,12 +143,38 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     const previousElapsed = deliveryRef.current.segments.at(-1)?.endSeconds ?? 0;
     const elapsed = () => previousElapsed + (Date.now() - started) / 1000;
     const recognition = new Constructor();
+    listeningWantedRef.current = true;
+    measuredActivityRef.current = null;
+    let hasWords = false;
+    let notifiedForGap = false;
+    const current = () => mountedRef.current && recognitionRef.current === recognition && answerKeyRef.current === answerKey;
+    const scheduleSilence = () => {
+      clearSilence();
+      if (!current() || !listeningWantedRef.current || finishRef.current || !hasWords || notifiedForGap || measuredActivityRef.current === true) return;
+      silenceTimerRef.current = window.setTimeout(() => {
+        silenceTimerRef.current = null;
+        if (!current() || !listeningWantedRef.current || finishRef.current || measuredActivityRef.current === true) return;
+        notifiedForGap = true;
+        onSilenceRef.current?.();
+      }, silenceMs);
+    };
+    const commitInterim = () => {
+      const text = interimRef.current;
+      interimRef.current = "";
+      if (!current() || !text) return;
+      onTranscriptRef.current(text);
+      boundaryRef.current.commit();
+      const delivery = deliveryRef.current;
+      delivery.text += ` ${text}`;
+      delivery.segments.push({ kind: "speech", text, ...boundaryRef.current.timing(delivery.segments.at(-1)?.endSeconds ?? 0, elapsed()) });
+    };
     recognition.lang = "en-GB";
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.onspeechstart = () => {
-      if (recognitionRef.current !== recognition || finishRef.current) return;
+      if (!current() || !listeningWantedRef.current || finishRef.current) return;
       clearSilence();
+      notifiedForGap = false;
       const pause = boundaryRef.current.start(elapsed());
       if (pause) {
         // Do not place a gap before words that are still awaiting recognition.
@@ -144,18 +185,18 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       }
     };
     recognition.onspeechend = () => {
+      if (!current() || !listeningWantedRef.current || finishRef.current) return;
       boundaryRef.current.end(elapsed());
-      clearSilence();
-      silenceTimerRef.current = window.setTimeout(() => {
-        silenceTimerRef.current = null;
-        if (mountedRef.current && !finishRef.current) onSilenceRef.current?.();
-      }, silenceMs);
+      scheduleSilence();
     };
     recognition.onresult = (event) => {
+      if (!current()) return;
       let interim = "";
+      let receivedWords = false;
       for (let index = event.resultIndex; index < event.results.length; index += 1) {
         const result = event.results[index];
         const text = normalizeSpeechTranscript(result[0].transcript.trim());
+        if (text) receivedWords = true;
         if (result.isFinal && text) {
           boundaryRef.current.commit();
           onTranscriptRef.current(text);
@@ -172,9 +213,17 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       const delivery = deliveryRef.current;
       const liveSegments = interim.trim() ? [...delivery.segments, { kind: "speech" as const, text: interim, ...boundaryRef.current.timing(delivery.segments.at(-1)?.endSeconds ?? 0, elapsed()) }] : delivery.segments;
       setDeliveryHints(getSpeechDelivery({ transcript: `${delivery.text} ${interim}`, segments: liveSegments, elapsedSeconds: elapsed(), confidence: delivery.confidence }));
+      if (receivedWords) {
+        hasWords = true;
+        notifiedForGap = false;
+        // Several browsers omit speechend in continuous mode. Results also
+        // restart a pause watchdog; measured ongoing voice always blocks it.
+        scheduleSilence();
+      }
     };
     recognition.onerror = (event) => {
-      if (event.error === "aborted" || event.error === "no-speech") return;
+      if (!current() || event.error === "no-speech") return;
+      if (event.error === "aborted") { void stop(); return; }
       const message = event.error === "not-allowed" || event.error === "service-not-allowed"
         ? "Microphone access was not allowed. You can enable it in your browser or type your answer."
         : event.error === "audio-capture"
@@ -186,27 +235,36 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     recognition.onend = () => {
       if (recognitionRef.current !== recognition) return;
       if (finishRef.current) { finishRef.current(); return; }
-      if (interimRef.current) { onTranscriptRef.current(interimRef.current); interimRef.current = ""; }
-      activityStopRef.current?.();
-      activityStopRef.current = null;
-      recognitionRef.current = null;
-      recognition.onresult = null;
-      recognition.onerror = null;
-      recognition.onend = null;
-      recognition.onspeechstart = null;
-      recognition.onspeechend = null;
-      setListening(false);
+      if (!current() || !listeningWantedRef.current) return;
+      commitInterim();
       setInterimTranscript("");
+      if (silenceTimerRef.current === null) scheduleSilence();
+      // Recognition services end on pauses and at their session limit, even
+      // in continuous mode. Keep the microphone intent and the same answer.
+      if (restartTimerRef.current !== null) window.clearTimeout(restartTimerRef.current);
+      restartTimerRef.current = window.setTimeout(() => {
+        restartTimerRef.current = null;
+        if (!current() || !listeningWantedRef.current || finishRef.current) return;
+        try { recognition.start(); } catch {
+          setError("The microphone could not restart. Your answer is kept; turn the microphone on again or type to continue.");
+          void stop();
+        }
+      }, 200);
     };
     recognitionRef.current = recognition;
     try {
       recognition.start();
-      activityStopRef.current = monitorSpeechActivity(recognition);
+      activityStopRef.current = monitorSpeechActivity(recognition, (active) => {
+        measuredActivityRef.current = active;
+        if (active === true) clearSilence();
+        else if (silenceTimerRef.current === null) scheduleSilence();
+      });
       setListening(true);
     } catch {
       activityStopRef.current?.();
       activityStopRef.current = null;
       recognitionRef.current = null;
+      listeningWantedRef.current = false;
       setError("The microphone could not start. Try again or type your answer.");
     }
   }, [stopSpeaking, stop, answerKey, clearSilence, silenceMs]);
@@ -245,7 +303,10 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      listeningWantedRef.current = false;
       clearSilence();
+      if (restartTimerRef.current !== null) window.clearTimeout(restartTimerRef.current);
+      restartTimerRef.current = null;
       speechRequestRef.current += 1;
       const recognition = recognitionRef.current;
       if (recognition) {

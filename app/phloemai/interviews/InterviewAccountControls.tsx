@@ -88,7 +88,7 @@ export function InterviewAccountControls() {
   if (!user) return <Link href="/phloemai/account" className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[#cfe0df] bg-white px-5 py-3 text-sm font-bold text-[#08787b] hover:bg-[#edf7f6]">Sign in / create account</Link>;
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex min-w-0 items-center gap-4">
       <Link
         href="/phloemai/interviews/notifications"
         aria-label="Notifications"
@@ -108,8 +108,8 @@ export function InterviewAccountControls() {
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#d6eeee] text-sm font-bold text-[#08787b]">
             {initial}
           </div>
-          <span className="hidden text-left sm:block">
-            <span className="block text-sm font-bold leading-4 text-[#071923]">
+          <span className="hidden min-w-0 max-w-36 text-left sm:block">
+            <span className="block truncate text-sm font-bold leading-4 text-[#071923]">
               {firstName}
             </span>
             <span className="mt-1 block text-[11px] font-bold uppercase tracking-wide text-[#6f8792]">
@@ -122,7 +122,7 @@ export function InterviewAccountControls() {
         {menuOpen && (
           <div
             role="menu"
-            className="absolute right-0 z-20 mt-3 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-[#d8e0e6] bg-white shadow-xl"
+            className="absolute -left-12 z-20 mt-3 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-[#d8e0e6] bg-white shadow-xl sm:left-auto sm:right-0"
           >
             <div className="bg-[#042724] p-4 text-white">
               <div className="flex items-start gap-3">

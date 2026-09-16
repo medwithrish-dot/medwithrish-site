@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT } from "../app/phloemai/interviews/_lib/station-flow.ts";
+import { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition } from "../app/phloemai/interviews/_lib/station-flow.ts";
 import { test } from "node:test";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -161,7 +161,7 @@ test("an older tab's autosave preserves a probe answer it has not seen", async (
 
 // Exercise the actual room callbacks against delayed saves. Browser, device and
 // hook lifecycle boundaries are substituted; all save scheduling stays production code.
-async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, configured = true, followUps = false, permission = true, speechError = "", questions = ["Why medicine?"], initialDraft } = {}) {
+async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, hasAttempt = true, configured = true, followUps = false, permission = true, speechError = "", voiceSupported = false, delayedVoice = false, questions = ["Why medicine?"], initialDraft } = {}) {
   const cells = [];
   let cursor = 0;
   let effects = [];
@@ -170,10 +170,12 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const requests = [];
   const followUpRequests = [];
   const feedbackRequests = [];
+  const spoken = [];
   let microphoneRequests = 0;
   let recognitionStarts = 0;
   let speechOptions;
   let pendingSpeech = "";
+  let finishVoice;
   const attempt = {
     id: circuitId, circuitId, status, mode: "free", stationSlug: "why-medicine",
     title: "Why medicine?", startedAt: new Date().toISOString(), completedAt: null, preparationSeconds,
@@ -200,10 +202,16 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     useCallback: (callback, dependencies) => memo(() => callback, dependencies),
     useEffect: (effect, dependencies) => memo(() => { effects.push(effect); }, dependencies),
   };
-  const speech = { listening: false, error: speechError, stop: async () => {
+  const speech = { listening: false, speaking: false, error: speechError, stop: async () => {
     speech.listening = false;
     if (pendingSpeech) { const finalText = pendingSpeech; pendingSpeech = ""; speechOptions.onTranscript(finalText); }
-  }, stopSpeaking() {}, speak: async () => {}, voiceSupported: false, supported: true, start: () => { speech.listening = true; recognitionStarts += 1; } };
+  }, stopSpeaking() { speech.speaking = false; finishVoice = undefined; }, speak: async (text, onComplete) => {
+    spoken.push(text);
+    speech.speaking = true;
+    const complete = () => { speech.speaking = false; finishVoice = undefined; onComplete?.(); };
+    if (delayedVoice) finishVoice = complete;
+    else complete();
+  }, voiceSupported, supported: true, start: () => { speech.listening = true; recognitionStarts += 1; } };
   const devices = {
     stopCamera() {}, stopMicCheck() {}, cancelMicrophoneRequest() {}, microphonePermission: "idle",
     requestMicrophone: async () => { microphoneRequests += 1; devices.microphonePermission = permission ? "granted" : "denied"; return permission; },
@@ -220,7 +228,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: options => { speechOptions = options; return speech; }, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
       if (name.endsWith("useInterviewDevices")) return { useInterviewDevices: () => devices };
-      if (name.endsWith("station-flow")) return { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled: () => followUps };
+      if (name.endsWith("station-flow")) return { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition, followUpsEnabled: () => followUps };
       if (name.endsWith("interview-stations")) return { findInterviewStation: () => ({ questions }), interviewStations: [] };
       if (name === "./AIInterviewCall") return { AIInterviewCall: "interview-call" };
       if (name === "./AIInterviewReview") return { AIInterviewReview: "interview-review" };
@@ -283,11 +291,12 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const call = findCall(tree);
   if (hasAttempt) assert.ok(call || findReview(tree));
   return {
-    requests, followUpRequests, feedbackRequests, flush, render, call, latestCall: () => findCall(render()), latestReview: () => findReview(render()), storage,
+    requests, followUpRequests, feedbackRequests, spoken, flush, render, call, latestCall: () => findCall(render()), latestReview: () => findReview(render()), storage,
     get microphoneRequests() { return microphoneRequests; },
     get recognitionStarts() { return recognitionStarts; },
     edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(), finish: () => call.onSubmit(),
     finalSpeech: text => { pendingSpeech = text; },
+    completeVoice: () => finishVoice?.(),
     say: text => speechOptions.onTranscript(text), silence: () => speechOptions.onSilence(),
   };
 }
@@ -324,6 +333,33 @@ test("manual microphone off stays off after subsequent room renders", async () =
   await room.flush(); room.render(); room.render();
   assert.equal(room.recognitionStarts, 1);
   assert.equal(room.latestCall().speech.listening, false);
+});
+
+test("microphone off then on during a spoken question waits for playback and preserves automatic confirmation", async () => {
+  const room = await autosaveRoom({ voiceSupported: true, delayedVoice: true });
+  await room.flush(); room.render();
+  assert.deepEqual(room.spoken, ["Why medicine?"]);
+  assert.equal(room.latestCall().speech.speaking, true);
+  assert.equal(room.recognitionStarts, 0);
+
+  room.latestCall().onToggleMicrophone();
+  await room.flush(); room.render();
+  assert.equal(room.latestCall().micWanted, false);
+  room.latestCall().onToggleMicrophone();
+  await room.flush(); room.render();
+  assert.equal(room.latestCall().micWanted, true);
+  assert.equal(room.recognitionStarts, 0, "The microphone cannot interrupt the spoken question");
+  assert.equal(room.latestCall().speech.speaking, true);
+
+  room.completeVoice(); room.render();
+  assert.equal(room.recognitionStarts, 1, "Listening starts when the question finishes");
+  room.say("I learned how listening carefully helps patients."); room.render();
+  room.silence(); await room.flush(); room.render();
+  assert.equal(room.latestCall().awaitingDone, true, "Microphone toggling cannot leave the prompt lock stuck");
+  assert.equal(room.spoken.at(-1), DONE_PROMPT);
+  assert.equal(room.recognitionStarts, 1, "The microphone also waits for the confirmation prompt");
+  room.completeVoice(); room.render();
+  assert.equal(room.recognitionStarts, 2, "The candidate can then answer yes or no");
 });
 
 test("multiple queued autosaves never overlap or replace the newest transcript", async () => {
@@ -730,4 +766,41 @@ test("a read-aloud failure does not block the approved microphone", async () => 
   const room = await autosaveRoom({ speechError: "Read-aloud could not play. You can read the question on screen." });
   await room.flush(); room.render();
   assert.equal(room.recognitionStarts, 1);
+});
+
+test("natural confirmation variants advance without treating an ongoing answer as yes", () => {
+  for (const reply of ["Yes, I'm done.", "Yeah, I’m finished.", "Yes please!", "That's everything.", "Yes, thank you."]) {
+    assert.equal(parseDoneReply(reply).done, true, reply);
+  }
+  for (const reply of ["No.", "Not yet.", "Yes, and I also learned to listen."]) {
+    assert.equal(parseDoneReply(reply).done, false, reply);
+  }
+  assert.equal(parseDoneReply("No, I have another example.").continuation, "I have another example.");
+});
+
+test("an interim-only confirmation is flushed after its pause and advances without a click", async () => {
+  const room = await autosaveRoom({ questions: ["Why medicine?", "What did you learn?"] });
+  await room.flush(); room.render();
+  room.say("I learned to listen to patients."); room.render();
+  room.silence(); await room.flush(); room.render();
+  room.finalSpeech("Yes.");
+  room.silence(); await room.flush();
+  assert.equal(room.latestCall().questionIndex, 1);
+  assert.equal(room.latestCall().answers[0].answer, "I learned to listen to patients.");
+});
+
+test("spoken questions use varied transitions and late confirmation words cannot enter either answer", async () => {
+  const room = await autosaveRoom({ voiceSupported: true, questions: ["Why medicine?", "What did you learn?", "Why this role?"] });
+  await room.flush(); room.render();
+  assert.deepEqual(room.spoken, ["Why medicine?"]);
+  room.say("I learned to listen to patients."); room.render();
+  room.silence(); await room.flush(); room.render();
+  assert.equal(room.spoken.at(-1), DONE_PROMPT);
+  room.finalSpeech("Yes, I'm done.");
+  room.latestCall().onConfirmDone(); await room.flush(); room.render();
+  assert.equal(room.latestCall().answers[0].answer, "I learned to listen to patients.");
+  assert.equal(room.latestCall().answers[1].answer, "");
+  assert.equal(room.spoken.at(-1), `${questionTransition(1)} What did you learn?`);
+  assert.notEqual(questionTransition(1), questionTransition(2));
+  assert.notEqual(questionTransition(1), questionTransition(1, true));
 });

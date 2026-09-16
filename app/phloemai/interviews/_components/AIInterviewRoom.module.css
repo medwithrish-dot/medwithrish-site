@@ -221,11 +221,10 @@
 .questionNumbers button { position: relative; }
 .questionNumbers button[aria-current=step] { border: 1px solid #91c6bd25; background: linear-gradient(145deg, #36616a, #24434f); color: #d8eee8; }
 .questionNumbers button[data-answered=true]::after { content: ''; position: absolute; bottom: 2px; width: 3px; height: 3px; border-radius: 50%; background: #94c7b4; }
-.previousAnswer { margin: 16px 0 0; padding-top: 8px; border-top: 1px solid var(--room-line); font-size: 11px; color: #b4c7dc; }
-.previousAnswer > button { color: #b4c7dc; }
-.previousAnswer strong { display: block; margin-top: 12px; font-size: 11px; line-height: 1.7; }
-.previousAnswer p { white-space: pre-wrap; line-height: 1.8; overflow-wrap: anywhere; }
-.previousAnswer .textButton { color: #9bcdbb; }
+.conversationHistory { list-style: none; margin: 0; padding: 0; }
+.conversationHistory > li { padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--room-line); }
+.historyAnswer { margin: 12px 0 0; padding: 14px 16px; border-left: 2px solid #72bcb6; background: #0d1d3040; border-radius: 0 9px 9px 0; color: #d5e1ee; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.8; }
+.questionTransition { margin: 0 0 12px; color: #a9cdc6; font-size: 12px; line-height: 1.6; }
 .notesPanel { display: flex; flex: 1; flex-direction: column; min-height: 0; overflow-y: auto; padding: 18px; scrollbar-width: thin; }
 .notesPanel h2 { flex-shrink: 0; margin: 0 0 7px; color: #e1ebf6; font-size: 14px; font-weight: 550; }
 .notesPanel textarea { flex: 1; width: 100%; min-height: 120px; margin-top: 5px; padding: 12px; border: 1px solid #9bb9d62a; border-radius: 9px; background: #0d1d3080; box-shadow: inset 0 2px 7px #08121e1f; color: #e2edf8; font-size: 14px; line-height: 1.8; resize: vertical; }
@@ -430,3 +429,49 @@
 .donePrompt button, .answerProgress button { border: 1px solid #72bcb6; border-radius: 6px; padding: 8px 12px; font-size: 12px; font-weight: 650; background: #245b59; color: white; cursor: pointer; }
 .answerProgress button { margin-top: 8px; }
 .donePrompt button:disabled, .answerProgress button:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Touch layouts keep controls reachable without changing the desktop room proportions. */
+@media (max-width: 1023px), (pointer: coarse) {
+  :global([data-interview-shell]):has(.callRoom),
+  :global([data-interview-shell-grid]):has(.callRoom),
+  .focusRoom { height: var(--interview-viewport-height, 100dvh); }
+  .experience :is(input:not([type=checkbox]), textarea, select) { font-size: 16px; }
+  .voiceControls, .voiceControls label, .micCheck, .levelMeter { min-width: 0; }
+  .voiceControls { flex-wrap: wrap; }
+  .voiceControls label { flex-basis: 160px; }
+  .stageIcon { width: 40px; height: 40px; }
+  .promptHeading > button, .donePrompt button, .answerProgress button,
+  .questionControls button, .secondaryButton, .primaryButton { min-height: 44px; }
+  .questionNumbers button { min-width: 40px; }
+  .questionControls { padding-inline: 8px; }
+  .transcriptTabs { overflow-x: auto; }
+  .transcriptTabs button { min-height: 44px; }
+  .finishDialog { max-height: calc(var(--interview-viewport-height, 100dvh) - 32px); }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .stageColumn { padding-inline: 14px; }
+  .participantGrid { gap: 10px; }
+  .participantCard { height: clamp(180px, 25dvh, 240px); }
+  .participantName { padding-inline: 10px; }
+  .participantName strong { font-size: 11px; }
+  .participantName > svg { display: none; }
+}
+@media (max-width: 400px) {
+  .roomHeader { flex-wrap: wrap; }
+  .roomBrand { flex: 1 1 120px; }
+  .headerActions { flex: 0 0 auto; }
+  .questionControls > button { gap: 3px; padding-inline: 4px; font-size: 10px; }
+  .questionNumbers { gap: 2px; }
+  .questionNumbers button { min-width: 32px; padding-inline: 4px; }
+  .transcriptTabs { gap: 15px; }
+}
+@media (max-width: 767px) {
+  :global(html[data-interview-keyboard]) :global([data-interview-shell-main]):has(.callRoom) > nav,
+  :global(html[data-interview-keyboard]) :global([data-interview-shell-main]):has(.callRoom) > :global([aria-label="Device recommendation"]),
+  :global(html[data-interview-keyboard]) .experience:has(.callRoom) > .previewBanner { display: none; }
+  :global(html[data-interview-keyboard]) .callLayout { grid-template-rows: minmax(0, 1fr) auto; }
+  :global(html[data-interview-keyboard]) .conversationStage { display: none; }
+  :global(html[data-interview-keyboard]) .transcriptPanel { grid-row: 1; }
+  :global(html[data-interview-keyboard]) .callControls { grid-row: 2; }
+  :global(html[data-interview-keyboard]) .controlHint { display: none; }
+}

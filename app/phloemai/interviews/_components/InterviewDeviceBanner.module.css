@@ -1,0 +1,9 @@
+.banner { display: none; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 8px; min-height: 40px; padding: 0 12px; border-bottom: 1px solid #cbe0db; background: #e5f3ee; color: #285d50; font-size: 12px; line-height: 1.4; }
+.banner button { display: grid; flex-shrink: 0; width: 44px; min-height: 40px; place-items: center; border-radius: 6px; cursor: pointer; }
+.banner button:hover { background: #cce6dc; }
+.banner button:focus-visible { outline: 2px solid #08787b; outline-offset: -3px; }
+@media (max-width: 1023px), (hover: none) and (pointer: coarse) { .banner { display: flex; } }
+@media (min-width: 1024px) and (hover: none) and (pointer: coarse) {
+  :global(main):has(> .banner) { display: flex; flex-direction: column; }
+  :global(main):has(> .banner) > :global(.grid) { flex: 1; height: auto; min-height: 0; }
+}

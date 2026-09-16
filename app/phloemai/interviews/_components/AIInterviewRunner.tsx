@@ -7,7 +7,7 @@ import { findInterviewStation, interviewStations } from "../_data/interview-stat
 import { previewInterviewFeedback } from "../_data/interview-preview";
 import type { InterviewAnswer, InterviewAttempt, InterviewMode } from "../_lib/interview-types";
 import { getTranscriptHints, useInterviewSpeech } from "../_lib/useInterviewSpeech";
-import { ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled, parseDoneReply } from "../_lib/station-flow";
+import { ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled, parseDoneReply, questionTransition } from "../_lib/station-flow";
 import { useInterviewDevices } from "../_lib/useInterviewDevices";
 import { AIInterviewSetup, type InterviewRoomPlan } from "./AIInterviewSetup";
 import { AIInterviewCall } from "./AIInterviewCall";
@@ -115,7 +115,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
 
   const speech = useInterviewSpeech({ rate: voiceRate, answerKey: `${attempt?.id ?? "preview"}:${questionIndex}`, silenceMs: ANSWER_SILENCE_MS, onSilence: () => onSilenceRef.current(), onTranscript: (text) => {
     const current = attemptRef.current;
-    if (!current || current.status !== "in_progress") return;
+    if (!current || current.status !== "in_progress" || completionLockRef.current) return;
     if (awaitingDoneRef.current) {
       const reply = parseDoneReply(text);
       awaitingDoneRef.current = false;
@@ -300,7 +300,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     submitLockRef.current = true;
     setMicWanted(false);
     followUpRequestRef.current?.abort();
-    setBusy("Saving your station?");
+    setBusy("Saving your station…");
     setReviewRequested(true);
     setError("");
     setErrorStatus(0);
@@ -339,7 +339,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     const current = attemptRef.current;
     if (!current || current.status === "in_progress" || actionLockRef.current || submitLockRef.current) return;
     submitLockRef.current = true;
-    setBusy("Preparing your feedback?");
+    setBusy("Preparing your feedback…");
     setError("");
     setErrorStatus(0);
     try {
@@ -367,7 +367,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const secondsRemaining = Math.max(0, Math.ceil(((preparing ? preparationEnd : stationEnd) - now) / 1000));
   const breakRemaining = attempt?.nextAvailableAt ? Math.max(0, Math.ceil((Date.parse(attempt.nextAvailableAt) - now) / 1000)) : 0;
   const question = attempt?.questions[questionIndex] ?? "";
-  const originalQuestions: readonly string[] = attempt ? findInterviewStation(attempt.stationSlug)?.questions ?? [] : [];
+  const originalQuestions: readonly string[] = useMemo(() => attempt ? findInterviewStation(attempt.stationSlug)?.questions ?? [] : [], [attempt]);
   const followingQuestion = attempt?.questions[questionIndex + 1];
   const followUpAvailable = !preview && Boolean(attempt && followUpsEnabled(attempt.stationSlug)) && originalQuestions.includes(question)
     && (!followingQuestion || originalQuestions.includes(followingQuestion));
@@ -399,7 +399,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       || questionIndexRef.current !== index || actionLockRef.current || submitLockRef.current || document.hidden
       || Date.now() + clockOffsetRef.current >= deadline) return;
     setMicWanted(true);
-    speech.start();
+    if (!promptingRef.current && !speech.speaking && !confirmationPendingRef.current) speech.start();
   };
 
   useEffect(() => {
@@ -415,12 +415,13 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     spokenQuestionRef.current = key;
     if (!readAloud || !voiceSupported) return;
     promptingRef.current = true;
-    void speak(question, () => {
+    const transition = questionTransition(questionIndex, !originalQuestions.includes(question));
+    void speak([transition, question].filter(Boolean).join(" "), () => {
       if (spokenQuestionRef.current !== key) return;
       promptingRef.current = false;
       setPrompting(false);
     });
-  }, [attempt, active, entryReady, question, questionIndex, readAloud, speak, voiceSupported]);
+  }, [attempt, active, entryReady, question, questionIndex, readAloud, speak, voiceSupported, originalQuestions]);
 
   useEffect(() => {
     if (!active || !micWanted || promptingRef.current || confirmationPendingRef.current || speech.speaking || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
@@ -437,10 +438,13 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     setSaveWarning("");
     try {
       cancelMicrophoneRequest();
-      await speech.stop();
-      speech.stopSpeaking();
       stopMicCheck();
-      await requestMicrophone();
+      // Invoke getUserMedia during the Start button gesture, before any await.
+      // This also avoids consuming a fresh station's time in a permission prompt.
+      const microphone = requestMicrophone();
+      speech.stopSpeaking();
+      await speech.stop();
+      await microphone;
       if (!mountedRef.current || document.hidden) return;
       previewRef.current = asPreview;
       setPreview(asPreview);
@@ -577,7 +581,16 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     promptingRef.current = false;
     setPrompting(false);
   };
-  useEffect(() => { onSilenceRef.current = () => { if (micWanted) void requestDone(); }; completeAnswerRef.current = () => { void completeAnswer(); }; });
+  useEffect(() => {
+    onSilenceRef.current = () => {
+      if (!micWanted) return;
+      // Some browsers leave even a short yes/no reply as interim text.
+      // Flush it after the pause so confirmation never needs a button click.
+      if (awaitingDoneRef.current) void stopListening();
+      else void requestDone();
+    };
+    completeAnswerRef.current = () => { void completeAnswer(); };
+  });
 
   const leaveAttempt = async () => {
     if (!attempt || actionLockRef.current || submitLockRef.current) return;

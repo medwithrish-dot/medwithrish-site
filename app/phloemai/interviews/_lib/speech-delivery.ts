@@ -97,7 +97,7 @@ export function createSpeechBoundaryTracker() {
 export function monitorSpeechActivity(recognition: {
   onspeechstart: (() => void) | null;
   onspeechend: (() => void) | null;
-}) {
+}, onActivity?: (active: boolean | null) => void) {
   let stopped = false;
   let ready = false;
   let stream: MediaStream | null = null;
@@ -111,15 +111,18 @@ export function monitorSpeechActivity(recognition: {
     if (animation) cancelAnimationFrame(animation);
     stream?.getTracks().forEach((track) => track.stop());
     if (context && context.state !== "closed") void context.close().catch(() => {});
+    onActivity?.(null);
   };
-  if (typeof window === "undefined" || !window.AudioContext || typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) return stop;
+  const AudioConstructor = typeof window === "undefined" ? undefined : window.AudioContext
+    ?? (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioConstructor || typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) return stop;
   recognition.onspeechstart = () => { if (!ready && !stopped) start?.(); };
   recognition.onspeechend = () => { if (!ready && !stopped) end?.(); };
   void (async () => {
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
       if (stopped) { stream.getTracks().forEach((track) => track.stop()); return; }
-      context = new window.AudioContext();
+      context = new AudioConstructor();
       const source = context.createMediaStreamSource(stream);
       const analyser = context.createAnalyser();
       analyser.fftSize = 256;
@@ -127,7 +130,17 @@ export function monitorSpeechActivity(recognition: {
       const samples = new Uint8Array(analyser.fftSize);
       await context.resume();
       if (stopped) return;
+      // Safari can leave Web Audio suspended until a user gesture. Native
+      // recognition and the transcript watchdog must remain available then.
+      if (context.state !== "running") {
+        stream.getTracks().forEach((track) => track.stop());
+        stream = null;
+        if (context.state !== "closed") void context.close().catch(() => {});
+        onActivity?.(null);
+        return;
+      }
       ready = true;
+      onActivity?.(false);
       let active = false;
       let quietSince: number | null = null;
       const meter = () => {
@@ -136,10 +149,10 @@ export function monitorSpeechActivity(recognition: {
         const rms = Math.sqrt(samples.reduce((sum, value) => sum + ((value - 128) / 128) ** 2, 0) / samples.length);
         if (rms > 0.015) {
           quietSince = null;
-          if (!active) { active = true; start?.(); }
+          if (!active) { active = true; onActivity?.(true); start?.(); }
         } else if (active) {
           quietSince ??= performance.now();
-          if (performance.now() - quietSince >= 250) { active = false; end?.(); }
+          if (performance.now() - quietSince >= 250) { active = false; onActivity?.(false); end?.(); }
         }
         animation = requestAnimationFrame(meter);
       };
@@ -149,6 +162,7 @@ export function monitorSpeechActivity(recognition: {
       stream?.getTracks().forEach((track) => track.stop());
       if (context && context.state !== "closed") void context.close().catch(() => {});
       ready = false;
+      onActivity?.(null);
     }
   })();
   return stop;
