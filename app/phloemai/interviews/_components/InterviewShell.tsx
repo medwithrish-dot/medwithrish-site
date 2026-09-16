@@ -39,11 +39,11 @@ export async function InterviewShell({
   const { isPremium } = await getPhloemEntitlements();
 
   return (
-    <main data-interview-shell className="phloem-dashboard-compact flex-1 bg-[#eef1f3] text-[#071923] lg:h-[100dvh] lg:overflow-hidden">
+    <main data-interview-shell className="phloem-dashboard-compact flex-1 bg-[#eef1f3] text-[#071923] lg:fixed lg:inset-0 lg:h-auto lg:overflow-hidden">
       <a href="#interview-content" className="sr-only z-50 rounded-lg bg-white px-4 py-3 font-bold text-[#08787b] focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to page content</a>
-      <div data-interview-shell-grid className="grid min-h-[100dvh] lg:h-[100dvh] lg:min-h-0 lg:grid-cols-[230px_1fr]">
+      <div data-interview-shell-grid className="grid min-h-[100dvh] lg:h-full lg:min-h-0 lg:grid-cols-[230px_1fr]">
         <InterviewSidebar activeLabel={activeLabel} showPremiumCard={!isPremium} />
-        <div data-interview-shell-main className="min-w-0 lg:h-full lg:min-h-0 lg:overflow-y-auto">
+        <div data-interview-shell-main className="min-w-0 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain">
           <InterviewDeviceBanner />
           <nav aria-label="Interview navigation" className="flex gap-2 overflow-x-auto border-b border-white/10 bg-[#042724] px-4 py-3 lg:hidden">
             {mobileLinks.map(([label, href]) => (
