@@ -89,6 +89,9 @@
 .joinBar p { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 7px 0 0; color: #73846f; font-size: 10px; line-height: 1.7; }
 .joinBar p a { text-decoration: underline; }
 .joinActions { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+.setupCard .joinBar { margin-top: 18px; padding: 17px; }
+.setupCard .joinActions { width: 100%; }
+.setupCard .joinActions > button { flex: 1 1 150px; }
 .lobbyFootnote { margin: 14px 0 0; color: #7a8b7a; text-align: center; font-size: 10px; }
 .previewBanner { display: flex; align-items: center; gap: 10px; margin-bottom: 17px; padding: 12px 15px; border-radius: 9px; border: 1px solid #e3ddbd; background: #faf7e8; color: #827640; font-size: 11px; line-height: 1.7; }
 .previewBanner svg { flex-shrink: 0; }

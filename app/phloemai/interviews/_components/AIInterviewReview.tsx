@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
-import { ArrowLeft, ArrowRight, Check, CheckCircle2, Clock3, Download, FileText, GraduationCap, Loader2, RotateCcw, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Clock3, Download, FileText, GraduationCap, Loader2, RotateCcw, Sparkles, X } from "lucide-react";
 import type { InterviewAttempt } from "../_lib/interview-types";
 import { getStationReviewGuidance } from "../_lib/station-review";
 import { findInterviewUniversity } from "../_data/universities";
@@ -32,6 +32,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   const feedbackRef = useRef<HTMLElement>(null);
   const assessmentRef = useRef<HTMLElement>(null);
   const feedbackRequestedRef = useRef(false);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
   useEffect(() => { headingRef.current?.focus(); }, []);
   const guidance = getStationReviewGuidance(attempt.stationSlug);
   const university = attempt.universitySlug ? findInterviewUniversity(attempt.universitySlug) : null;
@@ -47,8 +48,9 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   }, [feedback]);
   const feedbackSections = feedback ? [{ title: "Strengths", items: feedback.strengths }, { title: "Weaknesses", items: feedback.weaknesses ?? [] }, { title: "Fixes", items: feedback.fixes ?? feedback.improvements }] : [];
   const needsSaving = attempt.status === "in_progress";
-  const feedbackAction = <button type="button" className={styles.primary}
-    disabled={!feedback && (busy || needsSaving || (!preview && (!configured || wordCount < 20)))}
+  const feedbackUnavailable = !feedback && !preview ? (wordCount < 20 ? "word-count" : !configured ? "credits" : null) : null;
+  const feedbackAction = <div className={styles.feedbackActionGroup}><button type="button" className={styles.primary}
+    disabled={!feedback && (busy || needsSaving || feedbackUnavailable === "word-count" || feedbackUnavailable === "credits")}
     aria-controls={feedback ? "station-feedback" : "ai-feedback"}
     onClick={() => {
       if (feedback) { revealFeedback(assessmentRef.current); return; }
@@ -58,7 +60,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
     }}>
     {busy && !feedback ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
     {feedback ? "View AI feedback" : busy ? "Generating feedback…" : preview ? "View sample AI feedback" : attempt.status === "grading" ? "Check AI feedback" : "Generate AI feedback"}
-  </button>;
+  </button>{feedbackUnavailable === "word-count" && <button type="button" className={styles.unavailablePill} disabled>Not available - less than 20 words</button>}{feedbackUnavailable === "credits" && <button type="button" className={styles.upgradePill} onClick={() => setUpgradeOpen(true)}>Not available - <span>Upgrade</span> for more credits</button>}</div>;
   const download = () => {
     const text = [preview ? "PHLOEMAI PREVIEW — not saved to an account" : "PHLOEMAI STATION REVIEW", attempt.title,
       university?.name ?? "Independent station practice", "", "TRANSCRIPT",
@@ -124,5 +126,6 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       <p className={styles.sourceNote}>Practice guidance, not an admissions prediction. Accent, camera use and eye contact are not scored.</p>
     </section>}
     <footer className={styles.nextSteps}><div><h2>{onNext ? "Keep your circuit moving" : "Put one improvement into practice"}</h2><p>{preview ? "Try the station again, or choose another topic." : "This attempt stays in saved interviews when you retry."}{onNext && breakRemaining > 0 && ` Your break: ${Math.floor(breakRemaining / 60)}:${String(breakRemaining % 60).padStart(2, "0")} remaining.`}</p></div><div><button type="button" className={styles.secondary} disabled={busy || needsSaving} onClick={onRetry}><RotateCcw size={16} /> Retry station</button>{onNext ? <button type="button" className={styles.primary} disabled={busy || needsSaving || breakRemaining > 0} onClick={onNext}>Next station <ArrowRight size={16} /></button> : needsSaving ? <button type="button" className={styles.primary} disabled>Choose another station <ArrowRight size={16} /></button> : <Link className={styles.primary} href="/phloemai/interviews/ai-interviews?setup=1">Choose another station <ArrowRight size={16} /></Link>}</div></footer>
+    {upgradeOpen && <div className={styles.upgradeBackdrop} role="presentation" onClick={() => setUpgradeOpen(false)}><div role="dialog" aria-modal="true" aria-labelledby="upgrade-placeholder-title" className={styles.upgradeDialog} onClick={(event) => event.stopPropagation()}><button type="button" className={styles.closeUpgrade} aria-label="Close upgrade dialog" onClick={() => setUpgradeOpen(false)}><X size={17} /></button><p className={styles.eyebrow}>CREDITS PLACEHOLDER</p><h2 id="upgrade-placeholder-title">Upgrade for more AI feedback credits</h2><p>This is a placeholder popup for the credit upgrade flow. The real checkout or membership screen can be connected here.</p><div><Link className={styles.primary} href="/phloemai/pricing">View pricing <ArrowRight size={16} /></Link><button type="button" className={styles.secondary} onClick={() => setUpgradeOpen(false)}>Not now</button></div></div></div>}
   </div>;
 }
