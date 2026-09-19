@@ -1,6 +1,7 @@
 import { INTERVIEW_QUESTIONS, type InterviewQuestion } from "@/app/phloemai/interviews/_data/interviewQuestionBank";
 import { stationQuestionCount } from "@/app/phloemai/interviews/_data/interview-stations";
 import { questionEligible, type ApplicantProfile } from "@/utils/interviews/applicant-profile";
+import { getQuestionStimulus } from "@/app/phloemai/interviews/_data/interview-stimuli";
 
 type StationQuestionRule = {
   sourceTopics?: readonly string[];
@@ -16,7 +17,7 @@ const rules: Record<string, StationQuestionRule> = {
   "ethics-confidentiality": { subcategories: ["Consent, Capacity & Confidentiality"] },
   "nhs-waiting-lists": { sourceTopics: ["NHS WAITING LISTS & ACCESS TO CARE"] },
   "teamwork-group-discussion": { subcategories: ["Teamwork", "Conflict & Difficult Conversations", "Group Discussion"] },
-  "data-analysis": { subcategories: ["Data Stations", "Graphs & Trends", "Data Interpretation"] },
+  "data-analysis": { subcategories: ["Data Stations", "Graphs & Trends", "Data Interpretation", "Critical Appraisal", "Article Analysis"] },
 };
 
 const questions: readonly InterviewQuestion[] = INTERVIEW_QUESTIONS;
@@ -44,8 +45,9 @@ export function selectStationQuestions(stationSlug: string, stationSeconds: numb
   const count = stationQuestionCount(stationSeconds);
   const groups = new Map<string, InterviewQuestion[]>();
   for (const question of matchingQuestions(stationSlug)) {
+    if (stationSlug === "data-analysis" && !getQuestionStimulus(question.id)) continue;
     if (!questionEligible(question.text, applicant)) continue;
-    const key = question.sourceTopic || question.subcategory;
+    const key = stationSlug === "data-analysis" ? "visual-data" : question.sourceTopic || question.subcategory;
     groups.set(key, [...(groups.get(key) ?? []), question]);
   }
   const eligible = [...groups.values()].filter((group) => group.length >= count);

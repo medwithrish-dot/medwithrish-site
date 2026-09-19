@@ -1,7 +1,9 @@
-import type { InterviewQuestion, InterviewQuestionCategoryTitle } from "../_data/interviewQuestionBank";
+import { INTERVIEW_QUESTIONS, type InterviewQuestion, type InterviewQuestionCategoryTitle } from "../_data/interviewQuestionBank";
+import { questionMarkingPoints } from "../_data/question-marking-points";
+import { suppliedMarkSchemes } from "../_data/supplied-mark-schemes";
 
 export type MarkSchemeSection = {
-  title: "General" | "Start" | "Middle" | "End";
+  title: "General" | "Start" | "Middle" | "End" | "Mistakes";
   items: readonly string[];
 };
 
@@ -284,16 +286,36 @@ export const categoryRubric = {
 >;
 
 export function getQuestionMarkScheme(question: InterviewQuestion): MarkSchemeSection[] {
-  return categoryRubric[question.category].map((section) => ({
-    title: section.title,
-    items:
-      section.title === "General"
-        ? [
-            ...section.items,
-            `Addresses the ${question.subcategory.toLowerCase()} focus directly`,
-            `Keeps the depth appropriate for a ${question.difficulty} question`,
-          ]
-        : section.items,
-  }));
+  const supplied = suppliedMarkSchemes[question.id];
+  if (supplied) return supplied.map((section) => ({ ...section, items: [...section.items] }));
+  const key = question.id.split("-").slice(1, 3).join("-");
+  const points = questionMarkingPoints[key];
+  // New bank questions must ship with an authored markscheme. Never silently
+  // substitute a category template, which can mark an unrelated task.
+  if (!points) throw new Error(`Missing question markscheme: ${question.id}`);
+  const [start, middle, end, mistakes] = points.split("|");
+  const general = ["Answers the specific task with clear, relevant reasoning", "Supports claims with examples or evidence appropriate to this question"];
+  if (question.sourceSection === 18) general.push("Uses the supplied image accurately and distinguishes observation from interpretation");
+  else if (question.sourceSection === 17) general.push("Demonstrates the requested communication, using natural language and space for the other person to respond");
+  else if (question.sourceSection === 19) general.push("Explains collaboration and inclusion without inventing contributions by other group members");
+  else if (question.sourceSection === 20) general.push("Makes priorities explicit, works within their role and revises decisions when facts change");
+  else if (question.sourceSection === 22) general.push("Keeps the answer concise and personal; a long structured story is not required");
+  else if (/describe (a|an|when)|occasion when|time when|experience|achievement|mistake you made|opinion you once/i.test(question.text)) general.push("Uses Situation, Task, Action, Result and Reflection naturally where an experience is requested, with emphasis on learning");
+  else if (/to what extent|weigh|arguments|discuss whether|compare|for and against/i.test(question.text)) general.push("Weighs credible arguments on both sides before giving a justified, balanced view");
+  return [
+    { title: "General", items: general },
+    { title: "Start", items: start.split(";") },
+    { title: "Middle", items: middle.split(";") },
+    { title: "End", items: end.split(";") },
+    { title: "Mistakes", items: mistakes.split(";") },
+  ];
+}
+
+const questionsById = new Map<string, InterviewQuestion>(INTERVIEW_QUESTIONS.map((question) => [question.id, question]));
+const questionsByText = new Map<string, InterviewQuestion>(INTERVIEW_QUESTIONS.map((question) => [question.text, question]));
+
+/** IDs are authoritative for saved attempts; text supports pre-ID attempts. */
+export function findReviewQuestion(id: string | null | undefined, text: string) {
+  return (id ? questionsById.get(id) : undefined) ?? questionsByText.get(text) ?? null;
 }
 

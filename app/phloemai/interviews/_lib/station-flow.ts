@@ -1,11 +1,6 @@
 // Owner-controlled allowlist. Add station slugs here only when explicitly selected.
 // Shared with the API: client requests cannot enable a station's follow-ups.
-export const FOLLOW_UP_STATIONS: readonly string[] = [
-  "disability-in-medicine",
-  "equality-diversity-inclusion",
-  "ozempic",
-  "ethics-confidentiality",
-];
+export const FOLLOW_UP_STATIONS: readonly string[] = [];
 export const followUpsEnabled = (slug: string) => FOLLOW_UP_STATIONS.includes(slug);
 
 // A short thinking interval for interview answers, followed by confirmation.

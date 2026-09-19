@@ -1,0 +1,19 @@
+.stimulus { width: 100%; min-width: 0; overflow: hidden; border: 1px solid #d8e0e6; border-radius: 12px; background: #fff; color: #122e3c; }
+.heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; }
+.heading h2, .dialogHeader h2 { margin: 0; font-size: 16px; font-weight: 800; }
+.heading span { display: block; margin-bottom: 4px; color: #476372; font-size: 12px; }
+.heading button, .dialogHeader button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; flex-shrink: 0; padding: 8px 12px; border: 1px solid #b8c8cf; border-radius: 8px; background: white; color: #153e4c; cursor: pointer; }
+.heading button:focus-visible, .dialogHeader button:focus-visible, .textVersion summary:focus-visible { outline: 3px solid #159a9d; outline-offset: 3px; }
+.image { position: relative; width: 100%; aspect-ratio: 1.6; background: #fff; }
+.picture { object-fit: contain; }
+.image > p, .expandedImage > p { padding: 20px; }
+.textVersion { border-top: 1px solid #d8e0e6; padding: 12px 16px; font-size: 13px; line-height: 1.7; }
+.textVersion summary { cursor: pointer; font-weight: 700; }
+.textVersion p { margin: 12px 0 0; white-space: pre-wrap; }
+.presentation { flex-shrink: 0; box-shadow: 0 16px 40px #0003; }
+.dialog { position: fixed; inset: 0; width: min(1600px, 96vw); max-width: 96vw; max-height: 94dvh; margin: auto; padding: 16px; border: 0; border-radius: 12px; background: white; color: #122e3c; overflow: auto; }
+.dialog::backdrop { background: #06141eeb; }
+.dialogHeader { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.question { margin: 12px 0; font-size: 16px; line-height: 1.5; }
+.expandedImage { position: relative; width: 100%; height: min(73dvh, 62vw); min-height: 180px; }
+@media (max-width: 767px) { .heading { padding: 10px; gap: 8px; } .heading h2 { font-size: 14px; } .heading button { padding: 6px 8px; font-size: 12px; } .dialog { padding: 12px; } .expandedImage { height: 65dvh; } }

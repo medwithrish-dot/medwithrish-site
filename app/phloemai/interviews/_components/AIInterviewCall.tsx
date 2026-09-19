@@ -1,5 +1,9 @@
 "use client";
 
+import { getQuestionStimulus } from "../_data/interview-stimuli";
+import { findReviewQuestion } from "../_lib/question-review";
+import { InterviewStimulus } from "./InterviewStimulus";
+
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, AudioLines, Check, Clock3, FileText, Loader2, LockKeyhole, Maximize2, MessageSquareText, Mic, MicOff, Minimize2, Phone, Sparkles, UserRound, Video, VideoOff, Volume2, VolumeX, X } from "lucide-react";
 import type { InterviewAnswer, InterviewAttempt } from "../_lib/interview-types";
@@ -45,6 +49,8 @@ export function AIInterviewCall(props: Props) {
   const donePrompt = useRef<HTMLElement>(null);
   const { attempt, speech, devices, questionIndex, answers, preparing, expired, active, busy, preview } = props;
   const question = attempt.questions[questionIndex];
+  const bankQuestion = findReviewQuestion(attempt.questionIds?.[questionIndex], question);
+  const stimulus = getQuestionStimulus(bankQuestion?.id);
   const status = busy ? "One moment…" : preparing ? "Take a moment to think" : expired ? "Time to reflect" : speech.speaking ? "Reading your question" : speech.listening ? "Listening to you" : "Ready when you are";
   const answer = answers[questionIndex]?.answer ?? "";
   const answerWordCount = answer.trim() ? answer.trim().split(/\s+/).length : 0;
@@ -132,8 +138,8 @@ export function AIInterviewCall(props: Props) {
     </header>
     <div className={styles.callLayout}>
       <div className={styles.stageColumn}>
-        <div className={styles.conversationStage}>
-          <div className={styles.participantGrid}>
+        <div className={`${styles.conversationStage} ${stimulus ? styles.presentationStage : ""}`}>
+          {stimulus ? <InterviewStimulus key={stimulus.id} stimulus={stimulus} question={question} presentation slideLabel={`Question ${questionIndex + 1} of ${attempt.questions.length}`} /> : <div className={styles.participantGrid}>
             <section className={`${styles.participantCard} ${speech.listening ? styles.participantActive : ""}`} aria-label="Your participant tile">
               <ParticipantWaves />
               {devices.cameraEnabled ? <div className={styles.participantVideo}><InterviewDevicePreview stream={devices.stream} compact /></div> : <div className={styles.participantPortrait}><span className={styles.youAvatar} aria-hidden="true"><UserRound size={46} strokeWidth={1.4} /></span></div>}
@@ -144,7 +150,7 @@ export function AIInterviewCall(props: Props) {
               <div className={styles.participantPortrait}><div className={`${styles.interviewerOrb} ${speech.speaking ? styles.orbSpeaking : ""}`} aria-hidden="true"><span /><div><AudioLines size={46} strokeWidth={1.6} /></div></div></div>
               <div className={styles.participantName}><div><strong>AI interviewer</strong><span>{speech.speaking ? "Speaking" : "PhloemAI"}</span></div>{speech.speaking ? <AudioLines size={15} aria-label="Reading the question" /> : <span className={styles.greenDot} />}</div>
             </section>
-          </div>
+          </div>}
           <div className={styles.stationHint}><p className={styles.stageStatus} role="status"><span className={speech.listening ? styles.listeningDot : styles.greenDot} />{status}</p>{preparing && preview && <button type="button" className={styles.textButton} onClick={props.onSkipPreparation}>Skip reading time <ArrowRight size={14} /></button>}</div>
         </div>
         <footer className={styles.callControls} aria-label="Interview controls">
@@ -170,6 +176,7 @@ export function AIInterviewCall(props: Props) {
             <div ref={currentTurn}>
               {transition(questionIndex) && <p className={styles.questionTransition}>{transition(questionIndex)}</p>}
               <div className={styles.transcriptQuestion}><span className={styles.miniInterviewer}><AudioLines size={19} /></span><div><strong>AI Interviewer</strong><p id="current-interview-question">{question}</p></div></div>
+              {stimulus && <div className={styles.transcriptStimulus}><InterviewStimulus key={stimulus.id} stimulus={stimulus} question={question} /></div>}
             </div>
             <div className={styles.promptHeading}><span>Question {questionIndex + 1} of {attempt.questions.length}</span><button type="button" onClick={props.onReadQuestion} disabled={!speech.voiceSupported || Boolean(busy) || props.awaitingDone}>{speech.speaking ? <VolumeX size={14} /> : <Volume2 size={14} />}{speech.speaking ? "Stop reading" : "Hear question"}</button></div>
             <div className={styles.answerHeading}><span className={styles.miniYou}><UserRound size={16} /></span><strong>You</strong>{speech.listening && <span className={styles.transcribingLabel}><AudioLines size={13} />Transcribing</span>}</div>

@@ -40,9 +40,9 @@ export const interviewStations = [
     "What would you do differently next time, and why?",
   ] },
   { slug: "data-analysis", title: "Data and evidence", lobbyTitle: "Data interpretation", theme: "Analysis", questions: [
-    "A service reports that missed appointments fell from 20 out of 100 appointments to 15 out of 100. Explain this change clearly.",
-    "What other information would you need before concluding that a reminder system caused the improvement?",
-    "How would you explain the uncertainty to a patient representative?",
+    "Briefly describe the main trend shown in this graph.",
+    "Which conclusions can reasonably be drawn from these data?",
+    "Which conclusions cannot be drawn from these data?",
   ] },
 ] as const;
 

@@ -4,9 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Clock3, Download, FileText, GraduationCap, Loader2, RotateCcw, Sparkles, X } from "lucide-react";
 import type { InterviewAttempt } from "../_lib/interview-types";
-import { getStationReviewGuidance } from "../_lib/station-review";
 import { findInterviewUniversity } from "../_data/universities";
-import { StationMarkScheme } from "./InterviewMarkScheme";
+import { AttemptMarkSchemes } from "./AttemptMarkSchemes";
 import { getTranscriptHints, normalizeSpeechTranscript } from "../_lib/speech-delivery";
 import { answerConversation } from "../_lib/interviewer-transcript";
 import styles from "./AIInterviewReview.module.css";
@@ -35,7 +34,6 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   const feedbackRequestedRef = useRef(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   useEffect(() => { headingRef.current?.focus(); }, []);
-  const guidance = getStationReviewGuidance(attempt.stationSlug);
   const university = attempt.universitySlug ? findInterviewUniversity(attempt.universitySlug) : null;
   const transcript = attempt.questions.map((question) => ({ question, answer: "", ...attempt.answers.find((item) => item.question === question) }));
   const wordCount = transcript.reduce((total, item) => total + getTranscriptHints(item.answer).wordCount, 0);
@@ -108,7 +106,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
 
       <aside className={styles.studyColumn} aria-label="Station guidance and feedback">
         <section id="review-guide" aria-label="Station markscheme">
-          {guidance ? <StationMarkScheme key={attempt.id} rubricGroups={guidance.rubric} headerAction={feedbackAction} /> : <><p>No markscheme is available for this saved station.</p>{feedbackAction}</>}
+          <AttemptMarkSchemes key={attempt.id} attempt={attempt} headerAction={feedbackAction} />
         </section>
 
         <section id="ai-feedback" ref={feedbackRef} tabIndex={-1} className={styles.feedback} aria-labelledby="ai-feedback-heading" aria-busy={busy && !feedback}>

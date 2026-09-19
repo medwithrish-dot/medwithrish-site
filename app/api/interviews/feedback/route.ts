@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     if (claimed.status === "completed") return interviewJson({ attempt: toInterviewAttempt(claimed) });
     try {
       const snapshot = toInterviewAttempt(claimed);
-      const feedback = await assessInterview(snapshot.title, snapshot.answers);
+      const feedback = await assessInterview(snapshot.title, snapshot.answers, snapshot.questions.map((question, index) => ({ question, id: snapshot.questionIds?.[index] })));
       const { data, error: saveError } = await admin.from("interview_attempts").update({ status: "completed", feedback, score: feedback.score, completed_at: snapshot.completedAt ?? new Date().toISOString(), last_error: null }).eq("id", row.id).eq("user_id", user.id).eq("grading_token", token).eq("status", "grading").select().maybeSingle();
       if (saveError) databaseError(saveError);
       if (!data) throw new InterviewError("A newer feedback request is running. Refresh to see its result.", 409);

@@ -553,6 +553,13 @@ test("draft recovery matches questions after a probe was inserted on the server"
   assert.equal(room.call.answers[2].answer, "Later draft");
 });
 
+function loadQuestionModule(file) {
+  const compiled = { exports: {} };
+  const output = ts.transpileModule(readFileSync(file, "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+  new Function("require", "module", "exports", output)(name => loadQuestionModule(resolve(dirname(file), `${name}.ts`)), compiled, compiled.exports);
+  return compiled.exports;
+}
+
 function questionRecordingRoom({ recorderFails = false } = {}) {
   const effects = [];
   const recorders = [];
@@ -578,10 +585,9 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
     module: loaded, exports: loaded.exports, MediaRecorder: Recorder,
     require(name) {
       if (name.endsWith("speech-delivery") || name.endsWith("question-review")) {
-        const delivery = { exports: {} };
-        new Function("module", "exports", ts.transpileModule(readFileSync(resolve(root, `app/phloemai/interviews/_lib/${name.split("/").at(-1)}.ts`), "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText)(delivery, delivery.exports);
-        return delivery.exports;
+        return loadQuestionModule(resolve(root, `app/phloemai/interviews/_lib/${name.split("/").at(-1)}.ts`));
       }
+      if (name.endsWith("interview-stimuli")) return loadQuestionModule(resolve(root, "app/phloemai/interviews/_data/interview-stimuli.ts"));
       if (name === "react") return {
         useState: initial => [typeof initial === "function" ? initial() : initial, () => {}],
         useRef: current => ({ current }), useCallback: callback => callback,
@@ -600,7 +606,7 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
   const tree = loaded.exports.testPracticeView({
     category: { title: "Personal & Motivation", colour: "#fff" },
     selectedSubcategory: "Motivation for Medicine", questionNumber: 1,
-    question: { id: "question", text: "Why medicine?", category: "Personal & Motivation", subcategory: "Motivation for Medicine", difficulty: "standard" },
+    question: INTERVIEW_QUESTIONS[0],
     initialSavedResponse: null, onBackToQuestions() {}, onQuestionResponseSaved() {}, onQuestionReset() {}, onQuestionStatusChange() {},
   });
   const cleanups = effects.map(effect => effect()).filter(Boolean);

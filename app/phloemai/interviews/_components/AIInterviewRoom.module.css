@@ -478,3 +478,10 @@
   :global(html[data-interview-keyboard]) .callControls { grid-row: 2; }
   :global(html[data-interview-keyboard]) .controlHint { display: none; }
 }
+
+.presentationStage { width: 100%; margin-block: auto; padding-inline: 0; }
+.transcriptStimulus { display: none; margin-top: 16px; }
+@media (max-width: 767px) {
+  .presentationStage { display: none; }
+  .transcriptStimulus { display: block; }
+}

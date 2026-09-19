@@ -6,8 +6,12 @@ The markscheme is for formative UK medical-interview practice. It is not a unive
 
 The implementation currently has two connected layers:
 
-1. **Self-review checklists** use the category rubrics in `app/phloemai/interviews/_lib/question-review.ts`. Each category has General, Start, Middle and End sections.
-2. **AI feedback** uses the five equally weighted criteria in `utils/interviews/scoring.ts`. The complete station transcript, including valid follow-up answers, is considered together.
+1. **Self-review checklists** use `getQuestionMarkScheme()` in `app/phloemai/interviews/_lib/question-review.ts`. All 561 bank questions have individually authored Start, Middle, End and Mistakes content in `_data/question-marking-points.ts`; 15 owner-supplied worked examples override those entries in `_data/supplied-mark-schemes.ts`. General guidance is shared where appropriate. Mistakes appear separately and never increase checklist coverage. Category rubrics remain only for legacy attempts whose questions cannot be matched to the bank.
+2. **AI feedback** uses the five equally weighted criteria in `utils/interviews/scoring.ts`, informed by these same question-specific marking sections and the factual text of any stimulus. The complete station transcript, including historical follow-up answers, is considered together. The server supplies the reference content from saved question IDs, with exact-text lookup for older attempts; candidate answers cannot supply a replacement rubric.
+
+The structures are guidance rather than a compulsory script. Equivalent sound reasoning, reasonable visual estimates and defensible alternative priorities receive credit. A political position, a named mnemonic, an invented actor response or specialist clinical management is not required. New bank questions must include authored content; the coverage test fails on missing entries or duplicate substantive marking sections.
+
+The downloadable text and PDF are generated from the same source with `node scripts/export-interview-markschemes.mjs --pdf`. PDF generation requires a local Playwright installation and Chromium; `PLAYWRIGHT_MODULE` can point to its `index.mjs` outside the project. Without `--pdf`, only the text export is regenerated.
 
 ## The five scored criteria
 
@@ -91,10 +95,13 @@ Strong answers define the issue, explain causes and effects for patients, staff 
 
 ### Data interpretation
 
-The candidate should state the main observation, keep denominators clear, distinguish percentages from percentage-point changes, avoid turning association into causation, identify missing context and explain uncertainty in plain language. Visual-specific answer keys should be added only after the image set is approved.
+The candidate should address the actual question, keep denominators clear, distinguish percentages from percentage-point changes, avoid turning association into causation, identify missing context and explain uncertainty in plain language. All 27 final PNGs are mapped by question ID in `_data/interview-stimuli.ts`, with factual accessible transcriptions. The visual marking points use the final images rather than earlier image-generation prompts. In particular, the berry headline conflicts with 12/200 versus 20/400, the satisfaction chart compares hospitals rather than years, and the diabetes budget includes setup costs.
+
+Question practice shows the image above the response area. AI interviews show it on the presentation stage, or above the answer on mobile, and switch images with the active question. A native dialog provides an enlarged view with keyboard focus containment and Escape dismissal. If an image fails, the source transcription opens. Saved bank-question reviews use the same image and marking content. The data-interview selector covers all 15 section-18 stimuli, and its preview also uses image-backed bank questions.
 
 ## Follow-ups and fairness
 
+- Probing is disabled by default for every station. `FOLLOW_UP_STATIONS` in `_lib/station-flow.ts` is an empty owner-controlled allowlist shared by the client and API. Only an explicit future owner selection should populate it. Existing saved probes remain in their transcripts.
 - Follow-ups are assessed as additional evidence within the same five criteria; they do not create a sixth criterion or change the weighting.
 - An unanswered follow-up is not automatically scored zero when the candidate has already covered the relevant issue.
 - A follow-up must be grounded in what the candidate actually said. It must not invent an experience, mistake, disagreement, patient outcome or belief.
@@ -108,3 +115,7 @@ Feedback contains a short summary, one to three specific strengths, one to three
 ## Question-bank completion
 
 Interview stations draw coherent question clusters from the question bank at roughly one substantive question per 2.5 minutes (three questions for an eight-minute station). When a saved station is submitted, each bank question with a non-empty answer is upserted as `completed` in `interview_question_progress`. AI-generated probes are not question-bank items and are therefore not marked complete in the bank.
+
+## Reference checks for authoring
+
+Ethical guidance is framed around applicant-level reasoning and appropriate supervision, with current legal detail left to the relevant jurisdiction. Reference checks included the GMC's [decision-making and consent guidance](https://www.gmc-uk.org/professional-standards/the-professional-standards/decision-making-and-consent) and [confidentiality disclosure framework](https://www.gmc-uk.org/professional-standards/the-professional-standards/confidentiality/disclosing-patients-personal-information-a-framework). Organisation questions distinguish established functions from transitions: see NHS England's [commissioning changes](https://www.england.nhs.uk/commissioning/how-commissioning-is-changing/) and [integrated care systems](https://www.england.nhs.uk/commissioning/who-commissions-nhs-services/ccg-ics/). The markschemes intentionally avoid fixed current eligibility thresholds, numerical workforce claims or predictions that a proposed law is already in force.

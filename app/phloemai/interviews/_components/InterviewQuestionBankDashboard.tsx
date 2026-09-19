@@ -1,5 +1,8 @@
 "use client";
 
+import { getQuestionStimulus } from "../_data/interview-stimuli";
+import { InterviewStimulus } from "./InterviewStimulus";
+
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { LucideIcon } from "lucide-react";
@@ -1241,7 +1244,7 @@ function QuestionPracticeView({
   const [checkedItems, setCheckedItems] = useState<Set<string>>(() => new Set());
   const [openMarkSchemeSections, setOpenMarkSchemeSections] = useState<
     Set<MarkSchemeSection["title"]>
-  >(() => new Set(["General", "Start", "Middle", "End"]));
+  >(() => new Set(["General", "Start", "Middle", "End", "Mistakes"]));
   const [savedResponse, setSavedResponse] =
     useState<SavedQuestionResponse | null>(null);
   const [isRecordingAudio, setIsRecordingAudio] = useState(false);
@@ -1279,6 +1282,7 @@ function QuestionPracticeView({
   const elapsedSeconds = Math.max(0, suggestedSeconds - timeRemaining);
   const timerPercent = getPercent(elapsedSeconds, suggestedSeconds);
   const rubricGroups = getQuestionMarkScheme(question);
+  const stimulus = getQuestionStimulus(question.id);
 
   const draftAnswer = appendTranscript(answer, interimTranscript);
   const canFinish = Boolean(draftAnswer.trim());
@@ -2351,6 +2355,8 @@ function QuestionPracticeView({
                 </div>
               </div>
             </section>
+
+            {stimulus && <div className="mt-5 max-w-5xl"><InterviewStimulus key={stimulus.id} stimulus={stimulus} question={question.text} /></div>}
 
             {isReviewing ? (
               <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">

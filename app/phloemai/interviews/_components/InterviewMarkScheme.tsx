@@ -52,8 +52,9 @@ export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkScheme
   headerAction?: ReactNode;
 }) {
   const panelPrefix = useId();
-  const totalChecklistItems = rubricGroups.reduce((total, group) => total + group.items.length, 0);
-  const checkedCount = rubricGroups.reduce((total, group) => total + group.items.filter((item) => checkedItems.has(`${group.title}-${item}`)).length, 0);
+  const positiveGroups = rubricGroups.filter((group) => group.title !== "Mistakes");
+  const totalChecklistItems = positiveGroups.reduce((total, group) => total + group.items.length, 0);
+  const checkedCount = positiveGroups.reduce((total, group) => total + group.items.filter((item) => checkedItems.has(`${group.title}-${item}`)).length, 0);
   const checklistPercent = totalChecklistItems ? Math.round(checkedCount / totalChecklistItems * 100) : 0;
   return (
     <aside data-mark-scheme className={compact ? styles.compact : "space-y-5"}>
@@ -110,10 +111,10 @@ export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkScheme
             >
               <span className="min-w-0">
                 <span className="block text-sm font-black text-[#08787b]">
-                  {group.title}
+                  {group.title === "Mistakes" ? "Mistakes to avoid" : group.title}
                 </span>
                 <span className="mt-1 block text-xs font-bold text-[#5d7280]">
-                  {checkedInGroup} / {group.items.length}
+                  {group.title === "Mistakes" ? "Review these separately from your coverage checklist" : `${checkedInGroup} / ${group.items.length}`}
                 </span>
               </span>
               <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#d8e0e6] bg-[#f7fafb] text-[#4a6370] transition-colors hover:border-[#08787b] hover:text-[#08787b]">
@@ -131,6 +132,7 @@ export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkScheme
                 {group.items.map((item) => {
                   const id = `${group.title}-${item}`;
 
+                  if (group.title === "Mistakes") return <p key={id} className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-950">{item}</p>;
                   return (
                     <ChecklistToggle
                       key={id}
@@ -153,7 +155,7 @@ export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkScheme
 
 export function StationMarkScheme({ rubricGroups, headerAction }: { rubricGroups: readonly MarkSchemeSection[]; headerAction?: ReactNode }) {
   const [checkedItems, setCheckedItems] = useState<Set<string>>(() => new Set());
-  const [openSections, setOpenSections] = useState<Set<MarkSchemeSection["title"]>>(() => new Set(["General", "Start", "Middle", "End"]));
+  const [openSections, setOpenSections] = useState<Set<MarkSchemeSection["title"]>>(() => new Set(["General", "Start", "Middle", "End", "Mistakes"]));
   return <InterviewMarkScheme compact rubricGroups={rubricGroups} headerAction={headerAction} checkedItems={checkedItems} openMarkSchemeSections={openSections}
     toggleChecklistItem={(id) => setCheckedItems((previous) => { const next = new Set(previous); if (next.has(id)) next.delete(id); else next.add(id); return next; })}
     toggleMarkSchemeSection={(title) => setOpenSections((previous) => { const next = new Set(previous); if (next.has(title)) next.delete(title); else next.add(title); return next; })} />;
