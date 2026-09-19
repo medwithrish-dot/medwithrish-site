@@ -55,7 +55,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
   const searchRef = useRef<HTMLInputElement>(null);
   const editorToggleRef = useRef<HTMLButtonElement>(null);
   const savingRef = useRef(false);
-  const [expanded, setExpanded] = useState(!initialProfile && variant === "full");
+  const [expanded, setExpanded] = useState(false);
   const [savedProfile, setSavedProfile] = useState(initialProfile);
   const [draft, setDraft] = useState(() => copyProfile(initialProfile));
   const [query, setQuery] = useState("");
@@ -169,7 +169,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
           </div>}
         </div>
       </div>
-      {signedIn && <button ref={editorToggleRef} type="button" aria-expanded={expanded} aria-controls={editorId} disabled={saving} onClick={() => expanded ? cancelEditing() : openEditor()} className="inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-xl border border-[#cdded8] bg-white px-4 py-2.5 text-xs font-bold text-[#08787b] hover:bg-[#edf7f3] disabled:opacity-50">
+      {signedIn && <button ref={editorToggleRef} type="button" aria-expanded={expanded} aria-controls={editorId} disabled={saving} onClick={() => expanded ? cancelEditing() : openEditor()} className={`inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-xl border px-4 py-2.5 text-xs font-bold text-[#08787b] transition disabled:opacity-50 ${!savedProfile && !expanded ? "border-[#82bda1] bg-[#f1fbf4] shadow-[0_0_0_3px_rgba(91,170,124,0.12)] hover:border-[#5b9f7b] hover:bg-[#e8f7ed]" : "border-[#cdded8] bg-white hover:bg-[#edf7f3]"}`}>
         {expanded ? (savedProfile ? "Cancel editing" : "Set up later") : savedProfile ? "Edit plan" : "Set up my plan"}<ChevronDown size={15} className={`transition-transform duration-200 motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`} aria-hidden="true" />
       </button>}
     </div>

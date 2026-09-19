@@ -11,6 +11,12 @@
 .primaryAction { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 11px 15px; border-radius: 9px; background: #06766c; color: white; font-size: 13px; font-weight: 600; transition: background .15s; }
 .primaryAction svg:last-child { margin-left: auto; }
 .primaryAction:hover { background: #045b53; }
+.heroActions { display: grid; gap: 8px; min-width: 210px; }
+.retryAction { display: inline-flex; min-height: 36px; align-items: center; justify-content: center; gap: 7px; border: 1px solid #85bdb0; border-radius: 9px; background: #ffffff9c; color: #176d60; font-size: 11px; font-weight: 700; }
+.retryAction:hover { border-color: #398b79; background: white; }
+.cardActions { display: grid; gap: 8px; }
+.cardRetryAction { display: inline-flex; min-height: 36px; align-items: center; justify-content: center; gap: 7px; border: 1px solid #b9d2cc; border-radius: 9px; background: #f7fbf9; color: #176d60; font-size: 11px; font-weight: 700; }
+.cardRetryAction:hover { border-color: #77aa9e; background: #edf7f3; }
 .catalogue { margin-top: 24px; }
 .catalogueHeading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 18px; }
 .catalogueHeading h2 { margin: 0; font-size: 21px; font-weight: 700; letter-spacing: -.025em; }
@@ -43,5 +49,5 @@
 .sourceNote { margin: 20px 0 0; font-size: 11px; line-height: 1.7; color: #61736b; }
 .empty { padding: 36px; border: 1px dashed #b9cfc7; border-radius: 14px; text-align: center; color: #59716c; }
 @media (max-width: 1200px) { .hero { gap: 18px; padding: 22px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 760px) { .hero { grid-template-columns: auto 1fr; padding: 19px; } .hero > .primaryAction { grid-column: 1 / -1; width: 100%; } .freeVisual { width: 58px; height: 58px; } }
+@media (max-width: 760px) { .hero { grid-template-columns: auto 1fr; padding: 19px; } .hero > :is(.primaryAction, .heroActions) { grid-column: 1 / -1; width: 100%; } .freeVisual { width: 58px; height: 58px; } }
 @media (max-width: 520px) { .cards { grid-template-columns: 1fr; } .filters { flex-direction: column; } .filters select { max-width: none; } .hero { grid-template-columns: 1fr; border-radius: 15px; } .freeVisual { display: none; } .freeMeta span + span::before { display: none; } }

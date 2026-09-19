@@ -28,6 +28,7 @@ function loadTypeScript(path) {
   return compiledModule.exports;
 }
 const { deriveDashboard, londonDate, interviewTheme } = loadTypeScript(resolve(root, "utils/interviews/dashboard-analytics"));
+const { deriveInterviewQuestionProgress } = loadTypeScript(resolve(root, "utils/interviews/question-bank-progress"));
 const { interviewUniversities } = loadTypeScript(resolve(root, "app/phloemai/interviews/_data/universities"));
 const NOW = "2026-09-06T12:00:00Z";
 let sequence = 0;
@@ -49,6 +50,21 @@ function profile(overrides = {}) {
 function completedOn(date, overrides = {}) {
   return attempt({ startedAt: `${date}T09:00:00Z`, completedAt: `${date}T09:08:00Z`, ...overrides });
 }
+
+test("interview question progress is deduplicated, category-aware and ignores stale IDs", () => {
+  const progress = deriveInterviewQuestionProgress([
+    { question_id: "iq-01-001-motivation-for-medicine", status: "completed" },
+    { question_id: "iq-01-001-motivation-for-medicine", status: "completed" },
+    { question_id: "iq-09-001-ethical-and-professional-scenarios", status: "review" },
+    { question_id: "removed-question", status: "completed" },
+  ]);
+  assert.equal(progress.categories.length, 8);
+  assert.equal(progress.completed, 1);
+  assert.equal(progress.review, 1);
+  assert.ok(progress.total > 500);
+  assert.equal(progress.categories.find((item) => item.category === "Personal & Motivation").completed, 1);
+  assert.equal(progress.categories.find((item) => item.category === "Ethics & Professionalism").review, 1);
+});
 
 test("no history produces honest empty evidence and a usable free plan", () => {
   const data = deriveDashboard([], null, NOW, false);

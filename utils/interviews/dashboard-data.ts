@@ -5,6 +5,7 @@ import { toInterviewAttempt } from "./server";
 import { deriveDashboard, londonDate, type PreparationProfile } from "./dashboard-analytics";
 import type { InterviewAttempt } from "@/app/phloemai/interviews/_lib/interview-types";
 import { readApplicant } from "./applicant-profile";
+import type { InterviewQuestionProgressRow } from "./question-bank-progress";
 
 export function preparationFromRow(row: Record<string, unknown> | null): PreparationProfile | null {
   if (!row) return null;
@@ -30,6 +31,8 @@ export const getInterviewDashboardData = cache(async () => {
   let totals: Record<string, number | boolean | null> | null = null;
   let dailyActivity: { practice_date: string; questions: number }[] = [];
   let activityAvailable = false;
+  let questionProgress: InterviewQuestionProgressRow[] = [];
+  let questionProgressAvailable = false;
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -37,12 +40,13 @@ export const getInterviewDashboardData = cache(async () => {
       message = "Sign in to save your university choices, interview dates and preparation plan.";
     } else {
       signedIn = true;
-      const [settings, plan, tasks, allTime, activity] = await Promise.all([
+      const [settings, plan, tasks, allTime, activity, questionBank] = await Promise.all([
         supabase.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("profiles").select("current_plan").eq("id", user.id).maybeSingle(),
         supabase.from("interview_dashboard_tasks").select("task_id").eq("user_id", user.id).eq("date", londonDate(now)),
         supabase.rpc("interview_dashboard_totals"),
         supabase.rpc("interview_daily_activity"),
+        supabase.from("interview_question_progress").select("question_id,status").eq("user_id", user.id).in("status", ["completed", "review"]).limit(1000),
       ]);
       isPremium = plan.data?.current_plan === "premium";
       available = !settings.error && !tasks.error && !allTime.error;
@@ -51,6 +55,8 @@ export const getInterviewDashboardData = cache(async () => {
       totals = allTime.data;
       dailyActivity = activity.data ?? [];
       activityAvailable = !activity.error;
+      questionProgress = (questionBank.data ?? []) as InterviewQuestionProgressRow[];
+      questionProgressAvailable = !questionBank.error;
       if (!available) message = "Your saved interview results are shown below. Personal plans and dates will be available once dashboard storage is ready.";
 
       // No answer text or microphone metrics are transferred for a dashboard view.
@@ -73,5 +79,5 @@ export const getInterviewDashboardData = cache(async () => {
     analytics.stats.practiceMinutes = Math.round(analytics.stats.practiceSeconds / 60);
     analytics.stats.practiceTimeEstimated = Boolean(totals.practiceTimeEstimated);
   }
-  return { attempts, profile, analytics, signedIn, isPremium, available, message, dailyActivity, activityAvailable, today: londonDate(now), historyLimited: Number(totals?.attemptCount ?? 0) > 500 };
+  return { attempts, profile, analytics, signedIn, isPremium, available, message, dailyActivity, activityAvailable, questionProgress, questionProgressAvailable, today: londonDate(now), historyLimited: Number(totals?.attemptCount ?? 0) > 500 };
 });

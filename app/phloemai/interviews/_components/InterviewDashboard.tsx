@@ -1,17 +1,14 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, CalendarDays, CheckCircle2, ChevronRight, GraduationCap, Mic, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CheckCircle2, Mic, Sparkles, TrendingUp } from "lucide-react";
 import type { getInterviewDashboardData } from "@/utils/interviews/dashboard-data";
 import { INTERVIEW_PATHWAY } from "@/utils/interviews/pathway";
 import { InterviewPreparationSetup } from "./InterviewPreparationSetup";
 import { InterviewDailyActivity } from "./InterviewDailyActivity";
+import { InterviewQuestionProgressMini } from "./InterviewQuestionProgressMini";
 
 type DashboardData = Awaited<ReturnType<typeof getInterviewDashboardData>>;
 const base = "/phloemai/interviews";
 const panel = "rounded-2xl border border-[#d7e3e1] bg-white";
-
-function dateLabel(date: string | null | undefined) {
-  return date ? new Date(`${date}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/London" }) : "Date not added";
-}
 
 function practiceDuration(minutes: number) {
   if (minutes < 60) return `${minutes} min`;
@@ -20,7 +17,7 @@ function practiceDuration(minutes: number) {
 
 export function InterviewDashboard({ data }: { data: DashboardData }) {
   const { analytics, profile, signedIn, available, message } = data;
-  const { stats, nextAction, targets, recentPerformance, weeklyInsight } = analytics;
+  const { stats, nextAction, recentPerformance, weeklyInsight } = analytics;
   const targetProgress = stats.weeklyTarget > 0 ? Math.min(100, stats.weekCompleted / stats.weeklyTarget * 100) : 0;
   const latest = recentPerformance[0];
 
@@ -71,11 +68,7 @@ export function InterviewDashboard({ data }: { data: DashboardData }) {
       </section>
 
       <div className="space-y-5">
-        <section className={`${panel} p-5`} aria-labelledby="interviews-title">
-          <div className="flex items-center justify-between gap-3"><h2 id="interviews-title" className="flex items-center gap-2 text-sm font-bold text-[#173d3d]"><GraduationCap className="h-4 w-4 text-[#08787b]" /> Your interviews</h2><Link href="#preparation-settings" className="text-[10px] font-bold text-[#08787b]">Edit</Link></div>
-          {targets.length ? <div className="mt-4 divide-y divide-[#e7eeee]">{targets.slice(0, 3).map((university) => <Link key={university.universitySlug} href={`${base}/ai-interviews?university=${encodeURIComponent(university.universitySlug)}`} className="group flex items-center gap-3 py-3 first:pt-0 last:pb-0"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#edf5f2] text-[#08787b]"><GraduationCap className="h-4 w-4" /></span><span className="min-w-0 flex-1"><strong className="block truncate text-xs text-[#284b4c] group-hover:text-[#08787b]">{university.name}</strong><span className="mt-1 flex items-center gap-1 text-[10px] text-[#748789]"><CalendarDays className="h-3 w-3" />{dateLabel(university.interviewDate)}</span></span><ChevronRight className="h-4 w-4 text-[#91a4a1]" /></Link>)}</div> : <div className="mt-4 rounded-xl bg-[#f5f9f8] p-4"><p className="text-xs font-bold text-[#315553]">No universities added yet</p><p className="mt-1 text-[10px] leading-5 text-[#718486]">Add the schools you’re preparing for to keep their practice links here.</p><Link href="#preparation-settings" className="mt-3 inline-flex text-[10px] font-bold text-[#08787b]">Add universities <ArrowRight className="ml-1 h-3 w-3" /></Link></div>}
-          {targets.length > 3 && <p className="mt-3 text-[10px] text-[#788b8b]">+ {targets.length - 3} more in your preparation settings</p>}
-        </section>
+        <InterviewQuestionProgressMini rows={data.questionProgress} signedIn={signedIn} available={data.questionProgressAvailable} />
 
         <section className={`${panel} p-5`} aria-labelledby="latest-title">
           <div className="flex items-center justify-between gap-3"><h2 id="latest-title" className="flex items-center gap-2 text-sm font-bold text-[#173d3d]"><TrendingUp className="h-4 w-4 text-[#08787b]" /> Latest progress</h2><Link href={`${base}/reports`} className="text-[10px] font-bold text-[#08787b]">All reports</Link></div>

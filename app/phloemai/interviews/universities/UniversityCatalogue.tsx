@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Clock3, Mic, Search } from "lucide-react";
+import { ArrowRight, BookOpenCheck, Clock3, Mic, RotateCcw, Search } from "lucide-react";
 import styles from "../_components/AIInterviewLanding.module.css";
 import { interviewUniversities, universityTimingSummary, UNIVERSITY_SOURCES_CHECKED } from "../_data/universities";
 import { isAcademicInterview } from "../_data/university-stations";
 
 type UniversityCatalogueMode = "practice" | "reference";
+type RecentAttempt = { href: string; completedAt: string };
 
-export function UniversityCatalogue({ mode = "reference" }: { mode?: UniversityCatalogueMode }) {
+export function UniversityCatalogue({ mode = "reference", recentAttempts = {} }: { mode?: UniversityCatalogueMode; recentAttempts?: Record<string, RecentAttempt> }) {
   const [query, setQuery] = useState("");
   const [format, setFormat] = useState("All");
   const practiceMode = mode === "practice";
@@ -46,8 +47,9 @@ export function UniversityCatalogue({ mode = "reference" }: { mode?: UniversityC
       </div>
       {visible.length === 0 ? <p className={styles.empty}>No medical schools match your search. Try another name or clear your filters.</p> : (
         <div className={styles.cards}>
-          {visible.map((entry) => (
-            <article key={entry.slug} className={styles.card}>
+          {visible.map((entry) => {
+            const recentAttempt = recentAttempts[entry.slug];
+            return <article key={entry.slug} className={styles.card}>
               <div className={styles.cardHeader}>
                 <span className={styles.monogram} aria-hidden="true">{entry.name.replace(/University of |University|of /g, "").trim().split(/\s+/).map((word) => word[0]).join("").slice(0, 2).toUpperCase()}</span>
                 <div><h3><Link href={`/phloemai/interviews/universities/${entry.slug}`}>{entry.name}</Link></h3><span className={styles.format}>{entry.format === "Unconfirmed" ? "General practice" : entry.format === "Mixed" ? "Mixed / group" : entry.format}</span></div>
@@ -55,11 +57,14 @@ export function UniversityCatalogue({ mode = "reference" }: { mode?: UniversityC
               <p className={styles.timing}><Clock3 size={16} aria-hidden="true" />{universityTimingSummary(entry)}</p>
               <p className={styles.preparation}>{entry.preparationSeconds > 0 ? `${entry.preparationSeconds}s preparation per block` : "No separate preparation timer"}{entry.breakSeconds > 0 ? ` · ${entry.breakSeconds}s intervals` : ""}</p>
               <div className={styles.cardFooter}>
-                <Link href={`/phloemai/interviews/ai-interviews?university=${entry.slug}`} className={styles.primaryAction} aria-label={`Start AI interview for ${entry.name}`}><Mic size={16} aria-hidden="true" />Start AI interview<ArrowRight size={16} aria-hidden="true" /></Link>
-                <div className={styles.details}><span>{entry.timingStatus === "published" ? "Reported timing" : "Practice preset"}</span><Link href={`/phloemai/interviews/universities/${entry.slug}`} aria-label={`View format and sources for ${entry.name}`}>Format &amp; sources</Link></div>
+                {recentAttempt ? <div className={styles.cardActions}>
+                  <Link href={recentAttempt.href} className={styles.primaryAction} aria-label={`Review your last ${entry.name} interview`}><BookOpenCheck size={16} aria-hidden="true" />Review last attempt<ArrowRight size={16} aria-hidden="true" /></Link>
+                  <Link href={`/phloemai/interviews/ai-interviews?university=${entry.slug}`} className={styles.cardRetryAction} aria-label={`Retry AI interview for ${entry.name}`}><RotateCcw size={14} aria-hidden="true" />Retry interview</Link>
+                </div> : <Link href={`/phloemai/interviews/ai-interviews?university=${entry.slug}`} className={styles.primaryAction} aria-label={`Start AI interview for ${entry.name}`}><Mic size={16} aria-hidden="true" />Start AI interview<ArrowRight size={16} aria-hidden="true" /></Link>}
+                <div className={styles.details}><span>{recentAttempt ? `Last attempt ${new Date(recentAttempt.completedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" })}` : entry.timingStatus === "published" ? "Reported timing" : "Practice preset"}</span><Link href={`/phloemai/interviews/universities/${entry.slug}`} aria-label={`View format and sources for ${entry.name}`}>Format &amp; sources</Link></div>
               </div>
-            </article>
-          ))}
+            </article>;
+          })}
         </div>
       )}
       <p className={styles.sourceNote}>Practice presets may include estimated timings. Always follow your university invitation. Sources checked {UNIVERSITY_SOURCES_CHECKED}.</p>
