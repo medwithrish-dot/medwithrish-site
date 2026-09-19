@@ -1,0 +1,83 @@
+PHLOEMAI INTERVIEW STIMULI 01–05 — EXPANDED PROMPTS
+
+Generated using the built-in image generation tool, then visually checked.
+These expanded versions supersede prompts 01–05 in interview-stimulus-image-prompts.txt.
+All examples and datasets are fictional; candidate-facing images contain no answers.
+Final PNGs are in public/phloemai/interview-stimuli/.
+The original simple drafts are not the final deliverables.
+
+============================================================
+01. iq-18-001-data-stations.png
+
+Redesign the supplied simple stimulus into a more detailed, realistic medical-school interview data sheet. Preserve its topic but replace the layout and data with the specification below. Landscape approximately 1600 x 1000, white background, crisp readable dark sans-serif text, subtle rules, restrained teal and muted orange. Keep title compact so evidence has ample space. All data fictional. Use exact text and numbers. No answers, analytical conclusions, recommendations or highlighting of a correct choice. Title: "GP appointment waits across two districts". Subtitle: "Routine appointments, 2019–2024".
+Main panel: two-series line chart, y-axis "Mean wait (days)" 0–16, ticks every 2, x-axis six equally spaced years 2019, 2020, 2021, 2022, 2023, 2024. Teal circles: "North district", values 6, 7, 11, 13, 12, 10. Orange squares: "South district", values 5, 6, 8, 9, 11, 12. Include legend; plot coordinates accurately; label each point with its value.
+Below chart: compact table headed "Practices submitting data" with columns District | 2019 | 2020 | 2021 | 2022 | 2023 | 2024. North | 18 | 18 | 17 | 15 | 15 | 14. South | 20 | 20 | 20 | 21 | 22 | 22.
+Two neutral notes below: "North introduced online triage in January 2022; South introduced it in January 2024." and "Annual means use each year's reporting practices. Urgent appointments excluded; patient age and appointment demand were not recorded."
+Footer: "Fictional regional audit". Do not explain whether triage worked.
+
+============================================================
+02. iq-18-002-data-stations.png
+
+Redesign the supplied simple stimulus into a more detailed, realistic medical-school interview data sheet. Preserve its topic but replace the layout and data with the specification below. Landscape approximately 1600 x 1000, white background, crisp readable dark sans-serif text, subtle rules, restrained teal and muted orange. Keep title compact so evidence has ample space. All data fictional. Use exact text and numbers. No answers, analytical conclusions, recommendations or highlighting of a correct choice. Title: "Six-month smoking cessation programme results".
+Subtitle: "Service evaluation across three self-selected programmes".
+Main table with columns Programme | Enrolled | Followed up | Reported quitting | Still smoking | Not followed up.
+Rows: Text support | 200 | 150 | 48 | 102 | 50; Group sessions | 120 | 108 | 43 | 65 | 12; One-to-one support | 80 | 60 | 30 | 30 | 20.
+Second table labelled "Participant and service information" with columns Programme | Mean age | Median cigarettes/day at entry | Total programme cost.
+Rows: Text support | 29 | 12 | £8,000; Group sessions | 46 | 18 | £18,000; One-to-one support | 52 | 22 | £24,000.
+Notes: "Participants chose their programme. Quitting was self-reported at six months; no biochemical confirmation was used." and "Reported quitting and still smoking refer only to participants followed up. Outcomes for those not followed up are unknown."
+Footer: "Fictional data". Do not calculate percentages or cost per quitter.
+
+============================================================
+03. iq-18-003-data-stations.png
+
+Redesign the supplied simple stimulus into a more detailed, realistic medical-school interview data sheet. Preserve its topic but replace the layout and data with the specification below. Landscape approximately 1600 x 1000, white background, crisp readable dark sans-serif text, subtle rules, restrained teal and muted orange. Keep title compact so evidence has ample space. All data fictional. Use exact text and numbers. No answers, analytical conclusions, recommendations or highlighting of a correct choice. Title: "Weekly exercise and reported wellbeing".
+Subtitle: "Cross-sectional online survey of 240 adults".
+Main panel grouped bar chart with four x-axis groups "Less than 1 hour", "1–3 hours", "4–6 hours", "More than 6 hours". Y-axis "Mean wellbeing score (0–10)", linear 0–10, ticks every 2. Two equal-width bars per group: teal "Aged 18–39", orange "Aged 40–65".
+Younger means: 5.4, 6.2, 7.1, 6.9. Older means: 4.9, 5.8, 6.5, 6.7. Label each bar top with mean.
+Add thin black capped error bars showing these 95% confidence intervals respectively: younger 4.9–5.9, 5.8–6.6, 6.7–7.5, 6.0–7.8; older 4.4–5.4, 5.4–6.2, 6.0–7.0, 5.7–7.7. Bar heights and error endpoints must match y-axis.
+Below plot a compact table labelled "Respondents per group (n)", with same four category columns. Rows Aged 18–39: 30, 45, 30, 15; Aged 40–65: 35, 40, 30, 15. These total 240.
+Footnotes: "Error bars show 95% confidence intervals." and "Exercise and wellbeing were self-reported. Income, health conditions and sleep were not recorded. Fictional data."
+Do not explain association, causation or statistical significance.
+
+FOLLOW-UP EDIT 1:
+Edit this chart to make the confidence intervals unambiguous. Keep all existing wording, means, sample sizes, colours and categories unchanged. Replace the bottom respondents table with a slightly taller table titled "Mean (95% confidence interval); n". Four columns keep the exercise categories and two rows keep the age groups. Exact eight cells: Aged 18–39: "5.4 (4.9–5.9); n=30", "6.2 (5.8–6.6); n=45", "7.1 (6.7–7.5); n=30", "6.9 (6.0–7.8); n=15". Aged 40–65: "4.9 (4.4–5.4); n=35", "5.8 (5.4–6.2); n=40", "6.5 (6.0–7.0); n=30", "6.7 (5.7–7.7); n=15". Wrap each cell to two lines if needed. Precisely adjust all plotted error-bar caps to those same interval endpoints; the last teal cap must be below 8 at 7.8. Keep the eight mean labels above the caps without overlap, preserve chart scale 0–10 and original footnotes. No added conclusions or answers. Clean landscape educational chart.
+
+FOLLOW-UP EDIT 2 (FINAL):
+Make only this precise change to the supplied chart: remove all eight black error bars including their vertical strokes and horizontal caps. Keep the coloured bar heights, eight numeric mean labels, axes, table, title, legend and all other text exactly unchanged. Replace the footnote "Error bars show 95% confidence intervals." with "The table reports means, 95% confidence intervals and sample sizes." The confidence intervals are now given numerically only, in the existing exact table. Leave the mean labels above each bar with clear spacing. Do not add error bars or any other graphical elements.
+
+Final chart shows grouped means. Confidence intervals and sample sizes are provided numerically in the table; there are no plotted error bars.
+
+============================================================
+04. iq-18-004-data-stations.png
+
+Redesign the supplied simple stimulus into a more detailed, realistic medical-school interview data sheet. Preserve its topic but replace the layout and data with the specification below. Landscape approximately 1600 x 1000, white background, crisp readable dark sans-serif text, subtle rules, restrained teal and muted orange. Keep title compact so evidence has ample space. All data fictional. Use exact text and numbers. No answers, analytical conclusions, recommendations or highlighting of a correct choice. Title: "Options for a community diabetes programme".
+Subtitle: "Planning brief: £200,000 first-year budget; one option must be selected".
+Main table with columns Option | Annual invitations | Expected attendance | Annual running cost | One-off setup cost.
+Rows: Mobile clinic | 1,200 | 68% | £180,000 | £35,000; Evening clinic | 800 | 81% | £120,000 | £15,000; Online support | 2,400 | 42% | £90,000 | £45,000.
+Second table titled "Access and implementation" with columns Option | Time to launch | Delivery requirements.
+Rows: Mobile clinic | 5 months | Two nurses; weekly rural visits; Evening clinic | 2 months | One nurse; town-centre site; Online support | 3 months | Internet access; remote educator.
+Below tables include neutral notes: "The budget must cover setup and running costs. No additional funding is confirmed." and "Attendance estimates come from small pilots in different areas. An estimated 18% of the local target population lacks reliable internet access." and "Health outcomes, long-term retention and adverse effects were not measured."
+Footer: "Fictional planning data". Do not calculate total costs, mark feasibility or recommend an option.
+
+============================================================
+05. iq-18-005-data-stations.png
+
+Redesign the supplied simple stimulus into a more detailed, realistic medical-school interview data sheet. Preserve its topic but replace the layout and data with the specification below. Landscape approximately 1600 x 1000, white background, crisp readable dark sans-serif text, subtle rules, restrained teal and muted orange. Keep title compact so evidence has ample space. All data fictional. Use exact text and numbers. No answers, analytical conclusions, recommendations or highlighting of a correct choice. Title: "Ward admissions and discharge delays".
+Subtitle: "Twenty sampled ward-days across two wards".
+Main panel scatter plot. X-axis "Daily admissions" linear 10–50 with ticks every 5. Y-axis "Mean time from discharge decision to leaving (hours)" linear 1–8, ticks every 1.
+Exactly twenty markers, ten per ward. Teal circles labelled in legend "Ward A": (12,2.1), (16,2.8), (20,2.4), (24,3.3), (28,3.0), (32,3.8), (36,3.4), (40,4.4), (44,4.0), (48,4.8).
+Orange squares labelled in legend "Ward B": (14,2.8), (18,3.5), (22,3.1), (26,4.0), (30,3.6), (34,4.5), (38,4.0), (42,5.0), (46,4.6), (24,7.5).
+No connecting lines, regression lines or point labels. Outlier has same size and style as other Ward B squares.
+Small table below chart titled "Ward profile during the sampling period", columns Ward | Beds | Median nurse-to-patient ratio | Weekend days sampled. Ward A | 28 | 1:6 | 2 of 10. Ward B | 36 | 1:8 | 4 of 10.
+Footnote: "Days were sampled over six weeks. Patient complexity and transport availability were not recorded. Each marker represents one ward-day."
+Footer: "Fictional audit data". Do not identify the outlier or suggest a cause.
+
+VERIFICATION NOTES
+- Checked visible titles, labels, table entries and fictional-data notes against the specifications.
+- Checked line-series direction and labelled values; counted ten markers per ward in the scatter plot.
+- Smoking outcomes reconcile: quitting + still smoking = followed up; followed up + missing = enrolled.
+- Exercise sample sizes sum to 240, split equally between the two age groups.
+- Budget, setup costs and access information intentionally leave trade-offs for the candidate to discuss.
+- Exact numerical marking should use printed values and the source specifications, allowing normal graph-reading tolerance.
+- Image generation only: these files have not yet been wired into the question-bank UI or given final markschemes.
+
