@@ -1,0 +1,157 @@
+INTERVIEW STIMULUS FINAL CLEANUP PROMPTS
+19 September 2026
+Mode: built-in imagegen, image editing with each original PNG as the edit target.
+
+These exact edit prompts take precedence over ALL earlier stimulus-generation prompts.
+No candidate questions or answer instructions inside PNGs. Any depicted people must be male; neutral icons may remain. Keep all fictional data and neutral scenario constraints. Use opaque, readable backgrounds. Questions are stored separately in interview-stimulus-candidate-tasks.txt.
+
+Unchanged after visual review: 01, 02, 03, 05, 07, 08, 09, 10, 11, 13.
+
+============================================================
+IMAGE 04
+Filename: iq-18-004-data-stations.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 4. Replace subtitle with exactly "Planning brief: £200,000 first-year budget; funding for one programme". This is a neutral funding constraint, not an instruction. Preserve both tables, all numbers and notes exactly.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 06
+Filename: iq-18-006-graphs-and-trends.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 6. Replace right panel heading "Survey question" with "Survey measure". Replace its question with "Overall satisfaction with inpatient care." Replace next sentence with "Percentages show respondents reporting satisfaction." Preserve the deliberately truncated y-axis 80%–87%, A82% B86%, and all table data and notes exactly. No question marks.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 12
+Filename: iq-18-012-critical-appraisal.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 12. Replace the question title with "Reminder texts and missed appointments". Keep every number, group, study detail and all other text unchanged.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 14
+Filename: iq-18-014-article-analysis.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 14. Remove the question subheading "A daily serving for everyone?" entirely. Leave the fictional sensational headline "BERRY HALVES CANCER RISK" and "Fewer diagnoses among berry eaters." intact because these are evidence for appraisal, not conclusions endorsed by the image. Preserve the entire right-side study table and methods unchanged.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 15
+Filename: iq-18-015-article-analysis.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 15. Replace question title with "Virtual reality and anatomy learning". Keep all chart bars, percentages, participant counts and all other text exactly as shown.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 16
+Filename: iq-19-001-group-discussion.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 16. Replace title with "Healthcare improvement proposals". Replace subtitle with "Capacity for two programme launches next year". Remove bottom sentence "Rank all five. Explain your first two choices, missing information and any disagreement." Footer should only say "Fictional planning brief". Preserve all five equal A–E cards, all service descriptions, numbers, launch times and constraints exactly; do not highlight any choice.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 17
+Filename: iq-19-002-group-tasks.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 17. Replace title with "NHS improvement budget". Replace sentence beside budget with "Whole-project funding only. Total budget: £10m." Remove bottom instruction "Agree a package. Explain trade-offs and what evidence you would request." Footer should only say "Fictional one-year project costs". Preserve £10 million, all five table rows, costs £4m/£6m/£3m/£5m/£2m, benefits and constraints exactly.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 18
+Filename: iq-19-003-group-tasks.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 18. Replace "You can keep five items. Agree your choices." with factual "Carrying capacity: five items". Replace bottom sentence with only "Phone signal is intermittent." Preserve title, Four adults, Rain, 3°C overnight, Dusk in 30 minutes; all TEN object illustrations and labels unchanged including 2 litres, 10 metres, 20% battery. Do not select or rank anything. No people to add.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 19
+Filename: iq-19-008-group-tasks.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 19. Replace title with "Four patient presentations". Keep role/context subtitle. Remove entire bottom instruction "Agree an assessment order. State who you would alert and what else you need to know." Footer only "Fictional cases". Preserve four A–D cards with ages 67,24,45,5 and every symptom, time and detail unchanged. No diagnosis or prioritisation answer.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 20
+Filename: iq-20-001-prioritisation-stations.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 20. Replace title with "Assessment queue". Remove the bottom instruction beginning "Explain priorities..." entirely. Footer only "Fictional interview scenario". Preserve white-on-navy styling and all A–E table rows, symptoms and timing unchanged.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 21
+Filename: iq-20-002-prioritisation-stations.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 21. Replace title "Five tasks. Three immediate actions." with "Five competing demands". Keep student placement context and all five notes unchanged in their current positions C/A above E/B/D. Remove the whole bottom white strip containing "Choose three..." and its pins; reconstruct the cork naturally. Do not add substitute instructions.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 22
+Filename: iq-20-003-prioritisation-stations.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 22. Remove bottom instruction box; preserve only the context "Student on placement" as a small neutral footer above "Fictional team messages". Rewrite the three request messages as factual statements: Pharmacist: "A routine prescription needs clarification by the prescriber before 14:00." Student colleague: "Help requested with tomorrow's teaching." Manager: "The monthly survey is due today." Preserve Nurse and Receptionist messages verbatim, all five senders, avatars and 10:00 timestamps. No question marks or imperatives.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 23
+Filename: iq-20-004-prioritisation-stations.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 23. Replace title with "Health-service funding proposals". Replace left instruction "Choose whole proposals within the budget." with "Whole-proposal funding only". Remove bottom instruction beginning "Explain your choice..." entirely. Footer only "Fictional year-one estimates". Preserve £5 million budget, complete four-row table, costs, activities, uncertainty notes and caveat about different activities exactly.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 24
+Filename: iq-20-005-prioritisation-stations.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 24. Rebuild the illegible black/transparent background as FULLY OPAQUE SOLID WHITE across the entire canvas and ALL panel interiors. Crisp solid dark navy lettering, pale blue header bands only. NO transparency, alpha holes, black patches, speckles, textures or outlined text. Title exactly "Public-health investment estimates". Remove subtitle instruction and bottom ranking instruction bar entirely. Keep distinct equal 2x2 panels, no rankings. Exact panel contents:
+School vaccination outreach / Year-one reach: 1,200 children / Cost: £120,000 / Benefit horizon: 3–12 months / Uncertainty: parental consent.
+Smoking-cessation support / Year-one reach: 800 adults / Cost: £80,000 / Benefit horizon: 1–5 years / Uncertainty: programme uptake.
+Air-quality monitoring / Area covered: 20,000 residents / Cost: £60,000 / Benefit horizon: depends on policy action / Uncertainty: action on findings.
+Free community exercise / Year-one reach: 1,500 adults / Cost: £45,000 / Benefit horizon: 6–12 months / Uncertainty: continued attendance.
+Footer "All costs are for year one • Fictional planning estimates".
+Preserve simple school, speech bubble, air sensor, walking person icons. Air sensor should have no CO2 text. Walking icons must be male/neutral trouser silhouettes, no women. Large, comfortably readable text. Do not add any questions, candidate instructions or answers.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 25
+Filename: iq-20-007-prioritisation-stations.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 25. Remove ONLY the bottom-right candidate question and instruction "What would you keep, rearrange or delegate? Explain how you would communicate." Fill its former area with matching blank ruled cream paper. Preserve every other detail, both days, all five Thursday appointment times, Friday09:00 deadline, three hours work remaining, booked two months ago, cover may be available, diary style and footer. No new writing.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 26
+Filename: iq-20-008-prioritisation-stations.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 26. Remove bottom question "Which concern would you escalate first?" and instruction "Explain immediate actions, who to involve and what to record." Footer only "Fictional incidents". Keep title, role context, four incident cards and all facts exactly unchanged: medicine administered despite documented allergy patient well; fridge1°C above permitted range duration unknown; wrong-patient medicine caught before administration; spill sign missing corridor empty. No answer or hints.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.
+
+============================================================
+IMAGE 27
+Filename: iq-20-009-prioritisation-stations.png
+Input: previous version of this image (image 23-27 used their first generated drafts).
+
+Use case: text-localization / precise-object-edit. Image 1 is the EDIT TARGET: interview question-bank stimulus 27. Replace BOTH standing women with adult MEN in the same positions and roles: left filming visitor becomes a short-haired man in casual clothes and trousers holding his phone up; right colleague becomes a short-haired man in blue scrubs with lanyard, same speaking gesture. Preserve collapsed adult man and all scene events. Restore ALL black/transparent damaged areas to clean FULLY OPAQUE backgrounds; header and footer pure white, dark navy readable lettering. No speckles or transparency. Keep title "Several events happen at once" and subtitle "Hospital corridor • Student on placement". Remove bottom candidate instruction beginning "Explain your first actions..." entirely. Footer only "Fictional interview scenario".
+Preserve all five factual callouts verbatim with correctly attached leaders:
+A • Smoke at a closed store-room door
+B • A visitor has collapsed nearby
+C • Another visitor is filming
+D • A colleague asks you to fetch confidential notes
+E • The fire alarm has not sounded
+Closed door must remain fully CLOSED, smoke visible; fire alarm unactivated; no rescuers, diagnoses, answers or recommendations added. All depicted people male. Preserve distinct blue-grey educational scene illustration and full framing.
+Global constraints: This image must contain only evidence, scenario facts and neutral descriptive titles, never candidate questions, task instructions, answers or marking hints. Preserve all unspecified original facts, numbers, layout and visual style. Do not add people where none exist. Any depicted people must be men or neutral male-style icons. Keep landscape aspect ratio and large readable type. Return one finished edited image.

@@ -1,0 +1,112 @@
+INTERVIEW STIMULUS CANDIDATE TASKS — SEPARATE FROM IMAGES
+19 September 2026
+
+These are draft candidate-facing tasks for app text or markscheme authoring, NOT image-generation prompts. Do not render them inside the PNGs. They accompany the final 27 images and are not completed markschemes or clinical guidance. Review before publishing. No question-bank/database records were changed in this pass.
+
+01. GP appointment waits
+Image: iq-18-001-data-stations.png
+Task: Describe the trends and differences between the districts. What limits the comparison, and what extra information would help explain it?
+
+02. Smoking cessation results
+Image: iq-18-002-data-stations.png
+Task: Compare programme outcomes using appropriate denominators. Discuss follow-up, participant differences and what the data can support.
+
+03. Exercise and wellbeing
+Image: iq-18-003-data-stations.png
+Task: Describe the relationship between exercise and wellbeing across the age groups. Discuss uncertainty and whether causation can be inferred.
+
+04. Community diabetes programmes
+Image: iq-18-004-data-stations.png
+Task: Select one programme within the £200,000 first-year budget. Explain costs, access trade-offs and what missing evidence could change your choice.
+
+05. Ward admissions and discharge delays
+Image: iq-18-005-data-stations.png
+Task: Describe the association and unusual observations. What additional ward information would help you interpret them?
+
+06. Patient satisfaction briefing
+Image: iq-18-006-graphs-and-trends.png
+Task: Critically assess the hospital communications claim and graph. How would you present the same data more fairly?
+
+07. Childhood vaccination uptake
+Image: iq-18-007-graphs-and-trends.png
+Task: Describe changes in uptake and compare the districts. Discuss possible explanations without assuming that the service changes caused them.
+
+08. Sleep and exam scores
+Image: iq-18-008-graphs-and-trends.png
+Task: Interpret the sleep/exam association, accounting for revision groups. What further information would you need?
+
+09. Heart-event risk
+Image: iq-18-009-data-interpretation.png
+Task: Explain the potential benefits, harms and treatment burden to a patient using plain language and absolute numbers.
+
+10. Physiotherapy results
+Image: iq-18-010-data-interpretation.png
+Task: Explain the results of both programmes in plain language. Discuss missing responses, follow-up and practical trade-offs.
+
+11. Energy drinks and concentration
+Image: iq-18-011-critical-appraisal.png
+Task: Assess how the energy-drink study was conducted and reported. What limits confidence in the claim?
+
+12. Reminder texts and appointments
+Image: iq-18-012-critical-appraisal.png
+Task: Interpret the missed-appointment results. What does the study establish, and what uncertainty remains?
+
+13. Asthma-app evaluation
+Image: iq-18-013-article-analysis.png
+Task: Appraise the asthma-app evaluation, including missing follow-up, measurement and other changes during the study.
+
+14. Berry news and study
+Image: iq-18-014-article-analysis.png
+Task: Compare the fictional news claims with the study data. How would you communicate the findings accurately?
+
+15. Virtual reality and anatomy learning
+Image: iq-18-015-article-analysis.png
+Task: Appraise the virtual-reality pilot. What further research would address its limitations?
+
+16. Healthcare improvement proposals
+Image: iq-19-001-group-discussion.png
+Task: Group task, eight minutes: rank all five proposals and agree your first two choices for launch next year. Explain criteria, missing information and how you handled disagreement.
+
+17. NHS improvement budget
+Image: iq-19-002-group-tasks.png
+Task: Agree a package of whole projects costing no more than £10m. Explain trade-offs and the further evidence you would request.
+
+18. Overnight on the mountain
+Image: iq-19-003-group-tasks.png
+Task: Agree five items for the group to carry. Explain assumptions, trade-offs and how you would reach agreement.
+
+19. Four patient presentations
+Image: iq-19-008-group-tasks.png
+Task: Agree an assessment order. State who you would alert and what else you need to know. You are a student, not being asked to diagnose.
+
+20. Assessment queue
+Image: iq-20-001-prioritisation-stations.png
+Task: Explain your priorities, immediate safety actions and how you would communicate delays. Do not diagnose.
+
+21. Five competing demands
+Image: iq-20-002-prioritisation-stations.png
+Task: Choose three demands to address immediately. Explain what happens to the others and who you would involve.
+
+22. Team inbox
+Image: iq-20-003-prioritisation-stations.png
+Task: Explain what you would do first, who you would alert and what could be delegated, taking account of the student role.
+
+23. Health-service funding proposals
+Image: iq-20-004-prioritisation-stations.png
+Task: Choose whole proposals within the £5m year-one budget. Explain your choices, trade-offs and what further evidence you need.
+
+24. Public-health investment estimates
+Image: iq-20-005-prioritisation-stations.png
+Task: Rank the likely impact of the public-health options. Explain your criteria and missing information; reach alone is not a measure of health benefit.
+
+25. A difficult Thursday
+Image: iq-20-007-prioritisation-stations.png
+Task: Explain what you would keep, rearrange or delegate, and how you would communicate.
+
+26. Four patient-safety concerns
+Image: iq-20-008-prioritisation-stations.png
+Task: Which concern would you escalate first? Explain immediate actions, who to involve and what to record. No diagnoses are required.
+
+27. Several events happen at once
+Image: iq-20-009-prioritisation-stations.png
+Task: Explain your first actions, who to call and how you would protect people, taking account of your student role.
