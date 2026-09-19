@@ -1,0 +1,102 @@
+PHLOEMAI INTERVIEW STIMULI 06–10 — EXPANDED PROMPTS AND REVIEW
+
+Generated with the built-in imagegen tool. These prompts supersede original prompts 06–10.
+Final PNGs: public/phloemai/interview-stimuli/.
+All studies, data and organisations are fictional. These are candidate-facing stimuli, not real clinical advice.
+This batch adds five assets; it does not connect them to the question bank or create final markschemes.
+
+REVIEW OF EXISTING IMAGES 01–05
+Visually inspected the saved PNGs against their expanded prompts.
+01: Both six-point line series, reporting-practice counts, labels and notes agree with the specification.
+02: Each followed-up count equals quitting plus still smoking; each enrolled count includes missing follow-up. Table figures agree with the specification.
+03: Eight displayed means and numerical confidence intervals agree with the table. Age-group samples total 120 each, 240 overall. The final image correctly has no error bars.
+04: Budget, invitations, attendance, running costs, setup costs and access information agree with the specification. No preferred answer is highlighted.
+05: Ten circles and ten squares, including the Ward B point near (24, 7.5); axis labels and ward-profile table agree with the specification.
+No material content correction identified in 01–05. Dense footnotes need full-size viewing; provide enlargement when these are integrated into the question bank.
+Existing generated images are 1586 x 992, approximately the requested 1600 x 1000 format.
+
+============================================================
+06. iq-18-006-graphs-and-trends.png
+
+Use case: scientific-educational. Generate a detailed medical-school interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Patient satisfaction rises sharply".
+Subtitle: "Hospital communications briefing | 2024 inpatient survey".
+Left two-thirds: vertical bar chart with ONLY two equal-width teal bars labelled Hospital A and Hospital B. Values 82% and 86% clearly printed above bars. Y-axis "Satisfied respondents (%)" starts at 80%, ends at 87%, ticks at every integer percent 80 through 87. Both bars start exactly at 80, with heights 2 and 6 scale units. Intentionally use this truncated axis WITHOUT a break symbol and WITHOUT drawing attention to truncation. No zero axis. Right third: neutral box titled "Survey question" containing "Overall, were you satisfied with your inpatient care?" and below it "Percentages refer to respondents who answered yes."
+Below the chart, full-width table titled "Survey administration". Columns: Detail | Hospital A | Hospital B.
+Rows: Invitations sent | 2,000 | 1,000; Responses received | 500 | 100; Answered yes | 410 | 86; Survey method | Anonymous postal form | Interview with ward staff; Collection period | January–March | October–December.
+Footnotes: "Respondents were adults discharged from inpatient wards. Patient age, illness severity and previous-year results were not provided." and "Fictional communications extract".
+The headline and truncated chart are deliberately part of a critical-appraisal exercise. Do not use the words misleading, bias or truncated anywhere in the image, and do not explain the problems.
+
+============================================================
+07. iq-18-007-graphs-and-trends.png
+
+Use case: scientific-educational. Generate a detailed medical-school interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Childhood vaccination uptake".
+Subtitle: "Completed scheduled vaccinations by age two, 2018–2024".
+Main chart: two lines with seven points each. X-axis years 2018, 2019, 2020, 2021, 2022, 2023, 2024 equally spaced. Y-axis "Eligible children vaccinated (%)", linear 70–100 with ticks every 5.
+Teal circles legend "North district": 93, 92, 89, 86, 87, 89, 91.
+Muted orange squares legend "South district": 94, 93, 91, 90, 90, 92, 93.
+Precisely plot these data and include compact numeric labels next to every marker without overlap.
+Below chart table titled "Eligible children recorded". Columns District | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024.
+North | 1,000 | 1,000 | 1,100 | 1,200 | 1,300 | 1,400 | 1,500.
+South | 1,500 | 1,500 | 1,600 | 1,600 | 1,700 | 1,700 | 1,800.
+Three compact neutral context notes:
+"2021: both districts updated their child-registration records."
+"2022: North introduced reminder texts. 2023: both districts added weekend clinics."
+"Uptake uses each year's registered eligible population. Migration and individual reasons for missed vaccination were not recorded."
+Footer: "Fictional public-health audit". Do not attribute changes to a particular intervention or add causal arrows.
+
+============================================================
+08. iq-18-008-graphs-and-trends.png
+
+Use case: scientific-educational. Generate a detailed medical-school interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Average nightly sleep and exam score".
+Subtitle: "Survey of 40 students sitting the same examination".
+Main scatter plot with x-axis "Self-reported sleep (hours/night)", linear 4 to 10, ticks every 1; y-axis "Exam score (%)", linear 40 to 100, ticks every 10.
+Exactly 40 separate data markers, 20 per category. All markers same visual size. Teal circles: "Revision under 10 hours/week". Coordinates: (4.3,46),(4.6,60),(4.9,51),(5.2,65),(5.5,49),(5.8,68),(6.1,56),(6.4,72),(6.7,59),(7.0,76),(7.3,62),(7.6,71),(7.9,65),(8.2,80),(8.5,68),(8.8,74),(9.1,70),(9.4,83),(9.7,73),(6.6,45).
+Orange squares: "Revision 10+ hours/week". Coordinates: (4.4,58),(4.7,72),(5.0,61),(5.3,77),(5.6,64),(5.9,80),(6.2,67),(6.5,83),(6.8,69),(7.1,86),(7.4,73),(7.7,90),(8.0,76),(8.3,88),(8.6,79),(8.9,93),(9.2,82),(9.5,89),(9.8,85),(7.8,58).
+Make every point visible and countable; no overlapping markers, no connecting lines, regression lines or causal arrows. Legend below chart.
+Compact box below titled "How the data were collected" with exactly these three lines:
+"40 of 120 invited students responded; 20 in each revision group."
+"Sleep and revision time were recalled after the examination."
+"Previous attainment, stress, health and caffeine use were not recorded."
+Footer: "Fictional student survey". Do not state that sleep or revision caused the scores.
+
+============================================================
+09. iq-18-009-data-interpretation.png
+
+Use case: scientific-educational. Generate a detailed medical-school interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Chance of another heart event within five years".
+Subtitle: "A fictional treatment study: 1,000 adults in each group".
+Two equally sized side-by-side pictogram panels. Left heading "Standard care", right heading "Standard care + new treatment".
+Each panel is EXACTLY a 10-row by 10-column grid of 100 identical simple person icons, equally spaced. Left grid: exactly the first two rows (20 people) orange, remaining eight rows (80 people) light grey. Right grid: exactly first row (10 people) and first five icons of second row (5 people) teal, remaining 85 light grey. Do not add extra icons outside grids. Below left: "20 in 100 had another heart event". Below right: "15 in 100 had another heart event".
+Neutral legend line: "Each person icon represents 1 in 100 people. Coloured icons show people who had another heart event."
+Lower table titled "Other findings over the same five years", columns Outcome or treatment detail | Standard care | Standard care + new treatment.
+Rows: Major bleeding | 3 in 100 | 6 in 100; Extra daily tablets | None | One; Extra monitoring visits per year | None | Two.
+Footnotes: "Adults were randomly assigned to the two groups; five-year outcome data were complete." and "Heart events and major bleeding may affect the same person. Individual risks may differ."
+Footer: "Fictional example for interview practice".
+Do not calculate risk reductions or numbers needed to treat or recommend either option. Keep the 200-icon grid mathematically correct and readable. Use identical icon shapes and sizes throughout.
+
+CORRECTION APPLIED TO IMAGE 09:
+Correct only the two pictogram grids in this image. There are currently ELEVEN columns per grid, which is an error. Remove the rightmost column from BOTH grids so each becomes exactly TEN columns by TEN rows, 100 person icons. Re-centre each corrected grid within its panel. LEFT: first two full rows orange, all remaining 80 icons grey, total exactly 20 orange + 80 grey. RIGHT: first full row of TEN icons teal. Second row must have exactly FIVE teal icons followed by FIVE grey icons (recolour its sixth icon grey). Remaining eight rows entirely grey. Right total exactly 15 teal + 85 grey. Count carefully. Keep all headings, table, text, notes, panel outlines and colours unchanged. Do not add more icons or decorations. Exact 10 by 10 grids are essential for numerical correctness.
+
+============================================================
+10. iq-18-010-data-interpretation.png
+
+Use case: scientific-educational. Generate a detailed medical-school interview stimulus, a finished flat digital worksheet. Landscape approximately 1600 x 1000 pixels. White background, dark crisp readable sans-serif type, restrained teal and muted orange, thin table rules. Prioritise readable evidence over an oversized title. British English. All datasets and organisations fictional. Exact spelling and numeric fidelity essential. No logos, watermarks, candidate answers, recommendations, analytical conclusions or visual hints identifying an answer. Title: "Recovery after two physiotherapy programmes".
+Subtitle: "200 adults randomly assigned: 100 to each programme".
+A clear worksheet with TWO stacked outcome tables and a smaller practical-details table. Use large readable text.
+Table 1 title: "How people felt after 12 weeks". Columns Outcome | Programme A | Programme B.
+Rows: Much better | 54 of 100 | 62 of 100; A little better | 26 of 100 | 23 of 100; No better or worse | 15 of 100 | 10 of 100; Did not respond | 5 of 100 | 5 of 100.
+Table 2 title: "How people felt after six months". Same columns.
+Rows: Much better | 50 of 100 | 52 of 100; A little better | 20 of 100 | 18 of 100; No better or worse | 18 of 100 | 12 of 100; Did not respond | 12 of 100 | 18 of 100.
+Table 3 title: "Programme details". Columns Detail | Programme A | Programme B.
+Rows: Supervised sessions over 12 weeks | 4 | 8; Typical travel time per session | 20 minutes | 50 minutes; Reported temporary pain flare | 10 of 100 | 18 of 100.
+Footnotes: "All outcome counts use the original 100 people per group. Outcomes for non-responders are unknown." and "Recovery was self-reported. Participants knew their programme; both groups also received home exercises."
+Footer: "Fictional study; no follow-up beyond six months".
+Do not add conclusions, rank programmes, calculate combined improvement rates or claim that one programme is best.
+
+FINAL REVIEW OF IMAGES 06–10
+06: 410/500 = 82% and 86/100 = 86%. The 80–87% axis, headline and non-comparable survey methods are deliberate features of the critical-appraisal task; do not repair them as accidental errors.
+07: Seven points per district; values, years, eligible-population counts and intervention dates match the source. No causal claim is supplied.
+08: Counted 20 teal circles and 20 orange squares. Coordinates agree to normal graph-reading precision; axis bounds, legend and response numbers match the specification.
+09: Rejected the first version because it had 11 columns per icon grid. The corrected final version has two 10-by-10 grids, exactly 20 orange / 80 grey and 15 teal / 85 grey. Treatment-detail table and five-year time horizon match the specification.
+10: Each of four recovery columns totals 100 including non-responders. Outcomes at 12 weeks and six months, session counts, travel times and pain-flare figures match the specification.
+No answers or preferred options were added. Use source values and normal graph-reading tolerance when preparing markschemes.
+
