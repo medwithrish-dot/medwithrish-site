@@ -1,0 +1,155 @@
+PHLOEMAI INTERVIEW STIMULI 17–22 — FINAL PROMPTS AND REVIEW
+
+Generated and edited with the built-in imagegen tool.
+These final prompts supersede original prompts 17–22.
+User preference: distinct layouts, short wording, sufficient detail for discussion, no supplied answers.
+Saved PNGs: public/phloemai/interview-stimuli/.
+All situations, participants and figures are fictional.
+This batch creates assets only; question-bank integration and final markschemes remain separate.
+For marking, use only the evidence visible in the final images.
+
+REVIEW OF EXISTING IMAGES 11–16
+11: Corrected spelling remains intact. 36 + 24 = 60 enrolled, 33 + 21 completed; the stated 8% comparison is explicitly against water (54 versus 50).
+12: Missed plus attended totals 12 in each arm. Random allocation, four weeks, complete follow-up and the undelivered-text detail remain legible.
+13: Participant flow reconciles to 80; the missing-reason counts total 30. The table is explicitly labelled as means for 50 completers.
+14: 200 + 400 = 600; diagnoses and group characteristics match the final prompt. The unsupported headline is intentional appraisal material.
+15: Both bar heights match their 64% and 72% labels on a zero-based axis. Recruitment, completion and outcome denominators match the final prompt.
+16: Five equally prominent proposals, no supplied ranking; local need, timing and uncertainty details retained.
+No material content corrections identified in 11–16. Full-size images should be available when integrated.
+
+============================================================
+17. iq-19-002-group-tasks.png
+
+Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a clean finance ledger in pale mint, charcoal and forest green. Large budget figure at top left, thin ruled table across the lower two-thirds; professional serif title and tabular numerals. No cards, icons or decorative charts.
+Title "Allocate an NHS improvement budget".
+Budget display "£10 million".
+Small brief "Choose whole projects. Total spending must not exceed £10m."
+Five-row table with columns "Project" | "Cost" | "Potential benefit" | "Constraint".
+Rows:
+"Community mental-health team" | "£4m" | "Earlier local support" | "Specialist recruitment"
+"Two operating theatres" | "£6m" | "More surgical capacity" | "Additional staff needed"
+"Diabetes prevention programme" | "£3m" | "Reduce future illness" | "Benefits take time"
+"Digital-record upgrade" | "£5m" | "Information shared across services" | "Training and transition"
+"Rural mobile clinic" | "£2m" | "Reach isolated communities" | "Limited weekly visits"
+Footer task "Agree a package. Explain trade-offs and what evidence you would request."
+Final small note "Fictional one-year project costs • No single correct package".
+Do not preselect rows, total any package, show a budget already allocated or add currency symbols other than pounds.
+
+============================================================
+18. iq-19-003-group-tasks.png
+
+Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: illustrated outdoor equipment inventory on off-white paper, very faint contour lines behind the margins, dark olive headings. Ten realistic illustrated objects in a tidy TWO-ROW by FIVE-COLUMN grid. All objects equally prominent with generous spacing; no item highlighted. Each labelled once underneath. No card boxes, paragraphs or extra equipment.
+Title "Overnight on the mountain".
+Short context line "Four adults • Rain • 3°C overnight • Dusk in 30 minutes".
+Instruction "You can keep five items. Agree your choices."
+Top row five objects and labels:
+folded tarp, "Waterproof sheet";
+closed first-aid pouch, "First-aid kit";
+folded paper trail map, "Map";
+simple compass, "Compass";
+closed matchbox with a few visible matches, "Dry matches".
+Bottom row five objects and labels:
+two one-litre water bottles grouped as ONE choice, "Water: 2 litres total";
+coiled rope, "Rope: 10 metres";
+one working torch, "Torch";
+two wrapped chocolate bars grouped as ONE choice, "Chocolate bars";
+one smartphone, label "Phone: 20% battery". Phone screen only shows a 20% battery indicator, no app text.
+Footer "Phone signal is intermittent. Explain assumptions and how you would reach agreement."
+Small note "Fictional group exercise".
+Exactly ten choices, no additional loose gear, backpack, shelter, campfire, rescue route or explanatory uses for objects.
+
+FINAL CORRECTION:
+Correct the background and typography only. Replace ALL backdrop, including the top heading area, bottom footer area and margins, with solid, opaque warm ivory (#FAF8F0). Remove the contour pattern, black patches, speckles, harsh shadows, transparency and all background artefacts. Redraw all text as crisp solid dark charcoal with NO outlines, bevels, embossing, shadows or textures. Preserve the ten illustrated equipment choices in their existing two-row five-column arrangement and preserve their exact labels. Preserve these exact heading lines: "Overnight on the mountain"; "Four adults • Rain • 3°C overnight • Dusk in 30 minutes"; "You can keep five items. Agree your choices." Preserve bottom text: "Phone signal is intermittent. Explain assumptions and how you would reach agreement." and "Fictional group exercise". Keep phone screen at 20%. No additional objects. Final result must be an entirely opaque readable educational sheet.
+
+============================================================
+19. iq-19-008-group-tasks.png
+
+Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: four paper patient files in an evenly spaced 2×2 layout on a pale cool-grey desk background. Small slate-blue binder clips; dark ink and burgundy letter tabs A–D, same size and styling for all. Crisp readable text; no portraits, clinical equipment, coloured triage flags or extra icons.
+Title "Who should be assessed first?"
+Subtitle "You are a student on placement. A clinician is nearby."
+File A:
+"A • Age 67"
+"New chest pressure"
+"Sweating"
+"Started 20 minutes ago"
+File B:
+"B • Age 24"
+"Ankle pain after a fall"
+"Able to walk"
+"Injury one hour ago"
+File C:
+"C • Age 45"
+"Prescription query"
+"No current symptoms"
+"Routine medicine running low"
+File D:
+"D • Age 5"
+"Fever"
+"Unusually difficult to wake"
+"Parent says this is not normal"
+Footer task "Agree an assessment order. State who you would alert and what else you need to know."
+Small note "Do not diagnose • Fictional cases".
+Do not order by severity or add diagnoses, vital signs, treatment, red warning marks or an answer.
+
+============================================================
+20. iq-20-001-prioritisation-stations.png
+
+Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a high-contrast hospital assessment board, dark navy background, white text, thin steel-blue separators. Five equal horizontal rows, styled like a clear arrivals display. Use plain letter IDs A–E in identical neutral badges. No cards, photos or colour-coded urgency. Large column labels and generous spacing.
+Title "Prioritise the assessment queue".
+Subtitle "Five people need attention. Clinical help is available."
+Columns "ID" | "Reported concern" | "Known detail".
+Rows:
+"A" | "Sudden facial droop and slurred speech" | "Last well 15 minutes ago"
+"B" | "Mild rash for three weeks" | "No breathing difficulty"
+"C" | "Worsening breathlessness; blue lips" | "Deteriorating over five minutes"
+"D" | "Routine medication refill" | "Supply lasts three more days"
+"E" | "Deep cut" | "Bleeding controlled by pressure"
+Bottom task "Explain priorities, immediate safety actions and how you would communicate delays."
+Small footer "Fictional interview scenario • Do not diagnose".
+Keep all five rows equally styled. No urgency labels, alert triangles, diagnoses, medical treatment or ranked numbering.
+
+============================================================
+21. iq-20-002-prioritisation-stations.png
+
+Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a student's cork noticeboard with five pale-yellow notes pinned in a deliberately NON-SEQUENTIAL arrangement, all equal size and readable upright. Thin charcoal handwritten-style print, consistent font size. Small abstract room backdrop only; text dominates. All notes same colour and prominence. No checked boxes, arrows, calendars or rankings.
+Title on a white strip "Five tasks. Three immediate actions."
+Small subtitle "You are a student on placement."
+Five distinct notes with identifiers A–E and exactly these words:
+"A • A fire alarm is sounding on your floor."
+"B • A distressed friend has asked you to call."
+"C • Coursework is due in two hours."
+"D • A patient's identification label may be wrong."
+"E • You need food before the shop closes tonight."
+Layout top row notes C,A; bottom row notes E,B,D. Letters identify tasks, not priority. Do not change the content order within a note.
+A bottom white strip task: "Choose three to address immediately. Explain what happens to the others and who you would involve."
+Small footer "Fictional prioritisation exercise".
+No flames, distressed people, red warning graphics or other clues to a preferred answer.
+
+FINAL CORRECTION:
+Change only the areas OUTSIDE the wooden noticeboard frame. Remove all writing on the decorative books, wall poster and pen pot, leaving those surfaces plain and unlabelled. Preserve the cork board, frame, pins, ALL five yellow task notes and their exact text, title strip and instruction strip unchanged. Preserve the small "Fictional prioritisation exercise" footer. Do not add any writing or alter the tasks. This is a cleanup of unrelated decorative words only.
+
+============================================================
+22. iq-20-003-prioritisation-stations.png
+
+Use case: scientific-educational. Create one finished medical-school interview stimulus. Landscape approximately 1600 x 1000 pixels. Large readable text, high contrast, British English, concise wording. Render only the supplied text verbatim. All people, organisations, situations and figures fictional. No logos, watermarks, answers, rankings, checked choices or visual emphasis identifying a preferred option. Keep every option equally prominent. Design: a realistic desktop team-inbox interface on a white background with pale lavender sidebar and subtle violet separators. This is a flat UI screenshot, not a phone mockup. Compact sender avatars with initials, a slim time column and short message previews. Five rows identical styling; none flagged urgent, selected, pinned or highlighted. Crisp sans-serif type.
+Header "Team inbox".
+Subheading "Requests arriving at 10:00".
+Five rows, each timestamp "10:00":
+Sender "Nurse"; message "A patient has become suddenly confused."
+Sender "Receptionist"; message "A family wants an update."
+Sender "Pharmacist"; message "Please ask the prescriber to clarify a routine prescription before 14:00."
+Sender "Student colleague"; message "Can you help prepare tomorrow's teaching?"
+Sender "Manager"; message "Please complete the monthly survey today."
+A compact footer task panel: "You are a student on placement. Explain what you would do first, who you would alert and what could be delegated."
+Small final line "Fictional team messages".
+No replies, diagnosis, completed tasks, urgency tags, answer or priority ordering. Omit fake navigation text, brand names and unrelated UI controls.
+
+FINAL CHECKS
+17: Budget is £10m and all five project costs match the source: £4m, £6m, £3m, £5m and £2m. Whole-project rule and benefit/constraint pairings are visible. No package is selected.
+18: Exactly ten labelled choices in two rows of five. Two bottles together represent 2 litres and one choice; the chocolate bars together represent one choice. Four adults, 3°C, 30 minutes to dusk, 10-metre rope and 20% phone battery match the prompt. Corrected background artefacts and text readability; discarded the initial version.
+19: Four lettered patient files, with ages 67, 24, 45 and 5; symptoms and timing match the prompt. A clinician is available and no diagnosis or priority answer is supplied.
+20: Five rows A–E retain the exact symptoms, durations and contextual details. All rows have equal styling; no triage category, diagnosis or ranking is supplied.
+21: Exactly five distinct tasks with identifiers A–E, arranged C/A then E/B/D. Corrected unrelated background words without changing tasks. No three tasks have been preselected.
+22: Five senders with timestamp 10:00; prescription deadline is 14:00, teaching is tomorrow and survey is due today. Wording directs the student to the prescriber. No replies or urgency flags added.
+All final images were visually inspected against their prompts for legibility, labels, counts and task neutrality.
+
