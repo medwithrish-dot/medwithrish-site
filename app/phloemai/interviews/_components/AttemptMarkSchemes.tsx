@@ -27,7 +27,7 @@ export function AttemptMarkSchemes({ attempt, headerAction }: { attempt: Intervi
       </select>
     </label>
     <p className="text-sm leading-6 text-[#153e4c]">{current.text}</p>
-    {stimulus && <InterviewStimulus key={stimulus.id} stimulus={stimulus} question={current.text} />}
-    <StationMarkScheme key={current.question.id} rubricGroups={getQuestionMarkScheme(current.question)} headerAction={headerAction} />
+    {stimulus && <InterviewStimulus key={`image:${stimulus.id}`} stimulus={stimulus} question={current.text} />}
+    <StationMarkScheme key={`markscheme:${current.question.id}`} rubricGroups={getQuestionMarkScheme(current.question)} headerAction={headerAction} />
   </div>;
 }
