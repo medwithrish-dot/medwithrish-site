@@ -1,0 +1,208 @@
+PHLOEMAI INTERVIEW STIMULUS IMAGE PROMPTS
+
+HOW TO USE
+Copy one prompt at a time into your image generator. Save the result using the filename shown.
+
+Use these rules for every image:
+- Landscape, 1600 x 1000 pixels.
+- Clean, modern medical-education worksheet on a white background.
+- British English, large readable text, high contrast and no logos.
+- Use exactly the labels, numbers and wording supplied.
+- Do not include an answer, explanation, coloured hint or highlighted correct choice.
+- All people, organisations and data are fictional.
+
+IMPORTANT: Image generators often misspell text or change numbers. Check every finished image against this file before using it.
+
+============================================================
+01. MAIN TREND LINE GRAPH
+Filename: iq-18-001-data-stations.png
+
+Prompt:
+Create a clear line graph titled "Average GP appointment wait". X-axis: 2019, 2020, 2021, 2022, 2023, 2024. Y-axis: Days, from 0 to 16. Plot one teal line with values 6, 7, 9, 10, 12, 14. Add circular data markers and a small note: "Fictional regional data". Do not describe the trend.
+
+============================================================
+02. RESULTS TABLE
+Filename: iq-18-002-data-stations.png
+
+Prompt:
+Create a table titled "Six-month smoking cessation programme results". Columns: Programme, Participants, Stopped smoking, Did not stop. Rows: Text support, 100, 24, 76; Group sessions, 100, 38, 62; One-to-one support, 100, 46, 54. Add: "Participants selected their preferred programme. Fictional data." Do not add conclusions.
+
+============================================================
+03. LIMITED-CONCLUSION BAR CHART
+Filename: iq-18-003-data-stations.png
+
+Prompt:
+Create a bar chart titled "Average weekly exercise and reported wellbeing". Categories: Less than 1 hour, 1-3 hours, 4-6 hours, More than 6 hours. Mean wellbeing scores out of 10: 5.1, 6.0, 6.8, 7.0. Add: "Online survey of 240 adults; observational data; fictional." Use equal-width teal bars. Do not claim that exercise caused the scores.
+
+============================================================
+04. INCOMPLETE DECISION TABLE
+Filename: iq-18-004-data-stations.png
+
+Prompt:
+Create a comparison table titled "Options for a community diabetes programme". Columns: Option, People reached per year, Estimated annual cost, Attendance rate. Rows: Mobile clinic, 1,200, £180,000, 68%; Evening clinic, 800, £120,000, 81%; Online support, 2,400, £90,000, 42%. Add: "Information on health outcomes, accessibility and adverse effects was not collected. Fictional data." Do not recommend an option.
+
+============================================================
+05. OUTLIER SCATTER PLOT
+Filename: iq-18-005-data-stations.png
+
+Prompt:
+Create a scatter plot titled "Daily ward admissions and discharge time". X-axis: Daily admissions, 10 to 50. Y-axis: Average discharge time in hours, 1 to 8. Show 19 points forming a gentle upward pattern between 2 and 5 hours, plus one obvious outlier at 24 admissions and 7.5 hours. Add: "20 fictional ward-days". Do not label the outlier.
+
+============================================================
+06. MISLEADING GRAPH
+Filename: iq-18-006-graphs-and-trends.png
+
+Prompt:
+Create a deliberately misleading bar chart titled "Patient satisfaction rises sharply". Show Hospital A at 82% and Hospital B at 86%. Truncate the Y-axis so it starts at 80% and ends at 87%, making Hospital B's bar look much taller. Use similar colours and small text saying "Survey response numbers not reported". Do not explain why it is misleading.
+
+============================================================
+07. TREND WITH SEVERAL EXPLANATIONS
+Filename: iq-18-007-graphs-and-trends.png
+
+Prompt:
+Create a line graph titled "Childhood vaccination uptake". X-axis: 2018 to 2024. Y-axis: Percentage, 70% to 100%. Values: 93, 92, 89, 86, 87, 89, 91. Add three small neutral context notes below: "Reminder service introduced in 2022", "Population changed over time", and "No individual-level reasons were collected". Label it fictional data. Do not state what caused the trend.
+
+============================================================
+08. ASSOCIATION SCATTER PLOT
+Filename: iq-18-008-graphs-and-trends.png
+
+Prompt:
+Create a scatter plot titled "Average nightly sleep and exam score". X-axis: Sleep in hours, 4 to 10. Y-axis: Exam score, 40% to 100%. Show 40 fictional student points with a moderate positive association. Add: "One cross-sectional student survey; self-reported sleep; other factors not measured." Do not draw a causal arrow or write that sleep causes higher scores.
+
+============================================================
+09. PATIENT-FRIENDLY CLINICAL CHART
+Filename: iq-18-009-data-interpretation.png
+
+Prompt:
+Create a simple icon chart titled "Chance of another heart event within five years". Show two groups of 100 person icons. Standard care: colour 20 icons orange and 80 grey. New treatment: colour 15 icons teal and 85 grey. Add labels "20 in 100" and "15 in 100" and a note: "Fictional example; individual risk may differ." Do not add a recommendation.
+
+============================================================
+10. PLAIN-LANGUAGE RESULTS TABLE
+Filename: iq-18-010-data-interpretation.png
+
+Prompt:
+Create a simple table titled "Recovery after two physiotherapy programmes". Columns: Outcome after 12 weeks, Programme A, Programme B. Rows: Felt much better, 54 of 100, 62 of 100; Felt a little better, 26 of 100, 23 of 100; No better, 20 of 100, 15 of 100. Add: "Fictional randomised study; follow-up lasted 12 weeks." Do not say which programme is best.
+
+============================================================
+11. STUDY WITH SOURCES OF BIAS
+Filename: iq-18-011-critical-appraisal.png
+
+Prompt:
+Create a one-page research summary titled "Energy drinks and concentration". Include: "Researchers recruited 60 volunteers through an energy-drink company's social-media page. Participants chose whether to drink the company's product before completing a concentration test. Researchers knew which participants had consumed it. The company funded the study. The drink group scored 8% higher on average." Add a box titled "Study details" with Sample: 60, Allocation: participant choice, Blinding: none, Follow-up: one hour. Do not identify the biases.
+
+============================================================
+12. SAMPLE-SIZE STUDY EXTRACT
+Filename: iq-18-012-critical-appraisal.png
+
+Prompt:
+Create a research abstract card titled "Reminder texts and missed appointments". Include: "Twenty-four patients were randomly allocated to receive either the usual reminder or an additional text. Missed appointments were 2 of 12 with the text and 4 of 12 with usual care. The difference was not statistically significant. No sample-size calculation was reported. Follow-up lasted four weeks." Label it fictional. Do not judge whether the sample is sufficient.
+
+============================================================
+13. RELIABILITY ASSESSMENT ABSTRACT
+Filename: iq-18-013-article-analysis.png
+
+Prompt:
+Create a short abstract titled "A new app for managing asthma". Include: "A hospital tested an asthma app in 80 adults for eight weeks. App users reported fewer symptoms than before using it. There was no control group. Participants and researchers knew the study aim. Thirty participants did not complete follow-up. The app developer funded the research. The full questionnaire and raw data were not published." Label it fictional. Do not comment on reliability.
+
+============================================================
+14. MEDIA HEADLINE AND STUDY FINDINGS
+Filename: iq-18-014-article-analysis.png
+
+Prompt:
+Create a split-page comparison. Left side: a fictional news card with the headline "COMMON BERRY HALVES YOUR CANCER RISK, SCIENTISTS REVEAL" and subheading "A breakthrough everyone should add to breakfast". Right side: "What the study reported" with: observational food survey; 600 adults; 18-month follow-up; berry eaters had 12 cases and non-berry eaters had 20 cases; groups differed in age, smoking and income; association only; no causal conclusion. Do not explain the mismatch.
+
+============================================================
+15. STUDY NEEDING FURTHER RESEARCH
+Filename: iq-18-015-article-analysis.png
+
+Prompt:
+Create a research summary titled "Virtual reality for medical-student anatomy teaching". Include: "One medical school gave 32 volunteer students four weeks of optional virtual-reality teaching. Their anatomy quiz scores rose from 64% to 72%. There was no comparison group, students volunteered, only one short quiz was used, and satisfaction was high. Long-term knowledge and performance in other schools were not measured." Label it fictional. Do not suggest further research.
+
+============================================================
+16. HEALTHCARE PRIORITIES TO RANK
+Filename: iq-19-001-group-discussion.png
+
+Prompt:
+Create a group-task sheet titled "Rank these healthcare priorities". Show five equal cards: Reduce elective-surgery waits; Expand community mental-health support; Improve maternity safety; Increase childhood vaccination uptake; Modernise outdated hospital buildings. Add: "Agree a ranking from 1 to 5. There is no single correct order; explain your criteria." Do not rank the cards.
+
+============================================================
+17. NHS BUDGET ALLOCATION
+Filename: iq-19-002-group-tasks.png
+
+Prompt:
+Create a group-task sheet titled "Allocate a £10 million NHS improvement budget". Options: Community mental-health team, cost £4m; Two additional operating theatres, £6m; Diabetes prevention programme, £3m; Hospital digital-record upgrade, £5m; Rural mobile clinic, £2m. Add one short benefit and one limitation for each. State: "You may fund any combination costing no more than £10m." Do not choose a solution.
+
+============================================================
+18. SURVIVAL EQUIPMENT
+Filename: iq-19-003-group-tasks.png
+
+Prompt:
+Create a group-task sheet titled "Mountain survival exercise". Scenario: "Your group is stranded overnight in cold, wet conditions and may choose five items." Show ten labelled items: waterproof sheet, first-aid kit, map, compass, box of matches, two litres of water, rope, torch, chocolate bars, mobile phone with 20% battery. Do not select or rank the items.
+
+============================================================
+19. LIMITED PATIENT INFORMATION
+Filename: iq-19-008-group-tasks.png
+
+Prompt:
+Create a group-task sheet titled "Who should be assessed first?" Show four fictional patient cards: A, 67, new chest pressure and sweating; B, 24, painful ankle after a fall, able to walk; C, 45, prescription query and no current symptoms; D, 5, fever and unusually difficult to wake. Add: "You are not being asked to diagnose. Agree an assessment order and state what extra information you need." Do not number the patients by priority.
+
+============================================================
+20. PATIENT URGENCY
+Filename: iq-20-001-prioritisation-stations.png
+
+Prompt:
+Create an individual prioritisation sheet titled "Prioritise the assessment queue". Show five fictional cases: sudden facial droop and slurred speech; mild rash for three weeks with no breathing difficulty; worsening breathlessness and blue lips; medication refill needed in three days; deep cut with bleeding controlled by pressure. Add: "Explain your order, immediate safety actions and how you would communicate delays." Do not provide the correct order.
+
+============================================================
+21. FIVE COMPETING TASKS
+Filename: iq-20-002-prioritisation-stations.png
+
+Prompt:
+Create a task sheet titled "Five tasks, three immediate actions". List: Respond to a fire alarm on your floor; Call a distressed friend back; Submit coursework due in two hours; Tell the placement supervisor that a patient-identification label looks wrong; Buy food before the shop closes tonight. Add: "Choose three to address immediately and explain what happens to the others." Do not rank the tasks.
+
+============================================================
+22. TEAM REQUESTS
+Filename: iq-20-003-prioritisation-stations.png
+
+Prompt:
+Create a fictional team-message screen titled "Requests arriving at 10:00". Messages: Nurse: "A patient has become suddenly confused"; Receptionist: "A family wants an update"; Pharmacist: "Please clarify a routine prescription before 14:00"; Student colleague: "Can you help me prepare tomorrow's teaching?"; Manager: "Please complete the monthly survey today." Add: "Explain how you would prioritise, delegate and communicate." Do not mark any message as urgent.
+
+============================================================
+23. COMPETING HEALTH SERVICES
+Filename: iq-20-004-prioritisation-stations.png
+
+Prompt:
+Create a table titled "Competing services for £5 million funding". Rows: Mental-health crisis line, cost £2m, estimated 4,000 users; New cancer scanner, cost £4m, estimated 1,100 scans; Community falls prevention, cost £1m, estimated 3,000 older adults; Extra neonatal beds, cost £3m, estimated 240 admissions. Add a short limitation for each estimate and state that benefits use different measures. Do not recommend a service.
+
+============================================================
+24. PUBLIC-HEALTH INTERVENTIONS
+Filename: iq-20-005-prioritisation-stations.png
+
+Prompt:
+Create a comparison sheet titled "Choose public-health investments". Show four options: School vaccination outreach; Smoking-cessation support; Air-quality monitoring; Free community exercise sessions. For each, show fictional estimated reach, cost, likely time to benefit and one uncertainty. Ask the candidate to rank likely impact. Do not provide a ranking.
+
+============================================================
+25. COMPETING COMMITMENTS
+Filename: iq-20-007-prioritisation-stations.png
+
+Prompt:
+Create a weekly-planner task titled "A difficult Thursday". Show: 09:00 compulsory seminar; 12:00 volunteering shift with cover possible; 15:00 group-project meeting; 17:00 medical appointment booked two months ago; 18:00 family celebration; coursework deadline Friday 09:00 with three hours of work remaining. Add: "Explain what you would keep, rearrange or delegate, and how you would communicate." Do not provide a solution.
+
+============================================================
+26. PATIENT-SAFETY CONCERNS
+Filename: iq-20-008-prioritisation-stations.png
+
+Prompt:
+Create a patient-safety task sheet with four incident cards: a patient has received a medicine despite a documented allergy and is currently well; a fridge temperature is one degree outside range with vaccines inside; a staff member nearly gives medicine to the wrong patient but checks in time; a wet-floor sign is missing beside a small spill in an empty corridor. Ask which concern should be escalated first and what immediate actions are needed. Do not rank the cards.
+
+============================================================
+27. EMERGENCY RESPONSES
+Filename: iq-20-009-prioritisation-stations.png
+
+Prompt:
+Create an emergency task sheet titled "Several events happen at once". Scenario cards: smoke is visible from a closed store-room door; a visitor has collapsed nearby; another visitor is filming; a colleague asks you to retrieve confidential notes; the fire alarm has not yet sounded. Add: "Prioritise your actions. Focus on personal safety, raising the alarm, getting help and protecting others." Do not number the actions or provide the answer.
+
+============================================================
+END OF PROMPTS
+
+When the 27 images are ready, send them with these filenames. Also send any corrected wording or numbers if the generator changed them.
