@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState, type ReactNode } from "react";
-import { CheckCircle2, ChevronRight, Circle, FileText } from "lucide-react";
+import { CheckCircle2, ChevronRight, Circle } from "lucide-react";
 import type { MarkSchemeSection } from "../_lib/question-review";
 import type { SpeechDelivery } from "../_lib/speech-delivery";
 import { SpeechDeliveryHints } from "./SpeechDeliveryHints";
@@ -76,16 +76,7 @@ export function InterviewMarkScheme({ rubricGroups, checkedItems, openMarkScheme
         <p className="mt-3 text-sm font-medium text-[#4a6370]">
           {checkedCount} / {totalChecklistItems} covered
         </p>
-        <div className={styles.actions}><a
-          href="/phloemai/interview-question-markscheme-rubrics.pdf"
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#b8c8cf] bg-white px-4 text-sm font-black text-[#071923] shadow-sm transition-colors hover:border-[#08787b] hover:text-[#08787b]"
-        >
-          <FileText className="h-4 w-4" aria-hidden="true" />
-          Rubric PDF
-        </a>
-        {headerAction}</div>
+        {headerAction && <div className={styles.actions}>{headerAction}</div>}
       </section>
 
       {rubricGroups.map((group) => {
