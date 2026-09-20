@@ -15,7 +15,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid access form." }, { status: 400 });
   }
   const submittedPassword = formData.get("password");
+  const submittedNext = formData.get("next");
+  const destination =
+    submittedNext === "/phloemai/interviews" ||
+    submittedNext === "/phloemai/dashboard"
+      ? submittedNext
+      : "";
   const accessUrl = new URL("/phloemai/access", request.url);
+  if (destination) accessUrl.searchParams.set("next", destination);
 
   if (!isPhloemPreviewConfigured()) {
     accessUrl.searchParams.set("error", "not-configured");
@@ -31,7 +38,7 @@ export async function POST(request: NextRequest) {
   }
 
   const response = NextResponse.redirect(
-    new URL("/phloemai/dashboard", request.url),
+    new URL(destination || "/phloemai", request.url),
     303
   );
 

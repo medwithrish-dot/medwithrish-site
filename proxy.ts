@@ -18,6 +18,10 @@ export async function proxy(request: NextRequest) {
       const stayTunedUrl = request.nextUrl.clone();
       stayTunedUrl.pathname = "/phloemai";
       stayTunedUrl.search = "";
+      stayTunedUrl.searchParams.set(
+        "preview",
+        pathname.startsWith("/phloemai/interview") ? "interview" : "ucat"
+      );
 
       return NextResponse.redirect(stayTunedUrl);
     }

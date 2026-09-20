@@ -9841,20 +9841,21 @@ function RedesignedTutorHero() {
   const productCards = [
     {
       title: "UCAT",
-      status: "Available Now",
+      status: "Work in progress",
       text: "Full-length practice, AI diagnosis, attention tracking, and personalised coaching.",
       icon: Brain,
-      action: "Log in / Launch UCAT Platform",
+      action: "Open UCAT dashboard",
       href: "/phloemai/dashboard",
       active: true,
     },
     {
       title: "Medicine Interview",
-      status: "Coming Soon",
+      status: "Work in progress",
       text: "Realistic MMI and panel preparation with answer feedback.",
       icon: UserRound,
-      action: "Notify Me",
-      active: false,
+      action: "Open interview dashboard",
+      href: "/phloemai/interviews",
+      active: true,
     },
     {
       title: "Dentistry Interview",
@@ -10305,8 +10306,11 @@ function RedesignedTutorHero() {
 
         <div className="mt-7 text-center">
           <h2 className="text-xl font-black text-slate-950">
-            Available now. More coming soon.
+            Choose your preparation dashboard.
           </h2>
+          <p className="mt-1.5 text-sm text-slate-600">
+            UCAT and medicine interview preparation are both in private preview.
+          </p>
         </div>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-3">
@@ -10804,10 +10808,63 @@ export function PhloemAIPricingPage() {
   );
 }
 
-export function PhloemAILandingPage() {
+export function PhloemAILandingPage({
+  lockedArea = null,
+}: {
+  lockedArea?: "ucat" | "interview" | null;
+}) {
+  const lockedDashboard =
+    lockedArea === "interview"
+      ? {
+          label: "Medicine interview dashboard",
+          next: "/phloemai/interviews",
+        }
+      : lockedArea === "ucat"
+        ? { label: "UCAT dashboard", next: "/phloemai/dashboard" }
+        : null;
+
   return (
     <PhloemAIPageShell>
       <TutorHero />
+      {lockedDashboard && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/60 px-5 py-8 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="preview-lock-title"
+        >
+          <div className="w-full max-w-md rounded-2xl border border-cyan-100 bg-white p-6 text-slate-950 shadow-2xl">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-50 text-cyan-700">
+              <LockKeyhole className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <p className="mt-5 text-xs font-black uppercase tracking-widest text-cyan-700">
+              Work in progress
+            </p>
+            <h2 id="preview-lock-title" className="mt-2 text-2xl font-black">
+              The {lockedDashboard.label} is currently locked.
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600">
+              This area is still being polished. If you have the private access
+              key, you can open the preview on this browser.
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
+              <Link
+                href={`/phloemai/access?next=${encodeURIComponent(lockedDashboard.next)}`}
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800"
+              >
+                <LockKeyhole className="h-4 w-4" aria-hidden="true" />
+                Enter access key
+              </Link>
+              <Link
+                href="/phloemai"
+                className="inline-flex flex-1 items-center justify-center rounded-full border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700"
+              >
+                Not yet
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </PhloemAIPageShell>
   );
 }

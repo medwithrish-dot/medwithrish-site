@@ -4,7 +4,19 @@ import { ArrowLeft, KeyRound, Lock } from "lucide-react";
 
 type AccessSearchParams = {
   error?: string | string[];
+  next?: string | string[];
 };
+
+const PREVIEW_DESTINATIONS = {
+  interview: {
+    label: "Medicine interview dashboard",
+    path: "/phloemai/interviews",
+  },
+  ucat: {
+    label: "UCAT dashboard",
+    path: "/phloemai/dashboard",
+  },
+} as const;
 
 export const metadata: Metadata = {
   title: {
@@ -38,7 +50,12 @@ export default async function Page({
 }: {
   searchParams: Promise<AccessSearchParams>;
 }) {
-  const errorMessage = getErrorMessage(await searchParams);
+  const params = await searchParams;
+  const errorMessage = getErrorMessage(params);
+  const requestedNext = Array.isArray(params.next) ? params.next[0] : params.next;
+  const selectedDestination = Object.values(PREVIEW_DESTINATIONS).find(
+    (destination) => destination.path === requestedNext
+  );
 
   return (
     <main className="min-h-screen bg-[#f8fbff] px-6 py-10 text-slate-950">
@@ -62,7 +79,9 @@ export default async function Page({
 
           <p className="mt-3 text-sm leading-6 text-slate-600">
             Enter the private preview password to open the work-in-progress
-            PhloemAI app on this browser.
+            {selectedDestination
+              ? ` ${selectedDestination.label} on this browser.`
+              : " PhloemAI app on this browser."}
           </p>
 
           <form
@@ -70,6 +89,30 @@ export default async function Page({
             method="post"
             className="mt-6 space-y-4"
           >
+            {selectedDestination ? (
+              <input type="hidden" name="next" value={selectedDestination.path} />
+            ) : (
+              <fieldset className="space-y-2 text-left">
+                <legend className="text-sm font-bold text-slate-800">
+                  Choose a dashboard
+                </legend>
+                {Object.values(PREVIEW_DESTINATIONS).map((destination) => (
+                  <label
+                    key={destination.path}
+                    className="flex cursor-pointer items-center gap-3 rounded-lg border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-cyan-300"
+                  >
+                    <input
+                      type="radio"
+                      name="next"
+                      value={destination.path}
+                      required
+                      className="h-4 w-4 accent-cyan-700"
+                    />
+                    {destination.label}
+                  </label>
+                ))}
+              </fieldset>
+            )}
             <label className="block text-left text-sm font-bold text-slate-800">
               Password
               <input
