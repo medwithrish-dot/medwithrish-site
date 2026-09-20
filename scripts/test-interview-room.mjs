@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
-import { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition } from "../app/phloemai/interviews/_lib/station-flow.ts";
+import { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition } from "../app/phloemai/interview/_lib/station-flow.ts";
 import { test } from "node:test";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { runInNewContext } from "node:vm";
-import { INTERVIEW_QUESTIONS } from "../app/phloemai/interviews/_data/interviewQuestionBank.ts";
-import { stationQuestionCount } from "../app/phloemai/interviews/_data/interview-stations.ts";
+import { INTERVIEW_QUESTIONS } from "../app/phloemai/interview/_data/interviewQuestionBank.ts";
+import { stationQuestionCount } from "../app/phloemai/interview/_data/interview-stations.ts";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
@@ -82,7 +82,7 @@ test("a custom circuit reserves the chosen first topic and count", async () => {
 test("station timing and lobby labels do not preview the hidden topic", () => {
   assert.equal(stationQuestionCount(480), 3);
   assert.equal(stationQuestionCount(300), 2);
-  const lobby = readFileSync(resolve(root, "app/phloemai/interviews/_components/AIInterviewSetup.tsx"), "utf8");
+  const lobby = readFileSync(resolve(root, "app/phloemai/interview/_components/AIInterviewSetup.tsx"), "utf8");
   assert.doesNotMatch(lobby, /Free AI challenge/);
   assert.match(lobby, /Custom MMI circuit/);
   assert.match(lobby, /station\.lobbyTitle/);
@@ -233,7 +233,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     stopCamera() {}, stopMicCheck() {}, cancelMicrophoneRequest() {}, microphonePermission: "idle",
     requestMicrophone: async () => { microphoneRequests += 1; devices.microphonePermission = permission ? "granted" : "denied"; return permission; },
   };
-  const source = readFileSync(resolve(root, "app/phloemai/interviews/_components/AIInterviewRunner.tsx"), "utf8");
+  const source = readFileSync(resolve(root, "app/phloemai/interview/_components/AIInterviewRunner.tsx"), "utf8");
   const output = ts.transpileModule(source, { compilerOptions: {
     module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.ReactJSX,
   } }).outputText;
@@ -576,7 +576,7 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
     start() { this.state = "recording"; }
     stop() { this.state = "inactive"; }
   }
-  const source = readFileSync(resolve(root, "app/phloemai/interviews/_components/InterviewQuestionBankDashboard.tsx"), "utf8");
+  const source = readFileSync(resolve(root, "app/phloemai/interview/_components/InterviewQuestionBankDashboard.tsx"), "utf8");
   const output = ts.transpileModule(source, { compilerOptions: {
     module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.ReactJSX,
   } }).outputText;
@@ -585,9 +585,9 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
     module: loaded, exports: loaded.exports, MediaRecorder: Recorder,
     require(name) {
       if (name.endsWith("speech-delivery") || name.endsWith("question-review")) {
-        return loadQuestionModule(resolve(root, `app/phloemai/interviews/_lib/${name.split("/").at(-1)}.ts`));
+        return loadQuestionModule(resolve(root, `app/phloemai/interview/_lib/${name.split("/").at(-1)}.ts`));
       }
-      if (name.endsWith("interview-stimuli")) return loadQuestionModule(resolve(root, "app/phloemai/interviews/_data/interview-stimuli.ts"));
+      if (name.endsWith("interview-stimuli")) return loadQuestionModule(resolve(root, "app/phloemai/interview/_data/interview-stimuli.ts"));
       if (name === "react") return {
         useState: initial => [typeof initial === "function" ? initial() : initial, () => {}],
         useRef: current => ({ current }), useCallback: callback => callback,
@@ -676,7 +676,7 @@ function microphoneDevices({ supported = true } = {}) {
     useEffect: (effect, dependencies) => memo(() => { effects.push(effect); }, dependencies),
   };
   const loaded = { exports: {} };
-  runInNewContext(ts.transpileModule(readFileSync(resolve(root, "app/phloemai/interviews/_lib/useInterviewDevices.ts"), "utf8"), {
+  runInNewContext(ts.transpileModule(readFileSync(resolve(root, "app/phloemai/interview/_lib/useInterviewDevices.ts"), "utf8"), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
   }).outputText, {
     module: loaded, exports: loaded.exports,

@@ -21,12 +21,12 @@ function loader(mocks = {}) {
   };
 }
 const load = loader();
-const { INTERVIEW_PATHWAY, PATHWAY_TASK_IDS, PATHWAY_STORAGE_DATE, pathwayResourceIds, pathwayTaskId, sanitisePathwayProgress, derivePathwayProgress, changePathwayTask } = load(resolve(root, "utils/interviews/pathway.ts"));
+const { INTERVIEW_PATHWAY, PATHWAY_TASK_IDS, PATHWAY_STORAGE_DATE, pathwayResourceIds, pathwayTaskId, sanitisePathwayProgress, derivePathwayProgress, changePathwayTask, changePathwayStation } = load(resolve(root, "utils/interviews/pathway.ts"));
 
 test("the seven-stage curriculum resolves real guide, question and mock-station links", () => {
-  const { getInterviewPathwayStations } = load(resolve(root, "app/phloemai/interviews/_data/interview-pathway.ts"));
-  const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/phloemai/interviews/_data/interviewQuestionBank.ts"));
-  const { interviewStations } = load(resolve(root, "app/phloemai/interviews/_data/interview-stations.ts"));
+  const { getInterviewPathwayStations } = load(resolve(root, "app/phloemai/interview/_data/interview-pathway.ts"));
+  const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/phloemai/interview/_data/interviewQuestionBank.ts"));
+  const { interviewStations } = load(resolve(root, "app/phloemai/interview/_data/interview-stations.ts"));
   const stations = getInterviewPathwayStations();
   assert.equal(stations.length, 7);
   assert.equal(new Set(PATHWAY_TASK_IDS).size, PATHWAY_TASK_IDS.length);
@@ -84,6 +84,24 @@ test("reopening a task removes its readiness and preserves the learner's later w
   assert.equal(derivePathwayProgress(reviewed).allComplete, true);
 });
 
+test("the compact pathway checklist completes stations in order and rolls later steps back", () => {
+  const [first, second] = INTERVIEW_PATHWAY;
+  assert.throws(
+    () => changePathwayStation([], second.id, true),
+    /previous pathway step/
+  );
+  let progress = changePathwayStation([], first.id, true).completedTaskIds;
+  assert.equal(derivePathwayProgress(progress).completedCount, 1);
+  assert.ok(pathwayResourceIds(first).every((id) => progress.includes(id)));
+  assert.ok(progress.includes(pathwayTaskId(first.id, "ready")));
+  progress = changePathwayStation(progress, second.id, true).completedTaskIds;
+  assert.equal(derivePathwayProgress(progress).completedCount, 2);
+  progress = changePathwayStation(progress, first.id, false).completedTaskIds;
+  assert.equal(derivePathwayProgress(progress).completedCount, 0);
+  assert.ok(!pathwayResourceIds(second).some((id) => progress.includes(id)));
+  assert.throws(() => changePathwayStation([], "invented", true));
+});
+
 function apiHarness() {
   const rows = [];
   const mutations = [];
@@ -103,9 +121,12 @@ function apiHarness() {
         if (state.failStorage) return Promise.resolve(resolve({ data: null, error: { code: "42P01", message: "storage unavailable" } }));
         const matches = (row) => filters.every((filter) => filter(row));
         if (action === "upsert") {
-          mutations.push(values);
-          const existing = rows.findIndex((row) => row.user_id === values.user_id && row.task_id === values.task_id);
-          if (existing < 0) rows.push(values); else rows[existing] = values;
+          const entries = Array.isArray(values) ? values : [values];
+          mutations.push(...entries);
+          for (const value of entries) {
+            const existing = rows.findIndex((row) => row.user_id === value.user_id && row.task_id === value.task_id);
+            if (existing < 0) rows.push(value); else rows[existing] = value;
+          }
         } else if (action === "delete") {
           for (let i = rows.length - 1; i >= 0; i--) if (matches(rows[i])) rows.splice(i, 1);
         }
@@ -125,7 +146,8 @@ function apiHarness() {
   };
   const handlers = loader({ "next/cache": { revalidatePath() {} }, "@/utils/interviews/server": server })(resolve(root, "app/api/interviews/preparation/pathway/route.ts"));
   const post = (taskId, completed, extra = {}) => handlers.POST(new Request("https://example.test/api/interviews/preparation/pathway", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ taskId, completed, expectedUserId: state.userId, ...extra }) }));
-  return { rows, mutations, state, handlers, post };
+  const postStation = (stationId, completed, extra = {}) => handlers.POST(new Request("https://example.test/api/interviews/preparation/pathway", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ stationId, completed, expectedUserId: state.userId, ...extra }) }));
+  return { rows, mutations, state, handlers, post, postStation };
 }
 
 test("the real API saves bounded tasks against the authenticated owner, restores them and is idempotent", async () => {
@@ -163,4 +185,16 @@ test("the API denies skipped stages, unauthenticated reads/writes and never repo
   assert.equal((await api.post(first, true)).status, 503);
   assert.equal((await api.handlers.GET()).status, 503);
   assert.equal(api.mutations.length, 0);
+});
+
+test("the API persists compact checklist stations as the existing pathway tasks", async () => {
+  const api = apiHarness();
+  const [first, second] = INTERVIEW_PATHWAY;
+  assert.equal((await api.postStation(second.id, true)).status, 400);
+  assert.equal((await api.postStation(first.id, true)).status, 200);
+  assert.equal(derivePathwayProgress(api.rows.map((row) => row.task_id)).completedCount, 1);
+  assert.equal((await api.postStation(second.id, true)).status, 200);
+  assert.equal(derivePathwayProgress(api.rows.map((row) => row.task_id)).completedCount, 2);
+  assert.equal((await api.postStation(first.id, false)).status, 200);
+  assert.equal(derivePathwayProgress(api.rows.map((row) => row.task_id)).completedCount, 0);
 });

@@ -1,4 +1,4 @@
-import { findInterviewUniversity } from "../../app/phloemai/interviews/_data/universities";
+import { findInterviewUniversity } from "../../app/phloemai/interview/_data/universities";
 import { emptyApplicant, readApplicant } from "./applicant-profile";
 
 export const PREPARATION_THEMES = ["motivation", "reflection", "ethics", "teamwork", "nhs", "hot-topics", "analysis"] as const;

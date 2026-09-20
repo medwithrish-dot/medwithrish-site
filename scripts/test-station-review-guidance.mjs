@@ -21,9 +21,9 @@ function load(file) {
   return compiled.exports;
 }
 
-const { interviewStations } = load(resolve(root, "app/phloemai/interviews/_data/interview-stations.ts"));
-const { getStationReviewGuidance } = load(resolve(root, "app/phloemai/interviews/_lib/station-review.ts"));
-const { categoryRubric, getQuestionMarkScheme } = load(resolve(root, "app/phloemai/interviews/_lib/question-review.ts"));
+const { interviewStations } = load(resolve(root, "app/phloemai/interview/_data/interview-stations.ts"));
+const { getStationReviewGuidance } = load(resolve(root, "app/phloemai/interview/_lib/station-review.ts"));
+const { categoryRubric, getQuestionMarkScheme } = load(resolve(root, "app/phloemai/interview/_lib/question-review.ts"));
 
 test("every station has a specific framework and the shared question-bank rubric", () => {
   assert.equal(interviewStations.length, 9);
@@ -52,11 +52,11 @@ test("saved attempts with legacy station names resolve while unknown stations st
   }
 });
 
-const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/phloemai/interviews/_data/interviewQuestionBank.ts"));
-const { questionMarkingPoints } = load(resolve(root, "app/phloemai/interviews/_data/question-marking-points.ts"));
-const { interviewStimuli, getQuestionStimulus } = load(resolve(root, "app/phloemai/interviews/_data/interview-stimuli.ts"));
+const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/phloemai/interview/_data/interviewQuestionBank.ts"));
+const { questionMarkingPoints } = load(resolve(root, "app/phloemai/interview/_data/question-marking-points.ts"));
+const { interviewStimuli, getQuestionStimulus } = load(resolve(root, "app/phloemai/interview/_data/interview-stimuli.ts"));
 const { assessmentGuidance } = load(resolve(root, "utils/interviews/assessment-guidance.ts"));
-const { FOLLOW_UP_STATIONS, followUpsEnabled } = load(resolve(root, "app/phloemai/interviews/_lib/station-flow.ts"));
+const { FOLLOW_UP_STATIONS, followUpsEnabled } = load(resolve(root, "app/phloemai/interview/_lib/station-flow.ts"));
 const { selectStationQuestions } = load(resolve(root, "utils/interviews/station-question-selection.ts"));
 
 test("all 561 questions have independently authored content, with no category or question-text substitution", () => {
@@ -128,7 +128,7 @@ test("AI marking receives the exact source facts and criteria, including legacy 
 });
 
 test("every data interview has visuals and all 15 data sources can be selected", () => {
-  const { findReviewQuestion } = load(resolve(root, "app/phloemai/interviews/_lib/question-review.ts"));
+  const { findReviewQuestion } = load(resolve(root, "app/phloemai/interview/_lib/question-review.ts"));
   for (const text of interviewStations.find(station => station.slug === "data-analysis").questions) {
     assert.ok(getQuestionStimulus(findReviewQuestion(null, text)?.id), "The preview also needs a matching image");
   }

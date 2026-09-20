@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
   const submittedPassword = formData.get("password");
   const submittedNext = formData.get("next");
   const destination =
-    submittedNext === "/phloemai/interviews" ||
+    submittedNext === "/phloemai/interview/dashboard" ||
     submittedNext === "/phloemai/dashboard"
       ? submittedNext
       : "";

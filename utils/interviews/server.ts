@@ -1,7 +1,7 @@
 import "server-only";
 import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
-import type { InterviewAttempt } from "@/app/phloemai/interviews/_lib/interview-types";
+import type { InterviewAttempt } from "@/app/phloemai/interview/_lib/interview-types";
 import { questionIdForText } from "@/utils/interviews/station-question-selection";
 
 export class InterviewError extends Error {

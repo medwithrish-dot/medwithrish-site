@@ -5,7 +5,7 @@ import { test } from "node:test";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
 
-const source = readFileSync(new URL("../app/phloemai/interviews/_components/SavedInterviewReview.tsx", import.meta.url), "utf8");
+const source = readFileSync(new URL("../app/phloemai/interview/_components/SavedInterviewReview.tsx", import.meta.url), "utf8");
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText;
 const question = "Why medicine?";
 const words = "Listening to residents at a care home taught me to understand each person's concerns and how healthcare teams work together to support their needs.";
@@ -113,7 +113,7 @@ test("retry preserves university settings, reserves a fresh circuit and keeps th
   assert.equal(request.body.stationIndex, 0);
   assert.notEqual(request.body.circuitId, original.circuitId);
   assert.equal(page.review().attempt.id, original.id);
-  assert.equal(page.state.routes[0], "/phloemai/interviews/ai-interviews?attempt=new-attempt");
+  assert.equal(page.state.routes[0], "/phloemai/interview/ai-interviews?attempt=new-attempt");
 });
 
 test("retry after a timeout reuses its reservation ID without modifying the old transcript", async () => {

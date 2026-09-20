@@ -29,7 +29,7 @@ function loadTypeScript(path) {
 }
 const { deriveDashboard, londonDate, interviewTheme } = loadTypeScript(resolve(root, "utils/interviews/dashboard-analytics"));
 const { deriveInterviewQuestionProgress } = loadTypeScript(resolve(root, "utils/interviews/question-bank-progress"));
-const { interviewUniversities } = loadTypeScript(resolve(root, "app/phloemai/interviews/_data/universities"));
+const { interviewUniversities } = loadTypeScript(resolve(root, "app/phloemai/interview/_data/universities"));
 const NOW = "2026-09-06T12:00:00Z";
 let sequence = 0;
 function attempt(overrides = {}) {

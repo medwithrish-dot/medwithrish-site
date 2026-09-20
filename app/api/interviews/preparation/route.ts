@@ -32,10 +32,10 @@ export async function PUT(request: Request) {
       updated_at: new Date().toISOString(),
     }).select("*").single();
     if (error) databaseError(error);
-    revalidatePath("/phloemai/interviews");
-    revalidatePath("/phloemai/interviews/plan");
-    revalidatePath("/phloemai/interviews/progress");
-    revalidatePath("/phloemai/interviews/notifications");
+    revalidatePath("/phloemai/interview/dashboard");
+    revalidatePath("/phloemai/interview/plan");
+    revalidatePath("/phloemai/interview/progress");
+    revalidatePath("/phloemai/interview/notifications");
     return interviewJson({ profile: preparationFromRow(data) });
   } catch (error) { return interviewFailure(error); }
 }

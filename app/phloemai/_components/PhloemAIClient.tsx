@@ -1522,7 +1522,7 @@ const phloemAreaSwitchItems = [
   {
     label: "Med Interviews",
     eyebrow: "MMI and panel dashboard",
-    href: "/phloemai/interviews",
+    href: "/phloemai/interview/dashboard",
     icon: MessageSquare,
     current: false,
   },
@@ -9854,7 +9854,7 @@ function RedesignedTutorHero() {
       text: "Realistic MMI and panel preparation with answer feedback.",
       icon: UserRound,
       action: "Open interview dashboard",
-      href: "/phloemai/interviews",
+      href: "/phloemai/interview/dashboard",
       active: true,
     },
     {
@@ -10817,7 +10817,7 @@ export function PhloemAILandingPage({
     lockedArea === "interview"
       ? {
           label: "Medicine interview dashboard",
-          next: "/phloemai/interviews",
+          next: "/phloemai/interview/dashboard",
         }
       : lockedArea === "ucat"
         ? { label: "UCAT dashboard", next: "/phloemai/dashboard" }

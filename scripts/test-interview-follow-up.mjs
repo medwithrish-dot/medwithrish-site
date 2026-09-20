@@ -72,7 +72,7 @@ function harness({ generate = async () => probe, configured = true, enabled = tr
   }
   const admin = { from: (table) => new Query(table) };
   const { POST } = load("app/api/interviews/follow-up/route.ts", {
-    ...(enabled ? { "@/app/phloemai/interviews/_lib/station-flow": { followUpsEnabled: () => true } } : {}),
+    ...(enabled ? { "@/app/phloemai/interview/_lib/station-flow": { followUpsEnabled: () => true } } : {}),
     "@/utils/supabase/server": { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: user ? { id: user } : null } }) } }) },
     "@/utils/supabase/admin": { createAdminClient: () => admin },
     "@/utils/interviews/gemini": { interviewAiConfigured: () => configured, generateInterviewFollowUp: async (context) => { state.providerCalls += 1; return generate(context, state); } },

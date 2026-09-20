@@ -2,7 +2,7 @@ import {
   INTERVIEW_QUESTION_CATEGORIES,
   INTERVIEW_QUESTIONS,
   type InterviewQuestionCategoryTitle,
-} from "@/app/phloemai/interviews/_data/interviewQuestionBank";
+} from "@/app/phloemai/interview/_data/interviewQuestionBank";
 
 export type InterviewQuestionProgressRow = {
   question_id: string;

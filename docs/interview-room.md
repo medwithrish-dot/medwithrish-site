@@ -1,6 +1,6 @@
 # AI interview room
 
-Open **AI Interviews → Build your interview**, or `/phloemai/interviews/ai-interviews?setup=1`. Existing university, station and saved-attempt links use the same experience. The site's existing preview-access gate still applies.
+Open **AI Interviews → Build your interview**, or `/phloemai/interview/ai-interviews?setup=1`. Existing university, station and saved-attempt links use the same experience. The site's existing preview-access gate still applies.
 
 ## Experience
 

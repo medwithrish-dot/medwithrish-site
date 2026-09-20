@@ -1,7 +1,7 @@
-import { INTERVIEW_QUESTIONS, type InterviewQuestion } from "@/app/phloemai/interviews/_data/interviewQuestionBank";
-import { stationQuestionCount } from "@/app/phloemai/interviews/_data/interview-stations";
+import { INTERVIEW_QUESTIONS, type InterviewQuestion } from "@/app/phloemai/interview/_data/interviewQuestionBank";
+import { stationQuestionCount } from "@/app/phloemai/interview/_data/interview-stations";
 import { questionEligible, type ApplicantProfile } from "@/utils/interviews/applicant-profile";
-import { getQuestionStimulus } from "@/app/phloemai/interviews/_data/interview-stimuli";
+import { getQuestionStimulus } from "@/app/phloemai/interview/_data/interview-stimuli";
 
 type StationQuestionRule = {
   sourceTopics?: readonly string[];

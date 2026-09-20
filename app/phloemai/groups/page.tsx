@@ -21,7 +21,7 @@ const groupCards = [
   {
     title: "Med Interviews group",
     description: "Switch into interview prep groups and MMI practice.",
-    href: "/phloemai/interviews/groups",
+    href: "/phloemai/interview/groups",
   },
 ] as const;
 
@@ -90,7 +90,7 @@ export default function Page() {
             <ArrowRight className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />
           </Link>
           <Link
-            href="/phloemai/interviews/leaderboard"
+            href="/phloemai/interview/leaderboard"
             className="flex items-center justify-between rounded-xl border border-[#d8e0e6] bg-white p-5 shadow-sm transition-colors hover:border-[#159a9d]"
           >
             <span className="flex items-center gap-3">

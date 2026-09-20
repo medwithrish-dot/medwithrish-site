@@ -1,5 +1,5 @@
-import { findReviewQuestion, getQuestionMarkScheme } from "@/app/phloemai/interviews/_lib/question-review";
-import { getQuestionStimulus } from "@/app/phloemai/interviews/_data/interview-stimuli";
+import { findReviewQuestion, getQuestionMarkScheme } from "@/app/phloemai/interview/_lib/question-review";
+import { getQuestionStimulus } from "@/app/phloemai/interview/_data/interview-stimuli";
 
 /** Built from server-owned question IDs and authored content, never client rubrics. */
 export function assessmentGuidance(questions: readonly { question: string; id?: string | null }[]) {

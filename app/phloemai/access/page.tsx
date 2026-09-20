@@ -10,7 +10,7 @@ type AccessSearchParams = {
 const PREVIEW_DESTINATIONS = {
   interview: {
     label: "Medicine interview dashboard",
-    path: "/phloemai/interviews",
+    path: "/phloemai/interview/dashboard",
   },
   ucat: {
     label: "UCAT dashboard",

@@ -17,9 +17,9 @@ function load(file) {
   new Function("require", "module", "exports", code)(name => load(resolve(dirname(filename), name)), loadedModule, loadedModule.exports);
   return loadedModule.exports;
 }
-const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/phloemai/interviews/_data/interviewQuestionBank"));
-const { getQuestionMarkScheme } = load(resolve(root, "app/phloemai/interviews/_lib/question-review"));
-const { getQuestionStimulus } = load(resolve(root, "app/phloemai/interviews/_data/interview-stimuli"));
+const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/phloemai/interview/_data/interviewQuestionBank"));
+const { getQuestionMarkScheme } = load(resolve(root, "app/phloemai/interview/_lib/question-review"));
+const { getQuestionStimulus } = load(resolve(root, "app/phloemai/interview/_data/interview-stimuli"));
 const escape = value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const note = "Practice guidance, not official admissions criteria. Credit equivalent valid reasoning. Start, Middle and End are suggested structures, not a required script. Mistakes are pitfalls, not positive checklist points. Visual datasets are fictional. Current legal, policy and clinical details should be checked against relevant official guidance.";
 const sections = INTERVIEW_QUESTIONS.map(question => {

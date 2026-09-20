@@ -101,3 +101,49 @@ export function changePathwayTask(value: unknown, taskId: unknown, completed: un
   const next = completed ? [...new Set([...current, taskId])] : current.filter((id) => !removeIds.includes(id));
   return { completedTaskIds: next, removeIds };
 }
+
+export function changePathwayStation(
+  value: unknown,
+  stationId: unknown,
+  completed: unknown
+) {
+  if (typeof stationId !== "string" || typeof completed !== "boolean") {
+    throw new Error("Choose a station from your interview pathway.");
+  }
+
+  const stationIndex = INTERVIEW_PATHWAY.findIndex(
+    (station) => station.id === stationId
+  );
+  if (stationIndex < 0) {
+    throw new Error("Choose a station from your interview pathway.");
+  }
+
+  const current = sanitisePathwayProgress(value);
+  const station = INTERVIEW_PATHWAY[stationIndex];
+  const stationTaskIds = [
+    ...pathwayResourceIds(station),
+    pathwayTaskId(station.id, "ready"),
+  ];
+
+  if (completed) {
+    const state = derivePathwayProgress(current).stations[stationIndex];
+    if (!state.unlocked) {
+      throw new Error("Tick off the previous pathway step first.");
+    }
+    return {
+      completedTaskIds: [...new Set([...current, ...stationTaskIds])],
+      addIds: stationTaskIds.filter((id) => !current.includes(id)),
+      removeIds: [] as string[],
+    };
+  }
+
+  const removeIds = INTERVIEW_PATHWAY.slice(stationIndex).flatMap((entry) => [
+    ...pathwayResourceIds(entry),
+    pathwayTaskId(entry.id, "ready"),
+  ]);
+  return {
+    completedTaskIds: current.filter((id) => !removeIds.includes(id)),
+    addIds: [] as string[],
+    removeIds,
+  };
+}

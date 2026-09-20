@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { interviewAiConfigured } from "@/utils/interviews/gemini";
-import { findInterviewUniversity } from "@/app/phloemai/interviews/_data/universities";
-import { findInterviewStation, interviewStations } from "@/app/phloemai/interviews/_data/interview-stations";
+import { findInterviewUniversity } from "@/app/phloemai/interview/_data/universities";
+import { findInterviewStation, interviewStations } from "@/app/phloemai/interview/_data/interview-stations";
 import { databaseError, InterviewError, interviewContext, interviewFailure, interviewJson, readInterviewBody, toInterviewAttempt, validId } from "@/utils/interviews/server";
 import { selectStationQuestions } from "@/utils/interviews/station-question-selection";
 import { questionEligible, readApplicant } from "@/utils/interviews/applicant-profile";
-import { interviewerSpeech } from "@/app/phloemai/interviews/_lib/interviewer-transcript";
-import { isAcademicInterview, universityStationSlugs } from "@/app/phloemai/interviews/_data/university-stations";
+import { interviewerSpeech } from "@/app/phloemai/interview/_lib/interviewer-transcript";
+import { isAcademicInterview, universityStationSlugs } from "@/app/phloemai/interview/_data/university-stations";
 
 async function completeQuestionBankProgress(
   admin: Awaited<ReturnType<typeof interviewContext>>["admin"],

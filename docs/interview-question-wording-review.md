@@ -1,6 +1,6 @@
 # Interview question wording review
 
-Reviewed 12 September 2026. All 561 entries in `app/phloemai/interviews/_data/interviewQuestionBank.ts` were reviewed: 193 were rewritten and 368 retained.
+Reviewed 12 September 2026. All 561 entries in `app/phloemai/interview/_data/interviewQuestionBank.ts` were reviewed: 193 were rewritten and 368 retained.
 
 Routine motivation, university-choice, personal reflection, ethical definitions and general skills questions were retained where the wording was already generic. Distinctive scenario wording and focused policy dilemmas were restructured while preserving the point being assessed. The review also corrected malformed sentences, AI/COVID capitalisation and prompts whose meaning depended on a previous question.
 
