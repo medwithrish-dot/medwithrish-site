@@ -14,7 +14,7 @@ const PREVIEW_DESTINATIONS = {
   },
   ucat: {
     label: "UCAT dashboard",
-    path: "/phloemai/dashboard",
+    path: "/phloemai/ucat/dashboard",
   },
 } as const;
 

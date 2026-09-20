@@ -22,7 +22,7 @@ require.extensions[".ts"] = function loadTypeScript(module, filename) {
 const projectRoot = path.resolve(__dirname, "..");
 const generatedQuestionBankPath = path.join(
   projectRoot,
-  "app/phloemai/_lib/generatedUcatQuestionsHighQuality9000.ts"
+  "app/phloemai/ucat/_lib/generatedUcatQuestionsHighQuality9000.ts"
 );
 
 if (!fs.existsSync(generatedQuestionBankPath)) {

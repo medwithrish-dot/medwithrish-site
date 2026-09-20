@@ -41,10 +41,10 @@ In Supabase Dashboard:
   - Production: `https://www.medwithrish.com`
   - Local, only if testing locally: `http://localhost:3000`
 - Authentication > URL Configuration > Redirect URLs:
-  - `http://localhost:3000/phloemai/dashboard`
-  - `http://localhost:3001/phloemai/dashboard`
-  - `https://www.medwithrish.com/phloemai/dashboard`
-  - `https://medwithrish.com/phloemai/dashboard`
+  - `http://localhost:3000/phloemai/ucat/dashboard`
+  - `http://localhost:3001/phloemai/ucat/dashboard`
+  - `https://www.medwithrish.com/phloemai/ucat/dashboard`
+  - `https://medwithrish.com/phloemai/ucat/dashboard`
 - Authentication > Signups: enabled.
 - Email confirmations:
   - Recommended for production: enabled.

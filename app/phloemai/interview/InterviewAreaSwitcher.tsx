@@ -12,7 +12,7 @@ const switchItems = [
   {
     label: "UCAT",
     eyebrow: "Question bank and mocks",
-    href: "/phloemai/dashboard",
+    href: "/phloemai/ucat/dashboard",
     icon: Brain,
     current: false,
   },

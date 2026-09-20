@@ -5,7 +5,7 @@ import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
-const source = readFileSync(new URL("../app/phloemai/_lib/useAttentionTracker.ts", import.meta.url), "utf8");
+const source = readFileSync(new URL("../app/phloemai/ucat/_lib/useAttentionTracker.ts", import.meta.url), "utf8");
 const compiled = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
 }).outputText;

@@ -6,7 +6,7 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
 const compiled = ts.transpileModule(
-  readFileSync(new URL("../app/phloemai/_lib/ucatQuestionQualityGate.ts", import.meta.url), "utf8"),
+  readFileSync(new URL("../app/phloemai/ucat/_lib/ucatQuestionQualityGate.ts", import.meta.url), "utf8"),
   { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } },
 ).outputText;
 const compiledModule = { exports: {} };

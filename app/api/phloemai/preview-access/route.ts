@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
   const submittedNext = formData.get("next");
   const destination =
     submittedNext === "/phloemai/interview/dashboard" ||
-    submittedNext === "/phloemai/dashboard"
+    submittedNext === "/phloemai/ucat/dashboard"
       ? submittedNext
       : "";
   const accessUrl = new URL("/phloemai/access", request.url);

@@ -23,12 +23,12 @@ const projectRoot = path.resolve(__dirname, "..");
 const {
   UCAT_QUESTION_BANK,
   UCAT_QUESTION_QUALITY_REVIEW,
-} = require(path.join(projectRoot, "app/phloemai/_lib/ucatQuestionBank.ts"));
+} = require(path.join(projectRoot, "app/phloemai/ucat/_lib/ucatQuestionBank.ts"));
 
 const sections = ["vr", "dm", "qr", "sjt"];
 const generatedQuestionBankPath = path.join(
   projectRoot,
-  "app/phloemai/_lib/generatedUcatQuestionsHighQuality9000.ts"
+  "app/phloemai/ucat/_lib/generatedUcatQuestionsHighQuality9000.ts"
 );
 const highQualityGeneratedLayer = fs.existsSync(generatedQuestionBankPath)
   ? require(generatedQuestionBankPath)

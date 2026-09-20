@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PhloemAIPricingPage } from "../_components/PhloemAIClient";
+import { PhloemAIPricingPage } from "../ucat/_components/PhloemAIClient";
 
 export const metadata: Metadata = {
   title: "PhloemAI Pricing",

@@ -169,7 +169,7 @@ export function InterviewAccountControls() {
                 Help & Support
               </Link>
               <Link
-                href="/phloemai/dashboard"
+                href="/phloemai/ucat/dashboard"
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-bold text-slate-700 hover:bg-[#f4f8f8] hover:text-[#08787b]"
                 role="menuitem"

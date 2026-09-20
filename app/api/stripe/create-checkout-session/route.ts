@@ -253,8 +253,8 @@ export async function POST(request: Request) {
           message: `I agree to the [Terms and Conditions](${siteUrl}/terms-and-conditions) and confirm I have read the [Privacy Policy](${siteUrl}/privacy-policy).`,
         },
       },
-      success_url: `${siteUrl}/phloemai/dashboard?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/phloemai/dashboard?checkout=cancelled`,
+      success_url: `${siteUrl}/phloemai/ucat/dashboard?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/phloemai/ucat/dashboard?checkout=cancelled`,
       metadata: {
         supabase_user_id: user.id,
       },

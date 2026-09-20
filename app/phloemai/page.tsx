@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PhloemAILandingPage } from "./_components/PhloemAIClient";
+import { PhloemAILandingPage } from "./ucat/_components/PhloemAIClient";
 
 type LandingSearchParams = {
   preview?: string | string[];
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description:
     "Explore PhloemAI features and pricing, then choose UCAT or medicine interview preparation.",
   alternates: {
-    canonical: "/phloemai",
+    canonical: "/phloemai/ucat",
   },
 };
 

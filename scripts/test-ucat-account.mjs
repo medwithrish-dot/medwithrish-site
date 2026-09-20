@@ -5,7 +5,7 @@ import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
-const text = readFileSync(new URL("../app/phloemai/_components/PhloemAIClient.tsx", import.meta.url), "utf8");
+const text = readFileSync(new URL("../app/phloemai/ucat/_components/PhloemAIClient.tsx", import.meta.url), "utf8");
 const source = ts.createSourceFile("client.tsx", text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 let accountEffect;
 function visit(node) {

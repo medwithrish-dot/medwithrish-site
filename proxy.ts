@@ -5,7 +5,11 @@ import {
   PHLOEMAI_PREVIEW_COOKIE,
 } from "@/utils/phloemai/preview-access";
 
-const PHLOEMAI_PUBLIC_PATHS = new Set(["/phloemai", "/phloemai/access"]);
+const PHLOEMAI_PUBLIC_PATHS = new Set([
+  "/phloemai",
+  "/phloemai/ucat",
+  "/phloemai/access",
+]);
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
