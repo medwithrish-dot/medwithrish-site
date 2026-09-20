@@ -18,7 +18,8 @@ export type GroupMember = {
   userId: string;
   name: string;
   joinedAt: string;
-  groupScore: null;
+  rank: number;
+  questionsCompleted: number;
   whyMedicineScore: number | null;
 };
 

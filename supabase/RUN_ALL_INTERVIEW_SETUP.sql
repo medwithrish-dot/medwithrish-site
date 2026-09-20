@@ -417,15 +417,23 @@ begin
 
   if p_action = 'details' then
     select coalesce(jsonb_agg(jsonb_build_object(
-      'userId', m.user_id, 'name', m.display_name, 'joinedAt', m.joined_at,
-      'groupScore', null,
+      'userId', ranked.user_id, 'name', ranked.display_name, 'joinedAt', ranked.joined_at,
+      'rank', ranked.rank, 'questionsCompleted', ranked.questions_completed,
       -- Joining a private group explicitly shares this score with its members.
       -- No attempt IDs, answers, feedback, or other account data are exposed.
       'whyMedicineScore', (select max(a.score) from public.interview_attempts a
-        where a.user_id = m.user_id and a.mode = 'free' and a.station_slug = 'why-medicine'
+        where a.user_id = ranked.user_id and a.mode = 'free' and a.station_slug = 'why-medicine'
         and a.status = 'completed' and a.rubric_version = 'why-medicine-v1')
-    ) order by m.joined_at), '[]'::jsonb) into v_members
-      from public.interview_study_group_members m where m.group_id = v_group.id;
+    ) order by ranked.rank, ranked.joined_at), '[]'::jsonb) into v_members
+      from (
+        select m.*,
+          count(q.question_id) filter (where q.status = 'completed')::integer as questions_completed,
+          dense_rank() over (order by count(q.question_id) filter (where q.status = 'completed') desc) as rank
+        from public.interview_study_group_members m
+        left join public.interview_question_progress q on q.user_id = m.user_id
+        where m.group_id = v_group.id
+        group by m.group_id, m.user_id, m.display_name, m.joined_at
+      ) ranked;
     -- A completed timer stays completed even if nobody has the page open.
     select coalesce(jsonb_agg(jsonb_build_object(
       'id', r.id, 'stationId', r.station_id, 'title', r.title, 'questions', r.questions,

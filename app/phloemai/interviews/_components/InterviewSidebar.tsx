@@ -8,9 +8,9 @@ import {
   BookOpen,
   ClipboardList,
   Home,
-  Landmark,
   Mic,
   Trophy,
+  UserRoundCheck,
   Users,
 } from "lucide-react";
 import { InterviewAreaSwitcher } from "../InterviewAreaSwitcher";
@@ -30,14 +30,14 @@ const sidebarSections = [
         href: "/phloemai/interviews/question-bank",
       },
       {
-        label: "Universities",
-        icon: Landmark,
-        href: "/phloemai/interviews/universities",
-      },
-      {
         label: "Guides",
         icon: BookOpen,
         href: "/phloemai/interviews/guides",
+      },
+      {
+        label: "1-1 Tutoring",
+        icon: UserRoundCheck,
+        href: "/phloemai/interviews/tutoring",
       },
     ],
   },

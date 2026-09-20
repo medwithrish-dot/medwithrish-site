@@ -79,10 +79,12 @@ try {
     grant execute on function auth.uid() to authenticated, anon;
   `);
   const platformSql = await readFile(new URL("../supabase/phloemai_interview_platform.sql", import.meta.url), "utf8");
+  const questionProgressSql = (await readFile(new URL("../supabase/phloemai_interview_question_progress.sql", import.meta.url), "utf8"))
+    .replace('create extension if not exists "pgcrypto";', "");
   const groupsSql = await readFile(new URL("../supabase/phloemai_interview_groups.sql", import.meta.url), "utf8");
   await check("actual platform and groups migrations install and can be rerun", async () => {
-    await db.exec(platformSql); await db.exec(groupsSql);
-    await db.exec(platformSql); await db.exec(groupsSql);
+    await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);
+    await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);
   });
   for (const [name, id] of Object.entries(ids)) {
     await db.query("insert into auth.users(id,raw_user_meta_data) values ($1,$2::jsonb)", [id, JSON.stringify({ full_name: name })]);
@@ -250,10 +252,22 @@ try {
   await check("group joins are idempotent; members see best free score without transcripts", async () => {
     await group(ids.friend, "join", null, { code: created.inviteCode });
     await group(ids.friend, "join", null, { code: created.inviteCode });
+    await role("authenticated", ids.friend, () => db.query(
+      "insert into public.interview_question_progress(user_id,question_id,status,completed_at) values($1,'group-rank-1','completed',now()),($1,'group-rank-2','completed',now())",
+      [ids.friend],
+    ));
+    await role("authenticated", ids.owner, () => db.query(
+      "insert into public.interview_question_progress(user_id,question_id,status) values($1,'not-finished','review')",
+      [ids.owner],
+    ));
     const detail = await group(ids.friend, "details", groupId);
     assert.equal(detail.members.length, 2);
     assert.equal(detail.members.find((member) => member.userId === ids.friend).whyMedicineScore, 88.5);
-    assert.equal(detail.members[0].groupScore, null);
+    assert.equal(detail.members[0].userId, ids.friend);
+    assert.equal(detail.members[0].rank, 1);
+    assert.equal(detail.members[0].questionsCompleted, 2);
+    assert.equal(detail.members[1].rank, 2);
+    assert.equal(detail.members[1].questionsCompleted, 0);
     assert.equal(JSON.stringify(detail).includes(transcript), false);
     assert.equal(JSON.stringify(detail).includes("invite_hash"), false);
     await assert.rejects(group(ids.friend, "invite", groupId), /Only the group owner/);
