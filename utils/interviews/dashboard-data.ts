@@ -40,14 +40,17 @@ export const getInterviewDashboardData = cache(async () => {
       message = "Sign in to save your university choices, interview dates and preparation plan.";
     } else {
       signedIn = true;
-      const monthStart = `${londonDate(now).slice(0, 8)}01`;
+      const today = londonDate(now);
+      const activityStartDate = new Date(`${today}T12:00:00Z`);
+      activityStartDate.setUTCDate(activityStartDate.getUTCDate() - 6);
+      const activityStart = activityStartDate.toISOString().slice(0, 10);
       const [settings, plan, tasks, allTime, questionBank, activity] = await Promise.all([
         supabase.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("profiles").select("current_plan").eq("id", user.id).maybeSingle(),
         supabase.from("interview_dashboard_tasks").select("task_id").eq("user_id", user.id).eq("date", londonDate(now)),
         supabase.rpc("interview_dashboard_totals"),
         supabase.from("interview_question_progress").select("question_id,status").eq("user_id", user.id).in("status", ["completed", "review"]).limit(1000),
-        supabase.from("interview_daily_questions").select("practice_date").eq("user_id", user.id).gte("practice_date", monthStart).lte("practice_date", londonDate(now)).limit(5000),
+        supabase.from("interview_daily_questions").select("practice_date").eq("user_id", user.id).gte("practice_date", activityStart).lte("practice_date", today).limit(5000),
       ]);
       isPremium = plan.data?.current_plan === "premium";
       available = !settings.error && !tasks.error && !allTime.error;

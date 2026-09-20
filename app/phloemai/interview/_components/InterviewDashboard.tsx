@@ -52,11 +52,6 @@ export function InterviewDashboard({
       </div>
     </section>
 
-    <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(420px,.9fr)]">
-      <InterviewPreparationSetup key={profile?.updatedAt ?? "new"} initialProfile={profile} signedIn={signedIn} available={available} variant="compact" />
-      <InterviewQuestionCalendar rows={data.dailyActivity} today={data.today} available={signedIn && data.activityAvailable} signedIn={signedIn} />
-    </div>
-
     <section aria-label="Practice overview" className={`${panel} grid divide-y divide-[#e5eceb] sm:grid-cols-3 sm:divide-x sm:divide-y-0`}>
       {[
         ["Stations", String(stats.completedCount), "completed"],
@@ -65,7 +60,7 @@ export function InterviewDashboard({
       ].map(([label, value, detail]) => <div key={label} className="flex items-baseline justify-between gap-4 px-5 py-4 sm:block"><p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#708684]">{label}</p><p className="sm:mt-2"><strong className="text-xl font-bold tabular-nums text-[#153d3d]">{value}</strong><span className="ml-2 text-[10px] text-[#7a8d8c]">{detail}</span></p></div>)}
     </section>
     {data.historyLimited && <p className="px-1 text-[10px] leading-5 text-[#718788]">Recent suggestions use your latest 500 stations.</p>}
-    <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(300px,.65fr)]">
+    <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(340px,.55fr)]">
       <section className={`${panel} p-5 sm:p-6`} aria-labelledby="pathway-preview-title">
         <div className="flex items-start justify-between gap-4">
           <div><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#08787b]">Your pathway</p><h2 id="pathway-preview-title" className="mt-2 text-lg font-bold text-[#173d3d]">Build confidence, station by station</h2><p className="mt-2 text-xs leading-6 text-[#687d80]">Read the guides, practise the questions and check your readiness before moving on. Your progress carries over each day.</p></div>
@@ -79,6 +74,8 @@ export function InterviewDashboard({
       </section>
 
       <div className="space-y-5">
+        <InterviewPreparationSetup key={profile?.updatedAt ?? "new"} initialProfile={profile} signedIn={signedIn} available={available} variant="compact" />
+        <InterviewQuestionCalendar rows={data.dailyActivity} today={data.today} available={signedIn && data.activityAvailable} signedIn={signedIn} />
         <InterviewQuestionProgressMini rows={data.questionProgress} signedIn={signedIn} available={data.questionProgressAvailable} />
 
         <section className={`${panel} p-5`} aria-labelledby="latest-title">
