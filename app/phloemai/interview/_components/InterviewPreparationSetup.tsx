@@ -157,7 +157,7 @@ export function InterviewPreparationSetup({ initialProfile, signedIn, available,
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#cde5dc] bg-[#e6f3eb] text-[#08787b]" aria-hidden="true"><Settings2 size={21} /></span>
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#6e8a79]">Your preparation, your pace</p>
-          <h2 id={`${uniqueId}-title`} className="mt-1 text-lg font-bold tracking-tight text-[#123a3c]">Your interviews and applicant details</h2>
+          <h2 id={`${uniqueId}-title`} className="mt-1 text-lg font-bold tracking-tight text-[#123a3c]">Your interview plan</h2>
           <p className="mt-1.5 max-w-2xl text-sm leading-6 text-[#536d72]">Universities, interview dates, application route and personal experience.</p>
           {savedProfile && !expanded && <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-[#43625d]">
             <span className="inline-flex items-center gap-1.5"><GraduationCap size={14} aria-hidden="true" />{savedProfile.targets.length} {savedProfile.targets.length === 1 ? "university" : "universities"}</span>

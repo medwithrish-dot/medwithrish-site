@@ -5,6 +5,7 @@ import type { getInterviewPathwayData } from "@/utils/interviews/pathway-data";
 import { InterviewPreparationSetup } from "./InterviewPreparationSetup";
 import { InterviewPathwayChecklist } from "./InterviewPathwayChecklist";
 import { InterviewQuestionProgressMini } from "./InterviewQuestionProgressMini";
+import { InterviewQuestionCalendar } from "./InterviewQuestionCalendar";
 
 type DashboardData = Awaited<ReturnType<typeof getInterviewDashboardData>>;
 type PathwayData = Awaited<ReturnType<typeof getInterviewPathwayData>>;
@@ -51,6 +52,11 @@ export function InterviewDashboard({
       </div>
     </section>
 
+    <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(420px,.9fr)]">
+      <InterviewPreparationSetup key={profile?.updatedAt ?? "new"} initialProfile={profile} signedIn={signedIn} available={available} variant="compact" />
+      <InterviewQuestionCalendar rows={data.dailyActivity} today={data.today} available={signedIn && data.activityAvailable} signedIn={signedIn} />
+    </div>
+
     <section aria-label="Practice overview" className={`${panel} grid divide-y divide-[#e5eceb] sm:grid-cols-3 sm:divide-x sm:divide-y-0`}>
       {[
         ["Stations", String(stats.completedCount), "completed"],
@@ -59,10 +65,6 @@ export function InterviewDashboard({
       ].map(([label, value, detail]) => <div key={label} className="flex items-baseline justify-between gap-4 px-5 py-4 sm:block"><p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#708684]">{label}</p><p className="sm:mt-2"><strong className="text-xl font-bold tabular-nums text-[#153d3d]">{value}</strong><span className="ml-2 text-[10px] text-[#7a8d8c]">{detail}</span></p></div>)}
     </section>
     {data.historyLimited && <p className="px-1 text-[10px] leading-5 text-[#718788]">Recent suggestions use your latest 500 stations.</p>}
-    <div id="preparation-settings">
-      <InterviewPreparationSetup key={profile?.updatedAt ?? "new"} initialProfile={profile} signedIn={signedIn} available={available} />
-    </div>
-
     <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(300px,.65fr)]">
       <section className={`${panel} p-5 sm:p-6`} aria-labelledby="pathway-preview-title">
         <div className="flex items-start justify-between gap-4">

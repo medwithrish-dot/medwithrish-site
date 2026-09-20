@@ -31,6 +31,8 @@ export const getInterviewDashboardData = cache(async () => {
   let totals: Record<string, number | boolean | null> | null = null;
   let questionProgress: InterviewQuestionProgressRow[] = [];
   let questionProgressAvailable = false;
+  let dailyActivity: { practice_date: string; questions: number }[] = [];
+  let activityAvailable = false;
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -38,12 +40,14 @@ export const getInterviewDashboardData = cache(async () => {
       message = "Sign in to save your university choices, interview dates and preparation plan.";
     } else {
       signedIn = true;
-      const [settings, plan, tasks, allTime, questionBank] = await Promise.all([
+      const monthStart = `${londonDate(now).slice(0, 8)}01`;
+      const [settings, plan, tasks, allTime, questionBank, activity] = await Promise.all([
         supabase.from("interview_preparation_profiles").select("*").eq("user_id", user.id).maybeSingle(),
         supabase.from("profiles").select("current_plan").eq("id", user.id).maybeSingle(),
         supabase.from("interview_dashboard_tasks").select("task_id").eq("user_id", user.id).eq("date", londonDate(now)),
         supabase.rpc("interview_dashboard_totals"),
         supabase.from("interview_question_progress").select("question_id,status").eq("user_id", user.id).in("status", ["completed", "review"]).limit(1000),
+        supabase.from("interview_daily_questions").select("practice_date").eq("user_id", user.id).gte("practice_date", monthStart).lte("practice_date", londonDate(now)).limit(5000),
       ]);
       isPremium = plan.data?.current_plan === "premium";
       available = !settings.error && !tasks.error && !allTime.error;
@@ -52,6 +56,12 @@ export const getInterviewDashboardData = cache(async () => {
       totals = allTime.data;
       questionProgress = (questionBank.data ?? []) as InterviewQuestionProgressRow[];
       questionProgressAvailable = !questionBank.error;
+      if (!activity.error) {
+        const counts = new Map<string, number>();
+        for (const row of activity.data ?? []) counts.set(row.practice_date, (counts.get(row.practice_date) ?? 0) + 1);
+        dailyActivity = [...counts].map(([practice_date, questions]) => ({ practice_date, questions }));
+        activityAvailable = true;
+      }
       if (!available) message = "Your saved interview results are shown below. Personal plans and dates will be available once dashboard storage is ready.";
 
       // No answer text or microphone metrics are transferred for a dashboard view.
@@ -74,5 +84,5 @@ export const getInterviewDashboardData = cache(async () => {
     analytics.stats.practiceMinutes = Math.round(analytics.stats.practiceSeconds / 60);
     analytics.stats.practiceTimeEstimated = Boolean(totals.practiceTimeEstimated);
   }
-  return { attempts, profile, analytics, signedIn, isPremium, available, message, questionProgress, questionProgressAvailable, historyLimited: Number(totals?.attemptCount ?? 0) > 500 };
+  return { attempts, profile, analytics, signedIn, isPremium, available, message, questionProgress, questionProgressAvailable, dailyActivity, activityAvailable, today: londonDate(now), historyLimited: Number(totals?.attemptCount ?? 0) > 500 };
 });

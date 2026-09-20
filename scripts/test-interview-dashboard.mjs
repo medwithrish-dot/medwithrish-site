@@ -34,6 +34,18 @@ const interviewShellSource = readFileSync(
   resolve(root, "app/phloemai/interview/_components/InterviewShell.tsx"),
   "utf8"
 );
+const interviewDashboardSource = readFileSync(
+  resolve(root, "app/phloemai/interview/_components/InterviewDashboard.tsx"),
+  "utf8"
+);
+const interviewCalendarSource = readFileSync(
+  resolve(root, "app/phloemai/interview/_components/InterviewQuestionCalendar.tsx"),
+  "utf8"
+);
+const dashboardDataSource = readFileSync(
+  resolve(root, "utils/interviews/dashboard-data.ts"),
+  "utf8"
+);
 const NOW = "2026-09-06T12:00:00Z";
 let sequence = 0;
 function attempt(overrides = {}) {
@@ -58,6 +70,14 @@ function completedOn(date, overrides = {}) {
 test("desktop interview shell retains the full viewport height after client updates", () => {
   assert.match(interviewShellSource, /lg:h-\[100dvh\]/);
   assert.doesNotMatch(interviewShellSource, /lg:h-auto/);
+});
+
+test("dashboard pairs its expandable plan with a saved daily-question calendar", () => {
+  assert.match(interviewDashboardSource, /InterviewPreparationSetup[\s\S]*InterviewQuestionCalendar/);
+  assert.match(interviewDashboardSource, /variant="compact"/);
+  assert.match(interviewCalendarSource, /Questions done/);
+  assert.match(interviewCalendarSource, /7-day average/);
+  assert.match(dashboardDataSource, /interview_daily_questions/);
 });
 
 test("interview question progress is deduplicated, category-aware and ignores stale IDs", () => {
