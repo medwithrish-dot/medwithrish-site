@@ -39,7 +39,7 @@ export async function InterviewShell({
   const { isPremium } = await getPhloemEntitlements();
 
   return (
-    <main data-interview-shell className="phloem-dashboard-compact flex-1 bg-[#eef1f3] text-[#071923] lg:fixed lg:inset-0 lg:h-auto lg:overflow-hidden">
+    <main data-interview-shell className="phloem-dashboard-compact flex-1 bg-[#eef1f3] text-[#071923] lg:fixed lg:inset-0 lg:h-[100dvh] lg:overflow-hidden">
       <a href="#interview-content" className="sr-only z-50 rounded-lg bg-white px-4 py-3 font-bold text-[#08787b] focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to page content</a>
       <div data-interview-shell-grid className="grid min-h-[100dvh] lg:h-full lg:min-h-0 lg:grid-cols-[230px_1fr]">
         <InterviewSidebar activeLabel={activeLabel} showPremiumCard={!isPremium} />

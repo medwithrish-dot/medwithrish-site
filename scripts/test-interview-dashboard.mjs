@@ -30,6 +30,10 @@ function loadTypeScript(path) {
 const { deriveDashboard, londonDate, interviewTheme } = loadTypeScript(resolve(root, "utils/interviews/dashboard-analytics"));
 const { deriveInterviewQuestionProgress } = loadTypeScript(resolve(root, "utils/interviews/question-bank-progress"));
 const { interviewUniversities } = loadTypeScript(resolve(root, "app/phloemai/interview/_data/universities"));
+const interviewShellSource = readFileSync(
+  resolve(root, "app/phloemai/interview/_components/InterviewShell.tsx"),
+  "utf8"
+);
 const NOW = "2026-09-06T12:00:00Z";
 let sequence = 0;
 function attempt(overrides = {}) {
@@ -50,6 +54,11 @@ function profile(overrides = {}) {
 function completedOn(date, overrides = {}) {
   return attempt({ startedAt: `${date}T09:00:00Z`, completedAt: `${date}T09:08:00Z`, ...overrides });
 }
+
+test("desktop interview shell retains the full viewport height after client updates", () => {
+  assert.match(interviewShellSource, /lg:h-\[100dvh\]/);
+  assert.doesNotMatch(interviewShellSource, /lg:h-auto/);
+});
 
 test("interview question progress is deduplicated, category-aware and ignores stale IDs", () => {
   const progress = deriveInterviewQuestionProgress([
