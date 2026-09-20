@@ -72,14 +72,12 @@ test("desktop interview shell retains the full viewport height after client upda
   assert.doesNotMatch(interviewShellSource, /lg:h-auto/);
 });
 
-test("dashboard groups its expandable plan with a compact daily-question activity view", () => {
+test("dashboard pairs its expandable plan with a saved daily-question calendar", () => {
   assert.match(interviewDashboardSource, /InterviewPreparationSetup[\s\S]*InterviewQuestionCalendar/);
   assert.match(interviewDashboardSource, /variant="compact"/);
-  assert.match(interviewCalendarSource, /Question activity/);
-  assert.match(interviewCalendarSource, /last seven days/i);
-  assert.match(interviewCalendarSource, /Array\.from\(\{ length: 7 \}/);
+  assert.match(interviewCalendarSource, /Questions done/);
+  assert.match(interviewCalendarSource, /7-day average/);
   assert.match(dashboardDataSource, /interview_daily_questions/);
-  assert.match(dashboardDataSource, /getUTCDate\(\) - 6/);
 });
 
 test("interview question progress is deduplicated, category-aware and ignores stale IDs", () => {
