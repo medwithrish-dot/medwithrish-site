@@ -104,17 +104,24 @@ test("checkout synchronization rejects non-string session IDs before contacting 
 });
 
 test("site URLs are validated and production checkout cannot use a caller's localhost Origin", async () => {
-  const { getRequiredSiteUrl, getPublicSiteUrl } = load("utils/site-url.ts");
+  const { getRequiredSiteUrl, getPublicSiteUrl, getProductSiteUrl } = load("utils/site-url.ts");
   const request = new Request("https://example.test", { headers: { Origin: "http://localhost:9999" } });
-  await withEnv({ NODE_ENV: "production", NEXT_PUBLIC_SITE_URL: undefined }, async () => {
+  await withEnv({ NODE_ENV: "production", NEXT_PUBLIC_SITE_URL: undefined, NEXT_PUBLIC_PRODUCT_SITE_URL: undefined }, async () => {
     assert.throws(() => getRequiredSiteUrl(request), /Missing/);
     assert.equal(getPublicSiteUrl(), "https://www.medwithrish.com");
+    assert.equal(getProductSiteUrl(), "https://medicforest.com");
   });
   for (const url of ["httpwhatever", "javascript:alert(1)", "https://user:pass@example.test", "https://example.test/path", "https://example.test/?foo=bar"]) {
     await withEnv({ NEXT_PUBLIC_SITE_URL: url }, async () => assert.throws(() => getRequiredSiteUrl(request)));
   }
   await withEnv({ NEXT_PUBLIC_SITE_URL: " https://example.test/ " }, async () => {
     assert.equal(getRequiredSiteUrl(request), "https://example.test");
+  });
+  await withEnv({ NEXT_PUBLIC_SITE_URL: "https://www.medwithrish.com", NEXT_PUBLIC_PRODUCT_SITE_URL: "https://medicforest.com" }, async () => {
+    assert.equal(getRequiredSiteUrl(new Request("https://medicforest.com/api/stripe/create-checkout-session")), "https://medicforest.com");
+  });
+  await withEnv({ NEXT_PUBLIC_PRODUCT_SITE_URL: "https://medicforest.com/path" }, async () => {
+    assert.throws(() => getProductSiteUrl(), /NEXT_PUBLIC_PRODUCT_SITE_URL/);
   });
 });
 

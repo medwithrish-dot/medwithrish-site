@@ -78,9 +78,9 @@ const landingSections: Array<{
   {
     label: "MedWithRish",
     items: [
-      { label: "Main website", href: "/", icon: GraduationCap },
-      { label: "Free resources", href: "/resources", icon: BookOpen },
-      { label: "Contact & support", href: "/contact", icon: CircleHelp },
+      { label: "Main website", href: "https://www.medwithrish.com", icon: GraduationCap, external: true },
+      { label: "Free resources", href: "https://www.medwithrish.com/resources", icon: BookOpen, external: true },
+      { label: "Contact & support", href: "https://www.medwithrish.com/contact", icon: CircleHelp, external: true },
     ],
   },
 ];

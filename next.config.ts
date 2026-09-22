@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
     root: projectRoot,
   },
   async redirects() {
-    const phloemHosts = ["phloemai.com", "www.phloemai.com"];
+    const legacyPhloemHosts = ["phloemai.com", "www.phloemai.com"];
 
     return [
       ...legacyUcatRoutes.map((route) => ({
@@ -45,27 +45,52 @@ const nextConfig: NextConfig = {
         destination: "/phloemai/interview/:path*",
         permanent: true,
       },
-      ...phloemHosts.flatMap((host) => [
+      {
+        source: "/",
+        has: [{ type: "host", value: "www.medicforest.com" }],
+        destination: "https://medicforest.com",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.medicforest.com" }],
+        destination: "https://medicforest.com/:path*",
+        permanent: true,
+      },
+      ...legacyPhloemHosts.flatMap((host) => [
         {
           source: "/",
           has: [{ type: "host" as const, value: host }],
-          destination: "https://www.medwithrish.com/phloemai",
+          destination: "https://medicforest.com",
           permanent: true,
         },
         {
           source: "/phloemai/:path*",
           has: [{ type: "host" as const, value: host }],
-          destination: "https://www.medwithrish.com/phloemai/:path*",
+          destination: "https://medicforest.com/phloemai/:path*",
           permanent: true,
         },
         {
           source: "/:path*",
           has: [{ type: "host" as const, value: host }],
-          destination: "https://www.medwithrish.com/phloemai/:path*",
+          destination: "https://medicforest.com/phloemai/:path*",
           permanent: true,
         },
       ]),
     ];
+  },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/",
+          has: [{ type: "host", value: "medicforest.com" }],
+          destination: "/phloemai",
+        },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
   },
 };
 

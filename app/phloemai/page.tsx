@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description:
     "Explore PhloemAI features and pricing, then choose UCAT or medicine interview preparation.",
   alternates: {
-    canonical: "/phloemai/ucat",
+    canonical: "/",
   },
 };
 

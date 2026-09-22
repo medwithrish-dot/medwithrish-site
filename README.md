@@ -17,7 +17,8 @@ Open http://localhost:3000. Keep secrets in the ignored `.env.local` file.
 Account features use `NEXT_PUBLIC_SUPABASE_URL`,
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (or `NEXT_PUBLIC_SUPABASE_ANON_KEY`) and
 the server-only `SUPABASE_SERVICE_ROLE_KEY`. Set `NEXT_PUBLIC_SITE_URL` to the
-site origin, including `https://`, without a path, query or fragment.
+MedWithRish origin and `NEXT_PUBLIC_PRODUCT_SITE_URL` to the Medic Forest
+origin, including `https://`, without a path, query or fragment.
 
 Optional integrations:
 
