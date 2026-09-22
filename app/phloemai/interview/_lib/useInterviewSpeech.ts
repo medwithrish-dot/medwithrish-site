@@ -29,11 +29,11 @@ const recognitionAvailable = () => {
   const speechWindow = window as SpeechWindow;
   return Boolean(speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition);
 };
-const synthesisAvailable = () => "speechSynthesis" in window;
+const voicePlaybackAvailable = () => "Audio" in window || "speechSynthesis" in window;
 
 export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "answer", onSilence, silenceMs = 4_000 }: { onTranscript: (text: string) => void; rate?: number; answerKey?: string; onSilence?: () => void; silenceMs?: number }) {
   const supported = useSyncExternalStore(subscribe, recognitionAvailable, serverUnsupported);
-  const voiceSupported = useSyncExternalStore(subscribe, synthesisAvailable, serverUnsupported);
+  const voiceSupported = useSyncExternalStore(subscribe, voicePlaybackAvailable, serverUnsupported);
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState("");
@@ -46,6 +46,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   const interimRef = useRef("");
   const activityStopRef = useRef<(() => void) | null>(null);
   const recognitionRef = useRef<Recognition | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const onTranscriptRef = useRef(onTranscript);
   const finishRef = useRef<(() => void) | null>(null);
   const stoppingRef = useRef<Promise<void> | null>(null);
@@ -115,6 +116,14 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
 
   const stopSpeaking = useCallback(() => {
     speechRequestRef.current += 1;
+    const audio = audioRef.current;
+    audioRef.current = null;
+    if (audio) {
+      audio.onended = null;
+      audio.onerror = null;
+      audio.pause();
+      audio.currentTime = 0;
+    }
     if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
     if (mountedRef.current) setSpeaking(false);
   }, []);
@@ -269,34 +278,61 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     }
   }, [stopSpeaking, stop, answerKey, clearSilence, silenceMs]);
 
-  const speak = useCallback(async (text: string, onComplete?: () => void) => {
+  const speak = useCallback(async (text: string, onComplete?: () => void, audioSrc?: string) => {
     const request = ++speechRequestRef.current;
     await stop();
     if (!mountedRef.current || request !== speechRequestRef.current) return;
-    if (!("speechSynthesis" in window)) {
-      setError("Read-aloud is unavailable in this browser. The question is displayed on screen.");
-      onComplete?.();
-      return;
-    }
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-GB";
-    utterance.rate = rate;
-    const voice = window.speechSynthesis.getVoices().find((candidate) => candidate.lang === "en-GB");
-    if (voice) utterance.voice = voice;
-    utterance.onend = () => { if (mountedRef.current && request === speechRequestRef.current) { setSpeaking(false); onComplete?.(); } };
-    utterance.onerror = (event) => {
+    const finish = () => {
       if (!mountedRef.current || request !== speechRequestRef.current) return;
+      audioRef.current = null;
       setSpeaking(false);
       onComplete?.();
-      if (event.error !== "canceled" && event.error !== "interrupted") setError("Read-aloud could not play. You can read the question on screen.");
+    };
+    const speakWithBrowserVoice = () => {
+      if (!mountedRef.current || request !== speechRequestRef.current) return;
+      if (!("speechSynthesis" in window)) {
+        setError("Read-aloud is unavailable in this browser. The question is displayed on screen.");
+        finish();
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-GB";
+      utterance.rate = rate;
+      const voice = window.speechSynthesis.getVoices().find((candidate) => candidate.lang === "en-GB");
+      if (voice) utterance.voice = voice;
+      utterance.onend = finish;
+      utterance.onerror = (event) => {
+        if (!mountedRef.current || request !== speechRequestRef.current) return;
+        finish();
+        if (event.error !== "canceled" && event.error !== "interrupted") setError("Read-aloud could not play. You can read the question on screen.");
+      };
+      try { window.speechSynthesis.speak(utterance); } catch {
+        finish();
+        setError("Read-aloud could not play. You can read the question on screen.");
+      }
     };
     setSpeaking(true);
-    try { window.speechSynthesis.speak(utterance); } catch {
-      setSpeaking(false);
-      setError("Read-aloud could not play. You can read the question on screen.");
-      onComplete?.();
+    if (audioSrc && "Audio" in window) {
+      const audio = new Audio(audioSrc);
+      audio.playbackRate = rate;
+      audio.preservesPitch = true;
+      audioRef.current = audio;
+      let fellBack = false;
+      const fallback = () => {
+        if (fellBack || !mountedRef.current || request !== speechRequestRef.current) return;
+        fellBack = true;
+        audio.onended = null;
+        audio.onerror = null;
+        audioRef.current = null;
+        speakWithBrowserVoice();
+      };
+      audio.onended = finish;
+      audio.onerror = fallback;
+      try { void audio.play().catch(fallback); } catch { fallback(); }
+      return;
     }
+    speakWithBrowserVoice();
   }, [stop, rate]);
 
   useEffect(() => {
@@ -321,6 +357,13 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       activityStopRef.current = null;
       recognitionRef.current = null;
       finishRef.current?.();
+      const audio = audioRef.current;
+      audioRef.current = null;
+      if (audio) {
+        audio.onended = null;
+        audio.onerror = null;
+        audio.pause();
+      }
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     };
   }, [clearSilence]);

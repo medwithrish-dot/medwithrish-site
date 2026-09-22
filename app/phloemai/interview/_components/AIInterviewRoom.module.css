@@ -81,6 +81,10 @@
 .toggle[aria-checked=true] span { transform: translateX(13px); }
 .voiceControls { display: flex; align-items: flex-end; gap: 12px; margin-top: 12px; }
 .voiceControls label { display: grid; flex: 1; gap: 5px; color: #70836f; font-size: 9px; }
+.voiceChoice { display: grid; flex: 1; gap: 5px; color: #70836f; font-size: 9px; }
+.voiceChoice > div { display: flex; min-height: 39px; padding: 3px; gap: 3px; border-radius: 7px; background: #eef2ec; }
+.voiceChoice button { flex: 1; border: 1px solid transparent; border-radius: 5px; color: #6a7e72; font-size: 10px; font-weight: 650; }
+.voiceChoice button[aria-pressed=true] { border-color: #d9e2d4; background: #fffefa; color: #1b644d; box-shadow: 0 1px 3px #193f2c08; }
 .consent { display: flex; gap: 9px; padding-top: 17px; border-top: 1px solid #e5ebe1; font-size: 11px; font-weight: 600; line-height: 1.7; }
 .consent input { align-self: flex-start; margin-top: 4px; accent-color: #337553; }
 .consent > span > span { display: block; margin-top: 4px; color: #7a8b7a; font-size: 9px; font-weight: 400; }
@@ -439,9 +443,9 @@
   :global([data-interview-shell-grid]):has(.callRoom),
   .focusRoom { height: var(--interview-viewport-height, 100dvh); }
   .experience :is(input:not([type=checkbox]), textarea, select) { font-size: 16px; }
-  .voiceControls, .voiceControls label, .micCheck, .levelMeter { min-width: 0; }
+  .voiceControls, .voiceControls label, .voiceChoice, .micCheck, .levelMeter { min-width: 0; }
   .voiceControls { flex-wrap: wrap; }
-  .voiceControls label { flex-basis: 160px; }
+  .voiceControls label, .voiceChoice { flex-basis: 160px; }
   .stageIcon { width: 40px; height: 40px; }
   .promptHeading > button, .donePrompt button, .answerProgress button,
   .questionControls button, .secondaryButton, .primaryButton { min-height: 44px; }

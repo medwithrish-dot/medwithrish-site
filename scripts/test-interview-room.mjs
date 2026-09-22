@@ -244,6 +244,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
       if (name === "react") return react;
       if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       if (name.endsWith("useInterviewSpeech")) return { useInterviewSpeech: options => { speechOptions = options; return speech; }, getTranscriptHints: text => ({ wordCount: text.split(/\s+/).filter(Boolean).length }) };
+      if (name.endsWith("interview-question-audio")) return { getInterviewQuestionAudioSrc: () => undefined };
       if (name.endsWith("useInterviewDevices")) return { useInterviewDevices: () => devices };
       if (name.endsWith("station-flow")) return { parseDoneReply, ANSWER_SILENCE_MS, DONE_PROMPT, questionTransition, followUpsEnabled: () => followUps };
       if (name.endsWith("interview-stations")) return { findInterviewStation: () => ({ questions }), interviewStations: [] };

@@ -25,6 +25,7 @@ function speechHarness(options = {}) {
   const timers = [];
   const delays = [];
   const played = [];
+  const recorded = [];
   const transcripts = [];
   const recognitions = [];
   let reportActivity;
@@ -69,6 +70,12 @@ function speechHarness(options = {}) {
   class Utterance {
     constructor(text) { this.text = text; }
   }
+  class AudioPlayer {
+    constructor(src) { this.src = src; this.currentTime = 0; recorded.push(this); }
+    play() { return options.audioPlayRejects ? Promise.reject(new Error("Playback unavailable")) : Promise.resolve(); }
+    pause() { this.paused = true; }
+    end() { this.onended?.(); }
+  }
   const loaded = { exports: {} };
   runInNewContext(compiled, {
     module: loaded, exports: loaded.exports,
@@ -84,8 +91,10 @@ function speechHarness(options = {}) {
       return react;
     },
     SpeechSynthesisUtterance: Utterance,
+    Audio: AudioPlayer,
     Date: class extends Date { static now() { return now; } },
     window: {
+      Audio: AudioPlayer,
       SpeechRecognition: Recognition,
       setTimeout: (callback, delay) => { timers.push(callback); delays.push(delay); return timers.length; },
       clearTimeout: id => { if (id !== undefined) timers[id - 1] = null; },
@@ -106,7 +115,7 @@ function speechHarness(options = {}) {
   render();
   let unmounted = false;
   return {
-    get speech() { return speech; }, render, played, recognitions, transcripts,
+    get speech() { return speech; }, render, played, recorded, recognitions, transcripts,
     advanceTime: milliseconds => { now += milliseconds; },
     reportActivity: active => reportActivity?.(active),
     get cancellations() { return cancellations; },
@@ -143,6 +152,28 @@ test("leaving the room cancels read-aloud waiting for recognition to stop", asyn
   assert.ok(room.recognitions[0].abortCalls > 0, "Leaving releases speech recognition");
   assert.ok(room.cancellations > cancellationsBeforeLeaving, "Leaving cancels existing playback");
   assert.deepEqual(room.played, [], "A pending question must not start after leaving");
+});
+
+test("recorded questions use their matched MP3 at the selected pace", async t => {
+  const room = speechHarness({ rate: 0.8 });
+  t.after(() => room.unmount());
+  let completed = false;
+  await room.speech.speak("Question text", () => { completed = true; }, "/audio/female/q018.mp3");
+  assert.equal(room.recorded.length, 1);
+  assert.equal(room.recorded[0].src, "/audio/female/q018.mp3");
+  assert.equal(room.recorded[0].playbackRate, 0.8);
+  assert.equal(room.recorded[0].preservesPitch, true);
+  assert.deepEqual(room.played, [], "Browser text-to-speech is not used when recorded audio starts");
+  room.recorded[0].end();
+  assert.equal(completed, true);
+});
+
+test("a failed question recording falls back to browser text-to-speech", async t => {
+  const room = speechHarness({ audioPlayRejects: true });
+  t.after(() => room.unmount());
+  await room.speech.speak("Fallback question", undefined, "/audio/male/q999.mp3");
+  await Promise.resolve();
+  assert.deepEqual(room.played, ["Fallback question"]);
 });
 
 test("compact pauses and audible fillers are normalized without rewriting slang", () => {

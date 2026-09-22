@@ -6,6 +6,7 @@ import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { findInterviewStation, interviewStations } from "../_data/interview-stations";
 import { previewInterviewFeedback } from "../_data/interview-preview";
 import type { InterviewAnswer, InterviewAttempt, InterviewMode } from "../_lib/interview-types";
+import { getInterviewQuestionAudioSrc, type InterviewerVoice } from "../_lib/interview-question-audio";
 import { getTranscriptHints, useInterviewSpeech } from "../_lib/useInterviewSpeech";
 import { ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled, parseDoneReply, questionTransition } from "../_lib/station-flow";
 import { useInterviewDevices } from "../_lib/useInterviewDevices";
@@ -75,6 +76,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const [now, setNow] = useState(0);
   const [readAloud, setReadAloud] = useState(true);
   const [voiceRate, setVoiceRate] = useState(0.95);
+  const [interviewerVoice, setInterviewerVoice] = useState<InterviewerVoice>("female");
   const [preview, setPreview] = useState(false);
   const [roomPlan, setRoomPlan] = useState<InterviewRoomPlan | null>(null);
   const [continuationSlug, setContinuationSlug] = useState("");
@@ -368,6 +370,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const secondsRemaining = Math.max(0, Math.ceil(((preparing ? preparationEnd : stationEnd) - now) / 1000));
   const breakRemaining = attempt?.nextAvailableAt ? Math.max(0, Math.ceil((Date.parse(attempt.nextAvailableAt) - now) / 1000)) : 0;
   const question = attempt?.questions[questionIndex] ?? "";
+  const questionAudioSrc = getInterviewQuestionAudioSrc(attempt?.questionIds?.[questionIndex], question, interviewerVoice);
   const originalQuestions: readonly string[] = useMemo(() => attempt
     ? attempt.questionIds?.some(Boolean)
       ? attempt.questions.filter((_, index) => Boolean(attempt.questionIds?.[index]))
@@ -426,8 +429,8 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       if (spokenQuestionRef.current !== key) return;
       promptingRef.current = false;
       setPrompting(false);
-    });
-  }, [attempt, active, entryReady, question, questionIndex, readAloud, speak, voiceSupported, originalQuestions, replaceAnswers]);
+    }, questionAudioSrc);
+  }, [attempt, active, entryReady, question, questionIndex, questionAudioSrc, readAloud, speak, voiceSupported, originalQuestions, replaceAnswers]);
 
   useEffect(() => {
     if (!active || !micWanted || promptingRef.current || confirmationPendingRef.current || speech.speaking || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
@@ -673,7 +676,11 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your interview space ready…</div> : !attempt ? <AIInterviewSetup
       initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan} initialMockCircuit={initialMockCircuit}
       devices={devices} readAloud={readAloud} setReadAloud={setVoiceEnabled} voiceRate={voiceRate} setVoiceRate={setVoiceRate}
-      voiceSupported={speech.voiceSupported} speaking={speech.speaking} onStopVoice={speech.stopSpeaking} onTestVoice={() => { devices.stopMicCheck(); if (speech.speaking) speech.stopSpeaking(); else void speech.speak("Welcome to your Phloem interview. Take a breath, and tell me a little about what brought you to medicine."); }}
+      interviewerVoice={interviewerVoice} setInterviewerVoice={setInterviewerVoice}
+      voiceSupported={speech.voiceSupported} speaking={speech.speaking} onStopVoice={speech.stopSpeaking} onTestVoice={() => { devices.stopMicCheck(); if (speech.speaking) speech.stopSpeaking(); else {
+        const sample = "What has influenced your decision to pursue a career in medicine?";
+        void speech.speak(sample, undefined, getInterviewQuestionAudioSrc("iq-01-001-motivation-for-medicine", sample, interviewerVoice));
+      } }}
       speechSupported={speech.supported}
       isPremium={isPremium} busy={Boolean(busy)} onStart={beginRoom}
     /> : reviewing ? <AIInterviewReview key={attempt.id}
@@ -687,7 +694,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         speech={speech} devices={devices} saved={saved} busy={busy} preview={preview} readAloud={readAloud}
         onToggleMicrophone={() => void toggleMicrophone()} setReadAloud={setVoiceEnabled}
         followUpBusy={followUpBusy} followUpNotice={followUpNotice} awaitingDone={awaitingDone} prompting={prompting || speech.speaking} micWanted={micWanted}
-        onReadQuestion={() => { if (speech.speaking) { stopSpeaking(); promptingRef.current = false; setPrompting(false); } else { promptingRef.current = true; setPrompting(true); void speak(question, () => { promptingRef.current = false; setPrompting(false); }); } }}
+        onReadQuestion={() => { if (speech.speaking) { stopSpeaking(); promptingRef.current = false; setPrompting(false); } else { promptingRef.current = true; setPrompting(true); void speak(question, () => { promptingRef.current = false; setPrompting(false); }, questionAudioSrc); } }}
         onDone={() => void requestDone()} onConfirmDone={() => void completeAnswer()} onKeepAnswering={keepAnswering}
         onAnswer={(value) => replaceAnswers(answersRef.current.map((answer, index) => index === questionIndex ? { ...answer, answer: value } : answer))}
         onSubmit={() => void finishStation()} onLeave={() => void leaveAttempt()} wordCount={hints.wordCount}
