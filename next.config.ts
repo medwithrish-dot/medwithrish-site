@@ -3,6 +3,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+const medicForestHost = { type: "host" as const, value: "medicforest.com" };
+const medicForestPublicPagePattern =
+  "about|pricing|personal-statement|interviews|tutoring|resources|feedback|contact";
 const legacyUcatRoutes = [
   "dashboard",
   "diagnostic",
@@ -38,6 +41,30 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/medicforest",
+        has: [medicForestHost],
+        destination: "https://medicforest.com",
+        permanent: true,
+      },
+      {
+        source: "/medicforest/ucat",
+        has: [medicForestHost],
+        destination: "https://medicforest.com/ucat",
+        permanent: true,
+      },
+      {
+        source: "/medicforest/ucat/:path+",
+        has: [medicForestHost],
+        destination: "https://medicforest.com/ucat/:path+",
+        permanent: true,
+      },
+      {
+        source: `/medicforest/:page(${medicForestPublicPagePattern})`,
+        has: [medicForestHost],
+        destination: "https://medicforest.com/:page",
+        permanent: true,
+      },
+      {
         source: "/",
         has: [{ type: "host", value: "www.medicforest.com" }],
         destination: "https://medicforest.com",
@@ -56,8 +83,18 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         {
           source: "/",
-          has: [{ type: "host", value: "medicforest.com" }],
+          has: [medicForestHost],
           destination: "/medicforest",
+        },
+        {
+          source: "/ucat/:path*",
+          has: [medicForestHost],
+          destination: "/medicforest/ucat/:path*",
+        },
+        {
+          source: `/:page(${medicForestPublicPagePattern})`,
+          has: [medicForestHost],
+          destination: "/medicforest/:page",
         },
       ],
       afterFiles: [],

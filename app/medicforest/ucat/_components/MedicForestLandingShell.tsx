@@ -6,12 +6,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ArrowRight,
+  BadgePoundSterling,
   BookOpen,
+  Brain,
   CircleHelp,
   ExternalLink,
   FileText,
   Home,
-  Info,
   Menu,
   MessageSquare,
   Sparkles,
@@ -37,28 +38,28 @@ const landingSections: Array<{
     items: [
       {
         label: "UCAT",
-        href: "/medicforest/ucat",
-        icon: Home,
+        href: "/ucat",
+        icon: Brain,
       },
       {
         label: "Personal Statement",
-        href: "/medicforest/personal-statement",
+        href: "/personal-statement",
         icon: FileText,
       },
       {
         label: "Interviews",
-        href: "/medicforest/interviews",
+        href: "/interviews",
         icon: MessageSquare,
       },
       {
         label: "1-1 Tutoring",
-        href: "/medicforest/tutoring",
+        href: "/tutoring",
         icon: UserRoundCheck,
         italic: true,
       },
       {
         label: "Resources",
-        href: "/medicforest/resources",
+        href: "/resources",
         icon: BookOpen,
       },
     ],
@@ -66,8 +67,8 @@ const landingSections: Array<{
   {
     label: "Support",
     items: [
-      { label: "Feedback", href: "/medicforest/feedback", icon: MessageSquare },
-      { label: "Contact us", href: "/medicforest/contact", icon: CircleHelp },
+      { label: "Feedback", href: "/feedback", icon: MessageSquare },
+      { label: "Contact us", href: "/contact", icon: CircleHelp },
     ],
   },
 ];
@@ -92,14 +93,14 @@ function BrandMark() {
 function LandingSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const isCurrentPage = (href: string) =>
-    href === "/medicforest/ucat"
-      ? pathname === "/" || pathname === "/medicforest" || pathname === href
-      : pathname === href;
+    href === "/ucat"
+      ? ["/", "/ucat", "/medicforest", "/medicforest/ucat"].includes(pathname)
+      : pathname === href || pathname === `/medicforest${href}`;
 
   return (
     <div className="flex min-h-full flex-col">
       <Link
-        href="/medicforest/ucat"
+        href="/"
         onClick={onNavigate}
         className="group flex items-center gap-3 px-2 py-1"
         aria-label="MedicForest home"
@@ -115,19 +116,32 @@ function LandingSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         </span>
       </Link>
 
-      <nav aria-label="MedicForest navigation" className="mt-8">
+      <nav aria-label="MedicForest navigation" className="mt-8 space-y-1">
         <Link
-          href="/medicforest/about"
+          href="/about"
           onClick={onNavigate}
-          aria-current={pathname === "/medicforest/about" ? "page" : undefined}
+          aria-current={isCurrentPage("/about") ? "page" : undefined}
           className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
-            pathname === "/medicforest/about"
+            isCurrentPage("/about")
               ? "bg-white/[0.09] text-[#8be5df] ring-1 ring-white/[0.06]"
               : "text-slate-300 hover:bg-white/[0.06] hover:text-white"
           }`}
         >
-          <Info className="h-5 w-5" aria-hidden="true" />
+          <Home className="h-5 w-5" aria-hidden="true" />
           <span>About</span>
+        </Link>
+        <Link
+          href="/pricing"
+          onClick={onNavigate}
+          aria-current={isCurrentPage("/pricing") ? "page" : undefined}
+          className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
+            isCurrentPage("/pricing")
+              ? "bg-white/[0.09] text-[#8be5df] ring-1 ring-white/[0.06]"
+              : "text-slate-300 hover:bg-white/[0.06] hover:text-white"
+          }`}
+        >
+          <BadgePoundSterling className="h-5 w-5" aria-hidden="true" />
+          <span>Pricing</span>
         </Link>
       </nav>
 
@@ -195,7 +209,7 @@ function LandingSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             Start with the free UCAT diagnostic. No card needed.
           </p>
           <Link
-            href="/medicforest/ucat/dashboard"
+            href="/ucat/dashboard"
             onClick={onNavigate}
             className="mt-4 flex h-10 items-center justify-center gap-2 rounded-xl bg-[#1aa0a5] text-xs font-bold text-white transition-colors hover:bg-[#21b2b6]"
           >
@@ -239,7 +253,7 @@ export function MedicForestLandingShell({ children }: { children: ReactNode }) {
       </aside>
 
       <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-white/10 bg-[#042724]/95 px-4 text-white backdrop-blur lg:hidden">
-        <Link href="/medicforest/ucat" className="flex items-center gap-2.5" aria-label="MedicForest UCAT home">
+        <Link href="/" className="flex items-center gap-2.5" aria-label="MedicForest home">
           <BrandMark />
           <span>
             <span className="block text-base font-black leading-none">

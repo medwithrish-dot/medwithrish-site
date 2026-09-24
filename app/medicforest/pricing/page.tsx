@@ -6,13 +6,13 @@ export const metadata: Metadata = {
   description:
     "Compare the free MedicForest diagnostic with MedicForest Premium before upgrading.",
   alternates: {
-    canonical: "/medicforest/pricing",
+    canonical: "/pricing",
   },
   openGraph: {
     title: "MedicForest Pricing",
     description:
       "See what is included in the free diagnostic and what Premium unlocks.",
-    url: "/medicforest/pricing",
+    url: "/pricing",
     siteName: "MedicForest",
     type: "website",
   },

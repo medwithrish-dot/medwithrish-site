@@ -37,7 +37,7 @@ export function MedicForestPlaceholderPage({
           </p>
 
           <Link
-            href="/medicforest/ucat"
+            href="/ucat"
             className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#08787b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#06666a]"
           >
             Meet Forest

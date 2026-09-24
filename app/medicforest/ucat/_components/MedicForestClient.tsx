@@ -11,7 +11,6 @@ import {
 import type { Session, User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar";
 import {
   createClient as createSupabaseClient,
   hasSupabaseConfig,
@@ -8839,7 +8838,7 @@ function RedesignedTutorHero() {
       text: "Full-length practice, AI diagnosis, progress insights and personalised coaching.",
       icon: Brain,
       action: "Open UCAT dashboard",
-      href: "/medicforest/ucat/dashboard",
+      href: "/ucat/dashboard",
       active: true,
     },
     {
@@ -8908,7 +8907,7 @@ function RedesignedTutorHero() {
       };
 
       if (response.status === 401) {
-        router.push("/medicforest/ucat/dashboard");
+        router.push("/ucat/dashboard");
         setPremiumCheckoutLoading(false);
         return;
       }
@@ -8954,14 +8953,14 @@ function RedesignedTutorHero() {
 
               <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
                 <Link
-                  href="/medicforest/ucat/dashboard"
+                  href="/ucat/dashboard"
                   className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
                 >
                   Log in / Launch UCAT Platform
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <Link
-                  href="/medicforest/ucat/dashboard"
+                  href="/ucat/dashboard"
                   className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-blue-400/45 bg-blue-500/10 px-4 text-sm font-bold text-blue-100 transition-colors hover:border-blue-300 hover:bg-blue-500/20"
                 >
                   <Target className="h-4 w-4" aria-hidden="true" />
@@ -9207,7 +9206,7 @@ function RedesignedTutorHero() {
               ))}
             </ul>
             <Link
-              href={hasLandingDiagnosticReport ? "/medicforest/ucat/report" : "/medicforest/ucat/dashboard"}
+              href={hasLandingDiagnosticReport ? "/ucat/report" : "/ucat/dashboard"}
               className="mt-auto inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white transition-colors hover:bg-blue-700"
             >
               {hasLandingDiagnosticReport ? "View Report" : "Start Free Diagnostic"}
@@ -9386,15 +9385,6 @@ function TutorHero() {
 
 // ── Main Page ────────────────────────────────────────────────────────────────
 
-export function MedicForestPageShell({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-[#EEF4FF] to-indigo-100">
-      <Navbar />
-      {children}
-    </div>
-  );
-}
-
 export function MedicForestPricingPage() {
   const router = useRouter();
   const [premiumCheckoutLoading, setPremiumCheckoutLoading] = useState(false);
@@ -9414,7 +9404,7 @@ export function MedicForestPricingPage() {
       };
 
       if (response.status === 401) {
-        router.push("/medicforest/ucat/dashboard");
+        router.push("/ucat/dashboard");
         setPremiumCheckoutLoading(false);
         return;
       }
@@ -9434,12 +9424,12 @@ export function MedicForestPricingPage() {
   };
 
   return (
-    <MedicForestPageShell>
-      <main className="bg-white text-[#0b1143]">
+    <MedicForestLandingShell>
+      <div className="bg-white text-[#0b1143]">
         <section className="bg-[#050b1f] px-5 py-6 text-white lg:px-6">
           <div className="mx-auto max-w-5xl">
             <Link
-              href="/medicforest"
+              href="/ucat"
               className="inline-flex items-center gap-2 text-sm font-black text-blue-100 transition-colors hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -9500,7 +9490,7 @@ export function MedicForestPricingPage() {
                 ))}
               </ul>
               <Link
-                href="/medicforest/ucat/dashboard"
+                href="/ucat/dashboard"
                 className="mt-auto inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
               >
                 Launch UCAT Platform
@@ -9600,8 +9590,8 @@ export function MedicForestPricingPage() {
             .
           </div>
         </section>
-      </main>
-    </MedicForestPageShell>
+      </div>
+    </MedicForestLandingShell>
   );
 }
 

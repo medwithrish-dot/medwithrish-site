@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "About MedicForest | Medical admissions preparation",
   description:
     "Learn what MedicForest does, meet founder @medwithrish, and see outcomes from students supported through medical admissions.",
-  alternates: { canonical: "/medicforest/about" },
+  alternates: { canonical: "/about" },
 };
 
 const principles = [
@@ -48,7 +48,7 @@ export default function MedicForestAboutPage() {
             <p className="mt-6 max-w-3xl text-lg font-normal leading-8 text-[#c6dbd7]">
               MedicForest brings UCAT practice, interview preparation and guided progress into one place. It is designed to make complex feedback useful, personal and easy to act on.
             </p>
-            <Link href="/medicforest/ucat/dashboard" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#b9f4db] px-5 py-3 text-sm font-semibold text-[#042724] transition hover:bg-white">
+            <Link href="/ucat/dashboard" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#b9f4db] px-5 py-3 text-sm font-semibold text-[#042724] transition hover:bg-white">
               Explore MedicForest <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
