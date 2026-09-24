@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Reveal from "./Reveal";
 
 const pathways = [
   {
@@ -44,9 +45,9 @@ export default function OtherPathways() {
   const [selected, setSelected] = useState(pathways[0]);
 const cardRef = useRef<HTMLDivElement | null>(null);
   return (
-    <section className="bg-white px-6 py-16">
+    <section className="relative overflow-hidden bg-[radial-gradient(circle_at_8%_18%,rgba(219,234,254,0.72),transparent_28rem),radial-gradient(circle_at_92%_82%,rgba(237,233,254,0.7),transparent_30rem),linear-gradient(155deg,#ffffff_0%,#f8fbff_50%,#faf8ff_100%)] px-6 py-16">
       <div className="mx-auto max-w-6xl">
-        <div className="mx-auto mb-10 max-w-2xl text-center">
+        <Reveal className="mx-auto mb-10 max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
             Other Pathways
           </p>
@@ -57,9 +58,9 @@ const cardRef = useRef<HTMLDivElement | null>(null);
             Not getting in first time does not mean the journey is over. Explore
             alternative routes and realistic next steps.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <Reveal delay={80} className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
           {pathways.map((pathway) => {
             const active = selected.id === pathway.id;
 
@@ -92,12 +93,13 @@ const cardRef = useRef<HTMLDivElement | null>(null);
               </button>
             );
           })}
-        </div>
+        </Reveal>
 
+        <Reveal delay={150}>
         <div
-  ref={cardRef}
-  className="mt-8 rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8"
->
+          ref={cardRef}
+          className="mt-8 rounded-3xl border border-blue-100/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(239,246,255,0.88))] p-6 shadow-[0_16px_50px_rgba(37,99,235,0.06)] sm:p-8"
+        >
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
             {selected.audience}
           </p>
@@ -108,6 +110,7 @@ const cardRef = useRef<HTMLDivElement | null>(null);
             {selected.description}
           </p>
         </div>
+        </Reveal>
       </div>
     </section>
   );

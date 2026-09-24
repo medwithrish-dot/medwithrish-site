@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import PSReviewForm from "@/components/PSReviewForm";
+import Reveal from "@/components/Reveal";
 
 const stages = [
   {
@@ -204,9 +205,10 @@ useEffect(() => {
     <section
   id="journey"
   ref={journeyRef}
-  className="bg-[#f1f5fb] px-6 py-12 md:py-14"
+  className="relative overflow-hidden bg-[radial-gradient(circle_at_90%_12%,rgba(199,210,254,0.58),transparent_28rem),radial-gradient(circle_at_5%_78%,rgba(186,230,253,0.48),transparent_30rem),linear-gradient(145deg,#eef4fb_0%,#f4f7fd_48%,#f5f2fb_100%)] px-6 py-12 md:py-14"
 >
-      <div className="mx-auto max-w-6xl rounded-[2.5rem] bg-white p-6 shadow-[0_10px_40px_rgba(0,0,0,0.04)] md:p-10">
+      <Reveal className="mx-auto max-w-6xl">
+      <div className="rounded-[2.5rem] border border-white/80 bg-white/90 p-6 shadow-[0_18px_60px_rgba(38,62,105,0.08)] backdrop-blur-sm md:p-10">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
             Admissions Roadmap
@@ -355,6 +357,7 @@ useEffect(() => {
           })}
         </div>
       </div>
+      </Reveal>
     </section>
   );
 }

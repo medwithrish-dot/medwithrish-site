@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main>
+    <main className="medwithrish-home">
       <Navbar />
       <TopBanner />
       <SuccessStories />

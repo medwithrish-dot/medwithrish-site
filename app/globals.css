@@ -14,13 +14,23 @@
 
 html {
   scroll-behavior: smooth;
-  background: #f7fafe;
+  background: #f7f9fe;
 }
 
 body {
-  background: #f7fafe;
+  background:
+    radial-gradient(circle at 8% 12%, rgb(219 234 254 / 42%), transparent 32rem),
+    radial-gradient(circle at 92% 72%, rgb(237 233 254 / 38%), transparent 34rem),
+    linear-gradient(145deg, #f8fbff 0%, #f5f7fd 50%, #faf8ff 100%);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.medwithrish-home {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  background: linear-gradient(145deg, #f8fbff 0%, #f4f7fd 50%, #faf8ff 100%);
 }
 
 .medicforest-landing {

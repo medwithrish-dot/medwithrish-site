@@ -2,6 +2,7 @@
 import Universities from "./Universities";
 import Image from "next/image";
 import { useState } from "react";
+import Reveal from "./Reveal";
 
 const featuredStory = {
   src: "/success-stories/story5.jpeg",
@@ -75,11 +76,11 @@ export default function SuccessStories() {
   return (
     <section
       id="success-stories"
-      className="bg-gray-50 px-6 pt-6 pb-12 md:pt-8 md:pb-14"
+      className="relative overflow-hidden bg-[radial-gradient(circle_at_8%_8%,rgba(219,234,254,0.78),transparent_28rem),radial-gradient(circle_at_92%_38%,rgba(224,231,255,0.66),transparent_32rem),linear-gradient(180deg,#f8fbff_0%,#f4f7fc_52%,#f7f5fb_100%)] px-6 pt-6 pb-12 md:pt-8 md:pb-14"
     >
       <div className="mx-auto max-w-6xl">
         {/* Section heading */}
-        <div className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
             Student Success Stories
           </p>
@@ -104,10 +105,11 @@ export default function SuccessStories() {
     <span className="text-base">↓</span>
   </a>
 </div>
-        </div>
+        </Reveal>
 
         {/* Featured result */}
-<div id="featured-result" className="mx-auto mt-8 max-w-3xl">
+<Reveal delay={80} className="mx-auto mt-8 max-w-3xl">
+<div id="featured-result">
   <div className="relative overflow-hidden rounded-[1.75rem] border border-blue-200 bg-white p-4 shadow-[0_14px_40px_rgba(59,130,246,0.10)] md:p-5">
     <div className="pointer-events-none absolute inset-0">
       <div className="absolute -left-10 top-6 h-24 w-24 rounded-full bg-blue-100/70 blur-3xl" />
@@ -146,9 +148,11 @@ export default function SuccessStories() {
     </div>
   </div>
 </div>
-<Universities />
+</Reveal>
+<Reveal delay={120}><Universities /></Reveal>
         {/* More results heading */}
-        <div id="more-results" className="mt-10 text-center">
+        <Reveal className="mt-10 text-center">
+        <div id="more-results">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
             More Offers & Results
           </p>
@@ -157,13 +161,18 @@ export default function SuccessStories() {
             More student messages and outcomes
           </h3>
         </div>
+        </Reveal>
 
        {/* Grid */}
 <div className="mx-auto mt-6 max-w-6xl columns-1 gap-6 sm:columns-2 lg:columns-3">
   {visibleStories.map((story, index) => (
+    <Reveal
+      key={story.src}
+      delay={(index % 3) * 70}
+      className="mb-6 break-inside-avoid"
+    >
     <div
-      key={index}
-      className="mb-6 break-inside-avoid rounded-3xl border border-gray-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+      className="rounded-3xl border border-gray-200/90 bg-white/95 p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
     >
       <Image
         src={story.src}
@@ -180,6 +189,7 @@ export default function SuccessStories() {
         </p>
       )}
     </div>
+    </Reveal>
   ))}
 </div>
 

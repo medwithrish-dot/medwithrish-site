@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import SocialLinks from "./SocialLinks";
+import Reveal from "./Reveal";
 
 export default function Hero() {
   return (
-    <section id="hero" className="relative bg-gray-50 px-6 py-6 md:py-10 -mt-10 md:-mt-14">
+    <section id="hero" className="relative overflow-hidden bg-[radial-gradient(circle_at_12%_25%,rgba(191,219,254,0.5),transparent_30rem),radial-gradient(circle_at_88%_72%,rgba(224,231,255,0.7),transparent_28rem),linear-gradient(145deg,#f8fbff_0%,#f5f7ff_52%,#faf8ff_100%)] px-6 py-6 md:py-10 -mt-10 md:-mt-14">
 
       {/* Background glow */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -15,7 +16,7 @@ export default function Hero() {
 
       </div>
 
-      <div className="relative mx-auto max-w-6xl">
+      <Reveal className="relative mx-auto max-w-6xl">
 
         <div className="grid items-center gap-8 rounded-[2rem] border border-gray-200 bg-white p-6 shadow-sm md:grid-cols-[280px_1fr] md:p-8">
 
@@ -72,7 +73,7 @@ export default function Hero() {
 
         </div>
 
-      </div>
+      </Reveal>
 
     </section>
   );
