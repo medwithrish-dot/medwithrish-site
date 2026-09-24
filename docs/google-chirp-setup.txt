@@ -1,0 +1,170 @@
+GOOGLE CHIRP SETUP FOR MEDICFOREST INTERVIEWS
+==============================================
+
+Purpose
+-------
+This enables Google Cloud Chirp to read AI-generated interview follow-up
+questions aloud. Stored questions and prompts continue to use the MP3 files in
+public/audio.
+
+IMPORTANT
+---------
+- Google Cloud requires a billing account for the Text-to-Speech API.
+- Configure a budget and billing alerts before enabling this in production.
+- All variables in this guide are server-only. Never add NEXT_PUBLIC_ to them.
+- Never commit a Google service-account key to Git.
+
+
+OPTION A - LOCAL DEVELOPMENT ON WINDOWS
+=======================================
+
+1. Install the Google Cloud CLI if it is not already installed:
+
+   https://cloud.google.com/sdk/docs/install-sdk
+
+2. In Google Cloud Console, create or select a project and attach a billing
+   account:
+
+   https://console.cloud.google.com/
+
+3. Open PowerShell and copy these commands. Replace YOUR_PROJECT_ID first:
+
+   $medicforestProjectId = "YOUR_PROJECT_ID"
+   gcloud auth login
+   gcloud config set project $medicforestProjectId
+   gcloud services enable texttospeech.googleapis.com
+   gcloud auth application-default login
+   gcloud auth application-default set-quota-project $medicforestProjectId
+
+4. Open .env.local in the project root and add:
+
+   GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
+   INTERVIEW_GOOGLE_TTS_ENABLED=true
+
+5. AI probing also needs Gemini. Make sure these lines are present:
+
+   GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+   INTERVIEW_GEMINI_FREE_TIER_CONFIRMED=true
+   INTERVIEW_FOLLOWUP_GEMINI_MODEL=gemini-3.5-flash-lite
+
+   Only set INTERVIEW_GEMINI_FREE_TIER_CONFIRMED=true after checking that the
+   Google AI Studio project is using the intended free tier or billing setup.
+
+6. Restart the website:
+
+   npm run dev
+
+
+OPTION B - HOSTED ON GOOGLE CLOUD
+=================================
+
+1. Enable billing and the Text-to-Speech API for the hosting project:
+
+   $medicforestProjectId = "YOUR_PROJECT_ID"
+   gcloud config set project $medicforestProjectId
+   gcloud services enable texttospeech.googleapis.com
+
+2. Give the service account attached to the hosted application permission to
+   use Text-to-Speech. Prefer an attached service account/Workload Identity
+   over downloading a JSON key.
+
+3. Add these server-side environment variables to the hosted application:
+
+   GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
+   INTERVIEW_GOOGLE_TTS_ENABLED=true
+
+4. Add the Gemini variables shown in Option A if generated probing is required.
+
+5. Redeploy the application.
+
+
+OPTION C - VERCEL OR ANOTHER NON-GOOGLE HOST
+============================================
+
+1. Complete steps 1 to 3 from Option A to create/select the Google Cloud
+   project and enable Text-to-Speech.
+
+2. Create a dedicated service account with the minimum Text-to-Speech access
+   needed by the application. Download its JSON key once.
+
+3. Turn the JSON file into one line in PowerShell. Replace the path:
+
+   Get-Content -Raw "C:\path\to\google-service-account.json" | ConvertFrom-Json | ConvertTo-Json -Compress
+
+4. In the host's environment-variable dashboard, add the following to the
+   Production environment (and Preview if wanted):
+
+   GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
+   INTERVIEW_GOOGLE_TTS_ENABLED=true
+   GOOGLE_CLOUD_SERVICE_ACCOUNT_JSON=PASTE_THE_COMPLETE_ONE_LINE_JSON_HERE
+
+5. Add the Gemini variables shown in Option A if generated probing is required.
+
+6. Redeploy the application. After confirming the deployment works, keep the
+   downloaded key in a secure password/secret manager or remove the local copy.
+   If the key is ever exposed or committed, revoke it immediately and create a
+   new one.
+
+
+HOW TO TEST IT
+==============
+
+1. Start a normal scored interview rather than the setup preview.
+2. Enable the microphone and answer a question with at least 20 words.
+3. Stop talking for about four seconds.
+4. The interviewer should play "Done? Say yes or no."
+5. Say "yes".
+6. If a probe is appropriate, an AI-generated follow-up should appear and be
+   read aloud with Google Chirp.
+
+Expected fallbacks:
+- If Chirp is disabled or fails, the browser voice reads the generated probe.
+- If Gemini is unavailable, the interview can use its built-in guided probe.
+- The manual "Done answering" and Yes/No buttons remain available.
+- Typed answers use the manual completion control because microphone silence
+  detection applies only while speaking.
+
+
+TROUBLESHOOTING
+===============
+
+Probe appears but uses the browser voice:
+- Confirm INTERVIEW_GOOGLE_TTS_ENABLED is exactly true.
+- Confirm GOOGLE_CLOUD_PROJECT matches the enabled Google Cloud project.
+- Confirm the Text-to-Speech API and billing are enabled.
+- Locally, repeat: gcloud auth application-default login
+- On a non-Google host, check that GOOGLE_CLOUD_SERVICE_ACCOUNT_JSON contains
+  the complete valid JSON and is available to the Production deployment.
+- Check server logs for the /api/interviews/speech request.
+
+No generated probe appears:
+- Confirm GEMINI_API_KEY is set on the server.
+- Confirm INTERVIEW_GEMINI_FREE_TIER_CONFIRMED is exactly true.
+- Give an answer of at least 20 words.
+- A maximum of one generated probe is asked per original question and three per
+  station, so not every response will receive another probe.
+
+The done prompt does not appear automatically:
+- Permit microphone and speech-recognition access in the browser.
+- Begin speaking, then leave roughly four seconds of quiet.
+- Continuous background noise can prevent the silence timer from firing.
+- Use "Done answering" as the preserved manual fallback.
+
+
+OFFICIAL GOOGLE DOCUMENTATION
+=============================
+
+Text-to-Speech setup:
+https://docs.cloud.google.com/text-to-speech/docs/get-started
+
+Authentication:
+https://docs.cloud.google.com/text-to-speech/docs/authentication
+
+Chirp 3 HD voices:
+https://docs.cloud.google.com/text-to-speech/docs/chirp3-hd
+
+Quotas:
+https://docs.cloud.google.com/text-to-speech/quotas
+
+Pricing:
+https://cloud.google.com/text-to-speech/pricing
