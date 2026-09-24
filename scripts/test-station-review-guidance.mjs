@@ -145,7 +145,8 @@ test("every data interview has visuals and all 15 data sources can be selected",
   assert.equal(selected.size, 15);
 });
 
-test("probing is off by default for every current station and unknown slugs", () => {
-  assert.deepEqual(FOLLOW_UP_STATIONS, []);
-  for (const slug of [...interviewStations.map(station => station.slug), "unknown", "constructor"]) assert.equal(followUpsEnabled(slug), false);
+test("probing is owner-enabled for every current station but never unknown slugs", () => {
+  assert.deepEqual(FOLLOW_UP_STATIONS, interviewStations.map(station => station.slug));
+  for (const slug of interviewStations.map(station => station.slug)) assert.equal(followUpsEnabled(slug), true);
+  for (const slug of ["unknown", "constructor"]) assert.equal(followUpsEnabled(slug), false);
 });

@@ -56,6 +56,10 @@
 .feedbackStatus > svg { flex-shrink: 0; }
 .feedback .availability { font-size: 11px; margin: 12px 0 0; }
 .feedbackLink { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 12px; color: #24694f; }
+.deliverySideNote { margin: 12px 0; padding: 11px 12px; border: 1px solid #c9dbcf; border-radius: 10px; background: rgba(255,255,255,.62); color: #405e50; }
+.deliverySideNote strong { font-size: 11px; }
+.deliverySideNote p { margin: 4px 0 0; color: #405e50; font-size: 11px; line-height: 1.55; }
+.deliverySideNote span { display: block; margin-top: 4px; color: #71857a; font-size: 9px; }
 .notice { padding: 14px 18px; border-radius: 9px; background: #fff8e8; color: #82653a; font-size: 12px; line-height: 1.7; margin-bottom: 22px; }
 .circuitCallout { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin: 0 0 16px; padding: 18px; border: 1px solid #9ecdc0; border-radius: 16px; background: linear-gradient(135deg, #edf7f3, #fafff7); box-shadow: 0 10px 24px rgba(16,86,66,.08); }
 .circuitCallout h2 { margin: 7px 0 5px; color: #123f36; font-size: 20px; font-weight: 750; letter-spacing: -.45px; }

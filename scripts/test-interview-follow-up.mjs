@@ -278,10 +278,10 @@ test("paid-only overrides, provider errors and incomplete responses never trigge
 });
 
 
-test("the real owner allowlist rejects disabled stations before any provider call or claim", async () => {
-  const { post, state } = harness({ enabled: false });
+test("a caller cannot enable an unknown station before any provider call or claim", async () => {
+  const { post, state } = harness({ enabled: false, overrides: { station_slug: "not-enabled" } });
   const response = await post(originals[0], { followUpsEnabled: true });
-  assert.equal(response.status, 403);
+  assert.equal(response.status, 404);
   assert.equal(state.providerCalls, 0);
   assert.equal(state.row.last_error, null);
   assert.deepEqual(state.row.questions, originals);

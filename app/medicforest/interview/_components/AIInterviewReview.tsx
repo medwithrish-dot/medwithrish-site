@@ -39,6 +39,12 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   const wordCount = transcript.reduce((total, item) => total + getTranscriptHints(item.answer).wordCount, 0);
   const answered = transcript.filter((item) => item.answer.trim()).length;
   const feedback = attempt.feedback;
+  const speechSamples = attempt.metrics.speechSampleCount ?? 0;
+  const speechWords = attempt.metrics.speechWordsPerSevenSeconds ?? 0;
+  const speechSpeed = speechSamples ? (speechWords < 13 ? "slow" : speechWords > 21 ? "fast" : "medium") : null;
+  const speechSideNote = speechSpeed
+    ? `Talking speed: ${speechSpeed} (about ${speechWords} words per 7 seconds across ${speechSamples} measured ${speechSamples === 1 ? "answer" : "answers"}).`
+    : null;
   useEffect(() => {
     if (feedback && feedbackRequestedRef.current) {
       feedbackRequestedRef.current = false;
@@ -58,13 +64,14 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       onGenerate();
     }}>
     {busy && !feedback ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-    {feedback ? "View AI feedback" : busy ? "Generating feedback?" : preview ? "View sample AI feedback" : attempt.status === "grading" ? "Check AI feedback" : "Generate AI feedback"}
+    {feedback ? "View AI feedback" : busy ? "Generating feedback…" : preview ? "View sample AI feedback" : attempt.status === "grading" ? "Check AI feedback" : "Generate AI feedback"}
   </button>{feedbackUnavailable === "word-count" && <button type="button" className={styles.unavailablePill} disabled>Not available - less than 20 words</button>}{feedbackUnavailable === "credits" && <button type="button" className={styles.upgradePill} onClick={() => setUpgradeOpen(true)}>Not available - <span>Upgrade</span> for more credits</button>}</div>;
   const download = () => {
-    const text = [preview ? "MEDICFOREST PREVIEW ? not saved to an account" : "MEDICFOREST STATION REVIEW", attempt.title,
+    const text = [preview ? "MEDICFOREST PREVIEW — not saved to an account" : "MEDICFOREST STATION REVIEW", attempt.title,
       university?.name ?? "Independent station practice", "", "TRANSCRIPT",
       ...transcript.map((item) => `Interviewer: ${[item.interviewerIntro, item.question].filter(Boolean).join(" ")}\n${answerConversation(item).map((turn) => `${turn.speaker}: ${turn.text || "No answer saved."}`).join("\n")}`),
-      ...(feedback ? ["", "AI FEEDBACK", `Practice score: ${feedback.score}%`, feedback.summary, ...feedbackSections.flatMap((section) => [section.title, ...section.items]), ...feedback.rubric.map((item) => `${item.criterion}: ${item.score}/100 ? ${item.reason}`)] : []),
+      ...(speechSideNote ? ["", "SPEECH DELIVERY SIDE NOTE", speechSideNote] : []),
+      ...(feedback ? ["", "AI FEEDBACK", `Practice score: ${feedback.score}%`, feedback.summary, ...feedbackSections.flatMap((section) => [section.title, ...section.items]), ...feedback.rubric.map((item) => `${item.criterion}: ${item.score}/100 — ${item.reason}`)] : []),
     ].join("\n\n");
     const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
     const link = document.createElement("a");
@@ -87,7 +94,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       <span><GraduationCap size={16} /> {university?.name ?? "Independent practice"}</span>
       <span><Clock3 size={15} /> {new Date(attempt.startedAt).toLocaleDateString("en-GB", { timeZone: "Europe/London", day: "numeric", month: "short", year: "numeric" })}</span>
       <span>Station {attempt.stationIndex + 1} of {attempt.stationCount}</span>
-      <span>{answered} of {transcript.length} prompts answered ? {wordCount} words</span>
+      <span>{answered} of {transcript.length} prompts answered · {wordCount} words</span>
     </div>
     <nav className={styles.sectionLinks} aria-label="Review sections"><a href="#transcript-heading">Transcript</a><a href="#review-guide">Markscheme</a><a href="#ai-feedback-heading"><Sparkles size={14} /> AI feedback</a></nav>
     {preview && <p className={styles.notice} role="note">This preview is not saved. Any sample AI feedback is illustrative and does not assess your answers.</p>}
@@ -112,6 +119,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
         <section id="ai-feedback" ref={feedbackRef} tabIndex={-1} className={styles.feedback} aria-labelledby="ai-feedback-heading" aria-busy={busy && !feedback}>
           <div className={styles.panelHeading}><Sparkles size={20} /><div><h2 id="ai-feedback-heading">AI feedback</h2><p>{feedback ? "Your assessment is ready below." : "A second perspective, when you want it."}</p></div></div>
           <p>{feedback ? "Strengths, weaknesses and practical fixes." : "Generate a practice score and suggestions based on your saved answers."}</p>
+          {speechSideNote && <aside className={styles.deliverySideNote} aria-label="Speech delivery side note"><strong>Speech delivery side note</strong><p>{speechSideNote}</p><span>Approximate coaching only; it does not affect your score.</span></aside>}
           {feedback ? <a className={styles.feedbackLink} href="#station-feedback">Read your feedback <ArrowRight size={16} /></a> : <>
             {busy && <p className={styles.feedbackStatus} role="status"><Loader2 size={16} className="animate-spin" /> Preparing your feedback. It will appear here when ready.</p>}
             {!configured && !preview ? <p className={styles.availability}>AI feedback is currently unavailable. Your transcript and study guide are ready to use.</p> : wordCount < 20 && !preview ? <p className={styles.availability}>AI feedback needs at least 20 words. You can still review this attempt or retry the station.</p> : <p className={styles.availability}>Feedback is optional. You can retry or move on without generating it.</p>}

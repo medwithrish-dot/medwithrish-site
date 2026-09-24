@@ -41,6 +41,11 @@
 .stationName > span { color: #7b8b7d; font-size: 9px; }
 .stationName > span > span { margin: 0 5px; }
 .stationState { display: flex; color: #49836a; font-size: 9px; }
+.quantityControl { display: inline-flex; flex-shrink: 0; align-items: center; gap: 4px; color: #526d5d; font-size: 9px; }
+.quantityControl > span { margin-right: 2px; font-weight: 650; }
+.quantityControl button { display: grid; width: 26px; height: 26px; place-items: center; border: 1px solid #b9c9bd; border-radius: 6px; background: #fff; color: #245f49; font-size: 16px; line-height: 1; }
+.quantityControl button:disabled { cursor: not-allowed; opacity: .42; }
+.quantityControl output { min-width: 18px; text-align: center; color: #253d33; font-size: 11px; font-variant-numeric: tabular-nums; }
 .stationSelected { background: #f0f6eb; border-color: #b5ceb0; }
 .stationLocked { opacity: .58; cursor: default; }
 .smallNote { display: flex; align-items: flex-start; gap: 6px; margin: 15px 0 0; color: #7a8d7e; font-size: 10px; line-height: 1.8; }

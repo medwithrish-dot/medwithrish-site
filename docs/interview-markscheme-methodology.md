@@ -101,7 +101,7 @@ Question practice shows the image above the response area. AI interviews show it
 
 ## Follow-ups and fairness
 
-- Probing is disabled by default for every station. `FOLLOW_UP_STATIONS` in `_lib/station-flow.ts` is an empty owner-controlled allowlist shared by the client and API. Only an explicit future owner selection should populate it. Existing saved probes remain in their transcripts.
+- Probing is enabled for the current authored station topics through the owner-controlled `FOLLOW_UP_STATIONS` allowlist shared by the client and API. Each original question permits one probe and each station attempt is capped at three. Existing saved probes remain in their transcripts.
 - Follow-ups are assessed as additional evidence within the same five criteria; they do not create a sixth criterion or change the weighting.
 - An unanswered follow-up is not automatically scored zero when the candidate has already covered the relevant issue.
 - A follow-up must be grounded in what the candidate actually said. It must not invent an experience, mistake, disagreement, patient outcome or belief.

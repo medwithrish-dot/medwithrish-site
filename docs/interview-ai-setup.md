@@ -35,11 +35,30 @@ For deployment, set the corresponding key and confirmation flag in the host's se
 
 The existing Supabase account, service-role and interview database setup are still required; see [interview platform setup](interview-platform-setup.md). Do not infer a working production key from a local environment file. A missing key, rejected key or provider quota failure must leave saved answers and ordinary practice usable. Enabling an account's billing is a separate owner action; changing these variables does not activate billing or purchase credit.
 
+## Google Chirp speech for generated probes
+
+Fixed questions, transitions and the “Done? Say yes or no.” confirmation are generated from `scripts/questions.csv` into `public/audio/{female,male}`. Run only the missing operational prompts with:
+
+```powershell
+python scripts/generate_all.py --ids 643 644 645 646 647 648 649 650 651 652 653 654
+```
+
+The script skips existing files, validates contiguous CSV IDs, retries transient synthesis failures and supports `--dry-run`, `--force`, `--limit` and `--ids`. Local generation uses Google Application Default Credentials (ADC).
+
+Generated answer-aware probes cannot be pre-recorded. `GET /api/interviews/speech` therefore validates the signed-in user, active attempt and generated question before requesting Chirp 3 HD audio. The browser caches that private response and falls back to its built-in voice if the endpoint is disabled or unavailable. Enable it deliberately—Cloud Text-to-Speech requires a billing-enabled project even when usage is within its free allowance:
+
+```dotenv
+GOOGLE_CLOUD_PROJECT=your-project-id
+INTERVIEW_GOOGLE_TTS_ENABLED=true
+```
+
+For local development, install the Google Cloud CLI, run `gcloud auth application-default login`, enable `texttospeech.googleapis.com`, restart Next.js and test an eligible 20+ word answer. On a non-Google host, add the service account JSON as the server-only `GOOGLE_CLOUD_SERVICE_ACCOUNT_JSON` environment variable. Never prefix it with `NEXT_PUBLIC_` or commit the key. On Google Cloud hosting, attach a service account and let ADC discover it instead. Leave `INTERVIEW_GOOGLE_TTS_ENABLED` unset until billing alerts/quotas are configured. Google currently documents a 5,000-byte request content limit and a separate Chirp 3 quota; this route additionally limits probes to 500 characters. [Cloud TTS setup](https://docs.cloud.google.com/text-to-speech/docs/get-started), [authentication](https://docs.cloud.google.com/text-to-speech/docs/authentication), [Chirp 3 HD](https://docs.cloud.google.com/text-to-speech/docs/chirp3-hd), [quotas](https://docs.cloud.google.com/text-to-speech/quotas), [pricing](https://cloud.google.com/text-to-speech/pricing)
+
 ## What “training it for medicine interviews” means here
 
 The implementation uses a specialised examiner prompt and the saved station context. It does not fine-tune model weights or upload a training dataset. After a candidate answers, the examiner asks one concise question about a specific point in that answer: evidence, reflection, an alternative perspective, or what the candidate learned. For example, “I enjoyed helping patients on placement” could lead to “Which interaction changed your understanding of a doctor's responsibilities, and why?”
 
-The prompt supplies the UK medicine-interview purpose, station question and answer; it asks for one probe and treats candidate text as evidence rather than instructions. It should avoid invented candidate experiences, claims about confidential university marking criteria, premature scoring and clinical advice. Saved feedback remains a separate assessment. No web search, retrieval service or paid voice model is needed to generate a probe.
+The prompt supplies the UK medicine-interview purpose, station question and answer; it asks for one probe and treats candidate text as evidence rather than instructions. It should avoid invented candidate experiences, claims about confidential university marking criteria, premature scoring and clinical advice. Saved feedback remains a separate assessment. No web search or retrieval service is needed to generate a probe; Chirp is optional for voicing it.
 
 Review anonymised or synthetic answers with a human interviewer before relying on the feedback: include vague answers, strong reflection, ethical disagreements, incomplete transcripts, repeated answers and attempts to manipulate the prompt. Measure relevance and usefulness alongside response time and cost.
 

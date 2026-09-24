@@ -1,6 +1,17 @@
-// Owner-controlled allowlist. Add station slugs here only when explicitly selected.
-// Shared with the API: client requests cannot enable a station's follow-ups.
-export const FOLLOW_UP_STATIONS: readonly string[] = [];
+// Owner-controlled allowlist shared with the API: client requests cannot enable
+// arbitrary stations. Each original question is still limited to one probe and
+// the server caps an attempt at three probes.
+export const FOLLOW_UP_STATIONS: readonly string[] = [
+  "why-medicine",
+  "work-experience",
+  "disability-in-medicine",
+  "equality-diversity-inclusion",
+  "ozempic",
+  "ethics-confidentiality",
+  "nhs-waiting-lists",
+  "teamwork-group-discussion",
+  "data-analysis",
+];
 export const followUpsEnabled = (slug: string) => FOLLOW_UP_STATIONS.includes(slug);
 
 // A short thinking interval for interview answers, followed by confirmation.

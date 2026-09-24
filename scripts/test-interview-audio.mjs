@@ -43,7 +43,7 @@ function readQuestionCsv() {
 
 test("questions.csv remains aligned with bank IDs and every recorded voice file", () => {
   const rows = readQuestionCsv();
-  assert.equal(rows.length, 642);
+  assert.equal(rows.length, 654);
   assert.equal(INTERVIEW_AUDIO_QUESTION_COUNT, rows.length);
   assert.equal(INTERVIEW_QUESTIONS.length, 561);
 
@@ -63,6 +63,6 @@ test("questions.csv remains aligned with bank IDs and every recorded voice file"
   }
 });
 
-test("unknown and generated follow-up questions retain the browser-voice fallback", () => {
+test("unknown generated follow-up questions retain a browser-voice fallback", () => {
   assert.equal(getInterviewQuestionAudioSrc(null, "A newly generated follow-up?", "female"), undefined);
 });

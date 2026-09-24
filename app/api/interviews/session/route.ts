@@ -68,7 +68,7 @@ export async function POST(request: Request) {
     const defaultCount = mode === "university" ? presetStations.length || 1 : mode === "reference" ? 5 : 1;
     let count = defaultCount;
     if (body.stationCount !== undefined) {
-      if (typeof body.stationCount !== "number" || !Number.isInteger(body.stationCount) || body.stationCount < 1 || body.stationCount > interviewStations.length || (!circuitMode && body.stationCount !== 1)) throw new InterviewError("Choose between one and nine stations");
+      if (typeof body.stationCount !== "number" || !Number.isInteger(body.stationCount) || body.stationCount < 1 || body.stationCount > 20 || (!circuitMode && body.stationCount !== 1)) throw new InterviewError("Choose between one and twenty stations");
       count = body.stationCount;
     }
     if (!Number.isInteger(index) || index < 0 || index >= 20 || (!circuitMode && index !== 0)) throw new InterviewError("Invalid station number");
@@ -149,7 +149,7 @@ export async function PATCH(request: Request) {
     if (answers.reduce((sum, answer) => sum + answer.answer.length, 0) > 18000) throw new InterviewError("Please keep the station transcript under 18,000 characters");
     const metrics: Record<string, number> = answerWindowClosed ? toInterviewAttempt(row).metrics : {};
     if (!answerWindowClosed && body.metrics && typeof body.metrics === "object") {
-      for (const key of ["wordCount", "fillerCount", "repetitionCount"]) {
+      for (const key of ["wordCount", "fillerCount", "repetitionCount", "speechSampleCount", "speechWordsPerSevenSeconds", "speechFastAnswers", "speechSlowAnswers", "speechTranscriptionWarnings", "speechFluencyWarnings"]) {
         const value = (body.metrics as Record<string, unknown>)[key];
         if (typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 10000) metrics[key] = value;
       }

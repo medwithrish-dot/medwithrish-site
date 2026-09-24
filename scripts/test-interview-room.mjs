@@ -101,7 +101,7 @@ test("university customisation preserves that university's practice timings", as
 });
 
 test("presets use supported university topics and preserve custom/free defaults", async () => {
-  for (const [body, count] of [[{ mode: "reference" }, 5], [{ mode: "university", universitySlug: "manchester" }, 4], [{ mode: "free" }, 1]]) {
+  for (const [body, count] of [[{ mode: "reference" }, 5], [{ mode: "university", universitySlug: "manchester" }, 5], [{ mode: "free" }, 1]]) {
     const api = sessionRoute();
     assert.equal((await api.post(body)).status, 200);
     assert.equal(api.reservations[0].p_payload.station_count, count);
@@ -110,7 +110,7 @@ test("presets use supported university topics and preserve custom/free defaults"
 });
 
 test("empty, malformed and oversized station selections do not reserve an attempt", async () => {
-  for (const stationCount of [0, -1, 10, 1.5, "3", null, {}, []]) {
+  for (const stationCount of [0, -1, 21, 1.5, "3", null, {}, []]) {
     const api = sessionRoute();
     assert.equal((await api.post({ mode: "reference", stationCount })).status, 400);
     assert.equal(api.reservations.length, 0);
@@ -848,19 +848,22 @@ test("spoken questions use varied transitions and late confirmation words cannot
   room.latestCall().onConfirmDone(); await room.flush(); room.render();
   assert.equal(room.latestCall().answers[0].answer, "I learned to listen to patients.");
   assert.equal(room.latestCall().answers[1].answer, "");
-  assert.equal(room.spoken.at(-1), `${questionTransition(1)} What did you learn?`);
+  assert.deepEqual(room.spoken.slice(-2), [questionTransition(1), "What did you learn?"]);
   assert.notEqual(questionTransition(1), questionTransition(2));
   assert.notEqual(questionTransition(1), questionTransition(1, true));
   assert.equal(room.latestCall().answers[1].interviewerIntro, questionTransition(1));
   assert.equal(room.latestCall().answers[0].interviewerPrompts[0].text, DONE_PROMPT);
 });
 
-test("standard university circuits reject academic formats and unverified automatic topics", async () => {
-  for (const universitySlug of ["oxford", "cambridge", "aberdeen"]) {
+test("standard university circuits reject academic formats and preselect fallback topics", async () => {
+  for (const universitySlug of ["oxford", "cambridge"]) {
     const api = sessionRoute();
     assert.equal((await api.post({ mode: "university", universitySlug })).status, 400);
     assert.equal(api.reservations.length, 0);
   }
+  const aberdeen = sessionRoute();
+  assert.equal((await aberdeen.post({ mode: "university", universitySlug: "aberdeen" })).status, 200);
+  assert.equal(aberdeen.reservations[0].p_payload.station_count, 6);
 });
 
 test("session eligibility uses saved applicant facts, never caller-supplied confirmations", async () => {

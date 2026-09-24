@@ -88,7 +88,22 @@ const SUPPLEMENTAL_AUDIO_QUESTIONS = [
   "How would you discuss a public health headline while recognising the limits of your knowledge?",
 ] as const;
 
-export const INTERVIEW_AUDIO_QUESTION_COUNT = INTERVIEW_QUESTIONS.length + SUPPLEMENTAL_AUDIO_QUESTIONS.length;
+export const INTERVIEWER_AUDIO_PROMPTS = [
+  "Done? Say yes or no.",
+  "Great. Moving on to the next question.",
+  "Thank you. Let's move on.",
+  "Okay. Here's your next question.",
+  "Thanks for sharing that. Let's continue.",
+  "All right. Moving on to the next question.",
+  "Thank you for your answer. Here's the next question.",
+  "Okay, let's explore something else.",
+  "Thanks. We'll move on now.",
+  "Thank you. I'd like to explore that a little further.",
+  "Let's look at that in a bit more detail.",
+  "Thanks. I have a follow-up question for you.",
+] as const;
+
+export const INTERVIEW_AUDIO_QUESTION_COUNT = INTERVIEW_QUESTIONS.length + SUPPLEMENTAL_AUDIO_QUESTIONS.length + INTERVIEWER_AUDIO_PROMPTS.length;
 
 const questionNumberById = new Map<string, number>(
   INTERVIEW_QUESTIONS.map((question, index) => [question.id, index + 1]),
@@ -96,6 +111,7 @@ const questionNumberById = new Map<string, number>(
 const questionNumberByText = new Map<string, number>([
   ...INTERVIEW_QUESTIONS.map((question, index) => [question.text, index + 1] as const),
   ...SUPPLEMENTAL_AUDIO_QUESTIONS.map((question, index) => [question, INTERVIEW_QUESTIONS.length + index + 1] as const),
+  ...INTERVIEWER_AUDIO_PROMPTS.map((question, index) => [question, INTERVIEW_QUESTIONS.length + SUPPLEMENTAL_AUDIO_QUESTIONS.length + index + 1] as const),
 ]);
 
 export function getInterviewQuestionAudioSrc(

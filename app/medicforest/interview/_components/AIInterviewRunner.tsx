@@ -8,6 +8,7 @@ import { previewInterviewFeedback } from "../_data/interview-preview";
 import type { InterviewAnswer, InterviewAttempt, InterviewMode } from "../_lib/interview-types";
 import { getInterviewQuestionAudioSrc, type InterviewerVoice } from "../_lib/interview-question-audio";
 import { getTranscriptHints, useInterviewSpeech } from "../_lib/useInterviewSpeech";
+import type { SpeechDelivery } from "../_lib/speech-delivery";
 import { ANSWER_SILENCE_MS, DONE_PROMPT, followUpsEnabled, parseDoneReply, questionTransition } from "../_lib/station-flow";
 import { useInterviewDevices } from "../_lib/useInterviewDevices";
 import { AIInterviewSetup, type InterviewRoomPlan } from "./AIInterviewSetup";
@@ -98,6 +99,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const expirySubmittedRef = useRef<string | null>(null);
   const spokenQuestionRef = useRef("");
   const followUpRequestRef = useRef<AbortController | null>(null);
+  const speechDeliveryRef = useRef(new Map<string, SpeechDelivery>());
 
   useEffect(() => () => followUpRequestRef.current?.abort(), []);
 
@@ -132,6 +134,25 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       : answer));
   } });
   const { start: startListening, stop: stopListening, stopSpeaking, speak, voiceSupported } = speech;
+  const rememberSpeechDelivery = useCallback(() => {
+    const currentQuestion = attemptRef.current?.questions[questionIndexRef.current];
+    const delivery = typeof speech.getDeliveryHints === "function" ? speech.getDeliveryHints() : speech.deliveryHints;
+    if (currentQuestion && delivery?.wordsPerSevenSeconds !== null && delivery?.wordsPerSevenSeconds !== undefined) speechDeliveryRef.current.set(currentQuestion, delivery);
+  }, [speech]);
+  const stationMetrics = useCallback((snapshot: InterviewAnswer[], includeCurrent = false) => {
+    if (includeCurrent) rememberSpeechDelivery();
+    const delivery = [...speechDeliveryRef.current.values()];
+    const wordsPerSevenSeconds = delivery.reduce((total, item) => total + (item.wordsPerSevenSeconds ?? 0), 0) / Math.max(1, delivery.length);
+    return {
+      ...getTranscriptHints(snapshot.map((answer) => answer.answer).join(" ")),
+      speechSampleCount: delivery.length,
+      speechWordsPerSevenSeconds: delivery.length ? Math.round(wordsPerSevenSeconds * 10) / 10 : 0,
+      speechFastAnswers: delivery.filter((item) => item.speed === "fast").length,
+      speechSlowAnswers: delivery.filter((item) => item.speed === "slow").length,
+      speechTranscriptionWarnings: delivery.filter((item) => item.manyTranscriptionErrors).length,
+      speechFluencyWarnings: delivery.filter((item) => item.manyPausesOrRepetitions).length,
+    };
+  }, [rememberSpeechDelivery]);
 
   const applyResponse = useCallback((response: SessionResponse, restore = false) => {
     if (response.serverNow) clockOffsetRef.current = Date.parse(response.serverNow) - Date.now();
@@ -167,6 +188,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       }
     }
     if (changed || restore) {
+      speechDeliveryRef.current.clear();
       let restoredAnswers = next.questions.map((question) => ({ question, answer: "", ...next.answers.find((item) => item.question === question) }));
       let restoredIndex = 0;
       savedSignatureRef.current = JSON.stringify(restoredAnswers);
@@ -252,7 +274,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     if (signature === savedSignatureRef.current) return;
     const pending = requestSession("/api/interviews/session", "PATCH", {
       attemptId: current.id, answers: snapshot,
-      metrics: getTranscriptHints(snapshot.map((answer) => answer.answer).join(" ")),
+      metrics: stationMetrics(snapshot),
     }).then((response) => {
       savedSignatureRef.current = signature;
       if (attemptRef.current?.id === current.id) {
@@ -264,7 +286,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     savePromiseRef.current = pending;
     try { await pending; }
     finally { if (savePromiseRef.current === pending) savePromiseRef.current = null; }
-  }, [applyResponse]);
+  }, [applyResponse, stationMetrics]);
 
   useEffect(() => {
     if (attempt?.status !== "in_progress" || preview) return;
@@ -303,7 +325,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     submitLockRef.current = true;
     setMicWanted(false);
     followUpRequestRef.current?.abort();
-    setBusy("Saving your station?");
+    setBusy("Saving your station…");
     setReviewRequested(true);
     setError("");
     setErrorStatus(0);
@@ -314,13 +336,13 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       stopCamera();
       stopMicCheck();
       if (previewRef.current) {
-        applyResponse({ attempt: { ...current, status: "submitted", completedAt: new Date().toISOString(), answers: answersRef.current, feedback: null, nextAvailableAt: null } });
+        applyResponse({ attempt: { ...current, status: "submitted", completedAt: new Date().toISOString(), answers: answersRef.current, feedback: null, metrics: stationMetrics(answersRef.current, true), nextAvailableAt: null } });
         return;
       }
       while (savePromiseRef.current) await savePromiseRef.current.catch(() => {});
       const response = await requestSession("/api/interviews/session", "PATCH", {
         attemptId: current.id, answers: answersRef.current, finish: true,
-        metrics: getTranscriptHints(answersRef.current.map((answer) => answer.answer).join(" ")),
+        metrics: stationMetrics(answersRef.current, true),
       });
       applyResponse(response, true);
       setSaveWarning(response.usedSavedAnswers ? "The answer window had closed. This review shows the last answers saved to your account." : "");
@@ -336,13 +358,13 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         }
       } catch { /* Keep the local transcript available so the user can retry saving. */ }
     } finally { submitLockRef.current = false; setBusy(""); }
-  }, [applyResponse, showError, stopListening, stopSpeaking, stopCamera, stopMicCheck, cancelMicrophoneRequest]);
+  }, [applyResponse, showError, stopListening, stopSpeaking, stopCamera, stopMicCheck, cancelMicrophoneRequest, stationMetrics]);
 
   const generateFeedback = async () => {
     const current = attemptRef.current;
     if (!current || current.status === "in_progress" || actionLockRef.current || submitLockRef.current) return;
     submitLockRef.current = true;
-    setBusy("Preparing your feedback?");
+    setBusy("Preparing your feedback…");
     setError("");
     setErrorStatus(0);
     try {
@@ -370,7 +392,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const secondsRemaining = Math.max(0, Math.ceil(((preparing ? preparationEnd : stationEnd) - now) / 1000));
   const breakRemaining = attempt?.nextAvailableAt ? Math.max(0, Math.ceil((Date.parse(attempt.nextAvailableAt) - now) / 1000)) : 0;
   const question = attempt?.questions[questionIndex] ?? "";
-  const questionAudioSrc = getInterviewQuestionAudioSrc(attempt?.questionIds?.[questionIndex], question, interviewerVoice);
+  const recordedQuestionAudioSrc = getInterviewQuestionAudioSrc(attempt?.questionIds?.[questionIndex], question, interviewerVoice);
   const originalQuestions: readonly string[] = useMemo(() => attempt
     ? attempt.questionIds?.some(Boolean)
       ? attempt.questions.filter((_, index) => Boolean(attempt.questionIds?.[index]))
@@ -379,6 +401,9 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const followingQuestion = attempt?.questions[questionIndex + 1];
   const followUpAvailable = !preview && Boolean(attempt && followUpsEnabled(attempt.stationSlug)) && originalQuestions.includes(question)
     && (!followingQuestion || originalQuestions.includes(followingQuestion));
+  const questionAudioSrc = recordedQuestionAudioSrc ?? (!preview && attempt && !originalQuestions.includes(question)
+    ? `/api/interviews/speech?attempt=${encodeURIComponent(attempt.id)}&question=${questionIndex}&voice=${interviewerVoice}`
+    : undefined);
   const microphoneRoomId = !loading && attempt?.status === "in_progress" && !reviewing ? attempt.id : null;
 
   useEffect(() => {
@@ -425,12 +450,19 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     if (transition) replaceAnswers(answersRef.current.map((answer) => answer.question === question ? { ...answer, interviewerIntro: transition } : answer));
     if (!readAloud || !voiceSupported) return;
     promptingRef.current = true;
-    void speak([transition, question].filter(Boolean).join(" "), () => {
+    const finishPrompt = () => {
       if (spokenQuestionRef.current !== key) return;
       promptingRef.current = false;
       setPrompting(false);
-    }, questionAudioSrc);
-  }, [attempt, active, entryReady, question, questionIndex, questionAudioSrc, readAloud, speak, voiceSupported, originalQuestions, replaceAnswers]);
+    };
+    if (transition) {
+      void speak(transition, () => {
+        if (spokenQuestionRef.current === key) void speak(question, finishPrompt, questionAudioSrc);
+      }, getInterviewQuestionAudioSrc(null, transition, interviewerVoice));
+    } else {
+      void speak(question, finishPrompt, questionAudioSrc);
+    }
+  }, [attempt, active, entryReady, question, questionIndex, questionAudioSrc, readAloud, speak, voiceSupported, originalQuestions, replaceAnswers, interviewerVoice]);
 
   useEffect(() => {
     if (!active || !micWanted || promptingRef.current || confirmationPendingRef.current || speech.speaking || speech.listening || (speech.error && !speech.error.startsWith("Read-aloud")) || document.hidden
@@ -441,7 +473,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
   const startAttempt = async (options: StartOptions, asPreview = previewRef.current, plan = planRef.current) => {
     if (actionLockRef.current || submitLockRef.current) return;
     actionLockRef.current = true;
-    setBusy("Opening your interview?");
+    setBusy("Opening your interview…");
     setError("");
     setErrorStatus(0);
     setSaveWarning("");
@@ -483,7 +515,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         } else if (resumed && plan) {
           planRef.current = null;
           setRoomPlan(null);
-          setSaveWarning("You already had an active interview, so we?ve resumed it with its saved settings.");
+          setSaveWarning("You already had an active interview, so we’ve resumed it with its saved settings.");
         }
         applyResponse(response, true);
         setReviewRequested(false);
@@ -563,7 +595,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         promptingRef.current = true;
         setPrompting(true);
         replaceAnswers(answersRef.current.map((answer, answerIndex) => answerIndex === index ? { ...answer, interviewerPrompts: [...(answer.interviewerPrompts ?? []), { text: DONE_PROMPT, answerOffset: answer.answer.length }].slice(0, 12) } : answer));
-        void speak(DONE_PROMPT, () => { promptingRef.current = false; setPrompting(false); });
+        void speak(DONE_PROMPT, () => { promptingRef.current = false; setPrompting(false); }, getInterviewQuestionAudioSrc(null, DONE_PROMPT, interviewerVoice));
       }
     } finally { confirmationPendingRef.current = false; }
   };
@@ -576,6 +608,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     promptingRef.current = false;
     setPrompting(false);
     try {
+      rememberSpeechDelivery();
       stopSpeaking();
       await stopListening();
       if (await askFollowUp()) return;
@@ -606,7 +639,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
     if (!attempt || actionLockRef.current || submitLockRef.current) return;
     actionLockRef.current = true;
     followUpRequestRef.current?.abort();
-    setBusy("Closing this station?");
+    setBusy("Closing this station…");
     try {
       cancelMicrophoneRequest();
       await speech.stop();
@@ -673,7 +706,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       {errorStatus === 403 && <Link href="/medicforest/pricing" className="mt-2 inline-block font-bold underline">View membership options</Link>}
     </div>}
     {!configured && !preview && !reviewing && <p role="status" className={styles.previewBanner}>AI feedback is paused. Timed practice and saved answers are available.</p>}
-    {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your interview space ready?</div> : !attempt ? <AIInterviewSetup
+    {loading ? <div className={styles.statusCard}><Loader2 size={19} className="animate-spin" /> Getting your interview space ready…</div> : !attempt ? <AIInterviewSetup
       initialUniversitySlug={initialUniversitySlug} initialStationSlug={initialStationSlug} initialPlan={roomPlan} initialMockCircuit={initialMockCircuit}
       devices={devices} readAloud={readAloud} setReadAloud={setVoiceEnabled} voiceRate={voiceRate} setVoiceRate={setVoiceRate}
       interviewerVoice={interviewerVoice} setInterviewerVoice={setInterviewerVoice}
@@ -688,7 +721,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       onNext={attempt.stationIndex + 1 < attempt.stationCount && roomPlan && attempt.completedAt ? nextStation : undefined}
       breakRemaining={breakRemaining} busy={Boolean(busy)}
     /> : <>
-      {preview && <div className={styles.previewBanner}><Sparkles size={16} /><span><strong>You?re in preview.</strong> Explore the room and sample feedback. This won?t use an attempt or save anything to your account.</span></div>}
+      {preview && <div className={styles.previewBanner}><Sparkles size={16} /><span><strong>You’re in preview.</strong> Explore the room and sample feedback. This won’t use an attempt or save anything to your account.</span></div>}
       <AIInterviewCall key={attempt.id} attempt={attempt} answers={answers} questionIndex={questionIndex}
         preparing={preparing} expired={expired} active={Boolean(active)} secondsRemaining={secondsRemaining}
         speech={speech} devices={devices} saved={saved} busy={busy} preview={preview} readAloud={readAloud}
@@ -701,7 +734,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         onSkipPreparation={() => { if (preview) applyResponse({ attempt: { ...attempt, startedAt: new Date(Date.now() - attempt.preparationSeconds * 1000).toISOString() } }); }}
       />
     </>}
-    {reviewing && attempt?.completedAt && attempt.stationIndex + 1 < attempt.stationCount && !roomPlan && <section className={styles.joinBar}><div><strong>Continue your circuit</strong><p>Your remaining topic choices aren?t available on this device. Choose a topic for your next station.</p><label className={styles.universityChoice}>Next station<select aria-label="Next station topic" value={continuationSlug || interviewStations[(attempt.stationIndex + 1) % interviewStations.length].slug} onChange={(event) => setContinuationSlug(event.target.value)}>{interviewStations.map((station) => <option key={station.slug} value={station.slug}>{station.title}</option>)}</select></label>{breakRemaining > 0 && <p>Scheduled break is optional now. Continue whenever you feel ready.</p>}</div><button type="button" className={styles.primaryButton} disabled={Boolean(busy)} onClick={nextStation}>Continue to next station <ArrowRight size={16} /></button></section>}
+    {reviewing && attempt?.completedAt && attempt.stationIndex + 1 < attempt.stationCount && !roomPlan && <section className={styles.joinBar}><div><strong>Continue your circuit</strong><p>Your remaining topic choices aren’t available on this device. Choose a topic for your next station.</p><label className={styles.universityChoice}>Next station<select aria-label="Next station topic" value={continuationSlug || interviewStations[(attempt.stationIndex + 1) % interviewStations.length].slug} onChange={(event) => setContinuationSlug(event.target.value)}>{interviewStations.map((station) => <option key={station.slug} value={station.slug}>{station.title}</option>)}</select></label>{breakRemaining > 0 && <p>Scheduled break is optional now. Continue whenever you feel ready.</p>}</div><button type="button" className={styles.primaryButton} disabled={Boolean(busy)} onClick={nextStation}>Continue to next station <ArrowRight size={16} /></button></section>}
     {reviewing && attempt?.status === "in_progress" && !busy && <div role="status" className={styles.statusCard}><div><strong>Your transcript is still in this browser.</strong><p>Save the finished station before retrying or leaving this page.</p><button type="button" className={styles.primaryButton} onClick={() => void finishStation()}>Retry saving station</button></div></div>}
     {saveWarning && <div role="status" className={styles.previewBanner}><span>{saveWarning}</span>{attempt?.status === "in_progress" && <button type="button" disabled={Boolean(busy)} onClick={() => void saveDraft().catch(showError)}>Retry save</button>}</div>}
     {busy && <div role="status" className={styles.statusCard}><Loader2 size={18} className="animate-spin" />{busy}</div>}

@@ -13,7 +13,6 @@ import { InterviewDevicePreview } from "./InterviewDevicePreview";
 import { DONE_PROMPT, questionTransition } from "../_lib/station-flow";
 import { answerConversation } from "../_lib/interviewer-transcript";
 import { findInterviewStation } from "../_data/interview-stations";
-import { SpeechDeliveryHints } from "./SpeechDeliveryHints";
 import styles from "./AIInterviewRoom.module.css";
 
 export const formatRoomTime = (seconds: number) => `${Math.floor(Math.max(0, seconds) / 60)}:${String(Math.max(0, seconds) % 60).padStart(2, "0")}`;
@@ -51,7 +50,7 @@ export function AIInterviewCall(props: Props) {
   const question = attempt.questions[questionIndex];
   const bankQuestion = findReviewQuestion(attempt.questionIds?.[questionIndex], question);
   const stimulus = getQuestionStimulus(bankQuestion?.id);
-  const status = busy ? "One moment?" : preparing ? "Take a moment to think" : expired ? "Time to reflect" : speech.speaking ? "Reading your question" : speech.listening ? "Listening to you" : "Ready when you are";
+  const status = busy ? "One moment…" : preparing ? "Take a moment to think" : expired ? "Time to reflect" : speech.speaking ? "Reading your question" : speech.listening ? "Listening to you" : "Ready when you are";
   const answer = answers[questionIndex]?.answer ?? "";
   const answerWordCount = answer.trim() ? answer.trim().split(/\s+/).length : 0;
   const liveAnswer = [answer, speech.listening && !props.awaitingDone ? speech.interimTranscript : ""].filter(Boolean).join(" ");
@@ -125,7 +124,7 @@ export function AIInterviewCall(props: Props) {
   return <div className={`${styles.callRoom} ${focus ? styles.focusRoom : ""}`}>
     <header className={styles.roomHeader}>
       <div className={styles.roomBrand}>
-        <div><h1>{attempt.title}</h1><p>MedicForest interview <span>?</span> Station {attempt.stationIndex + 1} of {attempt.stationCount}</p></div>
+        <div><h1>{attempt.title}</h1><p>MedicForest interview <span>·</span> Station {attempt.stationIndex + 1} of {attempt.stationCount}</p></div>
       </div>
       <div className={styles.headerActions}>
         <span className={styles.sessionBadge}><span className={styles.greenDot} />{preview ? "Preview" : "Private practice"}</span>
@@ -159,7 +158,7 @@ export function AIInterviewCall(props: Props) {
             <button type="button" aria-label={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} title={devices.cameraEnabled ? "Turn camera off" : "Turn camera on"} aria-pressed={devices.cameraEnabled} disabled={devices.cameraPending || Boolean(busy)} onClick={() => void devices.toggleCamera()}>{devices.cameraPending ? <Loader2 size={21} className="animate-spin" /> : devices.cameraEnabled ? <Video size={21} /> : <VideoOff size={21} />}<span>{devices.cameraEnabled ? "Camera on" : "Camera off"}</span></button>
             <button ref={finishButton} type="button" className={styles.endCallButton} aria-label="Finish station" title="Finish station" disabled={Boolean(busy)} onClick={() => setEndDialog(true)}><Phone size={21} fill="currentColor" /><span>Finish</span></button>
           </div>
-          {microphonePending ? <p role="status" className={styles.callNotice}>Choose Allow or Block in your browser?s microphone prompt. You can also type your answer.</p> : (devices.microphoneError || speech.error) ? <p role="status" className={styles.callNotice}>{devices.microphoneError || speech.error}</p> : <p className={styles.controlHint}>{speech.listening ? "Listening ? your words appear in the transcript." : preparing ? "Your microphone will be ready after reading time." : "Speak naturally, or type your answer in the transcript panel."}</p>}
+          {microphonePending ? <p role="status" className={styles.callNotice}>Choose Allow or Block in your browser’s microphone prompt. You can also type your answer.</p> : (devices.microphoneError || speech.error) ? <p role="status" className={styles.callNotice}>{devices.microphoneError || speech.error}</p> : <p className={styles.controlHint}>{speech.listening ? "Listening · your words appear in the transcript." : preparing ? "Your microphone will be ready after reading time." : "Speak naturally, or type your answer in the transcript panel."}</p>}
           {devices.cameraError && <p role="status" className={styles.callNotice}>{devices.cameraError}</p>}
           {!speech.supported && <p className={styles.callNotice}>Speech recognition is unavailable in this browser. Type your answer to continue.</p>}
         </footer>
@@ -170,7 +169,7 @@ export function AIInterviewCall(props: Props) {
           <div ref={transcriptScroll} className={styles.transcriptScroll}>
             {questionIndex > 0 && <ol className={styles.conversationHistory} aria-label="Conversation history">{attempt.questions.slice(0, questionIndex).map((previousQuestion, index) => <li key={`${index}:${previousQuestion}`}>
               {transition(index) && <p className={styles.questionTransition}>{transition(index)}</p>}
-              <div className={styles.transcriptQuestion}><span className={styles.miniInterviewer}><AudioLines size={19} /></span><div><strong>AI Interviewer ? Question {index + 1}</strong>{answers.find((item) => item.question === previousQuestion)?.interviewerIntro && <p>{answers.find((item) => item.question === previousQuestion)?.interviewerIntro}</p>}<p>{previousQuestion}</p></div></div>
+              <div className={styles.transcriptQuestion}><span className={styles.miniInterviewer}><AudioLines size={19} /></span><div><strong>AI Interviewer · Question {index + 1}</strong>{answers.find((item) => item.question === previousQuestion)?.interviewerIntro && <p>{answers.find((item) => item.question === previousQuestion)?.interviewerIntro}</p>}<p>{previousQuestion}</p></div></div>
               {answerConversation(answers.find((item) => item.question === previousQuestion) ?? { question: previousQuestion, answer: "" }).map((turn, turnIndex) => <div key={turnIndex}><div className={styles.answerHeading}><strong>{turn.speaker === "You" ? "You" : "AI Interviewer"}</strong></div><p className={styles.historyAnswer}>{turn.text || "No answer added."}</p></div>)}
             </li>)}</ol>}
             <div ref={currentTurn}>
@@ -180,11 +179,10 @@ export function AIInterviewCall(props: Props) {
             </div>
             <div className={styles.promptHeading}><span>Question {questionIndex + 1} of {attempt.questions.length}</span><button type="button" onClick={props.onReadQuestion} disabled={!speech.voiceSupported || Boolean(busy) || props.awaitingDone}>{speech.speaking ? <VolumeX size={14} /> : <Volume2 size={14} />}{speech.speaking ? "Stop reading" : "Hear question"}</button></div>
             <div className={styles.answerHeading}><span className={styles.miniYou}><UserRound size={16} /></span><strong>You</strong>{speech.listening && <span className={styles.transcribingLabel}><AudioLines size={13} />Transcribing</span>}</div>
-            <label className={styles.answerLabel} htmlFor="interview-answer">{speech.listening ? "Listening ? stop the mic to edit" : preparing ? "Your answer opens after reading time" : "Speak or type your answer"}</label>
-            <textarea ref={answerInput} id="interview-answer" aria-describedby="current-interview-question" value={liveAnswer} readOnly={!active || speech.listening || props.awaitingDone} maxLength={6000} onChange={(event) => props.onAnswer(event.target.value)} placeholder={preparing ? "Your thinking time starts here?" : "Your words will appear here. You can type, too?"} className={styles.answerInput} />
+            <label className={styles.answerLabel} htmlFor="interview-answer">{speech.listening ? "Listening · stop the mic to edit" : preparing ? "Your answer opens after reading time" : "Speak or type your answer"}</label>
+            <textarea ref={answerInput} id="interview-answer" aria-describedby="current-interview-question" value={liveAnswer} readOnly={!active || speech.listening || props.awaitingDone} maxLength={6000} onChange={(event) => props.onAnswer(event.target.value)} placeholder={preparing ? "Your thinking time starts here…" : "Your words will appear here. You can type, too…"} className={styles.answerInput} />
             <p className={styles.characterCount}><span>{answerWordCount ? `${answerWordCount} words` : "Your answer, in your own words"}</span><span>{answer.length.toLocaleString()} / 6,000</span></p>
-            <SpeechDeliveryHints hints={speech.deliveryHints} />
-            {props.followUpBusy && <p role="status" className={styles.followUpNotice}><Loader2 size={16} className="animate-spin" /> Preparing your next question?</p>}
+            {props.followUpBusy && <p role="status" className={styles.followUpNotice}><Loader2 size={16} className="animate-spin" /> Preparing your next question…</p>}
             {props.awaitingDone ? <section ref={donePrompt} className={styles.donePrompt} aria-label="Answer confirmation">
               <p role="status">{DONE_PROMPT}</p>
               <span>Say yes to continue, or no to keep answering. You can also carry on speaking.</span>
@@ -192,8 +190,8 @@ export function AIInterviewCall(props: Props) {
             </section> : <div className={styles.answerProgress}><span>{speech.listening ? "After a short pause, I'll check whether you're done." : "Speak with the microphone on, or type and select Done answering."}</span><button type="button" onClick={props.onDone} disabled={!active || props.prompting || !liveAnswer.trim()}>Done answering</button></div>}
             {props.followUpNotice && <p role="status" className={styles.followUpNotice}>{props.followUpNotice}</p>}
           </div>
-          <div className={styles.transcriptFooter}><span><Check size={14} />{preview ? "Preview ? nothing saved to your account" : props.saved ? "Saved to your account" : "Autosaves every 15 seconds"}</span><p>Your browser?s speech service may process audio. MedicForest saves only your transcript.</p></div>
-        </> : <div className={styles.notesPanel}><h2>Station notes</h2><label htmlFor="interview-notes" className={styles.answerLabel}>Private notes ? not marked</label><textarea id="interview-notes" value={notes} onChange={(event) => setNotes(event.target.value)} maxLength={5000} placeholder="Key points, examples, and reminders?" /><p><LockKeyhole size={13} />Notes stay on this screen and aren?t saved.</p></div>}
+          <div className={styles.transcriptFooter}><span><Check size={14} />{preview ? "Preview · nothing saved to your account" : props.saved ? "Saved to your account" : "Autosaves every 15 seconds"}</span><p>Your browser’s speech service may process audio. MedicForest saves only your transcript.</p></div>
+        </> : <div className={styles.notesPanel}><h2>Station notes</h2><label htmlFor="interview-notes" className={styles.answerLabel}>Private notes · not marked</label><textarea id="interview-notes" value={notes} onChange={(event) => setNotes(event.target.value)} maxLength={5000} placeholder="Key points, examples, and reminders…" /><p><LockKeyhole size={13} />Notes stay on this screen and aren’t saved.</p></div>}
 
       </aside>
     </div>

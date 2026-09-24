@@ -39,6 +39,7 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
   const [interimTranscript, setInterimTranscript] = useState("");
   const [error, setError] = useState("");
   const [deliveryHints, setDeliveryHints] = useState(() => getSpeechDelivery({ transcript: "", segments: [], elapsedSeconds: 0 }));
+  const deliveryHintsRef = useRef(deliveryHints);
   const [deliveryKey, setDeliveryKey] = useState(answerKey);
   const deliveryRef = useRef<{ text: string; segments: TimedSpeech[]; confidence: RecognitionConfidence[] }>({ text: "", segments: [], confidence: [] });
   const deliveryKeyRef = useRef("");
@@ -146,7 +147,9 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       deliveryKeyRef.current = answerKey;
       setDeliveryKey(answerKey);
       deliveryRef.current = { text: "", segments: [], confidence: [] };
-      setDeliveryHints(getSpeechDelivery({ transcript: "", segments: [], elapsedSeconds: 0 }));
+      const emptyDelivery = getSpeechDelivery({ transcript: "", segments: [], elapsedSeconds: 0 });
+      deliveryHintsRef.current = emptyDelivery;
+      setDeliveryHints(emptyDelivery);
     }
     const started = Date.now();
     const previousElapsed = deliveryRef.current.segments.at(-1)?.endSeconds ?? 0;
@@ -221,7 +224,9 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       setInterimTranscript(interim.trim());
       const delivery = deliveryRef.current;
       const liveSegments = interim.trim() ? [...delivery.segments, { kind: "speech" as const, text: interim, ...boundaryRef.current.timing(delivery.segments.at(-1)?.endSeconds ?? 0, elapsed()) }] : delivery.segments;
-      setDeliveryHints(getSpeechDelivery({ transcript: `${delivery.text} ${interim}`, segments: liveSegments, elapsedSeconds: elapsed(), confidence: delivery.confidence }));
+      const nextDelivery = getSpeechDelivery({ transcript: `${delivery.text} ${interim}`, segments: liveSegments, elapsedSeconds: elapsed(), confidence: delivery.confidence });
+      deliveryHintsRef.current = nextDelivery;
+      setDeliveryHints(nextDelivery);
       if (receivedWords) {
         hasWords = true;
         notifiedForGap = false;
@@ -370,5 +375,6 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
 
   return { supported, voiceSupported, listening, speaking, interimTranscript,
     deliveryHints: deliveryKey === answerKey ? deliveryHints : getSpeechDelivery({ transcript: "", segments: [], elapsedSeconds: 0 }),
+    getDeliveryHints: () => deliveryHintsRef.current,
     error, start, stop, speak, stopSpeaking };
 }
