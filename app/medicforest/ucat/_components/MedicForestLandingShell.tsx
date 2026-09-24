@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
-  ChevronRight,
   CircleHelp,
   ExternalLink,
   FileText,
@@ -76,9 +76,16 @@ function BrandMark() {
   return (
     <span
       aria-hidden="true"
-      className="h-10 w-10 shrink-0 rounded-xl bg-cover bg-center bg-no-repeat shadow-sm ring-1 ring-white/10"
-      style={{ backgroundImage: "url('/favicon.ico')" }}
-    />
+      className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm"
+    >
+      <Image
+        src="/medicforest/medicforest-placeholder-logo.png"
+        alt=""
+        width={48}
+        height={48}
+        className="h-full w-full scale-[1.35] object-contain"
+      />
+    </span>
   );
 }
 
@@ -94,21 +101,18 @@ function LandingSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       <Link
         href="/medicforest/ucat"
         onClick={onNavigate}
-        className="group flex items-center gap-3 rounded-xl border border-white/10 bg-[#0b3431] p-2.5 shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b]"
+        className="group flex items-center gap-3 px-2 py-1"
+        aria-label="MedicForest home"
       >
         <BrandMark />
         <span className="min-w-0 flex-1">
-          <span className="block text-lg font-bold tracking-tight text-white">
+          <span className="block text-[19px] font-bold leading-tight tracking-tight text-white transition-colors group-hover:text-[#c7fffb]">
             Medic<span className="text-[#8be5df]">Forest</span>
           </span>
-          <span className="block text-[11px] font-semibold text-slate-400">
+          <span className="mt-0.5 block text-xs font-medium text-slate-400">
             Medical admissions
           </span>
         </span>
-        <ChevronRight
-          className="h-4 w-4 text-slate-500 transition-transform group-hover:translate-x-0.5 group-hover:text-[#78ddd7]"
-          aria-hidden="true"
-        />
       </Link>
 
       <nav aria-label="MedicForest navigation" className="mt-8">
