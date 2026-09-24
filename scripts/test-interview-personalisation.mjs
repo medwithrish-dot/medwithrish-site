@@ -20,10 +20,10 @@ function load(file) {
 }
 const { emptyApplicant, readApplicant, questionEligible } = load(resolve(root, "utils/interviews/applicant-profile"));
 const { selectStationQuestions } = load(resolve(root, "utils/interviews/station-question-selection"));
-const { interviewerSpeech, answerConversation } = load(resolve(root, "app/phloemai/interview/_lib/interviewer-transcript"));
-const { questionTransition, DONE_PROMPT } = load(resolve(root, "app/phloemai/interview/_lib/station-flow"));
-const { standardInterviewUniversities, universityStationPresets, universityStationSlugs } = load(resolve(root, "app/phloemai/interview/_data/university-stations"));
-const { interviewStations } = load(resolve(root, "app/phloemai/interview/_data/interview-stations"));
+const { interviewerSpeech, answerConversation } = load(resolve(root, "app/medicforest/interview/_lib/interviewer-transcript"));
+const { questionTransition, DONE_PROMPT } = load(resolve(root, "app/medicforest/interview/_lib/station-flow"));
+const { standardInterviewUniversities, universityStationPresets, universityStationSlugs } = load(resolve(root, "app/medicforest/interview/_data/university-stations"));
+const { interviewStations } = load(resolve(root, "app/medicforest/interview/_data/interview-stations"));
 
 test("unknown and negative applicant facts exclude personal-history questions", () => {
   const prompts = [

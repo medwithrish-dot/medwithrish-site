@@ -17,7 +17,6 @@ This document is a proposal and cost model. The accompanying practice-pathway wo
 | Guides and seven-stage learning pathway | Curated content and deterministic progression | No |
 | Recording, playback, mic meter and speech hints | Browser APIs and local heuristics | No paid model integration |
 | Speech recognition/read-aloud | Browser Web Speech APIs | No API bill to the platform; availability and quality depend on the browser/service |
-| UCAT attention tracking | MediaPipe running locally on the device | No cloud inference charge |
 | Rishbot sample question | Static API response | No |
 | Personal statement service | PDF upload, checkout and existing service workflow | No AI assessment integration found |
 
@@ -85,7 +84,6 @@ For future personalised follow-ups, generate only the new line and stream its au
 | Timers, animation, guide search, draft editing | Account identity, entitlement and authoritative quota decisions |
 | Audio capture, local replay, playhead/highlighting, mic meter | Paid text, transcription and TTS credentials/calls |
 | Silence measurement and approximate pace/filler coaching | Persisted marking, rubric/model version and leaderboard scores |
-| Optional device-local attention tracking | Durable jobs, usage ledger, retries and spending controls |
 | Playback of previously generated question audio | Private media access and retention, if persistent recording is added |
 
 Browser speech recognition may use an external browser-vendor service; it is not necessarily on-device or reliable in every browser. Keep it as a low-cost live draft/fallback, with typing always available. A paid final transcription pass offers a consistent service while limiting cost. Word-aligned playback needs timestamps/alignment, and recognisers can omit stutters and fillers. Measure silence locally and preserve the original audio; never ask a text model to invent missing speech events. Cloud recording/transcription should be clearly explained at microphone consent. Cross-device recordings need private storage, expiring links and a deletion policy.

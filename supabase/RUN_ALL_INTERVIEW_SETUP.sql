@@ -1,5 +1,5 @@
 -- COMPLETE MED INTERVIEW SETUP: paste this entire file into Supabase SQL Editor and Run.
--- For your EXISTING PhloemAI project (public.profiles must already exist).
+-- For your EXISTING MedicForest project (public.profiles must already exist).
 -- This combines all five interview setup files in dependency order.
 -- Safe to rerun. Existing interview answers, groups and profiles are preserved.
 -- One transaction: if any statement fails, no partial changes are committed.
@@ -9,16 +9,16 @@ begin;
 do $$
 begin
   if to_regclass('public.profiles') is null then
-    raise exception 'Missing base account setup. Run phloemai_setup.sql first, then run this file again.';
+    raise exception 'Missing base account setup. Run medicforest_setup.sql first, then run this file again.';
   end if;
 end;
 $$;
 
 -- ============================================================
--- STEP 1 OF 5: phloemai_security_patch.sql
+-- STEP 1 OF 5: medicforest_security_patch.sql
 -- ============================================================
 
--- PhloemAI security hardening patch
+-- MedicForest security hardening patch
 -- Run this in Supabase SQL Editor after the existing setup files.
 
 -- Profile rows should be created by public.handle_new_user(), not by clients.
@@ -48,11 +48,11 @@ with check (id = auth.uid());
 
 
 -- ============================================================
--- STEP 2 OF 5: phloemai_interview_question_progress.sql
+-- STEP 2 OF 5: medicforest_interview_question_progress.sql
 -- ============================================================
 
--- PhloemAI interview question-bank progress setup
--- Paste this into the Supabase SQL Editor after phloemai_setup.sql.
+-- MedicForest interview question-bank progress setup
+-- Paste this into the Supabase SQL Editor after medicforest_setup.sql.
 
 create extension if not exists "pgcrypto";
 
@@ -112,10 +112,10 @@ to authenticated;
 
 
 -- ============================================================
--- STEP 3 OF 5: phloemai_interview_platform.sql
+-- STEP 3 OF 5: medicforest_interview_platform.sql
 -- ============================================================
 
--- Run after phloemai_setup.sql and phloemai_security_patch.sql.
+-- Run after medicforest_setup.sql and medicforest_security_patch.sql.
 -- All paid AI mutations go through authenticated server routes and service-only RPCs.
 
 create table if not exists public.interview_attempts (
@@ -225,10 +225,10 @@ grant execute on function public.interview_leaderboard() to authenticated,servic
 
 
 -- ============================================================
--- STEP 4 OF 5: phloemai_interview_groups.sql
+-- STEP 4 OF 5: medicforest_interview_groups.sql
 -- ============================================================
 
--- Run in the Supabase SQL editor after phloemai_interview_platform.sql.
+-- Run in the Supabase SQL editor after medicforest_interview_platform.sql.
 -- All access uses the authenticated interview_groups_action RPC. Tables have no
 -- browser read/write grants, and the RPC checks auth.uid() on every operation.
 
@@ -585,10 +585,10 @@ comment on function public.interview_groups_action(text, uuid, jsonb) is
 
 
 -- ============================================================
--- STEP 5 OF 5: phloemai_interview_dashboard.sql
+-- STEP 5 OF 5: medicforest_interview_dashboard.sql
 -- ============================================================
 
--- Run after phloemai_interview_platform.sql (and the existing security patch).
+-- Run after medicforest_interview_platform.sql (and the existing security patch).
 -- Additive and rerunnable. No previous interview, group or leaderboard data is removed.
 
 
@@ -664,7 +664,7 @@ revoke all on function public.interview_dashboard_totals() from public,anon;
 grant execute on function public.interview_dashboard_totals() to authenticated;
 
 -- Leaderboard public-name moderation
--- Run after phloemai_interview_platform.sql. Safe to rerun.
+-- Run after medicforest_interview_platform.sql. Safe to rerun.
 -- Keep normalization and patterns aligned with utils/interviews/public-name.ts.
 
 create or replace function public.interview_name_has_profanity(p_name text)
@@ -720,7 +720,7 @@ revoke all on function public.interview_leaderboard() from public,anon;
 grant execute on function public.interview_leaderboard() to authenticated,service_role;
 
 
--- Run after phloemai_interview_dashboard.sql and phloemai_interview_question_progress.sql.
+-- Run after medicforest_interview_dashboard.sql and medicforest_interview_question_progress.sql.
 alter table public.interview_preparation_profiles
   add column if not exists applicant jsonb not null default '{}' check (jsonb_typeof(applicant) = 'object');
 

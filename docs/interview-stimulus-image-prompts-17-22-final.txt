@@ -1,9 +1,9 @@
-PHLOEMAI INTERVIEW STIMULI 17–22 — FINAL PROMPTS AND REVIEW
+MEDICFOREST INTERVIEW STIMULI 17–22 — FINAL PROMPTS AND REVIEW
 
 Generated and edited with the built-in imagegen tool.
 These final prompts supersede original prompts 17–22.
 User preference: distinct layouts, short wording, sufficient detail for discussion, no supplied answers.
-Saved PNGs: public/phloemai/interview-stimuli/.
+Saved PNGs: public/medicforest/interview-stimuli/.
 All situations, participants and figures are fictional.
 This batch creates assets only; question-bank integration and final markschemes remain separate.
 For marking, use only the evidence visible in the final images.

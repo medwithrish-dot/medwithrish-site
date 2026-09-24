@@ -1,7 +1,7 @@
-import type { InterviewAttempt } from "@/app/phloemai/interview/_lib/interview-types";
+import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
 import type { ApplicantProfile } from "./applicant-profile";
-import { findInterviewStation, interviewStations } from "@/app/phloemai/interview/_data/interview-stations";
-import { findInterviewUniversity } from "@/app/phloemai/interview/_data/universities";
+import { findInterviewStation, interviewStations } from "@/app/medicforest/interview/_data/interview-stations";
+import { findInterviewUniversity } from "@/app/medicforest/interview/_data/universities";
 
 export const INTERVIEW_THEMES = ["motivation", "reflection", "ethics", "teamwork", "nhs", "hot-topics", "analysis"] as const;
 export type InterviewTheme = (typeof INTERVIEW_THEMES)[number];
@@ -171,7 +171,7 @@ function stationFor(theme: InterviewTheme, day: number) {
 }
 
 function stationHref(slug: string) {
-  return `/phloemai/interview/ai-interviews?station=${encodeURIComponent(slug)}`;
+  return `/medicforest/interview/ai-interviews?station=${encodeURIComponent(slug)}`;
 }
 
 /**
@@ -227,7 +227,7 @@ export function deriveDashboard(
       daysUntil,
       dateStatus: daysUntil === null ? "unset" : daysUntil < 0 ? "past" : daysUntil === 0 ? "today" : "upcoming",
       averageScore: average(scores), sampleSize: scores.length, completedCount: matching.length,
-      href: `/phloemai/interview/universities/${university.slug}`,
+      href: `/medicforest/interview/universities/${university.slug}`,
     });
     if (targets.length === 10) break;
   }
@@ -262,8 +262,8 @@ export function deriveDashboard(
   const lastReport = previousDays.find((attempt) => scoreOf(attempt) !== null);
   const guideId = `${today}:guide:${guideTheme}`;
   const reviewId = `${today}:review:${lastReport?.id ?? "personal-reflection"}`;
-  const guideTask: DashboardTask = { id: guideId, title: "Read an interview preparation guide", description: `Choose one idea to apply to ${THEME_LABELS[guideTheme].toLowerCase()} questions.`, kind: "guide", theme: guideTheme, stationSlug: null, href: "/phloemai/interview/guides", minutes: 5, completed: manualCompleted.has(guideId) };
-  const reviewTask: DashboardTask = { id: reviewId, title: lastReport ? "Reflect on your latest feedback" : "Reflect on one caring experience", description: lastReport ? "Choose one specific change for your next attempt." : "Write down what happened, what you learnt, and how it affected your understanding of care.", kind: "review", theme: lastReport ? interviewTheme(lastReport) ?? "reflection" : "reflection", stationSlug: null, href: lastReport ? `/phloemai/interview/reports/${lastReport.id}` : "/phloemai/interview/question-bank", minutes: 5, completed: manualCompleted.has(reviewId) };
+  const guideTask: DashboardTask = { id: guideId, title: "Read an interview preparation guide", description: `Choose one idea to apply to ${THEME_LABELS[guideTheme].toLowerCase()} questions.`, kind: "guide", theme: guideTheme, stationSlug: null, href: "/medicforest/interview/guides", minutes: 5, completed: manualCompleted.has(guideId) };
+  const reviewTask: DashboardTask = { id: reviewId, title: lastReport ? "Reflect on your latest feedback" : "Reflect on one caring experience", description: lastReport ? "Choose one specific change for your next attempt." : "Write down what happened, what you learnt, and how it affected your understanding of care.", kind: "review", theme: lastReport ? interviewTheme(lastReport) ?? "reflection" : "reflection", stationSlug: null, href: lastReport ? `/medicforest/interview/reports/${lastReport.id}` : "/medicforest/interview/question-bank", minutes: 5, completed: manualCompleted.has(reviewId) };
   const dailyStationCount = isPremium && weeklyTarget >= 8 ? 2 : 1;
   const todayPlan: DashboardTask[] = [
     ...(isPremium ? planThemes.slice(0, dailyStationCount).map((theme) => stationTask(theme)) : [stationTask("motivation", true)]),
@@ -282,12 +282,12 @@ export function deriveDashboard(
   let nextAction: DashboardAnalytics["nextAction"];
   if (active) {
     nextAction = active.status === "grading"
-      ? { title: "Check your interview feedback", description: `Your ${active.title} feedback is being prepared. Return to check its progress.`, href: `/phloemai/interview/ai-interviews?attempt=${active.id}`, reason: "resume" }
-      : { title: "Return to your interview", description: `Continue ${active.title} and review your saved answers.`, href: `/phloemai/interview/ai-interviews?attempt=${active.id}`, reason: "resume" };
+      ? { title: "Check your interview feedback", description: `Your ${active.title} feedback is being prepared. Return to check its progress.`, href: `/medicforest/interview/ai-interviews?attempt=${active.id}`, reason: "resume" }
+      : { title: "Return to your interview", description: `Continue ${active.title} and review your saved answers.`, href: `/medicforest/interview/ai-interviews?attempt=${active.id}`, reason: "resume" };
   } else if (!completed.length) {
     nextAction = { title: "Start with Why medicine?", description: "Get your first feedback, then choose one thing to improve.", href: stationHref("why-medicine"), reason: "first-station" };
   } else if (soon && isPremium) {
-    nextAction = { title: `Practise for ${soon.name}`, description: soon.daysUntil === 0 ? "Your interview date is today. Use a short, familiar rehearsal if it would help." : `Your interview is in ${soon.daysUntil} ${soon.daysUntil === 1 ? "day" : "days"}. Check its format and plan a focused rehearsal.`, href: `/phloemai/interview/ai-interviews?university=${soon.universitySlug}`, reason: "interview-soon" };
+    nextAction = { title: `Practise for ${soon.name}`, description: soon.daysUntil === 0 ? "Your interview date is today. Use a short, familiar rehearsal if it would help." : `Your interview is in ${soon.daysUntil} ${soon.daysUntil === 1 ? "day" : "days"}. Check its format and plan a focused rehearsal.`, href: `/medicforest/interview/ai-interviews?university=${soon.universitySlug}`, reason: "interview-soon" };
   } else if (!isPremium) {
     nextAction = { title: "Develop your Why medicine? answer", description: "Return to the free station and apply one idea from your feedback.", href: stationHref("why-medicine"), reason: "focus" };
   } else {
@@ -312,7 +312,7 @@ export function deriveDashboard(
     recentPerformance: scored.slice(0, 5).map((attempt) => ({
       id: attempt.id, title: attempt.title, score: scoreOf(attempt)!, completedAt: attempt.completedAt!,
       theme: interviewTheme(attempt), universitySlug: findInterviewUniversity(attempt.universitySlug)?.slug ?? null,
-      href: `/phloemai/interview/reports/${attempt.id}`,
+      href: `/medicforest/interview/reports/${attempt.id}`,
     })),
     weeklyInsight: { currentAverage, previousAverage, currentCount: currentScores.length, previousCount: previousScores.length, changePoints, message: weeklyMessage },
     latestFeedback: typeof latestImprovement === "string" ? latestImprovement : null,

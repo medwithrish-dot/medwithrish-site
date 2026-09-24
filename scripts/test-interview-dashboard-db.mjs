@@ -52,8 +52,8 @@ try {
     create function auth.uid() returns uuid language sql stable as $$
       select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid
     $$; grant execute on function auth.uid() to authenticated,anon;`);
-  const platformSql = await readFile(new URL("../supabase/phloemai_interview_platform.sql", import.meta.url), "utf8");
-  const dashboardSql = await readFile(new URL("../supabase/phloemai_interview_dashboard.sql", import.meta.url), "utf8");
+  const platformSql = await readFile(new URL("../supabase/medicforest_interview_platform.sql", import.meta.url), "utf8");
+  const dashboardSql = await readFile(new URL("../supabase/medicforest_interview_dashboard.sql", import.meta.url), "utf8");
   await db.exec(platformSql);
   for (const id of [owner, friend, newcomer, claimant, legacyUser]) await db.query("insert into auth.users(id) values($1)", [id]);
   const beforeMigration = randomUUID();

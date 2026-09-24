@@ -10,8 +10,8 @@ function loadData(relativePath) {
   new Function("module", "exports", javascript)(compiledModule, compiledModule.exports);
   return compiledModule.exports;
 }
-const { interviewGuides, searchInterviewGuides, guidesForInterviewQuestion } = loadData("app/phloemai/interview/_data/interviewGuides.ts");
-const { INTERVIEW_QUESTIONS, INTERVIEW_QUESTION_SUBCATEGORIES, INTERVIEW_QUESTION_CATEGORIES } = loadData("app/phloemai/interview/_data/interviewQuestionBank.ts");
+const { interviewGuides, searchInterviewGuides, guidesForInterviewQuestion } = loadData("app/medicforest/interview/_data/interviewGuides.ts");
+const { INTERVIEW_QUESTIONS, INTERVIEW_QUESTION_SUBCATEGORIES, INTERVIEW_QUESTION_CATEGORIES } = loadData("app/medicforest/interview/_data/interviewQuestionBank.ts");
 
 test("every question-bank subcategory and named topic has a guide", () => {
   for (const category of INTERVIEW_QUESTION_CATEGORIES) assert.ok(interviewGuides.some((guide) => guide.category === category), category);
@@ -43,7 +43,7 @@ test("guide public sources are official and public university data contains no p
   for (const guide of interviewGuides) {
     for (const source of guide.sources) assert.match(new URL(source.url).hostname, /^(www\.)?(gmc-uk\.org|nhs\.uk|england\.nhs\.uk|gov\.uk|nice\.org\.uk|who\.int|organdonation\.nhs\.uk)$/);
   }
-  const { interviewUniversities } = loadData("app/phloemai/interview/_data/universities.ts");
+  const { interviewUniversities } = loadData("app/medicforest/interview/_data/universities.ts");
   for (const university of interviewUniversities) {
     assert.doesNotMatch(university.timingNote, /theukcatpeople|medify|medentry/i);
     assert.doesNotMatch(university.sourceUrl, /theukcatpeople|medify|medentry/i);

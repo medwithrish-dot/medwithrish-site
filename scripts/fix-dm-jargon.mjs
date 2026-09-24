@@ -16,7 +16,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const filePath = path.resolve(
   __dirname,
-  "../app/phloemai/ucat/_lib/ucatDmCuratedInputs.ts"
+  "../app/medicforest/ucat/_lib/ucatDmCuratedInputs.ts"
 );
 
 

@@ -7,13 +7,13 @@ const rootDir = path.resolve(scriptDir, "..");
 const sourcePath = path.join(
   rootDir,
   "public",
-  "phloemai",
+  "medicforest",
   "interview-question-markscheme-rubrics.txt"
 );
 const outputPath = path.join(
   rootDir,
   "public",
-  "phloemai",
+  "medicforest",
   "interview-question-markscheme-rubrics.pdf"
 );
 

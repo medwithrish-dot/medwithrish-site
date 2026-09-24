@@ -1,7 +1,7 @@
-PHLOEMAI INTERVIEW STIMULI 06–10 — EXPANDED PROMPTS AND REVIEW
+MEDICFOREST INTERVIEW STIMULI 06–10 — EXPANDED PROMPTS AND REVIEW
 
 Generated with the built-in imagegen tool. These prompts supersede original prompts 06–10.
-Final PNGs: public/phloemai/interview-stimuli/.
+Final PNGs: public/medicforest/interview-stimuli/.
 All studies, data and organisations are fictional. These are candidate-facing stimuli, not real clinical advice.
 This batch adds five assets; it does not connect them to the question bank or create final markschemes.
 

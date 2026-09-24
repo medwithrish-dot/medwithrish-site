@@ -70,11 +70,11 @@ const navItems: {
       { label: "Notes", href: "https://payhip.com/Medwithrish" },
       { label: "Privacy Policy", href: "/privacy-policy" },
       { label: "Terms and Conditions", href: "/terms-and-conditions" },
-      { label: "PhloemAI AI/Data Disclaimer", href: "/phloemai-disclaimer" },
+      { label: "MedicForest AI/Data Disclaimer", href: "/medicforest-disclaimer" },
     ],
   },
 
-  { label: "PhloemAI", special: true, locked: true, badge: "Stay tuned!" },
+  { label: "MedicForest", href: "/medicforest", special: true },
   { label: "Contact", href: "/contact" },
 ];
 

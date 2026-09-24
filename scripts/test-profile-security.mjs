@@ -18,8 +18,8 @@ test("standalone account setup protects plans and credits and reruns preserve us
     // PGlite provides gen_random_uuid in core; the pgcrypto extension is unnecessary here.
     const readSql = async (file) => (await readFile(new URL(`../supabase/${file}`, import.meta.url), "utf8"))
       .replace(/create extension if not exists "pgcrypto";/g, "");
-    const base = await readSql("phloemai_setup.sql");
-    const practice = await readSql("phloemai_practice_setup.sql");
+    const base = await readSql("medicforest_setup.sql");
+    const practice = await readSql("medicforest_practice_setup.sql");
     await db.exec(base);
     await db.exec("insert into auth.users(id,email) values ('11111111-1111-4111-8111-111111111111','student@example.test')");
     await db.exec("set role authenticated");

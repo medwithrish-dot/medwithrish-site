@@ -1,9 +1,9 @@
-PHLOEMAI INTERVIEW STIMULI 01–05 — EXPANDED PROMPTS
+MEDICFOREST INTERVIEW STIMULI 01–05 — EXPANDED PROMPTS
 
 Generated using the built-in image generation tool, then visually checked.
 These expanded versions supersede prompts 01–05 in interview-stimulus-image-prompts.txt.
 All examples and datasets are fictional; candidate-facing images contain no answers.
-Final PNGs are in public/phloemai/interview-stimuli/.
+Final PNGs are in public/medicforest/interview-stimuli/.
 The original simple drafts are not the final deliverables.
 
 ============================================================

@@ -1,7 +1,7 @@
 // A fixed date keeps permanent curriculum progress separate from daily dashboard tasks.
 // Reuses the owner-protected table; IDs remain stable when the learner returns later.
 export const PATHWAY_STORAGE_DATE = "2000-01-01";
-export const PATHWAY_GUEST_KEY = "phloem:interview-pathway:v1:guest";
+export const PATHWAY_GUEST_KEY = "medicforest:interview-pathway:v1:guest";
 
 export const INTERVIEW_PATHWAY = [
   {

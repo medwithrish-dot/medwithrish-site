@@ -24,9 +24,9 @@ const load = loader();
 const { INTERVIEW_PATHWAY, PATHWAY_TASK_IDS, PATHWAY_STORAGE_DATE, pathwayResourceIds, pathwayTaskId, sanitisePathwayProgress, derivePathwayProgress, changePathwayTask, changePathwayStation } = load(resolve(root, "utils/interviews/pathway.ts"));
 
 test("the seven-stage curriculum resolves real guide, question and mock-station links", () => {
-  const { getInterviewPathwayStations } = load(resolve(root, "app/phloemai/interview/_data/interview-pathway.ts"));
-  const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/phloemai/interview/_data/interviewQuestionBank.ts"));
-  const { interviewStations } = load(resolve(root, "app/phloemai/interview/_data/interview-stations.ts"));
+  const { getInterviewPathwayStations } = load(resolve(root, "app/medicforest/interview/_data/interview-pathway.ts"));
+  const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/medicforest/interview/_data/interviewQuestionBank.ts"));
+  const { interviewStations } = load(resolve(root, "app/medicforest/interview/_data/interview-stations.ts"));
   const stations = getInterviewPathwayStations();
   assert.equal(stations.length, 7);
   assert.equal(new Set(PATHWAY_TASK_IDS).size, PATHWAY_TASK_IDS.length);

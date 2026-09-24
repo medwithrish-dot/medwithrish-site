@@ -5,14 +5,14 @@ import Navbar from "@/components/Navbar";
 export const metadata: Metadata = {
   alternates: { canonical: "/privacy-policy" },
   title: "Privacy Policy | MedWithRish",
-  description: "How MedWithRish and PhloemAI collect, use and protect personal data.",
+  description: "How MedWithRish and MedicForest collect, use and protect personal data.",
 };
 
 const sections = [
   {
     title: "Who we are",
     body: [
-      "MedWithRish provides medical and dental admissions resources, tutoring and PhloemAI UCAT Tutor. For privacy questions, contact medwithrish@gmail.com.",
+      "MedWithRish provides medical and dental admissions resources, tutoring and MedicForest UCAT Tutor. For privacy questions, contact medwithrish@gmail.com.",
       "This policy explains how we use personal data under UK data protection law, including the UK GDPR and Data Protection Act 2018.",
     ],
   },
@@ -22,8 +22,7 @@ const sections = [
       "Account data: name, email address, login details and subscription status.",
       "Contact and booking data: messages, enquiries, session details and customer support records.",
       "Payment data: Stripe customer and subscription identifiers. Card details are handled by Stripe and are not stored by MedWithRish.",
-      "PhloemAI practice data: answers, correct/incorrect status, section, question type, timings, visits, flags, answer switches, calculator usage, keyboard shortcuts, navigation actions and review activity.",
-      "Optional attention tracking data: mouse or experimental eye-tracking focus zones, region switches and time spent around broad parts of the question interface. Webcam video is not stored by MedWithRish.",
+      "MedicForest practice data: answers, correct/incorrect status, section, question type, timings, visits, flags, answer switches, calculator usage, keyboard shortcuts, navigation actions and review activity.",
       "Analytics and technical data: pages visited, approximate device/browser information, errors and security logs.",
     ],
   },
@@ -48,24 +47,22 @@ const sections = [
     body: [
       "Contract: to provide the service you request, including account access, practice tools and paid subscriptions.",
       "Legitimate interests: to secure, maintain and improve the service, provided those interests do not override your rights.",
-      "Consent: for optional features where consent is required, such as experimental webcam eye tracking or marketing communications if offered.",
+      "Consent: for optional features where consent is required, such as marketing communications if offered.",
       "Legal obligation: where we must keep records or respond to lawful requests.",
     ],
   },
   {
-    title: "AI, tracking and sensitive information",
+    title: "AI and sensitive information",
     body: [
-      "PhloemAI is for educational support. AI feedback and attention estimates may be incomplete or inaccurate and should not be treated as guaranteed exam, admissions, medical, legal or financial advice.",
+      "MedicForest is for educational support. AI feedback may be incomplete or inaccurate and should not be treated as guaranteed exam, admissions, medical, legal or financial advice.",
       "Do not enter health information, special category data, third-party personal data or confidential university/application information unless clearly needed for a specific service.",
-      "Mouse tracking and eye tracking are optional. Eye tracking uses your browser camera permission and processes a live camera stream in the browser to estimate focus zones. We store only derived practice telemetry, not webcam video.",
-      "Experimental eye tracking may load browser-side model files from third-party content delivery networks before it can run.",
     ],
   },
   {
     title: "Children and students",
     body: [
       "Many UCAT users are students. Privacy information is written in plain language for students and parents/guardians.",
-      "If you are under 18, use paid services and PhloemAI accounts with parent or guardian permission. If a parent or guardian believes a child has provided personal data without appropriate permission, contact medwithrish@gmail.com.",
+      "If you are under 18, use paid services and MedicForest accounts with parent or guardian permission. If a parent or guardian believes a child has provided personal data without appropriate permission, contact medwithrish@gmail.com.",
     ],
   },
   {
@@ -138,8 +135,8 @@ export default function PrivacyPolicyPage() {
           <Link href="/terms-and-conditions" className="text-blue-600 hover:text-blue-700">
             Terms and Conditions
           </Link>
-          <Link href="/phloemai-disclaimer" className="text-blue-600 hover:text-blue-700">
-            PhloemAI disclaimer
+          <Link href="/medicforest-disclaimer" className="text-blue-600 hover:text-blue-700">
+            MedicForest disclaimer
           </Link>
           <a href="mailto:medwithrish@gmail.com" className="text-blue-600 hover:text-blue-700">
             medwithrish@gmail.com

@@ -6,12 +6,12 @@ import { runInNewContext } from "node:vm";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
-const source = readFileSync(new URL("../app/phloemai/interview/_lib/useInterviewSpeech.ts", import.meta.url), "utf8");
+const source = readFileSync(new URL("../app/medicforest/interview/_lib/useInterviewSpeech.ts", import.meta.url), "utf8");
 const compiled = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
 }).outputText;
 const deliveryModule = { exports: {} };
-new Function("module", "exports", ts.transpileModule(readFileSync(new URL("../app/phloemai/interview/_lib/speech-delivery.ts", import.meta.url), "utf8"), {
+new Function("module", "exports", ts.transpileModule(readFileSync(new URL("../app/medicforest/interview/_lib/speech-delivery.ts", import.meta.url), "utf8"), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 }).outputText)(deliveryModule, deliveryModule.exports);
 const { createSpeechBoundaryTracker, normalizeSpeechTranscript, getTranscriptHints, getSpeechDelivery } = deliveryModule.exports;
@@ -329,7 +329,7 @@ function activityHarness({ pending = false, suspended = false } = {}) {
     async resume() {}
     async close() { this.state = "closed"; closedContexts++; }
   }
-  runInNewContext(ts.transpileModule(readFileSync(new URL("../app/phloemai/interview/_lib/speech-delivery.ts", import.meta.url), "utf8"), {
+  runInNewContext(ts.transpileModule(readFileSync(new URL("../app/medicforest/interview/_lib/speech-delivery.ts", import.meta.url), "utf8"), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
   }).outputText, {
     module: activityModule, exports: activityModule.exports, window: { AudioContext },

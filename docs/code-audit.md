@@ -1,6 +1,6 @@
 # Code audit: 6 September 2026
 
-Reviewed the website components and routes, PhloemAI account and UCAT workflows,
+Reviewed the website components and routes, MedicForest account and UCAT workflows,
 interview platform, payment/API handlers, SQL setup, scripts and dependency
 configuration. Existing generated question content was checked with the question
 bank audit rather than rewritten.

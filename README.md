@@ -1,7 +1,7 @@
 # MedWithRish
 
 Next.js App Router website for admissions resources, personal statement reviews,
-PhloemAI UCAT practice and interview preparation.
+MedicForest UCAT practice and interview preparation.
 
 ## Local development
 
@@ -27,10 +27,10 @@ Optional integrations:
 - Personal statement notifications: `RESEND_API_KEY`.
 - UCAT feedback: `ANTHROPIC_API_KEY`.
 - Interview feedback: `GEMINI_API_KEY`; optionally `INTERVIEW_GEMINI_MODEL`.
-- Preview access: `PHLOEMAI_PREVIEW_PASSWORD` and `PHLOEMAI_PREVIEW_TOKEN_SECRET`.
+- Preview access: `MEDICFOREST_PREVIEW_PASSWORD` and `MEDICFOREST_PREVIEW_TOKEN_SECRET`.
 
 Database setup and feature configuration are documented in
-[`supabase/phloemai_settings.md`](supabase/phloemai_settings.md) and
+[`supabase/medicforest_settings.md`](supabase/medicforest_settings.md) and
 [`docs/interview-platform-setup.md`](docs/interview-platform-setup.md).
 Changing a SQL file does not apply it to a deployed Supabase database.
 

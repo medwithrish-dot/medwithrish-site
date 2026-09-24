@@ -1,7 +1,7 @@
 import "server-only";
 import { createClient } from "@/utils/supabase/server";
 import { toInterviewAttempt } from "./server";
-import type { InterviewAttempt } from "@/app/phloemai/interview/_lib/interview-types";
+import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
 
 export async function interviewHistory(): Promise<{ attempts: InterviewAttempt[]; message: string | null; signedIn: boolean }> {
   try {

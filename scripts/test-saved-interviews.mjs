@@ -5,7 +5,7 @@ import { test } from "node:test";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
-const source = readFileSync(new URL("../app/phloemai/interview/_lib/saved-interviews.ts", import.meta.url), "utf8");
+const source = readFileSync(new URL("../app/medicforest/interview/_lib/saved-interviews.ts", import.meta.url), "utf8");
 const compiledModule = { exports: {} };
 new Function("module", "exports", ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2021 },
@@ -61,10 +61,10 @@ test("only an unexpired active attempt opens the interview room", () => {
   assert.equal(canResumeSavedInterview(active, deadline - 1), true);
   assert.equal(canResumeSavedInterview(active, deadline), false);
   assert.equal(canResumeSavedInterview(active, deadline + 1), false);
-  assert.equal(savedInterviewHref(attempt({ id: "active", canResume: true })), "/phloemai/interview/ai-interviews?attempt=active");
+  assert.equal(savedInterviewHref(attempt({ id: "active", canResume: true })), "/medicforest/interview/ai-interviews?attempt=active");
   for (const status of ["submitted", "grading", "completed", "failed"]) {
     assert.equal(canResumeSavedInterview({ ...active, status }, deadline - 1), false);
-    assert.equal(savedInterviewHref(attempt({ id: status, status })), `/phloemai/interview/reports/${status}`);
+    assert.equal(savedInterviewHref(attempt({ id: status, status })), `/medicforest/interview/reports/${status}`);
   }
-  assert.equal(savedInterviewHref(attempt({ id: "expired", status: "in_progress" })), "/phloemai/interview/reports/expired");
+  assert.equal(savedInterviewHref(attempt({ id: "expired", status: "in_progress" })), "/medicforest/interview/reports/expired");
 });

@@ -1,4 +1,4 @@
-// Keep the SQL equivalent in phloemai_interview_name_moderation.sql in sync.
+// Keep the SQL equivalent in medicforest_interview_name_moderation.sql in sync.
 // The database tests run the same real-name/evasion corpus through both versions.
 const LOOKALIKES = "01345789@$!|аɑαеεёіιıоοрρсϲуυхχѕτтνκкς";
 const REPLACEMENTS = "oieastbgasiiaaaeeeiiiooppccyuxxsttvkkc";

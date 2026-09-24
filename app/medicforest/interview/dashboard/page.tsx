@@ -1,0 +1,30 @@
+import type { Metadata } from "next";
+import { getInterviewDashboardData } from "@/utils/interviews/dashboard-data";
+import { getInterviewPathwayData } from "@/utils/interviews/pathway-data";
+import { InterviewDashboard } from "../_components/InterviewDashboard";
+import { InterviewShell } from "../_components/InterviewShell";
+
+export const metadata: Metadata = {
+  title: "Med Interviews | MedicForest",
+  description:
+    "Your medicine interview preparation: university dates, a personal practice plan, saved feedback and progress.",
+  alternates: { canonical: "/medicforest/interview/dashboard" },
+};
+
+export default async function Page() {
+  const [data, pathway] = await Promise.all([
+    getInterviewDashboardData(),
+    getInterviewPathwayData(),
+  ]);
+
+  return (
+    <InterviewShell
+      title="Make your next answer count."
+      subtitle="Your universities, your practice and your next step — brought together in one place."
+      activeLabel="Dashboard"
+      eyebrow="Your interview preparation"
+    >
+      <InterviewDashboard data={data} pathway={pathway} />
+    </InterviewShell>
+  );
+}

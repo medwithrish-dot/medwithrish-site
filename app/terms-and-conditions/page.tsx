@@ -5,28 +5,28 @@ import Navbar from "@/components/Navbar";
 export const metadata: Metadata = {
   alternates: { canonical: "/terms-and-conditions" },
   title: "Terms and Conditions | MedWithRish",
-  description: "Terms for using MedWithRish and PhloemAI UCAT Tutor.",
+  description: "Terms for using MedWithRish and MedicForest UCAT Tutor.",
 };
 
 const terms = [
   {
     title: "1. About these terms",
     body: [
-      "These terms apply when you use MedWithRish websites, resources, tutoring services, downloads and PhloemAI UCAT Tutor.",
+      "These terms apply when you use MedWithRish websites, resources, tutoring services, downloads and MedicForest UCAT Tutor.",
       "By creating an account, booking a service or buying a subscription, you agree to these terms. If you are under 18, use the service with permission from a parent or guardian.",
     ],
   },
   {
     title: "2. Educational support only",
     body: [
-      "MedWithRish and PhloemAI provide educational and admissions preparation support. They do not guarantee UCAT scores, interview outcomes, offers, admission to any university or any professional outcome.",
-      "AI feedback, diagnostics, attention tracking and progress estimates are learning tools. They may be incomplete or inaccurate and should be checked against your own judgement and official guidance.",
+      "MedWithRish and MedicForest provide educational and admissions preparation support. They do not guarantee UCAT scores, interview outcomes, offers, admission to any university or any professional outcome.",
+      "AI feedback, diagnostics and progress estimates are learning tools. They may be incomplete or inaccurate and should be checked against your own judgement and official guidance.",
     ],
   },
   {
     title: "3. Independent service",
     body: [
-      "MedWithRish and PhloemAI are independent and are not endorsed by, affiliated with or approved by the UCAT Consortium, Pearson VUE, universities, medical schools, dental schools or NHS organisations unless explicitly stated.",
+      "MedWithRish and MedicForest are independent and are not endorsed by, affiliated with or approved by the UCAT Consortium, Pearson VUE, universities, medical schools, dental schools or NHS organisations unless explicitly stated.",
       "UCAT rules, dates, test formats and admissions policies can change. You should check official sources before relying on time-sensitive information.",
     ],
   },
@@ -41,11 +41,11 @@ const terms = [
   {
     title: "5. Paid subscriptions and digital content",
     body: [
-      "Premium PhloemAI features are sold as digital services. Prices, billing interval and taxes are shown at checkout before you pay.",
+      "Premium MedicForest features are sold as digital services. Prices, billing interval and taxes are shown at checkout before you pay.",
       "Payments and subscriptions are handled by Stripe. You can manage or cancel your subscription through the billing portal where available, or by contacting medwithrish@gmail.com.",
       "Where premium access starts immediately after checkout, you agree that the digital service begins before the end of any cancellation period. Your statutory rights are not affected.",
       "Refunds are considered case by case and do not affect any rights you have under UK consumer law.",
-      "If you want to use a cancellation notice, email medwithrish@gmail.com with: I hereby give notice that I cancel my contract for PhloemAI Premium, your name, account email, order date and today's date.",
+      "If you want to use a cancellation notice, email medwithrish@gmail.com with: I hereby give notice that I cancel my contract for MedicForest Premium, your name, account email, order date and today's date.",
     ],
   },
   {
@@ -58,7 +58,7 @@ const terms = [
   {
     title: "7. Data and privacy",
     body: [
-      "Use of personal data is explained in the Privacy Policy. PhloemAI also collects practice telemetry such as answer choices, timings, calculator usage and optional attention tracking data to provide feedback.",
+      "Use of personal data is explained in the Privacy Policy. MedicForest also collects practice telemetry such as answer choices, timings and calculator usage to provide feedback.",
       "Do not enter sensitive medical information, confidential third-party data or other information that is not needed for the service.",
     ],
   },
@@ -106,7 +106,7 @@ export default function TermsAndConditionsPage() {
           </h1>
           <p className="mt-3 text-sm font-semibold leading-6 text-slate-600">
             Last updated: 7 May 2026. Please read these terms before creating an
-            account, buying premium access or using PhloemAI.
+            account, buying premium access or using MedicForest.
           </p>
         </header>
 
@@ -130,8 +130,8 @@ export default function TermsAndConditionsPage() {
           <Link href="/privacy-policy" className="text-blue-600 hover:text-blue-700">
             Privacy Policy
           </Link>
-          <Link href="/phloemai-disclaimer" className="text-blue-600 hover:text-blue-700">
-            PhloemAI disclaimer
+          <Link href="/medicforest-disclaimer" className="text-blue-600 hover:text-blue-700">
+            MedicForest disclaimer
           </Link>
           <a href="mailto:medwithrish@gmail.com" className="text-blue-600 hover:text-blue-700">
             medwithrish@gmail.com

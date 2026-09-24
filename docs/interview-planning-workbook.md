@@ -1,4 +1,4 @@
-# PhloemAI interview planning workbook
+# MedicForest interview planning workbook
 
 ## 01 / Your launch brief
 
@@ -514,8 +514,8 @@ An initial test could compare **£9–£15 for a fixed practice pack** with **£
 ### Local implementation reviewed
 
 - `utils/interviews/gemini.ts`: text-model defaults, generation and feedback context, output bounds.
-- `app/phloemai/interview/_lib/station-flow.ts`: owner-selected probing stations.
-- `app/phloemai/interview/_lib/useInterviewSpeech.ts`: browser recognition and read-aloud.
+- `app/medicforest/interview/_lib/station-flow.ts`: owner-selected probing stations.
+- `app/medicforest/interview/_lib/useInterviewSpeech.ts`: browser recognition and read-aloud.
 - `app/api/interviews/follow-up/route.ts`: persisted, bounded follow-up generation.
 - `docs/interview-ai-setup.md`: personal configuration and operational constraints.
 - `docs/ai-cost-and-scaling-plan.md`: earlier cost model; use freshly checked rates here for this example.

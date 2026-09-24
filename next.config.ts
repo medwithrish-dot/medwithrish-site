@@ -14,7 +14,6 @@ const legacyUcatRoutes = [
   "question-bank",
   "report",
   "skills-trainers",
-  "ucat-demo",
 ];
 
 const nextConfig: NextConfig = {
@@ -22,27 +21,25 @@ const nextConfig: NextConfig = {
     root: projectRoot,
   },
   async redirects() {
-    const legacyPhloemHosts = ["phloemai.com", "www.phloemai.com"];
-
     return [
       ...legacyUcatRoutes.map((route) => ({
-        source: `/phloemai/${route}/:path*`,
-        destination: `/phloemai/ucat/${route}/:path*`,
+        source: `/medicforest/${route}/:path*`,
+        destination: `/medicforest/ucat/${route}/:path*`,
         permanent: true,
       })),
       {
-        source: "/phloemai/interview",
-        destination: "/phloemai/interview/dashboard",
+        source: "/medicforest/interview",
+        destination: "/medicforest/interview/dashboard",
         permanent: true,
       },
       {
-        source: "/phloemai/interviews",
-        destination: "/phloemai/interview/dashboard",
+        source: "/medicforest/interviews",
+        destination: "/medicforest/interview/dashboard",
         permanent: true,
       },
       {
-        source: "/phloemai/interviews/:path*",
-        destination: "/phloemai/interview/:path*",
+        source: "/medicforest/interviews/:path*",
+        destination: "/medicforest/interview/:path*",
         permanent: true,
       },
       {
@@ -57,26 +54,6 @@ const nextConfig: NextConfig = {
         destination: "https://medicforest.com/:path*",
         permanent: true,
       },
-      ...legacyPhloemHosts.flatMap((host) => [
-        {
-          source: "/",
-          has: [{ type: "host" as const, value: host }],
-          destination: "https://medicforest.com",
-          permanent: true,
-        },
-        {
-          source: "/phloemai/:path*",
-          has: [{ type: "host" as const, value: host }],
-          destination: "https://medicforest.com/phloemai/:path*",
-          permanent: true,
-        },
-        {
-          source: "/:path*",
-          has: [{ type: "host" as const, value: host }],
-          destination: "https://medicforest.com/phloemai/:path*",
-          permanent: true,
-        },
-      ]),
     ];
   },
   async rewrites() {
@@ -85,7 +62,7 @@ const nextConfig: NextConfig = {
         {
           source: "/",
           has: [{ type: "host", value: "medicforest.com" }],
-          destination: "/phloemai",
+          destination: "/medicforest",
         },
       ],
       afterFiles: [],

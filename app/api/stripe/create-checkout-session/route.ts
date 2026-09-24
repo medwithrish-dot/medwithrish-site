@@ -172,7 +172,7 @@ export async function POST(request: Request) {
       if (profile.stripe_customer_id) {
         const portalSession = await stripe.billingPortal.sessions.create({
           customer: profile.stripe_customer_id,
-          return_url: `${siteUrl}/phloemai/account`,
+          return_url: `${siteUrl}/medicforest/account`,
         });
 
         return Response.json({ url: portalSession.url });
@@ -196,7 +196,7 @@ export async function POST(request: Request) {
       if (customerIdForPortal) {
         const portalSession = await stripe.billingPortal.sessions.create({
           customer: customerIdForPortal,
-          return_url: `${siteUrl}/phloemai/account`,
+          return_url: `${siteUrl}/medicforest/account`,
         });
 
         return Response.json({ url: portalSession.url });
@@ -253,8 +253,8 @@ export async function POST(request: Request) {
           message: `I agree to the [Terms and Conditions](${siteUrl}/terms-and-conditions) and confirm I have read the [Privacy Policy](${siteUrl}/privacy-policy).`,
         },
       },
-      success_url: `${siteUrl}/phloemai/ucat/dashboard?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/phloemai/ucat/dashboard?checkout=cancelled`,
+      success_url: `${siteUrl}/medicforest/ucat/dashboard?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/medicforest/ucat/dashboard?checkout=cancelled`,
       metadata: {
         supabase_user_id: user.id,
       },

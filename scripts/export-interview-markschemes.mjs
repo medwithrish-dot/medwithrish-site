@@ -17,9 +17,9 @@ function load(file) {
   new Function("require", "module", "exports", code)(name => load(resolve(dirname(filename), name)), loadedModule, loadedModule.exports);
   return loadedModule.exports;
 }
-const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/phloemai/interview/_data/interviewQuestionBank"));
-const { getQuestionMarkScheme } = load(resolve(root, "app/phloemai/interview/_lib/question-review"));
-const { getQuestionStimulus } = load(resolve(root, "app/phloemai/interview/_data/interview-stimuli"));
+const { INTERVIEW_QUESTIONS } = load(resolve(root, "app/medicforest/interview/_data/interviewQuestionBank"));
+const { getQuestionMarkScheme } = load(resolve(root, "app/medicforest/interview/_lib/question-review"));
+const { getQuestionStimulus } = load(resolve(root, "app/medicforest/interview/_data/interview-stimuli"));
 const escape = value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const note = "Practice guidance, not official admissions criteria. Credit equivalent valid reasoning. Start, Middle and End are suggested structures, not a required script. Mistakes are pitfalls, not positive checklist points. Visual datasets are fictional. Current legal, policy and clinical details should be checked against relevant official guidance.";
 const sections = INTERVIEW_QUESTIONS.map(question => {
@@ -30,15 +30,15 @@ const sections = INTERVIEW_QUESTIONS.map(question => {
     html: `<article><p class="id">${escape(question.id)} · ${escape(question.category)}</p><h2>${escape(question.text)}</h2>${stimulus ? `<p class="source"><b>Image:</b> ${escape(stimulus.title)}<br><b>Source facts:</b> ${escape(stimulus.description)}</p>` : ""}${groups.map(group => `<section><h3>${group.title === "Mistakes" ? "Mistakes to avoid" : group.title}</h3><ul>${group.items.map(item => `<li>${escape(item)}</li>`).join("")}</ul></section>`).join("")}</article>`,
   };
 });
-const output = resolve(root, "public/phloemai/interview-question-markscheme-rubrics");
-writeFileSync(`${output}.txt`, `PHLOEMAI INTERVIEW MARKSCHEMES\n${INTERVIEW_QUESTIONS.length} question-specific markschemes\n\n${note}\n\n${sections.map(section => section.text).join("\n\n------------------------------------------------------------\n\n")}\n`);
+const output = resolve(root, "public/medicforest/interview-question-markscheme-rubrics");
+writeFileSync(`${output}.txt`, `MEDICFOREST INTERVIEW MARKSCHEMES\n${INTERVIEW_QUESTIONS.length} question-specific markschemes\n\n${note}\n\n${sections.map(section => section.text).join("\n\n------------------------------------------------------------\n\n")}\n`);
 if (process.argv.includes("--pdf")) {
   const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href : "playwright");
   const browser = await chromium.launch({ headless: true });
   try {
     const page = await browser.newPage();
-    await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>PhloemAI interview markschemes</title><style>@page { size: A4; margin: 16mm; } body { font: 10pt/1.4 Arial,sans-serif; color: #122e3c; } h1 { font-size: 24pt; } h2 { font-size: 14pt; } h3 { font-size: 10pt; color: #08787b; margin: 10px 0 4px; } ul { margin: 0; padding-left: 18px; } article { break-before: page; } .id { font-size: 8pt; color: #526b72; } .source { font-size: 9pt; padding: 10px; background: #f2f7f7; } section { break-inside: avoid; }</style></head><body><h1>Interview markschemes</h1><p>${INTERVIEW_QUESTIONS.length} individually authored question markschemes</p><p>${note}</p><p>Adapted from the owner's worked examples and the final 27 station images.</p>${sections.map(section => section.html).join("")}</body></html>`);
-    await page.pdf({ path: `${output}.pdf`, format: "A4", printBackground: true, displayHeaderFooter: true, headerTemplate: "<span></span>", footerTemplate: '<div style="width:100%;text-align:center;font-size:8px;color:#526b72">PhloemAI · <span class="pageNumber"></span></div>' });
+    await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>MedicForest interview markschemes</title><style>@page { size: A4; margin: 16mm; } body { font: 10pt/1.4 Arial,sans-serif; color: #122e3c; } h1 { font-size: 24pt; } h2 { font-size: 14pt; } h3 { font-size: 10pt; color: #08787b; margin: 10px 0 4px; } ul { margin: 0; padding-left: 18px; } article { break-before: page; } .id { font-size: 8pt; color: #526b72; } .source { font-size: 9pt; padding: 10px; background: #f2f7f7; } section { break-inside: avoid; }</style></head><body><h1>Interview markschemes</h1><p>${INTERVIEW_QUESTIONS.length} individually authored question markschemes</p><p>${note}</p><p>Adapted from the owner's worked examples and the final 27 station images.</p>${sections.map(section => section.html).join("")}</body></html>`);
+    await page.pdf({ path: `${output}.pdf`, format: "A4", printBackground: true, displayHeaderFooter: true, headerTemplate: "<span></span>", footerTemplate: '<div style="width:100%;text-align:center;font-size:8px;color:#526b72">MedicForest · <span class="pageNumber"></span></div>' });
   } finally { await browser.close(); }
 }
 console.log(`Exported ${INTERVIEW_QUESTIONS.length} question markschemes${process.argv.includes("--pdf") ? " (text and PDF)" : " (text)"}.`);

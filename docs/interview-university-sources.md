@@ -1,6 +1,6 @@
 # Interview university catalogue: sources and timing decisions
 
-Checked 6 September 2026. The runnable catalogue lives in `app/phloemai/interview/_data/universities.ts` and covers the user's 42 named universities and awarding combinations. It is not intended to assert that the list contains every current UK admissions route. Admissions details can change between cycles and between home, international and graduate-entry routes; the candidate's invitation takes precedence.
+Checked 6 September 2026. The runnable catalogue lives in `app/medicforest/interview/_data/universities.ts` and covers the user's 42 named universities and awarding combinations. It is not intended to assert that the list contains every current UK admissions route. Admissions details can change between cycles and between home, international and graduate-entry routes; the candidate's invitation takes precedence.
 
 TheUKCATPeople was the requested starting source. Its current school profiles were opened and their interview sections reviewed. Several pages contain older examples beneath a newer format summary; the catalogue uses the current summary, and explicitly labels unconfirmed figures. We did not copy the site's question bank. Prompts in this platform are original practice material, not claims about actual university questions.
 

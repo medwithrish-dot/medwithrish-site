@@ -1,5 +1,5 @@
-import { followUpsEnabled } from "@/app/phloemai/interview/_lib/station-flow";
-import { findInterviewStation } from "@/app/phloemai/interview/_data/interview-stations";
+import { followUpsEnabled } from "@/app/medicforest/interview/_lib/station-flow";
+import { findInterviewStation } from "@/app/medicforest/interview/_data/interview-stations";
 import { generateInterviewFollowUp, interviewAiConfigured } from "@/utils/interviews/gemini";
 import { existingFollowUp, followUpClaimMask, practiceFollowUp } from "@/utils/interviews/follow-up";
 import { questionEligible, readApplicant } from "@/utils/interviews/applicant-profile";

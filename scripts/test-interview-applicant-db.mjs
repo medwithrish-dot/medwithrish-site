@@ -17,11 +17,11 @@ test("applicant and daily-activity migration preserves history, isolates account
         select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid
       $$; grant execute on function auth.uid() to authenticated,anon;`);
     // PGlite has built-in gen_random_uuid; it does not ship pgcrypto's extension manifest.
-    for (const name of ["phloemai_interview_platform", "phloemai_interview_question_progress", "phloemai_interview_dashboard"]) await db.exec((await sql(name)).replace('create extension if not exists "pgcrypto";', ""));
+    for (const name of ["medicforest_interview_platform", "medicforest_interview_question_progress", "medicforest_interview_dashboard"]) await db.exec((await sql(name)).replace('create extension if not exists "pgcrypto";', ""));
     for (const id of [owner, other]) await db.query("insert into auth.users(id) values($1)", [id]);
     await db.query("insert into interview_preparation_profiles(user_id,experience,targets) values($1,'starting',$2::jsonb)", [owner, JSON.stringify([{ universitySlug: "manchester", interviewDate: "2026-12-10" }])]);
     await db.query("insert into interview_question_progress(user_id,question_id,status,completed_at) values($1,'first','completed','2026-09-01T23:30:00Z')", [owner]);
-    const migration = await sql("phloemai_interview_applicant_activity");
+    const migration = await sql("medicforest_interview_applicant_activity");
     await db.exec(migration);
     await db.exec(migration);
     const profile = (await db.query("select targets,applicant from interview_preparation_profiles where user_id=$1", [owner])).rows[0];

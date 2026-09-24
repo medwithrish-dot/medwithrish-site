@@ -1,30 +1,31 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import {
-  isValidPhloemPreviewToken,
-  PHLOEMAI_PREVIEW_COOKIE,
-} from "@/utils/phloemai/preview-access";
+  isValidMedicForestPreviewToken,
+  MEDICFOREST_PREVIEW_COOKIE,
+} from "@/utils/medicforest/preview-access";
 
-const PHLOEMAI_PUBLIC_PATHS = new Set([
-  "/phloemai",
-  "/phloemai/ucat",
-  "/phloemai/access",
+const MEDICFOREST_PUBLIC_PATHS = new Set([
+  "/medicforest",
+  "/medicforest/about",
+  "/medicforest/ucat",
+  "/medicforest/access",
 ]);
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  if (pathname.startsWith("/phloemai/") && !PHLOEMAI_PUBLIC_PATHS.has(pathname)) {
-    const previewToken = request.cookies.get(PHLOEMAI_PREVIEW_COOKIE)?.value;
-    const hasPreviewAccess = await isValidPhloemPreviewToken(previewToken);
+  if (pathname.startsWith("/medicforest/") && !MEDICFOREST_PUBLIC_PATHS.has(pathname)) {
+    const previewToken = request.cookies.get(MEDICFOREST_PREVIEW_COOKIE)?.value;
+    const hasPreviewAccess = await isValidMedicForestPreviewToken(previewToken);
 
     if (!hasPreviewAccess) {
       const stayTunedUrl = request.nextUrl.clone();
-      stayTunedUrl.pathname = "/phloemai";
+      stayTunedUrl.pathname = "/medicforest";
       stayTunedUrl.search = "";
       stayTunedUrl.searchParams.set(
         "preview",
-        pathname.startsWith("/phloemai/interview") ? "interview" : "ucat"
+        pathname.startsWith("/medicforest/interview") ? "interview" : "ucat"
       );
 
       return NextResponse.redirect(stayTunedUrl);
@@ -72,7 +73,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/phloemai/:path*",
+    "/medicforest/:path*",
     "/api/ai/:path*",
     "/api/interviews/:path*",
     "/api/stripe/create-checkout-session",

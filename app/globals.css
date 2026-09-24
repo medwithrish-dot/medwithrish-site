@@ -23,6 +23,23 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.medicforest-landing {
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  font-style: normal;
+}
+
+.medicforest-landing :where(p, li, span) {
+  font-style: normal;
+  font-weight: 400;
+}
+
+.medicforest-landing :where(h1, h2, h3, strong) {
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: normal;
+}
+
 :where(
   a[href],
   button:not(:disabled),
@@ -55,7 +72,7 @@ body {
   overflow-x: hidden;
 }
 
-@keyframes phloem-loading {
+@keyframes medicforest-loading {
   0% {
     transform: translateX(-110%);
   }
@@ -65,432 +82,432 @@ body {
   }
 }
 
-.phloem-dashboard-compact {
+.medicforest-dashboard-compact {
   font-size: 14px;
 }
 
-.phloem-dashboard-compact .p-6 {
+.medicforest-dashboard-compact .p-6 {
   padding: 1rem;
 }
 
-.phloem-dashboard-compact .p-5 {
+.medicforest-dashboard-compact .p-5 {
   padding: 0.875rem;
 }
 
-.phloem-dashboard-compact .p-4 {
+.medicforest-dashboard-compact .p-4 {
   padding: 0.75rem;
 }
 
-.phloem-dashboard-compact .p-3 {
+.medicforest-dashboard-compact .p-3 {
   padding: 0.55rem;
 }
 
-.phloem-dashboard-compact .p-2 {
+.medicforest-dashboard-compact .p-2 {
   padding: 0.35rem;
 }
 
-.phloem-dashboard-compact .px-8 {
+.medicforest-dashboard-compact .px-8 {
   padding-left: 1.15rem;
   padding-right: 1.15rem;
 }
 
-.phloem-dashboard-compact .px-6 {
+.medicforest-dashboard-compact .px-6 {
   padding-left: 1rem;
   padding-right: 1rem;
 }
 
-.phloem-dashboard-compact .px-5 {
+.medicforest-dashboard-compact .px-5 {
   padding-left: 0.875rem;
   padding-right: 0.875rem;
 }
 
-.phloem-dashboard-compact .px-4 {
+.medicforest-dashboard-compact .px-4 {
   padding-left: 0.7rem;
   padding-right: 0.7rem;
 }
 
-.phloem-dashboard-compact .px-3 {
+.medicforest-dashboard-compact .px-3 {
   padding-left: 0.55rem;
   padding-right: 0.55rem;
 }
 
-.phloem-dashboard-compact .py-6 {
+.medicforest-dashboard-compact .py-6 {
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
 
-.phloem-dashboard-compact .py-5 {
+.medicforest-dashboard-compact .py-5 {
   padding-top: 0.875rem;
   padding-bottom: 0.875rem;
 }
 
-.phloem-dashboard-compact .py-4 {
+.medicforest-dashboard-compact .py-4 {
   padding-top: 0.7rem;
   padding-bottom: 0.7rem;
 }
 
-.phloem-dashboard-compact .gap-6 {
+.medicforest-dashboard-compact .gap-6 {
   gap: 1rem;
 }
 
-.phloem-dashboard-compact .gap-5 {
+.medicforest-dashboard-compact .gap-5 {
   gap: 0.85rem;
 }
 
-.phloem-dashboard-compact .gap-4 {
+.medicforest-dashboard-compact .gap-4 {
   gap: 0.7rem;
 }
 
-.phloem-dashboard-compact .gap-3 {
+.medicforest-dashboard-compact .gap-3 {
   gap: 0.5rem;
 }
 
-.phloem-dashboard-compact .space-y-5 > :not(:last-child) {
+.medicforest-dashboard-compact .space-y-5 > :not(:last-child) {
   margin-bottom: 0.85rem;
 }
 
-.phloem-dashboard-compact .space-y-4 > :not(:last-child) {
+.medicforest-dashboard-compact .space-y-4 > :not(:last-child) {
   margin-bottom: 0.7rem;
 }
 
-.phloem-dashboard-compact .space-y-3 > :not(:last-child) {
+.medicforest-dashboard-compact .space-y-3 > :not(:last-child) {
   margin-bottom: 0.5rem;
 }
 
-.phloem-dashboard-compact .mt-10 {
+.medicforest-dashboard-compact .mt-10 {
   margin-top: 1.6rem;
 }
 
-.phloem-dashboard-compact .mt-8 {
+.medicforest-dashboard-compact .mt-8 {
   margin-top: 1.25rem;
 }
 
-.phloem-dashboard-compact .mt-7 {
+.medicforest-dashboard-compact .mt-7 {
   margin-top: 1.05rem;
 }
 
-.phloem-dashboard-compact .mt-6 {
+.medicforest-dashboard-compact .mt-6 {
   margin-top: 0.9rem;
 }
 
-.phloem-dashboard-compact .mt-5 {
+.medicforest-dashboard-compact .mt-5 {
   margin-top: 0.8rem;
 }
 
-.phloem-dashboard-compact .mt-4 {
+.medicforest-dashboard-compact .mt-4 {
   margin-top: 0.65rem;
 }
 
-.phloem-dashboard-compact .mt-3 {
+.medicforest-dashboard-compact .mt-3 {
   margin-top: 0.5rem;
 }
 
-.phloem-dashboard-compact .mt-2 {
+.medicforest-dashboard-compact .mt-2 {
   margin-top: 0.3rem;
 }
 
-.phloem-dashboard-compact .h-16 {
+.medicforest-dashboard-compact .h-16 {
   height: 3rem;
 }
 
-.phloem-dashboard-compact .w-16 {
+.medicforest-dashboard-compact .w-16 {
   width: 3rem;
 }
 
-.phloem-dashboard-compact .h-14 {
+.medicforest-dashboard-compact .h-14 {
   height: 2.55rem;
 }
 
-.phloem-dashboard-compact .w-14 {
+.medicforest-dashboard-compact .w-14 {
   width: 2.55rem;
 }
 
-.phloem-dashboard-compact .h-12 {
+.medicforest-dashboard-compact .h-12 {
   height: 2.25rem;
 }
 
-.phloem-dashboard-compact .w-12 {
+.medicforest-dashboard-compact .w-12 {
   width: 2.25rem;
 }
 
-.phloem-dashboard-compact .h-11 {
+.medicforest-dashboard-compact .h-11 {
   height: 2.05rem;
 }
 
-.phloem-dashboard-compact .w-11 {
+.medicforest-dashboard-compact .w-11 {
   width: 2.05rem;
 }
 
-.phloem-dashboard-compact .h-10 {
+.medicforest-dashboard-compact .h-10 {
   height: 1.9rem;
 }
 
-.phloem-dashboard-compact .w-10 {
+.medicforest-dashboard-compact .w-10 {
   width: 1.9rem;
 }
 
-.phloem-dashboard-compact .h-9 {
+.medicforest-dashboard-compact .h-9 {
   height: 1.75rem;
 }
 
-.phloem-dashboard-compact .h-56 {
+.medicforest-dashboard-compact .h-56 {
   height: 12rem;
 }
 
-.phloem-dashboard-compact .h-8 {
+.medicforest-dashboard-compact .h-8 {
   height: 1.5rem;
 }
 
-.phloem-dashboard-compact .w-8 {
+.medicforest-dashboard-compact .w-8 {
   width: 1.5rem;
 }
 
-.phloem-dashboard-compact .h-7 {
+.medicforest-dashboard-compact .h-7 {
   height: 1.25rem;
 }
 
-.phloem-dashboard-compact .w-7 {
+.medicforest-dashboard-compact .w-7 {
   width: 1.25rem;
 }
 
-.phloem-dashboard-compact .h-6 {
+.medicforest-dashboard-compact .h-6 {
   height: 1.1rem;
 }
 
-.phloem-dashboard-compact .w-6 {
+.medicforest-dashboard-compact .w-6 {
   width: 1.1rem;
 }
 
-.phloem-dashboard-compact .h-5 {
+.medicforest-dashboard-compact .h-5 {
   height: 0.95rem;
 }
 
-.phloem-dashboard-compact .w-5 {
+.medicforest-dashboard-compact .w-5 {
   width: 0.95rem;
 }
 
-.phloem-dashboard-compact .h-4 {
+.medicforest-dashboard-compact .h-4 {
   height: 0.8rem;
 }
 
-.phloem-dashboard-compact .w-4 {
+.medicforest-dashboard-compact .w-4 {
   width: 0.8rem;
 }
 
-.phloem-dashboard-compact .rounded-xl {
+.medicforest-dashboard-compact .rounded-xl {
   border-radius: 0.6rem;
 }
 
-.phloem-dashboard-compact .rounded-2xl {
+.medicforest-dashboard-compact .rounded-2xl {
   border-radius: 0.75rem;
 }
 
-.phloem-dashboard-compact .text-4xl {
+.medicforest-dashboard-compact .text-4xl {
   font-size: 1.75rem;
   line-height: 2.05rem;
 }
 
-.phloem-dashboard-compact .text-3xl {
+.medicforest-dashboard-compact .text-3xl {
   font-size: 1.45rem;
   line-height: 1.7rem;
 }
 
-.phloem-dashboard-compact .text-2xl {
+.medicforest-dashboard-compact .text-2xl {
   font-size: 1.2rem;
   line-height: 1.5rem;
 }
 
-.phloem-dashboard-compact .text-xl {
+.medicforest-dashboard-compact .text-xl {
   font-size: 1rem;
   line-height: 1.35rem;
 }
 
-.phloem-dashboard-compact .text-lg {
+.medicforest-dashboard-compact .text-lg {
   font-size: 0.925rem;
   line-height: 1.3rem;
 }
 
-.phloem-dashboard-compact .text-base {
+.medicforest-dashboard-compact .text-base {
   font-size: 0.86rem;
   line-height: 1.3rem;
 }
 
-.phloem-dashboard-compact .text-sm {
+.medicforest-dashboard-compact .text-sm {
   font-size: 0.74rem;
   line-height: 1.05rem;
 }
 
-.phloem-dashboard-compact .text-xs {
+.medicforest-dashboard-compact .text-xs {
   font-size: 0.64rem;
   line-height: 0.9rem;
 }
 
-.phloem-dashboard-compact .leading-7 {
+.medicforest-dashboard-compact .leading-7 {
   line-height: 1.35rem;
 }
 
-.phloem-dashboard-compact .leading-6 {
+.medicforest-dashboard-compact .leading-6 {
   line-height: 1.15rem;
 }
 
-.phloem-dashboard-compact .leading-5 {
+.medicforest-dashboard-compact .leading-5 {
   line-height: 1rem;
 }
 
-.phloem-dashboard-compact .leading-4 {
+.medicforest-dashboard-compact .leading-4 {
   line-height: 1rem;
 }
 
-.phloem-dashboard-compact .leading-none {
+.medicforest-dashboard-compact .leading-none {
   line-height: 1;
 }
 
 @media (min-width: 40rem) {
-  .phloem-dashboard-compact .sm\:p-6 {
+  .medicforest-dashboard-compact .sm\:p-6 {
     padding: 1rem;
   }
 
-  .phloem-dashboard-compact .sm\:text-xl {
+  .medicforest-dashboard-compact .sm\:text-xl {
     font-size: 1rem;
     line-height: 1.35rem;
   }
 }
 
 @media (min-width: 64rem) {
-  .phloem-dashboard-compact .lg\:px-8 {
+  .medicforest-dashboard-compact .lg\:px-8 {
     padding-left: 1rem;
     padding-right: 1rem;
   }
 
-  .phloem-dashboard-compact .lg\:px-6 {
+  .medicforest-dashboard-compact .lg\:px-6 {
     padding-left: 0.9rem;
     padding-right: 0.9rem;
   }
 
-  .phloem-dashboard-compact .lg\:pt-5 {
+  .medicforest-dashboard-compact .lg\:pt-5 {
     padding-top: 0.875rem;
   }
 
-  .phloem-dashboard-compact .lg\:gap-5 {
+  .medicforest-dashboard-compact .lg\:gap-5 {
     gap: 0.85rem;
   }
 }
 
-.phloem-dashboard-compact {
-  --phloem-ink: #071923;
-  --phloem-muted: #78909a;
-  --phloem-canvas: #eef1f3;
-  --phloem-panel: #ffffff;
-  --phloem-line: #d8e0e6;
-  --phloem-teal: #159a9d;
-  --phloem-teal-dark: #08787b;
-  --phloem-teal-soft: #e8f3f2;
-  color: var(--phloem-ink);
+.medicforest-dashboard-compact {
+  --medicforest-ink: #071923;
+  --medicforest-muted: #78909a;
+  --medicforest-canvas: #eef1f3;
+  --medicforest-panel: #ffffff;
+  --medicforest-line: #d8e0e6;
+  --medicforest-teal: #159a9d;
+  --medicforest-teal-dark: #08787b;
+  --medicforest-teal-soft: #e8f3f2;
+  color: var(--medicforest-ink);
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   font-weight: 400;
 }
 
-.phloem-dashboard-compact h1,
-.phloem-dashboard-compact h2,
-.phloem-dashboard-compact h3,
-.phloem-dashboard-compact p,
-.phloem-dashboard-compact span,
-.phloem-dashboard-compact button,
-.phloem-dashboard-compact a {
+.medicforest-dashboard-compact h1,
+.medicforest-dashboard-compact h2,
+.medicforest-dashboard-compact h3,
+.medicforest-dashboard-compact p,
+.medicforest-dashboard-compact span,
+.medicforest-dashboard-compact button,
+.medicforest-dashboard-compact a {
   letter-spacing: 0;
 }
 
-.phloem-dashboard-compact .font-black {
+.medicforest-dashboard-compact .font-black {
   font-weight: 700;
 }
 
-.phloem-dashboard-compact .font-bold {
+.medicforest-dashboard-compact .font-bold {
   font-weight: 600;
 }
 
-.phloem-dashboard-compact .font-medium {
+.medicforest-dashboard-compact .font-medium {
   font-weight: 500;
 }
 
-.phloem-dashboard-compact .tracking-wide {
+.medicforest-dashboard-compact .tracking-wide {
   letter-spacing: 0;
 }
 
-.phloem-dashboard-compact .bg-\[\#f8fbff\] {
-  background-color: var(--phloem-canvas);
+.medicforest-dashboard-compact .bg-\[\#f8fbff\] {
+  background-color: var(--medicforest-canvas);
 }
 
-.phloem-dashboard-compact .text-\[\#0b1143\] {
-  color: var(--phloem-ink);
+.medicforest-dashboard-compact .text-\[\#0b1143\] {
+  color: var(--medicforest-ink);
 }
 
-.phloem-dashboard-compact .text-slate-500 {
-  color: var(--phloem-muted);
+.medicforest-dashboard-compact .text-slate-500 {
+  color: var(--medicforest-muted);
 }
 
-.phloem-dashboard-main .text-slate-500 {
+.medicforest-dashboard-main .text-slate-500 {
   color: #334a56;
 }
 
-.phloem-dashboard-main .text-slate-600 {
+.medicforest-dashboard-main .text-slate-600 {
   color: #263d48;
 }
 
-.phloem-dashboard-compact .text-blue-600,
-.phloem-dashboard-compact .text-blue-700,
-.phloem-dashboard-compact .text-indigo-600,
-.phloem-dashboard-compact .text-violet-600,
-.phloem-dashboard-compact .text-purple-600 {
-  color: var(--phloem-teal-dark);
+.medicforest-dashboard-compact .text-blue-600,
+.medicforest-dashboard-compact .text-blue-700,
+.medicforest-dashboard-compact .text-indigo-600,
+.medicforest-dashboard-compact .text-violet-600,
+.medicforest-dashboard-compact .text-purple-600 {
+  color: var(--medicforest-teal-dark);
 }
 
-.phloem-dashboard-compact .hover\:text-blue-600:hover,
-.phloem-dashboard-compact .hover\:text-blue-700:hover,
-.phloem-dashboard-compact .hover\:text-indigo-600:hover {
-  color: var(--phloem-teal-dark);
+.medicforest-dashboard-compact .hover\:text-blue-600:hover,
+.medicforest-dashboard-compact .hover\:text-blue-700:hover,
+.medicforest-dashboard-compact .hover\:text-indigo-600:hover {
+  color: var(--medicforest-teal-dark);
 }
 
-.phloem-dashboard-compact .bg-blue-600,
-.phloem-dashboard-compact .bg-indigo-600 {
-  background-color: var(--phloem-teal);
+.medicforest-dashboard-compact .bg-blue-600,
+.medicforest-dashboard-compact .bg-indigo-600 {
+  background-color: var(--medicforest-teal);
 }
 
-.phloem-dashboard-compact .hover\:bg-blue-700:hover,
-.phloem-dashboard-compact .hover\:bg-indigo-700:hover {
-  background-color: var(--phloem-teal-dark);
+.medicforest-dashboard-compact .hover\:bg-blue-700:hover,
+.medicforest-dashboard-compact .hover\:bg-indigo-700:hover {
+  background-color: var(--medicforest-teal-dark);
 }
 
-.phloem-dashboard-compact .bg-blue-50,
-.phloem-dashboard-compact .bg-indigo-50,
-.phloem-dashboard-compact .bg-violet-50,
-.phloem-dashboard-compact .bg-purple-50 {
-  background-color: var(--phloem-teal-soft);
+.medicforest-dashboard-compact .bg-blue-50,
+.medicforest-dashboard-compact .bg-indigo-50,
+.medicforest-dashboard-compact .bg-violet-50,
+.medicforest-dashboard-compact .bg-purple-50 {
+  background-color: var(--medicforest-teal-soft);
 }
 
-.phloem-dashboard-compact .bg-blue-100,
-.phloem-dashboard-compact .bg-indigo-100,
-.phloem-dashboard-compact .bg-violet-100 {
+.medicforest-dashboard-compact .bg-blue-100,
+.medicforest-dashboard-compact .bg-indigo-100,
+.medicforest-dashboard-compact .bg-violet-100 {
   background-color: #d7ebe9;
 }
 
-.phloem-dashboard-compact .border-blue-100,
-.phloem-dashboard-compact .border-blue-200,
-.phloem-dashboard-compact .border-indigo-100,
-.phloem-dashboard-compact .border-violet-100 {
+.medicforest-dashboard-compact .border-blue-100,
+.medicforest-dashboard-compact .border-blue-200,
+.medicforest-dashboard-compact .border-indigo-100,
+.medicforest-dashboard-compact .border-violet-100 {
   border-color: #c9ddda;
 }
 
-.phloem-dashboard-compact .hover\:border-blue-200:hover,
-.phloem-dashboard-compact .hover\:border-blue-300:hover {
+.medicforest-dashboard-compact .hover\:border-blue-200:hover,
+.medicforest-dashboard-compact .hover\:border-blue-300:hover {
   border-color: #91c7c3;
 }
 
-.phloem-dashboard-compact .ring-blue-50,
-.phloem-dashboard-compact .ring-blue-100 {
+.medicforest-dashboard-compact .ring-blue-50,
+.medicforest-dashboard-compact .ring-blue-100 {
   --tw-ring-color: #c9ddda;
 }
 
-.phloem-dashboard-compact .focus-visible\:ring-blue-500:focus-visible,
-.phloem-dashboard-compact .focus-visible\:ring-teal-400:focus-visible {
-  --tw-ring-color: var(--phloem-teal);
+.medicforest-dashboard-compact .focus-visible\:ring-blue-500:focus-visible,
+.medicforest-dashboard-compact .focus-visible\:ring-teal-400:focus-visible {
+  --tw-ring-color: var(--medicforest-teal);
 }

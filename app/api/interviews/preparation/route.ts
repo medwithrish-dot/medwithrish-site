@@ -32,10 +32,10 @@ export async function PUT(request: Request) {
       updated_at: new Date().toISOString(),
     }).select("*").single();
     if (error) databaseError(error);
-    revalidatePath("/phloemai/interview/dashboard");
-    revalidatePath("/phloemai/interview/plan");
-    revalidatePath("/phloemai/interview/progress");
-    revalidatePath("/phloemai/interview/notifications");
+    revalidatePath("/medicforest/interview/dashboard");
+    revalidatePath("/medicforest/interview/plan");
+    revalidatePath("/medicforest/interview/progress");
+    revalidatePath("/medicforest/interview/notifications");
     return interviewJson({ profile: preparationFromRow(data) });
   } catch (error) { return interviewFailure(error); }
 }

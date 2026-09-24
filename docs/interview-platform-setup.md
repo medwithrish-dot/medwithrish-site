@@ -2,23 +2,23 @@
 
 ## Run the SQL
 
-**Unsure which older scripts you ran?** Use `supabase/RUN_ALL_PHLOEMAI_SETUP.sql` instead. Paste the entire file into Supabase SQL Editor and run once using the normal privileged role. It includes original account, UCAT practice and Stripe tables plus all interview migrations, in order and in one transaction. It preserves existing plans and used diagnostic credits, and creates missing profiles for existing accounts. You do not need to run any other SQL file afterwards. Unlike the original practice script, this catch-up file deliberately does not reset free diagnostic credits.
+**Unsure which older scripts you ran?** Use `supabase/RUN_ALL_MEDICFOREST_SETUP.sql` instead. Paste the entire file into Supabase SQL Editor and run once using the normal privileged role. It includes original account, UCAT practice and Stripe tables plus all interview migrations, in order and in one transaction. It preserves existing plans and used diagnostic credits, and creates missing profiles for existing accounts. You do not need to run any other SQL file afterwards. Unlike the original practice script, this catch-up file deliberately does not reset free diagnostic credits.
 
 **Single-paste option for the existing project:** open `supabase/RUN_ALL_INTERVIEW_SETUP.sql`, copy its complete contents into a new Supabase SQL Editor query, and run it once. It includes the security patch, question-bank progress, interview platform, groups and dashboard scripts in dependency order, inside one transaction. You do not also need to run the individual files below. The base `public.profiles` account table must already exist; for a new database follow the initial setup instructions below first.
 
-For the existing PhloemAI Supabase project, open **SQL Editor**, run each complete file separately, and wait for success before the next file:
+For the existing MedicForest Supabase project, open **SQL Editor**, run each complete file separately, and wait for success before the next file:
 
-1. `supabase/phloemai_security_patch.sql` — protects the existing account plan from browser edits. Safe to rerun.
-2. `supabase/phloemai_interview_platform.sql` — private attempts, scores, opt-in leaderboard, durable usage limits and grading locks.
-3. `supabase/phloemai_interview_groups.sql` — study groups, membership, invitations and shared station rooms.
-4. `supabase/phloemai_interview_dashboard.sql` — university choices/dates, preparation goals, task completion and precise practice-time tracking. If steps 1–3 are already installed, only this new file is needed for dashboard personalisation.
-5. `supabase/phloemai_interview_name_moderation.sql` — blocks offensive public leaderboard nicknames, including common letter/number and separator disguises. Existing offensive nicknames become a neutral Candidate nickname; scores and sharing preferences are preserved. If the platform is already installed, run this new file once. Both single-paste setup files also include it.
+1. `supabase/medicforest_security_patch.sql` — protects the existing account plan from browser edits. Safe to rerun.
+2. `supabase/medicforest_interview_platform.sql` — private attempts, scores, opt-in leaderboard, durable usage limits and grading locks.
+3. `supabase/medicforest_interview_groups.sql` — study groups, membership, invitations and shared station rooms.
+4. `supabase/medicforest_interview_dashboard.sql` — university choices/dates, preparation goals, task completion and precise practice-time tracking. If steps 1–3 are already installed, only this new file is needed for dashboard personalisation.
+5. `supabase/medicforest_interview_name_moderation.sql` — blocks offensive public leaderboard nicknames, including common letter/number and separator disguises. Existing offensive nicknames become a neutral Candidate nickname; scores and sharing preferences are preserved. If the platform is already installed, run this new file once. Both single-paste setup files also include it.
 
-6. `supabase/phloemai_interview_applicant_activity.sql` adds saved applicant confirmations and durable daily question activity. Run after both dashboard and question-progress setup. It is additive and rerunnable. Existing interviews and dates are preserved; applicant facts default to unconfirmed. The daily chart counts distinct completed bank questions per London day, including bank questions answered in interviews. Existing question-progress rows backfill their latest completion day; earlier overwritten bank completions cannot be reconstructed.
+6. `supabase/medicforest_interview_applicant_activity.sql` adds saved applicant confirmations and durable daily question activity. Run after both dashboard and question-progress setup. It is additive and rerunnable. Existing interviews and dates are preserved; applicant facts default to unconfirmed. The daily chart counts distinct completed bank questions per London day, including bank questions answered in interviews. Existing question-progress rows backfill their latest completion day; earlier overwritten bank completions cannot be reconstructed.
 
-If the question bank's existing account progress has never been set up, also run `supabase/phloemai_interview_question_progress.sql` before step 6. The interview scripts do not replace that feature.
+If the question bank's existing account progress has never been set up, also run `supabase/medicforest_interview_question_progress.sql` before step 6. The interview scripts do not replace that feature.
 
-For a completely new database, first run `supabase/phloemai_setup.sql`, `supabase/phloemai_practice_setup.sql`, `supabase/phloemai_stripe_setup.sql`, and `supabase/phloemai_interview_question_progress.sql`, then the numbered steps above. Use the SQL Editor's normal privileged database role. The new tables and functions are additive and rerunnable; they do not overwrite accounts or existing practice history.
+For a completely new database, first run `supabase/medicforest_setup.sql`, `supabase/medicforest_practice_setup.sql`, `supabase/medicforest_stripe_setup.sql`, and `supabase/medicforest_interview_question_progress.sql`, then the numbered steps above. Use the SQL Editor's normal privileged database role. The new tables and functions are additive and rerunnable; they do not overwrite accounts or existing practice history.
 
 The new migrations have been tested locally, but are deliberately **not applied to the hosted database**. Until you run them, affected screens show a setup message rather than pretend to save data. No Supabase Realtime publication, storage bucket, cron job or video service is required.
 
@@ -39,7 +39,7 @@ Keep the existing Supabase URL, publishable/anonymous key and `SUPABASE_SERVICE_
 
 These are adjustable initial cost controls, not a promised unlimited plan. All station starts count, including ended attempts. Premium limits cover free and premium stations together. A university circuit uses one allowance per station. The owner confirmed Free Tier and Gemini is enabled in the ignored local environment file. Hosted environments require their own matching key and confirmation flag; without those, built-in follow-ups and saved practice remain available. For personal free AI, keep the API key's project on Free Tier with no linked billing account. Keep the model stable within a leaderboard rubric version; changing assessment behaviour should get a new version and deliberate leaderboard reset/migration. See [interview AI setup](interview-ai-setup.md) for activation steps, follow-up prices, and considerations before a wider rollout.
 
-The existing preview-access gate remains active. For local preview use the existing `/phloemai/access` screen with `PHLOEMAI_PREVIEW_PASSWORD` configured for the local server. The platform is not made publicly accessible by this change. Existing Stripe billing is retained; **this work does not change the Stripe price to £15**. Configure that product/price when you choose to launch the £15 subscription.
+The existing preview-access gate remains active. For local preview use the existing `/medicforest/access` screen with `MEDICFOREST_PREVIEW_PASSWORD` configured for the local server. The platform is not made publicly accessible by this change. Existing Stripe billing is retained; **this work does not change the Stripe price to £15**. Configure that product/price when you choose to launch the £15 subscription.
 
 ## How the interview works
 

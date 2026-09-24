@@ -29,17 +29,17 @@ function loadTypeScript(path) {
 }
 const { deriveDashboard, londonDate, interviewTheme } = loadTypeScript(resolve(root, "utils/interviews/dashboard-analytics"));
 const { deriveInterviewQuestionProgress } = loadTypeScript(resolve(root, "utils/interviews/question-bank-progress"));
-const { interviewUniversities } = loadTypeScript(resolve(root, "app/phloemai/interview/_data/universities"));
+const { interviewUniversities } = loadTypeScript(resolve(root, "app/medicforest/interview/_data/universities"));
 const interviewShellSource = readFileSync(
-  resolve(root, "app/phloemai/interview/_components/InterviewShell.tsx"),
+  resolve(root, "app/medicforest/interview/_components/InterviewShell.tsx"),
   "utf8"
 );
 const interviewDashboardSource = readFileSync(
-  resolve(root, "app/phloemai/interview/_components/InterviewDashboard.tsx"),
+  resolve(root, "app/medicforest/interview/_components/InterviewDashboard.tsx"),
   "utf8"
 );
 const interviewCalendarSource = readFileSync(
-  resolve(root, "app/phloemai/interview/_components/InterviewQuestionCalendar.tsx"),
+  resolve(root, "app/medicforest/interview/_components/InterviewQuestionCalendar.tsx"),
   "utf8"
 );
 const dashboardDataSource = readFileSync(

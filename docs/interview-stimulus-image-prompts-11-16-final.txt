@@ -1,10 +1,10 @@
-PHLOEMAI INTERVIEW STIMULI 11–16 — FINAL CONCISE PROMPTS
+MEDICFOREST INTERVIEW STIMULI 11–16 — FINAL CONCISE PROMPTS
 
 Generated and edited with the built-in imagegen tool.
 These are the final, distinct-layout, reduced-text versions requested by the user.
 They supersede the original prompts 11–16 and the longer first drafts generated in this batch.
 Future batches should use varied layouts and concise wording while preserving enough evidence for the task.
-Saved PNGs: public/phloemai/interview-stimuli/.
+Saved PNGs: public/medicforest/interview-stimuli/.
 All studies and data are fictional. This batch creates assets only, not question-bank integration or final markschemes.
 Only assess information visible in the final images; do not require details removed from earlier drafts.
 

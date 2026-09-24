@@ -231,7 +231,7 @@ test("proxy only refreshes authentication for account pages and authenticated AP
   for (const url of ["/", "/terms-and-conditions", "/fonts/site.woff2", "/api/stripe/webhook", "/api/ps-review/upload", "/api/rishbot/question"]) {
     assert.equal(doesProxyMatch({ config, nextConfig: {}, url }), false, url);
   }
-  for (const url of ["/phloemai/ucat/dashboard", "/phloemai/access", "/api/interviews/feedback", "/api/ai/diagnostic-feedback", "/api/stripe/create-checkout-session"]) {
+  for (const url of ["/medicforest/ucat/dashboard", "/medicforest/access", "/api/interviews/feedback", "/api/ai/diagnostic-feedback", "/api/stripe/create-checkout-session"]) {
     assert.equal(doesProxyMatch({ config, nextConfig: {}, url }), true, url);
   }
 });

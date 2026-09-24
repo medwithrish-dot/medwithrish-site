@@ -2,7 +2,7 @@
 
 ## Storage
 
-Apply `supabase/phloemai_interview_applicant_activity.sql` after the dashboard and question-progress migrations. Both combined setup files include it. This additive migration stores applicant confirmations and distinct completed questions per London calendar day. It does not alter saved transcripts or interview dates. No hosted migration was applied during implementation.
+Apply `supabase/medicforest_interview_applicant_activity.sql` after the dashboard and question-progress migrations. Both combined setup files include it. This additive migration stores applicant confirmations and distinct completed questions per London calendar day. It does not alter saved transcripts or interview dates. No hosted migration was applied during implementation.
 
 Applicant confirmations are explicit, self-reported Yes/No values; missing values are unknown. Graduate entry never implies a completed degree. Session selection, safe fallback selection and generated follow-ups enforce the profile. Existing saved interview questions remain intact. New spoken transitions and confirmation prompts are retained in the existing answers JSON, including their position in the answer; older unrecorded speech is not reconstructed.
 

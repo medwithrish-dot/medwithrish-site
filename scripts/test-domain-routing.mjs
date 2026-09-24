@@ -8,16 +8,12 @@ test("Medic Forest serves the product landing page without changing the visible 
   assert.deepEqual(rewrites.beforeFiles, [{
     source: "/",
     has: [{ type: "host", value: "medicforest.com" }],
-    destination: "/phloemai",
+    destination: "/medicforest",
   }]);
 });
 
-test("www and legacy PhloemAI domains redirect permanently to Medic Forest", async () => {
+test("www MedicForest redirects permanently to the apex domain", async () => {
   const redirects = await nextConfig.redirects();
   assert.ok(redirects.some(rule => rule.source === "/" && rule.has?.[0]?.value === "www.medicforest.com"
     && rule.destination === "https://medicforest.com" && rule.permanent));
-  for (const host of ["phloemai.com", "www.phloemai.com"]) {
-    assert.ok(redirects.some(rule => rule.source === "/" && rule.has?.[0]?.value === host
-      && rule.destination === "https://medicforest.com" && rule.permanent));
-  }
 });

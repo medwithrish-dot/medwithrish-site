@@ -2,7 +2,7 @@ import "server-only";
 import { RUBRIC_CRITERIA, validateFeedback } from "./scoring";
 import { validateFollowUp } from "./follow-up";
 import { assessmentGuidance } from "./assessment-guidance";
-import type { InterviewAnswer } from "@/app/phloemai/interview/_lib/interview-types";
+import type { InterviewAnswer } from "@/app/medicforest/interview/_lib/interview-types";
 
 export const interviewModel = () => process.env.INTERVIEW_GEMINI_MODEL || "gemini-3.5-flash-lite";
 export const interviewFollowUpModel = () => process.env.INTERVIEW_FOLLOWUP_GEMINI_MODEL || "gemini-3.5-flash-lite";

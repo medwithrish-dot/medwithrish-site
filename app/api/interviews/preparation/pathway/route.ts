@@ -35,8 +35,8 @@ export async function POST(request: Request) {
         : { error: null }
       : await admin.from("interview_dashboard_tasks").delete().eq("user_id", user.id).eq("date", PATHWAY_STORAGE_DATE).in("task_id", change.removeIds);
     if (result.error) databaseError(result.error);
-    revalidatePath("/phloemai/interview/dashboard");
-    revalidatePath("/phloemai/interview/plan");
+    revalidatePath("/medicforest/interview/dashboard");
+    revalidatePath("/medicforest/interview/plan");
     return interviewJson({ userId: user.id, completedTaskIds: await readProgress(admin, user.id) });
   } catch (error) { return interviewFailure(error); }
 }

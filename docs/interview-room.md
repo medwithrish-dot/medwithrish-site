@@ -1,6 +1,6 @@
 # AI interview room
 
-Open **AI Interviews → Build your interview**, or `/phloemai/interview/ai-interviews?setup=1`. Existing university, station and saved-attempt links use the same experience. The site's existing preview-access gate still applies.
+Open **AI Interviews → Build your interview**, or `/medicforest/interview/ai-interviews?setup=1`. Existing university, station and saved-attempt links use the same experience. The site's existing preview-access gate still applies.
 
 ## Experience
 
@@ -29,7 +29,7 @@ A station retry reserves a fresh circuit ID and one station. University retries 
 
 ## Data and placeholders
 
-Device checks do not record or upload media. Camera tracks and calibration audio tracks are released when stopped, when submitting or leaving, and on unmount. Native microphone prompts cannot be dismissed by the app; a grant arriving after cancellation or unmount releases all tracks and cannot start speech. Pending prompts are reused across React effect replay. The browser's speech-recognition service may process spoken audio; Phloem persists text transcripts only. Notes stay on the current call screen and are neither saved nor marked. In preview, feedback is illustrative regardless of the entered answer.
+Device checks do not record or upload media. Camera tracks and calibration audio tracks are released when stopped, when submitting or leaving, and on unmount. Native microphone prompts cannot be dismissed by the app; a grant arriving after cancellation or unmount releases all tracks and cannot start speech. Pending prompts are reused across React effect replay. The browser's speech-recognition service may process spoken audio; Forest persists text transcripts only. Notes stay on the current call screen and are neither saved nor marked. In preview, feedback is illustrative regardless of the entered answer.
 
 ## Verification
 

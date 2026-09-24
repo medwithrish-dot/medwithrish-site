@@ -40,12 +40,12 @@ test("real SQL blocks bypasses, sanitizes existing names and matches JavaScript 
       grant usage on schema auth to authenticated,service_role;
       grant execute on function auth.uid() to authenticated,service_role;
     `);
-    await db.exec(await readFile(new URL("../supabase/phloemai_interview_platform.sql", import.meta.url), "utf8"));
+    await db.exec(await readFile(new URL("../supabase/medicforest_interview_platform.sql", import.meta.url), "utf8"));
     await db.query("insert into auth.users(id) values ($1)", [userId]);
     await db.query("insert into public.interview_preferences(user_id,display_name,leaderboard_opt_in) values ($1,'f.u.c.k',true)", [userId]);
     await db.query(`insert into public.interview_attempts(user_id,mode,station_slug,title,status,circuit_id,preparation_seconds,station_seconds,break_seconds,questions,score,completed_at)
       values ($1,'free','why-medicine','Why medicine?','completed',$2,0,480,0,'[]',88.5,now())`, [userId, randomUUID()]);
-    const migration = await readFile(new URL("../supabase/phloemai_interview_name_moderation.sql", import.meta.url), "utf8");
+    const migration = await readFile(new URL("../supabase/medicforest_interview_name_moderation.sql", import.meta.url), "utf8");
     await db.exec(migration);
     await db.exec(migration);
     const legacy = (await db.query("select display_name,leaderboard_opt_in from public.interview_preferences")).rows[0];

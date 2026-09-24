@@ -98,7 +98,7 @@ export async function POST(request: Request) {
 
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: profile.stripe_customer_id,
-      return_url: `${siteUrl}/phloemai/account`,
+      return_url: `${siteUrl}/medicforest/account`,
     });
 
     return Response.json({ url: portalSession.url });

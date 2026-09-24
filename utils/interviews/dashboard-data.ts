@@ -3,7 +3,7 @@ import { cache } from "react";
 import { createClient } from "@/utils/supabase/server";
 import { toInterviewAttempt } from "./server";
 import { deriveDashboard, londonDate, type PreparationProfile } from "./dashboard-analytics";
-import type { InterviewAttempt } from "@/app/phloemai/interview/_lib/interview-types";
+import type { InterviewAttempt } from "@/app/medicforest/interview/_lib/interview-types";
 import { readApplicant } from "./applicant-profile";
 import type { InterviewQuestionProgressRow } from "./question-bank-progress";
 

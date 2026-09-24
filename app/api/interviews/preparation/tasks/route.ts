@@ -11,13 +11,13 @@ export async function POST(request: Request) {
     if (!available) throw new InterviewError("Your practice plan is not available yet. Please try again shortly.", 503);
     const task = analytics.todayPlan.find((entry) => entry.id === body.taskId);
     if (!task || task.kind === "station") throw new InterviewError("Interview tasks are completed automatically when your station feedback is saved.");
-    if (task.kind === "review" && task.href.startsWith("/phloemai/interview/reports/") && !analytics.recentPerformance.length) throw new InterviewError("Complete an interview first so you have feedback to review.");
+    if (task.kind === "review" && task.href.startsWith("/medicforest/interview/reports/") && !analytics.recentPerformance.length) throw new InterviewError("Complete an interview first so you have feedback to review.");
     const result = body.completed
       ? await admin.from("interview_dashboard_tasks").upsert({ user_id: user.id, task_id: task.id, date: analytics.today, completed_at: new Date().toISOString() })
       : await admin.from("interview_dashboard_tasks").delete().eq("user_id", user.id).eq("task_id", task.id).eq("date", analytics.today);
     if (result.error) databaseError(result.error);
-    revalidatePath("/phloemai/interview/dashboard");
-    revalidatePath("/phloemai/interview/plan");
+    revalidatePath("/medicforest/interview/dashboard");
+    revalidatePath("/medicforest/interview/plan");
     return interviewJson({ taskId: task.id, completed: body.completed });
   } catch (error) { return interviewFailure(error); }
 }

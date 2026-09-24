@@ -25,8 +25,8 @@ function loadTypeScript(filename) {
   return loaded.exports;
 }
 
-const { INTERVIEW_QUESTIONS } = loadTypeScript(resolve(root, "app/phloemai/interview/_data/interviewQuestionBank.ts"));
-const { getInterviewQuestionAudioSrc, INTERVIEW_AUDIO_QUESTION_COUNT } = loadTypeScript(resolve(root, "app/phloemai/interview/_lib/interview-question-audio.ts"));
+const { INTERVIEW_QUESTIONS } = loadTypeScript(resolve(root, "app/medicforest/interview/_data/interviewQuestionBank.ts"));
+const { getInterviewQuestionAudioSrc, INTERVIEW_AUDIO_QUESTION_COUNT } = loadTypeScript(resolve(root, "app/medicforest/interview/_lib/interview-question-audio.ts"));
 
 function readQuestionCsv() {
   return readFileSync(resolve(root, "scripts/questions.csv"), "utf8")

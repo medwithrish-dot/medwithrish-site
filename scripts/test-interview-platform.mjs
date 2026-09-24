@@ -78,10 +78,10 @@ try {
     $$;
     grant execute on function auth.uid() to authenticated, anon;
   `);
-  const platformSql = await readFile(new URL("../supabase/phloemai_interview_platform.sql", import.meta.url), "utf8");
-  const questionProgressSql = (await readFile(new URL("../supabase/phloemai_interview_question_progress.sql", import.meta.url), "utf8"))
+  const platformSql = await readFile(new URL("../supabase/medicforest_interview_platform.sql", import.meta.url), "utf8");
+  const questionProgressSql = (await readFile(new URL("../supabase/medicforest_interview_question_progress.sql", import.meta.url), "utf8"))
     .replace('create extension if not exists "pgcrypto";', "");
-  const groupsSql = await readFile(new URL("../supabase/phloemai_interview_groups.sql", import.meta.url), "utf8");
+  const groupsSql = await readFile(new URL("../supabase/medicforest_interview_groups.sql", import.meta.url), "utf8");
   await check("actual platform and groups migrations install and can be rerun", async () => {
     await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);
     await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);

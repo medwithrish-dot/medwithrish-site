@@ -15,7 +15,8 @@ const publicRoutes: Array<{
   { path: "/ucat-score-tracker", changeFrequency: "monthly", priority: 0.85 },
   { path: "/ucat-timeline", changeFrequency: "monthly", priority: 0.85 },
   { path: "/interviews", changeFrequency: "monthly", priority: 0.85 },
-  { path: "/phloemai/ucat", changeFrequency: "weekly", priority: 0.85 },
+  { path: "/medicforest/ucat", changeFrequency: "weekly", priority: 0.85 },
+  { path: "/medicforest/about", changeFrequency: "monthly", priority: 0.8 },
   { path: "/resources", changeFrequency: "monthly", priority: 0.8 },
   { path: "/about", changeFrequency: "monthly", priority: 0.75 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.7 },
@@ -29,7 +30,7 @@ const publicRoutes: Array<{
   { path: "/work-experience-guide", changeFrequency: "monthly", priority: 0.65 },
   { path: "/related-careers-guide", changeFrequency: "monthly", priority: 0.65 },
   { path: "/year12-guide", changeFrequency: "monthly", priority: 0.65 },
-  { path: "/phloemai-disclaimer", changeFrequency: "yearly", priority: 0.3 },
+  { path: "/medicforest-disclaimer", changeFrequency: "yearly", priority: 0.3 },
   { path: "/privacy-policy", changeFrequency: "yearly", priority: 0.3 },
   { path: "/terms-and-conditions", changeFrequency: "yearly", priority: 0.3 },
 ];
