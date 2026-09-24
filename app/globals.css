@@ -14,14 +14,11 @@
 
 html {
   scroll-behavior: smooth;
-  background: #f7f9fe;
+  background: #f7fafe;
 }
 
 body {
-  background:
-    radial-gradient(circle at 8% 12%, rgb(219 234 254 / 42%), transparent 32rem),
-    radial-gradient(circle at 92% 72%, rgb(237 233 254 / 38%), transparent 34rem),
-    linear-gradient(145deg, #f8fbff 0%, #f5f7fd 50%, #faf8ff 100%);
+  background: #f7fafe;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -34,7 +31,7 @@ body {
 }
 
 .medicforest-landing {
-  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-style: normal;
 }
 
@@ -44,7 +41,7 @@ body {
 }
 
 .medicforest-landing :where(h1, h2, h3, strong) {
-  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 600;
   letter-spacing: normal;

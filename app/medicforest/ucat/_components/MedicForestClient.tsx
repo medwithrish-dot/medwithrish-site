@@ -19,7 +19,6 @@ import {
 import { ClientPremiumGate } from "./ClientPremiumGate";
 import { ExpandableAiFeedback } from "./ExpandableAiFeedback";
 import { MedicForestLandingShell } from "./MedicForestLandingShell";
-import { MedicForestMarketingLanding } from "./MedicForestMarketingLanding";
 import {
   fetchUCATQuestion,
   getPassageSections,
@@ -9382,7 +9381,7 @@ function RedesignedTutorHero() {
 }
 
 function TutorHero() {
-  return <MedicForestMarketingLanding />;
+  return <RedesignedTutorHero />;
 }
 
 // ── Main Page ────────────────────────────────────────────────────────────────
@@ -9631,11 +9630,11 @@ export function MedicForestLandingPage({
           aria-modal="true"
           aria-labelledby="preview-lock-title"
         >
-          <div className="w-full max-w-md rounded-lg border border-violet-200 bg-gradient-to-br from-white to-violet-50 p-6 text-slate-950 shadow-2xl">
-            <div className="flex h-11 w-11 items-center justify-center rounded-md border border-violet-200 bg-violet-100 text-violet-700">
+          <div className="w-full max-w-md rounded-2xl border border-cyan-100 bg-white p-6 text-slate-950 shadow-2xl">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-50 text-cyan-700">
               <LockKeyhole className="h-5 w-5" aria-hidden="true" />
             </div>
-            <p className="mt-5 text-xs font-black uppercase tracking-widest text-violet-700">
+            <p className="mt-5 text-xs font-black uppercase tracking-widest text-cyan-700">
               Work in progress
             </p>
             <h2 id="preview-lock-title" className="mt-2 text-2xl font-black">
@@ -9648,14 +9647,14 @@ export function MedicForestLandingPage({
             <div className="mt-6 flex flex-col gap-3 sm:flex-row-reverse">
               <Link
                 href={`/medicforest/access?next=${encodeURIComponent(lockedDashboard.next)}`}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-md bg-gradient-to-b from-violet-700 to-violet-900 px-5 py-3 text-sm font-bold text-white transition hover:from-violet-600 hover:to-violet-800"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800"
               >
                 <LockKeyhole className="h-4 w-4" aria-hidden="true" />
                 Enter access key
               </Link>
               <Link
                 href="/medicforest"
-                className="inline-flex flex-1 items-center justify-center rounded-md border border-violet-200 bg-white/70 px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-violet-400 hover:text-violet-700"
+                className="inline-flex flex-1 items-center justify-center rounded-full border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700"
               >
                 Not yet
               </Link>
