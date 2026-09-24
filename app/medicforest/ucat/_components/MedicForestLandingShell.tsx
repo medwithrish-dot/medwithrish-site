@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
@@ -22,7 +23,6 @@ type LandingNavItem = {
   label: string;
   href?: string;
   icon: typeof Home;
-  active?: boolean;
   badge?: string;
   external?: boolean;
   italic?: boolean;
@@ -42,23 +42,23 @@ const landingSections: Array<{
       },
       {
         label: "Personal Statement",
-        href: "/personal-statements-guide",
+        href: "/medicforest/personal-statement",
         icon: FileText,
       },
       {
         label: "Interviews",
-        href: "/medicforest/interview/dashboard",
+        href: "/medicforest/interviews",
         icon: MessageSquare,
       },
       {
         label: "1-1 Tutoring",
-        href: "/interview-tutoring",
+        href: "/medicforest/tutoring",
         icon: UserRoundCheck,
         italic: true,
       },
       {
         label: "Resources",
-        href: "/resources",
+        href: "/medicforest/resources",
         icon: BookOpen,
       },
     ],
@@ -66,8 +66,8 @@ const landingSections: Array<{
   {
     label: "Support",
     items: [
-      { label: "Feedback", href: "/contact?topic=medicforest-feedback", icon: MessageSquare },
-      { label: "Contact us", href: "/contact", icon: CircleHelp },
+      { label: "Feedback", href: "/medicforest/feedback", icon: MessageSquare },
+      { label: "Contact us", href: "/medicforest/contact", icon: CircleHelp },
     ],
   },
 ];
@@ -83,6 +83,12 @@ function BrandMark() {
 }
 
 function LandingSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
+  const pathname = usePathname();
+  const isCurrentPage = (href: string) =>
+    href === "/medicforest/ucat"
+      ? pathname === "/" || pathname === "/medicforest" || pathname === href
+      : pathname === href;
+
   return (
     <div className="flex min-h-full flex-col">
       <Link
@@ -109,7 +115,12 @@ function LandingSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         <Link
           href="/medicforest/about"
           onClick={onNavigate}
-          className="flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-white"
+          aria-current={pathname === "/medicforest/about" ? "page" : undefined}
+          className={`flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
+            pathname === "/medicforest/about"
+              ? "bg-white/[0.09] text-[#8be5df] ring-1 ring-white/[0.06]"
+              : "text-slate-300 hover:bg-white/[0.06] hover:text-white"
+          }`}
         >
           <Info className="h-5 w-5" aria-hidden="true" />
           <span>About</span>
@@ -128,6 +139,7 @@ function LandingSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             <div className="mt-2 space-y-1">
               {section.items.map((item) => {
                 const Icon = item.icon;
+                const active = item.href ? isCurrentPage(item.href) : false;
                 const content = (
                   <>
                     <Icon className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
@@ -141,7 +153,7 @@ function LandingSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                   </>
                 );
                 const className = `flex h-12 w-full items-center gap-4 rounded-xl px-4 text-sm font-semibold transition-colors ${
-                  item.active
+                  active
                     ? "bg-white/[0.09] text-[#8be5df] ring-1 ring-white/[0.06]"
                     : item.href
                       ? "text-slate-300 hover:bg-white/[0.06] hover:text-white"
@@ -153,7 +165,7 @@ function LandingSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                     key={item.label}
                     href={item.href}
                     onClick={onNavigate}
-                    aria-current={item.active ? "page" : undefined}
+                    aria-current={active ? "page" : undefined}
                     className={className}
                   >
                     {content}

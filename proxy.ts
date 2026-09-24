@@ -8,8 +8,14 @@ import {
 const MEDICFOREST_PUBLIC_PATHS = new Set([
   "/medicforest",
   "/medicforest/about",
-  "/medicforest/ucat",
   "/medicforest/access",
+  "/medicforest/contact",
+  "/medicforest/feedback",
+  "/medicforest/interviews",
+  "/medicforest/personal-statement",
+  "/medicforest/resources",
+  "/medicforest/tutoring",
+  "/medicforest/ucat",
 ]);
 
 export async function proxy(request: NextRequest) {

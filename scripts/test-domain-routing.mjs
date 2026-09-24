@@ -17,3 +17,10 @@ test("www MedicForest redirects permanently to the apex domain", async () => {
   assert.ok(redirects.some(rule => rule.source === "/" && rule.has?.[0]?.value === "www.medicforest.com"
     && rule.destination === "https://medicforest.com" && rule.permanent));
 });
+
+test("MedicForest interviews landing is not swallowed by the legacy interview redirect", async () => {
+  const redirects = await nextConfig.redirects();
+  assert.ok(redirects.some(rule => rule.source === "/medicforest/interviews/:path+"
+    && rule.destination === "/medicforest/interview/:path+"));
+  assert.ok(!redirects.some(rule => rule.source === "/medicforest/interviews"));
+});

@@ -33,13 +33,8 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/medicforest/interviews",
-        destination: "/medicforest/interview/dashboard",
-        permanent: true,
-      },
-      {
-        source: "/medicforest/interviews/:path*",
-        destination: "/medicforest/interview/:path*",
+        source: "/medicforest/interviews/:path+",
+        destination: "/medicforest/interview/:path+",
         permanent: true,
       },
       {
