@@ -12,15 +12,15 @@ Creating turbopack project {
   testMode: true
 }
 
- GET /phloemai 200 in 3.0s (next.js: 444ms, proxy.ts: 968ms, application-code: 1545ms)
+ GET /medicforest 200 in 3.0s (next.js: 444ms, proxy.ts: 968ms, application-code: 1545ms)
 ✓ Compiled in 378ms
 ✓ Compiled in 344ms
 ✓ Compiled in 273ms
- GET /phloemai 200 in 1844ms (next.js: 534ms, proxy.ts: 158ms, application-code: 1153ms)
- GET /phloemai/dashboard 200 in 1815ms (next.js: 913ms, proxy.ts: 641ms, application-code: 261ms)
- GET /phloemai/pricing 200 in 2.9s (next.js: 2.6s, proxy.ts: 28ms, application-code: 283ms)
+ GET /medicforest 200 in 1844ms (next.js: 534ms, proxy.ts: 158ms, application-code: 1153ms)
+ GET /medicforest/dashboard 200 in 1815ms (next.js: 913ms, proxy.ts: 641ms, application-code: 261ms)
+ GET /medicforest/pricing 200 in 2.9s (next.js: 2.6s, proxy.ts: 28ms, application-code: 283ms)
 ✓ Compiled in 54ms
- GET /phloemai/question-bank 200 in 2.2s (next.js: 346ms, proxy.ts: 159ms, application-code: 1740ms)
+ GET /medicforest/question-bank 200 in 2.2s (next.js: 346ms, proxy.ts: 159ms, application-code: 1740ms)
  GET /ucat-mock-difficulty 200 in 3.5s (next.js: 2.1s, proxy.ts: 158ms, application-code: 1215ms)
  GET /ucat-mock-difficulty 200 in 126ms (next.js: 3ms, proxy.ts: 5ms, application-code: 118ms)
  GET /ucat-mock-difficulty 200 in 826ms (next.js: 4ms, proxy.ts: 666ms, application-code: 156ms)
@@ -59,13 +59,13 @@ Creating turbopack project {
  GET /resources 200 in 880ms (next.js: 151ms, proxy.ts: 626ms, application-code: 103ms)
 ✓ Compiled in 4.6s
 ✓ Compiled in 413ms
- GET /phloemai/diagnostics/mock-diagnostic 200 in 944ms (next.js: 354ms, proxy.ts: 7ms, application-code: 582ms)
- GET /phloemai/pricing 200 in 2.5s (next.js: 317ms, proxy.ts: 326ms, application-code: 1851ms)
- GET /phloemai/diagnostic 200 in 2.2s (next.js: 2.0s, proxy.ts: 46ms, application-code: 162ms)
- GET /phloemai/pricing 200 in 2.1s (next.js: 325ms, proxy.ts: 139ms, application-code: 1674ms)
- GET /phloemai/diagnostic 200 in 5.2s (next.js: 311ms, proxy.ts: 1974ms, application-code: 2.9s)
- GET /phloemai 200 in 5.2s (next.js: 757ms, proxy.ts: 1967ms, application-code: 2.5s)
- GET /phloemai/diagnostics/mock-diagnostic 200 in 5.2s (next.js: 2.8s, proxy.ts: 1975ms, application-code: 429ms)
- GET /phloemai 200 in 4.0s (next.js: 337ms, proxy.ts: 118ms, application-code: 3.6s)
- GET /phloemai/pricing 200 in 4.4s (next.js: 2.3s, proxy.ts: 130ms, application-code: 1940ms)
- GET /phloemai/diagnostic 200 in 5.8s (next.js: 2.2s, proxy.ts: 2.0s, application-code: 1572ms)
+ GET /medicforest/diagnostics/mock-diagnostic 200 in 944ms (next.js: 354ms, proxy.ts: 7ms, application-code: 582ms)
+ GET /medicforest/pricing 200 in 2.5s (next.js: 317ms, proxy.ts: 326ms, application-code: 1851ms)
+ GET /medicforest/diagnostic 200 in 2.2s (next.js: 2.0s, proxy.ts: 46ms, application-code: 162ms)
+ GET /medicforest/pricing 200 in 2.1s (next.js: 325ms, proxy.ts: 139ms, application-code: 1674ms)
+ GET /medicforest/diagnostic 200 in 5.2s (next.js: 311ms, proxy.ts: 1974ms, application-code: 2.9s)
+ GET /medicforest 200 in 5.2s (next.js: 757ms, proxy.ts: 1967ms, application-code: 2.5s)
+ GET /medicforest/diagnostics/mock-diagnostic 200 in 5.2s (next.js: 2.8s, proxy.ts: 1975ms, application-code: 429ms)
+ GET /medicforest 200 in 4.0s (next.js: 337ms, proxy.ts: 118ms, application-code: 3.6s)
+ GET /medicforest/pricing 200 in 4.4s (next.js: 2.3s, proxy.ts: 130ms, application-code: 1940ms)
+ GET /medicforest/diagnostic 200 in 5.8s (next.js: 2.2s, proxy.ts: 2.0s, application-code: 1572ms)
