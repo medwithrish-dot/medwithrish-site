@@ -5,29 +5,62 @@ import Link from "next/link";
 import {
   Brain,
   ChevronDown,
+  Home,
   MessageSquare,
 } from "lucide-react";
 
-const switchItems = [
+const admissionsSwitchItems = [
   {
+    area: "admissions",
+    label: "MedicForest",
+    eyebrow: "Medical admissions",
+    href: "/",
+    icon: Home,
+  },
+  {
+    area: "ucat",
     label: "UCAT",
     eyebrow: "Question bank and mocks",
     href: "/medicforest/ucat/dashboard",
     icon: Brain,
-    current: false,
   },
   {
+    area: "interviews",
+    label: "Med Interviews",
+    eyebrow: "Interview preparation",
+    href: "/medicforest/interview/dashboard",
+    icon: MessageSquare,
+  },
+] as const;
+
+const interviewSwitchItems = [
+  {
+    area: "ucat",
+    label: "UCAT",
+    eyebrow: "Question bank and mocks",
+    href: "/medicforest/ucat/dashboard",
+    icon: Brain,
+  },
+  {
+    area: "interviews",
     label: "Med Interviews",
     eyebrow: "Current workspace",
     href: "/medicforest/interview/dashboard",
     icon: MessageSquare,
-    current: true,
   },
 ] as const;
 
-export function InterviewAreaSwitcher() {
+export function InterviewAreaSwitcher({
+  area = "interviews",
+}: {
+  area?: "admissions" | "interviews";
+}) {
   const [open, setOpen] = useState(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isAdmissions = area === "admissions";
+  const switchItems = isAdmissions
+    ? admissionsSwitchItems
+    : interviewSwitchItems;
 
   const clearCloseTimer = () => {
     if (!closeTimerRef.current) return;
@@ -74,10 +107,13 @@ export function InterviewAreaSwitcher() {
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-lg font-bold text-white">
-            Forest<span className="text-[#8be5df]">AI</span>
+            {isAdmissions ? "Medic" : "Forest"}
+            <span className="text-[#8be5df]">
+              {isAdmissions ? "Forest" : "AI"}
+            </span>
           </span>
           <span className="mt-0.5 block truncate text-xs font-semibold text-slate-300">
-            Med Interviews
+            {isAdmissions ? "Medical admissions" : "Med Interviews"}
           </span>
         </span>
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f4a45] text-[#86e6e1] ring-1 ring-white/10 transition-colors group-hover:bg-[#1aa0a5] group-hover:text-white">
@@ -96,22 +132,23 @@ export function InterviewAreaSwitcher() {
         >
           {switchItems.map((item) => {
             const Icon = item.icon;
+            const current = item.area === area;
             return (
               <Link
                 key={item.label}
                 href={item.href}
                 role="menuitem"
-                aria-current={item.current ? "page" : undefined}
+                aria-current={current ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors ${
-                  item.current
+                  current
                     ? "bg-[#edf7f6] text-[#08787b]"
                     : "text-slate-700 hover:bg-[#f4f8f8] hover:text-[#08787b]"
                 }`}
               >
                 <span
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-                    item.current
+                    current
                       ? "bg-white text-[#08787b]"
                       : "bg-[#edf7f6] text-[#4a6370]"
                   }`}

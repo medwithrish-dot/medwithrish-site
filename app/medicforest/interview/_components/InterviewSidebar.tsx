@@ -1,21 +1,42 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import {
   BadgeCheck,
+  BadgePoundSterling,
   BarChart3,
   BookOpen,
+  Brain,
+  CircleHelp,
   ClipboardList,
+  FileText,
   Home,
   Mic,
+  MessageSquare,
   Trophy,
   UserRoundCheck,
   Users,
 } from "lucide-react";
 import { InterviewAreaSwitcher } from "../InterviewAreaSwitcher";
 
-const sidebarSections = [
+type SidebarMode = "interview" | "landing";
+
+const interviewPrimaryItems = [
+  {
+    label: "Dashboard",
+    icon: Home,
+    href: "/medicforest/interview/dashboard",
+  },
+] as const;
+
+const landingPrimaryItems = [
+  { label: "About", icon: Home, href: "/about" },
+  { label: "Pricing", icon: BadgePoundSterling, href: "/pricing" },
+] as const;
+
+const interviewSections = [
   {
     label: "Practice",
     items: [
@@ -65,6 +86,54 @@ const sidebarSections = [
     ],
   },
 ] as const;
+
+const landingSections = [
+  {
+    label: "Preparation",
+    items: [
+      { label: "UCAT", icon: Brain, href: "/ucat" },
+      {
+        label: "Personal Statement",
+        icon: FileText,
+        href: "/personal-statement",
+      },
+      {
+        label: "Interviews",
+        icon: MessageSquare,
+        href: "/interviews/dashboard",
+      },
+      {
+        label: "1-1 Tutoring",
+        icon: UserRoundCheck,
+        href: "/tutoring",
+      },
+      { label: "Resources", icon: BookOpen, href: "/resources" },
+    ],
+  },
+  {
+    label: "Support",
+    items: [
+      { label: "Feedback", icon: MessageSquare, href: "/feedback" },
+      { label: "Contact us", icon: CircleHelp, href: "/contact" },
+    ],
+  },
+] as const;
+
+function getLandingActiveLabel(pathname: string) {
+  const path = pathname.replace(/^\/medicforest/, "") || "/";
+
+  if (path === "/about") return "About";
+  if (path === "/pricing") return "Pricing";
+  if (path.startsWith("/personal-statement")) return "Personal Statement";
+  if (path.startsWith("/interviews")) return "Interviews";
+  if (path.startsWith("/tutoring")) return "1-1 Tutoring";
+  if (path.startsWith("/resources")) return "Resources";
+  if (path.startsWith("/feedback")) return "Feedback";
+  if (path.startsWith("/contact")) return "Contact us";
+  if (path === "/" || path.startsWith("/ucat")) return "UCAT";
+
+  return "";
+}
 
 function SidebarLink({
   icon: Icon,
@@ -127,25 +196,39 @@ function LegalLinks({ className = "mt-5" }: { className?: string }) {
 export function InterviewSidebar({
   activeLabel,
   showPremiumCard,
+  mode = "interview",
 }: {
   activeLabel: string;
   showPremiumCard: boolean;
+  mode?: SidebarMode;
 }) {
+  const pathname = usePathname();
+  const primaryItems =
+    mode === "landing" ? landingPrimaryItems : interviewPrimaryItems;
+  const sections = mode === "landing" ? landingSections : interviewSections;
+  const resolvedActiveLabel =
+    mode === "landing" ? getLandingActiveLabel(pathname) : activeLabel;
+
   return (
     <aside className="hidden border-r border-[#093f3a] bg-[#042724] px-4 py-5 text-slate-100 lg:block lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain">
-      <InterviewAreaSwitcher />
+      <InterviewAreaSwitcher
+        area={mode === "landing" ? "admissions" : "interviews"}
+      />
 
       <nav className="mt-8 space-y-2">
-        <SidebarLink
-          icon={Home}
-          label="Dashboard"
-          href="/medicforest/interview/dashboard"
-          active={activeLabel === "Dashboard"}
-        />
+        {primaryItems.map((item) => (
+          <SidebarLink
+            key={item.label}
+            icon={item.icon}
+            label={item.label}
+            href={item.href}
+            active={resolvedActiveLabel === item.label}
+          />
+        ))}
       </nav>
 
       <div data-interview-sidebar-sections className="mt-8 space-y-8">
-        {sidebarSections.map((section) => (
+        {sections.map((section) => (
           <div key={section.label}>
             <p data-interview-sidebar-heading className="px-4 text-xs font-bold uppercase tracking-wide text-slate-500">
               {section.label}
@@ -157,7 +240,7 @@ export function InterviewSidebar({
                   icon={item.icon}
                   label={item.label}
                   href={item.href}
-                  active={activeLabel === item.label}
+                  active={resolvedActiveLabel === item.label}
                 />
               ))}
             </div>
@@ -171,17 +254,20 @@ export function InterviewSidebar({
             <BadgeCheck className="h-6 w-6" aria-hidden="true" />
           </div>
           <h2 className="mt-4 text-sm font-bold text-white">
-            Upgrade to Premium
+            {mode === "landing"
+              ? "Ready to see what costs you marks?"
+              : "Upgrade to Premium"}
           </h2>
           <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
-            Unlock more interview stations, deeper analytics and guided
-            practice.
+            {mode === "landing"
+              ? "Start with the free UCAT diagnostic. No card needed."
+              : "Unlock more interview stations, deeper analytics and guided practice."}
           </p>
           <Link
-            href="/medicforest/pricing"
+            href={mode === "landing" ? "/ucat/dashboard" : "/medicforest/pricing"}
             className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-[#1aa0a5] text-sm font-bold text-white transition-colors hover:bg-[#14888c]"
           >
-            Upgrade to Premium
+            {mode === "landing" ? "Start free" : "Upgrade to Premium"}
           </Link>
         </div>
       )}
