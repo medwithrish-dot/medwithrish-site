@@ -11,57 +11,68 @@ const featuredStory = {
 
 const stories = [
   {
+    src: "/success-stories/story-2410-b2.png",
+    alt: "Student UCAT score 2410 Band 2",
+    caption: "2410 b2!",
+  },
+  {
+    src: "/success-stories/story-2340-b2.png",
+    alt: "Student UCAT score 2340 Band 2",
+    caption: "2340 b2!!",
+  },
+  {
+    src: "/success-stories/story-2170-b2.png",
+    alt: "Student UCAT score 2170 Band 2 with 880 Quantitative Reasoning",
+    caption: "2170 B2 (880 in QR)!",
+  },
+  {
+    src: "/success-stories/story-2190-b3.png",
+    alt: "Student UCAT score 2190 Band 3",
+    caption: "2190 B3!",
+  },
+  {
     src: "/success-stories/story6.jpeg",
     alt: "Student success story 1",
     caption: "A 92nd Percentile UCAT Score - 2260!",
   },
-
   {
     src: "/success-stories/story3.jpeg",
     alt: "Student success story 2",
     caption: "All it takes is one interview to get a medicine offer!",
   },
-
   {
     src: "/success-stories/story4.jpeg",
     alt: "Student success story 4",
     caption: "A 96th percentile / top 4% UCAT score - 2350!",
   },
-
   {
     src: "/success-stories/story7.jpeg",
     alt: "Student success story 5",
   },
-
   {
     src: "/success-stories/story1.jpeg",
     alt: "Student success story 6",
     caption: "4 / 4 medicine offers!",
   },
-
   {
     src: "/success-stories/story2.jpeg",
     alt: "Student success story 7",
   },
-
   {
     src: "/success-stories/story8.jpeg",
     alt: "Student success story 8",
   },
-
   {
     src: "/success-stories/story9.jpeg",
     alt: "Student success story 9",
   },
-
   {
     src: "/success-stories/story11.jpeg",
-    alt: "Student success story 9",
+    alt: "Student success story 10",
   },
-
   {
     src: "/success-stories/story10.jpeg",
-    alt: "Student success story 10",
+    alt: "Student success story 11",
   },
 ];
 
@@ -70,7 +81,7 @@ const stories = [
 export default function SuccessStories() {
   const [showAll, setShowAll] = useState(false);
 
-  const initialCount = 5;
+  const initialCount = 6;
   const visibleStories = showAll ? stories : stories.slice(0, initialCount);
 
   return (
