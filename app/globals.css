@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7fafe;
+  --background: #edf3fa;
   --foreground: #171717;
 }
 
@@ -14,11 +14,11 @@
 
 html {
   scroll-behavior: smooth;
-  background: #f7fafe;
+  background: #edf3fa;
 }
 
 body {
-  background: #f7fafe;
+  background: #edf3fa;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -27,7 +27,7 @@ body {
   position: relative;
   isolation: isolate;
   min-height: 100vh;
-  background: linear-gradient(145deg, #f8fbff 0%, #f4f7fd 50%, #faf8ff 100%);
+  background: linear-gradient(180deg, #edf4fb 0%, #f3f6fc 35%, #edf1f8 70%, #f2f1f9 100%);
 }
 
 .medicforest-landing {

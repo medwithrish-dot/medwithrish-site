@@ -5,7 +5,7 @@ import Reveal from "./Reveal";
 
 export default function Hero() {
   return (
-    <section id="hero" className="relative overflow-hidden bg-[radial-gradient(circle_at_12%_25%,rgba(191,219,254,0.5),transparent_30rem),radial-gradient(circle_at_88%_72%,rgba(224,231,255,0.7),transparent_28rem),linear-gradient(145deg,#f8fbff_0%,#f5f7ff_52%,#faf8ff_100%)] px-6 py-6 md:py-10 -mt-10 md:-mt-14">
+    <section id="hero" className="relative overflow-hidden bg-gradient-to-b from-[#e9f0f8] via-[#edf3fa] to-[#e5eef7] px-6 py-8 md:py-12 -mt-10 md:-mt-14">
 
       {/* Background glow */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">

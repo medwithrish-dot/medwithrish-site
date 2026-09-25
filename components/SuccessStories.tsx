@@ -76,8 +76,14 @@ export default function SuccessStories() {
   return (
     <section
       id="success-stories"
-      className="relative overflow-hidden bg-[radial-gradient(circle_at_8%_8%,rgba(219,234,254,0.78),transparent_28rem),radial-gradient(circle_at_92%_38%,rgba(224,231,255,0.66),transparent_32rem),linear-gradient(180deg,#f8fbff_0%,#f4f7fc_52%,#f7f5fb_100%)] px-6 pt-6 pb-12 md:pt-8 md:pb-14"
+      className="relative overflow-hidden bg-gradient-to-b from-[#e8f1fb] via-[#eef5fc] to-[#eaf0f8] px-6 pt-8 pb-12 md:pt-10 md:pb-16"
     >
+      {/* Ambient background glows */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+        <div className="absolute -left-20 -top-10 h-[440px] w-[440px] rounded-full bg-blue-300/30 blur-3xl" />
+        <div className="absolute -right-20 top-20 h-[460px] w-[460px] rounded-full bg-indigo-300/25 blur-3xl" />
+        <div className="absolute left-1/3 bottom-10 h-80 w-80 rounded-full bg-cyan-200/25 blur-3xl" />
+      </div>
       <div className="mx-auto max-w-6xl">
         {/* Section heading */}
         <Reveal className="mx-auto max-w-2xl text-center">

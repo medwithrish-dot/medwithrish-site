@@ -205,8 +205,13 @@ useEffect(() => {
     <section
   id="journey"
   ref={journeyRef}
-  className="relative overflow-hidden bg-[radial-gradient(circle_at_90%_12%,rgba(199,210,254,0.58),transparent_28rem),radial-gradient(circle_at_5%_78%,rgba(186,230,253,0.48),transparent_30rem),linear-gradient(145deg,#eef4fb_0%,#f4f7fd_48%,#f5f2fb_100%)] px-6 py-12 md:py-14"
+  className="relative overflow-hidden bg-gradient-to-b from-[#eaf0f8] via-[#f1f6fc] to-[#eaf1f8] px-6 py-12 md:py-16"
 >
+      {/* Ambient background glows */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+        <div className="absolute right-0 top-10 h-96 w-96 rounded-full bg-indigo-200/30 blur-3xl" />
+        <div className="absolute left-0 bottom-10 h-96 w-96 rounded-full bg-blue-200/30 blur-3xl" />
+      </div>
       <Reveal className="mx-auto max-w-6xl">
       <div className="rounded-[2.5rem] border border-white/80 bg-white/90 p-6 shadow-[0_18px_60px_rgba(38,62,105,0.08)] backdrop-blur-sm md:p-10">
         <div className="mx-auto max-w-3xl text-center">

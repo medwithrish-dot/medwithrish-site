@@ -45,7 +45,11 @@ export default function OtherPathways() {
   const [selected, setSelected] = useState(pathways[0]);
 const cardRef = useRef<HTMLDivElement | null>(null);
   return (
-    <section className="relative overflow-hidden bg-[radial-gradient(circle_at_8%_18%,rgba(219,234,254,0.72),transparent_28rem),radial-gradient(circle_at_92%_82%,rgba(237,233,254,0.7),transparent_30rem),linear-gradient(155deg,#ffffff_0%,#f8fbff_50%,#faf8ff_100%)] px-6 py-16">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#eaf1f8] via-[#f4f7fc] to-[#e9f0f8] px-6 py-16">
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+        <div className="absolute -left-10 top-10 h-80 w-80 rounded-full bg-blue-200/30 blur-3xl" />
+        <div className="absolute -right-10 bottom-10 h-80 w-80 rounded-full bg-indigo-200/25 blur-3xl" />
+      </div>
       <div className="mx-auto max-w-6xl">
         <Reveal className="mx-auto mb-10 max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
