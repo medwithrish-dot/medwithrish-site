@@ -2,220 +2,199 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
-  BadgeCheck,
-  BarChart3,
   BookOpen,
-  Brain,
   Check,
+  CheckCircle2,
   ClipboardCheck,
   Clock3,
   MessageSquareText,
   Mic,
   Sparkles,
-  Stethoscope,
   Target,
-  University,
 } from "lucide-react";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "MedicForest Interviews | AI medicine interview preparation",
+    absolute: "MedicForest Interviews | 550+ free questions with markschemes",
   },
   description:
-    "Practise medicine and dentistry interviews with AI stations, structured feedback, question banks and a personalised preparation plan.",
-  alternates: {
-    canonical: "/interviews",
-  },
+    "Start practising immediately with 550+ free medicine and dentistry interview questions and markschemes. No payment or subscription needed. Explore AI interviews and personalised preparation tools.",
+  alternates: { canonical: "/interviews" },
 };
 
-const platformHref = "/interviews/dashboard";
-
+const questionBankHref = "/medicforest/interview/question-bank";
+const sampleHref = `${questionBankHref}?question=iq-01-001-motivation-for-medicine`;
+const primaryButton =
+  "inline-flex min-h-12 items-center justify-center gap-3 rounded-lg bg-[#51edcf] px-6! py-3 text-sm! font-bold text-[#062b2c] transition-colors hover:bg-[#85f5df] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-500";
 const features = [
   {
+    title: "550+ free questions",
+    text: "Build confidence across motivation, ethics, communication, NHS topics and more.",
+    icon: BookOpen,
+  },
+  {
+    title: "Free markschemes",
+    text: "Review the key points behind a strong answer and see where you can improve.",
+    icon: ClipboardCheck,
+  },
+  {
     title: "Realistic AI interviews",
-    text: "Answer timed questions aloud in a focused interview room with natural follow-ups.",
+    text: "Take your preparation further with timed stations and natural follow-up questions.",
     icon: Mic,
-    style: "bg-cyan-50 text-cyan-700",
   },
   {
-    title: "Actionable feedback",
-    text: "See what was strong, what held the answer back and exactly how to improve it.",
-    icon: MessageSquareText,
-    style: "bg-emerald-50 text-emerald-700",
-  },
-  {
-    title: "University-focused prep",
-    text: "Prepare for the formats and station styles used by the universities on your list.",
-    icon: University,
-    style: "bg-violet-50 text-violet-700",
-  },
-  {
-    title: "A plan that adapts",
-    text: "Turn your deadlines, completed practice and weaker areas into clear next steps.",
+    title: "Personalised feedback",
+    text: "Use AI interview feedback to understand your strengths and focus your next practice.",
     icon: Target,
-    style: "bg-amber-50 text-amber-700",
   },
-] as const;
-
-const journey = [
+];
+const steps = [
   {
-    step: "01",
-    title: "Tell Forest where you are applying",
-    text: "Add your universities and interview dates so your dashboard can prioritise the right preparation.",
-    icon: University,
+    title: "Pick a question",
+    text: "Open the free bank and choose a topic you want to work on. Start immediately.",
+    icon: BookOpen,
   },
   {
-    step: "02",
-    title: "Practise under interview conditions",
-    text: "Use AI interviews, the question bank and concise guides to build confident, structured answers.",
-    icon: Mic,
+    title: "Practise your answer",
+    text: "Think it through, speak it aloud or write it down. Build a clear answer in your own words.",
+    icon: MessageSquareText,
   },
   {
-    step: "03",
-    title: "Review, improve and repeat",
-    text: "Use feedback and progress insights to target the skills most likely to lift your next performance.",
-    icon: BarChart3,
+    title: "Learn from the markscheme",
+    text: "Compare your answer with the marking points, reflect on the gaps and try again.",
+    icon: ClipboardCheck,
   },
-] as const;
+];
 
 export default function InterviewsPage() {
   return (
     <MedicForestLandingShell>
-      <div className="bg-white">
-        <section className="overflow-hidden bg-[#050b1f] text-white">
-          <div className="mx-auto max-w-6xl px-5 py-8 lg:px-8 lg:py-10">
-            <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_0.8fr]">
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-cyan-200">
-                  <Stethoscope className="h-3.5 w-3.5" aria-hidden="true" />
-                  AI medicine interview preparation
-                </div>
-
-                <h1 className="mt-5 max-w-2xl text-4xl font-semibold leading-tight text-white sm:text-5xl">
-                  Walk into your interview{" "}
-                  <span className="text-cyan-400">ready.</span>
-                </h1>
-
-                <p className="mt-4 max-w-xl text-lg font-bold leading-snug text-white sm:text-xl">
-                  Personalised medicine and dentistry interview practice, from
-                  your first answer to your final offer.
-                </p>
-
-                <p className="mt-3 max-w-xl text-sm leading-6 text-slate-300">
-                  Practise realistic stations, get clear feedback and follow a
-                  preparation plan shaped around your universities and dates.
-                </p>
-
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <Link
-                    href={platformHref}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-cyan-600 px-5 text-sm font-bold text-white shadow-lg shadow-cyan-950/30 transition-colors hover:bg-cyan-500"
-                  >
-                    Log in / Launch Interview Platform
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                  <Link
-                    href={`${platformHref}#your-next-step`}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-cyan-300/40 bg-cyan-400/10 px-5 text-sm font-bold text-cyan-100 transition-colors hover:border-cyan-200 hover:bg-cyan-400/20"
-                  >
-                    <ClipboardCheck className="h-4 w-4" aria-hidden="true" />
-                    See my preparation plan
-                  </Link>
-                </div>
-
-                <div className="mt-7 grid max-w-2xl gap-4 sm:grid-cols-3">
-                  {[
-                    ["1", "Set up", "Add your universities and key dates."],
-                    ["2", "Practise", "Complete realistic interview stations."],
-                    ["3", "Improve", "Act on feedback and track progress."],
-                  ].map(([step, title, text], index) => (
-                    <div
-                      key={step}
-                      className={`flex gap-2.5 ${
-                        index < 2 ? "sm:border-r sm:border-white/10 sm:pr-4" : ""
-                      }`}
-                    >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-600 text-[10px] font-black text-white">
-                        {step}
-                      </span>
-                      <div>
-                        <h2 className="text-xs font-bold text-white">{title}</h2>
-                        <p className="mt-1 text-[11px] leading-4 text-slate-300">
-                          {text}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+      <div className="bg-white text-slate-950">
+        <section className="relative overflow-hidden bg-[#071827] text-white">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-32 -top-40 h-[550px] w-[550px] rounded-full bg-teal-400/10 blur-3xl"
+          />
+          <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6! py-14 xl:grid-cols-[1.05fr_1fr] xl:gap-12 xl:px-10 xl:py-20">
+            <div>
+              <p className="inline-flex items-center gap-2 rounded-full border border-teal-300/30 bg-teal-300/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-teal-200">
+                <Sparkles className="h-3.5 w-3.5" aria-hidden="true" /> Medicine
+                &amp; dentistry interview preparation
+              </p>
+              <h1 className="mt-6 max-w-xl text-4xl! font-semibold leading-[1.12] tracking-tight sm:text-5xl! 2xl:text-6xl!">
+                Your next chapter
+                <br />
+                starts with practice.
+              </h1>
+              <p className="mt-6 max-w-xl text-2xl! font-semibold leading-snug text-[#64f0d6] sm:text-3xl!">
+                550+ FREE interview questions.
+                <br />
+                Markschemes included.
+              </p>
+              <p className="mt-5 max-w-lg text-base! leading-7! text-slate-300">
+                Start practising right now, free of charge. Build stronger
+                answers for your medicine or dentistry interview, one question
+                at a time.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link href={questionBankHref} className={primaryButton}>
+                  Start practising free{" "}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/interviews/dashboard"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-slate-500 px-5 py-3 text-sm! font-semibold text-white transition-colors hover:border-teal-300 hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300"
+                >
+                  Explore the platform{" "}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
               </div>
+              <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-3 text-xs! text-slate-300">
+                {[
+                  "Instant access",
+                  "No payment needed",
+                  "Free question bank & markschemes",
+                ].map((text) => (
+                  <li key={text} className="flex items-center gap-2">
+                    <CheckCircle2
+                      className="h-4 w-4 shrink-0 text-teal-300"
+                      aria-hidden="true"
+                    />
+                    {text}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-              <div className="rounded-2xl border border-cyan-400/35 bg-slate-950/70 p-4 shadow-2xl shadow-cyan-950/20">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-600 text-white">
-                      <Sparkles className="h-5 w-5" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <h2 className="text-base font-black text-white">
-                        Interview feedback
-                      </h2>
-                      <p className="text-[11px] text-slate-400">
-                        Communication station
-                      </p>
-                    </div>
-                  </div>
-                  <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-right">
-                    <p className="text-lg font-black text-cyan-300">78%</p>
-                    <p className="text-[10px] text-slate-400">Strong answer</p>
-                  </div>
+            <div className="min-w-0 rounded-2xl border border-teal-300/25 bg-white/5 p-2.5 shadow-2xl sm:p-3">
+              <div className="overflow-hidden rounded-xl bg-white text-slate-900">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
+                  <span className="flex items-center gap-2 text-sm! font-bold">
+                    <BookOpen
+                      className="h-4 w-4 text-teal-700"
+                      aria-hidden="true"
+                    />
+                    Your interview practice
+                  </span>
+                  <span className="rounded-full bg-teal-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-teal-800">
+                    Free question bank
+                  </span>
                 </div>
-
-                <div className="mt-4 rounded-xl border border-emerald-400/25 bg-emerald-500/10 p-3">
-                  <div className="flex items-center gap-2 text-xs font-bold text-emerald-200">
-                    <BadgeCheck className="h-4 w-4" aria-hidden="true" />
-                    What worked
+                <div className="p-5 sm:p-6">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-medium text-slate-500">
+                    <span>Personal &amp; Motivation</span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
+                      Practise at your pace
+                    </span>
                   </div>
-                  <ul className="mt-2 space-y-1.5 text-[11px] leading-4 text-slate-100">
-                    <li className="flex gap-2">
-                      <Check className="mt-0.5 h-3 w-3 shrink-0 text-emerald-300" aria-hidden="true" />
-                      You acknowledged the patient&apos;s concern early.
-                    </li>
-                    <li className="flex gap-2">
-                      <Check className="mt-0.5 h-3 w-3 shrink-0 text-emerald-300" aria-hidden="true" />
-                      Your explanation was clear and free from jargon.
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-xl border border-amber-400/25 bg-amber-500/10 p-3">
-                    <div className="flex items-center gap-2 text-xs font-bold text-amber-200">
-                      <Target className="h-4 w-4" aria-hidden="true" />
-                      Next focus
-                    </div>
-                    <p className="mt-2 text-[11px] leading-4 text-slate-100">
-                      Ask one open question before moving into solutions.
+                  <h2 className="mt-4 text-xl! font-semibold leading-snug tracking-tight sm:text-2xl!">
+                    What has influenced your decision to pursue a career in
+                    medicine?
+                  </h2>
+                  <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
+                    <p className="text-xs! font-semibold text-slate-700">
+                      Build your answer
+                    </p>
+                    <p className="mt-2 text-sm! leading-6! text-slate-500">
+                      Think about your motivation, the experiences that shaped
+                      it and what you learned.
                     </p>
                   </div>
-                  <div className="rounded-xl border border-violet-400/25 bg-violet-500/10 p-3">
-                    <div className="flex items-center gap-2 text-xs font-bold text-violet-200">
-                      <Clock3 className="h-4 w-4" aria-hidden="true" />
-                      Delivery
-                    </div>
-                    <p className="mt-2 text-[11px] leading-4 text-slate-100">
-                      Good pace. Leave a little more time for your summary.
+                  <div className="mt-4 rounded-lg border border-teal-100 bg-[#f0faf7] p-4">
+                    <p className="flex items-center gap-2 text-xs! font-bold text-teal-900">
+                      <ClipboardCheck className="h-4 w-4" aria-hidden="true" />
+                      Markscheme preview
                     </p>
+                    <ul className="mt-3 space-y-2.5 text-xs! leading-5! text-slate-700">
+                      {[
+                        "Explain a personal, informed motivation.",
+                        "Reflect on a specific experience and what it taught you.",
+                        "Show a realistic understanding of a medical career.",
+                      ].map((text) => (
+                        <li key={text} className="flex gap-2">
+                          <Check
+                            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-teal-700"
+                            aria-hidden="true"
+                          />
+                          {text}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </div>
-
-                <div className="mt-3 rounded-xl border border-cyan-400/25 bg-cyan-500/10 p-3">
-                  <div className="flex items-center gap-2 text-xs font-bold text-cyan-200">
-                    <Brain className="h-4 w-4" aria-hidden="true" />
-                    Your next task
-                  </div>
-                  <p className="mt-2 text-[11px] leading-4 text-slate-100">
-                    Complete one empathy station, then review the SPIKES guide.
+                  <Link
+                    href={sampleHref}
+                    className="mt-5 flex min-h-11 items-center justify-between gap-3 rounded-lg bg-[#0a3238] px-4 py-3 text-sm! font-semibold text-white transition-colors hover:bg-teal-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-600"
+                  >
+                    Practise this question free{" "}
+                    <ArrowRight
+                      className="h-4 w-4 shrink-0"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                  <p className="mt-3 text-center text-[10px] text-slate-500">
+                    Example question · Full markscheme available in the bank
                   </p>
                 </div>
               </div>
@@ -223,108 +202,129 @@ export default function InterviewsPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-5 py-10 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-black uppercase tracking-widest text-cyan-700">
-              Everything in one place
+        <section
+          className="border-b border-slate-200 bg-[#f4faf8]"
+          aria-label="Free practice at a glance"
+        >
+          <div className="mx-auto grid max-w-7xl grid-cols-3 gap-3 px-6! py-7 text-center xl:px-10">
+            {[
+              ["550+", "Free interview questions"],
+              ["£0", "Questions & markschemes"],
+              ["Start now", "Immediate practice access"],
+            ].map(([value, label]) => (
+              <div
+                key={value}
+                className="border-r border-teal-900/10 last:border-0"
+              >
+                <p className="text-xl! font-semibold tracking-tight text-teal-900 sm:text-3xl!">
+                  {value}
+                </p>
+                <p className="mt-1.5 text-[11px] leading-4! text-slate-600 sm:text-xs!">
+                  {label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-6! py-14 xl:px-10 xl:py-16">
+          <div className="max-w-2xl">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-teal-700">
+              Purposeful preparation
             </p>
-            <h2 className="mt-2 text-2xl font-black text-slate-950 sm:text-3xl">
-              More than a list of interview questions
+            <h2 className="mt-3 text-3xl! font-semibold tracking-tight">
+              Better answers. Greater confidence.
             </h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              Build the knowledge, delivery and confidence needed to perform
-              when the pressure is real.
+            <p className="mt-4 text-sm! leading-7! text-slate-600">
+              Start with the free questions and markschemes. Explore AI
+              interviews and personalised preparation when you want to take your
+              practice further.
             </p>
           </div>
-
-          <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {features.map((feature) => {
-              const Icon = feature.icon;
-              return (
-                <article
-                  key={feature.title}
-                  className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
-                >
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-full ${feature.style}`}>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
+            {features.map(({ title, text, icon: Icon }, index) => (
+              <article
+                key={title}
+                className="rounded-xl border border-slate-200 bg-white p-6"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-teal-800">
                     <Icon className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                  <h3 className="mt-4 text-sm font-black text-slate-950">
-                    {feature.title}
-                  </h3>
-                  <p className="mt-2 text-xs leading-5 text-slate-600">
-                    {feature.text}
-                  </p>
-                </article>
-              );
-            })}
+                  </span>
+                  {index < 2 && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700">
+                      Always free
+                    </span>
+                  )}
+                </div>
+                <h3 className="mt-5 text-base! font-semibold">{title}</h3>
+                <p className="mt-2 text-sm! leading-6! text-slate-600">{text}</p>
+              </article>
+            ))}
           </div>
         </section>
 
         <section className="border-y border-slate-200 bg-slate-50">
-          <div className="mx-auto max-w-6xl px-5 py-10 lg:px-8">
-            <div className="grid gap-8 lg:grid-cols-[0.62fr_1fr] lg:items-start">
-              <div>
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-100 text-cyan-800">
-                  <BookOpen className="h-5 w-5" aria-hidden="true" />
-                </div>
-                <h2 className="mt-4 text-2xl font-black text-slate-950">
-                  A clear route from preparation to performance
-                </h2>
-                <p className="mt-3 text-sm leading-6 text-slate-600">
-                  Your dashboard brings practice, feedback and priorities
-                  together, so you always know what to do next.
-                </p>
-              </div>
-
-              <ol className="grid gap-3">
-                {journey.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <li
-                      key={item.step}
-                      className="flex gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
-                    >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#e8f7f5] text-[#08787b]">
-                        <Icon className="h-5 w-5" aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-cyan-700">
-                          Step {item.step}
-                        </p>
-                        <h3 className="mt-1 text-sm font-black text-slate-950">
-                          {item.title}
-                        </h3>
-                        <p className="mt-1.5 text-xs leading-5 text-slate-600">
-                          {item.text}
-                        </p>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ol>
+          <div className="mx-auto max-w-7xl px-6! py-14 xl:px-10 xl:py-16">
+            <div className="text-center">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-teal-700">
+                A clear place to start
+              </p>
+              <h2 className="mt-3 text-3xl! font-semibold tracking-tight">
+                From your first question to a stronger answer.
+              </h2>
+              <p className="mt-4 text-sm! text-slate-600">
+                Three simple steps. No subscription needed for the question
+                bank.
+              </p>
             </div>
+            <ol className="mt-10 grid gap-8 md:grid-cols-3">
+              {steps.map(({ title, text, icon: Icon }, index) => (
+                <li key={title} className="relative">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0a3238] text-sm! font-semibold text-white">
+                      {index + 1}
+                    </span>
+                    <div
+                      aria-hidden="true"
+                      className="h-px flex-1 bg-slate-200"
+                    />
+                    <Icon
+                      className="h-5 w-5 text-teal-700"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <h3 className="mt-5 text-base! font-semibold">{title}</h3>
+                  <p className="mt-2 text-sm! leading-6! text-slate-600">
+                    {text}
+                  </p>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-5 py-10 lg:px-8">
-          <div className="overflow-hidden rounded-2xl bg-[#063b37] px-6 py-8 text-center text-white shadow-xl sm:px-10">
-            <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-cyan-200">
-              <Stethoscope className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <h2 className="mt-4 text-2xl font-black">
-              Make your next answer count.
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-teal-50/80">
-              Open your personalised interview dashboard and start preparing for
-              the universities that matter to you.
+        <section className="bg-white px-6! py-12 xl:px-10">
+          <div className="mx-auto max-w-7xl rounded-2xl bg-[#071827] px-6! py-12 text-center text-white sm:px-10">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-teal-300">
+              Your next answer starts here
             </p>
-            <Link
-              href={platformHref}
-              className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-white px-5 text-sm font-black text-[#063b37] transition-colors hover:bg-cyan-50"
-            >
-              Go to Interviews Dashboard
+            <h2 className="mx-auto mt-4 max-w-2xl text-3xl! font-semibold tracking-tight sm:text-4xl!">
+              550+ free interview questions.
+              <br />
+              <span className="text-[#64f0d6]">Ready whenever you are.</span>
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-sm! leading-7! text-slate-300">
+              Open the question bank, practise your answer and review the
+              markscheme. All free of charge, with immediate access.
+            </p>
+            <Link href={questionBankHref} className={`mt-7 ${primaryButton}`}>
+              Start practising free{" "}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
+            <p className="mt-4 text-xs! text-slate-400">
+              No payment. No subscription. Just practice.
+            </p>
           </div>
         </section>
       </div>
