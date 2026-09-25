@@ -74,7 +74,7 @@ const navItems: {
     ],
   },
 
-  { label: "MedicForest", href: "/medicforest", special: true },
+  { label: "MedicForest", href: "https://medicforest.com", special: true },
   { label: "Contact", href: "/contact" },
 ];
 
