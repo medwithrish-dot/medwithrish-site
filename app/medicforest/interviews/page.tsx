@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -7,7 +7,6 @@ import {
   BookOpen,
   Check,
   CheckCircle2,
-  ChevronDown,
   ClipboardCheck,
   Clock3,
   CreditCard,
@@ -21,6 +20,7 @@ import {
   Zap,
 } from "lucide-react";
 import { MedicForestLogo } from "../_components/MedicForestLogo";
+import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -35,6 +35,7 @@ export const metadata: Metadata = {
 const bankHref = "/medicforest/interview/question-bank";
 const platformHref = "/interviews/dashboard";
 const sampleHref = `${bankHref}?question=iq-01-001-motivation-for-medicine`;
+
 const features = [
   {
     title: "550+ free questions",
@@ -61,6 +62,7 @@ const features = [
     tone: "gold",
   },
 ];
+
 const steps = [
   {
     title: "Choose",
@@ -109,10 +111,10 @@ function PracticeLinks() {
     <div className={styles.actions}>
       <Link className={styles.primary} href={bankHref}>
         Start free interview practice{" "}
-        <ArrowRight size={18} aria-hidden="true" />
+        <ArrowRight size={16} aria-hidden="true" />
       </Link>
       <Link className={styles.secondary} href={platformHref}>
-        Launch platform <ExternalLink size={16} aria-hidden="true" />
+        Launch platform <ExternalLink size={14} aria-hidden="true" />
       </Link>
     </div>
   );
@@ -135,7 +137,7 @@ function InterviewPreview() {
               </p>
             </div>
             <span className={styles.timer}>
-              <Clock3 size={16} aria-hidden="true" />
+              <Clock3 size={14} aria-hidden="true" />
               5:01
             </span>
           </div>
@@ -144,19 +146,19 @@ function InterviewPreview() {
               <div className={styles.callTiles}>
                 <div className={styles.candidateTile}>
                   <div className={styles.audioCircle}>
-                    <Mic size={30} strokeWidth={1.3} aria-hidden="true" />
+                    <Mic size={24} strokeWidth={1.3} aria-hidden="true" />
                   </div>
                   <div>
                     <strong>Your answer</strong>
                     <span>
-                      Voice practice <VideoOff size={12} aria-hidden="true" />
+                      Voice practice <VideoOff size={11} aria-hidden="true" />
                     </span>
                   </div>
                 </div>
                 <div className={styles.aiTile}>
                   <div className={styles.aiCircle}>
                     <AudioLines
-                      size={35}
+                      size={28}
                       strokeWidth={1.6}
                       aria-hidden="true"
                     />
@@ -179,27 +181,27 @@ function InterviewPreview() {
               </p>
               <div className={styles.callControls} aria-hidden="true">
                 <span>
-                  <Mic size={21} />
+                  <Mic size={18} />
                 </span>
                 <span>
-                  <VideoOff size={21} />
+                  <VideoOff size={18} />
                 </span>
                 <span>
-                  <Phone size={21} />
+                  <Phone size={18} />
                 </span>
               </div>
             </div>
             <div className={styles.transcript}>
               <div className={styles.tabs}>
                 <span>
-                  <FileText size={12} aria-hidden="true" />
+                  <FileText size={11} aria-hidden="true" />
                   Live transcript
                 </span>
                 <span>Notes</span>
               </div>
               <div className={styles.message}>
                 <span className={styles.speaker}>
-                  <AudioLines size={15} aria-hidden="true" />
+                  <AudioLines size={13} aria-hidden="true" />
                   AI interviewer
                 </span>
                 <p>
@@ -209,7 +211,7 @@ function InterviewPreview() {
               </div>
               <div className={styles.message}>
                 <span className={styles.speaker}>
-                  <Mic size={14} aria-hidden="true" />
+                  <Mic size={12} aria-hidden="true" />
                   Your answer
                 </span>
                 <p>
@@ -224,7 +226,7 @@ function InterviewPreview() {
           </div>
         </div>
         <div className={styles.previewFooter}>
-          <CheckCircle2 size={13} aria-hidden="true" />
+          <CheckCircle2 size={12} aria-hidden="true" />
           Realistic stations <span>&middot;</span> Structured feedback{" "}
           <span>&middot;</span> Clear next steps
         </div>
@@ -235,57 +237,14 @@ function InterviewPreview() {
 
 export default function InterviewsPage() {
   return (
-    <div className={styles.page}>
-      <a className={styles.skip} href="#main-content">
-        Skip to content
-      </a>
-      <header className={styles.header}>
-        <div className={styles.navbar}>
-          <Link href="/medicforest" aria-label="MedicForest home">
-            <Brand />
-          </Link>
-          <nav className={styles.desktopNav} aria-label="Main navigation">
-            <Link
-              className={styles.activeNav}
-              href="/interviews"
-              aria-current="page"
-            >
-              Interviews
-            </Link>
-            <a href="#features">Features</a>
-            <Link href="/pricing">Pricing</Link>
-            <Link href="/ucat">UCAT</Link>
-            <Link href="/resources">
-              Resources <ChevronDown size={13} aria-hidden="true" />
-            </Link>
-          </nav>
-          <div className={styles.accountLinks}>
-            <Link className={styles.signIn} href="/medicforest/account">
-              Sign in
-            </Link>
-            <Link className={styles.navCta} href={bankHref}>
-              Start free <ArrowRight size={15} aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-        <nav className={styles.mobileNav} aria-label="Mobile navigation">
-          <Link href="/interviews" aria-current="page">
-            Interviews
-          </Link>
-          <a href="#features">Features</a>
-          <Link href="/pricing">Pricing</Link>
-          <Link href="/ucat">UCAT</Link>
-          <Link href="/resources">Resources</Link>
-        </nav>
-      </header>
-
-      <main id="main-content">
+    <MedicForestLandingShell>
+      <div className={styles.page}>
         <section className={styles.hero}>
           <Waves />
           <div className={`${styles.container} ${styles.heroGrid}`}>
             <div className={styles.heroCopy}>
               <p className={styles.eyebrowPill}>
-                <Sparkles size={17} aria-hidden="true" />
+                <Sparkles size={15} aria-hidden="true" />
                 <span>Medicine &amp; dentistry interview preparation</span>
               </p>
               <h1>
@@ -299,7 +258,7 @@ export default function InterviewsPage() {
                 interviews.
               </p>
               <div className={styles.freePromise}>
-                <BookOpen size={22} aria-hidden="true" />
+                <BookOpen size={20} aria-hidden="true" />
                 <p>
                   <strong>
                     550+ FREE interview questions with markschemes.
@@ -317,7 +276,7 @@ export default function InterviewsPage() {
                   "No payment needed",
                 ].map((text) => (
                   <li key={text}>
-                    <CheckCircle2 size={17} aria-hidden="true" />
+                    <CheckCircle2 size={15} aria-hidden="true" />
                     {text}
                   </li>
                 ))}
@@ -336,7 +295,7 @@ export default function InterviewsPage() {
             {features.map(({ title, text, icon: Icon, tone }) => (
               <article className={styles.feature} data-tone={tone} key={title}>
                 <span className={styles.featureIcon}>
-                  <Icon size={25} strokeWidth={1.7} aria-hidden="true" />
+                  <Icon size={22} strokeWidth={1.7} aria-hidden="true" />
                 </span>
                 <h2>{title}</h2>
                 <p>{text}</p>
@@ -362,7 +321,7 @@ export default function InterviewsPage() {
                 <li key={title}>
                   <div className={styles.stepIcon}>
                     <span>{index + 1}</span>
-                    <Icon size={32} strokeWidth={1.5} aria-hidden="true" />
+                    <Icon size={26} strokeWidth={1.5} aria-hidden="true" />
                   </div>
                   <div>
                     <h3>{title}</h3>
@@ -416,27 +375,27 @@ export default function InterviewsPage() {
               <p>Personal &amp; Motivation</p>
               <div className={styles.markingPreview}>
                 <span>
-                  <ClipboardCheck size={17} aria-hidden="true" />
+                  <ClipboardCheck size={16} aria-hidden="true" />
                   Inside the markscheme
                 </span>
                 <ul>
                   <li>
-                    <Check size={15} aria-hidden="true" />
+                    <Check size={14} aria-hidden="true" />
                     Explain a personal, informed motivation.
                   </li>
                   <li>
-                    <Check size={15} aria-hidden="true" />
+                    <Check size={14} aria-hidden="true" />
                     Reflect on experience and what you learned.
                   </li>
                   <li>
-                    <Check size={15} aria-hidden="true" />
+                    <Check size={14} aria-hidden="true" />
                     Show insight into a career in medicine.
                   </li>
                 </ul>
               </div>
               <Link href={sampleHref}>
                 Practise this question free{" "}
-                <ArrowRight size={18} aria-hidden="true" />
+                <ArrowRight size={16} aria-hidden="true" />
               </Link>
             </article>
           </div>
@@ -456,31 +415,32 @@ export default function InterviewsPage() {
             <PracticeLinks />
             <ul className={styles.closingChecks}>
               <li>
-                <CreditCard size={19} aria-hidden="true" />
+                <CreditCard size={17} aria-hidden="true" />
                 No payment required
               </li>
               <li>
-                <Zap size={19} aria-hidden="true" />
+                <Zap size={17} aria-hidden="true" />
                 Instant access
               </li>
               <li>
-                <ClipboardCheck size={19} aria-hidden="true" />
+                <ClipboardCheck size={17} aria-hidden="true" />
                 Free markschemes included
               </li>
             </ul>
           </div>
         </section>
-      </main>
-      <footer className={styles.footer}>
-        <div className={styles.container}>
-          <Link href="/medicforest">
-            <Brand />
-          </Link>
-          <p>Prepare with purpose.</p>
-          <Link href="/privacy-policy">Privacy</Link>
-          <Link href="/terms-and-conditions">Terms</Link>
-        </div>
-      </footer>
-    </div>
+
+        <footer className={styles.footer}>
+          <div className={styles.container}>
+            <Link href="/medicforest">
+              <Brand />
+            </Link>
+            <p>&copy; MedicForest. Prepare with purpose.</p>
+            <Link href="/privacy-policy">Privacy</Link>
+            <Link href="/terms-and-conditions">Terms</Link>
+          </div>
+        </footer>
+      </div>
+    </MedicForestLandingShell>
   );
 }

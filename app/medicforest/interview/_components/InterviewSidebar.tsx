@@ -119,7 +119,7 @@ const landingSections = [
   },
 ] as const;
 
-function getLandingActiveLabel(pathname: string) {
+export function getLandingActiveLabel(pathname: string) {
   const path = pathname.replace(/^\/medicforest/, "") || "/";
 
   if (path === "/about") return "About";
