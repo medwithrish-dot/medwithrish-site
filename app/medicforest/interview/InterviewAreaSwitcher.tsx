@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { MedicForestLogo } from "../_components/MedicForestLogo";
 import {
   Brain,
   ChevronDown,
@@ -102,16 +103,8 @@ export function InterviewAreaSwitcher({
         aria-controls="interview-area-switcher"
         className="group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-[#0b3431] px-2.5 py-2.5 text-left shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
       >
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#123f3b] text-xs font-bold text-white">
-          MWR
-        </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-lg font-bold text-white">
-            {isAdmissions ? "Medic" : "Forest"}
-            <span className="text-[#8be5df]">
-              {isAdmissions ? "Forest" : "AI"}
-            </span>
-          </span>
+          <MedicForestLogo className="h-10 w-[148px]" onDark />
           <span className="mt-0.5 block truncate text-xs font-semibold text-slate-300">
             {isAdmissions ? "Medical admissions" : "Med Interviews"}
           </span>

@@ -17,10 +17,10 @@ import {
   Phone,
   Sparkles,
   Target,
-  TreeDeciduous,
   VideoOff,
   Zap,
 } from "lucide-react";
+import { MedicForestLogo } from "../_components/MedicForestLogo";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -80,14 +80,7 @@ const steps = [
 ];
 
 function Brand() {
-  return (
-    <span className={styles.brand}>
-      <TreeDeciduous aria-hidden="true" />
-      <span>
-        Medic<span>Forest</span>
-      </span>
-    </span>
-  );
+  return <MedicForestLogo className={styles.brandLogo} onDark priority />;
 }
 
 function Waves() {

@@ -18,6 +18,7 @@ import {
 import { ClientPremiumGate } from "./ClientPremiumGate";
 import { ExpandableAiFeedback } from "./ExpandableAiFeedback";
 import { MedicForestLandingShell } from "./MedicForestLandingShell";
+import { MedicForestLogo as MedicForestBrandLogo } from "../../_components/MedicForestLogo";
 import {
   fetchUCATQuestion,
   getPassageSections,
@@ -72,7 +73,7 @@ import {
 
 // ── MedicForest Logo (landing hero) ─────────────────────────────────────────────
 
-function MedicForestLogo({ compact = false }: { compact?: boolean } = {}) {
+export function LegacyMedicForestLogo({ compact = false }: { compact?: boolean } = {}) {
   return (
     <div
       className={`${
@@ -92,7 +93,7 @@ function MedicForestLogo({ compact = false }: { compact?: boolean } = {}) {
   );
 }
 
-function MedicForestFaviconMark({ className = "" }: { className?: string }) {
+export function LegacyMedicForestFaviconMark({ className = "" }: { className?: string }) {
   return (
     <span
       aria-hidden="true"
@@ -587,11 +588,8 @@ function MedicForestAreaSwitcher({
         title="Switch area"
         className="group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-[#0b3431] px-2.5 py-2.5 text-left shadow-sm transition-colors hover:border-teal-300/40 hover:bg-[#123f3b] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
       >
-        <MedicForestFaviconMark className="h-10 w-10 rounded-xl" />
+        <MedicForestBrandLogo className="h-10 w-[146px]" onDark />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-lg font-bold text-white">
-            Forest<span className="text-[#79d8d6]">AI</span>
-          </span>
           <span className="mt-0.5 block truncate text-xs font-semibold text-slate-300">
             UCAT Tutor
           </span>
@@ -6329,7 +6327,7 @@ function AuthPanel({
       >
         <div className="max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-xl focus:outline-none">
           <div className="mb-3 flex items-center gap-3 rounded-xl border border-white/40 bg-white/95 p-4 shadow-xl shadow-slate-950/10">
-            <MedicForestFaviconMark className="h-10 w-10 rounded-xl" />
+            <MedicForestBrandLogo className="h-10 w-[146px]" />
             <div>
               <h2 id="medicforest-auth-gate-title" className="text-lg font-black">
                 Sign in to MedicForest
@@ -6358,13 +6356,7 @@ function AuthPanel({
           </Link>
 
           <div className="flex items-center gap-3">
-            <MedicForestFaviconMark className="h-12 w-12 rounded-xl" />
-            <div>
-              <p className="text-2xl font-black">
-                Forest<span className="text-blue-600">AI</span>
-              </p>
-              <p className="text-sm font-bold text-slate-500">UCAT Tutor</p>
-            </div>
+            <MedicForestBrandLogo className="h-12 w-[175px]" />
           </div>
 
           <h1 className="mt-10 max-w-xl text-4xl font-black leading-tight sm:text-5xl">
@@ -9012,7 +9004,7 @@ function RedesignedTutorHero() {
             <div className="rounded-2xl border border-blue-400/45 bg-slate-950/70 p-3 shadow-xl shadow-blue-950/20">
               <div className="mb-2.5 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <MedicForestLogo compact />
+                  <MedicForestBrandLogo className="h-9 w-[118px]" onDark />
                   <div>
                     <h2 className="text-base font-black text-white">AI Diagnosis</h2>
                     <p className="text-[11px] text-slate-400">Based on your attempt</p>

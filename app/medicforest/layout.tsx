@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  icons: {
+    icon: "/brand/medicforest-tree-mark.png",
+    apple: "/brand/medicforest-tree-mark.png",
+  },
   openGraph: {
     title: "MedicForest",
     description:
