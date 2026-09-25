@@ -10,7 +10,7 @@ test("Medic Forest serves the product landing page without changing the visible 
     && rule.destination === "/medicforest" && JSON.stringify(rule.has) === JSON.stringify(apexHost)));
   assert.ok(rewrites.beforeFiles.some(rule => rule.source === "/ucat/:path*"
     && rule.destination === "/medicforest/ucat/:path*" && JSON.stringify(rule.has) === JSON.stringify(apexHost)));
-  for (const page of ["about", "pricing", "personal-statement", "interviews", "tutoring", "resources", "feedback", "contact"]) {
+  for (const page of ["about", "pricing", "personal-statement", "tutoring", "resources", "feedback", "contact"]) {
     const route = rewrites.beforeFiles.find(rule => rule.source.startsWith("/:page("));
     assert.ok(route?.source.includes(page));
     assert.equal(route.destination, "/medicforest/:page");
@@ -23,17 +23,22 @@ test("www MedicForest redirects permanently to the apex domain", async () => {
     && rule.destination === "https://medicforest.com" && rule.permanent));
 });
 
-test("MedicForest interviews landing is not swallowed by the legacy interview redirect", async () => {
-  const redirects = await nextConfig.redirects();
-  assert.ok(redirects.some(rule => rule.source === "/medicforest/interviews/:path+"
-    && rule.destination === "/medicforest/interview/:path+"));
-  assert.ok(!redirects.some(rule => rule.source === "/medicforest/interviews"));
-});
-
 test("old MedicForest-prefixed URLs normalize to clean product URLs", async () => {
   const redirects = await nextConfig.redirects();
   assert.ok(redirects.some(rule => rule.source === "/medicforest/ucat"
     && rule.destination === "https://medicforest.com/ucat"));
   assert.ok(redirects.some(rule => rule.source === "/medicforest/ucat/:path+"
     && rule.destination === "https://medicforest.com/ucat/:path+"));
+});
+
+test("MedicForest interview URLs open the real platform under clean routes", async () => {
+  const redirects = await nextConfig.redirects();
+  const rewrites = await nextConfig.rewrites();
+  assert.ok(!Array.isArray(rewrites));
+  assert.ok(redirects.some(rule => rule.source === "/interviews"
+    && rule.destination === "https://medicforest.com/interviews/dashboard"));
+  assert.ok(redirects.some(rule => rule.source === "/medicforest/interview/:path+"
+    && rule.destination === "https://medicforest.com/interviews/:path+"));
+  assert.ok(rewrites.beforeFiles.some(rule => rule.source === "/interviews/:path+"
+    && rule.destination === "/medicforest/interview/:path+"));
 });

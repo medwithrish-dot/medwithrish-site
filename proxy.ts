@@ -21,10 +21,8 @@ const MEDICFOREST_PUBLIC_PATHS = new Set([
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const isCleanUcatAppPath = pathname.startsWith("/ucat/");
   const isProtectedMedicForestPath =
-    (pathname.startsWith("/medicforest/") && !MEDICFOREST_PUBLIC_PATHS.has(pathname)) ||
-    isCleanUcatAppPath;
+    pathname.startsWith("/medicforest/") && !MEDICFOREST_PUBLIC_PATHS.has(pathname);
 
   if (isProtectedMedicForestPath) {
     const previewToken = request.cookies.get(MEDICFOREST_PREVIEW_COOKIE)?.value;
@@ -32,7 +30,7 @@ export async function proxy(request: NextRequest) {
 
     if (!hasPreviewAccess) {
       const stayTunedUrl = request.nextUrl.clone();
-      stayTunedUrl.pathname = isCleanUcatAppPath ? "/ucat" : "/medicforest";
+      stayTunedUrl.pathname = "/medicforest";
       stayTunedUrl.search = "";
       stayTunedUrl.searchParams.set(
         "preview",
@@ -86,6 +84,7 @@ export const config = {
   matcher: [
     "/medicforest/:path*",
     "/ucat/:path*",
+    "/interviews/:path*",
     "/api/ai/:path*",
     "/api/interviews/:path*",
     "/api/stripe/create-checkout-session",

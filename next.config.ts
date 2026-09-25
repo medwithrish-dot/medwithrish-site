@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 const medicForestHost = { type: "host" as const, value: "medicforest.com" };
 const medicForestPublicPagePattern =
-  "about|pricing|personal-statement|interviews|tutoring|resources|feedback|contact";
+  "about|pricing|personal-statement|tutoring|resources|feedback|contact";
 const legacyUcatRoutes = [
   "dashboard",
   "diagnostic",
@@ -30,6 +30,36 @@ const nextConfig: NextConfig = {
         destination: `/medicforest/ucat/${route}/:path*`,
         permanent: true,
       })),
+      {
+        source: "/interviews",
+        has: [medicForestHost],
+        destination: "https://medicforest.com/interviews/dashboard",
+        permanent: true,
+      },
+      {
+        source: "/medicforest/interview",
+        has: [medicForestHost],
+        destination: "https://medicforest.com/interviews/dashboard",
+        permanent: true,
+      },
+      {
+        source: "/medicforest/interview/:path+",
+        has: [medicForestHost],
+        destination: "https://medicforest.com/interviews/:path+",
+        permanent: true,
+      },
+      {
+        source: "/medicforest/interviews",
+        has: [medicForestHost],
+        destination: "https://medicforest.com/interviews/dashboard",
+        permanent: true,
+      },
+      {
+        source: "/medicforest/interviews/:path+",
+        has: [medicForestHost],
+        destination: "https://medicforest.com/interviews/:path+",
+        permanent: true,
+      },
       {
         source: "/medicforest/interview",
         destination: "/medicforest/interview/dashboard",
@@ -90,6 +120,11 @@ const nextConfig: NextConfig = {
           source: "/ucat/:path*",
           has: [medicForestHost],
           destination: "/medicforest/ucat/:path*",
+        },
+        {
+          source: "/interviews/:path+",
+          has: [medicForestHost],
+          destination: "/medicforest/interview/:path+",
         },
         {
           source: `/:page(${medicForestPublicPagePattern})`,

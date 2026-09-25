@@ -516,7 +516,7 @@ const medicforestAreaSwitchItems = [
   {
     label: "Med Interviews",
     eyebrow: "MMI and panel dashboard",
-    href: "/medicforest/interview/dashboard",
+    href: "/interviews/dashboard",
     icon: MessageSquare,
     current: false,
   },
@@ -8847,7 +8847,7 @@ function RedesignedTutorHero() {
       text: "Realistic MMI and panel preparation with answer feedback.",
       icon: UserRound,
       action: "Open interview dashboard",
-      href: "/medicforest/interview/dashboard",
+      href: "/interviews/dashboard",
       active: true,
     },
     {

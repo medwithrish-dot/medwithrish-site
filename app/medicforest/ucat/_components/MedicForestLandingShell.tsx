@@ -48,7 +48,7 @@ const landingSections: Array<{
       },
       {
         label: "Interviews",
-        href: "/interviews",
+        href: "/interviews/dashboard",
         icon: MessageSquare,
       },
       {
@@ -95,6 +95,11 @@ function LandingSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const isCurrentPage = (href: string) =>
     href === "/ucat"
       ? ["/", "/ucat", "/medicforest", "/medicforest/ucat"].includes(pathname)
+      : href === "/interviews/dashboard"
+        ? pathname === "/interviews" ||
+          pathname.startsWith("/interviews/") ||
+          pathname.startsWith("/medicforest/interview/") ||
+          pathname.startsWith("/medicforest/interviews/")
       : pathname === href || pathname === `/medicforest${href}`;
 
   return (

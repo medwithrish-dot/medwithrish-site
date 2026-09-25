@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Med Interviews | MedicForest",
   description:
     "Your medicine interview preparation: university dates, a personal practice plan, saved feedback and progress.",
-  alternates: { canonical: "/medicforest/interview/dashboard" },
+  alternates: { canonical: "/interviews/dashboard" },
 };
 
 export default async function Page() {
