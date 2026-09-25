@@ -1,5 +1,5 @@
 import { findInterviewUniversity, interviewUniversities } from "./universities";
-import { interviewStations } from "./interview-stations";
+import { interviewSetupStations, interviewStations } from "./interview-stations";
 
 type StationSlug = (typeof interviewStations)[number]["slug"];
 type Preset = { stations: StationSlug[]; source: string };
@@ -42,16 +42,17 @@ function hash(value: string) {
 }
 
 function fillUniversityCircuit(universitySlug: string, startingStations: readonly StationSlug[], count: number) {
-  const selected = [...startingStations];
+  const setupStationSlugs = new Set<StationSlug>(interviewSetupStations.map((station) => station.slug));
+  const selected = startingStations.filter((slug) => setupStationSlugs.has(slug));
   if (DATA_BASED_UNIVERSITIES.has(universitySlug) && !selected.includes("data-analysis")) selected.push("data-analysis");
-  const shuffled = interviewStations.map((station) => station.slug)
+  const shuffled = interviewSetupStations.map((station) => station.slug)
     .filter((slug) => slug !== "data-analysis" || DATA_BASED_UNIVERSITIES.has(universitySlug))
     .toSorted((left, right) => hash(`${universitySlug}:${left}`) - hash(`${universitySlug}:${right}`));
   for (const slug of shuffled) {
     if (selected.length >= count) break;
     if (!selected.includes(slug)) selected.push(slug);
   }
-  const repeatable = REPEATABLE_STATION_SLUGS.filter((slug) => slug !== "data-analysis");
+  const repeatable = REPEATABLE_STATION_SLUGS.filter((slug) => slug !== "data-analysis" && setupStationSlugs.has(slug));
   for (let index = 0; selected.length < count; index += 1) selected.push(repeatable[index % repeatable.length]);
   return selected.slice(0, count);
 }

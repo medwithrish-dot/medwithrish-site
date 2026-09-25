@@ -46,6 +46,17 @@ export const interviewStations = [
   ] },
 ] as const;
 
+const interviewSetupExcludedSlugs = new Set([
+  "disability-in-medicine",
+  "teamwork-group-discussion",
+]);
+
+// Keep retired lobby choices available for existing links, reports and review
+// guidance without offering them when someone builds a new interview circuit.
+export const interviewSetupStations = interviewStations.filter(
+  (station) => !interviewSetupExcludedSlugs.has(station.slug),
+);
+
 /** Roughly one substantive prompt per 2.5 minutes, as used by the interview room. */
 export function stationQuestionCount(stationSeconds: number) {
   if (!Number.isFinite(stationSeconds)) return 1;

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, AudioLines, Check, CheckCircle2, Clock3, Headphones, Mic, MonitorPlay, ShieldCheck, SlidersHorizontal, Sparkles, Video, VideoOff, Volume2 } from "lucide-react";
 import { REPEATABLE_STATION_SLUGS, standardInterviewUniversities as interviewUniversities, universityCircuitIsResearched, universityStationPresets, universityStationSlugs } from "../_data/university-stations";
-import { findInterviewStation, interviewStations, stationQuestionCount } from "../_data/interview-stations";
+import { findInterviewStation, interviewSetupStations, stationQuestionCount } from "../_data/interview-stations";
 import type { InterviewMode } from "../_lib/interview-types";
 import type { InterviewerVoice } from "../_lib/interview-question-audio";
 import type { useInterviewDevices } from "../_lib/useInterviewDevices";
@@ -80,8 +80,8 @@ export function AIInterviewSetup(props: Props) {
         <div className={styles.cardHeading}><span className={styles.sectionIcon}><SlidersHorizontal size={19} /></span><div><h2 id="stations-heading">Build your interview</h2><p>Keep what you need. Skip what you don’t.</p></div></div>
         <div className={styles.presetPicker} aria-label="Interview format">{([['custom', 'Custom MMI circuit'], ['university', 'University']] as const).map(([value, label]) => <button type="button" key={value} aria-pressed={preset === value} onClick={() => changePreset(value)}>{label}</button>)}</div>
         {preset === "university" && <div className={styles.universityChoice}><label htmlFor="room-university">Your university</label><select id="room-university" value={universitySlug} onChange={(event) => { setUniversitySlug(event.target.value); setSelected(universityStationSlugs(event.target.value)); }}>{interviewUniversities.map((entry) => <option key={entry.slug} value={entry.slug}>{entry.name}</option>)}</select><p>{university.format} practice · {plan.stationSeconds / 60} min per station.</p><p>{universityCircuitIsResearched(university.slug) ? "Pre-selected topics reflect published assessment areas where available; remaining places use balanced practice topics." : "Exact station topics are not published, so a balanced practice circuit has been pre-selected for this format."} Actual stations may differ.</p><AnimatedDisclosure title="About these practice timings"><p>{university.timingNote} Your selected topics form a custom rehearsal.</p><a href={universityStationPresets[university.slug]?.source ?? university.sourceUrl} target="_blank" rel="noreferrer">Official admissions information ↗</a></AnimatedDisclosure></div>}
-        <div className={styles.stationListHeading}><span>{selected.length} {selected.length === 1 ? "station" : "stations"} included</span><div><button type="button" onClick={() => setSelected(interviewStations.map((item) => item.slug))}>Select all</button><span>·</span><button type="button" onClick={() => setSelected([])}>Clear</button></div></div>
-        <div className={styles.stationList}>{interviewStations.map((station, index) => {
+        <div className={styles.stationListHeading}><span>{selected.length} {selected.length === 1 ? "station" : "stations"} included</span><div><button type="button" onClick={() => setSelected(interviewSetupStations.map((item) => item.slug))}>Select all</button><span>·</span><button type="button" onClick={() => setSelected([])}>Clear</button></div></div>
+        <div className={styles.stationList}>{interviewSetupStations.map((station, index) => {
           const quantity = selected.filter((slug) => slug === station.slug).length;
           const included = quantity > 0;
           const repeatable = REPEATABLE_STATION_SLUGS.includes(station.slug);

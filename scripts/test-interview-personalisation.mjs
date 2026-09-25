@@ -23,7 +23,7 @@ const { selectStationQuestions } = load(resolve(root, "utils/interviews/station-
 const { interviewerSpeech, answerConversation } = load(resolve(root, "app/medicforest/interview/_lib/interviewer-transcript"));
 const { questionTransition, DONE_PROMPT } = load(resolve(root, "app/medicforest/interview/_lib/station-flow"));
 const { standardInterviewUniversities, universityStationPresets, universityStationSlugs } = load(resolve(root, "app/medicforest/interview/_data/university-stations"));
-const { interviewStations } = load(resolve(root, "app/medicforest/interview/_data/interview-stations"));
+const { interviewSetupStations, interviewStations } = load(resolve(root, "app/medicforest/interview/_data/interview-stations"));
 
 test("unknown and negative applicant facts exclude personal-history questions", () => {
   const prompts = [
@@ -68,6 +68,10 @@ test("university defaults only contain supported topics and academic interviews 
   assert.notDeepEqual(universityStationSlugs("manchester"), universityStationSlugs("birmingham"));
   assert.deepEqual(universityStationSlugs("cambridge"), []);
   assert.deepEqual(universityStationSlugs("unknown"), []);
+  const setupSlugs = new Set(interviewSetupStations.map((station) => station.slug));
+  for (const university of standardInterviewUniversities) {
+    assert.ok(universityStationSlugs(university.slug).every((slug) => setupSlugs.has(slug)));
+  }
 });
 
 test("transcripts retain actual interviewer prompts without fabricating older conversation", () => {

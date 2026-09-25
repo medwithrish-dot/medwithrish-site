@@ -21,7 +21,7 @@ function load(file) {
   return compiled.exports;
 }
 
-const { interviewStations } = load(resolve(root, "app/medicforest/interview/_data/interview-stations.ts"));
+const { interviewSetupStations, interviewStations } = load(resolve(root, "app/medicforest/interview/_data/interview-stations.ts"));
 const { getStationReviewGuidance } = load(resolve(root, "app/medicforest/interview/_lib/station-review.ts"));
 const { categoryRubric, getQuestionMarkScheme } = load(resolve(root, "app/medicforest/interview/_lib/question-review.ts"));
 
@@ -42,6 +42,11 @@ test("every station has a specific framework and the shared question-bank rubric
     frameworks.add(JSON.stringify(guidance.framework));
   }
   assert.equal(frameworks.size, 9, "Stations should not fall back to one generic model framework");
+});
+
+test("the interview builder shows one ethical dilemma and no group station", () => {
+  assert.equal(interviewSetupStations.filter((station) => station.lobbyTitle === "Ethical dilemma").length, 1);
+  assert.equal(interviewSetupStations.some((station) => station.lobbyTitle === "Group station"), false);
 });
 
 test("saved attempts with legacy station names resolve while unknown stations stay unavailable", () => {
