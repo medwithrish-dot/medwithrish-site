@@ -2,6 +2,8 @@
 
 Open **AI Interviews → Build your interview**, or `/medicforest/interview/ai-interviews?setup=1`. Existing university, station and saved-attempt links use the same experience. The site's existing preview-access gate still applies.
 
+Speech-to-text, text-to-speech and current cost options are summarised in [Interview speech options](interview-speech-options.md).
+
 ## Experience
 
 - **Lobby:** choose a free station, a custom circuit, or university practice timings. University formats pre-select the published station count. Published data/numeracy formats include data practice; otherwise unpublished slots use a deterministic balanced selection. Ethics and current-issues topics have quantity steppers for distinct repeated stations. The summary includes preparation, station time and breaks. Scored practice starts only after joining.
