@@ -31,12 +31,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       })),
       {
-        source: "/interviews",
-        has: [medicForestHost],
-        destination: "https://medicforest.com/interviews/dashboard",
-        permanent: true,
-      },
-      {
         source: "/medicforest/interview",
         has: [medicForestHost],
         destination: "https://medicforest.com/interviews/dashboard",
@@ -51,7 +45,7 @@ const nextConfig: NextConfig = {
       {
         source: "/medicforest/interviews",
         has: [medicForestHost],
-        destination: "https://medicforest.com/interviews/dashboard",
+        destination: "https://medicforest.com/interviews",
         permanent: true,
       },
       {
@@ -120,6 +114,11 @@ const nextConfig: NextConfig = {
           source: "/ucat/:path*",
           has: [medicForestHost],
           destination: "/medicforest/ucat/:path*",
+        },
+        {
+          source: "/interviews",
+          has: [medicForestHost],
+          destination: "/medicforest/interviews",
         },
         {
           source: "/interviews/:path+",

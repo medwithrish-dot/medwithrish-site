@@ -28,7 +28,7 @@ const admissionsSwitchItems = [
     area: "interviews",
     label: "Med Interviews",
     eyebrow: "Interview preparation",
-    href: "/medicforest/interview/dashboard",
+    href: "/interviews",
     icon: MessageSquare,
   },
 ] as const;

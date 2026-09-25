@@ -100,7 +100,7 @@ const landingSections = [
       {
         label: "Interviews",
         icon: MessageSquare,
-        href: "/interviews/dashboard",
+        href: "/interviews",
       },
       {
         label: "1-1 Tutoring",

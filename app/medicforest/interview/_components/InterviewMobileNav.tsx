@@ -19,7 +19,7 @@ const landingLinks = [
   ["Pricing", "/pricing"],
   ["UCAT", "/ucat"],
   ["Personal Statement", "/personal-statement"],
-  ["Interviews", "/interviews/dashboard"],
+  ["Interviews", "/interviews"],
   ["1-1 Tutoring", "/tutoring"],
   ["Resources", "/resources"],
   ["Feedback", "/feedback"],

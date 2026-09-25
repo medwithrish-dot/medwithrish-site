@@ -35,8 +35,10 @@ test("MedicForest interview URLs open the real platform under clean routes", asy
   const redirects = await nextConfig.redirects();
   const rewrites = await nextConfig.rewrites();
   assert.ok(!Array.isArray(rewrites));
-  assert.ok(redirects.some(rule => rule.source === "/interviews"
-    && rule.destination === "https://medicforest.com/interviews/dashboard"));
+  assert.ok(!redirects.some(rule => rule.source === "/interviews"
+    && rule.has?.[0]?.value === "medicforest.com"));
+  assert.ok(rewrites.beforeFiles.some(rule => rule.source === "/interviews"
+    && rule.destination === "/medicforest/interviews"));
   assert.ok(redirects.some(rule => rule.source === "/medicforest/interview/:path+"
     && rule.destination === "https://medicforest.com/interviews/:path+"));
   assert.ok(rewrites.beforeFiles.some(rule => rule.source === "/interviews/:path+"
