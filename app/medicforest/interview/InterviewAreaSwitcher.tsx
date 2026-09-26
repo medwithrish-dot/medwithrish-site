@@ -105,9 +105,6 @@ export function InterviewAreaSwitcher({
       >
         <span className="min-w-0 flex-1">
           <MedicForestLogo className="h-10 w-[148px]" onDark />
-          <span className="mt-0.5 block truncate text-xs font-semibold text-slate-300">
-            {isAdmissions ? "Medical admissions" : "Med Interviews"}
-          </span>
         </span>
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#0f4a45] text-[#86e6e1] ring-1 ring-white/10 transition-colors group-hover:bg-[#1aa0a5] group-hover:text-white">
           <ChevronDown
