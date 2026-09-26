@@ -52,7 +52,7 @@ export function InterviewDashboard({
       </div>
     </section>
 
-    <div className="grid items-start gap-5 xl:grid-cols-2">
+    <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,.9fr)]">
       <InterviewPreparationSetup key={profile?.updatedAt ?? "new"} initialProfile={profile} signedIn={signedIn} available={available} variant="compact" />
       <InterviewQuestionCalendar rows={data.dailyActivity} today={data.today} available={signedIn && data.activityAvailable} signedIn={signedIn} />
     </div>

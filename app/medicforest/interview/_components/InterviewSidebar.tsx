@@ -210,7 +210,7 @@ export function InterviewSidebar({
     mode === "landing" ? getLandingActiveLabel(pathname) : activeLabel;
 
   return (
-    <aside className="hidden border-r border-[#093f3a] bg-[#042724] px-4 py-5 text-slate-100 lg:block lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain">
+    <aside className="hidden border-r border-[#093f3a] bg-[#042724] px-4 py-5 text-slate-100 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:block lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain">
       <InterviewAreaSwitcher
         area={mode === "landing" ? "admissions" : "interviews"}
       />
