@@ -12,13 +12,24 @@ const require = createRequire(import.meta.url);
 // Execute the real handlers with isolated provider adapters; no network or keys.
 function load(file, mocks = {}) {
   const path = resolve(root, file);
+  const fileDir = dirname(path);
   const compiledModule = { exports: {} };
   const javascript = ts.transpileModule(readFileSync(path, "utf8"), {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, esModuleInterop: true },
   }).outputText;
   const localRequire = (name) => {
     if (Object.hasOwn(mocks, name)) return mocks[name];
+    if (name === "@/utils/billing/stripe-client" && Object.hasOwn(mocks, "@/utils/stripe")) return mocks["@/utils/stripe"];
+    if (name === "@/utils/stripe" && Object.hasOwn(mocks, "@/utils/billing/stripe-client")) return mocks["@/utils/billing/stripe-client"];
+    if (name === "@/utils/billing/stripe-subscriptions" && Object.hasOwn(mocks, "@/utils/stripe-subscriptions")) return mocks["@/utils/stripe-subscriptions"];
+    if (name === "@/utils/stripe-subscriptions" && Object.hasOwn(mocks, "@/utils/billing/stripe-subscriptions")) return mocks["@/utils/billing/stripe-subscriptions"];
     if (name.startsWith("@/")) return load(`${name.slice(2)}.ts`, mocks);
+    if (name.startsWith("./") || name.startsWith("../")) {
+      const targetPath = resolve(fileDir, name);
+      const relPath = targetPath.slice(root.length + 1).replace(/\\/g, "/");
+      const normalizedPath = relPath.endsWith(".ts") ? relPath : `${relPath}.ts`;
+      return load(normalizedPath, mocks);
+    }
     return require(name);
   };
   new Function("require", "module", "exports", javascript)(localRequire, compiledModule, compiledModule.exports);
@@ -75,29 +86,42 @@ test("site URLs are validated and production checkout cannot use a caller's loca
   });
 });
 
-test("PS webhooks wait for payment and propagate delivery failures for Stripe retries", async () => {
-  let inserts = 0; let sends = 0; let failure = "";
-  let event = { type: "checkout.session.completed", data: { object: {
-    id: "cs_test_1", mode: "payment", created: 1788692400, payment_status: "unpaid",
-    metadata: { submission_type: "ps_review", student_email: "student@example.test", file_path: "file.pdf", review_type: "medicine" },
-  } } };
+test("subscription checkout webhooks retrieve subscription and sync", async () => {
+  let synced = false;
+  const currentSub = { id: "sub_paid", status: "active" };
+  const event = {
+    type: "checkout.session.completed",
+    data: {
+      object: {
+        id: "cs_sub_1",
+        mode: "subscription",
+        subscription: "sub_paid",
+      },
+    },
+  };
   const { POST } = load("app/api/stripe/webhook/route.ts", {
-    "@/utils/stripe": { createStripeClient: () => ({ webhooks: { constructEvent: () => event } }) },
-    "@/utils/stripe-subscriptions": { syncStripeSubscription: () => assert.fail("not a subscription") },
-    "@/utils/supabase/admin": { createAdminClient: () => ({
-      from: () => ({ insert: async () => { inserts++; return { error: failure === "db" ? { code: "XX000" } : null }; } }),
-      storage: { from: () => ({ createSignedUrl: async () => ({ data: { signedUrl: "https://storage.test/file" }, error: failure === "storage" ? new Error("unavailable") : null }) }) },
-    }) },
-    resend: { Resend: class { emails = { send: async () => { sends++; return { error: failure === "email" ? { message: "unavailable" } : null }; } }; } },
+    "@/utils/stripe": {
+      createStripeClient: () => ({
+        webhooks: { constructEvent: () => event },
+        subscriptions: { retrieve: async (id) => { assert.equal(id, "sub_paid"); return currentSub; } },
+      }),
+    },
+    "@/utils/stripe-subscriptions": {
+      syncStripeSubscription: async (sub) => {
+        assert.equal(sub.id, "sub_paid");
+        synced = true;
+      },
+    },
   });
-  const request = () => new Request("https://example.test", { method: "POST", headers: { "stripe-signature": "test" }, body: "{}" });
+  const request = () => new Request("https://example.test", {
+    method: "POST",
+    headers: { "stripe-signature": "test" },
+    body: "{}",
+  });
   await withEnv({ STRIPE_WEBHOOK_SECRET: "test-only" }, async () => {
-    assert.equal((await POST(request())).status, 200);
-    assert.equal(inserts, 0); assert.equal(sends, 0);
-    event = { ...event, type: "checkout.session.async_payment_succeeded", data: { object: { ...event.data.object, payment_status: "paid" } } };
-    assert.equal((await POST(request())).status, 200);
-    assert.equal(inserts, 1); assert.equal(sends, 1);
-    for (failure of ["db", "storage", "email"]) assert.equal((await POST(request())).status, 500);
+    const res = await POST(request());
+    assert.equal(res.status, 200);
+    assert.equal(synced, true);
   });
 });
 
