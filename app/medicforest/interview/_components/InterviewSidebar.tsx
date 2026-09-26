@@ -8,7 +8,6 @@ import {
   BadgePoundSterling,
   BarChart3,
   BookOpen,
-  Brain,
   CircleHelp,
   ClipboardList,
   Home,
@@ -17,6 +16,7 @@ import {
   Trophy,
   UserRoundCheck,
   Users,
+  Wrench,
 } from "lucide-react";
 import { InterviewAreaSwitcher } from "../InterviewAreaSwitcher";
 
@@ -90,7 +90,7 @@ const landingSections = [
   {
     label: "Preparation",
     items: [
-      { label: "UCAT", icon: Brain, href: "/ucat" },
+      { label: "UCAT (WIP)", icon: Wrench, href: "/ucat" },
       {
         label: "Interviews",
         icon: MessageSquare,
@@ -123,7 +123,7 @@ export function getLandingActiveLabel(pathname: string) {
   if (path.startsWith("/resources")) return "Resources";
   if (path.startsWith("/feedback")) return "Feedback";
   if (path.startsWith("/contact")) return "Contact us";
-  if (path === "/" || path.startsWith("/ucat")) return "UCAT";
+  if (path === "/" || path.startsWith("/ucat")) return "UCAT (WIP)";
 
   return "";
 }
@@ -253,11 +253,11 @@ export function InterviewSidebar({
           </h2>
           <p className="mt-3 text-sm font-medium leading-6 text-slate-300">
             {mode === "landing"
-              ? "Start with the free UCAT diagnostic. No card needed."
+              ? "Start with free interview practice. No card needed."
               : "Unlock more interview stations, deeper analytics and guided practice."}
           </p>
           <Link
-            href={mode === "landing" ? "/ucat/dashboard" : "/medicforest/pricing"}
+            href={mode === "landing" ? "/interviews" : "/medicforest/pricing"}
             className="mt-5 flex h-10 w-full items-center justify-center rounded-lg bg-[#1aa0a5] text-sm font-bold text-white transition-colors hover:bg-[#14888c]"
           >
             {mode === "landing" ? "Start free" : "Upgrade to Premium"}

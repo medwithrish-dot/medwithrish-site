@@ -8722,18 +8722,36 @@ const MEDICFOREST_PREMIUM_FEATURES = [
   "Progress tracking over time",
 ];
 
-const MEDICFOREST_PRICING_ROWS = [
-  ["Question bank practice", "Included", "Included"],
-  ["Skills trainers", "Included", "Included"],
-  ["Free QR diagnostic", "Included", "Included"],
-  ["Weakness diagnosis", "Limited", "Advanced"],
-  ["Strength diagnosis", "Included", "Included"],
-  ["AI diagnostic credit", "1 lifetime credit", "1 credit every 24 hours"],
-  ["Random diagnostic mocks", "Premium", "Included"],
-  ["Mock diagnostic reports", "Premium", "Included"],
-  ["Deeper issue causes and fixes", "Free diagnostic only", "All diagnostics"],
-  ["Personalised study plan", "Free diagnostic only", "All diagnostics"],
-  ["Progress and improvement history", "Basic progress", "Full tracking"],
+const INTERVIEW_FREE_FEATURES = [
+  "Unlimited interview question bank practice",
+  "1 free 'Why Medicine?' AI interview attempt",
+  "Free study groups and room practice",
+  "University interview guides and station checklists",
+  "Public leaderboard and community practice tools",
+  "Basic progress tracking across completed questions",
+];
+
+const INTERVIEW_PREMIUM_FEATURES = [
+  "Full AI interview station library",
+  "Unlimited saved interview reports and transcripts",
+  "AI feedback, scoring and mark scheme breakdowns",
+  "Personalised interview plan and revision tasks",
+  "MMI circuits, panel practice and university-specific stations",
+  "Advanced analytics for timing, structure, confidence and improvement",
+];
+
+const INTERVIEW_PRICING_ROWS = [
+  ["Question bank practice", "Unlimited", "Unlimited"],
+  ["'Why Medicine?' AI attempt", "1 free attempt", "Full access"],
+  ["Study groups", "Included", "Included"],
+  ["Interview guides", "Included", "Included"],
+  ["AI interview stations", "Starter attempt", "Full library"],
+  ["Saved transcripts and reports", "Limited", "Unlimited"],
+  ["AI scoring and mark schemes", "Sample feedback", "Full feedback"],
+  ["MMI circuits", "Premium", "Included"],
+  ["University-specific station practice", "Premium", "Included"],
+  ["Personalised improvement plan", "Basic progress", "Advanced"],
+  ["Analytics and leaderboard insights", "Basic", "Advanced"],
 ] as const;
 
 // ── Landing Hero ──────────────────────────────────────────────────────────────
@@ -9396,7 +9414,7 @@ export function MedicForestPricingPage() {
       };
 
       if (response.status === 401) {
-        router.push("/ucat/dashboard");
+        router.push("/medicforest/interview/dashboard");
         setPremiumCheckoutLoading(false);
         return;
       }
@@ -9421,24 +9439,25 @@ export function MedicForestPricingPage() {
         <section className="bg-[#050b1f] px-5 py-6 text-white lg:px-6">
           <div className="mx-auto max-w-5xl">
             <Link
-              href="/ucat"
+              href="/interviews"
               className="inline-flex items-center gap-2 text-sm font-black text-blue-100 transition-colors hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Back to MedicForest
+              Back to Interviews
             </Link>
             <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_330px] lg:items-end">
               <div>
                 <p className="text-xs font-black uppercase tracking-wide text-cyan-200">
-                  MedicForest pricing
+                  Interview platform pricing
                 </p>
                 <h1 className="mt-2 max-w-2xl text-3xl font-black leading-tight sm:text-4xl">
                   See exactly what you get before you upgrade.
                 </h1>
                 <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-slate-200">
-                  Start with the free QR diagnostic and question bank. Upgrade
-                  when you want full mocks, mock diagnostics, deeper reports and
-                  a daily AI diagnostic credit.
+                  Start with free question-bank practice, study groups and a
+                  Why Medicine? interview attempt. Upgrade when you want the
+                  full AI interview platform, saved reports and deeper
+                  improvement analytics.
                 </p>
               </div>
               <div className="rounded-xl border border-blue-300/40 bg-white/10 p-4 shadow-lg shadow-blue-950/20">
@@ -9453,7 +9472,7 @@ export function MedicForestPricingPage() {
                 </div>
                 <p className="mt-2 text-xs font-semibold leading-5 text-slate-300">
                   Cancel through billing management. No card is needed for the
-                  free diagnostic.
+                  free interview plan.
                 </p>
               </div>
             </div>
@@ -9474,7 +9493,7 @@ export function MedicForestPricingPage() {
                 No card needed.
               </p>
               <ul className="mt-4 flex-1 space-y-2.5 pb-5 text-sm font-semibold text-slate-700">
-                {MEDICFOREST_FREE_FEATURES.map((feature) => (
+                {INTERVIEW_FREE_FEATURES.map((feature) => (
                   <li key={feature} className="flex gap-3">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
                     <span>{feature}</span>
@@ -9482,10 +9501,10 @@ export function MedicForestPricingPage() {
                 ))}
               </ul>
               <Link
-                href="/ucat/dashboard"
+                href="/medicforest/interview/dashboard"
                 className="mt-auto inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-black text-white transition-colors hover:bg-blue-700"
               >
-                Launch UCAT Platform
+                Launch Interview Platform
               </Link>
             </div>
 
@@ -9496,7 +9515,7 @@ export function MedicForestPricingPage() {
               <div className="flex items-center justify-between gap-4">
                 <h2 className="text-lg font-black">MedicForest Premium</h2>
                 <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-black text-blue-700">
-                  Full UCAT prep
+                  Full interview prep
                 </span>
               </div>
               <div className="mt-3 flex flex-wrap items-end gap-x-3 gap-y-1">
@@ -9506,10 +9525,11 @@ export function MedicForestPricingPage() {
                 </span>
               </div>
               <p className="mt-2 text-sm font-black text-blue-700">
-                Best for full mocks, repeated diagnostics and daily AI feedback.
+                Best for full AI stations, realistic circuits and feedback you
+                can use after every attempt.
               </p>
               <ul className="mt-4 flex-1 space-y-2.5 pb-5 text-sm font-semibold text-slate-700">
-                {MEDICFOREST_PREMIUM_FEATURES.map((feature) => (
+                {INTERVIEW_PREMIUM_FEATURES.map((feature) => (
                   <li key={feature} className="flex gap-3">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" aria-hidden="true" />
                     <span>{feature}</span>
@@ -9540,13 +9560,13 @@ export function MedicForestPricingPage() {
             </div>
             <div className="border-b border-slate-100 px-4 py-3">
               <p className="text-xs font-semibold leading-5 text-slate-500">
-                The free plan includes limited weakness diagnosis and strength
-                diagnosis. Premium expands those features across mocks and
-                ongoing prep.
+                The free plan is built for regular interview practice. Premium
+                adds the full AI feedback loop, saved reports, circuits and
+                advanced analytics for serious interview preparation.
               </p>
             </div>
             <div className="divide-y divide-slate-100">
-              {MEDICFOREST_PRICING_ROWS.map(([feature, freeValue, premiumValue]) => (
+              {INTERVIEW_PRICING_ROWS.map(([feature, freeValue, premiumValue]) => (
                 <div
                   key={feature}
                   className="grid gap-2 px-4 py-3 text-sm sm:grid-cols-[1.2fr_1fr_1fr] sm:items-center"
@@ -9565,8 +9585,8 @@ export function MedicForestPricingPage() {
 
           <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-900">
             MedicForest is an independent educational tool. AI feedback and progress
-            estimates are not guarantees of UCAT,
-            admissions or interview outcomes. Practice telemetry is used to
+            estimates are not guarantees of admissions or interview outcomes.
+            Practice telemetry is used to
             provide feedback and progress tracking. Read the{" "}
             <Link href="/privacy-policy" className="font-black underline">
               Privacy Policy

@@ -16,22 +16,7 @@ const navItems: {
 }[] = [
   { label: "Journey", href: "/#journey", bold: true },
 
-  {
-    label: "UCAT",
-    items: [
-      { label: "UCAT Notes", href: "https://payhip.com/Medwithrish", external: true },
-      { label: "UCAT Prep Timeline", href: "/ucat-timeline" },
-      { label: "UCAT Tutoring", href: "/ucat-tutoring" },
-      {
-  label: "Free UCAT Score Tracker",
-  href:"/ucat-score-tracker"
-      },
-      {
-        label: "UCAT Mock Difficulty Spreadsheet",
-        href: "/ucat-mock-difficulty",
-      },
-    ],
-  },
+  { label: "UCAT (WIP)", locked: true },
 
   {
     label: "Personal Statements",
