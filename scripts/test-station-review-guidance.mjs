@@ -23,7 +23,7 @@ function load(file) {
 
 const { interviewSetupStations, interviewStations } = load(resolve(root, "app/medicforest/interview/_data/interview-stations.ts"));
 const { getStationReviewGuidance } = load(resolve(root, "app/medicforest/interview/_lib/station-review.ts"));
-const { categoryRubric, getQuestionMarkScheme } = load(resolve(root, "app/medicforest/interview/_lib/question-review.ts"));
+const { categoryRubric, findReviewQuestion, getQuestionMarkScheme } = load(resolve(root, "app/medicforest/interview/_lib/question-review.ts"));
 
 test("every station has a specific framework and the shared question-bank rubric", () => {
   assert.equal(interviewStations.length, 9);
@@ -62,7 +62,7 @@ const { questionMarkingPoints } = load(resolve(root, "app/medicforest/interview/
 const { interviewStimuli, getQuestionStimulus } = load(resolve(root, "app/medicforest/interview/_data/interview-stimuli.ts"));
 const { assessmentGuidance } = load(resolve(root, "utils/interviews/assessment-guidance.ts"));
 const { FOLLOW_UP_STATIONS, followUpsEnabled } = load(resolve(root, "app/medicforest/interview/_lib/station-flow.ts"));
-const { selectStationQuestions } = load(resolve(root, "utils/interviews/station-question-selection.ts"));
+const { questionIdForText, selectStationQuestions } = load(resolve(root, "utils/interviews/station-question-selection.ts"));
 
 test("all 561 questions have independently authored content, with no category or question-text substitution", () => {
   assert.equal(INTERVIEW_QUESTIONS.length, 561);
@@ -110,16 +110,66 @@ test("every prepared PNG is mapped to a real question with accessible source fac
   assert.equal(getQuestionStimulus("unknown"), null);
 });
 
+test("every visual question names the subject shown in its paired image", () => {
+  const expectedTerms = {
+    "iq-18-001-data-stations": ["gp", "appointment"],
+    "iq-18-002-data-stations": ["smoking", "cessation"],
+    "iq-18-003-data-stations": ["exercise", "wellbeing"],
+    "iq-18-004-data-stations": ["diabetes", "programme"],
+    "iq-18-005-data-stations": ["ward", "discharge"],
+    "iq-18-006-graphs-and-trends": ["patient satisfaction"],
+    "iq-18-007-graphs-and-trends": ["vaccination"],
+    "iq-18-008-graphs-and-trends": ["sleep", "exam"],
+    "iq-18-009-data-interpretation": ["heart-event", "new treatment"],
+    "iq-18-010-data-interpretation": ["recovery", "programme"],
+    "iq-18-011-critical-appraisal": ["energy-drink"],
+    "iq-18-012-critical-appraisal": ["reminder-text"],
+    "iq-18-013-article-analysis": ["asthma-app"],
+    "iq-18-014-article-analysis": ["berry", "cancer"],
+    "iq-18-015-article-analysis": ["virtual reality", "anatomy"],
+    "iq-19-001-group-discussion": ["healthcare improvement", "two"],
+    "iq-19-002-group-tasks": ["nhs", "£10 million"],
+    "iq-19-003-group-tasks": ["five items", "mountain"],
+    "iq-19-008-group-tasks": ["four patient presentations"],
+    "iq-20-001-prioritisation-stations": ["five people"],
+    "iq-20-002-prioritisation-stations": ["three demands"],
+    "iq-20-003-prioritisation-stations": ["team inbox"],
+    "iq-20-004-prioritisation-stations": ["£5 million", "whole proposals"],
+    "iq-20-005-prioritisation-stations": ["four public-health options"],
+    "iq-20-007-prioritisation-stations": ["diary"],
+    "iq-20-008-prioritisation-stations": ["patient-safety concern"],
+    "iq-20-009-prioritisation-stations": ["hospital-corridor emergency"],
+  };
+  for (const stimulus of interviewStimuli) {
+    const question = INTERVIEW_QUESTIONS.find(item => item.id === stimulus.id);
+    assert.ok(question, stimulus.id);
+    for (const term of expectedTerms[stimulus.id]) assert.match(question.text.toLowerCase(), new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${stimulus.id}: ${term}`);
+  }
+});
+
+test("older saved visual-question wording still resolves to the correct image", () => {
+  const oldText = "How might you explain these results to a patient?";
+  assert.equal(questionIdForText(oldText), "iq-18-009-data-interpretation");
+  assert.equal(getQuestionStimulus(findReviewQuestion(null, oldText)?.id)?.id, "iq-18-009-data-interpretation");
+});
+
 test("image marking handles changed denominators, misleading headlines and budget constraints", () => {
   const scheme = prefix => JSON.stringify(getQuestionMarkScheme(INTERVIEW_QUESTIONS.find(question => question.id.startsWith(prefix))));
   assert.match(scheme("iq-18-001"), /13-day peak in 2022/);
   assert.match(scheme("iq-18-002"), /48\/150 = 32%/);
   assert.match(scheme("iq-18-004"), /£215,000/);
-  assert.match(scheme("iq-18-006"), /4 percentage points/);
+  assert.match(scheme("iq-18-006"), /4 percentage-point difference/);
   assert.match(scheme("iq-18-009"), /5 fewer/);
-  assert.match(scheme("iq-18-012"), /non-significance does not establish no effect/);
+  assert.match(scheme("iq-18-012"), /too small for a firm claim/);
   assert.match(scheme("iq-18-014"), /12\/200 = 6% versus 20\/400 = 5%/);
   assert.match(scheme("iq-20-004"), /different measures/);
+});
+
+test("visual data markschemes use applicant-friendly language", () => {
+  for (const question of INTERVIEW_QUESTIONS.filter(question => question.sourceSection === 18)) {
+    const scheme = JSON.stringify(getQuestionMarkScheme(question));
+    assert.doesNotMatch(scheme, /\b(?:NNT|denominator|attrition|confounding|non-significance)\b/i, question.id);
+  }
 });
 
 test("AI marking receives the exact source facts and criteria, including legacy text lookup", () => {

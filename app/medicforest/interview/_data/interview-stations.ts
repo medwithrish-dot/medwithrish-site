@@ -40,9 +40,9 @@ export const interviewStations = [
     "What would you do differently next time, and why?",
   ] },
   { slug: "data-analysis", title: "Data and evidence", lobbyTitle: "Data interpretation", theme: "Analysis", questions: [
-    "Briefly describe the main trend shown in this graph.",
-    "Which conclusions can reasonably be drawn from these data?",
-    "Which conclusions cannot be drawn from these data?",
+    "Using the GP appointment-wait chart, describe the main trends and differences between the two districts. What limits the comparison?",
+    "Compare the smoking-cessation programmes using appropriate percentages. What can and cannot be concluded from the results?",
+    "Describe the relationship between weekly exercise and wellbeing across the two age groups. Can the survey show that exercise caused the differences?",
   ] },
 ] as const;
 

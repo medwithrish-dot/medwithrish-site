@@ -1,4 +1,4 @@
-import { INTERVIEW_QUESTIONS, type InterviewQuestion } from "@/app/medicforest/interview/_data/interviewQuestionBank";
+import { INTERVIEW_QUESTIONS, LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT, type InterviewQuestion } from "@/app/medicforest/interview/_data/interviewQuestionBank";
 import { stationQuestionCount } from "@/app/medicforest/interview/_data/interview-stations";
 import { questionEligible, type ApplicantProfile } from "@/utils/interviews/applicant-profile";
 import { getQuestionStimulus } from "@/app/medicforest/interview/_data/interview-stimuli";
@@ -69,5 +69,5 @@ export function selectStationQuestions(stationSlug: string, stationSeconds: numb
 }
 
 export function questionIdForText(text: string) {
-  return questionByText.get(text)?.id ?? null;
+  return questionByText.get(text)?.id ?? LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT.get(text) ?? null;
 }

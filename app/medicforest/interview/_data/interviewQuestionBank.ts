@@ -8600,7 +8600,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-001-data-stations",
-    text: "Briefly describe the main trend shown in this graph.",
+    text: "Using the GP appointment-wait chart, describe the main trends and differences between the two districts. What limits the comparison?",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -8617,7 +8617,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-002-data-stations",
-    text: "Which conclusions can reasonably be drawn from these data?",
+    text: "Compare the smoking-cessation programmes using appropriate percentages. What can and cannot be concluded from the results?",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -8634,7 +8634,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-003-data-stations",
-    text: "Which conclusions cannot be drawn from these data?",
+    text: "Describe the relationship between weekly exercise and wellbeing across the two age groups. Can the survey show that exercise caused the differences?",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -8651,7 +8651,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-004-data-stations",
-    text: "Which additional information would you want before making a decision?",
+    text: "Which community diabetes programme would you choose within the £200,000 first-year budget, and what further information could change your decision?",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -8668,7 +8668,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-005-data-stations",
-    text: "Can you identify any unusual values or outliers?",
+    text: "Describe the relationship between ward admissions and discharge delays. Which result is unusual, and what might help explain it?",
     category: "Practical MMI & Role Play",
     subcategory: "Data Stations",
     sourceSection: 18,
@@ -8685,7 +8685,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-006-graphs-and-trends",
-    text: "In what ways could the graph be misleading?",
+    text: "The briefing says patient satisfaction ‘rises sharply’. How could the graph and comparison be misleading?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Graphs & Trends",
     sourceSection: 18,
@@ -8702,7 +8702,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-007-graphs-and-trends",
-    text: "Which factors could explain the observed trend?",
+    text: "Describe the vaccination-uptake trends in both districts. What might explain the changes, and what cannot be concluded?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Graphs & Trends",
     sourceSection: 18,
@@ -8719,7 +8719,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-008-graphs-and-trends",
-    text: "Does this dataset show causation or simply an association?",
+    text: "What does the sleep and exam-score plot show? Discuss the role of revision time and whether the data prove causation.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Graphs & Trends",
     sourceSection: 18,
@@ -8736,7 +8736,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-009-data-interpretation",
-    text: "How might you explain these results to a patient?",
+    text: "According to the heart-event chart, what are the main potential benefits, harms and practical burdens of the new treatment?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Data Interpretation",
     sourceSection: 18,
@@ -8753,7 +8753,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-010-data-interpretation",
-    text: "How might you explain these results to someone without a scientific background?",
+    text: "Compare recovery after programmes A and B at 12 weeks and six months. What limitations and practical trade-offs should be considered?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Data Interpretation",
     sourceSection: 18,
@@ -8770,7 +8770,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-011-critical-appraisal",
-    text: "Which possible sources of bias can you identify?",
+    text: "What sources of bias or uncertainty limit the energy-drink study and its reported conclusion?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Critical Appraisal",
     sourceSection: 18,
@@ -8787,7 +8787,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-012-critical-appraisal",
-    text: "To what extent is the sample size sufficient?",
+    text: "What do the reminder-text results show, and why is this 24-person pilot too small to support a firm conclusion?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Critical Appraisal",
     sourceSection: 18,
@@ -8804,7 +8804,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-013-article-analysis",
-    text: "Which information would help you judge whether the study was reliable?",
+    text: "How reliable is the asthma-app evaluation? Discuss the missing follow-up, outcome measurements and other possible explanations for the change.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Article Analysis",
     sourceSection: 18,
@@ -8821,7 +8821,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-014-article-analysis",
-    text: "How could the media misrepresent these findings?",
+    text: "Does the headline ‘Berry halves cancer risk’ match the study results? Explain how the findings should be reported more accurately.",
     category: "Data, Research & Critical Thinking",
     subcategory: "Article Analysis",
     sourceSection: 18,
@@ -8838,7 +8838,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-18-015-article-analysis",
-    text: "Which further research would you conduct?",
+    text: "What further research would you conduct to test whether virtual reality improves anatomy learning?",
     category: "Data, Research & Critical Thinking",
     subcategory: "Article Analysis",
     sourceSection: 18,
@@ -8855,7 +8855,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-19-001-group-discussion",
-    text: "Explain how you would rank a list of healthcare priorities and agree on a group decision.",
+    text: "Rank the five healthcare improvement proposals and choose two to launch next year. Explain your criteria, trade-offs and how the group could reach agreement.",
     category: "Practical MMI & Role Play",
     subcategory: "Group Discussion",
     sourceSection: 19,
@@ -8872,7 +8872,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-19-002-group-tasks",
-    text: "Work through allocating a limited NHS budget across several competing services.",
+    text: "Choose a package of whole NHS projects costing no more than £10 million. Explain your trade-offs and what further evidence you would request.",
     category: "Practical MMI & Role Play",
     subcategory: "Group Tasks",
     sourceSection: 19,
@@ -8889,7 +8889,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-19-003-group-tasks",
-    text: "Your group must choose equipment for a survival exercise. Explain how you would compare suggestions and reach agreement.",
+    text: "Choose five items for the group to take overnight on the mountain. Explain your assumptions, trade-offs and how you would reach agreement.",
     category: "Practical MMI & Role Play",
     subcategory: "Group Tasks",
     sourceSection: 19,
@@ -8974,7 +8974,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-19-008-group-tasks",
-    text: "Prioritise how you would handle patients using limited information.",
+    text: "Put the four patient presentations in a provisional order for assessment. Explain who you would alert and what further information you need.",
     category: "Practical MMI & Role Play",
     subcategory: "Group Tasks",
     sourceSection: 19,
@@ -9025,7 +9025,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-001-prioritisation-stations",
-    text: "How would you decide which patients need attention most urgently, and communicate your reasoning?",
+    text: "Put the five people in a provisional order for attention. Explain your immediate safety actions, who you would alert and how you would communicate delays.",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9041,7 +9041,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-002-prioritisation-stations",
-    text: "Five tasks need attention, but you can deal with only three straight away. Explain how you would choose what to do now and what can wait.",
+    text: "Choose three demands to address immediately. Explain what you would do about the other two and who you would involve.",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9057,7 +9057,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-003-prioritisation-stations",
-    text: "Several members of your team ask for help at once. How might you prioritise?",
+    text: "Prioritise the five requests in the team inbox. Explain what you would do first, what could be delegated and who needs an update.",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9073,7 +9073,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-004-prioritisation-stations",
-    text: "Several services are competing for a limited healthcare budget. How would you decide their relative priority?",
+    text: "Choose a package of whole proposals within the £5 million budget. Explain your trade-offs and what further evidence you would need.",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9089,7 +9089,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-005-prioritisation-stations",
-    text: "Explain how you would rank several public-health interventions according to likely impact.",
+    text: "Rank the four public-health options by likely impact. Explain your criteria and why reach alone does not show health benefit.",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9121,7 +9121,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-007-prioritisation-stations",
-    text: "Prioritise how you would handle competing academic, personal and volunteering commitments.",
+    text: "Using the diary, explain what you would keep, rearrange or delegate, and how you would communicate the changes.",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9137,7 +9137,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-008-prioritisation-stations",
-    text: "Explain how you would decide which patient-safety concern needs escalating first.",
+    text: "Which patient-safety concern would you escalate first? Explain your immediate actions, who you would involve and what should be recorded.",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9153,7 +9153,7 @@ export const INTERVIEW_QUESTIONS = [
   },
   {
     id: "iq-20-009-prioritisation-stations",
-    text: "Prioritise how you would handle responses during an emergency situation.",
+    text: "What would you do first in this hospital-corridor emergency? Explain who you would call and how you would protect people while staying within the student role.",
     category: "Practical MMI & Role Play",
     subcategory: "Prioritisation Stations",
     sourceSection: 20,
@@ -9779,3 +9779,35 @@ export const INTERVIEW_QUESTIONS = [
     ]
   }
 ] as const satisfies readonly InterviewQuestion[];
+
+// Saved attempts retain the wording shown when they were completed. Keep those
+// prompts resolvable after image-specific questions are improved.
+export const LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT = new Map<string, string>([
+  ["Briefly describe the main trend shown in this graph.", "iq-18-001-data-stations"],
+  ["Which conclusions can reasonably be drawn from these data?", "iq-18-002-data-stations"],
+  ["Which conclusions cannot be drawn from these data?", "iq-18-003-data-stations"],
+  ["Which additional information would you want before making a decision?", "iq-18-004-data-stations"],
+  ["Can you identify any unusual values or outliers?", "iq-18-005-data-stations"],
+  ["In what ways could the graph be misleading?", "iq-18-006-graphs-and-trends"],
+  ["Which factors could explain the observed trend?", "iq-18-007-graphs-and-trends"],
+  ["Does this dataset show causation or simply an association?", "iq-18-008-graphs-and-trends"],
+  ["How might you explain these results to a patient?", "iq-18-009-data-interpretation"],
+  ["How might you explain these results to someone without a scientific background?", "iq-18-010-data-interpretation"],
+  ["Which possible sources of bias can you identify?", "iq-18-011-critical-appraisal"],
+  ["To what extent is the sample size sufficient?", "iq-18-012-critical-appraisal"],
+  ["Which information would help you judge whether the study was reliable?", "iq-18-013-article-analysis"],
+  ["How could the media misrepresent these findings?", "iq-18-014-article-analysis"],
+  ["Which further research would you conduct?", "iq-18-015-article-analysis"],
+  ["Explain how you would rank a list of healthcare priorities and agree on a group decision.", "iq-19-001-group-discussion"],
+  ["Work through allocating a limited NHS budget across several competing services.", "iq-19-002-group-tasks"],
+  ["Your group must choose equipment for a survival exercise. Explain how you would compare suggestions and reach agreement.", "iq-19-003-group-tasks"],
+  ["Prioritise how you would handle patients using limited information.", "iq-19-008-group-tasks"],
+  ["How would you decide which patients need attention most urgently, and communicate your reasoning?", "iq-20-001-prioritisation-stations"],
+  ["Five tasks need attention, but you can deal with only three straight away. Explain how you would choose what to do now and what can wait.", "iq-20-002-prioritisation-stations"],
+  ["Several members of your team ask for help at once. How might you prioritise?", "iq-20-003-prioritisation-stations"],
+  ["Several services are competing for a limited healthcare budget. How would you decide their relative priority?", "iq-20-004-prioritisation-stations"],
+  ["Explain how you would rank several public-health interventions according to likely impact.", "iq-20-005-prioritisation-stations"],
+  ["Prioritise how you would handle competing academic, personal and volunteering commitments.", "iq-20-007-prioritisation-stations"],
+  ["Explain how you would decide which patient-safety concern needs escalating first.", "iq-20-008-prioritisation-stations"],
+  ["Prioritise how you would handle responses during an emergency situation.", "iq-20-009-prioritisation-stations"],
+]);

@@ -1,4 +1,4 @@
-import { INTERVIEW_QUESTIONS, type InterviewQuestion, type InterviewQuestionCategoryTitle } from "../_data/interviewQuestionBank";
+import { INTERVIEW_QUESTIONS, LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT, type InterviewQuestion, type InterviewQuestionCategoryTitle } from "../_data/interviewQuestionBank";
 import { questionMarkingPoints } from "../_data/question-marking-points";
 import { suppliedMarkSchemes } from "../_data/supplied-mark-schemes";
 
@@ -192,14 +192,14 @@ export const categoryRubric = {
       items: [
         "Identifies what the data, article or prompt is asking",
         "States the key observation before detailed interpretation",
-        "Defines any comparison, denominator or outcome clearly",
+        "Makes clear what is being compared and how the outcome was measured",
       ],
     },
     {
       title: "Middle",
       items: [
         "Explains patterns using cautious, logical reasoning",
-        "Flags confounders, sample issues or missing context",
+        "Considers other possible explanations, small or unrepresentative samples, and missing context",
         "Connects interpretation to clinical or public health impact",
       ],
     },
@@ -316,6 +316,7 @@ const questionsByText = new Map<string, InterviewQuestion>(INTERVIEW_QUESTIONS.m
 
 /** IDs are authoritative for saved attempts; text supports pre-ID attempts. */
 export function findReviewQuestion(id: string | null | undefined, text: string) {
-  return (id ? questionsById.get(id) : undefined) ?? questionsByText.get(text) ?? null;
+  const legacyId = LEGACY_INTERVIEW_QUESTION_IDS_BY_TEXT.get(text);
+  return (id ? questionsById.get(id) : undefined) ?? questionsByText.get(text) ?? (legacyId ? questionsById.get(legacyId) : undefined) ?? null;
 }
 
