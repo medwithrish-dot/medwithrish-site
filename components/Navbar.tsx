@@ -11,6 +11,7 @@ const navItems: {
   special?: boolean;
   locked?: boolean;
   badge?: string;
+  external?: boolean;
   items?: { label: string; href: string; external?: boolean }[];
 }[] = [
   { label: "Journey", href: "/#journey", bold: true },
@@ -67,14 +68,14 @@ const navItems: {
     href: "/resources",
     items: [
       { label: "All Guides", href: "/resources" },
-      { label: "Notes", href: "https://payhip.com/Medwithrish" },
+      { label: "Notes", href: "https://payhip.com/Medwithrish", external: true },
       { label: "Privacy Policy", href: "/privacy-policy" },
       { label: "Terms and Conditions", href: "/terms-and-conditions" },
       { label: "MedicForest AI/Data Disclaimer", href: "/medicforest-disclaimer" },
     ],
   },
 
-  { label: "MedicForest", href: "https://medicforest.com", special: true },
+  { label: "MedicForest", href: "https://medicforest.com", special: true, external: true },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -181,6 +182,24 @@ export default function Navbar() {
                       </span>
                     )}
                   </button>
+                );
+              }
+
+              if (item.external) {
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={
+                      item.special
+                        ? "rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:from-cyan-400 hover:to-blue-500"
+                        : "text-gray-700 transition hover:text-blue-600"
+                    }
+                  >
+                    {item.label}
+                  </a>
                 );
               }
 

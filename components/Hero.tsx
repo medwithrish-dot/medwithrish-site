@@ -48,7 +48,7 @@ export default function Hero() {
               and high-value guidance to help students move closer to medicine
               and other ambitious career goals.
 <br></br>
-             Need to contact me? Send an email to <strong>medwithrish@gmail.com </strong>  
+             Need to contact me? Send an email to <a href="mailto:medwithrish@gmail.com" className="font-bold text-blue-600 hover:underline">medwithrish@gmail.com</a>  
               Or below are my current, official socials.
             </p>
 

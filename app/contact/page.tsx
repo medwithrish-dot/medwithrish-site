@@ -69,7 +69,7 @@ export default function ContactPage() {
                   width={112}
                   height={112}
                   className="h-full w-full object-cover"
-                  preload
+                  priority
                 />
               </div>
 
@@ -87,9 +87,7 @@ export default function ContactPage() {
               </p>
 
               <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=medwithrish@gmail.com"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="mailto:medwithrish@gmail.com"
                 className="mx-auto mt-7 inline-flex justify-center rounded-2xl border border-blue-200 bg-white px-6 py-4 text-sm font-bold text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-50"
               >
                 medwithrish@gmail.com
@@ -98,7 +96,9 @@ export default function ContactPage() {
               <p className="mt-3 text-xs font-medium text-gray-400">
                 Prefer WhatsApp/text?{" "}
                 <a
-                  href="tel:+447305422619"
+                  href="https://wa.me/447305422619"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="font-semibold text-gray-500 transition hover:text-blue-600"
                 >
                   +44 7305 422619

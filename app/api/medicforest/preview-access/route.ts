@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
   response.cookies.set(MEDICFOREST_PREVIEW_COOKIE, await createMedicForestPreviewToken(), {
     httpOnly: true,
     maxAge: MEDICFOREST_PREVIEW_COOKIE_MAX_AGE,
-    path: "/medicforest",
+    path: "/",
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
   });

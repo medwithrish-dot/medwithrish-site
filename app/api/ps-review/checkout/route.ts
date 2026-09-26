@@ -41,10 +41,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { data: fileExists, error: fileError } = await createAdminClient().storage
+    const { data: fileExists } = await createAdminClient().storage
       .from("ps-uploads")
       .exists(filePath);
-    if (fileError) throw fileError;
     if (!fileExists) {
       return Response.json({ error: "Please upload your personal statement before checking out." }, { status: 400 });
     }

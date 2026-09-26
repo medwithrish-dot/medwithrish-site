@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 const medicForestHost = { type: "host" as const, value: "medicforest.com" };
 const medicForestPublicPagePattern =
-  "about|pricing|personal-statement|tutoring|resources|feedback|contact";
+  "about|pricing|personal-statement|tutoring|resources|feedback|contact|access|account";
 const legacyUcatRoutes = [
   "dashboard",
   "diagnostic",
