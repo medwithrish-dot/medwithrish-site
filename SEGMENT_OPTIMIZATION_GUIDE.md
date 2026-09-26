@@ -169,3 +169,18 @@ Segment 4 covers the feedback evaluation pipeline and review UI:
   - Added new item at index 1 of `successStories` titled `"2350 B1!!"`.
   - Renamed the `"Oxbridge Medicine Offer"` card (`story5.jpeg`) to `"2370 B2!"` with tag `"UCAT Achievement"`.
   - Removed the external MedWithRish.com anchor link from the founder section.
+
+#### 3. MedicForest About Page Polish & Redesign
+- **Request**: Redesign the MedicForest About page to feel complete, polished, and premium while keeping the information density low and scan-friendly (approx. 2–2.5 desktop screens long).
+- **Core Product Realignment**:
+  - Highlighted the **TWO active offerings**:
+    1. **Interview Practice** (featuring 550+ FREE practice questions, MMI + panel prep, AI interview practice, personalised feedback).
+    2. **1-to-1 Tutoring** (interview coaching, personal statement support, individual feedback with Rish).
+  - Clarified that UCAT question bank tools are currently in development via a subtle single-line note.
+- **Section Structure**:
+  1. **Compact Hero**: Retained the core philosophy ("Growing a community of medics — like a forest of trees"), 2–3 line supporting copy, no huge empty dark areas, quick CTAs to platform and philosophy.
+  2. **What MedicForest Offers**: Two side-by-side compact cards (Interview Practice with bold `550+ FREE practice questions` badge, and 1-to-1 Tutoring) + subtle "UCAT practice tools are currently in development" note.
+  3. **Why MedicForest**: Core philosophy ("A solitary tree stands fragile. A forest stands unbreakable."), single short explanation paragraph, and a minimal 3-step inline flow (`Practise → Get Feedback → Improve`).
+  4. **Founder**: Compact 2-column layout with photo of Rish (`/rish-profile.jpg`), short 2-paragraph story, experience badges, mission quote, and CTA to 1-to-1 tutoring.
+  5. **Final CTA**: Compact bottom strip with clear heading, dual buttons (`Start Interview Practice →` and `Explore Tutoring →`), and `550+ free interview questions • No card required` trust note.
+- **Verification**: `npx tsc --noEmit` passed with 0 errors, `npm run test:unit` passed 197/197 tests, `npm run build` compiled 184 static pages cleanly.
