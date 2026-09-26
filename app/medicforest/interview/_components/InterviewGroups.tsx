@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, Clock3, Copy, MessageSquare, Play, Plus, RefreshCw, Users } from "lucide-react";
-import { groupStations, type GroupDetail, type GroupList, type GroupRoom } from "@/utils/interviews/groups";
+import { Check, Clock3, Copy, Plus, RefreshCw, Users } from "lucide-react";
+import type { GroupDetail, GroupList } from "@/utils/interviews/groups";
 
 const panel = "rounded-2xl border border-[#d5e2e3] bg-white p-5 shadow-sm";
 const input = "w-full rounded-lg border border-[#c6d6da] bg-white px-3 py-2.5 text-sm text-[#071923] outline-none focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15 disabled:opacity-60";
@@ -39,7 +39,6 @@ function parseInvite(value: string) {
 export function InterviewGroups() {
   const [list, setList] = useState<GroupList | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [detail, setDetail] = useState<GroupDetail | null>(null);
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
@@ -49,9 +48,7 @@ export function InterviewGroups() {
   const [notice, setNotice] = useState("");
   const [signedOut, setSignedOut] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [stationId, setStationId] = useState<string>(groupStations[0].id);
   const [confirm, setConfirm] = useState<{ action: string; userId?: string; name?: string } | null>(null);
-  const [clock, setClock] = useState<{ at: number; receivedAt: number } | null>(null);
   const detailSequence = useRef(0);
   const actionInFlight = useRef(false);
 
@@ -63,14 +60,12 @@ export function InterviewGroups() {
     return data;
   }, []);
 
-  const loadDetail = useCallback(async (groupId: string, roomId: string | null, signal?: AbortSignal) => {
+  const loadDetail = useCallback(async (groupId: string, signal?: AbortSignal) => {
     const sequence = ++detailSequence.current;
     const params = new URLSearchParams({ groupId });
-    if (roomId) params.set("roomId", roomId);
     const data = await request<GroupDetail>(`?${params}`, undefined, signal);
     if (sequence === detailSequence.current && !signal?.aborted) {
       setDetail(data);
-      setClock({ at: new Date(data.serverTime).getTime(), receivedAt: performance.now() });
     }
     return data;
   }, []);
@@ -107,9 +102,8 @@ export function InterviewGroups() {
       inFlight = true;
       let delay = 15_000;
       try {
-        const data = await loadDetail(selectedId, selectedRoomId, controller.signal);
+        await loadDetail(selectedId, controller.signal);
         failures = 0;
-        delay = data.room?.status === "active" ? 7_000 : 15_000;
       } catch (cause) {
         if (!controller.signal.aborted) {
           failures += 1;
@@ -136,7 +130,7 @@ export function InterviewGroups() {
       if (timeout) clearTimeout(timeout);
       document.removeEventListener("visibilitychange", onVisible);
     };
-  }, [selectedId, selectedRoomId, loadDetail, loadList]);
+  }, [selectedId, loadDetail, loadList]);
 
   const act = async (action: string, payload: Record<string, unknown> = {}) => {
     if (actionInFlight.current) return false;
@@ -155,21 +149,16 @@ export function InterviewGroups() {
       if (action === "create" || action === "join") {
         await loadList();
         setSelectedId(result.groupId ?? null);
-        setSelectedRoomId(null);
         setName("");
         setCode("");
         try { sessionStorage.removeItem("interview-group-invite"); } catch { /* Storage is optional. */ }
         setNotice(action === "create" ? "Your group is ready. Share the invite with your friends." : "You joined the group.");
       } else if (action === "leave" || action === "delete") {
         setDetail(null);
-        setSelectedRoomId(null);
         await loadList();
-        setNotice(action === "delete" ? "The group and its stations were deleted." : "You left the group.");
+        setNotice(action === "delete" ? "The group was deleted." : "You left the group.");
       } else if (selectedId) {
-        const roomId = result.roomId ?? selectedRoomId;
-        if (result.roomId) setSelectedRoomId(result.roomId);
-        await loadDetail(selectedId, roomId);
-        if (action === "answer") setNotice("Your answer is saved and visible to your group.");
+        await loadDetail(selectedId);
         if (action === "remove") {
           setInvite(null);
           setNotice("Member removed. Generate a new invite if you want to invite someone else.");
@@ -194,11 +183,11 @@ export function InterviewGroups() {
         <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full border-[30px] border-white/[0.035]" />
         <p className="relative text-[10px] font-bold uppercase tracking-[0.2em] text-[#8be5df]">Your interview study circle</p>
         <h2 className="relative mt-3 text-2xl font-bold tracking-tight">Practise with your people.</h2>
-        <p className="relative mt-3 max-w-2xl text-sm leading-6 text-[#c8dddf]">Bring your friends into a private study group. Work through the same station, compare your thinking and help each other build confidence.</p>
-        <div className="relative mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/10 pt-4 text-xs font-semibold text-[#d2edeb]"><span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />Up to 12 study partners</span><span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />8-minute shared stations</span><span className="inline-flex items-center gap-2"><MessageSquare className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />Answers & peer feedback</span></div>
+        <p className="relative mt-3 max-w-2xl text-sm leading-6 text-[#c8dddf]">Bring your friends into a private study group. Track question progress together, compare performance and help each other build confidence.</p>
+        <div className="relative mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/10 pt-4 text-xs font-semibold text-[#d2edeb]"><span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />Up to 12 study partners</span><span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />Track question practice</span></div>
       </div>
 
-      <p className="px-1 text-xs leading-5 text-[#46646b]">When you create or join a group, members can see your account display name, saved group answers and best free Why medicine? score. Your individual interview transcripts stay private.</p>
+      <p className="px-1 text-xs leading-5 text-[#46646b]">When you create or join a group, members can see your account display name and best free Why medicine? score. Your individual interview transcripts stay private.</p>
 
       {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}{signedOut && <p className="mt-2"><Link className="font-bold underline" href="/medicforest/account">Sign in or create an account</Link>, then return here to join your friends. Your invite is kept in this tab.</p>}</div>}
       {notice && <p role="status" className="rounded-xl bg-[#e5f5ef] p-3 text-sm text-[#075d4c]">{notice}</p>}
@@ -224,7 +213,7 @@ export function InterviewGroups() {
         <aside className={`${panel} self-start`}>
           <h2 className="text-base font-bold">Your groups <span className="font-normal text-slate-500">({list.groups.length})</span></h2>
           {list.groups.length === 0 && <p className="mt-3 text-sm leading-6 text-slate-600">Create your first group or paste an invite to get started.</p>}
-          <div className="mt-3 space-y-2">{list.groups.map((group) => <button key={group.id} disabled={!!busy} onClick={() => { setSelectedId(group.id); setSelectedRoomId(null); setConfirm(null); setNotice(""); setError(""); }} aria-pressed={group.id === selectedId} className={`w-full rounded-xl border p-3 text-left ${group.id === selectedId ? "border-[#08787b] bg-[#edf8f5]" : "border-slate-200 hover:bg-slate-50"}`}>
+          <div className="mt-3 space-y-2">{list.groups.map((group) => <button key={group.id} disabled={!!busy} onClick={() => { setSelectedId(group.id); setConfirm(null); setNotice(""); setError(""); }} aria-pressed={group.id === selectedId} className={`w-full rounded-xl border p-3 text-left ${group.id === selectedId ? "border-[#08787b] bg-[#edf8f5]" : "border-slate-200 hover:bg-slate-50"}`}>
             <span className="flex items-center gap-3"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#d8eeea] text-sm font-bold text-[#08787b]" aria-hidden="true">{group.name.slice(0, 1).toUpperCase()}</span><span className="block break-words text-sm font-bold">{group.name}</span></span>
             <span className="mt-2 block text-xs text-slate-600">{group.id === current?.group.id ? current.members.length : group.memberCount} members{group.ownerId === list.userId ? " · You host" : ""}</span>
           </button>)}</div>
@@ -234,7 +223,7 @@ export function InterviewGroups() {
         {current && <div className="min-w-0 space-y-5">
           <section className={panel}>
             <div className="flex flex-wrap items-start justify-between gap-3">
-              <div><h2 className="break-words text-xl font-bold">{current.group.name}</h2><p className="mt-1 text-xs text-slate-600">{current.members.length}/12 members · {isOwner ? "You are the host" : "The group owner controls the station timer"}</p></div>
+              <div><h2 className="break-words text-xl font-bold">{current.group.name}</h2><p className="mt-1 text-xs text-slate-600">{current.members.length}/12 members{isOwner ? " · You are the host" : ""}</p></div>
               <div className="flex flex-wrap gap-2">
                 {isOwner && <button className={secondary} disabled={!!busy} onClick={() => void act("invite")}>{currentInvite ? "Replace invite" : "Generate invite"}</button>}
                 <button className={`${secondary} text-red-700`} disabled={!!busy} onClick={() => setConfirm({ action: isOwner ? "delete" : "leave" })}>{isOwner ? "Delete group" : "Leave group"}</button>
@@ -251,7 +240,7 @@ export function InterviewGroups() {
             </div>}
 
             {confirm && <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
-              <p className="text-sm text-red-900">{confirm.action === "delete" ? "Delete this group and all its saved stations, answers and messages? This cannot be undone." : confirm.action === "leave" ? "Leave this group? You will need a valid invite to rejoin. Your saved answers remain in the group." : `Remove ${confirm.name || "this member"} from the group? Current invites will also expire.`}</p>
+              <p className="text-sm text-red-900">{confirm.action === "delete" ? "Delete this group and all its records? This cannot be undone." : confirm.action === "leave" ? "Leave this group? You will need a valid invite to rejoin." : `Remove ${confirm.name || "this member"} from the group? Current invites will also expire.`}</p>
               <div className="mt-3 flex gap-2"><button className={`${button} bg-red-700 hover:bg-red-800`} disabled={!!busy} onClick={() => void act(confirm.action, confirm.userId ? { userId: confirm.userId } : {})}>Confirm {confirm.action}</button><button className={secondary} disabled={!!busy} onClick={() => setConfirm(null)}>Cancel</button></div>
             </div>}
 
@@ -266,57 +255,10 @@ export function InterviewGroups() {
             </tbody></table></div>
             <p className="mt-3 text-xs leading-5 text-slate-500">Rank is based on completed interview question-bank questions. Tied totals share a rank. Why medicine? shows each member’s best scored free AI station, capped at 99%.</p>
           </section>
-
-          <section className={panel}>
-            <h2 className="flex items-center gap-2 text-base font-bold"><MessageSquare className="h-5 w-5 text-[#08787b]" aria-hidden="true" /> Group interview station</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Agree who will answer first, then the host starts your shared timer. Write your answer, read your friends’ responses and leave feedback. You can talk in person or on your own call alongside this room.</p>
-            {isOwner && <form className="mt-4 flex flex-wrap items-end gap-3" onSubmit={(event) => { event.preventDefault(); setSelectedRoomId(null); void act("create_room", { stationId }); }}><div className="min-w-0 flex-1"><label htmlFor="group-station" className="mb-2 block text-xs font-semibold">Station theme</label><select id="group-station" value={stationId} onChange={(event) => setStationId(event.target.value)} className={input}>{groupStations.map((station) => <option key={station.id} value={station.id}>{station.title}</option>)}</select></div><button className={button} disabled={!!busy || current.rooms.some((room) => room.status !== "completed")}><Plus className="h-4 w-4" aria-hidden="true" />Open station</button></form>}
-            {current.rooms.length > 0 && <div className="mt-4"><label htmlFor="group-room-history" className="mb-2 block text-xs font-semibold">Recent stations</label><select id="group-room-history" className={input} value={current.room?.id || ""} onChange={(event) => { setSelectedRoomId(event.target.value); setNotice(""); }} disabled={!!busy}>{current.rooms.map((room) => <option key={room.id} value={room.id}>{room.title} · {room.status === "lobby" ? "Waiting to start" : room.status === "active" ? "In progress" : "Completed"} · {new Date(room.createdAt).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</option>)}</select></div>}
-            {!current.room && <p className="mt-5 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">{isOwner ? "Choose a station above to open a room for everyone in your group." : "Your host can open a station when everyone is ready."}</p>}
-            {current.room && <StationRoom key={`${current.room.id}:${current.userId}`} detail={current} room={current.room} clock={clock} isOwner={isOwner} busy={busy} act={act} />}
-          </section>
         </div>}
       </div>}
     </div>
   );
-}
-
-function StationRoom({ detail, room, clock, isOwner, busy, act }: {
-  detail: GroupDetail;
-  room: GroupRoom;
-  clock: { at: number; receivedAt: number } | null;
-  isOwner: boolean;
-  busy: string | null;
-  act: (action: string, payload?: Record<string, unknown>) => Promise<boolean>;
-}) {
-  const savedAnswer = detail.answers.find((answer) => answer.userId === detail.userId);
-  const [answer, setAnswer] = useState(savedAnswer?.text || "");
-  const [message, setMessage] = useState("");
-  const [elapsed, setElapsed] = useState({ origin: 0, delta: 0 });
-
-  useEffect(() => {
-    if (room.status !== "active" || !clock) return;
-    const tick = () => { if (!document.hidden) setElapsed({ origin: clock.receivedAt, delta: performance.now() - clock.receivedAt }); };
-    const interval = setInterval(tick, 1000);
-    document.addEventListener("visibilitychange", tick);
-    return () => { clearInterval(interval); document.removeEventListener("visibilitychange", tick); };
-  }, [room.status, clock]);
-
-  const now = clock ? clock.at + (elapsed.origin === clock.receivedAt ? elapsed.delta : 0) : new Date(detail.serverTime).getTime();
-  const remaining = room.status === "lobby" ? room.durationSeconds : room.endsAt ? Math.max(0, Math.ceil((new Date(room.endsAt).getTime() - now) / 1000)) : 0;
-  const active = room.status === "active" && remaining > 0;
-  const completed = room.status === "completed" || (room.status === "active" && remaining === 0);
-  const unsaved = answer.trim() !== (savedAnswer?.text || "");
-
-  return <div className="mt-5 border-t border-slate-200 pt-5">
-    <div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="font-bold">{room.title}</h3><p className="mt-1 text-xs text-slate-500">{completed ? "Station complete · review your answers below" : active ? "Timer is running for everyone" : "Waiting for your host to start"}</p></div><span className={`inline-flex items-center gap-2 rounded-xl px-4 py-3 font-mono text-xl font-bold ${active && remaining <= 60 ? "bg-amber-50 text-amber-800" : "bg-[#edf8f5] text-[#08787b]"}`} role="timer" aria-label={`${Math.floor(remaining / 60)} minutes ${remaining % 60} seconds remaining`}><Clock3 className="h-5 w-5" aria-hidden="true" />{Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}</span></div>
-    {isOwner && !completed && <div className="mt-4 flex flex-wrap gap-2">{room.status === "lobby" && <button className={button} disabled={!!busy} onClick={() => void act("start_room", { roomId: room.id })}><Play className="h-4 w-4" aria-hidden="true" />Start for everyone</button>}<button className={secondary} disabled={!!busy} onClick={() => void act("end_room", { roomId: room.id })}>{room.status === "lobby" ? "Cancel station" : "Finish station early"}</button></div>}
-    <ol className="mt-5 list-decimal space-y-3 rounded-xl bg-[#f4f8f8] py-4 pl-10 pr-4 text-sm leading-6">{room.questions.map((question) => <li key={question}>{question}</li>)}</ol>
-    {active && <form className="mt-5" onSubmit={async (event) => { event.preventDefault(); await act("answer", { roomId: room.id, text: answer }); }}><label htmlFor="group-answer" className="mb-2 block text-sm font-bold">Your answer</label><textarea id="group-answer" className={`${input} min-h-40 resize-y`} value={answer} onChange={(event) => setAnswer(event.target.value)} required maxLength={6000} placeholder="Reflect on the station questions. Save your answer before the timer ends." /><div className="mt-2 flex flex-wrap items-center justify-between gap-3"><span className="text-xs text-slate-500">{answer.length}/6,000 · {unsaved ? "Unsaved changes" : savedAnswer ? "Saved to the group" : "Visible to your group when saved"}</span><button className={button} disabled={!!busy || !answer.trim() || !unsaved}>{busy === "answer" ? "Saving…" : savedAnswer ? "Update answer" : "Share answer"}</button></div></form>}
-    {completed && unsaved && answer.trim() && <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4"><p className="text-sm font-semibold text-amber-900">The timer ended before your latest changes were saved. You can copy your draft below.</p><textarea aria-label="Unsaved answer draft" readOnly className={`${input} mt-3 min-h-32`} value={answer} /></div>}
-    <div className="mt-6"><h4 className="text-sm font-bold">Shared answers <span className="font-normal text-slate-500">({detail.answers.length})</span></h4><p className="mt-1 text-xs text-slate-500">Peer practice · these answers are not added to the question-completion ranking.</p>{detail.answers.length === 0 ? <p className="mt-3 text-sm text-slate-500">Saved answers will appear here.</p> : <div className="mt-3 space-y-3">{detail.answers.map((response) => <article key={response.userId} className="rounded-xl border border-slate-200 p-4"><p className="text-sm font-bold">{response.name}{response.userId === detail.userId ? " (you)" : ""}</p><p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700">{response.text}</p></article>)}</div>}</div>
-    <div className="mt-6"><h4 className="text-sm font-bold">Room discussion</h4><p className="mt-1 text-xs text-slate-500">Messages refresh while this page is open. The latest 100 messages are shown.</p><div className="mt-3 max-h-72 space-y-3 overflow-y-auto rounded-xl bg-slate-50 p-4" aria-label="Room messages">{detail.messages.length === 0 ? <p className="text-sm text-slate-500">Say hello or agree who will answer first.</p> : detail.messages.map((entry) => <div key={entry.id}><p className="text-xs font-bold text-[#08787b]">{entry.name} <span className="font-normal text-slate-500">{new Date(entry.createdAt).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}</span></p><p className="mt-1 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700">{entry.text}</p></div>)}</div><form className="mt-3 flex items-end gap-2" onSubmit={async (event) => { event.preventDefault(); if (await act("message", { roomId: room.id, text: message })) setMessage(""); }}><div className="min-w-0 flex-1"><label htmlFor="group-chat-message" className="sr-only">Message your group</label><textarea id="group-chat-message" className={`${input} min-h-20 resize-y`} value={message} onChange={(event) => setMessage(event.target.value)} required maxLength={1000} placeholder="Encourage your friends or share constructive feedback…" /></div><button className={button} disabled={!!busy || !message.trim()}>Send</button></form></div>
-  </div>;
 }
 
 export default InterviewGroups;

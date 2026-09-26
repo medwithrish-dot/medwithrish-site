@@ -74,6 +74,13 @@ const successStories = [
     subtext: "Top national percentile — near-perfect scores across all cognitive subtests.",
   },
   {
+    src: "/success-stories/story-2350-b1.png",
+    alt: "Student UCAT score 2350 Band 1",
+    tag: "UCAT Achievement",
+    headline: "2350 B1!!",
+    subtext: "9th decile achievement — outstanding scores with 880 in Quantitative Reasoning and Band 1 SJT.",
+  },
+  {
     src: "/success-stories/story1.jpeg",
     alt: "Student received 4 out of 4 medicine offers",
     tag: "Medicine Offer",
@@ -89,10 +96,10 @@ const successStories = [
   },
   {
     src: "/success-stories/story5.jpeg",
-    alt: "Oxbridge medicine offer success story",
-    tag: "Medicine Offer",
-    headline: "Oxbridge Medicine Offer",
-    subtext: "Secured prestigious admission following intensive interview strategy and mock panel practice.",
+    alt: "Student UCAT score 2370 Band 2",
+    tag: "UCAT Achievement",
+    headline: "2370 B2!",
+    subtext: "Exceptional score progression and interview confidence guided by 1-1 coaching.",
   },
   {
     src: "/success-stories/story-2170-b2.png",
@@ -337,14 +344,6 @@ export default function MedicForestAboutPage() {
                   <span>1-1 Tutoring with Rish</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-                <a
-                  href="https://medwithrish.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-3 text-sm font-semibold text-[#0d2c2e] shadow-xs transition hover:border-teal-300 hover:text-teal-700"
-                >
-                  <span>Visit MedWithRish.com</span>
-                </a>
               </div>
             </div>
           </div>
