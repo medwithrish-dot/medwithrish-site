@@ -60,5 +60,6 @@ export type GroupDetail = {
   room: GroupRoom | null;
   answers: GroupAnswer[];
   messages: GroupMessage[];
+  completedQuestionIndices: number[];
   serverTime: string;
 };

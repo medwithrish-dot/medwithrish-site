@@ -43,6 +43,25 @@ const jsonRequest = (body) => new Request("https://example.test/api", {
 const auth = { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: { id: "user-1" } } }) } }) };
 const noStripe = { createStripeClient() { throw new Error("Stripe must not be called for invalid input"); } };
 
+test("public interview leaderboard loads for guests without exposing account preferences", async () => {
+  let publicCalls = 0;
+  const entries = [{ rank: 1, display_name: "Candidate One", score: 88, completed_at: "2026-09-01T00:00:00Z", is_you: false }];
+  const { GET } = load("app/api/interviews/leaderboard/route.ts", {
+    "@/utils/interviews/server": {
+      interviewJson: (value) => Response.json(value),
+      interviewFailure: (error) => Response.json({ error: String(error) }, { status: 503 }),
+      databaseError: (error) => { throw error; },
+    },
+    "@/utils/interviews/public-name": { safePublicName: (name) => name },
+    "@/utils/supabase/server": { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: null } }) } }) },
+    "@/utils/supabase/admin": { createAdminClient: () => ({ rpc: async () => { publicCalls += 1; return { data: entries, error: null }; }, from: () => { throw new Error("Guest account query"); } }) },
+  });
+  const response = await GET();
+  assert.equal(response.status, 200);
+  assert.deepEqual((await response.json()).entries, entries);
+  assert.equal(publicCalls, 1);
+});
+
 test("checkout rejects malformed bodies, invalid email addresses and arbitrary storage paths before Stripe", async () => {
   const { POST } = load("app/api/ps-review/checkout/route.ts", { "@/utils/stripe": noStripe });
   const valid = { email: "student@example.test", reviewType: "medicine", filePath: "cfca31be-7212-47d5-b00c-f1502baf307e.pdf" };

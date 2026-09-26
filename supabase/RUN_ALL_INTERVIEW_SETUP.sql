@@ -1,4 +1,4 @@
--- COMPLETE MED INTERVIEW SETUP: paste this entire file into Supabase SQL Editor and Run.
+﻿-- COMPLETE MED INTERVIEW SETUP: paste this entire file into Supabase SQL Editor and Run.
 -- For your EXISTING MedicForest project (public.profiles must already exist).
 -- This combines all five interview setup files in dependency order.
 -- Safe to rerun. Existing interview answers, groups and profiles are preserved.
@@ -279,6 +279,14 @@ create table if not exists public.interview_study_group_answers (
   primary key(room_id, user_id)
 );
 
+create table if not exists public.interview_study_group_question_completions (
+  room_id uuid not null references public.interview_study_group_rooms(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  question_index integer not null check (question_index >= 0),
+  completed_at timestamptz not null default now(),
+  primary key(room_id, user_id, question_index)
+);
+
 create table if not exists public.interview_study_group_messages (
   id uuid primary key default gen_random_uuid(),
   room_id uuid not null references public.interview_study_group_rooms(id) on delete cascade,
@@ -294,9 +302,11 @@ alter table public.interview_study_groups enable row level security;
 alter table public.interview_study_group_members enable row level security;
 alter table public.interview_study_group_rooms enable row level security;
 alter table public.interview_study_group_answers enable row level security;
+alter table public.interview_study_group_question_completions enable row level security;
 alter table public.interview_study_group_messages enable row level security;
 revoke all on public.interview_study_groups, public.interview_study_group_members,
   public.interview_study_group_rooms, public.interview_study_group_answers,
+  public.interview_study_group_question_completions,
   public.interview_study_group_messages from public, anon, authenticated;
 
 create or replace function public.interview_groups_action(
@@ -324,6 +334,7 @@ declare
   v_rooms jsonb;
   v_answers jsonb := '[]'::jsonb;
   v_messages jsonb := '[]'::jsonb;
+  v_completions jsonb := '[]'::jsonb;
   v_room_json jsonb := null;
   v_target uuid;
 begin
@@ -335,7 +346,7 @@ begin
   end if;
   if p_action is null or p_action not in (
     'list', 'details', 'create', 'join', 'invite', 'remove', 'leave', 'delete',
-    'create_room', 'start_room', 'end_room', 'answer', 'message'
+    'create_room', 'start_room', 'end_room', 'answer', 'message', 'complete_question'
   ) then
     raise exception 'Unknown group action.';
   end if;
@@ -427,10 +438,11 @@ begin
     ) order by ranked.rank, ranked.joined_at), '[]'::jsonb) into v_members
       from (
         select m.*,
-          count(q.question_id) filter (where q.status = 'completed')::integer as questions_completed,
-          dense_rank() over (order by count(q.question_id) filter (where q.status = 'completed') desc) as rank
+          count(c.question_index)::integer as questions_completed,
+          dense_rank() over (order by count(c.question_index) desc) as rank
         from public.interview_study_group_members m
-        left join public.interview_question_progress q on q.user_id = m.user_id
+        left join public.interview_study_group_rooms r on r.group_id = m.group_id
+        left join public.interview_study_group_question_completions c on c.room_id = r.id and c.user_id = m.user_id
         where m.group_id = v_group.id
         group by m.group_id, m.user_id, m.display_name, m.joined_at
       ) ranked;
@@ -457,6 +469,9 @@ begin
         'userId', user_id, 'name', display_name, 'text', answer, 'updatedAt', updated_at
       ) order by updated_at), '[]'::jsonb) into v_answers
         from public.interview_study_group_answers where room_id = v_room.id;
+      select coalesce(jsonb_agg(question_index order by question_index), '[]'::jsonb) into v_completions
+        from public.interview_study_group_question_completions
+        where room_id = v_room.id and user_id = v_actor;
       select coalesce(jsonb_agg(jsonb_build_object(
         'id', n.id, 'userId', n.user_id, 'name', n.display_name, 'text', n.message, 'createdAt', n.created_at
       ) order by n.created_at), '[]'::jsonb) into v_messages
@@ -466,7 +481,8 @@ begin
       'userId', v_actor, 'serverTime', now(),
       'group', jsonb_build_object('id', v_group.id, 'name', v_group.name, 'ownerId', v_group.owner_id,
         'createdAt', v_group.created_at, 'memberCount', jsonb_array_length(v_members)),
-      'members', v_members, 'rooms', v_rooms, 'room', v_room_json, 'answers', v_answers, 'messages', v_messages
+      'members', v_members, 'rooms', v_rooms, 'room', v_room_json, 'answers', v_answers, 'messages', v_messages,
+      'completedQuestionIndices', v_completions
     );
   end if;
 
@@ -547,6 +563,18 @@ begin
     return jsonb_build_object('ok', true);
   end if;
 
+  if p_action = 'complete_question' then
+    if v_room.status <> 'active' or v_room.ends_at <= now() then raise exception 'Questions can only be completed while the station timer is running.'; end if;
+    if coalesce(jsonb_typeof(p_payload->'questionIndex'), '') <> 'number' or
+       length(p_payload->>'questionIndex') > 2 or
+       (p_payload->>'questionIndex') !~ '^(0|[1-9][0-9]*)$' then raise exception 'Choose a valid question.'; end if;
+    if (p_payload->>'questionIndex')::integer >= jsonb_array_length(v_room.questions) then raise exception 'Choose a valid question.'; end if;
+    insert into public.interview_study_group_question_completions(room_id, user_id, question_index)
+      values(v_room.id, v_actor, (p_payload->>'questionIndex')::integer)
+      on conflict do nothing;
+    return jsonb_build_object('ok', true);
+  end if;
+
   select display_name into v_name from public.interview_study_group_members
     where group_id = v_group.id and user_id = v_actor;
   v_text := btrim(p_payload->>'text');
@@ -581,7 +609,7 @@ revoke all on function public.interview_groups_action(text, uuid, jsonb) from pu
 grant execute on function public.interview_groups_action(text, uuid, jsonb) to authenticated;
 
 comment on function public.interview_groups_action(text, uuid, jsonb) is
-  'Authenticated group operations. Membership and host checks run inside serialized mutations. Group scores deliberately await an owner-defined rubric.';
+  'Authenticated group operations. Membership and host checks run inside serialized mutations. Member rank counts completed questions in this group.';
 
 
 -- ============================================================

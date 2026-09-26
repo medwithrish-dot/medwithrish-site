@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
@@ -6,7 +6,7 @@ import { ArrowRight, Award, Check, Loader2, Trophy, Users } from "lucide-react";
 import { publicNameError } from "@/utils/interviews/public-name";
 
 type Entry = { rank: number; display_name: string; score: number; completed_at: string; is_you: boolean };
-type Board = { entries: Entry[]; preference: { display_name: string; leaderboard_opt_in: boolean }; bestScore: number | null };
+type Board = { entries: Entry[]; preference: { display_name: string; leaderboard_opt_in: boolean } | null; bestScore: number | null };
 
 async function fetchBoard(): Promise<Board> {
   const response = await fetch("/api/interviews/leaderboard", { cache: "no-store" });
@@ -24,7 +24,7 @@ export function InterviewLeaderboard() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const applyBoard = useCallback((data: Board) => {
-    setBoard(data); setName(data.preference.display_name); setOptIn(data.preference.leaderboard_opt_in); setError("");
+    setBoard(data); setName(data.preference?.display_name ?? ""); setOptIn(data.preference?.leaderboard_opt_in ?? false); setError("");
   }, []);
   const load = useCallback(async () => {
     try {
@@ -69,7 +69,7 @@ export function InterviewLeaderboard() {
         {loading ? <div role="status" className="flex items-center justify-center gap-3 p-14 text-sm text-[#62777e]"><Loader2 className="animate-spin" size={18} /> Loading scores…</div> : !board?.entries.length ? <div className="px-6 py-16 text-center"><div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#edf7f6]"><Trophy className="text-[#159a9d]" size={28} /></div><h3 className="mt-5 font-bold">A fresh start for everyone</h3><p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#62777e]">Complete the free station and choose to share your score. Only real, completed AI feedback appears here.</p></div> : <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead className="bg-[#f8fafa] text-xs uppercase tracking-wide text-[#62777e]"><tr><th className="px-5 py-3">Rank</th><th className="px-5 py-3">Candidate</th><th className="px-5 py-3 text-right">Best score</th></tr></thead><tbody>{board.entries.map((entry) => <tr key={entry.rank} className={`border-t border-[#edf1f1] ${entry.is_you ? "bg-[#edf7f6]" : ""}`}><td className="px-5 py-5"><span className={`inline-flex h-8 w-8 items-center justify-center rounded-lg font-bold ${entry.rank === 1 ? "bg-amber-100 text-amber-700" : entry.rank <= 3 ? "bg-teal-50 text-teal-700" : "text-[#62777e]"}`}>{entry.rank}</span></td><td className="px-5 py-5 font-semibold">{entry.display_name}{entry.is_you && <span className="ml-2 rounded-full bg-teal-100 px-2 py-1 text-[10px] text-teal-800">YOU</span>}</td><td className="px-5 py-5 text-right text-lg font-bold tabular-nums text-[#08787b]">{entry.score}%</td></tr>)}</tbody></table></div>}
       </section>
       <aside className="space-y-5">
-        <section className="rounded-2xl border border-[#dbe5e5] bg-white p-6"><h2 className="font-bold">Your place, your choice</h2><p className="mt-2 text-sm leading-6 text-[#62777e]">Share a nickname and your best score. Your answers and email stay private.</p><label className="mt-5 block text-xs font-bold" htmlFor="leaderboard-name">Public nickname</label><input id="leaderboard-name" value={name} maxLength={32} onChange={(event) => { setName(event.target.value); setSaved(false); }} className="mt-2 w-full rounded-xl border border-[#dbe5e5] px-3 py-3 text-sm outline-none focus:border-[#159a9d]" disabled={!board} /><label className="mt-4 flex items-start gap-3 text-sm leading-6"><input type="checkbox" checked={optIn} onChange={(event) => { setOptIn(event.target.checked); setSaved(false); }} disabled={!board} className="mt-1 h-4 w-4 accent-teal-700" />Show my best score on this leaderboard</label><button onClick={() => void save()} disabled={saving || !board} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#08787b] px-4 py-3 text-sm font-bold text-white hover:bg-[#042724] disabled:opacity-50">{saving ? <Loader2 size={16} className="animate-spin" /> : saved ? <Check size={16} /> : null}{saving ? "Saving…" : saved ? "Preferences saved" : "Save preferences"}</button></section>
+        <section className="rounded-2xl border border-[#dbe5e5] bg-white p-6"><h2 className="font-bold">Your place, your choice</h2><p className="mt-2 text-sm leading-6 text-[#62777e]">Share a nickname and your best score. Your answers and email stay private.</p>{board && !board.preference ? <Link href="/medicforest/account" className="mt-5 inline-flex rounded-xl bg-[#08787b] px-4 py-3 text-sm font-bold text-white">Sign in to share your score</Link> : <><label className="mt-5 block text-xs font-bold" htmlFor="leaderboard-name">Public nickname</label><input id="leaderboard-name" value={name} maxLength={32} onChange={(event) => { setName(event.target.value); setSaved(false); }} className="mt-2 w-full rounded-xl border border-[#dbe5e5] px-3 py-3 text-sm outline-none focus:border-[#159a9d]" disabled={!board} /><label className="mt-4 flex items-start gap-3 text-sm leading-6"><input type="checkbox" checked={optIn} onChange={(event) => { setOptIn(event.target.checked); setSaved(false); }} disabled={!board} className="mt-1 h-4 w-4 accent-teal-700" />Show my best score on this leaderboard</label><button onClick={() => void save()} disabled={saving || !board} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#08787b] px-4 py-3 text-sm font-bold text-white hover:bg-[#042724] disabled:opacity-50">{saving ? <Loader2 size={16} className="animate-spin" /> : saved ? <Check size={16} /> : null}{saving ? "Saving…" : saved ? "Preferences saved" : "Save preferences"}</button></>}</section>
         <section className="rounded-2xl bg-[#e3efee] p-6"><h2 className="font-bold">Every point means more</h2><p className="mt-3 text-sm leading-6 text-[#415b61]">Scores stop at 99%. A fixed logarithmic scale makes each extra percentage point require more evidence in the rubric. Repeating the station never adds bonus points.</p><p className="mt-3 text-xs leading-5 text-[#62777e]">This is an AI practice score, not an admissions prediction. Equal scores are ordered by the earliest completion. Voice and typed answers use the same rubric.</p></section>
       </aside>
     </div>

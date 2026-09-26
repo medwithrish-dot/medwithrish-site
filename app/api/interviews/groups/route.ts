@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const actions = new Set([
   "create", "join", "invite", "remove", "leave", "delete",
-  "create_room", "start_room", "end_room", "answer", "message",
+  "create_room", "start_room", "end_room", "answer", "message", "complete_question",
 ]);
 
 function json(value: unknown, status = 200) {

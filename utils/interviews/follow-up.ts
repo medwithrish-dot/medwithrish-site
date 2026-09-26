@@ -33,8 +33,10 @@ export function practiceFollowUp(answer: string, questionNumber: number) {
 // it only once the attempt leaves in_progress, when follow-ups are no longer allowed.
 export function followUpClaimMask(marker: unknown) {
   if (marker === null || marker === undefined) return 0;
-  if (typeof marker !== "string" || !/^ai_followup:[0-7]$/.test(marker)) throw new Error("Invalid follow-up state");
-  return Number(marker.slice("ai_followup:".length));
+  if (typeof marker !== "string" || !/^ai_followup:(0|[1-9]\d*)$/.test(marker)) throw new Error("Invalid follow-up state");
+  const mask = Number(marker.slice("ai_followup:".length));
+  if (!Number.isSafeInteger(mask)) throw new Error("Invalid follow-up state");
+  return mask;
 }
 
 export function existingFollowUp(questions: readonly string[], mainQuestion: string, originals: readonly string[]) {

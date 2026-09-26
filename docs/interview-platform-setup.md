@@ -58,7 +58,10 @@ Create a group and share its invitation yourself. No email or message is sent by
 
 The group owner creates and starts a shared eight-minute station. Members contribute their own responses and a text discussion. The room timer is shared and authoritative; polling slows when idle and pauses when hidden. There are no video calls or continuous AI charges. **Group assessment scores remain “Awaiting scoring rules”**, ready for the owner's future scoring design. The displayed Why medicine? personal best is labelled separately.
 
+During an active group station, each member can mark each question complete once. The group ranking counts these per-person completions across rooms in that group; it does not count private question-bank practice. Apply the updated `supabase/medicforest_interview_groups.sql` to existing databases before using this control.
+
 The overall leaderboard includes only opted-in, completed free Why medicine? attempts under rubric `why-medicine-v1`. It shows a nickname, score and rank, never email, user IDs or transcripts. One best attempt per person is ranked; equal scores use earliest completion. Members can withdraw their score or change their nickname.
+Visitors can view public scores without signing in. Sign-in is required to share a score or change a nickname.
 
 Public nickname validation runs in the browser and authenticated API. The moderation migration adds a database constraint and a guard on the leaderboard RPC, so direct calls cannot bypass it. The API also replaces unsafe legacy names when reading before the migration has been installed. The application and SQL normalization rules are checked against the same profanity/evasion and legitimate-name examples by `node --test scripts/test-interview-public-names.mjs`.
 

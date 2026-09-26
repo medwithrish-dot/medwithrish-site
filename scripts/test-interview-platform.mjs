@@ -263,10 +263,9 @@ try {
     const detail = await group(ids.friend, "details", groupId);
     assert.equal(detail.members.length, 2);
     assert.equal(detail.members.find((member) => member.userId === ids.friend).whyMedicineScore, 88.5);
-    assert.equal(detail.members[0].userId, ids.friend);
     assert.equal(detail.members[0].rank, 1);
-    assert.equal(detail.members[0].questionsCompleted, 2);
-    assert.equal(detail.members[1].rank, 2);
+    assert.equal(detail.members[0].questionsCompleted, 0);
+    assert.equal(detail.members[1].rank, 1);
     assert.equal(detail.members[1].questionsCompleted, 0);
     assert.equal(JSON.stringify(detail).includes(transcript), false);
     assert.equal(JSON.stringify(detail).includes("invite_hash"), false);
@@ -295,6 +294,21 @@ try {
     assert.equal(detail.answers[0].text, transcript); assert.equal(detail.messages[0].text, "Your turn!");
     await assert.rejects(group(ids.outsider, "message", groupId, { roomId, text: "Intrusion" }), /unavailable/);
   });
+  await check("group question completions count once per person and only in the group", async () => {
+    await assert.rejects(group(ids.friend, "complete_question", groupId, { roomId }), /valid question/);
+    await assert.rejects(group(ids.friend, "complete_question", groupId, { roomId, questionIndex: 3 }), /valid question/);
+    await assert.rejects(group(ids.friend, "complete_question", groupId, { roomId, questionIndex: -1 }), /valid question/);
+    await group(ids.friend, "complete_question", groupId, { roomId, questionIndex: 0 });
+    await group(ids.friend, "complete_question", groupId, { roomId, questionIndex: 0 });
+    await group(ids.friend, "complete_question", groupId, { roomId, questionIndex: 1 });
+    const detail = await group(ids.friend, "details", groupId);
+    assert.deepEqual(detail.completedQuestionIndices, [0, 1]);
+    assert.equal(detail.members[0].userId, ids.friend);
+    assert.equal(detail.members[0].questionsCompleted, 2);
+    assert.equal(detail.members[1].questionsCompleted, 0);
+    assert.deepEqual((await group(ids.owner, "details", groupId)).completedQuestionIndices, []);
+    await assert.rejects(group(ids.outsider, "complete_question", groupId, { roomId, questionIndex: 0 }), /unavailable/);
+  });
   await check("removal revokes membership and old invites; rotated invites restore access", async () => {
     await group(ids.owner, "remove", groupId, { userId: ids.friend });
     await assert.rejects(group(ids.friend, "details", groupId), /unavailable/);
@@ -307,6 +321,7 @@ try {
     await db.query("update public.interview_study_group_rooms set ends_at=now()-interval '1 second' where id=$1", [roomId]);
     assert.equal((await group(ids.friend, "details", groupId)).room.status, "completed");
     await assert.rejects(group(ids.friend, "answer", groupId, { roomId, text: "Too late" }), /only be saved/);
+    await assert.rejects(group(ids.friend, "complete_question", groupId, { roomId, questionIndex: 2 }), /only be completed/);
     assert.ok((await group(ids.owner, "create_room", groupId, { stationId: "ethics-edi" })).roomId);
   });
   await check("group tables reject direct client access and delete cascades room data", async () => {

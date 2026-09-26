@@ -28,6 +28,7 @@ export async function POST(request: Request) {
     const originals: readonly string[] = bankOriginals.length ? bankOriginals : station.questions;
     const questionNumber = originals.indexOf(body.question);
     if (questionNumber < 0 || !row.questions.includes(body.question)) throw new InterviewError("Follow-ups are available once for each main question");
+    if (questionNumber > 52) throw new InterviewError("This station has too many questions for follow-ups.", 409);
     const question = body.question;
     const reply = (saved: Record<string, unknown>, followUp: string, source: "ai" | "practice" | "saved") => {
       const attempt = toInterviewAttempt(saved);
@@ -52,9 +53,9 @@ export async function POST(request: Request) {
     // Atomically reserve one provider call per original question. The daily/monthly
     // attempt quotas therefore also bound AI usage; retries cannot spend more quota.
     const mask = followUpClaimMask(row.last_error);
-    const bit = 1 << questionNumber;
-    if (mask & bit) throw new InterviewError("A follow-up is already being prepared for this answer. Continue with the next question if it is unavailable.", 409);
-    let claim = admin.from("interview_attempts").update({ last_error: `ai_followup:${mask | bit}` }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress");
+    const bit = 2 ** questionNumber;
+    if (Math.floor(mask / bit) % 2) throw new InterviewError("A follow-up is already being prepared for this answer. Continue with the next question if it is unavailable.", 409);
+    let claim = admin.from("interview_attempts").update({ last_error: `ai_followup:${mask + bit}` }).eq("id", row.id).eq("user_id", user.id).eq("status", "in_progress");
     claim = row.last_error == null ? claim.is("last_error", null) : claim.eq("last_error", row.last_error);
     const { data: claimed, error: claimError } = await claim.select("id").maybeSingle();
     if (claimError) databaseError(claimError);
