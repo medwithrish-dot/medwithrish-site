@@ -11,7 +11,6 @@ import {
   Brain,
   CircleHelp,
   ClipboardList,
-  FileText,
   Home,
   Mic,
   MessageSquare,
@@ -93,11 +92,6 @@ const landingSections = [
     items: [
       { label: "UCAT", icon: Brain, href: "/ucat" },
       {
-        label: "Personal Statement",
-        icon: FileText,
-        href: "/personal-statement",
-      },
-      {
         label: "Interviews",
         icon: MessageSquare,
         href: "/interviews",
@@ -107,7 +101,6 @@ const landingSections = [
         icon: UserRoundCheck,
         href: "/tutoring",
       },
-      { label: "Resources", icon: BookOpen, href: "/resources" },
     ],
   },
   {

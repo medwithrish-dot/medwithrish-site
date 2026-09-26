@@ -22,10 +22,8 @@ const landingLinks = [
   ["About", "/about"],
   ["Pricing", "/pricing"],
   ["UCAT", "/ucat"],
-  ["Personal Statement", "/personal-statement"],
   ["Interviews", "/interviews"],
   ["1-1 Tutoring", "/tutoring"],
-  ["Resources", "/resources"],
   ["Feedback", "/feedback"],
   ["Contact us", "/contact"],
 ] as const;
