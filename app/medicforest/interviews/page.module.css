@@ -171,7 +171,6 @@
   flex-shrink: 0;
 }
 .previewWrap {
-  perspective: 1200px;
   min-width: 0;
 }
 .preview {
@@ -179,7 +178,6 @@
   background: linear-gradient(145deg, #102a3b, #071525 50%);
   border: 1px solid #39a4ae;
   border-radius: 18px;
-  transform: rotateY(-3deg) rotateZ(0.5deg);
   box-shadow:
     0 0 0 5px #30c3be06,
     0 0 40px #16cfb519,
