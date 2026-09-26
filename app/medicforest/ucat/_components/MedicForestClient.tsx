@@ -8946,14 +8946,14 @@ function RedesignedTutorHero() {
               <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
                 <Link
                   href="/ucat/dashboard"
-                  className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 text-base font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
                 >
                   Log in / Launch UCAT Platform
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  <ArrowRight className="h-5 w-5" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/ucat/dashboard"
-                  className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-blue-400/45 bg-blue-500/10 px-4 text-sm font-bold text-blue-100 transition-colors hover:border-blue-300 hover:bg-blue-500/20"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-blue-400/45 bg-blue-500/10 px-6 text-base font-bold text-blue-100 transition-colors hover:border-blue-300 hover:bg-blue-500/20"
                 >
                   <Target className="h-4 w-4" aria-hidden="true" />
                   Start Free Diagnostic
