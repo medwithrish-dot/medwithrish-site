@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Reveal from "@/components/Reveal";
 
@@ -157,14 +157,14 @@ function buttonClasses(variant: string) {
 
 export default function AdmissionsJourney() {
   const journeyRef = useRef<HTMLElement | null>(null);
-  const scrollRequestRef = useRef({ routeKey: "", completed: false });
+
   const searchParams = useSearchParams();
   const routeKey = searchParams.toString();
   const requestedStage = searchParams.get("stage")?.padStart(2, "0");
   const urlStage = stages.some((stage) => stage.number === requestedStage)
     ? requestedStage
     : "04";
-  const scrollTarget = searchParams.get("scroll");
+
   // A manual selection belongs to the current URL; new deep links take precedence.
   const [userStage, setUserStage] = useState<{ routeKey: string; stage: string | null } | null>(null);
   const openStage = userStage?.routeKey === routeKey ? userStage.stage : urlStage;

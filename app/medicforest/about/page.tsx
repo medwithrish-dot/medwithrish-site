@@ -9,12 +9,9 @@ import {
   GraduationCap,
   HeartHandshake,
   Quote,
-  ShieldCheck,
   Sprout,
-  Target,
   TreePine,
   Trees,
-  Trophy,
   Users,
 } from "lucide-react";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
