@@ -69,12 +69,6 @@ export default function PersonalStatementsGuidePage() {
                 Personal statement session
               </Link>
 
-              <Link
-                href="/?stage=05&scroll=ps-submission#journey"
-                className="inline-flex rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-800 hover:border-blue-300 hover:text-blue-700"
-              >
-                Submit for review
-              </Link>
             </div>
           </div>
         </header>
@@ -155,12 +149,6 @@ export default function PersonalStatementsGuidePage() {
                 Book PS support
               </Link>
 
-              <Link
-                href="/?stage=05&scroll=ps-submission#journey"
-                className="inline-flex justify-center rounded-xl border border-gray-200 bg-white px-5 py-3 text-sm font-bold text-gray-800 transition hover:border-blue-300 hover:text-blue-700"
-              >
-                Submit for review
-              </Link>
             </div>
           </div>
         </section>

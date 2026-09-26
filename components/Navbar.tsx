@@ -23,8 +23,6 @@ const navItems: {
     items: [
       { label: "Personal Statements Guide", href: "/personal-statements-guide" },
       { label: "1-to-1 Personal Statement Session", href: "/personal-statement-session" },
-      { label: "Medicine Personal Statement Review", href:"/?stage=05&scroll=ps-submission#journey" },
-       { label: "Dental Personal Statement Review", href:"/?stage=05&scroll=ps-submission#journey" },
     ],
   },
 

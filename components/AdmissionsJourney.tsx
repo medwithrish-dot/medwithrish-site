@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import PSReviewForm from "@/components/PSReviewForm";
 import Reveal from "@/components/Reveal";
 
 const stages = [
@@ -105,7 +104,6 @@ const stages = [
         variant: "tutoring",
       },
     ],
-    showSubmissionPlaceholder: true,
   },
   {
     number: "06",
@@ -158,7 +156,6 @@ function buttonClasses(variant: string) {
 }
 
 export default function AdmissionsJourney() {
-  const submissionRef = useRef<HTMLDivElement | null>(null);
   const journeyRef = useRef<HTMLElement | null>(null);
   const scrollRequestRef = useRef({ routeKey: "", completed: false });
   const searchParams = useSearchParams();
@@ -173,34 +170,7 @@ export default function AdmissionsJourney() {
   const openStage = userStage?.routeKey === routeKey ? userStage.stage : urlStage;
   const setOpenStage = (stage: string | null) => setUserStage({ routeKey, stage });
 
-useEffect(() => {
-  if (scrollRequestRef.current.routeKey !== routeKey) {
-    scrollRequestRef.current = { routeKey, completed: false };
-  }
-  if (!scrollRequestRef.current.completed && openStage === "05" && urlStage === "05" && scrollTarget === "ps-submission") {
-    const timer = setTimeout(() => {
-      const element = submissionRef.current;
 
-      if (element) {
-        const yOffset = -90;
-
-        const y =
-          element.getBoundingClientRect().top +
-          window.pageYOffset +
-          yOffset;
-
-        window.scrollTo({
-          top: y,
-          behavior: "smooth",
-        });
-        scrollRequestRef.current.completed = true;
-      }
-
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }
-}, [openStage, urlStage, scrollTarget, routeKey]);
   return (
     <section
   id="journey"
@@ -348,10 +318,6 @@ useEffect(() => {
                               )
                             )}
                           </div>
-                        )}
-
-                        {stage.showSubmissionPlaceholder && (
-                          <PSReviewForm submissionRef={submissionRef} />
                         )}
                       </div>
                     </div>

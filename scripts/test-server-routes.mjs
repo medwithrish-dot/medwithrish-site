@@ -43,56 +43,6 @@ const jsonRequest = (body) => new Request("https://example.test/api", {
 const auth = { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: { id: "user-1" } } }) } }) };
 const noStripe = { createStripeClient() { throw new Error("Stripe must not be called for invalid input"); } };
 
-test("checkout rejects malformed bodies, invalid email addresses and arbitrary storage paths before Stripe", async () => {
-  const { POST } = load("app/api/ps-review/checkout/route.ts", { "@/utils/stripe": noStripe });
-  const valid = { email: "student@example.test", reviewType: "medicine", filePath: "cfca31be-7212-47d5-b00c-f1502baf307e.pdf" };
-  for (const body of [null, [], 5, {}, { ...valid, email: {} }, { ...valid, email: "<b>@example.test" }, { ...valid, reviewType: [] }, { ...valid, filePath: "../private.pdf" }]) {
-    assert.equal((await POST(jsonRequest(body))).status, 400);
-  }
-  assert.equal((await POST(new Request("https://example.test", { method: "POST", body: "{" }))).status, 400);
-});
-
-test("PDF upload validates actual file contents and handles bad forms and storage outages", async () => {
-  let uploads = 0;
-  let storageFails = false;
-  const { POST } = load("app/api/ps-review/upload/route.ts", {
-    "@/utils/supabase/admin": { createAdminClient: () => ({ storage: { from: () => ({ upload: async () => {
-      uploads += 1; return { error: storageFails ? { message: "private provider details" } : null };
-    } }) } }) },
-  });
-  async function upload(value) {
-    const form = new FormData(); form.set("file", value);
-    return POST(new Request("https://example.test", { method: "POST", body: form }));
-  }
-  assert.equal((await POST(new Request("https://example.test", { method: "POST", body: "broken" }))).status, 400);
-  assert.equal((await upload("not a File" )).status, 400);
-  assert.equal((await upload(new File(["<script>bad</script>"], "fake.pdf", { type: "application/pdf" }))).status, 400);
-  assert.equal(uploads, 0);
-  const response = await upload(new File(["%PDF-1.7\ncontent"], "valid.pdf", { type: "application/pdf" }));
-  assert.equal(response.status, 200);
-  assert.match((await response.json()).filePath, /^[0-9a-f-]+\.pdf$/);
-  storageFails = true;
-  const failed = await upload(new File(["%PDF-1.7"], "valid.pdf", { type: "application/pdf" }));
-  assert.equal(failed.status, 500);
-  assert.doesNotMatch(JSON.stringify(await failed.json()), /private provider/);
-});
-
-test("PS checkout only accepts files that exist in the upload bucket", async () => {
-  let exists = false;
-  const { POST } = load("app/api/ps-review/checkout/route.ts", {
-    "@/utils/supabase/admin": { createAdminClient: () => ({ storage: { from: () => ({ exists: async () => ({ data: exists, error: null }) }) } }) },
-    "@/utils/stripe": { createStripeClient: () => ({ checkout: { sessions: { create: async () => ({ url: "https://checkout.stripe.test/session" }) } } }) },
-  });
-  await withEnv({ STRIPE_PS_REVIEW_PRICE_ID: "price_test", NEXT_PUBLIC_SITE_URL: "https://example.test" }, async () => {
-    const body = { email: "student@example.test", reviewType: "medicine", filePath: "cfca31be-7212-47d5-b00c-f1502baf307e.pdf" };
-    assert.equal((await POST(jsonRequest(body))).status, 400);
-    exists = true;
-    const response = await POST(jsonRequest(body));
-    assert.equal(response.status, 200);
-    assert.equal((await response.json()).url, "https://checkout.stripe.test/session");
-  });
-});
-
 test("checkout synchronization rejects non-string session IDs before contacting Stripe", async () => {
   const { POST } = load("app/api/stripe/sync-checkout-session/route.ts", {
     "@/utils/supabase/server": auth, "@/utils/stripe": noStripe,
@@ -228,7 +178,7 @@ test("proxy only refreshes authentication for account pages and authenticated AP
   const { config } = load("proxy.ts");
   // The installed Next 16 test package still exports the legacy helper name.
   const { unstable_doesMiddlewareMatch: doesProxyMatch } = require("next/experimental/testing/server");
-  for (const url of ["/", "/terms-and-conditions", "/fonts/site.woff2", "/api/stripe/webhook", "/api/ps-review/upload", "/api/ps-review/checkout"]) {
+  for (const url of ["/", "/terms-and-conditions", "/fonts/site.woff2", "/api/stripe/webhook", "/api/medicforest/preview-access"]) {
     assert.equal(doesProxyMatch({ config, nextConfig: {}, url }), false, url);
   }
   for (const url of ["/medicforest/ucat/dashboard", "/medicforest/access", "/api/interviews/feedback", "/api/ai/diagnostic-feedback", "/api/stripe/create-checkout-session"]) {

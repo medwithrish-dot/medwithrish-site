@@ -74,8 +74,6 @@ const stages = [
     resources: [
       { title: "Personal Statements Guide", href: "/personal-statements-guide" },
       { title: "1-to-1 Personal Statement Session", href: "/personal-statement-session" },
-      { title: "Medicine Personal Statement Review", href: "/?stage=05&scroll=ps-submission#journey" },
-      { title: "Dental Personal Statement Review", href: "/?stage=05&scroll=ps-submission#journey" },
     ],
   },
   {
