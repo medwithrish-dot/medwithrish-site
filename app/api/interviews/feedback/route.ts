@@ -29,7 +29,8 @@ export async function POST(request: Request) {
       return interviewJson({ attempt: toInterviewAttempt(data) });
     } catch (providerError) {
       await admin.from("interview_attempts").update({ status: "failed", last_error: "feedback_unavailable" }).eq("id", row.id).eq("grading_token", token).eq("status", "grading");
-      throw new InterviewError(providerError instanceof Error && providerError.name !== "TimeoutError" ? providerError.message : "Feedback timed out. Your answers are saved; please retry.", 503);
+      const isTimeout = providerError instanceof Error && (providerError.name === "TimeoutError" || providerError.name === "AbortError");
+      throw new InterviewError(isTimeout ? "Feedback timed out. Your answers are saved; please retry." : providerError instanceof Error ? providerError.message : "Feedback could not be generated. Please retry.", 503);
     }
   } catch (error) { return interviewFailure(error); }
 }
