@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RishbotLayout({
+export default function MedicForestLayout({
   children,
 }: {
   children: React.ReactNode;

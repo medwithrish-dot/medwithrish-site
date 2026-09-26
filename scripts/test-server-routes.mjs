@@ -228,7 +228,7 @@ test("proxy only refreshes authentication for account pages and authenticated AP
   const { config } = load("proxy.ts");
   // The installed Next 16 test package still exports the legacy helper name.
   const { unstable_doesMiddlewareMatch: doesProxyMatch } = require("next/experimental/testing/server");
-  for (const url of ["/", "/terms-and-conditions", "/fonts/site.woff2", "/api/stripe/webhook", "/api/ps-review/upload", "/api/rishbot/question"]) {
+  for (const url of ["/", "/terms-and-conditions", "/fonts/site.woff2", "/api/stripe/webhook", "/api/ps-review/upload", "/api/ps-review/checkout"]) {
     assert.equal(doesProxyMatch({ config, nextConfig: {}, url }), false, url);
   }
   for (const url of ["/medicforest/ucat/dashboard", "/medicforest/access", "/api/interviews/feedback", "/api/ai/diagnostic-feedback", "/api/stripe/create-checkout-session"]) {

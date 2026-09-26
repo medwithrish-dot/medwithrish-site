@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  type RefObject,
   useState,
   useRef,
   useEffect,
@@ -19,11 +18,6 @@ import { ClientPremiumGate } from "./ClientPremiumGate";
 import { ExpandableAiFeedback } from "./ExpandableAiFeedback";
 import { MedicForestLandingShell } from "./MedicForestLandingShell";
 import { MedicForestLogo as MedicForestBrandLogo } from "../../_components/MedicForestLogo";
-import {
-  fetchUCATQuestion,
-  getPassageSections,
-  type QuestionData,
-} from "../_lib/ucatQuestion";
 import {
   UCAT_QUESTION_BANK,
   getUCATSubtypeMeta,
@@ -71,37 +65,6 @@ import {
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-// ── MedicForest Logo (landing hero) ─────────────────────────────────────────────
-
-export function LegacyMedicForestLogo({ compact = false }: { compact?: boolean } = {}) {
-  return (
-    <div
-      className={`${
-        compact ? "w-9 h-9 rounded-xl" : "w-16 h-16 rounded-2xl"
-      } bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center shadow-lg border border-blue-500/20`}
-    >
-      <svg
-        className={`${compact ? "w-5 h-5" : "w-8 h-8"} text-white`}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.5}
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
-      </svg>
-    </div>
-  );
-}
-
-export function LegacyMedicForestFaviconMark({ className = "" }: { className?: string }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`block shrink-0 bg-cover bg-center bg-no-repeat ${className}`}
-      style={{ backgroundImage: "url('/favicon.ico')" }}
-    />
-  );
-}
 
 type MedicForestProfile = {
   full_name: string | null;
@@ -1675,32 +1638,6 @@ function getGreeting() {
   return "Good evening";
 }
 
-export function MetricCard({
-  label,
-  value,
-  delta,
-  direction,
-}: {
-  label: string;
-  value: string;
-  delta: string;
-  direction: "up" | "down";
-}) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <p className="text-xs font-black text-slate-700">{label}</p>
-      <div className="mt-2 flex items-end gap-3">
-        <span className="text-3xl font-black leading-none text-[#0b1143]">
-          {value}
-        </span>
-        <span className="text-sm font-black text-emerald-500">
-          {direction === "up" ? "↑" : "↓"} {delta}
-        </span>
-      </div>
-      <p className="mt-2 text-xs font-bold text-slate-400">vs last 7 days</p>
-    </div>
-  );
-}
 
 function sectionStyle(code: string) {
   return (
@@ -8658,51 +8595,6 @@ function UCATDashboard({
   );
 }
 
-// ── How It Works Panel ────────────────────────────────────────────────────────
-
-function HowItWorksPanel({
-  title,
-  accent,
-  children,
-}: {
-  title: string;
-  accent: "blue" | "violet";
-  children: React.ReactNode;
-}) {
-  const [open, setOpen] = useState(true);
-  const dotColor = accent === "blue" ? "bg-blue-600" : "bg-violet-500";
-  return (
-    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-5 py-4 text-left cursor-pointer"
-      >
-        <div className="flex items-center gap-2.5">
-          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${dotColor}`} />
-          <span className="font-semibold text-slate-900 text-sm">{title}</span>
-        </div>
-        <svg
-          className={`w-4 h-4 text-slate-400 transition-transform duration-200 flex-shrink-0 ${open ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-      <div
-        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
-          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="px-5 pb-5">{children}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 const MEDICFOREST_FREE_FEATURES = [
   "Question bank practice",
