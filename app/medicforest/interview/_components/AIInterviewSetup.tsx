@@ -85,7 +85,14 @@ export function AIInterviewSetup(props: Props) {
           const quantity = selected.filter((slug) => slug === station.slug).length;
           const included = quantity > 0;
           const repeatable = REPEATABLE_STATION_SLUGS.includes(station.slug);
-          return <div key={station.slug} className={`${styles.stationOption} ${included ? styles.stationSelected : ""}`}>
+          return <div
+            key={station.slug}
+            className={`${styles.stationOption} ${included ? styles.stationSelected : ""}`}
+            onClick={(event) => {
+              if ((event.target as HTMLElement).closest("button, input, label, a, select, textarea")) return;
+              setStationQuantity(station.slug, included ? 0 : 1);
+            }}
+          >
             <input id={`station-${station.slug}`} aria-label={`Include ${station.lobbyTitle}`} type="checkbox" checked={included} onChange={() => setStationQuantity(station.slug, included ? 0 : 1)} />
             <span className={styles.stationNumber}>{String(index + 1).padStart(2, "0")}</span><label htmlFor={`station-${station.slug}`} className={styles.stationName}><strong>{station.lobbyTitle}</strong><span>{station.theme} <span>·</span> {stationQuestionCount(plan.stationSeconds)} prompts</span></label>
             {repeatable ? <span className={styles.quantityControl} aria-label={`${station.lobbyTitle} quantity`}><span>Qty</span><button type="button" aria-label={`Remove one ${station.lobbyTitle} station`} disabled={!quantity} onClick={() => setStationQuantity(station.slug, quantity - 1)}>−</button><output aria-live="polite">{quantity}</output><button type="button" aria-label={`Add one ${station.lobbyTitle} station`} disabled={stationSlugs.length >= 20 || quantity >= 6} onClick={() => setStationQuantity(station.slug, quantity + 1)}>+</button></span> : <span className={styles.stationState}>{included ? <Check size={15} /> : "Skip"}</span>}

@@ -4,26 +4,12 @@ import {
   isValidMedicForestPreviewToken,
   MEDICFOREST_PREVIEW_COOKIE,
 } from "@/utils/medicforest/preview-access";
-
-const MEDICFOREST_PUBLIC_PATHS = new Set([
-  "/medicforest",
-  "/medicforest/about",
-  "/medicforest/access",
-  "/medicforest/contact",
-  "/medicforest/feedback",
-  "/medicforest/interviews",
-  "/medicforest/interview/question-bank",
-  "/medicforest/personal-statement",
-  "/medicforest/pricing",
-  "/medicforest/resources",
-  "/medicforest/tutoring",
-  "/medicforest/ucat",
-]);
+import { isPublicMedicForestPath } from "@/utils/medicforest/public-paths";
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const isProtectedMedicForestPath =
-    pathname.startsWith("/medicforest/") && !MEDICFOREST_PUBLIC_PATHS.has(pathname);
+    pathname.startsWith("/medicforest/") && !isPublicMedicForestPath(pathname);
 
   if (isProtectedMedicForestPath) {
     const previewToken = request.cookies.get(MEDICFOREST_PREVIEW_COOKIE)?.value;

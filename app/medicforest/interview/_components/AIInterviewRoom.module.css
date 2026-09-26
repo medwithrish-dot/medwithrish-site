@@ -33,7 +33,9 @@
 .stationListHeading > div { display: flex; align-items: center; gap: 9px; }
 .stationListHeading button { color: #387d62; min-height: 28px; }
 .stationList { display: grid; gap: 7px; }
-.stationOption { position: relative; display: flex; align-items: center; gap: 11px; min-height: 63px; padding: 10px 12px; border: 1px solid #e5eae2; border-radius: 9px; cursor: pointer; }
+.stationOption { position: relative; display: flex; align-items: center; gap: 11px; min-height: 63px; padding: 10px 12px; border: 1px solid #e5eae2; border-radius: 9px; cursor: pointer; transition: background .18s, border-color .18s, box-shadow .18s; user-select: none; }
+.stationOption:hover { border-color: #bfd1c2; background: #f7faf4; box-shadow: 0 2px 8px #234d3420; }
+.stationOption:focus-within { border-color: #63a88d; box-shadow: 0 0 0 3px #37aa9126; }
 .stationOption input { width: 15px; height: 15px; accent-color: #327f62; flex-shrink: 0; }
 .stationNumber { font-size: 10px; font-variant-numeric: tabular-nums; color: #8fa28f; }
 .stationName { display: grid; gap: 4px; min-width: 0; flex: 1; }
@@ -47,6 +49,7 @@
 .quantityControl button:disabled { cursor: not-allowed; opacity: .42; }
 .quantityControl output { min-width: 18px; text-align: center; color: #253d33; font-size: 11px; font-variant-numeric: tabular-nums; }
 .stationSelected { background: #f0f6eb; border-color: #b5ceb0; }
+.stationSelected:hover { background: #eaf3e4; border-color: #9ebf9a; }
 .stationLocked { opacity: .58; cursor: default; }
 .smallNote { display: flex; align-items: flex-start; gap: 6px; margin: 15px 0 0; color: #7a8d7e; font-size: 10px; line-height: 1.8; }
 .smallNote svg { flex-shrink: 0; margin-top: 2px; }

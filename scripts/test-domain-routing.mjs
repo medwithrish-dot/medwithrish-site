@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import nextConfig from "../next.config.ts";
+import { isPublicMedicForestPath } from "../utils/medicforest/public-paths.ts";
 
 test("Medic Forest serves the product landing page without changing the visible URL", async () => {
   const rewrites = await nextConfig.rewrites();
@@ -43,4 +44,10 @@ test("MedicForest interview URLs open the real platform under clean routes", asy
     && rule.destination === "https://medicforest.com/interviews/:path+"));
   assert.ok(rewrites.beforeFiles.some(rule => rule.source === "/interviews/:path+"
     && rule.destination === "/medicforest/interview/:path+"));
+});
+
+test("interview stimulus images bypass the MedicForest preview gate", () => {
+  assert.equal(isPublicMedicForestPath("/medicforest/interview-stimuli/iq-18-001-data-stations.png"), true);
+  assert.equal(isPublicMedicForestPath("/medicforest/interview-stimuli/iq-18-015-article-analysis.png"), true);
+  assert.equal(isPublicMedicForestPath("/medicforest/interview/dashboard"), false);
 });
