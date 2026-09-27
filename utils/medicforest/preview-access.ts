@@ -1,7 +1,9 @@
 export const MEDICFOREST_PREVIEW_COOKIE = "medicforest_preview_access";
 export const MEDICFOREST_PREVIEW_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 
-const TOKEN_PREFIX = "medicforest-preview:v1:";
+const TOKEN_PREFIX = "medicforest-preview:v2:";
+const TOKEN_PATTERN = /^v2\.([1-9]\d{0,12})\.([0-9a-f]{64})$/;
+const CLOCK_SKEW_SECONDS = 60;
 
 export function getMedicForestPreviewPassword() {
   return process.env.MEDICFOREST_PREVIEW_PASSWORD?.trim() ?? "";
@@ -29,11 +31,22 @@ function constantTimeEquals(a: string, b: string) {
   return mismatch === 0;
 }
 
-async function sha256(value: string) {
-  const data = new TextEncoder().encode(value);
-  const hash = await crypto.subtle.digest("SHA-256", data);
+async function signIssuedAt(issuedAt: number, secret: string) {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    encoder.encode(`${TOKEN_PREFIX}${issuedAt}`)
+  );
 
-  return Array.from(new Uint8Array(hash))
+  return Array.from(new Uint8Array(signature))
     .map((byte) => byte.toString(16).padStart(2, "0"))
     .join("");
 }
@@ -42,14 +55,24 @@ export async function createMedicForestPreviewToken() {
   const secret = getMedicForestPreviewSecret();
   if (!secret) return "";
 
-  return sha256(`${TOKEN_PREFIX}${secret}`);
+  const issuedAt = Math.floor(Date.now() / 1000);
+  return `v2.${issuedAt}.${await signIssuedAt(issuedAt, secret)}`;
 }
 
-export async function isValidMedicForestPreviewToken(token?: string) {
-  if (!token) return false;
+export async function isValidMedicForestPreviewToken(token?: string, now = Date.now()) {
+  const match = token && TOKEN_PATTERN.exec(token);
+  if (!match) return false;
 
-  const expectedToken = await createMedicForestPreviewToken();
-  if (!expectedToken) return false;
+  const issuedAt = Number(match[1]);
+  const nowSeconds = Math.floor(now / 1000);
+  if (
+    !Number.isSafeInteger(issuedAt) ||
+    issuedAt > nowSeconds + CLOCK_SKEW_SECONDS ||
+    nowSeconds - issuedAt > MEDICFOREST_PREVIEW_COOKIE_MAX_AGE
+  ) return false;
 
-  return constantTimeEquals(token, expectedToken);
+  const secret = getMedicForestPreviewSecret();
+  if (!secret) return false;
+
+  return constantTimeEquals(match[2], await signIssuedAt(issuedAt, secret));
 }

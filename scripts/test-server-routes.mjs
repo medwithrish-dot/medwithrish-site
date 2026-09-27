@@ -287,7 +287,11 @@ test("preview access rejects wrong passwords and redirect targets, and tokens ro
     MEDICFOREST_PREVIEW_TOKEN_SECRET: "first-secret",
   }, async () => {
     const { POST } = load("app/api/medicforest/preview-access/route.ts");
-    const { createMedicForestPreviewToken, isValidMedicForestPreviewToken } = load("utils/medicforest/preview-access.ts");
+    const {
+      createMedicForestPreviewToken,
+      isValidMedicForestPreviewToken,
+      MEDICFOREST_PREVIEW_COOKIE_MAX_AGE,
+    } = load("utils/medicforest/preview-access.ts");
     const submit = (password, next) => POST(new Request("https://example.test/api/medicforest/preview-access", {
       method: "POST",
       body: new URLSearchParams({ password, next }),
@@ -302,10 +306,19 @@ test("preview access rejects wrong passwords and redirect targets, and tokens ro
     assert.equal(granted.status, 303);
     assert.equal(granted.headers.get("location"), "https://example.test/medicforest");
     assert.match(granted.headers.get("set-cookie"), /medicforest_preview_access=.*HttpOnly/i);
+    const issuedCookie = granted.headers.get("set-cookie").match(/medicforest_preview_access=([^;]+)/)?.[1];
+    assert.equal(await isValidMedicForestPreviewToken(issuedCookie), true);
 
     const token = await createMedicForestPreviewToken();
+    assert.match(token, /^v2\.\d+\.[0-9a-f]{64}$/);
     assert.equal(await isValidMedicForestPreviewToken(token), true);
-    assert.equal(await isValidMedicForestPreviewToken(`${token[0] === "0" ? "1" : "0"}${token.slice(1)}`), false);
+    const [version, issuedAtText, signature] = token.split(".");
+    const issuedAt = Number(issuedAtText);
+    assert.equal(await isValidMedicForestPreviewToken(`${version}.${issuedAtText}.${signature[0] === "0" ? "1" : "0"}${signature.slice(1)}`), false);
+    assert.equal(await isValidMedicForestPreviewToken(`${version}.${issuedAt + 1}.${signature}`), false);
+    assert.equal(await isValidMedicForestPreviewToken("a".repeat(64)), false);
+    assert.equal(await isValidMedicForestPreviewToken(token, (issuedAt + MEDICFOREST_PREVIEW_COOKIE_MAX_AGE + 1) * 1000), false);
+    assert.equal(await isValidMedicForestPreviewToken(token, (issuedAt - 61) * 1000), false);
     process.env.MEDICFOREST_PREVIEW_TOKEN_SECRET = "second-secret";
     assert.equal(await isValidMedicForestPreviewToken(token), false);
   });
