@@ -92,13 +92,13 @@ npm run build
 - **Domain**: `app/medicforest/interview/`, `app/api/interviews/speech/`, audio timers, microphone hooks.
 - **Scope**: Audio recorder lifecycle, silence detection, pause flushing, speech recognition error recovery, interview room UI.
 - **Verification**: `npm run test:interviews:room` (50+ tests).
-- **Status**: 🔄 In Progress.
+- **Status**: ✅ Re-audited.
 
 ### Segment 4: AI Interview Platform — Scoring & Feedback Reports
 - **Domain**: `app/medicforest/interview/_lib/`, `app/api/interviews/feedback/`, `InterviewHistoryViews.tsx`.
-- **Scope**: Feedback generation, rubrics, university circuit weighting, retry state preservation, timeout safety.
-- **Verification**: `node --test scripts/test-interview-feedback-reports.mjs` (6 tests).
-- **Status**: ✅ Completed.
+- **Scope**: Feedback generation, practice rubrics, saved reports, retry state preservation, timeout safety.
+- **Verification**: `node --test scripts/test-interview-feedback-reports.mjs scripts/test-interview-scoring.mjs scripts/test-interview-review.mjs scripts/test-saved-interview-review.mjs`, `npm run test:interviews:db`, and `node scripts/test-interview-dashboard-db.mjs`.
+- **Status**: ✅ Re-audited.
 
 ### Segment 5: AI Interview Platform — Community (Groups, Leaderboard, Pathway)
 - **Domain**: `app/medicforest/interview/groups/`, `app/medicforest/interview/leaderboard/`, `app/medicforest/interview/pathway/`.

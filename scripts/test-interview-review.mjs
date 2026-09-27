@@ -14,17 +14,19 @@ const question = "Why medicine?";
 const words = "Working with residents in a care home taught me to listen carefully and recognise how different members of the healthcare team support each person.";
 const feedback = { score: 75, summary: "A thoughtful answer", strengths: ["Reflection"], improvements: ["Be specific"], rubric: [] };
 
-function load(file, mocks) {
+function load(file, mocks, cache = new Map()) {
   const filename = resolve(root, file);
+  if (cache.has(filename)) return cache.get(filename);
   const compiled = { exports: {} };
+  cache.set(filename, compiled.exports);
   const output = ts.transpileModule(readFileSync(filename, "utf8"), {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, esModuleInterop: true },
   }).outputText;
   const localRequire = name => {
     if (Object.hasOwn(mocks, name)) return mocks[name];
     if (name === "server-only") return {};
-    if (name.startsWith("@/")) return load(`${name.slice(2)}.ts`, mocks);
-    if (name.startsWith(".")) return load(resolve(dirname(filename), `${name}.ts`), mocks);
+    if (name.startsWith("@/")) return load(`${name.slice(2)}.ts`, mocks, cache);
+    if (name.startsWith(".")) return load(resolve(dirname(filename), `${name}.ts`), mocks, cache);
     return require(name);
   };
   new Function("require", "module", "exports", output)(localRequire, compiled, compiled.exports);
@@ -33,7 +35,7 @@ function load(file, mocks) {
 
 // Exercise real validation, ownership, mapping and route behaviour; substitute
 // only Supabase transport and the external AI provider.
-function harness({ overrides = {}, configured = false, user = "user-1", beforeUpdate, assess = async () => feedback } = {}) {
+function harness({ overrides = {}, configured = false, user = "user-1", beforeUpdate, saveError = null, assess = async () => feedback } = {}) {
   const state = { row: {
     id: attemptId, user_id: "user-1", mode: "reference", university_slug: null, station_slug: "why-medicine", title: question,
     status: "in_progress", started_at: new Date(Date.now() - 180_000).toISOString(), completed_at: null, answer_submitted_at: null,
@@ -48,6 +50,7 @@ function harness({ overrides = {}, configured = false, user = "user-1", beforeUp
     update(value) { this.mutation = value; return this; }
     async maybeSingle() {
       if (this.table === "profiles") return { data: { current_plan: "premium" }, error: null };
+      if (this.mutation?.status === "completed" && saveError) return { data: null, error: { code: "XX000", message: saveError } };
       if (this.mutation && beforeUpdate) { const callback = beforeUpdate; beforeUpdate = undefined; callback(state); }
       const match = this.filters.every(([key, value]) => ["questions", "answers"].includes(key) ? JSON.stringify(state.row[key]) === value : state.row[key] === value);
       if (!match) return { data: null, error: null };
@@ -74,8 +77,9 @@ function harness({ overrides = {}, configured = false, user = "user-1", beforeUp
     "@/utils/supabase/admin": { createAdminClient: () => admin },
     "@/utils/interviews/gemini": { interviewAiConfigured: () => configured, assessInterview: async (...args) => { state.providerCalls += 1; return assess(...args); } },
   };
-  const session = load("app/api/interviews/session/route.ts", mocks);
-  const grade = load("app/api/interviews/feedback/route.ts", mocks);
+  const cache = new Map();
+  const session = load("app/api/interviews/session/route.ts", mocks, cache);
+  const grade = load("app/api/interviews/feedback/route.ts", mocks, cache);
   const request = (path, method, body) => new Request(`https://example.test/api/interviews/${path}`, { method,
     headers: { "Content-Type": "application/json", Origin: "https://example.test" }, body: JSON.stringify(body) });
   return { state,
@@ -194,6 +198,20 @@ test("feedback is explicit and keeps the original finish time and circuit break"
   assert.equal(api.state.providerCalls, 1, "Reopening completed feedback must not regrade");
 });
 
+test("feedback cannot be claimed before a station is submitted or after it is abandoned", async () => {
+  for (const overrides of [
+    { status: "in_progress", answers: [{ question, answer: words }] },
+    { status: "failed", last_error: "abandoned", completed_at: new Date().toISOString(), answer_submitted_at: new Date().toISOString(), answers: [{ question, answer: words }] },
+    { status: "failed", last_error: "feedback_unavailable", completed_at: null, answer_submitted_at: null, answers: [{ question, answer: words }] },
+  ]) {
+    const api = harness({ configured: true, overrides });
+    const response = await api.grade();
+    assert.equal(response.status, 409);
+    assert.equal(api.state.gradingClaims, 0);
+    assert.equal(api.state.providerCalls, 0);
+  }
+});
+
 test("unavailable or unsuccessful AI feedback preserves the submitted transcript", async () => {
   for (const configured of [false, true]) {
     const api = harness({ configured, assess: async () => { throw new Error("Provider temporarily unavailable"); } });
@@ -204,4 +222,32 @@ test("unavailable or unsuccessful AI feedback preserves the submitted transcript
     assert.equal(api.state.row.completed_at, submittedAt);
     assert.equal(api.state.providerCalls, configured ? 1 : 0);
   }
+});
+
+test("feedback errors hide provider details and release the claim for retry", async () => {
+  for (const failure of [new Error("Private provider diagnostic and key"), Object.assign(new Error("Timed out"), { name: "TimeoutError" })]) {
+    const api = harness({ configured: true, assess: async () => { throw failure; } });
+    await api.patch({ finish: true });
+    const response = await api.grade();
+    const { error } = await response.json();
+    assert.equal(response.status, 503);
+    assert.doesNotMatch(error, /Private provider diagnostic|key/);
+    assert.match(error, failure.name === "TimeoutError" ? /timed out/i : /could not be generated/i);
+    assert.equal(api.state.row.status, "failed");
+    assert.equal(api.state.row.last_error, "feedback_unavailable");
+  }
+});
+
+test("a failed feedback save releases its claim without exposing database details", async () => {
+  const api = harness({ configured: true, saveError: "Private database diagnostic" });
+  await api.patch({ finish: true });
+  const submittedAt = api.state.row.completed_at;
+  const response = await api.grade();
+  const { error } = await response.json();
+  assert.equal(response.status, 503);
+  assert.doesNotMatch(error, /Private database diagnostic/);
+  assert.equal(api.state.row.status, "failed");
+  assert.equal(api.state.row.last_error, "feedback_unavailable");
+  assert.equal(api.state.row.completed_at, submittedAt);
+  assert.equal(api.state.row.feedback, null);
 });

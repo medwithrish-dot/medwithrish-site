@@ -185,6 +185,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const intervals = new Map();
   const storage = new Map();
   const requests = [];
+  const sessionReads = [];
   const leaveRequests = [];
   const followUpRequests = [];
   const feedbackRequests = [];
@@ -264,7 +265,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
       clearInterval: id => intervals.delete(id), addEventListener() {}, removeEventListener() {},
     },
     fetch: (_path, options) => {
-      if (options.method === "GET") return Promise.resolve(Response.json({ attempt: hasAttempt ? attempt : null, configured }));
+      if (options.method === "GET") { sessionReads.push(_path); return Promise.resolve(Response.json({ attempt: hasAttempt ? attempt : null, configured })); }
       if (options.method === "DELETE") {
         leaveRequests.push(JSON.parse(options.body));
         return Promise.resolve(Response.json({ ended: true }));
@@ -316,7 +317,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const call = findCall(tree);
   if (hasAttempt) assert.ok(call || findReview(tree));
   return {
-    requests, leaveRequests, followUpRequests, feedbackRequests, spoken, flush, render, call, latestCall: () => findCall(render()), latestReview: () => findReview(render()), storage,
+    requests, sessionReads, leaveRequests, followUpRequests, feedbackRequests, spoken, flush, render, call, latestCall: () => findCall(render()), latestReview: () => findReview(render()), storage,
     get currentUrl() { return currentUrl; },
     get microphoneRequests() { return microphoneRequests; },
     get recognitionStarts() { return recognitionStarts; },
@@ -508,6 +509,16 @@ test("feedback is requested explicitly from review and does not resubmit the tra
   assert.deepEqual(room.latestReview().attempt.feedback, feedback);
   assert.equal(room.latestReview().attempt.status, "completed");
   assert.equal(room.latestCall(), null);
+});
+
+test("checking feedback already being prepared reads its status without a second assessment", async () => {
+  const room = await autosaveRoom({ status: "grading" });
+  const readsBefore = room.sessionReads.length;
+  room.latestReview().onGenerate();
+  await room.flush();
+  assert.equal(room.feedbackRequests.length, 0);
+  assert.equal(room.sessionReads.length, readsBefore + 1);
+  assert.match(room.sessionReads.at(-1), /\?attempt=/);
 });
 
 test("a failed finish keeps the transcript in review and retains the recoverable browser draft", async () => {

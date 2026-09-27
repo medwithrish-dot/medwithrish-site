@@ -99,6 +99,23 @@ test("failed feedback reconciles once while retaining the transcript", async () 
   assert.ok(find(page.tree(), node => node.props?.role === "alert"));
 });
 
+test("checking feedback already in progress refreshes the attempt without claiming again", async () => {
+  const page = await savedReview({ overrides: { status: "grading" } });
+  page.review().onGenerate();
+  await page.flush();
+  assert.deepEqual(page.state.requests.map((item) => item.method), ["GET"]);
+  assert.equal(page.review().attempt.status, "grading");
+  assert.ok(find(page.tree(), (node) => node.props?.role === "status"));
+
+  const finished = await savedReview({ overrides: { status: "grading" }, onRequest: (request, state) => {
+    if (request.method === "GET") state.attempt.status = "failed";
+  } });
+  finished.review().onGenerate();
+  await finished.flush();
+  assert.equal(finished.review().attempt.status, "failed");
+  assert.equal(find(finished.tree(), (node) => node.props?.role === "status"), undefined);
+});
+
 test("retry preserves university settings, reserves a fresh circuit and keeps the displayed previous attempt", async () => {
   const page = await savedReview();
   const original = page.review().attempt;

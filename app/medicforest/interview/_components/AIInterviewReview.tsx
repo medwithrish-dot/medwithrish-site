@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, CheckCircle2, Clock3, Download, FileText, GraduationCap, Loader2, RotateCcw, Sparkles, X } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Clock3, Download, FileText, GraduationCap, Loader2, RotateCcw, Sparkles } from "lucide-react";
 import type { InterviewAttempt } from "../_lib/interview-types";
 import { findInterviewUniversity } from "../_data/universities";
 import { AttemptMarkSchemes } from "./AttemptMarkSchemes";
@@ -32,7 +32,6 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   const feedbackRef = useRef<HTMLElement>(null);
   const assessmentRef = useRef<HTMLElement>(null);
   const feedbackRequestedRef = useRef(false);
-  const [upgradeOpen, setUpgradeOpen] = useState(false);
   useEffect(() => { headingRef.current?.focus(); }, []);
   const university = attempt.universitySlug ? findInterviewUniversity(attempt.universitySlug) : null;
   const transcript = attempt.questions.map((question) => ({ question, answer: "", ...attempt.answers.find((item) => item.question === question) }));
@@ -53,9 +52,9 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
   }, [feedback]);
   const feedbackSections = feedback ? [{ title: "Strengths", items: feedback.strengths }, { title: "Weaknesses", items: feedback.weaknesses ?? [] }, { title: "Fixes", items: feedback.fixes ?? feedback.improvements }] : [];
   const needsSaving = attempt.status === "in_progress";
-  const feedbackUnavailable = !feedback && !preview ? (wordCount < 20 ? "word-count" : !configured ? "upgrade" : null) : null;
+  const feedbackUnavailable = !feedback && !preview ? (!configured ? "unavailable" : wordCount < 20 ? "word-count" : null) : null;
   const feedbackAction = <div className={styles.feedbackActionGroup}><button type="button" className={styles.primary}
-    disabled={!feedback && (busy || needsSaving || feedbackUnavailable === "word-count" || feedbackUnavailable === "upgrade")}
+    disabled={!feedback && (busy || needsSaving || feedbackUnavailable !== null)}
     aria-controls={feedback ? "station-feedback" : "ai-feedback"}
     onClick={() => {
       if (feedback) { revealFeedback(assessmentRef.current); return; }
@@ -65,7 +64,7 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
     }}>
     {busy && !feedback ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
     {feedback ? "View AI feedback" : busy ? "Generating feedback…" : preview ? "View sample AI feedback" : attempt.status === "grading" ? "Check AI feedback" : "Generate AI feedback"}
-  </button>{feedbackUnavailable === "word-count" && <button type="button" className={styles.unavailablePill} disabled>Not available - less than 20 words</button>}{feedbackUnavailable === "upgrade" && <button type="button" className={styles.upgradePill} onClick={() => setUpgradeOpen(true)}>Pro feature — <span>Upgrade to unlock</span></button>}</div>;
+  </button>{feedbackUnavailable === "word-count" && <span className={styles.unavailablePill}>Needs at least 20 words</span>}{feedbackUnavailable === "unavailable" && <span className={styles.unavailablePill}>AI feedback is unavailable</span>}</div>;
   const download = () => {
     const text = [preview ? "MEDICFOREST PREVIEW — not saved to an account" : "MEDICFOREST STATION REVIEW", attempt.title,
       university?.name ?? "Independent station practice", "", "TRANSCRIPT",
@@ -135,6 +134,5 @@ export function AIInterviewReview({ attempt, preview = false, configured, busy =
       <p className={styles.sourceNote}>Practice guidance, not an admissions prediction. Accent, camera use and eye contact are not scored.</p>
     </section>}
     <footer className={styles.nextSteps}><div><h2>{onNext ? "Ready for the next one?" : "Your interview review"}</h2><p>{preview ? "This preview is not saved." : "All saved stations are available in your interview history."}{onNext && breakRemaining > 0 && " The break timer is optional; continue whenever you feel ready."}</p></div><div><button type="button" className={styles.secondary} disabled={busy || needsSaving} onClick={onRetry}><RotateCcw size={16} /> Retry station</button>{onNext ? <button type="button" className={styles.primary} disabled={busy || needsSaving} onClick={onNext}>Next station <ArrowRight size={16} /></button> : needsSaving ? <button type="button" className={styles.primary} disabled>End interview <ArrowRight size={16} /></button> : <Link className={styles.primary} href="/medicforest/interview/dashboard">End interview <ArrowRight size={16} /></Link>}</div></footer>
-    {upgradeOpen && <div className={styles.upgradeBackdrop} role="presentation" onClick={() => setUpgradeOpen(false)}><div role="dialog" aria-modal="true" aria-labelledby="upgrade-dialog-title" className={styles.upgradeDialog} onClick={(event) => event.stopPropagation()}><button type="button" className={styles.closeUpgrade} aria-label="Close upgrade dialog" onClick={() => setUpgradeOpen(false)}><X size={17} /></button><p className={styles.eyebrow}>MEDICFOREST PRO</p><h2 id="upgrade-dialog-title">Unlock Full AI Feedback &amp; MMI Scoring</h2><p>Get in-depth AI evaluation calibrated to official UK medical school MMI markschemes, including strengths, content gaps, and targeted coaching fixes for every station.</p><div><Link className={styles.primary} href="/medicforest/pricing">View membership options <ArrowRight size={16} /></Link><button type="button" className={styles.secondary} onClick={() => setUpgradeOpen(false)}>Not now</button></div></div></div>}
   </div>;
 }

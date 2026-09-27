@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { renderToStaticMarkup } from "react-dom/server";
+import ts from "typescript";
 import { interviewPercentage, validateFeedback, RUBRIC_CRITERIA } from "../utils/interviews/scoring.ts";
 
-test("rubric criteria matches exactly five GMC medical interview domains", () => {
+const require = createRequire(import.meta.url);
+
+test("the practice rubric uses five stable interview criteria", () => {
   assert.equal(RUBRIC_CRITERIA.length, 5);
   assert.deepEqual(RUBRIC_CRITERIA, [
     "Relevance and motivation",
@@ -11,6 +17,39 @@ test("rubric criteria matches exactly five GMC medical interview domains", () =>
     "Structure and clarity",
     "Insight and professionalism",
   ]);
+});
+
+test("unconfigured AI shows availability instead of a paid upgrade claim", () => {
+  const source = readFileSync(new URL("../app/medicforest/interview/_components/AIInterviewReview.tsx", import.meta.url), "utf8");
+  const output = ts.transpileModule(source, { compilerOptions: {
+    module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true,
+  } }).outputText;
+  const loaded = { exports: {} };
+  const React = require("react");
+  new Function("require", "module", "exports", output)(name => {
+    if (name === "react" || name === "react/jsx-runtime") return require(name);
+    if (name === "next/link") return { __esModule: true, default: ({ children, href }) => React.createElement("a", { href }, children) };
+    if (name === "lucide-react") return new Proxy({}, { get: () => () => null });
+    if (name.endsWith("/universities")) return { findInterviewUniversity: () => null };
+    if (name === "./AttemptMarkSchemes") return { AttemptMarkSchemes: ({ headerAction }) => React.createElement(React.Fragment, null, headerAction) };
+    if (name.endsWith("/speech-delivery")) return { getTranscriptHints: text => ({ wordCount: text.trim().split(/\s+/).filter(Boolean).length }), normalizeSpeechTranscript: text => text };
+    if (name.endsWith("/interviewer-transcript")) return { answerConversation: answer => [{ speaker: "You", text: answer.answer }] };
+    if (name.endsWith(".module.css")) return { __esModule: true, default: {} };
+    throw new Error(`Unexpected review dependency: ${name}`);
+  }, loaded, loaded.exports);
+  const attempt = {
+    id: "12345678-1234-4234-8234-123456789012", circuitId: "12345678-1234-4234-8234-123456789012",
+    stationSlug: "why-medicine", stationIndex: 0, stationCount: 1, title: "Why medicine?", mode: "free",
+    status: "submitted", startedAt: "2026-09-01T12:00:00Z", completedAt: "2026-09-01T12:05:00Z",
+    universitySlug: null, questions: ["Why medicine?"], answers: [{ question: "Why medicine?", answer: "I want to study medicine because I value scientific reasoning and careful conversations with patients. Volunteering helped me understand the importance of listening, teamwork, and reflecting on what I do not yet know." }],
+    metrics: {}, feedback: null,
+  };
+  const html = renderToStaticMarkup(React.createElement(loaded.exports.AIInterviewReview, {
+    attempt, configured: false, onGenerate() {}, onRetry() {},
+  }));
+  assert.match(html, /AI feedback is unavailable/);
+  assert.doesNotMatch(html, /Upgrade to unlock|official UK medical school/);
+  assert.match(html.match(/<button[^>]*aria-controls="ai-feedback"[^>]*>/)?.[0] ?? "", /disabled/);
 });
 
 test("validateFeedback handles structured feedback with distinct weaknesses and fixes", () => {

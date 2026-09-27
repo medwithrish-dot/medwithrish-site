@@ -102,6 +102,12 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
       }
       if (action === "generate") {
         if (abandoned) throw new Error("This older attempt was ended without submission. Retry the station to receive feedback on a new answer.");
+        if (current.status === "grading") {
+          const latest = await reviewRequest(`/api/interviews/session?attempt=${encodeURIComponent(current.id)}`);
+          applyResponse(latest);
+          if (liveRef.current && latest.attempt?.status === "grading") setNotice("Your feedback is still being prepared. Check again in a moment.");
+          return;
+        }
         const response = await reviewRequest("/api/interviews/feedback", "POST", { attemptId: current.id });
         applyResponse(response);
         if (liveRef.current && response.attempt?.status === "grading") setNotice("Your feedback is still being prepared. Check again in a moment.");
@@ -135,6 +141,10 @@ export function SavedInterviewReview({ initialAttempt, configured: initialConfig
           const latest = await reviewRequest(`/api/interviews/session?attempt=${encodeURIComponent(attemptRef.current.id)}`);
           applyResponse(latest);
           if (liveRef.current && (action === "generate" ? latest.attempt?.feedback : latest.attempt && latest.attempt.status !== "in_progress")) setError("");
+          if (liveRef.current && action === "generate" && latest.attempt?.status === "grading") {
+            setError("");
+            setNotice("Your feedback is still being prepared. Check again in a moment.");
+          }
         } catch { /* The current saved transcript remains available. */ }
       }
     } finally {

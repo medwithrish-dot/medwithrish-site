@@ -372,7 +372,14 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
         applyResponse({ attempt: { ...current, status: "completed", feedback: previewInterviewFeedback } });
         return;
       }
+      if (current.status === "grading") {
+        const latest = await requestSession(`/api/interviews/session?attempt=${encodeURIComponent(current.id)}`);
+        applyResponse(latest);
+        setSaveWarning(latest.attempt?.status === "grading" ? "Your feedback is still being prepared. Check again in a moment." : "");
+        return;
+      }
       applyResponse(await requestSession("/api/interviews/feedback", "POST", { attemptId: current.id }));
+      setSaveWarning("");
     } catch (failure) {
       showError(failure);
       try {

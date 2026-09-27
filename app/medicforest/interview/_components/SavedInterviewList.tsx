@@ -8,7 +8,7 @@ import { filterSavedInterviews, groupSavedInterviews, savedInterviewHref, savedI
 const PAGE_SIZE = 20;
 const fieldClass = "w-full rounded-xl border border-[#ccdcda] bg-white px-3 py-3 text-sm outline-none focus:border-[#08787b] focus:ring-2 focus:ring-[#08787b]/15";
 
-export function SavedInterviewList({ attempts, showFilters = true }: { attempts: SavedInterviewSummary[]; showFilters?: boolean }) {
+export function SavedInterviewList({ attempts }: { attempts: SavedInterviewSummary[] }) {
   const [query, setQuery] = useState("");
   const [university, setUniversity] = useState("all");
   const [status, setStatus] = useState<SavedInterviewStatus>("all");
@@ -27,7 +27,7 @@ export function SavedInterviewList({ attempts, showFilters = true }: { attempts:
 
   return (
     <>
-      {showFilters && <div className="border-b border-[#e6edec] bg-[#f7faf9] p-5 sm:p-6">
+      <div className="border-b border-[#e6edec] bg-[#f7faf9] p-5 sm:p-6">
         <div className="grid items-end gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,.8fr)]">
           <div>
             <label htmlFor="saved-interview-search" className="mb-2 block text-xs font-bold text-[#244b48]">Find an interview</label>
@@ -58,7 +58,7 @@ export function SavedInterviewList({ attempts, showFilters = true }: { attempts:
           <p role="status" aria-live="polite">{filtered.length} {filtered.length === 1 ? "interview" : "interviews"}{filtering ? " found" : " saved"} · Most recent first</p>
           {filtering && <button type="button" onClick={clearFilters} className="inline-flex items-center gap-1 rounded px-2 py-1 font-semibold text-[#08787b] hover:bg-[#e6f1ee]"><X size={13} aria-hidden="true" /> Clear filters</button>}
         </div>
-      </div>}
+      </div>
 
       {filtered.length ? <div className="divide-y divide-[#edf1f1]">
         {filtered.slice(0, visibleCount).map((attempt) => <Link key={attempt.id} href={savedInterviewHref(attempt)} className="group flex items-center gap-3 px-5 py-5 transition-colors hover:bg-[#f7faf9] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#08787b] sm:gap-4 sm:px-6">

@@ -79,12 +79,14 @@ try {
     grant execute on function auth.uid() to authenticated, anon;
   `);
   const platformSql = await readFile(new URL("../supabase/medicforest_interview_platform.sql", import.meta.url), "utf8");
+  const gradingGuardSql = await readFile(new URL("../supabase/medicforest_interview_grading_guard.sql", import.meta.url), "utf8");
   const questionProgressSql = (await readFile(new URL("../supabase/medicforest_interview_question_progress.sql", import.meta.url), "utf8"))
     .replace('create extension if not exists "pgcrypto";', "");
   const groupsSql = await readFile(new URL("../supabase/medicforest_interview_groups.sql", import.meta.url), "utf8");
-  await check("actual platform and groups migrations install and can be rerun", async () => {
+  await check("actual platform, groups and grading guard SQL install and can be rerun", async () => {
     await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);
     await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);
+    await db.exec(gradingGuardSql); await db.exec(gradingGuardSql);
   });
   for (const [name, id] of Object.entries(ids)) {
     await db.query("insert into auth.users(id,raw_user_meta_data) values ($1,$2::jsonb)", [id, JSON.stringify({ full_name: name })]);
@@ -143,18 +145,25 @@ try {
     await assert.rejects(reserve(ids.monthly, station(), 20, 2), /Monthly interview limit reached/);
   });
 
-  const gradeId = await attempt(ids.claims, { status: "in_progress" });
+  const gradeId = await attempt(ids.claims, { status: "failed" });
+  await db.query("update public.interview_attempts set last_error='awaiting_feedback' where id=$1", [gradeId]);
   const token1 = randomUUID();
   const token2 = randomUUID();
   await check("grading validates the locked transcript before spending a retry", async () => {
-    const changed = await attempt(ids.claims, { status: "in_progress" });
+    const changed = await attempt(ids.claims, { status: "failed" });
+    await db.query("update public.interview_attempts set last_error='awaiting_feedback' where id=$1", [changed]);
     // Simulate an autosave replacing a valid preflight snapshot just before claim.
     await db.query("update public.interview_attempts set answers='[]' where id=$1", [changed]);
     await assert.rejects(claim(ids.claims, changed), /at least 20 words/);
     const current = (await db.query("select status,grading_tries,grading_token from public.interview_attempts where id=$1", [changed])).rows[0];
-    assert.deepEqual(current, { status: "in_progress", grading_tries: 0, grading_token: null });
+    assert.deepEqual(current, { status: "failed", grading_tries: 0, grading_token: null });
     await db.query("update public.interview_attempts set answers=$2::jsonb where id=$1", [changed, JSON.stringify([{ question: "Why medicine?", answer: " \n\t " }])]);
     await assert.rejects(claim(ids.claims, changed), /at least 20 words/);
+  });
+  await check("an active station cannot spend a feedback claim", async () => {
+    const active = await attempt(ids.claims, { status: "in_progress", completedAt: null });
+    await assert.rejects(claim(ids.claims, active), /Finish the station/);
+    assert.equal((await db.query("select grading_tries from public.interview_attempts where id=$1", [active])).rows[0].grading_tries, 0);
   });
   await check("grading claim checks ownership and blocks a concurrent fresh claim", async () => {
     await assert.rejects(claim(ids.outsider, gradeId), /Interview not found/);
@@ -173,10 +182,10 @@ try {
     assert.equal(staleWrite.rows.length, 0);
   });
   await check("failed grading retry is bounded to three claims", async () => {
-    await db.query("update public.interview_attempts set status='failed' where id=$1", [gradeId]);
+    await db.query("update public.interview_attempts set status='failed',last_error='feedback_unavailable' where id=$1", [gradeId]);
     const finalTry = await claim(ids.claims, gradeId);
     assert.equal(finalTry.grading_tries, 3);
-    await db.query("update public.interview_attempts set status='failed' where id=$1", [gradeId]);
+    await db.query("update public.interview_attempts set status='failed',last_error='feedback_unavailable' where id=$1", [gradeId]);
     await assert.rejects(claim(ids.claims, gradeId), /retry limit reached/);
   });
   await check("saved ungraded reviews can request feedback with the existing database schema", async () => {
@@ -197,7 +206,8 @@ try {
     assert.equal(completed.status, "completed"); assert.equal(completed.grading_tries, 0);
   });
   await check("submitted snapshots reject later autosaves and score constraint caps at 99", async () => {
-    const lockedId = await attempt(ids.claims, { status: "in_progress" });
+    const lockedId = await attempt(ids.claims, { status: "failed" });
+    await db.query("update public.interview_attempts set last_error='awaiting_feedback' where id=$1", [lockedId]);
     await claim(ids.claims, lockedId);
     const lateSave = await role("service_role", null, () => db.query(
       "update public.interview_attempts set answers='[]' where id=$1 and user_id=$2 and status='in_progress' returning id", [lockedId, ids.claims],

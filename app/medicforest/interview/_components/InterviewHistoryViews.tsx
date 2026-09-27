@@ -28,7 +28,7 @@ async function savedInterviewHistory() {
   return { attempts, message, savedAttempts };
 }
 
-export async function InterviewHistoryViews({ view = "reports" }: { view?: "reports" | "notifications" }) {
+export async function InterviewHistoryViews() {
   const { attempts, message, savedAttempts } = await savedInterviewHistory();
   return (
     <div className="space-y-6">
@@ -39,17 +39,15 @@ export async function InterviewHistoryViews({ view = "reports" }: { view?: "repo
       )}
       <section className="overflow-hidden rounded-2xl border border-[#dce6e5] bg-white">
         <div className="border-b border-[#e6edec] p-6">
-          <h2 className="font-bold">{view === "notifications" ? "Your interview updates" : "Your saved interviews"}</h2>
+          <h2 className="font-bold">Your saved interviews</h2>
           <p className="mt-2 text-sm leading-6 text-[#62777e]">
-            {view === "notifications"
-              ? "Feedback and stations to pick up, drawn from your own activity."
-              : "Every saved attempt stays here when you retry a station. Revisit your transcript, answer framework and feedback, or find a particular university below."}
+            Every saved attempt stays here when you retry a station. Revisit your transcript, answer framework and feedback, or find a particular university below.
           </p>
         </div>
         {!attempts.length ? (
           <EmptyHistory />
         ) : (
-          <SavedInterviewList attempts={view === "notifications" ? savedAttempts.slice(0, 20) : savedAttempts} showFilters={view === "reports"} />
+          <SavedInterviewList attempts={savedAttempts} />
         )}
       </section>
     </div>

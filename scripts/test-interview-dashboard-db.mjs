@@ -128,7 +128,14 @@ try {
   });
 
   let submittedAt;
-  const gradingId = await seedAttempt(claimant, { status: "in_progress", completedAt: null, startedAt: new Date(Date.now() - 180_000).toISOString() });
+  const activeId = await seedAttempt(claimant, { status: "in_progress", completedAt: null, startedAt: new Date(Date.now() - 180_000).toISOString() });
+  await check("feedback claim rejects an unfinished station", async () => {
+    await role("service_role", null, async () => {
+      await assert.rejects(db.query("select public.claim_interview_grading($1,$2,$3)", [claimant, activeId, randomUUID()]), /Finish the station/);
+    });
+  });
+  const gradingId = await seedAttempt(claimant, { status: "failed", completedAt: new Date().toISOString(), startedAt: new Date(Date.now() - 180_000).toISOString() });
+  await db.query("update public.interview_attempts set last_error='awaiting_feedback' where id=$1", [gradingId]);
   await check("the first locked feedback claim captures a submission timestamp", async () => {
     const before = Date.now();
     const claimed = await role("service_role", null, async () => (await db.query(
@@ -140,7 +147,7 @@ try {
     assert.equal(claimed.grading_tries, 1);
   });
   await check("submission time survives failure, retries and later completion", async () => {
-    await db.query("update public.interview_attempts set status='failed',grading_started_at=now()-interval '2 minutes',answer_submitted_at=now()+interval '2 hours' where id=$1", [gradingId]);
+    await db.query("update public.interview_attempts set status='failed',last_error='feedback_unavailable',grading_started_at=now()-interval '2 minutes',answer_submitted_at=now()+interval '2 hours' where id=$1", [gradingId]);
     const retry = await role("service_role", null, async () => (await db.query(
       "select to_jsonb(public.claim_interview_grading($1,$2,$3)) as value", [claimant, gradingId, randomUUID()],
     )).rows[0].value);

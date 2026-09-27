@@ -12,13 +12,13 @@ Any AI or engineer reviewing these changes can verify repository health using th
 # 1. Typecheck the entire project (zero errors required)
 npx tsc --noEmit
 
-# 2. Run the full unit test suite (220 tests passing at the Segment 3 audit)
+# 2. Run the full unit test suite (226 tests passing at the Segment 4 audit)
 npm run test:unit
 
 # 3. Run the billing test suite (11 tests)
 node scripts/test-billing.mjs
 
-# 4. Run the Segment 4 feedback reports test suite (6 tests)
+# 4. Run the Segment 4 feedback reports test suite (7 tests)
 node --test scripts/test-interview-feedback-reports.mjs
 
 # 5. Run the Segment 7 UCAT question bank & scoring engine test suite (8 tests)
@@ -37,7 +37,7 @@ npm run build
 | **Segment 1** | Stripe Billing & Webhook Service | ✅ Re-audited | Modular billing service, repository and thin HTTP controllers verified. Fixed manual Premium portal routing, stale subscription portal recovery, customer ownership checks and provider error exposure; 11 billing tests. |
 | **Segment 2** | PS Review Submission Service | 🗑️ Scrapped and re-audited | No submission or checkout flow remains. Old MedicForest personal-statement URLs redirect to live tutoring; obsolete setup variables and the unused email dependency were removed. |
 | **Segment 3** | AI Interview Platform — Call & Speech Engine | ✅ Re-audited | Verified session, microphone, speech, recording and timer flows. Recovered playback and recognition failures, corrected question timer drift, and made active-station leaving available with URL cleanup. |
-| **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Completed | Polished review flow, eliminated placeholder upgrade modal with MedicForest Pro dialog, tightened timeout/abort error handling in feedback route, streamlined `InterviewHistoryViews`, added `loading.tsx` and `error.tsx` states, added 6 dedicated unit tests (`test-interview-feedback-reports.mjs`). |
+| **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Re-audited | Feedback is claimed only after a saved station ends; provider and database failures release claims safely. Review copy reflects AI availability without a false paid upgrade, and reports views contain only live paths. |
 | **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | 📋 Pending | Collaborative study circles, public leaderboard guest access (401 fix), prep pathway task progression. |
 | **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Completed | Deconstructed monolithic client: extracted `MedicForestPricingClient` & `MedicForestLandingClient`, eliminated ~9.8MB bundle bloat from public marketing pages, fixed broken `Alt+C` calculator toggle, eliminated timer drift, removed double redirect chains, and made 11,727-question quality gate lazy via Proxy. |
 | **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | ✅ Completed | Isolated scoring engine in `app/medicforest/ucat/_lib/ucatScoring.ts`, isolated question diagram and SVG visual components in `app/medicforest/ucat/_components/UCATQuestionVisuals.tsx`, eliminated ~1,450 lines of duplicate code from `UCATQuestionBankClient.tsx`, added global window keyboard shortcut listener for exams, implemented auto-finalization on timer expiration, fixed SPA exit tearing by replacing `window.location.assign` with Next.js `router.push`, added 8 comprehensive engine tests in `scripts/test-ucat-engine.mjs` bringing unit test suite to 205 passing tests. |
@@ -142,38 +142,22 @@ Run `npm run test:interviews:room`, `npm run test:unit`, `npm run lint`, `npx ts
 ### Segment 4: AI Interview Platform — Scoring & Feedback Reports
 
 #### 1. Context & Motivation
-Segment 4 covers the feedback evaluation pipeline and review UI:
-- Candidate answers are evaluated against authored MMI question markschemes using Gemini Flash-Lite.
-- Scoring is computed via calibrated log-curve formula in `utils/interviews/scoring.ts` ensuring bounds between 0% and 99% (calibrated cap, monotonic).
-- The review interface previously contained placeholder modal dialogs (`CREDITS PLACEHOLDER`) and confusing "credits" copy when free tier was active or unconfigured.
-- `InterviewHistoryViews.tsx` contained dead, unreachable view branches (`plan`, `progress`, `notifications`) that cluttered reports rendering.
-- `reports/` and `reports/[report]/` routes lacked Next.js App Router error boundaries and loading states.
+Segment 4 covers feedback generation, saved reports and review UI. Gemini evaluates saved candidate answers against server-owned question guidance. `utils/interviews/scoring.ts` calculates a fixed practice percentage capped at 99. The criteria are MedicForest practice criteria, not official medical-school marking standards.
+
+The re-audit found that the feedback endpoint could claim an active station before submission. It also caught database save errors as provider failures. In the review, an unconfigured AI service was presented as a paid upgrade, although subscription status does not enable that service.
 
 #### 2. What Was Done
-1. **Production Upgrade Modal in [`AIInterviewReview.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/interview/_components/AIInterviewReview.tsx)**:
-   - Replaced placeholder modal with a high-converting **MedicForest Pro** dialog detailing GMC MMI rubric criteria, targeted weaknesses, and actionable coaching fixes.
-   - Updated button copy from misleading *"Not available - Upgrade for more credits"* to *"Pro feature — Upgrade to unlock"*.
-2. **Robust Timeout & Abort Handling in [`app/api/interviews/feedback/route.ts`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/api/interviews/feedback/route.ts)**:
-   - Now cleanly checks both `TimeoutError` and `AbortError` so timed-out AI provider calls consistently return user-friendly retry guidance (*"Feedback timed out. Your answers are saved; please retry."*) with HTTP 503 instead of raw internal messages.
-3. **Streamlined [`InterviewHistoryViews.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/interview/_components/InterviewHistoryViews.tsx)**:
-   - Purged dead `view === "plan"` and `view === "progress"` branches and unneeded Lucide icon imports.
-   - Focused component exclusively on saved interview reports listing and filtering.
-4. **Added App Router Loading & Error Boundaries**:
-   - [`app/medicforest/interview/reports/loading.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/interview/reports/loading.tsx): Animated skeleton state for the reports list.
-   - [`app/medicforest/interview/reports/error.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/interview/reports/error.tsx): Client-safe error boundary with retry and dashboard fallback.
-   - [`app/medicforest/interview/reports/[report]/loading.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/interview/reports/%5Breport%5D/loading.tsx): Detail view skeleton.
-   - [`app/medicforest/interview/reports/[report]/error.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/interview/reports/%5Breport%5D/error.tsx): Detail view error boundary.
-5. **New Automated Test Suite [`scripts/test-interview-feedback-reports.mjs`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/scripts/test-interview-feedback-reports.mjs)**:
-   - 6 automated tests verifying GMC rubric domains, structured feedback parsing with distinct weaknesses/fixes, legacy improvements compatibility, score boundaries (0–99%), and strict monotonicity.
-   - Registered in `package.json` under `npm run test:unit`, bringing total unit tests to 197.
+1. `app/api/interviews/feedback/route.ts` now parses the request and delegates feedback work to `utils/interviews/feedback-service.ts`. The service verifies ownership and a completed station before claiming grading. Legacy saved attempts without `answer_submitted_at` remain eligible; the database trigger captures that timestamp on their first claim.
+2. The grading claim function in all three interview setup SQL files enforces the same completed-station rule. A standalone SQL patch updates existing installations without replacing unrelated functions. Provider failures return safe retry text and release the claim. Database save failures are handled separately and also release the claim where possible, preserving the submitted transcript and original completion time.
+3. `AIInterviewReview.tsx` now says AI feedback is unavailable when the service is unconfigured. The paid upgrade dialog and its claim about official medical-school markschemes were removed. Existing feedback remains viewable. While a grading request is running, the runner and saved review check the current station with GET instead of starting another grading request.
+4. `InterviewHistoryViews.tsx` and `SavedInterviewList.tsx` now contain only the live reports path and its filters. The reports list and detail routes retain their loading and error boundaries.
+5. Regression tests cover route eligibility, legacy submission timestamps, provider and database failure recovery, score validation and the rendered unavailable state.
 
 #### 3. Instructions for Another AI to Verify Segment 4
-1. Run `node --test scripts/test-interview-feedback-reports.mjs` and verify all 6 tests pass.
-2. Run `node --test scripts/test-interview-scoring.mjs` and verify all 5 scoring tests pass.
-3. Run `node --test scripts/test-interview-review.mjs` and verify review lifecycles pass.
-4. Run `npm run test:unit` to verify the full 197-test suite passes.
-5. Run `npx tsc --noEmit` to verify type safety.
-6. Run `npm run build` to confirm static page generation and webpack bundling succeed.
+1. Run `node --test scripts/test-interview-feedback-reports.mjs scripts/test-interview-scoring.mjs scripts/test-interview-review.mjs scripts/test-saved-interview-review.mjs` for scoring and review behavior.
+2. Run `npm run test:interviews:db` and `node scripts/test-interview-dashboard-db.mjs` to verify the real PostgreSQL grading claim rejects active stations, accepts older submitted rows and applies the standalone patch.
+3. Run `npm run test:unit`, `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+4. For an existing hosted interview database, apply `supabase/medicforest_interview_grading_guard.sql` through the SQL editor. This audit tested the patch locally and did not apply it to the hosted project.
 
 ---
 

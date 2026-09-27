@@ -2,6 +2,8 @@
 
 ## Run the SQL
 
+If interview setup is already installed, run `supabase/medicforest_interview_grading_guard.sql` once to update `claim_interview_grading`. This patch changes only the claim function, so later leaderboard changes remain intact. The function now rejects feedback claims for active or abandoned stations; the API also checks submission before calling it. The SQL change has been tested locally but has not been applied to the hosted database. Fresh installs using either combined setup file already include the guard.
+
 **Unsure which older scripts you ran?** Use `supabase/RUN_ALL_MEDICFOREST_SETUP.sql` instead. Paste the entire file into Supabase SQL Editor and run once using the normal privileged role. It includes original account, UCAT practice and Stripe tables plus all interview migrations, in order and in one transaction. It preserves existing plans and used diagnostic credits, and creates missing profiles for existing accounts. You do not need to run any other SQL file afterwards. Unlike the original practice script, this catch-up file deliberately does not reset free diagnostic credits.
 
 **Single-paste option for the existing project:** open `supabase/RUN_ALL_INTERVIEW_SETUP.sql`, copy its complete contents into a new Supabase SQL Editor query, and run it once. It includes the security patch, question-bank progress, interview platform, groups and dashboard scripts in dependency order, inside one transaction. You do not also need to run the individual files below. The base `public.profiles` account table must already exist; for a new database follow the initial setup instructions below first.
