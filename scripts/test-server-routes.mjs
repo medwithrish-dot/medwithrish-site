@@ -20,6 +20,7 @@ function load(file, mocks = {}, cache = new Map()) {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, esModuleInterop: true },
   }).outputText;
   const localRequire = (name) => {
+    if (name === "server-only") return {};
     if (Object.hasOwn(mocks, name)) return mocks[name];
     if (name === "@/utils/billing/stripe-client" && Object.hasOwn(mocks, "@/utils/stripe")) return mocks["@/utils/stripe"];
     if (name === "@/utils/stripe" && Object.hasOwn(mocks, "@/utils/billing/stripe-client")) return mocks["@/utils/billing/stripe-client"];
@@ -278,6 +279,36 @@ test("proxy only refreshes authentication for account pages and authenticated AP
   for (const url of ["/medicforest/ucat/dashboard", "/medicforest/access", "/api/interviews/feedback", "/api/ai/diagnostic-feedback", "/api/stripe/create-checkout-session"]) {
     assert.equal(doesProxyMatch({ config, nextConfig: {}, url }), true, url);
   }
+});
+
+test("preview access rejects wrong passwords and redirect targets, and tokens rotate with the secret", async () => {
+  await withEnv({
+    MEDICFOREST_PREVIEW_PASSWORD: "preview-password",
+    MEDICFOREST_PREVIEW_TOKEN_SECRET: "first-secret",
+  }, async () => {
+    const { POST } = load("app/api/medicforest/preview-access/route.ts");
+    const { createMedicForestPreviewToken, isValidMedicForestPreviewToken } = load("utils/medicforest/preview-access.ts");
+    const submit = (password, next) => POST(new Request("https://example.test/api/medicforest/preview-access", {
+      method: "POST",
+      body: new URLSearchParams({ password, next }),
+    }));
+
+    const denied = await submit("wrong", "/medicforest/interview/dashboard");
+    assert.equal(denied.status, 303);
+    assert.match(denied.headers.get("location"), /error=invalid/);
+    assert.equal(denied.headers.get("set-cookie"), null);
+
+    const granted = await submit("preview-password", "https://attacker.example/");
+    assert.equal(granted.status, 303);
+    assert.equal(granted.headers.get("location"), "https://example.test/medicforest");
+    assert.match(granted.headers.get("set-cookie"), /medicforest_preview_access=.*HttpOnly/i);
+
+    const token = await createMedicForestPreviewToken();
+    assert.equal(await isValidMedicForestPreviewToken(token), true);
+    assert.equal(await isValidMedicForestPreviewToken(`${token[0] === "0" ? "1" : "0"}${token.slice(1)}`), false);
+    process.env.MEDICFOREST_PREVIEW_TOKEN_SECRET = "second-secret";
+    assert.equal(await isValidMedicForestPreviewToken(token), false);
+  });
 });
 
 test("leaderboard handlers reject offensive names before writing and mask legacy names on read", async () => {

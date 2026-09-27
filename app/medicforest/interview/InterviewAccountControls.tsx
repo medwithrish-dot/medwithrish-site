@@ -18,12 +18,14 @@ import {
   hasSupabaseConfig,
 } from "@/utils/supabase/client";
 
-function getUserName(user: User | null) {
+function getUserName(user: User | null, profileName: string | null) {
+  if (profileName?.trim()) return profileName.trim();
+
   const metadataName =
     typeof user?.user_metadata?.full_name === "string"
-      ? user.user_metadata.full_name
+      ? user.user_metadata.full_name.trim()
       : typeof user?.user_metadata?.name === "string"
-        ? user.user_metadata.name
+        ? user.user_metadata.name.trim()
         : "";
 
   return metadataName || user?.email?.split("@")[0] || "Guest";
@@ -31,7 +33,13 @@ function getUserName(user: User | null) {
 
 export function InterviewAccountControls() {
   const [user, setUser] = useState<User | null>(null);
-  const [plan, setPlan] = useState("Free plan");
+  const [sessionReady, setSessionReady] = useState(false);
+  const [profileResult, setProfileResult] = useState<{
+    userId: string;
+    name: string | null;
+    plan: string;
+  } | null>(null);
+  const [signOutError, setSignOutError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const supabaseReady = hasSupabaseConfig();
   const supabase = useMemo(
@@ -42,49 +50,76 @@ export function InterviewAccountControls() {
   useEffect(() => {
     if (!supabase) return;
 
-    let mounted = true;
-    const client = supabase;
-
-    async function loadSession() {
-      const {
-        data: { session },
-      } = await client.auth.getSession();
-
-      if (mounted) setUser(session?.user ?? null);
-      if (session?.user) {
-        const { data } = await client.from("profiles").select("current_plan").eq("id", session.user.id).maybeSingle();
-        if (mounted) setPlan(data?.current_plan === "premium" ? "Premium plan" : "Free plan");
-      }
-    }
-
-    void loadSession();
-
     const {
       data: { subscription },
-    } = client.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
+      setSessionReady(true);
+      if (event === "SIGNED_OUT") {
+        setProfileResult(null);
+        setMenuOpen(false);
+        setSignOutError("");
+      }
     });
 
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, [supabase]);
 
-  const displayName = getUserName(user);
+  const userId = user?.id;
+  useEffect(() => {
+    if (!supabase || !userId) return;
+
+    let active = true;
+    void supabase
+      .from("profiles")
+      .select("full_name,current_plan")
+      .eq("id", userId)
+      .maybeSingle()
+      .then(
+        ({ data }) => {
+          if (active) {
+            setProfileResult({
+              userId,
+              name: typeof data?.full_name === "string" ? data.full_name : null,
+              plan: data?.current_plan === "premium" ? "Premium plan" : "Free plan",
+            });
+          }
+        },
+        () => {
+          if (active) {
+            setProfileResult({ userId, name: null, plan: "Free plan" });
+          }
+        }
+      );
+
+    return () => {
+      active = false;
+    };
+  }, [supabase, userId]);
+
+  const profile = profileResult?.userId === user?.id ? profileResult : null;
+  const displayName = getUserName(user, profile?.name ?? null);
   const firstName = displayName.split(" ")[0] || "Guest";
   const initial = firstName.charAt(0).toUpperCase() || "R";
   const email = user?.email ?? "Account settings";
+  const plan = profile?.plan ?? "Checking plan…";
 
   const handleLogout = async () => {
-    if (supabase) await supabase.auth.signOut();
-    setUser(null);
-    setMenuOpen(false);
+    if (!supabase) return;
+    setSignOutError("");
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    } catch {
+      setSignOutError("Could not log out. Please try again.");
+      return;
+    }
     // A full navigation clears interview state and previously cached account pages.
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.assign("/medicforest");
   };
 
+  if (supabase && !sessionReady) return <span className="text-sm text-slate-500">Loading account…</span>;
   if (!user) return <Link href="/medicforest/account" className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[#cfe0df] bg-white px-5 py-3 text-sm font-bold text-[#08787b] hover:bg-[#edf7f6]">Sign in / create account</Link>;
 
   return (
@@ -118,6 +153,8 @@ export function InterviewAccountControls() {
           </span>
           <ChevronDown className="h-4 w-4 text-[#4a6370]" aria-hidden="true" />
         </button>
+
+        {signOutError && <p role="alert" className="mt-2 max-w-72 text-xs font-semibold text-red-600">{signOutError}</p>}
 
         {menuOpen && (
           <div

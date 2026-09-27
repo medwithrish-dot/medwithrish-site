@@ -17,6 +17,7 @@ function load(file, mocks = {}) {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, esModuleInterop: true },
   }).outputText;
   const localRequire = (name) => {
+    if (name === "server-only") return {};
     if (Object.hasOwn(mocks, name)) return mocks[name];
     if (name === "@/utils/billing/stripe-client" && Object.hasOwn(mocks, "@/utils/stripe")) return mocks["@/utils/stripe"];
     if (name === "@/utils/stripe" && Object.hasOwn(mocks, "@/utils/billing/stripe-client")) return mocks["@/utils/billing/stripe-client"];

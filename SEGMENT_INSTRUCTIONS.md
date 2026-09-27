@@ -127,8 +127,8 @@ npm run build
 ### Segment 9: Auth, Supabase & User Account Management
 - **Domain**: `utils/supabase/`, `app/medicforest/account/`, user profile hooks, session persistence.
 - **Scope**: Session hydration, token refreshing, account switcher, preview access tokens, profile display name updates.
-- **Verification**: `node --test scripts/test-profile-security.mjs scripts/test-ucat-account.mjs`.
-- **Status**: 📋 Pending.
+- **Verification**: `node --test scripts/test-profile-security.mjs scripts/test-server-routes.mjs scripts/test-interview-leaderboard.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
+- **Status**: ✅ Non-UCAT scope re-audited. The account page and switcher use the UCAT component and are outside the current request.
 
 ### Segment 10: MedicForest Public Marketing & Shell
 - **Domain**: `app/medicforest/about/`, `app/medicforest/pricing/`, `app/medicforest/_components/`, navigation shell.

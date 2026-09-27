@@ -42,7 +42,7 @@ npm run build
 | **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Re-audited | Public routes import dedicated landing/pricing clients; dashboard bank lookups are deferred. Fixed dual `Alt+C` toggles, timer drift, account countdown redraws, cross-domain links, and legacy mock redirect hops. |
 | **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | ✅ Re-audited | Scoring and visuals remain separated. Fixed duplicate shortcut handling, stale timeout submission, zero-second resume resets, invalid saved-answer scoring, and multi-part answer-change reporting; added runner tests. |
 | **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | ✅ Completed | Separated diagnostic and report views from dashboard state; isolated diagnostic transforms and study tasks; preserved mock IDs through redirects; hardened saved-data AI feedback, credit handling, and report aggregation; added focused regression tests. |
-| **Segment 9** | Auth, Supabase & User Account Management | 📋 Pending | User profiles, session persistence, preview access tokens. |
+| **Segment 9** | Auth, Supabase & User Account Management | ✅ Non-UCAT scope re-audited | Interview account hydration now uses one auth event stream; profile names and plans follow the active user. Shared server clients have explicit server boundaries. Preview token and redirect checks are covered. The UCAT-backed account page is outside this pass. |
 | **Segment 10** | MedicForest Public Marketing & Shell | 📋 Pending | Public marketing layer, navigation shells, trust badges, pricing page. |
 | **Segment 11** | MedWithRish.com Core & Resources Hub | 📋 Pending | Primary brand website, admissions advice, guides, tutoring booking. |
 | **Segment 12** | Infrastructure, Routing & Build Configuration | 📋 Pending | Next.js configuration, middleware, proxy auth refresh, security headers, SEO. |
@@ -314,6 +314,18 @@ Diagnostic and report rendering, issue labels, study tasks, credit display, and 
 1. Run `node --test scripts/test-ucat-diagnostics.mjs scripts/test-server-routes.mjs`.
 2. Run `npx tsc --noEmit`, `npm run lint`, and `npm run test:unit` (210 tests).
 3. Run `npm run build` and confirm all 184 static pages compile.
+
+---
+
+### Segment 9: Auth, Supabase & User Account Management — non-UCAT re-audit (2026-09-27)
+
+The interview account controls previously read the session twice: once through `getSession()` and again through the auth subscription. A delayed initial read or profile query could leave the wrong user's plan on screen after an account change. The menu also ignored `profiles.full_name`, where account edits are saved, and navigated away even if sign-out failed.
+
+The menu now hydrates from Supabase's `INITIAL_SESSION` event, loads the active user's profile in a separate effect, and associates the returned name and plan with that user's ID. Stale profile responses are ignored. Sign-out failures remain visible so the user can retry. Server and admin Supabase clients now declare a server-only boundary.
+
+Preview access was reviewed without changing its token format or login flow. A route test confirms wrong passwords set no cookie, external redirect targets are rejected, tokens reject tampering, and changing the server secret invalidates old tokens. The account page and account switcher are implemented in the UCAT component and were deliberately excluded from this non-UCAT pass.
+
+Verification: `node --test scripts/test-profile-security.mjs scripts/test-server-routes.mjs scripts/test-interview-leaderboard.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
 
 ---
 
