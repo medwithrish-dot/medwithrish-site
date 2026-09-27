@@ -7,6 +7,7 @@ export const metadata: Metadata = {
 };
 
 import Link from "next/link";
+import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwithrish/site-links";
 
 const popularResources = [
   {
@@ -64,7 +65,7 @@ const stages = [
       { title: "UCAT Prep Timeline", href: "/ucat-timeline" },
       { title: "UCAT Tutoring", href: "/ucat-tutoring" },
       { title: "UCAT Mock Difficulty Spreadsheet", href: "/ucat-mock-difficulty" },
-      { title: "UCAT Notes", href: "https://payhip.com/Medwithrish", external: true },
+      { title: "UCAT Notes", href: MEDWITHRISH_NOTES_URL, external: true },
     ],
   },
   {
@@ -82,7 +83,7 @@ const stages = [
     description: "Prepare for MMI and panel interviews with structure.",
     resources: [
       { title: "Medicine and Dentistry Interviews", href: "/interviews" },
-      { title: "FREE Medicine Interview Guide", href: "https://payhip.com/Medwithrish", external: true },
+      { title: "FREE Medicine Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
       { title: "Interview Tutoring", href: "/interview-tutoring" },
     ],
   },

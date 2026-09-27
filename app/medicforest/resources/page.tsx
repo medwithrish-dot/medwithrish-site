@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { MedicForestLandingShell } from "../ucat/_components/MedicForestLandingShell";
+import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwithrish/site-links";
 
 export const metadata: Metadata = {
   title: "Resources | MedicForest",
@@ -62,7 +63,7 @@ const stages = [
       { title: "UCAT Mock Difficulty Spreadsheet", href: "/ucat-mock-difficulty" },
       {
         title: "UCAT Notes",
-        href: "https://payhip.com/Medwithrish",
+        href: MEDWITHRISH_NOTES_URL,
         external: true,
       },
     ],
@@ -83,7 +84,7 @@ const stages = [
       { title: "Medicine & Dentistry Interviews", href: "/interviews" },
       {
         title: "FREE Medicine Interview Guide",
-        href: "https://payhip.com/Medwithrish",
+        href: FREE_INTERVIEW_GUIDE_URL,
         external: true,
       },
     ],

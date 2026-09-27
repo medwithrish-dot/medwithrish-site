@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Reveal from "@/components/Reveal";
+import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwithrish/site-links";
 
 const stages = [
   {
@@ -70,7 +71,7 @@ const stages = [
   
     {
     label: "Click here for UCAT notes",
-    href: "https://payhip.com/Medwithrish",
+    href: MEDWITHRISH_NOTES_URL,
     variant: "primary",
   },
   
@@ -118,7 +119,7 @@ const stages = [
       },
       {
         label: "Click here for the FREE medicine interviews guide",
-        href: "https://payhip.com/Medwithrish",
+        href: FREE_INTERVIEW_GUIDE_URL,
         variant: "secondary",
       },
       {

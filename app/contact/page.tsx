@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 import Image from "next/image";
 import Link from "next/link";
 import SocialLinks from "@/components/SocialLinks";
+import { contactDetails } from "@/utils/medwithrish/site-links";
 const leftStories = [
   "/success-stories/story1.jpeg",
   "/success-stories/story2.jpeg",
@@ -44,7 +45,13 @@ function StoryGrid({ images }: { images: string[] }) {
   );
 }
 
-export default function ContactPage() {
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ topic?: string | string[] }>;
+}) {
+  const contact = contactDetails((await searchParams).topic);
+
   return (
     <main className="bg-[#f7fafe] px-6 pb-14 pt-8 md:pb-16 md:pt-10">
       <div className="mx-auto max-w-6xl">
@@ -78,16 +85,17 @@ export default function ContactPage() {
               </p>
 
               <h1 className="mt-3 text-4xl font-bold tracking-tight text-gray-900 md:text-5xl">
-                Get in touch
+                {contact.heading}
               </h1>
 
               <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-gray-600 md:text-lg">
-                For enquiries about UCAT tutoring, interviews, personal statement
-                sessions, resources, or collaborations, email me directly.
+                Tell me what support you need and when you hope to start. I can
+                help with tutoring, interviews, personal statement sessions,
+                resources, and collaborations.
               </p>
 
               <a
-                href="mailto:medwithrish@gmail.com"
+                href={contact.emailHref}
                 className="mx-auto mt-7 inline-flex justify-center rounded-2xl border border-blue-200 bg-white px-6 py-4 text-sm font-bold text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-50"
               >
                 medwithrish@gmail.com
@@ -96,7 +104,7 @@ export default function ContactPage() {
               <p className="mt-3 text-xs font-medium text-gray-400">
                 Prefer WhatsApp/text?{" "}
                 <a
-                  href="https://wa.me/447305422619"
+                  href={contact.whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-semibold text-gray-500 transition hover:text-blue-600"
@@ -105,10 +113,10 @@ export default function ContactPage() {
                 </a>
               </p>
 
-<div className="mt-6 flex justify-center">
-  <SocialLinks />
-</div>
-             
+              <div className="mt-6 flex justify-center">
+                <SocialLinks />
+              </div>
+
               <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
                 <Link
                   href="/resources"

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Lock } from "lucide-react";
 import { useState } from "react";
+import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwithrish/site-links";
 
 const navItems: {
   label: string;
@@ -20,6 +21,7 @@ const navItems: {
 
   {
     label: "Personal Statements",
+    href: "/personal-statements-guide",
     items: [
       { label: "Personal Statements Guide", href: "/personal-statements-guide" },
       { label: "1-to-1 Personal Statement Session", href: "/personal-statement-session" },
@@ -31,13 +33,14 @@ const navItems: {
     href: "/interviews",
     items: [
       { label: "Interview Hub", href: "/interviews" },
-      { label: "FREE Medicine Interview Guide", href: "https://payhip.com/Medwithrish", external: true },
+      { label: "FREE Medicine Interview Guide", href: FREE_INTERVIEW_GUIDE_URL, external: true },
       { label: "Medicine/Dentistry Interview Tutoring", href: "/interview-tutoring" },
     ],
   },
 
   {
     label: "GCSE & A-Levels",
+    href: "/resources",
     items: [
             { label: "A-Level Tutoring", href: "/alevel-tutoring" },
       { label: "GCSE Revision Guide", href: "/gcse-revision-guide" },
@@ -51,7 +54,7 @@ const navItems: {
     href: "/resources",
     items: [
       { label: "All Guides", href: "/resources" },
-      { label: "Notes", href: "https://payhip.com/Medwithrish", external: true },
+      { label: "Notes", href: MEDWITHRISH_NOTES_URL, external: true },
       { label: "Privacy Policy", href: "/privacy-policy" },
       { label: "Terms and Conditions", href: "/terms-and-conditions" },
       { label: "MedicForest AI/Data Disclaimer", href: "/medicforest-disclaimer" },
@@ -59,6 +62,7 @@ const navItems: {
   },
 
   { label: "MedicForest", href: "https://medicforest.com", special: true, external: true },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -91,32 +95,20 @@ export default function Navbar() {
             MedWithRish
           </Link>
 
-          <nav className="hidden items-center gap-7 text-sm font-medium lg:flex">
+          <nav className="hidden items-center gap-5 text-sm font-medium xl:flex">
             {navItems.map((item) => {
               if (item.items) {
                 return (
                   <div key={item.label} className="group relative">
-                    {item.href ? (
-                      <Link
-                        href={item.href}
-                        className="flex items-center gap-1.5 text-gray-700 transition hover:text-blue-600"
-                      >
-                        <span>{item.label}</span>
-                        <span className="transition-transform duration-200 group-hover:rotate-180">
-                          <Chevron />
-                        </span>
-                      </Link>
-                    ) : (
-                      <button
-                        type="button"
-                        className="flex cursor-pointer items-center gap-1.5 text-gray-700 transition hover:text-blue-600"
-                      >
-                        <span>{item.label}</span>
-                        <span className="transition-transform duration-200 group-hover:rotate-180">
-                          <Chevron />
-                        </span>
-                      </button>
-                    )}
+                    <Link
+                      href={item.href ?? item.items[0].href}
+                      className="flex items-center gap-1.5 text-gray-700 transition hover:text-blue-600"
+                    >
+                      <span>{item.label}</span>
+                      <span className="transition-transform duration-200 group-hover:rotate-180">
+                        <Chevron />
+                      </span>
+                    </Link>
 
                     <div className="invisible absolute left-0 top-full z-50 w-72 rounded-xl border border-gray-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                       {item.items.map((subItem) =>
@@ -131,15 +123,13 @@ export default function Navbar() {
                             {subItem.label}
                           </a>
                         ) : (
-                         <Link
-  key={subItem.label}
-  href={subItem.href}
-  scroll={true}
-  replace={false}
-  className="block rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700"
->
-  {subItem.label}
-</Link>
+                          <Link
+                            key={subItem.label}
+                            href={subItem.href}
+                            className="block rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700"
+                          >
+                            {subItem.label}
+                          </Link>
                         )
                       )}
                     </div>
@@ -206,7 +196,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 lg:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 xl:hidden"
             aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
@@ -222,7 +212,9 @@ export default function Navbar() {
         {mobileOpen && (
           <div
             id="mobile-navigation"
-            className="max-h-[calc(100dvh-49px)] overflow-y-auto border-t border-gray-200 bg-white px-6 py-4 lg:hidden"
+            role="navigation"
+            aria-label="Mobile navigation"
+            className="max-h-[calc(100dvh-49px)] overflow-y-auto border-t border-gray-200 bg-white px-6 py-4 xl:hidden"
             onClick={(event) => {
               if (event.target instanceof Element && event.target.closest("a[href]")) {
                 setMobileOpen(false);
@@ -272,15 +264,13 @@ export default function Navbar() {
                                 {subItem.label}
                               </a>
                             ) : (
-                             <Link
-  key={subItem.label}
-  href={subItem.href}
-  scroll={true}
-  replace={false}
-  className="block rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700"
->
-  {subItem.label}
-</Link>
+                              <Link
+                                key={subItem.label}
+                                href={subItem.href}
+                                className="block rounded-xl px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700"
+                              >
+                                {subItem.label}
+                              </Link>
                             )
                           )}
                         </div>

@@ -1,4 +1,5 @@
 import ScrollIndicator from "./ScrollIndicator";
+import { FREE_INTERVIEW_GUIDE_URL, MEDWITHRISH_NOTES_URL } from "@/utils/medwithrish/site-links";
 
 export default function TopBanner() {
   return (
@@ -47,7 +48,7 @@ export default function TopBanner() {
         <div className="mt-6 flex flex-wrap justify-center gap-3">
 
           <a
-            href="https://payhip.com/Medwithrish"
+            href={MEDWITHRISH_NOTES_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full bg-white px-7 py-3 text-base font-bold text-blue-700 shadow transition hover:-translate-y-0.5"
@@ -56,7 +57,7 @@ export default function TopBanner() {
           </a>
 
           <a
-            href="https://payhip.com/Medwithrish"
+            href={FREE_INTERVIEW_GUIDE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full bg-yellow-300 px-7 py-3 text-base font-extrabold text-blue-950 shadow-[0_12px_30px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-yellow-200"

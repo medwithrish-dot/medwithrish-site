@@ -15,6 +15,7 @@ import {
   Users,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { FREE_INTERVIEW_GUIDE_URL } from "@/utils/medwithrish/site-links";
 
 export const metadata: Metadata = {
   title: "Medicine and Dentistry Interviews | MedWithRish",
@@ -83,9 +84,9 @@ const commonMistakes = [
 
 const quickLinks = [
   {
-    title: "Free interview guide",
-    text: "Open the MedWithRish interview guide and notes library.",
-    href: "https://payhip.com/Medwithrish",
+    title: "Free medicine MMI guide",
+    text: "Open the free MedWithRish MMI interview guide.",
+    href: FREE_INTERVIEW_GUIDE_URL,
     external: true,
   },
   {
@@ -121,12 +122,12 @@ export default function InterviewsPage() {
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <a
-                href="https://payhip.com/Medwithrish"
+                href={FREE_INTERVIEW_GUIDE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-bold text-white transition hover:bg-blue-700"
               >
-                Free interview guide
+                Free medicine MMI guide
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
               <Link

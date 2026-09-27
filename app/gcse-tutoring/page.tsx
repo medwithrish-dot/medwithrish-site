@@ -7,6 +7,7 @@ export const metadata: Metadata = {
 };
 
 import GuidePage from "@/components/GuidePage";
+import { contactHref } from "@/utils/medwithrish/site-links";
 
 export default function Page() {
   return (
@@ -33,7 +34,7 @@ export default function Page() {
         },
       ]}
       ctaLabel="Contact for GCSE tutoring"
-      ctaHref="/contact"
+      ctaHref={contactHref("gcse-tutoring")}
     />
   );
 }

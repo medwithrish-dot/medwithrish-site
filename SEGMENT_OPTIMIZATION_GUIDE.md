@@ -44,7 +44,7 @@ npm run build
 | **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | ✅ Completed | Separated diagnostic and report views from dashboard state; isolated diagnostic transforms and study tasks; preserved mock IDs through redirects; hardened saved-data AI feedback, credit handling, and report aggregation; added focused regression tests. |
 | **Segment 9** | Auth, Supabase & User Account Management | ✅ Non-UCAT scope re-audited | Interview account hydration now uses one auth event stream; profile names and plans follow the active user. Shared server clients have explicit server boundaries. Preview tokens expire server-side after 30 days, with redirect checks covered. The UCAT-backed account page is outside this pass. |
 | **Segment 10** | MedicForest Public Marketing & Shell | ✅ Re-audited outside UCAT | Corrected Premium price to the configured live Stripe amount, protected checkout from price drift, returned interview upgrades to the interview flow, and fixed shared desktop/mobile navigation. Existing two-offering About page was verified. |
-| **Segment 11** | MedWithRish.com Core & Resources Hub | 📋 Pending | Primary brand website, admissions advice, guides, tutoring booking. |
+| **Segment 11** | MedWithRish.com Core & Resources Hub | ✅ Re-audited outside UCAT | Direct free-guide links, contextual tutoring enquiries, complete About journeys and desktop navigation. Verified success-story assets, internal links and removal of the deprecated PS review offer. |
 | **Segment 12** | Infrastructure, Routing & Build Configuration | 📋 Pending | Next.js configuration, middleware, proxy auth refresh, security headers, SEO. |
 
 ---
@@ -338,6 +338,18 @@ Interview customers previously returned from Stripe to the UCAT dashboard. The i
 The interview shell now reuses the shared mobile navigation instead of maintaining a second link list. Public shell links keep users on MedicForest whether they use clean medicforest.com paths or `/medicforest/...` paths on the shared site. A stable first pathname snapshot avoids hydration mismatches on the rewritten static pages. The landing page no longer highlights UCAT as the active section, and the area switcher uses a click disclosure that closes on focus exit or Escape. Shared MedicForest metadata now describes the active interview and tutoring offering, and About has its own social preview. No UCAT platform files changed.
 
 Verification: `node --test scripts/test-domain-routing.mjs scripts/test-billing.mjs scripts/test-server-routes.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (249 passing), and `npm run build` (184 static pages).
+
+---
+
+### Segment 11: MedWithRish.com Core & Resources Hub — non-UCAT re-audit (2026-09-27)
+
+The homepage journey, resources index, interview hub, shared navbar, About and Contact pages, and tutoring entry pages were reviewed. The success-story image files and literal internal links in the Segment 11 pages and components resolve. No live personal statement review upload or checkout offer remains; the one-to-one personal statement session is still a separate tutoring service.
+
+Several buttons labelled "Free interview guide" opened the general Payhip shop. The live free MMI guide has its own product page, so those buttons now use one shared direct URL across the MedWithRish pages and the related public MedicForest resources page. The general Notes buttons still open the shop.
+
+Tutoring buttons for GCSE, A-Level, interview and personal statement sessions now carry a topic to Contact. Contact validates the topic against a fixed list and prepares a matching email subject and WhatsApp message; unknown or repeated query values fall back to a general enquiry. The About page now provides routes into the admissions journey, interview preparation, resources, and contact. The desktop navigation has an About link, working destinations for category labels, and a mobile layout through tablet widths so the additional items fit. The category links remain keyboard accessible through the existing focus-based dropdown.
+
+Verification: `node --test scripts/test-medwithrish-journey.mjs` (3 passing), `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (252 passing), and `npm run build` (184 static pages; Contact is rendered on demand for its topic query). The link audit found no unresolved literal internal links in Segment 11 pages and components. No UCAT platform files changed.
 
 ---
 

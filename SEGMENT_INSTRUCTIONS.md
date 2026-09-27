@@ -139,8 +139,8 @@ npm run build
 ### Segment 11: MedWithRish.com Core & Resources Hub
 - **Domain**: `app/page.tsx` (MedWithRish homepage), `app/about/`, `app/contact/`, `app/resources/`, `app/interviews/`.
 - **Scope**: Main admissions journey, tutoring booking flows, success stories, remove deprecated PS review mentions, clean dead links.
-- **Verification**: `npm run build`.
-- **Status**: 📋 Pending.
+- **Verification**: `node --test scripts/test-medwithrish-journey.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
+- **Status**: ✅ Re-audited outside UCAT. Direct interview guide links, contextual tutoring enquiries, useful About routes, and desktop navigation were corrected. Success story assets and internal routes were verified; no live PS review offer remains.
 
 ### Segment 12: Infrastructure, Routing & Build Configuration
 - **Domain**: `next.config.ts`, `proxy.ts`, `app/layout.tsx`, security headers, redirects.
