@@ -56,10 +56,11 @@ export async function preparePremiumCheckout({
   );
 
   if (profile.current_plan === "premium") {
-    if (profile.stripe_customer_id) {
+    const activeCustomerId = existingSubscription?.stripe_customer_id;
+    if (activeCustomerId) {
       const portalUrl = await createCustomerPortalSession(
         stripe,
-        profile.stripe_customer_id,
+        activeCustomerId,
         `${siteUrl}/medicforest/account`
       );
       return { kind: "portal", url: portalUrl };
@@ -136,7 +137,7 @@ export async function openCustomerPortal({
     throw new BillingNotFoundError("No Stripe customer found for this account.");
   }
 
-  if (!profile.stripe_subscription_id || profile.subscription_status === "manual") {
+  if (profile.subscription_status === "manual") {
     throw new BillingConflictError(
       "This account has manual Premium access, so there is no Stripe billing portal to manage."
     );
@@ -148,7 +149,6 @@ export async function openCustomerPortal({
     billingActionStatuses,
     {
       customerId: profile.stripe_customer_id,
-      subscriptionId: profile.stripe_subscription_id,
     }
   );
 

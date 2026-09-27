@@ -1,13 +1,15 @@
 import type Stripe from "stripe";
+import { getStripeWebhookSecret } from "@/utils/billing/billing-config";
 import { createStripeClient } from "@/utils/billing/stripe-client";
 import { dispatchStripeWebhookEvent } from "@/utils/billing/webhooks/dispatch-stripe-event";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
-
-  if (!webhookSecret) {
+  let webhookSecret: string;
+  try {
+    webhookSecret = getStripeWebhookSecret();
+  } catch {
     return Response.json(
       { error: "Missing STRIPE_WEBHOOK_SECRET." },
       { status: 500 }
@@ -32,12 +34,9 @@ export async function POST(request: Request) {
   try {
     const body = await request.text();
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-  } catch (error) {
+  } catch {
     return Response.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Invalid Stripe webhook.",
-      },
+      { error: "Invalid Stripe webhook signature or payload." },
       { status: 400 }
     );
   }
@@ -45,12 +44,9 @@ export async function POST(request: Request) {
   try {
     const outcome = await dispatchStripeWebhookEvent({ event, stripe });
     return Response.json(outcome);
-  } catch (error) {
+  } catch {
     return Response.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Could not process webhook.",
-      },
+      { error: "Could not process webhook." },
       { status: 500 }
     );
   }

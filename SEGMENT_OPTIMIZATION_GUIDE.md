@@ -12,10 +12,10 @@ Any AI or engineer reviewing these changes can verify repository health using th
 # 1. Typecheck the entire project (zero errors required)
 npx tsc --noEmit
 
-# 2. Run the full unit test suite (210 tests passing)
+# 2. Run the full unit test suite (214 tests passing)
 npm run test:unit
 
-# 3. Run the billing test suite (7 tests)
+# 3. Run the billing test suite (11 tests)
 node scripts/test-billing.mjs
 
 # 4. Run the Segment 4 feedback reports test suite (6 tests)
@@ -34,7 +34,7 @@ npm run build
 
 | Segment | Domain | Status | Key Deliverables / Notes |
 |---|---|---|---|
-| **Segment 1** | Stripe Billing & Webhook Service | ✅ Completed | Fully modularized into `utils/billing/`, centralized environment config, dedicated repository layer, thin HTTP controllers in `app/api/stripe/`, 7 unit tests in `scripts/test-billing.mjs`. |
+| **Segment 1** | Stripe Billing & Webhook Service | ✅ Re-audited | Modular billing service, repository and thin HTTP controllers verified. Fixed manual Premium portal routing, stale subscription portal recovery, customer ownership checks and provider error exposure; 11 billing tests. |
 | **Segment 2** | PS Review Submission Service | 🗑️ Scrapped | Completely removed per owner directive (scrapped from website). All legacy PS submission endpoints, forms, and tests purged. |
 | **Segment 3** | AI Interview Platform — Call & Speech Engine | 🔄 In Progress | Fragility protections; fixed follow-up bitmask validation overflow, enabled leaving active sessions, removed Group Interview Station panel, preparation seconds alignment. |
 | **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Completed | Polished review flow, eliminated placeholder upgrade modal with MedicForest Pro dialog, tightened timeout/abort error handling in feedback route, streamlined `InterviewHistoryViews`, added `loading.tsx` and `error.tsx` states, added 6 dedicated unit tests (`test-interview-feedback-reports.mjs`). |
@@ -84,13 +84,20 @@ A modular billing architecture was created under [`utils/billing/`](file:///c:/U
    - [`app/api/stripe/webhook/route.ts`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/api/stripe/webhook/route.ts)
    - All routes reduced to thin controllers (parsing JSON $\to$ invoking service $\to$ returning standard JSON response).
 8. **Unit Tests Added**:
-   - [`scripts/test-billing.mjs`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/scripts/test-billing.mjs) added to verify customer mapping, error mappings, event routing, and subscription state synchronization.
+   - [`scripts/test-billing.mjs`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/scripts/test-billing.mjs) verifies checkout, portal access, customer mapping, error mappings, event routing, and subscription state synchronization.
+9. **Re-audit fixes**:
+   - Manual Premium accounts with an old Stripe customer ID no longer receive a portal link from checkout. Paid subscribers use the customer ID on the active subscription record.
+   - Portal access can recover when the profile stores an old subscription ID but the customer has a manageable subscription.
+   - Webhook reconciliation rejects subscription metadata that points to a different user than the linked Stripe customer.
+   - Unexpected Stripe and database errors return a stable public message instead of leaking provider details. The webhook uses centralized secret validation and returns generic failure messages.
+   - Added tests for manual access, stale subscription IDs, ownership conflicts, canceled subscriptions, another active subscription, and error responses.
 
 #### 3. Instructions for Another AI to Verify Segment 1
 1. Inspect [`utils/billing/`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/utils/billing/) and confirm each module has a single responsibility.
 2. Confirm no route in `app/api/stripe/` imports the raw `stripe` npm package directly; all interaction goes through `utils/billing/`.
-3. Run `node scripts/test-billing.mjs` and verify all 7 tests pass.
-4. Run `npm run test:unit` and verify tests pass without regression.
+3. Run `node scripts/test-billing.mjs` and verify all 11 tests pass.
+4. Run `npm run test:unit` and verify all 214 tests pass without regression.
+5. Run `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 
 ---
 

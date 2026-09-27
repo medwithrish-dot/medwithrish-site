@@ -57,6 +57,17 @@ export class ProviderError extends BillingError {
   }
 }
 
+const billingErrorNames = new Set([
+  "BillingError",
+  "AuthenticationRequiredError",
+  "InvalidRequestError",
+  "BillingForbiddenError",
+  "BillingNotFoundError",
+  "BillingConflictError",
+  "ConfigurationError",
+  "ProviderError",
+]);
+
 export function isBillingError(
   error: unknown
 ): error is BillingError {
@@ -64,9 +75,16 @@ export function isBillingError(
     error instanceof BillingError ||
     (typeof error === "object" &&
       error !== null &&
+      "name" in error &&
+      typeof error.name === "string" &&
+      billingErrorNames.has(error.name) &&
       "statusCode" in error &&
-      typeof (error as { statusCode: unknown }).statusCode === "number" &&
-      "message" in error)
+      typeof error.statusCode === "number" &&
+      Number.isInteger(error.statusCode) &&
+      error.statusCode >= 400 &&
+      error.statusCode <= 599 &&
+      "message" in error &&
+      typeof error.message === "string")
   );
 }
 
@@ -76,10 +94,6 @@ export function toBillingResponse(
 ): Response {
   if (isBillingError(error)) {
     return Response.json({ error: error.message }, { status: error.statusCode });
-  }
-
-  if (error instanceof Error) {
-    return Response.json({ error: error.message }, { status: 500 });
   }
 
   return Response.json({ error: fallbackMessage }, { status: 500 });

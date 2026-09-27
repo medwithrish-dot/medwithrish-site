@@ -40,10 +40,14 @@ export async function findUserIdForSubscription(
   admin: AdminSupabase
 ): Promise<string | null> {
   const metadataUserId = subscription.metadata?.supabase_user_id;
-  if (metadataUserId) return metadataUserId;
-
   const customerId = getCustomerId(subscription.customer);
-  return findUserIdByCustomerId(admin, customerId);
+  const customerOwnerId = await findUserIdByCustomerId(admin, customerId);
+
+  if (metadataUserId && customerOwnerId && metadataUserId !== customerOwnerId) {
+    throw new Error("Stripe customer and subscription belong to different users.");
+  }
+
+  return metadataUserId || customerOwnerId;
 }
 
 export async function syncStripeSubscription(

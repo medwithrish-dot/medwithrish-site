@@ -81,7 +81,7 @@ npm run build
 ### Segment 1: Stripe Billing & Subscription Infrastructure
 - **Domain**: `utils/billing/`, `app/api/stripe/`
 - **Scope**: Centralized Stripe config, repository layer, error handling, thin HTTP route handlers.
-- **Verification**: `node scripts/test-billing.mjs` (7 tests).
+- **Verification**: `node scripts/test-billing.mjs` (11 tests).
 - **Status**: ✅ Completed.
 
 ### Segment 2: PS Review Submission Service

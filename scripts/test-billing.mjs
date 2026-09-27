@@ -80,10 +80,10 @@ test("checkout redirects to portal when user already has active Stripe subscript
       ensureBillingProfile: async () => ({
         id: "user-1",
         current_plan: "premium",
-        stripe_customer_id: "cus_existing",
+        stripe_customer_id: "cus_stale",
         full_name: "Test User",
       }),
-      findManageableSubscription: async () => null,
+      findManageableSubscription: async () => ({ status: "active", stripe_customer_id: "cus_existing" }),
     },
     "@/utils/billing/stripe-portal": {
       createCustomerPortalSession: async (_stripe, customerId, returnUrl) => {
@@ -114,13 +114,17 @@ test("checkout prevents double subscription for manual premium accounts", async 
       ensureBillingProfile: async () => ({
         id: "user-manual",
         current_plan: "premium",
-        stripe_customer_id: null,
+        stripe_customer_id: "cus_previous",
+        subscription_status: "manual",
         full_name: "Manual User",
       }),
       findManageableSubscription: async () => null,
     },
     "@/utils/billing/stripe-client": {
       createStripeClient: () => ({}),
+    },
+    "@/utils/billing/stripe-portal": {
+      createCustomerPortalSession: async () => assert.fail("Manual Premium must not open a Stripe portal"),
     },
   });
 
@@ -231,6 +235,30 @@ test("portal rejects users with manual premium or missing Stripe customer", asyn
   );
 });
 
+test("portal can recover when the profile has a stale subscription ID", async () => {
+  const { openCustomerPortal } = load("utils/billing/billing-service.ts", {
+    "@/utils/billing/billing-repository": {
+      findBillingProfile: async () => ({
+        id: "user-paid", stripe_customer_id: "cus_paid",
+        stripe_subscription_id: "sub_old", subscription_status: "active",
+      }),
+      findManageableSubscription: async (_admin, _userId, _statuses, filters) => {
+        assert.deepEqual(filters, { customerId: "cus_paid" });
+        return { status: "active", stripe_customer_id: "cus_paid" };
+      },
+    },
+    "@/utils/billing/stripe-customers": { customerExists: async () => true },
+    "@/utils/billing/stripe-portal": {
+      createCustomerPortalSession: async () => "https://billing.stripe.com/portal/recovered",
+    },
+  });
+
+  const outcome = await openCustomerPortal({
+    user: { id: "user-paid" }, siteUrl: "https://medicforest.com", stripe: {}, admin: {},
+  });
+  assert.equal(outcome.url, "https://billing.stripe.com/portal/recovered");
+});
+
 test("checkout session sync enforces user ownership and rejects mismatched callers", async () => {
   const { synchronizeCheckoutSession } = load("utils/billing/billing-service.ts", {
     "@/utils/billing/stripe-client": {
@@ -290,4 +318,75 @@ test("webhook dispatcher processes subscription lifecycle events and ignores uns
     stripe: mockStripe,
   });
   assert.equal(res2.received, true);
+});
+
+test("subscription metadata cannot move another customer's Premium access", async () => {
+  const { findUserIdForSubscription } = load("utils/billing/stripe-subscriptions.ts", {
+    "@/utils/billing/billing-repository": {
+      findUserIdByCustomerId: async (_admin, customerId) => {
+        assert.equal(customerId, "cus_owned");
+        return "actual-owner";
+      },
+    },
+  });
+
+  await assert.rejects(
+    findUserIdForSubscription({
+      customer: "cus_owned",
+      metadata: { supabase_user_id: "different-user" },
+    }, {}),
+    /different users/
+  );
+});
+
+test("billing responses hide unexpected provider errors", async () => {
+  const { toBillingResponse, BillingConflictError } = load("utils/billing/billing-errors.ts");
+  const publicError = await toBillingResponse(new BillingConflictError("Already subscribed.")).json();
+  assert.equal(publicError.error, "Already subscribed.");
+
+  const providerResponse = toBillingResponse(
+    { name: "StripeInvalidRequestError", statusCode: 402, message: "secret provider details" },
+    "Could not start checkout."
+  );
+  assert.equal(providerResponse.status, 500);
+  assert.deepEqual(await providerResponse.json(), { error: "Could not start checkout." });
+});
+
+test("subscription reconciliation preserves manual Premium and downgrades canceled paid access", async () => {
+  let existingProfile;
+  let activeSubscription = null;
+  let savedProfile;
+  const { syncStripeSubscription } = load("utils/billing/stripe-subscriptions.ts", {
+    "@/utils/billing/billing-repository": {
+      findUserIdByCustomerId: async () => "user-1",
+      upsertSubscriptionRecord: async () => {},
+      findLatestActiveSubscription: async () => activeSubscription,
+      findBillingProfile: async () => existingProfile,
+      updateProfileEntitlements: async (_admin, profile) => { savedProfile = profile; },
+    },
+  });
+  const canceledSubscription = {
+    id: "sub_paid", customer: "cus_paid", metadata: { supabase_user_id: "user-1" },
+    status: "canceled", cancel_at_period_end: false, items: { data: [] },
+  };
+
+  existingProfile = {
+    current_plan: "premium", stripe_customer_id: "cus_paid", stripe_subscription_id: null,
+    subscription_status: "manual", premium_since: "2025-01-01T00:00:00.000Z",
+  };
+  await syncStripeSubscription(canceledSubscription, "user-1", {});
+  assert.equal(savedProfile.current_plan, "premium");
+  assert.equal(savedProfile.subscription_status, "manual");
+  assert.equal(savedProfile.premium_since, existingProfile.premium_since);
+
+  existingProfile = { ...existingProfile, stripe_subscription_id: "sub_paid", subscription_status: "active" };
+  await syncStripeSubscription(canceledSubscription, "user-1", {});
+  assert.equal(savedProfile.current_plan, "free");
+  assert.equal(savedProfile.subscription_status, "canceled");
+  assert.equal(savedProfile.premium_since, null);
+
+  activeSubscription = { stripe_customer_id: "cus_paid", stripe_subscription_id: "sub_other", status: "active" };
+  await syncStripeSubscription(canceledSubscription, "user-1", {});
+  assert.equal(savedProfile.current_plan, "premium");
+  assert.equal(savedProfile.stripe_subscription_id, "sub_other");
 });
