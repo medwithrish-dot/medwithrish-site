@@ -27,6 +27,8 @@ export function InterviewPathwayChecklist({
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState("");
   const pending = useRef(false);
+  const changeEpoch = useRef(0);
+  const restoreEpoch = useRef(0);
   const progress = derivePathwayProgress(completed);
 
   useEffect(() => {
@@ -34,6 +36,8 @@ export function InterviewPathwayChecklist({
 
     async function restore() {
       if (pending.current) return;
+      const changedAtStart = changeEpoch.current;
+      const requestEpoch = ++restoreEpoch.current;
       try {
         let ids: string[];
         if (userId) {
@@ -55,13 +59,13 @@ export function InterviewPathwayChecklist({
           );
         }
 
-        if (active && !pending.current) {
+        if (active && !pending.current && changedAtStart === changeEpoch.current && requestEpoch === restoreEpoch.current) {
           setCompleted(ids);
           setReady(true);
           setError("");
         }
       } catch (failure) {
-        if (active) {
+        if (active && changedAtStart === changeEpoch.current && requestEpoch === restoreEpoch.current) {
           setReady(false);
           setError(
             failure instanceof Error
@@ -87,6 +91,7 @@ export function InterviewPathwayChecklist({
   async function toggle(stationId: string, done: boolean) {
     if (!ready || pending.current) return;
     pending.current = true;
+    changeEpoch.current += 1;
     setBusy(stationId);
     setError("");
 

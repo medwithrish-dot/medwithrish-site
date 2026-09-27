@@ -55,8 +55,9 @@ test("MedicForest interview URLs open the real platform under clean routes", asy
     && rule.destination === "/medicforest/interview/:path+"));
 });
 
-test("interview stimulus images bypass the MedicForest preview gate", () => {
+test("public interview resources bypass the MedicForest preview gate", () => {
   assert.equal(isPublicMedicForestPath("/medicforest/interview-stimuli/iq-18-001-data-stations.png"), true);
   assert.equal(isPublicMedicForestPath("/medicforest/interview-stimuli/iq-18-015-article-analysis.png"), true);
+  assert.equal(isPublicMedicForestPath("/medicforest/interview/leaderboard"), true);
   assert.equal(isPublicMedicForestPath("/medicforest/interview/dashboard"), false);
 });

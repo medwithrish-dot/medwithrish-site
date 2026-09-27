@@ -184,7 +184,7 @@ export function InterviewGroups() {
         <p className="relative text-[10px] font-bold uppercase tracking-[0.2em] text-[#8be5df]">Your interview study circle</p>
         <h2 className="relative mt-3 text-2xl font-bold tracking-tight">Practise with your people.</h2>
         <p className="relative mt-3 max-w-2xl text-sm leading-6 text-[#c8dddf]">Bring your friends into a private study group. Track question progress together, compare performance and help each other build confidence.</p>
-        <div className="relative mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/10 pt-4 text-xs font-semibold text-[#d2edeb]"><span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />Up to 12 study partners</span><span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />Track question practice</span></div>
+        <div className="relative mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/10 pt-4 text-xs font-semibold text-[#d2edeb]"><span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />Up to 12 members</span><span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-[#8be5df]" aria-hidden="true" />Track question practice</span></div>
       </div>
 
       <p className="px-1 text-xs leading-5 text-[#46646b]">When you create or join a group, members can see your account display name and best free Why medicine? score. Your individual interview transcripts stay private.</p>

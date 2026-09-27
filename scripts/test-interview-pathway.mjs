@@ -102,6 +102,66 @@ test("the compact pathway checklist completes stations in order and rolls later 
   assert.throws(() => changePathwayStation([], "invented", true));
 });
 
+test("an older checklist refresh cannot erase a newly saved pathway step", async () => {
+  const source = readFileSync(resolve(root, "app/medicforest/interview/_components/InterviewPathwayChecklist.tsx"), "utf8");
+  const output = ts.transpileModule(source, { compilerOptions: {
+    target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX,
+  } }).outputText;
+  const cells = [];
+  let cursor = 0;
+  let effects = [];
+  let finishOldRead;
+  const react = {
+    useState(initial) {
+      const index = cursor++;
+      if (!(index in cells)) cells[index] = typeof initial === "function" ? initial() : initial;
+      return [cells[index], next => { cells[index] = typeof next === "function" ? next(cells[index]) : next; }];
+    },
+    useRef(initial) { const index = cursor++; return cells[index] ??= { current: initial }; },
+    useEffect(callback, dependencies) {
+      const index = cursor++;
+      if (!cells[index] || dependencies.some((value, i) => !Object.is(value, cells[index][i]))) {
+        cells[index] = dependencies;
+        effects.push(callback);
+      }
+    },
+  };
+  const loaded = { exports: {} };
+  new Function("require", "module", "exports", "window", "fetch", output)(name => {
+    if (name === "react") return react;
+    if (name === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
+    if (name === "next/link") return { default: "link" };
+    if (name === "lucide-react") return { Check: "icon", Loader2: "icon" };
+    if (name === "@/utils/interviews/pathway") return load(resolve(root, "utils/interviews/pathway.ts"));
+    throw new Error(`Unexpected checklist dependency: ${name}`);
+  }, loaded, loaded.exports, { addEventListener() {}, removeEventListener() {} }, async (_path, options) => {
+    if (options.method === "POST") {
+      return Response.json({ completedTaskIds: changePathwayStation([], INTERVIEW_PATHWAY[0].id, true).completedTaskIds });
+    }
+    return new Promise(resolve => { finishOldRead = () => resolve(Response.json({ userId: "owner", completedTaskIds: [] })); });
+  });
+  const render = () => {
+    cursor = 0;
+    const tree = loaded.exports.InterviewPathwayChecklist({ userId: "owner", initialCompleted: [], available: true });
+    const pendingEffects = effects; effects = [];
+    pendingEffects.forEach(effect => effect());
+    return tree;
+  };
+  const firstCheckbox = node => {
+    if (Array.isArray(node)) return node.map(firstCheckbox).find(Boolean);
+    if (!node || typeof node !== "object") return undefined;
+    return node.type === "input" && node.props?.type === "checkbox" ? node : firstCheckbox(node.props?.children);
+  };
+  const initial = render();
+  assert.equal(firstCheckbox(initial).props.checked, false);
+  firstCheckbox(initial).props.onChange({ target: { checked: true } });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(firstCheckbox(render()).props.checked, true);
+  finishOldRead();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(firstCheckbox(render()).props.checked, true);
+});
+
 function apiHarness() {
   const rows = [];
   const mutations = [];
@@ -144,7 +204,7 @@ function apiHarness() {
     interviewJson: (data) => Response.json(data),
     interviewFailure: (error) => Response.json({ error: error.message }, { status: error.status ?? 503 }),
   };
-  const handlers = loader({ "next/cache": { revalidatePath() {} }, "@/utils/interviews/server": server })(resolve(root, "app/api/interviews/preparation/pathway/route.ts"));
+  const handlers = loader({ "server-only": {}, "next/cache": { revalidatePath() {} }, "@/utils/interviews/server": server, "./server": server })(resolve(root, "app/api/interviews/preparation/pathway/route.ts"));
   const post = (taskId, completed, extra = {}) => handlers.POST(new Request("https://example.test/api/interviews/preparation/pathway", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ taskId, completed, expectedUserId: state.userId, ...extra }) }));
   const postStation = (stationId, completed, extra = {}) => handlers.POST(new Request("https://example.test/api/interviews/preparation/pathway", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ stationId, completed, expectedUserId: state.userId, ...extra }) }));
   return { rows, mutations, state, handlers, post, postStation };

@@ -103,8 +103,8 @@ npm run build
 ### Segment 5: AI Interview Platform — Community (Groups, Leaderboard, Pathway)
 - **Domain**: `app/medicforest/interview/groups/`, `app/medicforest/interview/leaderboard/`, `app/medicforest/interview/pathway/`.
 - **Scope**: Study circles/groups, public leaderboard guest viewing (fix 401 unauth issues), pathway task progression, offensive name sanitization.
-- **Verification**: `node --test scripts/test-interview-public-names.mjs scripts/test-interview-pathway.mjs`.
-- **Status**: 📋 Pending.
+- **Verification**: `node --test scripts/test-interview-public-names.mjs scripts/test-interview-leaderboard.mjs scripts/test-interview-groups-route.mjs scripts/test-interview-pathway.mjs` and `npm run test:interviews:db`.
+- **Status**: ✅ Re-audited.
 
 ### Segment 6: MedicForest UCAT Platform — Client Monolith & State
 - **Domain**: `app/medicforest/ucat/_components/MedicForestClient.tsx`, public marketing splits.

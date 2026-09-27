@@ -10,10 +10,12 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
 
 // Execute the real handlers with isolated provider adapters; no network or keys.
-function load(file, mocks = {}) {
+function load(file, mocks = {}, cache = new Map()) {
   const path = resolve(root, file);
+  if (cache.has(path)) return cache.get(path);
   const fileDir = dirname(path);
   const compiledModule = { exports: {} };
+  cache.set(path, compiledModule.exports);
   const javascript = ts.transpileModule(readFileSync(path, "utf8"), {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, esModuleInterop: true },
   }).outputText;
@@ -23,12 +25,12 @@ function load(file, mocks = {}) {
     if (name === "@/utils/stripe" && Object.hasOwn(mocks, "@/utils/billing/stripe-client")) return mocks["@/utils/billing/stripe-client"];
     if (name === "@/utils/billing/stripe-subscriptions" && Object.hasOwn(mocks, "@/utils/stripe-subscriptions")) return mocks["@/utils/stripe-subscriptions"];
     if (name === "@/utils/stripe-subscriptions" && Object.hasOwn(mocks, "@/utils/billing/stripe-subscriptions")) return mocks["@/utils/billing/stripe-subscriptions"];
-    if (name.startsWith("@/")) return load(`${name.slice(2)}.ts`, mocks);
+    if (name.startsWith("@/")) return load(`${name.slice(2)}.ts`, mocks, cache);
     if (name.startsWith("./") || name.startsWith("../")) {
       const targetPath = resolve(fileDir, name);
       const relPath = targetPath.slice(root.length + 1).replace(/\\/g, "/");
       const normalizedPath = relPath.endsWith(".ts") ? relPath : `${relPath}.ts`;
-      return load(normalizedPath, mocks);
+      return load(normalizedPath, mocks, cache);
     }
     return require(name);
   };
@@ -282,7 +284,7 @@ test("leaderboard handlers reject offensive names before writing and mask legacy
   let signedIn = true;
   const writes = [];
   const query = (table) => ({
-    select() { return this; }, eq() { return this; }, order() { return this; }, limit() { return this; },
+    select() { return this; }, eq() { return this; }, not() { return this; }, order() { return this; }, limit() { return this; },
     maybeSingle: async () => ({ error: null, data: table === "profiles" ? { current_plan: "free" }
       : table === "interview_preferences" ? { display_name: "f.u.c.k", leaderboard_opt_in: true } : { score: 88.5 } }),
     upsert: async (value) => { writes.push(value); return { error: null }; },
@@ -296,6 +298,7 @@ test("leaderboard handlers reject offensive names before writing and mask legacy
         { rank: 1, display_name: "shit", score: 88.5, is_you: true },
         { rank: 2, display_name: "Hassan", score: 80, is_you: false },
       ], error: null }),
+      from: query,
     }) },
   });
   for (const displayName of ["fuck", "sh1t", "f.u.c.k", "fuсk", "a55hole", "fuuuck", "A".repeat(33)]) {

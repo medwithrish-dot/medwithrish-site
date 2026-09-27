@@ -12,7 +12,7 @@ Any AI or engineer reviewing these changes can verify repository health using th
 # 1. Typecheck the entire project (zero errors required)
 npx tsc --noEmit
 
-# 2. Run the full unit test suite (226 tests passing at the Segment 4 audit)
+# 2. Run the full unit test suite (234 tests passing at the Segment 5 audit)
 npm run test:unit
 
 # 3. Run the billing test suite (11 tests)
@@ -38,7 +38,7 @@ npm run build
 | **Segment 2** | PS Review Submission Service | 🗑️ Scrapped and re-audited | No submission or checkout flow remains. Old MedicForest personal-statement URLs redirect to live tutoring; obsolete setup variables and the unused email dependency were removed. |
 | **Segment 3** | AI Interview Platform — Call & Speech Engine | ✅ Re-audited | Verified session, microphone, speech, recording and timer flows. Recovered playback and recognition failures, corrected question timer drift, and made active-station leaving available with URL cleanup. |
 | **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Re-audited | Feedback is claimed only after a saved station ends; provider and database failures release claims safely. Review copy reflects AI availability without a false paid upgrade, and reports views contain only live paths. |
-| **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | 📋 Pending | Collaborative study circles, public leaderboard guest access (401 fix), prep pathway task progression. |
+| **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | ✅ Re-audited | Guests can view opted-in leaderboard scores without an account; private preferences remain owner-only. Group and pathway routes delegate to services, and the compact pathway checklist preserves newly saved steps during older refreshes. |
 | **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Completed | Deconstructed monolithic client: extracted `MedicForestPricingClient` & `MedicForestLandingClient`, eliminated ~9.8MB bundle bloat from public marketing pages, fixed broken `Alt+C` calculator toggle, eliminated timer drift, removed double redirect chains, and made 11,727-question quality gate lazy via Proxy. |
 | **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | ✅ Completed | Isolated scoring engine in `app/medicforest/ucat/_lib/ucatScoring.ts`, isolated question diagram and SVG visual components in `app/medicforest/ucat/_components/UCATQuestionVisuals.tsx`, eliminated ~1,450 lines of duplicate code from `UCATQuestionBankClient.tsx`, added global window keyboard shortcut listener for exams, implemented auto-finalization on timer expiration, fixed SPA exit tearing by replacing `window.location.assign` with Next.js `router.push`, added 8 comprehensive engine tests in `scripts/test-ucat-engine.mjs` bringing unit test suite to 205 passing tests. |
 | **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | ✅ Completed | Separated diagnostic and report views from dashboard state; isolated diagnostic transforms and study tasks; preserved mock IDs through redirects; hardened saved-data AI feedback, credit handling, and report aggregation; added focused regression tests. |
@@ -158,6 +158,26 @@ The re-audit found that the feedback endpoint could claim an active station befo
 2. Run `npm run test:interviews:db` and `node scripts/test-interview-dashboard-db.mjs` to verify the real PostgreSQL grading claim rejects active stations, accepts older submitted rows and applies the standalone patch.
 3. Run `npm run test:unit`, `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 4. For an existing hosted interview database, apply `supabase/medicforest_interview_grading_guard.sql` through the SQL editor. This audit tested the patch locally and did not apply it to the hosted project.
+
+---
+
+### Segment 5: AI Interview Platform — Community (Groups, Leaderboard, Pathway)
+
+#### 1. Context & Motivation
+The leaderboard was intended for public viewing, but its GET endpoint required an account, the database denied anonymous RPC calls, and the MedicForest page path still passed through the preview gate. The page assumed every viewer could edit preferences. Group and pathway routes mixed request handling with database work. The compact dashboard checklist could accept an old refresh after a save and show an earlier pathway state.
+
+#### 2. What Was Done
+1. `leaderboard-service.ts` separates public reads from owner-only preference writes. Guest reads use an anonymous Supabase client and return only opted-in entries; private preferences and personal best are queried only for the signed-in owner. The leaderboard page now bypasses the preview gate, and its UI offers guests a sign-in action instead of editable controls. Failed preference reloads no longer show a false success message.
+2. The interview platform and name-moderation SQL now grant anonymous access only to the leaderboard RPC. The RPC returns a boolean `is_you` for guests; the API also normalizes older `null` values. `medicforest_interview_public_leaderboard.sql` adds the grant to existing installations without replacing moderated leaderboard logic.
+3. `groups-service.ts` owns bounded request parsing, authentication and RPC error mapping. Its route now only returns HTTP responses. Membership, private roster access, invitation hashing and limits remain enforced by the database RPC.
+4. `pathway-service.ts` owns account persistence while `pathway.ts` retains progression rules. The compact checklist now ignores stale refreshes after a save, and the dashboard keys its checklist by account ID.
+5. Regression tests cover guest and owner leaderboard responses, nickname sanitization, group route validation, pathway refresh ordering and actual PostgreSQL permissions.
+
+#### 3. Verification
+1. Run `node --test scripts/test-interview-public-names.mjs scripts/test-interview-leaderboard.mjs scripts/test-interview-groups-route.mjs scripts/test-interview-pathway.mjs`.
+2. Run `npm run test:interviews:db` to verify anonymous leaderboard access and continued privacy for attempts and groups.
+3. Run `npm run test:unit`, `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+4. Existing hosted databases need `supabase/medicforest_interview_public_leaderboard.sql`. It was tested locally and was not applied to the hosted project.
 
 ---
 

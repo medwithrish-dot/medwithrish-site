@@ -80,6 +80,7 @@ try {
   `);
   const platformSql = await readFile(new URL("../supabase/medicforest_interview_platform.sql", import.meta.url), "utf8");
   const gradingGuardSql = await readFile(new URL("../supabase/medicforest_interview_grading_guard.sql", import.meta.url), "utf8");
+  const publicLeaderboardSql = await readFile(new URL("../supabase/medicforest_interview_public_leaderboard.sql", import.meta.url), "utf8");
   const questionProgressSql = (await readFile(new URL("../supabase/medicforest_interview_question_progress.sql", import.meta.url), "utf8"))
     .replace('create extension if not exists "pgcrypto";', "");
   const groupsSql = await readFile(new URL("../supabase/medicforest_interview_groups.sql", import.meta.url), "utf8");
@@ -87,6 +88,7 @@ try {
     await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);
     await db.exec(platformSql); await db.exec(questionProgressSql); await db.exec(groupsSql);
     await db.exec(gradingGuardSql); await db.exec(gradingGuardSql);
+    await db.exec(publicLeaderboardSql); await db.exec(publicLeaderboardSql);
   });
   for (const [name, id] of Object.entries(ids)) {
     await db.query("insert into auth.users(id,raw_user_meta_data) values ($1,$2::jsonb)", [id, JSON.stringify({ full_name: name })]);
@@ -109,11 +111,11 @@ try {
       await assert.rejects(db.query("select public.claim_interview_grading($1,$2,$3)", [ids.owner, ownAttempt, randomUUID()]), /permission denied/);
     });
   });
-  await check("anonymous clients cannot read attempts, call groups, or see leaderboard", async () => {
+  await check("anonymous clients can see public scores but cannot read attempts or groups", async () => {
     await role("anon", null, async () => {
       await assert.rejects(db.query("select * from public.interview_attempts"), /permission denied/);
       await assert.rejects(db.query("select public.interview_groups_action('list')"), /permission denied/);
-      await assert.rejects(db.query("select * from public.interview_leaderboard()"), /permission denied/);
+      assert.deepEqual((await db.query("select * from public.interview_leaderboard()")).rows, []);
     });
     await assert.rejects(group(null, "list"), /Sign in/);
   });
@@ -236,6 +238,9 @@ try {
     assert.deepEqual(rows.map((row) => row.is_you), [false, false, true, false]);
     assert.equal(new Date(rows[2].completed_at).toISOString(), "2026-01-03T10:00:00.000Z");
     assert.deepEqual(Object.keys(rows[0]).sort(), ["completed_at", "display_name", "is_you", "rank", "score"]);
+    const publicRows = await role("anon", null, () => db.query("select * from public.interview_leaderboard()"));
+    assert.deepEqual(publicRows.rows.map((row) => row.display_name), rows.map((row) => row.display_name));
+    assert.ok(publicRows.rows.every((row) => row.is_you === false));
   });
   await check("preference RLS hides other accounts and opt-out removes board results", async () => {
     const ownPrefs = await role("authenticated", ids.owner, () => db.query("select user_id from public.interview_preferences"));

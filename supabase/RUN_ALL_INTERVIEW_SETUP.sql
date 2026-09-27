@@ -221,11 +221,11 @@ language sql stable security definer set search_path=public as $$
     where p.leaderboard_opt_in and a.mode='free' and a.station_slug='why-medicine' and a.status='completed'
       and a.rubric_version='why-medicine-v1' and a.score is not null
     order by a.user_id,a.score desc,a.completed_at asc
-  ) select row_number() over(order by best.score desc,best.completed_at asc),best.display_name,best.score,best.completed_at,best.user_id=auth.uid()
+  ) select row_number() over(order by best.score desc,best.completed_at asc),best.display_name,best.score,best.completed_at,coalesce(best.user_id=auth.uid(),false)
     from best order by best.score desc,best.completed_at asc limit 100;
 $$;
 revoke all on function public.interview_leaderboard() from public,anon;
-grant execute on function public.interview_leaderboard() to authenticated,service_role;
+grant execute on function public.interview_leaderboard() to anon,authenticated,service_role;
 
 
 -- ============================================================
@@ -717,11 +717,11 @@ language sql stable security definer set search_path=public as $$
     where p.leaderboard_opt_in and a.mode='free' and a.station_slug='why-medicine' and a.status='completed'
       and a.rubric_version='why-medicine-v1' and a.score is not null
     order by a.user_id,a.score desc,a.completed_at asc
-  ) select row_number() over(order by best.score desc,best.completed_at asc),best.display_name,best.score,best.completed_at,best.user_id=auth.uid()
+  ) select row_number() over(order by best.score desc,best.completed_at asc),best.display_name,best.score,best.completed_at,coalesce(best.user_id=auth.uid(),false)
     from best order by best.score desc,best.completed_at asc limit 100;
 $$;
 revoke all on function public.interview_leaderboard() from public,anon;
-grant execute on function public.interview_leaderboard() to authenticated,service_role;
+grant execute on function public.interview_leaderboard() to anon,authenticated,service_role;
 
 
 -- Run after medicforest_interview_dashboard.sql and medicforest_interview_question_progress.sql.

@@ -66,6 +66,10 @@ test("real SQL blocks bypasses, sanitizes existing names and matches JavaScript 
     const board = (await db.query("select * from public.interview_leaderboard()")).rows;
     assert.equal(board[0].display_name, "Shital Shah");
     assert.equal(Number(board[0].score), 88.5);
+    await db.exec("reset role; set role anon");
+    const guestBoard = (await db.query("select * from public.interview_leaderboard()")).rows;
+    assert.equal(guestBoard[0].display_name, "Shital Shah");
+    assert.equal(guestBoard[0].is_you, false);
     await db.exec("reset role");
 
     // Simulate a legacy row while retaining the read guard in the real RPC.

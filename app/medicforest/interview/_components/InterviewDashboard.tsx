@@ -71,6 +71,7 @@ export function InterviewDashboard({
           <div><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#08787b]">Your pathway</p><h2 id="pathway-preview-title" className="mt-2 text-lg font-bold text-[#173d3d]">Build confidence, station by station</h2><p className="mt-2 text-xs leading-6 text-[#687d80]">Read the guides, practise the questions and check your readiness before moving on. Your progress carries over each day.</p></div>
         </div>
         <InterviewPathwayChecklist
+          key={pathway.userId ?? "guest"}
           userId={pathway.userId}
           initialCompleted={pathway.completedTaskIds}
           available={pathway.available}

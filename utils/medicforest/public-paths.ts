@@ -6,6 +6,7 @@ const MEDICFOREST_PUBLIC_PATHS = new Set([
   "/medicforest/feedback",
   "/medicforest/interviews",
   "/medicforest/interview/question-bank",
+  "/medicforest/interview/leaderboard",
   "/medicforest/personal-statement",
   "/medicforest/pricing",
   "/medicforest/resources",
