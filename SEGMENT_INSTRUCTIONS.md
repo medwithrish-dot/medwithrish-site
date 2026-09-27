@@ -145,8 +145,8 @@ npm run build
 ### Segment 12: Infrastructure, Routing & Build Configuration
 - **Domain**: `next.config.ts`, `proxy.ts`, `app/layout.tsx`, security headers, redirects.
 - **Scope**: Route rewrites, domain proxying, cache headers, preview tokens, bundle optimization, clean production build.
-- **Verification**: `npm run build && node --test scripts/test-domain-routing.mjs`.
-- **Status**: 📋 Pending.
+- **Verification**: `node --test scripts/test-domain-routing.mjs scripts/test-server-routes.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, `npm run build`, and local production responses for both hosts.
+- **Status**: ✅ Re-audited outside UCAT. Preview gating now covers clean product interview URLs before rewrites, public routes skip claim refresh, both domains have their own crawler files, and shared security/API cache headers are applied.
 
 ---
 

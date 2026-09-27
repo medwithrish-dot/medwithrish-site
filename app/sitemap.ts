@@ -2,7 +2,6 @@ import type { MetadataRoute } from "next";
 import { getPublicSiteUrl } from "@/utils/site-url";
 
 const baseUrl = getPublicSiteUrl();
-const lastModified = new Date("2026-05-23T00:00:00.000Z");
 
 const publicRoutes: Array<{
   path: string;
@@ -15,8 +14,6 @@ const publicRoutes: Array<{
   { path: "/ucat-score-tracker", changeFrequency: "monthly", priority: 0.85 },
   { path: "/ucat-timeline", changeFrequency: "monthly", priority: 0.85 },
   { path: "/interviews", changeFrequency: "monthly", priority: 0.85 },
-  { path: "/medicforest/ucat", changeFrequency: "weekly", priority: 0.85 },
-  { path: "/medicforest/about", changeFrequency: "monthly", priority: 0.8 },
   { path: "/resources", changeFrequency: "monthly", priority: 0.8 },
   { path: "/about", changeFrequency: "monthly", priority: 0.75 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.7 },
@@ -38,7 +35,6 @@ const publicRoutes: Array<{
 export default function sitemap(): MetadataRoute.Sitemap {
   return publicRoutes.map((route) => ({
     url: `${baseUrl}${route.path}`,
-    lastModified,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));

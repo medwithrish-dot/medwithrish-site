@@ -20,8 +20,27 @@ const legacyUcatRoutes = [
 ];
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   turbopack: {
     root: projectRoot,
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Permissions-Policy", value: "camera=(self), microphone=(self), geolocation=()" },
+          { key: "Strict-Transport-Security", value: "max-age=31536000" },
+        ],
+      },
+      {
+        source: "/api/:path*",
+        headers: [{ key: "Cache-Control", value: "private, no-store" }],
+      },
+    ];
   },
   async redirects() {
     return [
@@ -122,6 +141,16 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
+        {
+          source: "/robots.txt",
+          has: [medicForestHost],
+          destination: "/medicforest/robots-file",
+        },
+        {
+          source: "/sitemap.xml",
+          has: [medicForestHost],
+          destination: "/medicforest/sitemap.xml",
+        },
         {
           source: "/",
           has: [medicForestHost],

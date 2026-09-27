@@ -5,11 +5,15 @@ import {
   MEDICFOREST_PREVIEW_COOKIE,
 } from "@/utils/medicforest/preview-access";
 import { isPublicMedicForestPath } from "@/utils/medicforest/public-paths";
+import { isMedicForestHost, previewPathname } from "@/utils/medicforest/preview-routing";
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const productHost = isMedicForestHost(request.nextUrl.hostname)
+    || isMedicForestHost(request.headers.get("host"));
+  const accessPathname = previewPathname(pathname, productHost);
   const isProtectedMedicForestPath =
-    pathname.startsWith("/medicforest/") && !isPublicMedicForestPath(pathname);
+    accessPathname.startsWith("/medicforest/") && !isPublicMedicForestPath(accessPathname);
 
   if (isProtectedMedicForestPath) {
     const previewToken = request.cookies.get(MEDICFOREST_PREVIEW_COOKIE)?.value;
@@ -17,15 +21,20 @@ export async function proxy(request: NextRequest) {
 
     if (!hasPreviewAccess) {
       const stayTunedUrl = request.nextUrl.clone();
-      stayTunedUrl.pathname = "/medicforest";
+      stayTunedUrl.pathname = productHost ? "/" : "/medicforest";
       stayTunedUrl.search = "";
       stayTunedUrl.searchParams.set(
         "preview",
-        pathname.startsWith("/medicforest/interview") ? "interview" : "ucat"
+        accessPathname.startsWith("/medicforest/interview") ? "interview" : "ucat"
       );
 
       return NextResponse.redirect(stayTunedUrl);
     }
+  }
+
+  // Public marketing pages and guest views do not need a Supabase claim refresh.
+  if (!isProtectedMedicForestPath && !pathname.startsWith("/api/")) {
+    return NextResponse.next({ request });
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

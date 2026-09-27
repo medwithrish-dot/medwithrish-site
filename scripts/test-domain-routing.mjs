@@ -3,6 +3,40 @@ import { test } from "node:test";
 import nextConfig from "../next.config.ts";
 import { isPublicMedicForestPath } from "../utils/medicforest/public-paths.ts";
 import { medicForestPublicHref } from "../utils/medicforest/public-navigation.ts";
+import { isMedicForestHost, previewPathname } from "../utils/medicforest/preview-routing.ts";
+
+test("clean MedicForest URLs map to preview paths before host rewrites", () => {
+  assert.equal(isMedicForestHost("medicforest.com"), true);
+  assert.equal(isMedicForestHost("WWW.MEDICFOREST.COM:443"), true);
+  assert.equal(isMedicForestHost("medwithrish.com"), false);
+  assert.equal(previewPathname("/interviews", true), "/medicforest/interviews");
+  assert.equal(previewPathname("/interviews/dashboard", true), "/medicforest/interview/dashboard");
+  assert.equal(previewPathname("/interviews/leaderboard", true), "/medicforest/interview/leaderboard");
+  assert.equal(previewPathname("/ucat/dashboard", true), "/medicforest/ucat/dashboard");
+  assert.equal(previewPathname("/interviews/dashboard", false), "/interviews/dashboard");
+});
+
+test("security headers cover pages while API responses remain private", async () => {
+  assert.equal(nextConfig.poweredByHeader, false);
+  const rules = await nextConfig.headers();
+  const general = rules.find((rule) => rule.source === "/:path*");
+  const api = rules.find((rule) => rule.source === "/api/:path*");
+  assert.equal(general?.headers.find((header) => header.key === "X-Content-Type-Options")?.value, "nosniff");
+  assert.equal(general?.headers.find((header) => header.key === "X-Frame-Options")?.value, "DENY");
+  assert.match(general?.headers.find((header) => header.key === "Permissions-Policy")?.value ?? "", /microphone=\(self\)/);
+  assert.equal(api?.headers.find((header) => header.key === "Cache-Control")?.value, "private, no-store");
+});
+
+test("MedicForest receives its own robots and sitemap routes", async () => {
+  const rewrites = await nextConfig.rewrites();
+  assert.ok(!Array.isArray(rewrites));
+  assert.ok(rewrites.beforeFiles.some((rule) => rule.source === "/robots.txt"
+    && rule.destination === "/medicforest/robots-file"
+    && rule.has?.[0]?.value === "medicforest.com"));
+  assert.ok(rewrites.beforeFiles.some((rule) => rule.source === "/sitemap.xml"
+    && rule.destination === "/medicforest/sitemap.xml"
+    && rule.has?.[0]?.value === "medicforest.com"));
+});
 
 test("public shell links stay on MedicForest on both supported path forms", () => {
   assert.equal(medicForestPublicHref("/about", "/pricing"), "/pricing");

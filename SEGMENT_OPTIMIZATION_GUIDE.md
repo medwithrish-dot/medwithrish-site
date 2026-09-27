@@ -45,7 +45,7 @@ npm run build
 | **Segment 9** | Auth, Supabase & User Account Management | ✅ Non-UCAT scope re-audited | Interview account hydration now uses one auth event stream; profile names and plans follow the active user. Shared server clients have explicit server boundaries. Preview tokens expire server-side after 30 days, with redirect checks covered. The UCAT-backed account page is outside this pass. |
 | **Segment 10** | MedicForest Public Marketing & Shell | ✅ Re-audited outside UCAT | Corrected Premium price to the configured live Stripe amount, protected checkout from price drift, returned interview upgrades to the interview flow, and fixed shared desktop/mobile navigation. Existing two-offering About page was verified. |
 | **Segment 11** | MedWithRish.com Core & Resources Hub | ✅ Re-audited outside UCAT | Direct free-guide links, contextual tutoring enquiries, complete About journeys and desktop navigation. Verified success-story assets, internal links and removal of the deprecated PS review offer. |
-| **Segment 12** | Infrastructure, Routing & Build Configuration | 📋 Pending | Next.js configuration, middleware, proxy auth refresh, security headers, SEO. |
+| **Segment 12** | Infrastructure, Routing & Build Configuration | ✅ Re-audited outside UCAT | Preview proxy covers clean product routes before rewrites; public pages avoid claim refresh. Added shared security headers, private API caching, and separate brand/product crawler files. |
 
 ---
 
@@ -350,6 +350,18 @@ Several buttons labelled "Free interview guide" opened the general Payhip shop. 
 Tutoring buttons for GCSE, A-Level, interview and personal statement sessions now carry a topic to Contact. Contact validates the topic against a fixed list and prepares a matching email subject and WhatsApp message; unknown or repeated query values fall back to a general enquiry. The About page now provides routes into the admissions journey, interview preparation, resources, and contact. The desktop navigation has an About link, working destinations for category labels, and a mobile layout through tablet widths so the additional items fit. The category links remain keyboard accessible through the existing focus-based dropdown.
 
 Verification: `node --test scripts/test-medwithrish-journey.mjs` (3 passing), `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (252 passing), and `npm run build` (184 static pages; Contact is rendered on demand for its topic query). The link audit found no unresolved literal internal links in Segment 11 pages and components. No UCAT platform files changed.
+
+---
+
+### Segment 12: Infrastructure, Routing & Build Configuration — non-UCAT re-audit (2026-09-27)
+
+Next 16 runs Proxy before host-based rewrites. The preview gate previously checked only `/medicforest/...`, so a clean `medicforest.com/interviews/dashboard` request could reach the rewrite without the gate. `preview-routing.ts` now maps clean product interview paths to their internal path before the access check. The shared mapping also keeps the existing clean `/ucat/...` preview gate consistent without editing UCAT platform files. Denied product requests redirect directly to the clean landing URL with the correct preview area. Public product pages and guest views skip Supabase claim refresh; protected pages and authenticated APIs keep it. Existing signed preview-token expiry remains covered by the server route tests.
+
+Both hosts previously served the MedWithRish sitemap and robots file. The product host now rewrites `/sitemap.xml` to a static MedicForest sitemap and `/robots.txt` to a statically generated product route. The brand sitemap no longer lists product-prefixed URLs or an outdated fixed modification date, and brand robots excludes duplicate `/medicforest/` subpaths while leaving the separate disclaimer page crawlable. Product crawler files advertise only clean product URLs. The root metadata description now names the actual admissions and tutoring resources.
+
+`next.config.ts` now removes the powered-by header, adds content-type, referrer, frame, transport and feature-policy headers, and marks API responses `private, no-store`. Camera and microphone remain allowed for the site's own interview pages. The product robots route uses a regular cached Route Handler because this Next version only recognizes `robots.ts` at the app root.
+
+Verification: `node --test scripts/test-domain-routing.mjs scripts/test-server-routes.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (258 passing), and `npm run build` (186 generated static pages). A local production server with `medicforest.com` resolved to localhost returned the product sitemap and robots file, redirected an unauthorised clean interview dashboard request to `/?preview=interview`, served the public leaderboard, and returned `Cache-Control: private, no-store` on an API response. No UCAT platform files changed.
 
 ---
 

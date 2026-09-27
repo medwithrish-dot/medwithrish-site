@@ -298,6 +298,67 @@ test("proxy only refreshes authentication for account pages and authenticated AP
   }
 });
 
+test("preview proxy gates clean product interview paths while keeping public paths open", async () => {
+  const { NextRequest } = require("next/server");
+  const { proxy } = load("proxy.ts", {
+    "@supabase/ssr": { createServerClient: () => assert.fail("public or denied requests must not refresh auth") },
+    "@/utils/medicforest/preview-access": {
+      MEDICFOREST_PREVIEW_COOKIE: "medicforest_preview_access",
+      isValidMedicForestPreviewToken: async () => false,
+    },
+  });
+
+  await withEnv({ NEXT_PUBLIC_SUPABASE_URL: "https://supabase.example.test", NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "test-key", NEXT_PUBLIC_SUPABASE_ANON_KEY: undefined }, async () => {
+    const denied = await proxy(new NextRequest("https://medicforest.com/interviews/dashboard"));
+    assert.equal(denied.status, 307);
+    assert.equal(new URL(denied.headers.get("location")).pathname, "/");
+    assert.equal(new URL(denied.headers.get("location")).searchParams.get("preview"), "interview");
+
+    const prefixed = await proxy(new NextRequest("https://medwithrish.com/medicforest/interview/dashboard"));
+    assert.equal(prefixed.status, 307);
+    assert.equal(new URL(prefixed.headers.get("location")).pathname, "/medicforest");
+
+    const publicPage = await proxy(new NextRequest("https://medicforest.com/interviews/leaderboard"));
+    assert.equal(publicPage.status, 200);
+    assert.equal(publicPage.headers.get("location"), null);
+  });
+});
+
+test("valid preview access still refreshes auth on protected interview pages", async () => {
+  const { NextRequest } = require("next/server");
+  let claimReads = 0;
+  const { proxy } = load("proxy.ts", {
+    "@supabase/ssr": { createServerClient: () => ({
+      auth: { getClaims: async () => { claimReads += 1; return { data: { claims: null } }; } },
+    }) },
+    "@/utils/medicforest/preview-access": {
+      MEDICFOREST_PREVIEW_COOKIE: "medicforest_preview_access",
+      isValidMedicForestPreviewToken: async () => true,
+    },
+  });
+
+  await withEnv({ NEXT_PUBLIC_SUPABASE_URL: "https://supabase.example.test", NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "test-key" }, async () => {
+    const response = await proxy(new NextRequest("https://medicforest.com/interviews/dashboard"));
+    assert.equal(response.status, 200);
+    assert.equal(claimReads, 1);
+  });
+});
+
+test("brand and product crawler files advertise only their own domains", async () => {
+  await withEnv({ NEXT_PUBLIC_SITE_URL: undefined, NEXT_PUBLIC_PRODUCT_SITE_URL: undefined }, async () => {
+    const brandSitemap = load("app/sitemap.ts").default();
+    const productSitemap = load("app/medicforest/sitemap.ts").default();
+    const brandRobots = load("app/robots.ts").default();
+    const productRobots = await load("app/medicforest/robots-file/route.ts").GET().text();
+
+    assert.ok(brandSitemap.every((entry) => entry.url.startsWith("https://www.medwithrish.com/")));
+    assert.ok(productSitemap.every((entry) => entry.url.startsWith("https://medicforest.com/")));
+    assert.ok(!brandSitemap.some((entry) => entry.url.includes("/medicforest/")));
+    assert.ok(brandRobots.rules.disallow.includes("/medicforest/"));
+    assert.match(productRobots, /Sitemap: https:\/\/medicforest\.com\/sitemap\.xml/);
+  });
+});
+
 test("preview access rejects wrong passwords and redirect targets, and tokens rotate with the secret", async () => {
   await withEnv({
     MEDICFOREST_PREVIEW_PASSWORD: "preview-password",
