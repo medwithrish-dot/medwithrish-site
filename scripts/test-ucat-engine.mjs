@@ -158,6 +158,61 @@ test("drag-order questions award 1 mark for exact sequence match and 0 otherwise
   const swapped = getAnswerScore(question, ["item-2", "item-1", "item-3"]);
   assert.equal(swapped.status, "incorrect");
   assert.equal(swapped.points, 0);
+
+  for (const invalid of [
+    ["item-1", "item-1", "item-3"],
+    ["item-1", "item-2", "unknown"],
+  ]) {
+    assert.equal(isAnswered(question, invalid), false);
+    assert.equal(getAnswerScore(question, invalid).status, "unanswered");
+  }
+});
+
+test("most/least scoring requires two distinct available actions", () => {
+  const question = {
+    id: "sjt-most-least-1",
+    section: "sjt",
+    subtype: "sjt-appropriateness",
+    title: "Priorities",
+    stimulus: ["Scenario."],
+    question: "Choose the most and least appropriate actions.",
+    questionType: "most-least",
+    actionItems: [
+      { id: "safe", text: "Escalate safely" },
+      { id: "wait", text: "Wait without escalating" },
+      { id: "ask", text: "Ask for help" },
+    ],
+    answerSlots: { most: "safe", least: "wait" },
+    explanation: "Escalation protects the patient.",
+  };
+
+  assert.equal(getAnswerScore(question, { most: "safe", least: "wait" }).points, 1);
+  assert.equal(getAnswerScore(question, { most: "safe", least: "ask" }).points, 0.5);
+  for (const invalid of [
+    { most: "safe", least: "safe" },
+    { most: "safe", least: "missing" },
+    { most: "safe" },
+  ]) {
+    assert.equal(isAnswered(question, invalid), false);
+    assert.equal(getAnswerScore(question, invalid).status, "unanswered");
+  }
+});
+
+test("single-choice scoring ignores keys that are not offered", () => {
+  const question = {
+    id: "qr-1",
+    section: "qr",
+    subtype: "qr-averages",
+    title: "Average",
+    stimulus: ["Numbers."],
+    question: "What is the mean?",
+    options: [{ key: "A", text: "2" }, { key: "B", text: "3" }],
+    answer: "A",
+    explanation: "The mean is 2.",
+  };
+
+  assert.equal(isAnswered(question, "E"), false);
+  assert.equal(getAnswerScore(question, "E").status, "unanswered");
 });
 
 test("DM yes/no multi-statement questions award 1 mark for 5/5 and 0.5 for 4/5 correct", () => {
@@ -204,6 +259,8 @@ test("scaled score calculator scales strictly within 300 to 900 rounded to 10", 
   assert.equal(getEstimatedScaledScore(44, 44), 900);
   assert.equal(getEstimatedScaledScore(22, 44), 600);
   assert.equal(getEstimatedScaledScore(0, 0), 300);
+  assert.equal(getEstimatedScaledScore(Number.NaN, 44), 300);
+  assert.equal(getEstimatedScaledScore(22, Number.POSITIVE_INFINITY), 300);
 
   // Monotonicity check
   let prev = 300;
@@ -225,6 +282,7 @@ test("SJT band calculator converts percentages accurately into Bands 1 to 4", ()
   assert.equal(getSjtBand(59.9, 100), 3);
   assert.equal(getSjtBand(39.9, 100), 4);
   assert.equal(getSjtBand(0, 100), 4);
+  assert.equal(getSjtBand(Number.NaN, 100), 4);
 });
 
 test("formatDisplayText formats exponent units to clean superscript notation", () => {

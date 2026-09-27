@@ -12,7 +12,7 @@ Any AI or engineer reviewing these changes can verify repository health using th
 # 1. Typecheck the entire project (zero errors required)
 npx tsc --noEmit
 
-# 2. Run the full unit test suite (239 tests passing at the Segment 6 audit)
+# 2. Run the full unit test suite (244 tests passing at the Segment 7 audit)
 npm run test:unit
 
 # 3. Run the billing test suite (11 tests)
@@ -40,7 +40,7 @@ npm run build
 | **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Re-audited | Feedback is claimed only after a saved station ends; provider and database failures release claims safely. Review copy reflects AI availability without a false paid upgrade, and reports views contain only live paths. |
 | **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | ✅ Re-audited | Guests can view opted-in leaderboard scores without an account; private preferences remain owner-only. Group and pathway routes delegate to services, and the compact pathway checklist preserves newly saved steps during older refreshes. |
 | **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Re-audited | Public routes import dedicated landing/pricing clients; dashboard bank lookups are deferred. Fixed dual `Alt+C` toggles, timer drift, account countdown redraws, cross-domain links, and legacy mock redirect hops. |
-| **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | ✅ Completed | Isolated scoring engine in `app/medicforest/ucat/_lib/ucatScoring.ts`, isolated question diagram and SVG visual components in `app/medicforest/ucat/_components/UCATQuestionVisuals.tsx`, eliminated ~1,450 lines of duplicate code from `UCATQuestionBankClient.tsx`, added global window keyboard shortcut listener for exams, implemented auto-finalization on timer expiration, fixed SPA exit tearing by replacing `window.location.assign` with Next.js `router.push`, added 8 comprehensive engine tests in `scripts/test-ucat-engine.mjs` bringing unit test suite to 205 passing tests. |
+| **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | ✅ Re-audited | Scoring and visuals remain separated. Fixed duplicate shortcut handling, stale timeout submission, zero-second resume resets, invalid saved-answer scoring, and multi-part answer-change reporting; added runner tests. |
 | **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | ✅ Completed | Separated diagnostic and report views from dashboard state; isolated diagnostic transforms and study tasks; preserved mock IDs through redirects; hardened saved-data AI feedback, credit handling, and report aggregation; added focused regression tests. |
 | **Segment 9** | Auth, Supabase & User Account Management | 📋 Pending | User profiles, session persistence, preview access tokens. |
 | **Segment 10** | MedicForest Public Marketing & Shell | 📋 Pending | Public marketing layer, navigation shells, trust badges, pricing page. |
@@ -258,14 +258,14 @@ The UCAT question bank client (`UCATQuestionBankClient.tsx`) was a 10,942-line m
      - Variant definitions, hashing, and legend styling.
 3. **Decoupled Exam Runner & Fixed Client Monolith ([`app/medicforest/ucat/_components/UCATQuestionBankClient.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/ucat/_components/UCATQuestionBankClient.tsx))**:
    - Removed ~1,450 lines of duplicate code by importing from `ucatScoring.ts` and `UCATQuestionVisuals.tsx`.
-   - Re-exported all scoring and visual utilities to maintain 100% backward compatibility.
+   - Kept the existing scoring and visual compatibility exports.
    - Replaced all `window.location.assign` calls with Next.js App Router `router.push(href)` to preserve client-side SPA routing.
    - Added global `window.addEventListener("keydown", ...)` listener so exam shortcuts and calculator typing work from anywhere on the page without requiring focus on a specific DOM container.
    - Added automatic session completion in `updateRemaining` so timed mock sections automatically finalize and mark candidate attempts when time hits 0.
 4. **Populated Landing & Pricing Client Components**:
    - Ensured [`app/medicforest/pricing/_components/MedicForestPricingClient.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/pricing/_components/MedicForestPricingClient.tsx) and [`app/medicforest/_components/MedicForestLandingClient.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/_components/MedicForestLandingClient.tsx) have full type declarations and imports, passing Next.js Turbopack build cleanly.
 5. **New Automated Unit Test Suite ([`scripts/test-ucat-engine.mjs`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/scripts/test-ucat-engine.mjs))**:
-   - 8 unit tests covering:
+   - 10 unit tests covering:
      - Core section and subtype metadata recognition
      - Single-choice scoring and unanswered states
      - SJT partial credit same-side scale checks (A/B vs C/D)
@@ -274,15 +274,24 @@ The UCAT question bank client (`UCATQuestionBankClient.tsx`) was a 10,942-line m
      - Scaled score monotonicity and 300–900 boundaries
      - SJT Band 1–4 percentage thresholds
      - Exponent unit display formatting
-   - Integrated into `package.json` under `npm run test:unit`, expanding total test suite to **205 passing unit tests**.
+   - Integrated into `package.json` under `npm run test:unit`. The Segment 7 re-audit brings the current total to **244 passing unit tests**.
 
 #### 3. Instructions for Another AI to Verify Segment 7
 1. Run `npx tsc --noEmit` and confirm 0 TypeScript errors across the repository.
-2. Run `node --test scripts/test-ucat-engine.mjs` to confirm all 8 engine tests pass.
+2. Run `node --test scripts/test-ucat-engine.mjs scripts/test-ucat-runner.mjs` to confirm all 13 engine and runner tests pass.
 3. Run `node --test scripts/test-ucat-quality.mjs` to confirm question quality gate validations pass.
-4. Run `node scripts/auditUcatQuestionBank.cjs` to confirm 11,727 accepted questions audit cleanly.
-5. Run `npm run test:unit` and verify all 205 unit tests pass.
+4. Run `node scripts/auditUcatQuestionBank.cjs` to confirm 11,727 accepted questions. Existing VR answer-balance and DM Venn/logic distribution warnings concern question content.
+5. Run `npm run test:unit` and verify all 244 unit tests pass.
 6. Run `npm run build` and confirm all 184 static pages compile cleanly.
+
+#### 4. Segment 7 re-audit (2026-09-27)
+The scoring module and visual components are still separate and the exit links use the App Router. The runner had both a root and a window keydown handler, so keys pressed inside the exam fired twice. It now has one window handler, ignores editable fields and browser modifier shortcuts, and reads the current handler after each render.
+
+The timeout interval captured the first render of the session. Expiring it could submit old answers, and callbacks could race to finish more than once. It now calls the current marking function through a ref and uses a one-shot completion guard. Session restoration keeps a saved zero-second value, so an expired draft does not regain its full allowance. Final summaries read remaining time from the monotonic deadline.
+
+The scoring engine now treats duplicate or unknown drag items, invalid most/least selections, and unavailable choice keys as unanswered. Non-finite score inputs receive safe bounds. Answer-switch counts now track each statement, category item, or most/least slot independently. Most/least answer events show their actual action and correctness; question-level changed-answer insights are reserved for whole-answer formats. Unused imports were removed from the runner.
+
+`ucatSessionTime.ts` and `ucatAnswerTracking.ts` hold the new pure logic. `scripts/test-ucat-engine.mjs` covers scoring edge cases, and `scripts/test-ucat-runner.mjs` covers restoration, per-part edits, and runner wiring. The 11,727-question audit retains the two content-distribution warnings reported in Segment 6; altering authored answers to silence them would change question correctness.
 
 ---
 

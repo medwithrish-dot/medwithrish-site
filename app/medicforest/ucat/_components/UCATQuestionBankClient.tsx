@@ -42,7 +42,6 @@ import {
   UCAT_QUESTION_BANK,
   UCAT_SECTIONS,
   UCAT_SUBTYPES,
-  type UCATChartVisual,
   type UCATOptionKey,
   type UCATQuestion,
   type UCATQuestionTag,
@@ -59,36 +58,27 @@ import {
   type SubtypeWeaknessRule,
 } from "../_lib/ucatWeaknessRules";
 import {
-  type DiagnosticSectionScore,
   type PracticeAnswer,
   type PracticeAnswerMap,
-  type PracticeAnswerScore,
   type PracticeAnswerStatus,
   getAnswerScore,
   getDiagnosticSectionScore,
-  getDragCategoryPlacementScore,
   getEstimatedScaledScore,
-  getMostLeastSlotScore,
   getSjtBand,
-  getYesNoStatementScore,
   isAnswerCorrect,
   isAnswered,
   isPracticeAnswerMap,
-  isSameSjtScaleSide,
   isSjtPartialCreditAnswer,
   isUCATSingleSelectQuestion,
-  makeAnswerScore,
   sameOrder,
 } from "../_lib/ucatScoring";
 import {
   formatDisplayText,
   OptionVisual,
   QuestionVisual,
-  SetDiagramShapeElement,
-  WrappedSvgLabel,
-  ChartPatternDefs,
-  LinePointMarker,
 } from "./UCATQuestionVisuals";
+import { getRestoredSessionTime } from "../_lib/ucatSessionTime";
+import { countAnswerSwitches } from "../_lib/ucatAnswerTracking";
 
 export {
   formatDisplayText,
@@ -1637,18 +1627,7 @@ function buildQuestionSummary({
   const correct = answerScore.status === "correct";
   const answerEvents = events.filter((event) => event.type === "answer_select");
   const dragEvents = events.filter((event) => event.type === "drag_reorder");
-  let previousAnswer = "";
-  let answerSwitches = 0;
-
-  answerEvents.forEach((event) => {
-    const nextAnswer = isUCATDragCategoryQuestion(question)
-      ? `${payloadString(event, "itemId")}:${payloadString(event, "answer")}`
-      : payloadString(event, "answer");
-    if (previousAnswer && nextAnswer && previousAnswer !== nextAnswer) {
-      answerSwitches += 1;
-    }
-    previousAnswer = nextAnswer || previousAnswer;
-  });
+  const answerSwitches = countAnswerSwitches(question, answerEvents);
 
   const answerPath = [...answerEvents, ...dragEvents]
     .sort((first, second) => first.at - second.at)
@@ -1704,6 +1683,19 @@ function buildQuestionSummary({
         };
       }
 
+      if (isUCATMostLeastQuestion(question)) {
+        const slot = payloadString(event, "slot") as UCATMostLeastSlot;
+        const itemId = payloadString(event, "answer");
+        const item = question.actionItems.find((action) => action.id === itemId);
+        return {
+          answer: `${slot}:${itemId}`,
+          answerText: `${slot === "most" ? "Most" : "Least"} appropriate: ${item?.text ?? itemId}`,
+          correct: question.answerSlots[slot] === itemId,
+          source,
+          atSeconds,
+        };
+      }
+
       const answerKey = payloadString(event, "answer") as UCATOptionKey;
       return {
         answer: answerKey,
@@ -1717,10 +1709,18 @@ function buildQuestionSummary({
 
   const firstAnswer = answerPath[0];
   const dragEdits = dragEvents.length;
-  const everCorrect = answerPath.some((item) => item.correct) || correct;
-  const everWrong = answerPath.some((item) => !item.correct);
-  const startedWrong = firstAnswer ? !firstAnswer.correct : false;
-  const startedCorrect = firstAnswer ? firstAnswer.correct : false;
+  const tracksWholeAnswer =
+    isUCATSingleSelectQuestion(question) || isUCATDragOrderQuestion(question);
+  const everCorrect = tracksWholeAnswer
+    ? answerPath.some((item) => item.correct) || correct
+    : correct;
+  const everWrong = tracksWholeAnswer
+    ? answerPath.some((item) => !item.correct)
+    : answered && !correct;
+  const startedWrong =
+    tracksWholeAnswer && firstAnswer ? !firstAnswer.correct : false;
+  const startedCorrect =
+    tracksWholeAnswer && firstAnswer ? firstAnswer.correct : false;
 
   return {
     questionId: question.id,
@@ -5899,12 +5899,15 @@ function UCATQuestionBankSection({
   const questionStartedAtRef = useRef(0);
   const sessionStartedAtRef = useRef(0);
   const sessionDeadlineMsRef = useRef<number | null>(null);
+  const completionStartedRef = useRef(false);
+  const markPracticeRef = useRef<() => void>(() => {});
   const phaseRef = useRef<PracticePhase>("practice");
   const markedSummaryRef = useRef<PracticeSessionSummary | null>(null);
   const markedInsightsHistoryActiveRef = useRef(false);
   const resumedPracticeSessionIdRef = useRef<string | null>(null);
   const handledPracticeSetIdRef = useRef<string | null>(null);
   const appRootRef = useRef<HTMLDivElement>(null);
+  const practiceKeyDownRef = useRef<(event: KeyboardEvent) => void>(() => {});
   const stimulusRegionRef = useRef<HTMLElement>(null);
   const questionRegionRef = useRef<HTMLDivElement>(null);
   const answersRegionRef = useRef<HTMLDivElement>(null);
@@ -7190,6 +7193,10 @@ function UCATQuestionBankSection({
   };
 
   useEffect(() => {
+    if (started) markPracticeRef.current = markPractice;
+  });
+
+  useEffect(() => {
     if (!started || !sessionTimed) {
       sessionDeadlineMsRef.current = null;
       return;
@@ -7204,19 +7211,55 @@ function UCATQuestionBankSection({
       if (deadline === null) return;
 
       const remaining = Math.max(0, Math.ceil((deadline - monotonicMs()) / 1000));
-      setTimeRemaining(remaining);
-      if (remaining === 0 && sessionTimed && started && (phase === "practice" || phase === "review")) {
-        markPractice();
+      setTimeRemaining((current) =>
+        current === remaining ? current : remaining
+      );
+      if (
+        remaining === 0 &&
+        (phaseRef.current === "practice" || phaseRef.current === "review")
+      ) {
+        markPracticeRef.current();
       }
     };
 
     updateRemaining();
     const intervalId = window.setInterval(updateRemaining, 250);
-
     return () => window.clearInterval(intervalId);
-    // The deadline is set when a timed session starts or resumes.
+    // Session start and resume explicitly set the monotonic deadline.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionTimed, started]);
+
+  useEffect(() => {
+    if (started) practiceKeyDownRef.current = handlePracticeKeyDown;
+  });
+
+  useEffect(() => {
+    if (
+      !started ||
+      phase === "review" ||
+      phase === "marked" ||
+      phase === "marked-review" ||
+      phase === "diagnostic-complete"
+    ) {
+      return;
+    }
+
+    const handleWindowKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        tag === "SELECT" ||
+        target?.isContentEditable
+      ) return;
+
+      practiceKeyDownRef.current(event);
+    };
+
+    window.addEventListener("keydown", handleWindowKeyDown);
+    return () => window.removeEventListener("keydown", handleWindowKeyDown);
+  }, [started, phase]);
 
   useEffect(() => {
     if (started && phase !== "review") {
@@ -7250,6 +7293,8 @@ function UCATQuestionBankSection({
     setAnswers({});
     setFlags({});
     setPhase("practice");
+    phaseRef.current = "practice";
+    completionStartedRef.current = false;
     setSessionQuestions(nextQuestions);
     setDragOrder(getDragOrder(nextQuestions[0]));
     setSessionTimed(nextTimed);
@@ -7332,12 +7377,15 @@ function UCATQuestionBankSection({
     setRevealed(false);
     setPhase("practice");
     phaseRef.current = "practice";
+    completionStartedRef.current = false;
     setSessionTimed(Boolean(draft.sessionTimed));
-    setSessionDurationSeconds(draft.sessionDurationSeconds || setupTimeSeconds);
-    const restoredRemainingSeconds = Math.max(
-      0,
-      draft.timeRemaining || draft.sessionDurationSeconds || setupTimeSeconds
+    const { durationSeconds, remainingSeconds } = getRestoredSessionTime(
+      draft.timeRemaining,
+      draft.sessionDurationSeconds,
+      setupTimeSeconds
     );
+    setSessionDurationSeconds(durationSeconds);
+    const restoredRemainingSeconds = remainingSeconds;
     setTimeRemaining(restoredRemainingSeconds);
     sessionDeadlineMsRef.current = draft.sessionTimed
       ? monotonicMs() + restoredRemainingSeconds * 1000
@@ -7998,10 +8046,11 @@ function UCATQuestionBankSection({
           ? firstIncompleteIndex
           : 0;
     const startedAt = nowMs();
-    const remainingSeconds =
-      set.summary.timed && Number.isFinite(set.summary.secondsRemaining)
-        ? Math.max(0, set.summary.secondsRemaining)
-        : set.summary.setSeconds;
+    const { durationSeconds, remainingSeconds } = getRestoredSessionTime(
+      set.summary.timed ? set.summary.secondsRemaining : undefined,
+      set.summary.setSeconds,
+      setupTimeSeconds
+    );
     seenQuestionContentIdsRef.current = new Set();
     commitQuestionTiming();
     markedInsightsHistoryActiveRef.current = false;
@@ -8026,9 +8075,10 @@ function UCATQuestionBankSection({
     setNavigatorOpen(false);
     setPhase("practice");
     phaseRef.current = "practice";
+    completionStartedRef.current = false;
     setSessionTimed(set.summary.timed);
-    setSessionDurationSeconds(set.summary.setSeconds || setupTimeSeconds);
-    const restoredRemainingSeconds = Math.max(0, remainingSeconds || setupTimeSeconds);
+    setSessionDurationSeconds(durationSeconds);
+    const restoredRemainingSeconds = remainingSeconds;
     setTimeRemaining(restoredRemainingSeconds);
     sessionDeadlineMsRef.current = set.summary.timed
       ? monotonicMs() + restoredRemainingSeconds * 1000
@@ -8068,6 +8118,9 @@ function UCATQuestionBankSection({
   };
 
   const markPractice = () => {
+    if (completionStartedRef.current) return;
+    completionStartedRef.current = true;
+    const secondsRemaining = getCurrentSessionSecondsRemaining();
     scrollToQuestionTop();
     commitQuestionTiming();
     const completedAt = nowMs();
@@ -8098,7 +8151,7 @@ function UCATQuestionBankSection({
       finished: true,
       timed: sessionTimed,
       setSeconds: sessionDurationSeconds,
-      secondsRemaining: timeRemaining,
+      secondsRemaining,
     });
     setQuestionIndex(0);
     setSelected(typeof answers[0] === "string" ? answers[0] : null);
@@ -8265,7 +8318,8 @@ function UCATQuestionBankSection({
     recordCalculator(calculatorOpen ? "close" : "open", undefined, source);
   };
 
-  const handlePracticeKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handlePracticeKeyDown = (event: KeyboardEvent) => {
+    if (event.ctrlKey || event.metaKey) return;
     const key = event.key.toLowerCase();
 
     if (event.altKey) {
@@ -8293,6 +8347,7 @@ function UCATQuestionBankSection({
         toggleFlag("keyboard");
         return;
       }
+      return;
     }
 
     if (phase !== "practice") return;
@@ -8351,23 +8406,6 @@ function UCATQuestionBankSection({
       }
     }
   };
-
-  useEffect(() => {
-    if (!started || phase === "review" || phase === "marked" || phase === "marked-review" || phase === "diagnostic-complete") {
-      return;
-    }
-
-    const handleWindowKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      const tag = target?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-
-      handlePracticeKeyDown(event as unknown as React.KeyboardEvent<HTMLDivElement>);
-    };
-
-    window.addEventListener("keydown", handleWindowKeyDown);
-    return () => window.removeEventListener("keydown", handleWindowKeyDown);
-  }, [started, phase, calculatorOpen, questionIndex, isSingleQuestion, question, answers]);
 
   if (phase === "review") {
     return (
@@ -8633,7 +8671,6 @@ function UCATQuestionBankSection({
       ref={appRootRef}
       className="min-h-screen bg-white font-sans text-black"
       tabIndex={-1}
-      onKeyDown={handlePracticeKeyDown}
     >
       <header className="flex min-h-14 items-center justify-between bg-[#0078a8] px-3 py-2 text-white">
         <div className="flex items-center gap-3">

@@ -60,6 +60,32 @@ export function sameOrder(first: string[], second: string[]) {
   );
 }
 
+function isValidDragOrderAnswer(
+  question: UCATQuestion,
+  answer?: PracticeAnswer
+): answer is string[] {
+  if (!isUCATDragOrderQuestion(question) || !Array.isArray(answer)) return false;
+  const itemIds = new Set(question.dragItems.map((item) => item.id));
+  return (
+    answer.length === itemIds.size &&
+    new Set(answer).size === itemIds.size &&
+    answer.every((itemId) => itemIds.has(itemId))
+  );
+}
+
+function isValidMostLeastAnswer(question: UCATQuestion, answer?: PracticeAnswer) {
+  if (!isUCATMostLeastQuestion(question) || !isPracticeAnswerMap(answer)) return false;
+  const actionIds = new Set(question.actionItems.map((item) => item.id));
+  const { most, least } = answer;
+  return (
+    typeof most === "string" &&
+    typeof least === "string" &&
+    most !== least &&
+    actionIds.has(most) &&
+    actionIds.has(least)
+  );
+}
+
 export function getDragCategoryPlacementScore(
   question: UCATQuestion,
   answer?: PracticeAnswer
@@ -153,7 +179,7 @@ export function getAnswerScore(
   answer?: PracticeAnswer
 ): PracticeAnswerScore {
   if (isUCATDragOrderQuestion(question)) {
-    if (!Array.isArray(answer) || answer.length !== question.answerOrder.length) {
+    if (!isValidDragOrderAnswer(question, answer)) {
       return makeAnswerScore("unanswered", 0, "No answer selected");
     }
 
@@ -225,6 +251,9 @@ export function getAnswerScore(
   }
 
   if (isUCATMostLeastQuestion(question)) {
+    if (!isValidMostLeastAnswer(question, answer)) {
+      return makeAnswerScore("unanswered", 0, "No complete response selected");
+    }
     const { answeredCount, correctCount, totalCount } = getMostLeastSlotScore(
       question,
       answer
@@ -254,7 +283,11 @@ export function getAnswerScore(
     );
   }
 
-  if (!isUCATSingleSelectQuestion(question) || typeof answer !== "string") {
+  if (
+    !isUCATSingleSelectQuestion(question) ||
+    typeof answer !== "string" ||
+    !question.options.some((option) => option.key === answer)
+  ) {
     return makeAnswerScore("unanswered", 0, "No answer selected");
   }
 
@@ -275,7 +308,7 @@ export function isAnswerCorrect(question: UCATQuestion, answer?: PracticeAnswer)
 
 export function isAnswered(question: UCATQuestion, answer?: PracticeAnswer) {
   if (isUCATDragOrderQuestion(question)) {
-    return Array.isArray(answer) && answer.length === question.answerOrder.length;
+    return isValidDragOrderAnswer(question, answer);
   }
 
   if (isUCATDragCategoryQuestion(question)) {
@@ -292,26 +325,29 @@ export function isAnswered(question: UCATQuestion, answer?: PracticeAnswer) {
   }
 
   if (isUCATMostLeastQuestion(question)) {
-    return (
-      isPracticeAnswerMap(answer) &&
-      (Object.keys(question.answerSlots) as UCATMostLeastSlot[]).every(
-        (slot) => Boolean(answer[slot])
-      )
-    );
+    return isValidMostLeastAnswer(question, answer);
   }
 
-  return typeof answer === "string" && Boolean(answer);
+  return (
+    isUCATSingleSelectQuestion(question) &&
+    typeof answer === "string" &&
+    question.options.some((option) => option.key === answer)
+  );
 }
 
 export function getEstimatedScaledScore(points: number, maxPoints: number) {
-  if (maxPoints <= 0) return 300;
+  if (!Number.isFinite(points) || !Number.isFinite(maxPoints) || maxPoints <= 0) {
+    return 300;
+  }
 
   const pct = Math.max(0, Math.min(1, points / maxPoints));
   return Math.max(300, Math.min(900, Math.round((300 + pct * 600) / 10) * 10));
 }
 
 export function getSjtBand(points: number, maxPoints: number) {
-  if (maxPoints <= 0) return 4;
+  if (!Number.isFinite(points) || !Number.isFinite(maxPoints) || maxPoints <= 0) {
+    return 4;
+  }
 
   const pct = (points / maxPoints) * 100;
   if (pct >= 75) return 1;

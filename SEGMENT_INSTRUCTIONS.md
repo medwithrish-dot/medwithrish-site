@@ -114,9 +114,9 @@ npm run build
 
 ### Segment 7: MedicForest UCAT Platform — Question Bank Engine
 - **Domain**: `app/medicforest/ucat/_components/UCATQuestionBankClient.tsx`, `_lib/ucatScoring.ts`, `_components/UCATQuestionVisuals.tsx`.
-- **Scope**: Question scoring (SJT partial credit, drag-order, yes/no syllogisms, scaled 300-900 scores), diagram/SVG rendering, exam timer auto-finalization, Next.js `router.push` navigation.
-- **Verification**: `node --test scripts/test-ucat-engine.mjs` (8 tests).
-- **Status**: ✅ Completed.
+- **Scope**: Question scoring and visual rendering, reliable exam shortcuts, latest-answer timer completion, saved time restoration, answer-change reporting, and App Router exit navigation.
+- **Verification**: `node --test scripts/test-ucat-engine.mjs scripts/test-ucat-runner.mjs`, `node --test scripts/test-ucat-quality.mjs`, `node scripts/auditUcatQuestionBank.cjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
+- **Status**: ✅ Re-audited.
 
 ### Segment 8: MedicForest UCAT Platform — Diagnostics & AI Feedback
 - **Domain**: `app/medicforest/ucat/_lib/ucatDiagnostics.ts`, `app/medicforest/ucat/_components/UCATDiagnosticContent.tsx`, `app/medicforest/ucat/_components/UCATReportContent.tsx`, `app/api/ai/diagnostic-feedback/route.ts`.
