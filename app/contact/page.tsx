@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contact MedWithRish | MedWithRish",
-  description: "Contact Rish about UCAT tutoring, interviews, personal statement reviews and admissions resources.",
+  description: "Contact Rish about UCAT tutoring, interviews, personal statement sessions and admissions resources.",
   alternates: { canonical: "/contact" },
 };
 
@@ -83,7 +83,7 @@ export default function ContactPage() {
 
               <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-gray-600 md:text-lg">
                 For enquiries about UCAT tutoring, interviews, personal statement
-                reviews, resources, or collaborations, email me directly.
+                sessions, resources, or collaborations, email me directly.
               </p>
 
               <a

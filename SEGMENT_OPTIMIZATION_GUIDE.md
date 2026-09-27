@@ -35,7 +35,7 @@ npm run build
 | Segment | Domain | Status | Key Deliverables / Notes |
 |---|---|---|---|
 | **Segment 1** | Stripe Billing & Webhook Service | ✅ Re-audited | Modular billing service, repository and thin HTTP controllers verified. Fixed manual Premium portal routing, stale subscription portal recovery, customer ownership checks and provider error exposure; 11 billing tests. |
-| **Segment 2** | PS Review Submission Service | 🗑️ Scrapped | Completely removed per owner directive (scrapped from website). All legacy PS submission endpoints, forms, and tests purged. |
+| **Segment 2** | PS Review Submission Service | 🗑️ Scrapped and re-audited | No live PS submission or checkout flow remains. Contact copy now points to the separate one-to-one tutoring session; the historical Stripe plan identifies its obsolete PS review steps. |
 | **Segment 3** | AI Interview Platform — Call & Speech Engine | 🔄 In Progress | Fragility protections; fixed follow-up bitmask validation overflow, enabled leaving active sessions, removed Group Interview Station panel, preparation seconds alignment. |
 | **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Completed | Polished review flow, eliminated placeholder upgrade modal with MedicForest Pro dialog, tightened timeout/abort error handling in feedback route, streamlined `InterviewHistoryViews`, added `loading.tsx` and `error.tsx` states, added 6 dedicated unit tests (`test-interview-feedback-reports.mjs`). |
 | **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | 📋 Pending | Collaborative study circles, public leaderboard guest access (401 fix), prep pathway task progression. |
@@ -110,6 +110,8 @@ The owner scrapped the Personal Statement review submission idea entirely from t
 1. Purged `ps_review` metadata handling and event branches from `app/api/stripe/webhook/route.ts`.
 2. Removed mock PS review checkout assertions from `scripts/test-server-routes.mjs`.
 3. Deleted stale PS review endpoints and components.
+4. Re-audited application routes and links: no `/api/ps-review`, `ps_review`, or upload form remains. The `/personal-statement-session` page is a separate one-to-one tutoring offer and remains live.
+5. Updated contact copy to describe sessions rather than the removed review service. Marked the old Stripe refactor plan as historical where it mentions PS review payment work.
 
 #### 3. Instructions for Another AI to Verify Segment 2
 1. Search the codebase for `/api/ps-review` to ensure no live forms or routes point to deprecated personal statement upload endpoints.

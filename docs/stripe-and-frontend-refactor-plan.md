@@ -1,5 +1,9 @@
 # Stripe and frontend refactor plan
 
+> Historical plan: the personal statement review submission and payment service was
+> scrapped and removed. References to that service below are superseded. The
+> one-to-one personal statement tutoring sessions remain available.
+
 This plan improves maintainability without changing product behaviour. Complete
 the Stripe work first because billing mistakes have a larger impact than excess
 frontend code. Refactor in small, independently testable changes rather than one
