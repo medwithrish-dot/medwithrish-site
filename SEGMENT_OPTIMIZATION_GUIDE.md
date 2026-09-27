@@ -12,7 +12,7 @@ Any AI or engineer reviewing these changes can verify repository health using th
 # 1. Typecheck the entire project (zero errors required)
 npx tsc --noEmit
 
-# 2. Run the full unit test suite (197+ tests passing)
+# 2. Run the full unit test suite (205+ tests passing)
 npm run test:unit
 
 # 3. Run the billing test suite (7 tests)
@@ -21,7 +21,10 @@ node scripts/test-billing.mjs
 # 4. Run the Segment 4 feedback reports test suite (6 tests)
 node --test scripts/test-interview-feedback-reports.mjs
 
-# 5. Run Next.js production build (184+ static pages)
+# 5. Run the Segment 7 UCAT question bank & scoring engine test suite (8 tests)
+node --test scripts/test-ucat-engine.mjs
+
+# 6. Run Next.js production build (184+ static pages)
 npm run build
 ```
 
@@ -37,7 +40,7 @@ npm run build
 | **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Completed | Polished review flow, eliminated placeholder upgrade modal with MedicForest Pro dialog, tightened timeout/abort error handling in feedback route, streamlined `InterviewHistoryViews`, added `loading.tsx` and `error.tsx` states, added 6 dedicated unit tests (`test-interview-feedback-reports.mjs`). |
 | **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | 📋 Pending | Collaborative study circles, public leaderboard guest access (401 fix), prep pathway task progression. |
 | **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Completed | Deconstructed monolithic client: extracted `MedicForestPricingClient` & `MedicForestLandingClient`, eliminated ~9.8MB bundle bloat from public marketing pages, fixed broken `Alt+C` calculator toggle, eliminated timer drift, removed double redirect chains, and made 11,727-question quality gate lazy via Proxy. |
-| **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | 📋 Pending | Question bank loader, question rendering, mock test player. |
+| **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | ✅ Completed | Isolated scoring engine in `app/medicforest/ucat/_lib/ucatScoring.ts`, isolated question diagram and SVG visual components in `app/medicforest/ucat/_components/UCATQuestionVisuals.tsx`, eliminated ~1,450 lines of duplicate code from `UCATQuestionBankClient.tsx`, added global window keyboard shortcut listener for exams, implemented auto-finalization on timer expiration, fixed SPA exit tearing by replacing `window.location.assign` with Next.js `router.push`, added 8 comprehensive engine tests in `scripts/test-ucat-engine.mjs` bringing unit test suite to 205 passing tests. |
 | **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | 📋 Pending | Diagnostic test scoring, mock conversion, diagnostic AI feedback. |
 | **Segment 9** | Auth, Supabase & User Account Management | 📋 Pending | User profiles, session persistence, preview access tokens. |
 | **Segment 10** | MedicForest Public Marketing & Shell | 📋 Pending | Public marketing layer, navigation shells, trust badges, pricing page. |
@@ -183,7 +186,59 @@ The UCAT client layer contained a 9,600+ line monolith (`MedicForestClient.tsx`)
 2. Run `node --test scripts/test-ucat-account.mjs` to confirm the AST and auth-lifecycle tests pass.
 3. Run `node --test scripts/test-ucat-quality.mjs` to confirm question quality gate validations pass.
 4. Run `node scripts/auditUcatQuestionBank.cjs` to confirm the lazy question quality review Proxy returns identical 11,727 accepted questions and duplicate checks.
-5. Run `npm run test:unit` and verify all 197 unit tests pass.
+---
+
+### Segment 7: MedicForest UCAT Platform — Question Bank Engine
+
+#### 1. Context & Motivation
+The UCAT question bank client (`UCATQuestionBankClient.tsx`) was a 10,942-line monolith:
+- Core scoring logic (single-choice, SJT partial credit on the 4-point scale, drag-order permutations, drag-category placement, multi-statement Yes/No syllogisms, Most/Least slots, scaled score 300–900 conversion, and SJT Band 1–4 calculation) was trapped inside a giant `"use client"` component file, preventing it from being tested in isolation or reused across server components, reporting pipelines, and APIs.
+- Over 1,200 lines of SVG diagram generation (Venn sets, scatterplots, grouped bars, line graphs, pie charts, and pattern definitions) were tightly coupled into the interactive exam runner.
+- Exiting an in-progress or completed question set / mock called `window.location.assign(href)`, triggering full browser page refreshes that tore down SPA client state and caused screen flashes.
+- Keyboard shortcuts (`Alt+N`, `Alt+P`, `Alt+C`, `Alt+F`, option keys `A`–`E`, and keypad digits) were bound exclusively to an outer wrapper `<div>`. If a candidate clicked anywhere on the stimulus text, passage, or timer, focus was blurred and exam shortcuts stopped firing.
+- Timed practice sets and mocks lacked automatic submission: when remaining time reached zero, the countdown froze at `00:00` indefinitely without finalizing or grading candidate attempts.
+
+#### 2. What Was Done
+1. **Modularized Scoring Engine ([`app/medicforest/ucat/_lib/ucatScoring.ts`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/ucat/_lib/ucatScoring.ts))**:
+   - Extracted all scoring and validation functions:
+     - `getAnswerScore` (single-select, SJT same-side partial credit, drag-order, drag-category, Yes/No, most/least)
+     - `isAnswerCorrect`, `isAnswered`
+     - `getEstimatedScaledScore` (0–100% $\to$ 300–900 points with standard 10-point rounding)
+     - `getSjtBand` (Bands 1–4 mapped accurately by percentage thresholds)
+     - `getDiagnosticSectionScore`
+     - Type definitions: `PracticeAnswer`, `PracticeAnswerMap`, `PracticeAnswerScore`, `PracticeAnswerStatus`, `DiagnosticSectionScore`
+2. **Modularized SVG Visuals ([`app/medicforest/ucat/_components/UCATQuestionVisuals.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/ucat/_components/UCATQuestionVisuals.tsx))**:
+   - Extracted all question diagram components and helpers:
+     - `OptionVisual`, `QuestionVisual`
+     - `SetDiagramShapeElement`, `WrappedSvgLabel`, `ChartPatternDefs`, `LinePointMarker`
+     - `formatDisplayText` (handling metric power formatting like $\text{mm}^2 \to \text{mm}^2$)
+     - Variant definitions, hashing, and legend styling.
+3. **Decoupled Exam Runner & Fixed Client Monolith ([`app/medicforest/ucat/_components/UCATQuestionBankClient.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/ucat/_components/UCATQuestionBankClient.tsx))**:
+   - Removed ~1,450 lines of duplicate code by importing from `ucatScoring.ts` and `UCATQuestionVisuals.tsx`.
+   - Re-exported all scoring and visual utilities to maintain 100% backward compatibility.
+   - Replaced all `window.location.assign` calls with Next.js App Router `router.push(href)` to preserve client-side SPA routing.
+   - Added global `window.addEventListener("keydown", ...)` listener so exam shortcuts and calculator typing work from anywhere on the page without requiring focus on a specific DOM container.
+   - Added automatic session completion in `updateRemaining` so timed mock sections automatically finalize and mark candidate attempts when time hits 0.
+4. **Populated Landing & Pricing Client Components**:
+   - Ensured [`app/medicforest/pricing/_components/MedicForestPricingClient.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/pricing/_components/MedicForestPricingClient.tsx) and [`app/medicforest/_components/MedicForestLandingClient.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/_components/MedicForestLandingClient.tsx) have full type declarations and imports, passing Next.js Turbopack build cleanly.
+5. **New Automated Unit Test Suite ([`scripts/test-ucat-engine.mjs`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/scripts/test-ucat-engine.mjs))**:
+   - 8 unit tests covering:
+     - Core section and subtype metadata recognition
+     - Single-choice scoring and unanswered states
+     - SJT partial credit same-side scale checks (A/B vs C/D)
+     - Drag-order permutation scoring
+     - DM Yes/No multi-statement 5/5 and 4/5 mark allocations
+     - Scaled score monotonicity and 300–900 boundaries
+     - SJT Band 1–4 percentage thresholds
+     - Exponent unit display formatting
+   - Integrated into `package.json` under `npm run test:unit`, expanding total test suite to **205 passing unit tests**.
+
+#### 3. Instructions for Another AI to Verify Segment 7
+1. Run `npx tsc --noEmit` and confirm 0 TypeScript errors across the repository.
+2. Run `node --test scripts/test-ucat-engine.mjs` to confirm all 8 engine tests pass.
+3. Run `node --test scripts/test-ucat-quality.mjs` to confirm question quality gate validations pass.
+4. Run `node scripts/auditUcatQuestionBank.cjs` to confirm 11,727 accepted questions audit cleanly.
+5. Run `npm run test:unit` and verify all 205 unit tests pass.
 6. Run `npm run build` and confirm all 184 static pages compile cleanly.
 
 ---

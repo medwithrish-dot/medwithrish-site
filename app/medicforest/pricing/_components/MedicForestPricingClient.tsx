@@ -4,39 +4,42 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ArrowLeft, Check, X } from "lucide-react";
-import { MedicForestLandingShell } from "../../ucat/_components/MedicForestLandingShell";
+import { MedicForestLandingShell } from "@/app/medicforest/ucat/_components/MedicForestLandingShell";
+
 
 const INTERVIEW_FREE_FEATURES = [
-  "Why Medicine? AI interview station",
-  "Complete GMC-aligned markschemes and scoring rubrics",
-  "550+ question bank with search and filtering",
-  "Study circles and collaborative practice groups",
-  "Public leaderboard participation and score sharing",
-  "Interview guides, university profiles and hot topics",
+  "Unlimited interview question bank practice",
+  "1 free 'Why Medicine?' AI interview attempt",
+  "Free study groups and room practice",
+  "University interview guides and station checklists",
+  "Public leaderboard and community practice tools",
+  "Basic progress tracking across completed questions",
 ];
 
 const INTERVIEW_PREMIUM_FEATURES = [
-  "All free plan features included",
-  "Full AI interview station practice across all topics",
-  "Adaptive AI follow-up questions and probing",
-  "Saved interview attempt history and review reports",
-  "Structured multi-station mock circuits with timed delivery",
-  "Performance tracking, theme breakdown and weekly insights",
-  "Realistic speech recognition and audio playback",
+  "Full AI interview station library",
+  "Unlimited saved interview reports and transcripts",
+  "AI feedback, scoring and mark scheme breakdowns",
+  "Personalised interview plan and revision tasks",
+  "MMI circuits, panel practice and university-specific stations",
+  "Advanced analytics for timing, structure, confidence and improvement",
 ];
 
-const INTERVIEW_PRICING_ROWS: [string, string, string][] = [
-  ["Why Medicine? station", "Unlimited", "Unlimited"],
-  ["Question bank access", "550+ questions", "550+ questions"],
-  ["Study groups & leaderboard", "Included", "Included"],
-  ["Interview guides & criteria", "Included", "Included"],
-  ["All AI interview topics", "Limited", "Unlimited"],
-  ["AI follow-up questions", "Limited", "Included"],
-  ["Saved feedback reports", "Latest attempt", "Unlimited history"],
-  ["Full mock circuits", "Not included", "Included"],
-  ["Speech-to-text practice", "Supported", "Supported"],
-  ["Theme & weakness analytics", "Basic", "Advanced"],
-];
+const INTERVIEW_PRICING_ROWS = [
+  ["Question bank practice", "Unlimited", "Unlimited"],
+  ["'Why Medicine?' AI attempt", "1 free attempt", "Full access"],
+  ["Study groups", "Included", "Included"],
+  ["Interview guides", "Included", "Included"],
+  ["AI interview stations", "Starter attempt", "Full library"],
+  ["Saved transcripts and reports", "Limited", "Unlimited"],
+  ["AI scoring and mark schemes", "Sample feedback", "Full feedback"],
+  ["MMI circuits", "Premium", "Included"],
+  ["University-specific station practice", "Premium", "Included"],
+  ["Personalised improvement plan", "Basic progress", "Advanced"],
+  ["Analytics and leaderboard insights", "Basic", "Advanced"],
+] as const;
+
+// ── Landing Hero ──────────────────────────────────────────────────────────────
 
 function PricingComparisonValue({
   value,
@@ -45,7 +48,7 @@ function PricingComparisonValue({
   value: string;
   featured?: boolean;
 }) {
-  if (value === "Included" || value === "Unlimited" || value === "Supported") {
+  if (value === "Included") {
     return (
       <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200">
         <Check className="h-4 w-4" aria-hidden="true" />
@@ -54,7 +57,7 @@ function PricingComparisonValue({
     );
   }
 
-  if (value === "Not included") {
+  if (value === "Premium") {
     return (
       <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-400 ring-1 ring-slate-200">
         <X className="h-4 w-4" aria-hidden="true" />
@@ -71,10 +74,10 @@ function PricingComparisonValue({
     );
   }
 
-  if (value === "Limited" || value === "Basic") {
+  if (value === "Limited") {
     return (
       <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-500">
-        {value}
+        Limited
       </span>
     );
   }
@@ -89,6 +92,7 @@ function PricingComparisonValue({
     </span>
   );
 }
+
 
 export function MedicForestPricingPage() {
   const router = useRouter();
@@ -134,7 +138,7 @@ export function MedicForestPricingPage() {
         <section className="bg-[#050b1f] px-5 py-6 text-white lg:px-6">
           <div className="mx-auto max-w-5xl">
             <Link
-              href="/medicforest/interview/ai-interviews"
+              href="/interviews"
               className="inline-flex items-center gap-2 text-sm font-black text-blue-100 transition-colors hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
