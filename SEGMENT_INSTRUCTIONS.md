@@ -108,9 +108,9 @@ npm run build
 
 ### Segment 6: MedicForest UCAT Platform — Client Monolith & State
 - **Domain**: `app/medicforest/ucat/_components/MedicForestClient.tsx`, public marketing splits.
-- **Scope**: Deconstruct monolithic client, lazy-load marketing pages (`MedicForestLandingClient`, `MedicForestPricingClient`), fix keyboard shortcuts (`Alt+C`), eliminate 1-second interval re-render churn.
-- **Verification**: `npx tsc --noEmit && npm run build`.
-- **Status**: ✅ Completed.
+- **Scope**: Route public pages directly to their isolated clients, defer dashboard question-bank lookups, fix calculator shortcuts and elapsed timing, isolate account credit countdown updates, and correct links and mock redirects.
+- **Verification**: `node --test scripts/test-ucat-client-state.mjs scripts/test-ucat-account.mjs scripts/test-ucat-quality.mjs scripts/test-domain-routing.mjs`, `node scripts/auditUcatQuestionBank.cjs`, `npx tsc --noEmit`, `npm run lint`, `npm run test:unit`, and `npm run build`.
+- **Status**: ✅ Re-audited.
 
 ### Segment 7: MedicForest UCAT Platform — Question Bank Engine
 - **Domain**: `app/medicforest/ucat/_components/UCATQuestionBankClient.tsx`, `_lib/ucatScoring.ts`, `_components/UCATQuestionVisuals.tsx`.

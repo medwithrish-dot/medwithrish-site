@@ -35,13 +35,11 @@ import {
   formatDigitalCountdown,
   getActiveDiagnosticReportStudyPlanTasks,
   getActiveDiagnosticStudyPlanTasks,
-  getAiDiagnosticCreditDisplay,
   getCombinedDiagnosticAccuracy,
   getCombinedDiagnosticAvgSeconds,
   getDiagnosticReportStudyPlanTasks,
   getDiagnosticStudyPlanTasks,
   getFullMockReportDiagnostics,
-  getNextAiDiagnosticCreditAt,
   getReportIssueDefinitionForLabel,
   getStudyPlanHref,
   getStudyPlanIcon,
@@ -55,6 +53,11 @@ import {
 import { UCATDiagnosticContent } from "./UCATDiagnosticContent";
 import { UCATReportContent } from "./UCATReportContent";
 import { ReportIssueSignalCard } from "./ReportIssueSignalCard";
+import {
+  AiDiagnosticCreditDetails,
+  AiDiagnosticCreditSummary,
+} from "./AiDiagnosticCredit";
+import { getTrainerElapsedSeconds } from "../_lib/ucatTrainerClock";
 
 export * from "../_lib/ucatDiagnostics";
 export { UCATDiagnosticContent } from "./UCATDiagnosticContent";
@@ -426,60 +429,70 @@ const sectionScores = [
   },
 ];
 
-const questionBankProgress = [
-  {
-    code: "VR",
-    section: "vr",
-    title: "MedicForest Verbal Reasoning",
-    completed: 0,
-    total: UCAT_QUESTION_BANK.vr.length,
-    focus: "No questions completed yet",
-    href: "/medicforest/ucat/question-bank/vr",
-  },
-  {
-    code: "DM",
-    section: "dm",
-    title: "MedicForest Decision Making",
-    completed: 0,
-    total: UCAT_QUESTION_BANK.dm.length,
-    focus: "No questions completed yet",
-    href: "/medicforest/ucat/question-bank/dm",
-  },
-  {
-    code: "QR",
-    section: "qr",
-    title: "MedicForest Quantitative Reasoning",
-    completed: 0,
-    total: UCAT_QUESTION_BANK.qr.length,
-    focus: "No questions completed yet",
-    href: "/medicforest/ucat/question-bank/qr",
-  },
-  {
-    code: "SJT",
-    section: "sjt",
-    title: "MedicForest Situational Judgement",
-    completed: 0,
-    total: UCAT_QUESTION_BANK.sjt.length,
-    focus: "No questions completed yet",
-    href: "/medicforest/ucat/question-bank/sjt",
-  },
-] as const;
+function createQuestionBankProgress() {
+  return [
+    {
+      code: "VR",
+      section: "vr",
+      title: "MedicForest Verbal Reasoning",
+      completed: 0,
+      total: UCAT_QUESTION_BANK.vr.length,
+      focus: "No questions completed yet",
+      href: "/medicforest/ucat/question-bank/vr",
+    },
+    {
+      code: "DM",
+      section: "dm",
+      title: "MedicForest Decision Making",
+      completed: 0,
+      total: UCAT_QUESTION_BANK.dm.length,
+      focus: "No questions completed yet",
+      href: "/medicforest/ucat/question-bank/dm",
+    },
+    {
+      code: "QR",
+      section: "qr",
+      title: "MedicForest Quantitative Reasoning",
+      completed: 0,
+      total: UCAT_QUESTION_BANK.qr.length,
+      focus: "No questions completed yet",
+      href: "/medicforest/ucat/question-bank/qr",
+    },
+    {
+      code: "SJT",
+      section: "sjt",
+      title: "MedicForest Situational Judgement",
+      completed: 0,
+      total: UCAT_QUESTION_BANK.sjt.length,
+      focus: "No questions completed yet",
+      href: "/medicforest/ucat/question-bank/sjt",
+    },
+  ] as const;
+}
+
+let questionBankProgressCache: ReturnType<typeof createQuestionBankProgress> | null = null;
+function getQuestionBankProgressBase() {
+  return (questionBankProgressCache ??= createQuestionBankProgress());
+}
 
 const dailyQuestionTarget = 200;
 const sectionCodes: UCATSectionCode[] = ["VR", "DM", "QR", "SJT"];
-const questionBankQuestionIds: Record<UCATSectionCode, Set<string>> = {
-  VR: new Set(UCAT_QUESTION_BANK.vr.map((question) => question.id)),
-  DM: new Set(UCAT_QUESTION_BANK.dm.map((question) => question.id)),
-  QR: new Set(UCAT_QUESTION_BANK.qr.map((question) => question.id)),
-  SJT: new Set(UCAT_QUESTION_BANK.sjt.map((question) => question.id)),
-};
+let questionBankQuestionIdsCache: Record<UCATSectionCode, Set<string>> | null = null;
+function getQuestionBankQuestionIds() {
+  return (questionBankQuestionIdsCache ??= {
+    VR: new Set(UCAT_QUESTION_BANK.vr.map((question) => question.id)),
+    DM: new Set(UCAT_QUESTION_BANK.dm.map((question) => question.id)),
+    QR: new Set(UCAT_QUESTION_BANK.qr.map((question) => question.id)),
+    SJT: new Set(UCAT_QUESTION_BANK.sjt.map((question) => question.id)),
+  });
+}
 
 function emptySectionCounts(): Record<UCATSectionCode, number> {
   return { VR: 0, DM: 0, QR: 0, SJT: 0 };
 }
 
 function getSectionTotal(code: UCATSectionCode) {
-  return questionBankProgress.find((item) => item.code === code)?.total ?? 0;
+  return getQuestionBankProgressBase().find((item) => item.code === code)?.total ?? 0;
 }
 
 function getMonthShell() {
@@ -508,7 +521,7 @@ function createEmptyPracticeStats(): PracticeStats {
     sectionAnswered: emptySectionCounts(),
     sectionCorrect: emptySectionCounts(),
     totalCompleted: 0,
-    totalAvailable: questionBankProgress.reduce((sum, item) => sum + item.total, 0),
+    totalAvailable: getQuestionBankProgressBase().reduce((sum, item) => sum + item.total, 0),
     accuracy: 0,
     avgSeconds: 0,
     hasCompletedQuestions: false,
@@ -534,7 +547,7 @@ function isCompletedDiagnosticPracticeAttempt(row: PracticeAttemptRow) {
 }
 
 function getQuestionBankProgressItem(code: UCATSectionCode) {
-  return questionBankProgress.find((item) => item.code === code);
+  return getQuestionBankProgressBase().find((item) => item.code === code);
 }
 
 function getNumberValue(value: unknown, fallback = 0) {
@@ -628,7 +641,7 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
     if (!section) return;
 
     const questionId = row.question_id;
-    if (!questionId || !questionBankQuestionIds[section].has(questionId)) return;
+    if (!questionId || !getQuestionBankQuestionIds()[section].has(questionId)) return;
 
     if (row.answered || isCompletedDiagnosticPracticeAttempt(row)) {
       uniqueCompletedBySection[section].add(questionId);
@@ -668,7 +681,7 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
     (sum, code) => sum + sectionCompleted[code],
     0
   );
-  const totalAvailable = questionBankProgress.reduce(
+  const totalAvailable = getQuestionBankProgressBase().reduce(
     (sum, item) => sum + item.total,
     0
   );
@@ -690,7 +703,7 @@ function buildPracticeStats(rows: PracticeAttemptRow[]): PracticeStats {
 }
 
 function getQuestionBankProgress(stats: PracticeStats) {
-  return questionBankProgress.map((item) => {
+  return getQuestionBankProgressBase().map((item) => {
     const code = item.code as UCATSectionCode;
     const completed = stats.sectionCompleted[code];
     return {
@@ -1844,6 +1857,7 @@ function SkillsTrainersContent({
     useState<CalculatorTrainerProblem>(initialCalculatorProblem);
   const [calculatorRunning, setCalculatorRunning] = useState(false);
   const [calculatorElapsedSeconds, setCalculatorElapsedSeconds] = useState(0);
+  const calculatorStartedAtRef = useRef<number | null>(null);
   const [calculatorCorrect, setCalculatorCorrect] = useState(0);
   const [calculatorTotal, setCalculatorTotal] = useState(0);
   const [calculatorFeedback, setCalculatorFeedback] = useState(
@@ -1977,7 +1991,10 @@ function SkillsTrainersContent({
       finaliseCalculatorPromptNumber(calcDisplay);
     }
 
-    const elapsed = calculatorElapsedSeconds;
+    const elapsed = calculatorStartedAtRef.current === null
+      ? calculatorElapsedSeconds
+      : getTrainerElapsedSeconds(calculatorStartedAtRef.current, getTrainerNowMs());
+    calculatorStartedAtRef.current = null;
     const correct = isCloseNumber(calcDisplay, calculatorProblem.answer);
     const onTarget = elapsed <= calculatorProblem.targetSeconds;
     setCalculatorTotal((current) => current + 1);
@@ -2005,7 +2022,11 @@ function SkillsTrainersContent({
     if (!calculatorRunning) return;
 
     const timer = window.setInterval(() => {
-      setCalculatorElapsedSeconds((current) => Math.round((current + 0.1) * 10) / 10);
+      if (calculatorStartedAtRef.current !== null) {
+        setCalculatorElapsedSeconds(
+          getTrainerElapsedSeconds(calculatorStartedAtRef.current, getTrainerNowMs())
+        );
+      }
     }, 100);
 
     return () => window.clearInterval(timer);
@@ -2028,11 +2049,7 @@ function SkillsTrainersContent({
     const handleCalculatorKeyDown = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase();
 
-      if (event.altKey && key === "c") {
-        event.preventDefault();
-        setCalculatorOpen((current) => !current);
-        return;
-      }
+      if (event.altKey) return;
 
       if (!calculatorRunning) return;
 
@@ -2267,6 +2284,7 @@ function SkillsTrainersContent({
     setCalculatorProblem(nextProblem);
     resetTrainerCalculator(nextProblem);
     setCalculatorRunning(false);
+    calculatorStartedAtRef.current = null;
     setCalculatorElapsedSeconds(0);
     setCalculatorFeedback(
       mode === "calibration"
@@ -2286,6 +2304,7 @@ function SkillsTrainersContent({
     setCalculatorMode(mode);
     setCalculatorProblem(nextProblem);
     resetTrainerCalculator(nextProblem);
+    calculatorStartedAtRef.current = getTrainerNowMs();
     setCalculatorRunning(true);
     setCalculatorElapsedSeconds(0);
     setCalculatorFeedback(`${getCalculatorModeLabel(mode)} running with a new calculation.`);
@@ -2306,6 +2325,7 @@ function SkillsTrainersContent({
   const openFlaggingTrainer = () => {
     setCalculatorOpen(false);
     setCalculatorRunning(false);
+    calculatorStartedAtRef.current = null;
     setFlaggingOpen(true);
     setFlagChoice(null);
   };
@@ -3374,7 +3394,6 @@ function AccountContent({
   onLogout: () => void;
   onSaveDisplayName: (name: string) => Promise<void>;
 }) {
-  const [creditNow, setCreditNow] = useState(() => Date.now());
   const [nameDraft, setNameDraft] = useState(displayName);
   const [profileSaveState, setProfileSaveState] = useState<
     "idle" | "saving" | "saved" | "error"
@@ -3382,12 +3401,6 @@ function AccountContent({
   const [profileSaveMessage, setProfileSaveMessage] = useState<string | null>(
     null
   );
-  const creditDisplay = getAiDiagnosticCreditDisplay({
-    plan,
-    diagnosticCredits,
-    lastUsedAt: aiDiagnosticLastUsedAt,
-    now: creditNow,
-  });
   const trimmedNameDraft = nameDraft.trim();
   const nameChanged = trimmedNameDraft.length > 0 && trimmedNameDraft !== displayName;
   const supportHref = `mailto:medwithrish@gmail.com?subject=${encodeURIComponent(
@@ -3396,13 +3409,6 @@ function AccountContent({
   const dataRequestHref = `mailto:medwithrish@gmail.com?subject=${encodeURIComponent(
     "MedicForest account or data request"
   )}`;
-  const creditIsCoolingDown = creditDisplay.status.startsWith("Available in");
-  const creditStatusClass =
-    creditDisplay.status === "Available"
-      ? "bg-emerald-50 text-emerald-700"
-      : creditIsCoolingDown
-        ? "bg-amber-50 text-amber-700"
-        : "bg-slate-100 text-slate-600";
   const savedDiagnosticsCount = diagnosticHistory.length;
   const completedSetsCount = recentPracticeSets.filter(
     (set) => !set.isIncomplete
@@ -3427,14 +3433,6 @@ function AccountContent({
       );
     }
   };
-
-  useEffect(() => {
-    const nextAvailableAt = getNextAiDiagnosticCreditAt(aiDiagnosticLastUsedAt);
-    if (plan !== "Premium" || !nextAvailableAt) return;
-
-    const intervalId = window.setInterval(() => setCreditNow(Date.now()), 1000);
-    return () => window.clearInterval(intervalId);
-  }, [aiDiagnosticLastUsedAt, plan]);
 
   return (
     <div className="space-y-5 px-6 py-5 lg:px-8">
@@ -3481,13 +3479,21 @@ function AccountContent({
       </section>
 
       <div className="grid gap-4 md:grid-cols-4">
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+            Current plan
+          </p>
+          <p className="mt-2 text-2xl font-black">{plan}</p>
+          <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+            {plan === "Premium" ? "Full access" : "Starter access"}
+          </p>
+        </section>
+        <AiDiagnosticCreditSummary
+          plan={plan}
+          diagnosticCredits={diagnosticCredits}
+          lastUsedAt={aiDiagnosticLastUsedAt}
+        />
         {[
-          ["Current plan", plan, plan === "Premium" ? "Full access" : "Starter access"],
-          [
-            "AI credit",
-            creditDisplay.value,
-            creditDisplay.status,
-          ],
           [
             "Saved diagnostics",
             String(savedDiagnosticsCount),
@@ -3666,54 +3672,11 @@ function AccountContent({
           )}
         </section>
 
-        <section className="rounded-xl border border-violet-100 bg-white p-6 shadow-sm">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-sm font-black uppercase tracking-wide">
-                Diagnostic AI credit
-              </h2>
-              <p className="mt-2 text-sm font-semibold leading-6 text-slate-500">
-                Server-timed so device clock changes cannot reset it.
-              </p>
-            </div>
-            <span className={`rounded-full px-3 py-1 text-xs font-black ${creditStatusClass}`}>
-              {creditDisplay.status}
-            </span>
-          </div>
-          <div className="mt-5 grid gap-4 sm:grid-cols-[180px_1fr] sm:items-center">
-            <div className="rounded-xl bg-violet-50 p-5 text-center">
-              <p className="text-xs font-black uppercase tracking-wide text-violet-700">
-                Credit
-              </p>
-              <p className="mt-2 text-4xl font-black text-violet-700">
-                {creditDisplay.value}
-              </p>
-              <p className="mt-2 font-mono text-xs font-black text-violet-700">
-                {creditDisplay.status}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold leading-6 text-slate-600">
-                {creditDisplay.helper} AI feedback can only be generated from a
-                saved diagnostic attempt owned by your logged-in account.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Link
-                  href="/medicforest/ucat/diagnostic"
-                  className="inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-4 text-xs font-black text-white transition-colors hover:bg-blue-700"
-                >
-                  Open diagnostics
-                </Link>
-                <Link
-                  href="/medicforest/ucat/report"
-                  className="inline-flex h-10 items-center justify-center rounded-lg border border-blue-100 px-4 text-xs font-black text-blue-600 transition-colors hover:bg-blue-50"
-                >
-                  View reports
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+        <AiDiagnosticCreditDetails
+          plan={plan}
+          diagnosticCredits={diagnosticCredits}
+          lastUsedAt={aiDiagnosticLastUsedAt}
+        />
 
         <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-sm font-black uppercase tracking-wide">

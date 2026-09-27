@@ -12,7 +12,7 @@ Any AI or engineer reviewing these changes can verify repository health using th
 # 1. Typecheck the entire project (zero errors required)
 npx tsc --noEmit
 
-# 2. Run the full unit test suite (234 tests passing at the Segment 5 audit)
+# 2. Run the full unit test suite (239 tests passing at the Segment 6 audit)
 npm run test:unit
 
 # 3. Run the billing test suite (11 tests)
@@ -39,7 +39,7 @@ npm run build
 | **Segment 3** | AI Interview Platform — Call & Speech Engine | ✅ Re-audited | Verified session, microphone, speech, recording and timer flows. Recovered playback and recognition failures, corrected question timer drift, and made active-station leaving available with URL cleanup. |
 | **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Re-audited | Feedback is claimed only after a saved station ends; provider and database failures release claims safely. Review copy reflects AI availability without a false paid upgrade, and reports views contain only live paths. |
 | **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | ✅ Re-audited | Guests can view opted-in leaderboard scores without an account; private preferences remain owner-only. Group and pathway routes delegate to services, and the compact pathway checklist preserves newly saved steps during older refreshes. |
-| **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Completed | Deconstructed monolithic client: extracted `MedicForestPricingClient` & `MedicForestLandingClient`, eliminated ~9.8MB bundle bloat from public marketing pages, fixed broken `Alt+C` calculator toggle, eliminated timer drift, removed double redirect chains, and made 11,727-question quality gate lazy via Proxy. |
+| **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Re-audited | Public routes import dedicated landing/pricing clients; dashboard bank lookups are deferred. Fixed dual `Alt+C` toggles, timer drift, account countdown redraws, cross-domain links, and legacy mock redirect hops. |
 | **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | ✅ Completed | Isolated scoring engine in `app/medicforest/ucat/_lib/ucatScoring.ts`, isolated question diagram and SVG visual components in `app/medicforest/ucat/_components/UCATQuestionVisuals.tsx`, eliminated ~1,450 lines of duplicate code from `UCATQuestionBankClient.tsx`, added global window keyboard shortcut listener for exams, implemented auto-finalization on timer expiration, fixed SPA exit tearing by replacing `window.location.assign` with Next.js `router.push`, added 8 comprehensive engine tests in `scripts/test-ucat-engine.mjs` bringing unit test suite to 205 passing tests. |
 | **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | ✅ Completed | Separated diagnostic and report views from dashboard state; isolated diagnostic transforms and study tasks; preserved mock IDs through redirects; hardened saved-data AI feedback, credit handling, and report aggregation; added focused regression tests. |
 | **Segment 9** | Auth, Supabase & User Account Management | 📋 Pending | User profiles, session persistence, preview access tokens. |
@@ -185,7 +185,7 @@ The leaderboard was intended for public viewing, but its GET endpoint required a
 
 #### 1. Context & Motivation
 The UCAT client layer contained a 9,600+ line monolith (`MedicForestClient.tsx`) that:
-- Bundled the entire question bank (~9.8MB of raw questions across 11,727 items) into the public marketing homepage (`/medicforest`), pricing page (`/medicforest/pricing`), and landing page (`/medicforest/ucat`), degrading Core Web Vitals and Largest Contentful Paint (LCP).
+- Brought the question-bank dependency into the public marketing homepage (`/medicforest`), pricing page (`/medicforest/pricing`), and UCAT landing page (`/medicforest/ucat`) through their imports of the dashboard client.
 - Executed fingerprint hashing, structure validation, and duplicate checking synchronously over 11,727 questions upon module evaluation in `ucatQuestionBank.ts`, adding blocking delay to server startup and client hydration.
 - Contained a functional bug in `SkillsTrainersContent` where `Alt+C` could not open the calculator when closed because its keydown listener was conditionally detached.
 - Contained an interval drift bug in the skills trainer timer where adding `0.1` ten times a second accumulated IEEE-754 floating-point rounding errors.
@@ -203,7 +203,7 @@ The UCAT client layer contained a 9,600+ line monolith (`MedicForestClient.tsx`)
 3. **Fixed Calculator `Alt+C` Keyboard Shortcut**:
    - In `SkillsTrainersContent`, gave `Alt+C` a permanent keydown listener that toggles the calculator open/closed from any state, aligning with actual UCAT testing software behavior.
 4. **Eliminated Floating-Point Accumulation in Timer**:
-   - Updated the 100ms skills trainer interval to `Math.round((current + 0.1) * 10) / 10`.
+   - The 100ms display interval now derives elapsed tenths from a monotonic start timestamp, including when the answer is submitted between ticks.
 5. **Fixed Broken Navigation Links**:
    - Updated outdated paths:
      - `/ucat/dashboard` $\to$ `/medicforest/ucat/dashboard`
@@ -219,6 +219,16 @@ The UCAT client layer contained a 9,600+ line monolith (`MedicForestClient.tsx`)
 2. Run `node --test scripts/test-ucat-account.mjs` to confirm the AST and auth-lifecycle tests pass.
 3. Run `node --test scripts/test-ucat-quality.mjs` to confirm question quality gate validations pass.
 4. Run `node scripts/auditUcatQuestionBank.cjs` to confirm the lazy question quality review Proxy returns identical 11,727 accepted questions and duplicate checks.
+
+#### 4. Segment 6 re-audit (2026-09-27)
+The first split left all three public page files importing `MedicForestClient.tsx`, which still pulled in the dashboard and question-bank dependency. They now import their dedicated clients directly. The production client-reference manifests for `/medicforest`, `/medicforest/ucat`, and `/medicforest/pricing` contain no `MedicForestClient` reference; the dashboard manifest still does. Compatibility re-exports remain.
+
+Dashboard question totals and ID sets previously accessed `UCAT_QUESTION_BANK` at module evaluation, defeating the lazy quality review. They are now cached on first use. The permanent `Alt+C` listener was already present, but a second listener also toggled the calculator while it was open; the input listener now ignores modified keys. `ucatTrainerClock.ts` measures elapsed time from a start timestamp so throttled callbacks do not slow the timer.
+
+`AiDiagnosticCredit.tsx` now owns the credit summary, details, and one-second countdown updates, leaving the full account view stable. Its copy distinguishes the locally displayed countdown from server-enforced credit use. Landing links use paths valid across the site domains. The two old diagnostic mock URLs redirect directly to the Premium-gated full mock route and preserve the `mock` query parameter.
+
+Verification: `npx tsc --noEmit`, `npm run lint`, `npm run test:unit` (239 tests), `node scripts/auditUcatQuestionBank.cjs` (11,727 accepted questions), and `npm run build` (184 static pages). `scripts/test-ucat-client-state.mjs` adds five focused regression tests. The question audit still reports existing VR answer-balance and DM Venn/logic distribution warnings; those concern Segment 7 question content.
+
 ---
 
 ### Segment 7: MedicForest UCAT Platform — Question Bank Engine

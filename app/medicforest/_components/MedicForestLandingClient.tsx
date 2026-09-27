@@ -85,7 +85,7 @@ function RedesignedTutorHero() {
       text: "Full-length practice, AI diagnosis, progress insights and personalised coaching.",
       icon: Brain,
       action: "Open UCAT dashboard",
-      href: "/ucat/dashboard",
+      href: "/medicforest/ucat/dashboard",
       active: true,
     },
     {
@@ -94,7 +94,7 @@ function RedesignedTutorHero() {
       text: "Realistic MMI and panel preparation with answer feedback.",
       icon: UserRound,
       action: "Open interview dashboard",
-      href: "/interviews/dashboard",
+      href: "/medicforest/interview/dashboard",
       active: true,
     },
     {
@@ -154,7 +154,7 @@ function RedesignedTutorHero() {
       };
 
       if (response.status === 401) {
-        router.push("/ucat/dashboard");
+        router.push("/medicforest/ucat/dashboard");
         setPremiumCheckoutLoading(false);
         return;
       }
@@ -200,14 +200,14 @@ function RedesignedTutorHero() {
 
               <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
                 <Link
-                  href="/ucat/dashboard"
+                  href="/medicforest/ucat/dashboard"
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 text-base font-bold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-blue-500"
                 >
                   Log in / Launch UCAT Platform
                   <ArrowRight className="h-5 w-5" aria-hidden="true" />
                 </Link>
                 <Link
-                  href="/ucat/dashboard"
+                  href="/medicforest/ucat/dashboard"
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-blue-400/45 bg-blue-500/10 px-6 text-base font-bold text-blue-100 transition-colors hover:border-blue-300 hover:bg-blue-500/20"
                 >
                   <Target className="h-4 w-4" aria-hidden="true" />
@@ -453,7 +453,7 @@ function RedesignedTutorHero() {
               ))}
             </ul>
             <Link
-              href={hasLandingDiagnosticReport ? "/ucat/report" : "/ucat/dashboard"}
+              href={hasLandingDiagnosticReport ? "/medicforest/ucat/report" : "/medicforest/ucat/dashboard"}
               className="mt-auto inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-sm font-bold text-white transition-colors hover:bg-blue-700"
             >
               {hasLandingDiagnosticReport ? "View Report" : "Start Free Diagnostic"}

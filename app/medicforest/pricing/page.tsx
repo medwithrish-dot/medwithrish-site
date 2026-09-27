@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MedicForestPricingPage } from "../ucat/_components/MedicForestClient";
+import { MedicForestPricingPage } from "./_components/MedicForestPricingClient";
 
 export const metadata: Metadata = {
   title: "MedicForest Interview Pricing",

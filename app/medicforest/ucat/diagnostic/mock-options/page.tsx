@@ -18,7 +18,7 @@ export default async function Page({
   const mockId = getMockId(await searchParams);
   redirect(
     mockId
-      ? `/medicforest/ucat/diagnostics/mock-diagnostic?mock=${encodeURIComponent(mockId)}`
-      : "/medicforest/ucat/diagnostics/mock-diagnostic"
+      ? `/medicforest/ucat/mocks/full?mock=${encodeURIComponent(mockId)}`
+      : "/medicforest/ucat/mocks/full"
   );
 }

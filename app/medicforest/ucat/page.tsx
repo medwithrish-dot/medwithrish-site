@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MedicForestLandingPage } from "./_components/MedicForestClient";
+import { MedicForestLandingPage } from "../_components/MedicForestLandingClient";
 
 type LandingSearchParams = {
   preview?: string | string[];
