@@ -36,7 +36,7 @@ npm run build
 | **Segment 3** | AI Interview Platform — Call & Speech Engine | 🔄 In Progress | Fragility protections; fixed follow-up bitmask validation overflow, enabled leaving active sessions, removed Group Interview Station panel, preparation seconds alignment. |
 | **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Completed | Polished review flow, eliminated placeholder upgrade modal with MedicForest Pro dialog, tightened timeout/abort error handling in feedback route, streamlined `InterviewHistoryViews`, added `loading.tsx` and `error.tsx` states, added 6 dedicated unit tests (`test-interview-feedback-reports.mjs`). |
 | **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | 📋 Pending | Collaborative study circles, public leaderboard guest access (401 fix), prep pathway task progression. |
-| **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | 📋 Pending | Deconstruct massive monoliths (e.g. `MedicForestClient.tsx`), improve state management & render performance. |
+| **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Completed | Deconstructed monolithic client: extracted `MedicForestPricingClient` & `MedicForestLandingClient`, eliminated ~9.8MB bundle bloat from public marketing pages, fixed broken `Alt+C` calculator toggle, eliminated timer drift, removed double redirect chains, and made 11,727-question quality gate lazy via Proxy. |
 | **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | 📋 Pending | Question bank loader, question rendering, mock test player. |
 | **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | 📋 Pending | Diagnostic test scoring, mock conversion, diagnostic AI feedback. |
 | **Segment 9** | Auth, Supabase & User Account Management | 📋 Pending | User profiles, session persistence, preview access tokens. |
@@ -142,6 +142,49 @@ Segment 4 covers the feedback evaluation pipeline and review UI:
 4. Run `npm run test:unit` to verify the full 197-test suite passes.
 5. Run `npx tsc --noEmit` to verify type safety.
 6. Run `npm run build` to confirm static page generation and webpack bundling succeed.
+
+---
+
+### Segment 6: MedicForest UCAT Platform — Client Monolith & State
+
+#### 1. Context & Motivation
+The UCAT client layer contained a 9,600+ line monolith (`MedicForestClient.tsx`) that:
+- Bundled the entire question bank (~9.8MB of raw questions across 11,727 items) into the public marketing homepage (`/medicforest`), pricing page (`/medicforest/pricing`), and landing page (`/medicforest/ucat`), degrading Core Web Vitals and Largest Contentful Paint (LCP).
+- Executed fingerprint hashing, structure validation, and duplicate checking synchronously over 11,727 questions upon module evaluation in `ucatQuestionBank.ts`, adding blocking delay to server startup and client hydration.
+- Contained a functional bug in `SkillsTrainersContent` where `Alt+C` could not open the calculator when closed because its keydown listener was conditionally detached.
+- Contained an interval drift bug in the skills trainer timer where adding `0.1` ten times a second accumulated IEEE-754 floating-point rounding errors.
+- Had 404 links on non-medicforest domains (`/ucat/dashboard`, `/interviews/dashboard`, `/ucat/report`).
+- Had double-redirect chains on diagnostic mock paths (`/diagnostic/mock-options` and `/diagnostic/mocks` hopping through `/diagnostics/mock-diagnostic` before landing on `/mocks/full`).
+
+#### 2. What Was Done
+1. **Extracted Dedicated Pricing & Landing Clients**:
+   - Created [`app/medicforest/pricing/_components/MedicForestPricingClient.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/pricing/_components/MedicForestPricingClient.tsx) isolating `MedicForestPricingPage`, `INTERVIEW_FREE_FEATURES`, `INTERVIEW_PREMIUM_FEATURES`, `INTERVIEW_PRICING_ROWS`, and `PricingComparisonValue`.
+   - Created [`app/medicforest/_components/MedicForestLandingClient.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/_components/MedicForestLandingClient.tsx) isolating `MedicForestLandingPage`, `RedesignedTutorHero`, and preview lock dialog.
+   - Updated [`app/medicforest/page.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/page.tsx), [`app/medicforest/pricing/page.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/pricing/page.tsx), and [`app/medicforest/ucat/page.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/ucat/page.tsx) to directly render these lightweight clients.
+   - Re-exported them from [`MedicForestClient.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/ucat/_components/MedicForestClient.tsx) to preserve 100% backward compatibility for any existing imports.
+2. **Lazy Question Bank Quality Review via Proxy**:
+   - In [`app/medicforest/ucat/_lib/ucatQuestionBank.ts`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/ucat/_lib/ucatQuestionBank.ts): Wrapped `UCAT_QUESTION_BANK` and `UCAT_QUESTION_QUALITY_REVIEW` in lazy Proxies so that merely importing types or helpers does not trigger synchronous 11,727-question fingerprinting at module load time.
+3. **Fixed Calculator `Alt+C` Keyboard Shortcut**:
+   - In `SkillsTrainersContent`, gave `Alt+C` a permanent keydown listener that toggles the calculator open/closed from any state, aligning with actual UCAT testing software behavior.
+4. **Eliminated Floating-Point Accumulation in Timer**:
+   - Updated the 100ms skills trainer interval to `Math.round((current + 0.1) * 10) / 10`.
+5. **Fixed Broken Navigation Links**:
+   - Updated outdated paths:
+     - `/ucat/dashboard` $\to$ `/medicforest/ucat/dashboard`
+     - `/interviews/dashboard` $\to$ `/medicforest/interview/dashboard`
+     - `/ucat/report` $\to$ `/medicforest/ucat/report`
+6. **Eliminated Double-Redirect Chains**:
+   - Direct redirects in [`app/medicforest/ucat/diagnostic/mocks/page.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/ucat/diagnostic/mocks/page.tsx) and [`app/medicforest/ucat/diagnostic/mock-options/page.tsx`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/app/medicforest/ucat/diagnostic/mock-options/page.tsx) pointing directly to `/medicforest/ucat/mocks/full`.
+7. **Preserved Critical AST Contracts**:
+   - Kept exact `useEffect(..., [initialReportId, supabase, view])` contract in `MedicForestClient.tsx` ensuring `scripts/test-ucat-account.mjs` passes without regression.
+
+#### 3. Instructions for Another AI to Verify Segment 6
+1. Run `npx tsc --noEmit` and confirm 0 TypeScript errors across the repository.
+2. Run `node --test scripts/test-ucat-account.mjs` to confirm the AST and auth-lifecycle tests pass.
+3. Run `node --test scripts/test-ucat-quality.mjs` to confirm question quality gate validations pass.
+4. Run `node scripts/auditUcatQuestionBank.cjs` to confirm the lazy question quality review Proxy returns identical 11,727 accepted questions and duplicate checks.
+5. Run `npm run test:unit` and verify all 197 unit tests pass.
+6. Run `npm run build` and confirm all 184 static pages compile cleanly.
 
 ---
 

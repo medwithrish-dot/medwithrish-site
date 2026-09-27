@@ -5355,13 +5355,34 @@ const DRAFT_9200_UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = {
   sjt: [],
 };
 
-export const UCAT_QUESTION_QUALITY_REVIEW = reviewUCATQuestionBank({
-  auditedBank: LEGACY_UCAT_QUESTION_BANK,
-  draftBank: DRAFT_9200_UCAT_QUESTION_BANK,
-});
+let qualityReviewCache: ReturnType<typeof reviewUCATQuestionBank> | null = null;
+export function getUCATQuestionQualityReview() {
+  if (!qualityReviewCache) {
+    qualityReviewCache = reviewUCATQuestionBank({
+      auditedBank: LEGACY_UCAT_QUESTION_BANK,
+      draftBank: DRAFT_9200_UCAT_QUESTION_BANK,
+    });
+  }
+  return qualityReviewCache;
+}
 
-export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> =
-  UCAT_QUESTION_QUALITY_REVIEW.bank;
+export const UCAT_QUESTION_BANK: Record<UCATSection, UCATQuestion[]> = new Proxy(
+  {} as Record<UCATSection, UCATQuestion[]>,
+  {
+    get(_, prop) {
+      return getUCATQuestionQualityReview().bank[prop as UCATSection];
+    },
+  }
+);
+
+export const UCAT_QUESTION_QUALITY_REVIEW = new Proxy(
+  {} as ReturnType<typeof reviewUCATQuestionBank>,
+  {
+    get(_, prop) {
+      return (getUCATQuestionQualityReview() as unknown as Record<string, unknown>)[prop as string];
+    },
+  }
+);
 
 export function isUCATSection(value: string): value is UCATSection {
   return UCAT_SECTIONS.some((section) => section.slug === value);
