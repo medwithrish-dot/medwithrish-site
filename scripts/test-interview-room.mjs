@@ -185,6 +185,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const intervals = new Map();
   const storage = new Map();
   const requests = [];
+  const leaveRequests = [];
   const followUpRequests = [];
   const feedbackRequests = [];
   const spoken = [];
@@ -193,6 +194,7 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   let speechOptions;
   let pendingSpeech = "";
   let finishVoice;
+  let currentUrl = "";
   const attempt = {
     id: circuitId, circuitId, status, mode: "free", stationSlug: "why-medicine",
     title: "Why medicine?", startedAt: new Date().toISOString(), completedAt: null, preparationSeconds,
@@ -257,11 +259,16 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
     document: { addEventListener() {}, removeEventListener() {} },
     window: {
       location: { search: "" }, setTimeout: () => 1, clearTimeout() {},
+      history: { replaceState: (_state, _title, url) => { currentUrl = url; } },
       setInterval: (callback, milliseconds) => { intervals.set(milliseconds, callback); return milliseconds; },
       clearInterval: id => intervals.delete(id), addEventListener() {}, removeEventListener() {},
     },
     fetch: (_path, options) => {
       if (options.method === "GET") return Promise.resolve(Response.json({ attempt: hasAttempt ? attempt : null, configured }));
+      if (options.method === "DELETE") {
+        leaveRequests.push(JSON.parse(options.body));
+        return Promise.resolve(Response.json({ ended: true }));
+      }
       if (_path === "/api/interviews/follow-up") {
         return new Promise(resolve => followUpRequests.push({ body: JSON.parse(options.body), complete: (followUp, source = "ai") => {
           const index = attempt.questions.indexOf(JSON.parse(options.body).question) + 1;
@@ -309,10 +316,11 @@ async function autosaveRoom({ status = "in_progress", preparationSeconds = 0, ha
   const call = findCall(tree);
   if (hasAttempt) assert.ok(call || findReview(tree));
   return {
-    requests, followUpRequests, feedbackRequests, spoken, flush, render, call, latestCall: () => findCall(render()), latestReview: () => findReview(render()), storage,
+    requests, leaveRequests, followUpRequests, feedbackRequests, spoken, flush, render, call, latestCall: () => findCall(render()), latestReview: () => findReview(render()), storage,
+    get currentUrl() { return currentUrl; },
     get microphoneRequests() { return microphoneRequests; },
     get recognitionStarts() { return recognitionStarts; },
-    edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(), finish: () => call.onSubmit(),
+    edit: text => call.onAnswer(text), save: () => intervals.get(15_000)(), finish: () => call.onSubmit(), leave: () => call.onLeave(),
     finalSpeech: text => { pendingSpeech = text; },
     completeVoice: () => finishVoice?.(),
     say: text => speechOptions.onTranscript(text), silence: () => speechOptions.onSilence(),
@@ -554,12 +562,38 @@ test("draft recovery matches questions after a probe was inserted on the server"
   assert.equal(room.call.answers[2].answer, "Later draft");
 });
 
+test("leaving an active station ends it and clears its reload URL and browser draft", async () => {
+  const room = await autosaveRoom();
+  assert.match(room.currentUrl, /\?attempt=/);
+  room.edit("A draft answer I do not want to submit.");
+  assert.ok(room.storage.has(`medicforest-interview-draft:${circuitId}`));
+  room.leave();
+  await room.flush();
+  await room.flush();
+  assert.deepEqual(room.leaveRequests, [{ attemptId: circuitId }]);
+  assert.equal(room.currentUrl, "/medicforest/interview/ai-interviews");
+  assert.equal(room.storage.has(`medicforest-interview-draft:${circuitId}`), false);
+  assert.equal(room.latestCall(), null);
+});
+
 function loadQuestionModule(file) {
   const compiled = { exports: {} };
   const output = ts.transpileModule(readFileSync(file, "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
   new Function("require", "module", "exports", output)(name => loadQuestionModule(resolve(dirname(file), `${name}.ts`)), compiled, compiled.exports);
   return compiled.exports;
 }
+
+test("question practice timer follows elapsed time through delayed callbacks", () => {
+  const { remainingQuestionMilliseconds, remainingQuestionSeconds } = loadQuestionModule(resolve(root, "app/medicforest/interview/_lib/question-practice-timer.ts"));
+  const deadline = 120_000;
+  assert.equal(remainingQuestionSeconds(deadline, 1_000), 119);
+  assert.equal(remainingQuestionSeconds(deadline, 89_500), 31, "A delayed callback must catch up to wall time");
+  assert.equal(remainingQuestionSeconds(deadline, 120_000), 0);
+  assert.equal(remainingQuestionSeconds(deadline, 180_000), 0);
+  const pausedMilliseconds = remainingQuestionMilliseconds(deadline, 10_750);
+  assert.equal(pausedMilliseconds, 109_250);
+  assert.equal(remainingQuestionSeconds(500_000 + pausedMilliseconds, 500_250), 109, "Pause and resume preserve fractions of a second");
+});
 
 function questionRecordingRoom({ recorderFails = false } = {}) {
   const effects = [];
@@ -585,7 +619,7 @@ function questionRecordingRoom({ recorderFails = false } = {}) {
   runInNewContext(`${output}\nexports.testPracticeView = QuestionPracticeView;`, {
     module: loaded, exports: loaded.exports, MediaRecorder: Recorder,
     require(name) {
-      if (name.endsWith("speech-delivery") || name.endsWith("question-review")) {
+      if (name.endsWith("speech-delivery") || name.endsWith("question-review") || name.endsWith("question-practice-timer")) {
         return loadQuestionModule(resolve(root, `app/medicforest/interview/_lib/${name.split("/").at(-1)}.ts`));
       }
       if (name.endsWith("interview-stimuli")) return loadQuestionModule(resolve(root, "app/medicforest/interview/_data/interview-stimuli.ts"));

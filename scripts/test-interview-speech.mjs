@@ -25,6 +25,7 @@ function speechHarness(options = {}) {
   const timers = [];
   const delays = [];
   const played = [];
+  const utterances = [];
   const recorded = [];
   const transcripts = [];
   const recognitions = [];
@@ -61,17 +62,17 @@ function speechHarness(options = {}) {
     useSyncExternalStore: (_subscribe, snapshot) => snapshot(),
   };
   class Recognition {
-    constructor() { this.startCalls = 0; this.stopCalls = 0; this.abortCalls = 0; recognitions.push(this); }
-    start() { this.startCalls += 1; }
+    constructor() { if (options.recognitionConstructorThrows) throw new Error("Recognition unavailable"); this.startCalls = 0; this.stopCalls = 0; this.abortCalls = 0; recognitions.push(this); }
+    start() { this.startCalls += 1; if (options.recognitionStartThrows) throw new Error("Recognition start unavailable"); }
     stop() { this.stopCalls += 1; }
     abort() { this.abortCalls += 1; }
     end() { this.onend?.(); }
   }
   class Utterance {
-    constructor(text) { this.text = text; }
+    constructor(text) { if (options.utteranceThrows) throw new Error("Speech synthesis unavailable"); this.text = text; }
   }
   class AudioPlayer {
-    constructor(src) { this.src = src; this.currentTime = 0; recorded.push(this); }
+    constructor(src) { if (options.audioConstructorThrows) throw new Error("Audio unavailable"); this.src = src; this.currentTime = 0; recorded.push(this); }
     play() { return options.audioPlayRejects ? Promise.reject(new Error("Playback unavailable")) : Promise.resolve(); }
     pause() { this.paused = true; }
     end() { this.onended?.(); }
@@ -101,7 +102,7 @@ function speechHarness(options = {}) {
       speechSynthesis: {
         cancel: () => { cancellations += 1; },
         getVoices: () => [],
-        speak: utterance => { if (options.synthesisThrows) throw new Error("Playback unavailable"); played.push(utterance.text); },
+        speak: utterance => { if (options.synthesisThrows) throw new Error("Playback unavailable"); played.push(utterance.text); utterances.push(utterance); },
       },
     },
   });
@@ -115,7 +116,7 @@ function speechHarness(options = {}) {
   render();
   let unmounted = false;
   return {
-    get speech() { return speech; }, render, played, recorded, recognitions, transcripts,
+    get speech() { return speech; }, render, played, utterances, recorded, recognitions, transcripts,
     advanceTime: milliseconds => { now += milliseconds; },
     reportActivity: active => reportActivity?.(active),
     get cancellations() { return cancellations; },
@@ -174,6 +175,43 @@ test("a failed question recording falls back to browser text-to-speech", async t
   await room.speech.speak("Fallback question", undefined, "/audio/male/q999.mp3");
   await Promise.resolve();
   assert.deepEqual(room.played, ["Fallback question"]);
+});
+
+test("audio construction failure falls back and releases the prompt on completion", async t => {
+  const room = speechHarness({ audioConstructorThrows: true });
+  t.after(() => room.unmount());
+  let completed = false;
+  await room.speech.speak("Fallback question", () => { completed = true; }, "/audio/male/q999.mp3");
+  assert.deepEqual(room.played, ["Fallback question"]);
+  room.render();
+  assert.equal(room.speech.speaking, true);
+  room.utterances[0].onend();
+  room.render();
+  assert.equal(room.speech.speaking, false);
+  assert.equal(completed, true);
+});
+
+test("speech synthesis construction failure releases the prompt", async t => {
+  const room = speechHarness({ utteranceThrows: true });
+  t.after(() => room.unmount());
+  let completed = false;
+  await room.speech.speak("Readable question", () => { completed = true; });
+  room.render();
+  assert.equal(room.speech.speaking, false);
+  assert.equal(completed, true);
+  assert.match(room.speech.error, /Read-aloud could not play/);
+});
+
+test("recognition construction and start failures leave the typed answer available", t => {
+  for (const options of [{ recognitionConstructorThrows: true }, { recognitionStartThrows: true }]) {
+    const room = speechHarness(options);
+    t.after(() => room.unmount());
+    assert.doesNotThrow(() => room.speech.start());
+    room.render();
+    assert.equal(room.speech.listening, false);
+    assert.match(room.speech.error, /microphone could not start/);
+    if (options.recognitionStartThrows) assert.equal(room.recognitions[0].abortCalls, 1);
+  }
 });
 
 test("compact pauses and audible fillers are normalized without rewriting slang", () => {

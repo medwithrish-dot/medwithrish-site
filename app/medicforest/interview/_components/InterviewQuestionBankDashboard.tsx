@@ -48,6 +48,7 @@ import {
   type InterviewQuestionSubcategory,
 } from "../_data/interviewQuestionBank";
 import { getQuestionMarkScheme, type MarkSchemeSection } from "../_lib/question-review";
+import { remainingQuestionMilliseconds, remainingQuestionSeconds } from "../_lib/question-practice-timer";
 import { InterviewSidebar } from "./InterviewSidebar";
 import { InterviewMobileNav } from "./InterviewMobileNav";
 import { InterviewMarkScheme } from "./InterviewMarkScheme";
@@ -1276,7 +1277,8 @@ function QuestionPracticeView({
   const speechBoundaryRef = useRef(createSpeechBoundaryTracker());
   const restoredResponseRef = useRef<string | null>(null);
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
-  const timeRemainingRef = useRef(suggestedSeconds);
+  const timerRemainingMsRef = useRef(suggestedSeconds * 1000);
+  const timerDeadlineRef = useRef<number | null>(null);
   const attemptPhaseRef = useRef<QuestionAttemptPhase>("idle");
   const wordCount = getWordCount(answer);
   const elapsedSeconds = Math.max(0, suggestedSeconds - timeRemaining);
@@ -1318,10 +1320,24 @@ function QuestionPracticeView({
     confidence: recognitionConfidence,
   });
 
+  const currentTimeRemaining = useCallback(() => {
+    const deadline = timerDeadlineRef.current;
+    return deadline === null ? Math.ceil(timerRemainingMsRef.current / 1000) : remainingQuestionSeconds(deadline, Date.now());
+  }, []);
+
+  const pauseTimer = useCallback(() => {
+    const deadline = timerDeadlineRef.current;
+    if (deadline !== null) timerRemainingMsRef.current = remainingQuestionMilliseconds(deadline, Date.now());
+    timerDeadlineRef.current = null;
+    const remaining = currentTimeRemaining();
+    setTimeRemaining(remaining);
+    setIsTimerRunning(false);
+  }, [currentTimeRemaining]);
+
   const beginAttempt = useCallback(() => {
     if (
       attemptPhaseRef.current === "review" ||
-      timeRemainingRef.current <= 0
+      currentTimeRemaining() <= 0
     ) {
       return false;
     }
@@ -1330,10 +1346,11 @@ function QuestionPracticeView({
     setAttemptPhase("answering");
     setHasStarted(true);
     setSavedResponse(null);
+    timerDeadlineRef.current ??= Date.now() + timerRemainingMsRef.current;
     setIsTimerRunning(true);
 
     return true;
-  }, []);
+  }, [currentTimeRemaining]);
 
   const getRecordingElapsedMs = useCallback(() => {
     const activeElapsedMs =
@@ -1741,7 +1758,10 @@ function QuestionPracticeView({
 
       const finalAnswer = answerRef.current;
       const remainingSeconds =
-        completionReason === "timer" ? 0 : timeRemainingRef.current;
+        completionReason === "timer" ? 0 : currentTimeRemaining();
+      const finalReason = remainingSeconds === 0 ? "timer" : completionReason;
+      timerRemainingMsRef.current = remainingSeconds * 1000;
+      timerDeadlineRef.current = null;
       const completedAt = new Date().toISOString();
       // Saving updates the parent prop. Do not treat that update as opening an old
       // response: doing so discards the recorder while its final blob is arriving.
@@ -1756,14 +1776,13 @@ function QuestionPracticeView({
         ),
         suggestedSeconds,
         mode: practiceMode,
-        completionReason,
+        completionReason: finalReason,
         wordCount: getWordCount(finalAnswer),
       };
 
       attemptPhaseRef.current = "review";
       answerRef.current = finalAnswer;
       interimTranscriptRef.current = "";
-      timeRemainingRef.current = remainingSeconds;
       setAnswer(finalAnswer);
       setInterimTranscript("");
       setSavedResponse(response);
@@ -1778,6 +1797,7 @@ function QuestionPracticeView({
     },
     [
       commitInterimTranscript,
+      currentTimeRemaining,
       finalizeAudioRecording,
       onQuestionResponseSaved,
       practiceMode,
@@ -1791,7 +1811,7 @@ function QuestionPracticeView({
     if (
       typeof window === "undefined" ||
       attemptPhaseRef.current === "review" ||
-      timeRemainingRef.current <= 0
+      currentTimeRemaining() <= 0
     ) {
       return;
     }
@@ -1911,6 +1931,7 @@ function QuestionPracticeView({
     beginAttempt,
     commitInterimTranscript,
     commitTranscript,
+    currentTimeRemaining,
     getRecordingElapsedMs,
     pauseAudioRecording,
     startAudioRecording,
@@ -1918,11 +1939,12 @@ function QuestionPracticeView({
   ]);
 
   const pauseAttempt = useCallback(() => {
-    setIsTimerRunning(false);
+    pauseTimer();
     stopListening({ commitInterim: true });
     pauseAudioRecording();
   }, [
     pauseAudioRecording,
+    pauseTimer,
     stopListening,
   ]);
 
@@ -1940,7 +1962,8 @@ function QuestionPracticeView({
     clearAudioRecording();
     answerRef.current = "";
     interimTranscriptRef.current = "";
-    timeRemainingRef.current = suggestedSeconds;
+    timerRemainingMsRef.current = suggestedSeconds * 1000;
+    timerDeadlineRef.current = null;
     attemptPhaseRef.current = "idle";
     setAnswer("");
     setTimeRemaining(suggestedSeconds);
@@ -1991,7 +2014,7 @@ function QuestionPracticeView({
   };
 
   const handleBackToQuestions = () => {
-    setIsTimerRunning(false);
+    pauseTimer();
     stopListening({ commitInterim: true });
     finalizeAudioRecording({ discard: true });
     onBackToQuestions();
@@ -2022,10 +2045,6 @@ function QuestionPracticeView({
   }, [interimTranscript]);
 
   useEffect(() => {
-    timeRemainingRef.current = timeRemaining;
-  }, [timeRemaining]);
-
-  useEffect(() => {
     attemptPhaseRef.current = attemptPhase;
   }, [attemptPhase]);
 
@@ -2045,7 +2064,8 @@ function QuestionPracticeView({
 
       answerRef.current = normalizeSpeechTranscript(saved.answer);
       interimTranscriptRef.current = "";
-      timeRemainingRef.current = remainingSeconds;
+      timerRemainingMsRef.current = remainingSeconds * 1000;
+      timerDeadlineRef.current = null;
       attemptPhaseRef.current = "review";
       setAnswer(answerRef.current);
       setInterimTranscript("");
@@ -2112,20 +2132,13 @@ function QuestionPracticeView({
     if (!isTimerRunning || attemptPhase !== "answering") return undefined;
 
     const intervalId = window.setInterval(() => {
-      setTimeRemaining((current) => {
-        const next = Math.max(0, current - 1);
-
-        timeRemainingRef.current = next;
-        if (next === 0) {
-          setIsTimerRunning(false);
-        }
-
-        return next;
-      });
+      const remaining = currentTimeRemaining();
+      setTimeRemaining(remaining);
+      if (remaining === 0) setIsTimerRunning(false);
     }, 1000);
 
     return () => window.clearInterval(intervalId);
-  }, [attemptPhase, isTimerRunning]);
+  }, [attemptPhase, currentTimeRemaining, isTimerRunning]);
 
   useEffect(() => {
     if (attemptPhase === "answering" && timeRemaining === 0) {

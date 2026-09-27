@@ -154,7 +154,12 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
     const started = Date.now();
     const previousElapsed = deliveryRef.current.segments.at(-1)?.endSeconds ?? 0;
     const elapsed = () => previousElapsed + (Date.now() - started) / 1000;
-    const recognition = new Constructor();
+    let recognition: Recognition;
+    try { recognition = new Constructor(); }
+    catch {
+      setError("The microphone could not start. Try again or type your answer.");
+      return;
+    }
     listeningWantedRef.current = true;
     measuredActivityRef.current = null;
     let hasWords = false;
@@ -279,6 +284,12 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
       activityStopRef.current = null;
       recognitionRef.current = null;
       listeningWantedRef.current = false;
+      recognition.onresult = null;
+      recognition.onend = null;
+      recognition.onerror = null;
+      recognition.onspeechstart = null;
+      recognition.onspeechend = null;
+      try { recognition.abort(); } catch { /* The browser did not start recognition. */ }
       setError("The microphone could not start. Try again or type your answer.");
     }
   }, [stopSpeaking, stop, answerKey, clearSilence, silenceMs]);
@@ -300,28 +311,36 @@ export function useInterviewSpeech({ onTranscript, rate = 0.95, answerKey = "ans
         finish();
         return;
       }
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-GB";
-      utterance.rate = rate;
-      const voice = window.speechSynthesis.getVoices().find((candidate) => candidate.lang === "en-GB");
-      if (voice) utterance.voice = voice;
-      utterance.onend = finish;
-      utterance.onerror = (event) => {
-        if (!mountedRef.current || request !== speechRequestRef.current) return;
-        finish();
-        if (event.error !== "canceled" && event.error !== "interrupted") setError("Read-aloud could not play. You can read the question on screen.");
-      };
-      try { window.speechSynthesis.speak(utterance); } catch {
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-GB";
+        utterance.rate = rate;
+        const voice = window.speechSynthesis.getVoices().find((candidate) => candidate.lang === "en-GB");
+        if (voice) utterance.voice = voice;
+        utterance.onend = finish;
+        utterance.onerror = (event) => {
+          if (!mountedRef.current || request !== speechRequestRef.current) return;
+          finish();
+          if (event.error !== "canceled" && event.error !== "interrupted") setError("Read-aloud could not play. You can read the question on screen.");
+        };
+        window.speechSynthesis.speak(utterance);
+      } catch {
         finish();
         setError("Read-aloud could not play. You can read the question on screen.");
       }
     };
     setSpeaking(true);
     if (audioSrc && "Audio" in window) {
-      const audio = new Audio(audioSrc);
-      audio.playbackRate = rate;
-      audio.preservesPitch = true;
+      let audio: HTMLAudioElement;
+      try {
+        audio = new Audio(audioSrc);
+        audio.playbackRate = rate;
+        audio.preservesPitch = true;
+      } catch {
+        speakWithBrowserVoice();
+        return;
+      }
       audioRef.current = audio;
       let fellBack = false;
       const fallback = () => {

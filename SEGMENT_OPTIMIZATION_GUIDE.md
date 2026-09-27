@@ -12,7 +12,7 @@ Any AI or engineer reviewing these changes can verify repository health using th
 # 1. Typecheck the entire project (zero errors required)
 npx tsc --noEmit
 
-# 2. Run the full unit test suite (215 tests passing)
+# 2. Run the full unit test suite (220 tests passing at the Segment 3 audit)
 npm run test:unit
 
 # 3. Run the billing test suite (11 tests)
@@ -36,7 +36,7 @@ npm run build
 |---|---|---|---|
 | **Segment 1** | Stripe Billing & Webhook Service | ✅ Re-audited | Modular billing service, repository and thin HTTP controllers verified. Fixed manual Premium portal routing, stale subscription portal recovery, customer ownership checks and provider error exposure; 11 billing tests. |
 | **Segment 2** | PS Review Submission Service | 🗑️ Scrapped and re-audited | No submission or checkout flow remains. Old MedicForest personal-statement URLs redirect to live tutoring; obsolete setup variables and the unused email dependency were removed. |
-| **Segment 3** | AI Interview Platform — Call & Speech Engine | 🔄 In Progress | Fragility protections; fixed follow-up bitmask validation overflow, enabled leaving active sessions, removed Group Interview Station panel, preparation seconds alignment. |
+| **Segment 3** | AI Interview Platform — Call & Speech Engine | ✅ Re-audited | Verified session, microphone, speech, recording and timer flows. Recovered playback and recognition failures, corrected question timer drift, and made active-station leaving available with URL cleanup. |
 | **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Completed | Polished review flow, eliminated placeholder upgrade modal with MedicForest Pro dialog, tightened timeout/abort error handling in feedback route, streamlined `InterviewHistoryViews`, added `loading.tsx` and `error.tsx` states, added 6 dedicated unit tests (`test-interview-feedback-reports.mjs`). |
 | **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | 📋 Pending | Collaborative study circles, public leaderboard guest access (401 fix), prep pathway task progression. |
 | **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Completed | Deconstructed monolithic client: extracted `MedicForestPricingClient` & `MedicForestLandingClient`, eliminated ~9.8MB bundle bloat from public marketing pages, fixed broken `Alt+C` calculator toggle, eliminated timer drift, removed double redirect chains, and made 11,727-question quality gate lazy via Proxy. |
@@ -96,7 +96,7 @@ A modular billing architecture was created under [`utils/billing/`](file:///c:/U
 1. Inspect [`utils/billing/`](file:///c:/Users/usedf/OneDrive/Desktop/MEDWITHRISH/medwithrish-site/utils/billing/) and confirm each module has a single responsibility.
 2. Confirm no route in `app/api/stripe/` imports the raw `stripe` npm package directly; all interaction goes through `utils/billing/`.
 3. Run `node scripts/test-billing.mjs` and verify all 11 tests pass.
-4. Run `npm run test:unit` and verify all 214 tests pass without regression.
+4. Run `npm run test:unit` and verify the full suite passes without regression.
 5. Run `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 
 ---
@@ -120,6 +120,22 @@ The owner scrapped the Personal Statement review submission idea entirely from t
 2. Verify `scripts/test-server-routes.mjs` runs and succeeds.
 3. Run `node --test scripts/test-domain-routing.mjs` and confirm the legacy route maps to tutoring. A production server must return HTTP 308 for `/medicforest/personal-statement` and for `/personal-statement` on the MedicForest host.
 4. Run `npm run test:unit`, `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+
+---
+
+### Segment 3: AI Interview Platform — Call & Speech Engine
+
+#### 1. Scope and audit
+The room, microphone device hook, speech hook, question-bank recorder, practice timer, recorded question audio and generated follow-up speech route were traced together. Existing protections for owner-bound sessions, follow-up speech requests, serial autosaves, late microphone permissions and failed station submission remain covered by the room tests.
+
+#### 2. Re-audit fixes
+1. Recorded audio and browser speech setup now recover when native constructors or voice setup throw. A failed prompt releases the room's speaking state, so microphone listening and typed answers remain usable. Speech recognition constructor and start failures also release the native recognition object and show the typed-answer fallback.
+2. Question-bank practice time is calculated from a deadline, so throttled interval callbacks catch up after a background tab resumes. Pauses retain the exact remaining milliseconds; repeated pause/resume actions cannot add time. Timer expiry is also recognised when the user submits before the next interval callback.
+3. The active-room finish dialog again offers **End without review**, with the result explained in the dialog. After a successful server end, the room removes its browser draft and clears the attempt query from the URL, so reloading setup cannot reopen the ended station.
+4. The existing call-room, speech, device and recording lifecycle tests were rerun. New regressions cover native playback and recognition failures, delayed timer callbacks, fractional pause/resume timing, and active-station leave cleanup.
+
+#### 3. Verification
+Run `npm run test:interviews:room`, `npm run test:unit`, `npm run lint`, `npx tsc --noEmit`, and `npm run build`. The Segment 3 audit passed 123 room tests, 220 full unit tests, lint, typecheck and a production build generating 183 static pages.
 
 ---
 

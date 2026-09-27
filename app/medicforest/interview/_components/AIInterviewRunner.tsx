@@ -653,6 +653,7 @@ export function AIInterviewRunner({ initialUniversitySlug, initialStationSlug, i
       }
       attemptRef.current = null;
       setAttempt(null);
+      window.history?.replaceState(null, "", "/medicforest/interview/ai-interviews");
       setReviewRequested(false);
       setError("");
       setErrorStatus(0);
