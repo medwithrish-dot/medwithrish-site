@@ -12,7 +12,7 @@ Any AI or engineer reviewing these changes can verify repository health using th
 # 1. Typecheck the entire project (zero errors required)
 npx tsc --noEmit
 
-# 2. Run the full unit test suite (205+ tests passing)
+# 2. Run the full unit test suite (210 tests passing)
 npm run test:unit
 
 # 3. Run the billing test suite (7 tests)
@@ -41,7 +41,7 @@ npm run build
 | **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | 📋 Pending | Collaborative study circles, public leaderboard guest access (401 fix), prep pathway task progression. |
 | **Segment 6** | MedicForest UCAT Platform — Client Monolith & State | ✅ Completed | Deconstructed monolithic client: extracted `MedicForestPricingClient` & `MedicForestLandingClient`, eliminated ~9.8MB bundle bloat from public marketing pages, fixed broken `Alt+C` calculator toggle, eliminated timer drift, removed double redirect chains, and made 11,727-question quality gate lazy via Proxy. |
 | **Segment 7** | MedicForest UCAT Platform — Question Bank Engine | ✅ Completed | Isolated scoring engine in `app/medicforest/ucat/_lib/ucatScoring.ts`, isolated question diagram and SVG visual components in `app/medicforest/ucat/_components/UCATQuestionVisuals.tsx`, eliminated ~1,450 lines of duplicate code from `UCATQuestionBankClient.tsx`, added global window keyboard shortcut listener for exams, implemented auto-finalization on timer expiration, fixed SPA exit tearing by replacing `window.location.assign` with Next.js `router.push`, added 8 comprehensive engine tests in `scripts/test-ucat-engine.mjs` bringing unit test suite to 205 passing tests. |
-| **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | 📋 Pending | Diagnostic test scoring, mock conversion, diagnostic AI feedback. |
+| **Segment 8** | MedicForest UCAT Platform — Diagnostics & AI Feedback | ✅ Completed | Separated diagnostic and report views from dashboard state; isolated diagnostic transforms and study tasks; preserved mock IDs through redirects; hardened saved-data AI feedback, credit handling, and report aggregation; added focused regression tests. |
 | **Segment 9** | Auth, Supabase & User Account Management | 📋 Pending | User profiles, session persistence, preview access tokens. |
 | **Segment 10** | MedicForest Public Marketing & Shell | 📋 Pending | Public marketing layer, navigation shells, trust badges, pricing page. |
 | **Segment 11** | MedWithRish.com Core & Resources Hub | 📋 Pending | Primary brand website, admissions advice, guides, tutoring booking. |
@@ -240,6 +240,28 @@ The UCAT question bank client (`UCATQuestionBankClient.tsx`) was a 10,942-line m
 4. Run `node scripts/auditUcatQuestionBank.cjs` to confirm 11,727 accepted questions audit cleanly.
 5. Run `npm run test:unit` and verify all 205 unit tests pass.
 6. Run `npm run build` and confirm all 184 static pages compile cleanly.
+
+---
+
+### Segment 8: MedicForest UCAT Platform — Diagnostics & AI Feedback
+
+#### 1. Context & Motivation
+
+Diagnostic and report rendering, issue labels, study tasks, credit display, and report aggregation were mixed into `MedicForestClient.tsx`. AI feedback could also use caller-supplied scores and issue text when saved metadata was absent, and mixed legacy report data could lower combined metrics incorrectly.
+
+#### 2. What Was Done
+
+1. Extracted the diagnostic page and report page into `UCATDiagnosticContent.tsx` and `UCATReportContent.tsx`, with the issue card in `ReportIssueSignalCard.tsx`. `MedicForestClient.tsx` remains responsible for account and dashboard state and retains compatibility exports.
+2. Moved diagnostic normalisation, study-task selection, report grouping, issue definitions, credit display, and combined metrics into `_lib/ucatDiagnostics.ts`. Saved metadata arrays are checked before rendering. Combined metrics use available scored data and exclude missing timing values.
+3. Kept the selected mock ID when redirecting through the premium diagnostic route. Feedback text can be expanded and copied from the report view.
+4. The diagnostic AI route builds prompts from saved attempt metadata or saved database columns. Client-supplied scores and issues cannot change the prompt. Grouped full-mock feedback requires distinct canonical sections belonging to the same mock. Existing saved feedback remains readable without spending another credit.
+5. Added `scripts/test-ucat-diagnostics.mjs` and focused route tests for saved-data authority, duplicate full-mock sections, combined metrics, malformed metadata, and credit reservation recovery. Removed the previous eight lint warnings.
+
+#### 3. Verification
+
+1. Run `node --test scripts/test-ucat-diagnostics.mjs scripts/test-server-routes.mjs`.
+2. Run `npx tsc --noEmit`, `npm run lint`, and `npm run test:unit` (210 tests).
+3. Run `npm run build` and confirm all 184 static pages compile.
 
 ---
 

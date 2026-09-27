@@ -80,7 +80,6 @@ async function run() {
   const darkFull = createSvg({ mode: "dark" });
   const lightFull = createSvg({ mode: "light" });
   const darkMark = createSvg({ mode: "dark", markOnly: true, width: 256, height: 256 });
-  const lightMark = createSvg({ mode: "light", markOnly: true, width: 256, height: 256 });
 
   // Save SVGs
   await fs.writeFile(path.join(brandDir, "medicforest-logo-dark.svg"), darkFull);

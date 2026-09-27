@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
@@ -32,7 +31,6 @@ function transpileAndLoad(relativePath) {
 const {
   isUCATSection,
   getUCATSectionMeta,
-  getUCATSubtypeMeta,
 } = transpileAndLoad("../app/medicforest/ucat/_lib/ucatQuestionBank.ts");
 
 const {
@@ -41,7 +39,6 @@ const {
   isAnswered,
   getEstimatedScaledScore,
   getSjtBand,
-  getDiagnosticSectionScore,
   isSameSjtScaleSide,
 } = transpileAndLoad("../app/medicforest/ucat/_lib/ucatScoring.ts");
 

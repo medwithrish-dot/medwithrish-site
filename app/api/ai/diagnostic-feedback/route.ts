@@ -6,6 +6,7 @@ import { createAdminClient } from "@/utils/supabase/admin";
 export const runtime = "nodejs";
 
 const PREMIUM_AI_CREDIT_INTERVAL_MS = 24 * 60 * 60 * 1000;
+const UCAT_SECTION_ORDER = ["VR", "DM", "QR", "SJT"];
 
 type DiagnosticIssue = {
   label: string;
@@ -21,26 +22,13 @@ type DiagnosticStudyTask = {
 type DiagnosticFeedbackBody = {
   attemptId?: string;
   attemptIds?: string[];
-  section?: string;
-  accuracy?: number;
-  scorePoints?: number;
-  maxScore?: number;
-  answeredQuestions?: number;
-  totalQuestions?: number;
-  avgSecondsPerQuestion?: number;
-  issues?: DiagnosticIssue[];
-  strengths?: string[];
-  questionTimings?: Array<{
-    label: string;
-    avgSeconds: number;
-    correct: number;
-    questions: number;
-  }>;
-  studyPlanTasks?: DiagnosticStudyTask[];
 };
-type DiagnosticQuestionTiming = NonNullable<
-  DiagnosticFeedbackBody["questionTimings"]
->[number];
+type DiagnosticQuestionTiming = {
+  label: string;
+  avgSeconds: number;
+  correct: number;
+  questions: number;
+};
 
 type DiagnosticAttemptRow = {
   id: string;
@@ -49,6 +37,9 @@ type DiagnosticAttemptRow = {
   ai_feedback_requested_at: string | null;
   ai_feedback_status: string | null;
   metadata: unknown;
+  accuracy?: number | null;
+  total_questions?: number | null;
+  avg_seconds_per_question?: number | null;
 };
 
 type DiagnosticPromptData = ReturnType<typeof buildPromptData>;
@@ -173,10 +164,8 @@ function getCreditSnapshot(profile: ProfileRow, nowMs = Date.now()) {
   };
 }
 
-function buildPromptData(
-  body: DiagnosticFeedbackBody,
-  metadata: Record<string, unknown>
-) {
+function buildPromptData(attempt: DiagnosticAttemptRow) {
+  const metadata = asRecord(attempt.metadata);
   const summary = asRecord(metadata.summary);
   const insights = asRecord(metadata.insights);
   const savedIssues = parseIssues(insights.issues);
@@ -185,23 +174,21 @@ function buildPromptData(
   const savedStudyPlanTasks = parseStudyPlanTasks(metadata.studyPlanTasks);
 
   return {
-    section: asString(summary.section) ?? asString(body.section),
-    accuracy: asNumber(summary.accuracy) ?? asNumber(body.accuracy),
-    scorePoints: asNumber(summary.scorePoints) ?? asNumber(body.scorePoints),
-    maxScore: asNumber(summary.maxScore) ?? asNumber(body.maxScore),
+    section: asString(summary.section),
+    accuracy: asNumber(summary.accuracy) ?? asNumber(attempt.accuracy),
+    scorePoints: asNumber(summary.scorePoints),
+    maxScore: asNumber(summary.maxScore),
     answeredQuestions:
-      asNumber(summary.answeredQuestions) ?? asNumber(body.answeredQuestions),
-    totalQuestions: asNumber(summary.totalQuestions) ?? asNumber(body.totalQuestions),
+      asNumber(summary.answeredQuestions),
+    totalQuestions:
+      asNumber(summary.totalQuestions) ?? asNumber(attempt.total_questions),
     avgSecondsPerQuestion:
-      asNumber(summary.avgSecondsPerQuestion) ?? asNumber(body.avgSecondsPerQuestion),
-    issues: savedIssues.length ? savedIssues : parseIssues(body.issues),
-    strengths: savedStrengths.length ? savedStrengths : asStringArray(body.strengths),
-    questionTimings: savedQuestionTimings.length
-      ? savedQuestionTimings
-      : parseQuestionTimings(body.questionTimings),
-    studyPlanTasks: savedStudyPlanTasks.length
-      ? savedStudyPlanTasks
-      : parseStudyPlanTasks(body.studyPlanTasks),
+      asNumber(summary.avgSecondsPerQuestion) ??
+      asNumber(attempt.avg_seconds_per_question),
+    issues: savedIssues,
+    strengths: savedStrengths,
+    questionTimings: savedQuestionTimings,
+    studyPlanTasks: savedStudyPlanTasks,
   };
 }
 
@@ -209,7 +196,7 @@ function formatStudyTask(task: DiagnosticStudyTask) {
   return task.label ? `${task.label}: ${task.fix}` : task.fix;
 }
 
-function buildUserPrompt(data: DiagnosticFeedbackBody) {
+function buildUserPrompt(data: DiagnosticPromptData) {
   const issuesText =
     data.issues
       ?.map((issue, idx) => {
@@ -445,7 +432,7 @@ export async function POST(request: Request) {
   const { data: attempts, error: attemptError } = await admin
     .from("diagnostic_attempts")
     .select(
-      "id,user_id,ai_feedback,ai_feedback_requested_at,ai_feedback_status,metadata"
+      "id,user_id,ai_feedback,ai_feedback_requested_at,ai_feedback_status,metadata,accuracy,total_questions,avg_seconds_per_question"
     )
     .eq("user_id", user.id)
     .in("id", requestedAttemptIds);
@@ -471,11 +458,20 @@ export async function POST(request: Request) {
   }
 
   const combinedAttempt = attemptRows.length > 1;
+  const promptSectionData = attemptRows.map(buildPromptData);
 
   if (combinedAttempt) {
     const fullMockId = asString(asRecord(attemptRow.metadata).mockId);
+    const sectionCodes = promptSectionData.map((section) =>
+      section.section?.toUpperCase()
+    );
     const fullMockGroupIsValid =
       Boolean(fullMockId) &&
+      attemptRows.length <= UCAT_SECTION_ORDER.length &&
+      sectionCodes.every(
+        (section) => section && UCAT_SECTION_ORDER.includes(section)
+      ) &&
+      new Set(sectionCodes).size === attemptRows.length &&
       attemptRows.every((attempt) => {
         const attemptMetadata = asRecord(attempt.metadata);
         return (
@@ -535,6 +531,13 @@ export async function POST(request: Request) {
       attemptIds: attemptRows.map((attempt) => attempt.id),
       ...snapshot,
     });
+  }
+
+  if (promptSectionData.some((section) => section.accuracy === undefined)) {
+    return Response.json(
+      { error: "Saved diagnostic results are incomplete." },
+      { status: 422 }
+    );
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -610,19 +613,18 @@ export async function POST(request: Request) {
   const reservedSnapshot = getCreditSnapshot(reservedProfile as ProfileRow);
 
   try {
-    const sectionOrder = ["VR", "DM", "QR", "SJT"];
-    const promptSectionData = attemptRows
-      .map((attempt) => buildPromptData({}, asRecord(attempt.metadata)))
-      .sort(
-        (first, second) =>
-          sectionOrder.indexOf(first.section?.toUpperCase() ?? "") -
-          sectionOrder.indexOf(second.section?.toUpperCase() ?? "")
+    const orderedSectionData = promptSectionData.sort(
+      (first, second) =>
+          UCAT_SECTION_ORDER.indexOf(first.section?.toUpperCase() ?? "") -
+          UCAT_SECTION_ORDER.indexOf(second.section?.toUpperCase() ?? "")
       );
     const promptContent = combinedAttempt
-      ? buildCombinedUserPrompt(promptSectionData)
-      : buildUserPrompt(buildPromptData(body, metadata));
+      ? buildCombinedUserPrompt(orderedSectionData)
+      : buildUserPrompt(promptSectionData[0]);
 
-    const client = new Anthropic();
+    const client = new Anthropic({
+      timeout: 25000,
+    });
     const msg = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 1200,

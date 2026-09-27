@@ -11,17 +11,13 @@ import {
   Brain,
   Check,
   CheckCircle,
-  Clock3,
   Eye,
-  HelpCircle,
   LockKeyhole,
-  Play,
   ShieldCheck,
   Sparkles,
   Target,
   Timer,
   UserRound,
-  Users,
 } from "lucide-react";
 import {
   createClient as createSupabaseClient,

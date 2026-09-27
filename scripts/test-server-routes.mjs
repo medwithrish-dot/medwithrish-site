@@ -160,7 +160,7 @@ test("subscription sync persists billing periods from the current Stripe item sc
 
 test("failed AI requests do not overwrite a newer credit reservation", async () => {
   const profile = { current_plan: "free", diagnostic_credits: 1, ai_diagnostic_last_used_at: null };
-  const attempt = { id: "attempt-1", user_id: "user-1", metadata: {} };
+  const attempt = { id: "attempt-1", user_id: "user-1", accuracy: 60, metadata: { summary: { section: "qr", accuracy: 60 } } };
   let refundUpdates = 0;
   const query = (table) => {
     const filters = []; let update;
@@ -196,6 +196,74 @@ test("failed AI requests do not overwrite a newer credit reservation", async () 
     assert.equal(profile.ai_diagnostic_last_used_at, "2026-09-07T00:00:00Z");
     assert.equal(refundUpdates, 0);
   });
+});
+
+test("diagnostic AI uses saved results instead of caller-supplied scores and issues", async () => {
+  const attempt = {
+    id: "attempt-1", user_id: "user-1", ai_feedback: null, ai_feedback_requested_at: null,
+    metadata: {
+      summary: { section: "qr", accuracy: 60, scorePoints: 3, maxScore: 5, totalQuestions: 5 },
+      insights: { issues: [{ label: "Saved timing issue" }], strengths: [] },
+    },
+  };
+  const profile = { current_plan: "free", diagnostic_credits: 1, ai_diagnostic_last_used_at: null };
+  let prompt;
+  const query = (table) => {
+    let update;
+    return {
+      select() { return this; }, eq() { return this; }, in() { return this; }, is() { return this; },
+      update(value) { update = value; return this; },
+      async maybeSingle() {
+        if (table !== "profiles") throw new Error("Unexpected single-row query");
+        if (update) Object.assign(profile, update);
+        return { data: { ...profile }, error: null };
+      },
+      then(resolve) {
+        if (table === "diagnostic_attempts") {
+          if (update) Object.assign(attempt, update);
+          return Promise.resolve({ data: [attempt], error: null }).then(resolve);
+        }
+        return Promise.resolve({ data: { ...profile }, error: null }).then(resolve);
+      },
+    };
+  };
+  const { POST } = load("app/api/ai/diagnostic-feedback/route.ts", {
+    "@/utils/supabase/server": auth,
+    "@/utils/supabase/admin": { createAdminClient: () => ({ from: query }) },
+    "@anthropic-ai/sdk": class { messages = { create: async ({ messages }) => {
+      prompt = messages[0].content;
+      return { content: [{ type: "text", text: "Use saved QR timing data." }] };
+    } }; },
+  });
+  await withEnv({ ANTHROPIC_API_KEY: "test-only" }, async () => {
+    const response = await POST(jsonRequest({
+      attemptId: attempt.id, section: "VR", accuracy: 100, scorePoints: 99,
+      issues: [{ label: "Forged issue" }],
+    }));
+    assert.equal(response.status, 200);
+  });
+  assert.match(prompt, /QR diagnostic/);
+  assert.match(prompt, /Score: 3\/5/);
+  assert.match(prompt, /Saved timing issue/);
+  assert.doesNotMatch(prompt, /Forged issue|99\/|VR diagnostic/);
+});
+
+test("full mock AI rejects duplicate sections before using a credit", async () => {
+  const attempts = ["attempt-1", "attempt-2"].map((id) => ({
+    id, user_id: "user-1", accuracy: 60,
+    metadata: { mockId: "mock-1", mockScope: "full-mock", summary: { section: "qr", accuracy: 60 } },
+  }));
+  const { POST } = load("app/api/ai/diagnostic-feedback/route.ts", {
+    "@/utils/supabase/server": auth,
+    "@/utils/supabase/admin": { createAdminClient: () => ({
+      from(table) {
+        assert.equal(table, "diagnostic_attempts");
+        return { select() { return this; }, eq() { return this; }, in: async () => ({ data: attempts, error: null }) };
+      },
+    }) },
+  });
+  const response = await POST(jsonRequest({ attemptId: "attempt-1", attemptIds: ["attempt-1", "attempt-2"] }));
+  assert.equal(response.status, 400);
 });
 
 test("proxy only refreshes authentication for account pages and authenticated APIs", () => {
