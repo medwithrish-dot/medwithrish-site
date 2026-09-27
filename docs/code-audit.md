@@ -1,5 +1,9 @@
 # Code audit: 6 September 2026
 
+Historical note: the personal statement review submission and payment service
+described below was subsequently scrapped. Its PDF, checkout and email findings
+no longer describe a live feature.
+
 Reviewed the website components and routes, MedicForest account and UCAT workflows,
 interview platform, payment/API handlers, SQL setup, scripts and dependency
 configuration. Existing generated question content was checked with the question

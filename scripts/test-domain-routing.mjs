@@ -11,11 +11,20 @@ test("Medic Forest serves the product landing page without changing the visible 
     && rule.destination === "/medicforest" && JSON.stringify(rule.has) === JSON.stringify(apexHost)));
   assert.ok(rewrites.beforeFiles.some(rule => rule.source === "/ucat/:path*"
     && rule.destination === "/medicforest/ucat/:path*" && JSON.stringify(rule.has) === JSON.stringify(apexHost)));
-  for (const page of ["about", "pricing", "personal-statement", "tutoring", "resources", "feedback", "contact"]) {
+  for (const page of ["about", "pricing", "tutoring", "resources", "feedback", "contact"]) {
     const route = rewrites.beforeFiles.find(rule => rule.source.startsWith("/:page("));
     assert.ok(route?.source.includes(page));
     assert.equal(route.destination, "/medicforest/:page");
   }
+});
+
+test("scrapped MedicForest personal statement page redirects to live tutoring", async () => {
+  const redirects = await nextConfig.redirects();
+  assert.ok(redirects.some(rule => rule.source === "/personal-statement"
+    && rule.has?.[0]?.value === "medicforest.com"
+    && rule.destination === "https://medicforest.com/tutoring" && rule.permanent));
+  assert.ok(redirects.some(rule => rule.source === "/medicforest/personal-statement"
+    && !rule.has && rule.destination === "/medicforest/tutoring" && rule.permanent));
 });
 
 test("www MedicForest redirects permanently to the apex domain", async () => {

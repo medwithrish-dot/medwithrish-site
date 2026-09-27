@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 const medicForestHost = { type: "host" as const, value: "medicforest.com" };
 const medicForestPublicPagePattern =
-  "about|pricing|personal-statement|tutoring|resources|feedback|contact|access|account";
+  "about|pricing|tutoring|resources|feedback|contact|access|account";
 const legacyUcatRoutes = [
   "dashboard",
   "diagnostic",
@@ -25,6 +25,23 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      {
+        source: "/personal-statement",
+        has: [medicForestHost],
+        destination: "https://medicforest.com/tutoring",
+        permanent: true,
+      },
+      {
+        source: "/medicforest/personal-statement",
+        has: [medicForestHost],
+        destination: "https://medicforest.com/tutoring",
+        permanent: true,
+      },
+      {
+        source: "/medicforest/personal-statement",
+        destination: "/medicforest/tutoring",
+        permanent: true,
+      },
       ...legacyUcatRoutes.map((route) => ({
         source: `/medicforest/${route}/:path*`,
         destination: `/medicforest/ucat/${route}/:path*`,

@@ -12,7 +12,7 @@ Any AI or engineer reviewing these changes can verify repository health using th
 # 1. Typecheck the entire project (zero errors required)
 npx tsc --noEmit
 
-# 2. Run the full unit test suite (214 tests passing)
+# 2. Run the full unit test suite (215 tests passing)
 npm run test:unit
 
 # 3. Run the billing test suite (11 tests)
@@ -24,7 +24,7 @@ node --test scripts/test-interview-feedback-reports.mjs
 # 5. Run the Segment 7 UCAT question bank & scoring engine test suite (8 tests)
 node --test scripts/test-ucat-engine.mjs
 
-# 6. Run Next.js production build (184+ static pages)
+# 6. Run Next.js production build (183 static pages)
 npm run build
 ```
 
@@ -35,7 +35,7 @@ npm run build
 | Segment | Domain | Status | Key Deliverables / Notes |
 |---|---|---|---|
 | **Segment 1** | Stripe Billing & Webhook Service | ✅ Re-audited | Modular billing service, repository and thin HTTP controllers verified. Fixed manual Premium portal routing, stale subscription portal recovery, customer ownership checks and provider error exposure; 11 billing tests. |
-| **Segment 2** | PS Review Submission Service | 🗑️ Scrapped and re-audited | No live PS submission or checkout flow remains. Contact copy now points to the separate one-to-one tutoring session; the historical Stripe plan identifies its obsolete PS review steps. |
+| **Segment 2** | PS Review Submission Service | 🗑️ Scrapped and re-audited | No submission or checkout flow remains. Old MedicForest personal-statement URLs redirect to live tutoring; obsolete setup variables and the unused email dependency were removed. |
 | **Segment 3** | AI Interview Platform — Call & Speech Engine | 🔄 In Progress | Fragility protections; fixed follow-up bitmask validation overflow, enabled leaving active sessions, removed Group Interview Station panel, preparation seconds alignment. |
 | **Segment 4** | AI Interview Platform — Scoring & Feedback Reports | ✅ Completed | Polished review flow, eliminated placeholder upgrade modal with MedicForest Pro dialog, tightened timeout/abort error handling in feedback route, streamlined `InterviewHistoryViews`, added `loading.tsx` and `error.tsx` states, added 6 dedicated unit tests (`test-interview-feedback-reports.mjs`). |
 | **Segment 5** | AI Interview Platform — Community (Groups, Leaderboard, Pathway) | 📋 Pending | Collaborative study circles, public leaderboard guest access (401 fix), prep pathway task progression. |
@@ -112,10 +112,14 @@ The owner scrapped the Personal Statement review submission idea entirely from t
 3. Deleted stale PS review endpoints and components.
 4. Re-audited application routes and links: no `/api/ps-review`, `ps_review`, or upload form remains. The `/personal-statement-session` page is a separate one-to-one tutoring offer and remains live.
 5. Updated contact copy to describe sessions rather than the removed review service. Marked the old Stripe refactor plan as historical where it mentions PS review payment work.
+6. Removed the stale `STRIPE_PS_REVIEW_PRICE_ID` and `RESEND_API_KEY` setup instructions and the unused `resend` dependency. Updated historical AI cost and code audit notes so old PDF upload and checkout recommendations are not mistaken for current features.
+7. Deleted the unsupported MedicForest “coming soon” personal-statement page. `next.config.ts` now gives its legacy paths a permanent redirect to `/medicforest/tutoring`; the separate MedWithRish one-to-one session remains available.
 
 #### 3. Instructions for Another AI to Verify Segment 2
 1. Search the codebase for `/api/ps-review` to ensure no live forms or routes point to deprecated personal statement upload endpoints.
 2. Verify `scripts/test-server-routes.mjs` runs and succeeds.
+3. Run `node --test scripts/test-domain-routing.mjs` and confirm the legacy route maps to tutoring. A production server must return HTTP 308 for `/medicforest/personal-statement` and for `/personal-statement` on the MedicForest host.
+4. Run `npm run test:unit`, `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 
 ---
 

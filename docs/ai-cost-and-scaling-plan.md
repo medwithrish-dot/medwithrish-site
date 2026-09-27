@@ -18,7 +18,7 @@ This document is a proposal and cost model. The accompanying practice-pathway wo
 | Recording, playback, mic meter and speech hints | Browser APIs and local heuristics | No paid model integration |
 | Speech recognition/read-aloud | Browser Web Speech APIs | No API bill to the platform; availability and quality depend on the browser/service |
 | Rishbot sample question | Static API response | No |
-| Personal statement service | PDF upload, checkout and existing service workflow | No AI assessment integration found |
+| One-to-one personal statement tutoring | Human-led session; no submission or payment workflow in this site | No |
 
 The current interview allowances are **free: 2 starts per rolling day and 30 per rolling 30 days; premium: 20/day and 300/30 days**. These count starts, including abandoned attempts. Each mock station counts separately. UCAT is separate: one lifetime free diagnostic credit, or one premium credit per 24 hours. A seven-station mock therefore consumes seven interview attempts, not one. These are not a single shared AI-credit wallet.
 
@@ -99,6 +99,6 @@ The repo already has authenticated server marking, bounded interview transcripts
 5. Pre-generate reusable content and audio. Cache by text/question ID, voice, model and content version. Saved personal feedback must remain owner-scoped; never put private answers into a shared public cache. Pin and evaluate grading changes so leaderboard comparisons remain meaningful.
 6. Exercise realistic bursts and failures: concurrent finishes, repeated submission, page closure, provider 429s/timeouts and recovery. Track queue age, p95 latency, error rate and database capacity. At 1,000 simultaneous active interviews, a changed draft saved every 15 seconds can already produce roughly 67 requests/second, before group polling and authentication. Stagger/coalesce saves and reduce idle polling.
 
-Two additional concrete gaps deserve attention before scale: the UCAT diagnostic route needs the same explicit input limits, timeouts and durable recovery as interviews; public personal-statement PDF uploads need scoped upload authorisation, rate limits and abandoned-upload cleanup to avoid storage abuse. These are recommendations from this audit, not changes included in the practice-pathway update.
+The UCAT diagnostic route needs the same explicit input limits, timeouts and durable recovery as interviews. The earlier public personal-statement PDF upload proposal was scrapped; no upload endpoint remains to harden. These are recommendations from this audit, not changes included in the practice-pathway update.
 
 Launch order: finish the seven-stage learning flow; replace fixed-question narration; add usage telemetry and durable assessment jobs; test provider quality and load; then decide whether dynamic voice earns enough value to justify a separate allowance.
